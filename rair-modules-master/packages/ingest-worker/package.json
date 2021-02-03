@@ -1,0 +1,30 @@
+{
+  "name": "@rair/ingest-worker",
+  "version": "0.2.1",
+  "description": "A web worker that can perform the ingestion operations without blocking the browser",
+  "author": "Willem Olding <willemolding@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/ingest-worker.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "browserify lib/ingest-worker -o build/ingest-worker.js",
+    "test": "echo \"Error: run tests from root\""
+  },
+  "dependencies": {
+    "@rair/ingest": "^0.2.1"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.2"
+  },
+  "gitHead": "16cc8c9499b35ff24cbda85a451feed565cb8ae0",
+  "publishConfig": {
+    "access": "public"
+  }
+}

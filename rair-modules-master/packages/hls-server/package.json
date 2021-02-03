@@ -1,0 +1,26 @@
+{
+  "name": "@rair/hls-server",
+  "version": "0.2.1",
+  "description": "HTTP middleware for serving HTTP Live Streaming (HLS) compatible media streams, Forked from t-mullen to support streaming decryption",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "author": "Thomas Mullen, Willem Olding",
+  "license": "MIT",
+  "devDependencies": {
+    "fluent-ffmpeg": "^2.1.2",
+    "sinon": "^9.1.0",
+    "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "follow-redirects": "^1.13.0",
+    "http-attach": "^1.0.0",
+    "minimist": "^1.2.0",
+    "yargs": "^16.0.3"
+  },
+  "gitHead": "16cc8c9499b35ff24cbda85a451feed565cb8ae0",
+  "publishConfig": {
+    "access": "public"
+  }
+}

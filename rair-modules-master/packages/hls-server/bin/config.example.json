@@ -1,0 +1,10 @@
+{
+  "/jellyfish": {
+    "dir": "/home/willem/rair-test/output/"
+  },
+  "/jellyfish_encrypted": {
+    "dir": "/home/willem/rair-test/output_encrypted/",
+    "key_path": "/home/willem/rair-test/output_encrypted/source.3gp.key",
+    "iv": "0000000000000000"
+  }
+}
