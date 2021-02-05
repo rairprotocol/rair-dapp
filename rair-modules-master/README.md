@@ -7,7 +7,7 @@ This repo uses [lerna.js](https://github.com/lerna/lerna#about) to manage multip
 To initialize:
 ```shell
 npm install
-npm run boostrap
+npm run bootstrap
 ```
 
 ## Demo
