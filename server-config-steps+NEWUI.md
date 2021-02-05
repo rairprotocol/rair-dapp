@@ -70,6 +70,11 @@ npm install
 ## systemd had some issues with automated IPFS pins
 ## PM2 was used instead to maintain the service running
 ## a .env file (needs npm module dotenv) was also used for
+```shell
+npm install dotenv
+or yarn add dotenv
+```
+
 ## enviroment variables
 
 ```shell
