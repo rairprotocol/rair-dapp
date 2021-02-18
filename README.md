@@ -5,7 +5,32 @@ Before eveything start, please check eveything we need below:
 - [Metamask](https://metamask.io/)
 - some Magic
 
-# Docker
+
+
+# Upadte!
+To run rair-node-front test, go download rairnodetest.tar
+
+
+```sh
+$ docker load < rairnodetest.tar
+# load into docker images
+$ docker images
+
+$ docker ps -s
+# it shows empty now
+
+$ docker run -it -p 8000:80 --name rairfront rairfrounttest
+# you can change rairfront everytime you boot it. It's just a name
+# it's will take an well, keep terminal open, you can open other terminal types next command
+
+$ docker ps-s
+# it should be here with a new container loaded from the docker image just created
+```
+We then go Browser to check out
+- > localhost:8080
+
+
+### Docker
 rair-node-test is very easy to install and deploy in a Docker container.
 Login with you Docker ID to push and pull images from Docker Hub.
 
