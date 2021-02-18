@@ -7,7 +7,7 @@ Before eveything start, please check eveything we need below:
 
 
 
-# Upadte!
+# Update!
 To run rair-node-front test, go download rairnodetest.tar
 
 
