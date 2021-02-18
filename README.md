@@ -191,7 +191,7 @@ $ yarn add dotenv
 ```
 enviroment variables:
 ```sh
-$ npm install -g pm2
+$ sudo npm install -g pm2
 $ cd demo-decrypt-node-EYSS-JuanNEW 
 $ pm2 start npm --name "rair" -- start
 ```
