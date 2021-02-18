@@ -26,7 +26,7 @@ $ docker run -it -p 8000:80 --name rairfront rairfrounttest
 $ docker ps-s
 # it should be here with a new container loaded from the docker image just created
 ```
-We then go Browser to check out
+We then go browser to check out
 - > localhost:8080
 
 
