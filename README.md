@@ -283,6 +283,9 @@ For production of magic release, create and edit contents of the .env file under
 - >PINATA_KEY=aaa581a498f99ed85279 
 - >PINATA_SECRET=92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1
 
+* Note: on the .env file the JWT secret can be any kind of string, doesn't matter the content or the length
+
+
 By Update the rair-node
 > Automated process is inside the EYSS-Juan branch
 ```sh
