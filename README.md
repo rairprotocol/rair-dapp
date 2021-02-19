@@ -22,6 +22,7 @@ $ docker ps -s
 $ docker run -it -p 8000:80 --name rairfront rairfrounttest
 # you can change rairfront everytime you boot it. It's just a name
 # it's will take an well, keep terminal open, you can open other terminal types next command
+# if show" Unable to find image 'rairfrounttest:latest' locally", please put docker images id as rairfrounttest
 
 $ docker ps-s
 # it should be here with a new container loaded from the docker image just created
