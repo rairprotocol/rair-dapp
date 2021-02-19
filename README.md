@@ -2,14 +2,27 @@ Before eveything start, please check eveything we need below:
 
 - Ubuntu 20.04 LTS
 - Docker
+- Visual Studio
 - [Metamask](https://metamask.io/)
 - some Magic
 
 
 
-# Update!
-To run rair-node-front test, go download rairnodetest.tar
 
+
+# Test
+rair node test are used frout-end and back-end separation architecture, since that, we create separated dockerfile for each usecase.
+
+As for front-end
+
+a) make dockerfile compile- build image in Visual Studio (for example rairfronttest here)
+```sh
+$ docker images
+# should be able to see it once successfully built
+
+```
+
+b) go download rairnodetest.tar under [githubpage](https://github.com/rairtech/weiyirait/releases/tag/dockerfront)
 
 ```sh
 $ docker load < rairnodetest.tar
@@ -234,7 +247,7 @@ For production of magic release, create and edit contents of the .env file under
 - > JWT_SECRET=UGt70v4#mZ0J@vHFK%b
 - > INFURA_PROJECT_ID=f8232f48540f48f0a7543643e57d6278 
 - > IPFS_GATEWAY=http://localhost:8080/ipfs 
-- >IPFS_API=http://localhost:5001 
+- >IPFS_API=http://localhost:5001 us
 - >PORT=5000 
 - >PINATA_KEY=aaa581a498f99ed85279 
 - >PINATA_SECRET=92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1
@@ -254,6 +267,9 @@ $ cd rair-front-master
 $ npm i
 $ npm run build
 ```
+
+
+
 # Todos
 - Updating server with code updates
 Since there is no CI/CD set up this is a manual process.
