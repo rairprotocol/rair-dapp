@@ -9,8 +9,6 @@ Before eveything start, please check eveything we need below:
 
 
 
-
-
 # Test
 rair node test are used frout-end and back-end separation architecture, since that, we create separated dockerfile for each usecase.
 
@@ -20,6 +18,7 @@ a) to make dockerfile compile- build image in Visual Studio (for example rairfro
 
 ```sh
 $ docker build -t rairfrounttest .
+# create docker images base on dockfile under rair-front-master
 
 $ docker images
 # should be able to see it once successfully built
@@ -56,7 +55,7 @@ We then go browser to check out
 As for back-end
 ```sh
 $ docker build -t rairserver .
-# create docker images base on dockfile
+# create docker images base on dockfile under demo-decrypt-node-EYSS-JuanNEW
 
 $ docker images
 # after successfully build and tagged, they will show rairserver inside docker images repository
