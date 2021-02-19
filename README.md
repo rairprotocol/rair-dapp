@@ -10,16 +10,23 @@ Before eveything start, please check eveything we need below:
 
 
 
+
 # Test
 rair node test are used frout-end and back-end separation architecture, since that, we create separated dockerfile for each usecase.
 
 As for front-end
 
-a) make dockerfile compile- build image in Visual Studio (for example rairfronttest here)
+a) to make dockerfile compile- build image in Visual Studio (for example rairfronttest here)
+
 ```sh
 $ docker images
 # should be able to see it once successfully built
 
+$ docker run -it -p 8000:80 --name rairfront rairfrounttest
+# if show" Unable to find image 'rairfrounttest:latest' locally", please put docker images id as rairfrounttest
+
+$ docker ps-s
+# it should be here with a new container loaded from the docker image just created
 ```
 
 b) go download rairnodetest.tar under [githubpage](https://github.com/rairtech/weiyirait/releases/tag/dockerfront)
