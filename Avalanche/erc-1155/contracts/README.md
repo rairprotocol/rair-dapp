@@ -11,7 +11,7 @@
 * Click Depoly, and confirm transaction - confirm
 * After transaction succuss, "ERC1155MINTABLE AT `0XA17...4F394`(depends yours contract ID)BLOCKCHIAN"show up
     * you can also see create, mint, safeBatchTransferFrom, safeTransferFrom, setApprovalForAll, setURI, balanceOf, balanceOfBatch, creators, isApprovedForAll, nonce, supportsInterface
-    * add below command into create
+    * add below command into each function
 
 example : 
 ```json
