@@ -9,7 +9,7 @@
 * Environment set as injected web3, account should match your metamask ID
 * Set contract as ERC1155Mintablle 
 * Click Depoly, and confirm transaction - confirm
-* After transaction succuss, "ERC1155MINTABLE AT `0XA17...4F394`(depends yours contract ID)BLOCKCHIAN"show up
+* After transaction succuss, "ERC1155MINTABLE AT `0x1EEBb16264D8BDB031685bEfF3d66bd6849F3942`(depends yours metamask account ID)BLOCKCHIAN"show up
     * you can also see create, mint, safeBatchTransferFrom, safeTransferFrom, setApprovalForAll, setURI, balanceOf, balanceOfBatch, creators, isApprovedForAll, nonce, supportsInterface
     * add below command into each function
 
@@ -21,11 +21,11 @@ create :
 
 mint : 
     "uint256 _id" : " 1 " 
-    "address[] _to" : " ["0XA17...4F394"] "
-    "uint256[] _quantities" : " [10] " 
+    "address[] _to" : " ["0x1EEBb16264D8BDB031685bEfF3d66bd6849F3942"] "
+    "uint256[] _quantities" : " [3] " 
     
 balanceOf :
-    "address_owner" : " 0XA17...4F394  "
+    "address_owner" : " 0x1EEBb16264D8BDB031685bEfF3d66bd6849F3942  "
     "uint256 _id" : " 1 " 
 
 creators: : 
