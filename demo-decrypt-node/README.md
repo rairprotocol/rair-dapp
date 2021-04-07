@@ -16,3 +16,5 @@ This will build the rair node, but IPFS will not be functioning locally, as addi
 
 docker build -t rairnode .
 docker run -it --rm -p 5000:5000 -p 3000:3000 -p 5001:5001 -p 4001:4001 -p 8080:8080 rairnode
+
+Optionally, use -d flag to run as a daemon
