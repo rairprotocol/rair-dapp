@@ -1,0 +1,57 @@
+<html>
+<body>
+
+<button class="get">Begin Authentication</button>
+<input id="media_id" class="media_id" type="text"></input>
+<label for="media_id">Input Media ID</label>
+</br>
+<span class="result"></span>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+<script type="text/javascript">
+
+  const ethEnabled = () => {
+    if (window.ethereum) {
+      web3.setProvider(window.ethereum);
+      window.ethereum.enable();
+      return true;
+    }
+    return false;
+  }
+
+  if (!ethEnabled()) {
+    alert("Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!");
+  }
+
+  $('.get').on('click', function () {
+    $.get('/api/auth/get_challenge/' + web3.eth.accounts[0], (res) => {
+      challenge = res
+
+      console.log(res)
+
+      const from = web3.eth.accounts[0];
+      const params = [from, challenge];
+
+      web3.currentProvider.request({
+        method: 'eth_signTypedData_v3',
+        params,
+        from
+      }).then(result => {
+        console.log('challenge', result)
+        const signature = result
+        const mediaId = $('#media_id').val()
+        const challengeString = JSON.parse(challenge).message.challenge
+        // make a second call with the signed challenge
+        $.get('/api/auth/get_token/' + challengeString + '/' + signature + '/' + mediaId, (res) => {
+          console.log('jwt', res)
+          $('.result').text(`Your access token for media ${mediaId} is: ${res}`)
+        });
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
