@@ -10,7 +10,7 @@ const fs = require('fs')
 require('dotenv').config()
 
 async function main () {
-  const adapter = new FileAsync('store.json')
+  const adapter = new FileAsync('./db/store.json')
   const db = await low(adapter)
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails']
 
