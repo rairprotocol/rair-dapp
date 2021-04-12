@@ -21,7 +21,6 @@ COPY . /usr/local/src
 
 RUN apt update
 RUN apt install -y ffmpeg
-RUN npm install readdirp
 RUN npm install
 
 EXPOSE 3000
