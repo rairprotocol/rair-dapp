@@ -13,6 +13,7 @@ services:
       - 8080:8080
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
+      - ./demo-decrypt-node/ipfs:/root/.ipfs
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
     container_name: 'rairnode'
     networks:
