@@ -2,9 +2,8 @@ version: '3.9'
 
 services:
   rairnode:
-    build:
-      context: demo-decrypt-node/
-      dockerfile: Dockerfile
+    image:
+      rairtechinc/rairservernode:1.0
     ports:
       - 3000:3000
       - 4001:4001
@@ -18,9 +17,8 @@ services:
     networks:
       - rair-local
   rairfront:
-    build:
-      context: rair-front-master/
-      dockerfile: Dockerfile
+    image:
+      rairtechinc/rairfront:1.0
     ports:
       - 80:80
     container_name: 'rairfront'
