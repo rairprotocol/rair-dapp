@@ -1,13 +1,14 @@
-const express = require('express')
-const { retrieveMediaInfo, addPin, removePin } = require('../integrations/ipfs')
-const upload = require('../Multer/Config.js')
-const { exec } = require('child_process')
-const crypto = require('crypto')
-const path = require('path')
-const fs = require('fs')
-const readdirp = require('readdirp')
-const fetch = require('node-fetch')
-const StartHLS = require('../hls-starter.js')
+const express = require('express');
+const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfs');
+const upload = require('../Multer/Config.js');
+const { exec } = require('child_process');
+const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
+const readdirp = require('readdirp');
+const fetch = require('node-fetch');
+const StartHLS = require('../hls-starter.js');
+const _ = require('lodash');
 
 const rareify = async (fsRoot) => {
   // Generate a key
@@ -56,7 +57,7 @@ const rareify = async (fsRoot) => {
 /**
  * intToByteArray Convert an integer to a 16 byte Uint8Array (little endian)
  */
-function intToByteArray (num) {
+function intToByteArray(num) {
   var byteArray = new Uint8Array(16)
   for (var index = 0; index < byteArray.length; index++) {
     var byte = num & 0xff
@@ -107,7 +108,7 @@ module.exports = context => {
       await addPin(mediaId)
       res.sendStatus(200)
     } catch (e) {
-      next(new Error(`Cannot retrieve rair.json manifest for ${mediaId}. Check the CID is correct and is a folder containing a manifest. ${e}`))
+      next(new Error(`Cannot retrieve rair.json manifest for ${ mediaId }. Check the CID is correct and is a folder containing a manifest. ${ e }`))
     }
   })
 
@@ -135,7 +136,7 @@ module.exports = context => {
     try {
       await removePin(mediaId)
     } catch (e) {
-      console.warn(`Could not remove pin ${mediaId}, ${e}`)
+      console.warn(`Could not remove pin ${ mediaId }, ${ e }`)
     }
     res.sendStatus(200)
   })
@@ -197,6 +198,7 @@ module.exports = context => {
             rairJson.author = author
           }
           fs.writeFileSync(req.file.destination + 'stream' + req.file.filename + '/rair.json', JSON.stringify(rairJson, null, 4))
+
           command = 'rm -f ' + req.file.path
           exec(command, (error, stdout, stderr) => {
             if (error) {
@@ -206,49 +208,50 @@ module.exports = context => {
           })
           console.log(req.file.originalname, 'pinning to ipfs')
 
-          command = 'ipfs add -r ' + req.file.destination + 'stream' + req.file.filename + '/ --pin --quieter'
-          exec(command, async (error, stdout, stderr) => {
-            if (error) {
-              console.log(req.file.originalname, error)
-            } else if (!stdout) {
-              console.log('error', stdout, stderr, req.file.destination)
-            } else {
-              const meta = {
-                mainManifest: 'stream.m3u8',
-                nftIdentifier: token,
-                encryption: 'aes-128-cbc',
-                name: title,
-                thumbnail: req.file.filename
-              }
-              if (author) {
-                meta.author = author
-              }
-              if (description) {
-                meta.description = description
-              }
-              const ipfsCid = stdout.slice(0, -1)
-              console.log(req.file.originalname, 'ipfs done: ', ipfsCid)
-              await context.store.addMedia(ipfsCid, { key: exportedKey, ...meta, uri: process.env.IPFS_GATEWAY + '/' + ipfsCid })
-              context.hls = StartHLS()
-              fetch('https://api.pinata.cloud/pinning/pinByHash', {
-                method: 'POST',
-                body: JSON.stringify({ hashToPin: ipfsCid }),
-                headers: {
-                  pinata_api_key: process.env.PINATA_KEY,
-                  pinata_secret_api_key: process.env.PINATA_SECRET,
-                  'Content-Type': 'application/json',
-                  Accept: 'application/json'
-                }
-              })
-                .then(blob => blob.json())
-                .then(response => {
-                  console.log('PINATA RESPONSE', response)
-                })
-                .catch(err => {
-                  console.log('PINATA ERROR', err)
-                })
+          const c = await addFolder(`${req.file.destination}stream${req.file.filename}/`, `stream${req.file.filename}`/*, { pin: true, quieter: true }*/);
+
+          const meta = {
+            mainManifest: 'stream.m3u8',
+            nftIdentifier: token,
+            encryption: 'aes-128-cbc',
+            name: title,
+            thumbnail: req.file.filename
+          }
+          if (author) {
+            meta.author = author
+          }
+          if (description) {
+            meta.description = description
+          }
+          const ipfsCid = _.chain(c.cid)
+            .split('(')
+            .last()
+            .split(')')
+            .first()
+            .value();
+          console.log(req.file.originalname, 'ipfs done: ', ipfsCid);
+          await context.store.addMedia(ipfsCid, {
+            key: exportedKey, ...meta,
+            uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
+          })
+          context.hls = StartHLS()
+          fetch('https://api.pinata.cloud/pinning/pinByHash', {
+            method: 'POST',
+            body: JSON.stringify({ hashToPin: ipfsCid }),
+            headers: {
+              pinata_api_key: process.env.PINATA_KEY,
+              pinata_secret_api_key: process.env.PINATA_SECRET,
+              'Content-Type': 'application/json',
+              Accept: 'application/json'
             }
           })
+            .then(blob => blob.json())
+            .then(response => {
+              console.log('PINATA RESPONSE', response)
+            })
+            .catch(err => {
+              console.log('PINATA ERROR', err)
+            })
         })
       })
     }
