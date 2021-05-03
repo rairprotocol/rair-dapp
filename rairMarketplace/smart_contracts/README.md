@@ -1,4 +1,4 @@
-=======
+
 RAIR PEPE - Demo on ERC721 Non-Fungible Tokens
 =======
 
