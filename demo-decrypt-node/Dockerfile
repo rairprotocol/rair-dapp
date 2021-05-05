@@ -18,5 +18,4 @@ RUN npm install
 EXPOSE 3000
 EXPOSE 5000
 
-RUN ["chmod", "+x", "/usr/local/src/scripts/docker_start.sh"]
-CMD /usr/local/src/scripts/docker_start.sh
+CMD npm start
