@@ -8,7 +8,6 @@ services:
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
-      - ./demo-decrypt-node/bin:/usr/local/src/bin
     ports:
       - 3000:3000
       - 5000:5000
@@ -19,7 +18,6 @@ services:
     image:
       ipfs/go-ipfs:latest
     volumes:
-      - ./demo-decrypt-node/ipfs:/root/.ipfs
       - ./demo-decrypt-node/ipfsData:/data/ipfs
     ports:
       - 4001:4001
