@@ -2,27 +2,35 @@ version: '3.9'
 
 services:
   rairnode:
+    container_name: 'rairnode'
     image:
       rairtechinc/rairservernode:1.0
-    ports:
-      - 3000:3000
-      - 4001:4001
-      - 5000:5000
-      - 5001:5001
-      - 8080:8080
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
-      - ./demo-decrypt-node/ipfs:/root/.ipfs
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
-    container_name: 'rairnode'
+    ports:
+      - 3000:3000
+      - 5000:5000
+    networks:
+      - rair-local
+  rairipfs:
+    container_name: 'rairipfs'
+    image:
+      ipfs/go-ipfs:latest
+    volumes:
+      - ./demo-decrypt-node/ipfsData:/data/ipfs
+    ports:
+      - 4001:4001
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:5001:5001
     networks:
       - rair-local
   rairfront:
+    container_name: 'rairfront'
     image:
       rairtechinc/rairfront:1.0
     ports:
       - 80:80
-    container_name: 'rairfront'
     networks:
       - rair-local
 networks:
