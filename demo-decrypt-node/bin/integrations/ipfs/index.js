@@ -26,9 +26,9 @@ async function removePin(CID) {
 async function addFolder(pathTo, folderName, args = {}) {
   const files = fs.readdirSync(pathTo);
   const ipfs = ipfsClient(process.env.IPFS_API);
-  const ipfsPath = `/Videos/${ folderName }`
+  const ipfsPath = `/data/files/${ folderName }`
 
-  await ipfs.files.mkdir(ipfsPath);
+  await ipfs.files.mkdir(ipfsPath, { parents: true });
 
   await Promise.all(_.map(files, (file) => {
     const filePath = path.join(pathTo, '/', file);
