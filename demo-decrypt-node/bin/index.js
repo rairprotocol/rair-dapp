@@ -7,6 +7,7 @@ const low = require('lowdb')
 const FileAsync = require('lowdb/adapters/FileAsync')
 const StartHLS = require('./hls-starter.js')
 const fs = require('fs')
+const cors = require('cors');
 require('dotenv').config()
 
 async function main () {
@@ -27,6 +28,9 @@ async function main () {
     .write()
 
   const app = express()
+
+  /* CORS */
+  app.use(cors());
 
   const hls = await StartHLS()
 
