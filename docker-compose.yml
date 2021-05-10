@@ -21,16 +21,21 @@ services:
       - ./demo-decrypt-node/ipfsData:/data/ipfs
     ports:
       - 4001:4001
-      - 127.0.0.1:8080:8080
-      - 127.0.0.1:5001:5001
+      - 127.0.0.1:8081:8080
+      - 127.0.0.1:5003:5001
     networks:
       - rair-local
   rairfront:
     container_name: 'rairfront'
-    image:
-      rairtechinc/rairfront:1.0
+    image: woda-with-nodejs
     ports:
-      - 80:80
+      - 8080:8080
+      - 8443:8443
+      - 5001:5001
+      - 5002:5002
+    volumes:
+      - /var/dev/EAMD.ucp/Components/tla/EAM/layer1/Thinglish/Once/latestServer/src/sh/:/usr/local/sbin/
+      - /var/dev/:/var/dev/
     networks:
       - rair-local
 networks:
