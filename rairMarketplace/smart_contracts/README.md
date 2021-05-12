@@ -8,4 +8,4 @@ RAIR PEPE - Demo on ERC721 Non-Fungible Tokens
 
 -`npm init`
 
--`npm install --save openzeppelin-solodity`
+-`npm install --save openzeppelin-solodity@1.9.0`
