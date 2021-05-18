@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   rairnode:
-    container_name: 'rairnode' test
+    container_name: 'rairnode'
     image:
       rairtechinc/rairservernode:latest
     volumes:
