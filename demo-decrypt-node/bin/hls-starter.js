@@ -4,7 +4,7 @@ const FileAsync = require('lowdb/adapters/FileAsync')
 const HLSServer = require('@rair/hls-server')
 
 module.exports = async () => {
-	const db = await low(new FileAsync('store.json'))
+	const db = await low(new FileAsync('./db/store.json'))
 
 	return HLSServer({
 		mediaConfigStore: async mediaId => {
@@ -14,5 +14,5 @@ module.exports = async () => {
 		},
 		segmentTransformation: streamDecrypter,
 		authCallback: req => req.token && req.token.media_id === req.mediaId
-	})	
+	})
 }

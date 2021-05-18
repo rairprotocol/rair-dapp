@@ -7,10 +7,11 @@ const low = require('lowdb')
 const FileAsync = require('lowdb/adapters/FileAsync')
 const StartHLS = require('./hls-starter.js')
 const fs = require('fs')
+const cors = require('cors');
 require('dotenv').config()
 
 async function main () {
-  const adapter = new FileAsync('store.json')
+  const adapter = new FileAsync('./db/store.json')
   const db = await low(adapter)
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails']
 
@@ -27,6 +28,9 @@ async function main () {
     .write()
 
   const app = express()
+
+  /* CORS */
+  app.use(cors());
 
   const hls = await StartHLS()
 

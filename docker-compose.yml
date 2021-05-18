@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  rairnode:
+    container_name: 'rairnode' test
+    image:
+      rairtechinc/rairservernode:latest
+    volumes:
+      - ./demo-decrypt-node/db:/usr/local/src/db
+      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+    ports:
+      - 3000:3000
+      - 5000:5000
+    networks:
+      - rair-local
+  rairipfs:
+    container_name: 'rairipfs'
+    image:
+      ipfs/go-ipfs:latest
+    volumes:
+      - ./demo-decrypt-node/ipfsData:/data/ipfs
+    ports:
+      - 4001:4001
+      - 127.0.0.1:8081:8080
+      - 127.0.0.1:5003:5001
+    networks:
+      - rair-local
+  rairfront:
+    container_name: 'rairfront'
+    image: woda-with-nodejs
+    ports:
+      - 8080:8080
+      - 8443:8443
+      - 5001:5001
+      - 5002:5002
+    volumes:
+      - /var/dev/EAMD.ucp/Components/tla/EAM/layer1/Thinglish/Once/latestServer/src/sh/:/usr/local/sbin/
+      - /var/dev/:/var/dev/
+    networks:
+      - rair-local
+networks:
+  rair-local:
+    driver: bridge

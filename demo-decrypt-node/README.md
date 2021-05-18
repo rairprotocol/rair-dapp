@@ -35,3 +35,4 @@ Optionally, use -d flag to run as a daemon
         * [x] /upload - POST - upload the media, [see details here](readme/upload_media.md)
     * [x] /docs - swagger documentation for the server
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
+* [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
