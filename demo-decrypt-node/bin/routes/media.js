@@ -234,6 +234,13 @@ module.exports = context => {
             key: exportedKey, ...meta,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
           })
+
+          await context.db.File.create({
+            _id: ipfsCid,
+            key: exportedKey, ...meta,
+            uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
+          });
+
           context.hls = StartHLS()
           fetch('https://api.pinata.cloud/pinning/pinByHash', {
             method: 'POST',
