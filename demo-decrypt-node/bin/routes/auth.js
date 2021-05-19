@@ -62,7 +62,7 @@ module.exports = context => {
     const ethAddres = req.metaAuth.recovered
     const { mediaId } = req.params
     try {
-      const { nftIdentifier } = context.store.getMediaConfig(mediaId)
+      const { nftIdentifier } = await context.db.File.find({ _id: mediaId });
       if (ethAddres) {
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':')
