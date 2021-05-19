@@ -2,6 +2,7 @@ var express = require('express')
 const jwt = require('jsonwebtoken')
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' })
 const { accountTokenBalance } = require('../integrations/eth')
+const _ = require('lodash');
 
 module.exports = context => {
   const router = express.Router()
@@ -62,7 +63,7 @@ module.exports = context => {
     const ethAddres = req.metaAuth.recovered
     const { mediaId } = req.params
     try {
-      const { nftIdentifier } = context.store.getMediaConfig(mediaId)
+      const { nftIdentifier } = await context.db.File.find({ _id: mediaId });
       if (ethAddres) {
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':')
@@ -94,7 +95,13 @@ module.exports = context => {
   // Verify with a Metamask challenge if the user holds the current Administrator token
   router.get('/admin/:MetaMessage/:MetaSignature/', metaAuth, async (req, res, next) => {
     const ethAddres = req.metaAuth.recovered
-    const nftIdentifier = context.store.getAdminToken()
+    // const nftIdentifier = context.store.getAdminToken()
+    const users = await context.db.User.find();
+    const nftIdentifier = _.chain(users)
+      .first()
+      .get('adminNFT')
+      .value();
+
     if (nftIdentifier === '') {
       console.log("There's no admin token, Admin panel will be visible for anyone!")
       res.json({
@@ -133,13 +140,17 @@ module.exports = context => {
   router.post('/new_admin/:MetaMessage/:MetaSignature/', metaAuth, async (req, res, next) => {
     try {
       const ethAddres = req.metaAuth.recovered
-      const nftIdentifier = context.store.getAdminToken()
+      // const nftIdentifier = context.store.getAdminToken()
+      const results = await context.db.User.find();
+      const user = _.first(results);
+      const nftIdentifier = _.get(user, 'adminNFT');
       const { adminNFT } = req.body
 
       console.log('New Admin NFT', adminNFT)
 
       if (nftIdentifier === '') {
-        context.store.setAdminToken(adminNFT)
+        context.store.setAdminToken(adminNFT);
+        await context.db.User.update({ _id: user._id }, { adminNFT });
         console.log('There was no NFT identifier, so', adminNFT, 'is the new admin token')
         res.status(200).json({
           ok: true,
@@ -161,7 +172,8 @@ module.exports = context => {
                 message: "You don't hold the current admin token"
               })
             } else {
-              context.store.setAdminToken(adminNFT)
+              context.store.setAdminToken(adminNFT);
+              await context.db.User.update({ _id: user._id }, { adminNFT });
               res.json({
                 ok: true,
                 message: 'New NFT set!'

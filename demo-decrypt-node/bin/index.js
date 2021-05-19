@@ -8,6 +8,7 @@ const FileAsync = require('lowdb/adapters/FileAsync')
 const StartHLS = require('./hls-starter.js')
 const fs = require('fs')
 const cors = require('cors');
+const mongoose = require('mongoose');
 require('dotenv').config()
 
 async function main () {
@@ -26,6 +27,22 @@ async function main () {
     .write()
   db.defaults({ adminNFT: '' })
     .write()
+
+  const  _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true })
+   .then((c) => {
+     if (process.env.PRODUCTION === 'true') {
+      console.log('DB Connected!');
+     } else {
+       console.log('Development DB Connected!');
+     }
+     return c;
+   })
+    .catch((e) => {
+      console.log('DB Not Connected!');
+      console.log(`Reason: ${e.message}`);
+    });
+
+  mongoose.set('useFindAndModify', false);
 
   const app = express()
 
@@ -55,6 +72,10 @@ async function main () {
       listMedia: () => {
         return db.get('mediaConfig').value()
       }
+    },
+    db: {
+      User: _mongoose.model('User', require('./models/user'), 'User'),
+      File: _mongoose.model('File', require('./models/file'), 'File')
     }
   }
 

@@ -97,20 +97,21 @@ module.exports = context => {
    *       200:
    *         description: Returns if added successfully
    */
-  router.post('/add/:mediaId', async function (req, res, next) {
-    const key = req.body.length > 0 ? req.body : undefined
-    var mediaId = req.params.mediaId
+  router.post('/add/:mediaId', async (req, res, next) => {
+    const key = req.body.length > 0 ? req.body : undefined;
+    const mediaId = req.params.mediaId;
 
     // lookup in IPFS at CID for a rair.json manifest
     try {
-      const meta = await retrieveMediaInfo(mediaId)
-      await context.store.addMedia(mediaId, { key, ...meta })
-      await addPin(mediaId)
-      res.sendStatus(200)
+      const meta = await retrieveMediaInfo(mediaId);
+      await context.store.addMedia(mediaId, { key, ...meta });
+      await context.db.File.create({ _id: mediaId, key, ...meta });
+      await addPin(mediaId);
+      res.sendStatus(200);
     } catch (e) {
-      next(new Error(`Cannot retrieve rair.json manifest for ${ mediaId }. Check the CID is correct and is a folder containing a manifest. ${ e }`))
+      next(new Error(`Cannot retrieve rair.json manifest for ${ mediaId }. Check the CID is correct and is a folder containing a manifest. ${ e }`));
     }
-  })
+  });
 
   /**
    * @swagger
@@ -130,16 +131,17 @@ module.exports = context => {
    *       200:
    *         description: Returns if media successfully found and deleted
    */
-  router.delete('/remove/:mediaId', async function (req, res) {
-    var mediaId = req.params.mediaId
-    await context.store.removeMedia(mediaId)
+  router.delete('/remove/:mediaId', async (req, res) => {
+    var mediaId = req.params.mediaId;
+    await context.store.removeMedia(mediaId);
+    await context.db.File.deleteOne({ _id: mediaId });
     try {
-      await removePin(mediaId)
+      await removePin(mediaId);
     } catch (e) {
-      console.warn(`Could not remove pin ${ mediaId }, ${ e }`)
+      console.warn(`Could not remove pin ${ mediaId }, ${ e }`);
     }
-    res.sendStatus(200)
-  })
+    res.sendStatus(200);
+  });
 
   /**
    * @swagger
@@ -155,9 +157,14 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', async function (req, res) {
-    const result = await context.store.listMedia()
-    res.json(result)
+  router.get('/list', async (req, res) => {
+    const data = await context.db.File.find();
+    const preparedData = _.reduce(data, (res, value) => {
+      res[value._id] = value;
+      return res;
+    }, {});
+
+    res.json(preparedData);
   })
 
   router.post('/upload', upload.single('video'), async (req, res) => {
@@ -234,6 +241,13 @@ module.exports = context => {
             key: exportedKey, ...meta,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
           })
+
+          await context.db.File.create({
+            _id: ipfsCid,
+            key: exportedKey, ...meta,
+            uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
+          });
+
           context.hls = StartHLS()
           fetch('https://api.pinata.cloud/pinning/pinByHash', {
             method: 'POST',
