@@ -49,7 +49,7 @@ const App = () => {
                 .then(blob => blob.json());
             }
 
-            const msg = `Sign in for RAIR by key: ${ user.nonce }`;
+            const msg = `Sign in for RAIR by key: ${ user.key }`;
 
             // get signature
             const signature = await web3.eth.personal.sign(msg, publicAddress, '');
@@ -109,7 +109,7 @@ const App = () => {
       } else {
         try {
           // get address
-          const user = await fetch(`/api/auth/token?token=${currentToken}`)
+          const user = await fetch(`/api/auth/user_info?token=${currentToken}`)
             .then(blob => blob.json());
           setEthAddress(user.publicAddress);
           setAdminRights(true);

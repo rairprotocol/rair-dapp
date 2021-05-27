@@ -205,12 +205,12 @@ module.exports = context => {
 
     if (!user) {
       console.log(`User with publicAddress ${ publicAddress } is not found in database`);
-      return res.status(401).send({
+      return res.status(404).send({
         error: `User with publicAddress ${publicAddress} is not found in database`,
       });
     }
 
-    const msg = `Sign in for RAIR by key: ${user.nonce}`;
+    const msg = `Sign in for RAIR by key: ${user.key}`;
 
     // get the address from signature
     const nonceBufferHex = bufferToHex(Buffer.from(msg, 'utf8'));
@@ -226,10 +226,10 @@ module.exports = context => {
       });
     }
 
-    // Generate a new nonce for the user
-    const nonce = nanoid();
+    // Generate a new key for the user
+    const key = nanoid();
 
-    await context.db.User.updateOne({ publicAddress }, { $set: { nonce } });
+    await context.db.User.updateOne({ publicAddress }, { $set: { key } });
 
     jwt.sign(
       { eth_addr: publicAddress },
@@ -241,6 +241,6 @@ module.exports = context => {
       })
   });
 
-  router.get('/token', JWTVerification(context), async (req, res, next) => res.send(req.user));
+  router.get('/user_info', JWTVerification(context), async (req, res, next) => res.send(req.user));
   return router
 }
