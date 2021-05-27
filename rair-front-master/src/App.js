@@ -33,11 +33,21 @@ const App = () => {
 
             const publicAddress = await web3.eth.getCoinbase();
 
-            setEthAddress(publicAddress);
-
             // find user
-            const user = await fetch(`/api/users/${ publicAddress }`)
+            let user = await fetch(`/api/users/${ publicAddress }`)
               .then(blob => blob.json());
+
+            if (!user) {
+              user = await fetch('/api/users', {
+                method: 'POST',
+                body: JSON.stringify({ publicAddress, adminNFT: 'temp' }),
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json'
+                }
+              })
+                .then(blob => blob.json());
+            }
 
             const msg = `Sign in for RAIR by key: ${ user.nonce }`;
 
@@ -54,6 +64,7 @@ const App = () => {
               .then(blob => blob.text());
 
             localStorage.setItem('token', token);
+            setEthAddress(publicAddress);
 
             await Swal.fire('Success!', 'MetaMask connection ready', 'success')
 
