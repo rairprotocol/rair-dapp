@@ -210,7 +210,7 @@ module.exports = context => {
       });
     }
 
-    const msg = `Sign in for RAIR by key: ${user.key}`;
+    const msg = `Sign in for RAIR by nonce: ${user.nonce}`;
 
     // get the address from signature
     const nonceBufferHex = bufferToHex(Buffer.from(msg, 'utf8'));
@@ -226,10 +226,10 @@ module.exports = context => {
       });
     }
 
-    // Generate a new key for the user
-    const key = nanoid();
+    // Generate a new nonce for the user
+    const nonce = nanoid();
 
-    await context.db.User.updateOne({ publicAddress }, { $set: { key } });
+    await context.db.User.updateOne({ publicAddress }, { $set: { nonce } });
 
     jwt.sign(
       { eth_addr: publicAddress },

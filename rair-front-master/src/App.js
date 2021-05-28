@@ -24,6 +24,7 @@ const App = () => {
       if (window.ethereum) {
         if (!currentToken) {
           let web3 = Web3 | undefined; // Will hold the web3 instance
+          let user = null;
 
           try {
             if (!web3) {
@@ -33,9 +34,11 @@ const App = () => {
 
             const publicAddress = await web3.eth.getCoinbase();
 
-            // find user
-            let user = await fetch(`/api/users/${ publicAddress }`)
-              .then(blob => blob.json());
+            if (publicAddress) {
+              // find user
+              user = await fetch(`/api/users/${ publicAddress }`)
+                .then(blob => blob.json());
+            }
 
             if (!user) {
               user = await fetch('/api/users', {
@@ -49,7 +52,7 @@ const App = () => {
                 .then(blob => blob.json());
             }
 
-            const msg = `Sign in for RAIR by key: ${ user.key }`;
+            const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
 
             // get signature
             const signature = await web3.eth.personal.sign(msg, publicAddress, '');
@@ -73,6 +76,12 @@ const App = () => {
             setAdminRights(false)
             await Swal.fire('Error', 'Something went wrong', 'error')
           }
+        } else {
+          // get address
+          const user = await fetch(`/api/auth/user_info?token=${currentToken}`)
+            .then(blob => blob.json());
+          setEthAddress(user.publicAddress);
+          setAdminRights(false);
         }
       }
     })();
@@ -80,9 +89,9 @@ const App = () => {
 
   useEffect( () => {
     (async () => {
-      const currentToken = localStorage.getItem('token');
+      // const currentToken = localStorage.getItem('token');
 
-      if (!currentToken) {
+      // if (!currentToken) {
         // Sign the admin rights challenge
         if (!adminRights && ethAddress !== undefined) {
           fetch('/api/auth/get_challenge/' + ethAddress)
@@ -106,19 +115,19 @@ const App = () => {
                 })
             })
         }
-      } else {
-        try {
-          // get address
-          const user = await fetch(`/api/auth/user_info?token=${currentToken}`)
-            .then(blob => blob.json());
-          setEthAddress(user.publicAddress);
-          setAdminRights(true);
-        } catch (e) {
-          console.log(e);
-          setAdminRights(false)
-          await Swal.fire('Error', 'Something went wrong', 'error')
-        }
-      }
+      // } else {
+      //   try {
+      //     // get address
+      //     const user = await fetch(`/api/auth/user_info?token=${currentToken}`)
+      //       .then(blob => blob.json());
+      //     setEthAddress(user.publicAddress);
+      //     setAdminRights(true);
+      //   } catch (e) {
+      //     console.log(e);
+      //     setAdminRights(false)
+      //     await Swal.fire('Error', 'Something went wrong', 'error')
+      //   }
+      // }
     })();
   }, [adminRights, ethAddress])
 
@@ -130,7 +139,7 @@ const App = () => {
       .then(res => {
         setVideos(res);
       })
-  }, [refresh])
+  }, [refresh, ethAddress])
 
   return (
     <div className='bg-light align-top text-dark w-100 h-100' style={{minHeight: '100vh', minWidth: '100vw'}}>
