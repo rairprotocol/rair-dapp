@@ -200,7 +200,7 @@ module.exports = context => {
   })
 
   router.post('/authentication', async (req, res, next) => {
-    const { publicAddress, signature } = req.body;
+    const { publicAddress, signature, adminRights } = req.body;
     const user = await context.db.User.findOne({ publicAddress });
 
     if (!user) {
@@ -232,7 +232,7 @@ module.exports = context => {
     await context.db.User.updateOne({ publicAddress }, { $set: { nonce } });
 
     jwt.sign(
-      { eth_addr: publicAddress },
+      { eth_addr: publicAddress, adminRights },
       process.env.JWT_SECRET,
       { expiresIn: '1d' },
       (err, token) => {

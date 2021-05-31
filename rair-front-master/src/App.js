@@ -17,119 +17,114 @@ const App = () => {
   const [ethAddress, setEthAddress] = useState();
   const [adminRights, setAdminRights] = useState(false);
 
+  const getToken = async () => {
+    let web3 = Web3 | undefined; // Will hold the web3 instance
+    let user = null;
+    let isAdmin = false;
+
+    try {
+      if (!web3) {
+        // Get instance of Web3
+        web3 = new Web3(window.ethereum);
+      }
+
+      const publicAddress = await web3.eth.getCoinbase();
+
+      if (publicAddress) {
+        // find user
+        user = await fetch(`/api/users/${ publicAddress }`)
+          .then(blob => blob.json());
+      }
+
+      if (!user) {
+        user = await fetch('/api/users', {
+          method: 'POST',
+          body: JSON.stringify({ publicAddress, adminNFT: 'temp' }),
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(blob => blob.json());
+      }
+
+      if (!adminRights && publicAddress !== undefined) {
+        try {
+          const response = await fetch(`/api/auth/get_challenge/${ publicAddress }`)
+            .then(blob => blob.json());
+          const ethResponse = await window.ethereum.request({
+            method: 'eth_signTypedData_v4',
+            params: [publicAddress, JSON.stringify(response)],
+            from: publicAddress
+          });
+          const adminResponse = await fetch(`/api/auth/admin/${ response.message.challenge }/${ ethResponse }/`)
+            .then(blob => blob.json());
+          setAdminRights(adminResponse.ok);
+          isAdmin = adminResponse.ok;
+        } catch (err) {
+          console.log('Error', err)
+          setAdminRights(false);
+          isAdmin = false;
+        }
+      }
+
+      const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
+
+      // get signature
+      const signature = await web3.eth.personal.sign(msg, publicAddress, '');
+
+      const token = await fetch('/api/auth/authentication', {
+        method: 'POST',
+        body: JSON.stringify({ publicAddress, signature, adminRights: isAdmin }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(blob => blob.text());
+
+      localStorage.setItem('token', token);
+      setEthAddress(publicAddress);
+
+      await Swal.fire('Success!', 'MetaMask connection ready', 'success');
+
+    } catch (err) {
+      console.log(err);
+      setAdminRights(false);
+      await Swal.fire('Error', 'Something went wrong', 'error');
+    }
+  }
+
   useEffect( () => {
     (async () => {
       const currentToken = localStorage.getItem('token');
       // Connect to Metamask
       if (window.ethereum) {
         if (!currentToken) {
-          let web3 = Web3 | undefined; // Will hold the web3 instance
-          let user = null;
-
-          try {
-            if (!web3) {
-              // Get instance of Web3
-              web3 = new Web3(window.ethereum);
-            }
-
-            const publicAddress = await web3.eth.getCoinbase();
-
-            if (publicAddress) {
-              // find user
-              user = await fetch(`/api/users/${ publicAddress }`)
-                .then(blob => blob.json());
-            }
-
-            if (!user) {
-              user = await fetch('/api/users', {
-                method: 'POST',
-                body: JSON.stringify({ publicAddress, adminNFT: 'temp' }),
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json'
-                }
-              })
-                .then(blob => blob.json());
-            }
-
-            const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
-
-            // get signature
-            const signature = await web3.eth.personal.sign(msg, publicAddress, '');
-
-            const token = await fetch('/api/auth/authentication', {
-              method: 'POST',
-              body: JSON.stringify({ publicAddress, signature }),
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            })
-              .then(blob => blob.text());
-
-            localStorage.setItem('token', token);
-            setEthAddress(publicAddress);
-
-            await Swal.fire('Success!', 'MetaMask connection ready', 'success')
-
-          } catch (err) {
-            console.log(err);
-            setAdminRights(false)
-            await Swal.fire('Error', 'Something went wrong', 'error')
-          }
+          await getToken();
         } else {
           // get address
           const user = await fetch(`/api/auth/user_info?token=${currentToken}`)
             .then(blob => blob.json());
+
+          if (user.message === 'jwt expired') {
+            localStorage.removeItem('token');
+            setAdminRights(false);
+            await getToken();
+            const updatedToken = localStorage.getItem('token');
+            const updatedUser = await fetch(`/api/auth/user_info?token=${ updatedToken }`)
+              .then(blob => blob.json());
+            setEthAddress(updatedUser.publicAddress);
+            setAdminRights(updatedUser.adminRights);
+
+            return updatedUser;
+          }
+
           setEthAddress(user.publicAddress);
-          setAdminRights(false);
+          setAdminRights(user.adminRights);
         }
       }
     })();
   }, [])
-
-  useEffect( () => {
-    (async () => {
-      // const currentToken = localStorage.getItem('token');
-
-      // if (!currentToken) {
-        // Sign the admin rights challenge
-        if (!adminRights && ethAddress !== undefined) {
-          fetch('/api/auth/get_challenge/' + ethAddress)
-            .then(blob => blob.json())
-            .then(response => {
-              window.ethereum.request({
-                method: "eth_signTypedData_v4",
-                params: [ethAddress, JSON.stringify(response)],
-                from: ethAddress
-              })
-                .then(e => {
-                  fetch('/api/auth/admin/' + response.message.challenge + '/' + e + '/')
-                    .then(blob => blob.json())
-                    .then(res => {
-                      setAdminRights(res.ok)
-                    })
-                    .catch(err => {
-                      console.log('Error', err)
-                      setAdminRights(false)
-                    })
-                })
-            })
-        }
-      // } else {
-      //   try {
-      //     // get address
-      //     const user = await fetch(`/api/auth/user_info?token=${currentToken}`)
-      //       .then(blob => blob.json());
-      //     setEthAddress(user.publicAddress);
-      //     setAdminRights(true);
-      //   } catch (e) {
-      //     console.log(e);
-      //     setAdminRights(false)
-      //     await Swal.fire('Error', 'Something went wrong', 'error')
-      //   }
-      // }
-    })();
-  }, [adminRights, ethAddress])
 
   useEffect(() => {
     const token = localStorage.getItem('token');

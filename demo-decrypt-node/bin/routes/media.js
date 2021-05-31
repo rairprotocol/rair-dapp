@@ -158,7 +158,7 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', JWTVerification(context), async (req, res) => {
+  router.get('/list', async (req, res) => {
     const data = await context.db.File.find();
     const preparedData = _.reduce(data, (res, value) => {
       res[value._id] = value;
