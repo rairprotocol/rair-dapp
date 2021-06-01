@@ -9,6 +9,7 @@ const readdirp = require('readdirp');
 const fetch = require('node-fetch');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
+const { JWTVerification } = require('../middleware');
 
 const rareify = async (fsRoot) => {
   // Generate a key

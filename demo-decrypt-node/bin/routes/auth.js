@@ -1,8 +1,12 @@
-var express = require('express')
-const jwt = require('jsonwebtoken')
-const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' })
-const { accountTokenBalance } = require('../integrations/eth')
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
+const { accountTokenBalance } = require('../integrations/eth');
 const _ = require('lodash');
+const { recoverPersonalSignature } = require('eth-sig-util');
+const { bufferToHex } = require('ethereumjs-util');
+const { JWTVerification } = require('../middleware');
+const { nanoid } = require('nanoid');
 
 module.exports = context => {
   const router = express.Router()
@@ -194,5 +198,49 @@ module.exports = context => {
       })
     }
   })
+
+  router.post('/authentication', async (req, res, next) => {
+    const { publicAddress, signature, adminRights } = req.body;
+    const user = await context.db.User.findOne({ publicAddress });
+
+    if (!user) {
+      console.log(`User with publicAddress ${ publicAddress } is not found in database`);
+      return res.status(404).send({
+        error: `User with publicAddress ${publicAddress} is not found in database`,
+      });
+    }
+
+    const msg = `Sign in for RAIR by nonce: ${user.nonce}`;
+
+    // get the address from signature
+    const nonceBufferHex = bufferToHex(Buffer.from(msg, 'utf8'));
+    const address = recoverPersonalSignature({
+      data: nonceBufferHex,
+      sig: signature,
+    });
+
+    if (address !== publicAddress) {
+      console.log('Signature verification failed');
+      return res.status(401).send({
+        error: 'Signature verification failed',
+      });
+    }
+
+    // Generate a new nonce for the user
+    const nonce = nanoid();
+
+    await context.db.User.updateOne({ publicAddress }, { $set: { nonce } });
+
+    jwt.sign(
+      { eth_addr: publicAddress, adminRights },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' },
+      (err, token) => {
+        if (err) next(new Error('Could not create JWT'))
+        res.send(token)
+      })
+  });
+
+  router.get('/user_info', JWTVerification(context), async (req, res, next) => res.send(req.user));
   return router
 }
