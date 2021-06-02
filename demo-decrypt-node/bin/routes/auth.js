@@ -99,21 +99,19 @@ module.exports = context => {
   // Verify with a Metamask challenge if the user holds the current Administrator token
   router.get('/admin/:MetaMessage/:MetaSignature/', metaAuth, async (req, res, next) => {
     const ethAddres = req.metaAuth.recovered
-    // const nftIdentifier = context.store.getAdminToken()
-    const users = await context.db.User.find();
-    const nftIdentifier = _.chain(users)
-      .first()
-      .get('adminNFT')
-      .value();
 
-    if (nftIdentifier === '') {
-      console.log("There's no admin token, Admin panel will be visible for anyone!")
-      res.json({
-        ok: true,
-        message: "There's no Admin token"
-      })
-    }
+    // if (nftIdentifier === '') {
+    //   console.log("There's no admin token, Admin panel will be visible for anyone!")
+    //   res.json({
+    //     ok: true,
+    //     message: "There's no Admin token"
+    //   })
+    // }
+
     if (ethAddres) {
+      const user = (await context.db.User.findOne({ publicAddress: ethAddres }).toObject());
+      const nftIdentifier = _.get(user, 'adminNFT');
+
       if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
         const [contractAddress, tokenId] = nftIdentifier.split(':')
         console.log('Verifying user account has the admin token')
@@ -137,33 +135,32 @@ module.exports = context => {
       }
     } else {
       res.sendStatus(400)
-    };
+    }
   })
 
   // Verify the user holds the current Admin token and then replace it with a new token
   router.post('/new_admin/:MetaMessage/:MetaSignature/', metaAuth, async (req, res, next) => {
     try {
       const ethAddres = req.metaAuth.recovered
-      // const nftIdentifier = context.store.getAdminToken()
-      const results = await context.db.User.find();
-      const user = _.first(results);
-      const nftIdentifier = _.get(user, 'adminNFT');
-      const { adminNFT } = req.body
-
-      console.log('New Admin NFT', adminNFT)
-
-      if (nftIdentifier === '') {
-        context.store.setAdminToken(adminNFT);
-        await context.db.User.update({ _id: user._id }, { adminNFT });
-        console.log('There was no NFT identifier, so', adminNFT, 'is the new admin token')
-        res.status(200).json({
-          ok: true,
-          message: 'New NFT set!'
-        })
-        return
-      }
 
       if (ethAddres) {
+        const user = (await context.db.User.findOne({ publicAddress: ethAddres }).toObject());
+        const nftIdentifier = _.get(user, 'adminNFT');
+        const { adminNFT } = req.body
+
+        console.log('New Admin NFT', adminNFT)
+
+        if (!nftIdentifier) {
+          context.store.setAdminToken(adminNFT);
+          await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
+          console.log('There was no NFT identifier, so', adminNFT, 'is the new admin token')
+          res.status(200).json({
+            ok: true,
+            message: 'New NFT set!'
+          })
+          return
+        }
+
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':')
           console.log('Verifying user account has the admin token')
@@ -177,7 +174,7 @@ module.exports = context => {
               })
             } else {
               context.store.setAdminToken(adminNFT);
-              await context.db.User.update({ _id: user._id }, { adminNFT });
+              await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
               res.json({
                 ok: true,
                 message: 'New NFT set!'
@@ -189,7 +186,7 @@ module.exports = context => {
         }
       } else {
         res.sendStatus(400)
-      };
+      }
     } catch (err) {
       console.log('New NFT Admin Error:', err)
       res.json({
@@ -201,7 +198,7 @@ module.exports = context => {
 
   router.post('/authentication', async (req, res, next) => {
     const { publicAddress, signature, adminRights } = req.body;
-    const user = await context.db.User.findOne({ publicAddress });
+    const user = (await context.db.User.findOne({ publicAddress })).toObject();
 
     if (!user) {
       console.log(`User with publicAddress ${ publicAddress } is not found in database`);
