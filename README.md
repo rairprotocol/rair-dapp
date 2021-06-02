@@ -311,6 +311,38 @@ Since there is no CI/CD set up this is a manual process.
   > Usage;
   > const decryptNode = require(‘decrypt-node’);
 
+# New deployment methodologies with Woda
+
+UPDATE DEPENDANCIES
+
+apt update
+apt upgrade
+
+INSTALL GIT AND DOCKER
+
+apt-get install git
+apt-get install docker.io
+
+INSTALL MOST RECENT DOCKER-COMPOSE
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+CREATE CUSTOM VOLUME DIRECTORIES
+
+mkdir -p /var/dev && cd /var/dev
+
+BUILD REPO
+
+git clone https://github.com/rairtech/RAIR.git
+
+INSTALL WODA
+
+wget http://test.wo-da.de/EAMD.ucp/Components/tla/EAM/layer1/Thinglish/Once/latestServer/src/sh/once.sh && ./once.sh
+
+cd RAIR
+docker-compose up
+
 License
 ----
 
