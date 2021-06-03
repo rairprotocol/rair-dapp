@@ -109,7 +109,7 @@ module.exports = context => {
     // }
 
     if (ethAddres) {
-      const user = (await context.db.User.findOne({ publicAddress: ethAddres }).toObject());
+      const user = (await context.db.User.findOne({ publicAddress: ethAddres })).toObject();
       const nftIdentifier = _.get(user, 'adminNFT');
 
       if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
@@ -144,7 +144,7 @@ module.exports = context => {
       const ethAddres = req.metaAuth.recovered
 
       if (ethAddres) {
-        const user = (await context.db.User.findOne({ publicAddress: ethAddres }).toObject());
+        const user = (await context.db.User.findOne({ publicAddress: ethAddres })).toObject();
         const nftIdentifier = _.get(user, 'adminNFT');
         const { adminNFT } = req.body
 

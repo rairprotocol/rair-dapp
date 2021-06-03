@@ -4,7 +4,7 @@ const { nanoid } = require('nanoid');
 const { Schema } = mongoose;
 
 const User = new Schema({
-  adminNFT: { type: String, required: true },
+  adminNFT: { type: String, required: true, unique: true },
   email: { type: String, default: null },
   firstName: { type: String, default: null },
   lastName: { type: String, default: null },

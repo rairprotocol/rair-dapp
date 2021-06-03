@@ -39,7 +39,7 @@ const App = () => {
       if (!user) {
         user = await fetch('/api/users', {
           method: 'POST',
-          body: JSON.stringify({ publicAddress, adminNFT: '' }),
+          body: JSON.stringify({ publicAddress, adminNFT: 'temp' }),
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
