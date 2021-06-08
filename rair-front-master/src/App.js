@@ -103,7 +103,13 @@ const App = () => {
           await getToken();
         } else {
           // get address
-          const user = await fetch(`/api/auth/user_info?token=${currentToken}`)
+          const user = await fetch(`/api/auth/user_info`, {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'X-rair-token': currentToken
+            }
+          })
             .then(blob => blob.json());
 
           if (user.message === 'jwt expired') {
@@ -111,7 +117,13 @@ const App = () => {
             setAdminRights(false);
             await getToken();
             const updatedToken = localStorage.getItem('token');
-            const updatedUser = await fetch(`/api/auth/user_info?token=${ updatedToken }`)
+            const updatedUser = await fetch(`/api/auth/user_info`, {
+              method: 'GET',
+              headers: {
+                Accept: 'application/json',
+                'X-rair-token': updatedToken
+              }
+            })
               .then(blob => blob.json());
             setEthAddress(updatedUser.publicAddress);
             setAdminRights(updatedUser.adminRights);
@@ -129,7 +141,13 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     // Update the video list
-    fetch(`/api/media/list?token=${token}`)
+    fetch(`/api/media/list`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'X-rair-token': token
+      }
+    })
       .then(blob => blob.json())
       .then(res => {
         setVideos(res);
