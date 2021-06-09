@@ -28,11 +28,15 @@ services:
       - rair-local
   rairfront:
     container_name: 'rairfront'
-    build:
-      context: rair-front-master/
-      dockerfile: Dockerfile
+    image: woda-with-nodejs
     ports:
-      - 80:80
+      - 8080:8080
+      - 8443:8443
+      - 5001:5001
+      - 5002:5002
+    volumes:
+      - /var/dev/EAMD.ucp/Components/tla/EAM/layer1/Thinglish/Once/latestServer/src/sh/:/usr/local/sbin/
+      - /var/dev/:/var/dev/
     networks:
       - rair-local
   mongo:
