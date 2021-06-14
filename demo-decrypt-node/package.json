@@ -38,6 +38,7 @@
     "foreman": "^3.0.1",
     "ipfs-core": "^0.4.2",
     "ipfs-http-client": "^49.0.4",
+    "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
     "lowdb": "^1.0.0",

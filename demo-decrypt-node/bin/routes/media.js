@@ -9,7 +9,7 @@ const readdirp = require('readdirp');
 const fetch = require('node-fetch');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
-const { JWTVerification } = require('../middleware');
+const { JWTVerification, validation } = require('../middleware');
 
 const rareify = async (fsRoot) => {
   // Generate a key
@@ -168,7 +168,7 @@ module.exports = context => {
     res.json(preparedData);
   })
 
-  router.post('/upload', upload.single('video'), async (req, res) => {
+  router.post('/upload', upload.single('video'), validation('uploadVideo'), async (req, res) => {
     const { title, description, token, author } = req.body
     console.log('Processing: ', req.file.originalname)
     if (req.file) {

@@ -5,7 +5,7 @@ const { accountTokenBalance } = require('../integrations/eth');
 const _ = require('lodash');
 const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
-const { JWTVerification } = require('../middleware');
+const { JWTVerification, validation } = require('../middleware');
 const { nanoid } = require('nanoid');
 
 module.exports = context => {
@@ -139,7 +139,7 @@ module.exports = context => {
   })
 
   // Verify the user holds the current Admin token and then replace it with a new token
-  router.post('/new_admin/:MetaMessage/:MetaSignature/', metaAuth, async (req, res, next) => {
+  router.post('/new_admin/:MetaMessage/:MetaSignature/', validation('newAdmin'), metaAuth, async (req, res, next) => {
     try {
       const ethAddres = req.metaAuth.recovered
 
@@ -196,7 +196,7 @@ module.exports = context => {
     }
   })
 
-  router.post('/authentication', async (req, res, next) => {
+  router.post('/authentication', validation('authentication'), async (req, res, next) => {
     const { publicAddress, signature, adminRights } = req.body;
     const user = (await context.db.User.findOne({ publicAddress })).toObject();
 

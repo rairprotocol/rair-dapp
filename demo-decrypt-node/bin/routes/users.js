@@ -1,9 +1,10 @@
-const express = require('express')
+const express = require('express');
+const { validation } = require('../middleware');
 
 module.exports = context => {
   const router = express.Router()
 
-  router.post('/', async (req, res, next) => {
+  router.post('/', validation('createUser'), async (req, res, next) => {
     try {
       const { publicAddress, adminNFT } = req.body;
       let user = await context.db.User.create({ publicAddress, adminNFT });
