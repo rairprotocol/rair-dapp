@@ -10,11 +10,11 @@ module.exports = Joi.object({
     .max(300)
     .required(),
   token: Joi.string()
-    .min(1)
+    .min(3)
     .max(150)
     .required(),
   author: Joi.string()
-    .min(1)
+    .min(3)
     .max(30)
     .required(),
   category: Joi.any()

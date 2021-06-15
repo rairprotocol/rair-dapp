@@ -87,7 +87,7 @@ async function main () {
   app.use(express.static(path.join(__dirname, 'public')))
   app.use(function (error, req, res, next) {
     console.error(error)
-    res.status(500).json({ error: true, message: error.message })
+    res.status(500).json({ success: false, error: true, message: error.message })
   })
 
   app.listen(port, () => {

@@ -9,18 +9,18 @@ module.exports = context => {
       const { publicAddress, adminNFT } = req.body;
       let user = await context.db.User.create({ publicAddress, adminNFT });
 
-      res.json(user);
+      res.json({ success: true, user });
     } catch (e) {
       next(e);
     }
   });
 
-  router.get('/:publicAddress', async (req, res, next) => {
+  router.get('/:publicAddress', validation('getUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress;
       const user = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
 
-      res.json(user);
+      res.json({ success: true, user });
     } catch (e) {
       next(e);
     }

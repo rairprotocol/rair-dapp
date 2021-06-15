@@ -9,7 +9,7 @@ const { JWTVerification, validation } = require('../middleware');
 const { nanoid } = require('nanoid');
 
 module.exports = context => {
-  const router = express.Router()
+  const router = express.Router();
   /**
    * @swagger
    *
@@ -28,9 +28,9 @@ module.exports = context => {
    *       200:
    *         description: Returns a challenge for the client to sign with the ethereum private key
    */
-  router.get('/get_challenge/:MetaAddress', metaAuth, function (req, res) {
-    res.send(req.metaAuth.challenge)
-  })
+  router.get('/get_challenge/:MetaAddress', validation('getChallenge', 'params'), metaAuth, function (req, res) {
+    res.send({ success: true, challenge: req.metaAuth.challenge });
+  });
 
   /**
    * @swagger
@@ -63,20 +63,20 @@ module.exports = context => {
    *       200:
    *         description: If the signer meets the requirments (signature valid, holds required token) returns a JWT which grants stream access.
    */
-  router.get('/get_token/:MetaMessage/:MetaSignature/:mediaId', metaAuth, async (req, res, next) => {
-    const ethAddres = req.metaAuth.recovered
-    const { mediaId } = req.params
+  router.get('/get_token/:MetaMessage/:MetaSignature/:mediaId', validation('getToken', 'params'), metaAuth, async (req, res, next) => {
+    const ethAddres = req.metaAuth.recovered;
+    const { mediaId } = req.params;
     try {
       const { nftIdentifier } = await context.db.File.find({ _id: mediaId });
       if (ethAddres) {
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
-          const [contractAddress, tokenId] = nftIdentifier.split(':')
-          console.log('verifying account has token', contractAddress, tokenId)
+          const [contractAddress, tokenId] = nftIdentifier.split(':');
+          console.log('verifying account has token', contractAddress, tokenId);
           try {
-            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId)
-            if (balance < 1) return next(new Error(`Account does not hold required token ${nftIdentifier}`))
+            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
+            if (balance < 1) return next(new Error(`Account does not hold required token ${ nftIdentifier }`));
           } catch (e) {
-            next(new Error('Could not verify account', e))
+            next(new Error('Could not verify account', e));
           }
         }
         jwt.sign(
@@ -84,21 +84,21 @@ module.exports = context => {
           process.env.JWT_SECRET,
           { expiresIn: '1d' },
           (err, token) => {
-            if (err) next(new Error('Could not create JWT'))
-            res.send(token)
-          })
+            if (err) next(new Error('Could not create JWT'));
+            res.send({ success: true, token });
+          });
       } else {
-        res.sendStatus(400)
-      };
+        res.sendStatus(400);
+      }
     } catch (err) {
-      console.log(err)
-      res.sendStatus(404)
+      console.log(err);
+      res.sendStatus(404);
     }
-  })
+  });
 
   // Verify with a Metamask challenge if the user holds the current Administrator token
-  router.get('/admin/:MetaMessage/:MetaSignature/', metaAuth, async (req, res, next) => {
-    const ethAddres = req.metaAuth.recovered
+  router.get('/admin/:MetaMessage/:MetaSignature/', validation('admin', 'params'), metaAuth, async (req, res, next) => {
+    const ethAddres = req.metaAuth.recovered;
 
     // if (nftIdentifier === '') {
     //   console.log("There's no admin token, Admin panel will be visible for anyone!")
@@ -113,88 +113,88 @@ module.exports = context => {
       const nftIdentifier = _.get(user, 'adminNFT');
 
       if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
-        const [contractAddress, tokenId] = nftIdentifier.split(':')
-        console.log('Verifying user account has the admin token')
+        const [contractAddress, tokenId] = nftIdentifier.split(':');
+        console.log('Verifying user account has the admin token');
 
         try {
-          const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId)
+          const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
           if (balance < 1) {
             res.json({
-              ok: false,
-              message: "You don't hold the current admin token"
-            })
+              success: false,
+              message: 'You don\'t hold the current admin token'
+            });
           } else {
             res.json({
-              ok: true,
+              success: true,
               message: 'Admin token holder'
-            })
+            });
           }
         } catch (e) {
-          next(new Error('Could not verify account', e))
+          next(new Error('Could not verify account', e));
         }
       }
     } else {
-      res.sendStatus(400)
+      res.sendStatus(400);
     }
-  })
+  });
 
   // Verify the user holds the current Admin token and then replace it with a new token
-  router.post('/new_admin/:MetaMessage/:MetaSignature/', validation('newAdmin'), metaAuth, async (req, res, next) => {
+  router.post('/new_admin/:MetaMessage/:MetaSignature/', validation('newAdminParams', 'params'), validation('newAdmin'), metaAuth, async (req, res, next) => {
     try {
-      const ethAddres = req.metaAuth.recovered
+      const ethAddres = req.metaAuth.recovered;
 
       if (ethAddres) {
         const user = (await context.db.User.findOne({ publicAddress: ethAddres })).toObject();
         const nftIdentifier = _.get(user, 'adminNFT');
-        const { adminNFT } = req.body
+        const { adminNFT } = req.body;
 
-        console.log('New Admin NFT', adminNFT)
+        console.log('New Admin NFT', adminNFT);
 
         if (!nftIdentifier) {
           context.store.setAdminToken(adminNFT);
           await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
-          console.log('There was no NFT identifier, so', adminNFT, 'is the new admin token')
+          console.log('There was no NFT identifier, so', adminNFT, 'is the new admin token');
           res.status(200).json({
-            ok: true,
+            success: true,
             message: 'New NFT set!'
-          })
-          return
+          });
+          return;
         }
 
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
-          const [contractAddress, tokenId] = nftIdentifier.split(':')
-          console.log('Verifying user account has the admin token')
+          const [contractAddress, tokenId] = nftIdentifier.split(':');
+          console.log('Verifying user account has the admin token');
 
           try {
-            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId)
+            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
             if (balance < 1) {
               res.json({
-                ok: false,
-                message: "You don't hold the current admin token"
-              })
+                success: false,
+                message: 'You don\'t hold the current admin token'
+              });
             } else {
               context.store.setAdminToken(adminNFT);
               await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
               res.json({
-                ok: true,
+                success: true,
                 message: 'New NFT set!'
-              })
+              });
             }
           } catch (e) {
-            next(new Error('Could not verify account', e))
+            next(new Error('Could not verify account', e));
           }
         }
       } else {
-        res.sendStatus(400)
+        res.sendStatus(400);
       }
     } catch (err) {
-      console.log('New NFT Admin Error:', err)
+      console.log('New NFT Admin Error:', err);
       res.json({
-        ok: false,
+        success: false,
         message: 'There was an error validating your request'
-      })
+      });
     }
-  })
+  });
 
   router.post('/authentication', validation('authentication'), async (req, res, next) => {
     const { publicAddress, signature, adminRights } = req.body;
@@ -203,11 +203,12 @@ module.exports = context => {
     if (!user) {
       console.log(`User with publicAddress ${ publicAddress } is not found in database`);
       return res.status(404).send({
-        error: `User with publicAddress ${publicAddress} is not found in database`,
+        success: false,
+        error: `User with publicAddress ${ publicAddress } is not found in database`,
       });
     }
 
-    const msg = `Sign in for RAIR by nonce: ${user.nonce}`;
+    const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
 
     // get the address from signature
     const nonceBufferHex = bufferToHex(Buffer.from(msg, 'utf8'));
@@ -219,6 +220,7 @@ module.exports = context => {
     if (address !== publicAddress) {
       console.log('Signature verification failed');
       return res.status(401).send({
+        success: false,
         error: 'Signature verification failed',
       });
     }
@@ -233,11 +235,14 @@ module.exports = context => {
       process.env.JWT_SECRET,
       { expiresIn: '1d' },
       (err, token) => {
-        if (err) next(new Error('Could not create JWT'))
-        res.send(token)
-      })
+        if (err) next(new Error('Could not create JWT'));
+        res.send({ success: true, token });
+      });
   });
 
-  router.get('/user_info', JWTVerification(context), async (req, res, next) => res.send(req.user));
-  return router
-}
+  router.get('/user_info', JWTVerification(context), async (req, res, next) => res.send({
+    success: true,
+    user: req.user
+  }));
+  return router;
+};
