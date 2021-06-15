@@ -9,23 +9,23 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh './jenkins/build.sh'
+        sh 'docker build -t rairtechinc/rairservernode:test.latest'
       }
     }
     stage('Login') {
       steps {
-        sh './jenkins/login.sh'
+        sh 'echo #DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
       }
     }
     stage('Push') {
       steps {
-        sh './jenkins/push.sh'
+        sh 'docker push rairtechinc/rairservernode:test.latest'
       }
     }
   }
   post {
     always {
-      sh './jenkins/logout.sh'
+      sh 'docker logout'
     }
   }
 }
