@@ -9,8 +9,9 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'cd demo-decrypt-node'
+        dir("${env.WORKSPACE}/demo-decrypt-node"){
         sh 'docker build -f -t rairtechinc/rairservernode:test.latest'
+        }
       }
     }
     stage('Login') {
