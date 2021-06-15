@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker build -f ./demo-decrypt-node -t rairtechinc/rairservernode:test.latest'
+        sh 'docker build -t rairtechinc/rairservernode:test.latest'
       }
     }
     stage('Login') {
