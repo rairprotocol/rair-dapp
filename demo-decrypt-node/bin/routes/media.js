@@ -13,63 +13,63 @@ const { JWTVerification, validation } = require('../middleware');
 
 const rareify = async (fsRoot) => {
   // Generate a key
-  const key = crypto.generateKeySync('aes', { length: 128 })
+  const key = crypto.generateKeySync('aes', { length: 128 });
 
-  fs.writeFileSync(fsRoot + '/.key', key.export())
+  fs.writeFileSync(fsRoot + '/.key', key.export());
 
-  const promiseList = []
+  const promiseList = [];
 
-  console.log('Rareifying ', fsRoot)
+  console.log('Rareifying ', fsRoot);
 
   // Encrypting .ts files
   for await (const entry of readdirp(fsRoot)) {
-    const { fullPath, basename } = entry
+    const { fullPath, basename } = entry;
     if (path.extname(basename) === '.ts') {
       const promise = new Promise((resolve, reject) => {
-        const encryptedPath = fullPath + '.encrypted'
+        const encryptedPath = fullPath + '.encrypted';
         // console.log('encrypting', fullPath)
         try {
-          const iv = intToByteArray(parseInt(basename.match(/([0-9]+).ts/)[1]))
-          const encrypt = crypto.createCipheriv('aes-128-cbc', key, iv)
-          const source = fs.createReadStream(fullPath)
-          const dest = fs.createWriteStream(encryptedPath)
+          const iv = intToByteArray(parseInt(basename.match(/([0-9]+).ts/)[1]));
+          const encrypt = crypto.createCipheriv('aes-128-cbc', key, iv);
+          const source = fs.createReadStream(fullPath);
+          const dest = fs.createWriteStream(encryptedPath);
           source.pipe(encrypt).pipe(dest).on('finish', () => {
             // overwrite the unencrypted file so we don't have to modify the manifests
-            fs.renameSync(encryptedPath, fullPath)
-            resolve(true)
-            console.log('finished encrypting', entry.path)
-          })
+            fs.renameSync(encryptedPath, fullPath);
+            resolve(true);
+            console.log('finished encrypting', entry.path);
+          });
         } catch (e) {
-          console.log('Could not encrypt', fullPath, e)
-          reject(e)
+          console.log('Could not encrypt', fullPath, e);
+          reject(e);
         }
-      })
-      promiseList.push(promise)
+      });
+      promiseList.push(promise);
     }
   }
-  console.log('Done scheduling encryptions,', promiseList.length, 'promises for', readdirp(fsRoot).length, 'files')
+  console.log('Done scheduling encryptions,', promiseList.length, 'promises for', readdirp(fsRoot).length, 'files');
   return await Promise.all(promiseList)
     .then(_ => {
-      console.log('RAIR-ification successful! The root directory is ready to be uploaded to IPFS.')
-      return key.export()
-    })
-}
+      console.log('RAIR-ification successful! The root directory is ready to be uploaded to IPFS.');
+      return key.export();
+    });
+};
 
 /**
  * intToByteArray Convert an integer to a 16 byte Uint8Array (little endian)
  */
 function intToByteArray(num) {
-  var byteArray = new Uint8Array(16)
+  var byteArray = new Uint8Array(16);
   for (var index = 0; index < byteArray.length; index++) {
-    var byte = num & 0xff
-    byteArray[index] = byte
-    num = (num - byte) / 256
+    var byte = num & 0xff;
+    byteArray[index] = byte;
+    num = (num - byte) / 256;
   }
-  return byteArray
+  return byteArray;
 }
 
 module.exports = context => {
-  const router = express.Router()
+  const router = express.Router();
 
   /**
    * @swagger
@@ -98,7 +98,7 @@ module.exports = context => {
    *       200:
    *         description: Returns if added successfully
    */
-  router.post('/add/:mediaId', async (req, res, next) => {
+  router.post('/add/:mediaId', validation('addMedia', 'params'), async (req, res, next) => {
     const key = req.body.length > 0 ? req.body : undefined;
     const mediaId = req.params.mediaId;
 
@@ -132,8 +132,8 @@ module.exports = context => {
    *       200:
    *         description: Returns if media successfully found and deleted
    */
-  router.delete('/remove/:mediaId', async (req, res) => {
-    var mediaId = req.params.mediaId;
+  router.delete('/remove/:mediaId', validation('removeMedia', 'params'), async (req, res) => {
+    const mediaId = req.params.mediaId;
     await context.store.removeMedia(mediaId);
     await context.db.File.deleteOne({ _id: mediaId });
     try {
@@ -160,63 +160,63 @@ module.exports = context => {
    */
   router.get('/list', async (req, res) => {
     const data = await context.db.File.find();
-    const preparedData = _.reduce(data, (res, value) => {
+    const list = _.reduce(data, (res, value) => {
       res[value._id] = value;
       return res;
     }, {});
 
-    res.json(preparedData);
-  })
+    res.json({ success: true, list });
+  });
 
   router.post('/upload', upload.single('video'), validation('uploadVideo'), async (req, res) => {
-    const { title, description, token, author } = req.body
-    console.log('Processing: ', req.file.originalname)
+    const { title, description, token, author } = req.body;
+    console.log('Processing: ', req.file.originalname);
     if (req.file) {
-      let command = 'pwd && mkdir ' + req.file.destination + 'stream' + req.file.filename + '/'
+      let command = 'pwd && mkdir ' + req.file.destination + 'stream' + req.file.filename + '/';
       exec(command, (error, stdout, stderr) => {
         if (error) {
-          console.log(error)
+          console.log(error);
         }
-      })
-      console.log(req.file.originalname, 'generating thumbnails')
-      command = 'ffmpeg -ss 3 -i ' + req.file.path + ' -vf "select=gt(scene,0.5)" -vf "scale=144:-1" -vsync vfr -frames:v 1 ' + req.file.destination + 'Thumbnails/' + req.file.filename + '.png && ffmpeg -i ' + req.file.path + ' -vf  "scale=144:-1" -ss 00:10 -t 00:03 ' + req.file.destination + 'Thumbnails/' + req.file.filename + '.gif'
+      });
+      console.log(req.file.originalname, 'generating thumbnails');
+      command = 'ffmpeg -ss 3 -i ' + req.file.path + ' -vf "select=gt(scene,0.5)" -vf "scale=144:-1" -vsync vfr -frames:v 1 ' + req.file.destination + 'Thumbnails/' + req.file.filename + '.png && ffmpeg -i ' + req.file.path + ' -vf  "scale=144:-1" -ss 00:10 -t 00:03 ' + req.file.destination + 'Thumbnails/' + req.file.filename + '.gif';
       exec(command, (error, stdout, stderr) => {
         if (error) {
-          console.log(req.file.originalname, error)
+          console.log(req.file.originalname, error);
         }
-        res.json({ ok: true, result: req.file.filename })
-        command = 'ffmpeg -i ' + req.file.path + ' -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ' + req.file.destination + 'stream' + req.file.filename + '/stream.m3u8'
-        console.log(req.file.originalname, 'converting to stream')
+        res.json({ success: true, result: req.file.filename });
+        command = 'ffmpeg -i ' + req.file.path + ' -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ' + req.file.destination + 'stream' + req.file.filename + '/stream.m3u8';
+        console.log(req.file.originalname, 'converting to stream');
         exec(command, { maxBuffer: 1024 * 1024 * 20 }, async (error, stdout, stderr) => {
           if (error) {
-            console.log(req.file.originalname, error)
+            console.log(req.file.originalname, error);
           }
-          const exportedKey = await rareify(req.file.destination + 'stream' + req.file.filename)
-          console.log('DONE')
+          const exportedKey = await rareify(req.file.destination + 'stream' + req.file.filename);
+          console.log('DONE');
           const rairJson = {
             name: title,
             mainManifest: 'stream.m3u8',
             nftIdentifier: token,
             encryption: 'aes-128-cbc'
-          }
+          };
           if (description) {
-            rairJson.description = description
+            rairJson.description = description;
           }
           if (author) {
-            rairJson.author = author
+            rairJson.author = author;
           }
-          fs.writeFileSync(req.file.destination + 'stream' + req.file.filename + '/rair.json', JSON.stringify(rairJson, null, 4))
+          fs.writeFileSync(req.file.destination + 'stream' + req.file.filename + '/rair.json', JSON.stringify(rairJson, null, 4));
 
-          command = 'rm -f ' + req.file.path
+          command = 'rm -f ' + req.file.path;
           exec(command, (error, stdout, stderr) => {
             if (error) {
-              console.log(req.file.originalname, error)
+              console.log(req.file.originalname, error);
             }
-            console.log(req.file.originalname, 'raw deleted')
-          })
-          console.log(req.file.originalname, 'pinning to ipfs')
+            console.log(req.file.originalname, 'raw deleted');
+          });
+          console.log(req.file.originalname, 'pinning to ipfs');
 
-          const c = await addFolder(`${req.file.destination}stream${req.file.filename}/`, `stream${req.file.filename}`/*, { pin: true, quieter: true }*/);
+          const c = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`/*, { pin: true, quieter: true }*/);
 
           const meta = {
             mainManifest: 'stream.m3u8',
@@ -224,12 +224,12 @@ module.exports = context => {
             encryption: 'aes-128-cbc',
             name: title,
             thumbnail: req.file.filename
-          }
+          };
           if (author) {
-            meta.author = author
+            meta.author = author;
           }
           if (description) {
-            meta.description = description
+            meta.description = description;
           }
           const ipfsCid = _.chain(c.cid)
             .split('(')
@@ -241,7 +241,7 @@ module.exports = context => {
           await context.store.addMedia(ipfsCid, {
             key: exportedKey, ...meta,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
-          })
+          });
 
           await context.db.File.create({
             _id: ipfsCid,
@@ -249,7 +249,7 @@ module.exports = context => {
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
           });
 
-          context.hls = StartHLS()
+          context.hls = StartHLS();
           fetch('https://api.pinata.cloud/pinning/pinByHash', {
             method: 'POST',
             body: JSON.stringify({ hashToPin: ipfsCid }),
@@ -262,15 +262,15 @@ module.exports = context => {
           })
             .then(blob => blob.json())
             .then(response => {
-              console.log('PINATA RESPONSE', response)
+              console.log('PINATA RESPONSE', response);
             })
             .catch(err => {
-              console.log('PINATA ERROR', err)
-            })
-        })
-      })
+              console.log('PINATA ERROR', err);
+            });
+        });
+      });
     }
-  })
+  });
 
-  return router
-}
+  return router;
+};

@@ -29,7 +29,7 @@ module.exports = context => {
    *         description: Returns a challenge for the client to sign with the ethereum private key
    */
   router.get('/get_challenge/:MetaAddress', validation('getChallenge', 'params'), metaAuth, function (req, res) {
-    res.send({ success: true, challenge: req.metaAuth.challenge });
+    res.send({ success: true, response: req.metaAuth.challenge });
   });
 
   /**

@@ -32,12 +32,14 @@ const App = () => {
 
       if (publicAddress) {
         // find user
-        user = await fetch(`/api/users/${ publicAddress }`)
+        const result = await fetch(`/api/users/${ publicAddress }`)
           .then(blob => blob.json());
+
+        user = result.user;
       }
 
       if (!user) {
-        user = await fetch('/api/users', {
+        const result = await fetch('/api/users', {
           method: 'POST',
           body: JSON.stringify({ publicAddress, adminNFT: 'temp' }),
           headers: {
@@ -46,21 +48,23 @@ const App = () => {
           }
         })
           .then(blob => blob.json());
+
+        user = result.user;
       }
 
       if (!adminRights && publicAddress !== undefined) {
         try {
-          const response = await fetch(`/api/auth/get_challenge/${ publicAddress }`)
+          const { response } = await fetch(`/api/auth/get_challenge/${ publicAddress }`)
             .then(blob => blob.json());
           const ethResponse = await window.ethereum.request({
             method: 'eth_signTypedData_v4',
-            params: [publicAddress, JSON.stringify(response)],
+            params: [publicAddress, response],
             from: publicAddress
           });
-          const adminResponse = await fetch(`/api/auth/admin/${ response.message.challenge }/${ ethResponse }/`)
+          const adminResponse = await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)
             .then(blob => blob.json());
-          setAdminRights(adminResponse.ok);
-          isAdmin = adminResponse.ok;
+          setAdminRights(adminResponse.success);
+          isAdmin = adminResponse.success;
         } catch (err) {
           console.log('Error', err)
           setAdminRights(false);
@@ -73,14 +77,15 @@ const App = () => {
       // get signature
       const signature = await web3.eth.personal.sign(msg, publicAddress, '');
 
-      const token = await fetch('/api/auth/authentication', {
+      const { token } = await fetch('/api/auth/authentication', {
         method: 'POST',
         body: JSON.stringify({ publicAddress, signature, adminRights: isAdmin }),
         headers: {
+          Accept: 'application/json',
           'Content-Type': 'application/json'
         }
       })
-        .then(blob => blob.text());
+        .then(blob => blob.json());
 
       localStorage.setItem('token', token);
       setEthAddress(publicAddress);
@@ -103,7 +108,7 @@ const App = () => {
           await getToken();
         } else {
           // get address
-          const user = await fetch(`/api/auth/user_info`, {
+          const { user } = await fetch(`/api/auth/user_info`, {
             method: 'GET',
             headers: {
               Accept: 'application/json',
@@ -117,7 +122,7 @@ const App = () => {
             setAdminRights(false);
             await getToken();
             const updatedToken = localStorage.getItem('token');
-            const updatedUser = await fetch(`/api/auth/user_info`, {
+            const { user } = await fetch(`/api/auth/user_info`, {
               method: 'GET',
               headers: {
                 Accept: 'application/json',
@@ -125,10 +130,10 @@ const App = () => {
               }
             })
               .then(blob => blob.json());
-            setEthAddress(updatedUser.publicAddress);
-            setAdminRights(updatedUser.adminRights);
+            setEthAddress(user.publicAddress);
+            setAdminRights(user.adminRights);
 
-            return updatedUser;
+            return user;
           }
 
           setEthAddress(user.publicAddress);
@@ -150,7 +155,7 @@ const App = () => {
     })
       .then(blob => blob.json())
       .then(res => {
-        setVideos(res);
+        setVideos(res.list);
       })
   }, [refresh, ethAddress])
 
