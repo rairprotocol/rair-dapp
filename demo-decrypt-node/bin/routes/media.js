@@ -245,7 +245,7 @@ module.exports = context => {
 
           await context.db.File.create({
             _id: ipfsCid,
-            key: exportedKey, ...meta,
+            key: exportedKey.toJSON(), ...meta,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
           });
 
