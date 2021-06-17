@@ -168,9 +168,11 @@ module.exports = context => {
     res.json({ success: true, list });
   });
 
-  router.post('/upload', upload.single('video'), validation('uploadVideo'), async (req, res) => {
+  router.post('/upload', upload.single('video'), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
     const { title, description, token, author } = req.body;
+
     console.log('Processing: ', req.file.originalname);
+
     if (req.file) {
       let command = 'pwd && mkdir ' + req.file.destination + 'stream' + req.file.filename + '/';
       exec(command, (error, stdout, stderr) => {

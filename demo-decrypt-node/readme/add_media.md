@@ -45,6 +45,7 @@ Returns if added successfully
 
 ```json
 {
+  "success": false,
   "error": true,
   "message": "Cannot retrieve rair.json manifest for [mediaId]. Check the CID is correct and is a folder containing a manifest. [Original error]"
 }

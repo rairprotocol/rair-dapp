@@ -13,9 +13,16 @@ module.exports = Joi.object({
     .min(3)
     .max(150)
     .required(),
-  author: Joi.string()
-    .min(3)
-    .max(30)
+  category: Joi.string()
     .required(),
-  category: Joi.any()
+  price: Joi.number()
+    .required(),
+  copies: Joi.number()
+    .required(),
+  mint: Joi.string()
+    .min(3)
+    .max(150)
+    .required(),
+  royalty: Joi.number()
+    .required()
 });

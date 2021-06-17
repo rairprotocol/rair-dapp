@@ -43,7 +43,7 @@ const AddMedia = ({address}) => {
         <label htmlFor="media_id">File:</label>
         <input id='media_id' type="file" onChange={(e) => setVideo(e.target.files ? e.target.files[0] : undefined)} />
       </div>
-      
+
       <button type='button' disabled={uploading} className='btn py-1 col-8 btn-primary' onClick={e => {
         if (uploading)
         {
@@ -53,9 +53,9 @@ const AddMedia = ({address}) => {
         {
           setVPV(URL.createObjectURL(video))
           let formData = new FormData();
-    
+
           formData.append('video', video)
-          formData.append('author', author)
+          // formData.append('author', author)
           formData.append('title', title)
           formData.append('description', description)
           formData.append('token', token)
@@ -124,7 +124,7 @@ const AddMedia = ({address}) => {
                             console.error(e);
                             Swal.fire('Error',e,'error');
                           })
-                      })      
+                      })
                 })
         }
     }}> Set new NFT </button>

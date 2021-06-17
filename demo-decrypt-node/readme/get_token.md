@@ -34,12 +34,15 @@ If the signer meets the requirments (signature valid, holds required token) retu
 
 **Code** : `200 OK`
 
-**Content-Type**: `text/html`
+**Content-Type**: `application/json`
 
 **Content example**
 
 ```json
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJldGhfYWRkciI6IjB4Njc5ZjQ3ZGI1ZDBlNWZmNzJkMzIxNmE1NGVkMWZiZTAzNDY0YTU3OSIsIm1lZGlhX2lkIjoiUW1kS2RBWk5WSG4xcGlCR1VFWFREUjJDU1drYzNyRXQzQWdGMzk5NEJzRXZ0cCIsImlhdCI6MTYxNzg3OTM4OCwiZXhwIjoxNjE3OTY1Nzg4fQ.9V9sGPcQCavJYGUP7Gm5WhgSln-4Xz4MwV5ocXNKDyc
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJldGhfYWRkciI6IjB4Njc5ZjQ3ZGI1ZDBlNWZmNzJkMzIxNmE1NGVkMWZiZTAzNDY0YTU3OSIsIm1lZGlhX2lkIjoiUW1kS2RBWk5WSG4xcGlCR1VFWFREUjJDU1drYzNyRXQzQWdGMzk5NEJzRXZ0cCIsImlhdCI6MTYxNzg3OTM4OCwiZXhwIjoxNjE3OTY1Nzg4fQ.9V9sGPcQCavJYGUP7Gm5WhgSln-4Xz4MwV5ocXNKDyc"
+}
 ```
 
 ## Error Response
@@ -56,6 +59,7 @@ OR
 
 ```json
 {
+  "success": true,
   "error": true,
   "message": "Account does not hold required token [nftIdentifier]"
 }
@@ -69,6 +73,7 @@ OR
 
 ```json
 {
+  "success": true,
   "error": true,
   "message": "Could not verify account"
 }
@@ -82,6 +87,7 @@ OR
 
 ```json
 {
+  "success": true,
   "error": true,
   "message": "Could not create JWT"
 }
@@ -95,6 +101,7 @@ OR
 
 ```json
 {
+  "success": true,
   "error": true,
   "message": "Invalid Ethereum address passed to eth-auth"
 }

@@ -10,6 +10,7 @@ const newAdminParams = require('./newAdminParams');
 const removeMedia = require('./removeMedia');
 const stream = require('./stream');
 const uploadVideo = require('./uploadVideo');
+const uploadVideoFile = require('./uploadVideoFile');
 
 module.exports = {
   admin,
@@ -23,5 +24,6 @@ module.exports = {
   newAdminParams,
   removeMedia,
   stream,
-  uploadVideo
+  uploadVideo,
+  uploadVideoFile
 };
