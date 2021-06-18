@@ -10,7 +10,7 @@ Get User information by the token
 
 ```json
 {
-  "token": {
+  "x-rair-token": {
     "required": true,
     "content": {
       "type": "string"
