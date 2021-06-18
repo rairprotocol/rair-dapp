@@ -49,7 +49,7 @@ Returns if added successfully
 
 ```json
 {
-  "ok": true,
+  "success": true,
   "result": "[file name]"
 }
 ```

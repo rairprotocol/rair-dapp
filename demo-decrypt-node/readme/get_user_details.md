@@ -31,12 +31,15 @@ Returns if sent valid token
 
 ```json
 {
-  "creationDate": "2021-05-18T14:20:17.957Z",
-  "email": null,
-  "firstName": null,
-  "lastName": null,
-  "publicAddress": "0x679f47db5d0e5ff72d3216a54ed1fbe03465b579",
-  "_id": "60a3cd21abe49f001d168767"
+  "success": true,
+  "user": {
+    "creationDate": "2021-05-18T14:20:17.957Z",
+    "email": null,
+    "firstName": null,
+    "lastName": null,
+    "publicAddress": "0x679f47db5d0e5ff72d3216a54ed1fbe03465b579",
+    "_id": "60a3cd21abe49f001d168767"
+  }
 }
 ```
 

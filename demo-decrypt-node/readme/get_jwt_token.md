@@ -36,7 +36,10 @@ Returns if verification passed successfully
 **Content example**
 
 ```json
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJldGhfYWRkciI6IjB4Njc5ZjQ3ZGI1ZDBlNWZmNzJkMzIxNmE1NGVkMWZiZTAzNDY0YTU3OSIsImlhdCI6MTYyMjExNDQ4MiwiZXhwIjoxNjIyMjAwODgyfQ.B43GmgXyBShHTa1qLK5Ozo_7UcHzZp4HlfFISzhp24I
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJldGhfYWRkciI6IjB4Njc5ZjQ3ZGI1ZDBlNWZmNzJkMzIxNmE1NGVkMWZiZTAzNDY0YTU3OSIsImlhdCI6MTYyMjExNDQ4MiwiZXhwIjoxNjIyMjAwODgyfQ.B43GmgXyBShHTa1qLK5Ozo_7UcHzZp4HlfFISzhp24I"
+}
 ```
 
 ## Error Response

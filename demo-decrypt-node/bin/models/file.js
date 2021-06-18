@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const File = new Schema({
   _id: { type: String, required: true },
-  key: { type: Buffer, required: true },
+  key: { type: Object, required: true },
   mainManifest: { type: String, required: true },
   nftIdentifier: { type: String, required: true },
   encryption: { type: String, required: true },
