@@ -45,6 +45,7 @@ services:
     restart: always
     volumes:
       - ./demo-decrypt-node/dev/db-data:/data/db
+      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
