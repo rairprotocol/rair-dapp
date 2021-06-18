@@ -6,7 +6,7 @@ Get User information by the token
 
 **Method** : `GET`
 
-**Query parameters:**
+**Headers:**
 
 ```json
 {
@@ -37,7 +37,7 @@ Returns if sent valid token
     "email": null,
     "firstName": null,
     "lastName": null,
-    "publicAddress": "0x679f47db5d0e5ff72d3216a54ed1fbe03465b579",
+    "publicAddress": "some public address",
     "_id": "60a3cd21abe49f001d168767"
   }
 }

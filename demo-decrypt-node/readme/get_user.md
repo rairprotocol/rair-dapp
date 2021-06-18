@@ -38,7 +38,7 @@ Returns founded user
     "firstName": null,
     "lastName": null,
     "key": "zw5Ne122KxV2CSr_4HYKu",
-    "publicAddress": "0x679f47db5d0e5ff72d3216a54ed1fbe03465b579",
+    "publicAddress": "some public address",
     "_id": "60a3cd21abe49f001d168767"
   }
 }
