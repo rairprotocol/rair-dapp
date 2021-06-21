@@ -3,10 +3,9 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const File = new Schema({
-  _id: { type: String, required: true },
   title: { type: String, required: true },
   blockchain: { type: String, required: true },
-  contractAddress: { type: String, required: true },
+  contractAddress: { type: String, required: true, unique: true },
   copies: { type: Number, required: true },
   royalty: { type: Number, required: true },
   user: { type: String, required: true },
