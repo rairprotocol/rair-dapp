@@ -6,6 +6,19 @@ Upload the media
 
 **Method** : `POST`
 
+**Headers:**
+
+```json
+{
+  "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
 **Request body:**
 
 ```json

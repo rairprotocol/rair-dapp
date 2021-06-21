@@ -9,20 +9,8 @@ module.exports = Joi.object({
     .min(1)
     .max(300)
     .required(),
-  token: Joi.string()
+  contractAddress: Joi.string()
     .min(3)
     .max(150)
-    .required(),
-  category: Joi.string()
-    .required(),
-  price: Joi.number()
-    .required(),
-  copies: Joi.number()
-    .required(),
-  mint: Joi.string()
-    .min(3)
-    .max(150)
-    .required(),
-  royalty: Joi.number()
     .required()
 });

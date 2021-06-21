@@ -67,14 +67,14 @@ module.exports = context => {
     const ethAddres = req.metaAuth.recovered;
     const { mediaId } = req.params;
     try {
-      const { nftIdentifier } = await context.db.File.find({ _id: mediaId });
+      const { author } = await context.db.File.find({ _id: mediaId });
       if (ethAddres) {
-        if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
-          const [contractAddress, tokenId] = nftIdentifier.split(':');
+        if (typeof author === 'string' && author.length > 0) { // verify the account holds the required NFT!
+          const [contractAddress, tokenId] = author.split(':');
           console.log('verifying account has token', contractAddress, tokenId);
           try {
             const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
-            if (balance < 1) return next(new Error(`Account does not hold required token ${ nftIdentifier }`));
+            if (balance < 1) return next(new Error(`Account does not hold required token ${ author }`));
           } catch (e) {
             next(new Error('Could not verify account', e));
           }

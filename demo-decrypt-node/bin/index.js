@@ -74,8 +74,9 @@ async function main () {
       }
     },
     db: {
-      User: _mongoose.model('User', require('./models/user'), 'User'),
-      File: _mongoose.model('File', require('./models/file'), 'File')
+      Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
+      File: _mongoose.model('File', require('./models/file'), 'File'),
+      User: _mongoose.model('User', require('./models/user'), 'User')
     }
   }
 

@@ -16,6 +16,8 @@ const AddMedia = ({address}) => {
     const [adminNFT, setAdminNFT] = useState('');
     const [, setVPV] = useState();
 
+    const currentToken = localStorage.getItem('token');
+
     return <>
     <h1> Add Media </h1>
     <div className='text-center mx-auto col-12'>
@@ -49,20 +51,22 @@ const AddMedia = ({address}) => {
         {
           return
         }
-        if (video && title && token)
+        if (video && title && currentToken)
         {
           setVPV(URL.createObjectURL(video))
           let formData = new FormData();
 
           formData.append('video', video)
-          // formData.append('author', author)
           formData.append('title', title)
           formData.append('description', description)
-          formData.append('token', token)
-          formData.append('category', category)
+          formData.append('contractAddress', 'temp value of contract address')
           setUploading(true);
           fetch('/api/media/upload', {
             method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'X-rair-token': currentToken
+            },
             body: formData
           })
           .then(blob => blob.json())
