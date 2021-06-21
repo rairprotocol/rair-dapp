@@ -7,6 +7,9 @@ RUN apt-get -y install \
     libusb-1.0.0-dev \
     libudev-dev
 
+#version management
+COPY VERSION /
+
 #install rairnode
 WORKDIR /usr/local/src
 COPY . /usr/local/src
