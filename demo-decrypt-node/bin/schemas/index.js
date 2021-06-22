@@ -1,6 +1,7 @@
 const admin = require('./admin');
 const addMedia = require('./addMedia');
 const authentication = require('./authentication');
+const createContract = require('./createContract');
 const createUser = require('./createUser');
 const getChallenge = require('./getChallenge');
 const getToken = require('./getToken');
@@ -11,11 +12,14 @@ const removeMedia = require('./removeMedia');
 const stream = require('./stream');
 const uploadVideo = require('./uploadVideo');
 const uploadVideoFile = require('./uploadVideoFile');
+const updateContract = require('./updateContract');
+const singleContract = require('./singleContract');
 
 module.exports = {
   admin,
   addMedia,
   authentication,
+  createContract,
   createUser,
   getChallenge,
   getToken,
@@ -25,5 +29,7 @@ module.exports = {
   removeMedia,
   stream,
   uploadVideo,
-  uploadVideoFile
+  uploadVideoFile,
+  updateContract,
+  singleContract
 };

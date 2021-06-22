@@ -168,8 +168,9 @@ module.exports = context => {
     res.json({ success: true, list });
   });
 
-  router.post('/upload', upload.single('video'), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
-    const { title, description, token, author } = req.body;
+  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
+    const { title, description, contractAddress } = req.body;
+    const { adminNFT: author } = req.user;
 
     console.log('Processing: ', req.file.originalname);
 
@@ -196,17 +197,16 @@ module.exports = context => {
           const exportedKey = await rareify(req.file.destination + 'stream' + req.file.filename);
           console.log('DONE');
           const rairJson = {
-            name: title,
+            title,
             mainManifest: 'stream.m3u8',
-            nftIdentifier: token,
-            encryption: 'aes-128-cbc'
+            author,
+            encryptionType: 'aes-128-cbc'
           };
+
           if (description) {
             rairJson.description = description;
           }
-          if (author) {
-            rairJson.author = author;
-          }
+
           fs.writeFileSync(req.file.destination + 'stream' + req.file.filename + '/rair.json', JSON.stringify(rairJson, null, 4));
 
           command = 'rm -f ' + req.file.path;
@@ -222,17 +222,18 @@ module.exports = context => {
 
           const meta = {
             mainManifest: 'stream.m3u8',
-            nftIdentifier: token,
-            encryption: 'aes-128-cbc',
-            name: title,
-            thumbnail: req.file.filename
+            author,
+            encryptionType: 'aes-128-cbc',
+            title,
+            thumbnail: req.file.filename,
+            currentOwner: author,
+            contractAddress
           };
-          if (author) {
-            meta.author = author;
-          }
+
           if (description) {
             meta.description = description;
           }
+
           const ipfsCid = _.chain(c.cid)
             .split('(')
             .last()
@@ -242,13 +243,13 @@ module.exports = context => {
           console.log(req.file.originalname, 'ipfs done: ', ipfsCid);
           await context.store.addMedia(ipfsCid, {
             key: exportedKey, ...meta,
-            uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
+            uri: process.env.IPFS_GATEWAY + '/' + ipfsCid,
           });
 
           await context.db.File.create({
             _id: ipfsCid,
             key: exportedKey.toJSON(), ...meta,
-            uri: process.env.IPFS_GATEWAY + '/' + ipfsCid
+            uri: process.env.IPFS_GATEWAY + '/' + ipfsCid,
           });
 
           context.hls = StartHLS();
