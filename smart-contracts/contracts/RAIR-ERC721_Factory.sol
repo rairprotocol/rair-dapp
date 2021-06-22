@@ -74,7 +74,7 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 		}
 
 		for (uint i = 0; i < tokensBought; i++) {
-			RAIR_ERC721 newToken = new RAIR_ERC721(from, 0, 30000);
+			RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
 			ownerToTokens[from].push(address(newToken));
 			tokenToOwner[address(newToken)] = from;
 		}
