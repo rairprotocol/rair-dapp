@@ -35,13 +35,7 @@ Upload the media
       "type": "string"
     }
   },
-  "token":  {
-    "required": false,
-    "content": {
-      "type": "string"
-    }
-  },
-  "author": {
+  "contractAddress": {
     "required": false,
     "content": {
       "type": "string"
