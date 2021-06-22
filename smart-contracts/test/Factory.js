@@ -166,22 +166,26 @@ describe("Token Factory", function () {
 
 			it ("Creates a Collection", async function() {
 				expect(await rair721Instance.getCollectionCount()).to.equal(0);
-				expect(await rair721Instance.createCollection("COLLECTION #1", 2)).to.emit(rair721Instance, 'CollectionCreated');
-				expect(await rair721Instance.createCollection("COLLECTION #2", 10)).to.emit(rair721Instance, 'CollectionCreated');
-				expect(await rair721Instance.getCollectionCount()).to.equal(2);
+				expect(await rair721Instance.createCollection("COLLECTION #1", 2, 2)).to.emit(rair721Instance, 'CollectionCreated');
+				expect(await rair721Instance.createCollection("COLLECTION #2", 10, 1)).to.emit(rair721Instance, 'CollectionCreated');
+				expect(await rair721Instance.createCollection("COLLECTION #3", 170, 50)).to.emit(rair721Instance, 'CollectionCreated');
+				expect(await rair721Instance.getCollectionCount()).to.equal(3);
+				expect((await rair721Instance.getCollection(0)).name).to.equal("COLLECTION #1");
 				expect((await rair721Instance.getCollection(1)).name).to.equal("COLLECTION #2");
+				expect((await rair721Instance.getCollection(2)).name).to.equal("COLLECTION #3");
 			});
 
 			it ("Minter can mint", async function() {
 				let rair721AsAddress2 = rair721Instance.connect(addr2);
 				expect(await rair721AsAddress2.mint(addr3.address, 0)).to.emit(rair721Instance, 'Transfer');
-				expect(await rair721AsAddress2.mint(addr4.address, 1)).to.emit(rair721Instance, 'Transfer');
+				expect(await rair721AsAddress2.mint(addr4.address, 1)).to.emit(rair721Instance, 'ResaleEnabled');
 				expect(await rair721AsAddress2.mint(addr3.address, 0)).to.emit(rair721Instance, 'CollectionCompleted');
+				expect(await rair721AsAddress2.mint(addr1.address, 2)).to.emit(rair721Instance, 'Transfer');
 			});
 
 			it ("Minter cannot mint once the collection is complete", async function() {
 				let rair721AsAddress2 = rair721Instance.connect(addr2);
-				expect(rair721AsAddress2.mint(addr3.address, 0)).to.be.revertedWith('ERC721: Cannot mint tokens from this collection');
+				expect(rair721AsAddress2.mint(addr3.address, 0)).to.be.revertedWith('RAIR ERC721: Cannot mint tokens from this collection');
 			});
 
 			it ("Unauthorize a Minter", async function() {
@@ -199,27 +203,30 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.tokenByIndex(0)).to.equal(0);
 				expect(await rair721Instance.tokenByIndex(1)).to.equal(2);
 				expect(await rair721Instance.tokenByIndex(2)).to.equal(1);
+				expect(await rair721Instance.tokenByIndex(3)).to.equal(12);
 			});
 
 			it ("Token Supply", async function() {
-				expect(await rair721Instance.totalSupply()).to.equal(3);
+				expect(await rair721Instance.totalSupply()).to.equal(4);
 			});
 
 			it ("Collection Data", async function() {
 				expect(await rair721Instance.tokenToCollection(0)).to.equal(0);
 				expect(await rair721Instance.tokenToCollection(1)).to.equal(0);
 				expect(await rair721Instance.tokenToCollection(2)).to.equal(1);
+				expect(await rair721Instance.tokenToCollection(12)).to.equal(2);
 			})
 
 			it ("Token Owners", async function() {
 				expect(await rair721Instance.ownerOf(0)).to.equal(addr3.address);
 				expect(await rair721Instance.ownerOf(1)).to.equal(addr3.address);
 				expect(await rair721Instance.ownerOf(2)).to.equal(addr4.address);
+				expect(await rair721Instance.ownerOf(12)).to.equal(addr1.address);
 			});
 
 			it ("Owner balances", async function() {
 				expect(await rair721Instance.balanceOf(owner.address)).to.equal(0);
-				expect(await rair721Instance.balanceOf(addr1.address)).to.equal(0);
+				expect(await rair721Instance.balanceOf(addr1.address)).to.equal(1);
 				expect(await rair721Instance.balanceOf(addr2.address)).to.equal(0);
 				expect(await rair721Instance.balanceOf(addr3.address)).to.equal(2);
 				expect(await rair721Instance.balanceOf(addr4.address)).to.equal(1);
@@ -229,10 +236,21 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.tokenOfOwnerByIndex(addr3.address, 0)).to.equal(0);
 				expect(await rair721Instance.tokenOfOwnerByIndex(addr3.address, 1)).to.equal(1);
 				expect(await rair721Instance.tokenOfOwnerByIndex(addr4.address, 0)).to.equal(2);
+				expect(await rair721Instance.tokenOfOwnerByIndex(addr1.address, 0)).to.equal(12);
 			});
 		});
 
 		describe('Token Operations', function() {
+			it ("Should revert if the resale isn't enabled (First party transfer)", async function() {
+				let rair721AsAddress1 = rair721Instance.connect(addr1);
+				expect(rair721AsAddress1['safeTransferFrom(address,address,uint256)'](addr1.address, owner.address, 12)).to.revertedWith("RAIR ERC721: Transfers for this collection haven't been enabled");
+			});
+
+			it ("Transfers if the resale is enabled", async function() {
+				let rair721AsAddress3 = rair721Instance.connect(addr3);
+				expect(await rair721AsAddress3['safeTransferFrom(address,address,uint256)'](addr3.address, owner.address, 0)).to.emit(rair721Instance, "Transfer");
+			});
+
 			it ("Single approval", async function() {
 				let rair721AsAddress4 = await rair721Instance.connect(addr4);
 				expect(await rair721AsAddress4.approve(addr2.address, 2))
@@ -246,10 +264,10 @@ describe("Token Factory", function () {
 			});
 
 			it ("Full approval", async function() {
-				let rair721AsAddress4 = await rair721Instance.connect(addr4);
-				expect(await rair721AsAddress4.setApprovalForAll(addr1.address, true))
+				let rair721AsAddress1 = await rair721Instance.connect(addr1);
+				expect(await rair721AsAddress1.setApprovalForAll(addr4.address, true))
 					.to.emit(rair721Instance, 'ApprovalForAll');
-				expect(await rair721Instance.isApprovedForAll(addr4.address, addr1.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(addr1.address, addr4.address)).to.equal(true);
 			});
 
 			it ("Third party transfer", async function() {
@@ -262,13 +280,12 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.ownerOf(1)).to.equal(owner.address);
 			});
 
-			it ("Should revert if the collection isn't fully minted", async function() {
-				let rair721AsAddress2 = await rair721Instance.connect(addr2);
-				//transferFrom(from, to, tokenId) is discouraged by OpenZeppelin
-				expect(await rair721Instance.ownerOf(2)).to.equal(addr4.address);
-				expect(rair721AsAddress2['safeTransferFrom(address,address,uint256)'](
-					addr4.address, owner.address, 2
-				)).to.revertedWith("RAIR ERC721: There are unminted tokens in this collection");
+			it ("Should revert if the resale isn't enabled (Third party transfer)", async function() {
+				let rair721AsAddress4 = await rair721Instance.connect(addr4);
+				expect(await rair721Instance.ownerOf(12)).to.equal(addr1.address);
+				expect(rair721AsAddress4['safeTransferFrom(address,address,uint256)'](
+					addr1.address, owner.address, 12
+				)).to.revertedWith("RAIR ERC721: Transfers for this collection haven't been enabled");
 			});
 		});
 

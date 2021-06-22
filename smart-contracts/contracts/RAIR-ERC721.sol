@@ -18,14 +18,14 @@ contract RAIR_ERC721 is IERC2981, ERC165, ERC721Enumerable, AccessControlEnumera
 	struct collection {
 		uint startingToken;
 		uint endingToken;
-		string name;
 		uint mintableTokens;
+		uint enableResaleAt;
+		string name;
 	}
 
 	collection[] private _collections;
-
 	bytes4 private constant _INTERFACE_ID_ERC2981 = 0xc155531d;
-	
+
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	bytes32 public constant MINTER = keccak256("MINTER");
 
@@ -36,6 +36,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, ERC721Enumerable, AccessControlEnumera
 
 	event CollectionCreated(uint indexed id);
 	event CollectionCompleted(uint indexed id);
+	event ResaleEnabled(uint indexed id);
 
 	/// @notice	Token's constructor
 	/// @dev	RAIR is still the ERC721's symbol
@@ -57,7 +58,8 @@ contract RAIR_ERC721 is IERC2981, ERC165, ERC721Enumerable, AccessControlEnumera
 	/// @dev	Only a CREATOR can call this function
 	/// @param	_collectionName Name of the collection
 	/// @param	_copies			Amount of tokens inside the collection
-	function createCollection(string memory _collectionName, uint _copies) public onlyRole(CREATOR) {
+	function createCollection(string memory _collectionName, uint _copies, uint _resaleAt) public onlyRole(CREATOR) {
+		require(_copies >= _resaleAt, "ERC721: Resale start should be less than the total amount of copies");
 		uint lastToken;
 		if (_collections.length == 0) {
 			lastToken = 0;
@@ -69,14 +71,15 @@ contract RAIR_ERC721 is IERC2981, ERC165, ERC721Enumerable, AccessControlEnumera
 		newCollection.endingToken = newCollection.startingToken + _copies;
 		newCollection.name = string(_collectionName);
 		newCollection.mintableTokens = _copies;
+		newCollection.enableResaleAt = _resaleAt;
 		emit CollectionCreated(_collections.length - 1);
 	}
 
-	function getCollectionCount() public view returns(uint) {
+	function getCollectionCount() external view returns(uint) {
 		return _collections.length;
 	}
 
-	function getCollection(uint index) public view returns(collection memory) {
+	function getCollection(uint index) external view returns(collection memory) {
 		return _collections[index];
 	}
 
@@ -89,6 +92,12 @@ contract RAIR_ERC721 is IERC2981, ERC165, ERC721Enumerable, AccessControlEnumera
 		_safeMint(to, currentCollection.endingToken - currentCollection.mintableTokens);
 		tokenToCollection[currentCollection.endingToken - currentCollection.mintableTokens] = collectionID;
 		currentCollection.mintableTokens--;
+		if (currentCollection.enableResaleAt > 0) {
+			currentCollection.enableResaleAt--;
+			if (currentCollection.enableResaleAt == 0) {
+				emit ResaleEnabled(collectionID);
+			}
+		}
 		if (currentCollection.mintableTokens == 0) {
 			emit CollectionCompleted(collectionID);
 		}
@@ -118,7 +127,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, ERC721Enumerable, AccessControlEnumera
 
 	function _beforeTokenTransfer(address _from, address _to, uint256 _tokenId) internal virtual override(ERC721Enumerable) {
 		if (_from != address(0) && _to != address(0)) {
-			require(_collections[tokenToCollection[_tokenId]].mintableTokens == 0, "RAIR ERC721: There are unminted tokens in this collection");
+			require(_collections[tokenToCollection[_tokenId]].enableResaleAt == 0, "RAIR ERC721: Transfers for this collection haven't been enabled");
 		} 
 		super._beforeTokenTransfer(_from, _to, _tokenId);
 	} 
