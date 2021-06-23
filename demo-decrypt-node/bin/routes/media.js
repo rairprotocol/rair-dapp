@@ -158,14 +158,29 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', async (req, res) => {
-    const data = await context.db.File.find();
-    const list = _.reduce(data, (res, value) => {
-      res[value._id] = value;
-      return res;
-    }, {});
+  router.get('/list', async (req, res, next) => {
+    try {
+      const { pageNum = '1', filesPerPage = '5', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
 
-    res.json({ success: true, list });
+      const searchQuery = searchString ? { $text: { $search: searchString } } : {};
+      const pageSize = parseInt(filesPerPage, 10);
+      const sortDirection = parseInt(sort, 10);
+      const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+      const data = await context.db.File.find(searchQuery)
+        .skip(skip)
+        .limit(pageSize)
+        .sort([[sortBy, sortDirection]]);
+
+      const list = _.reduce(data, (result, value) => {
+        result[value._id] = value;
+        return result;
+      }, {});
+
+      res.json({ success: true, list });
+    } catch (e) {
+      console.log(e);
+      next(e.message);
+    }
   });
 
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
