@@ -4,7 +4,7 @@ const _ = require('lodash');
 module.exports = (context) => async (req, res, next) => {
   try {
     const decoded = jwt.verify(req.headers['x-rair-token'], process.env.JWT_SECRET);
-    const user = await context.db.User.findOne({ publicAddress: decoded.eth_addr }, { nonce: 0 });
+    const user = await context.db.User.findOne({ publicAddress: decoded.eth_addr }, { nonce: 0, adminNFT: 0 });
 
     if (!user) {
       return next(new Error('User with provided Token is not found in database'));
