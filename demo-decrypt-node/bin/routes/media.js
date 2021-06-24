@@ -160,7 +160,7 @@ module.exports = context => {
    */
   router.get('/list', async (req, res, next) => {
     try {
-      const { pageNum = '1', filesPerPage = '5', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
+      const { pageNum = '1', filesPerPage = '10', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
 
       const searchQuery = searchString ? { $text: { $search: searchString } } : {};
       const pageSize = parseInt(filesPerPage, 10);
