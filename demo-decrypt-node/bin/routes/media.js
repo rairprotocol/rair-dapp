@@ -158,7 +158,7 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', async (req, res, next) => {
+  router.get('/list', validation('getFiles', 'query'), async (req, res, next) => {
     try {
       const { pageNum = '1', filesPerPage = '10', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
 
