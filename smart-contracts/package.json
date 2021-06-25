@@ -8,7 +8,8 @@
   },
   "scripts": {
     "hardhat:compile": "hardhat compile",
-    "hardhat:test": "hardhat test"
+    "hardhat:test": "hardhat test",
+    "deploy-factory": "node ./deployment-scripts/deployFactory.js"
   },
   "author": "Juan Miguel Sanchez Mola <jmsm412@gmail.com>",
   "homepage": "",
