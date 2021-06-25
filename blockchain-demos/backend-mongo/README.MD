@@ -1,7 +1,7 @@
 # MongoDB and Backend Communication demo
 
 To install all packages run
-### `npm start`
+### `npm i`
 
 # Demo 1: Insert into the database
 To run the demo, run
