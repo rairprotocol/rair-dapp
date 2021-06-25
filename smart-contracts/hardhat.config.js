@@ -11,18 +11,6 @@ module.exports = {
         url: process.env.ALCHEMY_API,
         blockNumber: 12420727
       }
-    },
-    bscTestnet: {
-      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-      chainId: 97,
-      gasPrice: 20000000000,
-      accounts: [process.env.SECRET_KEY]
-    },
-    bscMainnet: {
-      url: 'https://bsc-dataseed.binance.org/',
-      chainId: 56,
-      gasPrice: 20000000000,
-      accounts: { mnemonic: process.env.MNEMONIC }
     }
   },
   solidity: {
@@ -45,5 +33,3 @@ module.exports = {
     timeout: 0
   }
 };
-
-//bscProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/', { name: 'binance', chainId: 56 })
