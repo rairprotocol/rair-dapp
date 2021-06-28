@@ -230,6 +230,20 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.ownerOf(12)).to.equal(addr1.address);
 			});
 
+			if ("Token Owners to Collections", async function() {
+				expect(await rair721Instance.hasTokenInCollection(addr3.address, 0)).to.equal(true);
+				expect(await rair721Instance.hasTokenInCollection(addr3.address, 1)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr3.address, 2)).to.equal(false);
+				
+				expect(await rair721Instance.hasTokenInCollection(addr4.address, 0)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr4.address, 1)).to.equal(true);
+				expect(await rair721Instance.hasTokenInCollection(addr4.address, 2)).to.equal(false);
+				
+				expect(await rair721Instance.hasTokenInCollection(addr1.address, 0)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr1.address, 1)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr1.address, 2)).to.equal(true);
+			});
+
 			it ("Owner balances", async function() {
 				expect(await rair721Instance.balanceOf(owner.address)).to.equal(0);
 				expect(await rair721Instance.balanceOf(addr1.address)).to.equal(1);

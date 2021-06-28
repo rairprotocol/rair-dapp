@@ -83,6 +83,15 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		return (selectedCollection.startingToken, selectedCollection.endingToken, selectedCollection.mintableTokens, selectedCollection.name);
 	}
 
+	function hasTokenInCollection(address owner, uint collectionIndex) public view returns (bool) {
+		for (uint i = 0; i < balanceOf(owner); i++) {
+			if (tokenToCollection[tokenOfOwnerByIndex(owner, i)] == collectionIndex) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/// @notice	Mints new Tokens for A COLLECTION
 	/// @param	to				Address of the new Owner
 	/// @param	collectionID	Index of the collection to mint
