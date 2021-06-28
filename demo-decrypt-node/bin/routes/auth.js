@@ -240,9 +240,16 @@ module.exports = context => {
       });
   });
 
-  router.get('/user_info', JWTVerification(context), async (req, res, next) => res.send({
-    success: true,
-    user: req.user
-  }));
+  router.get('/user_info', JWTVerification(context), async (req, res, next) => {
+    const user = _.chain(req.user)
+      .assign({})
+      .omit(['nonce', 'adminNFT'])
+      .value();
+
+    res.send({
+      success: true,
+      user
+    })
+  });
   return router;
 };
