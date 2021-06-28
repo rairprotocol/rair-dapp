@@ -7,6 +7,7 @@ import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "./IERC2981.sol";
 import "./IRAIR-ERC721.sol";
+import 'hardhat/console.sol';
 
 /// @title  Extended ERC721Enumerable contract for the RAIR system
 /// @notice Uses ERC2981 and ERC165 for standard royalty info
@@ -23,7 +24,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	}
 
 	collection[] private _collections;
-	bytes4 private constant _INTERFACE_ID_ERC2981 = 0xc155531d;
 
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	bytes32 public constant MINTER = keccak256("MINTER");
@@ -98,6 +98,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	function mint(address to, uint collectionID) external override(IRAIR_ERC721) onlyRole(MINTER) {
 		collection storage currentCollection = _collections[collectionID];
 		require(currentCollection.mintableTokens > 0, "RAIR ERC721: Cannot mint tokens from this collection");
+		//console.log('Minted', currentCollection.endingToken - currentCollection.mintableTokens, 'for', to);
 		_safeMint(to, currentCollection.endingToken - currentCollection.mintableTokens);
 		tokenToCollection[currentCollection.endingToken - currentCollection.mintableTokens] = collectionID;
 		currentCollection.mintableTokens--;
@@ -125,8 +126,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	///                               EIP-2981 alone.
 	function royaltyInfo(uint256 _tokenId, uint256 _value,	bytes calldata _data)
 		external view override(IRAIR_ERC721, IERC2981) returns (address _receiver, uint256 _royaltyAmount, bytes memory _royaltyPaymentData) {
-		require(ownerOf(_tokenId) != address(0), 'Asking for fee on an invalid Token ID!');
-		return (getRoleMember(CREATOR, 0), (_value / 100000) * _royaltyFee, abi.encodePacked(_value));
+		return (getRoleMember(CREATOR, 0), (_value * _royaltyFee) / 100000, abi.encodePacked(_value));
 	}
 
 	function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165, ERC165, AccessControlEnumerable, ERC721Enumerable, IERC2981) returns (bool) {
