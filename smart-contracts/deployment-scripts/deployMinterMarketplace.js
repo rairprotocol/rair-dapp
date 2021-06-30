@@ -29,7 +29,7 @@ const main = async () => {
 	// For deployment, the factory requires 2 things:
 	//		The number of ERC777 tokens required to deploy an ERC721
 	// 			and the address of the ERC777
-	let minterInstance = await MinterFactory.deploy('0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1', 9000, 1000);
+	let minterInstance = await MinterFactory.deploy('0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000);
 	try {
 		await minterInstance.deployed();
 	} catch (err) {

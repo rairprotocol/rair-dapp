@@ -1,40 +1,28 @@
 import {useState} from 'react';
 
-import logo from './logo.svg';
+import logo from './RAIRlogo.png';
 import './App.css';
-
-const minterMarketplaceAddress = '0xcB07dFad44C2b694474E1ea6FEc1729b4c6df31B';
-const factoryAddress = '0x4d4b5a70E77ac749B180eC24e48d03aF9d08e531';
-
-// Ethers.js
-import * as ethers from 'ethers'
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
 // Import the data from the contract artifacts
-import * as Factory from './contracts/RAIR_Token_Factory.json';
-import * as ERC777 from './contracts/RAIR777.json';
-import * as MinterMarketplace from './contracts/Minter_Marketplace.json';
-import * as ERC721Token from './contracts/RAIR_ERC721.json';
+
+import CreatorMode from './components/creatorMode.jsx';
+import ConsumerMode from './components/consumerMode.jsx';
 
 // Define the ABIs for each contract
-const factoryAbi = Factory.default.abi;
-const erc777Abi = ERC777.default.abi;
-const minterAbi = MinterMarketplace.default.abi;
-const erc721Abi = ERC721Token.default.abi;
 
 function App() {
 
 	const [account, setAccount] = useState();
-	const [erc777Instance, setERC777Instance] = useState();
-	const [factoryInstance, setFactoryInstance] = useState();
-	const [minterInstance, setMinterInstance] = useState();
+	const [mode, setMode] = useState();
 
 	return (
-		<div className="App">
+		<div style={{minHeight: '100vh'}} className="App bg-dark text-white">
 			<img src={logo} className="App-logo" alt="logo" />
-			{window.ethereum && account === undefined && <button onClick={async e => {
+			<br/>
+			{window.ethereum && account === undefined && <button className='btn btn-primary' onClick={async e => {
 				// Requesting Metamask for the current account, if Metamask isn't enabled this will ask for permission
 				let [metamaskAccount] = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -44,22 +32,27 @@ function App() {
 					Swal.fire('Please use Binance Smartchain Testnet!');
 					return;
 				}
-
 				setAccount(metamaskAccount);
-
-				// Ethers Connection
-				let provider = new ethers.providers.Web3Provider(window.ethereum);
-				let signer = provider.getSigner(0);
-				let erc777Instance = new ethers.Contract('0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1', erc777Abi, signer);
-				setERC777Instance(erc777Instance);
-
-				let factoryInstanceEthers = new ethers.Contract(factoryAddress, factoryAbi, signer);
-				setFactoryInstance(factoryInstanceEthers);
-
-				// On Ethers you can get all of the functions in a contract calling the instance's functions property
-				//console.log(factoryInstanceWeb3.functions)
-				//console.log(erc777InstanceWeb3.functions)
 			}}> Connect with Metamask! </button>}
+			{account && !mode && <>
+				Welcome {account}!
+				<br />
+				<button onClick={e => {
+					setMode(1);
+				}} className='btn btn-success mx-5'>
+					I'm a creator!
+				</button>
+				<button onClick={e => {
+					setMode(2);
+				}} className='btn btn-warning mx-5'>
+					I'm an user!
+				</button>
+			</>}
+			{account && mode && <button onClick={e => setMode()} style={{position: 'absolute', left: 0}} className='btn btn-danger'>
+				Go Back
+			</button>}
+			{account && mode === 1 && <CreatorMode account={account} />}
+			{account && mode === 2 && <ConsumerMode account={account} />}
 		</div>
 	);
 }
