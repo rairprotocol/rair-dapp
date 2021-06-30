@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const File = new Schema({
+const Contract = new Schema({
   title: { type: String, required: true },
   blockchain: { type: String, required: true },
   contractAddress: { type: String, required: true, unique: true },
@@ -14,4 +14,4 @@ const File = new Schema({
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
-module.exports = File;
+module.exports = Contract;
