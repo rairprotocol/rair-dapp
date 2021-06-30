@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Swal from 'sweetalert2';
 import InputField from './InputField.jsx';
 import InputSelect from './InputSelect.jsx';
+import io from 'socket.io-client';
 
 // Admin view to upload media to the server
 const AddMedia = ({address}) => {
@@ -14,9 +15,33 @@ const AddMedia = ({address}) => {
     const [video, setVideo] = useState(undefined)
     const [uploading, setUploading] = useState(false);
     const [adminNFT, setAdminNFT] = useState('');
+    const [thisSessionId, setThisSessionId] = useState('');
     const [, setVPV] = useState();
 
+    // let thisSessionId = '';
+    // let currentSocket = null;
+
     const currentToken = localStorage.getItem('token');
+
+
+    useEffect(() => {
+      const sessionId = Math.random().toString(36).substr(2, 9);
+      setThisSessionId(sessionId);
+      const socket = io('http://localhost:5000', { transports : ['websocket'] });
+
+      socket.on("connect", data => {
+        console.log('Connected !');
+      });
+
+      socket.emit('init', sessionId);
+      socket.on("uploadProgress", data => {
+        console.log(`>>>>>>>>>>>>>>>>>>> ${data}`);
+      });
+
+      return () => {
+        socket.emit('end', sessionId);
+      }
+    }, []);
 
     return <>
     <h1> Add Media </h1>
@@ -61,7 +86,7 @@ const AddMedia = ({address}) => {
           formData.append('description', description)
           formData.append('contractAddress', 'temp value of contract address')
           setUploading(true);
-          fetch('/api/media/upload', {
+          fetch(`/api/media/upload?socketSessionId=${thisSessionId}`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
