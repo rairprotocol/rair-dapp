@@ -13,7 +13,6 @@ const ERC721Manager = ({tokenInfo, minter, account}) => {
 		const aux = async () => {
 			let collectionsData = [];
 			for await (let index of [...Array.apply(null, {length: tokenInfo.collectionCount}).keys()]) {
-				console.log("Doing", index, "of", tokenInfo.collectionCount);
 				let colData = (await tokenInfo.instance.getCollection(index));
 				collectionsData.push({
 					name: colData.collectionName,
