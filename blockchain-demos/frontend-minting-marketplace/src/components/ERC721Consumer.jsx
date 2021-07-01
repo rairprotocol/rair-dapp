@@ -34,7 +34,11 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 		<hr className='w-75 mx-auto' />
 		{balance && <>
 			You own {balance.length} tokens from this collection<br/>
-			{balance.length > 0 && balance.toString()}
+			{balance.map((item, index) => {
+				return <p className='d-block'>
+					{tokenInfo.address}:<b>{item}</b>
+				</p>
+			})}
 		</>}
 		<br />
 		<button onClick={async e => {
