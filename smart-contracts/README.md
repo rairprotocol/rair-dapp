@@ -31,4 +31,8 @@ Tests were written for Hardhat, using mocha and chai
 # Deployment
 Deploy the factory contract to the Binance Testnet, this only has to happen once!
 ### `npm run deploy-factory`
+
+Deploy the minter marketplace contract to the Binance Testnet, this only has to happen once!
+### `npm run deploy-minter`
+
 Ethers can do deployments as well but the deployment only uses Ethers.js code
