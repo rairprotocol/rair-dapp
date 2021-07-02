@@ -9,6 +9,8 @@ import * as ERC721Token from '../contracts/RAIR_ERC721.json';
 
 import ERC721Manager from './ERC721Manager.jsx';
 
+import Swal from 'sweetalert2';
+
 const minterAbi = MinterMarketplace.default.abi;
 const factoryAbi = Factory.default.abi;
 const erc777Abi = ERC777.default.abi;
@@ -21,6 +23,8 @@ const erc777Address = '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1';
 const CreatorMode = ({account}) => {
 
 	const [erc777Instance, setERC777Instance] = useState();
+	const [targetAddress, setTargetAddress] = useState('');
+	const [targetValue, setTargetValue] = useState(0);
 	const [factoryInstance, setFactoryInstance] = useState();
 	const [minterInstance, setMinterInstance] = useState();
 	const [tokensOwned, setTokensOwned] = useState();
@@ -78,6 +82,7 @@ const CreatorMode = ({account}) => {
 		</button>
 		<br/>
 		{erc777Data && <>
+			
 			<hr className='w-100' />
 			<h5>Factory</h5>
 			You currently own {tokensOwned.length} ERC721 contracts<br/>
@@ -86,6 +91,22 @@ const CreatorMode = ({account}) => {
 			})}
 			<hr className='w-100' />
 			<h5>ERC777</h5>
+			<button className='btn btn-success' onClick={e => {
+				window.ethereum.request({
+					method: 'metamask_watchAsset',
+					params: {
+						"type":"ERC20", // Initially only supports ERC20, but eventually more!
+						"options":{
+							"address": erc777Instance.address, // The address that the token is at.
+							"symbol": erc777Data.symbol, // A ticker symbol or shorthand, up to 5 chars.
+							"decimals": 18, // The number of decimals in the token
+						},
+					}})
+				.then(boolean => Swal.fire(boolean ? 'ERC777 RAIR Token added' : 'Failed to Add ERC777 RAIR Token'))
+			}}>
+				Add {erc777Data.name} to Metamask!
+			</button>
+			<br/>
 			Your balance on '{erc777Data.name}': {erc777Data.balance} {erc777Data.symbol} <br/>
 			Your new contract's name:
 			<input className='form-control w-75 mx-auto' value={erc721Name} onChange={e => setERC721Name(e.target.value)} />
@@ -96,6 +117,15 @@ const CreatorMode = ({account}) => {
 				Buy an ERC721 contract for {tokensRequired.toString()} {erc777Data.symbol}!
 			</button>
 			<hr className='w-100' />
+			Transfer Tokens<br/>
+			Transfer to Address: <input className='form-control w-75 mx-auto' value={targetAddress} onChange={e => setTargetAddress(e.target.value)} />
+			Amount to Transfer: <input className='form-control w-75 mx-auto' value={targetValue} type='number' onChange={e => setTargetValue(e.target.value)} />
+			<br/>
+			<button disabled={targetValue <= 0 || targetAddress === ''} onClick={() => {
+				erc777Instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''))
+			}} className='btn btn-success'>
+				Transfer {targetValue} TEST RAIRs to {targetAddress}!
+			</button>
 		</>}
 	</>
 }

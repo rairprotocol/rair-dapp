@@ -23,6 +23,20 @@ function App() {
 			<img src={logo} className="App-logo" alt="logo" />
 			<br/>
 			{window.ethereum && account === undefined && <button className='btn btn-primary' onClick={async e => {
+				const data = [{
+					chainId: '0x61',
+					chainName: 'Smart Chain - Testnet',
+					nativeCurrency:
+					{
+						name: 'BNB',
+						symbol: 'BNB',
+						decimals: 18
+					},
+					rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+					blockExplorerUrls: ['https://testnet.bscscan.com'],
+				}]
+				await window.ethereum.request({method: 'wallet_addEthereumChain', params:data})
+
 				// Requesting Metamask for the current account, if Metamask isn't enabled this will ask for permission
 				let [metamaskAccount] = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
