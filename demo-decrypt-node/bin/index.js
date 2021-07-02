@@ -9,6 +9,7 @@ const StartHLS = require('./hls-starter.js')
 const fs = require('fs')
 const cors = require('cors');
 const mongoose = require('mongoose');
+const Socket = require("socket.io")
 require('dotenv').config()
 
 async function main () {
@@ -49,7 +50,7 @@ async function main () {
   /* CORS */
   app.use(cors());
 
-  const hls = await StartHLS()
+  const hls = await StartHLS();
 
   const context = {
     hls,
@@ -91,9 +92,34 @@ async function main () {
     res.status(500).json({ success: false, error: true, message: error.message })
   })
 
-  app.listen(port, () => {
+  const server = app.listen(port, () => {
     console.log(`Decrypt node listening at http://localhost:${port}`)
   })
+
+  const io = Socket(server);
+  const sockets = {};
+
+  io.on("connection", socket => {
+    console.log(`Client connected: ${socket.id}`);
+    socket.on("init", sessionId => {
+
+      console.log(`Opened connection: ${ sessionId }`);
+
+      sockets[sessionId] = socket.id;
+      app.set("sockets", sockets);
+    });
+
+    socket.on("end", sessionId => {
+      delete sockets[sessionId];
+
+      socket.disconnect(0);
+      app.set("sockets", sockets);
+
+      console.log(`Close connection ${ sessionId }`);
+    });
+  });
+
+  app.set("io", io);
 }
 
 (async () => {

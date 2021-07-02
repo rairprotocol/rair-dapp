@@ -11,7 +11,7 @@ const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
 const { JWTVerification, validation } = require('../middleware');
 
-const rareify = async (fsRoot) => {
+const rareify = async (fsRoot, socketInstance) => {
   // Generate a key
   const key = crypto.generateKeySync('aes', { length: 128 });
 
@@ -38,6 +38,9 @@ const rareify = async (fsRoot) => {
             fs.renameSync(encryptedPath, fullPath);
             resolve(true);
             console.log('finished encrypting', entry.path);
+
+            socketInstance.emit('uploadProgress', { message: `finished encrypting ${entry.path}`, last: false, part: true });
+
           });
         } catch (e) {
           console.log('Could not encrypt', fullPath, e);
@@ -48,6 +51,9 @@ const rareify = async (fsRoot) => {
     }
   }
   console.log('Done scheduling encryptions,', promiseList.length, 'promises for', readdirp(fsRoot).length, 'files');
+
+  socketInstance.emit('uploadProgress', { message: `Done scheduling encryptions, ${promiseList.length} promises for ${readdirp(fsRoot).length} files`, last: false, done: 15, parts: promiseList.length });
+
   return await Promise.all(promiseList)
     .then(_ => {
       console.log('RAIR-ification successful! The root directory is ready to be uploaded to IPFS.');
@@ -186,6 +192,19 @@ module.exports = context => {
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
     const { title, description, contractAddress } = req.body;
     const { adminNFT: author } = req.user;
+    const { socketSessionId } = req.query;
+
+    if (author) {
+      return res.json({ success: false, message: 'You don\'t have permission to upload the files.' });
+    }
+
+    // Get the socket connection from Express app
+    const io = req.app.get('io');
+    const sockets = req.app.get('sockets');
+    const thisSocketId = sockets[socketSessionId];
+    const socketInstance = io.to(thisSocketId);
+
+    socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
 
     console.log('Processing: ', req.file.originalname);
 
@@ -203,13 +222,19 @@ module.exports = context => {
           console.log(req.file.originalname, error);
         }
         res.json({ success: true, result: req.file.filename });
+
+        socketInstance.emit('uploadProgress', { message: `${req.file.originalname} generating thumbnails`, last: false, done: 10 });
+
         command = 'ffmpeg -i ' + req.file.path + ' -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ' + req.file.destination + 'stream' + req.file.filename + '/stream.m3u8';
         console.log(req.file.originalname, 'converting to stream');
+
+        socketInstance.emit('uploadProgress', { message: `${req.file.originalname} converting to stream`, last: false, done: 11 });
+
         exec(command, { maxBuffer: 1024 * 1024 * 20 }, async (error, stdout, stderr) => {
           if (error) {
             console.log(req.file.originalname, error);
           }
-          const exportedKey = await rareify(req.file.destination + 'stream' + req.file.filename);
+          const exportedKey = await rareify(req.file.destination + 'stream' + req.file.filename, socketInstance);
           console.log('DONE');
           const rairJson = {
             title,
@@ -230,10 +255,14 @@ module.exports = context => {
               console.log(req.file.originalname, error);
             }
             console.log(req.file.originalname, 'raw deleted');
+
+            socketInstance.emit('uploadProgress', { message: `${req.file.originalname} raw deleted`, last: false });
           });
           console.log(req.file.originalname, 'pinning to ipfs');
 
-          const c = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`/*, { pin: true, quieter: true }*/);
+          socketInstance.emit('uploadProgress', { message: `${req.file.originalname} pinning to ipfs`, last: false });
+
+          const c = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`, socketInstance, /*, { pin: true, quieter: true }*/);
 
           const meta = {
             mainManifest: 'stream.m3u8',
@@ -256,6 +285,9 @@ module.exports = context => {
             .first()
             .value();
           console.log(req.file.originalname, 'ipfs done: ', ipfsCid);
+
+          socketInstance.emit('uploadProgress', { message: `ipfs done.`, last: false, done: 90 });
+
           await context.store.addMedia(ipfsCid, {
             key: exportedKey, ...meta,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid,
@@ -266,6 +298,9 @@ module.exports = context => {
             key: exportedKey.toJSON(), ...meta,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid,
           });
+
+
+          socketInstance.emit('uploadProgress', { message: 'Stored to DB', last: false, done: 95 });
 
           context.hls = StartHLS();
           fetch('https://api.pinata.cloud/pinning/pinByHash', {
@@ -281,6 +316,9 @@ module.exports = context => {
             .then(blob => blob.json())
             .then(response => {
               console.log('PINATA RESPONSE', response);
+
+              socketInstance.emit('uploadProgress', { message: 'Pined to Pinata.', last: true, done: 100 });
+
             })
             .catch(err => {
               console.log('PINATA ERROR', err);
