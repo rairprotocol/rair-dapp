@@ -103,9 +103,7 @@ async function main () {
     console.log(`Client connected: ${socket.id}`);
     socket.on("init", sessionId => {
 
-      console.log('============ in connectInit ============');
-      console.log(sessionId);
-      console.log('============ in connectInit ============');
+      console.log(`Opened connection: ${ sessionId }`);
 
       sockets[sessionId] = socket.id;
       app.set("sockets", sockets);
@@ -117,10 +115,8 @@ async function main () {
       socket.disconnect(0);
       app.set("sockets", sockets);
 
-      console.log(`============ Close connection ${sessionId} ============`);
+      console.log(`Close connection ${ sessionId }`);
     });
-
-    // app.set("socket", socket);
   });
 
   app.set("io", io);

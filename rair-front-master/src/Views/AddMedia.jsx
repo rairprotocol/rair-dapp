@@ -16,10 +16,11 @@ const AddMedia = ({address}) => {
     const [uploading, setUploading] = useState(false);
     const [adminNFT, setAdminNFT] = useState('');
     const [thisSessionId, setThisSessionId] = useState('');
+    const [socket, setSocket] = useState(null);
+    const [status, setStatus] = useState(0);
+    const [message, setMessage] = useState(0);
+    const [part, setPart] = useState(0);
     const [, setVPV] = useState();
-
-    // let thisSessionId = '';
-    // let currentSocket = null;
 
     const currentToken = localStorage.getItem('token');
 
@@ -27,21 +28,44 @@ const AddMedia = ({address}) => {
     useEffect(() => {
       const sessionId = Math.random().toString(36).substr(2, 9);
       setThisSessionId(sessionId);
-      const socket = io('http://localhost:5000', { transports : ['websocket'] });
+      const so = io('http://localhost:5000', { transports : ['websocket'] });
 
-      socket.on("connect", data => {
-        console.log('Connected !');
-      });
+      setSocket(so);
 
-      socket.emit('init', sessionId);
-      socket.on("uploadProgress", data => {
-        console.log(`>>>>>>>>>>>>>>>>>>> ${data}`);
-      });
+      // so.on("connect", data => {
+      //   console.log('Connected !');
+      // });
+
+      so.emit('init', sessionId);
 
       return () => {
-        socket.emit('end', sessionId);
+        so.emit('end', sessionId);
       }
     }, []);
+
+      if (socket) {
+        socket.removeListener('uploadProgress');
+        socket.on("uploadProgress", data => {
+          if (data.parts) {
+            setPart(Math.round(((89 - data.done) / (data.parts * 2 + 3)) * 10)/10);
+          }
+
+          if (data.done) {
+            setStatus(data.done);
+          }
+
+          if (data.part) {
+            setStatus(Math.round((status + part) * 10)/10);
+          }
+
+          setMessage(data.message);
+
+          if (data.last) {
+            socket.emit('end', thisSessionId);
+            Swal.fire('Success','Your file is being processed','success');
+          }
+        });
+      }
 
     return <>
     <h1> Add Media </h1>
@@ -101,7 +125,7 @@ const AddMedia = ({address}) => {
             setAuthor('');
             setDescription('');
             setVideo(undefined);
-            Swal.fire('Success','Your file is being processed','success');
+            // Swal.fire('Success','Your file is being processed','success');
           })
           .catch(e => {
             console.error(e);
@@ -114,6 +138,13 @@ const AddMedia = ({address}) => {
           setVPV();
         }
       }}> {uploading ? 'Upload in progress' : 'Submit'} </button>
+      <div/>
+      <div className="progress" style={{ 'margin-top': '20px' }}>
+        <div className='progress-bar' role='progressbar' style={ { width: `${ status }%` } } aria-valuenow={ status } aria-valuemin='0'
+             aria-valuemax='100'>{ status }%
+        </div>
+      </div>
+      <div>{status !== 100 && status !== 0 ? `Step: ${message}` : ''}</div>
       <hr className='w-100 my-5' />
     </div>
     <h1> Manage Account </h1>

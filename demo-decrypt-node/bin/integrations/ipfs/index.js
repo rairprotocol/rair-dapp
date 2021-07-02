@@ -31,12 +31,9 @@ async function addFolder(pathTo, folderName, socketInstance, args = {}) {
   await ipfs.files.mkdir(ipfsPath, { parents: true });
 
   await Promise.all(_.map(files, (file) => {
+    socketInstance.emit('uploadProgress', { message: `added to ipfs file ${file}`, last: false, part: true });
     const filePath = path.join(pathTo, '/', file);
     const data = fs.readFileSync(filePath);
-
-
-    socketInstance.emit('uploadProgress', `added to ipfs file ${file}`);
-
 
     return ipfs.files.write(path.join(ipfsPath, '/', file), data, { create: true });
   }));
