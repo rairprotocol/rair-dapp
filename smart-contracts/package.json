@@ -9,7 +9,8 @@
   "scripts": {
     "hardhat:compile": "hardhat compile",
     "hardhat:test": "hardhat test",
-    "deploy-factory": "node ./deployment-scripts/deployFactory.js"
+    "deploy-factory": "node ./deployment-scripts/deployFactory.js",
+    "deploy-minter": "node ./deployment-scripts/deployMinterMarketplace.js"
   },
   "author": "Juan Miguel Sanchez Mola <jmsm412@gmail.com>",
   "homepage": "",

@@ -5,6 +5,7 @@ describe("Token Factory", function () {
 	let ERC777Factory, erc777instance, erc777ExtraInstance;
 	let FactoryFactory, factoryInstance;
 	let RAIR721Factory, rair721Instance;
+	let MinterFactory, minterInstance;
 	let tokensDeployed;
 	const initialSupply = 20;
 	const tokenPrice = 5;
@@ -15,7 +16,7 @@ describe("Token Factory", function () {
 		ERC777Factory = await ethers.getContractFactory("RAIR777");
 		FactoryFactory = await ethers.getContractFactory("RAIR_Token_Factory");
 		RAIR721Factory = await ethers.getContractFactory("RAIR_ERC721");
-		//RAIR721Factory.deploy(owner.address, initialSupply, 30000);
+		MinterFactory = await ethers.getContractFactory("Minter_Marketplace");
 	});
 
 	describe('Deployments', function() {
@@ -30,7 +31,7 @@ describe("Token Factory", function () {
 			expect(await erc777instance.totalSupply()).to.equal(initialSupply);
 
 			erc777instance.on('Sent', (from, to, value) => {
-				console.log(from, 'Sent', value.toString(), 'to', to);
+				//console.log(from, 'Sent', value.toString(), 'to', to);
 			});
 		});
 
@@ -38,6 +39,11 @@ describe("Token Factory", function () {
 			factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
 			expect(await erc777instance.deployed());
 		});
+
+		it ("Minter Marketplace", async function() {
+			minterInstance = await MinterFactory.deploy(erc777instance.address, 9000, 1000);
+			expect(await minterInstance.deployed());
+		})
 	})
 
 	describe('Factory', function() {
@@ -170,9 +176,9 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.createCollection("COLLECTION #2", 10, 1)).to.emit(rair721Instance, 'CollectionCreated');
 				expect(await rair721Instance.createCollection("COLLECTION #3", 170, 50)).to.emit(rair721Instance, 'CollectionCreated');
 				expect(await rair721Instance.getCollectionCount()).to.equal(3);
-				expect((await rair721Instance.getCollection(0)).name).to.equal("COLLECTION #1");
-				expect((await rair721Instance.getCollection(1)).name).to.equal("COLLECTION #2");
-				expect((await rair721Instance.getCollection(2)).name).to.equal("COLLECTION #3");
+				expect((await rair721Instance.getCollection(0)).collectionName).to.equal("COLLECTION #1");
+				expect((await rair721Instance.getCollection(1)).collectionName).to.equal("COLLECTION #2");
+				expect((await rair721Instance.getCollection(2)).collectionName).to.equal("COLLECTION #3");
 			});
 
 			it ("Minter can mint", async function() {
@@ -222,6 +228,20 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.ownerOf(1)).to.equal(addr3.address);
 				expect(await rair721Instance.ownerOf(2)).to.equal(addr4.address);
 				expect(await rair721Instance.ownerOf(12)).to.equal(addr1.address);
+			});
+
+			if ("Token Owners to Collections", async function() {
+				expect(await rair721Instance.hasTokenInCollection(addr3.address, 0)).to.equal(true);
+				expect(await rair721Instance.hasTokenInCollection(addr3.address, 1)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr3.address, 2)).to.equal(false);
+				
+				expect(await rair721Instance.hasTokenInCollection(addr4.address, 0)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr4.address, 1)).to.equal(true);
+				expect(await rair721Instance.hasTokenInCollection(addr4.address, 2)).to.equal(false);
+				
+				expect(await rair721Instance.hasTokenInCollection(addr1.address, 0)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr1.address, 1)).to.equal(false);
+				expect(await rair721Instance.hasTokenInCollection(addr1.address, 2)).to.equal(true);
 			});
 
 			it ("Owner balances", async function() {
@@ -289,20 +309,90 @@ describe("Token Factory", function () {
 			});
 		});
 
-		describe('Market', function() {
-			it ("Correct default creator fee", async function() {
-				expect((await rair721Instance.royaltyInfo(1, 100000, ethers.utils.randomBytes(8)))[1]).to.equal(30000);
+		it ("TODO: Test DEFAULT_ADMIN_ROLE");
+		it ("TODO: Test getRoleMemberCount");
+		it ("TODO: Test renounceRole");
+		it ("TODO: Test safeTransferFrom");
+		it ("TODO: Test supportsInterface");
+		it ("TODO: Test tokenURI");
+	})
+
+	describe('Minter Marketplace', function() {
+		describe("Minting Permissions", function() {
+			it ("Refuses to add a collection without a Minter role", async function() {
+				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
+				expect(minterInstance.addCollection(rair721Instance.address, 5, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: This Marketplace isn't a Minter!");
+			});
+
+			it ("Grants Marketplace Minter Role", async function() {
+				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(false);
+				expect(await rair721Instance.grantRole(await rair721Instance.MINTER(), minterInstance.address)).to.emit(rair721Instance, 'RoleGranted').withArgs(await rair721Instance.MINTER(), minterInstance.address, owner.address);
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(true);
 			});
 		});
 
-		it ("TODO: Test Transfers from the marketplace ", console.log(''));
-		/*
-			'DEFAULT_ADMIN_ROLE()': [Function (anonymous)],
-			'getRoleMemberCount(bytes32)': [Function (anonymous)],
-			'renounceRole(bytes32,address)': [Function (anonymous)],
-			'safeTransferFrom(address,address,uint256,bytes)': [Function (anonymous)],
-			'supportsInterface(bytes4)': [Function (anonymous)],
-			'tokenURI(uint256)': [Function (anonymous)],
-		*/
-	})
+		describe("Adding Collections and Minting", function() {
+			it ("Refuses to add a number of tokens higher than the mintable limit", async function() {
+				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
+				//console.log(await rair721Instance.getCollection(1));
+				expect(minterInstance.addCollection(rair721Instance.address, 10, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: Collection doesn't have that many tokens to mint!");
+			});
+
+			it ("Add a collection", async function() {
+				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
+				expect(await minterInstance.addCollection(rair721Instance.address, 5, 1, 999, owner.address)).to.emit(minterInstance, 'AddedCollection');
+			});	
+
+			it ("Should mint with permissions", async function() {
+				let minterAsAddress2 = await minterInstance.connect(addr2);				
+				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer");
+			});
+
+			it ("Shouldn't mint without permissions", async function() {
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(true);
+				expect(await rair721Instance.revokeRole(await rair721Instance.MINTER(), minterInstance.address)).to.emit(rair721Instance, 'RoleRevoked');
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(false);
+				let minterAsAddress2 = await minterInstance.connect(addr2);
+				expect(minterAsAddress2.buyToken(0, {value: 999})).to.revertedWith(`AccessControl: account ${minterInstance.address.toLowerCase()} is missing role ${await rair721Instance.MINTER()}`);
+			});
+
+			it ("Shouldn't mint past the allowed number of tokens", async function() {
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(false);
+				expect(await rair721Instance.grantRole(await rair721Instance.MINTER(), minterInstance.address)).to.emit(rair721Instance, 'RoleGranted');
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(true);
+				let minterAsAddress2 = await minterInstance.connect(addr2);				
+				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
+				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
+				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
+				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
+				expect(minterAsAddress2.buyToken(0, {value: 999})).to.revertedWith('Minting Marketplace: Cannot mint more tokens!');
+			});
+		});
+
+		describe("Updating Collections", function() {
+			it ("Shouldn't let the creator update the collection info limits with wrong info", async () => {
+				expect(minterInstance.updateCollectionSale(0, 5, 999)).to.revertedWith('Minting Marketplace: New limit must be lower or equal than the total allowed to mint!');
+			});
+
+			it ("Should let the creator update the collection info limits", async () => {
+				expect(await minterInstance.updateCollectionSale(0, 4, 9999)).to.emit(minterInstance, 'UpdatedCollection');
+			});
+			
+			it ("Shouldn't mint if the collection is completely minted", async () => {
+				let minterAsAddress2 = await minterInstance.connect(addr2);
+				expect(minterAsAddress2.buyToken(0, {value: 999})).to.revertedWith("Minting Marketplace: Insuficient Funds!");
+				expect(await minterAsAddress2.buyToken(0, {value: 10000})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+				expect(await minterAsAddress2.buyToken(0, {value: 19999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+				expect(await minterAsAddress2.buyToken(0, {value: 29999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+				expect(await minterAsAddress2.buyToken(0, {value: 999999999})).to.emit(rair721Instance, "CollectionCompleted").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+				await expect(minterAsAddress2.buyToken(0, {value: 9999})).to.be.revertedWith('Minting Marketplace: Cannot mint more tokens!');
+			});
+		})
+
+		it ("721 instance returns the correct creator fee", async function() {
+			expect((await rair721Instance.royaltyInfo(1, 100000, ethers.utils.randomBytes(8)))[0]).to.equal(owner.address);
+			expect((await rair721Instance.royaltyInfo(1, 100000, ethers.utils.randomBytes(8)))[1]).to.equal(30000);
+		});
+	});
 })
