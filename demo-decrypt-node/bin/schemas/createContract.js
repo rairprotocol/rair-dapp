@@ -10,8 +10,8 @@ module.exports = Joi.object({
     .max(300)
     .required(),
   contractAddress: Joi.string()
-    .min(3)
-    .max(150)
+    .pattern(/^0x\w{40}$/)
+    .messages({ 'string.pattern.base': 'Invalid contract address' })
     .required(),
   copies: Joi.number()
     .required(),
