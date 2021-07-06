@@ -256,6 +256,13 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.tokenOfOwnerByIndex(addr4.address, 0)).to.equal(2);
 				expect(await rair721Instance.tokenOfOwnerByIndex(addr1.address, 0)).to.equal(12);
 			});
+
+			it ("Internal Token Indexes", async function() {
+				expect(await rair721Instance.tokenToCollectionIndex(0)).to.equal(0);
+				expect(await rair721Instance.tokenToCollectionIndex(1)).to.equal(1);
+				expect(await rair721Instance.tokenToCollectionIndex(2)).to.equal(0);
+				expect(await rair721Instance.tokenToCollectionIndex(12)).to.equal(0);
+			});
 		});
 
 		describe('Token Operations', function() {

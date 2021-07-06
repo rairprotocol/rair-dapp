@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.4; 
+pragma solidity ^0.8.6; 
 
 import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
 
 interface IRAIR_ERC721 is IERC721 {
+
+	event CollectionCreated(uint indexed id, string name, uint length);
+	event CollectionCompleted(uint indexed id, string name);
+	event ResaleEnabled(uint indexed id, string name);
 
 	// Get the total number of collections in the contract
 	function getCollectionCount() external view returns(uint);
