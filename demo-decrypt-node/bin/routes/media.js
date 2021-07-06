@@ -9,7 +9,7 @@ const readdirp = require('readdirp');
 const fetch = require('node-fetch');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
-const { JWTVerification, validation } = require('../middleware');
+const { JWTVerification, validation, isOwner } = require('../middleware');
 
 const rareify = async (fsRoot, socketInstance) => {
   // Generate a key
@@ -138,10 +138,12 @@ module.exports = context => {
    *       200:
    *         description: Returns if media successfully found and deleted
    */
-  router.delete('/remove/:mediaId', validation('removeMedia', 'params'), async (req, res) => {
+  router.delete('/remove/:mediaId', JWTVerification(context), validation('removeMedia', 'params'), isOwner(context), async (req, res) => {
     const mediaId = req.params.mediaId;
+
     await context.store.removeMedia(mediaId);
     await context.db.File.deleteOne({ _id: mediaId });
+
     try {
       await removePin(mediaId);
     } catch (e) {
@@ -164,7 +166,7 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', validation('getFiles', 'query'), async (req, res, next) => {
+  router.get('/list', JWTVerification(context), validation('getFiles', 'query'), async (req, res, next) => {
     try {
       const { pageNum = '1', filesPerPage = '10', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
 
@@ -177,10 +179,22 @@ module.exports = context => {
         .limit(pageSize)
         .sort([[sortBy, sortDirection]]);
 
-      const list = _.reduce(data, (result, value) => {
+      const { adminNFT: author } = req.user;
+      const reg = new RegExp(/^0x\w{40}:\w+$/);
+
+      const list = _.chain(data)
+        .map(file => {
+          const clonedFile = _.assign({}, file.toObject());
+
+          clonedFile.isOwner = !!(author && reg.test(author) && author === clonedFile.author);
+
+          return clonedFile;
+        })
+        .reduce((result, value) => {
         result[value._id] = value;
         return result;
-      }, {});
+      }, {})
+        .value();
 
       res.json({ success: true, list });
     } catch (e) {
@@ -193,9 +207,10 @@ module.exports = context => {
     const { title, description, contractAddress } = req.body;
     const { adminNFT: author } = req.user;
     const { socketSessionId } = req.query;
+    const reg = new RegExp(/^0x\w{40}:\w+$/);
 
-    if (author) {
-      return res.json({ success: false, message: 'You don\'t have permission to upload the files.' });
+    if (!author || !reg.test(author)) {
+      return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
     }
 
     // Get the socket connection from Express app

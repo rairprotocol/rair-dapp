@@ -52,9 +52,90 @@ Returns a list of the currently registered media
             "contractAddress": "temp value of contract address",
             "description": "Desc 01",
             "uri": "http://rairipfs:8080/ipfs/QmfUHHWHaT1jCuiMcJGZJG4pdo4A6ddoaZKPz6rbCDeNMA",
-            "creationDate": "2021-06-21T10:38:34.095Z"
+            "creationDate": "2021-06-21T10:38:34.095Z",
+            "isOwner": true
         },
     ...
   }
+}
+```
+
+## Error Response
+
+**Condition** : If token expired.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt expired"
+}
+```
+
+OR
+
+**Condition** : If token not valid.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "invalid signature"
+}
+```
+
+OR
+
+**Condition** : If token not valid.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt malformed"
+}
+```
+
+OR
+
+**Condition** : If token not provided.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt must be provided"
+}
+```
+
+OR
+
+**Condition** : If user not found.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "User with provided Token is not found in database"
 }
 ```

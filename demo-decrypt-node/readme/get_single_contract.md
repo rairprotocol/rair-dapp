@@ -59,3 +59,83 @@ Returns found contract
   }
 }
 ```
+
+## Error Response
+
+**Condition** : If token expired.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt expired"
+}
+```
+
+OR
+
+**Condition** : If token not valid.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "invalid signature"
+}
+```
+
+OR
+
+**Condition** : If token not valid.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt malformed"
+}
+```
+
+OR
+
+**Condition** : If token not provided.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt must be provided"
+}
+```
+
+OR
+
+**Condition** : If user not found.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "User with provided Token is not found in database"
+}
+```
