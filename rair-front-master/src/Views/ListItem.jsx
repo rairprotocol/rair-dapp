@@ -60,12 +60,14 @@ const ListItem = ({cid, videoData, refresh, setRefresh, setOpenVideo, admin}) =>
     </div>}
     {admin && <button onClick={e => {
       let body = {file: videoData.file}
+      const token = localStorage.getItem('token')
       fetch('/api/media/remove/'+cid,{
         body: JSON.stringify(body),
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-rair-token': token
         }
       })
       .then(blob => blob.json())
