@@ -132,6 +132,22 @@ OR
 
 OR
 
+**Condition** : If token not provided.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt must be provided"
+}
+```
+
+OR
+
 **Condition** : If user not found.
 
 **Code** : `500 INTERNAL SERVER ERROR`

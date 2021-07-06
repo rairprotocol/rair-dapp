@@ -166,7 +166,7 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', validation('getFiles', 'query'), async (req, res, next) => {
+  router.get('/list', JWTVerification(context), validation('getFiles', 'query'), async (req, res, next) => {
     try {
       const { pageNum = '1', filesPerPage = '10', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
 
@@ -179,10 +179,22 @@ module.exports = context => {
         .limit(pageSize)
         .sort([[sortBy, sortDirection]]);
 
-      const list = _.reduce(data, (result, value) => {
+      const { adminNFT: author } = req.user;
+      const reg = new RegExp(/^0x\w{40}:\w+$/);
+
+      const list = _.chain(data)
+        .map(file => {
+          const clonedFile = _.assign({}, file.toObject());
+
+          clonedFile.isOwner = !!(author && reg.test(author) && author === clonedFile.author);
+
+          return clonedFile;
+        })
+        .reduce((result, value) => {
         result[value._id] = value;
         return result;
-      }, {});
+      }, {})
+        .value();
 
       res.json({ success: true, list });
     } catch (e) {
