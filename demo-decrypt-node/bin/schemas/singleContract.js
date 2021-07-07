@@ -2,6 +2,8 @@ const Joi = require('joi');
 const  { customValidator } = require('./helpers');
 
 module.exports = Joi.object({
-  contractAddress: Joi.custom(customValidator({ min: 3, max: 150 }))
+  contractAddress: Joi.string()
+    .pattern(/^0x\w{40}$/)
+    .messages({ 'string.pattern.base': 'Invalid contract address' })
     .required()
 });
