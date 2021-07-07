@@ -23,6 +23,7 @@ contract Minter_Marketplace is Ownable {
 	mintableCollection[] catalog;
 
 	address public treasury;
+	uint public openSales;
 	uint16 public treasuryFee;
 	uint16 public nodeFee;
 
@@ -102,6 +103,7 @@ contract Minter_Marketplace is Ownable {
 		newCollection.collectionIndex = _collectionIndex;
 		newCollection.tokensAllowed = _tokensAllowed;
 		newCollection.price = _tokenPrice;
+		openSales++;
 		emit AddedCollection(_tokenAddress, _tokensAllowed, _tokenPrice);
 	}
 
@@ -156,6 +158,7 @@ contract Minter_Marketplace is Ownable {
 
 		selectedCollection.tokensAllowed--;
 		if (selectedCollection.tokensAllowed == 0) {
+			openSales--;
 			emit SoldOut(selectedCollection.contractAddress, _collectionID);
 		}
 		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.collectionIndex);
