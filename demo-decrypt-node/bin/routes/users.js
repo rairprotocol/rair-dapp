@@ -15,10 +15,28 @@ module.exports = context => {
     }
   });
 
-  router.get('/:publicAddress', validation('getUser', 'params'), async (req, res, next) => {
+  router.get('/:publicAddress', validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress;
       const user = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
+
+      res.json({ success: true, user });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  router.put('/:publicAddress', validation('updateUser'), validation('singleUser', 'params'),  async (req, res, next) => {
+    try {
+      const publicAddress = req.params.publicAddress;
+      const adminNFT = req.body.adminNFT;
+      const foundUser = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
+
+      if (!foundUser) {
+        res.status(404).send({ success: false, message: 'User not found.' });
+      }
+
+      const user = await context.db.User.findOneAndUpdate({ publicAddress }, { adminNFT }, { new: true });
 
       res.json({ success: true, user });
     } catch (e) {
