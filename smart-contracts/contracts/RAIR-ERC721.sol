@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.4; 
+pragma solidity ^0.8.6;
 
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
@@ -31,11 +31,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	mapping(uint => uint) public tokenToCollection;
 
 	address private _factory;
-	uint16 _royaltyFee;
-
-	event CollectionCreated(uint indexed id);
-	event CollectionCompleted(uint indexed id);
-	event ResaleEnabled(uint indexed id);
+	uint16 private _royaltyFee;
 
 	/// @notice	Token's constructor
 	/// @dev	RAIR is still the ERC721's symbol
@@ -71,18 +67,25 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		newCollection.name = string(_collectionName);
 		newCollection.mintableTokens = _copies;
 		newCollection.enableResaleAt = _resaleAt;
-		emit CollectionCreated(_collections.length - 1);
+		emit CollectionCreated(_collections.length - 1, _collectionName, _copies);
 	}
 
+	/// @notice	Returns the number of collections on the contract
+	/// @dev	Use with get collection to list all of the collections
 	function getCollectionCount() external view override(IRAIR_ERC721) returns(uint) {
 		return _collections.length;
 	}
 
+	/// @notice	Returns information about a collection
+	/// @param	index	Index of the collection
 	function getCollection(uint index) external override(IRAIR_ERC721) view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName) {
 		collection memory selectedCollection =  _collections[index];
 		return (selectedCollection.startingToken, selectedCollection.endingToken, selectedCollection.mintableTokens, selectedCollection.name);
 	}
 
+	/// @notice	Very inefficient way of verifying if an user owns a token within a collection
+	/// @param	owner			User to search
+	/// @param	collectionIndex	Collection to search
 	function hasTokenInCollection(address owner, uint collectionIndex) public view returns (bool) {
 		for (uint i = 0; i < balanceOf(owner); i++) {
 			if (tokenToCollection[tokenOfOwnerByIndex(owner, i)] == collectionIndex) {
@@ -91,6 +94,12 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		}
 		return false;
 	}
+
+	/// @notice	Returns the token index inside the collection
+	/// @param	token	Token ID to find
+	function tokenToCollectionIndex(uint token) public view returns (uint tokenIndex) {
+		return token - _collections[tokenToCollection[token]].startingToken;
+	} 
 
 	/// @notice	Mints new Tokens for A COLLECTION
 	/// @param	to				Address of the new Owner
@@ -105,11 +114,11 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		if (currentCollection.enableResaleAt > 0) {
 			currentCollection.enableResaleAt--;
 			if (currentCollection.enableResaleAt == 0) {
-				emit ResaleEnabled(collectionID);
+				emit ResaleEnabled(collectionID, currentCollection.name);
 			}
 		}
 		if (currentCollection.mintableTokens == 0) {
-			emit CollectionCompleted(collectionID);
+			emit CollectionCompleted(collectionID, currentCollection.name);
 		}
 	}
 
@@ -124,7 +133,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @return _royaltyPaymentData - information used by extensions of this ERC.
 	///                               Must not to be used by implementers of
 	///                               EIP-2981 alone.
-	function royaltyInfo(uint256 _tokenId, uint256 _value,	bytes calldata _data)
+	function royaltyInfo(uint256 _tokenId, uint256 _value, bytes calldata _data)
 		external view override(IRAIR_ERC721, IERC2981) returns (address _receiver, uint256 _royaltyAmount, bytes memory _royaltyPaymentData) {
 		return (getRoleMember(CREATOR, 0), (_value * _royaltyFee) / 100000, abi.encodePacked(_value));
 	}
@@ -134,6 +143,11 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 			|| super.supportsInterface(interfaceId);
 	}
 
+	/// @notice Hook being called before every transfer
+	/// @dev	Transfer locking happens here!
+	/// @param	_from		Token's original owner
+	/// @param	_to			Token's new owner
+	/// @param	_tokenId	Token's ID
 	function _beforeTokenTransfer(address _from, address _to, uint256 _tokenId) internal virtual override(ERC721Enumerable) {
 		if (_from != address(0) && _to != address(0)) {
 			require(_collections[tokenToCollection[_tokenId]].enableResaleAt == 0, "RAIR ERC721: Transfers for this collection haven't been enabled");
