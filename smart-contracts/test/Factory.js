@@ -182,7 +182,7 @@ describe("Token Factory", function () {
 			it ("Minter can mint", async function() {
 				let rair721AsAddress2 = rair721Instance.connect(addr2);
 				expect(await rair721AsAddress2.mint(addr3.address, 0)).to.emit(rair721Instance, 'Transfer');
-				expect(await rair721AsAddress2.mint(addr4.address, 1)).to.emit(rair721Instance, 'ResaleEnabled');
+				expect(await rair721AsAddress2.mint(addr4.address, 1)).to.emit(rair721Instance, 'TransfersEnabled');
 				expect(await rair721AsAddress2.mint(addr3.address, 0)).to.emit(rair721Instance, 'CollectionCompleted');
 				expect(await rair721AsAddress2.mint(addr1.address, 2)).to.emit(rair721Instance, 'Transfer');
 			});

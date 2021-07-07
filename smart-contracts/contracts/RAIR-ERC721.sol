@@ -68,6 +68,9 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		newCollection.mintableTokens = _copies;
 		newCollection.enableResaleAt = _resaleAt;
 		emit CollectionCreated(_collections.length - 1, _collectionName, _copies);
+		if (_resaleAt == 0) {
+			emit TransfersEnabled(_collections.length - 1, _collectionName);
+		}
 	}
 
 	/// @notice	Returns the number of collections on the contract
@@ -114,7 +117,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		if (currentCollection.enableResaleAt > 0) {
 			currentCollection.enableResaleAt--;
 			if (currentCollection.enableResaleAt == 0) {
-				emit ResaleEnabled(collectionID, currentCollection.name);
+				emit TransfersEnabled(collectionID, currentCollection.name);
 			}
 		}
 		if (currentCollection.mintableTokens == 0) {
