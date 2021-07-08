@@ -11,7 +11,7 @@ contract MarketplaceResale_RairTreasuryFundsCommissionRegistry is IRAIR_ERC721_R
 
     IRAIR_ERC721_ResaleAccessControls public accessControls;
 
-    address payable[] public treasuries;
+    address [] public treasuries;
 
     uint16 public maxTreasuryFundsCommission = 100000;
 
@@ -27,7 +27,7 @@ contract MarketplaceResale_RairTreasuryFundsCommissionRegistry is IRAIR_ERC721_R
         accessControls = _accessControls;
     }
 
-    function setTreasuryFundsCommissionSplits(uint256[] calldata _percentages, address payable[] calldata _treasuries) external isWhitelisted returns (bool) {
+    function setTreasuryFundsCommissionSplits(uint256[] calldata _percentages, address[] calldata _treasuries) external isWhitelisted returns (bool) {
             require(_percentages.length == _treasuries.length, "Differing percentage or contractAddress sizes");
 
             // reset any existing splits
@@ -53,7 +53,7 @@ contract MarketplaceResale_RairTreasuryFundsCommissionRegistry is IRAIR_ERC721_R
             return true;
     }
 
-    function getTreasuryFundsCommissionSplits() external view returns (uint256[] memory _percentages, address payable[] memory _treasuries) {
+    function getTreasuryFundsCommissionSplits() external view returns (uint256[] memory _percentages, address [] memory _treasuries) {
         require(treasuries.length > 0, "No treasuries have been registered");
         _percentages = new uint256[](treasuries.length);
         _treasuries = new address payable[](treasuries.length);
