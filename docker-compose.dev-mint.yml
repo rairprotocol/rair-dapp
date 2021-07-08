@@ -58,7 +58,8 @@ services:
     container_name: minting-network
     image: rairtechinc/minting-network:latest
     restart: always
-    ports: 3001:3000
+    ports: 
+      - 3001:3000
     networks:
       - rair-local
     
