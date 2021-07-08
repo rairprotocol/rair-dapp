@@ -216,8 +216,8 @@ module.exports = context => {
     // Get the socket connection from Express app
     const io = req.app.get('io');
     const sockets = req.app.get('sockets');
-    const thisSocketId = sockets[socketSessionId];
-    const socketInstance = io.to(thisSocketId);
+    const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
+    const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : { emit: (eventName, eventData) => { console.log(`Dummy event: "${ eventName }" socket emitter fired with message: "${ eventData.message }" `) } };
 
     socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
 
