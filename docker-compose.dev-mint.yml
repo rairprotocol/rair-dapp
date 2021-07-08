@@ -59,7 +59,7 @@ services:
     image: rairtechinc/minting-network:latest
     restart: always
     ports: 
-      - 3001:3000
+      - 3002:3000
     networks:
       - rair-local
     
