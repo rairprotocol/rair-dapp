@@ -26,19 +26,19 @@ services:
       - 127.0.0.1:5003:5001
     networks:
       - rair-local
-#  rairfront:
-#    container_name: 'rairfront'
-#    image: woda-with-nodejs
-#    ports:
-#      - 8080:8080
-#      - 8443:8443
-#      - 5001:5001
-#      - 5002:5002
-#    volumes:
-#      - /var/dev/EAMD.ucp/Components/tla/EAM/layer1/Thinglish/Once/latestServer/src/sh/:/usr/local/sbin/
-#      - /var/dev/:/var/dev/
-#    networks:
-#      - rair-local
+  rairfront:
+    container_name: 'rairfront'
+    image: rairtech/woda_front:dev1.2
+    ports:
+      - 8080:8080
+      - 8443:8443
+      - 5001:5001
+      - 5002:5002
+    volumes:
+      - /var/dev/EAMD.ucp/Components/tla/EAM/layer1/Thinglish/Once/latestServer/src/sh/:/usr/local/sbin/
+      - /var/dev/:/var/dev/
+    networks:
+      - rair-local
   mongo:
     container_name: mongo
     image: mongo
