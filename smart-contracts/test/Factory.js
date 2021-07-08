@@ -347,6 +347,7 @@ describe("Token Factory", function () {
 			it ("Add a collection", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
 				expect(await minterInstance.addCollection(rair721Instance.address, 5, 1, 999, owner.address)).to.emit(minterInstance, 'AddedCollection');
+				expect(await minterInstance.openSales()).to.equal(1);
 			});	
 
 			it ("Should mint with permissions", async function() {

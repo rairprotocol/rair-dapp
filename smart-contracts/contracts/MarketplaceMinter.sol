@@ -41,6 +41,7 @@ contract Minter_Marketplace is Ownable {
 		treasury = _treasury;
 		treasuryFee = _treasuryFee;
 		nodeFee = _nodeFee;
+		openSales = 0;
 	}
 
 	/// @notice	Sets the new treasury address
@@ -126,6 +127,9 @@ contract Minter_Marketplace is Ownable {
 		require(IAccessControl(selectedCollection.contractAddress).hasRole(bytes32(keccak256("MINTER")), address(this)), "Minting Marketplace: This Marketplace isn't a Minter!");
 		require(IAccessControl(selectedCollection.contractAddress).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)));
 		selectedCollection.price = _tokenPrice;
+		if (selectedCollection.tokensAllowed == 0 && _newTokensAllowed > 0) {
+			openSales++;
+		}
 		selectedCollection.tokensAllowed = _newTokensAllowed;
 		emit UpdatedCollection(selectedCollection.contractAddress, _newTokensAllowed, _tokenPrice);
 	}
