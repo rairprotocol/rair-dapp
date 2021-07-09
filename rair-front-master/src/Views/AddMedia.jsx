@@ -10,7 +10,7 @@ const AddMedia = ({address}) => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState()
     const [author, setAuthor] = useState('')
-    const [token, setToken] = useState('0xd07dc4262bcdbf85190c01c996b4c06a461d2430:50984')
+    const [token, setToken] = useState('0xd07dc4262bcdbf85190c01c996b4c06a461d2430')
     const [category, setCategory] = useState('null')
     const [video, setVideo] = useState(undefined)
     const [uploading, setUploading] = useState(false);
@@ -108,7 +108,7 @@ const AddMedia = ({address}) => {
           formData.append('video', video)
           formData.append('title', title)
           formData.append('description', description)
-          formData.append('contractAddress', 'temp value of contract address')
+          formData.append('contractAddress', token)
           setUploading(true);
           fetch(`/api/media/upload?socketSessionId=${thisSessionId}`, {
             method: 'POST',

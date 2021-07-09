@@ -1,12 +1,12 @@
 const express = require('express');
 const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfs');
+const { pinByHash, unpin } = require('../integrations/pinata');
 const upload = require('../Multer/Config.js');
 const { exec } = require('child_process');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const readdirp = require('readdirp');
-const fetch = require('node-fetch');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
 const { JWTVerification, validation, isOwner } = require('../middleware');
@@ -145,7 +145,15 @@ module.exports = context => {
     await context.db.File.deleteOne({ _id: mediaId });
 
     try {
-      await removePin(mediaId);
+      // unpin from ipfs
+      const unpinIpfs = await removePin(mediaId);
+
+      console.log(`Unpin IPFS: ${ unpinIpfs.Pins }`);
+
+      // unpin from pinata
+      const unpinPinata = await unpin(mediaId);
+
+      console.log(`Unpin PINATA: ${ unpinPinata }`);
     } catch (e) {
       console.warn(`Could not remove pin ${ mediaId }, ${ e }`);
     }
@@ -303,6 +311,10 @@ module.exports = context => {
 
           socketInstance.emit('uploadProgress', { message: `ipfs done.`, last: false, done: 90 });
 
+          await addPin(ipfsCid);
+
+          socketInstance.emit('uploadProgress', { message: `Pinning to ipfs.`, last: false, done: 93 });
+
           await context.store.addMedia(ipfsCid, {
             key: exportedKey, ...meta,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid,
@@ -315,29 +327,19 @@ module.exports = context => {
           });
 
 
-          socketInstance.emit('uploadProgress', { message: 'Stored to DB', last: false, done: 95 });
+          socketInstance.emit('uploadProgress', { message: 'Stored to DB', last: false, done: 96 });
 
           context.hls = StartHLS();
-          fetch('https://api.pinata.cloud/pinning/pinByHash', {
-            method: 'POST',
-            body: JSON.stringify({ hashToPin: ipfsCid }),
-            headers: {
-              pinata_api_key: process.env.PINATA_KEY,
-              pinata_secret_api_key: process.env.PINATA_SECRET,
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            }
-          })
-            .then(blob => blob.json())
-            .then(response => {
-              console.log('PINATA RESPONSE', response);
 
-              socketInstance.emit('uploadProgress', { message: 'Pined to Pinata.', last: true, done: 100 });
+          try {
+            const response = await pinByHash(ipfsCid, title);
 
-            })
-            .catch(err => {
-              console.log('PINATA ERROR', err);
-            });
+            console.log('PINATA RESPONSE', response);
+
+            socketInstance.emit('uploadProgress', { message: 'Pined to Pinata.', last: true, done: 100 });
+          } catch(err) {
+            console.log('PINATA ERROR', err.message);
+          }
         });
       });
     }
