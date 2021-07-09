@@ -28,7 +28,7 @@ services:
       - rair-local
   rairfront:
     container_name: 'rairfront'
-    image: rairtech/woda_front:dev1.2
+    image: rairtechinc/woda_front:dev1.2
     ports:
       - 8080:8080
       - 8443:8443
@@ -54,6 +54,15 @@ services:
       - 27017:27017
     networks:
       - rair-local
+  minting-network:
+    container_name: minting-network
+    image: rairtechinc/minting-network:latest
+    restart: always
+    ports: 
+      - 3002:3000
+    networks:
+      - rair-local
+    
 networks:
   rair-local:
     driver: bridge

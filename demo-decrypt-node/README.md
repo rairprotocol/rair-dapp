@@ -37,6 +37,7 @@ Optionally, use -d flag to run as a daemon
         * [x] /upload - POST - upload the media, [see details here](readme/upload_media.md)
     * [x] /users - POST - create new user, [see details here](readme/create_user.md)
         * [x] /:publicAddress - GET - get single user, [see details here](readme/get_user.md)
+        * [x] /:publicAddress - PUT - update specific user, [see details here](readme/update_user.md)
     * [x] /contracts - POST - create new contract, [see details here](readme/create_contract.md)
         * [x] / - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)

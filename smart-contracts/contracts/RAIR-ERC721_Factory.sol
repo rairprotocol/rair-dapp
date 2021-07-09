@@ -15,10 +15,14 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 	bytes32 public constant OWNER = keccak256("OWNER");
 	bytes32 public constant ERC777 = keccak256("ERC777");
 
-	mapping(address => address[]) ownerToTokens;
+	mapping(address => address[]) public ownerToTokens;
 	mapping(address => address) public tokenToOwner;
 
 	mapping(address => uint) public erc777ToNFTPrice;
+
+	event NewTokensAccepted(address erc777, uint priceForNFT);
+	event TokenNoLongerAccepted(address erc777);
+	event NewTokenDeployed(address owner, uint id, address token);
 
 	/// @notice Factory Constructor
 	/// @param  _pricePerToken    Fee given to the node on every sale
@@ -35,6 +39,7 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 	function add777Token(address _erc777Address, uint _pricePerToken) public onlyRole(OWNER) {
 		grantRole(ERC777, _erc777Address);
 		erc777ToNFTPrice[_erc777Address] = _pricePerToken;
+		emit NewTokensAccepted(_erc777Address, _pricePerToken);
 	}
 
 	/// @notice	Removes an address from the list of allowed minters
@@ -42,12 +47,14 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 	function remove777Token(address _erc777Address) public onlyRole(OWNER) {
 		revokeRole(ERC777, _erc777Address);
 		erc777ToNFTPrice[_erc777Address] = 0;
+		emit TokenNoLongerAccepted(_erc777Address);
 	}
 
-	/// @notice	Displays the entire list of Tokens owned by a creator
-	/// @param	_owner	Address of the Token
-	function tokensByOwner(address _owner) public view returns (address[] memory) {
-		return ownerToTokens[_owner];
+	/// @notice	Returns the number of contracts deployed by an address
+	/// @dev	Use alongside ownerToTokens for the full list of tokens 
+	/// @param	_owner	Wallet address to query
+	function getContractCount(address _owner) public view returns (uint count) {
+		return ownerToTokens[_owner].length;
 	}
 
 	/// @notice Function called by an ERC777 when they send tokens
@@ -73,10 +80,13 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 			IERC777(msg.sender).send(from, amount - (erc777ToNFTPrice[msg.sender] * tokensBought), userData);
 		}
 
+		address[] storage tokensFromOwner = ownerToTokens[from];
+
 		for (uint i = 0; i < tokensBought; i++) {
 			RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
-			ownerToTokens[from].push(address(newToken));
+			tokensFromOwner.push(address(newToken));
 			tokenToOwner[address(newToken)] = from;
+			emit NewTokenDeployed(from, tokensFromOwner.length, address(newToken));
 		}
 	}
 }
