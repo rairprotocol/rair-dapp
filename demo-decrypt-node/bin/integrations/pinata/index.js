@@ -1,10 +1,15 @@
 const axios = require('axios');
 const _ = require('lodash');
 
-async function pinByHash(CID) {
+async function pinByHash(CID, name) {
   const response = await axios.post(
     `${ process.env.PINATA_HOST }/pinning/pinByHash`,
-    { hashToPin: CID },
+    {
+      hashToPin: CID,
+      pinataMetadata: {
+        name: `RAIR_${name}`
+      },
+    },
     {
       headers: {
         pinata_api_key: process.env.PINATA_KEY,

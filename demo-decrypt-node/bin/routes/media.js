@@ -309,9 +309,11 @@ module.exports = context => {
             .value();
           console.log(req.file.originalname, 'ipfs done: ', ipfsCid);
 
+          socketInstance.emit('uploadProgress', { message: `ipfs done.`, last: false, done: 90 });
+
           await addPin(ipfsCid);
 
-          socketInstance.emit('uploadProgress', { message: `ipfs done.`, last: false, done: 90 });
+          socketInstance.emit('uploadProgress', { message: `Pinning to ipfs.`, last: false, done: 93 });
 
           await context.store.addMedia(ipfsCid, {
             key: exportedKey, ...meta,
@@ -325,12 +327,12 @@ module.exports = context => {
           });
 
 
-          socketInstance.emit('uploadProgress', { message: 'Stored to DB', last: false, done: 95 });
+          socketInstance.emit('uploadProgress', { message: 'Stored to DB', last: false, done: 96 });
 
           context.hls = StartHLS();
 
           try {
-            const response = await pinByHash(ipfsCid);
+            const response = await pinByHash(ipfsCid, title);
 
             console.log('PINATA RESPONSE', response);
 
