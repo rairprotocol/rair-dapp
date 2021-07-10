@@ -10,7 +10,7 @@ pipeline {
     stage('Build') {
       steps {
         dir("${env.WORKSPACE}/demo-decrypt-node"){
-        sh 'docker build -t rairtechinc/rairservernode:test.latest .'
+        sh 'docker build -t rairtechinc/rairservernode:latest .'
         }
       }
     }
@@ -21,7 +21,7 @@ pipeline {
     }
     stage('Push') {
       steps {
-        sh 'docker push rairtechinc/rairservernode:test.latest'
+        sh 'docker push rairtechinc/rairservernode:latest'
       }
     }
   }
