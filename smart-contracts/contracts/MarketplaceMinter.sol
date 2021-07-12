@@ -20,6 +20,8 @@ contract Minter_Marketplace is Ownable {
 		uint price;
 	}
 
+	mapping(address => uint[]) public contractToOffers;
+
 	mintableCollection[] catalog;
 
 	address public treasury;
@@ -44,6 +46,10 @@ contract Minter_Marketplace is Ownable {
 		openSales = 0;
 	}
 
+	function getOffersFromContract(address _contract) public view returns (uint[] memory) {
+		return contractToOffers[_contract];
+	} 
+
 	/// @notice	Sets the new treasury address
 	/// @dev	Make sure the treasury is a wallet address!
 	/// @dev	If the treasury is a contract, make sure it has a receive function!
@@ -67,7 +73,7 @@ contract Minter_Marketplace is Ownable {
 	/// @notice	Returns the information about a collection
 	/// @dev	Translates the internal collection schema to individual values
 	/// @param	_index		Index of the collection INSIDE this contract
-	function getCollectionInfo(uint _index) public view returns(address, uint, uint, uint) {
+	function getCollectionInfo(uint _index) public view returns(address contractAddress, uint collectionIndex, uint tokensAllowed, uint price) {
 		mintableCollection memory selectedCollection = catalog[_index];
 		return (
 			selectedCollection.contractAddress,
@@ -105,6 +111,7 @@ contract Minter_Marketplace is Ownable {
 		newCollection.tokensAllowed = _tokensAllowed;
 		newCollection.price = _tokenPrice;
 		openSales++;
+		contractToOffers[_tokenAddress].push(catalog.length - 1);
 		emit AddedCollection(_tokenAddress, _tokensAllowed, _tokenPrice);
 	}
 
