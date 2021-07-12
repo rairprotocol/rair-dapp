@@ -9,6 +9,10 @@ import '@openzeppelin/contracts/access/AccessControl.sol';
 import 'hardhat/console.sol';
 import './RAIR-ERC721.sol';
 
+/// @title  RAIR ERC721 Factory
+/// @notice Handles the deployment of ERC721 RAIR Tokens
+/// @author Juan M. Sanchez M.
+/// @dev 	Uses AccessControl for the reception of ERC777 tokens!
 contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 	
@@ -67,15 +71,7 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 	/// @param operatorData	bytes sent from the operator
 	function tokensReceived(address operator, address from, address to, uint256 amount, bytes calldata userData, bytes calldata operatorData) external onlyRole(ERC777) override {
 		require(amount >= erc777ToNFTPrice[msg.sender], 'RAIR Factory: not enough RAIR tokens to deploy a contract');
-		//console.log('Operator', operator);
-		//console.log('From contract', msg.sender);
-		//console.log('From', from);
-		//console.log('To', to);
-		//console.log('Got',amount,'tokens');
-		//console.log('At',erc777ToNFTPrice[msg.sender],'per token');
 		uint tokensBought = uint((amount / erc777ToNFTPrice[msg.sender]));
-		//console.log("That's",tokensBought,'tokens to be minted');
-		//console.log("Returning",amount - (erc777ToNFTPrice[msg.sender] * tokensBought),'tokens');
 		if (amount - (erc777ToNFTPrice[msg.sender] * tokensBought) > 0) {
 			IERC777(msg.sender).send(from, amount - (erc777ToNFTPrice[msg.sender] * tokensBought), userData);
 		}
