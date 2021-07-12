@@ -1,68 +1,115 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
+import * as ethers from 'ethers'
 
+import * as ERC721Token from '../contracts/RAIR_ERC721.json';
 import CollectionManager from './CollectionManager.jsx';
 
-const ERC721Manager = ({tokenInfo, minter, account}) => {
+const erc721Abi = ERC721Token.default.abi;
+
+const ERC721Manager = ({tokenAddress, minter, account}) => {
+
+	const [erc721Instance, setERC721Instance] = useState();
+	const [tokenInfo, setTokenInfo] = useState();
 	
 	const [collectionName, setCollectionName] = useState('');
 	const [collectionLength, setCollectionLength] = useState(0);
 	const [collectionResaleLimit, setCollectionResaleLimit] = useState(0);
 	const [existingCollectionsData, setExistingCollectionsData] = useState();
 
+	const refreshData = useCallback(async (instance = erc721Instance) => {
+		let tokInfo = {
+			name: await instance.name(),
+			symbol: await instance.symbol(),
+			totalSupply: (await instance.totalSupply()).toString(),
+			collectionCount: (await instance.getCollectionCount()).toString(),
+			balance: (await instance.balanceOf(account)).toString()
+		} 
+		setTokenInfo(tokInfo)
+		let collectionsData = [];
+		for await (let index of [...Array.apply(null, {length: tokInfo.collectionCount}).keys()]) {
+			let colData = (await instance.getCollection(index));
+			collectionsData.push({
+				name: colData.collectionName,
+				startingToken: colData.startingToken.toString(),
+				endingToken: colData.endingToken.toString(),
+				mintableTokensLeft: colData.mintableTokensLeft.toString()
+			});
+		}
+		setExistingCollectionsData(collectionsData);
+	}, [account, erc721Instance]);
+
 	useEffect(() => {
-		const aux = async () => {
-			let collectionsData = [];
-			for await (let index of [...Array.apply(null, {length: tokenInfo.collectionCount}).keys()]) {
-				let colData = (await tokenInfo.instance.getCollection(index));
-				collectionsData.push({
-					name: colData.collectionName,
-					startingToken: colData.startingToken.toString(),
-					endingToken: colData.endingToken.toString(),
-					mintableTokensLeft: colData.mintableTokensLeft.toString()
-				});
-			}
-			setExistingCollectionsData(collectionsData);
-		};
-		aux();
-	}, [tokenInfo])
+		let provider = new ethers.providers.Web3Provider(window.ethereum);
+		let signer = provider.getSigner(0);
+		let erc721 = new ethers.Contract(tokenAddress, erc721Abi, signer);
+		setERC721Instance(erc721);
+		refreshData(erc721);
+	}, [refreshData, tokenAddress])
 	
-	return tokenInfo && <details className='text-center'>
-		<summary>
-			<h3 className='d-inline-block'>
-				Address: {tokenInfo.address}
-			</h3>
+	return <details className='text-center border border-white rounded' style={{position: 'relative'}}>
+		<summary className='py-1'>
+			<b>
+				ERC721 {tokenInfo && tokenInfo.name}<br />
+			</b>
 		</summary>
-		Name: <b>{tokenInfo.name}</b><br />
-		Symbol: {tokenInfo.symbol}<br /><br />
-		Total Supply: {tokenInfo.totalSupply}<br />
-		Collections Created: {tokenInfo.collectionCount}<br />
-		Current Balance: {tokenInfo.balanceOf}<br />
-		<hr className='mx-auto w-75' />
-		{existingCollectionsData && <>
-			<h5> Collections </h5>
-			{existingCollectionsData.map((item, index) => {
-				return <CollectionManager
-							key={index}
-							index={index}
-							collectionInfo={item}
-							tokenInstance={tokenInfo.instance}
-							tokenAddress={tokenInfo.address}
-							minter={minter} />
-			})}
-		</>}
-		<hr className='mx-auto w-75' />
-		Collection Name: <input className='w-50' value={collectionName} onChange={e => setCollectionName(e.target.value)} />
-		<br/>
-		Collection's length: <input className='w-50' type='number' value={collectionLength} onChange={e => setCollectionLength(e.target.value)} />
-		<br />
-		Resale starts at: <input className='w-50' type='number' value={collectionResaleLimit} onChange={e => setCollectionResaleLimit(e.target.value)} />
-		<br />
-		<button disabled={collectionName === '' || collectionLength === 0 || collectionResaleLimit === 0} onClick={() => {
-			tokenInfo.instance.createCollection(collectionName, collectionLength, collectionResaleLimit);
-		}} className='btn btn-success'>
-			Create {collectionLength} tokens under collection {collectionName}
+		Contract Address: <b>{tokenAddress}</b>
+		<button
+			style={{position: 'absolute', left: 0, top: 0}}
+			onClick={refreshData}
+			className='btn btn-dark'>
+			<i className='fas fa-redo' />
 		</button>
-		<hr className='w-100' />
+		<br />
+		<br />
+		{tokenInfo && erc721Instance ? <div className='row mx-0 px-0'>
+			<div className='col-12 col-md-6 border border-secondary rounded'>
+				<h5> ERC721 Info </h5>
+				Name: <b>{tokenInfo.name}</b><br />
+				Symbol: {tokenInfo.symbol}<br /><br />
+				Total Supply: {tokenInfo.totalSupply}<br />
+				Collections Created: {tokenInfo.collectionCount}<br />
+				Current Balance: {tokenInfo.balance}<br />
+			</div>
+			<div className='col-12 col-md-6 border border-secondary rounded'>
+				<h5> Create a new collection </h5>
+				Collection Name: <input className='w-50' value={collectionName} onChange={e => setCollectionName(e.target.value)} />
+				<br/>
+				Collection's length: <input className='w-50' type='number' value={collectionLength} onChange={e => setCollectionLength(e.target.value)} />
+				<br />
+				Resale starts at: <input className='w-50' type='number' value={collectionResaleLimit} onChange={e => setCollectionResaleLimit(e.target.value)} />
+				<br />
+				<button disabled={collectionName === '' || collectionLength === 0 || collectionResaleLimit === 0} onClick={() => {
+					erc721Instance.createCollection(collectionName, collectionLength, collectionResaleLimit);
+				}} className='btn btn-success'>
+					Create {collectionLength} tokens under collection {collectionName}
+				</button>
+			</div>
+			<div className='col-12 col-md-6 border border-secondary rounded'>
+				To sell your unminted collections<br />
+				<button onClick={async e => {
+					erc721Instance.grantRole(await erc721Instance.MINTER(), minter.address);
+				}} className='btn btn-warning'>
+					Approve the Marketplace as a Minter!
+				</button>
+				<br />
+				(once)
+			</div>
+			<div className='col-12 col-md-6 border border-secondary rounded'>
+				{existingCollectionsData && <>
+					<h5> Existing Collections </h5>
+					
+					{existingCollectionsData.map((item, index) => {
+						return <CollectionManager
+									key={index}
+									index={index}
+									collectionInfo={item}
+									tokenInstance={erc721Instance}
+									tokenAddress={tokenInfo.address}
+									minter={minter} />
+					})}
+				</>}
+			</div>
+		</div> : <>Fetching info...</>}
 	</details>
 }
 

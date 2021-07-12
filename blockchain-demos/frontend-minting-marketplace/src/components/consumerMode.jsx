@@ -48,14 +48,21 @@ const ConsumerMode = ({account}) => {
 		<button onClick={fetchData} style={{position: 'absolute', right: 0}} className='btn btn-warning'>
 			{collectionsData ? 'Refresh Marketplace Data!' : 'Get Marketplace Data!'}
 		</button>
-		{collectionsData && <>
-			<h5>Marketplace</h5>
-			Collections up for sale: {collectionsData.length}
+		{collectionsData && <div className='row mx-0 px-0'>
+			<div className='col-12'>
+				<h5>Minter Marketplace</h5>
+				<small>Collections up for sale: {collectionsData.length}</small>
+			</div>
 			<br/>
 			{collectionsData.map((item, index) => {
-				return <ERC721Consumer key={index} index={index} tokenInfo={item} account={account} minter={minterInstance} />
+				return <ERC721Consumer
+					key={index}
+					index={index}
+					tokenInfo={item}
+					account={account}
+					minter={minterInstance} />
 			})}
-		</>}
+		</div>}
 	</>
 }
 

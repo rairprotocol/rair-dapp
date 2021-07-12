@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import logo from './RAIRlogo.png';
+import logo from './RAIRLandscape.png';
 import './App.css';
 
 // Sweetalert2 for the popup messages
@@ -20,7 +20,7 @@ function App() {
 
 	return (
 		<div style={{minHeight: '100vh'}} className="App bg-dark text-white">
-			<img src={logo} className="App-logo" alt="logo" />
+			<img src={logo} style={{maxHeight: '5vh'}} className="App-logo" alt="logo" />
 			<br/>
 			{window.ethereum && account === undefined && <button className='btn btn-primary' onClick={async e => {
 				const data = [{
@@ -62,8 +62,8 @@ function App() {
 					I'm an user!
 				</button>
 			</>}
-			{account && mode && <button onClick={e => setMode()} style={{position: 'absolute', left: 0}} className='btn btn-danger'>
-				Go Back
+			{account && mode && <button onClick={e => setMode()} style={{position: 'absolute', left: 0, top: 0}} className='btn btn-danger'>
+				<i className='fas fa-arrow-left' />
 			</button>}
 			{account && mode === 1 && <CreatorMode account={account} />}
 			{account && mode === 2 && <ConsumerMode account={account} />}
