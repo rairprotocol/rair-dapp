@@ -44,9 +44,15 @@ const ConsumerMode = ({account}) => {
 		setMinterInstance(ethersMinterInstance);
 	}, [])
 
+	useEffect(() => {
+		if (minterInstance) {
+			fetchData();
+		}
+	}, [minterInstance])
+
 	return <>
 		<button onClick={fetchData} style={{position: 'absolute', right: 0}} className='btn btn-warning'>
-			{collectionsData ? 'Refresh Marketplace Data!' : 'Get Marketplace Data!'}
+			<i className='fas fa-redo' />
 		</button>
 		{collectionsData && <div className='row mx-0 px-0'>
 			<div className='col-12'>

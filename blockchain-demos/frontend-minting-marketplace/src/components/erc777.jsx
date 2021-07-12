@@ -9,17 +9,17 @@ const ERC777Manager = ({instance, account}) => {
 	const [targetAddress, setTargetAddress] = useState('');
 	const [targetValue, setTargetValue] = useState(0);
 
-	const refreshData = useCallback(async () => {
+	const refreshData = async () => {
 		setERC777Data({
 			balance: (await instance.balanceOf(account)).toString(),
 			name: await instance.name(),
 			symbol: await instance.symbol(),
 		});
-	}, [account, instance])
+	};
 
 	useEffect(() => {
 		refreshData();
-	}, [refreshData])
+	}, [])
 
 	return <div className='col bg-dark py-4 text-white border border-white rounded' style={{position: 'relative'}}>
 		<h5> ERC777 </h5>

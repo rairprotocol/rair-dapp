@@ -16,7 +16,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 	const [collectionResaleLimit, setCollectionResaleLimit] = useState(0);
 	const [existingCollectionsData, setExistingCollectionsData] = useState();
 
-	const refreshData = useCallback(async (instance = erc721Instance) => {
+	const refreshData = async (instance = erc721Instance) => {
 		let tokInfo = {
 			name: await instance.name(),
 			symbol: await instance.symbol(),
@@ -36,7 +36,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 			});
 		}
 		setExistingCollectionsData(collectionsData);
-	}, [account, erc721Instance]);
+	};
 
 	useEffect(() => {
 		let provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -44,7 +44,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 		let erc721 = new ethers.Contract(tokenAddress, erc721Abi, signer);
 		setERC721Instance(erc721);
 		refreshData(erc721);
-	}, [refreshData, tokenAddress])
+	}, [])
 	
 	return <details className='text-center border border-white rounded' style={{position: 'relative'}}>
 		<summary className='py-1'>
