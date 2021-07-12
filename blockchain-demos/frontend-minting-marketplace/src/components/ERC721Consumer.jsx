@@ -21,10 +21,10 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 		aux();
 	}, [tokenInfo, account])
 	
-	return <details className='text-center'>
+	return <details className='col-12 col-md-4 bg-dark py-4 text-white border border-white rounded'>
 		<summary>
-			<h3 className='d-inline-block'>
-				Sale #{index + 1}
+			<h3 className='d-inline-block' style={{color: Number(tokenInfo.tokensAllowed) === 0 ? 'red' : 'inherit'}}>
+				Offer #{index + 1} ({tokenInfo.tokensAllowed} Left!)
 			</h3>
 		</summary>
 		Contract Address: {tokenInfo.address}<br />
@@ -41,11 +41,11 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 			})}
 		</>}
 		<br />
-		<button onClick={async e => {
+		{Number(tokenInfo.tokensAllowed) !== 0 && <button onClick={async e => {
 			await minter.buyToken(index, {value: tokenInfo.price});
 		}} className='btn btn-success'>
-			Mint a new token!
-		</button>
+			Buy a token for {tokenInfo.price} Wei!
+		</button>}
 		<hr className='w-50 mx-auto' />
 	</details>
 }
