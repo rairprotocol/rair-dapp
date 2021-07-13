@@ -4,12 +4,14 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 	
 	const [balance, setBalance] = useState();
 	const [collectionName, setCollectionName] = useState();
+	const [contractName, setContractName] = useState();
 
 	useEffect(() => {
 		const aux = async () => {
 			let balances = [];
 			let tokensOwned = (await tokenInfo.instance.balanceOf(account)).toString();
 			setCollectionName((await tokenInfo.instance.getCollection(tokenInfo.collectionIndex)).collectionName);
+			setContractName(await tokenInfo.instance.name());
 			if (tokensOwned > 0) {
 				for await (let index of [...Array.apply(null, {length: tokensOwned}).keys()]) {
 					let token = (await tokenInfo.instance.tokenOfOwnerByIndex(account, index)).toString();
@@ -21,19 +23,28 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 			setBalance(balances);
 		};
 		aux();
-	}, [tokenInfo, account])
+	}, [tokenInfo, account]);
 	
-	return <details className='col-12 col-md-4 bg-dark py-4 text-white border border-white rounded'>
+	return <details style={{position: 'relative'}} className='col-12 col-md-4 bg-dark py-4 text-white border border-white rounded'>
 		<summary>
-			Offer #{index + 1}<br />
-			<h3 className='d-inline-block'>
+			<div style={{position: 'absolute', top: 0, right: '2vh'}}>
+				#{index + 1}<br />
+			</div>
+			<h5 className='d-inline-block'>
 				{collectionName}
-			</h3>
-			<h3 style={{color: Number(tokenInfo.tokensAllowed) === 0 ? 'red' : 'inherit'}}>
+			</h5>
+			<div style={{position: 'absolute', top: 0, left: '2vh'}}>
+				@{contractName}
+			</div>
+			<h5 style={{color: Number(tokenInfo.tokensAllowed) === 0 ? 'red' : 'inherit'}}>
 				({tokenInfo.tokensAllowed} Left!)
-			</h3>
+			</h5>
+			{Number(tokenInfo.tokensAllowed) !== 0 && <small>
+				{tokenInfo.price} Wei
+			</small>}
 		</summary>
 		Contract Address: {tokenInfo.address}<br />
+		<br />
 		Collection Index: {tokenInfo.collectionIndex}<br />
 		Tokens allowed to sell: {tokenInfo.tokensAllowed}<br />
 		Each token is sold for {tokenInfo.price} Wei
