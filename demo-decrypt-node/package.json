@@ -34,6 +34,7 @@
     "dotenv": "^8.2.0",
     "eth-sig-util": "^2.0.2",
     "ethereumjs-util": "^5.2.1",
+    "ethers": "^5.4.1",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "foreman": "^3.0.1",
