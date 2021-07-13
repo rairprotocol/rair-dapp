@@ -159,7 +159,7 @@ contract Minter_Marketplace is Ownable {
 		bool hasFees = IERC2981(selectedCollection.contractAddress).supportsInterface(type(IERC2981).interfaceId);
 
 		if (hasFees) {
-			(creatorAddress, amount,) = IRAIR_ERC721(selectedCollection.contractAddress).royaltyInfo(0, selectedCollection.price, 'REEEEE');
+			(creatorAddress, amount,) = IRAIR_ERC721(selectedCollection.contractAddress).royaltyInfo(0, selectedCollection.price, '');
 			payable(creatorAddress).transfer(selectedCollection.price * (100000 - (treasuryFee + nodeFee)) / 100000);
 		}
 
