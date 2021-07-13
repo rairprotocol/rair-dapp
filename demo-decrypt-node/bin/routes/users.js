@@ -1,12 +1,18 @@
 const express = require('express');
 const { validation } = require('../middleware');
+const { nanoid } = require('nanoid');
 
 module.exports = context => {
   const router = express.Router()
 
   router.post('/', validation('createUser'), async (req, res, next) => {
     try {
-      const { publicAddress, adminNFT } = req.body;
+      let { publicAddress, adminNFT } = req.body;
+
+      if (adminNFT === 'temp') {
+        adminNFT = `temp_${nanoid()}`; //FIXME: should be removed right after fix the frontend functionality
+      }
+
       let user = await context.db.User.create({ publicAddress, adminNFT });
 
       res.json({ success: true, user });
