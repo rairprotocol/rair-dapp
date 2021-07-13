@@ -3,11 +3,13 @@ import {useState, useEffect} from 'react'
 const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 	
 	const [balance, setBalance] = useState();
+	const [collectionName, setCollectionName] = useState();
 
 	useEffect(() => {
 		const aux = async () => {
 			let balances = [];
 			let tokensOwned = (await tokenInfo.instance.balanceOf(account)).toString();
+			setCollectionName((await tokenInfo.instance.getCollection(tokenInfo.collectionIndex)).collectionName);
 			if (tokensOwned > 0) {
 				for await (let index of [...Array.apply(null, {length: tokensOwned}).keys()]) {
 					let token = (await tokenInfo.instance.tokenOfOwnerByIndex(account, index)).toString();
@@ -23,8 +25,12 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 	
 	return <details className='col-12 col-md-4 bg-dark py-4 text-white border border-white rounded'>
 		<summary>
-			<h3 className='d-inline-block' style={{color: Number(tokenInfo.tokensAllowed) === 0 ? 'red' : 'inherit'}}>
-				Offer #{index + 1} ({tokenInfo.tokensAllowed} Left!)
+			Offer #{index + 1}<br />
+			<h3 className='d-inline-block'>
+				{collectionName}
+			</h3>
+			<h3 style={{color: Number(tokenInfo.tokensAllowed) === 0 ? 'red' : 'inherit'}}>
+				({tokenInfo.tokensAllowed} Left!)
 			</h3>
 		</summary>
 		Contract Address: {tokenInfo.address}<br />
