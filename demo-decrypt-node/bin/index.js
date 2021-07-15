@@ -10,6 +10,7 @@ const fs = require('fs')
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require("socket.io")
+const { newContract, newMinterCollection, rairMintingInfo } = require('./integrations/ethers');
 require('dotenv').config()
 
 async function main () {
@@ -120,6 +121,16 @@ async function main () {
   });
 
   app.set("io", io);
+
+  // Contracts creation listeners
+  newContract(context.db);
+
+  // Minter listeners
+  newMinterCollection();
+
+  // RAIR listeners
+  rairMintingInfo();
+
 }
 
 (async () => {
