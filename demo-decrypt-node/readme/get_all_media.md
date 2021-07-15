@@ -6,6 +6,19 @@ List all the registered media, their URIs and encrypted status
 
 **Method** : `GET`
 
+**Headers:**
+
+```json
+{
+  "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
 ## Success Response
 
 Returns a list of the currently registered media

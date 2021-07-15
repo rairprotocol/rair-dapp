@@ -16,18 +16,19 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 	const [collectionResaleLimit, setCollectionResaleLimit] = useState(0);
 	const [existingCollectionsData, setExistingCollectionsData] = useState();
 
-	const refreshData = async (instance = erc721Instance) => {
+	const refreshData = async () => {
 		let tokInfo = {
-			name: await instance.name(),
-			symbol: await instance.symbol(),
-			totalSupply: (await instance.totalSupply()).toString(),
-			collectionCount: (await instance.getCollectionCount()).toString(),
-			balance: (await instance.balanceOf(account)).toString()
+			name: await erc721Instance.name(),
+			symbol: await erc721Instance.symbol(),
+			totalSupply: (await erc721Instance.totalSupply()).toString(),
+			collectionCount: (await erc721Instance.getCollectionCount()).toString(),
+			balance: (await erc721Instance.balanceOf(account)).toString(),
+			address: erc721Instance.address
 		} 
 		setTokenInfo(tokInfo)
 		let collectionsData = [];
 		for await (let index of [...Array.apply(null, {length: tokInfo.collectionCount}).keys()]) {
-			let colData = (await instance.getCollection(index));
+			let colData = (await erc721Instance.getCollection(index));
 			collectionsData.push({
 				name: colData.collectionName,
 				startingToken: colData.startingToken.toString(),
@@ -36,14 +37,21 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 			});
 		}
 		setExistingCollectionsData(collectionsData);
+		console.log('fetched');
 	};
+
+	useEffect(() => {
+		if (erc721Instance) {
+			console.log('Fetching')
+			refreshData();
+		}
+	}, [erc721Instance])
 
 	useEffect(() => {
 		let provider = new ethers.providers.Web3Provider(window.ethereum);
 		let signer = provider.getSigner(0);
 		let erc721 = new ethers.Contract(tokenAddress, erc721Abi, signer);
 		setERC721Instance(erc721);
-		refreshData(erc721);
 	}, [])
 	
 	return <details className='text-center border border-white rounded' style={{position: 'relative'}}>

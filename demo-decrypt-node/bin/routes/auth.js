@@ -108,32 +108,44 @@ module.exports = context => {
     //   })
     // }
 
-    if (ethAddres) {
-      const user = (await context.db.User.findOne({ publicAddress: ethAddres })).toObject();
-      const nftIdentifier = _.get(user, 'adminNFT');
+    try {
+      if (ethAddres) {
+        let user = await context.db.User.findOne({ publicAddress: ethAddres });
 
-      if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
-        const [contractAddress, tokenId] = nftIdentifier.split(':');
-        console.log('Verifying user account has the admin token');
-
-        try {
-          const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
-          if (balance < 1) {
-            res.json({
-              success: false,
-              message: 'You don\'t hold the current admin token'
-            });
-          } else {
-            res.json({
-              success: true,
-              message: 'Admin token holder'
-            });
-          }
-        } catch (e) {
-          next(new Error('Could not verify account', e));
+        if (_.isNull(user)) {
+          return res.status(404).send({ success: false, message: 'User not found.' });
         }
+
+        user = user.toObject();
+
+        const nftIdentifier = _.get(user, 'adminNFT');
+
+        if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
+          const [contractAddress, tokenId] = nftIdentifier.split(':');
+          console.log('Verifying user account has the admin token');
+
+          try {
+            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
+            if (balance < 1) {
+              res.json({
+                success: false,
+                message: 'You don\'t hold the current admin token'
+              });
+            } else {
+              res.json({
+                success: true,
+                message: 'Admin token holder'
+              });
+            }
+          } catch (e) {
+            next(new Error('Could not verify account', e));
+          }
+        }
+      } else {
+        res.sendStatus(400);
       }
-    } else {
+    } catch (err) {
+      console.log(err);
       res.sendStatus(400);
     }
   });

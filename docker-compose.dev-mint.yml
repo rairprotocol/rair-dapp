@@ -13,6 +13,7 @@ services:
       - 5000:5000
     networks:
       - rair-local
+    restart: always
   rairipfs:
     container_name: 'rairipfs'
     image:
