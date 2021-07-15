@@ -138,6 +138,7 @@ module.exports = context => {
               });
             }
           } catch (e) {
+            console.log(e);
             next(new Error('Could not verify account', e));
           }
         }
