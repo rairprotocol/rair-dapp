@@ -13,6 +13,8 @@ module.exports = context => {
         adminNFT = `temp_${nanoid()}`; //FIXME: should be removed right after fix the frontend functionality
       }
 
+      publicAddress = publicAddress.toLowerCase();
+
       let user = await context.db.User.create({ publicAddress, adminNFT });
 
       res.json({ success: true, user });
@@ -23,7 +25,7 @@ module.exports = context => {
 
   router.get('/:publicAddress', validation('singleUser', 'params'), async (req, res, next) => {
     try {
-      const publicAddress = req.params.publicAddress;
+      const publicAddress = req.params.publicAddress.toLowerCase();
       const user = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
 
       res.json({ success: true, user });
@@ -34,7 +36,7 @@ module.exports = context => {
 
   router.put('/:publicAddress', validation('updateUser'), validation('singleUser', 'params'),  async (req, res, next) => {
     try {
-      const publicAddress = req.params.publicAddress;
+      const publicAddress = req.params.publicAddress.toLowerCase();
       const adminNFT = req.body.adminNFT;
       const foundUser = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
 
