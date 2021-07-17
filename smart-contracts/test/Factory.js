@@ -1,4 +1,5 @@
 const { expect } = require("chai");
+const { upgrades } = require("hardhat");
 
 describe("Token Factory", function () {
 	let owner, addr1, addr2, addr3, addr4, addrs;
@@ -29,19 +30,31 @@ describe("Token Factory", function () {
 			expect(await erc777instance.granularity()).to.equal(1);
 			expect(await erc777instance.totalSupply()).to.equal(initialSupply);
 
-			erc777instance.on('Sent', (from, to, value) => {
-				//console.log(from, 'Sent', value.toString(), 'to', to);
-			});
+			/*
+			*	Events:
+			*	erc777instance.on('Sent', (from, to, value) => {
+			*		console.log(from, 'Sent', value.toString(), 'to', to);
+			*	});
+			*/
 		});
 
+	})
+
+	describe('Upgradeable Deployments', function() {
 		it ("Factory", async function() {
-			factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
-			expect(await erc777instance.deployed());
+			/*
+			*	Normal deployment:
+			*	variable = await ContractFactory.deploy(...params);
+			*	factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
+			*
+			*	Upgradeable deployment
+			*	variable = await upgrades.deployProxy(ContractFactory, [...params])
+			*/
+			factoryInstance = await upgrades.deployProxy(FactoryFactory, [tokenPrice, erc777instance.address]);
 		});
 
 		it ("Minter Marketplace", async function() {
-			minterInstance = await MinterFactory.deploy(erc777instance.address, 9000, 1000);
-			expect(await minterInstance.deployed());
+			minterInstance = await upgrades.deployProxy(MinterFactory, [erc777instance.address, 9000, 1000]);
 		})
 	})
 

@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.4; 
 
-import '@openzeppelin/contracts/access/Ownable.sol';
+// Used on interfaces
 import '@openzeppelin/contracts/access/AccessControl.sol';
-import "./IRAIR-ERC721.sol";
-import "./IERC2981.sol";
+import "../Tokens/IRAIR-ERC721.sol";
+import "../Tokens/IERC2981.sol";
+
+// Parent classes
+import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+
 import "hardhat/console.sol";
 
 /// @title  Minter Marketplace 
 /// @notice Handles the minting of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the minting mechanisms on other tokens!
-contract Minter_Marketplace is Ownable {
+contract Minter_Marketplace is OwnableUpgradeable {
 	struct mintableCollection {
 		address contractAddress;
 		address nodeAddress;
@@ -39,7 +43,7 @@ contract Minter_Marketplace is Ownable {
 	/// @param	_treasury		The address of the Treasury
 	/// @param	_treasuryFee	Fee given to the treasury every sale (Recommended default: 9%)
 	/// @param	_nodeFee		Fee given to the node on every sale (Recommended default: 1%)
-	constructor(address _treasury, uint16 _treasuryFee, uint16 _nodeFee) {
+	function initialize(address _treasury, uint16 _treasuryFee, uint16 _nodeFee) public initializer {
 		treasury = _treasury;
 		treasuryFee = _treasuryFee;
 		nodeFee = _nodeFee;

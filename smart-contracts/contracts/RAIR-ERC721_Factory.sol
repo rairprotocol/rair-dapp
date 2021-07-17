@@ -1,19 +1,22 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.4; 
+pragma solidity ^0.8.6; 
 
+// Interfaces
 import "@openzeppelin/contracts/utils/introspection/IERC1820Registry.sol";
-import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
-import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
-import '@openzeppelin/contracts/access/AccessControl.sol';
+import "@openzeppelin/contracts-upgradeable/token/ERC777/IERC777Upgradeable.sol";
+
+// Parent classes
+import "@openzeppelin/contracts-upgradeable/token/ERC777/IERC777RecipientUpgradeable.sol";
+import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
 
 import 'hardhat/console.sol';
-import './RAIR-ERC721.sol';
+import './Tokens/RAIR-ERC721.sol';
 
 /// @title  RAIR ERC721 Factory
 /// @notice Handles the deployment of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the reception of ERC777 tokens!
-contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
+contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlUpgradeable {
 	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 	
 	bytes32 public constant OWNER = keccak256("OWNER");
@@ -30,7 +33,7 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 
 	/// @notice Factory Constructor
 	/// @param  _pricePerToken    Fee given to the node on every sale
-	constructor(uint _pricePerToken, address _rairAddress) {
+	function initialize(uint _pricePerToken, address _rairAddress) public initializer {
 		_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
 		_setRoleAdmin(ERC777, OWNER);
 		_setupRole(OWNER, msg.sender);
@@ -73,7 +76,7 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControl {
 		require(amount >= erc777ToNFTPrice[msg.sender], 'RAIR Factory: not enough RAIR tokens to deploy a contract');
 		uint tokensBought = uint((amount / erc777ToNFTPrice[msg.sender]));
 		if (amount - (erc777ToNFTPrice[msg.sender] * tokensBought) > 0) {
-			IERC777(msg.sender).send(from, amount - (erc777ToNFTPrice[msg.sender] * tokensBought), userData);
+			IERC777Upgradeable(msg.sender).send(from, amount - (erc777ToNFTPrice[msg.sender] * tokensBought), userData);
 		}
 
 		address[] storage tokensFromOwner = ownerToTokens[from];
