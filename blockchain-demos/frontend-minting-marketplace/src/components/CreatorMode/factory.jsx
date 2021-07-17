@@ -5,18 +5,23 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 
 	const [erc721Name, setERC721Name] = useState('');
 	const [tokensOwned, setTokensOwned] = useState();
+	const [tokenData, setTokenData] = useState();
 	const [tokensRequired, setTokensRequired] = useState();
 
 	const refreshData = async () => {
-		let tokens = await instance.tokensByOwner(account)
-		setTokensOwned(tokens);
+		let tokenCount = await instance.getContractCount(account);
+		let tokens = [];
+		for (let i = 0; i < tokenCount; i++) {
+			tokens.push(await instance.ownerToTokens(account, i));
+		}
+		setTokensOwned(tokenCount);
 		setDeployedTokens(tokens);
 		setTokensRequired(await instance.erc777ToNFTPrice(erc777Instance.address));
 	}
 
 	useEffect(() => {
 		refreshData();
-	}, [])
+	}, [instance])
 
 	return <div className='col bg-dark py-4 text-white border border-white rounded' style={{position: 'relative'}}>
 		<h5>Factory</h5>

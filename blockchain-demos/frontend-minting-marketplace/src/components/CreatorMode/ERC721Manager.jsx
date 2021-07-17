@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
 
-import * as ERC721Token from '../contracts/RAIR_ERC721.json';
+import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 import CollectionManager from './CollectionManager.jsx';
 
 const erc721Abi = ERC721Token.default.abi;

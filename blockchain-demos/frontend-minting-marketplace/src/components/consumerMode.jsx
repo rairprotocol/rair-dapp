@@ -5,12 +5,12 @@ import * as ethers from 'ethers'
 import * as MinterMarketplace from '../contracts/Minter_Marketplace.json';
 import * as ERC721Token from '../contracts/RAIR_ERC721.json';
 
-import ERC721Consumer from './ERC721Consumer.jsx';
+import ERC721Consumer from './ConsumerMode/ERC721Consumer.jsx';
 
 const minterAbi = MinterMarketplace.default.abi;
 const erc721Abi = ERC721Token.default.abi;
 
-const minterMarketplaceAddress = '0xcB07dFad44C2b694474E1ea6FEc1729b4c6df31B';
+const minterMarketplaceAddress = '0x2f3234af29Cd5E8976D206099DA3998E6B8D3e7b';
 
 const ConsumerMode = ({account}) => {
 

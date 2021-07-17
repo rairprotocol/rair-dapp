@@ -1,5 +1,7 @@
 const ethers = require('ethers');
 const { upgrades } = require("hardhat");
+require("@nomiclabs/hardhat-ethers");
+require('@openzeppelin/hardhat-upgrades');
 
 require('dotenv').config();
 
@@ -22,7 +24,7 @@ if (!process.env.ADDRESS_PRIVATE_KEY) {
 const main = async () => {
 	// Connect to the Binance Testnet, this JsonRpcProvider can be used to connect to any Blockchain!
 	let binanceTestnetProvider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {
-		chainId: 97, symbol: 'BNB', name: 'Binance Testnet'
+		chainId: 97, symbol: 'BNB', name: 'Binance Testnet', timeout: 1000000
 	});
 	console.log(`Connected to ${binanceTestnetProvider._network.name}!`);
 
@@ -34,10 +36,12 @@ const main = async () => {
 	// The contract factory holds all the information about the contract, using the ABI and the Bytecode, the address will be the deployer and owner of the contract
 	let FactoryFactory = await new ethers.ContractFactory(FactoryData.abi, FactoryData.bytecode, currentWallet);
 
+	console.log(FactoryFactory.interface.functions['initialize(uint256,address)']);
+
 	// For deployment, the factory requires 2 things:
 	//		The number of ERC777 tokens required to deploy an ERC721
 	// 			and the address of the ERC777
-	let factoryInstance = await upgrades.deployProxy(FactoryFactory, [10, '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1']);
+	let factoryInstance = await upgrades.deployProxy(FactoryFactory, [10, '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1'], {initializer: 'initialize', gasLimit: 4090000});
 	try {
 		await factoryInstance.deployed();
 	} catch (err) {
