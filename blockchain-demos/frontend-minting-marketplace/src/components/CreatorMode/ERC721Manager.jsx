@@ -37,12 +37,10 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 			});
 		}
 		setExistingCollectionsData(collectionsData);
-		console.log('fetched');
 	};
 
 	useEffect(() => {
 		if (erc721Instance) {
-			console.log('Fetching')
 			refreshData();
 		}
 	}, [erc721Instance])
