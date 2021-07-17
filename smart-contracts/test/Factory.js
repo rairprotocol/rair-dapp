@@ -59,12 +59,12 @@ describe("Token Factory", function () {
 	})
 
 	describe('Factory', function() {
-		describe('Upgrades', function() {
+		/*describe('Upgrades', function() {
 			it ("Should upgrade", async function() {
 				let FactoryV2 = await ethers.getContractFactory("RAIR_Token_Factory_V2");
 				factoryInstance = await upgrades.upgradeProxy(factoryInstance.address, FactoryV2);
 			});
-		});
+		});*/
 
 		describe('Users', function() {
 			it ("Roles should be set up", async function() {
@@ -92,11 +92,11 @@ describe("Token Factory", function () {
 				expect(await erc777instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
 			});
 
-			it ("V2 - Should track number of token holders", async function() {
+			it ("Should track number of token holders", async function() {
 				expect(await factoryInstance.getTokenHoldersCount()).to.equal(1);
 			});
 
-			it ("V2 - Should store the addresses of the token holders", async function() {
+			it ("Should store the addresses of the token holders", async function() {
 				expect(await factoryInstance.tokenHolders(0)).to.equal(owner.address)
 			});
 
@@ -110,6 +110,20 @@ describe("Token Factory", function () {
 
 			it ("Return the token's creator", async function() {
 				expect(await factoryInstance.tokenToOwner(await factoryInstance.ownerToTokens(owner.address, 0))).to.equal(owner.address);
+			});
+		});
+
+		describe('Withdrawals', function() {
+			it ("Cannot withdraw from tokens without the role", async function() {
+				await expect(factoryInstance.withdrawTokens(erc777ExtraInstance.address, tokenPrice)).to.revertedWith("RAIR Factory: Specified contract isn't an approved erc777 contract");
+			});
+
+			it ("Cannot withdraw more than the balance", async function() {
+				await expect(factoryInstance.withdrawTokens(erc777instance.address, tokenPrice + 1)).to.revertedWith("ERC777: transfer amount exceeds balance");
+			});
+
+			it ("Owners should withdraw tokens", async function() {
+				expect(await factoryInstance.withdrawTokens(erc777instance.address, tokenPrice)).to.emit(factoryInstance, 'TokensWithdrawn').withArgs(owner.address, erc777instance.address, tokenPrice);
 			});
 		});
 

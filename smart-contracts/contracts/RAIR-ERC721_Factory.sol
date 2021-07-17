@@ -2,12 +2,12 @@
 pragma solidity ^0.8.6; 
 
 // Interfaces
-import "@openzeppelin/contracts/utils/introspection/IERC1820Registry.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/IERC1820RegistryUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC777/IERC777Upgradeable.sol";
 
 // Parent classes
 import "@openzeppelin/contracts-upgradeable/token/ERC777/IERC777RecipientUpgradeable.sol";
-import '@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol';
 
 import 'hardhat/console.sol';
 import './Tokens/RAIR-ERC721.sol';
@@ -16,8 +16,8 @@ import './Tokens/RAIR-ERC721.sol';
 /// @notice Handles the deployment of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the reception of ERC777 tokens!
-contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlUpgradeable {
-	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
+contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumerableUpgradeable {
+	IERC1820RegistryUpgradeable internal constant _ERC1820_REGISTRY = IERC1820RegistryUpgradeable(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 	
 	bytes32 public constant OWNER = keccak256("OWNER");
 	bytes32 public constant ERC777 = keccak256("ERC777");
@@ -27,9 +27,12 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlUpgrade
 
 	mapping(address => uint) public erc777ToNFTPrice;
 
+	address[] public tokenHolders;
+
 	event NewTokensAccepted(address erc777, uint priceForNFT);
 	event TokenNoLongerAccepted(address erc777);
 	event NewContractDeployed(address owner, uint id, address token);
+	event TokensWithdrawn(address recipient, address erc777, uint amount);
 
 	/// @notice Factory Constructor
 	/// @param  _pricePerToken    Fee given to the node on every sale
@@ -39,6 +42,23 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlUpgrade
 		_setupRole(OWNER, msg.sender);
 		_setupRole(ERC777, _rairAddress);
 		erc777ToNFTPrice[_rairAddress] = _pricePerToken;
+		emit NewTokensAccepted(_rairAddress, _pricePerToken);
+	}
+
+	/// @notice Returns the number of addresses that have deployed a contract
+	function getTokenHoldersCount() public view returns(uint count) {
+		return tokenHolders.length;
+	}
+
+	/// @notice Transfers tokens from the factory to any of the OWNER addresses
+	/// @dev 	If the contract has less than the amount, the ERC777 contract will revert
+	/// @dev 	AccessControl makes sure only an OWNER can withdraw
+	/// @param 	erc777	Address of the ERC777 contract
+	/// @param 	amount	Amount of tokens to withdraw
+	function withdrawTokens(address erc777, uint amount) public onlyRole(OWNER) {
+		require(hasRole(ERC777, erc777), "RAIR Factory: Specified contract isn't an approved erc777 contract");
+		IERC777Upgradeable(erc777).send(msg.sender, amount, "Factory Withdraw");
+		emit TokensWithdrawn(msg.sender, erc777, amount);
 	}
 
 	/// @notice	Adds an address to the list of allowed minters
@@ -80,6 +100,10 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlUpgrade
 		}
 
 		address[] storage tokensFromOwner = ownerToTokens[from];
+		
+		if (tokensFromOwner.length == 0) {
+			tokenHolders.push(from);
+		}
 
 		for (uint i = 0; i < tokensBought; i++) {
 			RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
