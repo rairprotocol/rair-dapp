@@ -1,13 +1,21 @@
 const ethers = require('ethers');
+const { upgrades } = require("hardhat");
+
 require('dotenv').config();
-let MinterData;
+
+let FactoryData;
 
 try {
 	// The ABI describes how the contract works, it's the result of Hardhat / Truffle compiling the .sol files
-	MinterData = require('../artifacts/contracts/MarketplaceMinter.sol/Minter_Marketplace.json');
+	FactoryData = require('../artifacts/contracts/RAIR-ERC721_Factory.sol/RAIR_Token_Factory.json');
 } catch (err) {
 	console.log('Error! Try running "npm run hardhat:compile" to produce artifacts!');
 	console.error(err);
+	return;
+}
+
+if (!process.env.ADDRESS_PRIVATE_KEY) {
+	console.log('Error! You need to provide your private key to the .env file!');
 	return;
 }
 
@@ -24,22 +32,22 @@ const main = async () => {
 	console.log('Balance of', currentWallet.address, 'before the deployment:', (await currentWallet.getBalance()).toString(), binanceTestnetProvider._network.symbol);
 
 	// The contract factory holds all the information about the contract, using the ABI and the Bytecode, the address will be the deployer and owner of the contract
-	let MinterFactory = await new ethers.ContractFactory(MinterData.abi, MinterData.bytecode, currentWallet);
+	let FactoryFactory = await new ethers.ContractFactory(FactoryData.abi, FactoryData.bytecode, currentWallet);
 
 	// For deployment, the factory requires 2 things:
 	//		The number of ERC777 tokens required to deploy an ERC721
 	// 			and the address of the ERC777
-	let minterInstance = await MinterFactory.deploy('0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000);
+	let factoryInstance = await upgrades.deployProxy(FactoryFactory, [10, '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1']);
 	try {
-		await minterInstance.deployed();
+		await factoryInstance.deployed();
 	} catch (err) {
 		console.error(err);
 	}
-	console.log('Your factory contract is deployed! Find it on address', minterInstance.address);
-	console.log('Gas Price:', minterInstance.deployTransaction.gasPrice.toString());
-	console.log('Gas Limit:', minterInstance.deployTransaction.gasLimit.toString());
-	console.log('Transaction Hash:', minterInstance.deployTransaction.hash);
-	console.log('Chain ID:', minterInstance.deployTransaction.chainId);
+	console.log('The Factory contract is deployed! Find it on address', factoryInstance.address);
+	console.log('Gas Price:', factoryInstance.deployTransaction.gasPrice.toString());
+	console.log('Gas Limit:', factoryInstance.deployTransaction.gasLimit.toString());
+	console.log('Transaction Hash:', factoryInstance.deployTransaction.hash);
+	console.log('Chain ID:', factoryInstance.deployTransaction.chainId);
 
 	console.log('Balance of', currentWallet.address, 'after the deployment:', (await currentWallet.getBalance()).toString(), binanceTestnetProvider._network.symbol);
 }
