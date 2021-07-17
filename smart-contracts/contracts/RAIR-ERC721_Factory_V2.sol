@@ -87,6 +87,10 @@ contract RAIR_Token_Factory_V2 is IERC777RecipientUpgradeable, AccessControlUpgr
 		}
 
 		address[] storage tokensFromOwner = ownerToTokens[from];
+		
+		if (tokensFromOwner.length == 0) {
+			tokenHolders.push(from);
+		}
 
 		for (uint i = 0; i < tokensBought; i++) {
 			RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);

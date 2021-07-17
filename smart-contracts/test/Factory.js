@@ -59,6 +59,13 @@ describe("Token Factory", function () {
 	})
 
 	describe('Factory', function() {
+		describe('Upgrades', function() {
+			it ("Should upgrade", async function() {
+				let FactoryV2 = await ethers.getContractFactory("RAIR_Token_Factory_V2");
+				factoryInstance = await upgrades.upgradeProxy(factoryInstance.address, FactoryV2);
+			});
+		});
+
 		describe('Users', function() {
 			it ("Roles should be set up", async function() {
 				expect(await factoryInstance.hasRole(await factoryInstance.OWNER(), owner.address)).to.equal(true);
@@ -73,7 +80,6 @@ describe("Token Factory", function () {
 				expect(factoryInstance.tokensReceived(owner.address, owner.address, factoryInstance.address, tokenPrice, ethers.utils.toUtf8Bytes(''),  ethers.utils.toUtf8Bytes('')))
 					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryInstance.ERC777()}`);
 			});
-
 			it ("Reverts if there aren't enough tokens for at least 1 contract", async function() {
 				expect(erc777instance.send(factoryInstance.address, tokenPrice - 1, ethers.utils.toUtf8Bytes('')))
 					.to.be.revertedWith('RAIR Factory: not enough RAIR tokens to deploy a contract');
@@ -84,6 +90,14 @@ describe("Token Factory", function () {
 				expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName))).to.emit(erc777instance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
 				expect(await erc777instance.balanceOf(owner.address)).to.equal(initialSupply - tokenPrice);
 				expect(await erc777instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
+			});
+
+			it ("V2 - Should track number of token holders", async function() {
+				expect(await factoryInstance.getTokenHoldersCount()).to.equal(1);
+			});
+
+			it ("V2 - Should store the addresses of the token holders", async function() {
+				expect(await factoryInstance.tokenHolders(0)).to.equal(owner.address)
 			});
 
 			it ("Return the ERC777 price of an NFT", async function() {
