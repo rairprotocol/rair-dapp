@@ -29,7 +29,7 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlUpgrade
 
 	event NewTokensAccepted(address erc777, uint priceForNFT);
 	event TokenNoLongerAccepted(address erc777);
-	event NewTokenDeployed(address owner, uint id, address token);
+	event NewContractDeployed(address owner, uint id, address token);
 
 	/// @notice Factory Constructor
 	/// @param  _pricePerToken    Fee given to the node on every sale
@@ -85,7 +85,7 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlUpgrade
 			RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
 			tokensFromOwner.push(address(newToken));
 			tokenToOwner[address(newToken)] = from;
-			emit NewTokenDeployed(from, tokensFromOwner.length, address(newToken));
+			emit NewContractDeployed(from, tokensFromOwner.length, address(newToken));
 		}
 	}
 }

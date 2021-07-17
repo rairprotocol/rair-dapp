@@ -81,7 +81,7 @@ describe("Token Factory", function () {
 
 			it ("Deploys an ERC721 contract after an ERC777 transfer", async function() {
 				// Should return leftover tokens
-				expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName))).to.emit(erc777instance, "Sent").to.emit(factoryInstance, 'NewTokenDeployed');
+				expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName))).to.emit(erc777instance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
 				expect(await erc777instance.balanceOf(owner.address)).to.equal(initialSupply - tokenPrice);
 				expect(await erc777instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
 			});
@@ -111,7 +111,7 @@ describe("Token Factory", function () {
 			});
 
 			it ("Mint a token after another ERC777 transfer", async function() {
-				expect(await erc777ExtraInstance.send(factoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes(''))).to.emit(erc777ExtraInstance, "Sent").to.emit(factoryInstance, 'NewTokenDeployed');
+				expect(await erc777ExtraInstance.send(factoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes(''))).to.emit(erc777ExtraInstance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
 				expect(await erc777ExtraInstance.balanceOf(owner.address)).to.equal((initialSupply - tokenPrice) * 2);
 				expect(await erc777ExtraInstance.balanceOf(factoryInstance.address)).to.equal(tokenPrice * 2);
 				expect(await factoryInstance.getContractCount(owner.address)).to.equal(2);
