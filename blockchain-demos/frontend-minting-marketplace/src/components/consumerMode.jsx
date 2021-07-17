@@ -10,9 +10,7 @@ import ERC721Consumer from './ConsumerMode/ERC721Consumer.jsx';
 const minterAbi = MinterMarketplace.default.abi;
 const erc721Abi = ERC721Token.default.abi;
 
-const minterMarketplaceAddress = '0x2f3234af29Cd5E8976D206099DA3998E6B8D3e7b';
-
-const ConsumerMode = ({account}) => {
+const ConsumerMode = ({account, addresses}) => {
 
 	const [minterInstance, setMinterInstance] = useState();
 	const [collectionsData, setCollectionsData] = useState();
@@ -40,7 +38,7 @@ const ConsumerMode = ({account}) => {
 		let provider = new ethers.providers.Web3Provider(window.ethereum);
 		let signer = provider.getSigner(0);
 
-		let ethersMinterInstance = new ethers.Contract(minterMarketplaceAddress, minterAbi, signer);
+		let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
 		setMinterInstance(ethersMinterInstance);
 	}, [])
 

@@ -14,11 +14,7 @@ const minterAbi = MinterMarketplace.default.abi;
 const factoryAbi = Factory.default.abi;
 const erc777Abi = ERC777.default.abi;
 
-const minterMarketplaceAddress = '0x2f3234af29Cd5E8976D206099DA3998E6B8D3e7b';
-const factoryAddress = '0xDBA62f812cBaA5d0e45601E38878ccF4b541B3e6';
-const erc777Address = '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1';
-
-const CreatorMode = ({account}) => {
+const CreatorMode = ({account, addresses}) => {
 
 	const [erc777Instance, setERC777Instance] = useState();
 	const [factoryInstance, setFactoryInstance] = useState();
@@ -26,19 +22,22 @@ const CreatorMode = ({account}) => {
 	const [deployedTokens, setDeployedTokens] = useState();
 
 	useEffect(() => {
+		if (!addresses) {
+			return;
+		}
 		// Ethers Connection
 		let provider = new ethers.providers.Web3Provider(window.ethereum);
 		let signer = provider.getSigner(0);
 
-		let erc777Instance = new ethers.Contract(erc777Address, erc777Abi, signer);
+		let erc777Instance = new ethers.Contract(addresses.erc777, erc777Abi, signer);
 		setERC777Instance(erc777Instance);
 
-		let ethersMinterInstance = new ethers.Contract(minterMarketplaceAddress, minterAbi, signer);
+		let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
 		setMinterInstance(ethersMinterInstance);
 
-		let factoryInstanceEthers = new ethers.Contract(factoryAddress, factoryAbi, signer);
+		let factoryInstanceEthers = new ethers.Contract(addresses.factory, factoryAbi, signer);
 		setFactoryInstance(factoryInstanceEthers);
-	}, [])
+	}, [addresses])
 
 	return <>
 		<br/>
