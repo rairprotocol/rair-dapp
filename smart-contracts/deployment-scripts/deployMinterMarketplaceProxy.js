@@ -7,7 +7,7 @@ let MinterData;
 
 try {
 	// The ABI describes how the contract works, it's the result of Hardhat / Truffle compiling the .sol files
-	MinterData = require('../artifacts/contracts/MarketplaceMinter.sol/Minter_Marketplace.json');
+	MinterData = require('../artifacts/contracts/Marketplaces/MarketplaceMinter.sol/Minter_Marketplace.json');
 } catch (err) {
 	console.log('Error! Try running "npm run hardhat:compile" to produce artifacts!');
 	console.error(err);
