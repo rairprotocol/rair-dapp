@@ -93,23 +93,23 @@ describe("Token Factory", function () {
 			});
 
 			it ("Should track number of token holders", async function() {
-				expect(await factoryInstance.getTokenHoldersCount()).to.equal(1);
+				expect(await factoryInstance.getCreatorsCount()).to.equal(1);
 			});
 
 			it ("Should store the addresses of the token holders", async function() {
-				expect(await factoryInstance.tokenHolders(0)).to.equal(owner.address)
+				expect(await factoryInstance.creators(0)).to.equal(owner.address)
 			});
 
 			it ("Return the ERC777 price of an NFT", async function() {
-				expect(await factoryInstance.erc777ToNFTPrice(erc777instance.address)).to.equal(tokenPrice);
+				expect(await factoryInstance.deploymentCostForERC777(erc777instance.address)).to.equal(tokenPrice);
 			});
 
 			it ("Return the creator's tokens", async function() {
-				expect(await factoryInstance.getContractCount(owner.address)).to.equal(1);
+				expect(await factoryInstance.getContractCountOf(owner.address)).to.equal(1);
 			});
 
 			it ("Return the token's creator", async function() {
-				expect(await factoryInstance.tokenToOwner(await factoryInstance.ownerToTokens(owner.address, 0))).to.equal(owner.address);
+				expect(await factoryInstance.contractToOwner(await factoryInstance.ownerToContracts(owner.address, 0))).to.equal(owner.address);
 			});
 		});
 
@@ -142,8 +142,8 @@ describe("Token Factory", function () {
 				expect(await erc777ExtraInstance.send(factoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes(''))).to.emit(erc777ExtraInstance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
 				expect(await erc777ExtraInstance.balanceOf(owner.address)).to.equal((initialSupply - tokenPrice) * 2);
 				expect(await erc777ExtraInstance.balanceOf(factoryInstance.address)).to.equal(tokenPrice * 2);
-				expect(await factoryInstance.getContractCount(owner.address)).to.equal(2);
-				expect(await factoryInstance.tokenToOwner(await factoryInstance.ownerToTokens(owner.address, 0))).to.equal(owner.address);
+				expect(await factoryInstance.getContractCountOf(owner.address)).to.equal(2);
+				expect(await factoryInstance.contractToOwner(await factoryInstance.ownerToContracts(owner.address, 0))).to.equal(owner.address);
 			});
 
 			it ("Only the owner can remove an ERC777 token", async function() {
@@ -167,7 +167,7 @@ describe("Token Factory", function () {
 	describe('RAIR 721', function() {
 		describe('Metadata', function() {
 			it ("Roles should be set up", async function() {
-				rair721Instance = await RAIR721Factory.attach(await factoryInstance.ownerToTokens(owner.address, 0))
+				rair721Instance = await RAIR721Factory.attach(await factoryInstance.ownerToContracts(owner.address, 0))
 				//console.log(rair721Instance.functions);
 				expect(await rair721Instance.hasRole(await rair721Instance.CREATOR(), owner.address)).to.equal(true);
 				expect(await rair721Instance.getRoleAdmin(await rair721Instance.MINTER())).to.equal(await rair721Instance.CREATOR());

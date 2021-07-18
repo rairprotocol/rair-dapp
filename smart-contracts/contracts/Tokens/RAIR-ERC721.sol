@@ -55,18 +55,18 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	function createCollection(string memory _collectionName, uint _copies, uint _resaleAt) public onlyRole(CREATOR) {
 		require(_copies >= _resaleAt, "ERC721: Resale start should be less than the total amount of copies");
 		uint lastToken;
-		if (_collections.length == 0) {
-			lastToken = 0;
-		} else {
-			lastToken = _collections[_collections.length - 1].endingToken;
-		}
+		lastToken = _collections.length == 0 ? 0 : _collections[_collections.length - 1].endingToken;
+		
 		collection storage newCollection = _collections.push();
+
 		newCollection.startingToken = lastToken;
 		newCollection.endingToken = newCollection.startingToken + _copies;
 		newCollection.name = string(_collectionName);
 		newCollection.mintableTokens = _copies;
 		newCollection.enableResaleAt = _resaleAt;
+		
 		emit CollectionCreated(_collections.length - 1, _collectionName, _copies);
+		
 		if (_resaleAt == 0) {
 			emit TransfersEnabled(_collections.length - 1, _collectionName);
 		}
