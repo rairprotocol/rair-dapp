@@ -6,13 +6,12 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS = credentials('rairtech-dockerhub')
     VERSION = "${env.BUILD_ID}"
-    BRANCH = "${env.BRANCH}"
+    BRANCH = "${env.GIT.BRANCH}"
   }
   stages {
     stage('Build RAIR node') {
       steps {
-        git branch: "${BRANCH}"
-        echo "for branch ${env.BRANCH_NAME}"
+        echo "for branch ${BRANCH}"
         dir("${env.WORKSPACE}/demo-decrypt-node"){
           sh 'docker build -t rairtechinc/rairservernode:${BRANCH}0.${VERSION} .'
         }
