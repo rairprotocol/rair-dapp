@@ -10,14 +10,14 @@ pipeline {
     stage('Build RAIR node') {
       steps {
         dir("${env.WORKSPACE}/demo-decrypt-node"){
-        sh 'docker build -t rairtechinc/rairservernode:latest .'
+          sh 'docker build -t rairtechinc/rairservernode:0.${env.BUILD_ID} .'
         }
       }
     }
     stage('Build minting-network') {
       steps {
         dir("${env.WORKSPACE}/blockchain-demos/frontend-minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:latest .'
+          sh 'docker build -t rairtechinc/minting-network:0.${env.BUILD_ID} .'
         }
       }
     }
@@ -28,12 +28,12 @@ pipeline {
     }
     stage('Push docker RAIR node') {
       steps {
-        sh 'docker push rairtechinc/rairservernode:latest'
+        sh 'docker push rairtechinc/rairservernode:${env.BUILD_ID}'
       }
     }
     stage('Push docker minting-network') {
       steps {
-        sh 'docker push rairtechinc/minting-network:latest'
+        sh 'docker push rairtechinc/minting-network:0.${env.BUILD_ID}'
       }
     }
   }
