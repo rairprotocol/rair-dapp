@@ -6,19 +6,20 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS = credentials('rairtech-dockerhub')
     VERSION = "${env.BUILD_ID}"
+    BRANCH = "${env.BRANCH}"
   }
   stages {
     stage('Build RAIR node') {
       steps {
         dir("${env.WORKSPACE}/demo-decrypt-node"){
-          sh 'docker build -t rairtechinc/rairservernode:0.${VERSION} .'
+          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}0.${VERSION} .'
         }
       }
     }
     stage('Build minting-network') {
       steps {
         dir("${env.WORKSPACE}/blockchain-demos/frontend-minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:0.${VERSION} .'
+          sh 'docker build -t rairtechinc/minting-network:${BRANCH}0.${VERSION} .'
         }
       }
     }
@@ -29,12 +30,12 @@ pipeline {
     }
     stage('Push docker RAIR node') {
       steps {
-        sh 'docker push rairtechinc/rairservernode:0.${VERSION}'
+        sh 'docker push rairtechinc/rairservernode:${BRANCH}0.${VERSION}'
       }
     }
     stage('Push docker minting-network') {
       steps {
-        sh 'docker push rairtechinc/minting-network:0.${VERSION}'
+        sh 'docker push rairtechinc/minting-network:${BRANCH}0.${VERSION}'
       }
     }
   }
