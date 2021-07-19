@@ -7,18 +7,9 @@ module.exports = Joi.object({
     .required(),
   blockchain: Joi.string()
     .min(1)
-    .max(300)
-    .required(),
+    .max(300),
   contractAddress: Joi.string()
     .pattern(/^0x\w{40}$/)
     .messages({ 'string.pattern.base': 'Invalid contract address' })
-    .required(),
-  copies: Joi.number()
-    .required(),
-  royalty: Joi.number()
-    .required(),
-  license: Joi.boolean()
-    .required(),
-  price: Joi.number()
     .required()
 });

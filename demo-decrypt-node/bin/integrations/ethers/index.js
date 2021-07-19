@@ -44,31 +44,9 @@ const newContract = (db) => {
       try {
         const erc777Instance = new ethers.Contract('contractAddress', ERC777, binanceTestnetProvider);
 
-        const tokenDecimals = await erc777Instance.decimals();
-
-        const tokenGranularity = (await erc777Instance.granularity()).toString();
-
         const tokenName = await erc777Instance.name();
 
-        const tokenSymbol = await erc777Instance.symbol();
-
         const data = {
-          // From demo
-          // tokenAddress: erc777Instance.address,
-          // name: tokenName,
-
-          // symbol: tokenSymbol, //small name
-          // granularity: tokenGranularity,
-          // decimals: tokenDecimals,
-
-          // Expected
-          blockchain: '',
-          copies: '',
-          royalty: '',
-          license: '',
-          price: '',
-
-          // Result
           user: ownerAddress,
           title: tokenName,
           contractAddress: erc777Instance.address,
