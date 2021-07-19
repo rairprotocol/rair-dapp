@@ -29,12 +29,12 @@ pipeline {
     }
     stage('Push docker RAIR node') {
       steps {
-        sh 'docker push rairtechinc/rairservernode:${env.BUILD_ID}'
+        sh 'docker push rairtechinc/rairservernode:0.${VERSION}'
       }
     }
     stage('Push docker minting-network') {
       steps {
-        sh 'docker push rairtechinc/minting-network:0.${env.BUILD_ID}'
+        sh 'docker push rairtechinc/minting-network:0.${VERSION}'
       }
     }
   }
