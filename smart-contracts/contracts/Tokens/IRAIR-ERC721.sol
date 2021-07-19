@@ -15,8 +15,8 @@ interface IRAIR_ERC721 is IERC721 {
 	// Get a specific collection in the contract
 	function getCollection(uint index) external view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName);
 	
-	// Mint a token inside a collection (Minting happens sequentially)
-	function mint(address to, uint collectionID) external;
+	// Mint a token inside a collection
+	function mint(address to, uint collectionID, uint index) external;
 
 	// Ask for the royalty info of the creator
 	// Value is the price for the token, so if token #1 is being sold for 100 ETH and the creator fee is 30%, you-ll get as a result 30 in _royaltyAmount

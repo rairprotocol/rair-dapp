@@ -103,16 +103,43 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		return token - _collections[tokenToCollection[token]].startingToken;
 	} 
 
-	/// @notice	Mints new Tokens for A COLLECTION
-	/// @param	to				Address of the new Owner
-	/// @param	collectionID	Index of the collection to mint
-	function mint(address to, uint collectionID) external override(IRAIR_ERC721) onlyRole(MINTER) {
+	modifier canMint(uint collectionID) {
+		require(_collections.length > collectionID, "RAIR ERC721: Collection does not exist");
+		require(_collections[collectionID].mintableTokens > 0, "RAIR ERC721: Cannot mint tokens from this collection");
+		_;
+	}
+
+	/// @notice	Loops through the collection tokens and returns the first token without an owner
+	/// @dev	LOOPS, do not call this from a contract
+	/// @param	collectionID	Index of the collection to search
+	function getNextSequentialIndex(uint collectionID) public view canMint(collectionID) returns(uint nextIndex) {
+		collection memory currentCollection = _collections[collectionID];
+		if (currentCollection.endingToken - currentCollection.startingToken == currentCollection.mintableTokens) {
+			return 0;
+		}
+		for (uint i = currentCollection.startingToken; i < currentCollection.endingToken; i++) {
+			if (!_exists(i)) {
+				return i - currentCollection.startingToken;
+			}
+		}
+	}
+
+	/// @notice	Mints a specific token within a collection
+	/// @dev	Has to be used alongside getNextSequentialIndex to simulate a sequential minting
+	/// @dev	Anyone that wants a specific token just has to call this
+	/// @param	to					Address of the new token's owner
+	/// @param	collectionID		Collection to mint from
+	/// @param	indexInCollection	Internal index of the token
+	function mint(address to, uint collectionID, uint indexInCollection) external override(IRAIR_ERC721) onlyRole(MINTER) canMint(collectionID) {
 		collection storage currentCollection = _collections[collectionID];
-		require(currentCollection.mintableTokens > 0, "RAIR ERC721: Cannot mint tokens from this collection");
-		//console.log('Minted', currentCollection.endingToken - currentCollection.mintableTokens, 'for', to);
-		_safeMint(to, currentCollection.endingToken - currentCollection.mintableTokens);
-		tokenToCollection[currentCollection.endingToken - currentCollection.mintableTokens] = collectionID;
+		
+		require(indexInCollection < currentCollection.endingToken - currentCollection.startingToken, "RAIR ERC721: Invalid token index");
+
+		_safeMint(to, currentCollection.startingToken + indexInCollection);
+
+		tokenToCollection[currentCollection.startingToken + indexInCollection] = collectionID;
 		currentCollection.mintableTokens--;
+		
 		if (currentCollection.enableResaleAt > 0) {
 			currentCollection.enableResaleAt--;
 			if (currentCollection.enableResaleAt == 0) {
@@ -121,7 +148,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		}
 		if (currentCollection.mintableTokens == 0) {
 			emit CollectionCompleted(collectionID, currentCollection.name);
-		}
+		}	
 	}
 
 	/// @notice Returns the fee for the NFT sale

@@ -24,6 +24,8 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		uint price;
 	}
 
+	uint16 public constant feeDecimals = 2;
+
 	mapping(address => uint[]) public contractToOffers;
 
 	mintableCollection[] catalog;
@@ -37,6 +39,9 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	event UpdatedCollection(address contractAddress, uint collectionIndex, uint price);
 	event TokenMinted(address ownerAddress, uint catalogIndex);
 	event SoldOut(address contractAddress, uint catalogIndex);
+	event ChangedTreasury(address newTreasury);
+	event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
+	event ChangedNodeFee(uint16 newNodeFee);
 
 	/// @notice	Constructor
 	/// @dev	Should start up with the treasury, node and treasury fee
@@ -60,12 +65,21 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @param	_newTreasury	New address
 	function setTreasuryAddress(address _newTreasury) public onlyOwner {
 		treasury = _newTreasury;
+		emit ChangedTreasury(_newTreasury);
 	}
 
 	/// @notice	Sets the new treasury fee
 	/// @param	_newFee	New Fee
 	function setTreasuryFee(uint16 _newFee) public onlyOwner {
 		treasuryFee = _newFee;
+		emit ChangedTreasuryFee(treasury, _newFee);
+	}
+
+	/// @notice	Sets the new fee paid to nodes
+	/// @param	_newFee	New Fee
+	function setNodeFee(uint16 _newFee) public onlyOwner {
+		nodeFee = _newFee;
+		emit ChangedNodeFee(_newFee);
 	}
 
 	/// @notice	Returns the number of collections on the market
@@ -151,7 +165,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @dev	It validates that the ERC721 token supports the interface for royalties and only then, it will give the funds to the creator
 	/// @dev	If the ERC721 collection doesn't have any mintable tokens left, it will revert using the ERC721 error, not in the marketplace!
 	/// @param	_collectionID		Index of the sale within the catalog
-	function buyToken(uint _collectionID) payable public {
+	function buyToken(uint _collectionID, uint internalIndex) payable public {
 		mintableCollection storage selectedCollection = catalog[_collectionID];
 		require(selectedCollection.contractAddress != address(0), "Minting Marketplace: Invalid Collection Selected!");
 		require(selectedCollection.tokensAllowed > 0, "Minting Marketplace: Cannot mint more tokens!");
@@ -176,7 +190,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 			openSales--;
 			emit SoldOut(selectedCollection.contractAddress, _collectionID);
 		}
-		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.collectionIndex);
+		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.collectionIndex, internalIndex);
 		emit TokenMinted(msg.sender, _collectionID);
 	}
 }
