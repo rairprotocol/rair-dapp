@@ -20,7 +20,7 @@ const ConsumerMode = ({account, addresses}) => {
 		let signer = provider.getSigner(0);
 
 		let collectionData = [];
-		for await (let index of [...Array.apply(null, {length: (await minterInstance.getCollectionCount()).toString()}).keys()]) {
+		for await (let index of [...Array.apply(null, {length: (await minterInstance.getOfferCount()).toString()}).keys()]) {
 			let data = await minterInstance.getCollectionInfo(index);
 			collectionData.push({
 				instance: new ethers.Contract(data[0], erc721Abi, signer),
@@ -52,6 +52,15 @@ const ConsumerMode = ({account, addresses}) => {
 		<button onClick={fetchData} style={{position: 'absolute', right: 0}} className='btn btn-warning'>
 			<i className='fas fa-redo' />
 		</button>
+		{
+			// Initializer, do not use!
+			false && <button
+				onClick={async e => await minterInstance.initialize('0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000)}
+				style={{position: 'absolute', left: 0}}
+				className='btn btn-success'>
+				<i className='fas fa-arrow-up' />
+			</button>
+		}
 		{collectionsData && <div className='row mx-0 px-0'>
 			<div className='col-12'>
 				<h5>Minter Marketplace</h5>

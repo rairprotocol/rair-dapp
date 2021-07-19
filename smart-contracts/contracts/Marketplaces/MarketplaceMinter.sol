@@ -16,7 +16,7 @@ import "hardhat/console.sol";
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the minting mechanisms on other tokens!
 contract Minter_Marketplace is OwnableUpgradeable {
-	struct mintableCollection {
+	struct offer {
 		address contractAddress;
 		address nodeAddress;
 		uint collectionIndex;
@@ -28,15 +28,15 @@ contract Minter_Marketplace is OwnableUpgradeable {
 
 	mapping(address => uint[]) public contractToOffers;
 
-	mintableCollection[] catalog;
+	offer[] offerCatalog;
 
 	address public treasury;
 	uint public openSales;
 	uint16 public treasuryFee;
 	uint16 public nodeFee;
 
-	event AddedCollection(address contractAddress, uint collectionIndex, uint price);
-	event UpdatedCollection(address contractAddress, uint collectionIndex, uint price);
+	event AddedOffer(address contractAddress, uint tokensAllowed, uint price, uint catalogIndex);
+	event UpdatedOffer(address contractAddress, uint tokensAllowed, uint price, uint catalogIndex);
 	event TokenMinted(address ownerAddress, uint catalogIndex);
 	event SoldOut(address contractAddress, uint catalogIndex);
 	event ChangedTreasury(address newTreasury);
@@ -84,15 +84,15 @@ contract Minter_Marketplace is OwnableUpgradeable {
 
 	/// @notice	Returns the number of collections on the market
 	/// @dev	Includes completed collections though
-	function getCollectionCount() public view returns(uint) {
-		return catalog.length;
+	function getOfferCount() public view returns(uint) {
+		return offerCatalog.length;
 	}
 
 	/// @notice	Returns the information about a collection
 	/// @dev	Translates the internal collection schema to individual values
 	/// @param	_index		Index of the collection INSIDE this contract
 	function getCollectionInfo(uint _index) public view returns(address contractAddress, uint collectionIndex, uint tokensAllowed, uint price) {
-		mintableCollection memory selectedCollection = catalog[_index];
+		offer memory selectedCollection = offerCatalog[_index];
 		return (
 			selectedCollection.contractAddress,
 			selectedCollection.collectionIndex,
@@ -111,7 +111,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @param	_collectionIndex	Index of the collection inside the ERC721
 	/// @param	_tokenPrice			Price of the individual token IN WEI
 	/// @param	_nodeAddress		Address of the node to be paid
-	function addCollection(
+	function addOffer(
 		address _tokenAddress,
 		uint _tokensAllowed,
 		uint _collectionIndex,
@@ -122,15 +122,15 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		require(IAccessControl(_tokenAddress).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)));
 		(,,uint mintableTokensLeft,) = IRAIR_ERC721(_tokenAddress).getCollection(_collectionIndex);
 		require(mintableTokensLeft >= _tokensAllowed, "Minting Marketplace: Collection doesn't have that many tokens to mint!");
-		mintableCollection storage newCollection = catalog.push();
+		offer storage newCollection = offerCatalog.push();
 		newCollection.contractAddress = _tokenAddress;
 		newCollection.nodeAddress = _nodeAddress;
 		newCollection.collectionIndex = _collectionIndex;
 		newCollection.tokensAllowed = _tokensAllowed;
 		newCollection.price = _tokenPrice;
 		openSales++;
-		contractToOffers[_tokenAddress].push(catalog.length - 1);
-		emit AddedCollection(_tokenAddress, _tokensAllowed, _tokenPrice);
+		contractToOffers[_tokenAddress].push(offerCatalog.length - 1);
+		emit AddedOffer(_tokenAddress, _tokensAllowed, _tokenPrice, offerCatalog.length - 1);
 	}
 
 	/// @notice	Updates the sale information
@@ -141,12 +141,12 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @param	_catalogIndex		Index of the sale within the catalog
 	/// @param	_newTokensAllowed	New number of tokens allowed
 	/// @param	_tokenPrice			New price of the token
-	function updateCollectionSale(
+	function updateOffer(
 		uint _catalogIndex,
 		uint _newTokensAllowed,
 		uint _tokenPrice
 	) public {
-		mintableCollection storage selectedCollection = catalog[_catalogIndex];
+		offer storage selectedCollection = offerCatalog[_catalogIndex];
 		(,,uint mintableTokensLeft,) = IRAIR_ERC721(selectedCollection.contractAddress).getCollection(selectedCollection.collectionIndex);
 		require(_newTokensAllowed <= mintableTokensLeft, "Minting Marketplace: New limit must be lower or equal than the total allowed to mint!");
 		require(IAccessControl(selectedCollection.contractAddress).hasRole(bytes32(keccak256("MINTER")), address(this)), "Minting Marketplace: This Marketplace isn't a Minter!");
@@ -156,7 +156,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 			openSales++;
 		}
 		selectedCollection.tokensAllowed = _newTokensAllowed;
-		emit UpdatedCollection(selectedCollection.contractAddress, _newTokensAllowed, _tokenPrice);
+		emit UpdatedOffer(selectedCollection.contractAddress, _newTokensAllowed, _tokenPrice, _catalogIndex);
 	}
 
 	/// @notice	Receives funds and mints a new token for the sender
@@ -166,7 +166,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @dev	If the ERC721 collection doesn't have any mintable tokens left, it will revert using the ERC721 error, not in the marketplace!
 	/// @param	_collectionID		Index of the sale within the catalog
 	function buyToken(uint _collectionID, uint internalIndex) payable public {
-		mintableCollection storage selectedCollection = catalog[_collectionID];
+		offer storage selectedCollection = offerCatalog[_collectionID];
 		require(selectedCollection.contractAddress != address(0), "Minting Marketplace: Invalid Collection Selected!");
 		require(selectedCollection.tokensAllowed > 0, "Minting Marketplace: Cannot mint more tokens!");
 		require(msg.value >= selectedCollection.price, "Minting Marketplace: Insuficient Funds!");

@@ -84,7 +84,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 				<br />
 				Resale starts at: <input className='w-50' type='number' value={collectionResaleLimit} onChange={e => setCollectionResaleLimit(e.target.value)} />
 				<br />
-				<button disabled={collectionName === '' || collectionLength === 0 || collectionResaleLimit === 0} onClick={() => {
+				<button disabled={collectionName === '' || collectionLength === 0 || collectionResaleLimit < 0} onClick={() => {
 					erc721Instance.createCollection(collectionName, collectionLength, collectionResaleLimit);
 				}} className='btn btn-success'>
 					Create {collectionLength} tokens under collection {collectionName}

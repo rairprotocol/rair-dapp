@@ -400,7 +400,7 @@ describe("Token Factory", function () {
 		describe("Minting Permissions", function() {
 			it ("Refuses to add a collection without a Minter role", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
-				expect(minterInstance.addCollection(rair721Instance.address, 5, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: This Marketplace isn't a Minter!");
+				expect(minterInstance.addOffer(rair721Instance.address, 5, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: This Marketplace isn't a Minter!");
 			});
 
 			it ("Grants Marketplace Minter Role", async function() {
@@ -415,12 +415,12 @@ describe("Token Factory", function () {
 			it ("Refuses to add a number of tokens higher than the mintable limit", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
 				//console.log(await rair721Instance.getCollection(1));
-				expect(minterInstance.addCollection(rair721Instance.address, 10, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: Collection doesn't have that many tokens to mint!");
+				expect(minterInstance.addOffer(rair721Instance.address, 10, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: Collection doesn't have that many tokens to mint!");
 			});
 
 			it ("Add a collection", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
-				expect(await minterInstance.addCollection(rair721Instance.address, 5, 1, 999, owner.address)).to.emit(minterInstance, 'AddedCollection');
+				expect(await minterInstance.addOffer(rair721Instance.address, 5, 1, 999, owner.address)).to.emit(minterInstance, 'AddedOffer').withArgs(rair721Instance.address, 5, 999, 0);
 				expect(await minterInstance.openSales()).to.equal(1);
 			});	
 
@@ -465,11 +465,11 @@ describe("Token Factory", function () {
 
 		describe("Updating Collections", function() {
 			it ("Shouldn't let the creator update the collection info limits with wrong info", async () => {
-				expect(minterInstance.updateCollectionSale(0, 5, 999)).to.revertedWith('Minting Marketplace: New limit must be lower or equal than the total allowed to mint!');
+				expect(minterInstance.updateOffer(0, 5, 999)).to.revertedWith('Minting Marketplace: New limit must be lower or equal than the total allowed to mint!');
 			});
 
 			it ("Should let the creator update the collection info limits", async () => {
-				expect(await minterInstance.updateCollectionSale(0, 4, 9999)).to.emit(minterInstance, 'UpdatedCollection');
+				expect(await minterInstance.updateOffer(0, 4, 9999)).to.emit(minterInstance, 'UpdatedOffer').withArgs(rair721Instance.address, 4, 9999, 0);
 			});
 
 			it ("Shouldn't mint out of bounds", async function() {
