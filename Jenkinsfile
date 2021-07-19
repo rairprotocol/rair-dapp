@@ -11,6 +11,8 @@ pipeline {
   stages {
     stage('Build RAIR node') {
       steps {
+        git branch: $"${BRANCH"}
+        echo "for branch ${env.BRANCH_NAME}",   .....
         dir("${env.WORKSPACE}/demo-decrypt-node"){
           sh 'docker build -t rairtechinc/rairservernode:${BRANCH}0.${VERSION} .'
         }
