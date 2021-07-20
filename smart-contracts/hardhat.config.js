@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
+require('@openzeppelin/hardhat-upgrades');
 require('dotenv').config()
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -9,7 +10,8 @@ module.exports = {
     hardhat: {
       forking: {
         url: process.env.ALCHEMY_API,
-        blockNumber: 12420727
+        blockNumber: 12420727,
+        timeout: 1000000
       }
     }
   },

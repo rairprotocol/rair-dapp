@@ -5,22 +5,38 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 
 	const [erc721Name, setERC721Name] = useState('');
 	const [tokensOwned, setTokensOwned] = useState();
+	const [tokenData, setTokenData] = useState();
 	const [tokensRequired, setTokensRequired] = useState();
 
 	const refreshData = async () => {
-		let tokens = await instance.tokensByOwner(account)
-		setTokensOwned(tokens);
+		let tokenCount = await instance.getContractCount(account);
+		let tokens = [];
+		for (let i = 0; i < tokenCount; i++) {
+			tokens.push(await instance.ownerToContracts(account, i));
+		}
+		setTokensOwned(tokenCount);
 		setDeployedTokens(tokens);
-		setTokensRequired(await instance.erc777ToNFTPrice(erc777Instance.address));
+		setTokensRequired(await instance.deploymentCostForERC777(erc777Instance.address));
 	}
 
 	useEffect(() => {
 		refreshData();
-	}, [])
+	}, [instance])
 
 	return <div className='col bg-dark py-4 text-white border border-white rounded' style={{position: 'relative'}}>
 		<h5>Factory</h5>
 		<small>({instance.address})</small><br />
+		
+		{
+			// Initializer, do not use
+		}
+		{/*false && <button
+			style={{position: 'absolute', right: 0, top: 0}}
+			onClick={e => instance.initialize(10, erc777Instance.address)}
+			className='btn btn-success'>
+			<i className='fas fa-arrow-up' />
+		</button>*/}
+		
 		<button
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}

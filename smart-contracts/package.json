@@ -9,8 +9,8 @@
   "scripts": {
     "hardhat:compile": "hardhat compile",
     "hardhat:test": "hardhat test",
-    "deploy-factory": "node ./deployment-scripts/deployFactory.js",
-    "deploy-minter": "node ./deployment-scripts/deployMinterMarketplace.js"
+    "deploy-factory-proxy": "node ./deployment-scripts/deployFactoryProxy.js",
+    "deploy-minter-proxy": "node ./deployment-scripts/deployMinterMarketplaceProxy.js"
   },
   "author": "Juan Miguel Sanchez Mola <jmsm412@gmail.com>",
   "homepage": "",
@@ -26,6 +26,8 @@
     "hardhat-gas-reporter": "^1.0.4"
   },
   "dependencies": {
+    "@openzeppelin/contracts-upgradeable": "^4.2.0",
+    "@openzeppelin/hardhat-upgrades": "^1.9.0",
     "dotenv": "^10.0.0"
   }
 }

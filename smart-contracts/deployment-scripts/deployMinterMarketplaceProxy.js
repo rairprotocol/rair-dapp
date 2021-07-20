@@ -1,13 +1,21 @@
 const ethers = require('ethers');
+const { upgrades } = require("hardhat");
+
 require('dotenv').config();
+
 let MinterData;
 
 try {
 	// The ABI describes how the contract works, it's the result of Hardhat / Truffle compiling the .sol files
-	MinterData = require('../artifacts/contracts/MarketplaceMinter.sol/Minter_Marketplace.json');
+	MinterData = require('../artifacts/contracts/Marketplaces/MarketplaceMinter.sol/Minter_Marketplace.json');
 } catch (err) {
 	console.log('Error! Try running "npm run hardhat:compile" to produce artifacts!');
 	console.error(err);
+	return;
+}
+
+if (!process.env.ADDRESS_PRIVATE_KEY) {
+	console.log('Error! You need to provide your private key to the .env file!');
 	return;
 }
 
@@ -29,13 +37,13 @@ const main = async () => {
 	// For deployment, the factory requires 2 things:
 	//		The number of ERC777 tokens required to deploy an ERC721
 	// 			and the address of the ERC777
-	let minterInstance = await MinterFactory.deploy('0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000);
+	let minterInstance = await upgrades.deployProxy(MinterFactory, ['0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000]);
 	try {
 		await minterInstance.deployed();
 	} catch (err) {
 		console.error(err);
 	}
-	console.log('Your factory contract is deployed! Find it on address', minterInstance.address);
+	console.log('The Minter Marketplace contract is deployed! Find it on address', minterInstance.address);
 	console.log('Gas Price:', minterInstance.deployTransaction.gasPrice.toString());
 	console.log('Gas Limit:', minterInstance.deployTransaction.gasLimit.toString());
 	console.log('Transaction Hash:', minterInstance.deployTransaction.hash);
