@@ -20,7 +20,7 @@ pipeline {
     stage('Build minting-network') {
       steps {
         dir("${env.WORKSPACE}/blockchain-demos/frontend-minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} -t rairtechinc/dev_minting-network:dev_latest --no-cache .'
+          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} -t rairtechinc/minting-network:dev_latest --no-cache .'
         }
       }
     }
