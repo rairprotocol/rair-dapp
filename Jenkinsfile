@@ -13,14 +13,14 @@ pipeline {
       steps {
         echo 'for branch' + env.BRANCH_NAME
         dir("${env.WORKSPACE}/demo-decrypt-node"){
-          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_0.${VERSION} .'
+          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_0.${VERSION} --no-cache .'
         }
       }
     }
     stage('Build minting-network') {
       steps {
         dir("${env.WORKSPACE}/blockchain-demos/frontend-minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} .'
+          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} --no-cache .'
         }
       }
     }
