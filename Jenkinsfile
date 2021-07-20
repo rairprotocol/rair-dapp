@@ -39,6 +39,16 @@ pipeline {
         sh 'docker push rairtechinc/minting-network:${BRANCH}_0.${VERSION}'
       }
     }
+    stage('Update docker version file') {
+      steps {
+        dir("${env.WORKSPACE}/demo-decrypt-node") {
+          script {
+            def data = "0.${VERSION}"
+            writeFile(file: 'VERSION'. text: data")
+          }
+        }
+      }
+    }
   }
   post {
     always {
