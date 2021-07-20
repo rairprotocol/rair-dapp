@@ -77,7 +77,6 @@ function App() {
 			setChainId(chainId);
 			setAddresses(contractAddresses[chainId]);
 		});
-		console.log(window.ethereum)
 		setChainId(window.ethereum.chainId);
 		setAddresses(contractAddresses[window.ethereum.chainId]);
 	}, [])
@@ -90,7 +89,7 @@ function App() {
 						className='btn btn-warning'
 						disabled={chainId === '0x61'}
 						onClick={async e => {
-							console.log(await window.ethereum.request({method: 'wallet_addEthereumChain', params: [binanceTestnetData]}));
+							await window.ethereum.request({method: 'wallet_addEthereumChain', params: [binanceTestnetData]});
 							setAccount();
 							setChainId();
 						}}>

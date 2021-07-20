@@ -9,7 +9,6 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 	const [tokensRequired, setTokensRequired] = useState();
 
 	const refreshData = async () => {
-		console.log(instance.functions);
 		let tokenCount = await instance.getContractCount(account);
 		let tokens = [];
 		for (let i = 0; i < tokenCount; i++) {
