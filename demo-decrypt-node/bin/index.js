@@ -1,17 +1,24 @@
 const port = process.env.PORT
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const path = require('path')
-const low = require('lowdb')
-const FileAsync = require('lowdb/adapters/FileAsync')
-const StartHLS = require('./hls-starter.js')
-const fs = require('fs')
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const low = require('lowdb');
+const FileAsync = require('lowdb/adapters/FileAsync');
+const StartHLS = require('./hls-starter.js');
+const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const Socket = require("socket.io")
-const { newContract, newMinterCollection, rairMintingInfo } = require('./integrations/ethers');
-require('dotenv').config()
+const Socket = require("socket.io");
+const {
+  newContractBNB,
+  newMinterCollectionBNB,
+  rairMintingInfoBNB,
+  newContractETH,
+  newMinterCollectionETH,
+  rairMintingInfoETH
+} = require('./integrations/ethers');
+require('dotenv').config();
 
 async function main () {
   const adapter = new FileAsync('./db/store.json')
@@ -78,7 +85,9 @@ async function main () {
     db: {
       Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
       File: _mongoose.model('File', require('./models/file'), 'File'),
-      User: _mongoose.model('User', require('./models/user'), 'User')
+      User: _mongoose.model('User', require('./models/user'), 'User'),
+      Product: _mongoose.model('Product', require('./models/product'), 'Product'),
+      SoldItem: _mongoose.model('SoldItem', require('./models/soldItem'), 'SoldItem')
     }
   }
 
@@ -88,7 +97,7 @@ async function main () {
   app.use('/stream', require('./routes/stream')(context))
   app.use('/api', require('./routes')(context))
   app.use(express.static(path.join(__dirname, 'public')))
-  app.use(function (error, req, res, next) {
+  app.use(function (error, req, res) {
     console.error(error)
     res.status(500).json({ success: false, error: true, message: error.message })
   })
@@ -123,13 +132,16 @@ async function main () {
   app.set("io", io);
 
   // Contracts creation listeners
-  newContract(context.db);
+  newContractBNB(context.db);
+  newContractETH(context.db);
 
   // Minter listeners
-  newMinterCollection();
+  newMinterCollectionBNB(context.db);
+  newMinterCollectionETH(context.db);
 
   // RAIR listeners
-  rairMintingInfo();
+  // rairMintingInfoBNB();
+  // rairMintingInfoETH();
 
 }
 
