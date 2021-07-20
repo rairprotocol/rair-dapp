@@ -44,7 +44,7 @@ pipeline {
         dir("${env.WORKSPACE}/demo-decrypt-node") {
           script {
             def data = "0.${VERSION}"
-            writeFile(file: 'VERSION'. text: data")
+            writeFile(file: 'VERSION'. text: 'data')
           }
         }
       }
