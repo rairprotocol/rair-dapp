@@ -45,7 +45,7 @@ const rairMintingInfoBNB = async (db, ownerAddress) => {
   }
 };
 
-const newContractBNB = (db) => {
+const newTokenGroupBNB = (db) => {
   try {
     factoryInstanceBNB.on('NewTokenDeployed(address, uint256, address)', async (ownerAddress, length, contractAddress) => {
       try {
@@ -54,9 +54,9 @@ const newContractBNB = (db) => {
         const tokenName = await erc777Instance.name();
 
         const data = {
-          user: ownerAddress,
+          // user: ownerAddress,
           title: tokenName,
-          contractAddress: erc777Instance.address,
+          tokenGroupAddress: erc777Instance.address,
           blockchain: 'BNB'
         };
 
@@ -107,7 +107,7 @@ const rairMintingInfoETH = async (db, ownerAddress) => {
   }
 };
 
-const newContractETH = (db) => {
+const newTokenGroupETH = (db) => {
   try {
     factoryInstanceETH.on('NewTokenDeployed(address, uint256, address)', async (ownerAddress, length, contractAddress) => {
       try {
@@ -116,9 +116,9 @@ const newContractETH = (db) => {
         const tokenName = await erc777Instance.name();
 
         const data = {
-          user: ownerAddress,
+          // user: ownerAddress,
           title: tokenName,
-          contractAddress: erc777Instance.address,
+          tokenGroupAddress: erc777Instance.address,
           blockchain: 'ETH'
         };
 
@@ -145,10 +145,10 @@ const newMinterCollectionETH = (db) => {
 };
 
 module.exports = {
-  newContractBNB,
+  newTokenGroupBNB,
   newMinterCollectionBNB,
   rairMintingInfoBNB,
-  newContractETH,
+  newTokenGroupETH,
   newMinterCollectionETH,
   rairMintingInfoETH
 };

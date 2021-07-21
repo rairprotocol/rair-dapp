@@ -5,7 +5,8 @@ const { Schema } = mongoose;
 const Product = new Schema({
   name: { type: String, required: true },
   productAddress: { type: String, required: true },
-  contract: { type: String, required: true },
+  blockchain: { type: String, required: true },
+  tokenGroup: { type: String, required: true },
   copies: { type: Number, required: true },
   resale: { type: Number, required: true },
   price: { type: Number },

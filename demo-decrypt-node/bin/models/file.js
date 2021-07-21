@@ -12,8 +12,7 @@ const File = new Schema({
   mainManifest: { type: String, required: true },
   thumbnail: { type: String, required: true },
   uri: { type: String, required: true },
-  contractAddress: { type: String, required: true },
-  currentOwner: { type: String, required: true },
+  productAddress: { type: String, required: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 

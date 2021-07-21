@@ -1,10 +1,10 @@
-# Get Specific Contract
+# Remove TokenGroup
 
-Find specific contract with all data for specific user by contract address
+Remove specific TokenGroup of the user
 
-**URL** : `/api/contracts/:contractAddress`
+**URL** : `/api/tokenGroups/:tokenGroupAddress`
 
-**Method** : `GET`
+**Method** : `DELETE`
 
 **Headers:**
 
@@ -23,7 +23,7 @@ Find specific contract with all data for specific user by contract address
 
 ```json
 {
-  "contractAddress": {
+  "tokenGroupAddress": {
     "required": true,
     "content": {
       "type": "string"
@@ -34,7 +34,7 @@ Find specific contract with all data for specific user by contract address
 
 ## Success Response
 
-Returns found contract
+Returns if removed successfully
 
 **Code** : `200 OK`
 
@@ -44,19 +44,7 @@ Returns found contract
 
 ```json
 {
-  "success": true,
-  "contract": {
-    "_id": "60d0819870a807001c75164d",
-    "user": "user NFT",
-    "title": "test contract 1",
-    "blockchain": "some data in blockchain",
-    "contractAddress": "contractAddress",
-    "copies": 1000,
-    "royalty": 30,
-    "license": true,
-    "price": 0.001,
-    "creationDate": "2021-06-21T12:10:00.623Z"
-  }
+  "success": true
 }
 ```
 

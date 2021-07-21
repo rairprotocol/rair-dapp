@@ -7,6 +7,6 @@ module.exports = context => {
   router.use('/docs', require('./swagger'));
   router.use('/media', require('./media')(context));
   router.use('/users', require('./users')(context));
-  router.use('/contracts', JWTVerification(context), require('./contracts')(context));
+  router.use('/tokenGroups', JWTVerification(context), require('./tokenGroups')(context));
   return router;
 };
