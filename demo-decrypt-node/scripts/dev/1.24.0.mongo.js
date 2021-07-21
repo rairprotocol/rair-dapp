@@ -1,9 +1,10 @@
 // Move data from Contract collection to new collection TokenGroup
 db.Contract.find().toArray().forEach((Contract) => {
   const tokenGroup = {
-    tokenGroupAddress: Contract.contractAddress,
     title: Contract.title,
-    creationDate: Contract.creationDate
+    tokenGroupAddress: Contract.contractAddress,
+    user: Contract.user,
+    creationDate: Contract.creationDate,
   };
 
   if (Contract.contractAddress) {
