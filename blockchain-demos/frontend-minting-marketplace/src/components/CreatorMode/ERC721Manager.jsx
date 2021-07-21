@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
 
-import * as ERC721Token from '../contracts/RAIR_ERC721.json';
+import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 import CollectionManager from './CollectionManager.jsx';
 
 const erc721Abi = ERC721Token.default.abi;
@@ -37,12 +37,10 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 			});
 		}
 		setExistingCollectionsData(collectionsData);
-		console.log('fetched');
 	};
 
 	useEffect(() => {
 		if (erc721Instance) {
-			console.log('Fetching')
 			refreshData();
 		}
 	}, [erc721Instance])
@@ -86,7 +84,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 				<br />
 				Resale starts at: <input className='w-50' type='number' value={collectionResaleLimit} onChange={e => setCollectionResaleLimit(e.target.value)} />
 				<br />
-				<button disabled={collectionName === '' || collectionLength === 0 || collectionResaleLimit === 0} onClick={() => {
+				<button disabled={collectionName === '' || collectionLength === 0 || collectionResaleLimit < 0} onClick={() => {
 					erc721Instance.createCollection(collectionName, collectionLength, collectionResaleLimit);
 				}} className='btn btn-success'>
 					Create {collectionLength} tokens under collection {collectionName}

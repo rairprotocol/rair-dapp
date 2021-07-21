@@ -1,4 +1,5 @@
 const { expect } = require("chai");
+const { upgrades } = require("hardhat");
 
 describe("Token Factory", function () {
 	let owner, addr1, addr2, addr3, addr4, addrs;
@@ -29,23 +30,42 @@ describe("Token Factory", function () {
 			expect(await erc777instance.granularity()).to.equal(1);
 			expect(await erc777instance.totalSupply()).to.equal(initialSupply);
 
-			erc777instance.on('Sent', (from, to, value) => {
-				//console.log(from, 'Sent', value.toString(), 'to', to);
-			});
+			/*
+			*	Events:
+			*	erc777instance.on('Sent', (from, to, value) => {
+			*		console.log(from, 'Sent', value.toString(), 'to', to);
+			*	});
+			*/
 		});
 
+	})
+
+	describe('Upgradeable Deployments', function() {
 		it ("Factory", async function() {
-			factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
-			expect(await erc777instance.deployed());
+			/*
+			*	Normal deployment:
+			*	variable = await ContractFactory.deploy(...params);
+			*	factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
+			*
+			*	Upgradeable deployment
+			*	variable = await upgrades.deployProxy(ContractFactory, [...params])
+			*/
+			factoryInstance = await upgrades.deployProxy(FactoryFactory, [tokenPrice, erc777instance.address]);
 		});
 
 		it ("Minter Marketplace", async function() {
-			minterInstance = await MinterFactory.deploy(erc777instance.address, 9000, 1000);
-			expect(await minterInstance.deployed());
+			minterInstance = await upgrades.deployProxy(MinterFactory, [erc777instance.address, 9000, 1000]);
 		})
 	})
 
 	describe('Factory', function() {
+		/*describe('Upgrades', function() {
+			it ("Should upgrade", async function() {
+				let FactoryV2 = await ethers.getContractFactory("RAIR_Token_Factory_V2");
+				factoryInstance = await upgrades.upgradeProxy(factoryInstance.address, FactoryV2);
+			});
+		});*/
+
 		describe('Users', function() {
 			it ("Roles should be set up", async function() {
 				expect(await factoryInstance.hasRole(await factoryInstance.OWNER(), owner.address)).to.equal(true);
@@ -60,7 +80,6 @@ describe("Token Factory", function () {
 				expect(factoryInstance.tokensReceived(owner.address, owner.address, factoryInstance.address, tokenPrice, ethers.utils.toUtf8Bytes(''),  ethers.utils.toUtf8Bytes('')))
 					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryInstance.ERC777()}`);
 			});
-
 			it ("Reverts if there aren't enough tokens for at least 1 contract", async function() {
 				expect(erc777instance.send(factoryInstance.address, tokenPrice - 1, ethers.utils.toUtf8Bytes('')))
 					.to.be.revertedWith('RAIR Factory: not enough RAIR tokens to deploy a contract');
@@ -68,21 +87,43 @@ describe("Token Factory", function () {
 
 			it ("Deploys an ERC721 contract after an ERC777 transfer", async function() {
 				// Should return leftover tokens
-				expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName))).to.emit(erc777instance, "Sent").to.emit(factoryInstance, 'NewTokenDeployed');
+				expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName))).to.emit(erc777instance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
 				expect(await erc777instance.balanceOf(owner.address)).to.equal(initialSupply - tokenPrice);
 				expect(await erc777instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
 			});
 
+			it ("Should track number of token holders", async function() {
+				expect(await factoryInstance.getCreatorsCount()).to.equal(1);
+			});
+
+			it ("Should store the addresses of the token holders", async function() {
+				expect(await factoryInstance.creators(0)).to.equal(owner.address)
+			});
+
 			it ("Return the ERC777 price of an NFT", async function() {
-				expect(await factoryInstance.erc777ToNFTPrice(erc777instance.address)).to.equal(tokenPrice);
+				expect(await factoryInstance.deploymentCostForERC777(erc777instance.address)).to.equal(tokenPrice);
 			});
 
 			it ("Return the creator's tokens", async function() {
-				expect(await factoryInstance.getContractCount(owner.address)).to.equal(1);
+				expect(await factoryInstance.getContractCountOf(owner.address)).to.equal(1);
 			});
 
 			it ("Return the token's creator", async function() {
-				expect(await factoryInstance.tokenToOwner(await factoryInstance.ownerToTokens(owner.address, 0))).to.equal(owner.address);
+				expect(await factoryInstance.contractToOwner(await factoryInstance.ownerToContracts(owner.address, 0))).to.equal(owner.address);
+			});
+		});
+
+		describe('Withdrawals', function() {
+			it ("Cannot withdraw from tokens without the role", async function() {
+				await expect(factoryInstance.withdrawTokens(erc777ExtraInstance.address, tokenPrice)).to.revertedWith("RAIR Factory: Specified contract isn't an approved erc777 contract");
+			});
+
+			it ("Cannot withdraw more than the balance", async function() {
+				await expect(factoryInstance.withdrawTokens(erc777instance.address, tokenPrice + 1)).to.revertedWith("ERC777: transfer amount exceeds balance");
+			});
+
+			it ("Owners should withdraw tokens", async function() {
+				expect(await factoryInstance.withdrawTokens(erc777instance.address, tokenPrice)).to.emit(factoryInstance, 'TokensWithdrawn').withArgs(owner.address, erc777instance.address, tokenPrice);
 			});
 		});
 
@@ -98,11 +139,11 @@ describe("Token Factory", function () {
 			});
 
 			it ("Mint a token after another ERC777 transfer", async function() {
-				expect(await erc777ExtraInstance.send(factoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes(''))).to.emit(erc777ExtraInstance, "Sent").to.emit(factoryInstance, 'NewTokenDeployed');
+				expect(await erc777ExtraInstance.send(factoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes(''))).to.emit(erc777ExtraInstance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
 				expect(await erc777ExtraInstance.balanceOf(owner.address)).to.equal((initialSupply - tokenPrice) * 2);
 				expect(await erc777ExtraInstance.balanceOf(factoryInstance.address)).to.equal(tokenPrice * 2);
-				expect(await factoryInstance.getContractCount(owner.address)).to.equal(2);
-				expect(await factoryInstance.tokenToOwner(await factoryInstance.ownerToTokens(owner.address, 0))).to.equal(owner.address);
+				expect(await factoryInstance.getContractCountOf(owner.address)).to.equal(2);
+				expect(await factoryInstance.contractToOwner(await factoryInstance.ownerToContracts(owner.address, 0))).to.equal(owner.address);
 			});
 
 			it ("Only the owner can remove an ERC777 token", async function() {
@@ -126,7 +167,7 @@ describe("Token Factory", function () {
 	describe('RAIR 721', function() {
 		describe('Metadata', function() {
 			it ("Roles should be set up", async function() {
-				rair721Instance = await RAIR721Factory.attach(await factoryInstance.ownerToTokens(owner.address, 0))
+				rair721Instance = await RAIR721Factory.attach(await factoryInstance.ownerToContracts(owner.address, 0))
 				//console.log(rair721Instance.functions);
 				expect(await rair721Instance.hasRole(await rair721Instance.CREATOR(), owner.address)).to.equal(true);
 				expect(await rair721Instance.getRoleAdmin(await rair721Instance.MINTER())).to.equal(await rair721Instance.CREATOR());
@@ -152,23 +193,15 @@ describe("Token Factory", function () {
 		});
 
 		describe('Supply', function() {
-			it ("Correct initial supply", async function() {
+			it ("Should display correct initial supply", async function() {
 				expect(rair721Instance.ownerOf(1)).to.be.revertedWith('ERC721: owner query for nonexistent token');
 			});
 
-			it ("Unauthorized addresses can't mint", async function() {
-				let rair721AsAddress2 = rair721Instance.connect(addr2);
-				expect(rair721AsAddress2.mint(addr3.address, 0))
-					.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await rair721Instance.MINTER()}`);
-			});
+			it ("Should not show next index for nonexistent collections", async function() {
+				await expect(rair721Instance.getNextSequentialIndex(0)).to.revertedWith("RAIR ERC721: Collection does not exist");
+			})
 
-			it ("Authorize a Minter", async function() {
-				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(false);
-				expect(await rair721Instance.grantRole(await rair721Instance.MINTER(), addr2.address)).to.emit(rair721Instance, 'RoleGranted');
-				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(true);
-			});
-
-			it ("Creates a Collection", async function() {
+			it ("Should create a Collection", async function() {
 				expect(await rair721Instance.getCollectionCount()).to.equal(0);
 				expect(await rair721Instance.createCollection("COLLECTION #1", 2, 2)).to.emit(rair721Instance, 'CollectionCreated');
 				expect(await rair721Instance.createCollection("COLLECTION #2", 10, 1)).to.emit(rair721Instance, 'CollectionCreated');
@@ -179,17 +212,56 @@ describe("Token Factory", function () {
 				expect((await rair721Instance.getCollection(2)).collectionName).to.equal("COLLECTION #3");
 			});
 
-			it ("Minter can mint", async function() {
+			it ("Should show the next index for collections", async function() {
+				expect(await rair721Instance.getNextSequentialIndex(0)).to.equal(0);
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(0);
+				expect(await rair721Instance.getNextSequentialIndex(2)).to.equal(0);
+			})
+
+			it ("Shouldn't let unauthorized addresses mint", async function() {
 				let rair721AsAddress2 = rair721Instance.connect(addr2);
-				expect(await rair721AsAddress2.mint(addr3.address, 0)).to.emit(rair721Instance, 'Transfer');
-				expect(await rair721AsAddress2.mint(addr4.address, 1)).to.emit(rair721Instance, 'TransfersEnabled');
-				expect(await rair721AsAddress2.mint(addr3.address, 0)).to.emit(rair721Instance, 'CollectionCompleted');
-				expect(await rair721AsAddress2.mint(addr1.address, 2)).to.emit(rair721Instance, 'Transfer');
+				let next = await rair721Instance.getNextSequentialIndex(0);
+				expect(next).to.equal(0);
+				await expect(rair721AsAddress2.mint(addr3.address, 0, next))
+					.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await rair721Instance.MINTER()}`);
+				expect(await rair721Instance.getNextSequentialIndex(0)).to.equal(next);
+			});
+
+			it ("Authorize a Minter", async function() {
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(false);
+				expect(await rair721Instance.grantRole(await rair721Instance.MINTER(), addr2.address)).to.emit(rair721Instance, 'RoleGranted');
+				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(true);
+			});
+
+			it ("Should let minters mint tokens", async function() {
+				let rair721AsAddress2 = rair721Instance.connect(addr2);
+				
+
+				let next = await rair721Instance.getNextSequentialIndex(0);
+				expect(next).to.equal(0);
+				expect(await rair721AsAddress2.mint(addr3.address, 0, next)).to.emit(rair721Instance, 'Transfer').withArgs(ethers.constants.AddressZero, addr3.address, 0);
+				expect(await rair721Instance.getNextSequentialIndex(0)).to.equal(next + 1);
+				
+				next = await rair721Instance.getNextSequentialIndex(1);
+				expect(next).to.equal(0);
+				expect(await rair721AsAddress2.mint(addr4.address, 1, next)).to.emit(rair721Instance, 'TransfersEnabled');
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(next + 1);
+				
+				next = await rair721Instance.getNextSequentialIndex(0);
+				expect(next).to.equal(1);
+				expect(await rair721AsAddress2.mint(addr3.address, 0, next)).to.emit(rair721Instance, 'CollectionCompleted');
+				await expect(rair721Instance.getNextSequentialIndex(0)).to.be.revertedWith("RAIR ERC721: Cannot mint tokens from this collection");
+				
+				next = await rair721Instance.getNextSequentialIndex(2);
+				expect(next).to.equal(0);
+				expect(await rair721AsAddress2.mint(addr1.address, 2, next)).to.emit(rair721Instance, 'Transfer').withArgs(ethers.constants.AddressZero, addr1.address, 12);
+				expect(await rair721Instance.getNextSequentialIndex(2)).to.equal(next + 1);
 			});
 
 			it ("Minter cannot mint once the collection is complete", async function() {
+				await expect(rair721Instance.getNextSequentialIndex(0)).to.be.revertedWith('RAIR ERC721: Cannot mint tokens from this collection');
 				let rair721AsAddress2 = rair721Instance.connect(addr2);
-				expect(rair721AsAddress2.mint(addr3.address, 0)).to.be.revertedWith('RAIR ERC721: Cannot mint tokens from this collection');
+				await expect(rair721AsAddress2.mint(addr3.address, 0, 2)).to.be.revertedWith('RAIR ERC721: Cannot mint tokens from this collection');
 			});
 
 			it ("Unauthorize a Minter", async function() {
@@ -197,7 +269,9 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(true);
 				expect(await rair721Instance.revokeRole(await rair721Instance.MINTER(), addr2.address)).to.emit(rair721Instance, 'RoleRevoked');
 				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(false);
-				expect(rair721AsAddress2.mint(addr3.address, 0))
+				let next = await rair721Instance.getNextSequentialIndex(2);
+				expect(next).to.equal(1);
+				expect(rair721AsAddress2.mint(addr3.address, 2, next))
 					.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await rair721Instance.MINTER()}`);
 			});
 		});
@@ -326,7 +400,7 @@ describe("Token Factory", function () {
 		describe("Minting Permissions", function() {
 			it ("Refuses to add a collection without a Minter role", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
-				expect(minterInstance.addCollection(rair721Instance.address, 5, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: This Marketplace isn't a Minter!");
+				expect(minterInstance.addOffer(rair721Instance.address, 5, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: This Marketplace isn't a Minter!");
 			});
 
 			it ("Grants Marketplace Minter Role", async function() {
@@ -341,18 +415,21 @@ describe("Token Factory", function () {
 			it ("Refuses to add a number of tokens higher than the mintable limit", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
 				//console.log(await rair721Instance.getCollection(1));
-				expect(minterInstance.addCollection(rair721Instance.address, 10, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: Collection doesn't have that many tokens to mint!");
+				expect(minterInstance.addOffer(rair721Instance.address, 10, 1, 999, owner.address)).to.revertedWith("Minting Marketplace: Collection doesn't have that many tokens to mint!");
 			});
 
 			it ("Add a collection", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
-				expect(await minterInstance.addCollection(rair721Instance.address, 5, 1, 999, owner.address)).to.emit(minterInstance, 'AddedCollection');
+				expect(await minterInstance.addOffer(rair721Instance.address, 5, 1, 999, owner.address)).to.emit(minterInstance, 'AddedOffer').withArgs(rair721Instance.address, 5, 999, 0);
 				expect(await minterInstance.openSales()).to.equal(1);
 			});	
 
 			it ("Should mint with permissions", async function() {
-				let minterAsAddress2 = await minterInstance.connect(addr2);				
-				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer");
+				let minterAsAddress2 = await minterInstance.connect(addr2);
+				let next = await rair721Instance.getNextSequentialIndex(1);
+				expect(next).to.equal(1);
+				expect(await minterAsAddress2.buyToken(0, next, {value: 999})).to.emit(rair721Instance, "Transfer");
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(Number(next) + 1);
 			});
 
 			it ("Shouldn't mint without permissions", async function() {
@@ -360,7 +437,10 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.revokeRole(await rair721Instance.MINTER(), minterInstance.address)).to.emit(rair721Instance, 'RoleRevoked');
 				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(false);
 				let minterAsAddress2 = await minterInstance.connect(addr2);
-				expect(minterAsAddress2.buyToken(0, {value: 999})).to.revertedWith(`AccessControl: account ${minterInstance.address.toLowerCase()} is missing role ${await rair721Instance.MINTER()}`);
+				let next = await rair721Instance.getNextSequentialIndex(1);
+				expect(next).to.equal(2);
+				await expect(minterAsAddress2.buyToken(0, next, {value: 999})).to.revertedWith(`AccessControl: account ${minterInstance.address.toLowerCase()} is missing role ${await rair721Instance.MINTER()}`);
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(next);
 			});
 
 			it ("Shouldn't mint past the allowed number of tokens", async function() {
@@ -368,31 +448,66 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.grantRole(await rair721Instance.MINTER(), minterInstance.address)).to.emit(rair721Instance, 'RoleGranted');
 				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), minterInstance.address)).to.equal(true);
 				let minterAsAddress2 = await minterInstance.connect(addr2);				
-				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
-				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
-				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
-				expect(await minterAsAddress2.buyToken(0, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
-				expect(minterAsAddress2.buyToken(0, {value: 999})).to.revertedWith('Minting Marketplace: Cannot mint more tokens!');
+				
+				for await (item of [2,3,4,5]) {
+					let next = await rair721Instance.getNextSequentialIndex(1);
+					expect(next).to.equal(item);
+					expect(await minterAsAddress2.buyToken(0, next, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
+					expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(Number(next) + 1);
+				}
+
+				let next = await rair721Instance.getNextSequentialIndex(1);
+				expect(next).to.equal(6);
+				await expect(minterAsAddress2.buyToken(0, next, {value: 999})).to.revertedWith('Minting Marketplace: Cannot mint more tokens!');
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(next);
 			});
 		});
 
 		describe("Updating Collections", function() {
 			it ("Shouldn't let the creator update the collection info limits with wrong info", async () => {
-				expect(minterInstance.updateCollectionSale(0, 5, 999)).to.revertedWith('Minting Marketplace: New limit must be lower or equal than the total allowed to mint!');
+				expect(minterInstance.updateOffer(0, 5, 999)).to.revertedWith('Minting Marketplace: New limit must be lower or equal than the total allowed to mint!');
 			});
 
 			it ("Should let the creator update the collection info limits", async () => {
-				expect(await minterInstance.updateCollectionSale(0, 4, 9999)).to.emit(minterInstance, 'UpdatedCollection');
+				expect(await minterInstance.updateOffer(0, 4, 9999)).to.emit(minterInstance, 'UpdatedOffer').withArgs(rair721Instance.address, 4, 9999, 0);
+			});
+
+			it ("Shouldn't mint out of bounds", async function() {
+				// Collection #1 has 10 tokens, but it includes 0, so the last mintable token should be #9
+				let minterAsAddress2 = await minterInstance.connect(addr2);
+				await expect(minterAsAddress2.buyToken(0, 10, {value: 29999})).to.be.revertedWith("RAIR ERC721: Invalid token index");
+			});
+
+			it ("Should mint specific tokens", async function() {
+				let minterAsAddress2 = await minterInstance.connect(addr2);
+				expect(await minterAsAddress2.buyToken(0, 8, {value: 29999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(6);
 			});
 			
 			it ("Shouldn't mint if the collection is completely minted", async () => {
 				let minterAsAddress2 = await minterInstance.connect(addr2);
-				expect(minterAsAddress2.buyToken(0, {value: 999})).to.revertedWith("Minting Marketplace: Insuficient Funds!");
-				expect(await minterAsAddress2.buyToken(0, {value: 10000})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
-				expect(await minterAsAddress2.buyToken(0, {value: 19999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
-				expect(await minterAsAddress2.buyToken(0, {value: 29999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
-				expect(await minterAsAddress2.buyToken(0, {value: 999999999})).to.emit(rair721Instance, "CollectionCompleted").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
-				await expect(minterAsAddress2.buyToken(0, {value: 9999})).to.be.revertedWith('Minting Marketplace: Cannot mint more tokens!');
+
+				// Insufficient funds test
+				let next = Number(await rair721Instance.getNextSequentialIndex(1));
+				expect(next).to.equal(6);
+				expect(minterAsAddress2.buyToken(0, next, {value: 999})).to.revertedWith("Minting Marketplace: Insuficient Funds!");
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(next);
+				
+				expect(await minterAsAddress2.buyToken(0, next, {value: 10000})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(Number(next) + 1);
+
+				// 8 is already minted, so after minting next sequential index should be 9
+				next = Number(await rair721Instance.getNextSequentialIndex(1));
+				expect(next).to.equal(7);
+				expect(await minterAsAddress2.buyToken(0, next, {value: 19999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+				expect(await rair721Instance.getNextSequentialIndex(1)).to.equal(Number(next) + 2);
+				
+				next = Number(await rair721Instance.getNextSequentialIndex(1));
+				expect(next).to.equal(9);
+				expect(await minterAsAddress2.buyToken(0, next, {value: 999999999})).to.emit(rair721Instance, "CollectionCompleted").to.changeEtherBalances([owner, addr2, erc777instance], [8999 + 99, -9999, 899]);
+
+				await expect(rair721Instance.getNextSequentialIndex(1)).to.be.revertedWith('RAIR ERC721: Cannot mint tokens from this collection');
+				await expect(minterAsAddress2.buyToken(0, next + 1, {value: 9999})).to.be.revertedWith('Minting Marketplace: Cannot mint more tokens!');
 			});
 		})
 

@@ -13,14 +13,14 @@ pipeline {
       steps {
         echo 'for branch' + env.BRANCH_NAME
         dir("${env.WORKSPACE}/demo-decrypt-node"){
-          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_0.${VERSION} .'
+          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_0.${VERSION} -t rairtechinc/rairservernode:dev_latest --no-cache .'
         }
       }
     }
     stage('Build minting-network') {
       steps {
         dir("${env.WORKSPACE}/blockchain-demos/frontend-minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} .'
+          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} -t rairtechinc/minting-network:dev_latest --no-cache .'
         }
       }
     }
@@ -32,11 +32,13 @@ pipeline {
     stage('Push docker RAIR node') {
       steps {
         sh 'docker push rairtechinc/rairservernode:${BRANCH}_0.${VERSION}'
+        sh 'docker push rairtechinc/rairservernode:dev_latest'
       }
     }
     stage('Push docker minting-network') {
       steps {
         sh 'docker push rairtechinc/minting-network:${BRANCH}_0.${VERSION}'
+        sh 'docker push rairtechinc/minting-network:dev_latest'
       }
     }
     stage('Update docker version file') {

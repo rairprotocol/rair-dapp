@@ -4,7 +4,7 @@ services:
   rairnode:
     container_name: 'rairnode'
     image:
-      rairtechinc/rairservernode:latest
+      rairtechinc/rairservernode:dev_latest
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
@@ -56,7 +56,7 @@ services:
       - rair-local
   minting-network:
     container_name: minting-network
-    image: rairtechinc/minting-network:latest
+    image: rairtechinc/minting-network:dev_latest
     restart: always
     ports: 
       - 3002:3000

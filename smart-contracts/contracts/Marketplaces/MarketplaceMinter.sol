@@ -1,18 +1,22 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.4; 
 
-import '@openzeppelin/contracts/access/Ownable.sol';
+// Used on interfaces
 import '@openzeppelin/contracts/access/AccessControl.sol';
-import "./IRAIR-ERC721.sol";
-import "./IERC2981.sol";
+import "../Tokens/IRAIR-ERC721.sol";
+import "../Tokens/IERC2981.sol";
+
+// Parent classes
+import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+
 import "hardhat/console.sol";
 
 /// @title  Minter Marketplace 
 /// @notice Handles the minting of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the minting mechanisms on other tokens!
-contract Minter_Marketplace is Ownable {
-	struct mintableCollection {
+contract Minter_Marketplace is OwnableUpgradeable {
+	struct offer {
 		address contractAddress;
 		address nodeAddress;
 		uint collectionIndex;
@@ -20,26 +24,31 @@ contract Minter_Marketplace is Ownable {
 		uint price;
 	}
 
+	uint16 public constant feeDecimals = 2;
+
 	mapping(address => uint[]) public contractToOffers;
 
-	mintableCollection[] catalog;
+	offer[] offerCatalog;
 
 	address public treasury;
 	uint public openSales;
 	uint16 public treasuryFee;
 	uint16 public nodeFee;
 
-	event AddedCollection(address contractAddress, uint collectionIndex, uint price);
-	event UpdatedCollection(address contractAddress, uint collectionIndex, uint price);
+	event AddedOffer(address contractAddress, uint tokensAllowed, uint price, uint catalogIndex);
+	event UpdatedOffer(address contractAddress, uint tokensAllowed, uint price, uint catalogIndex);
 	event TokenMinted(address ownerAddress, uint catalogIndex);
 	event SoldOut(address contractAddress, uint catalogIndex);
+	event ChangedTreasury(address newTreasury);
+	event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
+	event ChangedNodeFee(uint16 newNodeFee);
 
 	/// @notice	Constructor
 	/// @dev	Should start up with the treasury, node and treasury fee
 	/// @param	_treasury		The address of the Treasury
 	/// @param	_treasuryFee	Fee given to the treasury every sale (Recommended default: 9%)
 	/// @param	_nodeFee		Fee given to the node on every sale (Recommended default: 1%)
-	constructor(address _treasury, uint16 _treasuryFee, uint16 _nodeFee) {
+	function initialize(address _treasury, uint16 _treasuryFee, uint16 _nodeFee) public initializer {
 		treasury = _treasury;
 		treasuryFee = _treasuryFee;
 		nodeFee = _nodeFee;
@@ -56,25 +65,34 @@ contract Minter_Marketplace is Ownable {
 	/// @param	_newTreasury	New address
 	function setTreasuryAddress(address _newTreasury) public onlyOwner {
 		treasury = _newTreasury;
+		emit ChangedTreasury(_newTreasury);
 	}
 
 	/// @notice	Sets the new treasury fee
 	/// @param	_newFee	New Fee
 	function setTreasuryFee(uint16 _newFee) public onlyOwner {
 		treasuryFee = _newFee;
+		emit ChangedTreasuryFee(treasury, _newFee);
+	}
+
+	/// @notice	Sets the new fee paid to nodes
+	/// @param	_newFee	New Fee
+	function setNodeFee(uint16 _newFee) public onlyOwner {
+		nodeFee = _newFee;
+		emit ChangedNodeFee(_newFee);
 	}
 
 	/// @notice	Returns the number of collections on the market
 	/// @dev	Includes completed collections though
-	function getCollectionCount() public view returns(uint) {
-		return catalog.length;
+	function getOfferCount() public view returns(uint) {
+		return offerCatalog.length;
 	}
 
 	/// @notice	Returns the information about a collection
 	/// @dev	Translates the internal collection schema to individual values
 	/// @param	_index		Index of the collection INSIDE this contract
 	function getCollectionInfo(uint _index) public view returns(address contractAddress, uint collectionIndex, uint tokensAllowed, uint price) {
-		mintableCollection memory selectedCollection = catalog[_index];
+		offer memory selectedCollection = offerCatalog[_index];
 		return (
 			selectedCollection.contractAddress,
 			selectedCollection.collectionIndex,
@@ -93,7 +111,7 @@ contract Minter_Marketplace is Ownable {
 	/// @param	_collectionIndex	Index of the collection inside the ERC721
 	/// @param	_tokenPrice			Price of the individual token IN WEI
 	/// @param	_nodeAddress		Address of the node to be paid
-	function addCollection(
+	function addOffer(
 		address _tokenAddress,
 		uint _tokensAllowed,
 		uint _collectionIndex,
@@ -104,15 +122,15 @@ contract Minter_Marketplace is Ownable {
 		require(IAccessControl(_tokenAddress).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)));
 		(,,uint mintableTokensLeft,) = IRAIR_ERC721(_tokenAddress).getCollection(_collectionIndex);
 		require(mintableTokensLeft >= _tokensAllowed, "Minting Marketplace: Collection doesn't have that many tokens to mint!");
-		mintableCollection storage newCollection = catalog.push();
+		offer storage newCollection = offerCatalog.push();
 		newCollection.contractAddress = _tokenAddress;
 		newCollection.nodeAddress = _nodeAddress;
 		newCollection.collectionIndex = _collectionIndex;
 		newCollection.tokensAllowed = _tokensAllowed;
 		newCollection.price = _tokenPrice;
 		openSales++;
-		contractToOffers[_tokenAddress].push(catalog.length - 1);
-		emit AddedCollection(_tokenAddress, _tokensAllowed, _tokenPrice);
+		contractToOffers[_tokenAddress].push(offerCatalog.length - 1);
+		emit AddedOffer(_tokenAddress, _tokensAllowed, _tokenPrice, offerCatalog.length - 1);
 	}
 
 	/// @notice	Updates the sale information
@@ -123,12 +141,12 @@ contract Minter_Marketplace is Ownable {
 	/// @param	_catalogIndex		Index of the sale within the catalog
 	/// @param	_newTokensAllowed	New number of tokens allowed
 	/// @param	_tokenPrice			New price of the token
-	function updateCollectionSale(
+	function updateOffer(
 		uint _catalogIndex,
 		uint _newTokensAllowed,
 		uint _tokenPrice
 	) public {
-		mintableCollection storage selectedCollection = catalog[_catalogIndex];
+		offer storage selectedCollection = offerCatalog[_catalogIndex];
 		(,,uint mintableTokensLeft,) = IRAIR_ERC721(selectedCollection.contractAddress).getCollection(selectedCollection.collectionIndex);
 		require(_newTokensAllowed <= mintableTokensLeft, "Minting Marketplace: New limit must be lower or equal than the total allowed to mint!");
 		require(IAccessControl(selectedCollection.contractAddress).hasRole(bytes32(keccak256("MINTER")), address(this)), "Minting Marketplace: This Marketplace isn't a Minter!");
@@ -138,7 +156,7 @@ contract Minter_Marketplace is Ownable {
 			openSales++;
 		}
 		selectedCollection.tokensAllowed = _newTokensAllowed;
-		emit UpdatedCollection(selectedCollection.contractAddress, _newTokensAllowed, _tokenPrice);
+		emit UpdatedOffer(selectedCollection.contractAddress, _newTokensAllowed, _tokenPrice, _catalogIndex);
 	}
 
 	/// @notice	Receives funds and mints a new token for the sender
@@ -147,8 +165,8 @@ contract Minter_Marketplace is Ownable {
 	/// @dev	It validates that the ERC721 token supports the interface for royalties and only then, it will give the funds to the creator
 	/// @dev	If the ERC721 collection doesn't have any mintable tokens left, it will revert using the ERC721 error, not in the marketplace!
 	/// @param	_collectionID		Index of the sale within the catalog
-	function buyToken(uint _collectionID) payable public {
-		mintableCollection storage selectedCollection = catalog[_collectionID];
+	function buyToken(uint _collectionID, uint internalIndex) payable public {
+		offer storage selectedCollection = offerCatalog[_collectionID];
 		require(selectedCollection.contractAddress != address(0), "Minting Marketplace: Invalid Collection Selected!");
 		require(selectedCollection.tokensAllowed > 0, "Minting Marketplace: Cannot mint more tokens!");
 		require(msg.value >= selectedCollection.price, "Minting Marketplace: Insuficient Funds!");
@@ -172,7 +190,7 @@ contract Minter_Marketplace is Ownable {
 			openSales--;
 			emit SoldOut(selectedCollection.contractAddress, _collectionID);
 		}
-		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.collectionIndex);
+		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.collectionIndex, internalIndex);
 		emit TokenMinted(msg.sender, _collectionID);
 	}
 }

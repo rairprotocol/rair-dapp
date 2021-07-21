@@ -21,7 +21,7 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 				Amount: <input className='w-50' value={tokensOnSale} onChange={e => setTokensOnSale(e.target.value)} /><br/>
 				Price: <input className='w-50' value={priceInWei} onChange={e => setPriceInWei(e.target.value)} /><br/>
 				<button onClick={async e => {
-					await minter.addCollection(tokenAddress, tokensOnSale, index, priceInWei, '0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
+					await minter.addOffer(tokenAddress, tokensOnSale, index, priceInWei, '0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
 				}} disabled={!tokensOnSale || !priceInWei} className='btn btn-warning'>
 					Put {tokensOnSale} NFTs up for sale on the Marketplace at {priceInWei} Wei (each)
 				</button>
