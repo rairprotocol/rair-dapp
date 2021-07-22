@@ -212,7 +212,7 @@ module.exports = context => {
   });
 
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
-    const { title, description, tokenGroupAddress } = req.body;
+    const { title, description, contractAddress } = req.body;
     const { adminNFT: author } = req.user;
     const { socketSessionId } = req.query;
     const reg = new RegExp(/^0x\w{40}:\w+$/);
@@ -294,7 +294,7 @@ module.exports = context => {
             title,
             thumbnail: req.file.filename,
             currentOwner: author,
-            tokenGroupAddress
+            contractAddress
           };
 
           if (description) {

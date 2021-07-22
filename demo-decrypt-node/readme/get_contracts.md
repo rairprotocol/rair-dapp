@@ -1,10 +1,10 @@
-# Creat TokenGroup
+# Get contracts
 
-Adding new TokenGroup by user
+Find all contracts
 
-**URL** : `/api/tokenGroups`
+**URL** : `/api/contracts`
 
-**Method** : `POST`
+**Method** : `GET`
 
 **Headers:**
 
@@ -19,28 +19,9 @@ Adding new TokenGroup by user
 }
 ```
 
-**Request body:**
-
-```json
-{
-  "title": {
-    "required": true,
-    "content": {
-      "type": "string"
-    }
-  },
-  "tokenGroupAddress": {
-    "required": true,
-    "content": {
-      "type": "string"
-    }
-  }
-}
-```
-
 ## Success Response
 
-Returns if created successfully
+Returns found contracts
 
 **Code** : `200 OK`
 
@@ -51,12 +32,13 @@ Returns if created successfully
 ```json
 {
   "success": true,
-  "tokenGroup": {
-    "_id": "60d0819870a807001c75164d",
-    "title": "test contract 1",
-    "tokenGroupAddress": "tokenGroupAddress",
-    "creationDate": "2021-06-21T12:10:00.623Z"
-  }
+  "contracts": [
+    {
+      "_id": "60d0819870a807001c75164d",
+      "contractAddress": "contractAddress"
+    },
+    ...
+  ]
 }
 ```
 

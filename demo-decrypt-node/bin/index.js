@@ -11,12 +11,11 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require("socket.io");
 const {
-  newTokenGroupBNB,
+  newContractBNB,
   newMinterCollectionBNB,
   rairMintingInfoBNB,
   newContractETH,
   newMinterCollectionETH,
-  newTokenGroupETH
 } = require('./integrations/ethers');
 require('dotenv').config();
 
@@ -83,7 +82,7 @@ async function main () {
       }
     },
     db: {
-      TokenGroup: _mongoose.model('TokenGroup', require('./models/tokenGroup'), 'TokenGroup'),
+      Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
       File: _mongoose.model('File', require('./models/file'), 'File'),
       User: _mongoose.model('User', require('./models/user'), 'User'),
       Product: _mongoose.model('Product', require('./models/product'), 'Product')
@@ -131,8 +130,8 @@ async function main () {
   app.set("io", io);
 
   // Contracts creation listeners
-  newTokenGroupBNB(context.db);
-  newTokenGroupETH(context.db);
+  newContractBNB(context.db);
+  newContractETH(context.db);
 
   // Minter listeners
   newMinterCollectionBNB(context.db);

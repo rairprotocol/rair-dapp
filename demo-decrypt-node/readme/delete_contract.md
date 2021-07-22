@@ -1,10 +1,10 @@
-# Get Specific TokenGroup
+# Remove contract
 
-Find specific TokenGroup with all data by TokenGroup address
+Remove specific contract of the user
 
-**URL** : `/api/tokenGroups/:tokenGroupAddress`
+**URL** : `/api/contracts/:contractAddress`
 
-**Method** : `GET`
+**Method** : `DELETE`
 
 **Headers:**
 
@@ -23,7 +23,7 @@ Find specific TokenGroup with all data by TokenGroup address
 
 ```json
 {
-  "tokenGroupAddress": {
+  "contractAddress": {
     "required": true,
     "content": {
       "type": "string"
@@ -34,7 +34,7 @@ Find specific TokenGroup with all data by TokenGroup address
 
 ## Success Response
 
-Returns found contract
+Returns if removed successfully
 
 **Code** : `200 OK`
 
@@ -44,13 +44,7 @@ Returns found contract
 
 ```json
 {
-  "success": true,
-  "tokenGroup": {
-    "_id": "60d0819870a807001c75164d",
-    "title": "test contract 1",
-    "tokenGroupAddress": "tokenGroupAddress",
-    "creationDate": "2021-06-21T12:10:00.623Z"
-  }
+  "success": true
 }
 ```
 
