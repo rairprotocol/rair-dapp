@@ -19,6 +19,45 @@ List all the registered media, their URIs and encrypted status
 }
 ```
 
+**Query parameters:**
+
+```json
+{
+  "pageNum": {
+    "required": false,
+    "content": {
+      "type": "number"
+    }
+  },
+  "filesPerPage": {
+    "required": false,
+    "content": {
+      "type": "number"
+    }
+  },
+  "sortBy": {
+    "required": false,
+    "content": {
+      "type": "string",
+      "variants": ["creationDate", "title"]
+    }
+  },
+  "sort": {
+    "required": false,
+    "content": {
+      "type": "number",
+      "variants": [1, -1]
+    }
+  },
+  "searchString": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
 ## Success Response
 
 Returns a list of the currently registered media
