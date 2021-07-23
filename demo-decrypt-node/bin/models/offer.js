@@ -2,16 +2,15 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const Product = new Schema({
-  name: { type: String, required: true },
-  collectionIndexInContract: { type: Number, required: true },
+const Offer = new Schema({
+  marketplaceCatalogIndex: { type: Number, required: true },
   contract: { type: String, required: true },
+  product: { type: Number, required: true },
   copies: { type: Number, required: true },
   soldCopies: { type: Number, default: 0 },
   sold: { type: Boolean, default: false },
-  resale: { type: Number, default: 0 },
-  royalty: { type: Number, default: 0 },
+  price: { type: Number, required: true },
   creationDate: { type: Date, default: Date.now },
 }, { versionKey: false });
 
-module.exports = Product;
+module.exports = Offer;

@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const Contract = new Schema({
   title: { type: String, required: true },
   user: { type: String, required: true },
+  blockchain: { type: String, required: true },
   contractAddress: { type: String, required: true, unique: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });

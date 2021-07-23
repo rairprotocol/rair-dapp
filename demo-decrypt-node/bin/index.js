@@ -10,13 +10,7 @@ const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require("socket.io");
-const {
-  newContractBNB,
-  newMinterCollectionBNB,
-  rairMintingInfoBNB,
-  newContractETH,
-  newMinterCollectionETH,
-} = require('./integrations/ethers');
+const eventListeners = require('./integrations/ethers');
 require('dotenv').config();
 
 async function main () {
@@ -85,7 +79,8 @@ async function main () {
       Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
       File: _mongoose.model('File', require('./models/file'), 'File'),
       User: _mongoose.model('User', require('./models/user'), 'User'),
-      Product: _mongoose.model('Product', require('./models/product'), 'Product')
+      Product: _mongoose.model('Product', require('./models/product'), 'Product'),
+      Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer')
     }
   }
 
@@ -129,17 +124,21 @@ async function main () {
 
   app.set("io", io);
 
-  // Contracts creation listeners
-  newContractBNB(context.db);
-  newContractETH(context.db);
+  // Listen network events
+  const {
+    contractEventsBNB,
+    productEventsBNB,
+    offerEventsBNB
+  } = await eventListeners();
 
-  // Minter listeners
-  newMinterCollectionBNB(context.db);
-  newMinterCollectionETH(context.db);
+  // Contracts
+  contractEventsBNB(context.db);
 
-  // RAIR listeners
-  // rairMintingInfoBNB();
-  // rairMintingInfoETH();
+  // Products
+  productEventsBNB(context.db, '0x679f47db5d0e5ff72d3216a54ed1fbe03464a579');
+
+  // Offers
+  offerEventsBNB(context.db);
 
 }
 
