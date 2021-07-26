@@ -14,18 +14,18 @@ services:
     networks:
       - rair-local
     restart: always
-  rairipfs:
-    container_name: 'rairipfs'
-    image:
-      ipfs/go-ipfs:latest
-    volumes:
-      - ./demo-decrypt-node/ipfsData:/data/ipfs
-    ports:
-      - 4001:4001
-      - 127.0.0.1:8081:8080
-      - 127.0.0.1:5003:5001
-    networks:
-      - rair-local
+#  rairipfs:
+#    container_name: 'rairipfs'
+#    image:
+#      ipfs/go-ipfs:latest
+#    volumes:
+#      - ./demo-decrypt-node/ipfsData:/data/ipfs
+#    ports:
+#      - 4001:4001
+#      - 127.0.0.1:8081:8080
+#      - 127.0.0.1:5003:5001
+#    networks:
+#      - rair-local
   rairfront:
     container_name: 'rairfront'
     image: rairtechinc/woda_front:dev1.2
