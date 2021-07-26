@@ -6,7 +6,6 @@ import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "./IERC2981.sol";
 import "./IRAIR-ERC721.sol";
-import 'hardhat/console.sol';
 
 /// @title  Extended ERC721Enumerable contract for the RAIR system
 /// @notice Uses ERC2981 and ERC165 for standard royalty info
@@ -110,18 +109,19 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	}
 
 	/// @notice	Loops through the collection tokens and returns the first token without an owner
-	/// @dev	LOOPS, do not call this from a contract
+	/// @dev	Uses LOOPS, do not call this from a non-view function
 	/// @param	collectionID	Index of the collection to search
-	function getNextSequentialIndex(uint collectionID) public view canMint(collectionID) returns(uint nextIndex) {
+	function getNextSequentialIndex(uint collectionID, uint startingIndex, uint endingIndex) public view canMint(collectionID) returns(uint nextIndex) {
 		collection memory currentCollection = _collections[collectionID];
 		if (currentCollection.endingToken - currentCollection.startingToken == currentCollection.mintableTokens) {
 			return 0;
 		}
-		for (uint i = currentCollection.startingToken; i < currentCollection.endingToken; i++) {
+		for (uint i = currentCollection.startingToken + startingIndex; i <= currentCollection.startingToken + endingIndex; i++) {
 			if (!_exists(i)) {
 				return i - currentCollection.startingToken;
 			}
 		}
+		require(false, "RAIR ERC721: There are no available tokens in this range.");
 	}
 
 	/// @notice	Mints a specific token within a collection
