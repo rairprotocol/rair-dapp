@@ -30,7 +30,7 @@ services:
     container_name: 'rairfront'
     image: rairtechinc/woda_front:dev1.2
     ports:
-      - 8080:80
+      - 80:8080
       - 8443:8443
       - 5001:5001
       - 5002:5002
