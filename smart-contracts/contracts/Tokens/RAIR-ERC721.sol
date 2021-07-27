@@ -51,6 +51,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @dev	Only a CREATOR can call this function
 	/// @param	_collectionName Name of the collection
 	/// @param	_copies			Amount of tokens inside the collection
+	/// @param	_resaleAt		Threshold of tokens that have to be minted to allow transactions
 	function createCollection(string memory _collectionName, uint _copies, uint _resaleAt) public onlyRole(CREATOR) {
 		require(_copies >= _resaleAt, "ERC721: Resale start should be less than the total amount of copies");
 		uint lastToken;
@@ -64,7 +65,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		newCollection.mintableTokens = _copies;
 		newCollection.enableResaleAt = _resaleAt;
 		
-		emit CollectionCreated(_collections.length - 1, _collectionName, _copies);
+		emit CollectionCreated(_collections.length - 1, _collectionName, _copies, _resaleAt);
 		
 		if (_resaleAt == 0) {
 			emit TransfersEnabled(_collections.length - 1, _collectionName);

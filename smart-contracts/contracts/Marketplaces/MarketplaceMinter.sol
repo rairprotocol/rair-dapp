@@ -27,7 +27,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 
 	uint16 public constant feeDecimals = 2;
 
-	mapping(address => uint) public contractToOffer;
+	mapping(address => uint) internal _contractToOffer;
 
 	offer[] offerCatalog;
 
@@ -38,12 +38,19 @@ contract Minter_Marketplace is OwnableUpgradeable {
 
 	event AddedOffer(address contractAddress, uint productIndex, uint rangesCreated, uint catalogIndex);
 	event UpdatedOffer(address contractAddress, uint offerIndex, uint rangeIndex, uint tokens, uint price, string name);
-	event AppendedOffer(address contractAddress, uint offerIndex, uint rangeIndex);
-	event TokenMinted(address ownerAddress, uint catalogIndex, uint rangeIndex);
+	event AppendedRange(address contractAddress, uint productIndex, uint offerIndex, uint startToken, uint endToken, uint price, string name);
+	event TokenMinted(address ownerAddress, uint catalogIndex, uint rangeIndex, uint tokenIndex);
 	event SoldOut(address contractAddress, uint catalogIndex, uint rangeIndex);
 	event ChangedTreasury(address newTreasury);
 	event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
 	event ChangedNodeFee(uint16 newNodeFee);
+
+	function contractToOffer(address erc721Address) public view returns (uint offerIndex) {
+		require(offerCatalog.length > 0 &&
+					offerCatalog[_contractToOffer[erc721Address]].contractAddress == erc721Address,
+						"Minting Marketplace: Contract address doesn't have an offer associated!");
+		return (_contractToOffer[erc721Address]); 
+	}
 
 	/// @notice	Constructor
 	/// @dev	Should start up with the treasury, node and treasury fee
@@ -114,8 +121,8 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		offer memory selectedOffer = offerCatalog[offerIndex];
 		return (selectedOffer.contractAddress,
 			selectedOffer.productIndex,
-			selectedOffer.tokenRangeEnd[rangeIndex],
 			selectedOffer.tokenRangeStart[rangeIndex],
+			selectedOffer.tokenRangeEnd[rangeIndex],
 			selectedOffer.tokensAllowed[rangeIndex],
 			selectedOffer.rangePrice[rangeIndex],
 			selectedOffer.rangeName[rangeIndex]);
@@ -151,12 +158,19 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		string memory name
 	) internal {
 		offer storage selectedOffer = offerCatalog[offerIndex];
-		emit AppendedOffer(selectedOffer.contractAddress, offerIndex, selectedOffer.rangeName.length);
 		selectedOffer.tokenRangeStart.push(startToken);
 		selectedOffer.tokenRangeEnd.push(endToken);
 		selectedOffer.rangePrice.push(price);
 		selectedOffer.tokensAllowed.push((endToken - startToken) + 1);
 		selectedOffer.rangeName.push(name);
+		emit AppendedRange(
+			selectedOffer.contractAddress,
+			selectedOffer.productIndex,
+			offerIndex,
+			startToken,
+			endToken,
+			price,
+			name);
 		openSales++;
 	}
 
@@ -181,7 +195,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	external {
 		validateRoles(_tokenAddress);
 		if (offerCatalog.length != 0) {
-			require(offerCatalog[contractToOffer[_tokenAddress]].contractAddress == address(0), "Minting Marketplace: An offer already exists!");
+			require(offerCatalog[_contractToOffer[_tokenAddress]].contractAddress == address(0), "Minting Marketplace: An offer already exists!");
 		}
 		require(_rangeStartToken.length == _rangeEndToken.length &&
 					_rangePrice.length == _rangeStartToken.length &&
@@ -206,7 +220,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 				_rangeName[i]
 			);
 		}
-		contractToOffer[_tokenAddress] = offerCatalog.length - 1;
+		_contractToOffer[_tokenAddress] = offerCatalog.length - 1;
 		emit AddedOffer(_tokenAddress, _productIndex, _rangeName.length, offerCatalog.length - 1);
 	}
 
@@ -310,6 +324,6 @@ contract Minter_Marketplace is OwnableUpgradeable {
 			emit SoldOut(selectedCollection.contractAddress, catalogIndex, rangeIndex);
 		}
 		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.productIndex, internalTokenIndex);
-		emit TokenMinted(msg.sender, catalogIndex, rangeIndex);
+		emit TokenMinted(msg.sender, catalogIndex, rangeIndex, internalTokenIndex);
 	}
 }

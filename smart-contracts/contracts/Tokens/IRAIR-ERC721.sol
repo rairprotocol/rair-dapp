@@ -5,7 +5,7 @@ import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 
 interface IRAIR_ERC721 is IERC721 {
 
-	event CollectionCreated(uint indexed id, string name, uint length);
+	event CollectionCreated(uint indexed id, string name, uint length, uint resaleStarts);
 	event CollectionCompleted(uint indexed id, string name);
 	event TransfersEnabled(uint indexed id, string name);
 
