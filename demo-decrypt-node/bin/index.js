@@ -132,6 +132,8 @@ async function main () {
     offerListenersBNB
   } = await eventListeners(context.db);
 
+  // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offers
+
   // Contracts
   contractListenersBNB();
 

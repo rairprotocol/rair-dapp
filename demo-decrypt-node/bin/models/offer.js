@@ -10,7 +10,6 @@ const Offer = new Schema({
   soldCopies: { type: Number, default: 0 },
   sold: { type: Boolean, default: false },
   price: { type: Number, required: true },
-  outOfAllowedTokens: { type: Boolean, default: false },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
