@@ -11,6 +11,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require("socket.io");
 const eventListeners = require('./integrations/ethers');
+const _ = require('lodash');
 require('dotenv').config();
 
 async function main () {
@@ -126,19 +127,20 @@ async function main () {
 
   // Listen network events
   const {
-    contractEventsBNB,
-    productEventsBNB,
-    offerEventsBNB
-  } = await eventListeners();
+    contractListenersBNB,
+    productListenersBNB,
+    offerListenersBNB
+  } = await eventListeners(context.db);
 
   // Contracts
-  contractEventsBNB(context.db);
+  contractListenersBNB();
 
   // Products
-  productEventsBNB(context.db, '0x679f47db5d0e5ff72d3216a54ed1fbe03464a579');
+  const arrayOfUsers = await context.db.User.distinct('publicAddress');
+  await Promise.all(_.map(arrayOfUsers, productListenersBNB));
 
   // Offers
-  offerEventsBNB(context.db);
+  offerListenersBNB();
 
 }
 

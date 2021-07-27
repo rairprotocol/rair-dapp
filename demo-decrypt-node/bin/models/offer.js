@@ -10,7 +10,8 @@ const Offer = new Schema({
   soldCopies: { type: Number, default: 0 },
   sold: { type: Boolean, default: false },
   price: { type: Number, required: true },
-  creationDate: { type: Date, default: Date.now },
+  outOfAllowedTokens: { type: Boolean, default: false },
+  creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
 module.exports = Offer;

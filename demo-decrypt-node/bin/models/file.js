@@ -13,7 +13,7 @@ const File = new Schema({
   thumbnail: { type: String, required: true },
   uri: { type: String, required: true },
   productIndex: { type: Number, required: true },
-  offerIndex: { type: Number, required: true },
+  offerIndex: { type: [Number], required: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
