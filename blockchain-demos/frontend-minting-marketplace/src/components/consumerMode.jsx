@@ -13,24 +13,30 @@ const erc721Abi = ERC721Token.default.abi;
 const ConsumerMode = ({account, addresses}) => {
 
 	const [minterInstance, setMinterInstance] = useState();
+	const [offerCount, setOfferCount] = useState();
+	const [salesCount, setSalesCount] = useState();
 	const [collectionsData, setCollectionsData] = useState();
 
 	const fetchData = async () => {
 		let provider = new ethers.providers.Web3Provider(window.ethereum);
 		let signer = provider.getSigner(0);
 
-		let collectionData = [];
-		for await (let index of [...Array.apply(null, {length: (await minterInstance.getOfferCount()).toString()}).keys()]) {
-			let data = await minterInstance.getCollectionInfo(index);
-			collectionData.push({
-				instance: new ethers.Contract(data[0], erc721Abi, signer),
-				address: data[0],
-				collectionIndex: data[1].toString(),
-				tokensAllowed: data[2].toString(),
-				price: data[3].toString()
+		let aux = (await minterInstance.getOfferCount()).toString();
+ 		setSalesCount((await minterInstance.openSales()).toString());
+		setOfferCount(aux);
+
+		let offerData = [];
+		for await (let index of [...Array.apply(null, {length: aux}).keys()]) {
+			let data = await minterInstance.getOfferInfo(index);
+			offerData.push({
+				contractAddress: data.contractAddress,
+				productIndex: data.productIndex.toString(),
+				nodeAddress: data.nodeAddress,
+				ranges: data.availableRanges.toString(),
+				instance: new ethers.Contract(data.contractAddress, erc721Abi, signer)
 			})
 		}
-		setCollectionsData(collectionData);
+		setCollectionsData(offerData);
 	}
 
 	useEffect(() => {
@@ -52,6 +58,7 @@ const ConsumerMode = ({account, addresses}) => {
 		<button onClick={fetchData} style={{position: 'absolute', right: 0}} className='btn btn-warning'>
 			<i className='fas fa-redo' />
 		</button>
+		
 		{
 			// Initializer, do not use!
 			false && <button
@@ -64,14 +71,17 @@ const ConsumerMode = ({account, addresses}) => {
 		{collectionsData && <div className='row mx-0 px-0'>
 			<div className='col-12'>
 				<h5>Minter Marketplace</h5>
-				<small>Collections up for sale: {collectionsData.length}</small>
+				<small>
+					{offerCount} Offers found<br/>
+					with {salesCount} price ranges!
+				</small>
 			</div>
 			<br/>
 			{collectionsData.map((item, index) => {
 				return <ERC721Consumer
 					key={index}
 					index={index}
-					tokenInfo={item}
+					offerInfo={item}
 					account={account}
 					minter={minterInstance} />
 			})}

@@ -1,24 +1,38 @@
 import {useState, useEffect} from 'react'
 
-const ERC721Manager = ({tokenInfo, account, minter, index}) => {
+const ERC721Manager = ({offerInfo, account, minter, index}) => {
 	
 	const [balance, setBalance] = useState();
 	const [collectionName, setCollectionName] = useState();
 	const [contractName, setContractName] = useState();
 	const [nextMintableToken, setNextMintableToken] = useState();
 	const [specificIndex, setSpecificIndex] = useState(0);
+	const [rangeInfo, setRangeInfo] = useState([]);
 
 	useEffect(() => {
 		const aux = async () => {
 			let balances = [];
-			let tokensOwned = (await tokenInfo.instance.balanceOf(account)).toString();
-			setCollectionName((await tokenInfo.instance.getCollection(tokenInfo.collectionIndex)).collectionName);
-			setNextMintableToken((await tokenInfo.instance.getNextSequentialIndex(tokenInfo.collectionIndex)).toString());
-			setContractName(await tokenInfo.instance.name());
+			let tokensOwned = (await offerInfo.instance.balanceOf(account)).toString();
+			setCollectionName((await offerInfo.instance.getCollection(offerInfo.productIndex)).collectionName);
+			//setNextMintableToken((await offerInfo.instance.getNextSequentialIndex(offerInfo.productIndex)).toString());
+			setContractName(await offerInfo.instance.name());
+
+			let ranges = [];
+			for await (let rangeIndex of [...Array.apply(null, {length: offerInfo.ranges}).keys()]) {
+				let data = await minter.getOfferRangeInfo(index, rangeIndex);
+				ranges.push({
+					name: data.name,
+					price: data.price.toString(),
+					start: data.tokenStart.toString(),
+					end: data.tokenEnd.toString(),
+					allowed: data.tokensAllowed.toString()
+				})
+			}
+			setRangeInfo(ranges);
 			if (tokensOwned > 0) {
 				for await (let index of [...Array.apply(null, {length: tokensOwned}).keys()]) {
-					let token = (await tokenInfo.instance.tokenOfOwnerByIndex(account, index)).toString();
-					if ((await tokenInfo.instance.tokenToCollection(token)).toString() === tokenInfo.collectionIndex) {
+					let token = (await offerInfo.instance.tokenOfOwnerByIndex(account, index)).toString();
+					if ((await offerInfo.instance.tokenToCollection(token)).toString() === offerInfo.productIndex) {
 						balances.push(token);
 					}
 				}
@@ -26,11 +40,11 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 			setBalance(balances);
 		};
 		aux();
-	}, [tokenInfo, account]);
+	}, [offerInfo, account]);
 
 	useEffect(() => {
-		tokenInfo.instance.on('Transfer(address,address,uint256)', async (from, to, tokenId) => {
-			setNextMintableToken((await tokenInfo.instance.getNextSequentialIndex(tokenInfo.collectionIndex)).toString());
+		offerInfo.instance.on('Transfer(address,address,uint256)', async (from, to, tokenId) => {
+			setNextMintableToken((await offerInfo.instance.getNextSequentialIndex(offerInfo.productIndex)).toString());
 		})
 	}, [])
 	
@@ -45,34 +59,42 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 			<div style={{position: 'absolute', top: 0, left: '2vh'}}>
 				@{contractName}
 			</div>
-			<h5 style={{color: Number(tokenInfo.tokensAllowed) === 0 ? 'red' : 'inherit'}}>
-				({tokenInfo.tokensAllowed} Left!)
-			</h5>
-			{Number(tokenInfo.tokensAllowed) !== 0 && <small>
-				{tokenInfo.price} Wei
-			</small>}
 		</summary>
-		Contract Address: {tokenInfo.address}<br />
+		<small>Contract Address: <b>{offerInfo.contractAddress}</b></small><br />
+		<small>Product Index: {offerInfo.productIndex}</small><br />
 		<br />
-		Collection Index: {tokenInfo.collectionIndex}<br />
-		Tokens allowed to sell: {tokenInfo.tokensAllowed}<br />
-		Each token is sold for {tokenInfo.price} Wei
+		{rangeInfo.map((item, rangeIndex) => {
+			return <div style={{position: 'relative'}} className='w-100 my-2'>
+				<b>{item.name}</b>: {item.allowed} tokens at {item.price} each!
+				<br />
+				<div style={{position: 'absolute', left: 0}}>
+					{item.start}...
+				</div>
+				<div style={{position: 'absolute', right: 0}}>
+					...{item.end}
+				</div>
+				<button onClick={async e => {
+					await minter.buyToken(index, rangeIndex, nextMintableToken, {value: offerInfo.price});
+				}} className='btn btn-success py-0'>
+					Buy token #{nextMintableToken} for {offerInfo.price} Wei!
+				</button>
+				<br />
+				<progress className='w-100' value={item.start + (item.end - item.allowed)} max={item.end} />
+				{item.allowed} tokens left!
+				<hr className='w-100'/>
+			</div>
+		})}
 		<hr className='w-75 mx-auto' />
 		{balance && <>
 			You own {balance.length} tokens from this collection<br/>
 			{balance.map((item, index) => {
 				return <p className='d-block'>
-					{tokenInfo.address}:<b>{item}</b>
+					{offerInfo.contractAddress}:<b>{item}</b>
 				</p>
 			})}
 		</>}
 		<br />
-		{Number(tokenInfo.tokensAllowed) !== 0 && <>
-			<button onClick={async e => {
-				await minter.buyToken(index, nextMintableToken, {value: tokenInfo.price});
-			}} className='btn btn-success'>
-				Buy token #{nextMintableToken} for {tokenInfo.price} Wei!
-			</button>			
+		{Number(offerInfo.tokensAllowed) !== 0 && <>
 			<small>
 				<details>
 					<summary>
@@ -81,9 +103,10 @@ const ERC721Manager = ({tokenInfo, account, minter, index}) => {
 					<input type='number' value={specificIndex} onChange={e => setSpecificIndex(e.target.value)} />
 					<br />
 					<button disabled={nextMintableToken > specificIndex} onClick={async e => {
-						await minter.buyToken(index, specificIndex, {value: tokenInfo.price});
+						console.log(minter.functions);
+						//await minter.buyToken(index, specificIndex, {value: offerInfo.price});
 					}} className='btn btn-warning'>
-						Buy token #{specificIndex} for {tokenInfo.price} Wei!
+						Buy token #{specificIndex} for {offerInfo.price} Wei!
 					</button>
 				</details>
 			</small>

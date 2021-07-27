@@ -11,12 +11,14 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 	const [erc721Instance, setERC721Instance] = useState();
 	const [tokenInfo, setTokenInfo] = useState();
 	
+	const [minterApproved, setMinterApproved] = useState();
 	const [collectionName, setCollectionName] = useState('');
 	const [collectionLength, setCollectionLength] = useState(0);
 	const [collectionResaleLimit, setCollectionResaleLimit] = useState(0);
 	const [existingCollectionsData, setExistingCollectionsData] = useState();
 
 	const refreshData = async () => {
+		setMinterApproved(await erc721Instance.hasRole(await erc721Instance.MINTER(), minter.address));
 		let tokInfo = {
 			name: await erc721Instance.name(),
 			symbol: await erc721Instance.symbol(),
@@ -67,7 +69,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 		</button>
 		<br />
 		<br />
-		{tokenInfo && erc721Instance ? <div className='row mx-0 px-0'>
+		{tokenInfo && erc721Instance ? <div className='row text-center mx-0 px-0'>
 			<div className='col-12 col-md-6 border border-secondary rounded'>
 				<h5> ERC721 Info </h5>
 				Name: <b>{tokenInfo.name}</b><br />
@@ -90,7 +92,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 					Create {collectionLength} tokens under collection {collectionName}
 				</button>
 			</div>
-			<div className='col-12 col-md-6 border border-secondary rounded'>
+			{minterApproved === false ? <div className='col-12 col-md-6 border border-secondary rounded'>
 				To sell your unminted collections<br />
 				<button onClick={async e => {
 					erc721Instance.grantRole(await erc721Instance.MINTER(), minter.address);
@@ -99,7 +101,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 				</button>
 				<br />
 				(once)
-			</div>
+			</div> : <div className='col-3' />}
 			<div className='col-12 col-md-6 border border-secondary rounded'>
 				{existingCollectionsData && <>
 					<h5> Existing Collections </h5>

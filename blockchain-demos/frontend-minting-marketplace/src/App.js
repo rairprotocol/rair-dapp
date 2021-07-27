@@ -15,7 +15,7 @@ const contractAddresses = {
 	'0x61': { // Binance Testnet
 		factory: '0x5f35db8c13a351e841f83577112ccc95edca9697',
 		erc777: '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1',
-		minterMarketplace: '0xb8083810fa33e7ebd777c8cd6ebb453948afd354'
+		minterMarketplace: '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0'
 	}
 }
 
