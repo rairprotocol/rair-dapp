@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Offer = new Schema({
-  marketplaceCatalogIndex: { type: Number, required: true },
+  marketplaceCatalogIndex: { type: Number, unique: true, required: true },
   contract: { type: String, lowercase:true, required: true },
   product: { type: Number, required: true },
   copies: { type: Number, required: true },
