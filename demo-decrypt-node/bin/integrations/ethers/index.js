@@ -4,6 +4,9 @@ const Market = require('./contracts/Minter_Marketplace.json').abi;
 const ERC777 = require('./contracts/RAIR777.json').abi;
 const Token = require('./contracts/RAIR_ERC721.json').abi;
 
+const { nanoid } = require('nanoid');
+const _ = require('lodash');
+
 module.exports = async (db) => {
 // Connect to the Binance Testnet
   const binanceTestnetProvider = new ethers.providers.JsonRpcProvider(process.env.BINANCE_TESTNET, {
@@ -22,9 +25,9 @@ module.exports = async (db) => {
   const minterMarketplaceInstanceETH = await new ethers.Contract(process.env.MINTER_MARKETPLACE_ADDRESS, Market, infuraTestnetProvider);
 
   // Helpers
-  const setProductListeners = async (contract) => {
-    const tokenInstance = new ethers.Contract(contract, Token, binanceTestnetProvider);
-
+  const setProductListeners = async (contractAddress) => {
+    const tokenInstance = new ethers.Contract(contractAddress, Token, binanceTestnetProvider);
+    const contract = contractAddress.toLowerCase();
 
     tokenInstance.on('CollectionCreated(uint256,string,uint256)', async (index, name, copies) => {
       await db.Product.create({
@@ -49,21 +52,6 @@ module.exports = async (db) => {
 
       console.log(`RAIR: The transfer lock of collection ID#${ index }, name "${ name }" is removed.`);
     });
-  };
-
-  const storeContract = async (user, contractAddress) => {
-    const contract = await db.Contract.findOne({ contractAddress, user });
-
-    if (!contract) {
-      await db.Contract.create({
-        user,
-        title: 'Some temporary title', // need to get from blockchain
-        contractAddress,
-        blockchain: 'BNB'
-      });
-
-      console.log(`Stored an additional Contract ${ contractAddress } for User ${ user }`);
-    }
   };
 
   // Listeners
@@ -121,6 +109,7 @@ module.exports = async (db) => {
   const productListeners = async (provider, ownerAddress) => {
     try {
       const numberOfTokens = await provider.getContractCountOf(ownerAddress);
+      const foundContracts = await db.Contract.find({ user: ownerAddress }).distinct('contractAddress');
 
       console.log(ownerAddress, 'has deployed', numberOfTokens.toString(), 'contracts');
 
@@ -129,7 +118,16 @@ module.exports = async (db) => {
 
         console.log(`Contract ${ contractAddress } found!`);
 
-        await storeContract(ownerAddress, contractAddress);
+        if (!_.includes(foundContracts, contractAddress.toLowerCase())) {
+          await db.Contract.create({
+            user: ownerAddress,
+            title: 'Some temporary title', // need to get from blockchain
+            contractAddress,
+            blockchain: 'BNB'
+          });
+
+          console.log(`Stored an additional Contract ${ contractAddress } for User ${ user }`);
+        }
 
         await setProductListeners(contractAddress);
       }
@@ -152,22 +150,34 @@ module.exports = async (db) => {
         console.log(`Minter Marketplace: Created a new offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
       });
 
-      provider.on('UpdatedOffer(address,uint256,uint256,uint256)', async (contract, copies, price, catalogIndex) => {
+      provider.on('UpdatedOffer(address,uint256,uint256,uint256)', async (contractAddress, copies, price, catalogIndex) => {
+        const contract = contractAddress.toLowerCase();
+
         await db.Offer.findOneAndUpdate({ marketplaceCatalogIndex: catalogIndex, contract }, { copies, price });
 
         console.log(`Minter Marketplace: Update a offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
       });
 
       provider.on('TokenMinted(address,uint256)', async (ownerAddress, catalogIndex) => {
+        // TODO: contract address need to be in lowerCase
         const updatedOffer = await db.Offer.findOneAndUpdate({ marketplaceCatalogIndex: catalogIndex }, { $inc: { soldCopies: 1 } });
 
         // TODO: should be updated Product which offer belong to, field "soldCopies"
-        // await db.Product.findOneAndUpdate({ collectionIndexInContract: updatedOffer.product }, { $inc: { soldCopies: 1 } });
+        // await db.Product.findOneAndUpdate({ collectionIndexInContract: updatedOffer.product, contract }, { $inc: { soldCopies: 1 } });
+
+        await db.MintedToken.create({
+          token: `temp_token_${nanoid()}`, // FIXME: should received from event
+          ownerAddress,
+          offer: catalogIndex,
+          contract: 'some contract', // FIXME: should received from event
+        });
 
         console.log(`Minter Marketplace: Minted new token of the offer ${ catalogIndex } for User ${ ownerAddress }.`);
       });
 
-      provider.on('SoldOut(address,uint256)', async (contract, catalogIndex) => {
+      provider.on('SoldOut(address,uint256)', async (contractAddress, catalogIndex) => {
+        const contract = contractAddress.toLowerCase();
+
         await db.Offer.findOneAndUpdate({ marketplaceCatalogIndex: catalogIndex, contract }, { $set: { sold: true } });
 
         console.log(`Minter Marketplace: Offer ${ catalogIndex } runs out of allowed tokens.`);

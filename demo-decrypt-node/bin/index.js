@@ -81,7 +81,8 @@ async function main () {
       File: _mongoose.model('File', require('./models/file'), 'File'),
       User: _mongoose.model('User', require('./models/user'), 'User'),
       Product: _mongoose.model('Product', require('./models/product'), 'Product'),
-      Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer')
+      Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
+      MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken')
     }
   }
 

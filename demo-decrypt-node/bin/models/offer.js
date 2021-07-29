@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const Offer = new Schema({
   marketplaceCatalogIndex: { type: Number, required: true },
-  contract: { type: String, required: true },
+  contract: { type: String, lowercase:true, required: true },
   product: { type: Number, required: true },
   copies: { type: Number, required: true },
   soldCopies: { type: Number, default: 0 },
