@@ -13,9 +13,9 @@ import ConsumerMode from './components/consumerMode.jsx';
 
 const contractAddresses = {
 	'0x61': { // Binance Testnet
-		factory: '0x5f35db8c13a351e841f83577112ccc95edca9697',
+		factory: '0x6d4289314C1c5c0d8F94a1cd44E15e20fcCa5B40',
 		erc777: '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1',
-		minterMarketplace: '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0'
+		minterMarketplace: '0xDf49AdC002CcEF23aC9823e0B1eeBc4e8dDE54CC'
 	}
 }
 
