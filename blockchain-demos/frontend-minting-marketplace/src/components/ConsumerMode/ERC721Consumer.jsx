@@ -76,7 +76,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 				<button onClick={async e => {
 					await minter.buyToken(index, rangeIndex, nextMintableToken, {value: offerInfo.price});
 				}} className='btn btn-success py-0'>
-					Buy token #{nextMintableToken} for {offerInfo.price} Wei!
+					Buy token #{nextMintableToken} for {item.price} Wei!
 				</button>
 				<br />
 				<progress className='w-100' value={item.start + (item.end - item.allowed)} max={item.end} />

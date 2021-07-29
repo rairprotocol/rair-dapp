@@ -38,8 +38,8 @@ contract Minter_Marketplace is OwnableUpgradeable {
 
 	event AddedOffer(address contractAddress, uint productIndex, uint rangesCreated, uint catalogIndex);
 	event UpdatedOffer(address contractAddress, uint offerIndex, uint rangeIndex, uint tokens, uint price, string name);
-	event AppendedRange(address contractAddress, uint productIndex, uint offerIndex, uint startToken, uint endToken, uint price, string name);
-	event TokenMinted(address ownerAddress, uint catalogIndex, uint rangeIndex, uint tokenIndex);
+	event AppendedRange(address contractAddress, uint productIndex, uint offerIndex, uint rangeIndex,  uint startToken, uint endToken, uint price, string name);
+	event TokenMinted(address ownerAddress, address contractAddress, uint catalogIndex, uint rangeIndex, uint tokenIndex);
 	event SoldOut(address contractAddress, uint catalogIndex, uint rangeIndex);
 	event ChangedTreasury(address newTreasury);
 	event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
@@ -167,6 +167,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 			selectedOffer.contractAddress,
 			selectedOffer.productIndex,
 			offerIndex,
+			selectedOffer.rangeName.length - 1,
 			startToken,
 			endToken,
 			price,
@@ -324,6 +325,6 @@ contract Minter_Marketplace is OwnableUpgradeable {
 			emit SoldOut(selectedCollection.contractAddress, catalogIndex, rangeIndex);
 		}
 		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.productIndex, internalTokenIndex);
-		emit TokenMinted(msg.sender, catalogIndex, rangeIndex, internalTokenIndex);
+		emit TokenMinted(msg.sender, selectedCollection.contractAddress, catalogIndex, rangeIndex, internalTokenIndex);
 	}
 }

@@ -80,7 +80,7 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 			for await (let rangeIndex of [...Array.apply(null, {length: offerData.availableRanges.toString()}).keys()]) {
 				let rangeInfo = await minter.getOfferRangeInfo(offerIndex, rangeIndex);
 				existingRanges.push({
-					endingToken: rangeInfo.tokenEnd.toString(),
+					endingToken: Number(rangeInfo.tokenEnd.toString()),
 					name: rangeInfo.name,
 					price: rangeInfo.price.toString(),
 					disabled: true
@@ -172,7 +172,7 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 						Swal.fire('Error', err.data.message, 'error');
 					}
 				}} disabled={!ranges.length} className='btn btn-warning'>
-					Send {ranges.length} ranges to the marketplace!
+					{ranges.length > 0 && ranges[0].disabled ? `Append ${ranges.filter(item => !item.disabled).length} ranges to the marketplace` : `Create offer with ${ranges.length} ranges on the marketplace`}
 				</button>
 			</div>
 		</div>
