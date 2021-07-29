@@ -8,8 +8,6 @@ module.exports = context => {
   router.use('/media', require('./media')(context));
   router.use('/users', require('./users')(context));
   router.use('/contracts', JWTVerification(context), require('./contracts')(context));
-
-  // TODO: have to be added endpoints for Products and Offers
-
+  router.use('/products', JWTVerification(context), require('./products')(context));
   return router;
 };

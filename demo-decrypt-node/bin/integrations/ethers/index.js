@@ -142,7 +142,7 @@ module.exports = async (db) => {
         await db.Offer.create({
           marketplaceCatalogIndex: catalogIndex,
           contract,
-          product: 2,
+          product: 200000000000000001,
           copies,
           price,
         });

@@ -42,6 +42,7 @@ Optionally, use -d flag to run as a daemon
         * [x] / - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
             * [x] /:contractAddress - DELETE - remove specific contract, [see details here](readme/delete_contract.md)
+    * [x] /products - GET - get all products with all offers for eac of them for particular user, [see details here](readme/get_products.md)
     * [x] /docs - swagger documentation for the server
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
 * [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
