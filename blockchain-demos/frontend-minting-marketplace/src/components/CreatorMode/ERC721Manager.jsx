@@ -14,7 +14,6 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 	const [minterApproved, setMinterApproved] = useState();
 	const [collectionName, setCollectionName] = useState('');
 	const [collectionLength, setCollectionLength] = useState(0);
-	const [collectionResaleLimit, setCollectionResaleLimit] = useState(0);
 	const [existingCollectionsData, setExistingCollectionsData] = useState();
 
 	const refreshData = async () => {
@@ -84,10 +83,8 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 				<br/>
 				Collection's length: <input className='w-50' type='number' value={collectionLength} onChange={e => setCollectionLength(e.target.value)} />
 				<br />
-				Resale starts at: <input className='w-50' type='number' value={collectionResaleLimit} onChange={e => setCollectionResaleLimit(e.target.value)} />
-				<br />
-				<button disabled={collectionName === '' || collectionLength === 0 || collectionResaleLimit < 0} onClick={() => {
-					erc721Instance.createCollection(collectionName, collectionLength, collectionResaleLimit);
+				<button disabled={collectionName === '' || collectionLength === 0} onClick={() => {
+					erc721Instance.createCollection(collectionName, collectionLength);
 				}} className='btn btn-success'>
 					Create {collectionLength} tokens under collection {collectionName}
 				</button>

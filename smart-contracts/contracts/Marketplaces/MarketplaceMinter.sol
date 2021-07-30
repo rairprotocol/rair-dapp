@@ -271,7 +271,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		uint[] memory endTokens,
 		uint[] memory prices,
 		string[] memory names
-	) internal {
+	) public {
 		require(startTokens.length == endTokens.length &&
 					prices.length == startTokens.length &&
 					names.length == prices.length, "Minting Marketplace: Offer's ranges should have the same length!");
