@@ -1,11 +1,16 @@
 import {useState, useEffect} from 'react'
 import Swal from 'sweetalert2';
 
-const RangeManager = ({index, array, deleter, sync, hardLimit, disabled}) => {
+const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}) => {
 
-	const [endingRange, setEndingRange] = useState(index === 0 ? 0 : Number(array[index].endingToken) + 1);
+	console.log(index)
+
+	const [endingRange, setEndingRange] = useState(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [rangeName, setRangeName] = useState(array[index].name);
 	const [rangePrice, setRangePrice] = useState(array[index].price);
+	const [lockedTokens, setLockedTokens] = useState(0);
+
+	console.log(array[index]);
 
 	useEffect(() => {
 		array[index].endingToken = endingRange;
@@ -24,10 +29,15 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled}) => {
 
 	return <tr>
 		<th>
-			{!disabled && <button
+			{!disabled ? <button
 				onClick={e => deleter(index)}
 				className='btn btn-danger h-50'>
 				<i className='fas fa-trash' />
+			</button> : <button
+				disabled={!lockedTokens}
+				onClick={e => locker(0, (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1), endingRange, lockedTokens)}
+				className='btn btn-danger h-50'>
+				<i className='fas fa-lock' />
 			</button>}
 		</th>
 		<th>
@@ -37,7 +47,7 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled}) => {
 			<input className='form-control' disabled={disabled} value={rangeName} onChange={e => setRangeName(e.target.value)} />
 		</th>
 		<th>
-			<input className='form-control' disabled value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} />
+			<input className='form-control' value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} disabled/>
 		</th>
 		<th>
 			<input
@@ -48,7 +58,7 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled}) => {
 				disabled={disabled} 
 				className='form-control'
 				type='number'
-				min={index === 0 ? 0 : Number(array[index - 1].endingToken) + 1}
+				min={(index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)}
 				max={hardLimit}
 				value={endingRange}
 				onChange={e => setEndingRange(Number(e.target.value))} />
@@ -56,6 +66,11 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled}) => {
 		<th>
 			<input disabled={disabled}  className='form-control' value={rangePrice} onChange={e => setRangePrice(e.target.value)} />
 		</th>
+		{disabled &&
+			<th>
+				<input disabled={!disabled} className='form-control' value={lockedTokens} onChange={e => setLockedTokens(e.target.value)} />
+			</th>
+		}
 	</tr>
 }
 
@@ -72,15 +87,18 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 		setRanges(aux);
 	}
 
+	const locker = (collectionIndex, startingToken, endingToken, lockedTokens) => {
+		tokenInstance.createRangeLock(collectionIndex, startingToken, endingToken, lockedTokens);
+	}
+
 	const refresher = async () => {
 		try {
-			let offerIndex = (await minter.contractToOffer(tokenInstance.address)).toString();
+			let offerIndex = (await minter.contractToOfferRange(tokenInstance.address, index)).toString();
 			let offerData = await minter.getOfferInfo(offerIndex);
-			console.log(offerData);
 			let existingRanges = [];
 			for await (let rangeIndex of [...Array.apply(null, {length: offerData.availableRanges.toString()}).keys()]) {
 				let rangeInfo = await minter.getOfferRangeInfo(offerIndex, rangeIndex);
-				console.log(rangeIndex, rangeInfo);
+				console.log('A',rangeIndex, rangeInfo);
 				if (Number(rangeInfo.collectionIndex.toString()) === index) {
 					existingRanges.push({
 						endingToken: Number(rangeInfo.tokenEnd.toString()),
@@ -92,7 +110,7 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 			}
 			setRanges(existingRanges);
 		} catch (err) {
-
+			console.error(err);
 		}
 	} 
 
@@ -104,7 +122,7 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 
 	return <details className='w-100 border border-secondary rounded'>
 		<summary>
-			Collection #{index+1}: {collectionInfo.name}
+			Product #{index+1}: {collectionInfo.name}
 		</summary>
 		<div className='row mx-0 px-0'>
 			<div className='col-12'>
@@ -147,11 +165,15 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 							<th>
 								Price
 							</th>
+							<th>
+								Lock
+							</th>
 						</tr>
 					</thead>
 					<tbody>
 						{ranges.map((item, index, array) => {
 							return <RangeManager
+										locker={locker}
 										disabled={item.disabled}
 										index={index}
 										array={array}
