@@ -212,6 +212,10 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 			|| super.supportsInterface(interfaceId);
 	}
 
+	function isTokenLocked(uint256 _tokenId) public view returns (bool) {
+		return _lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown == 0;
+	}
+
 	/// @notice Hook being called before every transfer
 	/// @dev	Transfer locking happens here!
 	/// @param	_from		Token's original owner

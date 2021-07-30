@@ -76,15 +76,19 @@ const CollectionManager = ({index, collectionInfo, minter, tokenInstance, tokenA
 		try {
 			let offerIndex = (await minter.contractToOffer(tokenInstance.address)).toString();
 			let offerData = await minter.getOfferInfo(offerIndex);
+			console.log(offerData);
 			let existingRanges = [];
 			for await (let rangeIndex of [...Array.apply(null, {length: offerData.availableRanges.toString()}).keys()]) {
 				let rangeInfo = await minter.getOfferRangeInfo(offerIndex, rangeIndex);
-				existingRanges.push({
-					endingToken: Number(rangeInfo.tokenEnd.toString()),
-					name: rangeInfo.name,
-					price: rangeInfo.price.toString(),
-					disabled: true
-				})
+				console.log(rangeIndex, rangeInfo);
+				if (Number(rangeInfo.collectionIndex.toString()) === index) {
+					existingRanges.push({
+						endingToken: Number(rangeInfo.tokenEnd.toString()),
+						name: rangeInfo.name,
+						price: rangeInfo.price.toString(),
+						disabled: true
+					})
+				}
 			}
 			setRanges(existingRanges);
 		} catch (err) {

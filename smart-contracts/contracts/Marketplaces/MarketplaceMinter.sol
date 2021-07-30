@@ -9,6 +9,8 @@ import "../Tokens/IERC2981.sol";
 // Parent classes
 import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 
+import 'hardhat/console.sol';
+
 /// @title  Minter Marketplace 
 /// @notice Handles the minting of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
@@ -27,7 +29,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 
 	uint16 public constant feeDecimals = 2;
 
-	mapping(address => uint) internal _contractToOffer;
+	mapping(address => mapping(uint => uint)) internal _contractToOffers;
 
 	offer[] offerCatalog;
 
@@ -45,11 +47,11 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
 	event ChangedNodeFee(uint16 newNodeFee);
 
-	function contractToOffer(address erc721Address) public view returns (uint offerIndex) {
-		require(offerCatalog.length > 0 &&
-					offerCatalog[_contractToOffer[erc721Address]].contractAddress == erc721Address,
-						"Minting Marketplace: Contract address doesn't have an offer associated!");
-		return (_contractToOffer[erc721Address]); 
+	function contractToOfferRange(address erc721Address, uint productIndex) public view returns (uint offerIndex) {
+		require(offerCatalog.length > 0, "Minting Marketplace: There are no offers registered");
+		require(offerCatalog[(_contractToOffers[erc721Address][productIndex])].contractAddress == erc721Address, "Minting Marketplace: There are no offers registered for that address");
+		require(offerCatalog[(_contractToOffers[erc721Address][productIndex])].productIndex == productIndex, "Minting Marketplace: There are is no offer registered for that product");
+		return (_contractToOffers[erc721Address][productIndex]);
 	}
 
 	/// @notice	Constructor
@@ -195,9 +197,6 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		address _nodeAddress)
 	external {
 		validateRoles(_tokenAddress);
-		if (offerCatalog.length != 0) {
-			require(offerCatalog[_contractToOffer[_tokenAddress]].contractAddress == address(0), "Minting Marketplace: An offer already exists!");
-		}
 		require(_rangeStartToken.length == _rangeEndToken.length &&
 					_rangePrice.length == _rangeStartToken.length &&
 					_rangeName.length == _rangePrice.length, "Minting Marketplace: Offer's ranges should have the same length!");
@@ -221,7 +220,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 				_rangeName[i]
 			);
 		}
-		_contractToOffer[_tokenAddress] = offerCatalog.length - 1;
+		_contractToOffers[_tokenAddress][_productIndex] = offerCatalog.length - 1;
 		emit AddedOffer(_tokenAddress, _productIndex, _rangeName.length, offerCatalog.length - 1);
 	}
 

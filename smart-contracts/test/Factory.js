@@ -482,18 +482,46 @@ describe("Token Factory", function () {
 				)).to.revertedWith("Minting Marketplace: Offer's ranges should have the same length!");
 			});
 
+			it ("Should revert if info is asked for non-existant offers", async function() {
+				await expect(minterInstance.contractToOfferRange(rair721Instance.address, 0))
+					.to.be.revertedWith("Minting Marketplace: There are no offers registered");
+			});
+
 			it ("Should add an offer", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
 				expect(await minterInstance.addOffer(
 					rair721Instance.address, 			// Token Address
 					1,									// Product Index
-					[0,3],							// Starting token in Range
-					[2,5],							// Ending token in Range
-					[999,500],						// Price
-					['Deluxe','Special'],	// Range Name
+					[0,3],								// Starting token in Range
+					[2,5],								// Ending token in Range
+					[999,500],							// Price
+					['Deluxe','Special'],				// Range Name
 					owner.address						// Node Address
 				)).to.emit(minterInstance, 'AddedOffer').withArgs(rair721Instance.address, 1, 2, 0);
 				expect(await minterInstance.openSales()).to.equal(2);
+			});
+
+			it ("Should revert if info is asked for a non-existant product offer", async function() {
+				await expect(minterInstance.contractToOfferRange(rair721Instance.address, 0))
+					.to.be.revertedWith("Minting Marketplace: There are is no offer registered for that product");
+			});
+
+			it ("Should give info about the offers", async function() {
+				await expect(await minterInstance.contractToOfferRange(rair721Instance.address, 1)).to.equal(0);
+			});
+
+			it ("Should add another offer for the same contract", async function() {
+				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
+				expect(await minterInstance.addOffer(
+					rair721Instance.address, 			// Token Address
+					2,									// Product Index
+					[0],								// Starting token in Range
+					[10],								// Ending token in Range
+					[1000],								// Price
+					['Deluxes'],						// Range Name
+					owner.address						// Node Address
+				)).to.emit(minterInstance, 'AddedOffer').withArgs(rair721Instance.address, 2, 1, 1);
+				expect(await minterInstance.openSales()).to.equal(3);
 			});
 
 			it ("Should append a range to an existing offer", async function() {
@@ -505,7 +533,21 @@ describe("Token Factory", function () {
 					'Standard'							// Range Name
 					//	event AppendedRange(address contractAddress, uint productIndex, uint offerIndex, uint rangeIndex,  uint startToken, uint endToken, uint price, string name);
 				)).to.emit(minterInstance, 'AppendedRange').withArgs(rair721Instance.address, 1, 0, 2, 6, 9, 100, 'Standard');
-				expect(await minterInstance.openSales()).to.equal(3);
+				expect(await minterInstance.openSales()).to.equal(4);
+			});
+
+			it ("Should append a batch of ranges to an existing offer", async function() {
+				expect(await minterInstance.appendOfferRangeBatch(
+					1,									// Catalog index
+					[11, 101],							// Starting token in Range
+					[100, 169],							// Ending token in Range
+					[100, 10],							// Price
+					['Special','Standard']				// Range Name
+					//	event AppendedRange(address contractAddress, uint productIndex, uint offerIndex, uint rangeIndex,  uint startToken, uint endToken, uint price, string name);
+				)).to.emit(minterInstance, 'AppendedRange').withArgs(rair721Instance.address, 2, 1, 1, 11, 100, 100, 'Special')
+					.to.emit(minterInstance, 'AppendedRange').withArgs(rair721Instance.address, 2, 1, 2, 101, 169, 10, 'Standard');
+				
+				expect(await minterInstance.openSales()).to.equal(6);
 			});
 
 			it ("Should mint with permissions", async function() {
@@ -537,7 +579,7 @@ describe("Token Factory", function () {
 				let next = await rair721Instance.getNextSequentialIndex(1, 0, 2);
 				expect(next).to.equal(2);
 
-				expect(await minterInstance.openSales()).to.equal(3);
+				expect(await minterInstance.openSales()).to.equal(6);
 				
 				expect(await minterAsAddress2.buyToken(0, 0, next, {value: 999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
 				
@@ -548,7 +590,7 @@ describe("Token Factory", function () {
 					expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(Number(next) + 1);
 				}
 
-				expect(await minterInstance.openSales()).to.equal(2);
+				expect(await minterInstance.openSales()).to.equal(5);
 
 				next = await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit);
 				expect(next).to.equal(6);
@@ -563,7 +605,8 @@ describe("Token Factory", function () {
 			});
 
 			it ("Should let the creator update the collection info limits", async () => {
-				expect(await minterInstance.updateOfferRange(0, 0, 1, 2, 999, 'Revised Deluxe')).to.emit(minterInstance, 'UpdatedOffer').withArgs(rair721Instance.address, 0, 0, 0, 999, 'Revised Deluxe');
+				expect(await minterInstance.updateOfferRange(0, 0, 1, 2, 999, 'Revised Deluxe'))
+					.to.emit(minterInstance, 'UpdatedOffer').withArgs(rair721Instance.address, 0, 0, 0, 999, 'Revised Deluxe');
 			});
 
 			it ("Shouldn't mint out of bounds", async function() {
