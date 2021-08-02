@@ -1,32 +1,40 @@
 const { createLogger, format, transports } = require('winston');
-const { combine, splat, timestamp, printf, label, errors, colorize } = format;
+const { combine, splat, timestamp, printf, label, errors, colorize, metadata } = format;
 const _ = require('lodash');
+require('winston-mongodb');
+
+const { LOG_LEVEL, PRODUCTION, MONGO_URI, MONGO_URI_LOCAL, MONGO_LOG_COLLECTION } = process.env;
 
 module.exports = (module) => {
   const path = module.filename.split('/').slice(-2).join('/');
-  const myFormat = printf(({ level, message, timestamp, errors, ...metadata }) => {
+  const myFormat = printf(({ level, message, timestamp, stack }) => {
     let msg = `${ timestamp } [${ level }] : ${ message } `;
 
-    if (metadata && !_.isEmpty(metadata)) {
-      msg = `${ msg } - ${ JSON.stringify(metadata) }`;
-    }
-
-    if (errors && !_.isEmpty(errors)) {
-      msg = `${ msg } - stack: ${ errors.stack }`;
+    if (stack && !_.isEmpty(stack)) {
+      msg = `${ msg } - ${ stack }`;
     }
     return msg;
   });
 
   return new createLogger({
-    level: 'debug',
+    level: LOG_LEVEL,
     format: combine(
       errors({ stack: true }),
       label({ label: path, message: true }),
       colorize(),
       splat(),
       timestamp(),
-      myFormat
+      myFormat,
+      metadata()
     ),
-    transports: [new transports.Console()],
+    transports: [
+      new transports.Console(),
+      // transport logs to mongodb
+      new transports.MongoDB({
+        db: PRODUCTION === 'true' ? MONGO_URI : MONGO_URI_LOCAL,
+        collection: MONGO_LOG_COLLECTION,
+        decolorize: true
+      }),
+    ],
   });
-}
+};
