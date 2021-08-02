@@ -7,6 +7,7 @@ const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
 const { JWTVerification, validation } = require('../middleware');
 const { nanoid } = require('nanoid');
+const log = require('../utils/logger')(module);
 
 module.exports = context => {
   const router = express.Router();
@@ -71,7 +72,7 @@ module.exports = context => {
       if (ethAddres) {
         if (typeof author === 'string' && author.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = author.split(':');
-          console.log('verifying account has token', contractAddress, tokenId);
+          log.info('verifying account has token', contractAddress, tokenId);
           try {
             const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
             if (balance < 1) return next(new Error(`Account does not hold required token ${ author }`));
@@ -91,7 +92,7 @@ module.exports = context => {
         res.sendStatus(400);
       }
     } catch (err) {
-      console.log(err);
+      log.error(err);
       res.sendStatus(404);
     }
   });
@@ -122,7 +123,7 @@ module.exports = context => {
 
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':');
-          console.log('Verifying user account has the admin token');
+          log.info('Verifying user account has the admin token');
 
           try {
             const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
@@ -138,7 +139,7 @@ module.exports = context => {
               });
             }
           } catch (e) {
-            console.log(e);
+            log.error(e);
             next(new Error('Could not verify account', e));
           }
         }
@@ -146,7 +147,7 @@ module.exports = context => {
         res.sendStatus(400);
       }
     } catch (err) {
-      console.log(err);
+      vdlog(err);
       res.sendStatus(400);
     }
   });
@@ -161,12 +162,12 @@ module.exports = context => {
         const nftIdentifier = _.get(user, 'adminNFT');
         const { adminNFT } = req.body;
 
-        console.log('New Admin NFT', adminNFT);
+        log.info('New Admin NFT', adminNFT);
 
         if (!nftIdentifier) {
           context.store.setAdminToken(adminNFT);
           await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
-          console.log('There was no NFT identifier, so', adminNFT, 'is the new admin token');
+          log.info('There was no NFT identifier, so', adminNFT, 'is the new admin token');
           res.status(200).json({
             success: true,
             message: 'New NFT set!'
@@ -176,7 +177,7 @@ module.exports = context => {
 
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':');
-          console.log('Verifying user account has the admin token');
+          log.info('Verifying user account has the admin token');
 
           try {
             const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
@@ -201,7 +202,7 @@ module.exports = context => {
         res.sendStatus(400);
       }
     } catch (err) {
-      console.log('New NFT Admin Error:', err);
+      log.error('New NFT Admin Error:', err);
       res.json({
         success: false,
         message: 'There was an error validating your request'
@@ -214,10 +215,11 @@ module.exports = context => {
     const user = (await context.db.User.findOne({ publicAddress })).toObject();
 
     if (!user) {
-      console.log(`User with publicAddress ${ publicAddress } is not found in database`);
+      const message = `User with publicAddress ${ publicAddress } is not found in database`;
+      log.error(message);
       return res.status(404).send({
         success: false,
-        error: `User with publicAddress ${ publicAddress } is not found in database`,
+        message
       });
     }
 
@@ -231,10 +233,10 @@ module.exports = context => {
     });
 
     if (address !== publicAddress) {
-      console.log('Signature verification failed');
+      log.error('Signature verification failed');
       return res.status(401).send({
         success: false,
-        error: 'Signature verification failed',
+        message: 'Signature verification failed',
       });
     }
 
