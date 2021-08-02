@@ -201,7 +201,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 					_rangePrice.length == _rangeStartToken.length &&
 					_rangeName.length == _rangePrice.length, "Minting Marketplace: Offer's ranges should have the same length!");
 		
-		(,,uint mintableTokensLeft,) = IRAIR_ERC721(_tokenAddress).getCollection(_productIndex);
+		(,,uint mintableTokensLeft,,) = IRAIR_ERC721(_tokenAddress).getCollection(_productIndex);
 		require(mintableTokensLeft > 0, "Minting Marketplace: Cannot mint more tokens from this Product!");
 		
 		offer storage newOffer = offerCatalog.push();

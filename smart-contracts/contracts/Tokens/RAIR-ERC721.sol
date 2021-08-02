@@ -114,9 +114,15 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 
 	/// @notice	Returns information about a collection
 	/// @param	index	Index of the collection
-	function getCollection(uint index) external override(IRAIR_ERC721) view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName) {
+	function getCollection(uint index) external override(IRAIR_ERC721) view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName, uint[] memory locks) {
 		collection memory selectedCollection =  _collections[index];
-		return (selectedCollection.startingToken, selectedCollection.endingToken, selectedCollection.mintableTokens, selectedCollection.name);
+		return (
+			selectedCollection.startingToken,
+			selectedCollection.endingToken,
+			selectedCollection.mintableTokens,
+			selectedCollection.name,
+			selectedCollection.locks
+		);
 	}
 
 	/// @notice	Very inefficient way of verifying if an user owns a token within a collection
@@ -153,6 +159,20 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 			}
 		}
 		require(false, "RAIR ERC721: There are no available tokens in this range.");
+	}
+
+	function getLockedRange(uint index) public view returns (uint startingToken, uint endingToken, uint countToUnlock, uint collectionIndex) {
+		lockedRange memory currentLock = _lockedRange[index];
+		return (
+			currentLock.startingToken,
+			currentLock.endingToken,
+			currentLock.lockCountdown,
+			currentLock.collectionIndex
+		);
+	}
+
+	function isTokenLocked(uint256 _tokenId) public view returns (bool) {
+		return _lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown == 0;
 	}
 
 	/// @notice	Mints a specific token within a collection
@@ -210,10 +230,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165, ERC165, AccessControlEnumerable, ERC721Enumerable, IERC2981) returns (bool) {
 		return interfaceId == type(IERC2981).interfaceId
 			|| super.supportsInterface(interfaceId);
-	}
-
-	function isTokenLocked(uint256 _tokenId) public view returns (bool) {
-		return _lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown == 0;
 	}
 
 	/// @notice Hook being called before every transfer

@@ -250,6 +250,13 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.createRangeLock(2, 0, 169, 10)).to.emit(rair721Instance, 'RangeLocked').withArgs(2, 12, 181, 10, 'COLLECTION #3');
 			});
 
+			it ("Locks - Should give information about token ranges", async function() {
+				await expect((await rair721Instance.getLockedRange(0)).map(item => Number(item.toString()))).to.equal([0,1,2,0]);
+				await expect((await rair721Instance.getLockedRange(1)).map(item => Number(item.toString()))).to.equal([0,4,3,1]);
+				await expect((await rair721Instance.getLockedRange(2)).map(item => Number(item.toString()))).to.equal([5,9,5,1]);
+				await expect((await rair721Instance.getLockedRange(3)).map(item => Number(item.toString()))).to.equal([0,169,10,2]);
+			})
+
 			it ("Should let minters mint tokens", async function() {
 				let rair721AsAddress2 = rair721Instance.connect(addr2);
 
@@ -277,6 +284,16 @@ describe("Token Factory", function () {
 				await expect(await rair721AsAddress2.mint(addr1.address, 2, next)).to.emit(rair721Instance, 'Transfer').withArgs(ethers.constants.AddressZero, addr1.address, 12);
 				await expect(await rair721Instance.getNextSequentialIndex(2, 0, collection3Limit)).to.equal(next.add(1));
 			});
+
+			it ("Locks - Should give information about locked tokens", async function() {
+				await expect(await rair721Instance.isTokenLocked(0)).to.equal(true);
+				await expect(await rair721Instance.isTokenLocked(1)).to.equal(true);
+				await expect(await rair721Instance.isTokenLocked(2)).to.equal(true);
+				await expect(await rair721Instance.isTokenLocked(3)).to.equal(false);
+				await expect(await rair721Instance.isTokenLocked(4)).to.equal(false);
+				await expect(await rair721Instance.isTokenLocked(5)).to.equal(false);
+				await expect(await rair721Instance.isTokenLocked(12)).to.equal(true);
+			})
 
 			it ("Minter cannot mint once the collection is complete", async function() {
 				await expect(rair721Instance.getNextSequentialIndex(0, 0, collection1Limit)).to.be.revertedWith('RAIR ERC721: There are no available tokens in this range');

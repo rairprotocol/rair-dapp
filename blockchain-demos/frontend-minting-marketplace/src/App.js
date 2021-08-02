@@ -65,6 +65,8 @@ function App() {
 	const [chainId, setChainId] = useState();
 	const [addresses, setAddresses] = useState();
 
+	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState();
+
 	useEffect(() => {
 		window.ethereum.request({ method: 'eth_requestAccounts' })
 			.then(accounts => {
@@ -139,6 +141,23 @@ function App() {
 						}}>
 						Mumbai (Polygon)
 					</button>}
+				{!window.ethereum && <div className='row my-5 w-100 px-0 mx-0'>
+					<hr className='w-100' />
+					<h5 className='col-12'> For tests only! </h5>
+					<div className='col-1' />
+					<input
+						className='col-7'
+						value={UNSAFE_PrivateKey}
+						onChange={e => setUNSAFE_PrivateKey(e.target.value)}
+					/>
+					<button className='btn btn-danger col-3' onClick={e => {
+						return 0;
+					}}>
+						Use my private key to connect!
+					</button>
+					<div className='col-1' />
+					<hr className='w-100' />
+				</div>}
 			</div>}
 			<img src={logo} style={{maxHeight: '5vh'}} className="App-logo my-5" alt="logo" />
 			<br/>

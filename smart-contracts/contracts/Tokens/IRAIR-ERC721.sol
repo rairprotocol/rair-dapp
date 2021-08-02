@@ -14,7 +14,7 @@ interface IRAIR_ERC721 is IERC721 {
 	function getCollectionCount() external view returns(uint);
 
 	// Get a specific collection in the contract
-	function getCollection(uint index) external view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName);
+	function getCollection(uint index) external view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName, uint[] memory locks);
 	
 	// Mint a token inside a collection
 	function mint(address to, uint collectionID, uint index) external;

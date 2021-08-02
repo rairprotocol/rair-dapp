@@ -34,7 +34,8 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 				name: colData.collectionName,
 				startingToken: colData.startingToken.toString(),
 				endingToken: colData.endingToken.toString(),
-				mintableTokensLeft: colData.mintableTokensLeft.toString()
+				mintableTokensLeft: colData.mintableTokensLeft.toString(),
+				locks: colData.locks?.map(item => item.toString())
 			});
 		}
 		setExistingCollectionsData(collectionsData);

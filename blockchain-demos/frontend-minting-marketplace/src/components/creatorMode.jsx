@@ -33,6 +33,8 @@ const CreatorMode = ({account, addresses}) => {
 		setERC777Instance(erc777Instance);
 
 		let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
+		console.log('Minter', ethersMinterInstance.functions)
+		console.log('Minter Events', ethersMinterInstance.filters)
 		setMinterInstance(ethersMinterInstance);
 
 		let factoryInstanceEthers = new ethers.Contract(addresses.factory, factoryAbi, signer);
