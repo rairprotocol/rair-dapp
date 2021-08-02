@@ -33,6 +33,8 @@ module.exports = (module) => {
       new transports.MongoDB({
         db: PRODUCTION === 'true' ? MONGO_URI : MONGO_URI_LOCAL,
         collection: MONGO_LOG_COLLECTION,
+        capped: true,
+        tryReconnect: true,
         decolorize: true
       }),
     ],
