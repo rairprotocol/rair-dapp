@@ -10,6 +10,7 @@ const readdirp = require('readdirp');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
 const { JWTVerification, validation, isOwner } = require('../middleware');
+const log = require('../utils/logger')(module);
 
 const rareify = async (fsRoot, socketInstance) => {
   // Generate a key
@@ -19,7 +20,7 @@ const rareify = async (fsRoot, socketInstance) => {
 
   const promiseList = [];
 
-  console.log('Rareifying ', fsRoot);
+  log.info('Rareifying ', fsRoot);
 
   // Encrypting .ts files
   for await (const entry of readdirp(fsRoot)) {
@@ -37,26 +38,26 @@ const rareify = async (fsRoot, socketInstance) => {
             // overwrite the unencrypted file so we don't have to modify the manifests
             fs.renameSync(encryptedPath, fullPath);
             resolve(true);
-            console.log('finished encrypting', entry.path);
+            log.info('finished encrypting', entry.path);
 
             socketInstance.emit('uploadProgress', { message: `finished encrypting ${entry.path}`, last: false, part: true });
 
           });
         } catch (e) {
-          console.log('Could not encrypt', fullPath, e);
+          log.error('Could not encrypt', fullPath, e);
           reject(e);
         }
       });
       promiseList.push(promise);
     }
   }
-  console.log('Done scheduling encryptions,', promiseList.length, 'promises for', readdirp(fsRoot).length, 'files');
+  log.info('Done scheduling encryptions,', promiseList.length, 'promises for', readdirp(fsRoot).length, 'files');
 
   socketInstance.emit('uploadProgress', { message: `Done scheduling encryptions, ${promiseList.length} promises for ${readdirp(fsRoot).length} files`, last: false, done: 15, parts: promiseList.length });
 
   return await Promise.all(promiseList)
     .then(_ => {
-      console.log('RAIR-ification successful! The root directory is ready to be uploaded to IPFS.');
+      log.info('RAIR-ification successful! The root directory is ready to be uploaded to IPFS.');
       return key.export();
     });
 };
@@ -148,14 +149,14 @@ module.exports = context => {
       // unpin from ipfs
       const unpinIpfs = await removePin(mediaId);
 
-      console.log(`Unpin IPFS: ${ unpinIpfs.Pins }`);
+      log.info(`Unpin IPFS: ${ unpinIpfs.Pins }`);
 
       // unpin from pinata
       const unpinPinata = await unpin(mediaId);
 
-      console.log(`Unpin PINATA: ${ unpinPinata }`);
+      log.info(`Unpin PINATA: ${ unpinPinata }`);
     } catch (e) {
-      console.warn(`Could not remove pin ${ mediaId }, ${ e }`);
+      log.warn(`Could not remove pin ${ mediaId }, ${ e }`);
     }
     res.sendStatus(200);
   });
@@ -206,7 +207,7 @@ module.exports = context => {
 
       res.json({ success: true, list });
     } catch (e) {
-      console.log(e);
+      log.error(e);
       next(e.message);
     }
   });
@@ -225,40 +226,44 @@ module.exports = context => {
     const io = req.app.get('io');
     const sockets = req.app.get('sockets');
     const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
-    const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : { emit: (eventName, eventData) => { console.log(`Dummy event: "${ eventName }" socket emitter fired with message: "${ eventData.message }" `) } };
+    const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : {
+      emit: (eventName, eventData) => {
+        log.info(`Dummy event: "${ eventName }" socket emitter fired with message: "${ eventData.message }" `);
+      }
+    };
 
     socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
 
-    console.log('Processing: ', req.file.originalname);
+    log.info('Processing: ', req.file.originalname);
 
     if (req.file) {
       let command = 'pwd && mkdir ' + req.file.destination + 'stream' + req.file.filename + '/';
       exec(command, (error, stdout, stderr) => {
         if (error) {
-          console.log(error);
+          log.error(error);
         }
       });
-      console.log(req.file.originalname, 'generating thumbnails');
+      log.info(req.file.originalname, 'generating thumbnails');
       command = 'ffmpeg -ss 3 -i ' + req.file.path + ' -vf "select=gt(scene,0.5)" -vf "scale=144:-1" -vsync vfr -frames:v 1 ' + req.file.destination + 'Thumbnails/' + req.file.filename + '.png && ffmpeg -i ' + req.file.path + ' -vf  "scale=144:-1" -ss 00:10 -t 00:03 ' + req.file.destination + 'Thumbnails/' + req.file.filename + '.gif';
       exec(command, (error, stdout, stderr) => {
         if (error) {
-          console.log(req.file.originalname, error);
+          log.error(req.file.originalname, error);
         }
         res.json({ success: true, result: req.file.filename });
 
         socketInstance.emit('uploadProgress', { message: `${req.file.originalname} generating thumbnails`, last: false, done: 10 });
 
         command = 'ffmpeg -i ' + req.file.path + ' -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ' + req.file.destination + 'stream' + req.file.filename + '/stream.m3u8';
-        console.log(req.file.originalname, 'converting to stream');
+        log.info(req.file.originalname, 'converting to stream');
 
         socketInstance.emit('uploadProgress', { message: `${req.file.originalname} converting to stream`, last: false, done: 11 });
 
         exec(command, { maxBuffer: 1024 * 1024 * 20 }, async (error, stdout, stderr) => {
           if (error) {
-            console.log(req.file.originalname, error);
+            log.error(req.file.originalname, error);
           }
           const exportedKey = await rareify(req.file.destination + 'stream' + req.file.filename, socketInstance);
-          console.log('DONE');
+          log.info('DONE');
           const rairJson = {
             title,
             mainManifest: 'stream.m3u8',
@@ -275,13 +280,13 @@ module.exports = context => {
           command = 'rm -f ' + req.file.path;
           exec(command, (error, stdout, stderr) => {
             if (error) {
-              console.log(req.file.originalname, error);
+              log.error(req.file.originalname, error);
             }
-            console.log(req.file.originalname, 'raw deleted');
+            log.info(req.file.originalname, 'raw deleted');
 
             socketInstance.emit('uploadProgress', { message: `${req.file.originalname} raw deleted`, last: false });
           });
-          console.log(req.file.originalname, 'pinning to ipfs');
+          log.info(req.file.originalname, 'pinning to ipfs');
 
           socketInstance.emit('uploadProgress', { message: `${req.file.originalname} pinning to ipfs`, last: false });
 
@@ -307,7 +312,7 @@ module.exports = context => {
             .split(')')
             .first()
             .value();
-          console.log(req.file.originalname, 'ipfs done: ', ipfsCid);
+          log.info(req.file.originalname, 'ipfs done: ', ipfsCid);
 
           socketInstance.emit('uploadProgress', { message: `ipfs done.`, last: false, done: 90 });
 
@@ -334,11 +339,11 @@ module.exports = context => {
           try {
             const response = await pinByHash(ipfsCid, title);
 
-            console.log('PINATA RESPONSE', response);
+            log.info('PINATA RESPONSE', response);
 
             socketInstance.emit('uploadProgress', { message: 'Pined to Pinata.', last: true, done: 100 });
           } catch(err) {
-            console.log('PINATA ERROR', err.message);
+            log.error('PINATA ERROR', err.message);
           }
         });
       });
