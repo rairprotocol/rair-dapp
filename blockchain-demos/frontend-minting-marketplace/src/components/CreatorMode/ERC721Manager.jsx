@@ -7,7 +7,6 @@ import CollectionManager from './CollectionManager.jsx';
 const erc721Abi = ERC721Token.default.abi;
 
 const ERC721Manager = ({tokenAddress, minter, account}) => {
-
 	const [erc721Instance, setERC721Instance] = useState();
 	const [tokenInfo, setTokenInfo] = useState();
 	
@@ -15,8 +14,10 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 	const [collectionName, setCollectionName] = useState('');
 	const [collectionLength, setCollectionLength] = useState(0);
 	const [existingCollectionsData, setExistingCollectionsData] = useState();
+	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
 	const refreshData = async () => {
+		setRefetchingFlag(true);
 		setMinterApproved(await erc721Instance.hasRole(await erc721Instance.MINTER(), minter.address));
 		let tokInfo = {
 			name: await erc721Instance.name(),
@@ -39,6 +40,7 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 			});
 		}
 		setExistingCollectionsData(collectionsData);
+		setRefetchingFlag(false);
 	};
 
 	useEffect(() => {
@@ -64,8 +66,9 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 		<button
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}
+			disabled={refetchingFlag}
 			className='btn btn-dark'>
-			<i className='fas fa-redo' />
+			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<br />
 		<br />
@@ -100,14 +103,14 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 				<br />
 				(once)
 			</div> : <div className='col-3' />}
-			<div className='col-12 col-md-6 border border-secondary rounded'>
+			<div className='col-12 col-md border border-secondary rounded'>
 				{existingCollectionsData && <>
 					<h5> Existing Collections </h5>
 					
 					{existingCollectionsData.map((item, index) => {
 						return <CollectionManager
 									key={index}
-									index={index}
+									collectionIndex={index}
 									collectionInfo={item}
 									tokenInstance={erc721Instance}
 									tokenAddress={tokenInfo.address}

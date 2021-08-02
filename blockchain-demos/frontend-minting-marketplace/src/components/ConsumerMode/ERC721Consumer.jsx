@@ -29,7 +29,11 @@ const Range = ({start, end, name, allowed, price, tokenInstance, minterInstance,
 			...{end}
 		</div>
 		<button onClick={async e => {
-			await minterInstance.buyToken(offerIndex, rangeIndex, next, {value: price});
+			try {
+				await minterInstance.buyToken(offerIndex, rangeIndex, next, {value: price});
+			} catch (err) {
+				Swal.fire('Error', err?.data?.message, 'error');
+			}
 		}} className='btn btn-success py-0'>
 			Buy token #{next} for {price} Wei!
 		</button>
@@ -78,6 +82,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		let ranges = [];
 		for await (let rangeIndex of [...Array.apply(null, {length: offerInfo.ranges}).keys()]) {
 			let data = await minter.getOfferRangeInfo(index, rangeIndex);
+			console.log(data);
 			ranges.push({
 				name: data.name,
 				price: data.price.toString(),

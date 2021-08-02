@@ -150,9 +150,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @param	endingIndex		Index of the collection to search
 	function getNextSequentialIndex(uint collectionID, uint startingIndex, uint endingIndex) public view collectionExists(collectionID) returns(uint nextIndex) {
 		collection memory currentCollection = _collections[collectionID];
-		if ((currentCollection.endingToken + 1) - currentCollection.startingToken == currentCollection.mintableTokens) {
-			return 0;
-		}
 		for (uint i = currentCollection.startingToken + startingIndex; i <= currentCollection.startingToken + endingIndex; i++) {
 			if (!_exists(i)) {
 				return i - currentCollection.startingToken;
@@ -163,16 +160,17 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 
 	function getLockedRange(uint index) public view returns (uint startingToken, uint endingToken, uint countToUnlock, uint collectionIndex) {
 		lockedRange memory currentLock = _lockedRange[index];
+		collection memory currentCollection = _collections[currentLock.collectionIndex];
 		return (
-			currentLock.startingToken,
-			currentLock.endingToken,
+			currentLock.startingToken - currentCollection.startingToken,
+			currentLock.endingToken - currentCollection.startingToken,
 			currentLock.lockCountdown,
 			currentLock.collectionIndex
 		);
 	}
 
 	function isTokenLocked(uint256 _tokenId) public view returns (bool) {
-		return _lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown == 0;
+		return _lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown > 0;
 	}
 
 	/// @notice	Mints a specific token within a collection

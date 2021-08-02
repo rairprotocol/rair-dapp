@@ -217,8 +217,11 @@ describe("Token Factory", function () {
 
 			it ("Should show the next index for collections", async function() {
 				expect(await rair721Instance.getNextSequentialIndex(0, 0, collection1Limit)).to.equal(0);
+				expect(await rair721Instance.getNextSequentialIndex(0, 1, collection1Limit)).to.equal(1);
 				expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(0);
+				expect(await rair721Instance.getNextSequentialIndex(1, 1, collection2Limit)).to.equal(1);
 				expect(await rair721Instance.getNextSequentialIndex(2, 0, collection3Limit)).to.equal(0);
+				expect(await rair721Instance.getNextSequentialIndex(2, 23, collection3Limit)).to.equal(23);
 			})
 
 			it ("Shouldn't let unauthorized addresses mint", async function() {
@@ -251,10 +254,17 @@ describe("Token Factory", function () {
 			});
 
 			it ("Locks - Should give information about token ranges", async function() {
-				await expect((await rair721Instance.getLockedRange(0)).map(item => Number(item.toString()))).to.equal([0,1,2,0]);
-				await expect((await rair721Instance.getLockedRange(1)).map(item => Number(item.toString()))).to.equal([0,4,3,1]);
-				await expect((await rair721Instance.getLockedRange(2)).map(item => Number(item.toString()))).to.equal([5,9,5,1]);
-				await expect((await rair721Instance.getLockedRange(3)).map(item => Number(item.toString()))).to.equal([0,169,10,2]);
+				for await (let item of [
+					{range: 0, expected: [0, 1, 2, 0]},
+					{range: 1, expected: [0, 4, 3, 1]},
+					{range: 2, expected: [5, 9, 5, 1]},
+					{range: 3, expected: [0, 169, 10, 2]},
+				]) {
+					let aux = await rair721Instance.getLockedRange(item.range);
+					for await (let internal of [0,1,2,3]) {
+						await expect(aux[internal]).to.equal(item.expected[internal]); 
+					}
+				}
 			})
 
 			it ("Should let minters mint tokens", async function() {
@@ -286,8 +296,8 @@ describe("Token Factory", function () {
 			});
 
 			it ("Locks - Should give information about locked tokens", async function() {
-				await expect(await rair721Instance.isTokenLocked(0)).to.equal(true);
-				await expect(await rair721Instance.isTokenLocked(1)).to.equal(true);
+				await expect(await rair721Instance.isTokenLocked(0)).to.equal(false);
+				await expect(await rair721Instance.isTokenLocked(1)).to.equal(false);
 				await expect(await rair721Instance.isTokenLocked(2)).to.equal(true);
 				await expect(await rair721Instance.isTokenLocked(3)).to.equal(false);
 				await expect(await rair721Instance.isTokenLocked(4)).to.equal(false);

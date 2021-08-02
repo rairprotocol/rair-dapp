@@ -16,8 +16,10 @@ const ConsumerMode = ({account, addresses}) => {
 	const [offerCount, setOfferCount] = useState();
 	const [salesCount, setSalesCount] = useState();
 	const [collectionsData, setCollectionsData] = useState();
+	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
 	const fetchData = async () => {
+		setRefetchingFlag(true);
 		let provider = new ethers.providers.Web3Provider(window.ethereum);
 		let signer = provider.getSigner(0);
 
@@ -37,6 +39,7 @@ const ConsumerMode = ({account, addresses}) => {
 			})
 		}
 		setCollectionsData(offerData);
+		setRefetchingFlag(false);
 	}
 
 	useEffect(() => {
@@ -55,8 +58,8 @@ const ConsumerMode = ({account, addresses}) => {
 	}, [minterInstance])
 
 	return <>
-		<button onClick={fetchData} style={{position: 'absolute', right: 0}} className='btn btn-warning'>
-			<i className='fas fa-redo' />
+		<button onClick={fetchData} disabled={refetchingFlag} style={{position: 'absolute', right: 0}} className='btn btn-warning'>
+			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		
 		{
