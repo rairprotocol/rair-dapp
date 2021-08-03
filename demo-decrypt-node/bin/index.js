@@ -98,9 +98,9 @@ async function main() {
   app.use('/stream', require('./routes/stream')(context));
   app.use('/api', require('./routes')(context));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use((error, req, res) => {
-    log.error(error);
-    res.status(500).json({ success: false, error: true, message: error.message });
+  app.use((err, req, res, next) => {
+    log.error(err);
+    res.status(500).json({ success: false, error: true, message: err.message });
   });
 
   const server = app.listen(port, () => {

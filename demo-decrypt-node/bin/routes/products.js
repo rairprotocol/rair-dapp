@@ -48,8 +48,8 @@ module.exports = context => {
       ]);
 
       res.json({ success: true, products });
-    } catch (e) {
-      next(e);
+    } catch (err) {
+      next(err);
     }
   });
 
