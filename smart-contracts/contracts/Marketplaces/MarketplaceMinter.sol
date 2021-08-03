@@ -9,7 +9,7 @@ import "../Tokens/IERC2981.sol";
 // Parent classes
 import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 
-import 'hardhat/console.sol';
+//import 'hardhat/console.sol';
 
 /// @title  Minter Marketplace 
 /// @notice Handles the minting of ERC721 RAIR Tokens

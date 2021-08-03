@@ -242,7 +242,7 @@ describe("Token Factory", function () {
 			it ("Locks - Shouldn't lock ranges with tokens outside the collection's range", async function() {
 				await expect(rair721Instance.createRangeLock(0, 0, 2, 2)).to.be.revertedWith('RAIR ERC721: Invalid ending token');
 				// Invalid starting token
-				await expect(rair721Instance.createRangeLock(0, -1, 1, 2)).to.be.reverted;
+				await expect(rair721Instance.createRangeLock(0, -1, 1, 2)).to.be.reverted; // Negative number is not allowed but there's no specific revert message for this
 				await expect(rair721Instance.createRangeLock(1, 0, 9, 11)).to.be.revertedWith('RAIR ERC721: Invalid number of tokens to lock');
 			});
 

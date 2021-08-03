@@ -115,8 +115,12 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 		setLocks(aux);
 	}
 
-	const locker = (collectionIndex, startingToken, endingToken, lockedTokens) => {
-		tokenInstance.createRangeLock(collectionIndex, startingToken, endingToken, lockedTokens);
+	const locker = async (collectionIndex, startingToken, endingToken, lockedTokens) => {
+		try {
+			await tokenInstance.createRangeLock(collectionIndex, startingToken, endingToken, lockedTokens);
+		} catch (err) {
+			Swal.fire('Error', err?.data?.message, 'error');
+		}
 	}
 
 	const refresher = async () => {

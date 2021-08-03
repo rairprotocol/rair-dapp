@@ -121,7 +121,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 				@{contractName}
 			</div>
 		</summary>
-		<button onClick={refreshData} disabled={refetchingFlag} style={{position: 'absolute', left: 0, top: 0}} className='btn btn-dark'>
+		<button onClick={refreshData} disabled={refetchingFlag} style={{position: 'absolute', left: 0, top: 0}} className=' px-2 btn btn-dark'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<small>Contract Address: <b>{offerInfo.contractAddress}</b></small><br />
@@ -142,11 +142,22 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		{balance && <>
 			You own {balance.length} tokens from this collection<br/>
 			{balance.map((item, index) => {
-				return <button className='btn btn-light'>
-					<abbr className='d-inline-block' title={`${offerInfo.contractAddress}:${item.token}`}>
-						{item.internalIndex}
-					</abbr>
-				</button>
+				return <details className='w-100'>
+					<summary>
+						<h5 className='d-inline-block'>{item.internalIndex}</h5>
+					</summary>
+
+					{offerInfo.contractAddress}:{item.token}
+					<div className='row px-0 mx-0'>
+						<div className='col-9'>
+							<input disabled className='form-control' placeholder='Price' />
+						</div>
+						<button disabled className='btn btn-primary col-3'>
+							Resell
+						</button>
+					</div>
+					<hr className='w-100' />
+				</details>
 			})}
 		</>}
 		<br />

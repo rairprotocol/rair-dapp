@@ -39,13 +39,18 @@ const ERC777Manager = ({instance, account}) => {
 			Transfer to Address: <input className='form-control w-75 mx-auto' value={targetAddress} onChange={e => setTargetAddress(e.target.value)} />
 			Amount to Transfer: <input className='form-control w-75 mx-auto' value={targetValue} type='number' onChange={e => setTargetValue(e.target.value)} />
 			<br/>
-			<button disabled={targetValue <= 0 || targetAddress === ''} onClick={() => {
-				instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''))
+			<button disabled={targetValue <= 0 || targetAddress === ''} onClick={async () => {
+				try {
+					await instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''));
+				} catch (err) {
+					console.log('Error sending ERC777 tokens', err)
+					Swal.fire('Error', err, 'error');
+				}
 			}} className='btn btn-success'>
 				Transfer {targetValue} TEST RAIRs to {targetAddress}!
 			</button>
 			<hr className='w-100'/>
-			<button className='btn btn-light' onClick={e => {
+			{window.ethereum && <button className='btn btn-light' onClick={e => {
 				window.ethereum.request({
 					method: 'metamask_watchAsset',
 					params: {
@@ -59,7 +64,7 @@ const ERC777Manager = ({instance, account}) => {
 				.then(boolean => Swal.fire(boolean ? 'ERC777 RAIR Token added' : 'Failed to Add ERC777 RAIR Token'))
 			}}>
 				Track {erc777Data.name} Token on Metamask!
-			</button>
+			</button>}
 		</> : 'Fetching info...'}
 	</div>
 }
