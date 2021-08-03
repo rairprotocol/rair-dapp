@@ -6,7 +6,6 @@ const Range = ({start, end, name, allowed, price, tokenInstance, minterInstance,
 	const [specificIndex, setSpecificIndex] = useState(0);
 
 	const refreshData = async () => {
-		console.log(productIndex, start, end)
 		setNext((await tokenInstance.getNextSequentialIndex(productIndex, start, end)).toString());
 	}
 
@@ -71,18 +70,17 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 	const [contractName, setContractName] = useState();
 	const [nextMintableToken, setNextMintableToken] = useState();
 	const [rangeInfo, setRangeInfo] = useState([]);
+	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
 	const refreshData = async () => {
+		setRefetchingFlag(true);
 		let balances = [];
 		let tokensOwned = (await offerInfo.instance.balanceOf(account)).toString();
 		setCollectionName((await offerInfo.instance.getCollection(offerInfo.productIndex)).collectionName);
-		//setNextMintableToken((await offerInfo.instance.getNextSequentialIndex(offerInfo.productIndex)).toString());
 		setContractName(await offerInfo.instance.name());
-
 		let ranges = [];
 		for await (let rangeIndex of [...Array.apply(null, {length: offerInfo.ranges}).keys()]) {
 			let data = await minter.getOfferRangeInfo(index, rangeIndex);
-			console.log(data);
 			ranges.push({
 				name: data.name,
 				price: data.price.toString(),
@@ -104,6 +102,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 			}
 		}
 		setBalance(balances);
+		setRefetchingFlag(false);
 	}
 
 	useEffect(() => {
@@ -122,8 +121,8 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 				@{contractName}
 			</div>
 		</summary>
-		<button onClick={refreshData} style={{position: 'absolute', left: 0, top: 0}} className='btn py-0 btn-dark'>
-			<i className='fas fa-redo' />
+		<button onClick={refreshData} disabled={refetchingFlag} style={{position: 'absolute', left: 0, top: 0}} className='btn btn-dark'>
+			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<small>Contract Address: <b>{offerInfo.contractAddress}</b></small><br />
 		<small>Product Index: {offerInfo.productIndex}</small><br />

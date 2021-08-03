@@ -216,6 +216,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 					<tbody>
 						{ranges.map((item, index, array) => {
 							return <RangeManager
+										key={index}
 										disabled={item.disabled}
 										index={index}
 										array={array}

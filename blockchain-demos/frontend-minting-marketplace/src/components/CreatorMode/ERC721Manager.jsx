@@ -6,7 +6,7 @@ import CollectionManager from './CollectionManager.jsx';
 
 const erc721Abi = ERC721Token.default.abi;
 
-const ERC721Manager = ({tokenAddress, minter, account}) => {
+const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) => {
 	const [erc721Instance, setERC721Instance] = useState();
 	const [tokenInfo, setTokenInfo] = useState();
 	
@@ -50,8 +50,11 @@ const ERC721Manager = ({tokenAddress, minter, account}) => {
 	}, [erc721Instance])
 
 	useEffect(() => {
-		let provider = new ethers.providers.Web3Provider(window.ethereum);
-		let signer = provider.getSigner(0);
+		let signer = programmaticProvider;
+		if (window.ethereum) {
+			let provider = new ethers.providers.Web3Provider(window.ethereum);
+			signer = provider.getSigner(0);
+		}
 		let erc721 = new ethers.Contract(tokenAddress, erc721Abi, signer);
 		setERC721Instance(erc721);
 	}, [])

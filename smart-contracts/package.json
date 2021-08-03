@@ -9,6 +9,7 @@
   "scripts": {
     "hardhat:compile": "hardhat compile",
     "hardhat:test": "hardhat test",
+    "deploy": "npx hardhat --network binanceSmartchain deploy",
     "deploy-factory-proxy": "node ./deployment-scripts/deployFactoryProxy.js",
     "deploy-minter-proxy": "node ./deployment-scripts/deployMinterMarketplaceProxy.js"
   },

@@ -10,7 +10,7 @@ import ERC721Consumer from './ConsumerMode/ERC721Consumer.jsx';
 const minterAbi = MinterMarketplace.default.abi;
 const erc721Abi = ERC721Token.default.abi;
 
-const ConsumerMode = ({account, addresses}) => {
+const ConsumerMode = ({account, addresses, programmaticProvider}) => {
 
 	const [minterInstance, setMinterInstance] = useState();
 	const [offerCount, setOfferCount] = useState();
@@ -20,8 +20,11 @@ const ConsumerMode = ({account, addresses}) => {
 
 	const fetchData = async () => {
 		setRefetchingFlag(true);
-		let provider = new ethers.providers.Web3Provider(window.ethereum);
-		let signer = provider.getSigner(0);
+		let signer = programmaticProvider;
+		if (window.ethereum) {
+			let provider = new ethers.providers.Web3Provider(window.ethereum);
+			signer = provider.getSigner(0);
+		}
 
 		let aux = (await minterInstance.getOfferCount()).toString();
  		setSalesCount((await minterInstance.openSales()).toString());
@@ -43,10 +46,11 @@ const ConsumerMode = ({account, addresses}) => {
 	}
 
 	useEffect(() => {
-		// Ethers Connection
-		let provider = new ethers.providers.Web3Provider(window.ethereum);
-		let signer = provider.getSigner(0);
-
+		let signer = programmaticProvider;
+		if (window.ethereum) {
+			let provider = new ethers.providers.Web3Provider(window.ethereum);
+			signer = provider.getSigner(0);
+		}
 		let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
 		setMinterInstance(ethersMinterInstance);
 	}, [])
