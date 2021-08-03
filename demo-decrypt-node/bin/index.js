@@ -1,4 +1,4 @@
-const port = process.env.PORT
+const port = process.env.PORT;
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -9,45 +9,50 @@ const StartHLS = require('./hls-starter.js');
 const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const Socket = require("socket.io");
+const Socket = require('socket.io');
 const eventListeners = require('./integrations/ethers');
+const log = require('./utils/logger')(module);
+const morgan = require('morgan');
 const _ = require('lodash');
 require('dotenv').config();
 
-async function main () {
-  const adapter = new FileAsync('./db/store.json')
-  const db = await low(adapter)
-  const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails']
+async function main() {
+  const adapter = new FileAsync('./db/store.json');
+  const db = await low(adapter);
+  const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
 
   for (const folder of mediaDirectories) {
     if (!fs.existsSync(folder)) {
-      console.log(folder, "doesn't exist, creating it now!")
-      fs.mkdirSync(folder)
+      log.info(folder, 'doesn\'t exist, creating it now!');
+      fs.mkdirSync(folder);
     }
   }
 
   db.defaults({ mediaConfig: {} })
-    .write()
+    .write();
   db.defaults({ adminNFT: '' })
-    .write()
+    .write();
 
-  const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true })
-   .then((c) => {
-     if (process.env.PRODUCTION === 'true') {
-      console.log('DB Connected!');
-     } else {
-       console.log('Development DB Connected!');
-     }
-     return c;
-   })
+  const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+    .then((c) => {
+      if (process.env.PRODUCTION === 'true') {
+        log.info('DB Connected!');
+      } else {
+        log.info('Development DB Connected!');
+      }
+      return c;
+    })
     .catch((e) => {
-      console.log('DB Not Connected!');
-      console.log(`Reason: ${e.message}`);
+      log.error('DB Not Connected!');
+      log.error(`Reason: ${ e.message }`);
     });
 
   mongoose.set('useFindAndModify', false);
 
-  const app = express()
+  const app = express();
 
   /* CORS */
   app.use(cors());
@@ -58,22 +63,22 @@ async function main () {
     hls,
     store: {
       setAdminToken: (token) => {
-        return db.set('adminNFT', token).write()
+        return db.set('adminNFT', token).write();
       },
       getAdminToken: () => {
-        return db.get('adminNFT').value()
+        return db.get('adminNFT').value();
       },
       getMediaConfig: mediaId => {
-        return db.get(['mediaConfig', mediaId]).value()
+        return db.get(['mediaConfig', mediaId]).value();
       },
       addMedia: (mediaId, config) => {
-        return db.set(['mediaConfig', mediaId], config).write()
+        return db.set(['mediaConfig', mediaId], config).write();
       },
       removeMedia: mediaId => {
-        return db.unset(['mediaConfig', mediaId]).write()
+        return db.unset(['mediaConfig', mediaId]).write();
       },
       listMedia: () => {
-        return db.get('mediaConfig').value()
+        return db.get('mediaConfig').value();
       }
     },
     db: {
@@ -84,47 +89,48 @@ async function main () {
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken')
     }
-  }
+  };
 
-  app.use(bodyParser.raw())
-  app.use(bodyParser.json())
-  app.use('/thumbnails', express.static(path.join(__dirname, 'Videos/Thumbnails')))
-  app.use('/stream', require('./routes/stream')(context))
-  app.use('/api', require('./routes')(context))
-  app.use(express.static(path.join(__dirname, 'public')))
-  app.use(function (error, req, res) {
-    console.error(error)
-    res.status(500).json({ success: false, error: true, message: error.message })
-  })
+  app.use(morgan('dev'));
+  app.use(bodyParser.raw());
+  app.use(bodyParser.json());
+  app.use('/thumbnails', express.static(path.join(__dirname, 'Videos/Thumbnails')));
+  app.use('/stream', require('./routes/stream')(context));
+  app.use('/api', require('./routes')(context));
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use((error, req, res) => {
+    log.error(error);
+    res.status(500).json({ success: false, error: true, message: error.message });
+  });
 
   const server = app.listen(port, () => {
-    console.log(`Decrypt node listening at http://localhost:${port}`)
-  })
+    log.info(`Decrypt node listening at http://localhost:${ port }`);
+  });
 
   const io = Socket(server);
   const sockets = {};
 
-  io.on("connection", socket => {
-    console.log(`Client connected: ${socket.id}`);
-    socket.on("init", sessionId => {
+  io.on('connection', socket => {
+    log.info(`Client connected: ${ socket.id }`);
+    socket.on('init', sessionId => {
 
-      console.log(`Opened connection: ${ sessionId }`);
+      log.info(`Opened connection: ${ sessionId }`);
 
       sockets[sessionId] = socket.id;
-      app.set("sockets", sockets);
+      app.set('sockets', sockets);
     });
 
-    socket.on("end", sessionId => {
+    socket.on('end', sessionId => {
       delete sockets[sessionId];
 
       socket.disconnect(0);
-      app.set("sockets", sockets);
+      app.set('sockets', sockets);
 
-      console.log(`Close connection ${ sessionId }`);
+      log.info(`Close connection ${ sessionId }`);
     });
   });
 
-  app.set("io", io);
+  app.set('io', io);
 
   // Listen network events
   const {
@@ -144,12 +150,11 @@ async function main () {
 
   // Offers
   offerListenersBNB();
-
 }
 
 (async () => {
-  await main()
+  await main();
 })().catch(e => {
-  console.error(e)
-  process.exit()
-})
+  log.error(e);
+  process.exit();
+});
