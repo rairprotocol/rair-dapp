@@ -3,6 +3,7 @@ const Factory = require('./contracts/RAIR_Token_Factory.json').abi;
 const Market = require('./contracts/Minter_Marketplace.json').abi;
 const ERC777 = require('./contracts/RAIR777.json').abi;
 const Token = require('./contracts/RAIR_ERC721.json').abi;
+const log = require('../../utils/logger')(module);
 
 const { nanoid } = require('nanoid');
 const _ = require('lodash');
@@ -38,19 +39,19 @@ module.exports = async (db) => {
         copies
       });
 
-      console.log(`RAIR: New Product ID#${ index } created for Contract  ${ contract } with ${ copies } tokens`);
+      log.info(`RAIR: New Product ID#${ index } created for Contract  ${ contract } with ${ copies } tokens`);
     });
 
     tokenInstance.on('CollectionCompleted(uint256,string)', async (index, name) => {
       await db.Product.findOneAndUpdate({ collectionIndexInContract: index, contract }, { sold: true });
 
-      console.log(`RAIR: collection #${index} with name "${name}" ran out of mintable copies!`);
+      log.info(`RAIR: collection #${index} with name "${name}" ran out of mintable copies!`);
     });
 
     tokenInstance.on('TransfersEnabled(uint256,string)', async (index, name) => {
       await db.Product.findOneAndUpdate({ collectionIndexInContract: index, contract }, { resaleEnabled: true });
 
-      console.log(`RAIR: The transfer lock of collection ID#${ index }, name "${ name }" is removed.`);
+      log.info(`RAIR: The transfer lock of collection ID#${ index }, name "${ name }" is removed.`);
     });
   };
 
@@ -69,40 +70,40 @@ module.exports = async (db) => {
             blockchain: 'BNB'
           });
 
-          console.log(`Factory: New Contract ${ contractAddress } of User ${ user } was stored to the DB.`);
+          log.info(`Factory: New Contract ${ contractAddress } of User ${ user } was stored to the DB.`);
 
           await setProductListeners(contractAddress);
         } catch (err) {
-          console.log(err);
+          log.error(err);
         }
       });
 
       // TODO: need to be clarify events below
       provider.on('TokensWithdrawn(address,address,uint256)', async (recipientAddress, token, amountOfTokens) => {
         try {
-          console.log(`Factory: ERC777 token ${ token } received, total length ${ amountOfTokens } through deployments are sent to the owner ${ recipientAddress }.`);
+          log.info(`Factory: ERC777 token ${ token } received, total length ${ amountOfTokens } through deployments are sent to the owner ${ recipientAddress }.`);
         } catch (err) {
-          console.log(err);
+          log.error(err);
         }
       });
 
       provider.on('NewTokensAccepted(address,uint256)', async (token, amountOfTokens) => {
         try {
-          console.log(`Factory: ERC777 token ${ token } is accepted as a deployment method from total amount of tokens ${ amountOfTokens }.`);
+          log.info(`Factory: ERC777 token ${ token } is accepted as a deployment method from total amount of tokens ${ amountOfTokens }.`);
         } catch (err) {
-          console.log(err);
+          log.error(err);
         }
       });
 
       provider.on('TokenNoLongerAccepted(address)', async (token) => {
         try {
-          console.log(`Factory: ERC777 token ${ token } is no longer accepted for deployments.`);
+          log.info(`Factory: ERC777 token ${ token } is no longer accepted for deployments.`);
         } catch (err) {
-          console.log(err);
+          log.error(err);
         }
       });
     } catch (err) {
-      console.log(err);
+      log.error(err);
     }
   };
 
@@ -111,12 +112,12 @@ module.exports = async (db) => {
       const numberOfTokens = await provider.getContractCountOf(ownerAddress);
       const foundContracts = await db.Contract.find({ user: ownerAddress }).distinct('contractAddress');
 
-      console.log(ownerAddress, 'has deployed', numberOfTokens.toString(), 'contracts');
+      log.info(ownerAddress, 'has deployed', numberOfTokens.toString(), 'contracts');
 
       for (let j = 0; j < numberOfTokens; j++) {
         const contractAddress = await provider.ownerToContracts(ownerAddress, j);
 
-        console.log(`Contract ${ contractAddress } found!`);
+        log.info(`Contract ${ contractAddress } found!`);
 
         if (!_.includes(foundContracts, contractAddress.toLowerCase())) {
           await db.Contract.create({
@@ -126,13 +127,13 @@ module.exports = async (db) => {
             blockchain: 'BNB'
           });
 
-          console.log(`Stored an additional Contract ${ contractAddress } for User ${ user }`);
+          log.info(`Stored an additional Contract ${ contractAddress } for User ${ user }`);
         }
 
         await setProductListeners(contractAddress);
       }
     } catch (err) {
-      console.log(err);
+      log.error(err);
     }
   };
 
@@ -147,7 +148,7 @@ module.exports = async (db) => {
           price,
         });
 
-        console.log(`Minter Marketplace: Created a new offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
+        log.info(`Minter Marketplace: Created a new offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
       });
 
       provider.on('UpdatedOffer(address,uint256,uint256,uint256)', async (contractAddress, copies, price, catalogIndex) => {
@@ -155,7 +156,7 @@ module.exports = async (db) => {
 
         await db.Offer.findOneAndUpdate({ marketplaceCatalogIndex: catalogIndex, contract }, { copies, price });
 
-        console.log(`Minter Marketplace: Update a offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
+        log.info(`Minter Marketplace: Update a offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
       });
 
       provider.on('TokenMinted(address,uint256)', async (ownerAddress, catalogIndex) => {
@@ -172,7 +173,7 @@ module.exports = async (db) => {
           contract: 'some contract', // FIXME: should received from event
         });
 
-        console.log(`Minter Marketplace: Minted new token of the offer ${ catalogIndex } for User ${ ownerAddress }.`);
+        log.info(`Minter Marketplace: Minted new token of the offer ${ catalogIndex } for User ${ ownerAddress }.`);
       });
 
       provider.on('SoldOut(address,uint256)', async (contractAddress, catalogIndex) => {
@@ -180,26 +181,26 @@ module.exports = async (db) => {
 
         await db.Offer.findOneAndUpdate({ marketplaceCatalogIndex: catalogIndex, contract }, { $set: { sold: true } });
 
-        console.log(`Minter Marketplace: Offer ${ catalogIndex } runs out of allowed tokens.`);
+        log.info(`Minter Marketplace: Offer ${ catalogIndex } runs out of allowed tokens.`);
       });
 
       // TODO: need to be clarify events below
       provider.on('ChangedTreasury(address)', async (newTreasuryAddress) => {
 
-        console.log(`Minter Marketplace: Updates it’s treasury address ${ newTreasuryAddress }.`);
+        log.info(`Minter Marketplace: Updates it’s treasury address ${ newTreasuryAddress }.`);
       });
 
       provider.on('ChangedTreasuryFee(address,uint16)', async (treasuryAddress, fee) => {
 
-        console.log(`Minter Marketplace: The treasury ${ treasuryAddress } fee ${ fee } gets updated.`);
+        log.info(`Minter Marketplace: The treasury ${ treasuryAddress } fee ${ fee } gets updated.`);
       });
 
       provider.on('ChangedNodeFee(uint16)', async (fee) => {
 
-        console.log(`Minter Marketplace: Updates the node fee ${ fee }.`);
+        log.info(`Minter Marketplace: Updates the node fee ${ fee }.`);
       });
     } catch (err) {
-      console.log(err);
+      log.error(err);
     }
   };
 
