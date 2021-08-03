@@ -14,7 +14,7 @@ const minterAbi = MinterMarketplace.default.abi;
 const factoryAbi = Factory.default.abi;
 const erc777Abi = ERC777.default.abi;
 
-const CreatorMode = ({account, addresses}) => {
+const CreatorMode = ({account, addresses, programmaticProvider}) => {
 
 	const [erc777Instance, setERC777Instance] = useState();
 	const [factoryInstance, setFactoryInstance] = useState();
@@ -25,9 +25,13 @@ const CreatorMode = ({account, addresses}) => {
 		if (!addresses) {
 			return;
 		}
-		// Ethers Connection
-		let provider = new ethers.providers.Web3Provider(window.ethereum);
-		let signer = provider.getSigner(0);
+
+		let signer = programmaticProvider;
+		if (window.ethereum) {
+			// Ethers Connection
+			let provider = new ethers.providers.Web3Provider(window.ethereum);
+			signer = provider.getSigner(0);
+		}
 
 		let erc777Instance = new ethers.Contract(addresses.erc777, erc777Abi, signer);
 		setERC777Instance(erc777Instance);
@@ -57,7 +61,7 @@ const CreatorMode = ({account, addresses}) => {
 			{deployedTokens !== undefined && <>
 				<h3> Your Deployed ERC721 Contracts </h3> 
 				{deployedTokens.map((item, index) => {
-					return <ERC721Manager key={index} tokenAddress={item} minter={minterInstance} account={account}/>
+					return <ERC721Manager programmaticProvider={programmaticProvider} key={index} tokenAddress={item} minter={minterInstance} account={account}/>
 				})}
 			</>}
 			</div>

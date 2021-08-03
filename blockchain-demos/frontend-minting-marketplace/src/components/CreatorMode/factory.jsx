@@ -7,8 +7,10 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 	const [tokensOwned, setTokensOwned] = useState();
 	const [tokenData, setTokenData] = useState();
 	const [tokensRequired, setTokensRequired] = useState();
+	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
 	const refreshData = async () => {
+		setRefetchingFlag(true);
 		let tokenCount = await instance.getContractCount(account);
 		let tokens = [];
 		for (let i = 0; i < tokenCount; i++) {
@@ -17,6 +19,7 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 		setTokensOwned(tokenCount);
 		setDeployedTokens(tokens);
 		setTokensRequired(await instance.deploymentCostForERC777(erc777Instance.address));
+		setRefetchingFlag(false);
 	}
 
 	useEffect(() => {
@@ -29,19 +32,20 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 		
 		{
 			// Initializer, do not use
+			false && <button
+				style={{position: 'absolute', right: 0, top: 0}}
+				onClick={e => instance.initialize(10, erc777Instance.address)}
+				className='btn btn-success'>
+				<i className='fas fa-arrow-up' />
+			</button>
 		}
-		{/*false && <button
-			style={{position: 'absolute', right: 0, top: 0}}
-			onClick={e => instance.initialize(10, erc777Instance.address)}
-			className='btn btn-success'>
-			<i className='fas fa-arrow-up' />
-		</button>*/}
 		
 		<button
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}
+			disabled={refetchingFlag}
 			className='btn btn-dark'>
-			<i className='fas fa-redo' />
+			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<br />
 		{(tokensOwned && tokensRequired) ? <>You currently own {tokensOwned.length} ERC721 contracts<br/>
