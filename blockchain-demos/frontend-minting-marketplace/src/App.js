@@ -181,12 +181,17 @@ function App() {
 				{chainId && addresses?.factory && <button onClick={e => {
 					setMode(1);
 				}} className='btn btn-success mx-5'>
-					I'm a creator!
+					Factory
 				</button>}
 				{chainId && addresses?.minterMarketplace && <button onClick={e => {
 					setMode(2);
 				}} className='btn btn-warning mx-5'>
-					I'm an user!
+					Minter Marketplace
+				</button>}
+				{chainId && addresses?.resaleMarketplace && <button onClick={e => {
+					setMode(3);
+				}} className='btn btn-primary mx-5'>
+					Resale Marketplace
 				</button>}
 			</>}
 			{account && mode && <button onClick={e => setMode()} style={{position: 'absolute', left: 0, top: 0}} className='btn btn-danger'>
