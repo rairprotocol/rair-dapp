@@ -16,6 +16,10 @@ module.exports = {
         timeout: 1000000
       }
     },
+    goerli: {
+      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ROPSTEN_ALCHEMY_URL}`,
+      accounts: [process.env.ADDRESS_PRIVATE_KEY],
+    },
     binanceSmartchain: {
       url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       chainId: 97,

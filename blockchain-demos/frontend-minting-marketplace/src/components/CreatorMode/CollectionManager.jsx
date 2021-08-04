@@ -19,13 +19,13 @@ const LockManager = ({index, array, deleter, disabled, locker, collectionIndex})
 			#{index + 1}
 		</th>
 		<th>
-			<input className='form-control' disabled={disabled} value={start} onChange={e => setStart(e.target.value)} />
+			<input className='form-control' type='number' disabled={disabled} value={start} onChange={e => setStart(e.target.value)} />
 		</th>
 		<th>
-			<input className='form-control' disabled={disabled} value={end} onChange={e => setEnd(e.target.value)} />
+			<input className='form-control' type='number' disabled={disabled} value={end} onChange={e => setEnd(e.target.value)} />
 		</th>
 		<th>
-			<input className='form-control' disabled={disabled} value={locked} onChange={e => setLocked(e.target.value)} />
+			<input className='form-control' type='number' disabled={disabled} value={locked} onChange={e => setLocked(e.target.value)} />
 		</th>
 		<th>
 			{!disabled ? <button
@@ -73,14 +73,14 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 			<input className='form-control' disabled={disabled} value={rangeName} onChange={e => setRangeName(e.target.value)} />
 		</th>
 		<th>
-			<input className='form-control' value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} disabled/>
+			<input className='form-control' type='number' value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} disabled/>
 		</th>
 		<th>
 			<input
-				style={{
-					backgroundColor: (index === 0 ? 0 : array[index - 1].endingToken) > endingRange ? 'red' : undefined,
-					color: (index === 0 ? 0 : array[index - 1].endingToken) > endingRange ? 'white' : undefined
-				}}
+				style={((index === 0 ? 0 : array[index - 1].endingToken) > endingRange) || endingRange > hardLimit ? {
+					backgroundColor: 'red',
+					color: 'white'
+				} : {}}
 				disabled={disabled} 
 				className='form-control'
 				type='number'
@@ -90,7 +90,7 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 				onChange={e => setEndingRange(Number(e.target.value))} />
 		</th>
 		<th>
-			<input disabled={disabled}  className='form-control' value={rangePrice} onChange={e => setRangePrice(e.target.value)} />
+			<input disabled={disabled} type='number' className='form-control' value={rangePrice} onChange={e => setRangePrice(e.target.value)} />
 		</th>
 	</tr>
 }
@@ -170,6 +170,14 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 	}
 
 	useEffect(() => {
+		if (minter) {
+			minter.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', function() {
+				refresher()
+			})
+		}
+	})
+
+	useEffect(() => {
 		if (tokenInstance && minter) {
 			refresher()
 		} 
@@ -231,7 +239,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 										array={array}
 										deleter={deleter}
 										sync={() => {setForceSync(!forceSync)}}
-										hardLimit={collectionInfo.endingToken}
+										hardLimit={collectionInfo.endingToken - collectionInfo.startingToken}
 									/>
 						})}
 					</tbody>
@@ -261,13 +269,12 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 							await minter.addOffer(
 								tokenAddress,
 								collectionIndex,
-								ranges.map((item, index, array) => index === 0 ? 0 : (Number(array[index - 1].endingToken) + 1)),
+								ranges.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
 								ranges.map((item) => item.endingToken),
 								ranges.map((item) => item.price),
 								ranges.map((item) => item.name),
 								'0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
 						}
-						refresher()
 					} catch (err) {
 						console.log(err);
 						Swal.fire('Error', err?.data?.message, 'error');
@@ -320,7 +327,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 										array={array}
 										deleter={lockDeleter}
 										sync={() => {setForceSync(!forceSync)}}
-										hardLimit={collectionInfo.endingToken}
+										hardLimit={collectionInfo.endingToken - collectionInfo.startingToken}
 									/>
 						})}
 					</tbody>
