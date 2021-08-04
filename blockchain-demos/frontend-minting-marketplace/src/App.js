@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 
 import logo from './RAIRLandscape.png';
 import './App.css';
+import * as ethers from 'ethers'
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -13,9 +14,9 @@ import ConsumerMode from './components/consumerMode.jsx';
 
 const contractAddresses = {
 	'0x61': { // Binance Testnet
-		factory: '0x5f35db8c13a351e841f83577112ccc95edca9697',
+		factory: '0x58B81fE7D18ED2296A9E814c768d28dA3BCC94F9',
 		erc777: '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1',
-		minterMarketplace: '0xb8083810fa33e7ebd777c8cd6ebb453948afd354'
+		minterMarketplace: '0xe9245a462b1B6Dd41075a80748760fa29A597591'
 	}
 }
 
@@ -64,21 +65,37 @@ function App() {
 	const [mode, setMode] = useState();
 	const [chainId, setChainId] = useState();
 	const [addresses, setAddresses] = useState();
+	const [programmaticProvider, setProgrammaticProvider] = useState();
+
+	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState();
 
 	useEffect(() => {
-		window.ethereum.request({ method: 'eth_requestAccounts' })
+		window.ethereum && window.ethereum.request({ method: 'eth_requestAccounts' })
 			.then(accounts => {
 				setAccount(accounts[0]);
 			});
 	}, [account])
 
+	const connectProgrammatically = () => {
+		let binanceTestnetProvider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {
+				chainId: 97, symbol: 'BNB', name: 'Binance Testnet', timeout: 1000000
+			});
+		let currentWallet = new ethers.Wallet(UNSAFE_PrivateKey, binanceTestnetProvider);
+		setChainId(currentWallet.provider._network.chainId);
+		setAddresses(contractAddresses['0x61']);
+		setAccount(currentWallet.address);
+		setProgrammaticProvider(currentWallet);
+	}
+
 	useEffect(() => {
-		window.ethereum.on('chainChanged', async (chainId) => {
-			setChainId(chainId);
-			setAddresses(contractAddresses[chainId]);
-		});
-		setChainId(window.ethereum.chainId);
-		setAddresses(contractAddresses[window.ethereum.chainId]);
+		if (window.ethereum) {
+			window.ethereum.on('chainChanged', async (chainId) => {
+				setChainId(chainId);
+				setAddresses(contractAddresses[chainId]);
+			});
+			setChainId(window.ethereum.chainId);
+			setAddresses(contractAddresses[window.ethereum.chainId]);
+		}
 	}, [])
 
 	return (
@@ -139,6 +156,22 @@ function App() {
 						}}>
 						Mumbai (Polygon)
 					</button>}
+				{!window.ethereum && <div className='row py-5 w-100 px-0 mx-0'>
+					<hr className='w-100' />
+					<h5 className='col-12'> For tests only! </h5>
+					<div className='col-1' />
+					<input
+						className='col-7'
+						type='password'
+						value={UNSAFE_PrivateKey}
+						onChange={e => setUNSAFE_PrivateKey(e.target.value)}
+					/>
+					<button className='btn btn-danger col-3' onClick={connectProgrammatically}>
+						Use my private key to connect!
+					</button>
+					<div className='col-1' />
+					<hr className='w-100' />
+				</div>}
 			</div>}
 			<img src={logo} style={{maxHeight: '5vh'}} className="App-logo my-5" alt="logo" />
 			<br/>
@@ -148,19 +181,24 @@ function App() {
 				{chainId && addresses?.factory && <button onClick={e => {
 					setMode(1);
 				}} className='btn btn-success mx-5'>
-					I'm a creator!
+					Factory
 				</button>}
 				{chainId && addresses?.minterMarketplace && <button onClick={e => {
 					setMode(2);
 				}} className='btn btn-warning mx-5'>
-					I'm an user!
+					Minter Marketplace
+				</button>}
+				{chainId && addresses?.resaleMarketplace && <button onClick={e => {
+					setMode(3);
+				}} className='btn btn-primary mx-5'>
+					Resale Marketplace
 				</button>}
 			</>}
 			{account && mode && <button onClick={e => setMode()} style={{position: 'absolute', left: 0, top: 0}} className='btn btn-danger'>
 				<i className='fas fa-arrow-left' />
 			</button>}
-			{account && mode === 1 && <CreatorMode account={account} addresses={addresses}/>}
-			{account && mode === 2 && <ConsumerMode account={account} addresses={addresses}/>}
+			{account && mode === 1 && <CreatorMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>}
+			{account && mode === 2 && <ConsumerMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>}
 		</div>
 	);
 }

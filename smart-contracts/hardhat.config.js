@@ -1,6 +1,8 @@
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
 require('@openzeppelin/hardhat-upgrades');
+require('hardhat-deploy');
+require("@nomiclabs/hardhat-ethers")
 require('dotenv').config()
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -13,6 +15,12 @@ module.exports = {
         blockNumber: 12420727,
         timeout: 1000000
       }
+    },
+    binanceSmartchain: {
+      url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+      chainId: 97,
+      accounts: [process.env.ADDRESS_PRIVATE_KEY],
+      timeout: 0
     }
   },
   solidity: {

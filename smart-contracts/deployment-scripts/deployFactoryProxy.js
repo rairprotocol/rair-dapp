@@ -36,8 +36,6 @@ const main = async () => {
 	// The contract factory holds all the information about the contract, using the ABI and the Bytecode, the address will be the deployer and owner of the contract
 	let FactoryFactory = await new ethers.ContractFactory(FactoryData.abi, FactoryData.bytecode, currentWallet);
 
-	console.log(FactoryFactory.interface.functions['initialize(uint256,address)']);
-
 	// For deployment, the factory requires 2 things:
 	//		The number of ERC777 tokens required to deploy an ERC721
 	// 			and the address of the ERC777
