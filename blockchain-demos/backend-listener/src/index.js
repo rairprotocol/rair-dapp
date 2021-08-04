@@ -14,8 +14,8 @@ const main = async () => {
 	let factoryInstance = await new ethers.Contract('0x58B81fE7D18ED2296A9E814c768d28dA3BCC94F9', FactoryAbi, binanceTestnetProvider);
 	let minterInstance = await new ethers.Contract('0xe9245a462b1B6Dd41075a80748760fa29A597591', MinterAbi, binanceTestnetProvider);
 
-	minterInstance.on('AddedOffer(address,uint256,uint256,uint256)', (contractAddress, tokensAllowed, individualPrice, catalogIndex) => {
-		console.log(`Minter Marketplace: Created a new offer ${catalogIndex} (from ${contractAddress}), ${tokensAllowed} tokens for ${individualPrice} WEI each`);
+	minterInstance.on('AddedOffer(address,uint256,uint256,uint256)', (contractAddress, productIndex, rangesCreated, catalogIndex) => {
+		console.log(`Minter Marketplace: Created a new offer #${catalogIndex} (from ${contractAddress}, product #${productIndex}) with ${rangesCreated} ranges`);
 	});
 	minterInstance.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', (contractAddress, productIndex, offerIndex, rangeIndex, startingToken, endingToken, priceOfToken, nameOfRange) => {
 		console.log(`Minter Marketplace: New range created for contract ${contractAddress} on product ${productIndex} (offer #${offerIndex} on the marketplace) as range #${rangeIndex}: ${nameOfRange}, starting from ${startingToken} to ${endingToken} at ${priceOfToken} each`);

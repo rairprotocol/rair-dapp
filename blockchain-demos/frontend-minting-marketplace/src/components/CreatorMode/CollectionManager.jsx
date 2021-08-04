@@ -78,8 +78,8 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 		<th>
 			<input
 				style={{
-					backgroundColor: (index === 0 ? 0 : array[index - 1].endingToken) >= endingRange ? 'red' : undefined,
-					color: (index === 0 ? 0 : array[index - 1].endingToken) >= endingRange ? 'white' : undefined
+					backgroundColor: (index === 0 ? 0 : array[index - 1].endingToken) > endingRange ? 'red' : undefined,
+					color: (index === 0 ? 0 : array[index - 1].endingToken) > endingRange ? 'white' : undefined
 				}}
 				disabled={disabled} 
 				className='form-control'
@@ -141,7 +141,12 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 				}
 			}
 			setRanges(existingRanges);
-			// Lock Ranges
+			
+		} catch (err) {
+			console.error(err?.data?.message);
+		}
+
+		try {// Lock Ranges
 			let existingLocks = [];
 			for await (let lockIndex of collectionInfo.locks) {
 				let lockInfo = await tokenInstance.getLockedRange(lockIndex);
@@ -156,7 +161,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 			}
 			setLocks(existingLocks);
 		} catch (err) {
-			console.error(err);
+			console.error(err?.data?.message);
 		}
 	}
 
@@ -262,11 +267,12 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 								ranges.map((item) => item.name),
 								'0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
 						}
+						refresher()
 					} catch (err) {
 						console.log(err);
 						Swal.fire('Error', err?.data?.message, 'error');
 					}
-				}} disabled={!ranges.length} className='btn btn-warning'>
+				}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>
 					{ranges.length > 0 && ranges[0].disabled ? `Append ${ranges.filter(item => !item.disabled).length} ranges to the marketplace` : `Create offer with ${ranges.length} ranges on the marketplace`}
 				</button>
 			</div>
@@ -306,6 +312,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 					<tbody>
 						{locks.map((item, index, array) => {
 							return <LockManager
+										key={index}
 										locker={locker}
 										collectionIndex={collectionIndex}
 										disabled={item.disabled}
