@@ -86,8 +86,10 @@ async function main() {
       File: _mongoose.model('File', require('./models/file'), 'File'),
       User: _mongoose.model('User', require('./models/user'), 'User'),
       Product: _mongoose.model('Product', require('./models/product'), 'Product'),
+      OfferPool: _mongoose.model('OfferPool', require('./models/offerPool'), 'OfferPool'),
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
-      MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken')
+      MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
+      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
     }
   };
 
@@ -139,7 +141,7 @@ async function main() {
     offerListenersBNB
   } = await eventListeners(context.db);
 
-  // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offers
+  // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offerPools/offers
 
   // Contracts
   contractListenersBNB();

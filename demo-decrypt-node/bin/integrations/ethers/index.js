@@ -36,11 +36,10 @@ module.exports = async (db) => {
           name,
           collectionIndexInContract: index,
           contract,
-          // resaleEnabled: false,
           copies
         });
 
-        log.info(`RAIR: New Product ID#${ index } created for Contract  ${ contract } with ${ copies } tokens`);
+        log.info(`RAIR: New Product ID#${ index } created for Contract ${ contract } with ${ copies } tokens`);
       } catch (err) {
         log.error(err);
       }
@@ -56,11 +55,30 @@ module.exports = async (db) => {
       }
     });
 
-    tokenInstance.on('TransfersEnabled(uint256,string)', async (index, name) => {
+    tokenInstance.on('RangeLocked(uint256,uint256,uint256,uint256,string)', async (product, startingToken, endingToken, lockedTokens, name) => {
       try {
-        await db.Product.findOneAndUpdate({ collectionIndexInContract: index, contract }, { resaleEnabled: true });
+        await db.LockedTokens.create({
+          contract,
+          product,
+          range: [startingToken, endingToken],
+          lockedTokens,
+          isLocked: true
+        });
 
-        log.info(`RAIR: The transfer lock of collection ID#${ index }, name "${ name }" is removed.`);
+        log.info(`RAIR: The range of tokens gets locked lock for Product ID#${ product }, name "${ name }", of Contract ${ contract }, for range from ${ startingToken } to ${ endingToken }, total number ${ lockedTokens }.`);
+      } catch (err) {
+        log.error(err);
+      }
+    });
+
+    tokenInstance.on('RangeUnlocked(uint256,uint256,uint256)', async (product, startingToken, endingToken) => {
+      try {
+        await db.LockedTokens.findOneAndUpdate({
+          contract,
+          product
+        }, { $set: { isLocked: false } });
+
+        log.info(`RAIR: The range is unlocked for Product ID#${ productIndex }, contract ${ contract }, for range from ${ startingToken } to ${ endingToken }.`);
       } catch (err) {
         log.error(err);
       }
@@ -70,21 +88,23 @@ module.exports = async (db) => {
   // Listeners
   const contractListeners = (provider) => {
     try {
-      provider.on('NewContractDeployed(address,uint256,address)', async (user, length, contractAddress) => {
+      provider.on('NewContractDeployed(address,uint256,address)', async (userOwner, length, contractAddress) => {
         try {
+          const user = userOwner.toLowerCase();
           const erc777Instance = new ethers.Contract(contractAddress, Token, binanceTestnetProvider);
           const title = await erc777Instance.name();
+          const contract = erc777Instance.address.toLowerCase();
 
           await db.Contract.create({
             user,
             title,
-            contractAddress: erc777Instance.address,
+            contractAddress: contract,
             blockchain: 'BNB'
           });
 
-          log.info(`Factory: New Contract ${ contractAddress } of User ${ user } was stored to the DB.`);
+          log.info(`Factory: New Contract ${ contract } of User ${ user } was stored to the DB.`);
 
-          await setProductListeners(contractAddress);
+          await setProductListeners(contract);
         } catch (err) {
           log.error(err);
         }
@@ -112,25 +132,27 @@ module.exports = async (db) => {
       const numberOfTokens = await provider.getContractCountOf(ownerAddress);
       const foundContracts = await db.Contract.find({ user: ownerAddress }).distinct('contractAddress');
 
-      log.info(ownerAddress, 'has deployed', numberOfTokens.toString(), 'contracts');
+      log.info(`${ ownerAddress } has deployed, ${ numberOfTokens.toString() }, contracts.`);
 
       for (let j = 0; j < numberOfTokens; j++) {
         const contractAddress = await provider.ownerToContracts(ownerAddress, j);
+        const user = ownerAddress.toLowerCase();
+        const contract = contractAddress.toLowerCase();
 
         log.info(`Contract ${ contractAddress } found!`);
 
-        if (!_.includes(foundContracts, contractAddress.toLowerCase())) {
+        if (!_.includes(foundContracts, contract)) {
           await db.Contract.create({
-            user: ownerAddress,
+            user,
             title: 'Some temporary title', // need to get from blockchain
-            contractAddress,
+            contractAddress: contract,
             blockchain: 'BNB'
           });
 
-          log.info(`Stored an additional Contract ${ contractAddress } for User ${ user }`);
+          log.info(`Stored an additional Contract ${ contract } for User ${ user }`);
         }
 
-        await setProductListeners(contractAddress);
+        await setProductListeners(contract);
       }
     } catch (err) {
       log.error(err);
@@ -139,67 +161,92 @@ module.exports = async (db) => {
 
   const offerListeners = (provider) => {
     try {
-      provider.on('AddedOffer(address,uint256,uint256,uint256)', async (contract, copies, price, catalogIndex) => {
+      provider.on('AddedOffer(address,uint256,uint256,uint256)', async (contractAddress, product, rangeNumber, catalogIndex) => {
         try {
-          await db.Offer.create({
+          const contract = contractAddress.toLowerCase();
+
+          await db.OfferPool.create({
             marketplaceCatalogIndex: catalogIndex,
             contract,
-            product: 200000000000000001,
-            copies,
-            price,
-            resale: 0,
-            range: [0, 15]
+            product,
+            rangeNumber
           });
 
-          log.info(`Minter Marketplace: Created a new offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
+          log.info(`Minter Marketplace: Created a new offerPool ${ catalogIndex } (from ${ contract }), Product ID#${ product }.`);
         } catch (err) {
           log.error(err);
         }
       });
 
-      provider.on('UpdatedOffer(address,uint256,uint256,uint256)', async (contractAddress, copies, price, catalogIndex) => {
+      provider.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', async (contractAddress, product, offerPool, rangeIndex, startingToken, endingToken, price, rangeName) => {
         try {
           const contract = contractAddress.toLowerCase();
 
-          await db.Offer.findOneAndUpdate({ marketplaceCatalogIndex: catalogIndex, contract }, { copies, price });
+          await db.Offer.create({
+            rangeIndex,
+            contract,
+            product,
+            offerPool,
+            price,
+            range: [startingToken, endingToken],
+            rangeName
+          });
 
-          log.info(`Minter Marketplace: Update a offer ${ catalogIndex } (from ${ contract }), ${ copies } tokens for ${ price } WEI each.`);
+          log.info(`Minter Marketplace: Created new Offer ${ rangeIndex }, name ${ rangeName } (from Contract ${ contract }, Product ${ product }), offerPool ${ offerPool }, range from ${ startingToken } to ${ endingToken } by price ${ price } WEI each.`);
         } catch (err) {
           log.error(err);
         }
       });
 
-      provider.on('TokenMinted(address,uint256)', async (ownerAddress, catalogIndex) => {
+      provider.on('UpdatedOffer(address,uint256,uint256,uint256,uint256,string)', async (contractAddress, offerPool, rangeIndex, copies, price, rangeName) => {
         try {
-          // TODO: contract address need to be in lowerCase
-          const updatedOffer = await db.Offer.findOneAndUpdate({ marketplaceCatalogIndex: catalogIndex }, { $inc: { soldCopies: 1 } });
+          const contract = contractAddress.toLowerCase();
 
-          // TODO: should be updated Product which offer belong to, field "soldCopies"
-          // await db.Product.findOneAndUpdate({ collectionIndexInContract: updatedOffer.product, contract }, { $inc: { soldCopies: 1 } });
+          await db.Offer.findOneAndUpdate({ offerPool, contract, rangeIndex }, { copies, price, rangeName });
+
+          log.info(`Minter Marketplace: Update a Offer ${ rangeIndex }, in offerPool ${ offerPool }, name ${ rangeName } (from ${ contract }), new amount of tokens ${ copies } by ${ price } WEI each.`);
+        } catch (err) {
+          log.error(err);
+        }
+      });
+
+      provider.on('TokenMinted(address,address,uint256,uint256,uint256)', async (ownerAddress, contractAddress, offerPool, range, tokenIndex) => {
+        try {
+          const contract = contractAddress.toLowerCase();
 
           await db.MintedToken.create({
-            token: `temp_token_${ nanoid() }`, // FIXME: should received from event
+            token: tokenIndex,
             ownerAddress,
-            offer: catalogIndex,
-            contract: 'some contract', // FIXME: should received from event
+            offerPool,
+            range,
+            contract,
           });
 
-          log.info(`Minter Marketplace: Minted new token of the offer ${ catalogIndex } for User ${ ownerAddress }.`);
+          const updatedOffer = await db.Offer.findOneAndUpdate({
+            rangeIndex: range,
+            offerPool
+          }, { $inc: { soldCopies: 1 } });
+
+          await db.Product.findOneAndUpdate({
+            collectionIndexInContract: updatedOffer.product,
+            contract
+          }, { $inc: { soldCopies: 1 } });
+
+          log.info(`Minter Marketplace: Minted new token ${ tokenIndex } of the offer ${ range } in offerPool ${ offerPool } for User ${ ownerAddress }.`);
         } catch (err) {
           log.error(err);
         }
       });
 
-      provider.on('SoldOut(address,uint256)', async (contractAddress, catalogIndex) => {
+      provider.on('SoldOut(address,uint256,uint256)', async (contractAddress, offerPool, rangeIndex) => {
         try {
           const contract = contractAddress.toLowerCase();
 
-          await db.Offer.findOneAndUpdate({
-            marketplaceCatalogIndex: catalogIndex,
-            contract
-          }, { $set: { sold: true } });
+          const offer = await db.Offer.findOneAndUpdate({ rangeIndex, offerPool }, { $set: { sold: true } });
 
-          log.info(`Minter Marketplace: Offer ${ catalogIndex } runs out of allowed tokens.`);
+          const product = await db.Product.findOne({ collectionIndexInContract: offer.product, contract });
+
+          log.info(`Minter Marketplace: Offer ${ rangeIndex } from Product ${ product.name } runs out of allowed tokens.`);
         } catch (err) {
           log.error(err);
         }
