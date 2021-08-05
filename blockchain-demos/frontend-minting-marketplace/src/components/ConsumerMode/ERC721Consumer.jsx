@@ -1,12 +1,24 @@
 import {useState, useEffect} from 'react'
 import Swal from 'sweetalert2';
 
-const Range = ({start, end, name, allowed, price, tokenInstance, minterInstance, productIndex, offerIndex, rangeIndex}) => {
+const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIndex}) => {
 	const [next, setNext] = useState();
 	const [specificIndex, setSpecificIndex] = useState(0);
+	
+	const [name, setName] = useState();
+	const [price, setPrice] = useState();
+	const [start, setStart] = useState();
+	const [end, setEnd] = useState();
+	const [allowed, setAllowed] = useState();
 
 	const refreshData = async () => {
-		setNext((await tokenInstance.getNextSequentialIndex(productIndex, start, end)).toString());
+		let data = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
+		setName(data.name);
+		setPrice(data.price.toString());
+		setStart(data.tokenStart.toString());
+		setEnd(data.tokenEnd.toString());
+		setAllowed(data.tokensAllowed.toString());
+		setNext((await tokenInstance.getNextSequentialIndex(productIndex, data.tokenStart, data.tokenEnd)).toString());
 	}
 
 	useEffect(() => {
@@ -36,9 +48,9 @@ const Range = ({start, end, name, allowed, price, tokenInstance, minterInstance,
 		}} className='btn btn-success py-0'>
 			Buy token #{next} for {price} Wei!
 		</button>
-		<progress className='w-100' value={(end - start + 1) - allowed} max={end} />
+		{start && allowed && end && <progress className='w-100' value={(end - start + 1) - allowed} max={end} />}
 		{allowed} tokens left!
-		{Number(allowed) !== 0 && <>
+		{allowed && Number(allowed) !== 0 && <>
 			<small>
 				<details>
 					<summary>
@@ -129,7 +141,6 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		<br />
 		{rangeInfo.map((item, rangeIndex) => {
 			return <Range
-				{...item}
 				key={rangeIndex}
 				tokenInstance={offerInfo.instance}
 				minterInstance={minter}
@@ -150,7 +161,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 					{offerInfo.contractAddress}:{item.token}
 					<div className='row px-0 mx-0'>
 						<div className='col-9'>
-							<input disabled className='form-control' placeholder='Price' />
+							<input disabled type='number' className='form-control' placeholder='Price' />
 						</div>
 						<button disabled className='btn btn-primary col-3'>
 							Resell

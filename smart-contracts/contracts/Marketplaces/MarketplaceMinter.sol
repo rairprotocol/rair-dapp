@@ -134,7 +134,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @param	start 	Starting token
 	/// @param	end 	Ending token
 	function _validateRangeInfo(uint start, uint end) internal pure {
-		require(start < end, "Minting Marketplace: Range's starting token has to be less than the range's ending token!");
+		require(start <= end, "Minting Marketplace: Range's starting token has to be less than the range's ending token!");
 	}
 
 	/// @notice Validates that the Minter Marketplace and the message sender have the correct roles inside the ERC721
@@ -200,6 +200,16 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		require(_rangeStartToken.length == _rangeEndToken.length &&
 					_rangePrice.length == _rangeStartToken.length &&
 					_rangeName.length == _rangePrice.length, "Minting Marketplace: Offer's ranges should have the same length!");
+
+		if (offerCatalog.length > 0) {
+			if (_contractToOffers[_tokenAddress][_productIndex] == 0) {
+				require(offerCatalog[_contractToOffers[_tokenAddress][_productIndex]].contractAddress != _tokenAddress ||
+							offerCatalog[_contractToOffers[_tokenAddress][_productIndex]].productIndex != _productIndex,
+								"Minting Marketplace: An offer already exists for this contract and product");
+			} else {
+				require(_contractToOffers[_tokenAddress][_productIndex] == 0, "Minting Marketplace: An offer already exists for this contract and product");
+			}
+		}
 		
 		(,,uint mintableTokensLeft,,) = IRAIR_ERC721(_tokenAddress).getCollection(_productIndex);
 		require(mintableTokensLeft > 0, "Minting Marketplace: Cannot mint more tokens from this Product!");
