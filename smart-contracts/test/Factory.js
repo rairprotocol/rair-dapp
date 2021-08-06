@@ -443,6 +443,14 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.ownerOf(1)).to.equal(owner.address);
 			});
 
+			it("Implicit Approval from the TRADER role", async function() {
+				expect(await rair721Instance.isApprovedForAll(owner.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(addr1.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(addr3.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(addr4.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(rair721Instance.address, addr2.address)).to.equal(true);
+			})
+
 			it ("Should revert if the resale isn't enabled (Third party transfer)", async function() {
 				let rair721AsAddress4 = await rair721Instance.connect(addr4);
 				expect(await rair721Instance.ownerOf(12)).to.equal(addr1.address);
