@@ -35,10 +35,25 @@ Upload the media
       "type": "string"
     }
   },
-  "contractAddress": {
-    "required": false,
+  "contract": {
+    "required": true,
     "content": {
       "type": "string"
+    }
+  },
+  "product": {
+    "required": true,
+    "content": {
+      "type": "number"
+    }
+  },
+  "offer": {
+    "required": true,
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
     }
   }
 }

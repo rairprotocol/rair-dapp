@@ -34,38 +34,49 @@ Returns found products
   "success": true,
   "products": [
     {
-      "_id": "60fea99f1e2186001db2c880",
-      "soldCopies": 0,
+      "_id": "610d14c03de2f5001dafc429",
+      "soldCopies": 3,
       "sold": false,
-      "resale": 0,
       "royalty": 0,
-      "name": "Product 1.1",
-      "collectionIndexInContract": 0,
+      "name": "The Dark Knight",
+      "collectionIndexInContract": 1,
       "contract": "contractAddress",
-      "copies": 1000,
-      "creationDate": "2021-07-26T12:25:03.257Z",
+      "copies": 4,
+      "creationDate": "2021-08-06T10:53:52.441Z",
       "offers": [
         {
-          "_id": "60fea9ea1e2186001db2c882",
-          "soldCopies": 10,
+          "_id": "610d15043de2f5001dafc42e",
+          "soldCopies": 2,
           "sold": true,
-          "marketplaceCatalogIndex": 29,
+          "range": [
+            0,
+            1
+          ],
+          "rangeIndex": 0,
           "contract": "contractAddress",
-          "product": 0,
-          "copies": 10,
-          "price": 50,
-          "creationDate": "2021-07-26T12:26:18.460Z"
+          "product": 1,
+          "offerPool": 21,
+          "price": 111,
+          "rangeName": "Some Name 1",
+          "creationDate": "2021-08-06T10:55:00.621Z",
+          "copies": 2
         },
         {
-          "_id": "60feaa161e2186001db2c884",
-          "soldCopies": 3,
+          "_id": "610d15983de2f5001dafc432",
+          "soldCopies": 1,
           "sold": false,
-          "marketplaceCatalogIndex": 30,
+          "range": [
+            2,
+            3
+          ],
+          "rangeIndex": 1,
           "contract": "contractAddress",
-          "product": 0,
-          "copies": 990,
-          "price": 20,
-          "creationDate": "2021-07-26T12:27:02.618Z"
+          "product": 1,
+          "offerPool": 21,
+          "price": 55,
+          "rangeName": "Some Name 2",
+          "creationDate": "2021-08-06T10:57:28.313Z",
+          "copies": 2
         }
       ]
     },
