@@ -49,7 +49,7 @@ module.exports = async (db) => {
       try {
         await db.Product.findOneAndUpdate({ collectionIndexInContract: index, contract }, { sold: true });
 
-        log.info(`RAIR: collection #${ index } with name "${ name }" ran out of mintable copies!`);
+        log.info(`RAIR: Product ID#${ index } with name "${ name }" ran out of mintable copies!`);
       } catch (err) {
         log.error(err);
       }
@@ -78,7 +78,7 @@ module.exports = async (db) => {
           product
         }, { $set: { isLocked: false } });
 
-        log.info(`RAIR: The range is unlocked for Product ID#${ productIndex }, contract ${ contract }, for range from ${ startingToken } to ${ endingToken }.`);
+        log.info(`RAIR: The range is unlocked for Product ID#${ product }, contract ${ contract }, for range from ${ startingToken } to ${ endingToken }.`);
       } catch (err) {
         log.error(err);
       }
@@ -153,6 +153,8 @@ module.exports = async (db) => {
         }
 
         await setProductListeners(contract);
+
+        if (j === (numberOfTokens - 1)) log.info(`Contract search complete!`);
       }
     } catch (err) {
       log.error(err);

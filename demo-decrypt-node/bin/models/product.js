@@ -13,19 +13,4 @@ const Product = new Schema({
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
-Product.pre('findOneAndUpdate', function (next) {
-  const data = this.getUpdate();
-
-  console.log('========== findOneAndUpdate ===========');
-  console.log(data);
-  console.log('========== findOneAndUpdate ===========');
-  console.log(this.copies);
-  console.log(this.soldCopies);
-  console.log('========== this ===========');
-
-  data.sold = this.copies === this.soldCopies;
-  this.findOneAndUpdate({}, { $set: data });
-  next();
-});
-
 module.exports = Product;
