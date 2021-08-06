@@ -12,8 +12,9 @@ const File = new Schema({
   mainManifest: { type: String, required: true },
   thumbnail: { type: String, required: true },
   uri: { type: String, required: true },
-  productIndex: { type: Number, required: true },
-  offerIndex: { type: [Number], required: true },
+  contract: { type: String, required: true, lowercase: true },
+  product: { type: Number, required: true },
+  offer: { type: [Number], required: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
