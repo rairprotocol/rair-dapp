@@ -193,6 +193,12 @@ describe("Token Factory", function () {
 				expect(rair721AsAddress1.renounceRole(await rair721Instance.CREATOR(), owner.address))
 					.to.be.revertedWith(`AccessControl: can only renounce roles for self`);
 			});
+
+			it ("Should know who's the admin role of all roles", async function() {
+				await expect(await rair721Instance.getRoleAdmin(await rair721Instance.MINTER())).to.equal(await rair721Instance.CREATOR());
+				await expect(await rair721Instance.getRoleAdmin(await rair721Instance.TRADER())).to.equal(await rair721Instance.CREATOR());
+				await expect(await rair721Instance.getRoleAdmin(await rair721Instance.CREATOR())).to.equal(await rair721Instance.DEFAULT_ADMIN_ROLE());
+			});
 		});
 
 		describe('Supply', function() {
@@ -234,9 +240,10 @@ describe("Token Factory", function () {
 			});
 
 			it ("Authorize a Minter", async function() {
-				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(false);
-				expect(await rair721Instance.grantRole(await rair721Instance.MINTER(), addr2.address)).to.emit(rair721Instance, 'RoleGranted');
-				expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(true);
+				await expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(false);
+				await expect(await rair721Instance.grantRole(await rair721Instance.MINTER(), addr2.address)).to.emit(rair721Instance, 'RoleGranted');
+				await expect(await rair721Instance.hasRole(await rair721Instance.MINTER(), addr2.address)).to.equal(true);
+				await expect(await rair721Instance.getRoleMemberCount(await rair721Instance.MINTER())).to.equal(2);
 			});
 
 			it ("Locks - Shouldn't lock ranges with tokens outside the collection's range", async function() {
@@ -386,8 +393,6 @@ describe("Token Factory", function () {
 			});
 		});
 
-		
-
 		describe('Token Operations', function() {
 			it ("Should revert if the resale isn't enabled (First party transfer)", async function() {
 				let rair721AsAddress1 = rair721Instance.connect(addr1);
@@ -434,10 +439,17 @@ describe("Token Factory", function () {
 				await rair721Instance.grantRole(await rair721Instance.TRADER(), addr2.address);
 				expect(await rair721AsAddress2['safeTransferFrom(address,address,uint256)'](
 					addr3.address, owner.address, 1
-				)).to.emit(rair721Instance, 'Transfer');
-				await rair721Instance.revokeRole(await rair721Instance.TRADER(), addr2.address);
+				)).to.emit(rair721Instance, 'Transfer').withArgs(addr3.address, owner.address, 1);
 				expect(await rair721Instance.ownerOf(1)).to.equal(owner.address);
 			});
+
+			it("Implicit Approval from the TRADER role", async function() {
+				expect(await rair721Instance.isApprovedForAll(owner.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(addr1.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(addr3.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(addr4.address, addr2.address)).to.equal(true);
+				expect(await rair721Instance.isApprovedForAll(rair721Instance.address, addr2.address)).to.equal(true);
+			})
 
 			it ("Should revert if the resale isn't enabled (Third party transfer)", async function() {
 				let rair721AsAddress4 = await rair721Instance.connect(addr4);
@@ -446,12 +458,18 @@ describe("Token Factory", function () {
 					addr1.address, owner.address, 12
 				)).to.revertedWith("RAIR ERC721: Transfers for this range are currently locked");
 			});
+
+			it ("Should renounce the TRADER role", async function() {
+				expect(await rair721Instance.hasRole(await rair721Instance.TRADER(), addr2.address)).to.equal(true);
+				let rair721AsAddress2 = await rair721Instance.connect(addr2);
+				await expect(await rair721AsAddress2.renounceRole(await rair721Instance.TRADER(), addr2.address))
+					.to.emit(rair721Instance, "RoleRevoked")
+					.withArgs(await rair721Instance.TRADER(), addr2.address, addr2.address);
+				expect(await rair721Instance.hasRole(await rair721Instance.TRADER(), addr2.address)).to.equal(false);
+			});
+
 		});
 
-		it ("TODO: Test DEFAULT_ADMIN_ROLE");
-		it ("TODO: Test getRoleMemberCount");
-		it ("TODO: Test renounceRole");
-		it ("TODO: Test safeTransferFrom");
 		it ("TODO: Test supportsInterface");
 		it ("TODO: Test tokenURI");
 	})
@@ -694,4 +712,22 @@ describe("Token Factory", function () {
 			expect((await rair721Instance.royaltyInfo(1, 100000, ethers.utils.randomBytes(8)))[1]).to.equal(30000);
 		});
 	});
+
+	describe("Resale Marketplace", async function() {
+		describe("Permissions", async function() {
+			it("Should grant the resale marketplace the TRADER role");
+			it("Should revoke the resale marketplace the TRADER role");
+			it("Should approve the resale marketplace to transfer a single token");
+			it("Should approve the resale marketplace to transfer all token");
+		});
+
+		describe("Offers", async function() {
+			it("Shouldn't create offers from people that don't own the token");
+			it("Should create offers");
+			it("Shouldn't create offers for a token that's already on sale");
+			it("Shouldn't sell if there aren't enough funds");
+			it("Should sell the token with the proper splits");
+			it("Should return any excess funds");
+		});
+	})
 })

@@ -230,6 +230,14 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 			|| super.supportsInterface(interfaceId);
 	}
 
+	/// @notice Queries if an operator can act on behalf of an owner on all of their tokens
+	/// @dev Overrides the OpenZeppelin standard by allowing anyone with the TRADER role to transfer tokens
+	/// @param owner 		Owner of the tokens.
+	/// @param operator 	Operator of the tokens.
+	function isApprovedForAll(address owner, address operator) public view virtual override(ERC721, IERC721) returns (bool) {
+        return (hasRole(TRADER, operator) || super.isApprovedForAll(owner, operator));
+    }
+
 	/// @notice Hook being called before every transfer
 	/// @dev	Transfer locking happens here!
 	/// @param	_from		Token's original owner

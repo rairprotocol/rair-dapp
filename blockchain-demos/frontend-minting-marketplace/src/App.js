@@ -5,7 +5,7 @@ import './App.css';
 import * as ethers from 'ethers'
 
 // Sweetalert2 for the popup messages
-import Swal from 'sweetalert2';
+//import Swal from 'sweetalert2';
 
 // Import the data from the contract artifacts
 
@@ -27,7 +27,7 @@ const contractAddresses = {
 
 const binanceTestnetData = {
 	chainId: '0x61',
-	chainName: 'Smart Chain - Testnet',
+	chainName: 'Binance Testnet',
 	nativeCurrency:
 	{
 		name: 'BNB',
@@ -53,15 +53,15 @@ const klaytnBaobabData = {
 
 const polygonMumbaiData = {
 	chainId: '0x13881',
-	chainName: 'Polygon Mumbai',
+	chainName: 'Matic Testnet Mumbai',
 	nativeCurrency:
 	{
 		name: 'Matic token',
 		symbol: 'tMATIC',
 		decimals: 18
 	},
-	rpcUrls: ['https://rpc-endpoints.superfluid.dev/mumbai'],
-	blockExplorerUrls: ['https://explorer-mumbai.maticvigil.com/']
+	rpcUrls: ['https://rpc-mumbai.matic.today'],
+	blockExplorerUrls: ['https://matic.network/']
 }
 
 function App() {
@@ -92,6 +92,30 @@ function App() {
 		setProgrammaticProvider(currentWallet);
 	}
 
+	const switchEthereumChain = async (chainData) => {
+		try {
+			await window.ethereum.request({
+				method: 'wallet_switchEthereumChain',
+				params: [{ chainId: chainData.chainId }],
+			});
+		} catch (switchError) {
+			// This error code indicates that the chain has not been added to MetaMask.
+			if (switchError.code === 4902) {
+				try {
+					console.log('Adding', chainData.chainName);
+					await window.ethereum.request({
+						method: 'wallet_addEthereumChain',
+						params: [chainData],
+					});
+				} catch (addError) {
+					console.error(addError);
+				}
+			} else {
+				console.error(switchError);
+			}
+		}
+	}
+
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
@@ -106,61 +130,24 @@ function App() {
 	return (
 		<div style={{minHeight: '100vh'}} className="App bg-dark text-white">
 			{!mode && <div>
-				{window.ethereum &&
-					<button
-						className='btn btn-warning'
-						disabled={chainId === '0x61'}
+				{window.ethereum && [
+					{chainData: binanceTestnetData, bootstrapColor: 'warning'},
+					{chainData: klaytnBaobabData, bootstrapColor: 'light'},
+					{chainData: {chainId: '0x3', chainName: 'Ropsten (Ethereum)'}, bootstrapColor: 'primary'},
+					{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},
+					{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
+				].map((item, index) => {
+					return <button
+						className={`btn btn-${item.bootstrapColor}`}
+						disabled={chainId === item.chainData.chainId}
 						onClick={async e => {
-							await window.ethereum.request({method: 'wallet_addEthereumChain', params: [binanceTestnetData]});
+							await switchEthereumChain(item.chainData);
 							setAccount();
 							setChainId();
 						}}>
-						Binance Testnet
-					</button>}
-				{window.ethereum &&
-					<button
-						className='btn btn-light'
-						disabled={chainId === '0x3e9'}
-						onClick={async e => {
-							await window.ethereum.request({method: 'wallet_addEthereumChain', params: [klaytnBaobabData]});
-							setAccount();
-							setChainId();
-						}}>
-						Baobab (Klaytn)
-					</button>}
-				{window.ethereum &&
-					<button
-						className='btn btn-primary'
-						disabled={chainId === '0x3'}
-						onClick={async e => {
-							await window.ethereum.request({method: 'wallet_switchEthereumChain', params: [{chainId: '0x3'}]});
-							setAccount();
-							setChainId();
-						}}>
-						Ropsten (Ethereum)
-					</button>}
-				{window.ethereum &&
-					<button
-						className='btn btn-secondary'
-						disabled={chainId === '0x5'}
-						onClick={async e => {
-							await window.ethereum.request({method: 'wallet_switchEthereumChain', params: [{chainId: '0x5'}]});
-							setAccount();
-							setChainId();
-						}}>
-						Goerli (Ethereum)
-					</button>}
-				{window.ethereum &&
-					<button
-						className='btn btn-danger'
-						disabled={chainId === '0x13881'}
-						onClick={async e => {
-							await window.ethereum.request({method: 'wallet_addEthereumChain', params: [polygonMumbaiData]});
-							setAccount();
-							setChainId();
-						}}>
-						Mumbai (Polygon)
-					</button>}
+						{item.chainData.chainName}
+					</button>
+				})}
 				{!window.ethereum && <div className='row py-5 w-100 px-0 mx-0'>
 					<hr className='w-100' />
 					<h5 className='col-12'> For tests only! </h5>
