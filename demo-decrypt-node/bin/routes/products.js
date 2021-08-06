@@ -15,10 +15,10 @@ module.exports = context => {
         { $replaceRoot: { newRoot: '$products' } },
         { $sort: { creationDate: -1 } },
         { $lookup: {
-            from: "Offer",
+            from: "OfferPool",
             let: {
               contr: '$contract',
-              proj: '$collectionIndexInContract'
+              prod: '$collectionIndexInContract'
             },
             pipeline: [
               {
@@ -34,7 +34,7 @@ module.exports = context => {
                       {
                         $eq: [
                           "$product",
-                          "$$proj"
+                          "$$prod"
                         ]
                       }
                     ]
@@ -42,9 +42,12 @@ module.exports = context => {
                 }
               }
             ],
-            as: "offers"
+            as: "offerPools"
           }
-        }
+        },
+        { $unwind: '$offerPools' },
+        { $lookup: { from: 'Offer', localField: 'offerPools.marketplaceCatalogIndex', foreignField: 'offerPool', as: 'offers' } },
+        { $project: { offerPools: false } }
       ]);
 
       res.json({ success: true, products });
