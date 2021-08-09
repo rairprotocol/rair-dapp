@@ -143,6 +143,7 @@ function App() {
 					{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
 				].map((item, index) => {
 					return <button
+						key={index}
 						className={`btn btn-${item.bootstrapColor}`}
 						disabled={chainId === item.chainData.chainId}
 						onClick={async e => {

@@ -42,21 +42,31 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 	const [endingRange, setEndingRange] = useState(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [rangeName, setRangeName] = useState(array[index].name);
 	const [rangePrice, setRangePrice] = useState(array[index].price);
+	const syncOutside = useCallback(sync, [sync]);	
 
 	useEffect(() => {
+		let aux = array[index].endingToken !== endingRange;
 		array[index].endingToken = endingRange;
-		sync();
-	}, [endingRange, array, index, sync])
+		if (aux) {
+			syncOutside();
+		}
+	}, [endingRange, array, index, syncOutside])
 
 	useEffect(() => {
+		let aux = array[index].name !== rangeName;
 		array[index].name = rangeName;
-		sync();
-	}, [rangeName, array, index, sync])
+		if (aux) {
+			syncOutside();
+		}
+	}, [rangeName, array, index, syncOutside])
 
 	useEffect(() => {
+		let aux = array[index].price !== rangePrice;
 		array[index].price = rangePrice;
-		sync();
-	}, [rangePrice, array, index, sync])
+		if (aux) {
+			syncOutside();
+		}
+	}, [rangePrice, array, index, syncOutside])
 
 	return <tr>
 		<th>
