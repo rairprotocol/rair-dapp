@@ -8,18 +8,21 @@ const ERC777Manager = ({instance, account}) => {
 	const [erc777Data, setERC777Data] = useState();
 	const [targetAddress, setTargetAddress] = useState('');
 	const [targetValue, setTargetValue] = useState(0);
+	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
-	const refreshData = async () => {
+	const refreshData = useCallback(async () => {
+		setRefetchingFlag(true);
 		setERC777Data({
 			balance: (await instance.balanceOf(account)).toString(),
 			name: await instance.name(),
 			symbol: await instance.symbol(),
 		});
-	};
+		setRefetchingFlag(false);
+	}, [instance, account]);
 
 	useEffect(() => {
 		refreshData();
-	}, [])
+	}, [refreshData])
 
 	return <div className='col bg-dark py-4 text-white border border-white rounded' style={{position: 'relative'}}>
 		<h5> ERC777 </h5>
@@ -27,8 +30,9 @@ const ERC777Manager = ({instance, account}) => {
 		<button
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}
+			disabled={refetchingFlag}
 			className='btn btn-dark'>
-			<i className='fas fa-redo' />
+			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<br />
 		{erc777Data ? <>

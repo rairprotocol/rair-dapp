@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import Swal from 'sweetalert2';
 
 const LockManager = ({index, array, deleter, disabled, locker, collectionIndex}) => {
@@ -46,17 +46,17 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 	useEffect(() => {
 		array[index].endingToken = endingRange;
 		sync();
-	}, [endingRange])
+	}, [endingRange, array, index, sync])
 
 	useEffect(() => {
 		array[index].name = rangeName;
 		sync();
-	}, [rangeName])
+	}, [rangeName, array, index, sync])
 
 	useEffect(() => {
 		array[index].price = rangePrice;
 		sync();
-	}, [rangePrice])
+	}, [rangePrice, array, index, sync])
 
 	return <tr>
 		<th>
@@ -97,8 +97,6 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 
 const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstance, tokenAddress}) => {
 
-	const [tokensOnSale, setTokensOnSale] = useState(0);
-	const [priceInWei, setPriceInWei] = useState(0);
 	const [ranges, setRanges] = useState([]);
 	const [locks, setLocks] = useState([]);
 	const [forceSync, setForceSync] = useState(false);
@@ -123,7 +121,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 		}
 	}
 
-	const refresher = async () => {
+	const refresher = useCallback(async () => {
 		try {
 			// Marketplace Ranges
 			let offerIndex = (await minter.contractToOfferRange(tokenInstance.address, collectionIndex)).toString();
@@ -150,7 +148,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 			let existingLocks = [];
 			for await (let lockIndex of collectionInfo.locks) {
 				let lockInfo = await tokenInstance.getLockedRange(lockIndex);
-				if (Number(lockInfo.collectionIndex.toString()) == collectionIndex) {
+				if (Number(lockInfo.collectionIndex.toString()) === collectionIndex) {
 					existingLocks.push({
 						startingToken: lockInfo.startingToken.toString(),
 						endingToken: lockInfo.endingToken.toString(),
@@ -163,7 +161,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 		} catch (err) {
 			console.error(err?.data?.message);
 		}
-	}
+	}, [minter, collectionIndex, collectionInfo.locks, tokenInstance])
 
 	const notDisabled = (item) => {
 		return !item.disabled;
@@ -181,7 +179,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 		if (tokenInstance && minter) {
 			refresher()
 		} 
-	}, [collectionInfo])
+	}, [collectionInfo, tokenInstance, minter, refresher])
 
 	return <details className='w-100 border border-secondary rounded'>
 		<summary>
@@ -257,9 +255,8 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 												return ranges[i - 1].endingToken + 1;
 											}
 										}
-									} else {
-										return (Number(array[index - 1].endingToken) + 1)
 									}
+									return (Number(array[index - 1].endingToken) + 1)
 								}),
 								ranges.filter(notDisabled).map((item) => item.endingToken),
 								ranges.filter(notDisabled).map((item) => item.price),

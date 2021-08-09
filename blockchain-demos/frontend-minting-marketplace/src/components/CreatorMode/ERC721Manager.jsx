@@ -16,7 +16,7 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 	const [existingCollectionsData, setExistingCollectionsData] = useState();
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
-	const refreshData = async () => {
+	const refreshData = useCallback(async () => {
 		setRefetchingFlag(true);
 		setMinterApproved(await erc721Instance.hasRole(await erc721Instance.MINTER(), minter.address));
 		let tokInfo = {
@@ -41,13 +41,13 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 		}
 		setExistingCollectionsData(collectionsData);
 		setRefetchingFlag(false);
-	};
+	}, [erc721Instance, account, minter.address]);
 
 	useEffect(() => {
 		if (erc721Instance) {
 			refreshData();
 		}
-	}, [erc721Instance])
+	}, [erc721Instance, refreshData])
 
 	useEffect(() => {
 		let signer = programmaticProvider;
@@ -57,7 +57,7 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 		}
 		let erc721 = new ethers.Contract(tokenAddress, erc721Abi, signer);
 		setERC721Instance(erc721);
-	}, [])
+	}, [programmaticProvider, tokenAddress])
 	
 	return <details className='text-center border border-white rounded' style={{position: 'relative'}}>
 		<summary className='py-1'>
