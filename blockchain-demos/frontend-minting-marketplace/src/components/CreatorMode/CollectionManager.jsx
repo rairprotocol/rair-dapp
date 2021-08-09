@@ -296,7 +296,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 					className='btn btn-success'>
 					<i className='fas fa-plus' />
 				</button>
-				<h5> Locks </h5>
+				<h5> Resale Locks </h5>
 				<table className='w-100'>
 					<thead>
 						<tr>

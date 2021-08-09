@@ -11,6 +11,7 @@
     "hardhat:test": "hardhat test",
     "deploy-binance": "npx hardhat --network binanceSmartchain deploy",
     "deploy-goerli": "npx hardhat --network goerli deploy",
+    "deploy-mumbai": "npx hardhat --network mumbai deploy",
     "deploy-factory-proxy": "node ./deployment-scripts/deployFactoryProxy.js",
     "deploy-minter-proxy": "node ./deployment-scripts/deployMinterMarketplaceProxy.js"
   },
