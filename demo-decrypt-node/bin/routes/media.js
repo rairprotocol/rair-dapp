@@ -9,7 +9,7 @@ const fs = require('fs');
 const readdirp = require('readdirp');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
-const { JWTVerification, validation, isOwner } = require('../middleware');
+const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
 const log = require('../utils/logger')(module);
 
 const rareify = async (fsRoot, socketInstance) => {
@@ -40,7 +40,11 @@ const rareify = async (fsRoot, socketInstance) => {
             resolve(true);
             log.info('finished encrypting', entry.path);
 
-            socketInstance.emit('uploadProgress', { message: `finished encrypting ${entry.path}`, last: false, part: true });
+            socketInstance.emit('uploadProgress', {
+              message: `finished encrypting ${ entry.path }`,
+              last: false,
+              part: true
+            });
 
           });
         } catch (e) {
@@ -53,7 +57,12 @@ const rareify = async (fsRoot, socketInstance) => {
   }
   log.info('Done scheduling encryptions,', promiseList.length, 'promises for', readdirp(fsRoot).length, 'files');
 
-  socketInstance.emit('uploadProgress', { message: `Done scheduling encryptions, ${promiseList.length} promises for ${readdirp(fsRoot).length} files`, last: false, done: 15, parts: promiseList.length });
+  socketInstance.emit('uploadProgress', {
+    message: `Done scheduling encryptions, ${ promiseList.length } promises for ${ readdirp(fsRoot).length } files`,
+    last: false,
+    done: 15,
+    parts: promiseList.length
+  });
 
   return await Promise.all(promiseList)
     .then(_ => {
@@ -200,9 +209,9 @@ module.exports = context => {
           return clonedFile;
         })
         .reduce((result, value) => {
-        result[value._id] = value;
-        return result;
-      }, {})
+          result[value._id] = value;
+          return result;
+        }, {})
         .value();
 
       res.json({ success: true, list });
@@ -212,8 +221,8 @@ module.exports = context => {
     }
   });
 
-  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
-    const { title, description, contractAddress } = req.body;
+  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res) => {
+    const { title, description, contract, product, offer } = req.body;
     const { adminNFT: author } = req.user;
     const { socketSessionId } = req.query;
     const reg = new RegExp(/^0x\w{40}:\w+$/);
@@ -251,12 +260,20 @@ module.exports = context => {
         }
         res.json({ success: true, result: req.file.filename });
 
-        socketInstance.emit('uploadProgress', { message: `${req.file.originalname} generating thumbnails`, last: false, done: 10 });
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } generating thumbnails`,
+          last: false,
+          done: 10
+        });
 
         command = 'ffmpeg -i ' + req.file.path + ' -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ' + req.file.destination + 'stream' + req.file.filename + '/stream.m3u8';
         log.info(req.file.originalname, 'converting to stream');
 
-        socketInstance.emit('uploadProgress', { message: `${req.file.originalname} converting to stream`, last: false, done: 11 });
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } converting to stream`,
+          last: false,
+          done: 11
+        });
 
         exec(command, { maxBuffer: 1024 * 1024 * 20 }, async (error, stdout, stderr) => {
           if (error) {
@@ -284,11 +301,11 @@ module.exports = context => {
             }
             log.info(req.file.originalname, 'raw deleted');
 
-            socketInstance.emit('uploadProgress', { message: `${req.file.originalname} raw deleted`, last: false });
+            socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } raw deleted`, last: false });
           });
           log.info(req.file.originalname, 'pinning to ipfs');
 
-          socketInstance.emit('uploadProgress', { message: `${req.file.originalname} pinning to ipfs`, last: false });
+          socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } pinning to ipfs`, last: false });
 
           const c = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`, socketInstance, /*, { pin: true, quieter: true }*/);
 
@@ -299,7 +316,9 @@ module.exports = context => {
             title,
             thumbnail: req.file.filename,
             currentOwner: author,
-            contractAddress
+            contract,
+            product,
+            offer
           };
 
           if (description) {
@@ -321,14 +340,16 @@ module.exports = context => {
           socketInstance.emit('uploadProgress', { message: `Pinning to ipfs.`, last: false, done: 93 });
 
           await context.store.addMedia(ipfsCid, {
-            key: exportedKey, ...meta,
+            key: exportedKey,
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid,
+            ...meta,
           });
 
           await context.db.File.create({
             _id: ipfsCid,
-            key: exportedKey.toJSON(), ...meta,
+            key: exportedKey.toJSON(),
             uri: process.env.IPFS_GATEWAY + '/' + ipfsCid,
+            ...meta,
           });
 
 
@@ -342,7 +363,7 @@ module.exports = context => {
             log.info('PINATA RESPONSE', response);
 
             socketInstance.emit('uploadProgress', { message: 'Pined to Pinata.', last: true, done: 100 });
-          } catch(err) {
+          } catch (err) {
             log.error('PINATA ERROR', err.message);
           }
         });

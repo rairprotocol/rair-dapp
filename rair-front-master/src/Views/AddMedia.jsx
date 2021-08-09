@@ -108,7 +108,9 @@ const AddMedia = ({address}) => {
           formData.append('video', video)
           formData.append('title', title)
           formData.append('description', description)
-          formData.append('contractAddress', token)
+          formData.append('contract', token)
+          formData.append('product', '1')
+          formData.append('offer', JSON.stringify([2]))
           setUploading(true);
           fetch(`/api/media/upload?socketSessionId=${thisSessionId}`, {
             method: 'POST',

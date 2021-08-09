@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { number } = require('joi');
 
 module.exports = Joi.object({
   title: Joi.string()
@@ -9,8 +10,10 @@ module.exports = Joi.object({
     .min(1)
     .max(300)
     .required(),
-  contractAddress: Joi.string()
+  contract: Joi.string()
     .pattern(/^0x\w{40}$/)
     .messages({ 'string.pattern.base': 'Invalid contract address' })
-    .required()
+    .required(),
+  product: Joi.number().required(),
+  offer: Joi.array().items(Joi.number()).required()
 });

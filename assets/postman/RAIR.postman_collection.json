@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "80479879-eef8-4f27-b7e1-924222d69740",
+		"_postman_id": "01879f45-5085-405b-853e-ef5849dc214e",
 		"name": "RAIR",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9,7 +9,7 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "Update User",
+					"name": "Create User",
 					"request": {
 						"method": "POST",
 						"header": [],

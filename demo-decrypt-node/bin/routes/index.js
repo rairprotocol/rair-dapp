@@ -8,5 +8,6 @@ module.exports = context => {
   router.use('/media', require('./media')(context));
   router.use('/users', require('./users')(context));
   router.use('/contracts', JWTVerification(context), require('./contracts')(context));
+  router.use('/products', JWTVerification(context), require('./products')(context));
   return router;
 };

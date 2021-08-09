@@ -7,7 +7,7 @@ module.exports = context => {
   router.post('/', validation('createContract'), async (req, res, next) => {
     try {
       const { adminNFT: user } = req.user;
-      let contract = await context.db.Contract.create({ user,  ...req.body });
+      const contract = await context.db.Contract.create({ user, ...req.body });
 
       res.json({ success: true, contract });
     } catch (e) {

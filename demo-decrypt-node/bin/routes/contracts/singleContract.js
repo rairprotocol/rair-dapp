@@ -6,9 +6,9 @@ module.exports = context => {
 
   router.get('/:contractAddress', validation('singleContract', 'params'), async (req, res, next) => {
     try {
-      const { adminNFT: user } = req.user;
+      // const { adminNFT: user } = req.user;
       const { contractAddress } = req.params;
-      const contract = await context.db.Contract.findOne({ user, contractAddress });
+      const contract = await context.db.Contract.findOne({ contractAddress });
 
       res.json({ success: true, contract });
     } catch (e) {
@@ -16,23 +16,23 @@ module.exports = context => {
     }
   });
 
-  router.put('/:contractAddress', validation('singleContract', 'params'), validation('updateContract'), async (req, res, next) => {
-    try {
-      const { adminNFT: user } = req.user;
-      const { contractAddress } = req.params;
-      const contract = await context.db.Contract.findOneAndUpdate({ user, contractAddress }, { ...req.body }, { new: true });
-
-      res.json({ success: true, contract });
-    } catch (e) {
-      next(e);
-    }
-  });
+  // router.put('/:contractAddress', validation('singleContract', 'params'), validation('updateContract'), async (req, res, next) => {
+  //   try {
+  //     const { adminNFT: user } = req.user;
+  //     const { contractAddress } = req.params;
+  //     const contract = await context.db.Contract.findOneAndUpdate({ user, contractAddress }, { ...req.body }, { new: true });
+  //
+  //     res.json({ success: true, contract });
+  //   } catch (e) {
+  //     next(e);
+  //   }
+  // });
 
   router.delete('/:contractAddress', validation('singleContract', 'params'), async (req, res, next) => {
     try {
-      const { adminNFT: user } = req.user;
+      // const { adminNFT: user } = req.user;
       const { contractAddress } = req.params;
-      await context.db.Contract.deleteOne({ user, contractAddress });
+      await context.db.Contract.deleteOne({ contractAddress });
 
       res.json({ success: true });
     } catch (e) {

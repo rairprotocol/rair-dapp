@@ -1,8 +1,8 @@
-# Update Contract
+# Update TokenGroup
 
-Updating some fields of the specific contract
+Updating some fields of the specific TokenGroup
 
-**URL** : `/api/contracts/:contractAddress`
+**URL** : `/api/tokenGroups/:tokenGroupAddress`
 
 **Method** : `PUT`
 
@@ -40,16 +40,6 @@ Updating some fields of the specific contract
     "content": {
       "type": "string"
     }
-  },
-  "royalty": {
-    "content": {
-      "type": "number"
-    }
-  },
-  "price": {
-    "content": {
-      "type": "number"
-    }
   }
 }
 ```
@@ -67,16 +57,10 @@ Returns if created successfully
 ```json
 {
   "success": true,
-  "contract": {
+  "tokenGroup": {
     "_id": "60d0819870a807001c75164d",
-    "user": "user NFT",
     "title": "test contract 1",
-    "blockchain": "some data in blockchain",
-    "contractAddress": "contractAddress",
-    "copies": 1000,
-    "royalty": 30,
-    "license": true,
-    "price": 0.001,
+    "tokenGroupAddress": "tokenGroupAddress",
     "creationDate": "2021-06-21T12:10:00.623Z"
   }
 }

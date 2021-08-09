@@ -1,4 +1,4 @@
-# Remove Contract
+# Remove contract
 
 Remove specific contract of the user
 
@@ -34,7 +34,7 @@ Remove specific contract of the user
 
 ## Success Response
 
-Returns if created successfully
+Returns if removed successfully
 
 **Code** : `200 OK`
 

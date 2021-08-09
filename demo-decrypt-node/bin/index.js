@@ -10,8 +10,10 @@ const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require('socket.io');
+const eventListeners = require('./integrations/ethers');
 const log = require('./utils/logger')(module);
 const morgan = require('morgan');
+const _ = require('lodash');
 require('dotenv').config();
 
 async function main() {
@@ -82,7 +84,12 @@ async function main() {
     db: {
       Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
       File: _mongoose.model('File', require('./models/file'), 'File'),
-      User: _mongoose.model('User', require('./models/user'), 'User')
+      User: _mongoose.model('User', require('./models/user'), 'User'),
+      Product: _mongoose.model('Product', require('./models/product'), 'Product'),
+      OfferPool: _mongoose.model('OfferPool', require('./models/offerPool'), 'OfferPool'),
+      Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
+      MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
+      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
     }
   };
 
@@ -93,9 +100,9 @@ async function main() {
   app.use('/stream', require('./routes/stream')(context));
   app.use('/api', require('./routes')(context));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use((error, req, res, next) => {
-    log.error(error);
-    res.status(500).json({ success: false, error: true, message: error.message });
+  app.use((err, req, res, next) => {
+    log.error(err);
+    res.status(500).json({ success: false, error: true, message: err.message });
   });
 
   const server = app.listen(port, () => {
@@ -126,6 +133,25 @@ async function main() {
   });
 
   app.set('io', io);
+
+  // Listen network events
+  const {
+    contractListenersBNB,
+    productListenersBNB,
+    offerListenersBNB
+  } = await eventListeners(context.db);
+
+  // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offerPools/offers
+
+  // Contracts
+  contractListenersBNB();
+
+  // Products
+  const arrayOfUsers = await context.db.User.distinct('publicAddress');
+  await Promise.all(_.map(arrayOfUsers, productListenersBNB));
+
+  // Offers
+  offerListenersBNB();
 }
 
 (async () => {

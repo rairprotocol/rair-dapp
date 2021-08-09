@@ -1,6 +1,6 @@
-# Get Specific Contract
+# Get Specific contract
 
-Find specific contract with all data for specific user by contract address
+Find specific contract with all data by contract address
 
 **URL** : `/api/contracts/:contractAddress`
 
@@ -47,14 +47,8 @@ Returns found contract
   "success": true,
   "contract": {
     "_id": "60d0819870a807001c75164d",
-    "user": "user NFT",
     "title": "test contract 1",
-    "blockchain": "some data in blockchain",
     "contractAddress": "contractAddress",
-    "copies": 1000,
-    "royalty": 30,
-    "license": true,
-    "price": 0.001,
     "creationDate": "2021-06-21T12:10:00.623Z"
   }
 }
