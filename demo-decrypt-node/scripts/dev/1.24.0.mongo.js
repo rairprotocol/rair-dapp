@@ -1,3 +1,6 @@
+// Have to be run before rebuilding the server! Will remove the old version of the index
+db.File.dropIndex('FileSearchIdx');
+
 // Removing redundant fields from Contract collection
 db.Contract.updateMany({}, { $unset: { copies: 1, royalty: 1, license: 1, price: 1 } });
 

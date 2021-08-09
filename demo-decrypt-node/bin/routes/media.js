@@ -9,7 +9,7 @@ const fs = require('fs');
 const readdirp = require('readdirp');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
-const { JWTVerification, validation, isOwner } = require('../middleware');
+const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
 const log = require('../utils/logger')(module);
 
 const rareify = async (fsRoot, socketInstance) => {
@@ -221,7 +221,7 @@ module.exports = context => {
     }
   });
 
-  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), validation('uploadVideo'), async (req, res) => {
+  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res) => {
     const { title, description, contract, product, offer } = req.body;
     const { adminNFT: author } = req.user;
     const { socketSessionId } = req.query;
