@@ -247,14 +247,14 @@ describe("Token Factory", function () {
 			});
 
 
-			it ("Locks - Shouldn't lock ranges with tokens outside the collection's range", async function() {
+			it ("Shouldn't lock ranges with tokens outside the collection's range", async function() {
 				await expect(rair721Instance.createRangeLock(0, 0, 2, 2)).to.be.revertedWith('RAIR ERC721: Invalid ending token');
 				// Invalid starting token
 				await expect(rair721Instance.createRangeLock(0, -1, 1, 2)).to.be.reverted; // Negative number is not allowed but there's no specific revert message for this
 				await expect(rair721Instance.createRangeLock(1, 0, 9, 11)).to.be.revertedWith('RAIR ERC721: Invalid number of tokens to lock');
 			});
 
-			it ("Locks - Should say if a lock can be created", async function() {
+			it ("Should say if a lock can be created", async function() {
 				await expect(await rair721Instance.canCreateLock(0, 0, 2)).to.equal(false); // 2 is not part of product 0!
 				await expect(await rair721Instance.canCreateLock(0, 0, 1)).to.equal(true);
 				await expect(await rair721Instance.canCreateLock(1, 0, 4)).to.equal(true);
@@ -262,18 +262,25 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.canCreateLock(2, 0, 169)).to.equal(true);
 			})
 
-			it ("Locks - Should lock ranges inside collections", async function() {
+			it ("Should lock ranges inside collections", async function() {
 				await expect(await rair721Instance.createRangeLock(0, 0, 1, 2)).to.emit(rair721Instance, 'RangeLocked').withArgs(0, 0, 1, 2, 'COLLECTION #1');
 				await expect(await rair721Instance.createRangeLock(1, 0, 4, 3)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 2, 6, 3, 'COLLECTION #2');
 				await expect(await rair721Instance.createRangeLock(1, 5, 9, 5)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 7, 11, 5, 'COLLECTION #2');
 				await expect(await rair721Instance.createRangeLock(2, 0, 169, 10)).to.emit(rair721Instance, 'RangeLocked').withArgs(2, 12, 181, 10, 'COLLECTION #3');
 			});
 
-			it ("Locks - Should say if more locks can be created", async function() {
+			it ("Should say if more locks can be created", async function() {
 				await expect(await rair721Instance.canCreateLock(0, 0, 1)).to.equal(false); // Already exists
 				await expect(await rair721Instance.canCreateLock(2, 0, 169)).to.equal(false); // Same
 				await expect(await rair721Instance.canCreateLock(1, 1, 3)).to.equal(false); // Subset of a lock
 				await expect(await rair721Instance.canCreateLock(1, 2, 6)).to.equal(false); // Same
+			});
+
+			it("Shouldn't lock ranges with invalid information", async function() {
+				await expect(rair721Instance.createRangeLock(0, 0, 1, 1)).to.be.revertedWith("RAIR ERC721: Cannot create lock") // Already exists
+				await expect(rair721Instance.createRangeLock(2, 0, 169, 2)).to.be.revertedWith("RAIR ERC721: Cannot create lock") // Same
+				await expect(rair721Instance.createRangeLock(1, 1, 3, 1)).to.be.revertedWith("RAIR ERC721: Cannot create lock") // Subset of a lock
+				await expect(rair721Instance.createRangeLock(1, 2, 6, 2)).to.be.revertedWith("RAIR ERC721: Cannot create lock") // Same
 			})
 
 			it ("Locks - Should give information about token ranges", async function() {

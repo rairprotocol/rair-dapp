@@ -31,7 +31,7 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 		
 		{
 			// Initializer, do not use
-			false && <button
+			true && <button
 				style={{position: 'absolute', right: 0, top: 0}}
 				onClick={e => instance.initialize(10, erc777Instance.address)}
 				className='btn btn-success'>

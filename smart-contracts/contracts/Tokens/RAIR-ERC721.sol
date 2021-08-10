@@ -96,6 +96,8 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		require(_endingToken - _startingToken <= selectedCollection.endingToken - selectedCollection.startingToken, 'RAIR ERC721: Invalid token limits');
 		require((_endingToken - _startingToken + 1) >= _lockedTokens, 'RAIR ERC721: Invalid number of tokens to lock');
 
+		require(canCreateLock(collectionIndex, _startingToken, _endingToken), "RAIR ERC721: Cannot create lock");
+
 		lockedRange storage newRange = _lockedRange.push();
 		newRange.startingToken = selectedCollection.startingToken + _startingToken;
 		newRange.endingToken = selectedCollection.startingToken + _endingToken;
