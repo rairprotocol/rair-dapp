@@ -246,6 +246,7 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.getRoleMemberCount(await rair721Instance.MINTER())).to.equal(2);
 			});
 
+
 			it ("Locks - Shouldn't lock ranges with tokens outside the collection's range", async function() {
 				await expect(rair721Instance.createRangeLock(0, 0, 2, 2)).to.be.revertedWith('RAIR ERC721: Invalid ending token');
 				// Invalid starting token
@@ -253,12 +254,27 @@ describe("Token Factory", function () {
 				await expect(rair721Instance.createRangeLock(1, 0, 9, 11)).to.be.revertedWith('RAIR ERC721: Invalid number of tokens to lock');
 			});
 
+			it ("Locks - Should say if a lock can be created", async function() {
+				await expect(await rair721Instance.canCreateLock(0, 0, 2)).to.equal(false); // 2 is not part of product 0!
+				await expect(await rair721Instance.canCreateLock(0, 0, 1)).to.equal(true);
+				await expect(await rair721Instance.canCreateLock(1, 0, 4)).to.equal(true);
+				await expect(await rair721Instance.canCreateLock(1, 5, 9)).to.equal(true);
+				await expect(await rair721Instance.canCreateLock(2, 0, 169)).to.equal(true);
+			})
+
 			it ("Locks - Should lock ranges inside collections", async function() {
 				await expect(await rair721Instance.createRangeLock(0, 0, 1, 2)).to.emit(rair721Instance, 'RangeLocked').withArgs(0, 0, 1, 2, 'COLLECTION #1');
 				await expect(await rair721Instance.createRangeLock(1, 0, 4, 3)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 2, 6, 3, 'COLLECTION #2');
 				await expect(await rair721Instance.createRangeLock(1, 5, 9, 5)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 7, 11, 5, 'COLLECTION #2');
 				await expect(await rair721Instance.createRangeLock(2, 0, 169, 10)).to.emit(rair721Instance, 'RangeLocked').withArgs(2, 12, 181, 10, 'COLLECTION #3');
 			});
+
+			it ("Locks - Should say if more locks can be created", async function() {
+				await expect(await rair721Instance.canCreateLock(0, 0, 1)).to.equal(false); // Already exists
+				await expect(await rair721Instance.canCreateLock(2, 0, 169)).to.equal(false); // Same
+				await expect(await rair721Instance.canCreateLock(1, 1, 3)).to.equal(false); // Subset of a lock
+				await expect(await rair721Instance.canCreateLock(1, 2, 6)).to.equal(false); // Same
+			})
 
 			it ("Locks - Should give information about token ranges", async function() {
 				for await (let item of [
@@ -467,7 +483,6 @@ describe("Token Factory", function () {
 					.withArgs(await rair721Instance.TRADER(), addr2.address, addr2.address);
 				expect(await rair721Instance.hasRole(await rair721Instance.TRADER(), addr2.address)).to.equal(false);
 			});
-
 		});
 
 		it ("TODO: Test supportsInterface");
@@ -498,8 +513,7 @@ describe("Token Factory", function () {
 		});
 
 		describe("Adding Collections and Minting", function() {
-			// Deprecated in the range update
-			/*it ("Refuses to add a number of tokens higher than the mintable limit", async function() {
+			it ("Shouldn't add a number of tokens higher than the mintable limit", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
 				//console.log(await rair721Instance.getCollection(1));
 				await expect(minterInstance.addOffer(
@@ -510,10 +524,10 @@ describe("Token Factory", function () {
 					[1000],						// Price
 					['Deluxe'],					// Range Name
 					owner.address				// Node Address
-				)).to.revertedWith("Minting Marketplace: Collection doesn't have that many tokens to mint!");
-			});*/
+				)).to.revertedWith("Minting Marketplace: Range's ending token has to be less or equal than the product's ending token!");
+			});
 
-			it ("Refuses to add a range with wrong lengths", async function() {
+			it ("Shouldn't add a range with wrong lengths", async function() {
 				// Token Address, Tokens Allowed, Collection Index, Token Price, Node Address
 				//console.log(await rair721Instance.getCollection(1));
 				await expect(minterInstance.addOffer(
