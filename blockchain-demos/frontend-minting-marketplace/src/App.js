@@ -18,10 +18,15 @@ const contractAddresses = {
 		erc777: '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1',
 		minterMarketplace: '0x8Fbb22212E2e5278743dE98E9A272e1f336d1Bdd'
 	},
-	'0x5': {
+	'0x5': { // Ethereum Goerli
 		factory: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
 		erc777: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
 		minterMarketplace: '0x0Ce668D271b8016a785Bf146e58739F432300B12'
+	},
+	'0x13881': { // Matic Mumbai
+		factory: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
+		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
+		minterMarketplace: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a'
 	}
 }
 
@@ -39,7 +44,7 @@ const binanceTestnetData = {
 }
 
 const klaytnBaobabData = {
-	chainId: '0x3E9',
+	chainId: '0x3e9',
 	chainName: 'Klaytn Baobab',
 	nativeCurrency:
 	{
@@ -71,6 +76,7 @@ function App() {
 	const [chainId, setChainId] = useState();
 	const [addresses, setAddresses] = useState();
 	const [programmaticProvider, setProgrammaticProvider] = useState();
+	const [refreshFlag, setRefreshFlag] = useState(false);
 
 	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState();
 
@@ -102,7 +108,6 @@ function App() {
 			// This error code indicates that the chain has not been added to MetaMask.
 			if (switchError.code === 4902) {
 				try {
-					console.log('Adding', chainData.chainName);
 					await window.ethereum.request({
 						method: 'wallet_addEthereumChain',
 						params: [chainData],
@@ -119,13 +124,17 @@ function App() {
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
-				setChainId(chainId);
-				setAddresses(contractAddresses[chainId]);
+				setRefreshFlag(refreshFlag => !refreshFlag);
 			});
-			setChainId(window.ethereum.chainId);
-			setAddresses(contractAddresses[window.ethereum.chainId]);
 		}
 	}, [])
+
+	useEffect(() => {
+		if (window.ethereum) {
+			setChainId(window.ethereum.chainId?.toLowerCase());
+			setAddresses(contractAddresses[window.ethereum.chainId?.toLowerCase()]);
+		}
+	}, [refreshFlag])
 
 	return (
 		<div style={{minHeight: '100vh'}} className="App bg-dark text-white">
@@ -138,8 +147,9 @@ function App() {
 					{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
 				].map((item, index) => {
 					return <button
+						key={index}
 						className={`btn btn-${item.bootstrapColor}`}
-						disabled={chainId === item.chainData.chainId}
+						disabled={chainId === item.chainData.chainId?.toLowerCase()}
 						onClick={async e => {
 							await switchEthereumChain(item.chainData);
 							setAccount();

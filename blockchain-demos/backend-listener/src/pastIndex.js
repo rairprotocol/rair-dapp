@@ -4,7 +4,6 @@ const TokenAbi = require('./contracts/RAIR_ERC721.json').abi;
 const MinterAbi = require('./contracts/Minter_Marketplace.json').abi;
 
 const main = async () => {
-	// Connect to the Binance Testnet
 	let providers = [
 		{
 			provider: new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {chainId: 97, symbol: 'BNB', name: 'Binance Testnet'}),
@@ -15,6 +14,11 @@ const main = async () => {
 			provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {chainId: 5, symbol: 'ETH', name: 'Goerli Testnet'}),
 			factoryAddress: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
 			minterAddress: '0x0Ce668D271b8016a785Bf146e58739F432300B12'
+		},
+		{
+			provider: new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com", {chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet'}),
+			factoryAddress: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
+			minterAddress: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a'
 		}
 	]
 

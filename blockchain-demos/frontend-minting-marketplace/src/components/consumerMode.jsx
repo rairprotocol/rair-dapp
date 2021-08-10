@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 
 import * as ethers from 'ethers'
 
@@ -18,7 +18,7 @@ const ConsumerMode = ({account, addresses, programmaticProvider}) => {
 	const [collectionsData, setCollectionsData] = useState();
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		setRefetchingFlag(true);
 		let signer = programmaticProvider;
 		if (window.ethereum) {
@@ -43,7 +43,7 @@ const ConsumerMode = ({account, addresses, programmaticProvider}) => {
 		}
 		setCollectionsData(offerData);
 		setRefetchingFlag(false);
-	}
+	}, [programmaticProvider, minterInstance])
 
 	useEffect(() => {
 		let signer = programmaticProvider;
@@ -53,13 +53,13 @@ const ConsumerMode = ({account, addresses, programmaticProvider}) => {
 		}
 		let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
 		setMinterInstance(ethersMinterInstance);
-	}, [])
+	}, [addresses.minterMarketplace, programmaticProvider])
 
 	useEffect(() => {
 		if (minterInstance) {
 			fetchData();
 		}
-	}, [minterInstance])
+	}, [minterInstance, fetchData])
 
 	return <>
 		<button onClick={fetchData} disabled={refetchingFlag} style={{position: 'absolute', right: 0}} className='btn btn-warning'>

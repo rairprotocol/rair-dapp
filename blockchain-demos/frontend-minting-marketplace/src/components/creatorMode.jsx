@@ -41,7 +41,7 @@ const CreatorMode = ({account, addresses, programmaticProvider}) => {
 
 		let factoryInstanceEthers = new ethers.Contract(addresses.factory, factoryAbi, signer);
 		setFactoryInstance(factoryInstanceEthers);
-	}, [addresses])
+	}, [addresses, programmaticProvider])
 
 	return <>
 		<br/>

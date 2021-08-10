@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import Swal from 'sweetalert2';
 
 const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIndex}) => {
@@ -11,7 +11,7 @@ const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIn
 	const [end, setEnd] = useState();
 	const [allowed, setAllowed] = useState();
 
-	const refreshData = async () => {
+	const refreshData = useCallback(async () => {
 		let data = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
 		setName(data.name);
 		setPrice(data.price.toString());
@@ -19,7 +19,7 @@ const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIn
 		setEnd(data.tokenEnd.toString());
 		setAllowed(data.tokensAllowed.toString());
 		setNext((await tokenInstance.getNextSequentialIndex(productIndex, data.tokenStart, data.tokenEnd)).toString());
-	}
+	}, [minterInstance, offerIndex, rangeIndex, productIndex, tokenInstance])
 
 	useEffect(() => {
 		if (tokenInstance) {
@@ -28,7 +28,7 @@ const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIn
 			})
 		}
 		refreshData();
-	}, []);
+	}, [refreshData, tokenInstance]);
 	
 	return <div style={{position: 'relative'}} className='w-100 my-2'>
 		<b>{name}</b>: {allowed} tokens at {price} each!
@@ -80,11 +80,10 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 	const [balance, setBalance] = useState();
 	const [collectionName, setCollectionName] = useState();
 	const [contractName, setContractName] = useState();
-	const [nextMintableToken, setNextMintableToken] = useState();
 	const [rangeInfo, setRangeInfo] = useState([]);
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
-	const refreshData = async () => {
+	const refreshData = useCallback(async () => {
 		setRefetchingFlag(true);
 		let balances = [];
 		let tokensOwned = (await offerInfo.instance.balanceOf(account)).toString();
@@ -115,11 +114,11 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		}
 		setBalance(balances);
 		setRefetchingFlag(false);
-	}
+	}, [account, index, minter, offerInfo.instance, offerInfo.productIndex, offerInfo.ranges])
 
 	useEffect(() => {
 		refreshData();
-	}, [offerInfo, account]);
+	}, [offerInfo, account, refreshData]);
 	
 	return <details style={{position: 'relative'}} className='col-12 col-md-4 bg-dark py-4 text-white border border-white rounded'>
 		<summary>
@@ -153,7 +152,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		{balance && <>
 			You own {balance.length} tokens from this collection<br/>
 			{balance.map((item, index) => {
-				return <details className='w-100'>
+				return <details key={index} className='w-100'>
 					<summary>
 						<h5 className='d-inline-block'>{item.internalIndex}</h5>
 					</summary>
