@@ -152,7 +152,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		{balance && <>
 			You own {balance.length} tokens from this collection<br/>
 			{balance.map((item, index) => {
-				return <details className='w-100'>
+				return <details key={index} className='w-100'>
 					<summary>
 						<h5 className='d-inline-block'>{item.internalIndex}</h5>
 					</summary>
