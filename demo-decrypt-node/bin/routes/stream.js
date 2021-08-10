@@ -1,21 +1,22 @@
-const express = require('express')
-const jwt = require('express-jwt')
+const express = require('express');
+const jwt = require('express-jwt');
+const { validation } = require('../middleware');
 
 module.exports = context => {
-  const router = express.Router()
+  const router = express.Router();
 
   const jwtMiddleware = jwt({
     secret: process.env.JWT_SECRET,
     algorithms: ['HS256'],
     getToken: req => {
       if (req.params && req.params.token) {
-        return req.params.token
+        return req.params.token;
       } else {
-        return null
+        return null;
       }
     },
     requestProperty: 'token'
-  })
+  });
 
   /**
    * @swagger
@@ -50,7 +51,9 @@ module.exports = context => {
    */
   router.use('/:token/:mediaId',
     jwtMiddleware,
+    validation('stream', 'params'),
     context.hls.middleware
-  )
-  return router
-}
+  );
+
+  return router;
+};

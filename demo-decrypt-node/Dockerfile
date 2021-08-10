@@ -1,11 +1,14 @@
 FROM node:latest
 
+RUN apt-get upgrade
 RUN apt-get update
-RUN apt-get upgrade -y
 RUN apt-get -y install \
     libusb-dev \
     libusb-1.0.0-dev \
     libudev-dev
+
+#version management
+COPY VERSION /
 
 #install rairnode
 WORKDIR /usr/local/src

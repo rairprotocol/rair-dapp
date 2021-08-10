@@ -23,7 +23,7 @@ async function removePin(CID) {
   return response.data
 }
 
-async function addFolder(pathTo, folderName, args = {}) {
+async function addFolder(pathTo, folderName, socketInstance, args = {}) {
   const files = fs.readdirSync(pathTo);
   const ipfs = ipfsClient(process.env.IPFS_API);
   const ipfsPath = `/data/files/${ folderName }`
@@ -31,8 +31,10 @@ async function addFolder(pathTo, folderName, args = {}) {
   await ipfs.files.mkdir(ipfsPath, { parents: true });
 
   await Promise.all(_.map(files, (file) => {
+    socketInstance.emit('uploadProgress', { message: `added to ipfs file ${file}`, last: false, part: true });
     const filePath = path.join(pathTo, '/', file);
     const data = fs.readFileSync(filePath);
+
     return ipfs.files.write(path.join(ipfsPath, '/', file), data, { create: true });
   }));
 

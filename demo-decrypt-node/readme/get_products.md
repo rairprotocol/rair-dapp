@@ -1,0 +1,166 @@
+# Get products
+
+Find all products with all offers for eac of them for particular user
+
+**URL** : `/api/products`
+
+**Method** : `GET`
+
+**Headers:**
+
+```json
+{
+  "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
+## Success Response
+
+Returns found products
+
+**Code** : `200 OK`
+
+**Content-Type**: `application/json;`
+
+**Content example**
+
+```json
+{
+  "success": true,
+  "products": [
+    {
+      "_id": "610d14c03de2f5001dafc429",
+      "soldCopies": 3,
+      "sold": false,
+      "royalty": 0,
+      "name": "The Dark Knight",
+      "collectionIndexInContract": 1,
+      "contract": "contractAddress",
+      "copies": 4,
+      "creationDate": "2021-08-06T10:53:52.441Z",
+      "offers": [
+        {
+          "_id": "610d15043de2f5001dafc42e",
+          "soldCopies": 2,
+          "sold": true,
+          "range": [
+            0,
+            1
+          ],
+          "rangeIndex": 0,
+          "contract": "contractAddress",
+          "product": 1,
+          "offerPool": 21,
+          "price": 111,
+          "rangeName": "Some Name 1",
+          "creationDate": "2021-08-06T10:55:00.621Z",
+          "copies": 2
+        },
+        {
+          "_id": "610d15983de2f5001dafc432",
+          "soldCopies": 1,
+          "sold": false,
+          "range": [
+            2,
+            3
+          ],
+          "rangeIndex": 1,
+          "contract": "contractAddress",
+          "product": 1,
+          "offerPool": 21,
+          "price": 55,
+          "rangeName": "Some Name 2",
+          "creationDate": "2021-08-06T10:57:28.313Z",
+          "copies": 2
+        }
+      ]
+    },
+    ...
+  ]
+}
+```
+
+## Error Response
+
+**Condition** : If token expired.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt expired"
+}
+```
+
+OR
+
+**Condition** : If token not valid.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "invalid signature"
+}
+```
+
+OR
+
+**Condition** : If token not valid.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt malformed"
+}
+```
+
+OR
+
+**Condition** : If token not provided.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "jwt must be provided"
+}
+```
+
+OR
+
+**Condition** : If user not found.
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "error": true,
+  "message": "User with provided Token is not found in database"
+}
+```

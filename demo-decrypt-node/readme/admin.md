@@ -31,7 +31,7 @@ Verify with a Metamask challenge if the user holds the current Administrator tok
 
 ```json
 {
-  "ok": true,
+  "success": true,
   "message": "Admin token holder"
 }
 ```
@@ -46,7 +46,7 @@ OR
 
 ```json
 {
-  "ok": false,
+  "success": false,
   "message": "You don't hold the current admin token"
 }
 ```
@@ -67,6 +67,7 @@ OR
 
 ```json
 {
+  "success": false,
   "error": true,
   "message": "Could not verify account"
 }
@@ -80,6 +81,7 @@ OR
 
 ```json
 {
+  "success": false,
   "error": true,
   "message": "Invalid Ethereum address passed to eth-auth"
 }

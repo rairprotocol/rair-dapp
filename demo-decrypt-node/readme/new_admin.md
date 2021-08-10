@@ -45,7 +45,7 @@ Verify the user holds the current Admin token and then replace it with a new tok
 
 ```json
 {
-  "ok": true,
+  "success": true,
   "message": "New NFT set!"
 }
 ```
@@ -60,7 +60,7 @@ OR
 
 ```json
 {
-  "ok": false,
+  "success": false,
   "message": "You don't hold the current admin token"
 }
 ```
@@ -75,7 +75,7 @@ OR
 
 ```json
 {
-  "ok": false,
+  "success": false,
   "message": "There was an error validating your request"
 }
 ```
@@ -96,6 +96,7 @@ OR
 
 ```json
 {
+  "success": false,
   "error": true,
   "message": "Could not verify account"
 }
@@ -109,6 +110,7 @@ OR
 
 ```json
 {
+  "success": false,
   "error": true,
   "message": "Invalid Ethereum address passed to eth-auth"
 }

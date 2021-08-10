@@ -28,11 +28,26 @@ Optionally, use -d flag to run as a daemon
         * [x] /get_token/:MetaMessage/:MetaSignature/:mediaId - GET - respond to a challenge to receive a JWT, [see details here](readme/get_token.md)
         * [x] /admin/:MetaMessage/:MetaSignature - GET - verify with a Metamask challenge if the user holds the current Administrator token, [see details here](readme/admin.md)
         * [x] /new_admin/:MetaMessage/:MetaSignature - POST - verify the user holds the current Admin token and then replace it with a new token, [see details here](readme/new_admin.md)
+        * [x] /authentication - POST - verification of user signature and generating of JWT token, [see details here](readme/get_jwt_token.md)
+        * [x] /user_info - GET - get details about user by JWT token, [see details here](readme/get_user_details.md)
     * [x] /media
         * [x] /add/:mediaId - POST - register a new piece of media, [see details here](readme/add_media.md)
         * [x] /remove/:mediaId - DELETE - find and delete the media, [see details here](readme/remove_media.md)
         * [x] /list - GET - list all the registered media, their URIs and encrypted status, [see details here](readme/get_all_media.md)
         * [x] /upload - POST - upload the media, [see details here](readme/upload_media.md)
+    * [x] /users - POST - create new user, [see details here](readme/create_user.md)
+        * [x] /:publicAddress - GET - get single user, [see details here](readme/get_user.md)
+        * [x] /:publicAddress - PUT - update specific user, [see details here](readme/update_user.md)
+    * [x] /contracts - POST - create new contract, [see details here](readme/create_Contract.md)
+        * [x] / - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
+            * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
+            * [x] /:contractAddress - DELETE - remove specific contract, [see details here](readme/delete_contract.md)
+    * [x] /products - GET - get all products with all offers for eac of them for particular user, [see details here](readme/get_products.md)
     * [x] /docs - swagger documentation for the server
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
 * [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
+
+
+# MongoDB structure
+
+![](readme/assets/rair_db.png)

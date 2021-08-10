@@ -1,0 +1,21 @@
+{
+  "name": "backend-listener",
+  "version": "1.0.0",
+  "description": "Demo for Backend Event Listening",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "past": "node src/pastIndex.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "demo",
+    "blockchain",
+    "ethers"
+  ],
+  "author": "Juan Miguel Sanchez Mola",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^5.4.0"
+  }
+}

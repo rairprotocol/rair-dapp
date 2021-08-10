@@ -7,14 +7,14 @@ const ListItem = ({cid, videoData, refresh, setRefresh, setOpenVideo, admin}) =>
     const his = useHistory();
     const [hovered, setHovered] = useState(false);
 
-    const [nftP1, nftP2] = videoData.nftIdentifier.split(':');
+    const [nftP1, nftP2] = videoData.author.split(':');
 
     if (!cid)
     {
-      console.error('Missing CID for',videoData.name,'by',videoData.author);
+      console.error('Missing CID for',videoData.title,'by',videoData.author);
       return <></>
     }
-  
+
     return <div className='col-3 text-justify'>
     <button
       onClick={e => {
@@ -27,7 +27,7 @@ const ListItem = ({cid, videoData, refresh, setRefresh, setOpenVideo, admin}) =>
       style={{
       }}>
       <div className='btn p-0 col-12'>
-        <img 
+        <img
         className='col-12'
         style={{
           maxHeight: '100%',
@@ -39,7 +39,7 @@ const ListItem = ({cid, videoData, refresh, setRefresh, setOpenVideo, admin}) =>
       </div>
     </button>
     {videoData.nftIdentifier && <div className='col-12 mx-0 px-0 row'>
-      <a rel='noreferrer' 
+      <a rel='noreferrer'
           target="_blank"
           href={'http://app.rarible.com/token/'+videoData.nftIdentifier}
           className='btn btn-success col-4'>
@@ -60,12 +60,14 @@ const ListItem = ({cid, videoData, refresh, setRefresh, setOpenVideo, admin}) =>
     </div>}
     {admin && <button onClick={e => {
       let body = {file: videoData.file}
+      const token = localStorage.getItem('token')
       fetch('/api/media/remove/'+cid,{
         body: JSON.stringify(body),
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-rair-token': token
         }
       })
       .then(blob => blob.json())
@@ -77,7 +79,7 @@ const ListItem = ({cid, videoData, refresh, setRefresh, setOpenVideo, admin}) =>
         }
       })
     }} className='btn btn-danger col-6'>Delete</button>}
-    {cid && admin && <a rel='noreferrer' target="_blank" href={'https://ipfs.io/ipfs/'+cid} className='btn btn-warning col-6'>IPFS</a>}    
+    {cid && admin && <a rel='noreferrer' target="_blank" href={'https://ipfs.io/ipfs/'+cid} className='btn btn-warning col-6'>IPFS</a>}
     </div>
   }
 
