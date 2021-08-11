@@ -19,14 +19,14 @@ const contractAddresses = {
 		minterMarketplace: '0x343715F15702Fec9089B99623738a80662EC4FBE'
 	},
 	'0x5': { // Ethereum Goerli
-		factory: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
+		factory: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
 		erc777: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
-		minterMarketplace: '0x0Ce668D271b8016a785Bf146e58739F432300B12'
+		minterMarketplace: '0xE9e953A29D0688d1348E17f7aCC801b33693B501'
 	},
 	'0x13881': { // Matic Mumbai
-		factory: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
+		factory: '0x5CaBa889219DE9d52841fd79741cfe4ce5A61a29',
 		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
-		minterMarketplace: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a'
+		minterMarketplace: '0xD22179AbCFFC1b62a51a35Fbc726f0C79440547C'
 	}
 }
 
