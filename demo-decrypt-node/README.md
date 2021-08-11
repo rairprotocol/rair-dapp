@@ -20,6 +20,14 @@ docker run -it --rm -p 5000:5000 -p 3000:3000 -p 5001:5001 -p 4001:4001 -p 8080:
 
 Optionally, use -d flag to run as a daemon
 
+# Usage of the IPFS Service
+
+For switching between different IPFS services have to be changed environment variable `IPFS_SERVICE`
+
+Supported options:
+ - **ipfs** - native IPFS service;
+ - **pinata** - Pinata cloud;
+
 # API
 
 * [x] /api

@@ -21,12 +21,7 @@ module.exports = async () => {
   const File = _mongoose.model('File', require('./models/file'), 'File');
 
   return HLSServer({
-    mediaConfigStore: async mediaId => {
-      const config = (await File.findOne({ _id: mediaId })).toObject();
-      config.uri = process.env.IPFS_GATEWAY + '/' + mediaId;
-
-      return config;
-    },
+    mediaConfigStore: async mediaId => (await File.findOne({ _id: mediaId })).toObject(),
     segmentTransformation: streamDecrypter,
     authCallback: req => req.token && req.token.media_id === req.mediaId
   });

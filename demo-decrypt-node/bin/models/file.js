@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const File = new Schema({
   _id: { type: String, required: true },
   author: { type: String, required: true },
+  currentOwner: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String },
   encryptionType: { type: String, required: true },
