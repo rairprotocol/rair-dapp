@@ -27,6 +27,13 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		string[] rangeName;
 	}
 
+	// Auxiliary struct used to avoid "stack too deep" errors
+	struct productInfo {
+		uint start;
+		uint end;
+		uint mintableTokens;
+	}
+
 	uint16 public constant feeDecimals = 2;
 
 	mapping(address => mapping(uint => uint)) internal _contractToOffers;
@@ -133,8 +140,9 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @notice Makes sure the starting and ending tokens are correct
 	/// @param	start 	Starting token
 	/// @param	end 	Ending token
-	function _validateRangeInfo(uint start, uint end) internal pure {
+	function _validateRangeInfo(uint start, uint end, uint parentStart, uint parentEnd) internal pure {
 		require(start <= end, "Minting Marketplace: Range's starting token has to be less than the range's ending token!");
+		require((parentStart + end) <= parentEnd, "Minting Marketplace: Range's ending token has to be less or equal than the product's ending token!");
 	}
 
 	/// @notice Validates that the Minter Marketplace and the message sender have the correct roles inside the ERC721
@@ -210,9 +218,11 @@ contract Minter_Marketplace is OwnableUpgradeable {
 				require(_contractToOffers[_tokenAddress][_productIndex] == 0, "Minting Marketplace: An offer already exists for this contract and product");
 			}
 		}
+
+		productInfo memory aux;
 		
-		(,,uint mintableTokensLeft,,) = IRAIR_ERC721(_tokenAddress).getCollection(_productIndex);
-		require(mintableTokensLeft > 0, "Minting Marketplace: Cannot mint more tokens from this Product!");
+		(aux.start, aux.end, aux.mintableTokens,,) = IRAIR_ERC721(_tokenAddress).getCollection(_productIndex);
+		require(aux.mintableTokens > 0, "Minting Marketplace: Cannot mint more tokens from this Product!");
 		
 		offer storage newOffer = offerCatalog.push();
 
@@ -221,7 +231,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		newOffer.productIndex = _productIndex;
 
 		for (uint i = 0; i < _rangeName.length; i++) {
-			_validateRangeInfo(_rangeStartToken[i], _rangeEndToken[i]);
+			_validateRangeInfo(_rangeStartToken[i], _rangeEndToken[i], aux.start, aux.end);
 			_appendOfferRange(
 				offerCatalog.length - 1,
 				_rangeStartToken[i],
@@ -247,7 +257,10 @@ contract Minter_Marketplace is OwnableUpgradeable {
 					startToken >= selectedOffer.tokenRangeStart[rangeIndex],
 						'Minting Marketplace: New limits must be within the previous limits!');
 		validateRoles(selectedOffer.contractAddress);
-		_validateRangeInfo(startToken, endToken);
+		
+		productInfo memory aux;
+		(aux.start, aux.end,,,) = IRAIR_ERC721(selectedOffer.contractAddress).getCollection(selectedOffer.productIndex);
+		_validateRangeInfo(startToken, endToken, aux.start, aux.end);
 		selectedOffer.tokensAllowed[rangeIndex] -= (selectedOffer.tokenRangeEnd[rangeIndex] - selectedOffer.tokenRangeStart[rangeIndex]) - (endToken - startToken);
 		selectedOffer.tokenRangeStart[rangeIndex] = startToken;
 		selectedOffer.tokenRangeEnd[rangeIndex] = endToken;
@@ -264,7 +277,9 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		string calldata name
 	) public {
 		validateRoles(offerCatalog[offerIndex].contractAddress);
-		_validateRangeInfo(startToken, endToken);
+		productInfo memory aux;
+		(aux.start, aux.end,,,) = IRAIR_ERC721(offerCatalog[offerIndex].contractAddress).getCollection(offerCatalog[offerIndex].productIndex);
+		_validateRangeInfo(startToken, endToken, aux.start, aux.end);
 		_appendOfferRange(
 			offerIndex,
 			startToken,
@@ -285,8 +300,10 @@ contract Minter_Marketplace is OwnableUpgradeable {
 					prices.length == startTokens.length &&
 					names.length == prices.length, "Minting Marketplace: Offer's ranges should have the same length!");
 		validateRoles(offerCatalog[offerIndex].contractAddress);
+		productInfo memory aux;
+		(aux.start, aux.end,,,) = IRAIR_ERC721(offerCatalog[offerIndex].contractAddress).getCollection(offerCatalog[offerIndex].productIndex);
 		for (uint i = 0; i < names.length; i++) {
-			_validateRangeInfo(startTokens[i], endTokens[i]);
+			_validateRangeInfo(startTokens[i], endTokens[i], aux.start, aux.end);
 			_appendOfferRange(
 				offerIndex,
 				startTokens[i],
