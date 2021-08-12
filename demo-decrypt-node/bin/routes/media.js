@@ -294,7 +294,7 @@ module.exports = context => {
 
           fs.writeFileSync(`${ req.file.destination }stream${ req.file.filename }/rair.json`, JSON.stringify(rairJson, null, 4));
 
-          command = 'rm -f ' + req.file.path;
+          command = `rm -f ${ req.file.path }`;
           exec(command, (error, stdout, stderr) => {
             if (error) {
               log.error(req.file.originalname, error);
@@ -304,9 +304,28 @@ module.exports = context => {
           });
 
           log.info(`${ req.file.originalname } uploading to ipfsService`);
-          socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } uploading to ipfsService`, last: false });
+          socketInstance.emit('uploadProgress', {
+            message: `${ req.file.originalname } uploading to ipfsService`,
+            last: false
+          });
+
+          command = `rm ${ req.file.destination }stream${ req.file.filename }/.key`;
+          exec(command, (error, stdout, stderr) => {
+            if (error) {
+              log.error(req.file.originalname, error);
+            }
+            log.info(`${ req.file.destination }stream${ req.file.filename }/.key file was removed.`);
+          });
 
           const ipfsCid = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`, socketInstance);
+
+          command = `rm -r ${ req.file.destination }stream${ req.file.filename }`;
+          exec(command, (error, stdout, stderr) => {
+            if (error) {
+              log.error(req.file.originalname, error);
+            }
+            log.info(`Temporary folder ${ req.file.destination }stream${ req.file.filename } with stream chunks was removed.`);
+          });
 
           const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
           const gateway = {
@@ -334,7 +353,10 @@ module.exports = context => {
           socketInstance.emit('uploadProgress', { message: `uploaded to ipfsService.`, last: false, done: 90 });
 
           log.info(`${ req.file.originalname } storing to DB.`);
-          socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } storing to db.`, last: false });
+          socketInstance.emit('uploadProgress', {
+            message: `${ req.file.originalname } storing to db.`,
+            last: false
+          });
 
           await context.store.addMedia(ipfsCid, {
             key: exportedKey,
@@ -355,7 +377,10 @@ module.exports = context => {
           context.hls = StartHLS();
 
           log.info(`${ req.file.originalname } pinning to ipfsService.`);
-          socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } pinning to ipfsService.`, last: false });
+          socketInstance.emit('uploadProgress', {
+            message: `${ req.file.originalname } pinning to ipfsService.`,
+            last: false
+          });
 
           await addPin(ipfsCid, title, socketInstance);
         });
