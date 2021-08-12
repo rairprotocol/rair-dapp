@@ -26,15 +26,15 @@ services:
 #      - 127.0.0.1:5003:5001
 #    networks:
 #      - rair-local
-  rairfront:
-    container_name: 'rairfront'
-    build:
-      context: rair-front-master/
-      dockerfile: Dockerfile
-    ports:
-      - 80:80
-    networks:
-      - rair-local
+#  rairfront:
+#    container_name: 'rairfront'
+#    build:
+#      context: rair-front-master/
+#      dockerfile: Dockerfile
+#    ports:
+#      - 80:80
+#    networks:
+#      - rair-local
   mongo:
     container_name: mongo
     image: mongo
