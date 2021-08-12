@@ -3,9 +3,8 @@ version: '3.9'
 services:
   rairnode:
     container_name: 'rairnode'
-    build:
-      context: demo-decrypt-node/
-      dockerfile: Dockerfile
+    image:
+      rairtechinc/rairservernode:dev_latest
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
