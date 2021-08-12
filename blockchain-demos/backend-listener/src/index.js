@@ -7,18 +7,18 @@ const main = async () => {
 	let providers = [
 		{
 			provider: new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {chainId: 97, symbol: 'BNB', name: 'Binance Testnet'}),
-			factoryAddress: '0x58B81fE7D18ED2296A9E814c768d28dA3BCC94F9',
-			minterAddress: '0x8Fbb22212E2e5278743dE98E9A272e1f336d1Bdd'
+			factoryAddress: '0x02638eD2D3362CDAe26c4DD33B28CbE3dc8719Aa',
+			minterAddress: '0x343715F15702Fec9089B99623738a80662EC4FBE'
 		},
 		{
 			provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {chainId: 5, symbol: 'ETH', name: 'Goerli Testnet'}),
-			factoryAddress: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
-			minterAddress: '0x0Ce668D271b8016a785Bf146e58739F432300B12'
+			factoryAddress: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
+			minterAddress: '0xE9e953A29D0688d1348E17f7aCC801b33693B501'
 		},
 		{
 			provider: new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com", {chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet'}),
-			factoryAddress: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
-			minterAddress: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a'
+			factoryAddress: '0x5CaBa889219DE9d52841fd79741cfe4ce5A61a29',
+			minterAddress: '0xD22179AbCFFC1b62a51a35Fbc726f0C79440547C'
 		}
 	]
 

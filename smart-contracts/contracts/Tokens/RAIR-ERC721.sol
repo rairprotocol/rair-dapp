@@ -66,6 +66,23 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		_;
 	}
 
+	function canCreateLock(uint productIndex, uint startingToken, uint endingToken) public view returns (bool canCreate) {
+		collection storage selectedCollection =  _collections[productIndex];
+		if (startingToken > selectedCollection.endingToken - selectedCollection.startingToken ||
+				endingToken > selectedCollection.endingToken - selectedCollection.startingToken) {
+			return false;
+		}
+		for (uint i = 0; i < selectedCollection.locks.length; i++) {
+			if ((_lockedRange[selectedCollection.locks[i]].startingToken <= selectedCollection.startingToken + startingToken &&
+					_lockedRange[selectedCollection.locks[i]].endingToken >= selectedCollection.startingToken + startingToken) ||
+						(_lockedRange[selectedCollection.locks[i]].startingToken <= selectedCollection.startingToken + endingToken &&
+								_lockedRange[selectedCollection.locks[i]].endingToken >= selectedCollection.startingToken + endingToken)) {
+				return false;
+			}
+		}
+		return true;
+	} 
+
 	/// @notice	Locks transfers for tokens within a specific range
 	/// @dev	The minter pays for the locking as well
 	/// @param	collectionIndex Index of the collection on the contract
@@ -78,7 +95,9 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		require(selectedCollection.startingToken + _endingToken <= selectedCollection.endingToken, 'RAIR ERC721: Invalid ending token');
 		require(_endingToken - _startingToken <= selectedCollection.endingToken - selectedCollection.startingToken, 'RAIR ERC721: Invalid token limits');
 		require((_endingToken - _startingToken + 1) >= _lockedTokens, 'RAIR ERC721: Invalid number of tokens to lock');
-		
+
+		require(canCreateLock(collectionIndex, _startingToken, _endingToken), "RAIR ERC721: Cannot create lock");
+
 		lockedRange storage newRange = _lockedRange.push();
 		newRange.startingToken = selectedCollection.startingToken + _startingToken;
 		newRange.endingToken = selectedCollection.startingToken + _endingToken;
