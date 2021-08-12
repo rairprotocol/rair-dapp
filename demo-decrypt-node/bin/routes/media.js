@@ -70,6 +70,15 @@ const rareify = async (fsRoot, socketInstance) => {
     });
 };
 
+const execPromise = (command, options = {}) => new Promise((resolve, reject) => {
+  exec(command, options, (error, stdout, stderr) => {
+    if (error) {
+      return reject(error);
+    }
+    return resolve();
+  });
+});
+
 /**
  * intToByteArray Convert an integer to a 16 byte Uint8Array (little endian)
  */
@@ -242,149 +251,128 @@ module.exports = context => {
 
     if (req.file) {
       let command = `pwd && mkdir ${ req.file.destination }stream${ req.file.filename }/`;
-
-      exec(command, (error, stdout, stderr) => {
-        if (error) {
-          log.error(error);
-        }
-      });
+      await execPromise(command);
 
       log.info(`${ req.file.originalname } generating thumbnails`);
 
       command = `ffmpeg -ss 3 -i ${ req.file.path } -vf "select=gt(scene,0.5)" -vf "scale=144:-1" -vsync vfr -frames:v 1 ${ req.file.destination }Thumbnails/${ req.file.filename }.png && ffmpeg -i ${ req.file.path } -vf  "scale=144:-1" -ss 00:10 -t 00:03 ${ req.file.destination }Thumbnails/${ req.file.filename }.gif`;
-      exec(command, (error, stdout, stderr) => {
-        if (error) {
-          log.error(req.file.originalname, error);
-        }
-        res.json({ success: true, result: req.file.filename });
+      await execPromise(command);
 
-        socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } generating thumbnails`,
-          last: false,
-          done: 10
-        });
+      res.json({ success: true, result: req.file.filename });
 
-        command = `ffmpeg -i ${ req.file.path } -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ${ req.file.destination }stream${ req.file.filename }/stream.m3u8`;
-
-        log.info(`${ req.file.originalname } converting to stream`);
-        socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } converting to stream`,
-          last: false,
-          done: 11
-        });
-
-        exec(command, { maxBuffer: 1024 * 1024 * 20 }, async (error, stdout, stderr) => {
-          if (error) {
-            log.error(req.file.originalname, error);
-          }
-          const exportedKey = await rareify(`${ req.file.destination }stream${ req.file.filename }`, socketInstance);
-
-          log.info('ffmpeg DONE: converted to stream.');
-
-          const rairJson = {
-            title,
-            mainManifest: 'stream.m3u8',
-            author,
-            encryptionType: 'aes-128-cbc'
-          };
-
-          if (description) {
-            rairJson.description = description;
-          }
-
-          fs.writeFileSync(`${ req.file.destination }stream${ req.file.filename }/rair.json`, JSON.stringify(rairJson, null, 4));
-
-          command = `rm -f ${ req.file.path }`;
-          exec(command, (error, stdout, stderr) => {
-            if (error) {
-              log.error(req.file.originalname, error);
-            }
-            log.info(`${ req.file.originalname } raw deleted`);
-            socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } raw deleted`, last: false });
-          });
-
-          log.info(`${ req.file.originalname } uploading to ipfsService`);
-          socketInstance.emit('uploadProgress', {
-            message: `${ req.file.originalname } uploading to ipfsService`,
-            last: false
-          });
-
-          command = `rm ${ req.file.destination }stream${ req.file.filename }/.key`;
-          exec(command, (error, stdout, stderr) => {
-            if (error) {
-              log.error(req.file.originalname, error);
-            }
-            log.info(`${ req.file.destination }stream${ req.file.filename }/.key file was removed.`);
-          });
-
-          const ipfsCid = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`, socketInstance);
-
-          command = `rm -r ${ req.file.destination }stream${ req.file.filename }`;
-          exec(command, (error, stdout, stderr) => {
-            if (error) {
-              log.error(req.file.originalname, error);
-            }
-            log.info(`Temporary folder ${ req.file.destination }stream${ req.file.filename } with stream chunks was removed.`);
-          });
-
-          const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
-          const gateway = {
-            ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
-            pinata: `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`
-          };
-
-          const meta = {
-            mainManifest: 'stream.m3u8',
-            author,
-            encryptionType: 'aes-128-cbc',
-            title,
-            thumbnail: req.file.filename,
-            currentOwner: author,
-            contract,
-            product,
-            offer
-          };
-
-          if (description) {
-            meta.description = description;
-          }
-
-          log.info(`${ req.file.originalname } uploaded to ipfsService: ${ ipfsCid }`);
-          socketInstance.emit('uploadProgress', { message: `uploaded to ipfsService.`, last: false, done: 90 });
-
-          log.info(`${ req.file.originalname } storing to DB.`);
-          socketInstance.emit('uploadProgress', {
-            message: `${ req.file.originalname } storing to db.`,
-            last: false
-          });
-
-          await context.store.addMedia(ipfsCid, {
-            key: exportedKey,
-            uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
-            ...meta,
-          });
-
-          await context.db.File.create({
-            _id: ipfsCid,
-            key: exportedKey.toJSON(),
-            uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
-            ...meta,
-          });
-
-          log.info(`${ req.file.originalname } stored to DB.`);
-          socketInstance.emit('uploadProgress', { message: 'Stored to DB.', last: false, done: 96 });
-
-          context.hls = StartHLS();
-
-          log.info(`${ req.file.originalname } pinning to ipfsService.`);
-          socketInstance.emit('uploadProgress', {
-            message: `${ req.file.originalname } pinning to ipfsService.`,
-            last: false
-          });
-
-          await addPin(ipfsCid, title, socketInstance);
-        });
+      socketInstance.emit('uploadProgress', {
+        message: `${ req.file.originalname } generating thumbnails`,
+        last: false,
+        done: 10
       });
+
+      log.info(`${ req.file.originalname } converting to stream`);
+      socketInstance.emit('uploadProgress', {
+        message: `${ req.file.originalname } converting to stream`,
+        last: false,
+        done: 11
+      });
+
+      command = `ffmpeg -i ${ req.file.path } -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ${ req.file.destination }stream${ req.file.filename }/stream.m3u8`;
+      await execPromise(command, { maxBuffer: 1024 * 1024 * 20 });
+
+      const exportedKey = await rareify(`${ req.file.destination }stream${ req.file.filename }`, socketInstance);
+
+      log.info('ffmpeg DONE: converted to stream.');
+
+      const rairJson = {
+        title,
+        mainManifest: 'stream.m3u8',
+        author,
+        encryptionType: 'aes-128-cbc'
+      };
+
+      if (description) {
+        rairJson.description = description;
+      }
+
+      fs.writeFileSync(`${ req.file.destination }stream${ req.file.filename }/rair.json`, JSON.stringify(rairJson, null, 4));
+
+      command = `rm -f ${ req.file.path }`;
+      await execPromise(command);
+
+      log.info(`${ req.file.originalname } raw deleted`);
+      socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } raw deleted`, last: false });
+
+      log.info(`${ req.file.originalname } uploading to ipfsService`);
+      socketInstance.emit('uploadProgress', {
+        message: `${ req.file.originalname } uploading to ipfsService`,
+        last: false
+      });
+
+      command = `rm ${ req.file.destination }stream${ req.file.filename }/.key`;
+      await execPromise(command);
+
+      log.info(`${ req.file.destination }stream${ req.file.filename }/.key file was removed.`);
+
+      const ipfsCid = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`, socketInstance);
+
+      command = `rm -r ${ req.file.destination }stream${ req.file.filename }`;
+      await execPromise(command);
+
+      log.info(`Temporary folder ${ req.file.destination }stream${ req.file.filename } with stream chunks was removed.`);
+
+      const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
+      const gateway = {
+        ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
+        pinata: `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`
+      };
+
+      const meta = {
+        mainManifest: 'stream.m3u8',
+        author,
+        encryptionType: 'aes-128-cbc',
+        title,
+        thumbnail: req.file.filename,
+        currentOwner: author,
+        contract,
+        product,
+        offer
+      };
+
+      if (description) {
+        meta.description = description;
+      }
+
+      log.info(`${ req.file.originalname } uploaded to ipfsService: ${ ipfsCid }`);
+      socketInstance.emit('uploadProgress', { message: `uploaded to ipfsService.`, last: false, done: 90 });
+
+      log.info(`${ req.file.originalname } storing to DB.`);
+      socketInstance.emit('uploadProgress', {
+        message: `${ req.file.originalname } storing to db.`,
+        last: false
+      });
+
+      await context.store.addMedia(ipfsCid, {
+        key: exportedKey,
+        uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
+        ...meta,
+      });
+
+      await context.db.File.create({
+        _id: ipfsCid,
+        key: exportedKey.toJSON(),
+        uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
+        ...meta,
+      });
+
+      log.info(`${ req.file.originalname } stored to DB.`);
+      socketInstance.emit('uploadProgress', { message: 'Stored to DB.', last: false, done: 96 });
+
+      context.hls = StartHLS();
+
+      log.info(`${ req.file.originalname } pinning to ipfsService.`);
+      socketInstance.emit('uploadProgress', {
+        message: `${ req.file.originalname } pinning to ipfsService.`,
+        last: false
+      });
+
+      await addPin(ipfsCid, title, socketInstance);
     }
   });
 
