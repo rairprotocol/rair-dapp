@@ -1,0 +1,39 @@
+{
+  "name": "rairMarketplace",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^1.0.0",
+    "dotenv": "^2.0.0",
+    "openzeppelin-solidity": "^1.9.0",
+    "react": "^16.3.2",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.3.2",
+    "react-redux": "^5.0.6",
+    "react-scripts": "^1.1.4",
+    "react-slick": "^0.23.1",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "slick-carousel": "^1.8.1",
+    "truffle-contract": "^3.0.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:8000/",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

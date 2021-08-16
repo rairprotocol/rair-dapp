@@ -1,0 +1,18 @@
+{
+  "name": "smart_contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Howard Wang <ah12wwy@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "dependencies": {
+    "openzeppelin-solidity": "^1.9.0"
+  }
+}

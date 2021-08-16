@@ -1,0 +1,19 @@
+{
+  "name": "rairMarketplace_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Howard Wang <ah12wwy@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "express-fileupload": "^0.4.0",
+    "formidable": "^1.2.1",
+    "fs": "0.0.1-security",
+    "ipfs": "^0.28.2"
+  }
+}

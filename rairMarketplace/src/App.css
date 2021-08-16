@@ -1,0 +1,59 @@
+body {
+  font-family: 'Open Sans';
+}
+
+.container { 
+  margin: 100px 150px 100px 150px;
+}
+
+.handwritten { 
+  font-family: Handlee;
+}
+
+.aligned-text { 
+  margin-left: 6px;
+}
+
+.slick-next:before, .slick-prev:before { 
+  color: black;
+}
+
+.icon { 
+  height: 20px;
+  position: absolute;
+  margin-left: 10px;
+}
+
+.owner-view-container { 
+  background-color: #E0E0E0;
+  border-radius: 10px;
+}
+
+.input-box { 
+  border-style: none;
+  border-radius: 10px;
+  width: 300px;
+  height: 30px;
+  font-size: 14px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.input-button { 
+  margin: 10px 20px 0 20px;
+}
+
+.button {
+  margin: 0 20px 10px 20px;
+  width: 300px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 18px;
+  background-color: #2bb673;
+  color: white !important;
+}
+
+img[src=""] {
+  display: none;
+}
+  
