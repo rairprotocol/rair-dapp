@@ -5,7 +5,7 @@ import './App.css';
 import * as ethers from 'ethers'
 
 // Sweetalert2 for the popup messages
-//import Swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 
 // Import the data from the contract artifacts
 
@@ -69,6 +69,14 @@ const polygonMumbaiData = {
 	blockExplorerUrls: ['https://matic.network/']
 }
 
+const blockchains = [
+	{chainData: binanceTestnetData, bootstrapColor: 'warning'},
+	{chainData: klaytnBaobabData, bootstrapColor: 'light'},
+	{chainData: {chainId: '0x3', chainName: 'Ropsten (Ethereum)'}, bootstrapColor: 'primary'},
+	{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},
+	{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
+]
+
 function App() {
 
 	const [account, setAccount] = useState();
@@ -78,7 +86,7 @@ function App() {
 	const [programmaticProvider, setProgrammaticProvider] = useState();
 	const [refreshFlag, setRefreshFlag] = useState(false);
 
-	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState();
+	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
 
 	useEffect(() => {
 		window.ethereum && window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -87,15 +95,20 @@ function App() {
 			});
 	}, [account])
 
-	const connectProgrammatically = () => {
-		let binanceTestnetProvider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {
-				chainId: 97, symbol: 'BNB', name: 'Binance Testnet', timeout: 1000000
-			});
-		let currentWallet = new ethers.Wallet(UNSAFE_PrivateKey, binanceTestnetProvider);
-		setChainId(currentWallet.provider._network.chainId);
-		setAddresses(contractAddresses['0x61']);
-		setAccount(currentWallet.address);
-		setProgrammaticProvider(currentWallet);
+	const connectProgrammatically = async ({rpcUrls, chainId, chainName, nativeCurrency}) => {
+		try {
+			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], {
+					chainId: Number(chainId), symbol: nativeCurrency.symbol, name: chainName, timeout: 1000000
+				});
+			let currentWallet = await new ethers.Wallet(UNSAFE_PrivateKey, provider);
+			setChainId(chainId);
+			setAddresses(contractAddresses[chainId]);
+			setAccount(currentWallet.address);
+			setProgrammaticProvider(currentWallet);
+		} catch (err) {
+			console.log(err);
+			Swal.fire('Error', err, 'error');
+		}
 	}
 
 	const switchEthereumChain = async (chainData) => {
@@ -139,13 +152,7 @@ function App() {
 	return (
 		<div style={{minHeight: '100vh'}} className="App bg-dark text-white">
 			{!mode && <div>
-				{window.ethereum && [
-					{chainData: binanceTestnetData, bootstrapColor: 'warning'},
-					{chainData: klaytnBaobabData, bootstrapColor: 'light'},
-					{chainData: {chainId: '0x3', chainName: 'Ropsten (Ethereum)'}, bootstrapColor: 'primary'},
-					{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},
-					{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
-				].map((item, index) => {
+				{window.ethereum && blockchains.map((item, index) => {
 					return <button
 						key={index}
 						className={`btn btn-${item.bootstrapColor}`}
@@ -163,15 +170,31 @@ function App() {
 					<h5 className='col-12'> For tests only! </h5>
 					<div className='col-1' />
 					<input
-						className='col-7'
+						className='col-10 text-center'
 						type='password'
 						value={UNSAFE_PrivateKey}
 						onChange={e => setUNSAFE_PrivateKey(e.target.value)}
 					/>
-					<button className='btn btn-danger col-3' onClick={connectProgrammatically}>
-						Use my private key to connect!
-					</button>
 					<div className='col-1' />
+					<div className='col-12 text-center'>
+						Use my private key to connect to
+					</div>
+					<div className='col-12'>
+						{blockchains.map((item, index) => {
+							if (!item.chainData.rpcUrls) {
+								return <></>
+							}
+							return <button
+								key={index}
+								className={`btn btn-${item.bootstrapColor}`}
+								disabled={chainId === item.chainData.chainId?.toLowerCase()}
+								onClick={async e => {
+									await connectProgrammatically(item.chainData);
+								}}>
+								{item.chainData.chainName}
+							</button>
+						})}
+					</div>
 					<hr className='w-100' />
 				</div>}
 			</div>}
