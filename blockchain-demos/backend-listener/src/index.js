@@ -22,7 +22,7 @@ const main = async () => {
 		}
 	]
 
-	for await (let providerData of providers) {
+	providers.forEach(async providerData => {
 		console.log('Connected to', providerData.provider._network.name);
 		// These connections don't have an address associated, so they can read but can't write to the blockchain
 		let factoryInstance = await new ethers.Contract(providerData.factoryAddress, FactoryAbi, providerData.provider);
@@ -102,7 +102,7 @@ const main = async () => {
 				await console.log('Set up listeners for', contractAddress, 'or', await tokenInstance.name());
 			}
 		}
-	}
+	})
 }
 
 try {
