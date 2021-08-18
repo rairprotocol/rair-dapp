@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.6; 
+pragma solidity ^0.8.7; 
 
 import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 
@@ -20,7 +20,6 @@ interface IRAIR_ERC721 is IERC721 {
 	function mint(address to, uint collectionID, uint index) external;
 
 	// Ask for the royalty info of the creator
-	// Value is the price for the token, so if token #1 is being sold for 100 ETH and the creator fee is 30%, you-ll get as a result 30 in _royaltyAmount
-	function royaltyInfo(uint256 _tokenId, uint256 _value,	bytes calldata _data)
-		external view returns (address _receiver, uint256 _royaltyAmount, bytes memory _royaltyPaymentData);
+	function royaltyInfo(uint256 _tokenId, uint256 _salePrice)
+		external view returns (address receiver, uint256 royaltyAmount);
 }
