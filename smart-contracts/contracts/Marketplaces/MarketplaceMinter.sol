@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.4; 
+pragma solidity ^0.8.7; 
 
 // Used on interfaces
 import '@openzeppelin/contracts/access/AccessControl.sol';
@@ -335,15 +335,21 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		address creatorAddress;
 		uint256 amount;
 
+
 		bool hasFees = IERC2981(selectedCollection.contractAddress).supportsInterface(type(IERC2981).interfaceId);
-		
+		// If the token minted supports the EIP2981 interface, ask for the creator fee!
 		if (hasFees) {
-			(creatorAddress, amount,) = IRAIR_ERC721(selectedCollection.contractAddress).royaltyInfo(0, selectedCollection.rangePrice[rangeIndex], bytes(selectedCollection.rangeName[rangeIndex]));
+			(creatorAddress, amount) = IRAIR_ERC721(selectedCollection.contractAddress).royaltyInfo(0, selectedCollection.rangePrice[rangeIndex]);
+			// Send the creator fee to the creator
+			// Should send whatever's left after transferring treasury and node fees
 			payable(creatorAddress).transfer(selectedCollection.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000);
 		}
 
+		// Pay the buyer any excess they transferred
 		payable(msg.sender).transfer(msg.value - selectedCollection.rangePrice[rangeIndex]);
+		// Pay the treasury
 		payable(treasury).transfer((selectedCollection.rangePrice[rangeIndex] * treasuryFee) / 100000);
+		// Pay the node
 		payable(selectedCollection.nodeAddress).transfer((selectedCollection.rangePrice[rangeIndex] * nodeFee) / 100000);
 		selectedCollection.tokensAllowed[rangeIndex]--;
 		if (selectedCollection.tokensAllowed[rangeIndex] == 0) {

@@ -367,31 +367,21 @@
         },
         {
           "internalType": "uint256",
-          "name": "_value",
+          "name": "_salePrice",
           "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "_data",
-          "type": "bytes"
         }
       ],
       "name": "royaltyInfo",
       "outputs": [
         {
           "internalType": "address",
-          "name": "_receiver",
+          "name": "receiver",
           "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "_royaltyAmount",
+          "name": "royaltyAmount",
           "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "_royaltyPaymentData",
-          "type": "bytes"
         }
       ],
       "stateMutability": "view",
