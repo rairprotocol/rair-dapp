@@ -70,7 +70,7 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
-			className='btn btn-dark'>
+			className='btn'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<br />

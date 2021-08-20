@@ -24,14 +24,14 @@ const ERC777Manager = ({instance, account}) => {
 		refreshData();
 	}, [refreshData])
 
-	return <div className='col bg-dark py-4 text-white border border-white rounded' style={{position: 'relative'}}>
+	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5> ERC777 </h5>
 		<small>({instance.address})</small>
 		<button
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
-			className='btn btn-dark'>
+			className='btn'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<br />

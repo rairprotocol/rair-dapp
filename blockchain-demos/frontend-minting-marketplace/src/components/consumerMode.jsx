@@ -43,7 +43,6 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 			}
 			setCollectionsData(offerData);
 			setRefetchingFlag(false);
-
 	}, [programmaticProvider, minterInstance])
 
 	useEffect(() => {
@@ -58,7 +57,7 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 		}else{
 			Swal.fire('Error', 'Network change detected in metamask', 'error');
 		}
-	}, [addresses?.minterMarketplace, programmaticProvider])
+	}, [addresses, programmaticProvider])
 
 	useEffect(() => {
 		if (minterInstance) {
@@ -66,7 +65,7 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 		}
 	}, [minterInstance, fetchData])
 
-	return <>
+	return <div className='col-12' style={{position: 'relative'}}>
 		<button onClick={fetchData} disabled={refetchingFlag} style={{ position: 'absolute', right: 0 }} className='btn btn-warning'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
@@ -98,7 +97,7 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 					minter={minterInstance} />
 			})}
 		</div>}
-	</>
+	</div>
 }
 
 export default ConsumerMode;

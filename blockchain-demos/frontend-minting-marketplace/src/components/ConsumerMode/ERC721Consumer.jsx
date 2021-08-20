@@ -120,7 +120,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		refreshData();
 	}, [offerInfo, account, refreshData]);
 	
-	return <details style={{position: 'relative'}} className='col-12 col-md-4 bg-dark py-4 text-white border border-white rounded'>
+	return <details style={{position: 'relative'}} className='col-12 col-md-4 py-4 border border-white rounded'>
 		<summary>
 			<div style={{position: 'absolute', top: 0, right: '2vh'}}>
 				#{index + 1}<br />
@@ -132,7 +132,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 				@{contractName}
 			</div>
 		</summary>
-		<button onClick={refreshData} disabled={refetchingFlag} style={{position: 'absolute', left: 0, top: 0}} className=' px-2 btn btn-dark'>
+		<button onClick={refreshData} disabled={refetchingFlag} style={{position: 'absolute', left: 0, top: 0}} className='px-2 btn'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<small>Contract Address: <b>{offerInfo.contractAddress}</b></small><br />
