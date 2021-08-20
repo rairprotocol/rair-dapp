@@ -110,8 +110,8 @@ function App() {
 	const connectProgrammatically = async ({rpcUrls, chainId, chainName, nativeCurrency}) => {
 		try {
 			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], {
-					chainId: Number(chainId), symbol: nativeCurrency.symbol, name: chainName, timeout: 1000000
-				});
+				chainId: Number(chainId), symbol: nativeCurrency.symbol, name: chainName, timeout: 1000000
+			});
 			let currentWallet = await new ethers.Wallet(UNSAFE_PrivateKey, provider);
 			setChainId(chainId);
 			setAddresses(contractAddresses[chainId]);

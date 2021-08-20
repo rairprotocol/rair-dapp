@@ -6,8 +6,6 @@ import Swal from 'sweetalert2';
 const VideoPlayer = () => {
 	const params = useParams();
 
-	console.log(params);
-
 	const [videoName,] = useState(Math.round(Math.random() * 10000));
 	const [mediaAddress, setMediaAddress] = useState(Math.round(Math.random() * 10000));
 	
@@ -26,6 +24,9 @@ const VideoPlayer = () => {
 			setTimeout(() => {
 				videojs('vjs-' + videoName);
 			}, 1000);
+		} else {
+			console.error(streamAddress);
+			Swal.fire('Error');
 		}
 	}
 

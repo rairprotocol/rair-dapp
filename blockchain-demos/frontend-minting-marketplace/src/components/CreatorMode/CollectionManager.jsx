@@ -109,7 +109,6 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 			<input className='form-control' type='number' value={locked} onChange={e => setLocked(e.target.value)} />
 		</th>
 		<th>
-			{console.log(rangeEnd)}
 			<button
 				disabled={locked <= 0 || locked > rangeEnd || !rangeEnd}
 				onClick={e => locker(collectionIndex, rangeInit, rangeEnd, locked)}
