@@ -16,6 +16,10 @@ import ConsumerMode from './components/consumerMode.jsx';
 import VideoList from './components/video/videoList.jsx';
 import VideoPlayer from './components/video/videoPlayer.jsx';
 
+import MyNFTs from './components/nft/myNFT.jsx';
+import Token from './components/nft/Token.jsx';
+import RairToken from './components/nft/RairToken.jsx';
+
 const contractAddresses = {
 	'0x61': { // Binance Testnet
 		factory: '0x02638eD2D3362CDAe26c4DD33B28CbE3dc8719Aa',
@@ -250,6 +254,11 @@ function App() {
 								<Route exact path='/minter'>
 									<ConsumerMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>
 								</Route>
+								<Route path='/my-nft'>
+									<MyNFTs />
+								</Route>
+								<Route path='/token/:contract/:identifier' component={Token} />
+								<Route path='/rair/:contract/:product' component={RairToken} />
 								<Route path='/all'>
 									<VideoList />
 								</Route>
