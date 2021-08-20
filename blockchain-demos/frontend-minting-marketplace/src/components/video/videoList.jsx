@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import VideoItem from './videoItem.jsx';
 
 const VideoList = props => {
-
-	const history = useHistory()
-
 	const [mediaList, setMediaList] = useState([]);
-
 	const updateList = async () => {
 		let response = await (await fetch('/api/media/list', {
 			headers: {
@@ -24,13 +20,7 @@ const VideoList = props => {
 
 	return <>
 		{Object.keys(mediaList).map((item, index) => {
-			return <div className='col-3 p-1 text-start' style={{height: '30vh'}} key={index} onClick={e => {
-				history.push(`/watch/${item}/${mediaList[item].mainManifest}`);
-			}}>
-					<img alt='thumbnail' style={index === 1 ? {filter: 'grayscale(100%)'} : undefined} src={`/thumbnails/${mediaList[item].thumbnail}.png`} className='col-12 bg-secondary rounded h-75' />
-				{mediaList[item].title}<br/>
-				{mediaList[item].description}
-			</div>
+			return <VideoItem key={index} mediaList={mediaList} item={item} />
 		})}
 	</>
 };

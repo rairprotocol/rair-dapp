@@ -182,7 +182,7 @@ function App() {
 							{name: 'Factory', route: '/factory'},
 							{name: 'Minter Marketplace', route: '/minter'}
 						].map((item, index) => {
-							return <div key={index} className='col-12 py-2 rounded bg-white'>
+							return <div key={index} className='col-12 py-3 rounded bg-white'>
 								<Link to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
 									{item.name}
 								</Link>
