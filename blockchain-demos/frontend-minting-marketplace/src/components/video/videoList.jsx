@@ -6,7 +6,7 @@ const VideoList = props => {
 	const updateList = async () => {
 		let response = await (await fetch('/api/media/list', {
 			headers: {
-				'x-rair-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJldGhfYWRkciI6IjB4ZWMzMDc1OWQwYTNmM2NlMGE3MzA5MjBkYzI5ZDc0ZTQ0MWY0OTJjMyIsImFkbWluUmlnaHRzIjp0cnVlLCJpYXQiOjE2MjkzOTY4MDUsImV4cCI6MTYyOTQ4MzIwNX0.G6YY8mrTxCoMfA-oICKDuUQlGUhXKzCOMNxy_Kkscys'
+				'x-rair-token': localStorage.token
 			}
 		})).json()
 		if (response.success) {

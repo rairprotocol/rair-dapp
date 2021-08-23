@@ -101,8 +101,67 @@ function App() {
 	const [addresses, setAddresses] = useState();
 	const [programmaticProvider, setProgrammaticProvider] = useState();
 	const [refreshFlag, setRefreshFlag] = useState(false);
+	const [userData, setUserData] = useState();
+	const [adminAccess, setAdminAccess] = useState(false);
 
 	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
+
+	const connectUserData = async () => {
+		try {
+			// Verifica si el usuario existe
+			// Make sure the user exists
+			const {success, user} = await (await fetch(`/api/users/${account}`)).json();
+			if (!user) {
+				const userCreation = await fetch('/api/users', {
+					method: 'POST',
+					body: JSON.stringify({ publicAddress: account, adminNFT: 'temp' }),
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					}
+				})
+				console.log(userCreation);
+			} else {
+				setUserData(user);
+			}
+
+			// Admin rights validation
+			// Acceso de Administrador (para subir videos)
+			let adminRights = adminAccess;
+			if (adminAccess === undefined) {
+				const { response } = await (await fetch(`/api/auth/get_challenge/${account}`)).json();
+				const ethResponse = await window.ethereum.request({
+					method: 'eth_signTypedData_v4',
+					params: [account, response],
+					from: account
+				});
+				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
+				setAdminAccess(adminResponse.success);
+				adminRights = adminResponse.success;
+			}
+
+			// JWT validation
+			// Verifica que la token exista
+			if (!localStorage.token) {
+				let provider = new ethers.providers.Web3Provider(window.ethereum);
+					const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
+					let signer = provider.getSigner();
+					let signature = await (signer.signMessage(msg, account));
+					const { token } = await (await fetch('/api/auth/authentication', {
+					method: 'POST',
+					body: JSON.stringify({ publicAddress: account, signature, adminRights: adminRights }),
+						headers: {
+							Accept: 'application/json',
+							'Content-Type': 'application/json'
+						}
+					})
+				).json();
+				localStorage.setItem('token', token);
+			}
+		} catch (err) {
+			console.log('Error', err)
+		}
+	}
 
 	useEffect(() => {
 		window.ethereum && window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -243,6 +302,7 @@ function App() {
 											{item.chainData.chainName}
 										</button>
 									})}
+									{account && <button className='btn btn-primary' onClick={connectUserData}> Connect with Metamask! </button>}
 								</Route>
 							</Switch>
 						</div>
