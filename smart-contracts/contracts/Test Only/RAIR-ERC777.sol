@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.4; 
+pragma solidity ^0.8.7; 
 import "@openzeppelin/contracts/token/ERC777/ERC777.sol";
 import "hardhat/console.sol";
 

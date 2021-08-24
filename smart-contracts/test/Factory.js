@@ -709,7 +709,7 @@ describe("Token Factory", function () {
 				await expect(minterAsAddress2.buyToken(0, 2, next, {value: 99})).to.revertedWith("Minting Marketplace: Insuficient Funds!");
 				await expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(next);
 				
-				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 100})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [91, -100, 9]);
+				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 100})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance, minterInstance], [91, -100, 9, 0]);
 				await expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(Number(next) + 1);
 
 				// 8 is already minted, so after minting next sequential index should be 9
@@ -729,8 +729,8 @@ describe("Token Factory", function () {
 		})
 
 		it ("721 instance returns the correct creator fee", async function() {
-			expect((await rair721Instance.royaltyInfo(1, 100000, ethers.utils.randomBytes(8)))[0]).to.equal(owner.address);
-			expect((await rair721Instance.royaltyInfo(1, 100000, ethers.utils.randomBytes(8)))[1]).to.equal(30000);
+			expect((await rair721Instance.royaltyInfo(1, 123000))[0]).to.equal(owner.address);
+			expect((await rair721Instance.royaltyInfo(1, 123000))[1]).to.equal(36900);
 		});
 	});
 

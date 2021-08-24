@@ -1,48 +1,51 @@
-import {useState, useEffect, useCallback} from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 
-const LockManager = ({index, array, deleter, disabled, locker, collectionIndex}) => {
+// const LockManager = ({ index, array, deleter, disabled, locker, collectionIndex }) => {
 
-	const [start, setStart] = useState(array[index].startingToken);
-	const [end, setEnd] = useState(array[index].endingToken);
-	const [locked, setLocked] = useState(array[index].countToUnlock);
+// 	const [start, setStart] = useState(array[index].startingToken);
+// 	const [end, setEnd] = useState(array[index].endingToken);
+// 	const [locked, setLocked] = useState(array[index].countToUnlock);
 
-	return <tr>
-		<th>
-			{!disabled ? <button
-				onClick={e => deleter(index)}
-				className='btn btn-danger h-50'>
-				<i className='fas fa-trash' />
-			</button> : ''}
-		</th>
-		<th>
-			#{index + 1}
-		</th>
-		<th>
-			<input className='form-control' type='number' disabled={disabled} value={start} onChange={e => setStart(e.target.value)} />
-		</th>
-		<th>
-			<input className='form-control' type='number' disabled={disabled} value={end} onChange={e => setEnd(e.target.value)} />
-		</th>
-		<th>
-			<input className='form-control' type='number' disabled={disabled} value={locked} onChange={e => setLocked(e.target.value)} />
-		</th>
-		<th>
-			{!disabled ? <button
-				onClick={e => locker(collectionIndex, start, end, locked)}
-				className='btn btn-success h-50'>
-				<i className='fas fa-lock' />
-			</button> : ''}
-		</th>
-	</tr>
-}
+// 	return <tr>
+// 		<th>
+// 			{!disabled ? <button
+// 				onClick={e => deleter(index)}
+// 				className='btn btn-danger h-50'>
+// 				<i className='fas fa-trash' />
+// 			</button> : ''}
+// 		</th>
+// 		<th>
+// 			#{index + 1}
+// 		</th>
+// 		<th>
+// 			<input className='form-control' type='number' disabled={disabled} value={start} onChange={e => setStart(e.target.value)} />
+// 		</th>
+// 		<th>
+// 			<input className='form-control' type='number' disabled={disabled} value={end} onChange={e => setEnd(e.target.value)} />
+// 		</th>
+// 		<th>
+// 			<input className='form-control' type='number' disabled={disabled} value={locked} onChange={e => setLocked(e.target.value)} />
+// 		</th>
+// 		<th>
+// 			{!disabled ? <button
+// 				onClick={e => locker(collectionIndex, start, end, locked)}
+// 				className='btn btn-success h-50'>
+// 				<i className='fas fa-lock' />
+// 			</button> : ''}
+// 		</th>
+// 	</tr>
+// }
 
-const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}) => {
+const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker, collectionIndex }) => {
 
 	const [endingRange, setEndingRange] = useState(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [rangeName, setRangeName] = useState(array[index].name);
 	const [rangePrice, setRangePrice] = useState(array[index].price);
-	const syncOutside = useCallback(sync, [sync]);	
+	const syncOutside = useCallback(sync, [sync]);
+	const rangeInit = array[index].endingToken;
+	const rangeEnd = (Number(array[index - 1]?.endingToken) + 1);
+	const [locked, setLocked] = useState(0);
 
 	useEffect(() => {
 		let aux = array[index].endingToken !== endingRange;
@@ -83,7 +86,7 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 			<input className='form-control' disabled={disabled} value={rangeName} onChange={e => setRangeName(e.target.value)} />
 		</th>
 		<th>
-			<input className='form-control' type='number' value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} disabled/>
+			<input className='form-control' type='number' value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} disabled />
 		</th>
 		<th>
 			<input
@@ -91,7 +94,7 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 					backgroundColor: 'red',
 					color: 'white'
 				} : {}}
-				disabled={disabled} 
+				disabled={disabled}
 				className='form-control'
 				type='number'
 				min={(index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)}
@@ -102,10 +105,21 @@ const RangeManager = ({index, array, deleter, sync, hardLimit, disabled, locker}
 		<th>
 			<input disabled={disabled} type='number' className='form-control' value={rangePrice} onChange={e => setRangePrice(e.target.value)} />
 		</th>
+		<th>
+			<input className='form-control' type='number' value={locked} onChange={e => setLocked(e.target.value)} />
+		</th>
+		<th>
+			<button
+				disabled={locked <= 0 || locked > rangeEnd || !rangeEnd}
+				onClick={e => locker(collectionIndex, rangeInit, rangeEnd, locked)}
+				className='btn btn-success h-50'>
+				<i className='fas fa-lock' />
+			</button>
+		</th>
 	</tr>
 }
 
-const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstance, tokenAddress}) => {
+const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInstance, tokenAddress }) => {
 
 	const [ranges, setRanges] = useState([]);
 	const [locks, setLocks] = useState([]);
@@ -137,7 +151,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 			let offerIndex = (await minter.contractToOfferRange(tokenInstance.address, collectionIndex)).toString();
 			let offerData = await minter.getOfferInfo(offerIndex);
 			let existingRanges = [];
-			for await (let rangeIndex of [...Array.apply(null, {length: offerData.availableRanges.toString()}).keys()]) {
+			for await (let rangeIndex of [...Array.apply(null, { length: offerData.availableRanges.toString() }).keys()]) {
 				let rangeInfo = await minter.getOfferRangeInfo(offerIndex, rangeIndex);
 				if (Number(rangeInfo.collectionIndex.toString()) === collectionIndex) {
 					existingRanges.push({
@@ -149,7 +163,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 				}
 			}
 			setRanges(existingRanges);
-			
+
 		} catch (err) {
 			console.error(err?.data?.message);
 		}
@@ -179,7 +193,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 
 	useEffect(() => {
 		if (minter) {
-			minter.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', function() {
+			minter.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', function () {
 				refresher()
 			})
 		}
@@ -188,24 +202,24 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 	useEffect(() => {
 		if (tokenInstance && minter) {
 			refresher()
-		} 
+		}
 	}, [collectionInfo, tokenInstance, minter, refresher])
 
 	return <details className='w-100 border border-secondary rounded'>
 		<summary>
-			Product #{collectionIndex+1}: {collectionInfo.name}
+			Product #{collectionIndex + 1}: {collectionInfo.name}
 		</summary>
 		<div className='row mx-0 px-0'>
 			<div className='col-12'>
 				<h5> Collection Info </h5>
-				First token: {collectionInfo.startingToken}<br/> 
-				Last Token: {collectionInfo.endingToken}<br/> 
-				Mintable Tokens Left: {collectionInfo.mintableTokensLeft}<br/>
+				First token: {collectionInfo.startingToken}<br />
+				Last Token: {collectionInfo.endingToken}<br />
+				Mintable Tokens Left: {collectionInfo.mintableTokensLeft}<br />
 			</div>
 			<hr className='w-100' />
-			<div className='col-6' style={{position: 'relative'}}>
+			<div className='col-12' style={{ position: 'relative' }}>
 				<button
-					style={{position: 'absolute', right: 0, top: 0}}
+					style={{ position: 'absolute', right: 0, top: 0 }}
 					onClick={e => {
 						let aux = [...ranges];
 						aux.push({
@@ -236,19 +250,24 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 							<th>
 								Price for each
 							</th>
+							<th>
+								Locked Tokens
+							</th>
 						</tr>
 					</thead>
 					<tbody>
 						{ranges.map((item, index, array) => {
 							return <RangeManager
-										key={index}
-										disabled={item.disabled}
-										index={index}
-										array={array}
-										deleter={deleter}
-										sync={() => {setForceSync(!forceSync)}}
-										hardLimit={collectionInfo.endingToken - collectionInfo.startingToken}
-									/>
+								key={index}
+								disabled={item.disabled}
+								index={index}
+								array={array}
+								deleter={deleter}
+								sync={() => { setForceSync(!forceSync) }}
+								hardLimit={collectionInfo.endingToken - collectionInfo.startingToken}
+								locker={locker}
+								collectionIndex={collectionIndex}
+							/>
 						})}
 					</tbody>
 				</table>
@@ -290,7 +309,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 					{ranges.length > 0 && ranges[0].disabled ? `Append ${ranges.filter(item => !item.disabled).length} ranges to the marketplace` : `Create offer with ${ranges.length} ranges on the marketplace`}
 				</button>
 			</div>
-			<div className='col-6' style={{position: 'relative'}}>
+			{/* <div className='col-6' style={{position: 'relative'}}>
 				<button
 					style={{position: 'absolute', right: 0, top: 0}}
 					onClick={e => {
@@ -339,7 +358,7 @@ const CollectionManager = ({collectionIndex, collectionInfo, minter, tokenInstan
 						})}
 					</tbody>
 				</table>
-			</div>
+			</div> */}
 		</div>
 	</details>
 }

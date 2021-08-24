@@ -25,7 +25,7 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 		refreshData();
 	}, [instance, refreshData])
 
-	return <div className='col bg-dark py-4 text-white border border-white rounded' style={{position: 'relative'}}>
+	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5>Factory</h5>
 		<small>({instance.address})</small><br />
 		
@@ -43,7 +43,7 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
-			className='btn btn-dark'>
+			className='btn'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 		<br />

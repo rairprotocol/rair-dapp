@@ -57,7 +57,7 @@ const CreatorMode = ({account, addresses, programmaticProvider}) => {
 				account={account}
 				setDeployedTokens={setDeployedTokens}
 			/>}
-			<div className='col-12 bg-dark py-4 text-white border border-white rounded'>
+			<div className='col-12 py-4 border border-white rounded'>
 			{deployedTokens !== undefined && <>
 				<h3> Your Deployed ERC721 Contracts </h3> 
 				{deployedTokens.map((item, index) => {

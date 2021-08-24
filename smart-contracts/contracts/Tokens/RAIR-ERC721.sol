@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.6;
+pragma solidity ^0.8.7;
 
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
@@ -230,18 +230,12 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 
 	/// @notice Returns the fee for the NFT sale
 	/// @param _tokenId - the NFT asset queried for royalty information
-	/// @param _value - the sale price of the NFT asset specified by _tokenId
-	/// @param _data - information used by extensions of this ERC.
-	///                Must not to be used by implementers of EIP-2981 
-	///                alone.
-	/// @return _receiver - address of who should be sent the royalty payment
-	/// @return _royaltyAmount - the royalty payment amount for _value sale price
-	/// @return _royaltyPaymentData - information used by extensions of this ERC.
-	///                               Must not to be used by implementers of
-	///                               EIP-2981 alone.
-	function royaltyInfo(uint256 _tokenId, uint256 _value, bytes calldata _data)
-		external view override(IRAIR_ERC721, IERC2981) returns (address _receiver, uint256 _royaltyAmount, bytes memory _royaltyPaymentData) {
-		return (getRoleMember(CREATOR, 0), (_value * _royaltyFee) / 100000, abi.encodePacked(_tokenId));
+	/// @param _salePrice - the sale price of the NFT asset specified by _tokenId
+	/// @return receiver - address of who should be sent the royalty payment
+	/// @return royaltyAmount - the royalty payment amount for _salePrice sale price
+	function royaltyInfo(uint256 _tokenId, uint256 _salePrice)
+		external view override(IRAIR_ERC721, IERC2981) returns (address receiver, uint256 royaltyAmount) {
+		return (getRoleMember(CREATOR, 0), (_salePrice * _royaltyFee) / 100000);
 	}
 
 	function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165, ERC165, AccessControlEnumerable, ERC721Enumerable, IERC2981) returns (bool) {
@@ -263,7 +257,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @param	_to			Token's new owner
 	/// @param	_tokenId	Token's ID
 	function _beforeTokenTransfer(address _from, address _to, uint256 _tokenId) internal virtual override(ERC721Enumerable) {
-
 		if (_from != address(0) && _to != address(0)) {
 			if (_lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId]) {
 				require(_lockedRange[tokenToLock[_tokenId]].lockCountdown == 0, "RAIR ERC721: Transfers for this range are currently locked");
