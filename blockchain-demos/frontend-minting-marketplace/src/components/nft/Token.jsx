@@ -1,6 +1,6 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import Swal from 'sweetalert2'
 
@@ -14,7 +14,7 @@ const MyNFTs = props => {
 
 	const aux = useSelector(state => state.accessStore);
 
-	const [metadata, setMetadata] = useState({name: 'Loading...'});
+	const [metadata, setMetadata] = useState({ name: 'Loading...' });
 	const [owner, setOwner] = useState('');
 
 	const getData = async () => {
@@ -40,11 +40,11 @@ const MyNFTs = props => {
 		</div>
 		<div className='col-6'>
 			<hr />
-			<small> {params.contract}:{params.identifier} </small><br/>
-			<h1 className='w-100' style={{textShadow: '5px 0 20px white, -5px 0 20px white', color: 'black'}}> {metadata.name} </h1>
-			<small> Owned by: {owner} </small><br/>
+			<small> {params.contract}:{params.identifier} </small><br />
+			<h1 className='w-100' style={{ textShadow: '5px 0 20px white, -5px 0 20px white', color: 'black' }}> {metadata.name} </h1>
+			<small> Owned by: {owner} </small><br />
 			<hr className='mb-5' />
-			<small> {metadata.description} </small><br/>
+			<small> {metadata.description} </small><br />
 			<h5 className='w-100 mt-5'>
 				Attributes
 			</h5>
@@ -58,18 +58,31 @@ const MyNFTs = props => {
 							value: metadata.attributes[item]
 						}
 					}
-					return <div key={index} className='col-4 my-2'> 
+					return <div key={index} className='col-4 my-2'>
 						<div style={{
-								backgroundColor: '#77FA',
-								borderRadius: '10px',
-								border: 'solid blue 1px',
-								height: '5vh'
-							}}
+							backgroundColor: '#77FA',
+							borderRadius: '10px',
+							border: 'solid blue 1px',
+							height: '5vh'
+						}}
 							className='w-100 h-100 py-auto'>
 							{itm.trait_type}: <b>{itm.value}</b>
 						</div>
 					</div>
 				})}
+				<div className='col-12'>
+					<button
+						style={{
+							backgroundColor: '#77FA',
+							borderRadius: '10px',
+							border: 'solid blue 1px',
+							color: '#fff',
+							width: '100%',
+							marginTop: '20px'
+						}}
+						id='button_buy_token'
+					>Buy</button>
+				</div>
 			</div>
 		</div>
 	</div>
