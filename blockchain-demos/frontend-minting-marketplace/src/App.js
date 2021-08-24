@@ -20,6 +20,8 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairToken from './components/nft/RairToken.jsx';
 
+import MetamaskLogo from './images/metamask-fox.svg';
+
 const contractAddresses = {
 	'0x61': { // Binance Testnet
 		factory: '0x02638eD2D3362CDAe26c4DD33B28CbE3dc8719Aa',
@@ -232,7 +234,9 @@ function App() {
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img src={headerLogo} className='h-100'/>
 						</div>
-						{[
+						{(!userData && account) ? <button className='btn btn-light' onClick={connectUserData}>
+							Connect <img src={MetamaskLogo} />
+						</button> : [
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: 'My NFTs', route: '/my-nft'},
@@ -242,19 +246,22 @@ function App() {
 							{name: 'Latest', route: '/latest'},
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
-							{name: 'Factory', route: '/factory'},
-							{name: 'Minter Marketplace', route: '/minter'}
+							{name: 'Factory', route: '/factory', disabled: contractAddresses[chainId] === undefined},
+							{name: 'Minter Marketplace', route: '/minter', disabled: contractAddresses[chainId] === undefined}
 						].map((item, index) => {
-							return <div key={index} className='col-12 py-3 rounded bg-white'>
-								<Link to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
-									{item.name}
-								</Link>
-							</div>
+							if (!item.disabled) {
+								return <div key={index} className='col-12 py-3 rounded bg-white'>
+									<Link to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
+										{item.name}
+									</Link>
+								</div>
+							}
+							return <></>
 						})}
 					</div>
 					<div className='col-11'>
 						<div className='col-12' style={{height: '10vh'}}>
-							Connected with {account}!<br />
+							{account && `Connected with ${account}!`}<br />
 							<Switch>
 								<Route exact path='/admin'>
 									{!window.ethereum && <div className='row py-5 w-100 px-0 mx-0'>
@@ -302,7 +309,6 @@ function App() {
 											{item.chainData.chainName}
 										</button>
 									})}
-									{account && <button className='btn btn-primary' onClick={connectUserData}> Connect with Metamask! </button>}
 								</Route>
 							</Switch>
 						</div>
