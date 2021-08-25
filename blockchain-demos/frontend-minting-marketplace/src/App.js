@@ -169,6 +169,7 @@ function App() {
 		window.ethereum && window.ethereum.request({ method: 'eth_requestAccounts' })
 			.then(accounts => {
 				setAccount(accounts[0]);
+				connectUserData();
 			});
 	}, [account])
 
@@ -256,7 +257,7 @@ function App() {
 									</Link>
 								</div>
 							}
-							return <></>
+							return <div key={index}></div>
 						})}
 					</div>
 					<div className='col-11'>
@@ -314,12 +315,12 @@ function App() {
 						</div>
 						<div className='col-12 mt-3 row'>
 							<Switch>
-								<Route exact path='/factory'>
+								{addresses && <Route exact path='/factory'>
 									<CreatorMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>
-								</Route>
-								<Route exact path='/minter'>
+								</Route>}
+								{addresses && <Route exact path='/minter'>
 									<ConsumerMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>
-								</Route>
+								</Route>}
 								<Route path='/my-nft'>
 									<MyNFTs />
 								</Route>

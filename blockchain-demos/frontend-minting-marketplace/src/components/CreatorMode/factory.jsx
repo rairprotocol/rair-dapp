@@ -22,7 +22,9 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 	}, [account, instance, erc777Instance.address, setDeployedTokens])
 
 	useEffect(() => {
-		refreshData();
+		if (account) {
+			refreshData();
+		}
 	}, [instance, refreshData])
 
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
