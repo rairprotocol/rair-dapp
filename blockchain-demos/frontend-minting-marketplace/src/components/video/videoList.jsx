@@ -11,12 +11,16 @@ const VideoList = props => {
 		})).json()
 		if (response.success) {
 			setMediaList(response.list)
+		} else if (response?.message === 'jwt expired') {
+			localStorage.setItem('token', undefined);
 		}
 	}
 
 	useEffect(() => {
-		updateList();
-	})
+		if (localStorage.token) {
+			updateList();
+		}
+	}, [])
 
 	return <>
 		{Object.keys(mediaList).map((item, index) => {
