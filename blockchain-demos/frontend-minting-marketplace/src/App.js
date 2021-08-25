@@ -8,7 +8,7 @@ import * as ethers from 'ethers'
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
-// Import the data from the contract artifacts
+import CSVParser from './components/metadata/csvParser.jsx';
 
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
@@ -332,6 +332,7 @@ function App() {
 									<VideoPlayer />
 								</Route>
 								{adminAccess && <Route path='/admin' component={FileUpload} />}
+								<Route path='/ending' component={CSVParser} />
 							</Switch>
 						</div>
 					</div>

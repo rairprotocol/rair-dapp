@@ -11,7 +11,7 @@ const InputField = ({getter, setter, name, label, type}) => {
     return <>
       {label && <label
         htmlFor={id}
-        className='col-12 d-inline-block col-md-6 my-2'>
+        className='col-12 d-inline-block col-md-4 my-2'>
           {label}:
         </label>}
       <input
@@ -19,7 +19,7 @@ const InputField = ({getter, setter, name, label, type}) => {
         value={getter}
         type={type ? type : 'text'}
         onChange={(e) => setter(e.target.value)}
-        className='col-12 d-inline-block col-md-6 py-2'/>
+        className='col-12 d-inline-block col-md-8 py-2'/>
     </>
   } 
 
