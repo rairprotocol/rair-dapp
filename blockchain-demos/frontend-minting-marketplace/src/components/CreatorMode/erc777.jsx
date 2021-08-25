@@ -21,7 +21,9 @@ const ERC777Manager = ({instance, account}) => {
 	}, [instance, account]);
 
 	useEffect(() => {
-		refreshData();
+		if (account) {
+			refreshData();
+		}
 	}, [refreshData])
 
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
