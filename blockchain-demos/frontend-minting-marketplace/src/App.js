@@ -8,13 +8,14 @@ import * as ethers from 'ethers'
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
-// Import the data from the contract artifacts
+import CSVParser from './components/metadata/csvParser.jsx';
 
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
 
 import VideoList from './components/video/videoList.jsx';
 import VideoPlayer from './components/video/videoPlayer.jsx';
+import FileUpload from './components/video/videoUpload.jsx';
 
 import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
@@ -104,7 +105,7 @@ function App() {
 	const [programmaticProvider, setProgrammaticProvider] = useState();
 	const [refreshFlag, setRefreshFlag] = useState(false);
 	const [userData, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(false);
+	const [adminAccess, setAdminAccess] = useState(undefined);
 
 	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
 
@@ -122,7 +123,6 @@ function App() {
 						'Content-Type': 'application/json'
 					}
 				})
-				console.log(userCreation);
 			} else {
 				setUserData(user);
 			}
@@ -332,6 +332,8 @@ function App() {
 								<Route path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
 								</Route>
+								{adminAccess && <Route path='/admin' component={FileUpload} />}
+								<Route path='/ending' component={CSVParser} />
 							</Switch>
 						</div>
 					</div>
