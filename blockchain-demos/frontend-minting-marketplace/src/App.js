@@ -19,7 +19,7 @@ import FileUpload from './components/video/videoUpload.jsx';
 
 import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
-import RairToken from './components/nft/RairToken.jsx';
+import RairProduct from './components/nft/rairCollection.jsx';
 
 import MetamaskLogo from './images/metamask-fox.svg';
 
@@ -231,6 +231,7 @@ function App() {
 		<BrowserRouter>
 			<div style={{minHeight: '100vh', backgroundColor: '#EEE'}} className="App p-0 text-black container-fluid">
 				<div className='row w-100 m-0 p-0'>
+					<div className='col-1 d-none d-xl-inline-block' />
 					<div className='col-1 rounded'>
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img src={headerLogo} className='h-100'/>
@@ -260,7 +261,7 @@ function App() {
 							return <div key={index}></div>
 						})}
 					</div>
-					<div className='col-11'>
+					<div className='col'>
 						<div className='col-12' style={{height: '10vh'}}>
 							{account && `Connected with ${account}!`}<br />
 							<Switch>
@@ -325,7 +326,7 @@ function App() {
 									<MyNFTs />
 								</Route>
 								<Route path='/token/:contract/:identifier' component={Token} />
-								<Route path='/rair/:contract/:product' component={RairToken} />
+								<Route path='/rair/:contract/:product' component={RairProduct} />
 								<Route path='/all'>
 									<VideoList />
 								</Route>
@@ -337,6 +338,7 @@ function App() {
 							</Switch>
 						</div>
 					</div>
+					<div className='col-1 d-none d-xl-inline-block' />
 				</div>
 			</div>
 		</BrowserRouter>

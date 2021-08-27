@@ -1,5 +1,6 @@
 import {useState, useEffect, useCallback} from 'react'
 import Swal from 'sweetalert2';
+import { Link } from "react-router-dom";
 
 const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIndex}) => {
 	const [next, setNext] = useState();
@@ -128,9 +129,11 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 			<h5 className='d-inline-block'>
 				{collectionName}
 			</h5>
-			<div style={{position: 'absolute', top: 0, left: '5vh'}}>
+			<Link
+				to={`/rair/${offerInfo.contractAddress}/${offerInfo.productIndex}`}
+				style={{position: 'absolute', top: 0, left: '5vh'}}>
 				@{contractName}
-			</div>
+			</Link>
 		</summary>
 		<button onClick={refreshData} disabled={refetchingFlag} style={{position: 'absolute', left: 0, top: 0}} className='px-2 btn'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
