@@ -16,17 +16,23 @@ const MyNFTs = props => {
 
 	const [metadata, setMetadata] = useState({ name: 'Loading...' });
 	const [owner, setOwner] = useState('');
+	const [name, setName] = useState('');
 
 	const getData = async () => {
 		try {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			let signer = provider.getSigner(0);
 			let instance = new ethers.Contract(params.contract, erc721Abi, signer);
+			setName(await instance.name());
 			setOwner(await instance.ownerOf(params.identifier));
 			let meta = await (await fetch(await instance.tokenURI(params.identifier))).json();
 			setMetadata(meta);
 		} catch (err) {
 			Swal.fire('Error', "We couldn't fetch the token's Metadata", 'error');
+			setMetadata({
+				name: 'No title found',
+				description: 'No description found'
+			})
 		}
 	}
 
@@ -36,54 +42,60 @@ const MyNFTs = props => {
 
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-6'>
-			<img className='w-100 h-auto' src={metadata.image} />
+			{metadata?.image ? 
+				<img className='w-100 h-auto' src={metadata.image} />
+			:
+				<div className='w-100 bg-secondary' style={{
+					position: 'relative',
+					borderRadius: '10px',
+					height: '80vh'
+				}}>
+					<i
+						className='fas fa-image h1'
+						style={{position: 'absolute', top: '50%'}} />
+				</div>
+			}
 		</div>
 		<div className='col-6'>
 			<hr />
-			<small> {params.contract}:{params.identifier} </small><br />
+			<small> {params.contract}:{params.identifier} ({name}) </small><br />
 			<h1 className='w-100' style={{ textShadow: '5px 0 20px white, -5px 0 20px white', color: 'black' }}> {metadata.name} </h1>
 			<small> Owned by: {owner} </small><br />
 			<hr className='mb-5' />
 			<small> {metadata.description} </small><br />
-			<h5 className='w-100 mt-5'>
-				Attributes
-			</h5>
-			<div className='col-12 row px-0 mx-0'>
-				{metadata.attributes && Object.keys(metadata.attributes).map((item, index) => {
-					let itm = metadata.attributes[item];
-					console.log(Object.keys(metadata.attributes[item]))
-					if (Object.keys(metadata.attributes[item]).length === 1) {
-						itm = {
-							trait_type: item,
-							value: metadata.attributes[item]
+			{metadata.attributes && <>
+				<h5 className='w-100 mt-5'>
+					Attributes
+				</h5>
+				<div className='col-12 row px-0 mx-0'>
+					{Object.keys(metadata.attributes).map((item, index) => {
+						let itm = metadata.attributes[item];
+						console.log(Object.keys(metadata.attributes[item]))
+						if (Object.keys(metadata.attributes[item]).length === 1) {
+							itm = {
+								trait_type: item,
+								value: metadata.attributes[item]
+							}
 						}
-					}
-					return <div key={index} className='col-4 my-2'>
-						<div style={{
-							backgroundColor: '#77FA',
-							borderRadius: '10px',
-							border: 'solid blue 1px',
-							height: '5vh'
-						}}
-							className='w-100 h-100 py-auto'>
-							{itm.trait_type}: <b>{itm.value}</b>
+						return <div key={index} className='col-4 my-2'>
+							<div style={{
+								backgroundColor: '#77FA',
+								borderRadius: '10px',
+								border: 'solid blue 1px',
+								height: '5vh'
+							}}
+								className='w-100 h-100 py-auto'>
+								{itm.trait_type}: <b>{itm.value}</b>
+							</div>
 						</div>
-					</div>
-				})}
-				<div className='col-12'>
-					<button
-						style={{
-							backgroundColor: '#77FA',
-							borderRadius: '10px',
-							border: 'solid blue 1px',
-							color: '#fff',
-							width: '100%',
-							marginTop: '20px'
-						}}
-						id='button_buy_token'
-					>Buy</button>
+					})}
 				</div>
-			</div>
+			</>}
+			{metadata.image && <div className='col-12'>
+				<button className='btn btn-primary' id='button_buy_token'>
+					Buy
+				</button>
+			</div>}
 		</div>
 	</div>
 }
