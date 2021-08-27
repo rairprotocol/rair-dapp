@@ -36,7 +36,7 @@ const VideoPlayer = () => {
 			setMediaAddress();
 		};
 	}, [])
-	return <div className="w-100 row mx-0 bg-secondary h1" style={ { minHeight: '50vh' } }>
+	return <div className="col-12 row mx-0 bg-secondary h1" style={ { minHeight: '50vh' } }>
 		<video id={ 'vjs-' + videoName }
 					 className="video-js vjs-16-9"
 					 controls
