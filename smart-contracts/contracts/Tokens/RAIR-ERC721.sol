@@ -30,7 +30,10 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		uint[] locks;
 	}
 
+	mapping(uint => uint[]) public tokensByProduct;
+	mapping(uint => uint) public tokenToCollection;
 	mapping(uint => uint) private tokenToLock;
+	
 	lockedRange[] private _lockedRange;
 	collection[] private _collections;
 
@@ -38,7 +41,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	bytes32 public constant MINTER = keccak256("MINTER");
 	bytes32 public constant TRADER = keccak256("TRADER");
 
-	mapping(uint => uint) public tokenToCollection;
 
 	address private _factory;
 	uint16 private _royaltyFee;
@@ -64,6 +66,10 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	modifier collectionExists(uint collectionID) {
 		require(_collections.length > collectionID, "RAIR ERC721: Collection does not exist");
 		_;
+	}
+
+	function tokenCountByProduct(uint product) public view returns (uint ) {
+		return tokensByProduct[product].length;
 	}
 
 	function canCreateLock(uint productIndex, uint startingToken, uint endingToken) public view returns (bool canCreate) {
@@ -196,16 +202,18 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @dev	Has to be used alongside getNextSequentialIndex to simulate a sequential minting
 	/// @dev	Anyone that wants a specific token just has to call this
 	/// @param	to					Address of the new token's owner
-	/// @param	collectionID		Collection to mint from
+	/// @param	productId			Product to mint from
 	/// @param	indexInCollection	Internal index of the token
-	function mint(address to, uint collectionID, uint indexInCollection) external override(IRAIR_ERC721) onlyRole(MINTER) collectionExists(collectionID) {
-		collection storage currentCollection = _collections[collectionID];
+	function mint(address to, uint productId, uint indexInCollection) external override(IRAIR_ERC721) onlyRole(MINTER) collectionExists(productId) {
+		collection storage currentCollection = _collections[productId];
 		
 		require(indexInCollection <= currentCollection.endingToken - currentCollection.startingToken, "RAIR ERC721: Invalid token index");
 
 		_safeMint(to, currentCollection.startingToken + indexInCollection);
 
-		tokenToCollection[currentCollection.startingToken + indexInCollection] = collectionID;
+		tokensByProduct[productId].push(currentCollection.startingToken + indexInCollection);
+
+		tokenToCollection[currentCollection.startingToken + indexInCollection] = productId;
 		currentCollection.mintableTokens--;
 
 		lockedRange storage lock;
@@ -217,14 +225,14 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 				if (lock.lockCountdown > 0) {
 					lock.lockCountdown--;
 					if (lock.lockCountdown == 0) {
-						emit RangeUnlocked(collectionID, lock.startingToken, lock.endingToken);
+						emit RangeUnlocked(productId, lock.startingToken, lock.endingToken);
 					}
 				}
 				break;
 			}
 		}
 		if (currentCollection.mintableTokens == 0) {
-			emit CollectionCompleted(collectionID, currentCollection.name);
+			emit CollectionCompleted(productId, currentCollection.name);
 		}
 	}
 

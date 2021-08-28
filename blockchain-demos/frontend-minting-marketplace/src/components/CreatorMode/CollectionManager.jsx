@@ -43,8 +43,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 	const [rangeName, setRangeName] = useState(array[index].name);
 	const [rangePrice, setRangePrice] = useState(array[index].price);
 	const syncOutside = useCallback(sync, [sync]);
-	const rangeInit = array[index].endingToken;
-	const rangeEnd = (Number(array[index - 1]?.endingToken) + 1);
+	const rangeInit = ((index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [locked, setLocked] = useState(0);
 
 	useEffect(() => {
@@ -110,8 +109,8 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 		</th>
 		<th>
 			<button
-				disabled={locked <= 0 || locked > rangeEnd || !rangeEnd}
-				onClick={e => locker(collectionIndex, rangeInit, rangeEnd, locked)}
+				disabled={locked <= 0}
+				onClick={e => locker(collectionIndex, rangeInit, endingRange, locked)}
 				className='btn btn-success h-50'>
 				<i className='fas fa-lock' />
 			</button>

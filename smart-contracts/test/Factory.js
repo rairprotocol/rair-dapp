@@ -325,7 +325,7 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.getNextSequentialIndex(2, 0, collection3Limit)).to.equal(next.add(1));
 			});
 
-			it ("Locks - Should give information about locked tokens", async function() {
+			it ("Should give information about locked tokens", async function() {
 				await expect(await rair721Instance.isTokenLocked(0)).to.equal(false);
 				await expect(await rair721Instance.isTokenLocked(1)).to.equal(false);
 				await expect(await rair721Instance.isTokenLocked(2)).to.equal(true);
@@ -413,6 +413,19 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.tokenToCollectionIndex(1)).to.equal(1);
 				expect(await rair721Instance.tokenToCollectionIndex(2)).to.equal(0);
 				expect(await rair721Instance.tokenToCollectionIndex(12)).to.equal(0);
+			});
+
+			it ("Should get product tokens' length", async function() {
+				expect(await rair721Instance.tokenCountByProduct(0)).to.equal(2);
+				expect(await rair721Instance.tokenCountByProduct(1)).to.equal(1);
+				expect(await rair721Instance.tokenCountByProduct(2)).to.equal(1);
+			});
+
+			it ("Should get product tokens", async function() {
+				expect(await rair721Instance.tokensByProduct(0, 0)).to.equal(0);
+				expect(await rair721Instance.tokensByProduct(0, 1)).to.equal(1);
+				expect(await rair721Instance.tokensByProduct(1, 0)).to.equal(2);
+				expect(await rair721Instance.tokensByProduct(2, 0)).to.equal(12);
 			});
 		});
 
