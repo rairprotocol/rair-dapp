@@ -121,7 +121,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInstance, tokenAddress }) => {
 
 	const [ranges, setRanges] = useState([]);
-	const [locks, setLocks] = useState([]);
+	const [/*locks*/, setLocks] = useState([]);
 	const [forceSync, setForceSync] = useState(false);
 
 	const deleter = index => {
@@ -130,11 +130,11 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 		setRanges(aux);
 	}
 
-	const lockDeleter = index => {
+	/*const lockDeleter = index => {
 		let aux = [...locks];
 		aux.splice(index, 1);
 		setLocks(aux);
-	}
+	}*/
 
 	const locker = async (collectionIndex, startingToken, endingToken, lockedTokens) => {
 		try {

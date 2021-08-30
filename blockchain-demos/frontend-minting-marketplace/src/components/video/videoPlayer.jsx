@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {useParams} from "react-router-dom";
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
@@ -9,7 +9,7 @@ const VideoPlayer = () => {
 	const [videoName,] = useState(Math.round(Math.random() * 10000));
 	const [mediaAddress, setMediaAddress] = useState(Math.round(Math.random() * 10000));
 	
-	const requestChallenge = async () => {
+	const requestChallenge = useCallback(async () => {
 		let [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
 		let response = await (await fetch('/api/auth/get_challenge/' + account)).json()
 		let parsedResponse = JSON.parse(response.response);
@@ -28,14 +28,14 @@ const VideoPlayer = () => {
 			console.error(streamAddress);
 			Swal.fire('Error');
 		}
-	}
+	}, [params.mainManifest, params.videoId, videoName])
 
 	useEffect(() => {
 		requestChallenge();
 		return () => {
 			setMediaAddress();
 		};
-	}, [])
+	}, [requestChallenge])
 	return <div className="col-12 row mx-0 bg-secondary h1" style={ { minHeight: '50vh' } }>
 		<video id={ 'vjs-' + videoName }
 					 className="video-js vjs-16-9"

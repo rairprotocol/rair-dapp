@@ -25,7 +25,7 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 		if (account) {
 			refreshData();
 		}
-	}, [instance, refreshData])
+	}, [instance, refreshData, account])
 
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5>Factory</h5>

@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import {BrowserRouter, Switch, Route, Link} from 'react-router-dom';
 
 import headerLogo from './images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
@@ -88,18 +88,9 @@ const blockchains = [
 	{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
 ]
 
-const styles = [{
-	backgroundColor: '#333',
-	textColor: '#FFF'
-},{
-	backgroundColor: '#FFF',
-	textColor: '#333'
-}]
-
 function App() {
 
 	const [account, setAccount] = useState();
-	const [mode, setMode] = useState();
 	const [chainId, setChainId] = useState();
 	const [addresses, setAddresses] = useState();
 	const [programmaticProvider, setProgrammaticProvider] = useState();
@@ -109,12 +100,12 @@ function App() {
 
 	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
 
-	const connectUserData = async () => {
+	const connectUserData = useCallback(async () => {
 		try {
 			// Verifica si el usuario existe
 			// Make sure the user exists
 			const {success, user} = await (await fetch(`/api/users/${account}`)).json();
-			if (!user) {
+			if (!success || !user) {
 				const userCreation = await fetch('/api/users', {
 					method: 'POST',
 					body: JSON.stringify({ publicAddress: account, adminNFT: 'temp' }),
@@ -123,6 +114,8 @@ function App() {
 						'Content-Type': 'application/json'
 					}
 				})
+				console.log('User Created', userCreation);
+				setUserData(userCreation);
 			} else {
 				setUserData(user);
 			}
@@ -163,7 +156,7 @@ function App() {
 		} catch (err) {
 			console.log('Error', err)
 		}
-	}
+	}, [account, adminAccess]);
 
 	useEffect(() => {
 		window.ethereum && window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -171,7 +164,7 @@ function App() {
 				setAccount(accounts[0]);
 				connectUserData();
 			});
-	}, [account])
+	}, [account, connectUserData])
 
 	const connectProgrammatically = async ({rpcUrls, chainId, chainName, nativeCurrency}) => {
 		try {
@@ -234,10 +227,10 @@ function App() {
 					<div className='col-1 d-none d-xl-inline-block' />
 					<div className='col-1 rounded'>
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
-							<img src={headerLogo} className='h-100'/>
+							<img alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
 						{(!userData && account) ? <button className='btn btn-light' onClick={connectUserData}>
-							Connect <img src={MetamaskLogo} />
+							Connect <img alt='Metamask Logo' src={MetamaskLogo} />
 						</button> : [
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect, useCallback } from 'react';
+//import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from "react-router-dom";
 
 import Swal from 'sweetalert2'
@@ -16,7 +16,7 @@ const MyNFTs = props => {
 	const [productData, setProductData] = useState('');
 	const [tokenData, setTokenData] = useState([]);
 
-	const getData = async () => {
+	const getData = useCallback(async () => {
 		try {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			let signer = provider.getSigner(0);
@@ -52,11 +52,11 @@ const MyNFTs = props => {
 			console.log(err);
 			Swal.fire('Error', "error", 'error');
 		}
-	}
+	}, [params.contract, params.product])
 
 	useEffect(() => {
 		getData();
-	}, []);
+	}, [getData]);
 
 	return <div className='col-12'>
 		<br/>
@@ -92,7 +92,7 @@ const MyNFTs = props => {
 					style={{height: '20vh', border: 'none', color: 'inherit', textDecoration: 'none'}}>
 					<div className='w-100 h-100 bg-white' style={{borderRadius: '10px', position: 'relative'}}>
 						{metadata?.image ? 
-							<img className='w-100 h-auto' src={metadata.image} />
+							<img alt='NFT' className='w-100 h-auto' src={metadata.image} />
 						:
 							<div className='w-100 h-100 bg-secondary' style={{
 								position: 'relative',

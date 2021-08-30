@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import InputField from '../common/InputField.jsx'
-import InputSelect from '../common/InputSelect.jsx'
+//import InputSelect from '../common/InputSelect.jsx'
 
 const Row = ({data}) => {
 	return <details className='row w-100 px-0 mx-0' style={{position: 'relative'}}>
@@ -29,7 +29,7 @@ const CSVParser = () => {
 			const text = e.target.result.split('\r\n');
 			let final = [];
 			let headers = text.splice(0, 1)[0].split(',');
-			text.map((textItem, textIndex) => {
+			text.forEach((textItem, textIndex) => {
 				let insert = {};
 				headers.forEach((headerItem, headerIndex) => {
 					insert[headerItem] = textItem.split(',')[headerIndex]
