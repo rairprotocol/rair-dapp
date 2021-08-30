@@ -1,0 +1,79 @@
+<html>
+<body>
+  <input type="file" name="fileupload" value="fileupload" id="fileupload">
+  <input type="checkbox" id="encrypt" name="encrypt">
+  <label for="encrypt">Encrypt?</label>
+  <input type="button" value="submit" onclick="submit()">
+  <script src="./jszip.min.js"></script>
+  <script>
+
+    const bundleAsZip = async function (hlsData) {
+      const zip = new JSZip()
+      for (const file of hlsData) {
+        zip.file(file.name, file.data)
+      }
+      return zip.generateAsync({type:"blob"})
+    }
+
+    const addDownloadLink = function(data, filename, prompt) {
+      const contentType = 'application/octet-stream';
+      var blob = new Blob([data], {type: contentType}),
+      a = document.createElement('a')
+      a.download = filename
+      a.href = window.URL.createObjectURL(blob)
+      a.innerHTML = prompt
+      a.dataset.downloadurl =  [contentType, a.download, a.href].join(':')
+      document.body.appendChild(a);
+    }
+
+    async function submit() {
+      const file = document.getElementById('fileupload').files[0];
+      const encrypt = document.getElementById('encrypt').checked;
+
+      const fileData = await file.arrayBuffer()
+
+      // generate an AES key
+      let aesKey = null
+      let exportKey = null
+      if (encrypt) {
+        console.log('Generating AES Key')
+        aesKey = await window.crypto.subtle.generateKey(
+          {
+            name: "AES-CBC",
+            length: 128
+          },
+          true,
+          ["encrypt"]
+        );
+        exportKey = await crypto.subtle.exportKey('raw', aesKey);
+      }
+
+      // create the web worker and when it is ready send it the file to encode
+      const worker = new Worker('ingest-worker.js')
+      worker.onmessage = function(e) {
+        const msg = e.data;
+        switch (msg.type) {
+        case "ready":
+          worker.postMessage({type: "run", data: { file: fileData, format: 'mp4', aesKey }});
+          break;
+        case "stdout":
+          console.log(msg.data);
+          break;
+        case "stderr":
+          console.log(msg.data);
+          break;
+        case "done":
+          console.log("Encoding complete!")
+          bundleAsZip(msg.data).then(zipBlob => {
+            addDownloadLink(zipBlob, 'encoded.zip', 'click to download encoded video   ')
+            if (exportKey) addDownloadLink(exportKey, 'encryption-key.key', 'click to download key')
+          })
+          break;
+        }
+      };
+
+
+    }
+  </script>
+</body>
+</html>

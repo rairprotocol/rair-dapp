@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  rairnode:
+    container_name: 'rairnode'
+    build:
+      context: demo-decrypt-node/
+      dockerfile: Dockerfile
+    volumes:
+      - ./demo-decrypt-node/db:/usr/local/src/db
+      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+    ports:
+      - 3000:3000
+      - 5000:5000
+    networks:
+      - rair-local
+#  rairipfs:
+#    container_name: 'rairipfs'
+#    image:
+#      ipfs/go-ipfs:latest
+#    volumes:
+#      - ./demo-decrypt-node/ipfsData:/data/ipfs
+#    ports:
+#      - 4001:4001
+#      - 127.0.0.1:8081:8080
+#      - 127.0.0.1:5003:5001
+#    networks:
+#      - rair-local
+  rairfront:
+    container_name: 'rairfront'
+    build:
+      context: rair-front-master/
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    networks:
+      - rair-local
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./demo-decrypt-node/dev/db-data:/data/db
+      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: rair-db
+    ports:
+      - 27017:27017
+    networks:
+      - rair-local
+networks:
+  rair-local:
+    driver: bridge

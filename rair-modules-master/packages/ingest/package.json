@@ -1,0 +1,26 @@
+{
+  "name": "@rair/ingest",
+  "version": "0.2.1",
+  "description": "Shared module for conversion, encryption and manifest creation",
+  "author": "Willem Olding <willemolding@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/ingest.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\""
+  },
+  "dependencies": {
+    "jszip": "^3.5.0"
+  },
+  "gitHead": "16cc8c9499b35ff24cbda85a451feed565cb8ae0",
+  "publishConfig": {
+    "access": "public"
+  }
+}

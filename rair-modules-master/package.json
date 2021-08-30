@@ -1,0 +1,15 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "build:demo": "lerna run build && cp ./packages/ingest-worker/build/ingest-worker.js ./demo/"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  },
+  "dependencies": {
+    "latest": "^0.2.0"
+  }
+}

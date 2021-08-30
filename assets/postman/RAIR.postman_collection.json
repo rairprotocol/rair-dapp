@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "01879f45-5085-405b-853e-ef5849dc214e",
+		"name": "RAIR",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"adminNFT\": \"0x679f47DB5D0E5Ff72D3216a54ed1FBe03464A572:1\",\n    \"publicAddress\": \"0x679f47DB5D0E5Ff72D3216a54ed1FBe03464A571\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"adminNFT\": \"0x679f47DB5D0E5Ff72D3216a54ed1FBe03464A572:2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/users/0x679f47DB5D0E5Ff72D3216a54ed1FBe03464A571",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								"0x679f47DB5D0E5Ff72D3216a54ed1FBe03464A571"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,1 @@
+web: nodemon bin/index.js --watch bin --ignore './bin/Videos/'
