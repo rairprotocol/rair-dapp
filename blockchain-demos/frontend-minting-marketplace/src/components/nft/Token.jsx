@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import * as ethers from 'ethers'
 
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
+import VideoList from '../video/videoList';
 const erc721Abi = ERC721Token.default.abi;
 
 const MyNFTs = props => {
@@ -42,9 +43,9 @@ const MyNFTs = props => {
 
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-6'>
-			{metadata?.image ? 
+			{metadata?.image ?
 				<img className='w-100 h-auto' src={metadata.image} />
-			:
+				:
 				<div className='w-100 bg-secondary' style={{
 					position: 'relative',
 					borderRadius: '10px',
@@ -52,7 +53,7 @@ const MyNFTs = props => {
 				}}>
 					<i
 						className='fas fa-image h1'
-						style={{position: 'absolute', top: '50%'}} />
+						style={{ position: 'absolute', top: '50%' }} />
 				</div>
 			}
 		</div>
@@ -96,6 +97,11 @@ const MyNFTs = props => {
 					Buy
 				</button>
 			</div>}
+
+		</div>
+		<div>
+			<h1>list videos</h1>
+			<VideoList />
 		</div>
 	</div>
 }
