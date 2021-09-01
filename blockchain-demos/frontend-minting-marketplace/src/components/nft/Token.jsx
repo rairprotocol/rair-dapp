@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect, useCallback } from 'react';
+//import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 
 import Swal from 'sweetalert2'
@@ -12,13 +12,13 @@ const erc721Abi = ERC721Token.default.abi;
 const MyNFTs = props => {
 	const params = useParams();
 
-	const aux = useSelector(state => state.accessStore);
+	//const aux = useSelector(state => state.accessStore);
 
 	const [metadata, setMetadata] = useState({ name: 'Loading...' });
 	const [owner, setOwner] = useState('');
 	const [name, setName] = useState('');
 
-	const getData = async () => {
+	const getData = useCallback(async () => {
 		try {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			let signer = provider.getSigner(0);
@@ -34,16 +34,16 @@ const MyNFTs = props => {
 				description: 'No description found'
 			})
 		}
-	}
+	}, [params.contract, params.identifier])
 
 	useEffect(() => {
 		getData();
-	}, []);
+	}, [getData]);
 
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-6'>
 			{metadata?.image ? 
-				<img className='w-100 h-auto' src={metadata.image} />
+				<img alt='NFT' className='w-100 h-auto' src={metadata.image} />
 			:
 				<div className='w-100 bg-secondary' style={{
 					position: 'relative',

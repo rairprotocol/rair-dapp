@@ -24,7 +24,7 @@ const ERC777Manager = ({instance, account}) => {
 		if (account) {
 			refreshData();
 		}
-	}, [refreshData])
+	}, [refreshData, account])
 
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5> ERC777 </h5>
