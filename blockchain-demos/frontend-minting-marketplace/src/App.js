@@ -152,8 +152,7 @@ function App() {
         });
         const adminResponse = await (
           await fetch(
-            `/api/auth/admin/${
-              JSON.parse(response).message.challenge
+            `/api/auth/admin/${JSON.parse(response).message.challenge
             }/${ethResponse}/`
           )
         ).json();
@@ -269,35 +268,6 @@ function App() {
       >
         <div className="row w-100 m-0 p-0">
           <div className="col-1 d-none d-xl-inline-block" />
-          {/* <div className='col-1 rounded'>
-						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
-							<img src={headerLogo} className='h-100'/>
-						</div>
-						{(!userData && account) ? <button className='btn btn-light' onClick={connectUserData}>
-							Connect <img src={MetamaskLogo} />
-						</button> : [
-							{name: <i className='fas fa-search' />, route: '/search'},
-							{name: <i className='fas fa-user' />, route: '/user'},
-							{name: 'My NFTs', route: '/my-nft'},
-							{name: 'For Sale', route: '/on-sale'},
-							{name: 'Admin', route: '/admin'},
-							{name: 'All', route: '/all'},
-							{name: 'Latest', route: '/latest'},
-							{name: 'Hot', route: '/hot'},
-							{name: 'Ending', route: '/ending'},
-							{name: 'Factory', route: '/factory', disabled: contractAddresses[chainId] === undefined},
-							{name: 'Minter Marketplace', route: '/minter', disabled: contractAddresses[chainId] === undefined}
-						].map((item, index) => {
-							if (!item.disabled) {
-								return <div key={index} className='col-12 py-3 rounded bg-white'>
-									<Link to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
-										{item.name}
-									</Link>
-								</div>
-							}
-							return <div key={index}></div>
-						})}
-					</div> */}
           <Layout
             userData={userData}
             account={account}
@@ -395,7 +365,13 @@ function App() {
                 <Route path="/my-nft">
                   <MyNFTs />
                 </Route>
-                <Route path="/token/:contract/:identifier" component={Token} />
+                <Route path="/token/:contract/:identifier">
+                  <Token
+                    account={account}
+                    addresses={addresses}
+                    programmaticProvider={programmaticProvider}
+                  />
+                </Route>
                 <Route
                   path="/rair/:contract/:product"
                   component={RairProduct}
