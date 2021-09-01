@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "./IERC2981.sol";
 import "./IRAIR-ERC721.sol";
 
-//import "hardhat/console.sol";
+import "hardhat/console.sol";
 
 /// @title  Extended ERC721Enumerable contract for the RAIR system
 /// @notice Uses ERC2981 and ERC165 for standard royalty info
@@ -36,8 +36,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	
 	//URIs
 	string internal baseURI;
-	mapping(uint => string) internal productURI;
-	mapping(uint => string) internal tknURI;
 
 	lockedRange[] private _lockedRange;
 	product[] private _products;
@@ -73,7 +71,17 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		_;
 	}
 
-	function tokenCountByProduct(uint productIndex) public view returns (uint ) {
+	function setBaseURI(string calldata newURI) external {
+		baseURI = newURI;
+	}
+
+	function _baseURI() internal view override(ERC721) returns (string memory) {
+		return baseURI;
+	}
+
+	/// @notice	Returns the 
+	/// @param	productIndex 	Product index
+	function tokenCountByProduct(uint productIndex) public view returns (uint) {
 		return tokensByProduct[productIndex].length;
 	}
 

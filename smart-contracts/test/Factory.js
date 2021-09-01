@@ -12,7 +12,7 @@ describe("Token Factory", function () {
 	const testTokenName = "RAIR Test Token!";
 	const collection1Limit = 2;
 	const collection2Limit = 10;
-	const collection3Limit = 170;
+	const collection3Limit = 250;
 
 	before(async function() {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
@@ -427,6 +427,18 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.tokensByProduct(1, 0)).to.equal(2);
 				expect(await rair721Instance.tokensByProduct(2, 0)).to.equal(12);
 			});
+
+			it ("Should get empty token URIs", async function() {
+				await expect(await rair721Instance.tokenURI(0)).to.equal("");
+			});
+
+			it ("Should set a new token URI", async function() {
+				await rair721Instance.setBaseURI('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/');
+			});
+
+			it ("Should get the token URI", async function() {
+				await expect(await rair721Instance.tokenURI(0)).to.equal("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/0");
+			});
 		});
 
 		describe('Token Operations', function() {
@@ -608,7 +620,7 @@ describe("Token Factory", function () {
 					rair721Instance.address, 				// Token Address
 					2,										// Product Index
 					[0,1],									// Starting token in Range
-					[0,10],									// Ending token in Range
+					[0,249],								// Ending token in Range
 					[9999999,1000],							// Price
 					['Super Turbo Special DX','Deluxes'],	// Range Name
 					owner.address							// Node Address
@@ -681,7 +693,18 @@ describe("Token Factory", function () {
 					.to.emit(minterInstance, "TokenMinted").withArgs(addr3.address, rair721Instance.address, 0, 1, 5)
 					// Minter events emitted
 					.to.changeEtherBalances([owner, addr2, erc777instance], [455 * 3, -500 * 3, 45 * 3]);
-				expect(await minterInstance.openSales()).to.equal(6);
+
+				//await expect
+				console.log(await minterAsAddress2.estimateGas.buyTokenBatch(1, 1,
+						Array.apply(null, Array(249)).map(function (_, i) {return i + 1;}),
+						[
+							...Array.apply(null, Array(200)).map(function (_, i) {return addr2.address;}),
+							...Array.apply(null, Array(40)).map(function (_, i) {return addr1.address;}),
+							...Array.apply(null, Array(9)).map(function (_, i) {return addr3.address;}),
+						], {value: 1000 * 249, gasLimit: 9999999999}))
+
+				//	.to.changeEtherBalances([owner, addr2, erc777instance], [455 * 249, -500 * 249, 45 * 249]);
+				//expect(await minterInstance.openSales()).to.equal(6);
 			});
 
 			it ("Shouldn't mint without permissions", async function() {

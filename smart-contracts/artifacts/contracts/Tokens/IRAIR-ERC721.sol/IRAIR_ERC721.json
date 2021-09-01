@@ -185,6 +185,31 @@
       "type": "event"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "collectionID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "startingToken",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "endingToken",
+          "type": "uint256"
+        }
+      ],
+      "name": "URIChanged",
+      "type": "event"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",

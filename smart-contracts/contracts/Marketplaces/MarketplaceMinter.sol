@@ -9,7 +9,7 @@ import "../Tokens/IERC2981.sol";
 // Parent classes
 import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 
-//import 'hardhat/console.sol';
+import 'hardhat/console.sol';
 
 /// @title  Minter Marketplace 
 /// @notice Handles the minting of ERC721 RAIR Tokens
@@ -364,6 +364,8 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		require(selectedCollection.contractAddress != address(0), "Minting Marketplace: Invalid Collection Selected!");
 		require((selectedCollection.tokensAllowed.length > rangeIndex), "Minting Marketplace: Invalid range!");
 		require((selectedCollection.tokensAllowed[rangeIndex] >= tokenIndexes.length), "Minting Marketplace: Cannot mint that many tokens for this range!");
+		console.log('Minting', tokenIndexes.length, 'tokens');
+		console.log('Expect', (selectedCollection.rangePrice[rangeIndex] * tokenIndexes.length), 'and got', msg.value);
 		require(msg.value >= (selectedCollection.rangePrice[rangeIndex] * tokenIndexes.length), "Minting Marketplace: Insuficient Funds!");
 		require(tokenIndexes.length == recipients.length, "Minting Marketplace: Token Indexes and Recipients should have the same length");
 
