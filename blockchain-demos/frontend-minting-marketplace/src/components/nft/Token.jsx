@@ -26,6 +26,7 @@ const MyNFTs = props => {
 			setName(await instance.name());
 			setOwner(await instance.ownerOf(params.identifier));
 			let meta = await (await fetch(await instance.tokenURI(params.identifier))).json();
+			//console.log(meta);
 			setMetadata(meta);
 		} catch (err) {
 			Swal.fire('Error', "We couldn't fetch the token's Metadata", 'error');
@@ -70,7 +71,7 @@ const MyNFTs = props => {
 				<div className='col-12 row px-0 mx-0'>
 					{Object.keys(metadata.attributes).map((item, index) => {
 						let itm = metadata.attributes[item];
-						console.log(Object.keys(metadata.attributes[item]))
+						//console.log(Object.keys(metadata.attributes[item]))
 						if (Object.keys(metadata.attributes[item]).length === 1) {
 							itm = {
 								trait_type: item,
@@ -86,6 +87,28 @@ const MyNFTs = props => {
 							}}
 								className='w-100 h-100 py-auto'>
 								{itm.trait_type}: <b>{itm.value}</b>
+							</div>
+						</div>
+					})}
+				</div>
+			</>}
+			{metadata.features && <>
+				<h5 className='w-100 mt-5'>
+					Features
+				</h5>
+				<div className='col-12 row px-0 mx-0'>
+					{metadata.features.map((item, index) => {
+						let itm = item.split(":");
+						//console.log(Object.keys(metadata.attributes[item]))
+						return <div key={index} className='col-4 my-2'>
+							<div style={{
+								backgroundColor: '#F77A',
+								borderRadius: '10px',
+								border: 'solid red 1px',
+								height: '5vh'
+							}}
+								className='w-100 h-100 py-auto'>
+								{itm[0]}: <b>{itm[1]}</b>
 							</div>
 						</div>
 					})}
