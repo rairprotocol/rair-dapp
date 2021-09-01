@@ -12,7 +12,7 @@ module.exports = {
     hardhat: {
       forking: {
         url: process.env.ALCHEMY_API,
-        blockNumber: 12420727,
+        blockNumber: 13000000,
         timeout: 1000000
       }
     },

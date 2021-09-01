@@ -19,10 +19,10 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		uint startingToken;
 		uint endingToken;
 		uint lockCountdown;
-		uint collectionIndex;
+		uint productIndex;
 	}
 
-	struct collection {
+	struct product {
 		uint startingToken;
 		uint endingToken;
 		uint mintableTokens;
@@ -34,13 +34,18 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	mapping(uint => uint) public tokenToCollection;
 	mapping(uint => uint) private tokenToLock;
 	
-	lockedRange[] private _lockedRange;
-	collection[] private _collections;
+	//URIs
+	string internal baseURI;
+	mapping(uint => string) internal productURI;
+	mapping(uint => string) internal tknURI;
 
+	lockedRange[] private _lockedRange;
+	product[] private _products;
+
+	//Roles
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	bytes32 public constant MINTER = keccak256("MINTER");
 	bytes32 public constant TRADER = keccak256("TRADER");
-
 
 	address private _factory;
 	uint16 private _royaltyFee;
@@ -63,17 +68,22 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		_setupRole(TRADER, _creatorAddress);
 	}
 
-	modifier collectionExists(uint collectionID) {
-		require(_collections.length > collectionID, "RAIR ERC721: Collection does not exist");
+	modifier productExists(uint productID) {
+		require(_products.length > productID, "RAIR ERC721: Collection does not exist");
 		_;
 	}
 
-	function tokenCountByProduct(uint product) public view returns (uint ) {
-		return tokensByProduct[product].length;
+	function tokenCountByProduct(uint productIndex) public view returns (uint ) {
+		return tokensByProduct[productIndex].length;
 	}
 
+	/// @notice	Makes sure a lock can be created
+	/// @dev	Used on the createRangeLock call!
+	/// @param	productIndex 	Product index
+	/// @param	startingToken 	First token to lock
+	/// @param	endingToken 	Last token to lock
 	function canCreateLock(uint productIndex, uint startingToken, uint endingToken) public view returns (bool canCreate) {
-		collection storage selectedCollection =  _collections[productIndex];
+		product storage selectedCollection =  _products[productIndex];
 		if (startingToken > selectedCollection.endingToken - selectedCollection.startingToken ||
 				endingToken > selectedCollection.endingToken - selectedCollection.startingToken) {
 			return false;
@@ -91,56 +101,56 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 
 	/// @notice	Locks transfers for tokens within a specific range
 	/// @dev	The minter pays for the locking as well
-	/// @param	collectionIndex Index of the collection on the contract
+	/// @param	productIndex Index of the product on the contract
 	/// @param	_startingToken Initial token locked
 	/// @param	_endingToken Last token locked
 	/// @param	_lockedTokens Number of tokens that have to be minted in order to unlock the full range
-	function createRangeLock(uint collectionIndex, uint _startingToken, uint _endingToken, uint _lockedTokens) public onlyRole(CREATOR) collectionExists(collectionIndex) {
-		collection storage selectedCollection =  _collections[collectionIndex];
+	function createRangeLock(uint productIndex, uint _startingToken, uint _endingToken, uint _lockedTokens) public onlyRole(CREATOR) productExists(productIndex) {
+		product storage selectedCollection =  _products[productIndex];
 
 		require(selectedCollection.startingToken + _endingToken <= selectedCollection.endingToken, 'RAIR ERC721: Invalid ending token');
 		require(_endingToken - _startingToken <= selectedCollection.endingToken - selectedCollection.startingToken, 'RAIR ERC721: Invalid token limits');
 		require((_endingToken - _startingToken + 1) >= _lockedTokens, 'RAIR ERC721: Invalid number of tokens to lock');
 
-		require(canCreateLock(collectionIndex, _startingToken, _endingToken), "RAIR ERC721: Cannot create lock");
+		require(canCreateLock(productIndex, _startingToken, _endingToken), "RAIR ERC721: Cannot create lock");
 
 		lockedRange storage newRange = _lockedRange.push();
 		newRange.startingToken = selectedCollection.startingToken + _startingToken;
 		newRange.endingToken = selectedCollection.startingToken + _endingToken;
 		newRange.lockCountdown = _lockedTokens;
-		newRange.collectionIndex = collectionIndex;
+		newRange.productIndex = productIndex;
 		selectedCollection.locks.push(_lockedRange.length - 1);
-		emit RangeLocked(collectionIndex, selectedCollection.startingToken + _startingToken, selectedCollection.startingToken + _endingToken, _lockedTokens, selectedCollection.name);
+		emit RangeLocked(productIndex, selectedCollection.startingToken + _startingToken, selectedCollection.startingToken + _endingToken, _lockedTokens, selectedCollection.name);
 	}
 
-	/// @notice	Creates a collection
+	/// @notice	Creates a product
 	/// @dev	Only a CREATOR can call this function
-	/// @param	_collectionName Name of the collection
-	/// @param	_copies			Amount of tokens inside the collection
-	function createCollection(string memory _collectionName, uint _copies) public onlyRole(CREATOR) {
+	/// @param	_productName Name of the product
+	/// @param	_copies			Amount of tokens inside the product
+	function createCollection(string memory _productName, uint _copies) public onlyRole(CREATOR) {
 		uint lastToken;
-		lastToken = _collections.length == 0 ? 0 : _collections[_collections.length - 1].endingToken + 1;
+		lastToken = _products.length == 0 ? 0 : _products[_products.length - 1].endingToken + 1;
 		
-		collection storage newCollection = _collections.push();
+		product storage newCollection = _products.push();
 
 		newCollection.startingToken = lastToken;
 		newCollection.endingToken = newCollection.startingToken + _copies - 1;
-		newCollection.name = string(_collectionName);
+		newCollection.name = string(_productName);
 		newCollection.mintableTokens = _copies;
 		
-		emit CollectionCreated(_collections.length - 1, _collectionName, _copies);
+		emit CollectionCreated(_products.length - 1, _productName, _copies);
 	}
 
-	/// @notice	Returns the number of collections on the contract
-	/// @dev	Use with get collection to list all of the collections
+	/// @notice	Returns the number of products on the contract
+	/// @dev	Use with get product to list all of the products
 	function getCollectionCount() external view override(IRAIR_ERC721) returns(uint) {
-		return _collections.length;
+		return _products.length;
 	}
 
-	/// @notice	Returns information about a collection
-	/// @param	index	Index of the collection
-	function getCollection(uint index) external override(IRAIR_ERC721) view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName, uint[] memory locks) {
-		collection memory selectedCollection =  _collections[index];
+	/// @notice	Returns information about a product
+	/// @param	index	Index of the product
+	function getCollection(uint index) external override(IRAIR_ERC721) view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory productName, uint[] memory locks) {
+		product memory selectedCollection =  _products[index];
 		return (
 			selectedCollection.startingToken,
 			selectedCollection.endingToken,
@@ -150,31 +160,32 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		);
 	}
 
-	/// @notice	Very inefficient way of verifying if an user owns a token within a collection
+	/// @notice	Very inefficient way of verifying if an user owns a token within a product
+	/// @dev	But it's a view function so it doesn't matter, just don't use it in a gas transaction
 	/// @param	owner			User to search
-	/// @param	collectionIndex	Collection to search
-	function hasTokenInCollection(address owner, uint collectionIndex) public view returns (bool) {
+	/// @param	productIndex	Collection to search
+	function hasTokenInCollection(address owner, uint productIndex) public view returns (bool) {
 		for (uint i = 0; i < balanceOf(owner); i++) {
-			if (tokenToCollection[tokenOfOwnerByIndex(owner, i)] == collectionIndex) {
+			if (tokenToCollection[tokenOfOwnerByIndex(owner, i)] == productIndex) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	/// @notice	Returns the token index inside the collection
+	/// @notice	Returns the token index inside the product
 	/// @param	token	Token ID to find
 	function tokenToCollectionIndex(uint token) public view returns (uint tokenIndex) {
-		return token - _collections[tokenToCollection[token]].startingToken;
+		return token - _products[tokenToCollection[token]].startingToken;
 	} 
 
-	/// @notice	Loops through a range of tokens inside a collection and returns the first token without an owner
+	/// @notice	Loops through a range of tokens inside a product and returns the first token without an owner
 	/// @dev	Uses a loop, do not call this from a non-view function!
-	/// @param	collectionID	Index of the collection to search
-	/// @param	startingIndex	Index of the collection to search
-	/// @param	endingIndex		Index of the collection to search
-	function getNextSequentialIndex(uint collectionID, uint startingIndex, uint endingIndex) public view collectionExists(collectionID) returns(uint nextIndex) {
-		collection memory currentCollection = _collections[collectionID];
+	/// @param	productID	Index of the product to search
+	/// @param	startingIndex	Index of the product to search
+	/// @param	endingIndex		Index of the product to search
+	function getNextSequentialIndex(uint productID, uint startingIndex, uint endingIndex) public view productExists(productID) returns(uint nextIndex) {
+		product memory currentCollection = _products[productID];
 		for (uint i = currentCollection.startingToken + startingIndex; i <= currentCollection.startingToken + endingIndex; i++) {
 			if (!_exists(i)) {
 				return i - currentCollection.startingToken;
@@ -183,29 +194,29 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		require(false, "RAIR ERC721: There are no available tokens in this range.");
 	}
 
-	function getLockedRange(uint index) public view returns (uint startingToken, uint endingToken, uint countToUnlock, uint collectionIndex) {
+	function getLockedRange(uint index) public view returns (uint startingToken, uint endingToken, uint countToUnlock, uint productIndex) {
 		lockedRange memory currentLock = _lockedRange[index];
-		collection memory currentCollection = _collections[currentLock.collectionIndex];
+		product memory currentCollection = _products[currentLock.productIndex];
 		return (
 			currentLock.startingToken - currentCollection.startingToken,
 			currentLock.endingToken - currentCollection.startingToken,
 			currentLock.lockCountdown,
-			currentLock.collectionIndex
+			currentLock.productIndex
 		);
 	}
 
 	function isTokenLocked(uint256 _tokenId) public view returns (bool) {
-		return _lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown > 0;
+		return _lockedRange[tokenToLock[_tokenId]].productIndex == tokenToCollection[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown > 0;
 	}
 
-	/// @notice	Mints a specific token within a collection
+	/// @notice	Mints a specific token within a product
 	/// @dev	Has to be used alongside getNextSequentialIndex to simulate a sequential minting
 	/// @dev	Anyone that wants a specific token just has to call this
 	/// @param	to					Address of the new token's owner
 	/// @param	productId			Product to mint from
 	/// @param	indexInCollection	Internal index of the token
-	function mint(address to, uint productId, uint indexInCollection) external override(IRAIR_ERC721) onlyRole(MINTER) collectionExists(productId) {
-		collection storage currentCollection = _collections[productId];
+	function mint(address to, uint productId, uint indexInCollection) external override(IRAIR_ERC721) onlyRole(MINTER) productExists(productId) {
+		product storage currentCollection = _products[productId];
 		
 		require(indexInCollection <= currentCollection.endingToken - currentCollection.startingToken, "RAIR ERC721: Invalid token index");
 
@@ -266,7 +277,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @param	_tokenId	Token's ID
 	function _beforeTokenTransfer(address _from, address _to, uint256 _tokenId) internal virtual override(ERC721Enumerable) {
 		if (_from != address(0) && _to != address(0)) {
-			if (_lockedRange[tokenToLock[_tokenId]].collectionIndex == tokenToCollection[_tokenId]) {
+			if (_lockedRange[tokenToLock[_tokenId]].productIndex == tokenToCollection[_tokenId]) {
 				require(_lockedRange[tokenToLock[_tokenId]].lockCountdown == 0, "RAIR ERC721: Transfers for this range are currently locked");
 			}
 			_checkRole(TRADER, msg.sender);

@@ -216,9 +216,9 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.createCollection("COLLECTION #2", collection2Limit)).to.emit(rair721Instance, 'CollectionCreated').withArgs(1, 'COLLECTION #2', collection2Limit);
 				await expect(await rair721Instance.createCollection("COLLECTION #3", collection3Limit)).to.emit(rair721Instance, 'CollectionCreated').withArgs(2, 'COLLECTION #3', collection3Limit);
 				await expect(await rair721Instance.getCollectionCount()).to.equal(3);
-				await expect((await rair721Instance.getCollection(0)).collectionName).to.equal("COLLECTION #1");
-				await expect((await rair721Instance.getCollection(1)).collectionName).to.equal("COLLECTION #2");
-				await expect((await rair721Instance.getCollection(2)).collectionName).to.equal("COLLECTION #3");
+				await expect((await rair721Instance.getCollection(0)).productName).to.equal("COLLECTION #1");
+				await expect((await rair721Instance.getCollection(1)).productName).to.equal("COLLECTION #2");
+				await expect((await rair721Instance.getCollection(2)).productName).to.equal("COLLECTION #3");
 			});
 
 			it ("Should show the next index for collections", async function() {
