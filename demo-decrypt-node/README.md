@@ -50,6 +50,8 @@ Supported options:
         * [x] / - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
             * [x] /:contractAddress - DELETE - remove specific contract, [see details here](readme/delete_contract.md)
+    * [x] /nft
+        * [x] /files/:contract/:token/:offerPool - get files by NFT token, [see details here](readme/get_files_by_nft.md)
     * [x] /products - GET - get all products with all offers for eac of them for particular user, [see details here](readme/get_products.md)
     * [x] /docs - swagger documentation for the server
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)

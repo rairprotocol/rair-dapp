@@ -9,5 +9,6 @@ module.exports = context => {
   router.use('/users', require('./users')(context));
   router.use('/contracts', JWTVerification(context), require('./contracts')(context));
   router.use('/products', JWTVerification(context), require('./products')(context));
+  router.use('/nft',/* JWTVerification(context),*/ require('./nft')(context));
   return router;
 };
