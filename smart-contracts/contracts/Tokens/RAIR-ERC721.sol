@@ -35,7 +35,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	mapping(uint => uint) private tokenToLock;
 	
 	//URIs
-	string internal baseURI; // Contract code is too big with this variable
+	string internal baseURI;
 	mapping(uint => string) internal uniqueTokenURI;
 
 	lockedRange[] private _lockedRange;
@@ -67,25 +67,38 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		_setupRole(TRADER, _creatorAddress);
 	}
 
+	/// @notice	Makes sure the product exists before doing changes to it
+	/// @param	productID	Product to verify
 	modifier productExists(uint productID) {
 		require(_products.length > productID, "RAIR ERC721: Product does not exist");
 		_;
 	}
 	
-	// Contract code is too big with these functions
+	/// @notice	Sets the Base URI for ALL tokens
+	/// @dev	Can be overriden by the specific token URI
+	/// @param	newURI	URI to be used
 	function setBaseURI(string calldata newURI) external {
 		baseURI = newURI;
 	}
 
+	/// @notice	Overridden function from the ERC721 contract that returns our
+	///			variable base URI instead of the hardcoded URI
 	function _baseURI() internal view override(ERC721) returns (string memory) {
 		return baseURI;
 	}
 	
+	/// @notice	Gives an individual token an unique URI
+	/// @dev	Emits an event so there's provenance
+	/// @param	tokenId	Token Index that will be given an URI
+	/// @param	newURI	New URI to be given
 	function setUniqueURI(uint tokenId, string calldata newURI) public {
 		uniqueTokenURI[tokenId] = newURI;
 		emit URIChanged(tokenId, newURI);
 	}
 
+	/// @notice	Returns a token's URI, could be specific or general
+	/// @dev	IF the specific token URI doesn't exist, the general base URI will be returned
+	/// @param	tokenId		Token Index to look for
 	function tokenURI(uint tokenId) public view override(ERC721) returns (string memory) {
 		string memory URI = uniqueTokenURI[tokenId];
 		if (bytes(URI).length > 0) {
@@ -94,7 +107,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		return super.tokenURI(tokenId);
 	}
 
-	/// @notice	Returns the 
+	/// @notice	Returns the number of tokens inside a product
 	/// @param	productIndex 	Product index
 	function tokenCountByProduct(uint productIndex) public view returns (uint) {
 		return tokensByProduct[productIndex].length;
@@ -217,6 +230,10 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		require(false, "RAIR ERC721: There are no available tokens in this range.");
 	}
 
+	/// @notice	View function to get information about a lock
+	/// @dev 	This uses universal numbering so you'll need to get information
+	///			about a product first to know what are the locks associated
+	/// @param	index	Index in the lock array to be returned
 	function getLockedRange(uint index) public view returns (uint startingToken, uint endingToken, uint countToUnlock, uint productIndex) {
 		lockedRange memory currentLock = _lockedRange[index];
 		product memory currentProduct = _products[currentLock.productIndex];
@@ -228,6 +245,8 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		);
 	}
 
+	/// @notice	View function to verify if a token can be traded
+	/// @param	_tokenId	Index of the token to search
 	function isTokenLocked(uint256 _tokenId) public view returns (bool) {
 		return _lockedRange[tokenToLock[_tokenId]].productIndex == tokenToProduct[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown > 0;
 	}
