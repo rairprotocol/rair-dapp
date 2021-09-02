@@ -1,3 +1,7 @@
+// Have to be run before rebuilding the server! Will remove the old version of the index
+db.Offer.dropIndex({ offerPool: 1, rangeIndex: 1 });
+db.Offer.dropIndex({ contract: 1, offerPool: 1, rangeIndex: 1 });
+
 // Renaming fields in MintedToken collection
 db.MintedToken.find().toArray().forEach((Token) => {
   const t = {};
