@@ -16,6 +16,7 @@ const uploadVideoFile = require('./uploadVideoFile');
 const updateContract = require('./updateContract');
 const updateUser = require('./updateUser');
 const singleContract = require('./singleContract');
+const getFilesByNFT = require('./getFilesByNFT');
 
 module.exports = {
   admin,
@@ -35,5 +36,6 @@ module.exports = {
   uploadVideoFile,
   updateContract,
   updateUser,
-  singleContract
+  singleContract,
+  getFilesByNFT
 };
