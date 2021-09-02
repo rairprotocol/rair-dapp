@@ -69,7 +69,7 @@
           "type": "string"
         }
       ],
-      "name": "CollectionCompleted",
+      "name": "ProductCompleted",
       "type": "event"
     },
     {
@@ -90,11 +90,17 @@
         {
           "indexed": false,
           "internalType": "uint256",
+          "name": "startingToken",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
           "name": "length",
           "type": "uint256"
         }
       ],
-      "name": "CollectionCreated",
+      "name": "ProductCreated",
       "type": "event"
     },
     {
@@ -190,20 +196,14 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "collectionID",
+          "name": "tokenId",
           "type": "uint256"
         },
         {
           "indexed": false,
-          "internalType": "uint256",
-          "name": "startingToken",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "endingToken",
-          "type": "uint256"
+          "internalType": "string",
+          "name": "newURI",
+          "type": "string"
         }
       ],
       "name": "URIChanged",
@@ -273,7 +273,7 @@
           "type": "uint256"
         }
       ],
-      "name": "getCollection",
+      "name": "getProduct",
       "outputs": [
         {
           "internalType": "uint256",
@@ -306,7 +306,7 @@
     },
     {
       "inputs": [],
-      "name": "getCollectionCount",
+      "name": "getProductCount",
       "outputs": [
         {
           "internalType": "uint256",

@@ -5,17 +5,17 @@ import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 
 interface IRAIR_ERC721 is IERC721 {
 
-	event CollectionCreated(uint indexed id, string name, uint length);
+	event ProductCreated(uint indexed id, string name, uint startingToken, uint length);
 	event RangeLocked(uint collectionIndex, uint startingToken, uint endingToken, uint tokensLocked, string collectionName);
-	event CollectionCompleted(uint indexed id, string name);
+	event ProductCompleted(uint indexed id, string name);
 	event RangeUnlocked(uint collectionID, uint startingToken, uint endingToken);
-	event URIChanged(uint collectionID, uint startingToken, uint endingToken);
+	event URIChanged(uint tokenId, string newURI);
 
 	// Get the total number of collections in the contract
-	function getCollectionCount() external view returns(uint);
+	function getProductCount() external view returns(uint);
 
 	// Get a specific collection in the contract
-	function getCollection(uint index) external view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName, uint[] memory locks);
+	function getProduct(uint index) external view returns(uint startingToken, uint endingToken, uint mintableTokensLeft, string memory collectionName, uint[] memory locks);
 	
 	// Mint a token inside a collection
 	function mint(address to, uint collectionID, uint index) external;
