@@ -180,39 +180,39 @@ module.exports = async (db) => {
         }
       });
 
-      provider.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', async (contractAddress, product, offerPool, rangeIndex, startingToken, endingToken, price, rangeName) => {
+      provider.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', async (contractAddress, product, offerPool, offerIndex, startingToken, endingToken, price, offerName) => {
         try {
           const contract = contractAddress.toLowerCase();
 
           await db.Offer.create({
-            rangeIndex,
+            offerIndex,
             contract,
             product,
             offerPool,
             price,
             range: [startingToken, endingToken],
-            rangeName
+            offerName
           });
 
-          log.info(`Minter Marketplace: Created new Offer ${ rangeIndex }, name ${ rangeName } (from Contract ${ contract }, Product ${ product }), offerPool ${ offerPool }, range from ${ startingToken } to ${ endingToken } by price ${ price } WEI each.`);
+          log.info(`Minter Marketplace: Created new Offer ${ offerIndex }, name ${ offerName } (from Contract ${ contract }, Product ${ product }), offerPool ${ offerPool }, range from ${ startingToken } to ${ endingToken } by price ${ price } WEI each.`);
         } catch (err) {
           log.error(err);
         }
       });
 
-      provider.on('UpdatedOffer(address,uint256,uint256,uint256,uint256,string)', async (contractAddress, offerPool, rangeIndex, copies, price, rangeName) => {
+      provider.on('UpdatedOffer(address,uint256,uint256,uint256,uint256,string)', async (contractAddress, offerPool, offerIndex, copies, price, offerName) => {
         try {
           const contract = contractAddress.toLowerCase();
 
-          await db.Offer.findOneAndUpdate({ offerPool, contract, rangeIndex }, { copies, price, rangeName });
+          await db.Offer.findOneAndUpdate({ offerPool, contract, offerIndex }, { copies, price, offerName });
 
-          log.info(`Minter Marketplace: Update a Offer ${ rangeIndex }, in offerPool ${ offerPool }, name ${ rangeName } (from ${ contract }), new amount of tokens ${ copies } by ${ price } WEI each.`);
+          log.info(`Minter Marketplace: Update a Offer ${ offerIndex }, in offerPool ${ offerPool }, name ${ offerName } (from ${ contract }), new amount of tokens ${ copies } by ${ price } WEI each.`);
         } catch (err) {
           log.error(err);
         }
       });
 
-      provider.on('TokenMinted(address,address,uint256,uint256,uint256)', async (ownerAddress, contractAddress, offerPool, range, tokenIndex) => {
+      provider.on('TokenMinted(address,address,uint256,uint256,uint256)', async (ownerAddress, contractAddress, offerPool, offerIndex, tokenIndex) => {
         try {
           const contract = contractAddress.toLowerCase();
 
@@ -220,12 +220,12 @@ module.exports = async (db) => {
             token: tokenIndex,
             ownerAddress,
             offerPool,
-            range,
+            offer: offerIndex,
             contract,
           });
 
           const updatedOffer = await db.Offer.findOneAndUpdate({
-            rangeIndex: range,
+            offerIndex,
             offerPool
           }, { $inc: { soldCopies: 1 } });
 
@@ -234,21 +234,21 @@ module.exports = async (db) => {
             contract
           }, { $inc: { soldCopies: 1 } });
 
-          log.info(`Minter Marketplace: Minted new token ${ tokenIndex } of the offer ${ range } in offerPool ${ offerPool } for User ${ ownerAddress }.`);
+          log.info(`Minter Marketplace: Minted new token ${ tokenIndex } of the offer ${ offerIndex } in offerPool ${ offerPool } for User ${ ownerAddress }.`);
         } catch (err) {
           log.error(err);
         }
       });
 
-      provider.on('SoldOut(address,uint256,uint256)', async (contractAddress, offerPool, rangeIndex) => {
+      provider.on('SoldOut(address,uint256,uint256)', async (contractAddress, offerPool, offerIndex) => {
         try {
           const contract = contractAddress.toLowerCase();
 
-          const offer = await db.Offer.findOneAndUpdate({ rangeIndex, offerPool }, { $set: { sold: true } });
+          const offer = await db.Offer.findOneAndUpdate({ offerIndex, offerPool }, { $set: { sold: true } });
 
           const product = await db.Product.findOne({ collectionIndexInContract: offer.product, contract });
 
-          log.info(`Minter Marketplace: Offer ${ rangeIndex } from Product ${ product.name } runs out of allowed tokens.`);
+          log.info(`Minter Marketplace: Offer ${ offerIndex } from Product ${ product.name } runs out of allowed tokens.`);
         } catch (err) {
           log.error(err);
         }

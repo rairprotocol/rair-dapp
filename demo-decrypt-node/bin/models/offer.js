@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Offer = new Schema({
-  rangeIndex: { type: Number, required: true },
+  offerIndex: { type: Number, required: true },
   contract: { type: String, lowercase:true, required: true },
   product: { type: Number, required: true },
   offerPool: { type: Number, required: true },
@@ -12,7 +12,7 @@ const Offer = new Schema({
   sold: { type: Boolean, default: false },
   price: { type: Number, required: true },
   range: { type: [Number], required: true },
-  rangeName: { type: String },
+  offerName: { type: String },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 

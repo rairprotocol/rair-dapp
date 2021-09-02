@@ -79,7 +79,7 @@ const MyNFTs = ({
 		}
 	}, [minterInstance])
 
-	const getData = async () => {
+	const getData = useCallback(async () => {
 		try {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			let signer = provider.getSigner(0);
@@ -95,11 +95,11 @@ const MyNFTs = ({
 				description: 'No description found'
 			})
 		}
-	}
+	}, [params.contract, params.identifier])
 
 	useEffect(() => {
 		getData();
-	}, []);
+	}, [getData]);
 
 	useEffect(() => {
 		const itemS = collectionsData.filter(item => item.contractAddress === url)
