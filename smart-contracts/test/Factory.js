@@ -440,15 +440,18 @@ describe("Token Factory", function () {
 			});
 
 			it ("Should set a new specific token URI", async function() {
-				await expect(await rair721Instance.setUniqueURI(0, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/')).to.emit(rair721Instance, "URIChanged").withArgs(0, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/');
-				await expect(await rair721Instance.setUniqueURI(1, 'BBBBBBBBB/')).to.emit(rair721Instance, "URIChanged").withArgs(1, 'BBBBBBBBB/');
-				await expect(await rair721Instance.setUniqueURI(2, 'CCCCCCCCCCCCCCCCCCCCCCCC/')).to.emit(rair721Instance, "URIChanged").withArgs(2, 'CCCCCCCCCCCCCCCCCCCCCCCC/');
+				await expect(await rair721Instance.setUniqueURI(0, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/')).to.emit(rair721Instance, "TokenURIChanged").withArgs(0, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/');
+				await expect(await rair721Instance.setUniqueURI(1, 'BBBBBBBBB/')).to.emit(rair721Instance, "TokenURIChanged").withArgs(1, 'BBBBBBBBB/');
+			});
+
+			it ("Should set a new specific product URI", async function() {
+				await expect(await rair721Instance.setProductURI(1, 'CCCCCCCCCCCCCCCCCCCCCCCC/')).to.emit(rair721Instance, "ProductURIChanged").withArgs(1, 'CCCCCCCCCCCCCCCCCCCCCCCC/');
 			});
 
 			it ("Should get the token URIs", async function() {
 				await expect(await rair721Instance.tokenURI(0)).to.equal("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/");
 				await expect(await rair721Instance.tokenURI(1)).to.equal("BBBBBBBBB/");
-				await expect(await rair721Instance.tokenURI(2)).to.equal("CCCCCCCCCCCCCCCCCCCCCCCC/");
+				await expect(await rair721Instance.tokenURI(2)).to.equal("CCCCCCCCCCCCCCCCCCCCCCCC/2");
 				await expect(await rair721Instance.tokenURI(12)).to.equal("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD/12");
 			});
 		});

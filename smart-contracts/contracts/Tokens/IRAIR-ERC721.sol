@@ -9,8 +9,10 @@ interface IRAIR_ERC721 is IERC721 {
 	event RangeLocked(uint collectionIndex, uint startingToken, uint endingToken, uint tokensLocked, string collectionName);
 	event ProductCompleted(uint indexed id, string name);
 	event RangeUnlocked(uint collectionID, uint startingToken, uint endingToken);
-	event URIChanged(uint tokenId, string newURI);
-
+	event BaseURIChanged(string newURI);
+	event TokenURIChanged(uint tokenId, string newURI);
+	event ProductURIChanged(uint productId, string newURI);
+	
 	// Get the total number of collections in the contract
 	function getProductCount() external view returns(uint);
 
