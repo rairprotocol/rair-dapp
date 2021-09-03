@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-const InputField = ({getter, setter, name, label, type}) => {
+const InputField = ({getter, setter, name, label, type, placeholder}) => {
     const [id, setID] = useState(name)
     useState(() => {
       if (!name)
@@ -17,6 +17,7 @@ const InputField = ({getter, setter, name, label, type}) => {
       <input
         id={id}
         value={getter}
+        placeholder={placeholder}
         type={type ? type : 'text'}
         onChange={(e) => setter(e.target.value)}
         className='col-12 d-inline-block col-md-8 py-2'/>

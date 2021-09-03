@@ -9,6 +9,7 @@ import * as ethers from 'ethers'
 import Swal from 'sweetalert2';
 
 import CSVParser from './components/metadata/csvParser.jsx';
+import MetadataEditor from './components/metadata/metadataEditor.jsx';
 
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
@@ -239,8 +240,8 @@ function App() {
 							{name: 'Admin', route: '/admin'},
 							{name: 'All', route: '/all'},
 							{name: 'Latest', route: '/latest'},
-							{name: 'Hot', route: '/hot'},
-							{name: 'Ending', route: '/ending'},
+							{name: 'Hot*', route: '/hot'},
+							{name: 'Ending*', route: '/ending'},
 							{name: 'Factory', route: '/factory', disabled: contractAddresses[chainId] === undefined},
 							{name: 'Minter Marketplace', route: '/minter', disabled: contractAddresses[chainId] === undefined}
 						].map((item, index) => {
@@ -328,6 +329,7 @@ function App() {
 								</Route>
 								{adminAccess && <Route path='/admin' component={FileUpload} />}
 								<Route path='/ending' component={CSVParser} />
+								<Route path='/hot' component={MetadataEditor} />
 							</Switch>
 						</div>
 					</div>
