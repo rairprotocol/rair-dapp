@@ -22,7 +22,7 @@ Get all files which belong particular NFT token
       "type": "string"
     }
   },
-  "offerPool": {
+  "product": {
     "required": true,
     "content": {
       "type": "number"
