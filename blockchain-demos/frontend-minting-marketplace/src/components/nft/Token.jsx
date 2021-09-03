@@ -8,6 +8,7 @@ import * as ethers from 'ethers'
 
 import * as MinterMarketplace from '../../contracts/Minter_Marketplace.json';
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
+import { Col } from '../../styled-components/nft/Token.styles';
 const minterAbi = MinterMarketplace.default.abi;
 const erc721Abi = ERC721Token.default.abi;
 
@@ -164,30 +165,29 @@ const MyNFTs = ({
 			</div>}
 
 		</div>
-		<div>
-			<h1>list videos</h1>
-			<VideoList />
-		</div>
-		<div style={{
-			width: '100%',
-			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
-			margin: 'auto',
-			marginTop: '20px'
-		}}>
-			{specificItem.map((item, index) => (
-				<ERC721Consumer
-					key={index}
-					index={index}
-					offerInfo={item}
-					account={account}
-					minter={minterInstance}
-					width='12'
-				/>
-			)
-			)}
-		</div>
+		<Col
+			width='100%'
+			direction='row'
+		>
+			<Col width='50%' direction='column'>
+					<h1>list videos</h1>
+					<VideoList />
+			</Col>
+			<Col width='50%' align='center'>
+				{specificItem.map((item, index) => (
+					<ERC721Consumer
+						key={index}
+						index={index}
+						offerInfo={item}
+						account={account}
+						minter={minterInstance}
+						width='12'
+					/>
+				)
+				)}
+			</Col>
+		</Col>
+
 	</div>
 }
 
