@@ -216,7 +216,7 @@ module.exports = async (db) => {
         try {
           const contract = contractAddress.toLowerCase();
 
-          await db.MintedToken.create({
+          await db.MintedToken.create({ // TODO have to be updated for handling saving/updating tokens and uploading metadata to the Pinata cloud
             token: tokenIndex,
             ownerAddress,
             offerPool,

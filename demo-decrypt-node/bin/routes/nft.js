@@ -1,8 +1,102 @@
 const express = require('express');
-const { validation } = require('../middleware');
+const { validation, JWTVerification } = require('../middleware');
+const upload = require('../Multer/Config.js');
+const fs = require('fs');
+const csv = require('csv-parser');
+const _ = require('lodash');
 
 module.exports = context => {
-  const router = express.Router()
+  const router = express.Router();
+
+  router.post('/', /*JWTVerification(context),*/ upload.single('csv'), async (req, res, next) => {
+    try {
+      const { contract, product } = req.body;
+      const prod = parseInt(product);
+      const records = [];
+      const forSave = [];
+
+      const offerPools = await context.db.OfferPool.aggregate([
+        { $match: { contract, product: prod } },
+        {
+          $lookup: {
+            from: 'Offer',
+            let: {
+              contractP: '$contract',
+              productP: '$product'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contractP'
+                        ]
+                      },
+                      {
+                        $eq: [
+                          '$product',
+                          '$$productP'
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'offer'
+          }
+        },
+        { $unwind: '$offer' }
+      ]);
+
+      await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
+        .pipe(csv())
+        .on('data', data => records.push(data))
+        .on('end', () => {
+          console.log(records);
+
+          _.forEach(offerPools, offerPool => {
+            _.forEach(records, record => {
+              if (_.inRange(record.NFTID, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
+                const attributes = _.chain(record)
+                  .assign({})
+                  .omit(['NFTID', 'transferto address', 'name', 'description', 'image'])
+                  .value();
+
+                forSave.push({
+                  token: record.NFTID,
+                  ownerAddress: record['transferto address'],
+                  offerPool: offerPool.marketplaceCatalogIndex,
+                  offer: offerPool.offer.offerIndex,
+                  contract,
+                  metadata: {
+                    name: record.name,
+                    description: record.description,
+                    // artist: { type: String },
+                    // external_url: { type: String, required: true },
+                    image: record.image,
+                    attributes: JSON.stringify(attributes)
+                  }
+                });
+              }
+            });
+
+            return resolve(records);
+          });
+        })
+        .on('error', reject)
+      );
+
+      const result = await context.db.MintedToken.insertMany(forSave);
+
+      res.json({ success: true, result });
+    } catch (err) {
+      next(err);
+    }
+  });
 
   router.get('/files/:contract/:token/:product', validation('getFilesByNFT', 'params'), async (req, res, next) => {
     try {
@@ -16,9 +110,9 @@ module.exports = context => {
         { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token } },
         {
           $lookup: {
-            from: "File",
+            from: 'File',
             let: {
-              contractT: "$contract",
+              contractT: '$contract',
               offerIndex: '$offer',
               productT: prod
             },
@@ -29,20 +123,20 @@ module.exports = context => {
                     $and: [
                       {
                         $eq: [
-                          "$contract",
-                          "$$contractT"
+                          '$contract',
+                          '$$contractT'
                         ]
                       },
                       {
                         $eq: [
-                          "$product",
-                          "$$productT"
+                          '$product',
+                          '$$productT'
                         ]
                       },
                       {
                         $in: [
-                          "$$offerIndex",
-                          "$offer"
+                          '$$offerIndex',
+                          '$offer'
                         ]
                       }
                     ]
@@ -50,7 +144,7 @@ module.exports = context => {
                 }
               }
             ],
-            as: "files"
+            as: 'files'
           },
         },
         { $unwind: '$files' },
@@ -63,5 +157,5 @@ module.exports = context => {
     }
   });
 
-  return router
-}
+  return router;
+};
