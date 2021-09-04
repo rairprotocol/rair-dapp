@@ -81,7 +81,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @notice	Sets the Base URI for ALL tokens
 	/// @dev	Can be overriden by the specific token URI
 	/// @param	newURI	URI to be used
-	function setBaseURI(string calldata newURI) external {
+	function setBaseURI(string calldata newURI) external onlyRole(CREATOR) {
 		baseURI = newURI;
 		emit BaseURIChanged(newURI);
 	}
@@ -96,7 +96,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @dev	Emits an event so there's provenance
 	/// @param	tokenId	Token Index that will be given an URI
 	/// @param	newURI	New URI to be given
-	function setUniqueURI(uint tokenId, string calldata newURI) public {
+	function setUniqueURI(uint tokenId, string calldata newURI) public onlyRole(CREATOR) {
 		uniqueTokenURI[tokenId] = newURI;
 		emit TokenURIChanged(tokenId, newURI);
 	}
@@ -105,7 +105,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @dev	Emits an event so there's provenance
 	/// @param	productId	Token Index that will be given an URI
 	/// @param	newURI		New URI to be given
-	function setProductURI(uint productId, string calldata newURI) public {
+	function setProductURI(uint productId, string calldata newURI) public onlyRole(CREATOR) {
 		productURI[productId] = newURI;
 		emit ProductURIChanged(productId, newURI);
 	}

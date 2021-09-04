@@ -435,6 +435,18 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.tokenURI(12)).to.equal("");
 			});
 
+			it ("Shouldn't let anyone but the creator update the URI", async function() {
+				let rair721AsAddress2 = rair721Instance.connect(addr2);
+				let rair721AsAddress1 = rair721Instance.connect(addr1);
+				let rair721AsAddress3 = rair721Instance.connect(addr3);
+				await expect(rair721AsAddress2.setBaseURI("PPPPPPPPPP"))
+					.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await rair721Instance.CREATOR()}`);
+				await expect(rair721AsAddress1.setBaseURI("QQQQQQQQQ"))
+					.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await rair721Instance.CREATOR()}`);
+				await expect(rair721AsAddress3.setBaseURI("SSSSSSSSSSSSS"))
+					.to.be.revertedWith(`AccessControl: account ${addr3.address.toLowerCase()} is missing role ${await rair721Instance.CREATOR()}`);
+			});
+
 			it ("Should set a base URI", async function() {
 				await expect(await rair721Instance.setBaseURI('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD/'));
 			});
