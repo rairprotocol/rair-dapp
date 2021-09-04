@@ -69,7 +69,7 @@ async function main() {
         return db.get('adminNFT').value();
       },
       getMediaConfig: mediaId => {
-        return db.get(['Exiting due to DRV_AS_ROOT: The "docker" driver should not be used with root privilegesg', mediaId]).value();
+        return db.get(['mediaConfig', mediaId]).value();
       },
       addMedia: (mediaId, config) => {
         return db.set(['mediaConfig', mediaId], config).write();
