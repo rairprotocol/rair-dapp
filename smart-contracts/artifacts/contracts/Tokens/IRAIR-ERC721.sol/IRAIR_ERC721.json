@@ -141,7 +141,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "collectionIndex",
+          "name": "productIndex",
           "type": "uint256"
         },
         {
@@ -165,7 +165,7 @@
         {
           "indexed": false,
           "internalType": "string",
-          "name": "collectionName",
+          "name": "productName",
           "type": "string"
         }
       ],
@@ -178,7 +178,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "collectionID",
+          "name": "productID",
           "type": "uint256"
         },
         {
@@ -324,7 +324,7 @@
         },
         {
           "internalType": "string",
-          "name": "collectionName",
+          "name": "productName",
           "type": "string"
         },
         {
@@ -382,7 +382,7 @@
         },
         {
           "internalType": "uint256",
-          "name": "collectionID",
+          "name": "productID",
           "type": "uint256"
         },
         {
