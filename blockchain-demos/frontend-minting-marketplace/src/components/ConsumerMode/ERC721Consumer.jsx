@@ -79,7 +79,7 @@ const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIn
 const ERC721Manager = ({offerInfo, account, minter, index}) => {
 	
 	const [balance, setBalance] = useState();
-	const [collectionName, setCollectionName] = useState();
+	const [productName, setProductName] = useState();
 	const [contractName, setContractName] = useState();
 	const [rangeInfo, setRangeInfo] = useState([]);
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
@@ -88,7 +88,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		setRefetchingFlag(true);
 		let balances = [];
 		let tokensOwned = (await offerInfo.instance.balanceOf(account)).toString();
-		setCollectionName((await offerInfo.instance.getCollection(offerInfo.productIndex)).collectionName);
+		setProductName((await offerInfo.instance.getProduct(offerInfo.productIndex)).productName);
 		setContractName(await offerInfo.instance.name());
 		let ranges = [];
 		for await (let rangeIndex of [...Array.apply(null, {length: offerInfo.ranges}).keys()]) {
@@ -105,10 +105,10 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		if (tokensOwned > 0) {
 			for await (let index of [...Array.apply(null, {length: tokensOwned}).keys()]) {
 				let token = (await offerInfo.instance.tokenOfOwnerByIndex(account, index)).toString();
-				if ((await offerInfo.instance.tokenToCollection(token)).toString() === offerInfo.productIndex) {
+				if ((await offerInfo.instance.tokenToProduct(token)).toString() === offerInfo.productIndex) {
 					balances.push({
 						token,
-						internalIndex: (await offerInfo.instance.tokenToCollectionIndex(token)).toString()
+						internalIndex: (await offerInfo.instance.tokenToProductIndex(token)).toString()
 					});
 				}
 			}
@@ -127,7 +127,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 				#{index + 1}<br />
 			</div>
 			<h5 className='d-inline-block'>
-				{collectionName}
+				{productName}
 			</h5>
 			<Link
 				to={`/rair/${offerInfo.contractAddress}/${offerInfo.productIndex}`}
@@ -153,7 +153,7 @@ const ERC721Manager = ({offerInfo, account, minter, index}) => {
 		})}
 		<hr className='w-75 mx-auto' />
 		{balance && <>
-			You own {balance.length} tokens from this collection<br/>
+			You own {balance.length} tokens from this product<br/>
 			{balance.map((item, index) => {
 				return <details key={index} className='w-100'>
 					<summary>

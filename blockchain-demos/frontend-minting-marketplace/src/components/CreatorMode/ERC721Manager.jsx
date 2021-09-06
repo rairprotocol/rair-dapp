@@ -2,7 +2,7 @@ import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
 
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
-import CollectionManager from './CollectionManager.jsx';
+import ProductManager from './CollectionManager.jsx';
 
 const erc721Abi = ERC721Token.default.abi;
 
@@ -11,9 +11,9 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 	const [tokenInfo, setTokenInfo] = useState();
 	
 	const [minterApproved, setMinterApproved] = useState();
-	const [collectionName, setCollectionName] = useState('');
-	const [collectionLength, setCollectionLength] = useState(0);
-	const [existingCollectionsData, setExistingCollectionsData] = useState();
+	const [productName, setProductName] = useState('');
+	const [productLength, setProductLength] = useState(0);
+	const [existingProductsData, setExistingProductsData] = useState();
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
 	const refreshData = useCallback(async () => {
@@ -23,23 +23,23 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 			name: await erc721Instance.name(),
 			symbol: await erc721Instance.symbol(),
 			totalSupply: (await erc721Instance.totalSupply()).toString(),
-			collectionCount: (await erc721Instance.getCollectionCount()).toString(),
+			productCount: (await erc721Instance.getProductCount()).toString(),
 			balance: (await erc721Instance.balanceOf(account)).toString(),
 			address: erc721Instance.address
 		} 
 		setTokenInfo(tokInfo)
-		let collectionsData = [];
-		for await (let index of [...Array.apply(null, {length: tokInfo.collectionCount}).keys()]) {
-			let colData = (await erc721Instance.getCollection(index));
-			collectionsData.push({
-				name: colData.collectionName,
+		let productsData = [];
+		for await (let index of [...Array.apply(null, {length: tokInfo.productCount}).keys()]) {
+			let colData = (await erc721Instance.getProduct(index));
+			productsData.push({
+				name: colData.productName,
 				startingToken: colData.startingToken.toString(),
 				endingToken: colData.endingToken.toString(),
 				mintableTokensLeft: colData.mintableTokensLeft.toString(),
 				locks: colData.locks?.map(item => item.toString())
 			});
 		}
-		setExistingCollectionsData(collectionsData);
+		setExistingProductsData(productsData);
 		setRefetchingFlag(false);
 	}, [erc721Instance, account, minter.address]);
 
@@ -81,23 +81,23 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 				Name: <b>{tokenInfo.name}</b><br />
 				Symbol: {tokenInfo.symbol}<br /><br />
 				Total Supply: {tokenInfo.totalSupply}<br />
-				Collections Created: {tokenInfo.collectionCount}<br />
+				Products Created: {tokenInfo.productCount}<br />
 				Current Balance: {tokenInfo.balance}<br />
 			</div>
 			<div className='col-12 col-md-6 border border-secondary rounded'>
-				<h5> Create a new collection </h5>
-				Collection Name: <input className='w-50' value={collectionName} onChange={e => setCollectionName(e.target.value)} />
+				<h5> Create a new product </h5>
+				Product Name: <input className='w-50' value={productName} onChange={e => setProductName(e.target.value)} />
 				<br/>
-				Collection's length: <input className='w-50' type='number' value={collectionLength} onChange={e => setCollectionLength(e.target.value)} />
+				Product's length: <input className='w-50' type='number' value={productLength} onChange={e => setProductLength(e.target.value)} />
 				<br />
-				<button disabled={collectionName === '' || collectionLength === 0} onClick={() => {
-					erc721Instance.createCollection(collectionName, collectionLength);
+				<button disabled={productName === '' || productLength === 0} onClick={() => {
+					erc721Instance.createProduct(productName, productLength);
 				}} className='btn btn-success'>
-					Create {collectionLength} tokens under collection {collectionName}
+					Create {productLength} tokens under product {productName}
 				</button>
 			</div>
 			{minterApproved === false ? <div className='col-12 col-md-6 border border-secondary rounded'>
-				To sell your unminted collections<br />
+				To sell your unminted products<br />
 				<button onClick={async e => {
 					erc721Instance.grantRole(await erc721Instance.MINTER(), minter.address);
 				}} className='btn btn-warning'>
@@ -107,14 +107,14 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 				(once)
 			</div> : <div className='col-3' />}
 			<div className='col-12 col-md border border-secondary rounded'>
-				{existingCollectionsData && <>
-					<h5> Existing Collections </h5>
+				{existingProductsData && <>
+					<h5> Existing Products </h5>
 					
-					{existingCollectionsData.map((item, index) => {
-						return <CollectionManager
+					{existingProductsData.map((item, index) => {
+						return <ProductManager
 									key={index}
-									collectionIndex={index}
-									collectionInfo={item}
+									productIndex={index}
+									productInfo={item}
 									tokenInstance={erc721Instance}
 									tokenAddress={tokenInfo.address}
 									minter={minter} />

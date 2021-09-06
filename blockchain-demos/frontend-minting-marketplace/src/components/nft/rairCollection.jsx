@@ -25,7 +25,7 @@ const MyNFTs = props => {
 				Swal.fire('Error','Contract is not a RAIR contract','error');
 			}
 			setName(await instance.name());
-			let pData = await instance.getCollection(params.product);
+			let pData = await instance.getProduct(params.product);
 			console.log(pData);
 			setProductData(pData);
 			setCreator(await instance.getRoleMember(await instance.CREATOR(), 0));

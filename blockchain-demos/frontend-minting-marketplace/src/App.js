@@ -25,19 +25,19 @@ import MetamaskLogo from './images/metamask-fox.svg';
 
 const contractAddresses = {
 	'0x61': { // Binance Testnet
-		factory: '0x02638eD2D3362CDAe26c4DD33B28CbE3dc8719Aa',
+		factory: '0x8CFB64bd8295372e532D7595cEf0b900c768e612',
 		erc777: '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1',
-		minterMarketplace: '0x343715F15702Fec9089B99623738a80662EC4FBE'
+		minterMarketplace: '0x1150A9D87EAb450ab83A3779Fe977cfdF9aEF45C'
 	},
 	'0x5': { // Ethereum Goerli
-		factory: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
+		factory: '0x69F0980e45ae2A3aC5254C7B3202E8fce5B0f84F',
 		erc777: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
-		minterMarketplace: '0xE9e953A29D0688d1348E17f7aCC801b33693B501'
+		minterMarketplace: '0xb256E35Ad58fc9c57948388C27840CEBcd7cb991'
 	},
 	'0x13881': { // Matic Mumbai
-		factory: '0x5CaBa889219DE9d52841fd79741cfe4ce5A61a29',
+		factory: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
 		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
-		minterMarketplace: '0xD22179AbCFFC1b62a51a35Fbc726f0C79440547C'
+		minterMarketplace: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba'
 	}
 }
 
