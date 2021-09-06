@@ -120,7 +120,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		}
 		URI = productURI[tokenToProduct[tokenId]];
 		if (bytes(URI).length > 0) {
-			return string(abi.encodePacked(URI, tokenId.toString()));
+			return string(abi.encodePacked(URI, tokenToProductIndex(tokenId).toString()));
 		}
 		return super.tokenURI(tokenId);
 	}
