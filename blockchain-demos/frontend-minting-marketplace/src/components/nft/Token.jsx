@@ -12,8 +12,6 @@ import { Col } from '../../styled-components/nft/Token.styles';
 const minterAbi = MinterMarketplace.default.abi;
 const erc721Abi = ERC721Token.default.abi;
 
-
-
 const MyNFTs = ({
 	account,
 	addresses,
@@ -42,8 +40,6 @@ const MyNFTs = ({
 		if (addresses) {
 			let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
 			setMinterInstance(ethersMinterInstance);
-		} else {
-			Swal.fire('Error', 'Network change detected in metamask', 'error');
 		}
 	}, [addresses, programmaticProvider])
 

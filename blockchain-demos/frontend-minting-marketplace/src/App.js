@@ -102,6 +102,9 @@ function App() {
 	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
 
 	const connectUserData = useCallback(async () => {
+		if (!account) {
+			return;
+		}
 		try {
 			// Verifica si el usuario existe
 			// Make sure the user exists
