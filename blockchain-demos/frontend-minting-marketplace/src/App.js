@@ -308,7 +308,7 @@ function App() {
 								</Route>
 							</Switch>
 						</div>
-						<div className='col-12 mt-3 row'>
+						<div className='col-12 mt-3 row' style={{maxHeight: '85vh', overflowY: 'scroll'}}>
 							<Switch>
 								{addresses && <Route exact path='/factory'>
 									<CreatorMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>
