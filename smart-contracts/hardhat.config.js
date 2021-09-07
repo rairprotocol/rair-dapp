@@ -12,7 +12,7 @@ module.exports = {
     hardhat: {
       forking: {
         url: process.env.ALCHEMY_API,
-        blockNumber: 12420727,
+        blockNumber: 13000000,
         timeout: 1000000
       }
     },
@@ -21,7 +21,7 @@ module.exports = {
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_ALCHEMY_URL}`,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     binanceSmartchain: {
@@ -37,7 +37,7 @@ module.exports = {
       settings: {
         optimizer: {
           enabled: true,
-          runs: 1000
+          runs: 200
         }
       }
     }],
