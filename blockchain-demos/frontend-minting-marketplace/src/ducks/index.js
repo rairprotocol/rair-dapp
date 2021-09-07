@@ -4,11 +4,13 @@ import createSagaMiddleware from 'redux-saga';
 import accessStore from './auth';
 import userStore from './users';
 import videosStore from './videos';
+import contractStore from './contracts';
 
 const reducers = combineReducers({
     accessStore,
     userStore,
-    videosStore
+    videosStore,
+    contractStore
 });
 
 const sagaMiddleware = createSagaMiddleware();

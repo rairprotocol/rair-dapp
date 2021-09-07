@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
@@ -45,6 +46,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 	const syncOutside = useCallback(sync, [sync]);
 	const rangeInit = ((index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [locked, setLocked] = useState(0);
+	
 
 	useEffect(() => {
 		let aux = array[index].endingToken !== endingRange;
@@ -118,7 +120,9 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 	</tr>
 }
 
-const ProductManager = ({ productIndex, productInfo, minter, tokenInstance, tokenAddress }) => {
+const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress }) => {
+
+	const { minterInstance } = useSelector(state => state.contractStore);
 
 	const [ranges, setRanges] = useState([]);
 	const [/*locks*/, setLocks] = useState([]);
@@ -147,12 +151,11 @@ const ProductManager = ({ productIndex, productInfo, minter, tokenInstance, toke
 	const refresher = useCallback(async () => {
 		try {
 			// Marketplace Ranges
-			let offerIndex = (await minter.contractToOfferRange(tokenInstance.address, productIndex)).toString();
-			let offerData = await minter.getOfferInfo(offerIndex);
+			let offerIndex = (await minterInstance.contractToOfferRange(tokenInstance.address, productIndex)).toString();
+			let offerData = await minterInstance.getOfferInfo(offerIndex);
 			let existingRanges = [];
 			for await (let rangeIndex of [...Array.apply(null, { length: offerData.availableRanges.toString() }).keys()]) {
-				let rangeInfo = await minter.getOfferRangeInfo(offerIndex, rangeIndex);
-				console.log(rangeInfo);
+				let rangeInfo = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
 				if (Number(rangeInfo.collectionIndex.toString()) === productIndex) {
 					existingRanges.push({
 						endingToken: Number(rangeInfo.tokenEnd.toString()),
@@ -185,25 +188,25 @@ const ProductManager = ({ productIndex, productInfo, minter, tokenInstance, toke
 		} catch (err) {
 			console.error(err?.data?.message);
 		}
-	}, [minter, productIndex, productInfo.locks, tokenInstance])
+	}, [minterInstance, productIndex, productInfo.locks, tokenInstance])
 
 	const notDisabled = (item) => {
 		return !item.disabled;
 	}
 
 	useEffect(() => {
-		if (minter) {
-			minter.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', function () {
+		if (minterInstance) {
+			minterInstance.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', function () {
 				refresher()
 			})
 		}
 	})
 
 	useEffect(() => {
-		if (tokenInstance && minter) {
+		if (tokenInstance && minterInstance) {
 			refresher()
 		}
-	}, [productInfo, tokenInstance, minter, refresher])
+	}, [productInfo, tokenInstance, minterInstance, refresher])
 
 	return <details className='w-100 border border-secondary rounded'>
 		<summary>
@@ -274,8 +277,8 @@ const ProductManager = ({ productIndex, productInfo, minter, tokenInstance, toke
 				<button onClick={async e => {
 					try {
 						if (ranges.length > 0 && ranges[0].disabled) {
-							await minter.appendOfferRangeBatch(
-								await minter.contractToOfferRange(tokenInstance.address, productIndex),
+							await minterInstance.appendOfferRangeBatch(
+								await minterInstance.contractToOfferRange(tokenInstance.address, productIndex),
 								ranges.filter(notDisabled).map((item, index, array) => {
 									if (index === 0) {
 										let i = 0;
@@ -292,7 +295,7 @@ const ProductManager = ({ productIndex, productInfo, minter, tokenInstance, toke
 								ranges.filter(notDisabled).map((item) => item.name)
 							)
 						} else {
-							await minter.addOffer(
+							await minterInstance.addOffer(
 								tokenAddress,
 								productIndex,
 								ranges.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),

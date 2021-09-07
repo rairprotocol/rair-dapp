@@ -1,12 +1,13 @@
 import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
+import { useSelector } from 'react-redux';
 
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 import ProductManager from './CollectionManager.jsx';
 
 const erc721Abi = ERC721Token.default.abi;
 
-const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) => {
+const ERC721Manager = ({ tokenAddress }) => {
 	const [erc721Instance, setERC721Instance] = useState();
 	const [tokenInfo, setTokenInfo] = useState();
 	
@@ -15,16 +16,18 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 	const [productLength, setProductLength] = useState(0);
 	const [existingProductsData, setExistingProductsData] = useState();
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
+	
+	const { minterInstance, currentUserAddress, programmaticProvider} = useSelector(state => state.contractStore);
 
 	const refreshData = useCallback(async () => {
 		setRefetchingFlag(true);
-		setMinterApproved(await erc721Instance.hasRole(await erc721Instance.MINTER(), minter.address));
+		setMinterApproved(await erc721Instance.hasRole(await erc721Instance.MINTER(), minterInstance.address));
 		let tokInfo = {
 			name: await erc721Instance.name(),
 			symbol: await erc721Instance.symbol(),
 			totalSupply: (await erc721Instance.totalSupply()).toString(),
 			productCount: (await erc721Instance.getProductCount()).toString(),
-			balance: (await erc721Instance.balanceOf(account)).toString(),
+			balance: (await erc721Instance.balanceOf(currentUserAddress)).toString(),
 			address: erc721Instance.address
 		} 
 		setTokenInfo(tokInfo)
@@ -41,7 +44,7 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 		}
 		setExistingProductsData(productsData);
 		setRefetchingFlag(false);
-	}, [erc721Instance, account, minter.address]);
+	}, [erc721Instance, currentUserAddress, minterInstance.address]);
 
 	useEffect(() => {
 		if (erc721Instance) {
@@ -99,7 +102,7 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 			{minterApproved === false ? <div className='col-12 col-md-6 border border-secondary rounded'>
 				To sell your unminted products<br />
 				<button onClick={async e => {
-					erc721Instance.grantRole(await erc721Instance.MINTER(), minter.address);
+					erc721Instance.grantRole(await erc721Instance.MINTER(), minterInstance.address);
 				}} className='btn btn-warning'>
 					Approve the Marketplace as a Minter!
 				</button>
@@ -116,8 +119,7 @@ const ERC721Manager = ({tokenAddress, minter, account, programmaticProvider}) =>
 									productIndex={index}
 									productInfo={item}
 									tokenInstance={erc721Instance}
-									tokenAddress={tokenInfo.address}
-									minter={minter} />
+									tokenAddress={tokenInfo.address} />
 					})}
 				</>}
 			</div>

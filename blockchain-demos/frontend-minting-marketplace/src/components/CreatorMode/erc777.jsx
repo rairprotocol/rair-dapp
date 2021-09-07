@@ -1,34 +1,37 @@
 import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
+import { useSelector } from 'react-redux';
 
 import Swal from 'sweetalert2';
 
-const ERC777Manager = ({instance, account}) => {
+const ERC777Manager = () => {
 
 	const [erc777Data, setERC777Data] = useState();
 	const [targetAddress, setTargetAddress] = useState('');
 	const [targetValue, setTargetValue] = useState(0);
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
+	
+	const { erc777Instance, currentUserAddress } = useSelector(state => state.contractStore);
 
 	const refreshData = useCallback(async () => {
 		setRefetchingFlag(true);
 		setERC777Data({
-			balance: (await instance.balanceOf(account)).toString(),
-			name: await instance.name(),
-			symbol: await instance.symbol(),
+			balance: (await erc777Instance.balanceOf(currentUserAddress)).toString(),
+			name: await erc777Instance.name(),
+			symbol: await erc777Instance.symbol(),
 		});
 		setRefetchingFlag(false);
-	}, [instance, account]);
+	}, [erc777Instance, currentUserAddress]);
 
 	useEffect(() => {
-		if (account) {
+		if (currentUserAddress) {
 			refreshData();
 		}
-	}, [refreshData, account])
+	}, [refreshData, currentUserAddress])
 
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5> ERC777 </h5>
-		<small>({instance.address})</small>
+		<small>({erc777Instance.address})</small>
 		<button
 			style={{position: 'absolute', left: 0, top: 0}}
 			onClick={refreshData}
@@ -47,7 +50,7 @@ const ERC777Manager = ({instance, account}) => {
 			<br/>
 			<button disabled={targetValue <= 0 || targetAddress === ''} onClick={async () => {
 				try {
-					await instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''));
+					await erc777Instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''));
 				} catch (err) {
 					console.log('Error sending ERC777 tokens', err)
 					Swal.fire('Error', err, 'error');
@@ -62,7 +65,7 @@ const ERC777Manager = ({instance, account}) => {
 					params: {
 						"type":"ERC20", // Initially only supports ERC20, but eventually more!
 						"options":{
-							"address": instance.address, // The address that the token is at.
+							"address": erc777Instance.address, // The address that the token is at.
 							"symbol": erc777Data.symbol, // A ticker symbol or shorthand, up to 5 chars.
 							"decimals": 18, // The number of decimals in the token
 						},

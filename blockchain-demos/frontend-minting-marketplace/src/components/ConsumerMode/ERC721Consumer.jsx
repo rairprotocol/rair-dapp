@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
-const Range = ({ tokenInstance, minterInstance, productIndex, offerIndex, rangeIndex }) => {
+const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 	const [next, setNext] = useState();
 	const [specificIndex, setSpecificIndex] = useState(0);
 
@@ -11,6 +12,8 @@ const Range = ({ tokenInstance, minterInstance, productIndex, offerIndex, rangeI
 	const [start, setStart] = useState();
 	const [end, setEnd] = useState();
 	const [allowed, setAllowed] = useState();
+
+	const { minterInstance } = useSelector(state => state.contractStore);
 
 	const refreshData = useCallback(async () => {
 		let data = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
@@ -76,7 +79,7 @@ const Range = ({ tokenInstance, minterInstance, productIndex, offerIndex, rangeI
 	</div>
 }
 
-const ERC721Manager = ({ offerInfo, account, minter, index, width = 4 }) => {
+const ERC721Manager = ({ offerInfo, minter, index, width = 4 }) => {
 
 	const [balance, setBalance] = useState();
 	const [productName, setProductName] = useState();
@@ -84,15 +87,17 @@ const ERC721Manager = ({ offerInfo, account, minter, index, width = 4 }) => {
 	const [rangeInfo, setRangeInfo] = useState([]);
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
 
+	const { minterInstance, currentUserAddress } = useSelector(state => state.contractStore);
+
 	const refreshData = useCallback(async () => {
 		setRefetchingFlag(true);
 		let balances = [];
-		let tokensOwned = (await offerInfo.instance.balanceOf(account)).toString();
+		let tokensOwned = (await offerInfo.instance.balanceOf(currentUserAddress)).toString();
 		setProductName((await offerInfo.instance.getProduct(offerInfo.productIndex)).productName);
 		setContractName(await offerInfo.instance.name());
 		let ranges = [];
 		for await (let rangeIndex of [...Array.apply(null, { length: offerInfo.ranges }).keys()]) {
-			let data = await minter.getOfferRangeInfo(index, rangeIndex);
+			let data = await minterInstance.getOfferRangeInfo(index, rangeIndex);
 			ranges.push({
 				name: data.name,
 				price: data.price.toString(),
@@ -104,7 +109,7 @@ const ERC721Manager = ({ offerInfo, account, minter, index, width = 4 }) => {
 		setRangeInfo(ranges);
 		if (tokensOwned > 0) {
 			for await (let index of [...Array.apply(null, { length: tokensOwned }).keys()]) {
-				let token = (await offerInfo.instance.tokenOfOwnerByIndex(account, index)).toString();
+				let token = (await offerInfo.instance.tokenOfOwnerByIndex(currentUserAddress, index)).toString();
 				if ((await offerInfo.instance.tokenToProduct(token)).toString() === offerInfo.productIndex) {
 					balances.push({
 						token,
@@ -115,11 +120,11 @@ const ERC721Manager = ({ offerInfo, account, minter, index, width = 4 }) => {
 		}
 		setBalance(balances);
 		setRefetchingFlag(false);
-	}, [account, index, minter, offerInfo.instance, offerInfo.productIndex, offerInfo.ranges])
+	}, [currentUserAddress, index, minterInstance, offerInfo.instance, offerInfo.productIndex, offerInfo.ranges])
 
 	useEffect(() => {
 		refreshData();
-	}, [offerInfo, account, refreshData]);
+	}, [offerInfo, currentUserAddress, refreshData]);
 
 	return (
 		<details style={{ position: 'relative' }} className={`col-12 col-md-${width} py-4 border border-white rounded`}>
@@ -146,7 +151,6 @@ const ERC721Manager = ({ offerInfo, account, minter, index, width = 4 }) => {
 				return <Range
 					key={rangeIndex}
 					tokenInstance={offerInfo.instance}
-					minterInstance={minter}
 					productIndex={offerInfo.productIndex}
 					rangeIndex={rangeIndex}
 					offerIndex={index}
