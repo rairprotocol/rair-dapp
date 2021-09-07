@@ -1,5 +1,5 @@
-import {useState, useEffect, useCallback} from 'react';
-import {BrowserRouter, Switch, Route, Link} from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 
 import headerLogo from './images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
 import './App.css';
@@ -21,7 +21,9 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
-import MetamaskLogo from './images/metamask-fox.svg';
+import MetamaskLogo from "./images/metamask-fox.svg";
+import Layout from "./components/layout/Layout";
+import CreateBatchMetadata from "./components/CreateBatchMetadata";
 
 const contractAddresses = {
 	'0x61': { // Binance Testnet
@@ -81,11 +83,11 @@ const polygonMumbaiData = {
 }
 
 const blockchains = [
-	{chainData: binanceTestnetData, bootstrapColor: 'warning'},
-	{chainData: klaytnBaobabData, bootstrapColor: 'light'},
-	{chainData: {chainId: '0x3', chainName: 'Ropsten (Ethereum)'}, bootstrapColor: 'primary'},
-	{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},
-	{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
+	{ chainData: binanceTestnetData, bootstrapColor: 'warning' },
+	{ chainData: klaytnBaobabData, bootstrapColor: 'light' },
+	{ chainData: { chainId: '0x3', chainName: 'Ropsten (Ethereum)' }, bootstrapColor: 'primary' },
+	{ chainData: { chainId: '0x5', chainName: 'Goerli (Ethereum)' }, bootstrapColor: 'secondary' },
+	{ chainData: polygonMumbaiData, bootstrapColor: 'danger' }
 ]
 
 function App() {
@@ -104,7 +106,7 @@ function App() {
 		try {
 			// Verifica si el usuario existe
 			// Make sure the user exists
-			const {success, user} = await (await fetch(`/api/users/${account}`)).json();
+			const { success, user } = await (await fetch(`/api/users/${account}`)).json();
 			if (!success || !user) {
 				const userCreation = await fetch('/api/users', {
 					method: 'POST',
@@ -130,7 +132,7 @@ function App() {
 					params: [account, response],
 					from: account
 				});
-				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
+				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
 				setAdminAccess(adminResponse.success);
 				adminRights = adminResponse.success;
 			}
@@ -139,17 +141,17 @@ function App() {
 			// Verifica que la token exista
 			if (!localStorage.token) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
-					const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
-					let signer = provider.getSigner();
-					let signature = await (signer.signMessage(msg, account));
-					const { token } = await (await fetch('/api/auth/authentication', {
+				const msg = `Sign in for RAIR by nonce: ${user.nonce}`;
+				let signer = provider.getSigner();
+				let signature = await (signer.signMessage(msg, account));
+				const { token } = await (await fetch('/api/auth/authentication', {
 					method: 'POST',
 					body: JSON.stringify({ publicAddress: account, signature, adminRights: adminRights }),
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/json'
-						}
-					})
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					}
+				})
 				).json();
 				localStorage.setItem('token', token);
 			}
@@ -166,7 +168,7 @@ function App() {
 			});
 	}, [account, connectUserData])
 
-	const connectProgrammatically = async ({rpcUrls, chainId, chainName, nativeCurrency}) => {
+	const connectProgrammatically = async ({ rpcUrls, chainId, chainName, nativeCurrency }) => {
 		try {
 			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], {
 				chainId: Number(chainId), symbol: nativeCurrency.symbol, name: chainName, timeout: 1000000
@@ -222,116 +224,133 @@ function App() {
 
 	return (
 		<BrowserRouter>
-			<div style={{minHeight: '100vh', backgroundColor: '#EEE'}} className="App p-0 text-black container-fluid">
-				<div className='row w-100 m-0 p-0'>
-					<div className='col-1 d-none d-xl-inline-block' />
-					<div className='col-1 rounded'>
-						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
-							<img alt='Header Logo' src={headerLogo} className='h-100'/>
-						</div>
-						{(!userData && account) ? <button className='btn btn-light' onClick={connectUserData}>
-							Connect <img alt='Metamask Logo' src={MetamaskLogo} />
-						</button> : [
-							{name: <i className='fas fa-search' />, route: '/search'},
-							{name: <i className='fas fa-user' />, route: '/user'},
-							{name: 'My NFTs', route: '/my-nft'},
-							{name: 'For Sale', route: '/on-sale'},
-							{name: 'Admin', route: '/admin'},
-							{name: 'All', route: '/all'},
-							{name: 'Latest', route: '/latest'},
-							{name: 'Hot', route: '/hot'},
-							{name: 'Ending', route: '/ending'},
-							{name: 'Factory', route: '/factory', disabled: contractAddresses[chainId] === undefined},
-							{name: 'Minter Marketplace', route: '/minter', disabled: contractAddresses[chainId] === undefined}
-						].map((item, index) => {
-							if (!item.disabled) {
-								return <div key={index} className='col-12 py-3 rounded bg-white'>
-									<Link to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
-										{item.name}
-									</Link>
-								</div>
-							}
-							return <div key={index}></div>
-						})}
-					</div>
-					<div className='col'>
-						<div className='col-12' style={{height: '10vh'}}>
-							{account && `Connected with ${account}!`}<br />
+			<div
+				style={{ minHeight: "100vh", backgroundColor: "#EEE" }}
+				className="App p-0 text-black container-fluid"
+			>
+				<div className="row w-100 m-0 p-0">
+					<div className="col-1 d-none d-xl-inline-block" />
+					<Layout
+						userData={userData}
+						account={account}
+						connectUserData={connectUserData}
+						contractAddresses={contractAddresses}
+						chainId={chainId}
+					>
+						<div className="col-12" style={{ height: "10vh" }}>
+							{account && `Connected with ${account}!`}
+							<br />
 							<Switch>
-								<Route exact path='/admin'>
-									{!window.ethereum && <div className='row py-5 w-100 px-0 mx-0'>
-										<hr className='w-100' />
-										<h5 className='col-12'> For tests only! </h5>
-										<div className='col-1' />
-										<input
-											className='col-10 text-center'
-											type='password'
-											value={UNSAFE_PrivateKey}
-											onChange={e => setUNSAFE_PrivateKey(e.target.value)}
-										/>
-										<div className='col-1' />
-										<div className='col-12 text-center'>
-											Use my private key to connect to
+								<Route exact path="/create-batch-metadata" component={CreateBatchMetadata} />
+								<Route exact path="/admin">
+									{!window.ethereum && (
+										<div className="row py-5 w-100 px-0 mx-0">
+											<hr className="w-100" />
+											<h5 className="col-12"> For tests only! </h5>
+											<div className="col-1" />
+											<input
+												className="col-10 text-center"
+												type="password"
+												value={UNSAFE_PrivateKey}
+												onChange={(e) => setUNSAFE_PrivateKey(e.target.value)}
+											/>
+											<div className="col-1" />
+											<div className="col-12 text-center">
+												Use my private key to connect to
+											</div>
+											<div className="col-12">
+												{blockchains.map((item, index) => {
+													if (!item.chainData.rpcUrls) {
+														return <></>;
+													}
+													return (
+														<button
+															key={index}
+															className={`btn btn-${item.bootstrapColor}`}
+															disabled={
+																chainId ===
+																item.chainData.chainId?.toLowerCase()
+															}
+															onClick={async (e) => {
+																await connectProgrammatically(item.chainData);
+															}}
+														>
+															{item.chainData.chainName}
+														</button>
+													);
+												})}
+											</div>
+											<hr className="w-100" />
 										</div>
-										<div className='col-12'>
-											{blockchains.map((item, index) => {
-												if (!item.chainData.rpcUrls) {
-													return <></>
-												}
-												return <button
+									)}
+									{window.ethereum &&
+										blockchains.map((item, index) => {
+											return (
+												<button
 													key={index}
 													className={`btn btn-${item.bootstrapColor}`}
-													disabled={chainId === item.chainData.chainId?.toLowerCase()}
-													onClick={async e => {
-														await connectProgrammatically(item.chainData);
-													}}>
+													disabled={
+														chainId === item.chainData.chainId?.toLowerCase()
+													}
+													onClick={async (e) => {
+														await switchEthereumChain(item.chainData);
+														setAccount();
+														setChainId();
+													}}
+												>
 													{item.chainData.chainName}
 												</button>
-											})}
-										</div>
-										<hr className='w-100' />
-									</div>}
-									{window.ethereum && blockchains.map((item, index) => {
-										return <button
-											key={index}
-											className={`btn btn-${item.bootstrapColor}`}
-											disabled={chainId === item.chainData.chainId?.toLowerCase()}
-											onClick={async e => {
-												await switchEthereumChain(item.chainData);
-												setAccount();
-												setChainId();
-											}}>
-											{item.chainData.chainName}
-										</button>
-									})}
+											);
+										})}
 								</Route>
 							</Switch>
 						</div>
-						<div className='col-12 mt-3 row'>
+						<div className="col-12 mt-3 row">
 							<Switch>
-								{addresses && <Route exact path='/factory'>
-									<CreatorMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>
-								</Route>}
-								{addresses && <Route exact path='/minter'>
-									<ConsumerMode account={account} addresses={addresses} programmaticProvider={programmaticProvider}/>
-								</Route>}
-								<Route path='/my-nft'>
+								{addresses && (
+									<Route exact path="/factory">
+										<CreatorMode
+											account={account}
+											addresses={addresses}
+											programmaticProvider={programmaticProvider}
+										/>
+									</Route>
+								)}
+								{addresses && (
+									<Route exact path="/minter">
+										<ConsumerMode
+											account={account}
+											addresses={addresses}
+											programmaticProvider={programmaticProvider}
+										/>
+									</Route>
+								)}
+								<Route path="/my-nft">
 									<MyNFTs />
 								</Route>
-								<Route path='/token/:contract/:identifier' component={Token} />
-								<Route path='/rair/:contract/:product' component={RairProduct} />
-								<Route path='/all'>
+								<Route path="/token/:contract/:identifier">
+									<Token
+										account={account}
+										addresses={addresses}
+										programmaticProvider={programmaticProvider}
+									/>
+								</Route>
+								<Route
+									path="/rair/:contract/:product"
+									component={RairProduct}
+								/>
+								<Route path="/all">
 									<VideoList />
 								</Route>
-								<Route path='/watch/:videoId/:mainManifest'>
+								<Route path="/watch/:videoId/:mainManifest">
 									<VideoPlayer />
 								</Route>
-								{adminAccess && <Route path='/admin' component={FileUpload} />}
-								<Route path='/ending' component={CSVParser} />
+								{adminAccess && <Route path="/admin" component={FileUpload} />}
+								<Route path="/ending" component={CSVParser} />
 							</Switch>
 						</div>
-					</div>
-					<div className='col-1 d-none d-xl-inline-block' />
+					</Layout>
+					<div className="col-1 d-none d-xl-inline-block" />
 				</div>
 			</div>
 		</BrowserRouter>
