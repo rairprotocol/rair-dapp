@@ -23,6 +23,7 @@ import RairProduct from "./components/nft/rairCollection.jsx";
 
 import MetamaskLogo from "./images/metamask-fox.svg";
 import Layout from "./components/layout/Layout";
+import CreateBatchMetadata from "./components/CreateBatchMetadata";
 
 const contractAddresses = {
   "0x61": {
@@ -279,6 +280,7 @@ function App() {
               {account && `Connected with ${account}!`}
               <br />
               <Switch>
+                <Route exact path="/create-batch-metadata" component={CreateBatchMetadata} />
                 <Route exact path="/admin">
                   {!window.ethereum && (
                     <div className="row py-5 w-100 px-0 mx-0">
