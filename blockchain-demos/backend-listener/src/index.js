@@ -7,18 +7,18 @@ const main = async () => {
 	let providers = [
 		{
 			provider: new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {chainId: 97, symbol: 'BNB', name: 'Binance Testnet'}),
-			factoryAddress: '0x02638eD2D3362CDAe26c4DD33B28CbE3dc8719Aa',
-			minterAddress: '0x343715F15702Fec9089B99623738a80662EC4FBE'
+			factoryAddress: '0x8CFB64bd8295372e532D7595cEf0b900c768e612',
+			minterAddress: '0x1150A9D87EAb450ab83A3779Fe977cfdF9aEF45C'
 		},
 		{
 			provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {chainId: 5, symbol: 'ETH', name: 'Goerli Testnet'}),
-			factoryAddress: '0x2b1FE33Cb7264dBa6331F54012f04133395fDe44',
-			minterAddress: '0xE9e953A29D0688d1348E17f7aCC801b33693B501'
+			factoryAddress: '0x69F0980e45ae2A3aC5254C7B3202E8fce5B0f84F',
+			minterAddress: '0xb256E35Ad58fc9c57948388C27840CEBcd7cb991'
 		},
 		{
 			provider: new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com", {chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet'}),
-			factoryAddress: '0x5CaBa889219DE9d52841fd79741cfe4ce5A61a29',
-			minterAddress: '0xD22179AbCFFC1b62a51a35Fbc726f0C79440547C'
+			factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
+			minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba'
 		}
 	]
 
@@ -78,14 +78,24 @@ const main = async () => {
 				let tokenInstance = new ethers.Contract(contractAddress, TokenAbi, providerData.provider);
 				// You can view all listen-able events with:
 				// console.log(tokenInstance.filters);
+
+				tokenInstance.on('TokenURIChanged(uint256,string)', (tokenIndex, newURI) => {
+					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: URI for token #${tokenIndex} changed to ${newURI}`);
+				})
+				tokenInstance.on('ProductURIChanged(uint256,string)', (productIndex, newURI) => {
+					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: URI for Product #${productIndex} to ${newURI}`);
+				})
+				tokenInstance.on('BaseURIChanged(string)', (newURI) => {
+					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: Base URI changed to ${newURI}`);
+				})
 				tokenInstance.on('RangeLocked(uint256,uint256,uint256,uint256,string)', (productIndex, startingToken, endingToken, numberRequired, productName) => {
 					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: locked a range of tokens inside product ${productName} (#${productIndex}), from ${startingToken} to ${endingToken} have been locked until ${numberRequired} tokens get minted!`);
 				})
 				tokenInstance.on('RangeUnlocked(uint256,uint256,uint256)', (productIndex, startingToken, endingToken) => {
 					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: The Range of tokens from ${startingToken} to ${endingToken} in product #${productIndex} have been unlocked!`);
 				})
-				tokenInstance.on("CollectionCreated(uint256,string,uint256)", (index, name, length) => {
-					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: has a new collection! ID#${index} called ${name} with ${length} copies!`);
+				tokenInstance.on("ProductCreated(uint256,string,uint256,uint256)", (index, name, startingToken, length) => {
+					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: has a new product! ID#${index} called ${name}, it starts at ${startingToken} and has ${length} copies!`);
 				})
 				tokenInstance.on("Approval(address,address,uint256)", (approver, approvee, tokenId) => {
 					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: ${approver} approved ${aprovee} to transfer token #${tokenId}!`);
@@ -93,8 +103,8 @@ const main = async () => {
 				tokenInstance.on("ApprovalForAll(address,address,bool)", (approver, aprovee, bool) => {
 					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: ${approver} ${bool ? 'enabled' : 'disabled'} full approval ${aprovee} to transfer tokens!`);
 				})
-				tokenInstance.on("CollectionCompleted(uint256,string)", (collectionId, name) => {
-					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address} collection #${collectionId} (${name}) ran out of mintable copies!`);
+				tokenInstance.on("ProductCompleted(uint256,string)", (productId, name) => {
+					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address} product #${productId} (${name}) ran out of mintable copies!`);
 				})
 				tokenInstance.on("Transfer(address,address,uint256)", (from, to, tokenId) => {
 					console.log(`${tokenInstance.provider._network.symbol} ${tokenInstance.address}: ${from} sent token #${tokenId} to ${to}!`);
