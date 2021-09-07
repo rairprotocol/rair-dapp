@@ -58,7 +58,7 @@ const addMetadata = async (data, name) => {
     }
   });
 
-  return `${ process.env.PINATA_GATEWAY }/${ _.get(response, 'IpfsHash') }`;
+  return _.get(response, 'IpfsHash');
 }
 
 module.exports = {

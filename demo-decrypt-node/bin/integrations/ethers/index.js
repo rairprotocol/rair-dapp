@@ -4,7 +4,7 @@ const Market = require('./contracts/Minter_Marketplace.json').abi;
 const ERC777 = require('./contracts/RAIR777.json').abi;
 const Token = require('./contracts/RAIR_ERC721.json').abi;
 const log = require('../../utils/logger')(module);
-const { addMetadata } = require('../../integrations/ipfsService')();
+const { addMetadata, addPin } = require('../../integrations/ipfsService')();
 
 const { nanoid } = require('nanoid');
 const _ = require('lodash');
@@ -227,7 +227,9 @@ module.exports = async (db) => {
             let metadataURI = 'none';
 
             if (!_.isEmpty(foundToken.metadata)) {
-              metadataURI = await addMetadata(foundToken.metadata, foundToken.metadata.name);
+              const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
+              await addPin(CID, `metadata_${foundToken.metadata.name}`);
+              metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
             }
 
             await db.MintedToken.findOneAndUpdate({
