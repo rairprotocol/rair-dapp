@@ -14,18 +14,6 @@ services:
       - 5000:5000
     networks:
       - rair-local
-#  rairipfs:
-#    container_name: 'rairipfs'
-#    image:
-#      ipfs/go-ipfs:latest
-#    volumes:
-#      - ./demo-decrypt-node/ipfsData:/data/ipfs
-#    ports:
-#      - 4001:4001
-#      - 127.0.0.1:8081:8080
-#      - 127.0.0.1:5003:5001
-#    networks:
-#      - rair-local
   rairfront:
     container_name: 'rairfront'
     build:
@@ -48,6 +36,15 @@ services:
       MONGO_INITDB_DATABASE: rair-db
     ports:
       - 27017:27017
+    networks:
+      - rair-local
+  minting-network:
+    container_name: minting-network
+    build:
+      context: blockchain-demos/frontend-minting-marketplace
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
     networks:
       - rair-local
 networks:

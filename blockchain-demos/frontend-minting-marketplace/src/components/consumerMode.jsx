@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
 import * as ethers from 'ethers'
-
 import * as MinterMarketplace from '../contracts/Minter_Marketplace.json';
 import * as ERC721Token from '../contracts/RAIR_ERC721.json';
 
@@ -26,23 +25,23 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			signer = provider.getSigner(0);
 		}
-			let aux = (await minterInstance.getOfferCount()).toString();
-			setSalesCount((await minterInstance.openSales()).toString());
-			setOfferCount(aux);
+		let aux = (await minterInstance.getOfferCount()).toString();
+		setSalesCount((await minterInstance.openSales()).toString());
+		setOfferCount(aux);
 
-			let offerData = [];
-			for await (let index of [...Array.apply(null, { length: aux }).keys()]) {
-				let data = await minterInstance.getOfferInfo(index);
-				offerData.push({
-					contractAddress: data.contractAddress,
-					productIndex: data.productIndex.toString(),
-					nodeAddress: data.nodeAddress,
-					ranges: data.availableRanges.toString(),
-					instance: new ethers.Contract(data.contractAddress, erc721Abi, signer)
-				})
-			}
-			setCollectionsData(offerData);
-			setRefetchingFlag(false);
+		let offerData = [];
+		for await (let index of [...Array.apply(null, { length: aux }).keys()]) {
+			let data = await minterInstance.getOfferInfo(index);
+			offerData.push({
+				contractAddress: data.contractAddress,
+				productIndex: data.productIndex.toString(),
+				nodeAddress: data.nodeAddress,
+				ranges: data.availableRanges.toString(),
+				instance: new ethers.Contract(data.contractAddress, erc721Abi, signer)
+			})
+		}
+		setCollectionsData(offerData);
+		setRefetchingFlag(false);
 	}, [programmaticProvider, minterInstance])
 
 	useEffect(() => {
@@ -54,7 +53,7 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 		if (addresses) {
 			let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
 			setMinterInstance(ethersMinterInstance);
-		}else{
+		} else {
 			Swal.fire('Error', 'Network change detected in metamask', 'error');
 		}
 	}, [addresses, programmaticProvider])
@@ -65,7 +64,7 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 		}
 	}, [minterInstance, fetchData])
 
-	return <div className='col-12' style={{position: 'relative'}}>
+	return <div className='col-12' style={{ position: 'relative' }}>
 		<button onClick={fetchData} disabled={refetchingFlag} style={{ position: 'absolute', right: 0 }} className='btn btn-warning'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
@@ -89,12 +88,16 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 			</div>
 			<br />
 			{collectionsData.map((item, index) => {
-				return <ERC721Consumer
-					key={index}
-					index={index}
-					offerInfo={item}
-					account={account}
-					minter={minterInstance} />
+				console.log(item);
+				return (
+					<ERC721Consumer
+						key={index}
+						index={index}
+						offerInfo={item}
+						account={account}
+						minter={minterInstance}
+					/>
+				)
 			})}
 		</div>}
 	</div>
