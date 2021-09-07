@@ -63,7 +63,7 @@ const Range = ({ tokenInstance, minterInstance, productIndex, offerIndex, rangeI
 						try {
 							await minterInstance.buyToken(offerIndex, rangeIndex, specificIndex, { value: price });
 						} catch (err) {
-							Swal.fire('Error', err.data.message, 'error');
+							Swal.fire('Error', err?.data?.message, 'error');
 						}
 					}} className='btn py-0 btn-warning'>
 						Buy token #{specificIndex} for {price} Wei!
@@ -120,48 +120,6 @@ const ERC721Manager = ({ offerInfo, account, minter, index, width = 4 }) => {
 	useEffect(() => {
 		refreshData();
 	}, [offerInfo, account, refreshData]);
-<<<<<<< HEAD
-	
-	return <details style={{position: 'relative'}} className='col-12 col-md-4 py-4 border border-white rounded'>
-		<summary>
-			<div style={{position: 'absolute', top: 0, right: '2vh'}}>
-				#{index + 1}<br />
-			</div>
-			<h5 className='d-inline-block'>
-				{productName}
-			</h5>
-			<Link
-				to={`/rair/${offerInfo.contractAddress}/${offerInfo.productIndex}`}
-				style={{position: 'absolute', top: 0, left: '5vh'}}>
-				@{contractName}
-			</Link>
-		</summary>
-		<button onClick={refreshData} disabled={refetchingFlag} style={{position: 'absolute', left: 0, top: 0}} className='px-2 btn'>
-			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
-		</button>
-		<small>Contract Address: <b>{offerInfo.contractAddress}</b></small><br />
-		<small>Product Index: {offerInfo.productIndex}</small><br />
-		<br />
-		{rangeInfo.map((item, rangeIndex) => {
-			return <Range
-				key={rangeIndex}
-				tokenInstance={offerInfo.instance}
-				minterInstance={minter}
-				productIndex={offerInfo.productIndex}
-				rangeIndex={rangeIndex}
-				offerIndex={index}
-			/>
-		})}
-		<hr className='w-75 mx-auto' />
-		{balance && <>
-			You own {balance.length} tokens from this product<br/>
-			{balance.map((item, index) => {
-				return <details key={index} className='w-100'>
-					<summary>
-						<h5 className='d-inline-block'>{item.internalIndex}</h5>
-					</summary>
-=======
->>>>>>> origin/dev
 
 	return (
 		<details style={{ position: 'relative' }} className={`col-12 col-md-${width} py-4 border border-white rounded`}>
@@ -170,7 +128,7 @@ const ERC721Manager = ({ offerInfo, account, minter, index, width = 4 }) => {
 					#{index + 1}<br />
 				</div>
 				<h5 className='d-inline-block'>
-					{collectionName}
+					{productName}
 				</h5>
 				<Link
 					to={`/rair/${offerInfo.contractAddress}/${offerInfo.productIndex}`}
