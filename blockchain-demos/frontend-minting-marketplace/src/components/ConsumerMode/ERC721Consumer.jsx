@@ -79,8 +79,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 	</div>
 }
 
-const ERC721Manager = ({ offerInfo, minter, index, width = 4 }) => {
-
+const ERC721Manager = ({ offerInfo, index, width = 4 }) => {
 	const [balance, setBalance] = useState();
 	const [productName, setProductName] = useState();
 	const [contractName, setContractName] = useState();
