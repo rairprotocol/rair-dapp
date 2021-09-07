@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 
-// const LockManager = ({ index, array, deleter, disabled, locker, collectionIndex }) => {
+// const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
 // 	const [start, setStart] = useState(array[index].startingToken);
 // 	const [end, setEnd] = useState(array[index].endingToken);
@@ -29,7 +29,7 @@ import Swal from 'sweetalert2';
 // 		</th>
 // 		<th>
 // 			{!disabled ? <button
-// 				onClick={e => locker(collectionIndex, start, end, locked)}
+// 				onClick={e => locker(productIndex, start, end, locked)}
 // 				className='btn btn-success h-50'>
 // 				<i className='fas fa-lock' />
 // 			</button> : ''}
@@ -37,7 +37,7 @@ import Swal from 'sweetalert2';
 // 	</tr>
 // }
 
-const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker, collectionIndex }) => {
+const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker, productIndex }) => {
 
 	const [endingRange, setEndingRange] = useState(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [rangeName, setRangeName] = useState(array[index].name);
@@ -110,7 +110,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 		<th>
 			<button
 				disabled={locked <= 0}
-				onClick={e => locker(collectionIndex, rangeInit, endingRange, locked)}
+				onClick={e => locker(productIndex, rangeInit, endingRange, locked)}
 				className='btn btn-success h-50'>
 				<i className='fas fa-lock' />
 			</button>
@@ -118,7 +118,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 	</tr>
 }
 
-const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInstance, tokenAddress }) => {
+const ProductManager = ({ productIndex, productInfo, minter, tokenInstance, tokenAddress }) => {
 
 	const [ranges, setRanges] = useState([]);
 	const [/*locks*/, setLocks] = useState([]);
@@ -136,9 +136,9 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 		setLocks(aux);
 	}*/
 
-	const locker = async (collectionIndex, startingToken, endingToken, lockedTokens) => {
+	const locker = async (productIndex, startingToken, endingToken, lockedTokens) => {
 		try {
-			await tokenInstance.createRangeLock(collectionIndex, startingToken, endingToken, lockedTokens);
+			await tokenInstance.createRangeLock(productIndex, startingToken, endingToken, lockedTokens);
 		} catch (err) {
 			Swal.fire('Error', err?.data?.message, 'error');
 		}
@@ -147,12 +147,13 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 	const refresher = useCallback(async () => {
 		try {
 			// Marketplace Ranges
-			let offerIndex = (await minter.contractToOfferRange(tokenInstance.address, collectionIndex)).toString();
+			let offerIndex = (await minter.contractToOfferRange(tokenInstance.address, productIndex)).toString();
 			let offerData = await minter.getOfferInfo(offerIndex);
 			let existingRanges = [];
 			for await (let rangeIndex of [...Array.apply(null, { length: offerData.availableRanges.toString() }).keys()]) {
 				let rangeInfo = await minter.getOfferRangeInfo(offerIndex, rangeIndex);
-				if (Number(rangeInfo.collectionIndex.toString()) === collectionIndex) {
+				console.log(rangeInfo);
+				if (Number(rangeInfo.collectionIndex.toString()) === productIndex) {
 					existingRanges.push({
 						endingToken: Number(rangeInfo.tokenEnd.toString()),
 						name: rangeInfo.name,
@@ -164,14 +165,14 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 			setRanges(existingRanges);
 
 		} catch (err) {
-			console.error(err?.data?.message);
+			console.error(err);
 		}
 
 		try {// Lock Ranges
 			let existingLocks = [];
-			for await (let lockIndex of collectionInfo.locks) {
+			for await (let lockIndex of productInfo.locks) {
 				let lockInfo = await tokenInstance.getLockedRange(lockIndex);
-				if (Number(lockInfo.collectionIndex.toString()) === collectionIndex) {
+				if (Number(lockInfo.productIndex.toString()) === productIndex) {
 					existingLocks.push({
 						startingToken: lockInfo.startingToken.toString(),
 						endingToken: lockInfo.endingToken.toString(),
@@ -184,7 +185,7 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 		} catch (err) {
 			console.error(err?.data?.message);
 		}
-	}, [minter, collectionIndex, collectionInfo.locks, tokenInstance])
+	}, [minter, productIndex, productInfo.locks, tokenInstance])
 
 	const notDisabled = (item) => {
 		return !item.disabled;
@@ -202,18 +203,18 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 		if (tokenInstance && minter) {
 			refresher()
 		}
-	}, [collectionInfo, tokenInstance, minter, refresher])
+	}, [productInfo, tokenInstance, minter, refresher])
 
 	return <details className='w-100 border border-secondary rounded'>
 		<summary>
-			Product #{collectionIndex + 1}: {collectionInfo.name}
+			Product #{productIndex + 1}: {productInfo.name}
 		</summary>
 		<div className='row mx-0 px-0'>
 			<div className='col-12'>
-				<h5> Collection Info </h5>
-				First token: {collectionInfo.startingToken}<br />
-				Last Token: {collectionInfo.endingToken}<br />
-				Mintable Tokens Left: {collectionInfo.mintableTokensLeft}<br />
+				<h5> Product Info </h5>
+				First token: {productInfo.startingToken}<br />
+				Last Token: {productInfo.endingToken}<br />
+				Mintable Tokens Left: {productInfo.mintableTokensLeft}<br />
 			</div>
 			<hr className='w-100' />
 			<div className='col-12' style={{ position: 'relative' }}>
@@ -263,9 +264,9 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 								array={array}
 								deleter={deleter}
 								sync={() => { setForceSync(!forceSync) }}
-								hardLimit={collectionInfo.endingToken - collectionInfo.startingToken}
+								hardLimit={productInfo.endingToken - productInfo.startingToken}
 								locker={locker}
-								collectionIndex={collectionIndex}
+								productIndex={productIndex}
 							/>
 						})}
 					</tbody>
@@ -274,7 +275,7 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 					try {
 						if (ranges.length > 0 && ranges[0].disabled) {
 							await minter.appendOfferRangeBatch(
-								await minter.contractToOfferRange(tokenInstance.address, collectionIndex),
+								await minter.contractToOfferRange(tokenInstance.address, productIndex),
 								ranges.filter(notDisabled).map((item, index, array) => {
 									if (index === 0) {
 										let i = 0;
@@ -293,7 +294,7 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 						} else {
 							await minter.addOffer(
 								tokenAddress,
-								collectionIndex,
+								productIndex,
 								ranges.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
 								ranges.map((item) => item.endingToken),
 								ranges.map((item) => item.price),
@@ -346,13 +347,13 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 							return <LockManager
 										key={index}
 										locker={locker}
-										collectionIndex={collectionIndex}
+										productIndex={productIndex}
 										disabled={item.disabled}
 										index={index}
 										array={array}
 										deleter={lockDeleter}
 										sync={() => {setForceSync(!forceSync)}}
-										hardLimit={collectionInfo.endingToken - collectionInfo.startingToken}
+										hardLimit={productInfo.endingToken - productInfo.startingToken}
 									/>
 						})}
 					</tbody>
@@ -362,4 +363,4 @@ const CollectionManager = ({ collectionIndex, collectionInfo, minter, tokenInsta
 	</details>
 }
 
-export default CollectionManager;
+export default ProductManager;

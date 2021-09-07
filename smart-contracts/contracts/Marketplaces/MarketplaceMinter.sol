@@ -221,7 +221,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 
 		productInfo memory aux;
 		
-		(aux.start, aux.end, aux.mintableTokens,,) = IRAIR_ERC721(_tokenAddress).getCollection(_productIndex);
+		(aux.start, aux.end, aux.mintableTokens,,) = IRAIR_ERC721(_tokenAddress).getProduct(_productIndex);
 		require(aux.mintableTokens > 0, "Minting Marketplace: Cannot mint more tokens from this Product!");
 		
 		offer storage newOffer = offerCatalog.push();
@@ -259,7 +259,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 		validateRoles(selectedOffer.contractAddress);
 		
 		productInfo memory aux;
-		(aux.start, aux.end,,,) = IRAIR_ERC721(selectedOffer.contractAddress).getCollection(selectedOffer.productIndex);
+		(aux.start, aux.end,,,) = IRAIR_ERC721(selectedOffer.contractAddress).getProduct(selectedOffer.productIndex);
 		_validateRangeInfo(startToken, endToken, aux.start, aux.end);
 		selectedOffer.tokensAllowed[rangeIndex] -= (selectedOffer.tokenRangeEnd[rangeIndex] - selectedOffer.tokenRangeStart[rangeIndex]) - (endToken - startToken);
 		selectedOffer.tokenRangeStart[rangeIndex] = startToken;
@@ -278,7 +278,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	) public {
 		validateRoles(offerCatalog[offerIndex].contractAddress);
 		productInfo memory aux;
-		(aux.start, aux.end,,,) = IRAIR_ERC721(offerCatalog[offerIndex].contractAddress).getCollection(offerCatalog[offerIndex].productIndex);
+		(aux.start, aux.end,,,) = IRAIR_ERC721(offerCatalog[offerIndex].contractAddress).getProduct(offerCatalog[offerIndex].productIndex);
 		_validateRangeInfo(startToken, endToken, aux.start, aux.end);
 		_appendOfferRange(
 			offerIndex,
@@ -301,7 +301,7 @@ contract Minter_Marketplace is OwnableUpgradeable {
 					names.length == prices.length, "Minting Marketplace: Offer's ranges should have the same length!");
 		validateRoles(offerCatalog[offerIndex].contractAddress);
 		productInfo memory aux;
-		(aux.start, aux.end,,,) = IRAIR_ERC721(offerCatalog[offerIndex].contractAddress).getCollection(offerCatalog[offerIndex].productIndex);
+		(aux.start, aux.end,,,) = IRAIR_ERC721(offerCatalog[offerIndex].contractAddress).getProduct(offerCatalog[offerIndex].productIndex);
 		for (uint i = 0; i < names.length; i++) {
 			_validateRangeInfo(startTokens[i], endTokens[i], aux.start, aux.end);
 			_appendOfferRange(
@@ -323,84 +323,84 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	/// @param	rangeIndex			Index of the range within the offer
 	/// @param	internalTokenIndex	Index of the token within the range
 	function buyToken(uint catalogIndex, uint rangeIndex, uint internalTokenIndex) payable public {
-		offer storage selectedCollection = offerCatalog[catalogIndex];
-		require(selectedCollection.contractAddress != address(0), "Minting Marketplace: Invalid Collection Selected!");
-		require((selectedCollection.tokensAllowed.length > rangeIndex), "Minting Marketplace: Invalid range!");
-		require((selectedCollection.tokensAllowed[rangeIndex] > 0), "Minting Marketplace: Cannot mint more tokens for this range!");
-		require(selectedCollection.tokenRangeStart[rangeIndex] <= internalTokenIndex &&
-				internalTokenIndex <= selectedCollection.tokenRangeEnd[rangeIndex],
+		offer storage selectedProduct = offerCatalog[catalogIndex];
+		require(selectedProduct.contractAddress != address(0), "Minting Marketplace: Invalid Product Selected!");
+		require((selectedProduct.tokensAllowed.length > rangeIndex), "Minting Marketplace: Invalid range!");
+		require((selectedProduct.tokensAllowed[rangeIndex] > 0), "Minting Marketplace: Cannot mint more tokens for this range!");
+		require(selectedProduct.tokenRangeStart[rangeIndex] <= internalTokenIndex &&
+				internalTokenIndex <= selectedProduct.tokenRangeEnd[rangeIndex],
 					"Minting Marketplace: Token doesn't belong in that offer range!");
-		require(msg.value >= selectedCollection.rangePrice[rangeIndex], "Minting Marketplace: Insuficient Funds!");
+		require(msg.value >= selectedProduct.rangePrice[rangeIndex], "Minting Marketplace: Insuficient Funds!");
 		
 		address creatorAddress;
 		uint256 amount;
 
-		bool hasFees = IERC2981(selectedCollection.contractAddress).supportsInterface(type(IERC2981).interfaceId);
+		bool hasFees = IERC2981(selectedProduct.contractAddress).supportsInterface(type(IERC2981).interfaceId);
 		// If the token minted supports the EIP2981 interface, ask for the creator fee!
 		if (hasFees) {
-			(creatorAddress, amount) = IRAIR_ERC721(selectedCollection.contractAddress).royaltyInfo(0, selectedCollection.rangePrice[rangeIndex]);
+			(creatorAddress, amount) = IRAIR_ERC721(selectedProduct.contractAddress).royaltyInfo(0, selectedProduct.rangePrice[rangeIndex]);
 			// Send the creator fee to the creator
 			// Should send whatever's left after transferring treasury and node fees
-			payable(creatorAddress).transfer(selectedCollection.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000);
+			payable(creatorAddress).transfer(selectedProduct.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000);
 		}
 
 		// Pay the buyer any excess they transferred
-		payable(msg.sender).transfer(msg.value - selectedCollection.rangePrice[rangeIndex]);
+		payable(msg.sender).transfer(msg.value - selectedProduct.rangePrice[rangeIndex]);
 		// Pay the treasury
-		payable(treasury).transfer((selectedCollection.rangePrice[rangeIndex] * treasuryFee) / 100000);
+		payable(treasury).transfer((selectedProduct.rangePrice[rangeIndex] * treasuryFee) / 100000);
 		// Pay the node
-		payable(selectedCollection.nodeAddress).transfer((selectedCollection.rangePrice[rangeIndex] * nodeFee) / 100000);
-		selectedCollection.tokensAllowed[rangeIndex]--;
-		if (selectedCollection.tokensAllowed[rangeIndex] == 0) {
+		payable(selectedProduct.nodeAddress).transfer((selectedProduct.rangePrice[rangeIndex] * nodeFee) / 100000);
+		selectedProduct.tokensAllowed[rangeIndex]--;
+		if (selectedProduct.tokensAllowed[rangeIndex] == 0) {
 			openSales--;
-			emit SoldOut(selectedCollection.contractAddress, catalogIndex, rangeIndex);
+			emit SoldOut(selectedProduct.contractAddress, catalogIndex, rangeIndex);
 		}
-		IRAIR_ERC721(selectedCollection.contractAddress).mint(msg.sender, selectedCollection.productIndex, internalTokenIndex);
-		emit TokenMinted(msg.sender, selectedCollection.contractAddress, catalogIndex, rangeIndex, internalTokenIndex);
+		IRAIR_ERC721(selectedProduct.contractAddress).mint(msg.sender, selectedProduct.productIndex, internalTokenIndex);
+		emit TokenMinted(msg.sender, selectedProduct.contractAddress, catalogIndex, rangeIndex, internalTokenIndex);
 	}
 
 	function buyTokenBatch(uint catalogIndex, uint rangeIndex, uint[] calldata tokenIndexes, address[] calldata recipients) payable external {
-		offer storage selectedCollection = offerCatalog[catalogIndex];
-		require(selectedCollection.contractAddress != address(0), "Minting Marketplace: Invalid Collection Selected!");
-		require((selectedCollection.tokensAllowed.length > rangeIndex), "Minting Marketplace: Invalid range!");
-		require((selectedCollection.tokensAllowed[rangeIndex] >= tokenIndexes.length), "Minting Marketplace: Cannot mint that many tokens for this range!");
-		require(msg.value >= (selectedCollection.rangePrice[rangeIndex] * tokenIndexes.length), "Minting Marketplace: Insuficient Funds!");
+		offer storage selectedProduct = offerCatalog[catalogIndex];
+		require(selectedProduct.contractAddress != address(0), "Minting Marketplace: Invalid Product Selected!");
+		require((selectedProduct.tokensAllowed.length > rangeIndex), "Minting Marketplace: Invalid range!");
+		require((selectedProduct.tokensAllowed[rangeIndex] >= tokenIndexes.length), "Minting Marketplace: Cannot mint that many tokens for this range!");
+		require(msg.value >= (selectedProduct.rangePrice[rangeIndex] * tokenIndexes.length), "Minting Marketplace: Insuficient Funds!");
 		require(tokenIndexes.length == recipients.length, "Minting Marketplace: Token Indexes and Recipients should have the same length");
 
 		address creatorAddress;
 		uint256 amount;
 
-		bool hasFees = IERC2981(selectedCollection.contractAddress).supportsInterface(type(IERC2981).interfaceId);
+		bool hasFees = IERC2981(selectedProduct.contractAddress).supportsInterface(type(IERC2981).interfaceId);
 
 		// Pay the buyer any excess they transferred
-		payable(msg.sender).transfer(msg.value - (selectedCollection.rangePrice[rangeIndex] * tokenIndexes.length));
+		payable(msg.sender).transfer(msg.value - (selectedProduct.rangePrice[rangeIndex] * tokenIndexes.length));
 		
 		// If the token minted supports the EIP2981 interface, ask for the creator fee!
 		if (hasFees) {
-			(creatorAddress, amount) = IRAIR_ERC721(selectedCollection.contractAddress).royaltyInfo(0, selectedCollection.rangePrice[rangeIndex]);
+			(creatorAddress, amount) = IRAIR_ERC721(selectedProduct.contractAddress).royaltyInfo(0, selectedProduct.rangePrice[rangeIndex]);
 			// Send the creator fee to the creator
 			// Should send whatever's left after transferring treasury and node fees
-			payable(creatorAddress).transfer((selectedCollection.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000) * tokenIndexes.length);
+			payable(creatorAddress).transfer((selectedProduct.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000) * tokenIndexes.length);
 		}
 		
 		// Pay the treasury
-		payable(treasury).transfer(((selectedCollection.rangePrice[rangeIndex] * treasuryFee) / 100000) * tokenIndexes.length);
+		payable(treasury).transfer(((selectedProduct.rangePrice[rangeIndex] * treasuryFee) / 100000) * tokenIndexes.length);
 		
 		// Pay the node
-		payable(selectedCollection.nodeAddress).transfer(((selectedCollection.rangePrice[rangeIndex] * nodeFee) / 100000) * tokenIndexes.length);
+		payable(selectedProduct.nodeAddress).transfer(((selectedProduct.rangePrice[rangeIndex] * nodeFee) / 100000) * tokenIndexes.length);
 		
-		selectedCollection.tokensAllowed[rangeIndex] -= tokenIndexes.length;
-		if (selectedCollection.tokensAllowed[rangeIndex] == 0) {
+		selectedProduct.tokensAllowed[rangeIndex] -= tokenIndexes.length;
+		if (selectedProduct.tokensAllowed[rangeIndex] == 0) {
 			openSales--;
-			emit SoldOut(selectedCollection.contractAddress, catalogIndex, rangeIndex);
+			emit SoldOut(selectedProduct.contractAddress, catalogIndex, rangeIndex);
 		}
 
 		for (uint256 i = 0; i < tokenIndexes.length; i++) {
-			require(selectedCollection.tokenRangeStart[rangeIndex] <= tokenIndexes[i] &&
-					tokenIndexes[i] <= selectedCollection.tokenRangeEnd[rangeIndex],
+			require(selectedProduct.tokenRangeStart[rangeIndex] <= tokenIndexes[i] &&
+					tokenIndexes[i] <= selectedProduct.tokenRangeEnd[rangeIndex],
 						"Minting Marketplace: Token doesn't belong in that offer range!");
-			IRAIR_ERC721(selectedCollection.contractAddress).mint(recipients[i], selectedCollection.productIndex, tokenIndexes[i]);
-			emit TokenMinted(recipients[i], selectedCollection.contractAddress, catalogIndex, rangeIndex, tokenIndexes[i]);
+			IRAIR_ERC721(selectedProduct.contractAddress).mint(recipients[i], selectedProduct.productIndex, tokenIndexes[i]);
+			emit TokenMinted(recipients[i], selectedProduct.contractAddress, catalogIndex, rangeIndex, tokenIndexes[i]);
 		}
 	}
 }

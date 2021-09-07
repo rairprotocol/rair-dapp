@@ -57,19 +57,13 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "id",
-          "type": "uint256"
-        },
-        {
           "indexed": false,
           "internalType": "string",
-          "name": "name",
+          "name": "newURI",
           "type": "string"
         }
       ],
-      "name": "CollectionCompleted",
+      "name": "BaseURIChanged",
       "type": "event"
     },
     {
@@ -86,6 +80,31 @@
           "internalType": "string",
           "name": "name",
           "type": "string"
+        }
+      ],
+      "name": "ProductCompleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "startingToken",
+          "type": "uint256"
         },
         {
           "indexed": false,
@@ -94,7 +113,7 @@
           "type": "uint256"
         }
       ],
-      "name": "CollectionCreated",
+      "name": "ProductCreated",
       "type": "event"
     },
     {
@@ -103,7 +122,26 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "collectionIndex",
+          "name": "productId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "newURI",
+          "type": "string"
+        }
+      ],
+      "name": "ProductURIChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "productIndex",
           "type": "uint256"
         },
         {
@@ -127,7 +165,7 @@
         {
           "indexed": false,
           "internalType": "string",
-          "name": "collectionName",
+          "name": "productName",
           "type": "string"
         }
       ],
@@ -140,7 +178,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "collectionID",
+          "name": "productID",
           "type": "uint256"
         },
         {
@@ -157,6 +195,25 @@
         }
       ],
       "name": "RangeUnlocked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "newURI",
+          "type": "string"
+        }
+      ],
+      "name": "TokenURIChanged",
       "type": "event"
     },
     {
@@ -248,7 +305,7 @@
           "type": "uint256"
         }
       ],
-      "name": "getCollection",
+      "name": "getProduct",
       "outputs": [
         {
           "internalType": "uint256",
@@ -267,7 +324,7 @@
         },
         {
           "internalType": "string",
-          "name": "collectionName",
+          "name": "productName",
           "type": "string"
         },
         {
@@ -281,7 +338,7 @@
     },
     {
       "inputs": [],
-      "name": "getCollectionCount",
+      "name": "getProductCount",
       "outputs": [
         {
           "internalType": "uint256",
@@ -325,7 +382,7 @@
         },
         {
           "internalType": "uint256",
-          "name": "collectionID",
+          "name": "productID",
           "type": "uint256"
         },
         {
