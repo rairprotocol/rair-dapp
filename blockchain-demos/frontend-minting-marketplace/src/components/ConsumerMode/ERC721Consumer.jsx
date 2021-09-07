@@ -41,6 +41,7 @@ const Range = ({tokenInstance, minterInstance, productIndex, offerIndex, rangeIn
 		let tokens = data.map(i => i.token);
 		try {
 			await minterInstance.buyTokenBatch(offerIndex, rangeIndex, tokens, addresses, {value: price * tokens.length});
+			Swal.close();
 		} catch (err) {
 			console.log(err);
 			Swal.fire('Error', err?.data?.message, 'error');
