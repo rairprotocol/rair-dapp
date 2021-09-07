@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import BatchMinting from './BatchMinting.jsx';
+const MySwal = withReactContent(Swal)
 
 const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 	const [next, setNext] = useState();
@@ -34,6 +37,18 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 		refreshData();
 	}, [refreshData, tokenInstance]);
 
+	const batchMint = async (data) => {
+		let addresses = data.map(i => i.address);
+		let tokens = data.map(i => i.token);
+		try {
+			await minterInstance.buyTokenBatch(offerIndex, rangeIndex, tokens, addresses, {value: price * tokens.length});
+			Swal.close();
+		} catch (err) {
+			console.log(err);
+			Swal.fire('Error', err?.data?.message, 'error');
+		}
+	}
+
 	return <div style={{ position: 'relative' }} className='w-100 my-2'>
 		<b>{name}</b>: {allowed} tokens at {price} each!
 		<br />
@@ -51,6 +66,21 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 			}
 		}} className='btn btn-success py-0'>
 			Buy token #{next} for {price} Wei!
+		</button>
+		<button onClick={e => {
+			MySwal.fire({
+				html: <BatchMinting
+					name={name}
+					start={start}
+					end={end}
+					price={price}
+					batchMint={batchMint}
+				/>,
+				width: '60vw',
+				showConfirmButton: false
+			})
+		}} className='btn py-0 btn-secondary'>
+			Batch Minting
 		</button>
 		{start && allowed && end && <progress className='w-100' value={(end - start + 1) - allowed} max={end} />}
 		{allowed} tokens left!
