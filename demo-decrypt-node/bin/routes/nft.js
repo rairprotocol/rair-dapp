@@ -10,7 +10,7 @@ const { execPromise } = require('../utils/helpers');
 module.exports = context => {
   const router = express.Router();
 
-  router.post('/', /*JWTVerification(context),*/ upload.single('csv'), async (req, res, next) => {
+  router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product } = req.body;
       const prod = parseInt(product);
