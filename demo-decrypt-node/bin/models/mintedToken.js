@@ -8,12 +8,12 @@ const Metadata = new Schema({
   artist: { type: String, default: 'none' },
   external_url: { type: String, default: 'none' },
   image: { type: String },
-  attributes: { type: String }
+  attributes: { type: Object }
 }, { _id: false });
 
 const MintedToken = new Schema({
   token: { type: String, required: true },
-  ownerAddress: { type: String, lowercase: true, required: true },
+  ownerAddress: { type: String, lowercase: true },
   offerPool: { type: Number, required: true },
   offer: { type: Number, required: true },
   contract: { type: String, lowercase: true, required: true },

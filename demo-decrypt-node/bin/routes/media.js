@@ -1,7 +1,6 @@
 const express = require('express');
 const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfsService')();
 const upload = require('../Multer/Config.js');
-const { exec } = require('child_process');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
@@ -10,6 +9,7 @@ const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
 const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
 const log = require('../utils/logger')(module);
+const { execPromise } = require('../utils/helpers');
 
 const rareify = async (fsRoot, socketInstance) => {
   // Generate a key
@@ -69,15 +69,6 @@ const rareify = async (fsRoot, socketInstance) => {
       return key.export();
     });
 };
-
-const execPromise = (command, options = {}) => new Promise((resolve, reject) => {
-  exec(command, options, (error, stdout, stderr) => {
-    if (error) {
-      return reject(error);
-    }
-    return resolve();
-  });
-});
 
 /**
  * intToByteArray Convert an integer to a 16 byte Uint8Array (little endian)

@@ -16,7 +16,11 @@ const addPin = async (CID, name, socketInstance) => {
 
     log.info(`Pinned to PINATA: ${ JSON.stringify(response) }`);
 
-    if (!_.isUndefined(socketInstance)) socketInstance.emit('uploadProgress', { message: 'Pined to Pinata.', last: true, done: 100 });
+    if (!_.isUndefined(socketInstance)) socketInstance.emit('uploadProgress', {
+      message: 'Pined to Pinata.',
+      last: true,
+      done: 100
+    });
   } catch (err) {
     log.error(`Pinning to PINATA: ${ err.message }`);
   }
@@ -47,9 +51,20 @@ const addFolder = async (pathTo, folderName, socketInstance) => {
   return _.get(response, 'IpfsHash');
 };
 
+const addMetadata = async (data, name) => {
+  const response = await pinata.pinJSONToIPFS(data, {
+    pinataMetadata: {
+      name
+    }
+  });
+
+  return `${ process.env.PINATA_GATEWAY }/${ _.get(response, 'IpfsHash') }`;
+}
+
 module.exports = {
   retrieveMediaInfo,
   removePin,
   addPin,
-  addFolder
+  addFolder,
+  addMetadata
 };

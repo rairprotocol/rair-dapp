@@ -4,6 +4,7 @@ const Market = require('./contracts/Minter_Marketplace.json').abi;
 const ERC777 = require('./contracts/RAIR777.json').abi;
 const Token = require('./contracts/RAIR_ERC721.json').abi;
 const log = require('../../utils/logger')(module);
+const { addMetadata } = require('../../integrations/ipfsService')();
 
 const { nanoid } = require('nanoid');
 const _ = require('lodash');
@@ -216,13 +217,36 @@ module.exports = async (db) => {
         try {
           const contract = contractAddress.toLowerCase();
 
-          await db.MintedToken.create({ // TODO have to be updated for handling saving/updating tokens and uploading metadata to the Pinata cloud
-            token: tokenIndex,
-            ownerAddress,
-            offerPool,
-            offer: offerIndex,
+          const foundToken = await db.MintedToken.findOne({
             contract,
+            offerPool,
+            token: tokenIndex,
           });
+
+          if (!_.isEmpty(foundToken)) {
+            let metadataURI = 'none';
+
+            if (!_.isEmpty(foundToken.metadata)) {
+              metadataURI = await addMetadata(foundToken.metadata, foundToken.metadata.name);
+            }
+
+            await db.MintedToken.findOneAndUpdate({
+              contract,
+              offerPool,
+              token: tokenIndex,
+            }, {
+              ownerAddress,
+              metadataURI
+            });
+          } else {
+            await db.MintedToken.create({
+              token: tokenIndex,
+              ownerAddress,
+              offerPool,
+              offer: offerIndex,
+              contract,
+            });
+          }
 
           const updatedOffer = await db.Offer.findOneAndUpdate({
             offerIndex,

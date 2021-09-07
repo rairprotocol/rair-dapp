@@ -4,6 +4,8 @@ const upload = require('../Multer/Config.js');
 const fs = require('fs');
 const csv = require('csv-parser');
 const _ = require('lodash');
+const log = require('../utils/logger')(module);
+const { execPromise } = require('../utils/helpers');
 
 module.exports = context => {
   const router = express.Router();
@@ -12,6 +14,7 @@ module.exports = context => {
     try {
       const { contract, product } = req.body;
       const prod = parseInt(product);
+      const defaultFields = ['NFTID', 'owneraddress', 'name', 'description', 'image'];
       const records = [];
       const forSave = [];
 
@@ -54,21 +57,30 @@ module.exports = context => {
 
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
         .pipe(csv())
-        .on('data', data => records.push(data))
-        .on('end', () => {
-          console.log(records);
+        .on('data', data => {
+          const foundFields = _.keys(data);
+          let isValid = true;
 
+          _.forEach(defaultFields, field => {
+            if (!_.includes(foundFields, field)) {
+              isValid = false;
+            }
+          })
+
+          if (isValid) records.push(data);
+        })
+        .on('end', () => {
           _.forEach(offerPools, offerPool => {
             _.forEach(records, record => {
               if (_.inRange(record.NFTID, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
                 const attributes = _.chain(record)
                   .assign({})
-                  .omit(['NFTID', 'transferto address', 'name', 'description', 'image'])
+                  .omit(defaultFields)
                   .value();
 
                 forSave.push({
                   token: record.NFTID,
-                  ownerAddress: record['transferto address'],
+                  ownerAddress: record['owneraddress'],
                   offerPool: offerPool.marketplaceCatalogIndex,
                   offer: offerPool.offer.offerIndex,
                   contract,
@@ -78,7 +90,7 @@ module.exports = context => {
                     // artist: { type: String },
                     // external_url: { type: String, required: true },
                     image: record.image,
-                    attributes: JSON.stringify(attributes)
+                    attributes: attributes
                   }
                 });
               }
@@ -90,9 +102,19 @@ module.exports = context => {
         .on('error', reject)
       );
 
-      const result = await context.db.MintedToken.insertMany(forSave);
+      try {
+        await context.db.MintedToken.insertMany(forSave, { ordered: false });
+      } catch (err) {
+        log.error(err);
+      }
+
+      const result = await context.db.MintedToken.find({ contract, offerPool: offerPools[0].marketplaceCatalogIndex });
+
+      const command = `rm ${ req.file.destination }${ req.file.filename }`;
+      await execPromise(command);
 
       res.json({ success: true, result });
+
     } catch (err) {
       next(err);
     }
