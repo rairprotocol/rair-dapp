@@ -13,6 +13,7 @@ const Metadata = new Schema({
 
 const MintedToken = new Schema({
   token: { type: String, required: true },
+  uniqueIndexInContract: { type: Number, required: true },
   ownerAddress: { type: String, lowercase: true },
   offerPool: { type: Number, required: true },
   offer: { type: Number, required: true },
