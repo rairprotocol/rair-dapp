@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {BrowserRouter, Switch, Route, Link} from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -118,6 +118,7 @@ function App() {
 
 	return (
 		<BrowserRouter>
+			{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 			<div style={{minHeight: '100vh', backgroundColor: '#EEE'}} className="App p-0 text-black container-fluid">
 				<div className='row w-100 m-0 p-0'>
 					<div className='col-1 d-none d-xl-inline-block' />
@@ -154,7 +155,7 @@ function App() {
 						<div className='col-12' style={{height: '10vh'}}>
 							{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
 							<Switch>
-								<Route exact path='/admin' component={BlockChainSwitcher} />
+								<Route path='/admin' component={BlockChainSwitcher} />
 							</Switch>
 						</div>
 						<div className='col-12 mt-3 row'>
