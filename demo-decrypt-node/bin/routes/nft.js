@@ -120,6 +120,55 @@ module.exports = context => {
     }
   });
 
+  router.get('/:contract/:product', async (req, res, next) => {
+    try {
+      const { contract, product } = req.params;
+      const prod = parseInt(product);
+
+      const result = await context.db.OfferPool.aggregate([
+        { $match: { contract, product: prod } },
+        {
+          $lookup: {
+            from: "MintedToken",
+            let: {
+              contractOP: '$contract',
+              offerPoolIndex: '$marketplaceCatalogIndex'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          "$contract",
+                          "$$contractOP"
+                        ]
+                      },
+                      {
+                        $eq: [
+                          "$offerPool",
+                          "$$offerPoolIndex"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: "mintedTokens"
+          }
+        },
+        { $unwind: '$mintedTokens' },
+        { $replaceRoot: { newRoot: '$mintedTokens' } },
+      ]);
+
+      res.json({ success: true, result });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   router.get('/files/:contract/:token/:product', validation('getFilesByNFT', 'params'), async (req, res, next) => {
     try {
       const { contract, token, product } = req.params;
