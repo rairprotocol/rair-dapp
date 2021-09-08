@@ -32,6 +32,7 @@
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
     "dotenv": "^8.2.0",
     "eth-sig-util": "^2.0.2",
     "ethereumjs-util": "^5.2.1",
