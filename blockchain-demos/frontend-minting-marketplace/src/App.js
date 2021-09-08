@@ -14,6 +14,7 @@ import * as contractTypes from './ducks/contracts/types.js';
 import Swal from 'sweetalert2';
 
 import CSVParser from './components/metadata/csvParser.jsx';
+import CreateBatchMetadata from './components/CreateBatchMetadata';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
 import CreatorMode from './components/creatorMode.jsx';
@@ -138,6 +139,7 @@ function App() {
 							{name: 'Latest', route: '/latest'},
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
+							{name: 'Batch Metadata', route: '/create-batch-metadata'},
 							{name: 'Factory', route: '/factory', disabled: factoryInstance === undefined},
 							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
@@ -167,6 +169,7 @@ function App() {
 								</Route>
 								<Route path='/token/:contract/:identifier' component={Token} />
 								<Route path='/rair/:contract/:product' component={RairProduct} />
+								<Route path='/create-batch-metadata' component={CreateBatchMetadata} />
 								<Route path='/all'>
 									<VideoList />
 								</Route>

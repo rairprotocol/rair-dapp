@@ -1,26 +1,43 @@
-import React, {useState} from 'react';
+import React, {useState} from 'react'
 
-const InputField = ({getter, setter, name, label, type}) => {
-    const [id, setID] = useState(name)
-    useState(() => {
-      if (!name)
-      {
-        setID(Math.round(Math.random() * 10000));
-      }
-    }, [])
-    return <>
-      {label && <label
-        htmlFor={id}
-        className='col-12 d-inline-block col-md-4 my-2'>
-          {label}:
-        </label>}
-      <input
-        id={id}
-        value={getter}
-        type={type ? type : 'text'}
-        onChange={(e) => setter(e.target.value)}
-        className='col-12 d-inline-block col-md-8 py-2'/>
-    </>
-  } 
+const InputField = ({
+	getter,
+	setter,
+	customCSS = {color: 'black'},
+	customClass,
+	labelCSS = {color: 'black'},
+	labelClass,
+	placeholder,
+	type,
+	label,
+	required,
+	disabled,
+	requiredColor,
+}) => {
+	const [id,] = useState(Number(new Date()) + '-' + Math.round(Math.random() * 1000000))
+	
+	return <>
+		{label &&
+			<label
+				htmlFor={id}
+				style={{
+					...labelCSS,
+					color: (required ? `${requiredColor}!important` : labelCSS.color)
+				}}
+				className={labelClass}>
+					 {label + (required ? '*' : '')}
+				</label>}
+		<input
+			type={type} 
+			id={id}
+			onChange={e => setter(e.target.value)}
+			value={getter}
+			disabled={disabled}
+			style={{...customCSS, ':required': {color: requiredColor}}}
+			className={customClass}
+			required={required ? required : false}
+			placeholder={placeholder + (required ? '*' : '')} />
+	</>
+}
 
-  export default InputField;
+export default InputField
