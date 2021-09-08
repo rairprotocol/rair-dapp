@@ -7,7 +7,7 @@ const InputField = ({
 	customClass,
 	labelCSS = {color: 'black'},
 	labelClass,
-	placeholder,
+	placeholder = '',
 	type,
 	label,
 	required,
