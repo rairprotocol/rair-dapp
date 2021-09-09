@@ -13,7 +13,6 @@ services:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
-      JWT_SECRET: ${jwt_secret}
       PINATA_SECRET: ${pinata_secret}  
     ports:
       - 3000:3000
