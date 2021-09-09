@@ -115,7 +115,13 @@ const FileUpload = ({address}) => {
 					<label className='w-100' htmlFor="media_id">File:</label>
 					<input className='form-control' id='media_id' type="file" onChange={(e) => setVideo(e.target.files ? e.target.files[0] : undefined)} />
 				</div>
-				<button type='button' disabled={uploading} className='btn py-1 col-8 btn-primary' onClick={e => {
+				<button type='button' disabled={
+					uploading ||
+					title === '' ||
+					description === '' ||
+					author === '' ||
+					token === ''
+				} className='btn py-1 col-8 btn-primary' onClick={e => {
 					if (uploading)
 					{
 						return
