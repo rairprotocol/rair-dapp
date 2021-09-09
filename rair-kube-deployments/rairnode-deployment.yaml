@@ -28,6 +28,7 @@ spec:
       containers:
         - image: rairtechinc/rairservernode:dev_latest
           name: rairnode
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
             - containerPort: 5000
@@ -38,7 +39,7 @@ spec:
             - mountPath: /usr/local/src/bin/Videos
               name: rairnode-claim1
       imagePullSecrets:
-            - name: regcred
+        - name: regcred
       restartPolicy: Always
       volumes:
         - name: rairnode-claim0

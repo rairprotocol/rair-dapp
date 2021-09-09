@@ -27,10 +27,12 @@ spec:
       containers:
         - image: rairtechinc/rairfront:dev_latest
           name: rairfront
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources: {}
       imagePullSecrets:
             - name: regcred
       restartPolicy: Always
+      
 status: {}
