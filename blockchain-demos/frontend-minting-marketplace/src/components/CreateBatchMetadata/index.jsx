@@ -14,6 +14,8 @@ const CreateBatchMetadata = () => {
 	const [productOptions, setProductOptions] = useState([]);
 	const [productId, setProductId] = useState('null');
 
+	const [contractInstance, setContractInstance] = useState();
+
 	const {factoryInstance, currentUserAddress, programmaticProvider} = useSelector(state => state.contractStore);
 
 	const onChangeValue = e => {
@@ -48,35 +50,36 @@ const CreateBatchMetadata = () => {
 		let finalContractList = []
 		for await (let contractNumber of [...Array(Number(contractsCreated.toString())).keys()]) {
 			let address = await factoryInstance.ownerToContracts(currentUserAddress, contractNumber)
+			let signer = programmaticProvider;
+			if (window.ethereum) {
+				let provider = new ethers.providers.Web3Provider(window.ethereum);
+				signer = provider.getSigner(0);
+			}
+			let instance = new ethers.Contract(address, erc721Abi, signer);
+			setContractInstance(instance);
 			finalContractList.push({
 				value: address,
-				label: address
+				label: `${await instance.name()} (${address})`
 			});
 		}
 		setContractOptions(finalContractList);
-	}, [factoryInstance, currentUserAddress])
+	}, [factoryInstance, currentUserAddress, programmaticProvider])
 
 	const fetchProductData = useCallback(async () => {
-		if (contractAddress === 'null') {
+		if (!contractInstance) {
 			return;
 		}
-		let signer = programmaticProvider;
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
-		}
-		let instance = new ethers.Contract(contractAddress, erc721Abi, signer);
-		let productCount = Number((await instance.getProductCount()).toString());
+		let productCount = Number((await contractInstance.getProductCount()).toString());
 		let finalProductList = [];
 		for await (let productNumber of [...Array(Number(productCount.toString())).keys()]) {
-			let productInfo = await instance.getProduct(productNumber);
+			let productInfo = await contractInstance.getProduct(productNumber);
 			finalProductList.push({
 				value: productNumber,
-				label: `${productNumber} - ${productInfo.productName}`
+				label: `${productInfo.productName} (${productNumber})`
 			})
 		}
 		setProductOptions(finalProductList);
-	}, [contractAddress])
+	}, [contractInstance])
 
 	useEffect(() => {
 		fetchFactoryData();
