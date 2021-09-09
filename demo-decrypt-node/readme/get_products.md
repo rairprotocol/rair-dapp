@@ -52,12 +52,12 @@ Returns found products
             0,
             1
           ],
-          "rangeIndex": 0,
+          "offerIndex": 0,
           "contract": "contractAddress",
           "product": 1,
           "offerPool": 21,
           "price": 111,
-          "rangeName": "Some Name 1",
+          "offerName": "Some Name 1",
           "creationDate": "2021-08-06T10:55:00.621Z",
           "copies": 2
         },
@@ -69,12 +69,12 @@ Returns found products
             2,
             3
           ],
-          "rangeIndex": 1,
+          "offerIndex": 1,
           "contract": "contractAddress",
           "product": 1,
           "offerPool": 21,
           "price": 55,
-          "rangeName": "Some Name 2",
+          "offerName": "Some Name 2",
           "creationDate": "2021-08-06T10:57:28.313Z",
           "copies": 2
         }

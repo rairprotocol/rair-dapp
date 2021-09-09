@@ -4,10 +4,11 @@ const { validation } = require('../../middleware');
 module.exports = context => {
   const router = express.Router()
 
-  router.get('/:contractAddress', validation('singleContract', 'params'), async (req, res, next) => {
+  router.get('/', async (req, res, next) => {
     try {
       // const { adminNFT: user } = req.user;
-      const { contractAddress } = req.params;
+      const { contractAddress } = req;
+
       const contract = await context.db.Contract.findOne({ contractAddress });
 
       res.json({ success: true, contract });
@@ -16,7 +17,7 @@ module.exports = context => {
     }
   });
 
-  // router.put('/:contractAddress', validation('singleContract', 'params'), validation('updateContract'), async (req, res, next) => {
+  // router.put('/', validation('singleContract', 'params'), validation('updateContract'), async (req, res, next) => {
   //   try {
   //     const { adminNFT: user } = req.user;
   //     const { contractAddress } = req.params;
@@ -28,10 +29,11 @@ module.exports = context => {
   //   }
   // });
 
-  router.delete('/:contractAddress', validation('singleContract', 'params'), async (req, res, next) => {
+  router.delete('/', async (req, res, next) => {
     try {
       // const { adminNFT: user } = req.user;
-      const { contractAddress } = req.params;
+      const { contractAddress } = req;
+
       await context.db.Contract.deleteOne({ contractAddress });
 
       res.json({ success: true });

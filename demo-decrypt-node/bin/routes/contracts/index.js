@@ -26,7 +26,10 @@ module.exports = context => {
     }
   });
 
-  router.use('/', require('./singleContract')(context));
+  router.use('/:contractAddress', validation('singleContract', 'params'), (req, res, next) => {
+    req.contractAddress = req.params.contractAddress;
+    next();
+  }, require('./singleContract')(context));
 
   return router
 }

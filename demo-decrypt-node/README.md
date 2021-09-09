@@ -51,7 +51,9 @@ Supported options:
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
             * [x] /:contractAddress - DELETE - remove specific contract, [see details here](readme/delete_contract.md)
     * [x] /nft - POST - create new nft tokens, [see details here](readme/bulk_create_NFT_tokens.md)
-        * [x] /files/:contract/:token/:offerPool - get files by NFT token, [see details here](readme/get_files_by_nft.md)
+        * [x] /:contract - 
+            * [x] /:product -
+                * [x] /files/:token - get files by NFT token, [see details here](readme/get_files_by_nft.md)
     * [x] /products - GET - get all products with all offers for eac of them for particular user, [see details here](readme/get_products.md)
     * [x] /docs - swagger documentation for the server
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
