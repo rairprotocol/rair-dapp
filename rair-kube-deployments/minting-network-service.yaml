@@ -15,5 +15,6 @@ spec:
       targetPort: 3001
   selector:
     io.kompose.service: minting-network
+    run: web
 status:
   loadBalancer: {}
