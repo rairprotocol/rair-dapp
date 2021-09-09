@@ -8,7 +8,7 @@ services:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
     environment:
-      PRODUCTION: "false"
+      PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       JWT_SECRET: ${jwt_secret}
