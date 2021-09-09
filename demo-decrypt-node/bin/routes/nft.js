@@ -55,6 +55,8 @@ module.exports = context => {
         { $unwind: '$offer' }
       ]);
 
+      const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
+
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
         .pipe(csv())
         .on('data', data => {
@@ -72,18 +74,21 @@ module.exports = context => {
         .on('end', () => {
           _.forEach(offerPools, offerPool => {
             _.forEach(records, record => {
-              if (_.inRange(record.NFTID, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
+              const token = parseInt(record.NFTID);
+
+              if (_.inRange(token, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
                 const attributes = _.chain(record)
                   .assign({})
                   .omit(defaultFields)
                   .value();
 
                 forSave.push({
-                  token: record.NFTID,
+                  token,
                   ownerAddress: record['owneraddress'],
                   offerPool: offerPool.marketplaceCatalogIndex,
                   offer: offerPool.offer.offerIndex,
                   contract,
+                  uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                   metadata: {
                     name: record.name,
                     description: record.description,
