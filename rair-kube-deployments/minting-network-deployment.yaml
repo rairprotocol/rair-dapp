@@ -27,6 +27,7 @@ spec:
       containers:
         - image: rairtechinc/minting-network:dev_latest
           name: minting-network
+          imagePullPolicy: Always
           ports:
             - containerPort: 3001
           resources: {}
