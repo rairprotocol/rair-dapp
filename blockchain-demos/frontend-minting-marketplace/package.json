@@ -2,7 +2,7 @@
   "name": "frontend-minting-marketplace",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://rairnode:5000",
+  "proxy": "http://dev.rair.tech:5000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -18,11 +18,12 @@
     "socket.io-client": "^4.1.3",
     "styled-components": "^5.3.1",
     "sweetalert2": "^11.0.18",
+    "sweetalert2-react-content": "^4.1.1",
     "video.js": "^7.14.3",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

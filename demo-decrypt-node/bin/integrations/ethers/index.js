@@ -4,6 +4,7 @@ const Market = require('./contracts/Minter_Marketplace.json').abi;
 const ERC777 = require('./contracts/RAIR777.json').abi;
 const Token = require('./contracts/RAIR_ERC721.json').abi;
 const log = require('../../utils/logger')(module);
+const { addMetadata, addPin } = require('../../integrations/ipfsService')();
 
 const { nanoid } = require('nanoid');
 const _ = require('lodash');
@@ -30,22 +31,23 @@ module.exports = async (db) => {
     const tokenInstance = new ethers.Contract(contractAddress, Token, binanceTestnetProvider);
     const contract = contractAddress.toLowerCase();
 
-    tokenInstance.on('CollectionCreated(uint256,string,uint256)', async (index, name, copies) => {
+    tokenInstance.on('ProductCreated(uint256,string,uint256,uint256)', async (index, name, firstTokenIndex, copies) => {
       try {
         await db.Product.create({
           name,
           collectionIndexInContract: index,
           contract,
-          copies
+          copies,
+          firstTokenIndex
         });
 
-        log.info(`RAIR: New Product ID#${ index } created for Contract ${ contract } with ${ copies } tokens`);
+        log.info(`RAIR: New Product ID#${ index } created for Contract ${ contract } with ${ copies } tokens, first token index ${ firstTokenIndex }`);
       } catch (err) {
         log.error(err);
       }
     });
 
-    tokenInstance.on('CollectionCompleted(uint256,string)', async (index, name) => {
+    tokenInstance.on('ProductCompleted(uint256,string)', async (index, name) => {
       try {
         await db.Product.findOneAndUpdate({ collectionIndexInContract: index, contract }, { sold: true });
 
@@ -82,6 +84,18 @@ module.exports = async (db) => {
       } catch (err) {
         log.error(err);
       }
+    });
+
+    tokenInstance.on('BaseURIChanged(string)', async (contractURI) => {
+      log.info(`RAIR: Base URI of the contract changed, new URI: ${ contractURI }.`);
+    });
+
+    tokenInstance.on('TokenURIChanged(uint256,string)', async (token, tokenURL) => {
+      log.info(`RAIR: Token is given an unique metadata URL, new metadata URL: ${ tokenURL } for token ${ token }.`);
+    });
+
+    tokenInstance.on('ProductURIChanged(uint256,string)', async (product, productURI) => {
+      log.info(`RAIR: Product is given a new URI, new URI: ${ productURI } for product ${ product }.`);
     });
   };
 
@@ -215,14 +229,55 @@ module.exports = async (db) => {
       provider.on('TokenMinted(address,address,uint256,uint256,uint256)', async (ownerAddress, contractAddress, offerPool, offerIndex, tokenIndex) => {
         try {
           const contract = contractAddress.toLowerCase();
+          const OfferP = parseInt(offerPool);
 
-          await db.MintedToken.create({
-            token: tokenIndex,
-            ownerAddress,
-            offerPool,
-            offer: offerIndex,
+          const product = await db.OfferPool.aggregate([
+            { $match: { contract, marketplaceCatalogIndex: OfferP } },
+            {
+              $lookup: {
+                from: 'Product',
+                localField: 'product',
+                foreignField: 'collectionIndexInContract',
+                as: 'products'
+              }
+            },
+            { $unwind: '$products' },
+            { $replaceRoot: { newRoot: '$products' } },
+          ]);
+
+          const foundToken = await db.MintedToken.findOne({
             contract,
+            offerPool,
+            token: tokenIndex,
           });
+
+          if (!_.isEmpty(foundToken)) {
+            let metadataURI = 'none';
+
+            if (!_.isEmpty(foundToken.metadata)) {
+              const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
+              await addPin(CID, `metadata_${ foundToken.metadata.name }`);
+              metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
+            }
+
+            await db.MintedToken.findOneAndUpdate({
+              contract,
+              offerPool,
+              token: tokenIndex,
+            }, {
+              ownerAddress,
+              metadataURI
+            });
+          } else {
+            await db.MintedToken.create({
+              token: tokenIndex,
+              ownerAddress,
+              offerPool,
+              offer: offerIndex,
+              contract,
+              uniqueIndexInContract: (product[0].firstTokenIndex + parseInt(tokenIndex))
+            });
+          }
 
           const updatedOffer = await db.Offer.findOneAndUpdate({
             offerIndex,

@@ -22,13 +22,14 @@ const Layout = (props) => {
         { name: 'Latest', route: '/latest' },
         { name: 'Hot', route: '/hot' },
         { name: 'Ending', route: '/ending' },
+        { name: 'Batch Metadata', route: '/create-batch-metadata' },
         { name: 'Factory', route: '/factory', disabled: contractAddresses[chainId] === undefined },
         { name: 'Minter Marketplace', route: '/minter', disabled: contractAddresses[chainId] === undefined }
     ]
     return (
         <div
             style={{
-                width: '100%',
+                width: '90%',
                 display: 'flex',
                 height: '100vh',
                 flexDirection: 'row',

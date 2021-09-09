@@ -43,6 +43,8 @@ const { MongoClient } = require('mongodb');
     }
   );
 
+  await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1, token: 1 }, { background: true, unique: true, name: 'MintedTokenUniqueIndex' });
+
   console.log('Completed Database Indexes');
 
   process.exit(0);

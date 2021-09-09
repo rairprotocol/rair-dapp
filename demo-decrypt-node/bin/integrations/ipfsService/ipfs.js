@@ -60,9 +60,16 @@ const addFolder = async (pathTo, folderName, socketInstance) => {
     .value();
 }
 
+const addMetadata = async (data, name) => {
+  const ipfs = ipfsClient(process.env.IPFS_API);
+
+  return ipfs.add(data);
+};
+
 module.exports = {
   retrieveMediaInfo,
   addPin,
   removePin,
-  addFolder
+  addFolder,
+  addMetadata
 }

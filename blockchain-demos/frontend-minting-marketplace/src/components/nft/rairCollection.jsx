@@ -22,10 +22,11 @@ const MyNFTs = props => {
 			let signer = provider.getSigner(0);
 			let instance = new ethers.Contract(params.contract, erc721Abi, signer);
 			if (await instance.symbol() !== 'RAIR') {
-				Swal.fire('Error', 'Contract is not a RAIR contract', 'error');
+				Swal.fire('Error','Contract is not a RAIR contract','error');
 			}
 			setName(await instance.name());
-			let pData = await instance.getCollection(params.product);
+			let pData = await instance.getProduct(params.product);
+			console.log(pData);
 			setProductData(pData);
 			setCreator(await instance.getRoleMember(await instance.CREATOR(), 0));
 			let finalTokenData = [];
@@ -58,7 +59,7 @@ const MyNFTs = props => {
 	}, [getData]);
 
 	return <div className='col-12'>
-		<br />
+		<br/>
 		{
 			productData && <div className='row px-0 mx-0 w-100'>
 				<h3> {productData.collectionName} </h3>
@@ -66,7 +67,7 @@ const MyNFTs = props => {
 					<small>
 						From contract: <b>{name}</b><br />
 						Created by: <b>{creator}</b>
-					</small> <br />
+					</small> <br/>
 					Range from {productData.startingToken.toString()} to {' '}
 					{productData.endingToken.toString()} <br />
 				</div>
@@ -79,36 +80,34 @@ const MyNFTs = props => {
 					max={productData.endingToken.toString()}
 					value={Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) - Number(productData.mintableTokensLeft.toString())}
 					className='col-12'
-					style={{ height: '5vh' }} />
+					style={{height: '5vh'}}/>
 			</div>
 		}
 		<div className='row w-100 mx-0 px-0'>
-			{tokenData?.map(({ metadata, tokenIndex, metadataURI }, index) => {
-				return (
-					<Link
-						key={index}
-						className='col-3 p-1'
-						to={`/token/${params.contract}/${tokenIndex}`}
-						style={{ height: '20vh', border: 'none', color: 'inherit', textDecoration: 'none' }}>
-						<div className='w-100 h-100 bg-white' style={{ borderRadius: '10px', position: 'relative' }}>
-							{metadata?.image ?
-								<img className='w-100 h-auto' src={metadata.image} />
-								:
-								<div className='w-100 h-100 bg-secondary' style={{
-									position: 'relative',
-									borderRadius: '10px',
-								}}>
-									<i
-										className='fas fa-image h1'
-										style={{ position: 'absolute', top: '50%', left: '50%' }} />
-								</div>
-							}
-							<div style={{ position: 'absolute', top: '1rem', left: '1rem' }}>
-								#{tokenIndex}
+			{tokenData?.map(({metadata, tokenIndex, metadataURI}, index) => {
+				return <Link
+					key={index}
+					className='col-3 p-1'
+					to={`/token/${params.contract}/${tokenIndex}`}
+					style={{height: '20vh', border: 'none', color: 'inherit', textDecoration: 'none'}}>
+					<div className='w-100 h-100 bg-white' style={{borderRadius: '10px', position: 'relative'}}>
+						{metadata?.image ? 
+							<img alt='NFT' className='w-100 h-auto' src={metadata.image} />
+						:
+							<div className='w-100 h-100 bg-secondary' style={{
+								position: 'relative',
+								borderRadius: '10px',
+							}}>
+								<i
+									className='fas fa-image h1'
+									style={{position: 'absolute', top: '50%', left: '50%'}} />
 							</div>
+						}
+						<div style={{position: 'absolute', top: '1rem', left: '1rem'}}>
+							#{tokenIndex}
 						</div>
-					</Link>
-				)
+					</div>
+				</Link>
 			})}
 		</div>
 	</div>

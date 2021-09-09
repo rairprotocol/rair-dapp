@@ -7,18 +7,18 @@ const main = async () => {
 	let providers = [
 		{
 			provider: new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {chainId: 97, symbol: 'BNB', name: 'Binance Testnet'}),
-			factoryAddress: '0x58B81fE7D18ED2296A9E814c768d28dA3BCC94F9',
-			minterAddress: '0x8Fbb22212E2e5278743dE98E9A272e1f336d1Bdd'
+			factoryAddress: '0x8CFB64bd8295372e532D7595cEf0b900c768e612',
+			minterAddress: '0x1150A9D87EAb450ab83A3779Fe977cfdF9aEF45C'
 		},
 		{
 			provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {chainId: 5, symbol: 'ETH', name: 'Goerli Testnet'}),
-			factoryAddress: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
-			minterAddress: '0x0Ce668D271b8016a785Bf146e58739F432300B12'
+			factoryAddress: '0x69F0980e45ae2A3aC5254C7B3202E8fce5B0f84F',
+			minterAddress: '0xb256E35Ad58fc9c57948388C27840CEBcd7cb991'
 		},
 		{
 			provider: new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com", {chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet'}),
-			factoryAddress: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
-			minterAddress: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a'
+			factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
+			minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba'
 		}
 	]
 
@@ -116,27 +116,27 @@ const main = async () => {
 				// console.log(tokenInstance.filters);
 
 				console.log('// ERC721: Products created in the past');
-				for await (let pastEvent of await tokenInstance.queryFilter(await tokenInstance.filters.CollectionCreated())) {
-					let {id, name, length} = pastEvent.args;
-					console.log(`[PAST] ${tokenInstance.address}: has a new product! ID#${id} called ${name} with ${length} copies!`);
+				for await (let pastEvent of await tokenInstance.queryFilter(await tokenInstance.filters.ProductCreated())) {
+					let {id, name, startingToken, length} = pastEvent.args;
+					console.log(`[PAST] ${tokenInstance.address}: has a new product! ID#${id} called ${name}, it starts at ${startingToken} and has ${length} copies!`);
 				}
 
 				console.log('// ERC721: Range locks created in the past');
 				for await (let pastEvent of await tokenInstance.queryFilter(await tokenInstance.filters.RangeLocked())) {
-					let {collectionIndex, startingToken, endingToken, tokensLocked, collectionName} = pastEvent.args;
-					console.log(`[PAST] ${tokenInstance.address}: locked a range of tokens inside product ${collectionName} (#${collectionIndex}), from ${startingToken} to ${endingToken} have been locked until ${tokensLocked} tokens get minted!`);
+					let {productIndex, startingToken, endingToken, tokensLocked, productName} = pastEvent.args;
+					console.log(`[PAST] ${tokenInstance.address}: locked a range of tokens inside product ${productName} (#${productIndex}), from ${startingToken} to ${endingToken} have been locked until ${tokensLocked} tokens get minted!`);
 				}
 
 				console.log('// ERC721: Ranges unlocked in the past');
 				for await (let pastEvent of await tokenInstance.queryFilter(await tokenInstance.filters.RangeUnlocked())) {
-					let {collectionID, startingToken, endingToken} = pastEvent.args;
-					console.log(`[PAST] ${tokenInstance.address}: The Range of tokens from ${startingToken} to ${endingToken} in product #${collectionID} have been unlocked!`);
+					let {productID, startingToken, endingToken} = pastEvent.args;
+					console.log(`[PAST] ${tokenInstance.address}: The Range of tokens from ${startingToken} to ${endingToken} in product #${productID} have been unlocked!`);
 				}
 
-				console.log('// ERC721: Collections completed in the past');
-				for await (let pastEvent of await tokenInstance.queryFilter(await tokenInstance.filters.CollectionCompleted())) {
+				console.log('// ERC721: Products completed in the past');
+				for await (let pastEvent of await tokenInstance.queryFilter(await tokenInstance.filters.ProductCompleted())) {
 					let {id, name} = pastEvent.args;
-					console.log(`[PAST] ${tokenInstance.address} collection #${id} (${name}) ran out of mintable copies!`);
+					console.log(`[PAST] ${tokenInstance.address} product #${id} (${name}) ran out of mintable copies!`);
 				}
 
 				console.log('// ERC721: Transfers done in the past');
