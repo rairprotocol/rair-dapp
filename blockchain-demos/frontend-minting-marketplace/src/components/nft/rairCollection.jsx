@@ -26,7 +26,6 @@ const MyNFTs = props => {
 			}
 			setName(await instance.name());
 			let pData = await instance.getProduct(params.product);
-			console.log(pData);
 			setProductData(pData);
 			setCreator(await instance.getRoleMember(await instance.CREATOR(), 0));
 			let finalTokenData = [];
@@ -50,7 +49,7 @@ const MyNFTs = props => {
 			setTokenData(finalTokenData);
 		} catch (err) {
 			console.log(err);
-			Swal.fire('Error', "error", 'error');
+			Swal.fire('Error', "An error has occurred", 'error');
 		}
 	}, [params.contract, params.product])
 

@@ -3,7 +3,7 @@ import VideoItem from './videoItem.jsx';
 import InputField from '../common/InputField.jsx';
 
 const VideoList = props => {
-	const [mediaList, setMediaList] = useState([]);
+	const [mediaList, setMediaList] = useState();
 	const [titleSearch, setTitleSearch] = useState('');
 	const updateList = async () => {
 		let response = await (await fetch('/api/media/list', {
@@ -13,8 +13,10 @@ const VideoList = props => {
 		})).json()
 		if (response.success) {
 			setMediaList(response.list)
-		} else if (response?.message === 'jwt expired') {
-			localStorage.setItem('token', undefined);
+		} else if (response?.message === 'jwt expired' || response?.message === 'jwt malformed') {
+			localStorage.removeItem('token');
+		} else {
+			console.log(response?.message);
 		}
 	}
 
@@ -27,11 +29,14 @@ const VideoList = props => {
 	return <>
 		<details className='col-12'>
 			<summary> Search </summary>
-			<InputField getter={titleSearch} setter={setTitleSearch} />
+			<InputField
+				getter={titleSearch}
+				setter={setTitleSearch}
+				customClass='form-control' />
 		</details>
-		{Object.keys(mediaList).filter(item => mediaList[item].title.toLowerCase().includes(titleSearch.toLowerCase())).map((item, index) => {
+		{mediaList ? Object.keys(mediaList).filter(item => mediaList[item].title.toLowerCase().includes(titleSearch.toLowerCase())).map((item, index) => {
 			return <VideoItem key={index} mediaList={mediaList} item={item} />
-		})}
+		}) : 'Searching...'}
 	</>
 };
 
