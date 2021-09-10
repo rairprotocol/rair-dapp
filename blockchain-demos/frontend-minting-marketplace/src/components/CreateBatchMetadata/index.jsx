@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import InputSelect from '../common/InputSelect.jsx';
 import styled from 'styled-components';
 import { erc721Abi } from '../../contracts';
@@ -17,6 +18,8 @@ const CreateBatchMetadata = () => {
 	const [contractInstance, setContractInstance] = useState();
 
 	const {factoryInstance, currentUserAddress, programmaticProvider} = useSelector(state => state.contractStore);
+
+	const params = useParams();
 
 	const onChangeValue = e => {
 		setData({
@@ -63,6 +66,9 @@ const CreateBatchMetadata = () => {
 			});
 		}
 		setContractOptions(finalContractList);
+		if (finalContractList.filter(i => i.value === params.contract).length) {
+			setContractAddress(params.contract);
+		}
 	}, [factoryInstance, currentUserAddress, programmaticProvider])
 
 	const fetchProductData = useCallback(async () => {
@@ -79,6 +85,10 @@ const CreateBatchMetadata = () => {
 			})
 		}
 		setProductOptions(finalProductList);
+		console.log(finalProductList);
+		if (finalProductList.filter(i => i.value === Number(params.product)).length) {
+			setProductId(params.product);
+		}
 	}, [contractInstance])
 
 	useEffect(() => {
@@ -124,7 +134,6 @@ const CreateBatchMetadata = () => {
 					onChange={onChangeValue}
 				/>
 			</ContentInput>
-
 			<ContentInput>
 				<button
 					className='btn btn-primary'
@@ -132,7 +141,6 @@ const CreateBatchMetadata = () => {
 					disabled={contractAddress === 'null' || productId === 'null' || data.csv === null}>
 					Submit Data
 				</button>
-
 			</ContentInput>
 		</Form>
 	)

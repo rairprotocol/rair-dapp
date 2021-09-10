@@ -3,6 +3,7 @@ import React, {useState} from 'react'
 const InputField = ({
 	getter,
 	setter,
+	setterField = 'value',
 	customCSS = {color: 'black'},
 	customClass,
 	labelCSS = {color: 'black'},
@@ -13,6 +14,8 @@ const InputField = ({
 	required,
 	disabled,
 	requiredColor,
+	min,
+	max
 }) => {
 	const [id,] = useState(Number(new Date()) + '-' + Math.round(Math.random() * 1000000))
 	
@@ -30,12 +33,14 @@ const InputField = ({
 		<input
 			type={type} 
 			id={id}
-			onChange={e => setter(e.target.value)}
+			onChange={e => setter(e.target[setterField])}
 			value={getter}
 			disabled={disabled}
 			style={{...customCSS, ':required': {color: requiredColor}}}
 			className={customClass}
 			required={required ? required : false}
+			min={min}
+			max={max}
 			placeholder={placeholder + (required ? '*' : '')} />
 	</>
 }

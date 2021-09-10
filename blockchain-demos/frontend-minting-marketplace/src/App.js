@@ -14,6 +14,7 @@ import * as contractTypes from './ducks/contracts/types.js';
 import Swal from 'sweetalert2';
 
 import CSVParser from './components/metadata/csvParser.jsx';
+import MetadataEditor from './components/metadata/metadataEditor.jsx';
 import CreateBatchMetadata from './components/CreateBatchMetadata';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
@@ -139,7 +140,6 @@ function App() {
 							{name: 'Latest', route: '/latest'},
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
-							{name: 'Batch Metadata', route: '/create-batch-metadata'},
 							{name: 'Factory', route: '/factory', disabled: factoryInstance === undefined},
 							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
@@ -164,12 +164,13 @@ function App() {
 							<Switch>
 								{factoryInstance && <Route exact path='/factory' component={CreatorMode} />}
 								{minterInstance && <Route exact path='/minter' component={ConsumerMode} />}
+								<Route exact path='/metadata/:contract/:product' component={MetadataEditor} />
+								<Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />
 								<Route path='/my-nft'>
 									<MyNFTs />
 								</Route>
 								<Route path='/token/:contract/:identifier' component={Token} />
 								<Route path='/rair/:contract/:product' component={RairProduct} />
-								<Route path='/create-batch-metadata' component={CreateBatchMetadata} />
 								<Route path='/all'>
 									<VideoList />
 								</Route>
