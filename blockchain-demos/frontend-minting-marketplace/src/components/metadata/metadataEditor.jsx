@@ -54,20 +54,21 @@ const AttributeRow = ({array, index, deleter, refetch}) => {
 	const [name, setName] = useState(array[index].name);
 	const [value, setValue] = useState(array[index].value);
 
-
-	useEffect(() => {
-		if (array[index].name !== name) {
-			array[index].name = name;
+	const updateName = (value) => {
+		setName(value)
+		if (array[index].name !== value) {
+			array[index].name = value;
 			refetch();
 		}
-	}, [name]);
+	}
 
-	useEffect(() => {
+	const updateValue = (value) => {
+		setValue(value)
 		if (array[index].value !== value) {
 			array[index].value = value;
 			refetch();
 		}
-	}, [value]);
+	}
 
 	useEffect(() => {
 		setName(array[index].name);
@@ -79,7 +80,7 @@ const AttributeRow = ({array, index, deleter, refetch}) => {
 			<InputField
 				placeholder='Name'
 				getter={name}
-				setter={setName}
+				setter={updateName}
 				customClass='form-control'
 				labelClass='w-100'
 				labelCSS={{textAlign: 'left'}}
@@ -89,7 +90,7 @@ const AttributeRow = ({array, index, deleter, refetch}) => {
 			<InputField
 				placeholder='Value'
 				getter={value}
-				setter={setValue}
+				setter={updateValue}
 				customClass='form-control'
 				labelClass='w-100'
 				labelCSS={{textAlign: 'left'}}
@@ -111,44 +112,57 @@ const MetadataEditor = (props) => {
 	
 	const [tokenNumber, setTokenNumber] = useState(0);
 
-	const [startingToken, setStartingToken] = useState(0);
+	const [internalStartingToken, setInternalStartingToken] = useState(0);
+	const [internalEndingToken, setInternalEndingToken] = useState(0);
 	const [endingToken, setEndingToken] = useState(0);
 	
 	const [attributes, setAttributes] = useState([]);
 	const [refreshData, setRefreshData] = useState(true);
 	const [image, setImage] = useState();
+	
+	const [offerArray, setOfferArray] = useState([]);
+	const [currentOffer, setCurrentOffer] = useState('');
+
+	// Causes the component to rerender
 
 	const params = useParams();
-	const {minterInstance, currentUserAddress, programmaticProvider} = useSelector(state => state.contractStore);
+	const {minterInstance, programmaticProvider} = useSelector(state => state.contractStore);
 
 	const fetchContractData = useCallback(async () => {
+		if (!params || !minterInstance) {
+			return;
+		}
 		let signer = programmaticProvider;
 		if (window.ethereum) {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			signer = provider.getSigner(0);
 		}
+		
+		let finalOfferArray = []
+		let offerIndex = await minterInstance.contractToOfferRange(params.contract, params.product);
+		let offerRanges = (await minterInstance.getOfferInfo(offerIndex)).availableRanges;
+		for await (let offerInfo of [...Array(Number(offerRanges.toString())).keys()]) {
+			let aux = await minterInstance.getOfferRangeInfo(offerIndex, offerInfo);
+			finalOfferArray.push({
+				tokenStart: aux.tokenStart.toString(),
+				tokenEnd: aux.tokenEnd.toString(),
+				name: aux.name
+			});
+		}
+		setOfferArray(finalOfferArray);
+
 		let instance = new ethers.Contract(params.contract, erc721Abi, signer);
 		let productInfo = await instance.getProduct(params.product)
 		setContractName(await instance.name());
 		setTitle(productInfo.productName);
-		setStartingToken(Number(productInfo.startingToken.toString()));
-		setEndingToken(Number(productInfo.endingToken.toString()));
-		
-		/*if (!factoryInstance || !currentUserAddress) {
-			return;
-		}
-		let contractsCreated = await factoryInstance.getContractCountOf(currentUserAddress);
-		let finalContractList = []
-		for await (let contractNumber of [...Array(Number(contractsCreated.toString())).keys()]) {
-			let address = await factoryInstance.ownerToContracts(currentUserAddress, contractNumber)
-			setContractInstance(instance);
-			finalContractList.push({
-				value: address,
-				label: `${await instance.name()} (${address})`
-			});
-		}
-		setContractOptions(finalContractList);*/
-	}, [params.contract, params.product, currentUserAddress, programmaticProvider])
+		let firstToken = Number(productInfo.startingToken.toString());
+		let lastToken = Number(productInfo.endingToken.toString())
+		setInternalStartingToken(firstToken);
+		setInternalEndingToken(lastToken);
+
+		setEndingToken(lastToken - firstToken);
+		setTokenNumber(0);
+	}, [params, programmaticProvider, minterInstance])
 
 	const addAttribute = () => {
 		let aux = [...attributes];
@@ -163,6 +177,11 @@ const MetadataEditor = (props) => {
 	}
 
 	useEffect(() => {
+		let aux = offerArray.filter(i => Number(i.tokenStart) <= Number(tokenNumber) && Number(i.tokenEnd) >= Number(tokenNumber));
+		setCurrentOffer(aux[0]?.name)
+	}, [tokenNumber, offerArray])
+
+	useEffect(() => {
 		fetchContractData()
 	}, [fetchContractData])
 
@@ -171,8 +190,8 @@ const MetadataEditor = (props) => {
 		let reader = new FileReader();
 		reader.onload = function () {
 			setImage(reader.result);
-        }
-		let url = await reader.readAsDataURL(file);
+		}
+		await reader.readAsDataURL(file);
 	}
 
 	return <div className='row w-100 px-0 mx-0'>
@@ -221,6 +240,14 @@ const MetadataEditor = (props) => {
 				labelClass='w-100'
 				labelCSS={{textAlign: 'left'}}
 			/>
+			<InputField
+				label='Offer'
+				getter={currentOffer}
+				customClass='form-control'
+				labelClass='w-100'
+				disabled
+				labelCSS={{textAlign: 'left'}}
+			/>
 			<hr/>
 			<div className='row mx-0 px-0 w-100'>
 				<div className='col-11 py-2'>
@@ -247,7 +274,7 @@ const MetadataEditor = (props) => {
 			<hr />
 			<div className='col-12 row mx-0 px-0'>
 				<div className='col-6'>
-					{image && <img src={image} style={{filter: `hue-rotate(${(180 / (endingToken - startingToken)) * tokenNumber}deg)`}} className='w-100 h-auto' />}
+					{image && <img src={image} alt='preview' style={{filter: `hue-rotate(${(180 / (endingToken)) * tokenNumber}deg)`}} className='w-100 h-auto' />}
 				</div>
 				<div className='col-6'>
 					<h2>
@@ -275,7 +302,7 @@ const MetadataEditor = (props) => {
 				<InputField
 					label='Go To NFT #'
 					type='number'
-					min={startingToken}
+					min={0}
 					max={endingToken}
 					getter={tokenNumber}
 					setter={setTokenNumber}
@@ -284,7 +311,7 @@ const MetadataEditor = (props) => {
 					labelCSS={{textAlign: 'left'}}
 				/>
 				<hr />
-				<button className='col-12 btn btn-primary'>
+				<button disabled className='col-12 btn btn-primary'>
 					Update Metadata
 				</button>
 		</div>

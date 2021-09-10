@@ -69,7 +69,7 @@ const CreateBatchMetadata = () => {
 		if (finalContractList.filter(i => i.value === params.contract).length) {
 			setContractAddress(params.contract);
 		}
-	}, [factoryInstance, currentUserAddress, programmaticProvider])
+	}, [factoryInstance, currentUserAddress, programmaticProvider, params])
 
 	const fetchProductData = useCallback(async () => {
 		if (!contractInstance) {
@@ -89,7 +89,7 @@ const CreateBatchMetadata = () => {
 		if (finalProductList.filter(i => i.value === Number(params.product)).length) {
 			setProductId(params.product);
 		}
-	}, [contractInstance])
+	}, [contractInstance, params])
 
 	useEffect(() => {
 		fetchFactoryData();

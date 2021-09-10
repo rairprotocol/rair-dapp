@@ -77,7 +77,7 @@ const MyNFTs = ({
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-6'>
 			{metadata?.image ?
-				<img className='w-100 h-auto' src={metadata.image} />
+				<img className='w-100 h-auto' alt='token' src={metadata.image} />
 				:
 				<div className='w-100 bg-secondary' style={{
 					position: 'relative',
