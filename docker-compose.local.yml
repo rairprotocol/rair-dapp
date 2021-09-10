@@ -9,6 +9,11 @@ services:
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+    environment:
+      PRODUCTION: "false"
+      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      PINATA_SECRET: ${pinata_secret}  
     ports:
       - 3000:3000
       - 5000:5000
@@ -31,8 +36,8 @@ services:
       - ./demo-decrypt-node/dev/db-data:/data/db
       - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_ROOT_USERNAME: ${localdbuser}
+      MONGO_INITDB_ROOT_PASSWORD: ${localdbpass}
       MONGO_INITDB_DATABASE: rair-db
     ports:
       - 27017:27017

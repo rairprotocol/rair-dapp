@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode
+  name: rairnode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rairnode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: rairnode
+    spec:
+      containers:
+        - image: rairtechinc/rairservernode:dev_latest
+          name: rairnode
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+            - containerPort: 5000
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/src/db
+              name: rairnode-claim0
+            - mountPath: /usr/local/src/bin/Videos
+              name: rairnode-claim1
+          env:
+          - name: JWT_SECRET
+            value: UGt70v4#mZ0J@vHFK%b
+          - name: INFURA_PROJECT_ID
+            value: f8232f48540f48f0a7543643e57d6278
+          - name: IPFS_GATEWAY
+            value: http://rairipfs:8080/ipfs
+          - name: IPFS_API
+            value: http://rairipfs:5001
+          - name: PORT
+            value: "5000"
+          - name: PINATA_HOST
+            value: https://api.pinata.cloud
+          - name: PINATA_KEY=
+            value: aaa581a498f99ed85279
+          - name: PINATA_SECRET
+            value: 92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1
+          - name: PINATA_GATEWAY
+            value: https://rair.mypinata.cloud/ipfs
+          - name: MONGO_URI_LOCAL
+            value: mongodb://admin:admin@mongo:27017/rair-db?authSource=admin
+          - name: MONGO_URI
+            value: mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/RairDev1?retryWrites=true&w=majority
+          - name: MONGO_LOG_COLLECTION
+            value: Log
+          - name: LOG_LEVEL
+            value: debug
+          - name: PRODUCTION
+            value: true
+          - name: BINANCE_TESTNET
+            value: https://data-seed-prebsc-1-s1.binance.org:8545/
+          - name: FACTORY_ADDRESS
+            value: "0x02638eD2D3362CDAe26c4DD33B28CbE3dc8719Aa"
+          - name: MINTER_MARKETPLACE_ADDRESS
+            value: "0x343715F15702Fec9089B99623738a80662EC4FBE"
+          - name: IPFS_SERVICE
+            value: pinata
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+      volumes:
+        - name: rairnode-claim0
+          persistentVolumeClaim:
+            claimName: rairnode-claim0
+        - name: rairnode-claim1
+          persistentVolumeClaim:
+            claimName: rairnode-claim1
+status: {}
