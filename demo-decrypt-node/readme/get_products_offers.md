@@ -1,8 +1,8 @@
 # Get products
 
-Find all products with all offers for eac of them for particular user
+Find all products with all offers for each of them for particular user
 
-**URL** : `/api/products`
+**URL** : `/api/contracts/:contractAddress/products/offers`
 
 **Method** : `GET`
 

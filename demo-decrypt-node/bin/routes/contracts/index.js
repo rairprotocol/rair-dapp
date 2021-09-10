@@ -6,7 +6,7 @@ module.exports = context => {
 
   router.post('/', validation('createContract'), async (req, res, next) => {
     try {
-      const { adminNFT: user } = req.user;
+      const { publicAddress: user } = req.user;
       const contract = await context.db.Contract.create({ user, ...req.body });
 
       res.json({ success: true, contract });
@@ -17,7 +17,7 @@ module.exports = context => {
 
   router.get('/', async (req, res, next) => {
     try {
-      const { adminNFT: user } = req.user;
+      const { publicAddress: user } = req.user;
       const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1 });
 
       res.json({ success: true, contracts });
