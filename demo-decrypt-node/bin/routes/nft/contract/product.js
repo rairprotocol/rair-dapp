@@ -5,6 +5,7 @@ const _ = require('lodash');
 module.exports = context => {
   const router = express.Router();
 
+  // Get minted tokens fro a product
   router.get('/', async (req, res, next) => {
     try {
       const { contract, product } = req;
@@ -54,6 +55,67 @@ module.exports = context => {
     }
   });
 
+  // Get specific token by internal token ID
+  router.get('/token/:token', async (req, res, next) => {
+    try {
+      const { contract, product } = req;
+      const { token } = req.params;
+      const prod = parseInt(product);
+
+      const result = await context.db.OfferPool.aggregate([
+        { $match: { contract, product: prod } },
+        {
+          $lookup: {
+            from: "MintedToken",
+            let: {
+              contractOP: '$contract',
+              offerPoolIndex: '$marketplaceCatalogIndex',
+              tokenRequested: token
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          "$contract",
+                          "$$contractOP"
+                        ]
+                      },
+                      {
+                        $eq: [
+                          "$offerPool",
+                          "$$offerPoolIndex"
+                        ]
+                      },
+                      {
+                        $eq: [
+                          "$token",
+                          "$$tokenRequested"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: "mintedTokens"
+          }
+        },
+        { $unwind: '$mintedTokens' },
+        { $replaceRoot: { newRoot: '$mintedTokens' } },
+      ]);
+
+      const re = _.head(result)
+
+      res.json({ success: true, result: re ? re : null });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // Get list of files locked by token
   router.get('/files/:token', async (req, res, next) => {
     try {
       const { token } = req.params;
@@ -109,65 +171,6 @@ module.exports = context => {
       ]);
 
       res.json({ success: true, files });
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  router.get('/token/:token', async (req, res, next) => {
-    try {
-      const { contract, product } = req;
-      const { token } = req.params;
-      const prod = parseInt(product);
-
-      const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
-        {
-          $lookup: {
-            from: "MintedToken",
-            let: {
-              contractOP: '$contract',
-              offerPoolIndex: '$marketplaceCatalogIndex',
-              tokenRequested: token
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          "$contract",
-                          "$$contractOP"
-                        ]
-                      },
-                      {
-                        $eq: [
-                          "$offerPool",
-                          "$$offerPoolIndex"
-                        ]
-                      },
-                      {
-                        $eq: [
-                          "$token",
-                          "$$tokenRequested"
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            as: "mintedTokens"
-          }
-        },
-        { $unwind: '$mintedTokens' },
-        { $replaceRoot: { newRoot: '$mintedTokens' } },
-      ]);
-
-      const re = _.head(result)
-
-      res.json({ success: true, result: re ? re : null });
     } catch (err) {
       next(err);
     }

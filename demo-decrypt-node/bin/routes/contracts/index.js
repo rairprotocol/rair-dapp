@@ -4,6 +4,7 @@ const { validation } = require('../../middleware');
 module.exports = context => {
   const router = express.Router()
 
+  // Create contract
   router.post('/', validation('createContract'), async (req, res, next) => {
     try {
       const { publicAddress: user } = req.user;
@@ -15,10 +16,11 @@ module.exports = context => {
     }
   });
 
+  // Get list of contracts for specific user
   router.get('/', async (req, res, next) => {
     try {
       const { publicAddress: user } = req.user;
-      const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1 });
+      const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1, title: 1 });
 
       res.json({ success: true, contracts });
     } catch (e) {

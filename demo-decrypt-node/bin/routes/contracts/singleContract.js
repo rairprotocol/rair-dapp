@@ -2,8 +2,9 @@ const express = require('express');
 const { validation } = require('../../middleware');
 
 module.exports = context => {
-  const router = express.Router()
+  const router = express.Router();
 
+  // Get specific contract
   router.get('/', async (req, res, next) => {
     try {
       // const { adminNFT: user } = req.user;
@@ -17,18 +18,7 @@ module.exports = context => {
     }
   });
 
-  // router.put('/', validation('singleContract', 'params'), validation('updateContract'), async (req, res, next) => {
-  //   try {
-  //     const { adminNFT: user } = req.user;
-  //     const { contractAddress } = req.params;
-  //     const contract = await context.db.Contract.findOneAndUpdate({ user, contractAddress }, { ...req.body }, { new: true });
-  //
-  //     res.json({ success: true, contract });
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // });
-
+  // Delete specific contract
   router.delete('/', async (req, res, next) => {
     try {
       // const { adminNFT: user } = req.user;
@@ -42,20 +32,30 @@ module.exports = context => {
     }
   });
 
+  // Find all products for particular contracts
+  router.get('/products', async (req, res, next) => {
+    try {
+      const { contractAddress: contract } = req;
+
+      const products = await context.db.Product.find({ contract });
+
+      res.json({ success: true, products });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // Find all products with all offers for each of them for particular contract
   router.get('/products/offers', async (req, res, next) => {
     try {
-      // const { publicAddress: user } = req.user;
-      const { contractAddress } = req;
+      const { contractAddress: contract } = req;
 
-      const products = await context.db.Contract.aggregate([
-        { $match: { contractAddress } },
-        { $lookup: { from: 'Product', localField: 'contractAddress', foreignField: 'contract', as: 'products' } },
-        { $project: { products: 1, contractAddress: 1 } },
-        { $unwind: '$products' },
-        { $replaceRoot: { newRoot: '$products' } },
+      const products = await context.db.Product.aggregate([
+        { $match: { contract } },
         { $sort: { creationDate: -1 } },
-        { $lookup: {
-            from: "OfferPool",
+        {
+          $lookup: {
+            from: 'OfferPool',
             let: {
               contr: '$contract',
               prod: '$collectionIndexInContract'
@@ -67,14 +67,14 @@ module.exports = context => {
                     $and: [
                       {
                         $eq: [
-                          "$contract",
-                          "$$contr"
+                          '$contract',
+                          '$$contr'
                         ]
                       },
                       {
                         $eq: [
-                          "$product",
-                          "$$prod"
+                          '$product',
+                          '$$prod'
                         ]
                       }
                     ]
@@ -82,11 +82,18 @@ module.exports = context => {
                 }
               }
             ],
-            as: "offerPools"
+            as: 'offerPools'
           }
         },
         { $unwind: '$offerPools' },
-        { $lookup: { from: 'Offer', localField: 'offerPools.marketplaceCatalogIndex', foreignField: 'offerPool', as: 'offers' } },
+        {
+          $lookup: {
+            from: 'Offer',
+            localField: 'offerPools.marketplaceCatalogIndex',
+            foreignField: 'offerPool',
+            as: 'offers'
+          }
+        },
         { $project: { offerPools: false } }
       ]);
 
@@ -96,5 +103,5 @@ module.exports = context => {
     }
   });
 
-  return router
-}
+  return router;
+};

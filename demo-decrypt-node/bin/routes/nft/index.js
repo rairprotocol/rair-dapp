@@ -10,6 +10,7 @@ const { execPromise } = require('../../utils/helpers');
 module.exports = context => {
   const router = express.Router()
 
+  // Create bunch of lazy minted tokens from csv file
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product } = req.body;
@@ -89,6 +90,7 @@ module.exports = context => {
                   offer: offerPool.offer.offerIndex,
                   contract,
                   uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
+                  isMinted: false,
                   metadata: {
                     name: record.name,
                     description: record.description,

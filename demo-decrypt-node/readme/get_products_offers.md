@@ -1,4 +1,4 @@
-# Get products
+# Get products with all offers
 
 Find all products with all offers for each of them for particular user
 

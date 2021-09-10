@@ -3,6 +3,7 @@ const express = require('express');
 module.exports = context => {
   const router = express.Router()
 
+  // Get specific token by contract address and unique toke ID in contract
   router.get('/token/:tokenInContract', async (req, res, next) => {
     try {
       const { contract } = req;
