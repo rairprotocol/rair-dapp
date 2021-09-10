@@ -1,41 +1,45 @@
 import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
+import { useSelector } from 'react-redux';
 
-const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) => {
+
+const FactoryManager = ({ setDeployedTokens }) => {
 
 	const [erc721Name, setERC721Name] = useState('');
 	const [tokensOwned, setTokensOwned] = useState();
 	const [tokensRequired, setTokensRequired] = useState();
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
+	
+	const {erc777Instance, factoryInstance, currentUserAddress} = useSelector(state => state.contractStore);
 
 	const refreshData = useCallback(async () => {
 		setRefetchingFlag(true);
-		let tokenCount = await instance.getContractCount(account);
+		let tokenCount = await factoryInstance.getContractCount(currentUserAddress);
 		let tokens = [];
 		for (let i = 0; i < tokenCount; i++) {
-			tokens.push(await instance.ownerToContracts(account, i));
+			tokens.push(await factoryInstance.ownerToContracts(currentUserAddress, i));
 		}
 		setTokensOwned(tokenCount);
 		setDeployedTokens(tokens);
-		setTokensRequired(await instance.deploymentCostForERC777(erc777Instance.address));
+		setTokensRequired(await factoryInstance.deploymentCostForERC777(erc777Instance.address));
 		setRefetchingFlag(false);
-	}, [account, instance, erc777Instance.address, setDeployedTokens])
+	}, [currentUserAddress, factoryInstance, erc777Instance.address, setDeployedTokens])
 
 	useEffect(() => {
-		if (account) {
+		if (currentUserAddress) {
 			refreshData();
 		}
-	}, [instance, refreshData, account])
+	}, [factoryInstance, refreshData, currentUserAddress])
 
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5>Factory</h5>
-		<small>({instance.address})</small><br />
+		<small>({factoryInstance.address})</small><br />
 		
 		{
 			// Initializer, do not use
 			false && <button
 				style={{position: 'absolute', right: 0, top: 0}}
-				onClick={e => instance.initialize(10, erc777Instance.address)}
+				onClick={e => factoryInstance.initialize(10, erc777Instance.address)}
 				className='btn btn-success'>
 				<i className='fas fa-arrow-up' />
 			</button>
@@ -55,7 +59,7 @@ const FactoryManager = ({instance, account, erc777Instance, setDeployedTokens}) 
 			<input className='form-control w-75 mx-auto' value={erc721Name} onChange={e => setERC721Name(e.target.value)} />
 			<br/>
 			<button disabled={erc721Name === ''} onClick={() => {
-				erc777Instance.send(instance.address, tokensRequired, ethers.utils.toUtf8Bytes(erc721Name))
+				erc777Instance.send(factoryInstance.address, tokensRequired, ethers.utils.toUtf8Bytes(erc721Name))
 			}} className='btn btn-success'>
 				Buy an ERC721 contract for {tokensRequired.toString()} tokens!
 			</button>

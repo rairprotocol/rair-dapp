@@ -10,6 +10,7 @@ const Product = new Schema({
   soldCopies: { type: Number, default: 0 },
   sold: { type: Boolean, default: false },
   royalty: { type: Number, default: 0 },
+  firstTokenIndex: { type: Number, required: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 

@@ -1,25 +1,21 @@
 import {useState, useEffect} from 'react'
+import { useSelector } from 'react-redux';
 
 import * as ethers from 'ethers'
-
 import * as MinterMarketplace from '../contracts/Minter_Marketplace.json';
-import * as Factory from '../contracts/RAIR_Token_Factory.json';
-import * as ERC777 from '../contracts/RAIR777.json';
 
 import ERC721Manager from './CreatorMode/ERC721Manager.jsx';
 import ERC777Manager from './CreatorMode/erc777.jsx';
 import FactoryManager from './CreatorMode/factory.jsx';
 
 const minterAbi = MinterMarketplace.default.abi;
-const factoryAbi = Factory.default.abi;
-const erc777Abi = ERC777.default.abi;
 
 const CreatorMode = ({account, addresses, programmaticProvider}) => {
 
-	const [erc777Instance, setERC777Instance] = useState();
-	const [factoryInstance, setFactoryInstance] = useState();
 	const [minterInstance, setMinterInstance] = useState();
 	const [deployedTokens, setDeployedTokens] = useState();
+
+	const {erc777Instance, factoryInstance} = useSelector(state => state.contractStore);
 
 	useEffect(() => {
 		if (!addresses) {
@@ -33,14 +29,9 @@ const CreatorMode = ({account, addresses, programmaticProvider}) => {
 			signer = provider.getSigner(0);
 		}
 
-		let erc777Instance = new ethers.Contract(addresses.erc777, erc777Abi, signer);
-		setERC777Instance(erc777Instance);
-
 		let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
 		setMinterInstance(ethersMinterInstance);
 
-		let factoryInstanceEthers = new ethers.Contract(addresses.factory, factoryAbi, signer);
-		setFactoryInstance(factoryInstanceEthers);
 	}, [addresses, programmaticProvider])
 
 	return <>

@@ -7,6 +7,12 @@ services:
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+    environment:
+      PRODUCTION: "true"
+      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      JWT_SECRET: ${jwt_secret}
+      PINATA_SECRET: ${pinata_secret}  
     ports:
       - 3000:3000
       - 5000:5000

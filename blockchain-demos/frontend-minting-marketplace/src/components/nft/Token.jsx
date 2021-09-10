@@ -1,80 +1,55 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2'
 import VideoList from '../video/videoList';
 import ERC721Consumer from '../ConsumerMode/ERC721Consumer.jsx';
 
 import * as ethers from 'ethers'
 
-import * as MinterMarketplace from '../../contracts/Minter_Marketplace.json';
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 import { Col } from '../../styled-components/nft/Token.styles';
-const minterAbi = MinterMarketplace.default.abi;
 const erc721Abi = ERC721Token.default.abi;
 
 const MyNFTs = ({
-	account,
 	addresses,
-	programmaticProvider,
 }) => {
-	const router = useHistory()
-	const url = router.location.pathname.split('/')[2]
 	const params = useParams();
 	const [metadata, setMetadata] = useState({ name: 'Loading...' });
 	const [owner, setOwner] = useState('');
 	const [name, setName] = useState('');
 	const [specificItem, setSpecificItem] = useState([]);
 
-	const [minterInstance, setMinterInstance] = useState();
-	const [offerCount, setOfferCount] = useState();
-	const [salesCount, setSalesCount] = useState();
-	const [collectionsData, setCollectionsData] = useState([]);
-	const [refetchingFlag, setRefetchingFlag] = useState(false);
-
-	useEffect(() => {
-		let signer = programmaticProvider;
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
-		}
-		if (addresses) {
-			let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
-			setMinterInstance(ethersMinterInstance);
-		}
-	}, [addresses, programmaticProvider])
+	const { minterInstance, programmaticProvider } = useSelector(state => state.contractStore);
 
 	const fetchData = useCallback(async () => {
-		setRefetchingFlag(true);
 		let signer = programmaticProvider;
 		if (window.ethereum) {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			signer = provider.getSigner(0);
 		}
-		let aux = (await minterInstance.getOfferCount()).toString();
-		setSalesCount((await minterInstance.openSales()).toString());
-		setOfferCount(aux);
 
-		let offerData = [];
-		for await (let index of [...Array.apply(null, { length: aux }).keys()]) {
-			let data = await minterInstance.getOfferInfo(index);
-			offerData.push({
-				contractAddress: data.contractAddress,
-				productIndex: data.productIndex.toString(),
-				nodeAddress: data.nodeAddress,
-				ranges: data.availableRanges.toString(),
-				instance: new ethers.Contract(data.contractAddress, erc721Abi, signer)
-			})
-		}
-		setCollectionsData(offerData);
-		setRefetchingFlag(false);
-	}, [programmaticProvider, minterInstance])
+		let RAIR721Instance = new ethers.Contract(params.contract, erc721Abi, signer);
+		let offerRangeIndex = (await minterInstance.contractToOfferRange(params.contract, await RAIR721Instance.tokenToProduct(params.identifier))).toString();
+		let rawOfferData = await minterInstance.getOfferInfo(offerRangeIndex);
+
+		let offerData = {
+			contractAddress: rawOfferData.contractAddress,
+			productIndex: rawOfferData.productIndex.toString(),
+			nodeAddress: rawOfferData.nodeAddress,
+			ranges: rawOfferData.availableRanges.toString(),
+			instance: RAIR721Instance
+		};
+
+		setSpecificItem({data: offerData, index: Number(offerRangeIndex.toString())});
+	}, [programmaticProvider, minterInstance, params.contract, params.identifier]);
 
 
 	useEffect(() => {
 		if (minterInstance) {
 			fetchData();
 		}
-	}, [minterInstance])
+	}, [minterInstance, fetchData])
 
 	const getData = useCallback(async () => {
 		try {
@@ -98,11 +73,6 @@ const MyNFTs = ({
 	useEffect(() => {
 		getData();
 	}, [getData]);
-
-	useEffect(() => {
-		const itemS = collectionsData.filter(item => item.contractAddress === url)
-		setSpecificItem(itemS);
-	}, [collectionsData])
 
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-6'>
@@ -193,17 +163,12 @@ const MyNFTs = ({
 					<VideoList />
 			</Col>
 			<Col width='50%' align='center'>
-				{specificItem.map((item, index) => (
+				{specificItem?.data && 
 					<ERC721Consumer
-						key={index}
-						index={index}
-						offerInfo={item}
-						account={account}
-						minter={minterInstance}
+						offerInfo={specificItem.data}
+						index={specificItem.index}
 						width='12'
-					/>
-				)
-				)}
+					/>}
 			</Col>
 		</Col>
 

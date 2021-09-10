@@ -50,6 +50,8 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumera
 	}
 
 	/// @notice Returns the number of contracts deployed by an address
+	/// @dev	Use alongside ownerToContracts for the full list of tokens 
+	/// @param	deployer	Wallet address to query
 	function getContractCountOf(address deployer) public view returns(uint count) {
 		return ownerToContracts[deployer].length;
 	}
@@ -79,13 +81,6 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumera
 		revokeRole(ERC777, _erc777Address);
 		deploymentCostForERC777[_erc777Address] = 0;
 		emit TokenNoLongerAccepted(_erc777Address);
-	}
-
-	/// @notice	Returns the number of contracts deployed by an address
-	/// @dev	Use alongside ownerToContracts for the full list of tokens 
-	/// @param	_owner	Wallet address to query
-	function getContractCount(address _owner) public view returns (uint count) {
-		return ownerToContracts[_owner].length;
 	}
 
 	/// @notice Function called by an ERC777 when they send tokens

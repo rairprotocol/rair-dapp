@@ -1,29 +1,51 @@
-import React , {useState} from 'react';
+import {useState} from 'react'
 
-const InputSelect = ({label, setter, getter, disabled, required, placeholder, options}) => {
-  const [id,] = useState(Math.random() * 10000)
-  
-  let i = 0;
-  return (<>
-          {label &&
-            <label htmlFor={id} className='col-12 d-inline-block col-md-6 my-2'>
-              {label}:
-            </label>}
-            <select
-                id={id}
-                className='col-12 d-inline-block col-md-6 py-1'
-                onChange={e => setter(e.target.value)}
-                value={getter}
-                disabled={disabled}
-                required={required}>
-                  <option value='null' disabled> {placeholder ? placeholder : 'Please select'} </option>
-                {options && 
-                    options.map(option => {
-                        return(<option key={i++} value={option.value.toString()}>{option.label}</option>)
-                    })
-                }
-            </select>
-      </>)
-};
+const InputSelect = ({
+		getter,
+		setter,
+		customCSS = {color: 'black'},
+		customClass,
+		optionCSS = {color: 'black'},
+		optionClass,
+		options,
+		placeholder,
+		placeholderValue = 'null',
+		label,
+		labelCSS = {color: 'black'},
+		labelClass,
+		required,
+		disabled,
+		requiredColor
+	}) => {
 
-export default InputSelect;
+	const [id,] = useState(Math.round(Math.random() * 1000))
+	return <>
+	{label && <label htmlFor={id} style={{...labelCSS, color: (required ? `${requiredColor}!important` : labelCSS.color)}} className={labelClass}>
+			 {label + (required ? '*' : '')}
+		</label>}
+	<select
+		disabled={disabled}
+		id={id}
+		onChange={e => setter(e.target.value)}
+		value={getter}
+		style={{...customCSS, width: '100%', color: (required ? requiredColor : customCSS.color)}}
+		className={customClass}>
+		{placeholder && <option value={placeholderValue} className={optionClass} style={{...optionCSS}} disabled>
+			{placeholder + (required ? '*' : '')}
+		</option>}
+		{options && options.map(({label, value}, index) => {
+				return <option 
+							key={id+'-'+index}
+							value={value}
+							style={{...optionCSS}}
+							className={optionClass}
+							>
+						{label}
+					</option>
+			})
+		}
+	</select>
+	</>
+}
+
+export default InputSelect

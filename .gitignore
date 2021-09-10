@@ -7,6 +7,10 @@
 node_modules/
 dist/
 
+#Local database files
+./demo-decrypt-node/db/store.json
+./demo-decrypt-node/dev/db-data/*
+
 # Compiled Java class files
 *.class
 

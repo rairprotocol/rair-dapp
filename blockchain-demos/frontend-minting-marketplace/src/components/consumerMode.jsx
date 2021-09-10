@@ -1,22 +1,19 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useSelector } from 'react-redux';
 
 import * as ethers from 'ethers'
-import * as MinterMarketplace from '../contracts/Minter_Marketplace.json';
-import * as ERC721Token from '../contracts/RAIR_ERC721.json';
+import {erc721Abi} from '../contracts';
 
 import ERC721Consumer from './ConsumerMode/ERC721Consumer.jsx';
-import Swal from 'sweetalert2';
 
-const minterAbi = MinterMarketplace.default.abi;
-const erc721Abi = ERC721Token.default.abi;
+const ConsumerMode = ({ addresses }) => {
 
-const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
-
-	const [minterInstance, setMinterInstance] = useState();
 	const [offerCount, setOfferCount] = useState();
 	const [salesCount, setSalesCount] = useState();
 	const [collectionsData, setCollectionsData] = useState();
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
+
+	const { minterInstance, programmaticProvider } = useSelector(state => state.contractStore);
 
 	const fetchData = useCallback(async () => {
 		setRefetchingFlag(true);
@@ -43,20 +40,6 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 		setCollectionsData(offerData);
 		setRefetchingFlag(false);
 	}, [programmaticProvider, minterInstance])
-
-	useEffect(() => {
-		let signer = programmaticProvider;
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
-		}
-		if (addresses) {
-			let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, minterAbi, signer);
-			setMinterInstance(ethersMinterInstance);
-		} else {
-			Swal.fire('Error', 'Network change detected in metamask', 'error');
-		}
-	}, [addresses, programmaticProvider])
 
 	useEffect(() => {
 		if (minterInstance) {
@@ -88,14 +71,11 @@ const ConsumerMode = ({ account, addresses, programmaticProvider }) => {
 			</div>
 			<br />
 			{collectionsData.map((item, index) => {
-				console.log(item);
 				return (
 					<ERC721Consumer
 						key={index}
 						index={index}
 						offerInfo={item}
-						account={account}
-						minter={minterInstance}
 					/>
 				)
 			})}
