@@ -24,13 +24,13 @@ Upload the media
 ```json
 {
   "title": {
-    "required": false,
+    "required": true,
     "content": {
       "type": "string"
     }
   },
   "description": {
-    "required": false,
+    "required": true,
     "content": {
       "type": "string"
     }
