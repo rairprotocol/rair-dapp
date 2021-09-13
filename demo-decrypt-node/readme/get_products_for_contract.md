@@ -1,8 +1,8 @@
-# Get contracts
+# Get products for the contract
 
-Find all contracts
+Get all products for specific contract
 
-**URL** : `/api/contracts`
+**URL** : `/api/contracts/:contractAddress/products`
 
 **Method** : `GET`
 
@@ -21,7 +21,7 @@ Find all contracts
 
 ## Success Response
 
-Returns found contracts
+Returns found products
 
 **Code** : `200 OK`
 
@@ -32,11 +32,17 @@ Returns found contracts
 ```json
 {
   "success": true,
-  "contracts": [
+  "products": [
     {
-      "_id": "60d0819870a807001c75164d",
-      "title": "SOme title",
-      "contractAddress": "contractAddress"
+      "_id": "610d14c03de2f5001dafc429",
+      "soldCopies": 3,
+      "sold": false,
+      "royalty": 0,
+      "name": "The Dark Knight",
+      "collectionIndexInContract": 1,
+      "contract": "contractAddress",
+      "copies": 4,
+      "creationDate": "2021-08-06T10:53:52.441Z"
     },
     ...
   ]

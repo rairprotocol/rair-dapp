@@ -1,15 +1,16 @@
 const express = require('express');
-const { validation, JWTVerification } = require('../middleware');
-const upload = require('../Multer/Config.js');
+const { validation } = require('../../middleware');
+const { JWTVerification } = require('../../middleware');
+const upload = require('../../Multer/Config.js');
 const fs = require('fs');
 const csv = require('csv-parser');
 const _ = require('lodash');
-const log = require('../utils/logger')(module);
-const { execPromise } = require('../utils/helpers');
+const { execPromise } = require('../../utils/helpers');
 
 module.exports = context => {
-  const router = express.Router();
+  const router = express.Router()
 
+  // Create bunch of lazy minted tokens from csv file
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product } = req.body;
@@ -89,6 +90,7 @@ module.exports = context => {
                   offer: offerPool.offer.offerIndex,
                   contract,
                   uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
+                  isMinted: false,
                   metadata: {
                     name: record.name,
                     description: record.description,
@@ -125,64 +127,10 @@ module.exports = context => {
     }
   });
 
-  router.get('/files/:contract/:token/:product', validation('getFilesByNFT', 'params'), async (req, res, next) => {
-    try {
-      const { contract, token, product } = req.params;
-
-      const prod = parseInt(product);
-
-      const offerPool = (await context.db.OfferPool.findOne({ contract, product: prod })).toObject();
-
-      const files = await context.db.MintedToken.aggregate([
-        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token } },
-        {
-          $lookup: {
-            from: 'File',
-            let: {
-              contractT: '$contract',
-              offerIndex: '$offer',
-              productT: prod
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          '$contract',
-                          '$$contractT'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$product',
-                          '$$productT'
-                        ]
-                      },
-                      {
-                        $in: [
-                          '$$offerIndex',
-                          '$offer'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            as: 'files'
-          },
-        },
-        { $unwind: '$files' },
-        { $replaceRoot: { newRoot: '$files' } },
-      ]);
-
-      res.json({ success: true, files });
-    } catch (err) {
-      next(err);
-    }
-  });
+  router.use('/:contract', (req, res, next) => {
+    req.contract = req.params.contract;
+    next();
+  }, require('./contract')(context));
 
   return router;
-};
+}
