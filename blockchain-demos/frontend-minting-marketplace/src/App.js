@@ -3,12 +3,12 @@ import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import headerLogo from './images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
 import './App.css';
 import * as ethers from 'ethers'
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
+import * as colorTypes from './ducks/colors/types.js';
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -39,6 +39,8 @@ function App() {
 	// Redux
 	const dispatch = useDispatch()
 	const {currentUserAddress, minterInstance, factoryInstance} = useSelector(store => store.contractStore);
+	const {primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect} = useSelector(store => store.colorStore);
+
 	const connectUserData = async () => {
 		let currentUser;
 		if (window.ethereum) {
@@ -121,14 +123,33 @@ function App() {
 	return (
 		<BrowserRouter>
 			{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
-			<div style={{minHeight: '100vh', backgroundColor: '#EEE'}} className="App p-0 text-black container-fluid">
+			<div 
+				style={{
+					...backgroundImageEffect,
+					minHeight: '100vh',
+					position: 'relative',
+					backgroundColor: `var(--${primaryColor})`,
+					color: textColor,
+					backgroundImage: `url(${backgroundImage})`,
+					backgroundPosition: 'center',
+					backgroundSize: 'cover',
+					backgroundRepeat: 'no-repeat'
+				}}
+				className="App p-0 container-fluid">
+				<div style={{position: 'absolute', top: '1rem', right: '1rem'}}>
+					<button style={{color: 'var(--royal-purple)', border: 'solid 1px var(--royal-purple)', backgroundColor: 'inherit', borderRadius: '50%'}} onClick={e => {
+						dispatch({type: colorTypes.SET_COLOR_SCHEME, payload: primaryColor === 'rhyno' ? 'charcoal' : 'rhyno'});
+					}}>
+						{primaryColor === 'rhyno' ? <i className='far fa-moon' /> : <i className='far fa-sun' />}
+					</button>
+				</div>
 				<div className='row w-100 m-0 p-0'>
 					<div className='col-1 d-none d-xl-inline-block' />
 					<div className='col-1 rounded'>
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
-						{(currentUserAddress === undefined) ? <button disabled={!window.ethereum} className='btn btn-light' onClick={connectUserData}>
+						{(currentUserAddress === undefined) ? <button disabled={!window.ethereum} className={`btn btn-${primaryColor}`} onClick={connectUserData}>
 							Connect Wallet <img alt='Metamask Logo' src={MetamaskLogo} />
 						</button> : [
 							{name: <i className='fas fa-search' />, route: '/search'},
@@ -144,8 +165,8 @@ function App() {
 							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
 							if (!item.disabled) {
-								return <div key={index} className='col-12 py-3 rounded bg-white'>
-									<Link to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
+								return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+									<Link className='py-3' to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
 										{item.name}
 									</Link>
 								</div>
@@ -179,6 +200,18 @@ function App() {
 								</Route>
 								{adminAccess && <Route path='/admin' component={FileUpload} />}
 								<Route path='/ending' component={CSVParser} />
+								<Route exact path='/'>
+									<div className='col-6 text-left'>
+										<h1 className='w-100' style={{textAlign: 'left'}}>
+											Digital <b className='title'>Ownership</b>
+											<br />
+											Encryption
+										</h1>
+										<p className='w-100' style={{textAlign: 'left'}}>
+											RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
+										</p>
+									</div>
+								</Route>
 							</Switch>
 						</div>
 					</div>
