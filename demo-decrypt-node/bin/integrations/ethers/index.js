@@ -266,7 +266,8 @@ module.exports = async (db) => {
               token: tokenIndex,
             }, {
               ownerAddress,
-              metadataURI
+              metadataURI,
+              isMinted: true
             });
           } else {
             await db.MintedToken.create({
@@ -275,7 +276,8 @@ module.exports = async (db) => {
               offerPool,
               offer: offerIndex,
               contract,
-              uniqueIndexInContract: (product[0].firstTokenIndex + parseInt(tokenIndex))
+              uniqueIndexInContract: (product[0].firstTokenIndex + parseInt(tokenIndex)),
+              isMinted: true
             });
           }
 

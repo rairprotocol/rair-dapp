@@ -2,7 +2,7 @@
 
 Get all files which belong particular NFT token
 
-**URL** : `/api/nft/files/:contract/:token/:offerPool`
+**URL** : `/api/nft/:contract/:product/files/:token`
 
 **Method** : `GET`
 
