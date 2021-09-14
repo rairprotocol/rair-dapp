@@ -2,6 +2,7 @@ const express = require('express');
 const { validation } = require('../../middleware');
 const { JWTVerification } = require('../../middleware');
 const upload = require('../../Multer/Config.js');
+const log = require('../../utils/logger')(module);
 const fs = require('fs');
 const csv = require('csv-parser');
 const _ = require('lodash');
