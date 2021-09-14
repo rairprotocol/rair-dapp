@@ -235,6 +235,7 @@ const MetadataEditor = (props) => {
 				label='Image'
 				type='file'
 				setter={imageSetter}
+				setterField={['files',0]}
 				setterField='files'
 				customClass='form-control'
 				labelClass='w-100'

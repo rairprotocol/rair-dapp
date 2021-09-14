@@ -2,18 +2,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import InputSelect from '../common/InputSelect.jsx';
+import InputField from '../common/InputField.jsx';
 import styled from 'styled-components';
 import { erc721Abi } from '../../contracts';
 import * as ethers from 'ethers';
+import Swal from 'sweetalert2';
 
 const CreateBatchMetadata = () => {
-	const [data, setData] = useState({
-		csv: null
-	})
 	const [contractOptions, setContractOptions] = useState([]);
 	const [contractAddress, setContractAddress] = useState('null');
 	const [productOptions, setProductOptions] = useState([]);
 	const [productId, setProductId] = useState('null');
+	const [csvData, setCsvData] = useState('null');
 
 	const [contractInstance, setContractInstance] = useState();
 
@@ -21,27 +21,28 @@ const CreateBatchMetadata = () => {
 
 	const params = useParams();
 
-	const onChangeValue = e => {
-		setData({
-			...data,
-			[e.target.name]: e.target.value
-		})
-	}
-
-	const onSubmit = e => {
+	const onSubmit = async e => {
 		e.preventDefault()
-		if (data.product_id === '') {
-			alert('You must add the product id')
-		} else if (data.contact_address === '') {
-			alert('You must add the contact address')
-		} if (!data.csv) {
-			alert('You must add the contact csv')
+		if (productId === 'null') {
+			Swal.fire('Error','You must add the product id','error')
+		} else if (productId === 'null') {
+			Swal.fire('Error','You must add the contact address','error')
+		} if (!csvData) {
+			Swal.fire('Error','You must add the contact csv','error')
 		} else {
 			let formData = new FormData();
-			formData.set('productId', productId);
-			formData.set('contractAddress', contractAddress);
-			formData.set('csv', data.csv);
+			formData.set('product', productId);
+			formData.set('contract', contractAddress);
+			formData.set('csv', csvData);
 			console.log('Sending info:', formData);
+			let response = await (await fetch('/api/nft', {
+				method: 'POST',
+				body: formData,
+				headers: {
+					'x-rair-token': localStorage.token
+				}
+			})).json()
+			console.log(response)
 		}
 	}
 
@@ -125,20 +126,23 @@ const CreateBatchMetadata = () => {
 				setter={setProductId}
 				customClass='form-control'
 			/>
-			<ContentInput>
-				<Label>CSV</Label>
-				<Input
-					type="file"
-					value={data.csv}
-					name="csv"
-					onChange={onChangeValue}
-				/>
-			</ContentInput>
+			<hr />
+			<InputField
+				label='CSV File'
+				type='file'
+				labelClass='w-100'
+				required
+				labelCSS={{textAlign: 'left'}}
+				placeholder='Please Select'
+				setter={setCsvData}
+				setterField={['files',0]}
+				customClass='form-control'
+			/>
 			<ContentInput>
 				<button
 					className='btn btn-primary'
 					type="submit"
-					disabled={contractAddress === 'null' || productId === 'null' || data.csv === null}>
+					disabled={contractAddress === 'null' || productId === 'null' || csvData === null}>
 					Submit Data
 				</button>
 			</ContentInput>

@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 const InputField = ({
 	getter,
 	setter,
-	setterField = 'value',
+	setterField = ['value'],
 	customCSS = {color: 'black'},
 	customClass,
 	labelCSS = {color: 'black'},
@@ -33,7 +33,7 @@ const InputField = ({
 		<input
 			type={type} 
 			id={id}
-			onChange={e => setter(e.target[setterField])}
+			onChange={e => setter(setterField.reduce((start, piece) => {return start[piece]}, e.target))}
 			value={getter}
 			disabled={disabled}
 			style={{...customCSS, ':required': {color: requiredColor}}}
