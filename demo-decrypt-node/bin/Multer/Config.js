@@ -1,15 +1,30 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+const log = require('../utils/logger')(module);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    let uploadPath = '';
+
     if (file.fieldname === 'video') {
-      cb(null, (path.join(__dirname, '../Videos/')));
+      uploadPath = path.join(__dirname, '../Videos/');
     }
 
     if (file.fieldname === 'csv') {
-      cb(null, (path.join(__dirname, '../csv/')));
+      uploadPath = path.join(__dirname, '../csv/');
     }
+
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdir(uploadPath, (err) => {
+        if (err) {
+          log.error('Error in folder creation');
+          return cb(new Error('Error in folder creation'));
+        }
+      })
+    }
+
+      cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
