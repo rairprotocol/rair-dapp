@@ -57,7 +57,11 @@ const MyNFTs = ({
 			let signer = provider.getSigner(0);
 			let instance = new ethers.Contract(params.contract, erc721Abi, signer);
 			setName(await instance.name());
-			setOwner(await instance.ownerOf(params.identifier));
+			try {
+				setOwner(await instance.ownerOf(params.identifier));
+			} catch (err) {
+				setOwner('No one!');
+			}
 			let meta = await (await fetch(await instance.tokenURI(params.identifier))).json();
 			//console.log(meta);
 			setMetadata(meta);

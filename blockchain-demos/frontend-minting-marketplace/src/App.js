@@ -126,14 +126,14 @@ function App() {
 			<div 
 				style={{
 					...backgroundImageEffect,
+					backgroundSize: '100vw 100vh',
 					minHeight: '100vh',
 					position: 'relative',
 					backgroundColor: `var(--${primaryColor})`,
 					color: textColor,
 					backgroundImage: `url(${backgroundImage})`,
-					backgroundPosition: 'center',
-					backgroundSize: 'cover',
-					backgroundRepeat: 'no-repeat'
+				    backgroundPosition: 'center top',
+					backgroundRepeat: 'no-repeat',
 				}}
 				className="App p-0 container-fluid">
 				<div style={{position: 'absolute', top: '1rem', right: '1rem'}}>

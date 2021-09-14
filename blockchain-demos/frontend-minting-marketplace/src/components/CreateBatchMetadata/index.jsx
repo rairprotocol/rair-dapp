@@ -14,6 +14,7 @@ const CreateBatchMetadata = () => {
 	const [productOptions, setProductOptions] = useState([]);
 	const [productId, setProductId] = useState('null');
 	const [csvData, setCsvData] = useState('null');
+	const [responseSuccessful, setResponseSuccessful] = useState(false);
 
 	const [contractInstance, setContractInstance] = useState();
 
@@ -31,18 +32,21 @@ const CreateBatchMetadata = () => {
 			Swal.fire('Error','You must add the contact csv','error')
 		} else {
 			let formData = new FormData();
-			formData.set('product', productId);
-			formData.set('contract', contractAddress);
-			formData.set('csv', csvData);
-			console.log('Sending info:', formData);
+			formData.append('product', productId);
+			formData.append('contract', contractAddress.toLowerCase());
+			formData.append('csv', csvData, 'metadata.csv');
 			let response = await (await fetch('/api/nft', {
 				method: 'POST',
 				body: formData,
+				redirect: 'follow',
 				headers: {
 					'x-rair-token': localStorage.token
 				}
 			})).json()
-			console.log(response)
+			setResponseSuccessful(response?.success);
+			if (response?.success) {
+				Swal.fire('Success',`Generated ${response.result.length} metadata entries!`,'success');
+			}
 		}
 	}
 
@@ -106,6 +110,7 @@ const CreateBatchMetadata = () => {
 			<InputSelect
 				label='Contract Address'
 				labelClass='w-100'
+				disabled={responseSuccessful}
 				required
 				labelCSS={{textAlign: 'left'}}
 				options={contractOptions}
@@ -118,6 +123,7 @@ const CreateBatchMetadata = () => {
 			<InputSelect
 				label='Product'
 				labelClass='w-100'
+				disabled={responseSuccessful}
 				required
 				labelCSS={{textAlign: 'left'}}
 				options={productOptions}
@@ -132,6 +138,7 @@ const CreateBatchMetadata = () => {
 				type='file'
 				labelClass='w-100'
 				required
+				disabled={responseSuccessful}
 				labelCSS={{textAlign: 'left'}}
 				placeholder='Please Select'
 				setter={setCsvData}
@@ -142,10 +149,18 @@ const CreateBatchMetadata = () => {
 				<button
 					className='btn btn-primary'
 					type="submit"
-					disabled={contractAddress === 'null' || productId === 'null' || csvData === null}>
+					disabled={contractAddress === 'null' || productId === 'null' || csvData === null || responseSuccessful}>
 					Submit Data
 				</button>
 			</ContentInput>
+			{responseSuccessful && <>
+				<hr />
+				<button type='button' className='btn btn-secondary' onClick={e => {
+					console.log(contractInstance.setProductURI(productId, `/api/nft/${contractAddress}/${productId}/token/`));
+				}}>
+					Set '/api/nft/{contractAddress}/{productId}/token/:token as the product's Metadata URI
+				</button>
+			</>}
 		</Form>
 	)
 };
