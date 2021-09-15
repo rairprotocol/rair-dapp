@@ -123,7 +123,14 @@ module.exports = context => {
 
       const prod = parseInt(product);
 
-      const offerPool = (await context.db.OfferPool.findOne({ contract, product: prod })).toObject();
+      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product: prod });
+
+      if (_.isEmpty(offerPoolRaw)) {
+        res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
+        return;
+      }
+
+      const offerPool = offerPoolRaw.toObject();
 
       const files = await context.db.MintedToken.aggregate([
         { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token } },
