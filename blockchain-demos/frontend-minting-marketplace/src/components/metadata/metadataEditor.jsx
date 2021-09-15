@@ -205,7 +205,6 @@ const MetadataEditor = (props) => {
 			setDescription(metadata.description);
 			setAttributes(Object.keys(metadata.attributes).map((item, index) => {
 				let itm = metadata.attributes[item];
-				console.log(item, itm);
 				if (itm.trait_type === undefined) {
 					if (Object.keys(metadata.attributes[item]).length === 1) {
 						itm = {
