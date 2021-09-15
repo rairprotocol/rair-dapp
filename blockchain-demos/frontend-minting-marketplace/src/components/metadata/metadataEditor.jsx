@@ -201,6 +201,9 @@ const MetadataEditor = (props) => {
 	useEffect(() => {
 		if (existingMetadataArray.length) {
 			let metadata = existingMetadataArray[tokenNumber];
+			if (!metadata) {
+				return;
+			}
 			setTitle(metadata.name);
 			setDescription(metadata.description);
 			setAttributes(Object.keys(metadata.attributes).map((item, index) => {
