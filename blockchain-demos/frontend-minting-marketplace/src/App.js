@@ -28,6 +28,8 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
+import Factory from './components/whitelabel/factory.jsx';
+
 import MetamaskLogo from './images/metamask-fox.svg';
 
 function App() {
@@ -140,7 +142,8 @@ function App() {
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
 							{name: 'Batch Metadata', route: '/create-batch-metadata'},
-							{name: 'Factory', route: '/factory', disabled: factoryInstance === undefined},
+							{name: 'New Factory', route: '/new-factory'},
+							{name: 'Old Factory', route: '/factory', disabled: factoryInstance === undefined},
 							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
 							if (!item.disabled) {
@@ -170,6 +173,7 @@ function App() {
 								<Route path='/token/:contract/:identifier' component={Token} />
 								<Route path='/rair/:contract/:product' component={RairProduct} />
 								<Route path='/create-batch-metadata' component={CreateBatchMetadata} />
+								<Route path='/new-factory' component={Factory} />
 								<Route path='/all'>
 									<VideoList />
 								</Route>
