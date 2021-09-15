@@ -62,10 +62,16 @@ const MyNFTs = ({
 			} catch (err) {
 				setOwner('No one!');
 			}
+			let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/token/${params.identifier}`)).json()
+			if (aux?.result) {
+				setMetadata(aux.result.metadata);
+				return;
+			}
 			let meta = await (await fetch(await instance.tokenURI(params.identifier))).json();
 			//console.log(meta);
 			setMetadata(meta);
 		} catch (err) {
+			console.error(err);
 			Swal.fire('Error', "We couldn't fetch the token's Metadata", 'error');
 			setMetadata({
 				name: 'No title found',
@@ -109,7 +115,13 @@ const MyNFTs = ({
 					{Object.keys(metadata.attributes).map((item, index) => {
 						let itm = metadata.attributes[item];
 						//console.log(Object.keys(metadata.attributes[item]))
-						if (Object.keys(metadata.attributes[item]).length === 1) {
+						if (itm.trait_type === undefined) {
+							if (Object.keys(metadata.attributes[item]).length === 1) {
+								itm = {
+									trait_type: item,
+									value: metadata.attributes[item]
+								}
+							} 
 							itm = {
 								trait_type: item,
 								value: metadata.attributes[item]
