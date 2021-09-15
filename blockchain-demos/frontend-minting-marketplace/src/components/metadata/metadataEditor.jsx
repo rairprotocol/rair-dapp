@@ -51,13 +51,13 @@ import * as ethers from 'ethers';
 */
 
 const AttributeRow = ({array, index, deleter, refetch}) => {
-	const [name, setName] = useState(array[index].name);
+	const [name, setName] = useState(array[index].trait_type);
 	const [value, setValue] = useState(array[index].value);
 
 	const updateName = (value) => {
 		setName(value)
-		if (array[index].name !== value) {
-			array[index].name = value;
+		if (array[index].trait_type !== value) {
+			array[index].trait_type = value;
 			refetch();
 		}
 	}
@@ -71,7 +71,7 @@ const AttributeRow = ({array, index, deleter, refetch}) => {
 	}
 
 	useEffect(() => {
-		setName(array[index].name);
+		setName(array[index].trait_type);
 		setValue(array[index].value);
 	}, [index, array]);
 
@@ -105,7 +105,7 @@ const AttributeRow = ({array, index, deleter, refetch}) => {
 const MetadataEditor = (props) => {
 	const [contractName, setContractName] = useState('');
 	const [title, setTitle] = useState('');
-	const [symbol, setSymbol] = useState('#');
+	//const [symbol, setSymbol] = useState('#');
 	//From the brilliant mind of @Ed Wood comes.. How many plans are
 	//	too many plans? Find out with edition # (URI) 
 	const [description, setDescription] = useState('');
@@ -123,6 +123,8 @@ const MetadataEditor = (props) => {
 	const [offerArray, setOfferArray] = useState([]);
 	const [currentOffer, setCurrentOffer] = useState('');
 
+	const [existingMetadataArray, setExistingMetadataArray] = useState([]);
+
 	// Causes the component to rerender
 
 	const params = useParams();
@@ -137,6 +139,11 @@ const MetadataEditor = (props) => {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			signer = provider.getSigner(0);
 		}
+
+		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
+		setExistingMetadataArray(aux.result.map(item => {
+			return item.metadata;
+		}))
 		
 		let finalOfferArray = []
 		let offerIndex = await minterInstance.contractToOfferRange(params.contract, params.product);
@@ -154,7 +161,9 @@ const MetadataEditor = (props) => {
 		let instance = new ethers.Contract(params.contract, erc721Abi, signer);
 		let productInfo = await instance.getProduct(params.product)
 		setContractName(await instance.name());
-		setTitle(productInfo.productName);
+		if (aux.result.length === 0) {
+			setTitle(productInfo.productName);
+		}
 		let firstToken = Number(productInfo.startingToken.toString());
 		let lastToken = Number(productInfo.endingToken.toString())
 		setInternalStartingToken(firstToken);
@@ -166,7 +175,7 @@ const MetadataEditor = (props) => {
 
 	const addAttribute = () => {
 		let aux = [...attributes];
-		aux.push({name: '', value: ''});
+		aux.push({trait_type: '', value: ''});
 		setAttributes(aux);
 	}
 
@@ -185,14 +194,38 @@ const MetadataEditor = (props) => {
 		fetchContractData()
 	}, [fetchContractData])
 
-	const imageSetter = async (fileArray) => {
-		let file = fileArray[0];
+	const imageSetter = async (file) => {
 		let reader = new FileReader();
 		reader.onload = function () {
 			setImage(reader.result);
 		}
 		await reader.readAsDataURL(file);
 	}
+
+	useEffect(() => {
+		if (existingMetadataArray.length) {
+			let metadata = existingMetadataArray[tokenNumber];
+			setTitle(metadata.name);
+			setDescription(metadata.description);
+			setAttributes(Object.keys(metadata.attributes).map((item, index) => {
+				let itm = metadata.attributes[item];
+				console.log(item, itm);
+				if (itm.trait_type === undefined) {
+					if (Object.keys(metadata.attributes[item]).length === 1) {
+						itm = {
+							trait_type: item,
+							value: metadata.attributes[item]
+						}
+					} 
+					itm = {
+						trait_type: item,
+						value: metadata.attributes[item]
+					}
+				}
+				return itm;
+			}))
+		}
+	}, [tokenNumber, existingMetadataArray])
 
 	return <div className='row w-100 px-0 mx-0'>
 		<h5>
@@ -215,14 +248,14 @@ const MetadataEditor = (props) => {
 				labelClass='w-100 text-left'
 				labelCSS={{textAlign: 'left'}}
 			/>
-			<InputField
+			{/*false && <InputField
 				label='Edition Symbol'
 				getter={symbol}
 				setter={setSymbol}
 				customClass='form-control'
 				labelClass='w-100'
 				labelCSS={{textAlign: 'left'}}
-			/>
+			/>*/}
 			<InputField
 				label='Description'
 				getter={description}
@@ -236,7 +269,6 @@ const MetadataEditor = (props) => {
 				type='file'
 				setter={imageSetter}
 				setterField={['files',0]}
-				setterField='files'
 				customClass='form-control'
 				labelClass='w-100'
 				labelCSS={{textAlign: 'left'}}
@@ -279,7 +311,7 @@ const MetadataEditor = (props) => {
 				</div>
 				<div className='col-6'>
 					<h2>
-						{title} {symbol}{tokenNumber}
+						{title} {/*symbol tokenNumber*/}
 					</h2>
 					{description}
 					<hr />
@@ -289,7 +321,7 @@ const MetadataEditor = (props) => {
 						{attributes.map((item, index) => {
 							return <div key={index} className='col-4 my-2 p-1' >
 								<div style={{border: 'solid red 1px', backgroundColor: '#F22A', borderRadius: '20px'}}>
-									{item.name}: {item.value}
+									{item.trait_type}: {item.value}
 								</div>
 							</div>
 						})}
