@@ -90,7 +90,6 @@ const CreateBatchMetadata = () => {
 			})
 		}
 		setProductOptions(finalProductList);
-		console.log(finalProductList);
 		if (finalProductList.filter(i => i.value === Number(params.product)).length) {
 			setProductId(params.product);
 		}
@@ -103,6 +102,19 @@ const CreateBatchMetadata = () => {
 	useEffect(() => {
 		fetchProductData();
 	}, [fetchProductData]);
+
+	useEffect(() => {
+		if (contractAddress === 'null') {
+			return;
+		}
+		let signer = programmaticProvider;
+		if (window.ethereum) {
+			let provider = new ethers.providers.Web3Provider(window.ethereum);
+			signer = provider.getSigner(0);
+		}
+		let instance = new ethers.Contract(contractAddress, erc721Abi, signer);
+		setContractInstance(instance);
+	}, [contractAddress, programmaticProvider])
 
 	return (
 		<Form onSubmit={onSubmit}>
@@ -155,8 +167,8 @@ const CreateBatchMetadata = () => {
 			</ContentInput>
 			{responseSuccessful && <>
 				<hr />
-				<button type='button' className='btn btn-secondary' onClick={e => {
-					console.log(contractInstance.setProductURI(productId, `/api/nft/${contractAddress}/${productId}/token/`));
+				<button type='button' className='btn btn-secondary' onClick={async e => {
+					await contractInstance.setProductURI(productId, `/api/nft/${contractAddress}/${productId}/token/`);
 				}}>
 					Set '/api/nft/{contractAddress}/{productId}/token/:token as the product's Metadata URI
 				</button>
@@ -180,6 +192,7 @@ const ContentInput = styled.div`
 	margin-top: 20px;
 `;
 
+/*
 const Label = styled.label`
 	float: left;
 `;
@@ -188,5 +201,6 @@ const Input = styled.input`
 	width: 100%;
 	outline: none;
 `;
+*/
 
 export default CreateBatchMetadata

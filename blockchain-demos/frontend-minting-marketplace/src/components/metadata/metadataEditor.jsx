@@ -112,8 +112,6 @@ const MetadataEditor = (props) => {
 	
 	const [tokenNumber, setTokenNumber] = useState(0);
 
-	const [internalStartingToken, setInternalStartingToken] = useState(0);
-	const [internalEndingToken, setInternalEndingToken] = useState(0);
 	const [endingToken, setEndingToken] = useState(0);
 	
 	const [attributes, setAttributes] = useState([]);
@@ -166,8 +164,6 @@ const MetadataEditor = (props) => {
 		}
 		let firstToken = Number(productInfo.startingToken.toString());
 		let lastToken = Number(productInfo.endingToken.toString())
-		setInternalStartingToken(firstToken);
-		setInternalEndingToken(lastToken);
 
 		setEndingToken(lastToken - firstToken);
 		setTokenNumber(0);

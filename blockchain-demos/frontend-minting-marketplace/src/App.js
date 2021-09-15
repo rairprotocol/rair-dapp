@@ -33,7 +33,7 @@ import MetamaskLogo from './images/metamask-fox.svg';
 
 function App() {
 
-	const [userData, setUserData] = useState();
+	const [/*userData*/, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(undefined);
 
 	// Redux
@@ -118,7 +118,7 @@ function App() {
 				dispatch({type: contractTypes.SET_CHAIN_ID, payload: chainId});
 			});
 		}
-	}, [])
+	}, [dispatch])
 
 	return (
 		<BrowserRouter>
