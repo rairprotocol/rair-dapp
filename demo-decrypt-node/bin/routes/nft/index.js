@@ -25,6 +25,7 @@ module.exports = context => {
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
+      const tokens = [];
 
       const offerPools = await context.db.OfferPool.aggregate([
         { $match: { contract, product: prod } },
@@ -99,6 +100,10 @@ module.exports = context => {
                 const attributes = _.chain(record)
                   .assign({})
                   .omit(defaultFields)
+                  .reduce((re, v, k) => {
+                    re.push({ trait_type: k, value: v });
+                    return re;
+                  }, [])
                   .value();
 
                 forSave.push({
@@ -118,6 +123,8 @@ module.exports = context => {
                     attributes: attributes
                   }
                 });
+
+                tokens.push(token);
               }
             });
 
@@ -141,7 +148,12 @@ module.exports = context => {
         log.error(err);
       }
 
-      const result = await context.db.MintedToken.find({ contract, offerPool: offerPools[0].marketplaceCatalogIndex });
+      const result = await context.db.MintedToken.find({
+        contract,
+        offerPool: offerPools[0].marketplaceCatalogIndex,
+        token: { $in: tokens },
+        isMinted: false
+      });
 
       res.json({ success: true, result });
     } catch (err) {
