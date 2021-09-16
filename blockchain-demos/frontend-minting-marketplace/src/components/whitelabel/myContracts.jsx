@@ -1,13 +1,9 @@
 import {useState, useEffect, useCallback} from 'react'
-import {useSelector} from 'react-redux';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
-import InputField from '../common/InputField.jsx';
+import DeployContracts from './DeployContracts.jsx';
+import CreateProduct from './CreateProduct.jsx';
 
 import BinanceDiamond from '../../images/binance-diamond.svg'
-
-const rSwal = withReactContent(Swal);
 
 const images = {
 	'BNB': BinanceDiamond
@@ -17,7 +13,6 @@ const Factory = () => {
 
 	const [contractArray, setContractArray] = useState([]);
 	
-	const {factoryInstance, erc777Instance} = useSelector(store => store.contractStore);
 
 	const fetchContracts = useCallback(async () => {
 		let response = await (await fetch('/api/contracts', {
@@ -55,29 +50,7 @@ const Factory = () => {
 
 	return <div style={{position: 'relative'}} className='w-100 text-start row mx-0 px-0'>
 		<h1>Your deployed contracts</h1>
-		{factoryInstance && <button
-			className='btn btn-success col-2'
-			style={{position: 'absolute', top: 0, right: 0}}
-			onClick={async e => {
-				let aux = (await factoryInstance.deploymentCostForERC777(erc777Instance.address)).toString();
-				rSwal.fire({
-					html: <>
-						Deploy a new contract for {aux} tokens!
-						<hr/>
-						<InputField
-							label='Contract Name'
-							customClass='form-control'
-							labelClass='w-100 text-start'
-						/>
-						<button className='btn my-3 btn-success'>
-							Deploy!
-						</button>
-					</>,
-					showConfirmButton: false
-				})
-			}}>
-			New Contract <i className='fas fa-plus'/>
-		</button>}
+		<DeployContracts />
 		{contractArray && contractArray.map((item, index) => {
 			return <div className='col-4 p-2' key={index}>
 				<div style={{border: 'solid 1px black', borderRadius: '16px', position: 'relative'}} className='w-100 p-3'>
@@ -94,7 +67,7 @@ const Factory = () => {
 					</abbr>
 					<small>({item.contractAddress})</small>
 					<h5>{item.title}</h5>
-					{item.products.length} products!
+					{item.products.length} products! <CreateProduct address={item.contractAddress} />
 					<hr />
 					<div className='w-100 row px-0 mx-0'>
 						{item.products
@@ -106,7 +79,7 @@ const Factory = () => {
 									</div>
 									{product.name}<br />
 									<div style={{position: 'absolute', top: 0, right: 0}}>
-										...{product.firstTokenIndex + product.copies}
+										...{product.firstTokenIndex + product.copies - 1}
 									</div>
 									<progress
 										className='w-100'
