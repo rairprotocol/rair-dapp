@@ -18,12 +18,12 @@ const endpoints = {
  * @param  {string} productId       Product ID within the contract
  * @return {boolean}                Returns true if the account has at least one of the given token
  */
-async function checkBalanceProduct (accountAddress, blockchain, contractAddress, productId) {
+async function checkBalanceProduct (accountAddress, blockchain, contractAddress, productId, offerRangeStart, offerRangeEnd) {
 	const provider = new ethers.providers.JsonRpcProvider(
 		`https://${endpoints[blockchain]}.infura.io/v3/${INFURA_PROJECT_ID}`
 	);
 	const tokenInstance = new ethers.Contract(contractAddress, RAIR_ERC721Abi, provider);
-	const result = await tokenInstance.hasTokenInProduct(accountAddress, productId);
+	const result = await tokenInstance.hasTokenInProduct(accountAddress, productId, offerRangeStart, offerRangeEnd);
 	return result
 }
 
