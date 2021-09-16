@@ -28,7 +28,7 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
-import Factory from './components/whitelabel/factory.jsx';
+import myContracts from './components/whitelabel/myContracts.jsx';
 
 import MetamaskLogo from './images/metamask-fox.svg';
 
@@ -173,7 +173,7 @@ function App() {
 								<Route path='/token/:contract/:identifier' component={Token} />
 								<Route path='/rair/:contract/:product' component={RairProduct} />
 								<Route path='/create-batch-metadata' component={CreateBatchMetadata} />
-								<Route path='/new-factory' component={Factory} />
+								<Route path='/new-factory' component={myContracts} />
 								<Route path='/all'>
 									<VideoList />
 								</Route>
