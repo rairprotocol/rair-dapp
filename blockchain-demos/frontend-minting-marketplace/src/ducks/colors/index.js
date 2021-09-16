@@ -6,26 +6,32 @@ import headerLogoWhite from '../../images/RAIR-Tech-Logo-POWERED BY-WHITE-2021.p
 import bgLogoBlack from '../../images/BlackBg.png';
 import bgLogoWhite from '../../images/ClayBg.png';
 
+const schemes = {
+	'rhyno': {
+		primaryColor: 'rhyno',
+		headerLogo: headerLogoBlack,
+		textColor: 'black',
+		backgroundImage: bgLogoWhite,
+		backgroundImageEffect: {backgroundBlendMode: undefined}
+	},
+	'charcoal': {
+		primaryColor: 'charcoal',
+		headerLogo: headerLogoWhite,
+		textColor: 'white',
+		backgroundImage: bgLogoBlack,
+		backgroundImageEffect: {backgroundBlendMode: 'lighten'}
+	}
+}
 
-
-const InitialState = {
-	primaryColor: 'rhyno',
-	headerLogo: headerLogoBlack,
-	textColor: 'black',
-	backgroundImage: bgLogoWhite,
-	backgroundImageEffect: {backgroundBlendMode: undefined}
-};
+const InitialState = schemes[localStorage.colorScheme ? localStorage.colorScheme : 'rhyno']; 
 
 export default function userStore(state = InitialState, action) {
 	switch (action.type) {
 		case types.SET_COLOR_SCHEME:
+			localStorage.setItem('colorScheme', action.payload);
 			return {
 				...state,
-				primaryColor: action.payload,
-				headerLogo: action.payload === 'rhyno' ? headerLogoBlack : headerLogoWhite,
-				textColor: action.payload === 'rhyno' ? 'black' : 'white',
-				backgroundImage: action.payload === 'rhyno' ?  bgLogoWhite : bgLogoBlack,
-				backgroundImageEffect: {backgroundBlendMode: action.payload === 'rhyno' ?  undefined : 'lighten'}
+				...(schemes[action.payload])
 			};
 		default:
 			return state;
