@@ -202,6 +202,9 @@ const MetadataEditor = (props) => {
 		if (existingMetadataArray.length) {
 			let metadata = existingMetadataArray[tokenNumber];
 			if (!metadata) {
+				setTitle('');
+				setDescription('');
+				setAttributes([]);
 				return;
 			}
 			setTitle(metadata.name);
