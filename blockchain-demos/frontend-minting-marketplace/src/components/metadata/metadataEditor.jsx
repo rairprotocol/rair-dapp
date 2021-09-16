@@ -139,9 +139,11 @@ const MetadataEditor = (props) => {
 		}
 
 		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
-		setExistingMetadataArray(aux.result.map(item => {
-			return item.metadata;
-		}))
+		let sortedMetadataArray = [];
+		for await (let token of aux.result) {
+			sortedMetadataArray[token.token] = token.metadata;
+		}
+		setExistingMetadataArray(sortedMetadataArray);
 		
 		let finalOfferArray = []
 		let offerIndex = await minterInstance.contractToOfferRange(params.contract, params.product);
