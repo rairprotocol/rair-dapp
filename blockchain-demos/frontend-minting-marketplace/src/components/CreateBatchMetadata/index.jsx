@@ -167,7 +167,7 @@ const CreateBatchMetadata = () => {
 			</ContentInput>
 			{responseSuccessful && <>
 				<hr />
-				<button type='button' className='btn btn-secondary' onClick={async e => {
+				<button disabled type='button' className='btn btn-secondary' onClick={async e => {
 					await contractInstance.setProductURI(productId, `/api/nft/${contractAddress}/${productId}/token/`);
 				}}>
 					Set '/api/nft/{contractAddress}/{productId}/token/:token as the product's Metadata URI
