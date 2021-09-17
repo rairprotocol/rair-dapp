@@ -5,13 +5,12 @@ services:
     image: nginx:latest
     container_name: rair-nginx
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/error.log:/etc/nginx/error_log.log
-      - ./nginx/cache/:/etc/nginx/cache
+      - ./nginx-auth/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx-auth/error.log:/etc/nginx/error_log.log
+      - ./nginx-auth/cache/:/etc/nginx/cache
       #Run certbot on the local server with proper hostname
       - /etc/letsencrypt/:/etc/letsencrypt/
-      #Authorization layer, see docker-compose-auth.yml
-      #- ./nginx/auth/:/etc/conf.d/
+      - ./nginx-auth/auth/:/etc/conf.d/
     ports:
       - 80:80
       - 443:443
