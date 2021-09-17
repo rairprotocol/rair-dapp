@@ -55,15 +55,18 @@ const Factory = () => {
 			return <div className='col-4 p-2' key={index}>
 				<div style={{border: 'solid 1px black', borderRadius: '16px', position: 'relative'}} className='w-100 p-3'>
 					<abbr title={'Binance Testnet'}>
-						<img style={{
-							border: 'solid 1px black',
-							position: 'absolute',
-							top: '5px',
-							right: '5px',
-							borderRadius: '50%',
-							maxWidth: '2rem',
-							maxHeight: '2rem'
-						}} src={images[item.blockchain]} />
+						<img 
+							alt='blockchain'
+							style={{
+								border: 'solid 1px black',
+								position: 'absolute',
+								top: '5px',
+								right: '5px',
+								borderRadius: '50%',
+								maxWidth: '2rem',
+								maxHeight: '2rem'
+							}}
+							src={images[item.blockchain]} />
 					</abbr>
 					<small>({item.contractAddress})</small>
 					<h5>{item.title}</h5>
@@ -103,7 +106,7 @@ const Factory = () => {
 												</div>
 												<progress
 													className='w-100'
-													max={offer.range[0]}
+													min={offer.range[0]}
 													max={offer.range[1]}
 													value={offer.soldCopies}
 												/>

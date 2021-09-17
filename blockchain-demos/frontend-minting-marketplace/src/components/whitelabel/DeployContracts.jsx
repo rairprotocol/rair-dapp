@@ -3,9 +3,8 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import InputField from '../common/InputField.jsx';
 import InputSelect from '../common/InputSelect.jsx';
-import {useSelector, useDispatch, Provider, useStore} from 'react-redux';
+import {useSelector, Provider, useStore} from 'react-redux';
 import {utils} from 'ethers'
-import * as contractTypes from '../../ducks/contracts/types.js';
 
 const rSwal = withReactContent(Swal);
 
@@ -32,7 +31,7 @@ const ModalContent = () => {
 										item.value === `0x${(factoryInstance?.provider?._network?.chainId).toString(16)}`
 									))[0]?.label);
 		}
-	}, [factoryInstance, erc777Instance]);
+	}, [factoryInstance, erc777Instance, options]);
 
 	useEffect(() => {
 		getPrice()
@@ -88,8 +87,7 @@ const ModalContent = () => {
 }
 
 const DeployContracts = () => {
-	const {factoryInstance, erc777Instance} = useSelector(store => store.contractStore);
-	const dispatch = useDispatch();
+	const {factoryInstance} = useSelector(store => store.contractStore);
 	const store = useStore();
 
 	return <button
