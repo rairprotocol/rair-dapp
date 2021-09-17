@@ -30,26 +30,29 @@ Returns a challenge for the client to sign with the ethereum private key
 
 ```json
 {
-  "types": {
-    "EIP712Domain": [
-      {
-        "name": "name",
-        "type": "string"
-      }
-    ],
-    "Challenge": [
-      {
-        "name": "challenge",
-        "type": "string"
-      }
-    ]
-  },
-  "domain": {
-    "name": "RAIR Inc."
-  },
-  "primaryType": "Challenge",
-  "message": {
-    "challenge": "0efb69a5d972acdffecd0d24dc7ffe73cfb46fc7e0cf24a0af01c05538669122"
+  "success": true,
+  "response": {
+    "types": {
+      "EIP712Domain": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "Challenge": [
+        {
+          "name": "challenge",
+          "type": "string"
+        }
+      ]
+    },
+    "domain": {
+      "name": "RAIR Inc."
+    },
+    "primaryType": "Challenge",
+    "message": {
+      "challenge": "0efb69a5d972acdffecd0d24dc7ffe73cfb46fc7e0cf24a0af01c05538669122"
+    }
   }
 }
 ```
@@ -62,6 +65,7 @@ Returns a challenge for the client to sign with the ethereum private key
 
 ```json
 {
+  "success": false,
   "error": true,
   "message": "Invalid Ethereum address passed to eth-auth"
 }

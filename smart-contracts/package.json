@@ -1,0 +1,36 @@
+{
+  "name": "RAIR Smart Contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "hardhat:compile": "hardhat compile",
+    "hardhat:test": "hardhat test",
+    "deploy-binance": "npx hardhat --network binanceSmartchain deploy",
+    "deploy-goerli": "npx hardhat --network goerli deploy",
+    "deploy-mumbai": "npx hardhat --network mumbai deploy"
+  },
+  "author": "Juan Miguel Sanchez Mola <jmsm412@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/contracts": "^4.1.0",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.3.0",
+    "ethers": "^5.4.3",
+    "hardhat": "^2.3.0",
+    "hardhat-deploy": "^0.8.11",
+    "hardhat-deploy-ethers": "^0.3.0-beta.10",
+    "hardhat-gas-reporter": "^1.0.4"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts-upgradeable": "^4.2.0",
+    "@openzeppelin/hardhat-upgrades": "^1.9.0",
+    "dotenv": "^10.0.0"
+  }
+}

@@ -3,39 +3,34 @@ version: '3.9'
 services:
   rairnode:
     container_name: 'rairnode'
-    image:
-      rairtechinc/rairservernode:test.latest
+    image: rairtechinc/rairservernode:dev_latest
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+    environment:
+      PRODUCTION: "true"
+      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      JWT_SECRET: ${jwt_secret}
+      PINATA_SECRET: ${pinata_secret}  
     ports:
       - 3000:3000
       - 5000:5000
     networks:
       - rair-local
-  rairipfs:
-    container_name: 'rairipfs'
-    image:
-      ipfs/go-ipfs:latest
-    volumes:
-      - ./demo-decrypt-node/ipfsData:/data/ipfs
-    ports:
-      - 4001:4001
-      - 127.0.0.1:8081:8080
-      - 127.0.0.1:5003:5001
-    networks:
-      - rair-local
   rairfront:
     container_name: 'rairfront'
-    image: woda-with-nodejs
+    image: rairtechinc/rairfront:dev_latest
     ports:
-      - 8080:8080
-      - 8443:8443
-      - 5001:5001
-      - 5002:5002
-    volumes:
-      - /var/dev/EAMD.ucp/Components/tla/EAM/layer1/Thinglish/Once/latestServer/src/sh/:/usr/local/sbin/
-      - /var/dev/:/var/dev/
+      - 80:80
+    networks:
+      - rair-local
+
+  minting-network:
+    container_name: minting-network
+    image: rairtechinc/minting-network:dev_latest
+    ports:
+      - 3001:3001
     networks:
       - rair-local
 networks:
