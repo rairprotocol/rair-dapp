@@ -59,6 +59,7 @@ Supported options:
                 * [x] /files/:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft.md)
             * [x] /token/:tokenInContract - GET - Get specific token by contract address and unique toke ID in contract, [see details here](readme/get_minted_token_by_contract_index.md)
     * [x] /docs - swagger documentation for the server
+    * [x] /:contractName/:productName/:offerName/:tokenId - GET - get metadata of specific token, [see details here](readme/get_token_metadata.md)
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
 * [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
 
