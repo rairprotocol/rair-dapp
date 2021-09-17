@@ -6,7 +6,7 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
   console.log('Minter Marketplace deployed at', (await deploy('Minter_Marketplace', {
     from: deployerAddress,
     //proxy: true,
-    //args: ['0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000],
+    args: ['0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000],
     //proxyContract: "OpenZeppelinTransparentProxy"
   })).receipt.contractAddress);
 };
