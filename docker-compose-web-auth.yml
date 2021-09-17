@@ -5,10 +5,12 @@ services:
     image: nginx:latest
     container_name: rair-nginx
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/error.log:/etc/nginx/error_log.log
-      - ./nginx/cache/:/etc/nginx/cache
+      - ./nginx-auth/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx-auth/error.log:/etc/nginx/error_log.log
+      - ./nginx-auth/cache/:/etc/nginx/cache
+      #Run certbot on the local server with proper hostname
       - /etc/letsencrypt/:/etc/letsencrypt/
+      - ./nginx-auth/auth/:/etc/conf.d/
     ports:
       - 80:80
       - 443:443
@@ -21,9 +23,7 @@ services:
       - minting-network
   rairnode:
     container_name: 'rairnode'
-    build:
-      context: demo-decrypt-node/
-      dockerfile: Dockerfile
+    image: rairtechinc/rairservernode:dev_latest
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
@@ -39,9 +39,7 @@ services:
       - rair-local
   rairfront:
     container_name: 'rairfront'
-    build:
-      context: rair-front-master/
-      dockerfile: Dockerfile
+    image: rairtechinc/rairfront:dev_latest
     ports:
       - 8080:80
     networks:
@@ -65,9 +63,7 @@ services:
     container_name: minting-network
     expose: 
       - "80"
-    build:
-      context: blockchain-demos/frontend-minting-marketplace
-      dockerfile: Dockerfile
+    image: rairtechinc/minting-network:dev_latest
     ports:
       - 3001:3001
     networks:

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -c
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert
+        kompose.cmd: kompose convert -c
         kompose.version: 1.22.0 (955b78124)
       creationTimestamp: null
       labels:
@@ -26,27 +26,26 @@ spec:
         io.kompose.service: rairnode
     spec:
       containers:
-        - image: rairtechinc/rairservernode:dev_latest
+        - env:
+            - name: JWT_SECRET
+            - name: MONGO_URI
+              value: mongodb+srv://:@
+            - name: MONGO_URI_LOCAL
+              value: mongodb://:@mongo:27017/rair-db?authSource=
+            - name: PINATA_SECRET
+            - name: PRODUCTION
+              value: "true"
+          image: rairtechinc/rairservernode:dev_latest
           name: rairnode
-          imagePullPolicy: Always
           ports:
             - containerPort: 3000
             - containerPort: 5000
-          env:
-            - name: PRODUCTION
-              value: "true"
-            - name: MONGO_URI
-              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/RairDev1?retryWrites=true&w=majority"
-            - name: MONGO_URI_LOCAL
-              value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
           resources: {}
           volumeMounts:
             - mountPath: /usr/local/src/db
               name: rairnode-claim0
             - mountPath: /usr/local/src/bin/Videos
               name: rairnode-claim1
-      imagePullSecrets:
-        - name: regcred
       restartPolicy: Always
       volumes:
         - name: rairnode-claim0
