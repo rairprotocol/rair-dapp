@@ -2,37 +2,33 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -c
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
-    io.kompose.service: minting-network
-  name: minting-network
+    io.kompose.service: rairfront
+  name: rairfront
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: minting-network
+      io.kompose.service: rairfront
   strategy: {}
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert
+        kompose.cmd: kompose convert -c
         kompose.version: 1.22.0 (955b78124)
       creationTimestamp: null
       labels:
         io.kompose.network/rair-local: "true"
-        io.kompose.service: minting-network
-        app: minting-network
+        io.kompose.service: rairfront
     spec:
       containers:
-        - image: rairtechinc/minting-network:dev_latest
-          name: minting-network
-          imagePullPolicy: Always
+        - image: rairtechinc/rairfront:dev_latest
+          name: rairfront
           ports:
-            - containerPort: 3001
+            - containerPort: 80
           resources: {}
-      imagePullSecrets:
-            - name: regcred
       restartPolicy: Always
 status: {}
