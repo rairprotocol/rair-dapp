@@ -18,6 +18,8 @@ import MetadataEditor from './components/metadata/metadataEditor.jsx';
 import CreateBatchMetadata from './components/CreateBatchMetadata';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
+import MyContracts from './components/whitelabel/myContracts.jsx';
+
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
 
@@ -161,7 +163,8 @@ function App() {
 							{name: 'Latest', route: '/latest'},
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
-							{name: 'Factory', route: '/factory', disabled: factoryInstance === undefined},
+							{name: 'New Factory', route: '/new-factory'},
+							{name: 'Old Factory', route: '/factory', disabled: factoryInstance === undefined},
 							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
 							if (!item.disabled) {
@@ -200,6 +203,7 @@ function App() {
 								</Route>
 								{adminAccess && <Route path='/admin' component={FileUpload} />}
 								<Route path='/ending' component={CSVParser} />
+								<Route path='/new-factory' component={MyContracts} />
 								<Route exact path='/'>
 									<div className='col-6 text-left'>
 										<h1 className='w-100' style={{textAlign: 'left'}}>
