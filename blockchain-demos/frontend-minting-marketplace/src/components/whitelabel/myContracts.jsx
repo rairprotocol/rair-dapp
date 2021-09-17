@@ -4,9 +4,13 @@ import DeployContracts from './DeployContracts.jsx';
 import CreateProduct from './CreateProduct.jsx';
 
 import BinanceDiamond from '../../images/binance-diamond.svg'
+import MaticLogo from '../../images/polygon-matic.svg'
+import EthereumLogo from '../../images/ethereum-logo.svg'
 
-const images = {
-	'BNB': BinanceDiamond
+const chainData = {
+	'BNB': {image: BinanceDiamond, name: 'Binance'},
+	'tMATIC': {image: MaticLogo, name: 'Matic'},
+	'ETH': {image: EthereumLogo, name: 'Ethereum'}
 }
 
 const Factory = () => {
@@ -52,22 +56,19 @@ const Factory = () => {
 		<h1>Your deployed contracts</h1>
 		<DeployContracts />
 		{contractArray && contractArray.map((item, index) => {
+			console.log(item);
 			return <div className='col-4 p-2' key={index}>
-				<div style={{border: 'solid 1px black', borderRadius: '16px', position: 'relative'}} className='w-100 p-3'>
-					<abbr title={'Binance Testnet'}>
-						<img 
-							alt='blockchain'
-							style={{
-								border: 'solid 1px black',
-								position: 'absolute',
-								top: '5px',
-								right: '5px',
-								borderRadius: '50%',
-								maxWidth: '2rem',
-								maxHeight: '2rem'
-							}}
-							src={images[item.blockchain]} />
-					</abbr>
+				<div style={{
+					border: 'solid 1px black',
+					borderRadius: '16px',
+					position: 'relative',
+					background: `url(${chainData[item.blockchain]?.image})`,
+					backgroundRepeat: 'no-repeat',
+					backgroundSize: '5rem 5rem',
+					backgroundPosition: 'top right',
+					backgroundColor: '#FFFA',
+					backgroundBlendMode: 'lighten'
+				}} className='w-100 p-3'>
 					<small>({item.contractAddress})</small>
 					<h5>{item.title}</h5>
 					{item.products.length} products! <CreateProduct address={item.contractAddress} />
