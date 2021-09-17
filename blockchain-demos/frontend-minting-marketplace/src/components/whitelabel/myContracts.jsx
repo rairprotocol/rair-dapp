@@ -32,13 +32,28 @@ const Factory = () => {
 						'x-rair-token': localStorage.token
 					}
 				})).json();
-				let response3 = await (await fetch(`/api/contracts/${contract.contractAddress}/products/offers`, {
+				let response3 = await (await fetch(`/api/contracts/${contract.contractAddress}/products`, {
 					headers: {
 						'x-rair-token': localStorage.token
 					}
 				})).json();
 				if (response3.success) {
 					response2.contract.products = response3.products
+				}
+				let response4 = await (await fetch(`/api/contracts/${contract.contractAddress}/products/offers`, {
+					headers: {
+						'x-rair-token': localStorage.token
+					}
+				})).json();
+				// Special case where a product exists but it has no offers
+				if (response4.success) {
+					response4.products.forEach(item => {
+						response2.contract.products.forEach(existingItem => {
+							if (!existingItem.offers && item._id.toString() === existingItem._id.toString()) {
+								existingItem.offers = item.offers;
+							}
+						})
+					})
 				}
 				contractData.push(response2.contract)
 			} 
@@ -71,11 +86,11 @@ const Factory = () => {
 				}} className='w-100 p-3'>
 					<small>({item.contractAddress})</small>
 					<h5>{item.title}</h5>
-					{item.products.length} products! <CreateProduct address={item.contractAddress} />
+					{item.products?.length} products! <CreateProduct address={item.contractAddress} blockchain={item.blockchain} />
 					<hr />
 					<div className='w-100 row px-0 mx-0'>
 						{item.products
-							.sort((a,b) => a.creationDate > b.creationDate ? 1 : -1)
+							?.sort((a,b) => a.creationDate > b.creationDate ? 1 : -1)
 							.map((product, index) => {
 								return <div key={index} style={{position: 'relative'}} className='col-12 text-center'>
 									<div style={{position: 'absolute', top: 0, left: 0}}>
@@ -90,7 +105,7 @@ const Factory = () => {
 										max={product.firstTokenIndex + product.copies}
 										value={product.soldCopies}
 									/>
-									<details className='w-100 text-start row px-0 mx-0'>
+									{product.offers && <details className='w-100 text-start row px-0 mx-0'>
 										<summary>
 											{product.offers.length} offers
 										</summary>
@@ -114,7 +129,7 @@ const Factory = () => {
 											</div>
 										})}
 										<hr />
-									</details>
+									</details>}
 								</div>
 						})}
 					</div>
