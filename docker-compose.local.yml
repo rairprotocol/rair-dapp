@@ -1,6 +1,24 @@
 version: '3.9'
 
 services:
+  nginx:
+    image: nginx:latest
+    container_name: rair-nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/error.log:/etc/nginx/error_log.log
+      - ./nginx/cache/:/etc/nginx/cache
+    #  - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - ENV=development
+      - APPLICATION_URL=http://minter-network
+    networks:
+      - rair-local
+    depends_on:
+      - minting-network
   rairnode:
     container_name: 'rairnode'
     build:
@@ -10,7 +28,7 @@ services:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
     environment:
-      PRODUCTION: "false"
+      PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       PINATA_SECRET: ${pinata_secret}  
@@ -25,7 +43,7 @@ services:
       context: rair-front-master/
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - 8080:80
     networks:
       - rair-local
   mongo:
@@ -45,6 +63,8 @@ services:
       - rair-local
   minting-network:
     container_name: minting-network
+    expose: 
+      - "80"
     build:
       context: blockchain-demos/frontend-minting-marketplace
       dockerfile: Dockerfile
