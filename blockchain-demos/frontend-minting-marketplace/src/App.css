@@ -1,3 +1,32 @@
+:root {
+  --bubblegum: #E882D5;
+  --bubblegum-hover: #BD6BAE;
+  --bubblegum-click: #925486;
+
+  --royal-purple: #725BDB;
+  --royal-purple-hover: #5B49AF;
+  --royal-purple-click: #443783;
+
+  --arctic-blue: #19A7F6;
+  --arctic-blue-hover: #1486C5;
+  --arctic-blue-click: #0F6494;
+
+  --charcoal: #222021;
+  --charcoal-80: #4E4D4D;
+  --charcoal-60: #7A797A;
+  --charcoal-40: #A7A6A6;
+  --charcoal-20: #D3D2D3;
+
+  --rhyno: #DEDEDE;
+  --rhyno-80: #E5E5E5;
+  --rhyno-60: #EBEBEB;
+  --rhyno-40: #F2F2F2;
+  --rhyno-20: #F8F8F8;
+
+  --royal-ice: linear-gradient(to right, var(--arctic-blue), var(--royal-purple));
+  --stimorol: linear-gradient(to right, var(--royal-purple), var(--bubblegum));
+}
+
 .App {
   text-align: center;
 }
@@ -21,4 +50,87 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.title {
+  font-size: larger;
+  background: var(--stimorol);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-rhyno {
+  color: black;
+  background-color: var(--rhyno);
+  border-color: var(--rhyno)
+}
+.btn-rhyno:hover {
+  color:black;
+  background-color:var(--rhyno-80);
+  border-color:var(--rhyno-60)
+}
+.btn-check:focus+.btn-rhyno, .btn-rhyno:focus {
+  color:black;
+  background-color:var(--rhyno-80);
+  border-color:var(--rhyno-60);
+  box-shadow:0 0 0 .25rem var(--rhyno-20)
+}
+.btn-check:active+.btn-rhyno,
+.btn-check:checked+.btn-rhyno,
+.btn-rhyno.active,
+.btn-rhyno:active,
+.show > .btn-rhyno.dropdown-toggle {
+  color:black;
+  background-color:var(--rhyno-60);
+  border-color:var(--rhyno-40)
+}
+.btn-check:active+.btn-rhyno:focus,
+.btn-check:checked+.btn-rhyno:focus,
+.btn-rhyno.active:focus,
+.btn-rhyno:active:focus,
+.show>.btn-rhyno.dropdown-toggle:focus {
+  box-shadow:0 0 0 .25rem var(--rhyno-20)
+}
+.btn-rhyno.disabled, .btn-rhyno:disabled {
+  color:black;
+  background-color:var(--rhyno);
+  border-color:var(--rhyno)
+}
+
+.btn-charcoal {
+  color: white;
+  background-color: var(--charcoal);
+  border-color: var(--charcoal)
+}
+.btn-charcoal:hover {
+  color:white;
+  background-color:var(--charcoal-80);
+  border-color:var(--charcoal-60)
+}
+.btn-check:focus+.btn-charcoal, .btn-charcoal:focus {
+  color:white;
+  background-color:var(--charcoal-80);
+  border-color:var(--charcoal-60);
+  box-shadow:0 0 0 .25rem var(--charcoal-20)
+}
+.btn-check:active+.btn-charcoal,
+.btn-check:checked+.btn-charcoal,
+.btn-charcoal.active,
+.btn-charcoal:active,
+.show > .btn-charcoal.dropdown-toggle {
+  color:white;
+  background-color:var(--charcoal-60);
+  border-color:var(--charcoal-40)
+}
+.btn-check:active+.btn-charcoal:focus,
+.btn-check:checked+.btn-charcoal:focus,
+.btn-charcoal.active:focus,
+.btn-charcoal:active:focus,
+.show>.btn-charcoal.dropdown-toggle:focus {
+  box-shadow:0 0 0 .25rem var(--charcoal-20)
+}
+.btn-charcoal.disabled, .btn-charcoal:disabled {
+  color:white;
+  background-color:var(--charcoal);
+  border-color:var(--charcoal)
 }

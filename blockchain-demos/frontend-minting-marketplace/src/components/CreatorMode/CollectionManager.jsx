@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
@@ -208,7 +209,14 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		}
 	}, [productInfo, tokenInstance, minterInstance, refresher])
 
-	return <details className='w-100 border border-secondary rounded'>
+	return <details style={{position: 'relative'}} className='w-100 border border-secondary rounded'>
+		<Link
+			className='btn btn-warning'
+			id={`metadata_${productIndex + 1}`}
+			style={{position: 'absolute', top: 0, right: 0}}
+			to={`/metadata/${tokenInstance.address}/${productIndex}`}>
+			Edit Metadata!
+		</Link>
 		<summary>
 			Product #{productIndex + 1}: {productInfo.name}
 		</summary>
