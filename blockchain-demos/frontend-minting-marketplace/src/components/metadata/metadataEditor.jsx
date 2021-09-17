@@ -116,7 +116,7 @@ const MetadataEditor = (props) => {
 	
 	const [attributes, setAttributes] = useState([]);
 	const [refreshData, setRefreshData] = useState(true);
-	const [image, setImage] = useState();
+	const [image, setImage] = useState('');
 	
 	const [offerArray, setOfferArray] = useState([]);
 	const [currentOffer, setCurrentOffer] = useState('');
@@ -207,10 +207,12 @@ const MetadataEditor = (props) => {
 				setTitle('');
 				setDescription('');
 				setAttributes([]);
+				setImage('');
 				return;
 			}
 			setTitle(metadata.name);
 			setDescription(metadata.description);
+			setImage(metadata.image);
 			setAttributes(Object.keys(metadata.attributes).map((item, index) => {
 				let itm = metadata.attributes[item];
 				if (itm.trait_type === undefined) {
@@ -269,9 +271,8 @@ const MetadataEditor = (props) => {
 			/>
 			<InputField
 				label='Image'
-				type='file'
-				setter={imageSetter}
-				setterField={['files',0]}
+				getter={image}
+				setter={setImage}
 				customClass='form-control'
 				labelClass='w-100'
 				labelCSS={{textAlign: 'left'}}
@@ -310,7 +311,7 @@ const MetadataEditor = (props) => {
 			<hr />
 			<div className='col-12 row mx-0 px-0'>
 				<div className='col-6'>
-					{image && <img src={image} alt='preview' style={{filter: `hue-rotate(${(180 / (endingToken)) * tokenNumber}deg)`}} className='w-100 h-auto' />}
+					{image && <img src={image} alt='preview' style={{/*filter: `hue-rotate(${(180 / (endingToken)) * tokenNumber}deg)`*/}} className='w-100 h-auto' />}
 				</div>
 				<div className='col-6'>
 					<h2>
