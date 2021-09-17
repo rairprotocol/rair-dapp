@@ -54,23 +54,27 @@ contract Minter_Marketplace is OwnableUpgradeable {
 	event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
 	event ChangedNodeFee(uint16 newNodeFee);
 
-	function contractToOfferRange(address erc721Address, uint productIndex) public view returns (uint offerIndex) {
-		require(offerCatalog.length > 0, "Minting Marketplace: There are no offers registered");
-		require(offerCatalog[(_contractToOffers[erc721Address][productIndex])].contractAddress == erc721Address, "Minting Marketplace: There are no offers registered for that address");
-		require(offerCatalog[(_contractToOffers[erc721Address][productIndex])].productIndex == productIndex, "Minting Marketplace: There are is no offer registered for that product");
-		return (_contractToOffers[erc721Address][productIndex]);
-	}
-
 	/// @notice	Constructor
 	/// @dev	Should start up with the treasury, node and treasury fee
 	/// @param	_treasury		The address of the Treasury
 	/// @param	_treasuryFee	Fee given to the treasury every sale (Recommended default: 9%)
 	/// @param	_nodeFee		Fee given to the node on every sale (Recommended default: 1%)
-	function initialize(address _treasury, uint16 _treasuryFee, uint16 _nodeFee) public initializer {
+	constructor(address _treasury, uint16 _treasuryFee, uint16 _nodeFee) {
 		treasury = _treasury;
 		treasuryFee = _treasuryFee;
 		nodeFee = _nodeFee;
 		openSales = 0;
+	}
+
+	/// @notice	View function that returns the offer given a contract address and a product index
+	/// @param	erc721Address	Address of the RAIR Token contract
+	/// @param	productIndex	Index of the product
+	/// @param	offerIndex		Index of the offer with all the ranges
+	function contractToOfferRange(address erc721Address, uint productIndex) public view returns (uint offerIndex) {
+		require(offerCatalog.length > 0, "Minting Marketplace: There are no offers registered");
+		require(offerCatalog[(_contractToOffers[erc721Address][productIndex])].contractAddress == erc721Address, "Minting Marketplace: There are no offers registered for that address");
+		require(offerCatalog[(_contractToOffers[erc721Address][productIndex])].productIndex == productIndex, "Minting Marketplace: There are is no offer registered for that product");
+		return (_contractToOffers[erc721Address][productIndex]);
 	}
 
 	/// @notice	Sets the new treasury address
