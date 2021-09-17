@@ -48,7 +48,7 @@ const ConsumerMode = ({ addresses }) => {
 	}, [minterInstance, fetchData])
 
 	return <div className='col-12' style={{ position: 'relative' }}>
-		<button onClick={fetchData} disabled={refetchingFlag} style={{ position: 'absolute', right: 0 }} className='btn btn-warning'>
+		<button onClick={fetchData} disabled={refetchingFlag} style={{ position: 'absolute', right: 0, color: 'inherit' }} className='btn btn-warning'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 

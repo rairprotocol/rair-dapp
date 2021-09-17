@@ -33,7 +33,7 @@ const ERC777Manager = () => {
 		<h5> ERC777 </h5>
 		<small>({erc777Instance.address})</small>
 		<button
-			style={{position: 'absolute', left: 0, top: 0}}
+			style={{position: 'absolute', left: 0, top: 0, color: 'inherit'}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
 			className='btn'>
