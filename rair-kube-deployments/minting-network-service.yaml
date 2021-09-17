@@ -10,11 +10,11 @@ metadata:
   name: minting-network
 spec:
   ports:
-    - name: "3001"
-      port: 3001
+    - protocol: TCP
+      port: 80
       targetPort: 3001
+      nodePort: 32001
   selector:
-    io.kompose.service: minting-network
-    run: web
+    role: minting-network
 status:
   loadBalancer: {}

@@ -1,0 +1,73 @@
+version: '3.9'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: rair-nginx
+    volumes:
+      - ./nginx-auth/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx-auth/error.log:/etc/nginx/error_log.log
+      - ./nginx-auth/cache/:/etc/nginx/cache
+      #Run certbot on the local server with proper hostname
+      - /etc/letsencrypt/:/etc/letsencrypt/
+      - ./nginx-auth/auth/:/etc/conf.d/
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - ENV=development
+      - APPLICATION_URL=${hostname}
+    networks:
+      - rair-local
+    depends_on:
+      - minting-network
+  rairnode:
+    container_name: 'rairnode'
+    image: rairtechinc/rairservernode:dev_latest
+    volumes:
+      - ./demo-decrypt-node/db:/usr/local/src/db
+      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+    environment:
+      PRODUCTION: "true"
+      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      PINATA_SECRET: ${pinata_secret}  
+    ports:
+      - 3000:3000
+      - 5000:5000
+    networks:
+      - rair-local
+  rairfront:
+    container_name: 'rairfront'
+    image: rairtechinc/rairfront:dev_latest
+    ports:
+      - 8080:80
+    networks:
+      - rair-local
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    volumes:
+      - ./demo-decrypt-node/dev/db-data:/data/db
+      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${localdbuser}
+      MONGO_INITDB_ROOT_PASSWORD: ${localdbpass}
+      MONGO_INITDB_DATABASE: rair-db
+    ports:
+      - 27017:27017
+    networks:
+      - rair-local
+  minting-network:
+    container_name: minting-network
+    expose: 
+      - "80"
+    image: rairtechinc/minting-network:dev_latest
+    ports:
+      - 3001:3001
+    networks:
+      - rair-local
+networks:
+  rair-local:
+    driver: bridge
