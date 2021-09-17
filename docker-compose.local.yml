@@ -1,24 +1,6 @@
 version: '3.9'
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: rair-nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/error.log:/etc/nginx/error_log.log
-      - ./nginx/cache/:/etc/nginx/cache
-      - /etc/letsencrypt/:/etc/letsencrypt/
-    ports:
-      - 80:80
-      - 443:443
-    environment:
-      - ENV=development
-      - APPLICATION_URL=${hostname}
-    networks:
-      - rair-local
-    depends_on:
-      - minting-network
   rairnode:
     container_name: 'rairnode'
     build:
@@ -28,7 +10,7 @@ services:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
     environment:
-      PRODUCTION: "true"
+      PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       PINATA_SECRET: ${pinata_secret}  
