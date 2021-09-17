@@ -8,13 +8,13 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/error.log:/etc/nginx/error_log.log
       - ./nginx/cache/:/etc/nginx/cache
-    #  - /etc/letsencrypt/:/etc/letsencrypt/
+      - /etc/letsencrypt/:/etc/letsencrypt/
     ports:
       - 80:80
       - 443:443
     environment:
       - ENV=development
-      - APPLICATION_URL=http://minter-network
+      - APPLICATION_URL=${hostname}
     networks:
       - rair-local
     depends_on:
