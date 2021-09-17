@@ -34,8 +34,9 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumera
 	event TokensWithdrawn(address recipient, address erc777, uint amount);
 
 	/// @notice Factory Constructor
-	/// @param  _pricePerToken    Fee given to the node on every sale
-	function initialize(uint _pricePerToken, address _rairAddress) public initializer {
+	/// @param  _pricePerToken    Tokens required for the deployment
+	/// @param  _rairAddress 	  Address of the primary ERC777 contract (RAIR contract)
+	constructor(uint _pricePerToken, address _rairAddress) {
 		_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
 		_setRoleAdmin(ERC777, OWNER);
 		_setupRole(OWNER, msg.sender);

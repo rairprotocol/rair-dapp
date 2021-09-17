@@ -14,6 +14,9 @@ describe("Token Factory", function () {
 	const collection2Limit = 10;
 	const collection3Limit = 250;
 
+	const rairFeePercentage = 9000; // 9.000%
+	const nodeFeePercentage = 1000; // 1.000%
+
 	before(async function() {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
 		ERC777Factory = await ethers.getContractFactory("RAIR777");
@@ -41,25 +44,31 @@ describe("Token Factory", function () {
 			*/
 		});
 
+		it ("RAIR Factory", async function() {
+			factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
+		});
+
+		it ("Minter Marketplace", async function() {
+			minterInstance = await MinterFactory.deploy(erc777instance.address, rairFeePercentage, nodeFeePercentage);
+		});
 	})
 
-	describe('Upgradeable Deployments', function() {
+	// Waiting until the diamond standard is finalized to start using upgradeable contracts
+	/*describe('Upgradeable Deployments', function() {
 		it ("Factory", async function() {
-			/*
 			*	Normal deployment:
 			*	variable = await ContractFactory.deploy(...params);
 			*	factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
 			*
 			*	Upgradeable deployment
 			*	variable = await upgrades.deployProxy(ContractFactory, [...params])
-			*/
 			factoryInstance = await upgrades.deployProxy(FactoryFactory, [tokenPrice, erc777instance.address]);
 		});
 
 		it ("Minter Marketplace", async function() {
 			minterInstance = await upgrades.deployProxy(MinterFactory, [erc777instance.address, 9000, 1000]);
 		})
-	})
+	})*/
 
 	describe('Factory', function() {
 		/*describe('Upgrades', function() {
@@ -394,39 +403,62 @@ describe("Token Factory", function () {
 			});
 
 			it ("Owner balances", async function() {
-				expect(await rair721Instance.balanceOf(owner.address)).to.equal(0);
-				expect(await rair721Instance.balanceOf(addr1.address)).to.equal(1);
-				expect(await rair721Instance.balanceOf(addr2.address)).to.equal(0);
-				expect(await rair721Instance.balanceOf(addr3.address)).to.equal(2);
-				expect(await rair721Instance.balanceOf(addr4.address)).to.equal(1);
+				await expect(await rair721Instance.balanceOf(owner.address)).to.equal(0);
+				await expect(await rair721Instance.balanceOf(addr1.address)).to.equal(1);
+				await expect(await rair721Instance.balanceOf(addr2.address)).to.equal(0);
+				await expect(await rair721Instance.balanceOf(addr3.address)).to.equal(2);
+				await expect(await rair721Instance.balanceOf(addr4.address)).to.equal(1);
 			});
 
 			it ("Token Indexes by Owner", async function() {
-				expect(await rair721Instance.tokenOfOwnerByIndex(addr3.address, 0)).to.equal(0);
-				expect(await rair721Instance.tokenOfOwnerByIndex(addr3.address, 1)).to.equal(1);
-				expect(await rair721Instance.tokenOfOwnerByIndex(addr4.address, 0)).to.equal(2);
-				expect(await rair721Instance.tokenOfOwnerByIndex(addr1.address, 0)).to.equal(12);
+				await expect(await rair721Instance.tokenOfOwnerByIndex(addr3.address, 0)).to.equal(0);
+				await expect(await rair721Instance.tokenOfOwnerByIndex(addr3.address, 1)).to.equal(1);
+				await expect(await rair721Instance.tokenOfOwnerByIndex(addr4.address, 0)).to.equal(2);
+				await expect(await rair721Instance.tokenOfOwnerByIndex(addr1.address, 0)).to.equal(12);
 			});
 
 			it ("Internal Token Indexes", async function() {
-				expect(await rair721Instance.tokenToProductIndex(0)).to.equal(0);
-				expect(await rair721Instance.tokenToProductIndex(1)).to.equal(1);
-				expect(await rair721Instance.tokenToProductIndex(2)).to.equal(0);
-				expect(await rair721Instance.tokenToProductIndex(12)).to.equal(0);
+				await expect(await rair721Instance.tokenToProductIndex(0)).to.equal(0);
+				await expect(await rair721Instance.tokenToProductIndex(1)).to.equal(1);
+				await expect(await rair721Instance.tokenToProductIndex(2)).to.equal(0);
+				await expect(await rair721Instance.tokenToProductIndex(12)).to.equal(0);
 			});
 
 			it ("Should get product tokens' length", async function() {
-				expect(await rair721Instance.tokenCountByProduct(0)).to.equal(2);
-				expect(await rair721Instance.tokenCountByProduct(1)).to.equal(1);
-				expect(await rair721Instance.tokenCountByProduct(2)).to.equal(1);
+				await expect(await rair721Instance.tokenCountByProduct(0)).to.equal(2);
+				await expect(await rair721Instance.tokenCountByProduct(1)).to.equal(1);
+				await expect(await rair721Instance.tokenCountByProduct(2)).to.equal(1);
 			});
 
 			it ("Should get product tokens", async function() {
-				expect(await rair721Instance.tokensByProduct(0, 0)).to.equal(0);
-				expect(await rair721Instance.tokensByProduct(0, 1)).to.equal(1);
-				expect(await rair721Instance.tokensByProduct(1, 0)).to.equal(2);
-				expect(await rair721Instance.tokensByProduct(2, 0)).to.equal(12);
+				await expect(await rair721Instance.tokensByProduct(0, 0)).to.equal(0);
+				await expect(await rair721Instance.tokensByProduct(0, 1)).to.equal(1);
+				await expect(await rair721Instance.tokensByProduct(1, 0)).to.equal(2);
+				await expect(await rair721Instance.tokensByProduct(2, 0)).to.equal(12);
 			});
+
+			it ("Should say if an user holds a token in a product", async function() {
+				// Product 0: Address 3 owns both tokens
+				await expect(await rair721Instance.hasTokenInProduct(addr1.address, 0, 0, 1)).to.equal(false);
+				await expect(await rair721Instance.hasTokenInProduct(addr2.address, 0, 0, 1)).to.equal(false);
+				await expect(await rair721Instance.hasTokenInProduct(addr3.address, 0, 0, 1)).to.equal(true);
+				await expect(await rair721Instance.hasTokenInProduct(addr3.address, 0, 0, 0)).to.equal(true); // Single token search
+				await expect(await rair721Instance.hasTokenInProduct(addr4.address, 0, 0, 1)).to.equal(false);
+
+				// Product 1: Address 4 owns the only token minted
+				await expect(await rair721Instance.hasTokenInProduct(addr1.address, 1, 0, collection2Limit - 1)).to.equal(false);
+				await expect(await rair721Instance.hasTokenInProduct(addr2.address, 1, 0, collection2Limit - 1)).to.equal(false);
+				await expect(await rair721Instance.hasTokenInProduct(addr3.address, 1, 0, collection2Limit - 1)).to.equal(false);
+				await expect(await rair721Instance.hasTokenInProduct(addr4.address, 1, 0, collection2Limit - 1)).to.equal(true);
+				await expect(await rair721Instance.hasTokenInProduct(addr4.address, 1, 1, collection2Limit - 1)).to.equal(false); // Range doesn't include the token Addr4 owns
+				
+				// Product 2: Address 1 owns the only token minted
+				await expect(await rair721Instance.hasTokenInProduct(addr1.address, 2, 0, collection3Limit - 1)).to.equal(true);
+				await expect(await rair721Instance.hasTokenInProduct(addr1.address, 2, 1, collection3Limit - 1)).to.equal(false); // Range doesn't include the token Addr4 owns
+				await expect(await rair721Instance.hasTokenInProduct(addr2.address, 2, 0, collection3Limit - 1)).to.equal(false);
+				await expect(await rair721Instance.hasTokenInProduct(addr3.address, 2, 0, collection3Limit - 1)).to.equal(false);
+				await expect(await rair721Instance.hasTokenInProduct(addr4.address, 2, 0, collection3Limit - 1)).to.equal(false);
+			});			
 
 			it ("Should get empty token URIs", async function() {
 				await expect(await rair721Instance.tokenURI(0)).to.equal("");
