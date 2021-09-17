@@ -10,7 +10,7 @@ services:
       - ./nginx-auth/cache/:/etc/nginx/cache
       #Run certbot on the local server with proper hostname
       - /etc/letsencrypt/:/etc/letsencrypt/
-      - ./nginx-auth/auth/:/etc//nginx/conf.d/
+      - ./nginx-auth/auth/:/etc/nginx/conf.d/
     ports:
       - 80:80
       - 443:443
