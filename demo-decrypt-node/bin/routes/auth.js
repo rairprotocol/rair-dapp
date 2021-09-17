@@ -126,7 +126,7 @@ module.exports = context => {
           log.info('Verifying user account has the admin token');
 
           try {
-            const ownsTheToken = await checkBalanceSingle(ethAddres, 'mumbai', contractAddress, tokenId);
+            const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NFT_CHAIN, contractAddress, tokenId);
             if (ownsTheToken) {
               res.json({
                 success: false,
@@ -180,7 +180,7 @@ module.exports = context => {
           log.info('Verifying user account has the admin token');
 
           try {
-            const ownsTheToken = await checkBalanceSingle(ethAddres, 'mumbai', contractAddress, tokenId);
+            const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NFT_CHAIN, contractAddress, tokenId);
             if (ownsTheToken) {
               res.json({
                 success: false,
