@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
-const { accountTokenBalance } = require('../integrations/eth');
+const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 const _ = require('lodash');
 const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
@@ -126,8 +126,8 @@ module.exports = context => {
           log.info('Verifying user account has the admin token');
 
           try {
-            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
-            if (balance < 1) {
+            const ownsTheToken = await checkBalanceSingle(ethAddres, 'mumbai', contractAddress, tokenId);
+            if (ownsTheToken) {
               res.json({
                 success: false,
                 message: 'You don\'t hold the current admin token'
@@ -180,8 +180,8 @@ module.exports = context => {
           log.info('Verifying user account has the admin token');
 
           try {
-            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
-            if (balance < 1) {
+            const ownsTheToken = await checkBalanceSingle(ethAddres, 'mumbai', contractAddress, tokenId);
+            if (ownsTheToken) {
               res.json({
                 success: false,
                 message: 'You don\'t hold the current admin token'
