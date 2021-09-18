@@ -18,7 +18,7 @@ const Contract = ({address}) => {
 
 	const [data, setData] = useState();
 
-	const {primaryColor, textColor, backgroundImageEffect} = useSelector(state => state.colorStore)
+	const {primaryColor, textColor} = useSelector(state => state.colorStore)
 
 	const fetchData = useCallback(async () => {
 		if (!address) {
@@ -46,7 +46,7 @@ const Contract = ({address}) => {
 		if (response4.success) {
 			response4.products.forEach(item => {
 				response2.contract.products.forEach(existingItem => {
-					if (!existingItem.offers && item._id.toString() === existingItem._id.toString()) {
+					if (item._id.toString() === existingItem._id.toString()) {
 						existingItem.offers = item.offers;
 					}
 				})
@@ -59,13 +59,10 @@ const Contract = ({address}) => {
 		fetchData();
 	}, [fetchData]);
 
-	console.log(backgroundImageEffect);
-
 	return <div className='col-4 p-2'>
 		<div style={{
 			border: `solid 1px ${textColor}`,
 			borderRadius: '16px',
-			position: 'relative',
 			backgroundImage: `url(${chainData[data?.blockchain]?.image})`,
 			backgroundRepeat: 'no-repeat',
 			backgroundSize: '5rem 5rem',
@@ -75,56 +72,68 @@ const Contract = ({address}) => {
 		}} className='w-100 p-3'>
 			{!data ? 'Fetching...' : 
 				<>
-					<small>({data.contractAddress})</small>
+					<small style={{
+						fontSize: '0.8vw'
+					}}>({data.contractAddress})</small>
 					<h5>{data.title}</h5>
-					{data.products?.length} products! <CreateProduct address={data.contractAddress} blockchain={data.blockchain} />
-					<hr />
-					<div className='w-100 row px-0 mx-0'>
-						{data.products
-							?.sort((a,b) => a.creationDate > b.creationDate ? 1 : -1)
-							.map((product, index) => {
-								return <div key={index} style={{position: 'relative'}} className='col-12 text-center'>
-									<div style={{position: 'absolute', top: 0, left: 0}}>
-										{product.firstTokenIndex}...
+					<details>
+						<summary>
+							{data.products?.length} products!
+						</summary>
+						<hr />
+						<CreateProduct address={data.contractAddress} blockchain={data.blockchain} />
+						<div className='w-100 row px-0 mx-0'>
+							{data.products
+								?.sort((a,b) => a.creationDate > b.creationDate ? 1 : -1)
+								.map((product, index) => {
+									return <div key={index} style={{position: 'relative'}} className='col-12 text-center'>
+										<div style={{position: 'absolute', top: 0, left: 0}}>
+											{product.firstTokenIndex}...
+										</div>
+										{product.name}<br />
+										<div style={{position: 'absolute', top: 0, right: 0}}>
+											...{product.firstTokenIndex + product.copies - 1}
+										</div>
+										<progress
+											className='w-100'
+											max={product.firstTokenIndex + product.copies}
+											value={product.soldCopies}
+										/>
+										<details className='w-100 text-start row px-0 mx-0 pt-0 mb-2'>
+											<summary>
+												{product.offers ? product.offers.length : 'No'} offers
+											</summary>
+											{product.offers
+												?.sort((a,b) => a.creationDate > b.creationDate ? 1 : -1)
+												.map((offer, index) => {
+													return <div key={index} style={{position: 'relative'}} className='col-12 text-center'>
+														<div style={{position: 'absolute', top: 0, left: '1rem'}}>
+															{offer.range[0]}...
+														</div>
+														{offer.offerName}<br />
+														<div style={{position: 'absolute', top: 0, right: '1rem'}}>
+															...{offer.range[1]}
+														</div>
+														<progress
+															className='w-100'
+															min={offer.range[0]}
+															max={offer.range[1]}
+															value={offer.soldCopies}
+														/>
+													</div>
+												})}
+											<AddOffer
+												existingOffers={product.offers}
+												address={data.contractAddress}
+												productIndex={index}
+												tokenLimit={product.copies - 1}
+												blockchain={data.blockchain} />
+											<hr />
+										</details>
 									</div>
-									{product.name}<br />
-									<div style={{position: 'absolute', top: 0, right: 0}}>
-										...{product.firstTokenIndex + product.copies - 1}
-									</div>
-									<progress
-										className='w-100'
-										max={product.firstTokenIndex + product.copies}
-										value={product.soldCopies}
-									/>
-									{product.offers && <details className='w-100 text-start row px-0 mx-0'>
-										<summary>
-											{product.offers.length} offers
-										</summary>
-										{product.offers
-											.sort((a,b) => a.creationDate > b.creationDate ? 1 : -1)
-											.map((offer, index) => {
-											return <div key={index} style={{position: 'relative'}} className='col-12 text-center'>
-												<div style={{position: 'absolute', top: 0, left: '1rem'}}>
-													{offer.range[0]}...
-												</div>
-												{offer.offerName}<br />
-												<div style={{position: 'absolute', top: 0, right: '1rem'}}>
-													...{offer.range[1]}
-												</div>
-												<progress
-													className='w-100'
-													min={offer.range[0]}
-													max={offer.range[1]}
-													value={offer.soldCopies}
-												/>
-											</div>
-										})}
-										<AddOffer address={data.contractAddress} blockchain={data.blockchain} />
-										<hr />
-									</details>}
-								</div>
-						})}
-					</div>
+							})}
+						</div>
+					</details>
 				</>
 			}
 		</div>

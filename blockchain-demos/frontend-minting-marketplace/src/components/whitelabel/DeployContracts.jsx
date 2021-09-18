@@ -21,7 +21,6 @@ const ModalContent = () => {
 	])
 
 	const {factoryInstance, erc777Instance} = useSelector(store => store.contractStore);
-	console.log(factoryInstance);
 
 	const getPrice = useCallback(async () => {
 		if (factoryInstance && erc777Instance) {

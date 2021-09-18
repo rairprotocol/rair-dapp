@@ -23,8 +23,6 @@ const Factory = () => {
 		fetchContracts()
 	}, [fetchContracts])
 
-	console.log(contractArray);
-
 	return <div style={{position: 'relative'}} className='w-100 text-start row mx-0 px-0'>
 		<h1>Your deployed contracts</h1>
 		<DeployContracts />

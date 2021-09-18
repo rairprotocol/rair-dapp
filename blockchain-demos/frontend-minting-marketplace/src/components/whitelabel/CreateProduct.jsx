@@ -51,8 +51,7 @@ const CreateProduct = ({address, blockchain}) => {
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined}
-		className={`btn btn-${onMyChain ? 'success' : 'primary'} py-0`}
-		style={{position: 'absolute', right: '1px'}}
+		className={`btn btn-${onMyChain ? 'success' : 'primary'} py-0 col-12`}
 		onClick={async e => {
 			if (!onMyChain) {
 				if (window.ethereum) {
