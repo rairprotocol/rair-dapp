@@ -1,5 +1,6 @@
 import {useState, useEffect, useCallback} from 'react'
 import {useSelector} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 import CreateProduct from './CreateProduct.jsx';
 import AddOffer from './AddOffer.jsx';
@@ -100,6 +101,9 @@ const Contract = ({address}) => {
 											max={product.firstTokenIndex + product.copies}
 											value={product.soldCopies}
 										/>
+										{product.offers && <Link className='btn py-0 btn-stimorol' to={`/metadata/${data.contractAddress}/${product.collectionIndexInContract}`}>
+											Edit Metadata!
+										</Link>}
 										<details className='w-100 text-start row px-0 mx-0 pt-0 mb-2'>
 											<summary>
 												{product.offers ? product.offers.length : 'No'} offers
@@ -130,7 +134,7 @@ const Contract = ({address}) => {
 																lastToken={offer.range[1]}
 																address={data.contractAddress}
 																blockchain={data.blockchain}
-																productIndex={index}
+																productIndex={product.collectionIndexInContract}
 															/>
 														</div>
 														<hr />
@@ -139,7 +143,7 @@ const Contract = ({address}) => {
 											<AddOffer
 												existingOffers={product.offers}
 												address={data.contractAddress}
-												productIndex={index}
+												productIndex={product.collectionIndexInContract}
 												tokenLimit={product.copies - 1}
 												blockchain={data.blockchain} />
 											<hr />

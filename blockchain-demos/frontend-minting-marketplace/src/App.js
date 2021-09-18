@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 
 import CSVParser from './components/metadata/csvParser.jsx';
 import MetadataEditor from './components/metadata/metadataEditor.jsx';
-import CreateBatchMetadata from './components/CreateBatchMetadata';
+import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
 import MyContracts from './components/whitelabel/myContracts.jsx';
