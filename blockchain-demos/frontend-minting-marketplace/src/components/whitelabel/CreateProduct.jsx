@@ -17,14 +17,15 @@ const ModalContent = ({instance, blockchain}) => {
 		<InputField 
 			label='Product Name'
 			customClass='form-control'
-			labelClass='w-100 text-center'
+			labelClass='w-100 pt-3 text-start'
 			getter={productName}
 			setter={setProductName}
 		/>
 		<InputField 
 			label='Number of copies'
 			customClass='form-control'
-			labelClass='w-100 text-center'
+			labelClass='w-100 pt-3 text-start'
+			type='number'
 			getter={productLength}
 			setter={setProductLength}
 		/>
@@ -46,6 +47,7 @@ const blockchains = {
 
 const CreateProduct = ({address, blockchain}) => {
 	const {factoryInstance, erc777Instance, contractCreator} = useSelector(store => store.contractStore);
+	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	let onMyChain = blockchains[blockchain] === window.ethereum.chainId;
 
@@ -65,7 +67,11 @@ const CreateProduct = ({address, blockchain}) => {
 			} else {
 				rSwal.fire({
 					html: <ModalContent blockchain={blockchain} instance={await contractCreator(address, erc721Abi)}/>,
-					showConfirmButton: false
+					showConfirmButton: false,
+					customClass: {
+						popup: `bg-${primaryColor}`,
+						htmlContainer: `text-${secondaryColor}`,
+					}
 				})
 			}
 		}}>

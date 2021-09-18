@@ -11,7 +11,7 @@ const InputSelect = ({
 		placeholder,
 		placeholderValue = 'null',
 		label,
-		labelCSS = {color: 'black'},
+		labelCSS = {color: 'inherit'},
 		labelClass,
 		required,
 		disabled,

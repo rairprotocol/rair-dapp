@@ -87,6 +87,7 @@ const ModalContent = () => {
 
 const DeployContracts = () => {
 	const {factoryInstance} = useSelector(store => store.contractStore);
+	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 	const store = useStore();
 
 	return <button
@@ -98,7 +99,11 @@ const DeployContracts = () => {
 				html: <Provider store={store}>
 					<ModalContent />
 				</Provider>,
-				showConfirmButton: false
+				showConfirmButton: false,
+				customClass: {
+					popup: `bg-${primaryColor}`,
+					htmlContainer: `text-${secondaryColor}`,
+				}
 			})
 		}}>
 		New Contract <i className='fas fa-plus'/>

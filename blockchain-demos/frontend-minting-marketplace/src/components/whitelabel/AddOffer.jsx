@@ -5,7 +5,9 @@ import InputField from '../common/InputField.jsx';
 import {useSelector, Provider, useStore} from 'react-redux';
 import {erc721Abi} from '../../contracts';
 
-const rSwal = withReactContent(Swal);
+const rSwal = withReactContent(Swal.mixin({
+	showConfirmButton: false
+}));
 
 const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, productIndex }) => {
 	const [endingRange, setEndingRange] = useState(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
@@ -99,6 +101,7 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 	const [hasMinterRole, setHasMinterRole] = useState(undefined);
 
 	const {minterInstance} = useSelector(store => store.contractStore);
+	const {textColor} = useSelector(store => store.colorStore);
 
 	const deleter = index => {
 		let aux = [...ranges];
@@ -138,7 +141,7 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 			</button>
 		</> 
 		: 
-		<>
+		<div style={{maxHeight: '70vh', overflowY: 'auto'}}>
 			<table className='w-100'>
 				<thead>
 					<tr>
@@ -229,7 +232,7 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 			}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>
 				{ranges.length > 0 && ranges[0].disabled ? `Append ${ranges.filter(item => !item.disabled).length} ranges to the marketplace` : `Create offer with ${ranges.length} ranges on the marketplace`}
 			</button>
-		</>}
+		</div>}
 	</>
 }
 
@@ -241,6 +244,7 @@ const blockchains = {
 
 const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers}) => {
 	const {contractCreator} = useSelector(store => store.contractStore);
+	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	const store = useStore();
 	let onMyChain = blockchains[blockchain] === window.ethereum.chainId;
@@ -268,8 +272,11 @@ const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers
 							tokenLimit={tokenLimit}
 							instance={await contractCreator(address, erc721Abi)}/>
 					</Provider>,
-					showConfirmButton: false,
-					width: '90vw'
+					width: '90vw',
+					customClass: {
+						popup: `bg-${primaryColor}`,
+						htmlContainer: `text-${secondaryColor}`,
+					}
 				})
 			}
 		}}>

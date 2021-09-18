@@ -23,7 +23,7 @@ const ModalContent = ({instance, blockchain, firstToken, lastToken, productIndex
 			getter={lockedTokens}
 			setter={setLockedTokens}
 		/>
-		<br /> 
+		<br />
 		<button disabled={blockchains[blockchain] !== window.ethereum.chainId || !instance} onClick={async e => {
 			await instance.createRangeLock(productIndex, firstToken, lastToken, lockedTokens);
 			rSwal.close();
@@ -41,6 +41,7 @@ const blockchains = {
 
 const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) => {
 	const {contractCreator} = useSelector(store => store.contractStore);
+	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	let onMyChain = blockchains[blockchain] === window.ethereum.chainId;
 
@@ -66,7 +67,11 @@ const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) =
 						lastToken={lastToken}
 						productIndex={productIndex}
 					/>,
-					showConfirmButton: false
+					showConfirmButton: false,
+					customClass: {
+						popup: `bg-${primaryColor}`,
+						htmlContainer: `text-${secondaryColor}`,
+					}
 				})
 			}
 		}}>

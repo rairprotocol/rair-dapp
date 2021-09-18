@@ -6,7 +6,7 @@ const InputField = ({
 	setterField = ['value'],
 	customCSS = {color: 'black'},
 	customClass,
-	labelCSS = {color: 'black'},
+	labelCSS = {color: 'inherit'},
 	labelClass,
 	placeholder = '',
 	type,

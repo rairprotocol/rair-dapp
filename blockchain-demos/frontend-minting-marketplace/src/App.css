@@ -206,3 +206,27 @@
   color:white;
   background:var(--stimorol-click);
 }
+
+.text-rhyno {
+  color: var(--rhyno)!important;
+}
+
+.text-rhyno-50 {
+  color: #DEDEDE88!important
+}
+
+.bg-rhyno{
+  background-color: var(--rhyno)!important;
+}
+
+.bg-charcoal{
+  background-color: var(--charcoal)!important;
+}
+
+.text-charcoal {
+  color: var(--charcoal)!important;
+}
+
+.text-charcoal-50 {
+  color: #22202188!important
+}

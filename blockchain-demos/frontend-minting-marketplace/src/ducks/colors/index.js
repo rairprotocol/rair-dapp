@@ -9,6 +9,7 @@ import bgLogoWhite from '../../images/ClayBg.png';
 const schemes = {
 	'rhyno': {
 		primaryColor: 'rhyno',
+		secondaryColor: 'charcoal',
 		headerLogo: headerLogoBlack,
 		textColor: 'black',
 		backgroundImage: bgLogoWhite,
@@ -16,6 +17,7 @@ const schemes = {
 	},
 	'charcoal': {
 		primaryColor: 'charcoal',
+		secondaryColor: 'rhyno',
 		headerLogo: headerLogoWhite,
 		textColor: 'white',
 		backgroundImage: bgLogoBlack,
