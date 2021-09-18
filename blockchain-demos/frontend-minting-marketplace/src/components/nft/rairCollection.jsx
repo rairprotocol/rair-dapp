@@ -3,12 +3,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from "react-router-dom";
 import rFetch from '../../utils/rFetch.js';
 
-import Swal from 'sweetalert2'
-import * as ethers from 'ethers'
-
-import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
-const erc721Abi = ERC721Token.default.abi;
-
 const MyNFTs = props => {
 	const params = useParams();
 
@@ -21,8 +15,6 @@ const MyNFTs = props => {
 	const [endingToken, setEndingToken] = useState(0);
 	const [soldCopies, setSoldCopies] = useState(0);
 
-	const [productData, setProductData] = useState('');
-	
 	const [tokenData, setTokenData] = useState([]);
 
 	const getData = useCallback(async () => {
