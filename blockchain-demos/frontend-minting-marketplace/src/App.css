@@ -144,7 +144,6 @@
 .btn-royal-ice {
   color: white;
   background: var(--royal-ice);
-  border-color: transparent;
 }
 .btn-royal-ice:hover {
   color:white;
@@ -178,7 +177,6 @@
 .btn-stimorol {
   color: white;
   background: var(--stimorol);
-  border-color: transparent;
 }
 .btn-stimorol:hover {
   color:white;

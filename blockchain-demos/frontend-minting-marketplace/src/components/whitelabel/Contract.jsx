@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux';
 
 import CreateProduct from './CreateProduct.jsx';
 import AddOffer from './AddOffer.jsx';
+import LockRange from './LockRange.jsx';
 
 import BinanceDiamond from '../../images/binance-diamond.svg'
 import MaticLogo from '../../images/polygon-matic.svg'
@@ -120,6 +121,19 @@ const Contract = ({address}) => {
 															max={offer.range[1]}
 															value={offer.soldCopies}
 														/>
+														<div className='row px-0 mx-0'>
+															<div className='col-12'>
+																{offer.soldCopies} of {offer.range[1]} tokens sold
+															</div>
+															<LockRange
+																firstToken={offer.range[0]}
+																lastToken={offer.range[1]}
+																address={data.contractAddress}
+																blockchain={data.blockchain}
+																productIndex={index}
+															/>
+														</div>
+														<hr />
 													</div>
 												})}
 											<AddOffer
