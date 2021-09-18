@@ -4,11 +4,9 @@ import DeployContracts from './DeployContracts.jsx';
 
 import Contract from './Contract.jsx';
 
-
 const Factory = () => {
 
 	const [contractArray, setContractArray] = useState([]);
-	
 
 	const fetchContracts = useCallback(async () => {
 		let response = await (await fetch('/api/contracts', {
@@ -17,11 +15,7 @@ const Factory = () => {
 			}
 		})).json();
 		if (response.success) {
-			let contractData = [];
-			for await (let contract of response.contracts) {
-				
-			} 
-			setContractArray(contractData);
+			setContractArray(response.contracts.map(item => item.contractAddress));
 		}
 	}, [])
 
@@ -35,7 +29,7 @@ const Factory = () => {
 		<h1>Your deployed contracts</h1>
 		<DeployContracts />
 		{contractArray && contractArray.map((item, index) => 
-			<Contract address={item.address} key={index} />
+			<Contract address={item} key={index} />
 		)}
 	</div>
 };

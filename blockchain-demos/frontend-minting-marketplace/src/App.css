@@ -16,12 +16,14 @@
   --charcoal-60: #7A797A;
   --charcoal-40: #A7A6A6;
   --charcoal-20: #D3D2D3;
+  --charcoal-transparent: #222021AA;
 
   --rhyno: #DEDEDE;
   --rhyno-80: #E5E5E5;
   --rhyno-60: #EBEBEB;
   --rhyno-40: #F2F2F2;
   --rhyno-20: #F8F8F8;
+  --rhyno-transparent: #DEDEDEAA;
 
   --royal-ice: linear-gradient(to right, var(--arctic-blue), var(--royal-purple));
   --stimorol: linear-gradient(to right, var(--royal-purple), var(--bubblegum));
