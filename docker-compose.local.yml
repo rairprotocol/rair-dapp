@@ -13,7 +13,8 @@ services:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
-      PINATA_SECRET: ${pinata_secret}  
+      PINATA_SECRET: ${pinata_secret}
+      ADMIN_NETWORK: ${admin_nft_chain}
     ports:
       - 3000:3000
       - 5000:5000
