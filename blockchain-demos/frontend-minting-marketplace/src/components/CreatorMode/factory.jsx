@@ -46,7 +46,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 		}
 		
 		<button
-			style={{position: 'absolute', left: 0, top: 0}}
+			style={{position: 'absolute', left: 0, top: 0, color: 'inherit'}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
 			className='btn'>
