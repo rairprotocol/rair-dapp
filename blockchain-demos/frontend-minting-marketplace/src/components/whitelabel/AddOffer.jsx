@@ -101,7 +101,6 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 	const [hasMinterRole, setHasMinterRole] = useState(undefined);
 
 	const {minterInstance} = useSelector(store => store.contractStore);
-	const {textColor} = useSelector(store => store.colorStore);
 
 	const deleter = index => {
 		let aux = [...ranges];

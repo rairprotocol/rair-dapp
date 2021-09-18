@@ -14,7 +14,7 @@ const ModalContent = () => {
 	const [price, setPrice] = useState(0);
 	const [currentChainName, setCurrentChainName] = useState('');
 
-	const [options, setOptions] = useState([
+	const [options, /*setOptions*/] = useState([
 		{value: '0x61', label: 'Binance Testnet'},
 		{value: '0x5', label: 'Ethereum Goerly'},
 		{value: '0x13881', label: 'Matic Mumbai'}

@@ -20,6 +20,7 @@ import * as ethers from 'ethers';
       },
 */
 
+/// OpenSea Standard
 /*
 	"tokenId": 9,
 	"name": "BASTARD GAN PUNK V2 #9",
@@ -191,14 +192,6 @@ const MetadataEditor = (props) => {
 	useEffect(() => {
 		fetchContractData()
 	}, [fetchContractData])
-
-	const imageSetter = async (file) => {
-		let reader = new FileReader();
-		reader.onload = function () {
-			setImage(reader.result);
-		}
-		await reader.readAsDataURL(file);
-	}
 
 	useEffect(() => {
 		if (existingMetadataArray.length) {

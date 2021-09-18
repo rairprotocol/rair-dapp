@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import InputField from '../common/InputField.jsx';
 import {useSelector} from 'react-redux';
-import {utils} from 'ethers'
 import {erc721Abi} from '../../contracts';
 
 const rSwal = withReactContent(Swal);
