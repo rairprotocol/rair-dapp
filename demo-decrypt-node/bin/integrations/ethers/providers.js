@@ -1,4 +1,5 @@
 const ethers = require('ethers');
+const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID
 
 module.exports = [
   {
@@ -7,28 +8,28 @@ module.exports = [
       symbol: 'BNB',
       name: 'Binance Testnet'
     }),
-    factoryAddress: '0x8CFB64bd8295372e532D7595cEf0b900c768e612',
-    minterAddress: '0x1150A9D87EAb450ab83A3779Fe977cfdF9aEF45C',
+    factoryAddress: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
+    minterAddress: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f',
     symbol: 'BNB',
   },
   {
-    provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {
+    provider: new ethers.providers.JsonRpcProvider(`https://goerli.infura.io/v3/${INFURA_PROJECT_ID}`, {
       chainId: 5,
       symbol: 'ETH',
       name: 'Goerli Testnet'
     }),
-    factoryAddress: '0x69F0980e45ae2A3aC5254C7B3202E8fce5B0f84F',
-    minterAddress: '0xb256E35Ad58fc9c57948388C27840CEBcd7cb991',
+    factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
+    minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba',
     symbol: 'ETH'
   },
   {
-    provider: new ethers.providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com', {
+    provider: new ethers.providers.JsonRpcProvider(`https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`, {
       chainId: 80001,
       symbol: 'tMATIC',
       name: 'Matic Mumbai Testnet'
     }),
-    factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
-    minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba',
+    factoryAddress: '0x1A5bf89208Dddd09614919eE31EA6E40D42493CD',
+    minterAddress: '0x63Dd6821D902012B664dD80140C54A98CeE97068',
     symbol: 'tMATIC'
   }
 ];
