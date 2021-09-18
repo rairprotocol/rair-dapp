@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import InputField from '../common/InputField.jsx';
 import {useSelector, Provider, useStore} from 'react-redux';
-import {utils} from 'ethers'
 import {erc721Abi} from '../../contracts';
 
 const rSwal = withReactContent(Swal);
@@ -13,8 +12,6 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, produc
 	const [rangeName, setRangeName] = useState(array[index].name);
 	const [rangePrice, setRangePrice] = useState(array[index].price);
 	const syncOutside = useCallback(sync, [sync]);
-	const rangeInit = ((index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
-	const [locked, setLocked] = useState(0);
 
 	useEffect(() => {
 		let aux = array[index].endingToken !== endingRange;
@@ -52,10 +49,20 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, produc
 			#{index + 1}
 		</th>
 		<th>
-			<input className='form-control' disabled={disabled} value={rangeName} onChange={e => setRangeName(e.target.value)} />
+			<InputField
+				customClass='form-control'
+				disabled={disabled}
+				getter={rangeName}
+				setter={setRangeName}
+			/>
 		</th>
 		<th>
-			<input className='form-control' type='number' value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} disabled />
+			<InputField
+				customClass='form-control'
+				disabled
+				getter={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))}
+				type='number'
+			/>
 		</th>
 		<th>
 			<input
@@ -105,7 +112,7 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 
 	const fetchMintingStatus = useCallback(async () => {
 		setHasMinterRole(await instance.hasRole(await instance.MINTER() ,minterInstance.address));
-	}, [minterInstance])
+	}, [minterInstance, instance])
 
 	useEffect(() => {
 		fetchMintingStatus()
@@ -162,7 +169,7 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 									});
 									setRanges(aux);
 								}}
-								className='btn btn-success'>
+								className='btn btn-royal-ice'>
 								<i className='fas fa-plus' />
 							</button>
 						</th>
@@ -233,14 +240,14 @@ const blockchains = {
 }
 
 const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers}) => {
-	const {factoryInstance, erc777Instance, contractCreator} = useSelector(store => store.contractStore);
+	const {contractCreator} = useSelector(store => store.contractStore);
 
 	const store = useStore();
 	let onMyChain = blockchains[blockchain] === window.ethereum.chainId;
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined}
-		className={`btn btn-${onMyChain ? 'success' : 'primary'} py-0`}
+		className={`btn btn-${onMyChain ? 'stimorol' : 'royal-ice'} py-0`}
 		onClick={async e => {
 			if (!onMyChain) {
 				if (window.ethereum) {

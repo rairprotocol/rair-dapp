@@ -79,7 +79,7 @@ const ModalContent = () => {
 				rSwal.close();
 			}}
 			disabled={price === 0} 
-			className='btn my-3 btn-success'>
+			className='btn my-3 btn-royal-ice'>
 			Deploy on {currentChainName}!
 		</button>
 	</>
@@ -91,7 +91,7 @@ const DeployContracts = () => {
 
 	return <button
 		disabled={factoryInstance === undefined}
-		className='btn btn-success col-2'
+		className='btn btn-stimorol col-2'
 		style={{position: 'absolute', top: 0, right: 0}}
 		onClick={async e => {
 			rSwal.fire({

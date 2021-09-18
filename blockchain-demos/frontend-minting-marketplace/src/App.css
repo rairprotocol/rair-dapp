@@ -26,7 +26,11 @@
   --rhyno-transparent: #DEDEDEAA;
 
   --royal-ice: linear-gradient(to right, var(--arctic-blue), var(--royal-purple));
+  --royal-ice-hover: linear-gradient(to right, var(--arctic-blue-hover), var(--royal-purple-hover));
+  --royal-ice-click: linear-gradient(to right, var(--arctic-blue-click), var(--royal-purple-click));
   --stimorol: linear-gradient(to right, var(--royal-purple), var(--bubblegum));
+  --stimorol-hover: linear-gradient(to right, var(--royal-purple-hover), var(--bubblegum-hover));
+  --stimorol-click: linear-gradient(to right, var(--royal-purple-click), var(--bubblegum-click));
 }
 
 .App {
@@ -135,4 +139,72 @@
   color:white;
   background-color:var(--charcoal);
   border-color:var(--charcoal)
+}
+
+.btn-royal-ice {
+  color: white;
+  background: var(--royal-ice);
+  border-color: transparent;
+}
+.btn-royal-ice:hover {
+  color:white;
+  background:var(--royal-ice-hover);
+}
+.btn-check:focus+.btn-royal-ice, .btn-royal-ice:focus {
+  color:white;
+  background:var(--royal-ice-hover);
+  box-shadow:0 0 0 .25rem white
+}
+.btn-check:active+.btn-royal-ice,
+.btn-check:checked+.btn-royal-ice,
+.btn-royal-ice.active,
+.btn-royal-ice:active,
+.show > .btn-royal-ice.dropdown-toggle {
+  color:white;
+  background:var(--royal-ice-click);
+}
+.btn-check:active+.btn-royal-ice:focus,
+.btn-check:checked+.btn-royal-ice:focus,
+.btn-royal-ice.active:focus,
+.btn-royal-ice:active:focus,
+.show>.btn-royal-ice.dropdown-toggle:focus {
+  box-shadow:0 0 0 .25rem white
+}
+.btn-royal-ice.disabled, .btn-royal-ice:disabled {
+  color:white;
+  background:var(--royal-ice-click);
+}
+
+.btn-stimorol {
+  color: white;
+  background: var(--stimorol);
+  border-color: transparent;
+}
+.btn-stimorol:hover {
+  color:white;
+  background:var(--stimorol-hover);
+}
+.btn-check:focus+.btn-stimorol, .btn-stimorol:focus {
+  color:white;
+  background:var(--stimorol-hover);
+  box-shadow:0 0 0 .25rem white
+}
+.btn-check:active+.btn-stimorol,
+.btn-check:checked+.btn-stimorol,
+.btn-stimorol.active,
+.btn-stimorol:active,
+.show > .btn-stimorol.dropdown-toggle {
+  color:white;
+  background:var(--stimorol-click);
+}
+.btn-check:active+.btn-stimorol:focus,
+.btn-check:checked+.btn-stimorol:focus,
+.btn-stimorol.active:focus,
+.btn-stimorol:active:focus,
+.show>.btn-stimorol.dropdown-toggle:focus {
+  box-shadow:0 0 0 .25rem white
+}
+.btn-stimorol.disabled, .btn-stimorol:disabled {
+  color:white;
+  background:var(--stimorol-click);
 }
