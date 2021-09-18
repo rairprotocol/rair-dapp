@@ -157,14 +157,14 @@ function App() {
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: 'My NFTs', route: '/my-nft'},
+							{name: 'My Contracts', route: '/new-factory'},
 							{name: 'For Sale', route: '/on-sale'},
 							{name: 'Admin', route: '/admin'},
 							{name: 'All', route: '/all'},
 							{name: 'Latest', route: '/latest'},
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
-							{name: 'New Factory', route: '/new-factory'},
-							{name: 'Old Factory', route: '/factory', disabled: factoryInstance === undefined},
+							{name: 'Factory', route: '/factory', disabled: factoryInstance === undefined},
 							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
 							if (!item.disabled) {

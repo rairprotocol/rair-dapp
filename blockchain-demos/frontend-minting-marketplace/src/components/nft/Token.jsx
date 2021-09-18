@@ -23,25 +23,29 @@ const MyNFTs = ({
 	const { minterInstance, programmaticProvider } = useSelector(state => state.contractStore);
 
 	const fetchData = useCallback(async () => {
-		let signer = programmaticProvider;
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
+		try {
+			let signer = programmaticProvider;
+			if (window.ethereum) {
+				let provider = new ethers.providers.Web3Provider(window.ethereum);
+				signer = provider.getSigner(0);
+			}
+
+			let RAIR721Instance = new ethers.Contract(params.contract, erc721Abi, signer);
+			let offerRangeIndex = (await minterInstance.contractToOfferRange(params.contract, await RAIR721Instance.tokenToProduct(params.identifier))).toString();
+			let rawOfferData = await minterInstance.getOfferInfo(offerRangeIndex);
+
+			let offerData = {
+				contractAddress: rawOfferData.contractAddress,
+				productIndex: rawOfferData.productIndex.toString(),
+				nodeAddress: rawOfferData.nodeAddress,
+				ranges: rawOfferData.availableRanges.toString(),
+				instance: RAIR721Instance
+			};
+
+			setSpecificItem({data: offerData, index: Number(offerRangeIndex.toString())});
+		} catch (err) {
+			console.error(err);
 		}
-
-		let RAIR721Instance = new ethers.Contract(params.contract, erc721Abi, signer);
-		let offerRangeIndex = (await minterInstance.contractToOfferRange(params.contract, await RAIR721Instance.tokenToProduct(params.identifier))).toString();
-		let rawOfferData = await minterInstance.getOfferInfo(offerRangeIndex);
-
-		let offerData = {
-			contractAddress: rawOfferData.contractAddress,
-			productIndex: rawOfferData.productIndex.toString(),
-			nodeAddress: rawOfferData.nodeAddress,
-			ranges: rawOfferData.availableRanges.toString(),
-			instance: RAIR721Instance
-		};
-
-		setSpecificItem({data: offerData, index: Number(offerRangeIndex.toString())});
 	}, [programmaticProvider, minterInstance, params.contract, params.identifier]);
 
 
@@ -52,6 +56,11 @@ const MyNFTs = ({
 	}, [minterInstance, fetchData])
 
 	const getData = useCallback(async () => {
+		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/token/${params.identifier}`)).json()
+		if (aux?.result) {
+			setMetadata(aux.result.metadata);
+			return;
+		}
 		try {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			let signer = provider.getSigner(0);
@@ -61,11 +70,6 @@ const MyNFTs = ({
 				setOwner(await instance.ownerOf(params.identifier));
 			} catch (err) {
 				setOwner('No one!');
-			}
-			let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/token/${params.identifier}`)).json()
-			if (aux?.result) {
-				setMetadata(aux.result.metadata);
-				return;
 			}
 			let meta = await (await fetch(await instance.tokenURI(params.identifier))).json();
 			//console.log(meta);
@@ -164,7 +168,7 @@ const MyNFTs = ({
 				</div>
 			</>}
 			{metadata.image && <div className='col-12'>
-				<button className='btn btn-primary' id='button_buy_token'>
+				<button disabled className='btn btn-primary' id='button_buy_token'>
 					Buy
 				</button>
 			</div>}

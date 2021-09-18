@@ -92,7 +92,10 @@ const Contract = ({address}) => {
 										<div style={{position: 'absolute', top: 0, left: 0}}>
 											{product.firstTokenIndex}...
 										</div>
-										{product.name}<br />
+										<Link to={`/rair/${data.contractAddress}/${product.collectionIndexInContract}`}>
+											{product.name}
+										</Link>
+										<br />
 										<div style={{position: 'absolute', top: 0, right: 0}}>
 											...{product.firstTokenIndex + product.copies - 1}
 										</div>

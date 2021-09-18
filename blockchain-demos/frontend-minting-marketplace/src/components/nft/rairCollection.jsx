@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 //import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from "react-router-dom";
+import rFetch from '../../utils/rFetch.js';
 
 import Swal from 'sweetalert2'
 import * as ethers from 'ethers'
@@ -12,44 +13,43 @@ const MyNFTs = props => {
 	const params = useParams();
 
 	const [creator, setCreator] = useState('');
-	const [name, setName] = useState('');
+	const [contractName, setContractName] = useState('');
+	const [contractNetwork, setContractNetwork] = useState('');
+
+	const [productName, setProductName] = useState('');
+	const [startingToken, setStartingToken] = useState(0);
+	const [endingToken, setEndingToken] = useState(0);
+	const [soldCopies, setSoldCopies] = useState(0);
+
 	const [productData, setProductData] = useState('');
+	
 	const [tokenData, setTokenData] = useState([]);
 
 	const getData = useCallback(async () => {
-		try {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			let signer = provider.getSigner(0);
-			let instance = new ethers.Contract(params.contract, erc721Abi, signer);
-			if (await instance.symbol() !== 'RAIR') {
-				Swal.fire('Error','Contract is not a RAIR contract','error');
-			}
-			setName(await instance.name());
-			let pData = await instance.getProduct(params.product);
-			setProductData(pData);
-			setCreator(await instance.getRoleMember(await instance.CREATOR(), 0));
-			let finalTokenData = [];
-			for (let i = Number(pData.startingToken).toString(); i < pData.endingToken - pData.mintableTokensLeft; i++) {
-				let tokenIndex = (await instance.tokenByIndex(i)).toString();
-				let metadata;
-				try {
-					metadata = await (await fetch(await instance.tokenURI(tokenIndex)))?.json()
-				} catch (err) {
-					console.log('Error fetching metadata for token #', tokenIndex);
-				}
-				finalTokenData.push({
-					metadataURI: await instance.tokenURI(tokenIndex),
-					tokenIndex,
-					metadata
-				});
-			}
-			finalTokenData = finalTokenData.sort((a, b) => {
-				return Number(a.tokenIndex) < Number(b.tokenIndex) ? -1 : 1;
-			});
-			setTokenData(finalTokenData);
-		} catch (err) {
-			console.log(err);
-			Swal.fire('Error', "An error has occurred", 'error');
+		let contractData = await rFetch(`/api/contracts/${params.contract}`);
+		if (contractData.success) {
+			setCreator(contractData.contract.user);
+			setContractName(contractData.contract.title);
+			setContractNetwork(contractData.contract.blockchain);
+		}
+
+		let productsData = await rFetch(`/api/contracts/${params.contract}/products`);
+		if (productsData.success) {
+			let product = productsData.products.find(i => i.collectionIndexInContract === Number(params.product));
+			setProductName(product.name);
+			setStartingToken(product.firstTokenIndex);
+			setEndingToken(product.firstTokenIndex + product.copies);
+			setSoldCopies(product.soldCopies);
+			console.log(product);
+		} 
+
+		let tokenData = await rFetch(`/api/nft/${params.contract}/${params.product}`);
+		if (tokenData.success) {
+			setTokenData(tokenData.result.map(item => ({
+				tokenIndex: item.uniqueIndexInContract,
+				name: item.metadata?.name,
+				image: item.metadata?.image
+			})))
 		}
 	}, [params.contract, params.product])
 
@@ -59,51 +59,50 @@ const MyNFTs = props => {
 
 	return <div className='col-12'>
 		<br/>
-		{
-			productData && <div className='row px-0 mx-0 w-100'>
-				<h3> {productData.collectionName} </h3>
-				<div className='col-12 col-md-6'>
-					<small>
-						From contract: <b>{name}</b><br />
-						Created by: <b>{creator}</b>
-					</small> <br/>
-					Range from {productData.startingToken.toString()} to {' '}
-					{productData.endingToken.toString()} <br />
-				</div>
-				<div className='col-12 col-md-6'>
-					{productData.mintableTokensLeft.toString()} tokens up for minting!<br />
-					{productData.locks.length.toString()} locks in place!
-				</div>
-				<progress
-					min={productData.startingToken.toString()}
-					max={productData.endingToken.toString()}
-					value={Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) - Number(productData.mintableTokensLeft.toString())}
-					className='col-12'
-					style={{height: '5vh'}}/>
+		<div className='row px-0 mx-0 w-100'>
+			<h3> {productName} </h3>
+			<div className='col-12 col-md-6'>
+				<small>
+					From contract: <b>{contractName}</b><br />
+					From network: <b>{contractNetwork}</b><br />
+					Created by: <b>{creator}</b>
+				</small> <br/>
 			</div>
-		}
+			<div className='col-12 col-md-6'>
+				Range from {startingToken} to {endingToken} <br />
+				{endingToken - startingToken - soldCopies} tokens up for minting!<br />
+			</div>
+			<progress
+				max={endingToken - startingToken}
+				value={soldCopies}
+				className='col-12'
+				style={{height: '5vh'}}/>
+		</div>
 		<div className='row w-100 mx-0 px-0'>
-			{tokenData?.map(({metadata, tokenIndex, metadataURI}, index) => {
+			{tokenData?.map(({tokenIndex, image, name}, index) => {
 				return <Link
 					key={index}
 					className='col-3 p-1'
 					to={`/token/${params.contract}/${tokenIndex}`}
 					style={{height: '20vh', border: 'none', color: 'inherit', textDecoration: 'none'}}>
 					<div className='w-100 h-100 bg-white' style={{borderRadius: '10px', position: 'relative'}}>
-						{metadata?.image ? 
-							<img alt='NFT' className='w-100 h-auto' src={metadata.image} />
-						:
-							<div className='w-100 h-100 bg-secondary' style={{
-								position: 'relative',
-								borderRadius: '10px',
+						<div style={{position: 'absolute', top: '2px', left: '2px'}}>
+							#{tokenIndex - startingToken}
+						</div>
+						<div style={{textShadow: '0 0 black', position: 'absolute', bottom: '2px'}}>
+							<small>{name}</small>
+						</div>
+						<div
+							className='w-100 h-100 text-center'
+							style={{
+								backgroundColor: 'gray',
+								backgroundImage: `url(${image})`,
+								borderRadius: '16px',
+								backgroundPosition: 'center',
+								backgroundSize: '100% auto',
+								backgroundRepeat: 'no-repeat',
 							}}>
-								<i
-									className='fas fa-image h1'
-									style={{position: 'absolute', top: '50%', left: '50%'}} />
-							</div>
-						}
-						<div style={{position: 'absolute', top: '1rem', left: '1rem'}}>
-							#{tokenIndex}
+								{!image && <i className='fas fa-image h1'/>}
 						</div>
 					</div>
 				</Link>
