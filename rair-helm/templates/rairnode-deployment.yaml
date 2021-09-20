@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode
+  name: rairnode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rairnode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: rairnode
+    spec:
+      containers:
+        - env:
+            - name: JWT_SECRET
+            - name: MONGO_URI
+              value: mongodb+srv://:@
+            - name: MONGO_URI_LOCAL
+              value: mongodb://:@mongo:27017/rair-db?authSource=
+            - name: PINATA_SECRET
+            - name: PRODUCTION
+              value: "true"
+          image: rairtechinc/rairservernode:dev_latest
+          name: rairnode
+          ports:
+            - containerPort: 3000
+            - containerPort: 5000
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/src/db
+              name: rairnode-claim0
+            - mountPath: /usr/local/src/bin/Videos
+              name: rairnode-claim1
+      restartPolicy: Always
+      volumes:
+        - name: rairnode-claim0
+          persistentVolumeClaim:
+            claimName: rairnode-claim0
+        - name: rairnode-claim1
+          persistentVolumeClaim:
+            claimName: rairnode-claim1
+status: {}
