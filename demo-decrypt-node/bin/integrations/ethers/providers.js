@@ -13,7 +13,7 @@ module.exports = [
     symbol: 'BNB',
   },
   {
-    provider: new ethers.providers.JsonRpcProvider(`https://goerli.infura.io/v3/${INFURA_PROJECT_ID}`, {
+    provider: new ethers.providers.JsonRpcProvider(`https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_`, {
       chainId: 5,
       symbol: 'ETH',
       name: 'Goerli Testnet'
@@ -23,7 +23,7 @@ module.exports = [
     symbol: 'ETH'
   },
   {
-    provider: new ethers.providers.JsonRpcProvider(`https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`, {
+    provider: new ethers.providers.JsonRpcProvider(`https://rpc-mumbai.maticvigil.com`, {
       chainId: 80001,
       symbol: 'tMATIC',
       name: 'Matic Mumbai Testnet'
