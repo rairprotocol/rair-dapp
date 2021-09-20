@@ -9,5 +9,9 @@ module.exports = context => {
   router.use('/users', require('./users')(context));
   router.use('/contracts', JWTVerification(context), require('./contracts')(context));
   router.use('/nft', require('./nft')(context));
+
+  // Custom temporary endpoint for the monaco2021
+  router.use('/', require('./monaco2021')(context));
+
   return router;
 };
