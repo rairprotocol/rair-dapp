@@ -1,44 +1,52 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import InputSelect from '../common/InputSelect.jsx';
+import InputField from '../common/InputField.jsx';
 import styled from 'styled-components';
 import { erc721Abi } from '../../contracts';
 import * as ethers from 'ethers';
+import Swal from 'sweetalert2';
 
 const CreateBatchMetadata = () => {
-	const [data, setData] = useState({
-		csv: null
-	})
 	const [contractOptions, setContractOptions] = useState([]);
 	const [contractAddress, setContractAddress] = useState('null');
 	const [productOptions, setProductOptions] = useState([]);
 	const [productId, setProductId] = useState('null');
+	const [csvData, setCsvData] = useState('null');
+	const [responseSuccessful, setResponseSuccessful] = useState(false);
 
 	const [contractInstance, setContractInstance] = useState();
 
 	const {factoryInstance, currentUserAddress, programmaticProvider} = useSelector(state => state.contractStore);
 
-	const onChangeValue = e => {
-		setData({
-			...data,
-			[e.target.name]: e.target.value
-		})
-	}
+	const params = useParams();
 
-	const onSubmit = e => {
+	const onSubmit = async e => {
 		e.preventDefault()
-		if (data.product_id === '') {
-			alert('You must add the product id')
-		} else if (data.contact_address === '') {
-			alert('You must add the contact address')
-		} if (!data.csv) {
-			alert('You must add the contact csv')
+		if (productId === 'null') {
+			Swal.fire('Error','You must add the product id','error')
+		} else if (productId === 'null') {
+			Swal.fire('Error','You must add the contact address','error')
+		} if (!csvData) {
+			Swal.fire('Error','You must add the contact csv','error')
 		} else {
 			let formData = new FormData();
-			formData.set('productId', productId);
-			formData.set('contractAddress', contractAddress);
-			formData.set('csv', data.csv);
-			console.log('Sending info:', formData);
+			formData.append('product', productId);
+			formData.append('contract', contractAddress.toLowerCase());
+			formData.append('csv', csvData, 'metadata.csv');
+			let response = await (await fetch('/api/nft', {
+				method: 'POST',
+				body: formData,
+				redirect: 'follow',
+				headers: {
+					'x-rair-token': localStorage.token
+				}
+			})).json()
+			setResponseSuccessful(response?.success);
+			if (response?.success) {
+				Swal.fire('Success',`Generated ${response.result.length} metadata entries!`,'success');
+			}
 		}
 	}
 
@@ -63,7 +71,10 @@ const CreateBatchMetadata = () => {
 			});
 		}
 		setContractOptions(finalContractList);
-	}, [factoryInstance, currentUserAddress, programmaticProvider])
+		if (finalContractList.filter(i => i.value === params.contract).length) {
+			setContractAddress(params.contract);
+		}
+	}, [factoryInstance, currentUserAddress, programmaticProvider, params])
 
 	const fetchProductData = useCallback(async () => {
 		if (!contractInstance) {
@@ -79,7 +90,10 @@ const CreateBatchMetadata = () => {
 			})
 		}
 		setProductOptions(finalProductList);
-	}, [contractInstance])
+		if (finalProductList.filter(i => i.value === Number(params.product)).length) {
+			setProductId(params.product);
+		}
+	}, [contractInstance, params])
 
 	useEffect(() => {
 		fetchFactoryData();
@@ -89,12 +103,26 @@ const CreateBatchMetadata = () => {
 		fetchProductData();
 	}, [fetchProductData]);
 
+	useEffect(() => {
+		if (contractAddress === 'null') {
+			return;
+		}
+		let signer = programmaticProvider;
+		if (window.ethereum) {
+			let provider = new ethers.providers.Web3Provider(window.ethereum);
+			signer = provider.getSigner(0);
+		}
+		let instance = new ethers.Contract(contractAddress, erc721Abi, signer);
+		setContractInstance(instance);
+	}, [contractAddress, programmaticProvider])
+
 	return (
 		<Form onSubmit={onSubmit}>
 			<h1>Create Batch Metadata</h1>
 			<InputSelect
 				label='Contract Address'
 				labelClass='w-100'
+				disabled={responseSuccessful}
 				required
 				labelCSS={{textAlign: 'left'}}
 				options={contractOptions}
@@ -107,6 +135,7 @@ const CreateBatchMetadata = () => {
 			<InputSelect
 				label='Product'
 				labelClass='w-100'
+				disabled={responseSuccessful}
 				required
 				labelCSS={{textAlign: 'left'}}
 				options={productOptions}
@@ -115,25 +144,35 @@ const CreateBatchMetadata = () => {
 				setter={setProductId}
 				customClass='form-control'
 			/>
-			<ContentInput>
-				<Label>CSV</Label>
-				<Input
-					type="file"
-					value={data.csv}
-					name="csv"
-					onChange={onChangeValue}
-				/>
-			</ContentInput>
-
+			<hr />
+			<InputField
+				label='CSV File'
+				type='file'
+				labelClass='w-100'
+				required
+				disabled={responseSuccessful}
+				labelCSS={{textAlign: 'left'}}
+				placeholder='Please Select'
+				setter={setCsvData}
+				setterField={['files',0]}
+				customClass='form-control'
+			/>
 			<ContentInput>
 				<button
 					className='btn btn-primary'
 					type="submit"
-					disabled={contractAddress === 'null' || productId === 'null' || data.csv === null}>
+					disabled={contractAddress === 'null' || productId === 'null' || csvData === null || responseSuccessful}>
 					Submit Data
 				</button>
-
 			</ContentInput>
+			{responseSuccessful && <>
+				<hr />
+				<button disabled type='button' className='btn btn-secondary' onClick={async e => {
+					await contractInstance.setProductURI(productId, `/api/nft/${contractAddress}/${productId}/token/`);
+				}}>
+					Set '/api/nft/{contractAddress}/{productId}/token/:token as the product's Metadata URI
+				</button>
+			</>}
 		</Form>
 	)
 };
@@ -153,6 +192,7 @@ const ContentInput = styled.div`
 	margin-top: 20px;
 `;
 
+/*
 const Label = styled.label`
 	float: left;
 `;
@@ -161,5 +201,6 @@ const Input = styled.input`
 	width: 100%;
 	outline: none;
 `;
+*/
 
 export default CreateBatchMetadata

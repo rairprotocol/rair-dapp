@@ -5,12 +5,14 @@ import accessStore from './auth';
 import userStore from './users';
 import videosStore from './videos';
 import contractStore from './contracts';
+import colorStore from './colors';
 
 const reducers = combineReducers({
     accessStore,
     userStore,
     videosStore,
-    contractStore
+    contractStore,
+    colorStore
 });
 
 const sagaMiddleware = createSagaMiddleware();

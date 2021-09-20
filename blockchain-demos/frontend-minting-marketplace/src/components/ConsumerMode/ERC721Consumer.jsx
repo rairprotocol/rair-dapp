@@ -170,7 +170,7 @@ const ERC721Manager = ({ offerInfo, index, width = 4 }) => {
 					@{contractName}
 				</Link>
 			</summary>
-			<button onClick={refreshData} disabled={refetchingFlag} style={{ position: 'absolute', left: 0, top: 0 }} className='px-2 btn'>
+			<button onClick={refreshData} disabled={refetchingFlag} style={{ position: 'absolute', left: 0, top: 0, color: 'inherit' }} className='px-2 btn'>
 				{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 			</button>
 			<small>Contract Address: <b>{offerInfo.contractAddress}</b></small><br />
