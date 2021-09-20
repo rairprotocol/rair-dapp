@@ -29,7 +29,7 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
-import MetamaskLogo from './images/metamask-fox.svg';
+// import MetamaskLogo from './images/metamask-fox.svg';
 
 function App() {
 
@@ -149,9 +149,10 @@ function App() {
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
-						{(currentUserAddress === undefined) ? <button disabled={!window.ethereum} className={`btn btn-${primaryColor}`} onClick={connectUserData}>
-							Connect Wallet <img alt='Metamask Logo' src={MetamaskLogo} />
-						</button> : [
+						{(currentUserAddress === undefined) ?<div className='btn-connect-wallet-wrapper'> <button disabled={!window.ethereum} className={`btn btn-${primaryColor} btn-connect-wallet` } onClick={connectUserData}>
+							Connect Wallet 
+							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+						</button></div> : [
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: 'My NFTs', route: '/my-nft'},
