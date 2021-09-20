@@ -21,11 +21,13 @@ module.exports = context => {
     try {
       const { contract, product } = req.body;
       const prod = parseInt(product);
-      const defaultFields = ['NFTID', 'owneraddress', 'name', 'description', 'image'];
+      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
       const tokens = [];
+
+      const foundContract = await context.db.Contract.findOne({ contractAddress: contract }, { title: 1 });
 
       const offerPools = await context.db.OfferPool.aggregate([
         { $match: { contract, product: prod } },
@@ -78,7 +80,18 @@ module.exports = context => {
       }
 
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
-        .pipe(csv())
+        .pipe(csv({
+          mapHeaders: ({ header, index }) => {
+            let h = header.toLowerCase();
+            h = h.replace(/\s/g, '');
+
+            if (_.includes(defaultFields, h)) {
+              return h;
+            }
+
+            return header;
+          }
+        }))
         .on('data', data => {
           const foundFields = _.keys(data);
           let isValid = true;
@@ -94,7 +107,7 @@ module.exports = context => {
         .on('end', () => {
           _.forEach(offerPools, offerPool => {
             _.forEach(records, record => {
-              const token = parseInt(record.NFTID);
+              const token = parseInt(record.nftid);
 
               if (_.inRange(token, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
                 const attributes = _.chain(record)
@@ -108,7 +121,7 @@ module.exports = context => {
 
                 forSave.push({
                   token,
-                  ownerAddress: record['owneraddress'],
+                  ownerAddress: record.publicaddress,
                   offerPool: offerPool.marketplaceCatalogIndex,
                   offer: offerPool.offer.offerIndex,
                   contract,
@@ -117,8 +130,8 @@ module.exports = context => {
                   metadata: {
                     name: record.name,
                     description: record.description,
-                    // artist: { type: String },
-                    // external_url: { type: String, required: true },
+                    artist: record.artist,
+                    external_url: encodeURI(`${process.env.SERVICE_HOST}/${foundContract.title}/${foundProduct.name}/${offerPool.offer.offerName}/${token}`),
                     image: record.image,
                     attributes: attributes
                   }
