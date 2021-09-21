@@ -213,7 +213,7 @@ function App() {
 										</p>
 									</div>
 									<div className='col-12 mt-3 row' >
-									<VideoList />
+									<VideoList primaryColor={primaryColor}/>
 									</div>
 								</Route>
 							</Switch>

@@ -259,7 +259,7 @@
   background: #E5E5E5;
   /* border: 1px solid #4E4D4D */
 }
-i.fas {
+i.fas-custom {
   position: relative;
   bottom: 4rem;
   z-index: 1;

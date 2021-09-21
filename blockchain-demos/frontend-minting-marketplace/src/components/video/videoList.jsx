@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import VideoItem from './videoItem.jsx';
 import InputField from '../common/InputField.jsx';
 
-const VideoList = props => {
+const VideoList = ({props, primaryColor}) => {
 	const [mediaList, setMediaList] = useState();
 	const [titleSearch, setTitleSearch] = useState('');
 	const updateList = async () => {
@@ -25,16 +25,15 @@ const VideoList = props => {
 			updateList();
 		}
 	}, [])
-
 	return <>
 	<div className='input-search-wrapper list-button-wrapper'>
 	<InputField
 				getter={titleSearch}
 				setter={setTitleSearch}
 				placeholder={'Search...'}
-				customClass='form-control input-styled' />
-				
-				<i class="fas fa-search fa-lg" aria-hidden="true"></i>
+				customCSS={{backgroundColor: `var(--${primaryColor})`}}
+				customClass= 'form-control input-styled' />
+				<i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
 
 	</div>
 		{/* <details className='col-12'> */}
