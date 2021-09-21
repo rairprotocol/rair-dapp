@@ -32,6 +32,8 @@ services:
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       JWT_SECRET: ${jwt_secret}
       PINATA_SECRET: ${pinata_secret}  
+      ADMIN_NETWORK: ${admin_nft_chain}
+      INFURA_PROJECT_ID: ${infura_project_id}
     ports:
       - 3000:3000
       - 5000:5000
