@@ -212,6 +212,9 @@ function App() {
 											RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
 										</p>
 									</div>
+									<div className='col-12 mt-3 row' >
+									<VideoList />
+									</div>
 								</Route>
 							</Switch>
 						</div>

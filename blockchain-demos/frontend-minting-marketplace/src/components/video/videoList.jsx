@@ -27,16 +27,29 @@ const VideoList = props => {
 	}, [])
 
 	return <>
-		<details className='col-12'>
-			<summary> Search </summary>
-			<InputField
+	<div className='input-search-wrapper list-button-wrapper'>
+	<InputField
 				getter={titleSearch}
 				setter={setTitleSearch}
-				customClass='form-control' />
-		</details>
+				placeholder={'Search...'}
+				customClass='form-control input-styled' />
+				
+				<i class="fas fa-search fa-lg" aria-hidden="true"></i>
+
+	</div>
+		{/* <details className='col-12'> */}
+			{/* <summary> Search </summary> */}
+			{/* <InputField
+				getter={titleSearch}
+				setter={setTitleSearch}
+				placeholder={'Search'}
+				customClass='form-control input-styled' /> */}
+		{/* </details> */}
+		<div className='list-button-wrapper'>
 		{mediaList ? Object.keys(mediaList).filter(item => mediaList[item].title.toLowerCase().includes(titleSearch.toLowerCase())).map((item, index) => {
 			return <VideoItem key={index} mediaList={mediaList} item={item} />
 		}) : 'Searching...'}
+		</div>
 	</>
 };
 

@@ -233,3 +233,40 @@
   font-size: 13px;
   line-height: 28px;
 }
+
+/* for videoLit input */
+.list-button-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.input-search-wrapper{
+  max-width: 86%;
+  display: flex;
+}
+.input-styled{
+  height: 48px;
+  left: 120px;
+  top: 453px;
+  border-radius: 16px;
+  margin-bottom: 32px;
+  background: #E5E5E5;
+  border: 1px solid #4E4D4D;
+  padding-left: 3rem;
+}
+.input-styled:focus{
+  background: #E5E5E5;
+  /* border: 1px solid #4E4D4D */
+}
+i.fas {
+  position: relative;
+  bottom: 4rem;
+  z-index: 1;
+  color: #E882D5;
+  left: 1.2rem;
+  margin-bottom: -1rem;
+  font-weight: lighter;
+  transform: scale(0.7);
+}
+/* */
