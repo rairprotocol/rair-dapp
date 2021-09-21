@@ -1,4 +1,5 @@
 const ethers = require('ethers');
+const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID
 
 module.exports = [
   {
@@ -12,7 +13,7 @@ module.exports = [
     symbol: 'BNB',
   },
   {
-    provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {
+    provider: new ethers.providers.JsonRpcProvider(`https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_`, {
       chainId: 5,
       symbol: 'ETH',
       name: 'Goerli Testnet'
@@ -22,7 +23,7 @@ module.exports = [
     symbol: 'ETH'
   },
   {
-    provider: new ethers.providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com', {
+    provider: new ethers.providers.JsonRpcProvider(`https://rpc-mumbai.maticvigil.com`, {
       chainId: 80001,
       symbol: 'tMATIC',
       name: 'Matic Mumbai Testnet'
