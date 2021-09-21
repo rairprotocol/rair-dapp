@@ -40,19 +40,19 @@ pipeline {
     stage('Push docker RAIR frontend') {
       steps {
         sh 'docker push rairtechinc/rairfront:${BRANCH}_0.${VERSION}'
-        sh 'docker push rairtechinc/rairfront:dev_latest'
+        sh 'docker push rairtechinc/rairfront:${BRANCH}_latest'
       }
     }
     stage('Push docker RAIR node') {
       steps {
         sh 'docker push rairtechinc/rairservernode:${BRANCH}_0.${VERSION}'
-        sh 'docker push rairtechinc/rairservernode:dev_latest'
+        sh 'docker push rairtechinc/rairservernode:${BRANCH}_latest'
       }
     }
     stage('Push docker minting-network') {
       steps {
         sh 'docker push rairtechinc/minting-network:${BRANCH}_0.${VERSION}'
-        sh 'docker push rairtechinc/minting-network:dev_latest'
+        sh 'docker push rairtechinc/minting-network:${BRANCH}_latest'
       }
     }
     stage('Update docker version file') {

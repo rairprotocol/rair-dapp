@@ -23,6 +23,7 @@ spec:
       labels:
         io.kompose.network/rair-local: "true"
         io.kompose.service: minting-network
+        app: minting-network
     spec:
       containers:
         - image: rairtechinc/minting-network:dev_latest

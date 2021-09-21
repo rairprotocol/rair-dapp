@@ -25,7 +25,7 @@ services:
       context: rair-front-master/
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - 8080:80
     networks:
       - rair-local
   mongo:
@@ -45,6 +45,8 @@ services:
       - rair-local
   minting-network:
     container_name: minting-network
+    expose: 
+      - "80"
     build:
       context: blockchain-demos/frontend-minting-marketplace
       dockerfile: Dockerfile

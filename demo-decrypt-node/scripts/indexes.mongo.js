@@ -21,9 +21,10 @@ const { MongoClient } = require('mongodb');
   });
 
   await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true });
+  await db.collection('OfferPool').createIndex({ contract: 1, marketplaceCatalogIndex: 1 }, { background: true, unique: true });
 
   await db.collection('Offer').createIndex({ offerPool: 1 }, { background: true });
-  await db.collection('Offer').createIndex({ offerPool: 1, offerIndex: 1 }, { background: true, unique: true });
+  await db.collection('Offer').createIndex({ offerPool: 1, offerIndex: 1 }, { background: true });
   await db.collection('Offer').createIndex({ contract: 1, offerPool: 1, offerIndex: 1 }, {
     background: true,
     unique: true
