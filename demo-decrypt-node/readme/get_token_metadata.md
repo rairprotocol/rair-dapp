@@ -2,7 +2,7 @@
 
 Get token metadata by contract name, product name, offer name and token ID
 
-**URL** : `/api/:contractName/:productName/:offerName/:tokenId`
+**URL** : `/api/:adminToken/:contractName/:productName/:offerName/:tokenId`
 
 **Method** : `GET`
 
@@ -10,6 +10,12 @@ Get token metadata by contract name, product name, offer name and token ID
 
 ```json
 {
+  "adminToken": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
   "contractName": {
     "required": true,
     "content": {
