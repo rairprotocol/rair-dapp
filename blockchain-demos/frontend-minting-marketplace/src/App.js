@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 
+
 import './App.css';
 import * as ethers from 'ethers'
 
@@ -19,6 +20,7 @@ import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
 import MyContracts from './components/whitelabel/myContracts.jsx';
+import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
 
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
@@ -109,6 +111,7 @@ function App() {
 				).json();
 				localStorage.setItem('token', token);
 			}
+
 		} catch (err) {
 			console.log('Error', err)
 		}
@@ -190,6 +193,7 @@ function App() {
 								{minterInstance && <Route exact path='/minter' component={ConsumerMode} />}
 								<Route exact path='/metadata/:contract/:product' component={MetadataEditor} />
 								<Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />
+								<Route path='/on-sale' component={MinterMarketplace} />
 								<Route path='/my-nft'>
 									<MyNFTs />
 								</Route>
