@@ -26,6 +26,7 @@ module.exports = context => {
       const records = [];
       const forSave = [];
       const tokens = [];
+      const re = new RegExp(/^0x\w{40}:\w+$/);
 
       const [foundContract] = await context.db.Contract.aggregate([
         { $match: { contractAddress: contract } },
@@ -34,7 +35,17 @@ module.exports = context => {
         { $project: { title: 1, 'user.adminNFT': 1 } },
       ]);
 
-      const [contractAddress, adminToken] = foundContract.user.adminNFT.split(':');
+      if (_.isEmpty(foundContract)) {
+        return res.status(404).send({ success: false, message: 'Contract or User not found.' });
+      }
+
+      const adminNFT = _.get(foundContract, 'user.adminNFT', null);
+
+      if (_.isEmpty(adminNFT) || !re.test(adminNFT)) {
+        return res.status(404).send({ success: false, message: 'Admin token not found or invalid.' });
+      }
+
+      const [contractAddress, adminToken] = adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
         { $match: { contract, product: prod } },
