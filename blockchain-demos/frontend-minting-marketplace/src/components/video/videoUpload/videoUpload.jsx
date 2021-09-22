@@ -11,7 +11,7 @@ const FileUpload = ({address}) => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [author, setAuthor] = useState('')
-    const [token, setToken] = useState('')
+    // const [token, setToken] = useState('')
     const [video, setVideo] = useState(undefined)
     const [uploading, setUploading] = useState(false);
     const [adminNFT, setAdminNFT] = useState('');
@@ -39,7 +39,7 @@ const FileUpload = ({address}) => {
     const currentToken = localStorage.getItem('token');
 
     const getContract = async () => {
-      const responseContract = await (await fetch('/api/contracts' , {
+      const responseContract = await (await fetch('/api/contracts/full' , {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -62,9 +62,9 @@ const FileUpload = ({address}) => {
       const names = responseProduct.products?.map(product => ({value : product.name, label:product.name}))
       setProductOptions(names)
 
-      const collectionIndexInContract = responseProduct.products[0].collectionIndexInContract;
+      const collectionIndexInContract = responseProduct.products[0]?.collectionIndexInContract;
       setCollectionIndex(collectionIndexInContract)
-      console.log('collectionIndexInContract', collectionIndex );
+      // console.log('collectionIndexInContract', collectionIndex );
       
       return responseProduct.products
     };
@@ -96,7 +96,7 @@ const FileUpload = ({address}) => {
             }
           })
         })
-        console.log('data',offersData)
+        // console.log('data',offersData)
       }
     },[selectsData,offer])
 
@@ -188,7 +188,7 @@ const FileUpload = ({address}) => {
         })
       }
 
-      console.log(selectsData)
+      // console.log(selectsData)
 
     return <>
     <h1> Add Media </h1>
@@ -251,6 +251,8 @@ const FileUpload = ({address}) => {
             setAuthor('');
             setDescription('');
             setVideo(undefined);
+            setOffersIndex([]);
+            setCollectionIndex({});
             // Swal.fire('Success','Your file is being processed','success');
           })
           .catch(e => {
