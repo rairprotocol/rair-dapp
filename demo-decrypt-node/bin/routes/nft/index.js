@@ -138,7 +138,7 @@ module.exports = context => {
                     name: record.name,
                     description: record.description,
                     artist: record.artist,
-                    external_url: encodeURI(`${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                    external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                     image: record.image,
                     attributes: attributes
                   }
