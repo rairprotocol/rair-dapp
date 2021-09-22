@@ -67,8 +67,8 @@ Returns if added successfully
       "offer": 0,
       "contract": "contract_address",
       "metadata": {
-        "artist": "none",
-        "external_url": "none",
+        "artist": "artist",
+        "external_url": "external_url",
         "name": "CoinAgenda Monaco 2021 #0",
         "description": "unique1",
         "image": "speaker.png",

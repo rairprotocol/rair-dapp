@@ -27,7 +27,14 @@ module.exports = context => {
       const forSave = [];
       const tokens = [];
 
-      const foundContract = await context.db.Contract.findOne({ contractAddress: contract }, { title: 1 });
+      const [foundContract] = await context.db.Contract.aggregate([
+        { $match: { contractAddress: contract } },
+        { $lookup: { from: 'User', localField: 'user', foreignField: 'publicAddress', as: 'user' } },
+        { $unwind: '$user' },
+        { $project: { title: 1, 'user.adminNFT': 1 } },
+      ]);
+
+      const [contractAddress, adminToken] = foundContract.user.adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
         { $match: { contract, product: prod } },
@@ -131,7 +138,7 @@ module.exports = context => {
                     name: record.name,
                     description: record.description,
                     artist: record.artist,
-                    external_url: encodeURI(`${process.env.SERVICE_HOST}/${foundContract.title}/${foundProduct.name}/${offerPool.offer.offerName}/${token}`),
+                    external_url: encodeURI(`${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                     image: record.image,
                     attributes: attributes
                   }
