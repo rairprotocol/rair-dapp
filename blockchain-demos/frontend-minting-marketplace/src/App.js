@@ -27,7 +27,7 @@ import ConsumerMode from './components/consumerMode.jsx';
 
 import VideoList from './components/video/videoList.jsx';
 import VideoPlayer from './components/video/videoPlayer.jsx';
-import FileUpload from './components/video/videoUpload.jsx';
+import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 
 import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';

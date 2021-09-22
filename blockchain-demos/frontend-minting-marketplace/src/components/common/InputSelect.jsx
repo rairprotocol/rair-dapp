@@ -27,10 +27,10 @@ const InputSelect = ({
 		disabled={disabled}
 		id={id}
 		onChange={e => setter(e.target.value)}
-		value={getter}
+    defaultValue={placeholderValue}
 		style={{...customCSS, width: '100%', color: (required ? requiredColor : customCSS.color)}}
 		className={customClass}>
-		{placeholder && <option value={placeholderValue} className={optionClass} style={{...optionCSS}} disabled>
+		{placeholder && <option value={placeholderValue} className={optionClass} style={{...optionCSS}} disabled >
 			{placeholder + (required ? '*' : '')}
 		</option>}
 		{options && options.map(({label, value}, index) => {

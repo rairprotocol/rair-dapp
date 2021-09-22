@@ -1,0 +1,9 @@
+.addButton{
+    position: absolute;
+    margin: 5px;
+    margin-left: 1rem;
+    border-radius: 50%;
+    /* border: none; */
+    width: 30px;
+    padding-top: 0;
+}
