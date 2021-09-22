@@ -6,13 +6,18 @@ module.exports = context => {
   const router = express.Router();
 
   // Get metadata of specific NFT token by contract name, product name, offer name and token id
-  router.get('/:contractName/:productName/:offerName/:tokenId', async (req, res, next) => {
+  router.get('/:adminToken/:contractName/:productName/:offerName/:tokenId', async (req, res, next) => {
     try {
-      const { contractName, productName, offerName, tokenId } = req.params;
+      const { adminToken, contractName, productName, offerName, tokenId } = req.params;
       const token = parseInt(tokenId);
+      const user = await context.db.User.findOne({ adminNFT: `${ process.env.ADMIN_CONTRACT }:${ adminToken }` }, { publicAddress: 1 });
 
-      const result = await context.db.Contract.aggregate([
-        { $match: { title: contractName } },
+      if (_.isEmpty(user)) {
+        return res.status(404).send({ success: false, message: 'User not found.' });
+      }
+
+      const [metadata] = await context.db.Contract.aggregate([
+        { $match: { user: user.publicAddress, title: contractName } },
         {
           $lookup: {
             from: 'Product',
@@ -171,7 +176,11 @@ module.exports = context => {
         { $replaceRoot: { newRoot: '$metadata' } },
       ]);
 
-      res.json({ success: true, metadata: _.head(result) });
+      if (_.isEmpty(metadata)) {
+        return res.status(404).send({ success: false, message: 'Token not found.' });
+      }
+
+      res.json({ success: true, metadata });
     } catch (e) {
       next(e);
     }

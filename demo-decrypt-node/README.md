@@ -28,6 +28,10 @@ Supported options:
  - **ipfs** - native IPFS service;
  - **pinata** - Pinata cloud;
 
+# Usage admin NFT
+
+Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file 
+
 # API
 
 * [x] /api
@@ -54,13 +58,14 @@ Supported options:
                     * [x] /offers - GET - get all products with all offers for eac of them for particular user, [see details here](readme/get_products_offers.md)
         * [x] /full - GET - get list of contracts with all products and offers, [see details here](readme/get_full_contracts.md)
     * [x] /nft - POST - create new nft tokens, [see details here](readme/bulk_create_NFT_tokens.md)
+        * [x] / - GET - get all tokens which belongs to current user, [see details here](readme/get_all_tokens_for_current_user.md)
         * [x] /:contract
             * [x] /:product - GET - get all minted tokens from a product, [see details here](readme/get_all_minted_tokens_from_product.md)
                 * [x] /token/:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index.md)
                 * [x] /files/:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft.md)
             * [x] /token/:tokenInContract - GET - Get specific token by contract address and unique toke ID in contract, [see details here](readme/get_minted_token_by_contract_index.md)
     * [x] /docs - swagger documentation for the server
-    * [x] /:contractName/:productName/:offerName/:tokenId - GET - get metadata of specific token, [see details here](readme/get_token_metadata.md)
+    * [x] /:adminToken/:contractName/:productName/:offerName/:tokenId - GET - get metadata of specific token, [see details here](readme/get_token_metadata.md)
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
 * [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
 
