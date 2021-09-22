@@ -182,6 +182,18 @@ module.exports = context => {
     }
   });
 
+  // Get all tokens which belongs to current user
+  router.get('/', JWTVerification(context), async (req, res, next) => {
+    try {
+      const { publicAddress: ownerAddress } = req.user;
+      const result = await context.db.MintedToken.find({ ownerAddress });
+
+      res.json({ success: true, result });
+    } catch (e) {
+      next(e);
+    }
+  });
+
   router.use('/:contract', (req, res, next) => {
     req.contract = req.params.contract;
     next();
