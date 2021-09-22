@@ -21,14 +21,35 @@ module.exports = context => {
     try {
       const { contract, product } = req.body;
       const prod = parseInt(product);
-      const defaultFields = ['NFTID', 'owneraddress', 'name', 'description', 'image'];
+      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
       const tokens = [];
+      const re = new RegExp(/^0x\w{40}:\w+$/);
+      const sanitizedContract = contract.toLowerCase();
+
+      const [foundContract] = await context.db.Contract.aggregate([
+        { $match: { contractAddress: sanitizedContract } },
+        { $lookup: { from: 'User', localField: 'user', foreignField: 'publicAddress', as: 'user' } },
+        { $unwind: '$user' },
+        { $project: { title: 1, 'user.adminNFT': 1 } },
+      ]);
+
+      if (_.isEmpty(foundContract)) {
+        return res.status(404).send({ success: false, message: 'Contract or User not found.' });
+      }
+
+      const adminNFT = _.get(foundContract, 'user.adminNFT', null);
+
+      if (_.isEmpty(adminNFT) || !re.test(adminNFT)) {
+        return res.status(404).send({ success: false, message: 'Admin token not found or invalid.' });
+      }
+
+      const [contractAddress, adminToken] = adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract: sanitizedContract, product: prod } },
         {
           $lookup: {
             from: 'Offer',
@@ -70,7 +91,7 @@ module.exports = context => {
       }
 
 
-      const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
+      const foundProduct = await context.db.Product.findOne({ contract: sanitizedContract, collectionIndexInContract: product });
 
       if (_.isEmpty(foundProduct)) {
         await removeTempFile(roadToFile);
@@ -78,7 +99,18 @@ module.exports = context => {
       }
 
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
-        .pipe(csv())
+        .pipe(csv({
+          mapHeaders: ({ header, index }) => {
+            let h = header.toLowerCase();
+            h = h.replace(/\s/g, '');
+
+            if (_.includes(defaultFields, h)) {
+              return h;
+            }
+
+            return header;
+          }
+        }))
         .on('data', data => {
           const foundFields = _.keys(data);
           let isValid = true;
@@ -94,7 +126,7 @@ module.exports = context => {
         .on('end', () => {
           _.forEach(offerPools, offerPool => {
             _.forEach(records, record => {
-              const token = parseInt(record.NFTID);
+              const token = parseInt(record.nftid);
 
               if (_.inRange(token, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
                 const attributes = _.chain(record)
@@ -108,17 +140,17 @@ module.exports = context => {
 
                 forSave.push({
                   token,
-                  ownerAddress: record['owneraddress'],
+                  ownerAddress: record.publicaddress,
                   offerPool: offerPool.marketplaceCatalogIndex,
                   offer: offerPool.offer.offerIndex,
-                  contract,
+                  contract: sanitizedContract,
                   uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                   isMinted: false,
                   metadata: {
                     name: record.name,
                     description: record.description,
-                    // artist: { type: String },
-                    // external_url: { type: String, required: true },
+                    artist: record.artist,
+                    external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                     image: record.image,
                     attributes: attributes
                   }
@@ -149,7 +181,7 @@ module.exports = context => {
       }
 
       const result = await context.db.MintedToken.find({
-        contract,
+        contract: sanitizedContract,
         offerPool: offerPools[0].marketplaceCatalogIndex,
         token: { $in: tokens },
         isMinted: false

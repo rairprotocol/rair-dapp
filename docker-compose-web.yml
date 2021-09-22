@@ -32,9 +32,11 @@ services:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
-      PINATA_SECRET: ${pinata_secret}  
+      PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
+      ADMIN_CONTRACT: ${admin_contract}
       INFURA_PROJECT_ID: ${infura_project_id}
+      SERVICE_HOST: ${hostname}
     ports:
       - 3000:3000
       - 5000:5000
@@ -64,7 +66,7 @@ services:
       - rair-local
   minting-network:
     container_name: minting-network
-    expose: 
+    expose:
       - "80"
     image: rairtechinc/minting-network:dev_latest
     ports:
