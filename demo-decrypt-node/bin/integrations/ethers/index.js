@@ -2,7 +2,6 @@ const ethers = require('ethers');
 const _ = require('lodash');
 const Factory = require('./contracts/RAIR_Token_Factory.json').abi;
 const Market = require('./contracts/Minter_Marketplace.json').abi;
-const ERC777 = require('./contracts/RAIR777.json').abi;
 const Token = require('./contracts/RAIR_ERC721.json').abi;
 const log = require('../../utils/logger')(module);
 const { addMetadata, addPin } = require('../../integrations/ipfsService')();
