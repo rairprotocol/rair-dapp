@@ -14,7 +14,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 
 	const refreshData = useCallback(async () => {
 		setRefetchingFlag(true);
-		let tokenCount = await factoryInstance.getContractCount(currentUserAddress);
+		let tokenCount = await factoryInstance.getContractCountOf(currentUserAddress);
 		let tokens = [];
 		for (let i = 0; i < tokenCount; i++) {
 			tokens.push(await factoryInstance.ownerToContracts(currentUserAddress, i));
@@ -46,7 +46,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 		}
 		
 		<button
-			style={{position: 'absolute', left: 0, top: 0}}
+			style={{position: 'absolute', left: 0, top: 0, color: 'inherit'}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
 			className='btn'>

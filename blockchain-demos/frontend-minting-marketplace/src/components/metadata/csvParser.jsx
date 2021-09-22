@@ -45,6 +45,7 @@ const CSVParser = () => {
 	}
 
 	return <>
+		CSV Parser (Obsolete):
 		<input type='file' accept='.csv' onChange={e => readCSVData(e.target.files[0])}/>
 		{csv && csv.map(item => <Row data={item} />)}
 	</>;

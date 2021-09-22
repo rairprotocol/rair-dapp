@@ -8,8 +8,13 @@ const csv = require('csv-parser');
 const _ = require('lodash');
 const { execPromise } = require('../../utils/helpers');
 
+const removeTempFile = async (roadToFile) => {
+  const command = `rm ${ roadToFile }`;
+  await execPromise(command);
+};
+
 module.exports = context => {
-  const router = express.Router()
+  const router = express.Router();
 
   // Create bunch of lazy minted tokens from csv file
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
@@ -17,8 +22,10 @@ module.exports = context => {
       const { contract, product } = req.body;
       const prod = parseInt(product);
       const defaultFields = ['NFTID', 'owneraddress', 'name', 'description', 'image'];
+      const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
+      const tokens = [];
 
       const offerPools = await context.db.OfferPool.aggregate([
         { $match: { contract, product: prod } },
@@ -57,7 +64,18 @@ module.exports = context => {
         { $unwind: '$offer' }
       ]);
 
+      if (_.isEmpty(offerPools)) {
+        await removeTempFile(roadToFile);
+        return res.status(404).send({ success: false, message: 'Offers not found.' });
+      }
+
+
       const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
+
+      if (_.isEmpty(foundProduct)) {
+        await removeTempFile(roadToFile);
+        return res.status(404).send({ success: false, message: 'Product not found.' });
+      }
 
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
         .pipe(csv())
@@ -69,7 +87,7 @@ module.exports = context => {
             if (!_.includes(foundFields, field)) {
               isValid = false;
             }
-          })
+          });
 
           if (isValid) records.push(data);
         })
@@ -82,6 +100,10 @@ module.exports = context => {
                 const attributes = _.chain(record)
                   .assign({})
                   .omit(defaultFields)
+                  .reduce((re, v, k) => {
+                    re.push({ trait_type: k, value: v });
+                    return re;
+                  }, [])
                   .value();
 
                 forSave.push({
@@ -101,14 +123,24 @@ module.exports = context => {
                     attributes: attributes
                   }
                 });
+
+                tokens.push(token);
               }
             });
 
             return resolve(records);
           });
+
+          if (_.isEmpty(offerPools)) return resolve();
         })
         .on('error', reject)
       );
+
+      await removeTempFile(roadToFile);
+
+      if (_.isEmpty(forSave)) {
+        return res.json({ success: false, message: 'Don\'t have tokens for creating.' });
+      }
 
       try {
         await context.db.MintedToken.insertMany(forSave, { ordered: false });
@@ -116,15 +148,29 @@ module.exports = context => {
         log.error(err);
       }
 
-      const result = await context.db.MintedToken.find({ contract, offerPool: offerPools[0].marketplaceCatalogIndex });
-
-      const command = `rm ${ req.file.destination }${ req.file.filename }`;
-      await execPromise(command);
+      const result = await context.db.MintedToken.find({
+        contract,
+        offerPool: offerPools[0].marketplaceCatalogIndex,
+        token: { $in: tokens },
+        isMinted: false
+      });
 
       res.json({ success: true, result });
-
     } catch (err) {
+      await removeTempFile(`${ req.file.destination }${ req.file.filename }`);
       next(err);
+    }
+  });
+
+  // Get all tokens which belongs to current user
+  router.get('/', JWTVerification(context), async (req, res, next) => {
+    try {
+      const { publicAddress: ownerAddress } = req.user;
+      const result = await context.db.MintedToken.find({ ownerAddress });
+
+      res.json({ success: true, result });
+    } catch (e) {
+      next(e);
     }
   });
 
@@ -134,4 +180,4 @@ module.exports = context => {
   }, require('./contract')(context));
 
   return router;
-}
+};

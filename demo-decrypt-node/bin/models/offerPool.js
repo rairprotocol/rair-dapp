@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const OfferPool = new Schema({
-  marketplaceCatalogIndex: { type: Number, unique: true, required: true },
+  marketplaceCatalogIndex: { type: Number,  required: true },
   contract: { type: String, lowercase:true, required: true },
   product: { type: Number },
   rangeNumber: { type: Number },

@@ -70,7 +70,7 @@ const ERC721Manager = ({ tokenAddress }) => {
 		</summary>
 		Contract Address: <b>{tokenAddress}</b>
 		<button
-			style={{position: 'absolute', left: 0, top: 0}}
+			style={{position: 'absolute', left: 0, top: 0, color: 'inherit'}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
 			className='btn'>

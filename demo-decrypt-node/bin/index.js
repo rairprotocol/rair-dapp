@@ -135,23 +135,9 @@ async function main() {
   app.set('io', io);
 
   // Listen network events
-  const {
-    contractListenersBNB,
-    productListenersBNB,
-    offerListenersBNB
-  } = await eventListeners(context.db);
+  await eventListeners(context.db);
 
   // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offerPools/offers
-
-  // Contracts
-  contractListenersBNB();
-
-  // Products
-  const arrayOfUsers = await context.db.User.distinct('publicAddress');
-  await Promise.all(_.map(arrayOfUsers, productListenersBNB));
-
-  // Offers
-  offerListenersBNB();
 }
 
 (async () => {

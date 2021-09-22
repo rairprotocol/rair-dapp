@@ -9,14 +9,14 @@ pipeline {
     BRANCH = "${env.BRANCH_NAME}"
   }
   stages {
-    stage('Build RAIR frontend') {
-      steps {
-        echo 'for branch' + env.BRANCH_NAME
-        dir("${env.WORKSPACE}/rair-front-master"){
-          sh 'docker build -t rairtechinc/rairfront:${BRANCH}_0.${VERSION} -t rairtechinc/rairfront:dev_latest --no-cache .'
-        }
-      }
-    }
+    //stage('Build RAIR frontend') {
+    //  steps {
+    //    echo 'for branch' + env.BRANCH_NAME
+    //    dir("${env.WORKSPACE}/rair-front-master"){
+    //      sh 'docker build -t rairtechinc/rairfront:${BRANCH}_0.${VERSION} -t rairtechinc/rairfront:dev_latest --no-cache .'
+    //    }
+    //  }
+    //}
     stage('Build RAIR node') {
       steps {
         echo 'for branch' + env.BRANCH_NAME
@@ -37,22 +37,22 @@ pipeline {
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
       }
     }
-    stage('Push docker RAIR frontend') {
-      steps {
-        sh 'docker push rairtechinc/rairfront:${BRANCH}_0.${VERSION}'
-        sh 'docker push rairtechinc/rairfront:dev_latest'
-      }
-    }
+    //stage('Push docker RAIR frontend') {
+    //  steps {
+    //    sh 'docker push rairtechinc/rairfront:${BRANCH}_0.${VERSION}'
+    //    sh 'docker push rairtechinc/rairfront:${BRANCH}_latest'
+    //  }
+    //}
     stage('Push docker RAIR node') {
       steps {
         sh 'docker push rairtechinc/rairservernode:${BRANCH}_0.${VERSION}'
-        sh 'docker push rairtechinc/rairservernode:dev_latest'
+        sh 'docker push rairtechinc/rairservernode:${BRANCH}_latest'
       }
     }
     stage('Push docker minting-network') {
       steps {
         sh 'docker push rairtechinc/minting-network:${BRANCH}_0.${VERSION}'
-        sh 'docker push rairtechinc/minting-network:dev_latest'
+        sh 'docker push rairtechinc/minting-network:${BRANCH}_latest'
       }
     }
     stage('Update docker version file') {

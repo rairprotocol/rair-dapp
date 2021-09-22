@@ -214,14 +214,26 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		);
 	}
 
-	/// @notice	Very inefficient way of verifying if an user owns a token within a product
-	/// @dev	But it's a view function so it doesn't matter, just don't use it in a gas transaction
-	/// @param	owner			User to search
-	/// @param	productIndex	Product to search
-	function hasTokenInProduct(address owner, uint productIndex) public view returns (bool) {
-		for (uint i = 0; i < balanceOf(owner); i++) {
-			if (tokenToProduct[tokenOfOwnerByIndex(owner, i)] == productIndex) {
-				return true;
+	/// @notice	Loops over the user's tokens looking for one that belongs to a product and a specific range
+	/// @dev	Loops are expensive in solidity, so don't use this in a function that requires gas
+	/// @param	userAddress			User to search
+	/// @param	productIndex		Product to search
+	/// @param	startingToken		Product to search
+	/// @param	endingToken			Product to search
+	function hasTokenInProduct(
+				address userAddress,
+				uint productIndex,
+				uint startingToken,
+				uint endingToken) public view returns (bool) {
+		product memory aux = _products[productIndex];
+		if (aux.endingToken != 0) {
+			for (uint i = 0; i < balanceOf(userAddress); i++) {
+				uint token = tokenOfOwnerByIndex(userAddress, i);
+				if (tokenToProduct[token] == productIndex &&
+						token >= aux.startingToken + startingToken &&
+						token <= aux.startingToken + endingToken) {
+					return true;
+				}
 			}
 		}
 		return false;

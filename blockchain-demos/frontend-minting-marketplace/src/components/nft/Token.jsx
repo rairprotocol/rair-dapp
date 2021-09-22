@@ -57,11 +57,21 @@ const MyNFTs = ({
 			let signer = provider.getSigner(0);
 			let instance = new ethers.Contract(params.contract, erc721Abi, signer);
 			setName(await instance.name());
-			setOwner(await instance.ownerOf(params.identifier));
+			try {
+				setOwner(await instance.ownerOf(params.identifier));
+			} catch (err) {
+				setOwner('No one!');
+			}
+			let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/token/${params.identifier}`)).json()
+			if (aux?.result) {
+				setMetadata(aux.result.metadata);
+				return;
+			}
 			let meta = await (await fetch(await instance.tokenURI(params.identifier))).json();
 			//console.log(meta);
 			setMetadata(meta);
 		} catch (err) {
+			console.error(err);
 			Swal.fire('Error', "We couldn't fetch the token's Metadata", 'error');
 			setMetadata({
 				name: 'No title found',
@@ -77,7 +87,7 @@ const MyNFTs = ({
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-6'>
 			{metadata?.image ?
-				<img className='w-100 h-auto' src={metadata.image} />
+				<img className='w-100 h-auto' alt='token' src={metadata.image} />
 				:
 				<div className='w-100 bg-secondary' style={{
 					position: 'relative',
@@ -105,7 +115,13 @@ const MyNFTs = ({
 					{Object.keys(metadata.attributes).map((item, index) => {
 						let itm = metadata.attributes[item];
 						//console.log(Object.keys(metadata.attributes[item]))
-						if (Object.keys(metadata.attributes[item]).length === 1) {
+						if (itm.trait_type === undefined) {
+							if (Object.keys(metadata.attributes[item]).length === 1) {
+								itm = {
+									trait_type: item,
+									value: metadata.attributes[item]
+								}
+							} 
 							itm = {
 								trait_type: item,
 								value: metadata.attributes[item]

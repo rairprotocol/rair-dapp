@@ -1,6 +1,25 @@
-version: '3.9'
+version: '3'
 
 services:
+  nginx:
+    image: nginx:latest
+    container_name: rair-nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/error.log:/etc/nginx/error_log.log
+      - ./nginx/cache/:/etc/nginx/cache
+    #  - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - ENV=development
+      - APPLICATION_URL=http://minter-network
+    networks:
+      - rair-local
+    depends_on:
+      - minting-network
+      
   rairnode:
     container_name: 'rairnode'
     image: rairtechinc/rairservernode:dev_latest
@@ -13,6 +32,8 @@ services:
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       JWT_SECRET: ${jwt_secret}
       PINATA_SECRET: ${pinata_secret}  
+      ADMIN_NETWORK: ${admin_nft_chain}
+      INFURA_PROJECT_ID: ${infura_project_id}
     ports:
       - 3000:3000
       - 5000:5000
@@ -22,13 +43,15 @@ services:
     container_name: 'rairfront'
     image: rairtechinc/rairfront:dev_latest
     ports:
-      - 80:80
+      - 8080:80
     networks:
       - rair-local
 
   minting-network:
     container_name: minting-network
     image: rairtechinc/minting-network:dev_latest
+    expose:
+      - "80"
     ports:
       - 3001:3001
     networks:
