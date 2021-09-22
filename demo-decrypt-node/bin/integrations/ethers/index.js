@@ -147,12 +147,12 @@ module.exports = async (db) => {
             blockchain: provider._network.symbol
           });
 
-          log.info(`Stored an additional Contract ${ contract } for User ${ user } from network ${provider._network.name}`);
+          log.info(`Stored an additional Contract ${ contract } for User ${ user } from network ${ provider._network.name }`);
         }
 
         await setProductListeners(contract, provider);
 
-        if (j === (numberOfTokens - 1)) log.info(`Contract search complete in ${provider._network.name} network!`);
+        if (j === (numberOfTokens - 1)) log.info(`Contract search complete in ${ provider._network.name } network!`);
       }
     } catch (err) {
       log.error(err);
