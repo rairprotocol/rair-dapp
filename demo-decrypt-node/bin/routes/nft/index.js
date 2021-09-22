@@ -27,9 +27,10 @@ module.exports = context => {
       const forSave = [];
       const tokens = [];
       const re = new RegExp(/^0x\w{40}:\w+$/);
+      const sanitizedContract = contract.toLowerCase();
 
       const [foundContract] = await context.db.Contract.aggregate([
-        { $match: { contractAddress: contract } },
+        { $match: { contractAddress: sanitizedContract } },
         { $lookup: { from: 'User', localField: 'user', foreignField: 'publicAddress', as: 'user' } },
         { $unwind: '$user' },
         { $project: { title: 1, 'user.adminNFT': 1 } },
@@ -48,7 +49,7 @@ module.exports = context => {
       const [contractAddress, adminToken] = adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract: sanitizedContract, product: prod } },
         {
           $lookup: {
             from: 'Offer',
@@ -90,7 +91,7 @@ module.exports = context => {
       }
 
 
-      const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
+      const foundProduct = await context.db.Product.findOne({ contract: sanitizedContract, collectionIndexInContract: product });
 
       if (_.isEmpty(foundProduct)) {
         await removeTempFile(roadToFile);
@@ -142,7 +143,7 @@ module.exports = context => {
                   ownerAddress: record.publicaddress,
                   offerPool: offerPool.marketplaceCatalogIndex,
                   offer: offerPool.offer.offerIndex,
-                  contract,
+                  contract: sanitizedContract,
                   uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                   isMinted: false,
                   metadata: {
@@ -180,7 +181,7 @@ module.exports = context => {
       }
 
       const result = await context.db.MintedToken.find({
-        contract,
+        contract: sanitizedContract,
         offerPool: offerPools[0].marketplaceCatalogIndex,
         token: { $in: tokens },
         isMinted: false
