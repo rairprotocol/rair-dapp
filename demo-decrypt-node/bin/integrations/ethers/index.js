@@ -128,7 +128,7 @@ module.exports = async (db) => {
       const numberOfTokens = await factoryInstance.getContractCountOf(ownerAddress);
       const foundContracts = await db.Contract.find({ user: ownerAddress }).distinct('contractAddress');
 
-      log.info(`${ ownerAddress } has deployed, ${ numberOfTokens.toString() }, contracts.`);
+      log.info(`${ ownerAddress } has deployed, ${ numberOfTokens.toString() }, contracts in ${provider._network.name} network.`);
 
       for (let j = 0; j < numberOfTokens; j++) {
         const contractAddress = await factoryInstance.ownerToContracts(ownerAddress, j);
@@ -137,7 +137,7 @@ module.exports = async (db) => {
         const erc777Instance = new ethers.Contract(contract, Token, provider);
         const title = await erc777Instance.name();
 
-        log.info(`Contract ${ contractAddress } found!`);
+        log.info(`Contract ${ contractAddress } found for network ${provider._network.name}!`);
 
         if (!_.includes(foundContracts, contract)) {
           await db.Contract.create({
@@ -147,12 +147,12 @@ module.exports = async (db) => {
             blockchain: provider._network.symbol
           });
 
-          log.info(`Stored an additional Contract ${ contract } for User ${ user }`);
+          log.info(`Stored an additional Contract ${ contract } for User ${ user } from network ${ provider._network.name }`);
         }
 
         await setProductListeners(contract, provider);
 
-        if (j === (numberOfTokens - 1)) log.info(`Contract search complete!`);
+        if (j === (numberOfTokens - 1)) log.info(`Contract search complete in ${ provider._network.name } network!`);
       }
     } catch (err) {
       log.error(err);
