@@ -23,6 +23,9 @@ const ModalContent = () => {
 	const {factoryInstance, erc777Instance} = useSelector(store => store.contractStore);
 
 	const getPrice = useCallback(async () => {
+		if (window.ethereum) {
+			setChainId(window.ethereum.chainId);
+		}
 		if (factoryInstance && erc777Instance) {
 			setPrice((await factoryInstance.deploymentCostForERC777(erc777Instance.address)).toString());
 			setCurrentChainName((options
@@ -39,6 +42,9 @@ const ModalContent = () => {
 	useEffect(() => {
 		if (chainId !== 'null') {
 			if (window.ethereum) {
+				if (chainId === window.ethereum.chainId) {
+					return;
+				}
 				window.ethereum.request({
 					method: 'wallet_switchEthereumChain',
 					params: [{ chainId: chainId }],
@@ -49,6 +55,12 @@ const ModalContent = () => {
 			setPrice(0);
 		}
 	}, [chainId])
+
+	if (!price) {
+		return <>
+			Please wait...
+		</>
+	}
 
 	return <>
 		Deploy a new contract for {price} tokens!
