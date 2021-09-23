@@ -185,7 +185,7 @@ function App() {
 						<div className='col-12' style={{height: '10vh'}}>
 							{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
 							<Switch>
-								{/* <Route path='/admin' component={BlockChainSwitcher} /> */}
+								<Route path='/admin' component={BlockChainSwitcher} />
 							</Switch>
 						</div>
 						<div className='col-12 mt-3 row'>
