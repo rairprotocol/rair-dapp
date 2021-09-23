@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 //import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from "react-router-dom";
-import rFetch from '../../utils/rFetch.js';
+import { rFetch } from '../../utils/rFetch.js';
 
 const MyNFTs = props => {
 	const params = useParams();

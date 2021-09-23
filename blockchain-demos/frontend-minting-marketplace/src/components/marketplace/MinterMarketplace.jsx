@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback} from 'react';
-import rFetch from '../../utils/rFetch.js';
+import {rFetch} from '../../utils/rFetch.js';
 import {useSelector, useStore, Provider} from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -212,7 +212,6 @@ const MinterMarketplace = () => {
 
 	return <div className='row px-0 mx-0 w-100'>
 		{offerData.map((item, index) => {
-			console.log(item);
 			return <div key={index} className='col-4 p-2'>
 				<div style={{
 					border: `solid 1px ${textColor}`,

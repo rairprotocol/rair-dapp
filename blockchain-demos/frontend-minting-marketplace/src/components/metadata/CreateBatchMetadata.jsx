@@ -4,7 +4,7 @@ import InputSelect from '../common/InputSelect.jsx';
 import InputField from '../common/InputField.jsx';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import rFetch from '../../utils/rFetch.js';
+import {rFetch} from '../../utils/rFetch.js';
 
 const CreateBatchMetadata = () => {
 	const [fullContractData, setFullContractData] = useState([]);

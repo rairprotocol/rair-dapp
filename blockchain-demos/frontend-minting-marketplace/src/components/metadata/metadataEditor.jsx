@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import InputField from '../common/InputField.jsx';
 import { Link, useParams } from "react-router-dom";
-import rFetch from '../../utils/rFetch.js';
+import {rFetch} from '../../utils/rFetch.js';
 
 /*
 	"metadata": {

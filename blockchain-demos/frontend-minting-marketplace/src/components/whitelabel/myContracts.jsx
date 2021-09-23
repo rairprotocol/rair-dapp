@@ -3,17 +3,14 @@ import {useState, useEffect, useCallback} from 'react'
 import DeployContracts from './DeployContracts.jsx';
 
 import Contract from './Contract.jsx';
+import {rFetch} from '../../utils/rFetch.js';
 
 const Factory = () => {
 
 	const [contractArray, setContractArray] = useState([]);
 
 	const fetchContracts = useCallback(async () => {
-		let response = await (await fetch('/api/contracts', {
-			headers: {
-				'x-rair-token': localStorage.token
-			}
-		})).json();
+		let response = await rFetch('/api/contracts');
 		if (response.success) {
 			setContractArray(response.contracts.map(item => item.contractAddress));
 		}
