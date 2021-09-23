@@ -5,7 +5,7 @@ const InputSelect = ({
 		setter,
 		customCSS = {color: 'black'},
 		customClass,
-		optionCSS = {color: 'black'},
+		optionCSS = {color: 'red'},
 		optionClass,
 		options,
 		placeholder,
