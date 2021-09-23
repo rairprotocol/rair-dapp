@@ -74,10 +74,15 @@ module.exports = context => {
           const [contractAddress, tokenId] = author.split(':');
           log.info('verifying account has token', contractAddress, tokenId);
           try {
-            const balance = await accountTokenBalance(ethAddres, contractAddress, tokenId);
-            if (balance < 1) return next(new Error(`Account does not hold required token ${ author }`));
+            const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
+
+            if (!ownsTheToken) {
+              res.json({ success: false, message: 'You don\'t hold the current admin token' });
+            } else {
+              res.json({ success: true, message: 'Admin token holder' });
+            }
           } catch (e) {
-            next(new Error('Could not verify account', e));
+            return next(new Error('Could not verify account', e));
           }
         }
         jwt.sign(
@@ -89,7 +94,7 @@ module.exports = context => {
             res.send({ success: true, token });
           });
       } else {
-        res.sendStatus(400);
+        return res.sendStatus(400);
       }
     } catch (err) {
       log.error(err);
@@ -100,14 +105,6 @@ module.exports = context => {
   // Verify with a Metamask challenge if the user holds the current Administrator token
   router.get('/admin/:MetaMessage/:MetaSignature/', validation('admin', 'params'), metaAuth, async (req, res, next) => {
     const ethAddres = req.metaAuth.recovered;
-
-    // if (nftIdentifier === '') {
-    //   console.log("There's no admin token, Admin panel will be visible for anyone!")
-    //   res.json({
-    //     ok: true,
-    //     message: "There's no Admin token"
-    //   })
-    // }
 
     try {
       if (ethAddres) {
@@ -123,20 +120,16 @@ module.exports = context => {
 
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':');
+
           log.info('Verifying user account has the admin token');
 
           try {
             const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-            if (ownsTheToken) {
-              res.json({
-                success: false,
-                message: 'You don\'t hold the current admin token'
-              });
+
+            if (!ownsTheToken) {
+              res.json({ success: false, message: 'You don\'t hold the current admin token' });
             } else {
-              res.json({
-                success: true,
-                message: 'Admin token holder'
-              });
+              res.json({ success: true, message: 'Admin token holder' });
             }
           } catch (e) {
             log.error(e);
@@ -177,15 +170,14 @@ module.exports = context => {
 
         if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':');
+
           log.info('Verifying user account has the admin token');
 
           try {
             const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-            if (ownsTheToken) {
-              res.json({
-                success: false,
-                message: 'You don\'t hold the current admin token'
-              });
+
+            if (!ownsTheToken) {
+              res.json({ success: false, message: 'You don\'t hold the current admin token' });
             } else {
               context.store.setAdminToken(adminNFT);
               await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
@@ -264,7 +256,7 @@ module.exports = context => {
     res.send({
       success: true,
       user
-    })
+    });
   });
   return router;
 };
