@@ -139,7 +139,13 @@ const ModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, of
 					/>
 					<div className='col-2' />
 					<button onClick={async e => {
-						await minterInstance.buyToken(offerIndex, rangeIndex, tokenIndex, {value: price})
+						try {
+							await minterInstance.buyToken(offerIndex, rangeIndex, tokenIndex, {value: price})
+							Swal.close();
+						} catch (err) {
+							console.error(err);
+							Swal.fire('Error', err?.data?.message, 'error');
+						}
 					}} className='btn btn-stimorol col-8'>
 						Buy token #{tokenIndex} for {price}
 					</button>
