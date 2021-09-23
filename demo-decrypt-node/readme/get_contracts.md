@@ -1,6 +1,6 @@
 # Get contracts
 
-Find all contracts
+Find all contracts for specific user
 
 **URL** : `/api/contracts`
 
