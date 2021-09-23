@@ -44,6 +44,8 @@ const CreateBatchMetadata = () => {
 			setResponseSuccessful(response?.success);
 			if (response?.success) {
 				Swal.fire('Success',`Generated ${response.result.length} metadata entries!`,'success');
+			} else {
+				Swal.fire('Error',response?.message,'error');
 			}
 		}
 	}
