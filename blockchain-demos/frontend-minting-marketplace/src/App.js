@@ -33,7 +33,7 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
-import MetamaskLogo from './images/metamask-fox.svg';
+// import MetamaskLogo from './images/metamask-fox.svg';
 
 function App() {
 
@@ -145,7 +145,7 @@ function App() {
 					<button style={{color: 'var(--royal-purple)', border: 'solid 1px var(--royal-purple)', backgroundColor: 'inherit', borderRadius: '50%'}} onClick={e => {
 						dispatch({type: colorTypes.SET_COLOR_SCHEME, payload: primaryColor === 'rhyno' ? 'charcoal' : 'rhyno'});
 					}}>
-						{primaryColor === 'rhyno' ? <i className='far fa-moon' /> : <i className='far fa-sun' />}
+						{primaryColor === 'rhyno' ? <i className='far fa-moon' /> : <i className='fas fa-sun' />}
 					</button>
 				</div>
 				<div className='row w-100 m-0 p-0'>
@@ -154,9 +154,10 @@ function App() {
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
-						{(currentUserAddress === undefined) ? <button disabled={!window.ethereum} className={`btn btn-${primaryColor}`} onClick={connectUserData}>
-							Connect Wallet <img alt='Metamask Logo' src={MetamaskLogo} />
-						</button> : [
+						{(currentUserAddress === undefined) ?<div className='btn-connect-wallet-wrapper'> <button disabled={!window.ethereum} className={`btn btn-${primaryColor} btn-connect-wallet` } onClick={connectUserData}>
+							Connect Wallet 
+							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+						</button></div> : [
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: 'My NFTs', route: '/my-nft'},
@@ -184,7 +185,7 @@ function App() {
 						<div className='col-12' style={{height: '10vh'}}>
 							{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
 							<Switch>
-								<Route path='/admin' component={BlockChainSwitcher} />
+								{/* <Route path='/admin' component={BlockChainSwitcher} /> */}
 							</Switch>
 						</div>
 						<div className='col-12 mt-3 row'>
@@ -205,7 +206,11 @@ function App() {
 								<Route path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
 								</Route>
-								{adminAccess && <Route path='/admin' component={FileUpload} />}
+								{adminAccess && <Route path='/admin' 
+								// component={FileUpload} 
+								>
+									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
+								</Route>}
 								<Route path='/ending' component={CSVParser} />
 								<Route path='/new-factory' component={MyContracts} />
 								<Route exact path='/'>
@@ -219,6 +224,9 @@ function App() {
 											RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
 										</p>
 									</div>
+									{/* <div className='col-12 mt-3 row' >
+									<VideoList primaryColor={primaryColor}/>
+									</div> */}
 								</Route>
 							</Switch>
 						</div>

@@ -29,7 +29,7 @@ const InputSelect = ({
 		options,
 		customCSS = {color: 'black'},
 		customClass,
-		optionCSS = {color: 'black'},
+		optionCSS = {color: 'red'},
 		optionClass,
 		placeholder,
 		placeholderValue = 'null',
