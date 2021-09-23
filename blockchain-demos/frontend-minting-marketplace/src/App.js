@@ -140,7 +140,7 @@ function App() {
 					<button style={{color: 'var(--royal-purple)', border: 'solid 1px var(--royal-purple)', backgroundColor: 'inherit', borderRadius: '50%'}} onClick={e => {
 						dispatch({type: colorTypes.SET_COLOR_SCHEME, payload: primaryColor === 'rhyno' ? 'charcoal' : 'rhyno'});
 					}}>
-						{primaryColor === 'rhyno' ? <i className='far fa-moon' /> : <i className='far fa-sun' />}
+						{primaryColor === 'rhyno' ? <i className='far fa-moon' /> : <i className='fas fa-sun' />}
 					</button>
 				</div>
 				<div className='row w-100 m-0 p-0'>
@@ -179,7 +179,7 @@ function App() {
 						<div className='col-12' style={{height: '10vh'}}>
 							{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
 							<Switch>
-								<Route path='/admin' component={BlockChainSwitcher} />
+								{/* <Route path='/admin' component={BlockChainSwitcher} /> */}
 							</Switch>
 						</div>
 						<div className='col-12 mt-3 row'>
@@ -199,7 +199,11 @@ function App() {
 								<Route path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
 								</Route>
-								{adminAccess && <Route path='/admin' component={FileUpload} />}
+								{adminAccess && <Route path='/admin' 
+								// component={FileUpload} 
+								>
+									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
+								</Route>}
 								<Route path='/ending' component={CSVParser} />
 								<Route exact path='/'>
 									<div className='col-6 text-left'>
@@ -212,9 +216,9 @@ function App() {
 											RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
 										</p>
 									</div>
-									<div className='col-12 mt-3 row' >
+									{/* <div className='col-12 mt-3 row' >
 									<VideoList primaryColor={primaryColor}/>
-									</div>
+									</div> */}
 								</Route>
 							</Switch>
 						</div>
