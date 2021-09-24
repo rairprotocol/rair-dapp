@@ -39,6 +39,8 @@ function App() {
 
 	const [/*userData*/, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(undefined);
+	const [startedLogin, setStartedLogin] = useState(false);
+	const [loginDone, setLoginDone] = useState(false);
 
 	// Redux
 	const dispatch = useDispatch()
@@ -46,6 +48,7 @@ function App() {
 	const {primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect} = useSelector(store => store.colorStore);
 
 	const connectUserData = async () => {
+		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
 			let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -111,7 +114,8 @@ function App() {
 				).json();
 				localStorage.setItem('token', token);
 			}
-
+			setStartedLogin(false);
+			setLoginDone(true);
 		} catch (err) {
 			console.log('Error', err)
 		}
@@ -154,17 +158,17 @@ function App() {
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
-						{(currentUserAddress === undefined) ?<div className='btn-connect-wallet-wrapper'> <button disabled={!window.ethereum} className={`btn btn-${primaryColor} btn-connect-wallet` } onClick={connectUserData}>
-							Connect Wallet 
+						{!loginDone ? <div className='btn-connect-wallet-wrapper'> <button disabled={!window.ethereum} className={`btn btn-${primaryColor} btn-connect-wallet` } onClick={connectUserData}>
+							{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
 							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 						</button></div> : [
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: 'My NFTs', route: '/my-nft'},
-							{name: 'My Contracts', route: '/new-factory'},
-							{name: 'For Sale', route: '/on-sale'},
-							{name: 'Admin', route: '/admin'},
-							{name: 'All', route: '/all'},
+							{name: 'My Contracts', route: '/new-factory', disabled: !loginDone},
+							{name: 'For Sale', route: '/on-sale', disabled: !loginDone},
+							{name: 'Admin', route: '/admin', disabled: !loginDone},
+							{name: 'All', route: '/all', disabled: !loginDone},
 							{name: 'Latest', route: '/latest'},
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
@@ -192,16 +196,17 @@ function App() {
 							<Switch>
 								{factoryInstance && <Route exact path='/factory' component={CreatorMode} />}
 								{minterInstance && <Route exact path='/minter' component={ConsumerMode} />}
-								<Route exact path='/metadata/:contract/:product' component={MetadataEditor} />
-								<Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />
-								<Route path='/on-sale' component={MinterMarketplace} />
+								{loginDone && <>
+									<Route exact path='/metadata/:contract/:product' component={MetadataEditor} />
+									<Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />
+									<Route path='/on-sale' component={MinterMarketplace} />
+									<Route path='/token/:contract/:identifier' component={Token} />
+									<Route path='/rair/:contract/:product' component={RairProduct} />
+									<Route path='/all' component={VideoList} />
+									<Route path='/new-factory' component={MyContracts} />
+								</>}
 								<Route path='/my-nft'>
 									<MyNFTs />
-								</Route>
-								<Route path='/token/:contract/:identifier' component={Token} />
-								<Route path='/rair/:contract/:product' component={RairProduct} />
-								<Route path='/all'>
-									<VideoList />
 								</Route>
 								<Route path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
@@ -211,8 +216,6 @@ function App() {
 								>
 									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
 								</Route>}
-								<Route path='/ending' component={CSVParser} />
-								<Route path='/new-factory' component={MyContracts} />
 								<Route exact path='/'>
 									<div className='col-6 text-left'>
 										<h1 className='w-100' style={{textAlign: 'left'}}>
@@ -225,7 +228,7 @@ function App() {
 										</p>
 									</div>
 									{/* <div className='col-12 mt-3 row' >
-									<VideoList primaryColor={primaryColor}/>
+										<VideoList primaryColor={primaryColor}/>
 									</div> */}
 								</Route>
 							</Switch>

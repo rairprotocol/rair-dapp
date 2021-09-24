@@ -208,8 +208,6 @@ const MinterMarketplace = () => {
 		fetchData()
 	}, [fetchData])
 
-
-
 	return <div className='row px-0 mx-0 w-100'>
 		{offerData.map((item, index) => {
 			return <div key={index} className='col-4 p-2'>
