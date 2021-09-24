@@ -61,6 +61,7 @@ module.exports = context => {
       const { contract, product } = req;
       const { token } = req.params;
       const prod = parseInt(product);
+      const sanitizedToken = parseInt(token);
 
       const result = await context.db.OfferPool.aggregate([
         { $match: { contract, product: prod } },
@@ -70,7 +71,7 @@ module.exports = context => {
             let: {
               contractOP: '$contract',
               offerPoolIndex: '$marketplaceCatalogIndex',
-              tokenRequested: token
+              tokenRequested: sanitizedToken
             },
             pipeline: [
               {
@@ -120,6 +121,7 @@ module.exports = context => {
     try {
       const { token } = req.params;
       const { contract, product } = req;
+      const sanitizedToken = parseInt(token);
 
       const prod = parseInt(product);
 
@@ -133,7 +135,7 @@ module.exports = context => {
       const offerPool = offerPoolRaw.toObject();
 
       const files = await context.db.MintedToken.aggregate([
-        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token } },
+        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
         {
           $lookup: {
             from: 'File',
