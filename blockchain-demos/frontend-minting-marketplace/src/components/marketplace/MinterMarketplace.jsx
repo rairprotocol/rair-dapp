@@ -3,26 +3,11 @@ import {rFetch} from '../../utils/rFetch.js';
 import {useSelector, useStore, Provider} from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import chainData from '../../utils/blockchainData';
 
 import InputField from '../common/InputField.jsx';
 
-import BinanceDiamond from '../../images/binance-diamond.svg'
-import MaticLogo from '../../images/polygon-matic.svg'
-import EthereumLogo from '../../images/ethereum-logo.svg'
-
 const rSwal = withReactContent(Swal);
-
-const chainData = {
-	'BNB': {image: BinanceDiamond, name: 'Binance'},
-	'tMATIC': {image: MaticLogo, name: 'Matic'},
-	'ETH': {image: EthereumLogo, name: 'Ethereum'}
-}
-
-const blockchains = {
-	'BNB': '0x61',
-	'ETH': '0x5',
-	'tMATIC': '0x13881'
-}
 
 const BatchRow = ({index, deleter, array}) => {
 
@@ -234,12 +219,12 @@ const MinterMarketplace = () => {
 					<small>{/*item.totalCopies*/}</small>
 					<br/>
 					<button id={`button_${index}`} onClick={async e => {
-						let onMyChain = blockchains[item.blockchain] === window.ethereum.chainId;
+						let onMyChain = chainData[item.blockchain]?.chainId === window.ethereum.chainId;
 						if (!onMyChain) {
 							if (window.ethereum) {
 								await window.ethereum.request({
 									method: 'wallet_switchEthereumChain',
-									params: [{ chainId: blockchains[item.blockchain] }],
+									params: [{ chainId: chainData[item.blockchain]?.chainId }],
 								});
 							} else {
 								// Code for suresh goes here
@@ -266,7 +251,7 @@ const MinterMarketplace = () => {
 							})
 						}
 					}} className='btn btn-royal-ice py-0'>
-						{blockchains[item.blockchain] === window.ethereum.chainId ?
+						{chainData[item.blockchain]?.chainId === window.ethereum.chainId ?
 							<>Buy</> :
 							<>Switch to <b>{item.blockchain}</b></>
 						}

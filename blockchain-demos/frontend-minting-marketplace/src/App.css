@@ -35,6 +35,14 @@
   --stimorol-click: linear-gradient(to right, var(--royal-purple-click), var(--bubblegum-click));
 }
 
+.bg-blockchain {
+  border-radius: 16px ;
+  background-repeat: no-repeat;
+  background-size: 5rem 5rem;
+  background-position: top right;
+  background-blend-mode: overlay;
+}
+
 .App {
   text-align: center;
 }

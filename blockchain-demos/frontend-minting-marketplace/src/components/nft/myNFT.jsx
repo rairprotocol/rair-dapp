@@ -7,11 +7,7 @@ import BinanceDiamond from '../../images/binance-diamond.svg'
 import MaticLogo from '../../images/polygon-matic.svg'
 import EthereumLogo from '../../images/ethereum-logo.svg'
 
-const chainData = {
-	'BNB': {image: BinanceDiamond, name: 'Binance'},
-	'tMATIC': {image: MaticLogo, name: 'Matic'},
-	'ETH': {image: EthereumLogo, name: 'Ethereum'}
-}
+import chainData from '../../utils/blockchainData';
 
 const MyNFTs = props => {
 
@@ -43,22 +39,17 @@ const MyNFTs = props => {
 			return <div
 						key={index}
 						className='p-2 my-2 col-4'>
-						<div className='w-100 p-2' style={{
+						<div className='w-100 bg-blockchain p-2' style={{
 							border: `solid 1px ${textColor}`,
-							borderRadius: '16px',
 							backgroundImage: `url(${chainData[item?.blockchain]?.image})`,
-							backgroundRepeat: 'no-repeat',
-							backgroundSize: '5rem 5rem',
-							backgroundPosition: 'top right',
 							backgroundColor: `var(--${primaryColor}-transparent)`,
-							backgroundBlendMode: 'overlay'
 						}}>
 						<small style={{fontSize: '0.7rem'}}>{item.contract}:{item.uniqueIndexInContract}</small>
 						<br />
 						{item.metadata ?
 							<>
 								<div className='w-100'>
-									<img src={item.metadata.image} style={{width: '100%', height: 'auto', maxHeight: '25vh'}} />
+									<img alt='NFT' src={item.metadata.image} style={{width: '100%', height: 'auto', maxHeight: '25vh'}} />
 								</div>
 								<b>{item.metadata.name}</b><br />
 								<small>{item.metadata.description}</small><br />

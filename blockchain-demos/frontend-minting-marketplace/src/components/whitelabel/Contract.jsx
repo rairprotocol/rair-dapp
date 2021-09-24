@@ -6,15 +6,7 @@ import CreateProduct from './CreateProduct.jsx';
 import AddOffer from './AddOffer.jsx';
 import LockRange from './LockRange.jsx';
 
-import BinanceDiamond from '../../images/binance-diamond.svg'
-import MaticLogo from '../../images/polygon-matic.svg'
-import EthereumLogo from '../../images/ethereum-logo.svg'
-
-const chainData = {
-	'BNB': {image: BinanceDiamond, name: 'Binance'},
-	'tMATIC': {image: MaticLogo, name: 'Matic'},
-	'ETH': {image: EthereumLogo, name: 'Ethereum'}
-}
+import chainData from '../../utils/blockchainData';
 
 const Contract = ({address}) => {
 
@@ -61,16 +53,11 @@ const Contract = ({address}) => {
 		fetchData();
 	}, [fetchData]);
 
-	return <div className='col-4 p-2'>
+	return <div className='col-4 p-2 bg-blockchain'>
 		<div style={{
 			border: `solid 1px ${textColor}`,
-			borderRadius: '16px',
 			backgroundImage: `url(${chainData[data?.blockchain]?.image})`,
-			backgroundRepeat: 'no-repeat',
-			backgroundSize: '5rem 5rem',
-			backgroundPosition: 'top right',
-			backgroundColor: `var(--${primaryColor}-transparent)`,
-			backgroundBlendMode: 'overlay'
+			backgroundColor: `var(--${primaryColor}-transparent)`
 		}} className='w-100 p-3'>
 			{!data ? 'Fetching...' : 
 				<>
