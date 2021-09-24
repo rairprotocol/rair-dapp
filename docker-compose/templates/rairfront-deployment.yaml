@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -c
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert
+        kompose.cmd: kompose convert -c
         kompose.version: 1.22.0 (955b78124)
       creationTimestamp: null
       labels:
@@ -27,12 +27,8 @@ spec:
       containers:
         - image: rairtechinc/rairfront:dev_latest
           name: rairfront
-          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources: {}
-      imagePullSecrets:
-            - name: regcred
       restartPolicy: Always
-      
 status: {}
