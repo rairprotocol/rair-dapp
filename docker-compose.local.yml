@@ -23,22 +23,13 @@ services:
       - 5000:5000
     networks:
       - rair-local
-  rairfront:
-    container_name: 'rairfront'
-    build:
-      context: rair-front-master/
-      dockerfile: Dockerfile
-    ports:
-      - 8080:80
-    networks:
-      - rair-local
   mongo:
     container_name: mongo
     image: mongo
     restart: always
     volumes:
       - ./demo-decrypt-node/dev/db-data:/data/db
-      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${localdbuser}
       MONGO_INITDB_ROOT_PASSWORD: ${localdbpass}
