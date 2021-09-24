@@ -14,7 +14,7 @@ import * as colorTypes from './ducks/colors/types.js';
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
-import CSVParser from './components/metadata/csvParser.jsx';
+//import CSVParser from './components/metadata/csvParser.jsx';
 import MetadataEditor from './components/metadata/metadataEditor.jsx';
 import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
@@ -196,18 +196,14 @@ function App() {
 							<Switch>
 								{factoryInstance && <Route exact path='/factory' component={CreatorMode} />}
 								{minterInstance && <Route exact path='/minter' component={ConsumerMode} />}
-								{loginDone && <>
-									<Route exact path='/metadata/:contract/:product' component={MetadataEditor} />
-									<Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />
-									<Route path='/on-sale' component={MinterMarketplace} />
-									<Route path='/token/:contract/:identifier' component={Token} />
-									<Route path='/rair/:contract/:product' component={RairProduct} />
-									<Route path='/all' component={VideoList} />
-									<Route path='/new-factory' component={MyContracts} />
-								</>}
-								<Route path='/my-nft'>
-									<MyNFTs />
-								</Route>
+								{loginDone && <Route exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+								{loginDone && <Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+								{loginDone && <Route path='/on-sale' component={MinterMarketplace} />}
+								{loginDone && <Route path='/token/:contract/:identifier' component={Token} />}
+								{loginDone && <Route path='/rair/:contract/:product' component={RairProduct} />}
+								{loginDone && <Route path='/all' component={VideoList} />}
+								{loginDone && <Route path='/new-factory' component={MyContracts} />}
+								{loginDone && <Route exact path='/my-nft' component={MyNFTs} />}
 								<Route path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
 								</Route>

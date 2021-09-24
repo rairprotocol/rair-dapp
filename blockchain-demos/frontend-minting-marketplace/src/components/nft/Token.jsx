@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import VideoList from '../video/videoList';
 import ERC721Consumer from '../ConsumerMode/ERC721Consumer.jsx';
 
+
 import * as ethers from 'ethers'
 
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
@@ -107,72 +108,73 @@ const MyNFTs = ({
 		<div className='col-6'>
 			<hr />
 			<small> {params.contract}:{params.identifier} ({name}) </small><br />
-			<h1 className='w-100' style={{ textShadow: '5px 0 20px white, -5px 0 20px white', color: 'black' }}> {metadata.name} </h1>
+			<h1 className='w-100' style={{ textShadow: '5px 0 20px white, -5px 0 20px white', color: 'black' }}> {metadata ? metadata.name : 'No metadata available'} </h1>
 			<small> Owned by: {owner} </small><br />
 			<hr className='mb-5' />
-			<small> {metadata.description} </small><br />
-			{metadata.attributes && <>
-				<h5 className='w-100 mt-5'>
-					Attributes
-				</h5>
-				<div className='col-12 row px-0 mx-0'>
-					{Object.keys(metadata.attributes).map((item, index) => {
-						let itm = metadata.attributes[item];
-						//console.log(Object.keys(metadata.attributes[item]))
-						if (itm.trait_type === undefined) {
-							if (Object.keys(metadata.attributes[item]).length === 1) {
+			{metadata && <>
+				<small> {metadata.description} </small><br />
+				{metadata.attributes && <>
+					<h5 className='w-100 mt-5'>
+						Attributes
+					</h5>
+					<div className='col-12 row px-0 mx-0'>
+						{Object.keys(metadata.attributes).map((item, index) => {
+							let itm = metadata.attributes[item];
+							//console.log(Object.keys(metadata.attributes[item]))
+							if (itm.trait_type === undefined) {
+								if (Object.keys(metadata.attributes[item]).length === 1) {
+									itm = {
+										trait_type: item,
+										value: metadata.attributes[item]
+									}
+								} 
 								itm = {
 									trait_type: item,
 									value: metadata.attributes[item]
 								}
-							} 
-							itm = {
-								trait_type: item,
-								value: metadata.attributes[item]
 							}
-						}
-						return <div key={index} className='col-4 my-2'>
-							<div style={{
-								backgroundColor: '#77FA',
-								borderRadius: '10px',
-								border: 'solid blue 1px',
-								height: '5vh'
-							}}
-								className='w-100 h-100 py-auto'>
-								{itm.trait_type}: <b>{itm.value}</b>
+							return <div key={index} className='col-4 my-2'>
+								<div style={{
+									backgroundColor: '#77FA',
+									borderRadius: '10px',
+									border: 'solid blue 1px',
+									height: '5vh'
+								}}
+									className='w-100 h-100 py-auto'>
+									{itm.trait_type}: <b>{itm.value}</b>
+								</div>
 							</div>
-						</div>
-					})}
-				</div>
-			</>}
-			{metadata.features && <>
-				<h5 className='w-100 mt-5'>
-					Features
-				</h5>
-				<div className='col-12 row px-0 mx-0'>
-					{metadata.features.map((item, index) => {
-						let itm = item.split(":");
-						//console.log(Object.keys(metadata.attributes[item]))
-						return <div key={index} className='col-4 my-2'>
-							<div style={{
-								backgroundColor: '#F77A',
-								borderRadius: '10px',
-								border: 'solid red 1px',
-								height: '5vh'
-							}}
-								className='w-100 h-100 py-auto'>
-								{itm[0]}: <b>{itm[1]}</b>
+						})}
+					</div>
+				</>}
+				{metadata.features && <>
+					<h5 className='w-100 mt-5'>
+						Features
+					</h5>
+					<div className='col-12 row px-0 mx-0'>
+						{metadata.features.map((item, index) => {
+							let itm = item.split(":");
+							//console.log(Object.keys(metadata.attributes[item]))
+							return <div key={index} className='col-4 my-2'>
+								<div style={{
+									backgroundColor: '#F77A',
+									borderRadius: '10px',
+									border: 'solid red 1px',
+									height: '5vh'
+								}}
+									className='w-100 h-100 py-auto'>
+									{itm[0]}: <b>{itm[1]}</b>
+								</div>
 							</div>
-						</div>
-					})}
-				</div>
+						})}
+					</div>
+				</>}
+				{metadata.image && <div className='col-12'>
+					<button disabled className='btn btn-primary' id='button_buy_token'>
+						Buy
+					</button>
+				</div>}
 			</>}
-			{metadata.image && <div className='col-12'>
-				<button disabled className='btn btn-primary' id='button_buy_token'>
-					Buy
-				</button>
-			</div>}
-
 		</div>
 		<Col
 			width='100%'

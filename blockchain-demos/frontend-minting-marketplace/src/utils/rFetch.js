@@ -46,6 +46,9 @@ const signIn = async () => {
 
 	*/
 	const {success, user} = await (await fetch(`/api/users/${currentUser}`)).json();
+	if (!success) {
+		return;
+	}
 	let provider = new ethers.providers.Web3Provider(window.ethereum);
 	const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
 	let signer = provider.getSigner();
