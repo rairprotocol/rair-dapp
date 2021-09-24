@@ -30,9 +30,10 @@ spec:
           name: minting-network
           imagePullPolicy: Always
           ports:
-            - containerPort: 3001
+          - name: http-server 
+            containerPort: 3001
           resources: {}
       imagePullSecrets:
-            - name: regcred
+        - name: regcred
       restartPolicy: Always
 status: {}

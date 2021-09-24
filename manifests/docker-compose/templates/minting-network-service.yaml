@@ -2,18 +2,21 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -c
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
-    io.kompose.service: rairfront
-  name: rairfront
+    io.kompose.service: minting-network
+  name: minting-network
 spec:
   ports:
+    - name: "3001"
+      port: 3001
+      targetPort: 3001
     - name: "80"
       port: 80
       targetPort: 80
   selector:
-    io.kompose.service: rairfront
+    io.kompose.service: minting-network
 status:
   loadBalancer: {}
