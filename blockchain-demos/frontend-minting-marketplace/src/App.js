@@ -127,9 +127,10 @@ function App() {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
 				signer = provider.getSigner();
 			}
-			let token = getJWT(signer, user, currentUser);
-			localStorage.setItem('token', token);
-			
+			if (!localStorage.token) {
+				let token = await getJWT(signer, user, currentUser);
+				localStorage.setItem('token', token);
+			}
 			setStartedLogin(false);
 			setLoginDone(true);
 		} catch (err) {

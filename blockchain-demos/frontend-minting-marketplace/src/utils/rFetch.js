@@ -92,7 +92,7 @@ const rFetch = async (route, options, retryOptions = undefined) => {
 	try {
 		let parsing = await request.json()
 		if (!parsing.success) {
-			if (parsing.message === 'jwt malformed' && retryOptions?.provider) {
+			if (parsing.message === 'jwt malformed' && (window.ethereum || retryOptions?.provider)) {
 				localStorage.removeItem('token');
 				let retry = await signIn(retryOptions?.provider);
 				if (retry) {
