@@ -5,12 +5,15 @@ import DeployContracts from './DeployContracts.jsx';
 import Contract from './Contract.jsx';
 import {rFetch} from '../../utils/rFetch.js';
 
+import {useSelector} from 'react-redux';
+
 const Factory = () => {
 
 	const [contractArray, setContractArray] = useState([]);
+	const {programmaticProvider} = useSelector(store => store.contractStore);
 
 	const fetchContracts = useCallback(async () => {
-		let response = await rFetch('/api/contracts');
+		let response = await rFetch('/api/contracts', undefined, {provider: programmaticProvider});
 		if (response.success) {
 			setContractArray(response.contracts.map(item => item.contractAddress));
 		}

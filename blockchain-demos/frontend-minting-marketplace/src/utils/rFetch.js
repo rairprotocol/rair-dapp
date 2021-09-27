@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 
-const signIn = async () => {
-	let currentUser;
+const signIn = async (provider) => {
+	let currentUser = provider.address;
 	if (window.ethereum) {
 		let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
 		currentUser = accounts[0];
@@ -43,33 +43,45 @@ const signIn = async () => {
 		setAdminAccess(adminResponse.success);
 		adminRights = adminResponse.success;
 	}
-
 	*/
+
 	const {success, user} = await (await fetch(`/api/users/${currentUser}`)).json();
 	if (!success) {
 		return;
 	}
-	let provider = new ethers.providers.Web3Provider(window.ethereum);
-	const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
-	let signer = provider.getSigner();
-	let signature = await (signer.signMessage(msg, currentUser));
-	const { token } = await (await fetch('/api/auth/authentication', {
-		method: 'POST',
-		body: JSON.stringify({ publicAddress: currentUser, signature, adminRights: false }),
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			}
-		})
-	).json();
-	if (token) {
-		localStorage.setItem('token', token);
-		return true;
+	if (!localStorage.token) {
+		let signer = provider;
+		if (window.ethereum) {
+			let ethProvider = new ethers.providers.Web3Provider(window.ethereum);
+			signer = provider.getSigner();
+		}
+		let token = await getJWT(signer, user, currentUser);
+		if (token) {
+			console.log('Set token');
+			localStorage.setItem('token', token);
+			return true;
+		}
 	}
 	return false;
 }
 
-const rFetch = async (route, options) => {
+const getJWT = async (signer, userData, userAddress) => {
+	const msg = `Sign in for RAIR by nonce: ${ userData.nonce }`;
+	let signature = await (signer.signMessage(msg, userAddress));
+	const { token } = await (await fetch('/api/auth/authentication', {
+		method: 'POST',
+		body: JSON.stringify({ publicAddress: userAddress.toLowerCase(), signature, adminRights: true }),
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
+				}
+			})
+		).json();
+	return token;
+}
+
+const rFetch = async (route, options, retryOptions = undefined) => {
+	console.log('Requesting', route);
 	let request = await fetch(route, {
 		headers: {
 			...options?.headers,
@@ -80,21 +92,20 @@ const rFetch = async (route, options) => {
 	try {
 		let parsing = await request.json()
 		if (!parsing.success) {
-			if (parsing.message === 'jwt malformed') {
+			if (parsing.message === 'jwt malformed' && retryOptions?.provider) {
 				localStorage.removeItem('token');
-				let retry = await signIn();
+				let retry = await signIn(retryOptions?.provider);
 				if (retry) {
 					return rFetch(route, options);
 				}
 			}
-			console.log(parsing);
 			Swal.fire('Error',parsing?.message,'error');
 		}
 		return parsing;
 	} catch (err) {
-		console.error(request);
+		console.error(request, err);
 	}
 	return request;
 }
 
-export {rFetch, signIn};
+export {rFetch, signIn, getJWT};

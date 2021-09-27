@@ -20,11 +20,13 @@ const ModalContent = () => {
 		{value: '0x13881', label: 'Matic Mumbai'}
 	])
 
-	const {factoryInstance, erc777Instance} = useSelector(store => store.contractStore);
+	const {factoryInstance, erc777Instance, programmaticProvider} = useSelector(store => store.contractStore);
 
 	const getPrice = useCallback(async () => {
 		if (window.ethereum) {
 			setChainId(window.ethereum.chainId);
+		} else if (programmaticProvider) {
+			setChainId(programmaticProvider.provider._network.chainId);
 		}
 		if (factoryInstance && erc777Instance) {
 			setPrice((await factoryInstance.deploymentCostForERC777(erc777Instance.address)).toString());
@@ -50,7 +52,7 @@ const ModalContent = () => {
 					params: [{ chainId: chainId }],
 				});
 			} else {
-				// Code for suresh goes here
+				Swal.fire('Blockchain Switch is disabled on Programmatic Connections!', 'Switch to the proper chain manually!');
 			}
 			setPrice(0);
 		}
@@ -103,7 +105,7 @@ const DeployContracts = () => {
 	const store = useStore();
 
 	return <button
-		disabled={factoryInstance === undefined}
+		disabled={factoryInstance === undefined || !window.ethereum}
 		className='btn btn-stimorol col-2'
 		style={{position: 'absolute', top: 0, right: 0}}
 		onClick={async e => {

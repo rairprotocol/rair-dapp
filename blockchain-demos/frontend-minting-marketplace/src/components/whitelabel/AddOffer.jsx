@@ -242,14 +242,14 @@ const blockchains = {
 }
 
 const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers}) => {
-	const {contractCreator} = useSelector(store => store.contractStore);
+	const {contractCreator, programmaticProvider} = useSelector(store => store.contractStore);
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	const store = useStore();
-	let onMyChain = blockchains[blockchain] === window.ethereum.chainId;
+	let onMyChain = window.ethereum ? blockchains[blockchain] === window.ethereum.chainId : blockchains[blockchain] === programmaticProvider.provider._network.chainId;
 
 	return <button
-		disabled={address === undefined || contractCreator === undefined}
+		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
 		className={`btn btn-${onMyChain ? 'stimorol' : 'royal-ice'} py-0`}
 		onClick={async e => {
 			if (!onMyChain) {

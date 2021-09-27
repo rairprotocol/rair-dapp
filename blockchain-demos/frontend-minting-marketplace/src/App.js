@@ -3,9 +3,9 @@ import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-
 import './App.css';
 import * as ethers from 'ethers'
+import {getJWT} from './utils/rFetch.js';
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
@@ -44,7 +44,7 @@ function App() {
 
 	// Redux
 	const dispatch = useDispatch()
-	const {currentUserAddress, minterInstance, factoryInstance} = useSelector(store => store.contractStore);
+	const {currentUserAddress, minterInstance, factoryInstance, programmaticProvider} = useSelector(store => store.contractStore);
 	const {primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect} = useSelector(store => store.colorStore);
 
 	const connectUserData = async () => {
@@ -58,10 +58,19 @@ function App() {
 				payload: window.ethereum.chainId?.toLowerCase()
 			});
 			currentUser = accounts[0];
+		} else if (programmaticProvider) {
+			dispatch({type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address});
+			dispatch({
+				type: contractTypes.SET_CHAIN_ID,
+				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
+			});
+			currentUser = programmaticProvider.address;
 		}
 
-		if (!currentUser) {
+		if (!currentUser && currentUser !== undefined) {
 			Swal.fire('Error', 'No user address found', 'error');
+			setStartedLogin(false)
+			return;
 		}
 
 		try {
@@ -88,32 +97,39 @@ function App() {
 			let adminRights = adminAccess;
 			if (adminAccess === undefined) {
 				const { response } = await (await fetch(`/api/auth/get_challenge/${currentUser}`)).json();
-				const ethResponse = await window.ethereum.request({
+				let ethResponse;
+				let ethRequest = {
 					method: 'eth_signTypedData_v4',
 					params: [currentUser, response],
 					from: currentUser
-				});
+				}
+				if (window.ethereum) {
+					ethResponse = await window.ethereum.request(ethRequest);
+				} else if (programmaticProvider) {
+					let parsedResponse = JSON.parse(response);
+					// EIP712Domain is added automatically by Ethers.js!
+					let {EIP712Domain, ...revisedTypes} = parsedResponse.types;
+					ethResponse = await programmaticProvider._signTypedData(
+						parsedResponse.domain,
+						revisedTypes,
+						parsedResponse.message);
+				} else {
+					Swal.fire('Error', "Can't sign messages", 'error');
+					return;
+				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
 				setAdminAccess(adminResponse.success);
 				adminRights = adminResponse.success;
 			}
 
-			if (!localStorage.token) {
+			let signer = programmaticProvider;
+			if (window.ethereum) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
-					const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
-					let signer = provider.getSigner();
-					let signature = await (signer.signMessage(msg, currentUser));
-					const { token } = await (await fetch('/api/auth/authentication', {
-					method: 'POST',
-					body: JSON.stringify({ publicAddress: currentUser, signature, adminRights: adminRights }),
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/json'
-						}
-					})
-				).json();
-				localStorage.setItem('token', token);
+				signer = provider.getSigner();
 			}
+			let token = getJWT(signer, user, currentUser);
+			localStorage.setItem('token', token);
+			
 			setStartedLogin(false);
 			setLoginDone(true);
 		} catch (err) {
@@ -158,8 +174,11 @@ function App() {
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
-						{!loginDone ? <div className='btn-connect-wallet-wrapper'> <button disabled={!window.ethereum} className={`btn btn-${primaryColor} btn-connect-wallet` } onClick={connectUserData}>
-							{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
+						{!loginDone ? <div className='btn-connect-wallet-wrapper'>
+							<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
+									className={`btn btn-${primaryColor} btn-connect-wallet`}
+									onClick={connectUserData}>
+								{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
 							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 						</button></div> : [
 							{name: <i className='fas fa-search' />, route: '/search'},

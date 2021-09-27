@@ -53,12 +53,12 @@ const Contract = ({address}) => {
 		fetchData();
 	}, [fetchData]);
 
-	return <div className='col-4 p-2 bg-blockchain'>
+	return <div className='col-4 p-2'>
 		<div style={{
 			border: `solid 1px ${textColor}`,
 			backgroundImage: `url(${chainData[data?.blockchain]?.image})`,
 			backgroundColor: `var(--${primaryColor}-transparent)`
-		}} className='w-100 p-3'>
+		}} className='w-100 p-3 bg-blockchain'>
 			{!data ? 'Fetching...' : 
 				<>
 					<small style={{

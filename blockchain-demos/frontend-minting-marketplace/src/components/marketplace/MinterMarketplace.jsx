@@ -165,6 +165,7 @@ const MinterMarketplace = () => {
 
 	const [offerData, setOfferData] = useState([]);
 	const {primaryColor, secondaryColor, textColor} = useSelector(state => state.colorStore)
+	const {programmaticProvider} = useSelector(state => state.contractStore);
 	const store = useStore();
 
 	const fetchData = useCallback(async () => {
@@ -219,7 +220,10 @@ const MinterMarketplace = () => {
 					<small>{/*item.totalCopies*/}</small>
 					<br/>
 					<button id={`button_${index}`} onClick={async e => {
-						let onMyChain = chainData[item.blockchain]?.chainId === window.ethereum.chainId;
+						let onMyChain = window.ethereum ?
+							chainData[item.blockchain]?.chainId === window.ethereum.chainId
+							:
+							chainData[item.blockchain]?.chainId === `0x${programmaticProvider.provider._network.chainId.toString(16)}`;
 						if (!onMyChain) {
 							if (window.ethereum) {
 								await window.ethereum.request({
@@ -251,7 +255,10 @@ const MinterMarketplace = () => {
 							})
 						}
 					}} className='btn btn-royal-ice py-0'>
-						{chainData[item.blockchain]?.chainId === window.ethereum.chainId ?
+						{(window.ethereum ?
+							chainData[item.blockchain]?.chainId === window.ethereum.chainId
+							:
+							chainData[item.blockchain]?.chainId === `0x${programmaticProvider.provider._network.chainId.toString(16)}`) ?
 							<>Buy</> :
 							<>Switch to <b>{item.blockchain}</b></>
 						}

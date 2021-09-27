@@ -4,8 +4,8 @@ import EthereumLogo from '../images/ethereum-logo.svg';
 
 const chainData = {
 	'BNB': {image: BinanceDiamond, name: 'Binance', chainId: '0x61'},
-	'tMATIC': {image: MaticLogo, name: 'Matic', chainId: '0x5'},
-	'ETH': {image: EthereumLogo, name: 'Ethereum', chainId: '0x13881'}
+	'tMATIC': {image: MaticLogo, name: 'Matic', chainId: '0x13881'},
+	'ETH': {image: EthereumLogo, name: 'Ethereum', chainId: '0x5'}
 }
 
 export default chainData;

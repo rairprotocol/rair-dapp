@@ -3,10 +3,6 @@ import { useSelector } from 'react-redux';
 import { rFetch } from '../../utils/rFetch.js';
 import { Link } from 'react-router-dom';
 
-import BinanceDiamond from '../../images/binance-diamond.svg'
-import MaticLogo from '../../images/polygon-matic.svg'
-import EthereumLogo from '../../images/ethereum-logo.svg'
-
 import chainData from '../../utils/blockchainData';
 
 const MyNFTs = props => {
