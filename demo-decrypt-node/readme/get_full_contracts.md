@@ -1,6 +1,6 @@
 # Get full contracts
 
-Find all contracts with all products and offers
+Find all contracts with all products and offers on the platform
 
 **URL** : `/api/contracts/full`
 
