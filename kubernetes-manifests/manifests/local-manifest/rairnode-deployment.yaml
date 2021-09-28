@@ -34,7 +34,7 @@ spec:
             - containerPort: 5000
           env:
             - name: PRODUCTION
-              value: "true"
+              value: "false"
             - name: MONGO_URI
               value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/RairDev1?retryWrites=true&w=majority"
             - name: MONGO_URI_LOCAL
