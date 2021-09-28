@@ -1,0 +1,11 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata: 
+  name: rair
+spec: 
+  acme: 
+    email: "chris@rair.tech"
+    http01: {}
+    privateKeySecretRef: 
+      name: rair
+    server: "https://acme-v02.api.letsencrypt.org/directory"

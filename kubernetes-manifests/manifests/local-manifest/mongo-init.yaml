@@ -1,0 +1,12 @@
+apiVersion: v1
+  kind: ConfigMap
+  metadata:
+  name: mongo-init
+  data:
+  mongo-user.sh: |
+    mongo admin -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} <<EOF
+        use unatnahs_db
+        db.createUser({user: "unatanhs", pwd: "${SECOND_USER_DB_PASSWORD}", roles: [
+            { role: "readWrite", db: "unatnahs_db" }
+        ]});
+    EOF

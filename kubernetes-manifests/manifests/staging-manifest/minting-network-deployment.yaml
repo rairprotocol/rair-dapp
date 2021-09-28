@@ -1,8 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: rair
   annotations:
-    kompose.cmd: kompose convert -c
+    kompose.cmd: kompose convert
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
@@ -17,18 +18,23 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -c
+        kompose.cmd: kompose convert
         kompose.version: 1.22.0 (955b78124)
       creationTimestamp: null
       labels:
         io.kompose.network/rair-local: "true"
         io.kompose.service: minting-network
+        app: minting-network
     spec:
       containers:
         - image: rairtechinc/minting-network:dev_latest
           name: minting-network
+          imagePullPolicy: Always
           ports:
-            - containerPort: 3001
+          - name: http-server 
+            containerPort: 3001
           resources: {}
+      imagePullSecrets:
+        - name: regcred
       restartPolicy: Always
 status: {}

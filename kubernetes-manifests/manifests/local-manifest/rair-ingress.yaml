@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rair-ingress
+  annotations:
+  #  kubernetes.io/ingress.global-static-ip-name: "dev-ip"
+spec:
+  #tls:
+  #- secretName: dev-ssl
+  rules:
+  - http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: minting-network
+            port:
+              number: 3001

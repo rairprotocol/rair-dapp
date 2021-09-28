@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Kubernetes: Run/Debug - cloudbuild",
+            "type": "cloudcode.kubernetes",
+            "request": "launch",
+            "skaffoldConfig": "${workspaceFolder}/skaffold.yaml",
+            "profile": "cloudbuild",
+            "watch": true,
+            "cleanUp": true,
+            "portForward": true,
+            "imageRegistry": "gcr.io/rair-314019"
+        }
+    ]
+}
