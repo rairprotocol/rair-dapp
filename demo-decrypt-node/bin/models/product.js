@@ -11,6 +11,7 @@ const Product = new Schema({
   sold: { type: Boolean, default: false },
   royalty: { type: Number, default: 0 },
   firstTokenIndex: { type: Number, required: true },
+  cover: { type: String, default: 'none' },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
