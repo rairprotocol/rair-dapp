@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-Modal.setAppElement('#root');
+import { Carousel } from '@trendyol-js/react-carousel';
+Modal.setAppElement("#root");
 
 const NftItem = ({ pict }) => {
   let subtitle;
@@ -13,6 +14,12 @@ const NftItem = ({ pict }) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
+      backgroundColor: "#222021",
+      width: "99%",
+      height: "95%",
+      borderRadius: "16px",
+      zIndex: 20000,
+      color: "white",
     },
   };
 
@@ -23,7 +30,7 @@ const NftItem = ({ pict }) => {
   }
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
-    subtitle.style.color = "#f00";
+    // subtitle.style.color = "white";
   }
 
   function closeModal() {
@@ -70,16 +77,77 @@ const NftItem = ({ pict }) => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-          <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
-        <button onClick={closeModal}>close</button>
-        <div>I am a modal</div>
+        <h2
+          ref={(_subtitle) => (subtitle = _subtitle)}
+          style={{
+            color: "white !Important",
+            fontFamily: "Plus Jakarta Sans",
+            fontSize: "40px",
+            fontStyle: "normal",
+            fontWeight: "700",
+            lineHeight: "28px",
+            letterSpacing: "0px",
+            textAlign: "left",
+            marginBottom: "3rem",
+            marginTop: "1rem",
+            marginLeft: "3px",
+          }}
+        >
+          Description
+        </h2>
+        <button
+          style={{
+            float: "right",
+            position: "relative",
+            bottom: "6rem",
+            border: "none",
+            background: "transparent",
+            color: "mediumpurple",
+            transform: "scale(1.5)",
+          }}
+          onClick={closeModal}
+        >
+          &#215;
+        </button>
+        <div
+          style={{
+            maxWidth: "1600px",
+            margin: "auto",
+            backgroundColor: "#383637",
+            borderRadius: "16px",
+            padding: "24px 0",
+          }}
+        >
+          <div
+            style={{
+              margin: "auto",
+              backgroundImage: `url(${pict})`,
+              width: "702px",
+              height: "394px",
+              backgroundPosition: "center",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+            }}
+          ></div>
+        </div>
         <form>
           <input />
           <button>tab navigation</button>
           <button>stays</button>
           <button>inside</button>
           <button>the modal</button>
+          
         </form>
+
+        <Carousel show={3.5} slide={3} swiping={true} useArrowKeys={true} >
+             <img style={{width: '291px', height: '291px'}}  src={pict} alt="ret" />
+             <img style={{width: '291px', height: '291px'}}  src={pict} alt="erte" />
+             <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
+             <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
+             <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
+
+
+          </Carousel>
       </Modal>
     </>
   );

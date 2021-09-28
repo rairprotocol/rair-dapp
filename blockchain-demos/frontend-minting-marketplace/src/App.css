@@ -246,7 +246,7 @@ li {
 i.fas-custom {
   position: relative;
   bottom: 4.2rem;
-  z-index: 1;
+  /* z-index: 1; */
   color: #E882D5;
   left: -25.4rem;
   margin-bottom: -1rem;
@@ -296,5 +296,13 @@ margin-left: -36px;
 }
 .react-tabs__tab--selected{
   background-color: var(--charcoal-80)  !important;
-  z-index: 10;
+  z-index: 0;
+}
+.styles-module_carousel-arrow__26sRw{
+  /* background: url(https://cdn.dsmcdn.com/web/production/slick-arrow.svg) no-repeat 50%;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    position: relative; */
+  display: none;
 }
