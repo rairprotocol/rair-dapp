@@ -28,6 +28,7 @@ import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
+import MockUpPage from './components/MockUpPage/MockUpPage';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 
@@ -194,7 +195,7 @@ function App() {
 								<Route path='/token/:contract/:identifier' component={Token} />
 								<Route path='/rair/:contract/:product' component={RairProduct} />
 								<Route path='/all'>
-									<VideoList />
+									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</Route>
 								<Route path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
@@ -216,9 +217,10 @@ function App() {
 											RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
 										</p>
 									</div>
-									{/* <div className='col-12 mt-3 row' >
-									<VideoList primaryColor={primaryColor}/>
-									</div> */}
+									<div className='col-12 mt-3 row' >
+									{/* <VideoList primaryColor={primaryColor}/> */}
+									<MockUpPage primaryColor={primaryColor} textColor={textColor}/>
+									</div>
 								</Route>
 							</Switch>
 						</div>
