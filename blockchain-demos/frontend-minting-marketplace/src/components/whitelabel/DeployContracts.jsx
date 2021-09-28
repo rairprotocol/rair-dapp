@@ -35,7 +35,7 @@ const ModalContent = () => {
 										item.value === `0x${(factoryInstance?.provider?._network?.chainId).toString(16)}`
 									))[0]?.label);
 		}
-	}, [factoryInstance, erc777Instance, options]);
+	}, [factoryInstance, erc777Instance, options, programmaticProvider]);
 
 	useEffect(() => {
 		getPrice()

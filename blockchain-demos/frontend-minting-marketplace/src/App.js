@@ -94,7 +94,7 @@ function App() {
 			}
 
 			// Admin rights validation
-			let adminRights = adminAccess;
+			//let adminRights = adminAccess;
 			if (adminAccess === undefined) {
 				const { response } = await (await fetch(`/api/auth/get_challenge/${currentUser}`)).json();
 				let ethResponse;
@@ -119,7 +119,7 @@ function App() {
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
 				setAdminAccess(adminResponse.success);
-				adminRights = adminResponse.success;
+				//adminRights = adminResponse.success;
 			}
 
 			let signer = programmaticProvider;

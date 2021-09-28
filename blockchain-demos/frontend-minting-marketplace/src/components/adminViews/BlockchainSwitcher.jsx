@@ -65,7 +65,6 @@ const BlockChainSwitcher = () => {
 				chainId: Number(chainId), symbol: nativeCurrency.symbol, name: chainName, timeout: 1000000
 			}
 			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], networkData);
-			let web3Provider = await new ethers.providers.Web3Provider(provider, networkData);
 			let currentWallet = await new ethers.Wallet(UNSAFE_PrivateKey, provider);
 			await dispatch({
 				type: contractTypes.SET_PROGRAMMATIC_PROVIDER,

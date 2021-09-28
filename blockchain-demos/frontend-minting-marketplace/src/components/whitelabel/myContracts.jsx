@@ -17,7 +17,7 @@ const Factory = () => {
 		if (response.success) {
 			setContractArray(response.contracts.map(item => item.contractAddress));
 		}
-	}, [])
+	}, [programmaticProvider])
 
 	useEffect(() => {
 		fetchContracts()

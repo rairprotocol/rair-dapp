@@ -53,7 +53,7 @@ const signIn = async (provider) => {
 		let signer = provider;
 		if (window.ethereum) {
 			let ethProvider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner();
+			signer = ethProvider.getSigner();
 		}
 		let token = await getJWT(signer, user, currentUser);
 		if (token) {
