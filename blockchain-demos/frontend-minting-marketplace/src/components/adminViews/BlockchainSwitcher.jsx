@@ -40,7 +40,7 @@ const polygonMumbaiData = {
 		symbol: 'tMATIC',
 		decimals: 18
 	},
-	rpcUrls: ['https://rpc-mumbai.matic.today'],
+	rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
 	blockExplorerUrls: ['https://matic.network/']
 }
 
