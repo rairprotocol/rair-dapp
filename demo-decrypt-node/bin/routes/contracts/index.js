@@ -85,7 +85,7 @@ module.exports = context => {
   });
 
   router.use('/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), (req, res, next) => {
-    req.contractAddress = req.params.contractAddress;
+    req.contractAddress = req.params.contractAddress.toLowerCase();
     next();
   }, require('./singleContract')(context));
 

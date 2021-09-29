@@ -207,7 +207,7 @@ module.exports = context => {
   });
 
   router.use('/:contract', (req, res, next) => {
-    req.contract = req.params.contract;
+    req.contract = req.params.contract.toLowerCase();
     next();
   }, require('./contract')(context));
 
