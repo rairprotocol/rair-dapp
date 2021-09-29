@@ -2,7 +2,7 @@ import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 
 const signIn = async (provider) => {
-	let currentUser = provider.address;
+	let currentUser = provider?.address;
 	if (window.ethereum) {
 		let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
 		currentUser = accounts[0];
@@ -81,7 +81,6 @@ const getJWT = async (signer, userData, userAddress) => {
 }
 
 const rFetch = async (route, options, retryOptions = undefined) => {
-	console.log('Requesting', route);
 	let request = await fetch(route, {
 		headers: {
 			...options?.headers,
