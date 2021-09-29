@@ -10,7 +10,8 @@ module.exports = context => {
     try {
       const { adminToken, contractName, productName, offerName, tokenId } = req.params;
       const token = parseInt(tokenId);
-      const user = await context.db.User.findOne({ adminNFT: `${ process.env.ADMIN_CONTRACT }:${ adminToken }` }, { publicAddress: 1 });
+      const adminContract = process.env.ADMIN_CONTRACT.toLowerCase();
+      const user = await context.db.User.findOne({ adminNFT: `${ adminContract }:${ adminToken }` }, { publicAddress: 1 });
 
       if (_.isEmpty(user)) {
         return res.status(404).send({ success: false, message: 'User not found.' });
