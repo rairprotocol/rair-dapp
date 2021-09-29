@@ -131,22 +131,22 @@ const NftItem = ({ pict , onClick}) => {
             }}
           ></div>
         </div>
-        <form>
+        {/* <form>
           <input />
           <button>tab navigation</button>
           <button>stays</button>
           <button>inside</button>
           <button>the modal</button>
           
-        </form>
+        </form> */}
 
-        {/* <Carousel name={'s'} show={3.5} slide={3} swiping={true} useArrowKeys={true} > */}
-             {/* <img style={{width: '291px', height: '291px'}}  src={pict} alt="ret" />
+        {/* <Carousel name={'s'} show={3.5} slide={3} swiping={true} useArrowKeys={true} >
+             <img style={{width: '291px', height: '291px'}}  src={pict} alt="ret" />
              <img style={{width: '291px', height: '291px'}}  src={pict} alt="erte" />
              <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
              <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
-             <img style={{width: '291px', height: '291px'}} src={pict} alt="te" /> */}
-          {/* </Carousel> */}
+             <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
+          </Carousel> */}
       </Modal>
     </>
   );
