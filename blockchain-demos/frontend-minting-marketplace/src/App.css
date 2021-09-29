@@ -18,15 +18,29 @@
   --charcoal-60: #7A797A;
   --charcoal-40: #A7A6A6;
   --charcoal-20: #D3D2D3;
+  --charcoal-transparent: #222021AA;
 
   --rhyno: #DEDEDE;
   --rhyno-80: #E5E5E5;
   --rhyno-60: #EBEBEB;
   --rhyno-40: #F2F2F2;
   --rhyno-20: #F8F8F8;
+  --rhyno-transparent: #DEDEDEAA;
 
   --royal-ice: linear-gradient(to right, var(--arctic-blue), var(--royal-purple));
+  --royal-ice-hover: linear-gradient(to right, var(--arctic-blue-hover), var(--royal-purple-hover));
+  --royal-ice-click: linear-gradient(to right, var(--arctic-blue-click), var(--royal-purple-click));
   --stimorol: linear-gradient(to right, var(--royal-purple), var(--bubblegum));
+  --stimorol-hover: linear-gradient(to right, var(--royal-purple-hover), var(--bubblegum-hover));
+  --stimorol-click: linear-gradient(to right, var(--royal-purple-click), var(--bubblegum-click));
+}
+
+.bg-blockchain {
+  border-radius: 16px ;
+  background-repeat: no-repeat;
+  background-size: 5rem 5rem;
+  background-position: top right;
+  background-blend-mode: overlay;
 }
 
 .App {
@@ -136,6 +150,89 @@
   background-color:var(--charcoal);
   border-color:var(--charcoal)
 }
+
+.btn-royal-ice {
+  color: white;
+  background: var(--royal-ice);
+}
+.btn-royal-ice:hover {
+  color:white;
+  background:var(--royal-ice-hover);
+}
+.btn-check:focus+.btn-royal-ice, .btn-royal-ice:focus {
+  color:white;
+  background:var(--royal-ice-hover);
+  box-shadow:0 0 0 .25rem white
+}
+.btn-check:active+.btn-royal-ice,
+.btn-check:checked+.btn-royal-ice,
+.btn-royal-ice.active,
+.btn-royal-ice:active,
+.show > .btn-royal-ice.dropdown-toggle {
+  color:white;
+  background:var(--royal-ice-click);
+}
+.btn-check:active+.btn-royal-ice:focus,
+.btn-check:checked+.btn-royal-ice:focus,
+.btn-royal-ice.active:focus,
+.btn-royal-ice:active:focus,
+.show>.btn-royal-ice.dropdown-toggle:focus {
+  box-shadow:0 0 0 .25rem white
+}
+.btn-royal-ice.disabled, .btn-royal-ice:disabled {
+  color:white;
+  background:var(--royal-ice-click);
+}
+
+.btn-stimorol {
+  color: white;
+  background: var(--stimorol);
+}
+.btn-stimorol:hover {
+  color:white;
+  background:var(--stimorol-hover);
+}
+.btn-check:focus+.btn-stimorol, .btn-stimorol:focus {
+  color:white;
+  background:var(--stimorol-hover);
+  box-shadow:0 0 0 .25rem white
+}
+.btn-check:active+.btn-stimorol,
+.btn-check:checked+.btn-stimorol,
+.btn-stimorol.active,
+.btn-stimorol:active,
+.show > .btn-stimorol.dropdown-toggle {
+  color:white;
+  background:var(--stimorol-click);
+}
+.btn-check:active+.btn-stimorol:focus,
+.btn-check:checked+.btn-stimorol:focus,
+.btn-stimorol.active:focus,
+.btn-stimorol:active:focus,
+.show>.btn-stimorol.dropdown-toggle:focus {
+  box-shadow:0 0 0 .25rem white
+}
+.btn-stimorol.disabled, .btn-stimorol:disabled {
+  color:white;
+  background:var(--stimorol-click);
+}
+
+.bg-rhyno{
+  background-color: var(--rhyno)!important;
+}
+.bg-charcoal{
+  background-color: var(--charcoal)!important;
+}
+
+.text-charcoal {
+  color: var(--charcoal)!important;
+}
+.text-charcoal-50 {
+  color: #22202188!important
+}
+
+
+
 
 .some-element-hover:hover{
   border-radius: 50%;
