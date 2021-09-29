@@ -32,6 +32,13 @@ pipeline {
         }
       }
     }
+    stage('Build blockchain-event-listener'){
+      steps {
+        dir("${env.WORKSPACE}/blockchain-networks-service"){
+          sh 'docker build -t rairtechinc/blockchain-event-listener${BRANCH}_0.${VERSION} -t rairtechinc/blockchain-event-listener:dev_latest --no-cache .'
+        }
+      }
+    }
     stage('Login') {
       steps {
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
@@ -53,6 +60,12 @@ pipeline {
       steps {
         sh 'docker push rairtechinc/minting-network:${BRANCH}_0.${VERSION}'
         sh 'docker push rairtechinc/minting-network:${BRANCH}_latest'
+      }
+    }
+    stage('Push docker blockchain-event-listener') {
+      steps {
+        sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_0.${VERSION}'
+        sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_latest'
       }
     }
     stage('Update docker version file') {
