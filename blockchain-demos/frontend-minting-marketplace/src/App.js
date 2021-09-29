@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import './App.css';
 import * as ethers from 'ethers'
+import {getJWT} from './utils/rFetch.js';
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
@@ -13,10 +14,13 @@ import * as colorTypes from './ducks/colors/types.js';
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
-import CSVParser from './components/metadata/csvParser.jsx';
+//import CSVParser from './components/metadata/csvParser.jsx';
 import MetadataEditor from './components/metadata/metadataEditor.jsx';
-import CreateBatchMetadata from './components/CreateBatchMetadata';
+import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
+
+import MyContracts from './components/whitelabel/myContracts.jsx';
+import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
 
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
@@ -35,13 +39,16 @@ function App() {
 
 	const [/*userData*/, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(undefined);
+	const [startedLogin, setStartedLogin] = useState(false);
+	const [loginDone, setLoginDone] = useState(false);
 
 	// Redux
 	const dispatch = useDispatch()
-	const {currentUserAddress, minterInstance, factoryInstance} = useSelector(store => store.contractStore);
+	const {currentUserAddress, minterInstance, factoryInstance, programmaticProvider} = useSelector(store => store.contractStore);
 	const {primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect} = useSelector(store => store.colorStore);
 
 	const connectUserData = async () => {
+		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
 			let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -51,10 +58,19 @@ function App() {
 				payload: window.ethereum.chainId?.toLowerCase()
 			});
 			currentUser = accounts[0];
+		} else if (programmaticProvider) {
+			dispatch({type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address});
+			dispatch({
+				type: contractTypes.SET_CHAIN_ID,
+				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
+			});
+			currentUser = programmaticProvider.address;
 		}
 
-		if (!currentUser) {
+		if (!currentUser && currentUser !== undefined) {
 			Swal.fire('Error', 'No user address found', 'error');
+			setStartedLogin(false)
+			return;
 		}
 
 		try {
@@ -78,35 +94,45 @@ function App() {
 			}
 
 			// Admin rights validation
-			let adminRights = adminAccess;
+			//let adminRights = adminAccess;
 			if (adminAccess === undefined) {
 				const { response } = await (await fetch(`/api/auth/get_challenge/${currentUser}`)).json();
-				const ethResponse = await window.ethereum.request({
+				let ethResponse;
+				let ethRequest = {
 					method: 'eth_signTypedData_v4',
 					params: [currentUser, response],
 					from: currentUser
-				});
+				}
+				if (window.ethereum) {
+					ethResponse = await window.ethereum.request(ethRequest);
+				} else if (programmaticProvider) {
+					let parsedResponse = JSON.parse(response);
+					// EIP712Domain is added automatically by Ethers.js!
+					let {EIP712Domain, ...revisedTypes} = parsedResponse.types;
+					ethResponse = await programmaticProvider._signTypedData(
+						parsedResponse.domain,
+						revisedTypes,
+						parsedResponse.message);
+				} else {
+					Swal.fire('Error', "Can't sign messages", 'error');
+					return;
+				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
 				setAdminAccess(adminResponse.success);
-				adminRights = adminResponse.success;
+				//adminRights = adminResponse.success;
 			}
 
-			if (!localStorage.token) {
+			let signer = programmaticProvider;
+			if (window.ethereum) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
-					const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
-					let signer = provider.getSigner();
-					let signature = await (signer.signMessage(msg, currentUser));
-					const { token } = await (await fetch('/api/auth/authentication', {
-					method: 'POST',
-					body: JSON.stringify({ publicAddress: currentUser, signature, adminRights: adminRights }),
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/json'
-						}
-					})
-				).json();
+				signer = provider.getSigner();
+			}
+			if (!localStorage.token) {
+				let token = await getJWT(signer, user, currentUser);
 				localStorage.setItem('token', token);
 			}
+			setStartedLogin(false);
+			setLoginDone(true);
 		} catch (err) {
 			console.log('Error', err)
 		}
@@ -149,16 +175,20 @@ function App() {
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
 							<img alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
-						{(currentUserAddress === undefined) ?<div className='btn-connect-wallet-wrapper'> <button disabled={!window.ethereum} className={`btn btn-${primaryColor} btn-connect-wallet` } onClick={connectUserData}>
-							Connect Wallet 
+						{!loginDone ? <div className='btn-connect-wallet-wrapper'>
+							<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
+									className={`btn btn-${primaryColor} btn-connect-wallet`}
+									onClick={connectUserData}>
+								{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
 							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 						</button></div> : [
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: 'My NFTs', route: '/my-nft'},
-							{name: 'For Sale', route: '/on-sale'},
-							{name: 'Admin', route: '/admin'},
-							{name: 'All', route: '/all'},
+							{name: 'My Contracts', route: '/new-factory', disabled: !loginDone},
+							{name: 'For Sale', route: '/on-sale', disabled: !loginDone},
+							{name: 'Admin', route: '/admin', disabled: !loginDone},
+							{name: 'All', route: '/all', disabled: !loginDone},
 							{name: 'Latest', route: '/latest'},
 							{name: 'Hot', route: '/hot'},
 							{name: 'Ending', route: '/ending'},
@@ -186,16 +216,14 @@ function App() {
 							<Switch>
 								{factoryInstance && <Route exact path='/factory' component={CreatorMode} />}
 								{minterInstance && <Route exact path='/minter' component={ConsumerMode} />}
-								<Route exact path='/metadata/:contract/:product' component={MetadataEditor} />
-								<Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />
-								<Route path='/my-nft'>
-									<MyNFTs />
-								</Route>
-								<Route path='/token/:contract/:identifier' component={Token} />
-								<Route path='/rair/:contract/:product' component={RairProduct} />
-								<Route path='/all'>
-									<VideoList />
-								</Route>
+								{loginDone && <Route exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+								{loginDone && <Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+								{loginDone && <Route path='/on-sale' component={MinterMarketplace} />}
+								{loginDone && <Route path='/token/:contract/:identifier' component={Token} />}
+								{loginDone && <Route path='/rair/:contract/:product' component={RairProduct} />}
+								{loginDone && <Route path='/all' component={VideoList} />}
+								{loginDone && <Route path='/new-factory' component={MyContracts} />}
+								{loginDone && <Route exact path='/my-nft' component={MyNFTs} />}
 								<Route path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
 								</Route>
@@ -204,7 +232,6 @@ function App() {
 								>
 									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
 								</Route>}
-								<Route path='/ending' component={CSVParser} />
 								<Route exact path='/'>
 									<div className='col-6 text-left'>
 										<h1 className='w-100' style={{textAlign: 'left'}}>
@@ -217,7 +244,7 @@ function App() {
 										</p>
 									</div>
 									{/* <div className='col-12 mt-3 row' >
-									<VideoList primaryColor={primaryColor}/>
+										<VideoList primaryColor={primaryColor}/>
 									</div> */}
 								</Route>
 							</Switch>

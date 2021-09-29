@@ -1,9 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import InputField from '../common/InputField.jsx';
 import { Link, useParams } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import { erc721Abi } from '../../contracts';
-import * as ethers from 'ethers';
+import {rFetch} from '../../utils/rFetch.js';
 
 /*
 	"metadata": {
@@ -20,6 +18,7 @@ import * as ethers from 'ethers';
       },
 */
 
+/// OpenSea Standard
 /*
 	"tokenId": 9,
 	"name": "BASTARD GAN PUNK V2 #9",
@@ -104,6 +103,8 @@ const AttributeRow = ({array, index, deleter, refetch}) => {
 
 const MetadataEditor = (props) => {
 	const [contractName, setContractName] = useState('');
+	const [contractNetwork, setContractNetwork] = useState('');
+	const [productName, setProductName] = useState('');
 	const [title, setTitle] = useState('');
 	//const [symbol, setSymbol] = useState('#');
 	//From the brilliant mind of @Ed Wood comes.. How many plans are
@@ -112,6 +113,7 @@ const MetadataEditor = (props) => {
 	
 	const [tokenNumber, setTokenNumber] = useState(0);
 
+	const [internalFirstToken, setInternalFirstToken] = useState(0);
 	const [endingToken, setEndingToken] = useState(0);
 	
 	const [attributes, setAttributes] = useState([]);
@@ -123,19 +125,28 @@ const MetadataEditor = (props) => {
 
 	const [existingMetadataArray, setExistingMetadataArray] = useState([]);
 
-	// Causes the component to rerender
-
 	const params = useParams();
-	const {minterInstance, programmaticProvider} = useSelector(state => state.contractStore);
 
 	const fetchContractData = useCallback(async () => {
-		if (!params || !minterInstance) {
-			return;
+
+		let contractData = await rFetch(`/api/contracts/${params.contract}`)
+		if (contractData.success) {
+			setContractName(contractData.contract.title);
+			setContractNetwork(contractData.contract.blockchain);
 		}
-		let signer = programmaticProvider;
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
+		
+		let productsData = await rFetch(`/api/contracts/${params.contract}/products/offers`)
+		if (productsData.success) {
+			let [aux] = productsData.products.filter(item => item.collectionIndexInContract === Number(params.product));
+			setProductName(aux.name);
+			setEndingToken(aux.copies - 1);
+			setInternalFirstToken(Number(aux.firstTokenIndex));
+			setOfferArray(aux.offers.map(item => ({
+				tokenStart: item.range[0],
+				tokenEnd: item.range[1],
+				name: item.offerName
+			})))
+			console.log(aux)
 		}
 
 		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
@@ -144,32 +155,9 @@ const MetadataEditor = (props) => {
 			sortedMetadataArray[token.token] = token.metadata;
 		}
 		setExistingMetadataArray(sortedMetadataArray);
-		
-		let finalOfferArray = []
-		let offerIndex = await minterInstance.contractToOfferRange(params.contract, params.product);
-		let offerRanges = (await minterInstance.getOfferInfo(offerIndex)).availableRanges;
-		for await (let offerInfo of [...Array(Number(offerRanges.toString())).keys()]) {
-			let aux = await minterInstance.getOfferRangeInfo(offerIndex, offerInfo);
-			finalOfferArray.push({
-				tokenStart: aux.tokenStart.toString(),
-				tokenEnd: aux.tokenEnd.toString(),
-				name: aux.name
-			});
-		}
-		setOfferArray(finalOfferArray);
 
-		let instance = new ethers.Contract(params.contract, erc721Abi, signer);
-		let productInfo = await instance.getProduct(params.product)
-		setContractName(await instance.name());
-		if (aux.result.length === 0) {
-			setTitle(productInfo.productName);
-		}
-		let firstToken = Number(productInfo.startingToken.toString());
-		let lastToken = Number(productInfo.endingToken.toString())
-
-		setEndingToken(lastToken - firstToken);
 		setTokenNumber(0);
-	}, [params, programmaticProvider, minterInstance])
+	}, [params])
 
 	const addAttribute = () => {
 		let aux = [...attributes];
@@ -191,14 +179,6 @@ const MetadataEditor = (props) => {
 	useEffect(() => {
 		fetchContractData()
 	}, [fetchContractData])
-
-	const imageSetter = async (file) => {
-		let reader = new FileReader();
-		reader.onload = function () {
-			setImage(reader.result);
-		}
-		await reader.readAsDataURL(file);
-	}
 
 	useEffect(() => {
 		if (existingMetadataArray.length) {
@@ -234,8 +214,11 @@ const MetadataEditor = (props) => {
 
 	return <div className='row w-100 px-0 mx-0'>
 		<h5>
-			Contract: <b>{contractName} ({params.contract})</b>
+			{productName} from <b>{contractName}</b>
 		</h5>
+		<small>
+			({params.contract}) on {contractNetwork}
+		</small>
 		<div className='col-6'>
 			<div className='col-3' />
 			<button disabled className='btn btn-primary col-3'>
@@ -347,6 +330,10 @@ const MetadataEditor = (props) => {
 					labelClass='w-100'
 					labelCSS={{textAlign: 'left'}}
 				/>
+				<hr />
+				<Link className='btn btn-stimorol' to={`/token/${params.contract}/${Number(internalFirstToken) + Number(tokenNumber)}`}>
+					View token!
+				</Link>
 				<hr />
 				<button disabled className='col-12 btn btn-primary'>
 					Update Metadata
