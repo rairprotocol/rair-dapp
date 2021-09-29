@@ -186,6 +186,9 @@ li {
 .video-wrapper{
   font-family: 'Plus Jakarta Text', sans-serif;
 }
+.pictures-wrapper{
+  border-radius: 16px;
+}
 .description-wrapper{
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
@@ -244,11 +247,10 @@ li {
   /* border: 1px solid #4E4D4D */
 }
 i.fas-custom {
-  position: relative;
-  bottom: 4.2rem;
-  /* z-index: 1; */
+  position: absolute;
+  top: 1.1rem;
   color: #E882D5;
-  left: -25.4rem;
+  left: 1.3rem;
   margin-bottom: -1rem;
   font-weight: lighter;
   transform: scale(0.7);
@@ -288,8 +290,9 @@ i.fas-custom {
 .react-tabs__tab.react-tabs__tab--selected{
   /* background-color: var(--charcoal-80); */
   /* background-color: red; */
-
-
+}
+.react-tabs{
+  width: -webkit-fill-available;
 }
 .category-button-videos{
 margin-left: -36px;
@@ -299,10 +302,10 @@ margin-left: -36px;
   z-index: 0;
 }
 .styles-module_carousel-arrow__26sRw{
+  display: none;
   /* background: url(https://cdn.dsmcdn.com/web/production/slick-arrow.svg) no-repeat 50%;
     outline: none;
     border: none;
     cursor: pointer;
     position: relative; */
-  display: none;
 }

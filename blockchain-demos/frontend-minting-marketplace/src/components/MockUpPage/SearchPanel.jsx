@@ -8,6 +8,26 @@ import VideoList from "../video/videoList.jsx";
 const SearchPanel = ({ primaryColor, textColor }) => {
   const [titleSearch, setTitleSearch] = useState("");
   const [mediaList, setMediaList] = useState();
+  const [data, setData] = useState()
+
+  useEffect(() => {
+    getContract()
+  },[])
+
+  const getContract = async () => {
+    const responseContract = await (
+      await fetch("/api/contracts/full", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "X-rair-token": localStorage.token,
+        },
+      })
+    ).json();
+    const covers = responseContract.contracts.map(item => ({collectionIndexInContract:item.collectionIndexInContract,contract:item.contractAdress,cover:item.products.cover}))
+    setData(covers);
+  };
+
   const updateList = async () => {
     let response = await (
       await fetch("/api/media/list", {
@@ -34,6 +54,14 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     }
   }, []);
 
+  const handleClick = (cover) => {
+    data.forEach(item => {
+        if(cover === item.cover){
+            console.log(1)
+        }
+    })
+  }
+
   return (
     <div className="input-search-wrapper list-button-wrapper">
       <Tabs>
@@ -58,7 +86,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             Videos
           </Tab>
         </TabList>
-
+            <div style={{position:'relative'}}>
         <InputField
           getter={titleSearch}
           setter={setTitleSearch}
@@ -71,8 +99,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           customClass="form-control input-styled"
         />
         <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
+        </div>
         <TabPanel>
-          <NftList />
+          <NftList handleClick={handleClick} data={data}/>
         </TabPanel>
         <TabPanel>
           <VideoList mediaList={mediaList} titleSearch={titleSearch} />

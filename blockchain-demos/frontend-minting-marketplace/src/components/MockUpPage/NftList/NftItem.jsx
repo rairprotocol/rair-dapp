@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { Carousel } from '@trendyol-js/react-carousel';
 Modal.setAppElement("#root");
 
-const NftItem = ({ pict }) => {
+const NftItem = ({ pict , onClick}) => {
   let subtitle;
 
   const customStyles = {
@@ -119,6 +119,7 @@ const NftItem = ({ pict }) => {
           }}
         >
           <div
+          onClick={onClick}
             style={{
               margin: "auto",
               backgroundImage: `url(${pict})`,
@@ -139,15 +140,13 @@ const NftItem = ({ pict }) => {
           
         </form>
 
-        <Carousel show={3.5} slide={3} swiping={true} useArrowKeys={true} >
-             <img style={{width: '291px', height: '291px'}}  src={pict} alt="ret" />
+        {/* <Carousel name={'s'} show={3.5} slide={3} swiping={true} useArrowKeys={true} > */}
+             {/* <img style={{width: '291px', height: '291px'}}  src={pict} alt="ret" />
              <img style={{width: '291px', height: '291px'}}  src={pict} alt="erte" />
              <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
              <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
-             <img style={{width: '291px', height: '291px'}} src={pict} alt="te" />
-
-
-          </Carousel>
+             <img style={{width: '291px', height: '291px'}} src={pict} alt="te" /> */}
+          {/* </Carousel> */}
       </Modal>
     </>
   );
