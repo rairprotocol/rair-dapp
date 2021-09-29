@@ -10,7 +10,6 @@ const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require('socket.io');
-const eventListeners = require('./integrations/ethers');
 const log = require('./utils/logger')(module);
 const morgan = require('morgan');
 const _ = require('lodash');
@@ -106,7 +105,7 @@ async function main() {
   });
 
   const server = app.listen(port, () => {
-    log.info(`Decrypt node listening at http://localhost:${ port }`);
+    log.info(`Decrypt node service listening at http://localhost:${ port }`);
   });
 
   const io = Socket(server);
@@ -133,11 +132,6 @@ async function main() {
   });
 
   app.set('io', io);
-
-  // Listen network events
-  await eventListeners(context.db);
-
-  // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offerPools/offers
 }
 
 (async () => {
