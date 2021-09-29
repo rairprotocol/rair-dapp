@@ -43,8 +43,7 @@ services:
     networks:
       - rair-local
   blockchain-networks:
-    container_name: 'blockchain-networks'
-    build:
+    image: raitechinc/blockchain-event-listener:dev_latest
       context: blockchain-networks-service/
       dockerfile: Dockerfile
     environment:
