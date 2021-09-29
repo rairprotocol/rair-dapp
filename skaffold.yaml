@@ -1,0 +1,35 @@
+# To learn more about the skaffold.yaml schema visit
+# https://skaffold.dev/docs/references/yaml/
+apiVersion: skaffold/v2beta4
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  local: {}
+  # defines where to find the code at build time and where to push the resulting image
+  artifacts:
+  - image: rairtechinc/minting-network
+    context: blockchain-demos/frontend-minting-marketplace
+  - image: rairtechinc/rairservernode
+    context: demo-decrypt-node/
+# defines the Kubernetes manifests to deploy on each run
+deploy:
+  kubectl:
+    manifests:
+    - /var/dev/rair/kubernetes-manifests/manifests/local-manifest/*.yaml
+profiles:
+# use the cloudbuild profile to build images using Google Cloud Build
+- name: cloudbuild
+  build:
+    googleCloudBuild: {}
+- name: buildpacks
+  build:
+    artifacts:
+    - image: minting-network
+      context: blockchain-demos/frontend-minting-marketplace
+      buildpack:
+        builder: "gcr.io/buildpacks/builder:v1"
+    - image: rairnode
+      context: demo-decrypt-node
+      buildpack:
+        builder: "gcr.io/buildpacks/builder:v1"
