@@ -129,6 +129,8 @@ module.exports = context => {
               const token = parseInt(record.nftid);
 
               if (_.inRange(token, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
+                const address = !!record.publicaddress ? record.publicaddress : '0xooooooooooooooooooooooooooooooooooo' + token;
+                const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
                   .assign({})
                   .omit(defaultFields)
@@ -140,7 +142,7 @@ module.exports = context => {
 
                 forSave.push({
                   token,
-                  ownerAddress: record.publicaddress,
+                  ownerAddress: sanitizedOwnerAddress,
                   offerPool: offerPool.marketplaceCatalogIndex,
                   offer: offerPool.offer.offerIndex,
                   contract: sanitizedContract,
