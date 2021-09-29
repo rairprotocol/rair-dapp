@@ -83,10 +83,12 @@ const ModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, of
 			let aux = [...rows];
 			text.forEach((textItem, textIndex) => {
 				let split = textItem.split(',');
-				aux.push({
-					address: split.at(addressIndex),
-					token: split[nftIndex]
-				})
+				if (split.at(addressIndex) !== "") {
+					aux.push({
+						address: split.at(addressIndex),
+						token: split[nftIndex]
+					})
+				}
 			})
 			setRows(aux);
 		};
