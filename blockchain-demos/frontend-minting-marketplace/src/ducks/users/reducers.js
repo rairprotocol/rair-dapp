@@ -2,7 +2,8 @@ import * as types from './types';
 
 const InitialState = {
     userRd: null,
-    error: null
+    error: null,
+    adminRights: undefined
 };
 
 export default function userStore(state = InitialState, action) {
@@ -11,6 +12,11 @@ export default function userStore(state = InitialState, action) {
             return {
                 ...state,
                 userRd: null
+            };
+        case types.SET_ADMIN_RIGHTS:
+            return {
+                ...state,
+                adminRights: action.payload
             };
         case types.GET_USER_COMPLETE:
             return {

@@ -1,23 +1,42 @@
 import { useEffect, useState, useCallback } from 'react';
 import {useParams} from "react-router-dom";
+import {useSelector} from "react-redux";
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
 
 const VideoPlayer = () => {
 	const params = useParams();
 
+	const {programmaticProvider} = useSelector(state => state.contractStore);
+
 	const [videoName,] = useState(Math.round(Math.random() * 10000));
 	const [mediaAddress, setMediaAddress] = useState(Math.round(Math.random() * 10000));
 	
 	const requestChallenge = useCallback(async () => {
-		let [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
-		let response = await (await fetch('/api/auth/get_challenge/' + account)).json()
-		let parsedResponse = JSON.parse(response.response);
-		let signature = await window.ethereum.request({
-			method: 'eth_signTypedData_v4',
-			params: [account, response.response],
-			from: account
-		});
+		let signature;
+		let parsedResponse;
+		if (window.ethereum) {
+			let [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+			let response = await (await fetch('/api/auth/get_challenge/' + account)).json()
+			parsedResponse = JSON.parse(response.response);
+			signature = await window.ethereum.request({
+				method: 'eth_signTypedData_v4',
+				params: [account, response.response],
+				from: account
+			});
+		} else if (programmaticProvider) {
+			let response = await (await fetch('/api/auth/get_challenge/' + programmaticProvider.address)).json()
+			parsedResponse = JSON.parse(response.response);
+			// EIP712Domain is added automatically by Ethers.js!
+			let {EIP712Domain, ...revisedTypes} = parsedResponse.types;
+			signature = await programmaticProvider._signTypedData(
+				parsedResponse.domain,
+				revisedTypes,
+				parsedResponse.message);
+		} else {
+			Swal.fire('Error', 'Unable to decrypt videos', 'error');
+			return;
+		}
 		let streamAddress = await(await fetch('/api/auth/get_token/' + parsedResponse.message.challenge + '/' + signature + '/' + params.videoId)).json();
 		if (streamAddress.success) {
 			await setMediaAddress('/stream/' + streamAddress.token + '/' + params.videoId + '/' + params.mainManifest);
