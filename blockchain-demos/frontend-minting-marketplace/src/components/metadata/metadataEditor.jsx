@@ -138,15 +138,16 @@ const MetadataEditor = (props) => {
 		let productsData = await rFetch(`/api/contracts/${params.contract}/products/offers`)
 		if (productsData.success) {
 			let [aux] = productsData.products.filter(item => item.collectionIndexInContract === Number(params.product));
-			setProductName(aux.name);
-			setEndingToken(aux.copies - 1);
-			setInternalFirstToken(Number(aux.firstTokenIndex));
-			setOfferArray(aux.offers.map(item => ({
-				tokenStart: item.range[0],
-				tokenEnd: item.range[1],
-				name: item.offerName
-			})))
-			console.log(aux)
+			if (aux) {
+				setProductName(aux.name);
+				setEndingToken(aux.copies - 1);
+				setInternalFirstToken(Number(aux.firstTokenIndex));
+				setOfferArray(aux.offers.map(item => ({
+					tokenStart: item.range[0],
+					tokenEnd: item.range[1],
+					name: item.offerName
+				})))
+			}
 		}
 
 		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
