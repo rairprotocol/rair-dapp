@@ -47,7 +47,7 @@ const VideoPlayer = () => {
 			console.error(streamAddress);
 			Swal.fire('Error');
 		}
-	}, [params.mainManifest, params.videoId, videoName])
+	}, [params.mainManifest, params.videoId, videoName, programmaticProvider])
 
 	useEffect(() => {
 		requestChallenge();
