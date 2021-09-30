@@ -34,6 +34,14 @@ import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
+import * as Sentry from "@sentry/react";
+
+const ErrorFallback = () => {
+	return <div className='bg-stiromol'>
+		<h1> Whoops! </h1>
+		An error has ocurred
+	</div>
+}
 
 function App() {
 
@@ -142,11 +150,13 @@ function App() {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
 				dispatch({type: contractTypes.SET_CHAIN_ID, payload: chainId});
+				console.log(chainId.error.three);
 			});
 		}
 	}, [dispatch])
 
 	return (
+		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 		<BrowserRouter>
 			{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 			<div 
@@ -254,6 +264,7 @@ function App() {
 				</div>
 			</div>
 		</BrowserRouter>
+		</Sentry.ErrorBoundary>
 	);
 }
 
