@@ -141,6 +141,12 @@ function App() {
 			window.ethereum.on('chainChanged', async (chainId) => {
 				dispatch({type: contractTypes.SET_CHAIN_ID, payload: chainId});
 			});
+			window.ethereum.on('accountsChanged', async (accounts) => {
+				dispatch({type: contractTypes.SET_USER_ADDRESS, payload: accounts[0]});
+				setLoginDone(false);
+				setAdminAccess(undefined);
+				localStorage.removeItem('token');
+			});
 		}
 	}, [dispatch])
 
