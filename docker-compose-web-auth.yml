@@ -44,7 +44,7 @@ services:
       - rair-local
   blockchain-networks:
     container_name: 'blockchain-networks'
-    image: raitechinc/blockchain-event-listener:dev_latest
+    image: rairtechinc/blockchain-event-listener:dev_latest
     environment:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
