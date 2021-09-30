@@ -33,8 +33,6 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
-// import MetamaskLogo from './images/metamask-fox.svg';
-
 function App() {
 
 	const [/*userData*/, setUserData] = useState();
