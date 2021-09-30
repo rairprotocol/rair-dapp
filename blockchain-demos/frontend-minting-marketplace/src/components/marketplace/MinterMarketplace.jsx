@@ -69,6 +69,35 @@ const ModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, of
 		}
 	}
 
+	const readCSVData = (data) => {
+		if (!data) {
+			return;
+		}
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			//Public Address
+			const text = e.target.result.split('\r\n');
+			let headers = text.splice(0, 1)[0].split(',');
+			let addressIndex = headers.indexOf('Public Address') - headers.length;
+			let nftIndex = headers.indexOf('NFTID');
+			let aux = [...rows];
+			text.forEach((textItem, textIndex) => {
+				let split = textItem.split(',');
+				split = split.map(item => {
+					return item.replace(/[\n\t\r]/g,"");	
+				});
+				if (split.at(addressIndex) !== "") {
+					aux.push({
+						address: split.at(addressIndex),
+						token: Number(split[nftIndex])
+					})
+				}
+			})
+			setRows(aux);
+		};
+		reader.readAsText(data);
+	}
+
 	const addRow = () => {
 		if (rows.length > end - start) {
 			return;
@@ -147,10 +176,21 @@ const ModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, of
 					<div className='col'>
 						Total: {price * rows.length} wei
 					</div>
-					<div className='col-12' style={{maxHeight: '60vh', overflowY: 'scroll'}}>
+					<div className='col-12' style={{maxHeight: '50vh', overflowY: 'scroll'}}>
 						{rows.map((item, index) => {
 							return <BatchRow key={index} index={index} deleter={() => deleteRow(index)} array={rows}/>
 						})}
+					</div>
+					<div className='col-12'>
+						<InputField
+							customClass='py-0 form-control mb-2'
+							labelClass='mt-2'
+							id='csv_import'
+							type='file'
+							setter={readCSVData}
+							setterField={['files', 0]}
+							label='Or load addresses with CSV file'
+						/>
 					</div>
 					<button onClick={e => batchMint(rows)} disabled={!rows.length} className='col btn btn-stimorol'>
 						Batch Mint {rows.length} tokens!
@@ -199,14 +239,9 @@ const MinterMarketplace = () => {
 			return <div key={index} className='col-4 p-2'>
 				<div style={{
 					border: `solid 1px ${textColor}`,
-					borderRadius: '16px',
 					backgroundImage: `url(${chainData[item?.blockchain]?.image})`,
-					backgroundRepeat: 'no-repeat',
-					backgroundSize: '5rem 5rem',
-					backgroundPosition: 'top right',
 					backgroundColor: `var(--${primaryColor}-transparent)`,
-					backgroundBlendMode: 'overlay'
-				}} className='w-100 p-3'>
+				}} className='w-100 p-3 bg-blockchain'>
 					{item.productName}
 					<br/>
 					<small style={{fontSize: '0.7rem'}}>
