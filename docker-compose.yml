@@ -67,6 +67,11 @@ services:
   minting-network:
     container_name: minting-network
     image: rairtechinc/minting-network:dev_latest
+    environment:
+      REACT_APP_SENTRY_ENABLED: ${sentry_enabled}
+      REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
+      REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
+      REACT_APP_SENTRY_RELEASE: ${sentry_release}
     expose:
       - "80"
     ports:
