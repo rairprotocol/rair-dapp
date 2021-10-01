@@ -313,19 +313,21 @@ module.exports = async (db) => {
   };
 
   return Promise.all(_.map(providers, async providerData => {
-    console.log('Connected to', providerData.provider._network.name);
-    console.log('Symbol:', providerData.provider._network.symbol);
+    const provider = new ethers.providers.JsonRpcProvider(providerData.url, providerData.network);
+
+    console.log('Connected to', provider._network.name);
+    console.log('Symbol:', provider._network.symbol);
 
     // These connections don't have an address associated, so they can read but can't write to the blockchain
-    let factoryInstance = await new ethers.Contract(providerData.factoryAddress, Factory, providerData.provider);
-    let minterInstance = await new ethers.Contract(providerData.minterAddress, Market, providerData.provider);
+    let factoryInstance = await new ethers.Contract(providerData.factoryAddress, Factory, provider);
+    let minterInstance = await new ethers.Contract(providerData.minterAddress, Market, provider);
 
     // Contracts
-    contractListeners(factoryInstance, providerData.provider);
+    contractListeners(factoryInstance, provider);
 
     // Products
     const arrayOfUsers = await db.User.distinct('publicAddress');
-    await Promise.all(_.map(arrayOfUsers, user => productListeners(providerData.provider, factoryInstance, user)));
+    await Promise.all(_.map(arrayOfUsers, user => productListeners(provider, factoryInstance, user)));
 
     // Offers
     offerListeners(minterInstance);

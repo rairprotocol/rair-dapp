@@ -9,13 +9,13 @@ const eventListeners = require('./integrations/ethers');
 const log = require('./utils/logger')(module);
 const morgan = require('morgan');
 const _ = require('lodash');
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
+const connectionString = process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL;
+
 async function main() {
-  const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+  const _mongoose = await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((c) => {
       if (process.env.PRODUCTION === 'true') {
         log.info('DB Connected!');
@@ -33,6 +33,9 @@ async function main() {
 
   const app = express();
 
+  const client = await MongoClient.connect(connectionString, { useNewUrlParser: true });
+  const _db = client.db(client.s.options.dbName);
+
   const context = {
     db: {
       Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
@@ -42,9 +45,20 @@ async function main() {
       OfferPool: _mongoose.model('OfferPool', require('./models/offerPool'), 'OfferPool'),
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
-      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
-    }
+      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
+      Task: _mongoose.model('Task', require('./models/task'), 'Task')
+    },
+    mongo: _db
   };
+
+  context.agenda = require('./tasks')(context);
+
+  _.forEach(fs.readdirSync(path.join(__dirname, './tasks')), (file) => {
+    if (file !== 'index.js' && path.extname(file) === '.js') {
+      const pathToTask = `./tasks/${file}`;
+      require(pathToTask)(context);
+    }
+  });
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
@@ -61,8 +75,6 @@ async function main() {
 
   // Listen network events
   await eventListeners(context.db);
-
-  // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offerPools/offers
 }
 
 (async () => {
