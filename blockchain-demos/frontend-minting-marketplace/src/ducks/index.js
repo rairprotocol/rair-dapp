@@ -23,7 +23,7 @@ const sentryReduxEnhancer = createReduxEnhancer({
 const sagaMiddleware = createSagaMiddleware();
 
 const exp = () => {
-    const store = createStore(reducers, sentryReduxEnhancer, undefined, compose(applyMiddleware(sagaMiddleware)));
+    const store = createStore(reducers, undefined, compose(sentryReduxEnhancer, applyMiddleware(sagaMiddleware)));
     return { store, sagaMiddleware };
 };
 

@@ -18,7 +18,7 @@ sagaMiddleware.run(rootSaga);
 if (process.env.REACT_APP_SENTRY_ENABLED) {
 	console.log(process.env.REACT_APP_SENTRY_ENABLED);
 	Sentry.init({
-		release: process.env.REACT_APP_SENTRY_RELEASE
+		release: process.env.REACT_APP_SENTRY_RELEASE,
 		dsn: process.env.REACT_APP_SENTRY_IO_ENDPOINT,
 		integrations: [
 			new Integrations.BrowserTracing({

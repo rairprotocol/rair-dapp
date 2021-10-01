@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
+import { Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './App.css';
@@ -157,7 +157,7 @@ function App({sentryHistory}) {
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
-		<BrowserRouter history={sentryHistory}>
+		<Router history={sentryHistory}>
 			{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 			<div 
 				style={{
@@ -263,7 +263,7 @@ function App({sentryHistory}) {
 					<div className='col-1 d-none d-xl-inline-block' />
 				</div>
 			</div>
-		</BrowserRouter>
+		</Router>
 		</Sentry.ErrorBoundary>
 	);
 }
