@@ -44,7 +44,7 @@ services:
     restart: always
     volumes:
       - ./demo-decrypt-node/dev/db-data:/data/db
-      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${localdbuser}
       MONGO_INITDB_ROOT_PASSWORD: ${localdbpass}
@@ -55,13 +55,11 @@ services:
       - rair-local
   minting-network:
     container_name: minting-network
-    expose:
-      - "80"
     build:
       context: blockchain-demos/frontend-minting-marketplace
       dockerfile: Dockerfile
     ports:
-      - 3001:3001
+      - 80:3001
     networks:
       - rair-local
 networks:
