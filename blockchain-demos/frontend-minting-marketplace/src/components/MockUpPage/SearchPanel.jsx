@@ -111,7 +111,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
         </div>
         <TabPanel>
-          <NftList handleClick={handleClick} data={data} />
+          <NftList primaryColor={primaryColor} textColor={textColor} handleClick={handleClick} data={data} />
         </TabPanel>
         <TabPanel>
           <VideoList mediaList={mediaList} titleSearch={titleSearch} />

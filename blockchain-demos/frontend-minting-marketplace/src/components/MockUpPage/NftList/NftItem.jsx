@@ -1,15 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import OfferItem from "./OfferItem";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionItemHeading,
+  AccordionItemButton,
+  AccordionItemPanel,
+} from "react-accessible-accordion";
+// import 'react-accessible-accordion/dist/fancy-example.css';
 Modal.setAppElement("#root");
 
-const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
+const NftItem = ({
+  pict,
+  onClick,
+  contract,
+  collectionIndexInContract,
+  primaryColor,
+  textColor,
+}) => {
   const [metadata, setMetadata] = useState([]);
   const [selected, setSelected] = useState({});
-  // const [attributes, setAttributes] = useState([]);
-  // const [existingMetadataArray, setExistingMetadataArray] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
 
   let subtitle;
@@ -22,13 +35,13 @@ const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      backgroundColor: "#222021",
+      backgroundColor: `var(--${primaryColor})`,
       width: "100%",
       height: "95%",
       borderRadius: "16px",
       border: "none",
       zIndex: 20000,
-      color: "white",
+      color: textColor,
     },
   };
 
@@ -64,40 +77,10 @@ const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
       })
     ).json();
 
-    // let sortedMetadataArray = [];
-    // for await (let token of responseAllProduct.result) {
-    //   sortedMetadataArray[token.token] = token.metadata;
-    // }
-    // setExistingMetadataArray(sortedMetadataArray);
-
     const metadata = responseAllProduct.result.map((item) => item.metadata);
     setMetadata(metadata);
     setSelected(metadata[0]);
   };
-
-  // useEffect(() => {
-  //   if (existingMetadataArray.length) {
-  //     let metadataArray = existingMetadataArray[collectionIndexInContract];
-  //     setAttributes(
-  //       Object.keys(metadataArray.attributes).map((item, index) => {
-  //         let itm = metadataArray.attributes[item];
-  //         if (itm.trait_type === undefined) {
-  //           if (Object.keys(metadataArray.attributes[item]).length === 1) {
-  //             itm = {
-  //               trait_type: item,
-  //               value: metadataArray.attributes[item],
-  //             };
-  //           }
-  //           itm = {
-  //             trait_type: item,
-  //             value: metadataArray.attributes[item],
-  //           };
-  //         }
-  //         return itm;
-  //       })
-  //     );
-  //   }
-  // }, [collectionIndexInContract, existingMetadataArray]);
 
   function openModal() {
     setIsOpen(true);
@@ -107,10 +90,7 @@ const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
   }
-  // function renderPic(e) {
-  // setSelected(e)
-  // setAttributes(e)
-  // }
+
   function closeModal() {
     setIsOpen(false);
   }
@@ -153,7 +133,7 @@ const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
         <h2
           ref={(_subtitle) => (subtitle = _subtitle)}
           style={{
-            color: "white !Important",
+            // color: "white !Important",
             fontFamily: "Plus Jakarta Sans",
             fontSize: "40px",
             fontStyle: "normal",
@@ -186,7 +166,7 @@ const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
           style={{
             maxWidth: "1600px",
             margin: "auto",
-            backgroundColor: "#383637",
+            backgroundColor: `var(--${primaryColor})`,
             borderRadius: "16px",
             padding: "24px 0",
           }}
@@ -203,62 +183,73 @@ const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
               backgroundRepeat: "no-repeat",
             }}
           ></div>
-          <div className="custom-desc-to-offer-wrapper">
-            <div
-              className="custom-desc-to-offer"
-              style={
-                {
-                  // border: "1px solid red",
-                  // backgroundColor: "rgba(255, 34, 34, 0.667)",
-                  // borderRadius: "20px",
-                }
-              }
-            >
-              {toUpper(selected?.artist)}
-            </div>
-            <div
-              className="custom-desc-to-offer"
-              style={
-                {
-                  // border: "1px solid red",
-                  // backgroundColor: "rgba(255, 34, 34, 0.667)",
-                  // borderRadius: "20px",
-                }
-              }
-            >
-              {/* selected metadata.description */}
-              {selected?.description}
-            </div>
-            <div
-              className="custom-desc-to-offer"
-              style={
-                {
-                  // border: "1px solid red",
-                  // backgroundColor: "rgba(255, 34, 34, 0.667)",
-                  // borderRadius: "20px",
-                }
-              }
-            >
-              {selected?.external_url}
-            </div>
-          </div>
-          {/* <div className="col-12 row px-0 mx-0"> */}
-          <div className="col-12 row px-0 mx-0">
-            {Object.keys(selected).length &&
-              selected?.attributes.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="col-4 my-2 p-1 custom-desc-to-offer"
-                  >
-                    <div style={{padding: '0.1rem 1rem', textAlign: 'center'}}>
-                      <span>{item?.trait_type}:</span>{" "}
-                      <span style={{ color: "#95F619" }}>{item?.value}</span>
-                    </div>
+          <Accordion allowZeroExpanded>
+            <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>Description</AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>
+                <div className=" custom-desc-to-offer-wrapper">
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    {toUpper(selected?.artist)}
                   </div>
-                );
-              })}
-          </div>
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    {selected?.description}
+                  </div>
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    <a href={selected?.external_url}>
+                        {selected?.external_url}
+                    </a>
+                  </div>
+                </div>
+              </AccordionItemPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>Attributes</AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>
+                <div className="col-12 row mx-0">
+                  {Object.keys(selected).length &&
+                    selected?.attributes.map((item, index) => {
+                      if (item.trait_type === "External URL") {
+                        return (
+                          <div
+                            key={index}
+                            className="col-4 my-2 p-1 custom-desc-to-offer"
+                            style={{ color: textColor, textAlign: "center" }}
+                          >
+                            <span>{item?.trait_type}:</span>
+                            <br/>
+                            <a style={{ color: textColor }} href={item?.value}>
+                              {item?.value}
+                            </a>
+                          </div>
+                        );
+                      }
+                      return (
+                        <div
+                          key={index}
+                          className="col-4 my-2 p-1 custom-desc-to-offer"
+                        >
+                          <div
+                            style={{
+                              padding: "0.1rem 1rem",
+                              textAlign: "center",
+                            }}
+                          >
+                            <span>{item?.trait_type}:</span>
+                            <span style={{ color: textColor }}>
+                              {item?.value}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </AccordionItemPanel>
+            </AccordionItem>
+          </Accordion>
         </div>
         <div style={{ maxWidth: "1600px", margin: "auto" }}>
           <Carousel
@@ -266,7 +257,7 @@ const NftItem = ({ pict, onClick, contract, collectionIndexInContract }) => {
             showDots={false}
             infinite={true}
             responsive={responsive}
-            itemClass="carousel-item-padding-40-px"
+            itemClass="carousel-item-padding-4-px"
           >
             {metadata &&
               metadata.map((e, index) => (

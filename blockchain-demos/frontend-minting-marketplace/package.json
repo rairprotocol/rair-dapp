@@ -10,6 +10,7 @@
     "@trendyol-js/react-carousel": "^2.0.0",
     "ethers": "^5.4.0",
     "react": "^17.0.2",
+    "react-accessible-accordion": "^4.0.0",
     "react-dom": "^17.0.2",
     "react-modal": "^3.14.3",
     "react-multi-carousel": "^2.6.5",

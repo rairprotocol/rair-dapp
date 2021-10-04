@@ -316,14 +316,27 @@ margin-left: -36px;
   background-color: #434343 !important;
 }
 /* style to desc */
+.custom-desc-to-offer-wrapper{
+  margin-top: 2rem;
+  /* padding: 2rem ; */
+  padding-bottom: 0;
+  margin-bottom: 0.5rem;
+
+}
 .custom-desc-to-offer{
   padding: 1rem 1rem;
   border: 1px solid #4E4D4D;
   background-color: transparent;
   border-radius: 16px;
 }
-.carousel-item-padding-40-px{
+.carousel-item-padding-4-px{
   /* width: auto !important; */
   /* background-color: red; */
   padding-left: 2rem;
+}
+.accordion__item{
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #383637;
 }

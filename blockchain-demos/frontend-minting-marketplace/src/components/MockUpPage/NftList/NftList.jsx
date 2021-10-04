@@ -9,7 +9,7 @@ const arrPic = [
     firstPict , secondPict , thirdPict , foPict
 ]
 
-const NftList = ({data,handleClick}) => {
+const NftList = ({data, primaryColor, textColor}) => {
     return (
         <div className={'list-button-wrapper'}>
                 <img className={'col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start pictures-wrapper'} width="291" height="291" src={firstPict} alt="first" />
@@ -22,10 +22,9 @@ const NftList = ({data,handleClick}) => {
                         return(<NftItem onClick={() => console.log('nftList',data)} 
                             key={index} 
                             pict={pict.cover} 
-                            title={pict.title}
-                            name={pict.name}
-                            offerData={pict.offerData}
                             contract={pict.contract}
+                            primaryColor={primaryColor}
+                            textColor={textColor}
                             collectionIndexInContract={pict.collectionIndexInContract}/>)
                     } else {
                         return null
