@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
-
+import { Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './App.css';
@@ -33,7 +32,19 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 
-function App() {
+// import MetamaskLogo from './images/metamask-fox.svg';
+import * as Sentry from "@sentry/react";
+
+const SentryRoute = Sentry.withSentryRouting(Route);
+
+const ErrorFallback = () => {
+	return <div className='bg-stiromol'>
+		<h1> Whoops! </h1>
+		An error has ocurred
+	</div>
+}
+
+function App({sentryHistory}) {
 
 	const [/*userData*/, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(undefined);
@@ -141,17 +152,12 @@ function App() {
 			window.ethereum.on('chainChanged', async (chainId) => {
 				dispatch({type: contractTypes.SET_CHAIN_ID, payload: chainId});
 			});
-			window.ethereum.on('accountsChanged', async (accounts) => {
-				dispatch({type: contractTypes.SET_USER_ADDRESS, payload: accounts[0]});
-				setLoginDone(false);
-				setAdminAccess(undefined);
-				localStorage.removeItem('token');
-			});
 		}
 	}, [dispatch])
 
 	return (
-		<BrowserRouter>
+		<Sentry.ErrorBoundary fallback={ErrorFallback}>
+		<Router history={sentryHistory}>
 			{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 			<div 
 				style={{
@@ -213,30 +219,30 @@ function App() {
 						<div className='col-12' style={{height: '10vh'}}>
 							{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
 							<Switch>
-								<Route path='/admin' component={BlockChainSwitcher} />
+								<SentryRoute path='/admin' component={BlockChainSwitcher} />
 							</Switch>
 						</div>
 						<div className='col-12 mt-3 row'>
 							<Switch>
-								{factoryInstance && <Route exact path='/factory' component={CreatorMode} />}
-								{minterInstance && <Route exact path='/minter' component={ConsumerMode} />}
-								{loginDone && <Route exact path='/metadata/:contract/:product' component={MetadataEditor} />}
-								{loginDone && <Route path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
-								{loginDone && <Route path='/on-sale' component={MinterMarketplace} />}
-								{loginDone && <Route path='/token/:contract/:identifier' component={Token} />}
-								{loginDone && <Route path='/rair/:contract/:product' component={RairProduct} />}
-								{loginDone && <Route path='/all' component={VideoList} />}
-								{loginDone && <Route path='/new-factory' component={MyContracts} />}
-								{loginDone && <Route exact path='/my-nft' component={MyNFTs} />}
-								<Route path='/watch/:videoId/:mainManifest'>
+								{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
+								{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
+								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+								{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+								{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
+								{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
+								{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+								{loginDone && <SentryRoute path='/all' component={VideoList} />}
+								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
+								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+								<SentryRoute path='/watch/:videoId/:mainManifest'>
 									<VideoPlayer />
-								</Route>
-								{adminAccess && <Route path='/admin' 
+								</SentryRoute>
+								{adminAccess && <SentryRoute path='/admin' 
 								// component={FileUpload} 
 								>
 									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
-								</Route>}
-								<Route exact path='/'>
+								</SentryRoute>}
+								<SentryRoute exact path='/'>
 									<div className='col-6 text-left'>
 										<h1 className='w-100' style={{textAlign: 'left'}}>
 											Digital <b className='title'>Ownership</b>
@@ -250,14 +256,15 @@ function App() {
 									{/* <div className='col-12 mt-3 row' >
 										<VideoList primaryColor={primaryColor}/>
 									</div> */}
-								</Route>
+								</SentryRoute>
 							</Switch>
 						</div>
 					</div>
 					<div className='col-1 d-none d-xl-inline-block' />
 				</div>
 			</div>
-		</BrowserRouter>
+		</Router>
+		</Sentry.ErrorBoundary>
 	);
 }
 
