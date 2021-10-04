@@ -160,7 +160,6 @@ li {
     top: 16px;
     width: 150px;
     height: 28px;
-
 }
 
 .btn-connect-wallet-wrapper:hover {
@@ -188,7 +187,7 @@ li {
 }
 .pictures-wrapper{
   border-radius: 16px;
-  width: 219px;
+  width: 291px;
 }
 .description-wrapper{
   border-bottom-left-radius: 16px;
@@ -203,6 +202,7 @@ li {
 .description-wrapper:hover{
   height: 17.35rem;
   top: -17.35rem;
+  margin-bottom: -16.35rem;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   transition-duration: 0.5s;
@@ -245,7 +245,6 @@ li {
 }
 .input-styled:focus{
   background: #E5E5E5;
-  /* border: 1px solid #4E4D4D */
 }
 i.fas-custom {
   position: absolute;
@@ -267,10 +266,10 @@ i.fas-custom {
 }
 .input-select-custom-style::-webkit-file-upload-button {
   background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
-  /* color: red; */
 }
 
 /* for mack-up-page */
+
 .category-wrapper{
   display: flex;
   flex-direction: row;
@@ -292,6 +291,9 @@ i.fas-custom {
   /* background-color: var(--charcoal-80); */
   /* background-color: red; */
 }
+#react-tabs-3{
+  margin-bottom: 4rem;
+}
 .react-tabs{
   width: -webkit-fill-available;
 }
@@ -309,4 +311,19 @@ margin-left: -36px;
     border: none;
     cursor: pointer;
     position: relative; */
+}
+.ReactModal__Overlay--after-open{
+  background-color: #434343 !important;
+}
+/* style to desc */
+.custom-desc-to-offer{
+  padding: 1rem 1rem;
+  border: 1px solid #4E4D4D;
+  background-color: transparent;
+  border-radius: 16px;
+}
+.carousel-item-padding-40-px{
+  /* width: auto !important; */
+  /* background-color: red; */
+  padding-left: 2rem;
 }

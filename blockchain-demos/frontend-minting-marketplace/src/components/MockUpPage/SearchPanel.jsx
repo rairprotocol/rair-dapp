@@ -8,11 +8,11 @@ import VideoList from "../video/videoList.jsx";
 const SearchPanel = ({ primaryColor, textColor }) => {
   const [titleSearch, setTitleSearch] = useState("");
   const [mediaList, setMediaList] = useState();
-  const [data, setData] = useState()
+  const [data, setData] = useState();
 
   useEffect(() => {
-    getContract()
-  },[])
+    getContract();
+  }, []);
 
   const getContract = async () => {
     const responseContract = await (
@@ -24,7 +24,17 @@ const SearchPanel = ({ primaryColor, textColor }) => {
         },
       })
     ).json();
-    const covers = responseContract.contracts.map(item => ({collectionIndexInContract:item.collectionIndexInContract,contract:item.contractAdress,cover:item.products.cover}))
+    const covers = responseContract.contracts.map((item) => ({
+      collectionIndexInContract: item.products.collectionIndexInContract,
+      contract: item.contractAddress,
+      cover: item.products.cover,
+      title: item.title,
+      name: item.products.name,
+      offerData: item.products.offers.map((elem) => ({
+        offerName: elem.offerName,
+        offerIndex: elem.offerIndex,
+      })),
+    }));
     setData(covers);
   };
 
@@ -55,12 +65,12 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   }, []);
 
   const handleClick = (cover) => {
-    data.forEach(item => {
-        if(cover === item.cover){
-            console.log(1)
-        }
-    })
-  }
+    data.forEach((item) => {
+      if (cover === item.cover) {
+        console.log(1);
+      }
+    });
+  };
 
   return (
     <div className="input-search-wrapper list-button-wrapper">
@@ -86,22 +96,22 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             Videos
           </Tab>
         </TabList>
-            <div style={{position:'relative'}}>
-        <InputField
-          getter={titleSearch}
-          setter={setTitleSearch}
-          placeholder={"Search..."}
-          customCSS={{
-            backgroundColor: `var(--${primaryColor})`,
-            color: `var(--${textColor})`,
-            borderTopLeftRadius: "0",
-          }}
-          customClass="form-control input-styled"
-        />
-        <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
+        <div style={{ position: "relative" }}>
+          <InputField
+            getter={titleSearch}
+            setter={setTitleSearch}
+            placeholder={"Search..."}
+            customCSS={{
+              backgroundColor: `var(--${primaryColor})`,
+              color: `var(--${textColor})`,
+              borderTopLeftRadius: "0",
+            }}
+            customClass="form-control input-styled"
+          />
+          <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
         </div>
         <TabPanel>
-          <NftList handleClick={handleClick} data={data}/>
+          <NftList handleClick={handleClick} data={data} />
         </TabPanel>
         <TabPanel>
           <VideoList mediaList={mediaList} titleSearch={titleSearch} />

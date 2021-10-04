@@ -19,7 +19,14 @@ const NftList = ({data,handleClick}) => {
             {
                 data?.map((pict, index) => {
                     if(pict.cover !== 'none'){
-                        return(<NftItem onClick={() => console.log(1)} key={index} pict={pict.cover}/>)
+                        return(<NftItem onClick={() => console.log('nftList',data)} 
+                            key={index} 
+                            pict={pict.cover} 
+                            title={pict.title}
+                            name={pict.name}
+                            offerData={pict.offerData}
+                            contract={pict.contract}
+                            collectionIndexInContract={pict.collectionIndexInContract}/>)
                     } else {
                         return null
                         // return(<img width="291" height="291" key={index} src={firstPict} alt="first" />)
