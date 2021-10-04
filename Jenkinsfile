@@ -35,7 +35,7 @@ pipeline {
     stage('Build blockchain-event-listener'){
       steps {
         dir("${env.WORKSPACE}/blockchain-networks-service"){
-          sh 'docker build -t rairtechinc/blockchain-event-listener${BRANCH}_0.${VERSION} -t rairtechinc/blockchain-event-listener:dev_latest --no-cache .'
+          sh 'docker build -t rairtechinc/blockchain-event-listener:${BRANCH}_0.${VERSION} -t rairtechinc/blockchain-event-listener:dev_latest --no-cache .'
         }
       }
     }
