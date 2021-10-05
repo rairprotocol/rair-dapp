@@ -4,6 +4,7 @@ import {useSelector, useStore, Provider} from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import chainData from '../../utils/blockchainData';
+import setDocumentTitle from '../../utils/setTitle';
 
 import InputField from '../common/InputField.jsx';
 
@@ -234,6 +235,10 @@ const MinterMarketplace = () => {
 		fetchData()
 	}, [fetchData])
 
+	useEffect(() => {
+		setDocumentTitle(`Minter Marketplace`);
+	}, [])
+	
 	return <div className='row px-0 mx-0 w-100'>
 		{offerData.map((item, index) => {
 			return <div key={index} className='col-4 p-2'>

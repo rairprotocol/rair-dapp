@@ -2,6 +2,7 @@ import {useState, useEffect, useCallback} from 'react';
 import InputField from '../common/InputField.jsx';
 import { Link, useParams } from "react-router-dom";
 import {rFetch} from '../../utils/rFetch.js';
+import setDocumentTitle from '../../utils/setTitle';
 
 /*
 	"metadata": {
@@ -128,7 +129,7 @@ const MetadataEditor = (props) => {
 	const params = useParams();
 
 	const fetchContractData = useCallback(async () => {
-
+		
 		let contractData = await rFetch(`/api/contracts/${params.contract}`)
 		if (contractData.success) {
 			setContractName(contractData.contract.title);
@@ -212,6 +213,10 @@ const MetadataEditor = (props) => {
 			}))
 		}
 	}, [tokenNumber, existingMetadataArray])
+	
+	useEffect(() => {
+		setDocumentTitle(`Metadata Editor for ${contractName !== '' ? contractName : params.contract}`);
+	}, [params, contractName])
 
 	return <div className='row w-100 px-0 mx-0'>
 		<h5>
