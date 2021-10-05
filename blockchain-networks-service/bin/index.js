@@ -51,7 +51,8 @@ async function main() {
     mongo: _db
   };
 
-  context.agenda = require('./tasks')(context);
+  // run scheduled tasks flow
+  context.agenda = await require('./tasks')(context);
 
   _.forEach(fs.readdirSync(path.join(__dirname, './tasks')), (file) => {
     if (file !== 'index.js' && path.extname(file) === '.js') {

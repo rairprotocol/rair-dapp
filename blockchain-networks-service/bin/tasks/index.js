@@ -2,8 +2,11 @@ const Agenda = require('agenda');
 const moment = require('moment-timezone');
 const log = require('../utils/logger')(module);
 
-module.exports = (context) => {
+module.exports = async (context) => {
   const db = context.mongo;
+
+  // remove all old sync contracts tasks
+  await context.db.Task.deleteMany({ name: 'sync contracts' })
 
   // Start a new instance of agenda
   const agenda = new Agenda({
@@ -18,6 +21,7 @@ module.exports = (context) => {
     log.info('Agenda > Started');
     await agenda.start();
 
+    // cleanup old tasks
     const removeJobs = await agenda.jobs({ name: 'system remove processed tasks' });
 
     if (removeJobs.length === 0) {
@@ -31,16 +35,13 @@ module.exports = (context) => {
         .save();
     }
 
-    const syncJobs = await agenda.jobs({ name: 'sync' });
-
-    if (syncJobs.length === 0) {
-      await agenda.create('sync')
-        .schedule(moment()
-          .utc()
-          .add(5, 'minutes')
-          .toDate())
-        .save();
-    }
+    // start sync processes
+    await agenda.create('sync')
+      .schedule(moment()
+        .utc()
+        .add(5, 'minutes')
+        .toDate())
+      .save();
   });
 
   agenda.on('error', (err) => {
@@ -48,9 +49,26 @@ module.exports = (context) => {
   });
 
   agenda.on('success', async task => {
-    let data = task.attrs.data; //FIXME: temporary not empty, have to be {}
+    let info = {};
     let additionalInfo = '';
-    log.info(`Agenda [${ task.attrs.name }][${ task.attrs._id }] > processed with data ${ JSON.stringify(data) }. ${ additionalInfo }`);
+
+    switch (task.attrs.name) {
+      case 'sync contracts':
+        info = { network: task.attrs.data.network };
+        await agenda.create('sync products', task.attrs.data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
+      case 'sync products':
+        info = { network: task.attrs.data.network };
+        break;
+      default:
+        break;
+    }
+
+    log.info(`Agenda [${ task.attrs.name }][${ task.attrs._id }] > processed with data ${ JSON.stringify(info) }. ${ additionalInfo }`);
   });
 
   agenda.on('fail', (err) => {

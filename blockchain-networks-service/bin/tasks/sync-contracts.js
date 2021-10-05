@@ -13,30 +13,36 @@ module.exports = (context) => {
       const { providerData } = task.attrs.data;
       const provider = new ethers.providers.JsonRpcProvider(providerData.url, providerData.network);
       const factoryInstance = await new ethers.Contract(providerData.factoryAddress, Factory, provider);
-      const arrayOfUsers = await context.db.User.distinct('publicAddress');
 
-      await Promise.all(_.map(arrayOfUsers, async user => {
-        const numberOfTokens = await factoryInstance.getContractCountOf(user);
-        const foundContracts = await context.db.Contract.find({ user: user }).distinct('contractAddress');
+      // get all users on platform
+      const numberOfCreators = await factoryInstance.getCreatorsCount();
 
-        for (let j = 0; j < numberOfTokens; j++) {
-          const contractAddress = await factoryInstance.ownerToContracts(user, j);
-          const contract = contractAddress.toLowerCase();
-          const erc777Instance = new ethers.Contract(contract, Token, provider);
-          const title = await erc777Instance.name();
+      await Promise.all(_.chain()
+        .range(numberOfCreators)
+        .map(async indexOfUser => {
+          const user = await factoryInstance.creators(indexOfUser);
+          const numberOfTokens = await factoryInstance.getContractCountOf(user);
+          const foundContracts = await context.db.Contract.find({ user: user.toLowerCase() }).distinct('contractAddress');
 
-          if (!_.includes(foundContracts, contract)) {
-            await context.db.Contract.create({
-              user,
-              title,
-              contractAddress: contract,
-              blockchain: provider._network.symbol
-            });
+          for (let j = 0; j < numberOfTokens; j++) {
+            const contractAddress = await factoryInstance.ownerToContracts(user, j);
+            const contract = contractAddress.toLowerCase();
+            const erc721Instance = new ethers.Contract(contract, Token, provider);
+            const title = await erc721Instance.name();
 
-            log.info(`[${ NAME }] Stored Contract ${ contract } for User ${ user } from network ${ provider._network.name }`);
+            if (!_.includes(foundContracts, contract)) {
+              await context.db.Contract.create({ // FIXME: make a bulkwrite
+                user,
+                title,
+                contractAddress: contract,
+                blockchain: provider._network.symbol
+              });
+
+              log.info(`[${ NAME }] Stored Contract ${ contract } for User ${ user } from network ${ provider._network.name }`);
+            }
           }
-        }
-      }));
+        })
+        .value());
 
       return done();
     } catch (e) {
