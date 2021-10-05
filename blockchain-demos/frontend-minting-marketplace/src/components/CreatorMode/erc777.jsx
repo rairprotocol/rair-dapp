@@ -55,7 +55,7 @@ const ERC777Manager = () => {
 					console.log('Error sending ERC777 tokens', err)
 					Swal.fire('Error', err, 'error');
 				}
-			}} className='btn btn-success'>
+			}} className='btn btn-royal-ice'>
 				Transfer {targetValue} TEST RAIRs to {targetAddress}!
 			</button>
 			<hr className='w-100'/>

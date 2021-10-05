@@ -57,7 +57,6 @@ const signIn = async (provider) => {
 		}
 		let token = await getJWT(signer, user, currentUser);
 		if (token) {
-			console.log('Set token');
 			localStorage.setItem('token', token);
 			return true;
 		}
@@ -91,7 +90,7 @@ const rFetch = async (route, options, retryOptions = undefined) => {
 	try {
 		let parsing = await request.json()
 		if (!parsing.success) {
-			if (parsing.message === 'jwt malformed' && (window.ethereum || retryOptions?.provider)) {
+			if (['jwt malformed', 'jwt expired'].includes(parsing.message) && (window.ethereum || retryOptions?.provider)) {
 				localStorage.removeItem('token');
 				let retry = await signIn(retryOptions?.provider);
 				if (retry) {
