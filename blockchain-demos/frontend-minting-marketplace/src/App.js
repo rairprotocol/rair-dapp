@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import setTitle from './utils/setTitle';
 
 import './App.css';
 import * as ethers from 'ethers'
@@ -155,6 +156,10 @@ function App({sentryHistory}) {
 		}
 	}, [dispatch])
 
+	useEffect(() => {
+		setTitle('Welcome');
+	}, [])
+
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 		<Router history={sentryHistory}>
@@ -226,7 +231,7 @@ function App({sentryHistory}) {
 							<Switch>
 								{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 								{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
-								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor}/>}
 								{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
 								{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 								{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
@@ -234,9 +239,7 @@ function App({sentryHistory}) {
 								{loginDone && <SentryRoute path='/all' component={VideoList} />}
 								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
-								<SentryRoute path='/watch/:videoId/:mainManifest'>
-									<VideoPlayer />
-								</SentryRoute>
+								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 								{adminAccess && <SentryRoute path='/admin' 
 								// component={FileUpload} 
 								>

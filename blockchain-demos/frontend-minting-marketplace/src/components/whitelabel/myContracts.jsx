@@ -1,6 +1,7 @@
 import {useState, useEffect, useCallback} from 'react'
 
 import DeployContracts from './DeployContracts.jsx';
+import setDocumentTitle from '../../utils/setTitle';
 
 import Contract from './Contract.jsx';
 import {rFetch} from '../../utils/rFetch.js';
@@ -23,6 +24,10 @@ const Factory = () => {
 		fetchContracts()
 	}, [fetchContracts])
 
+	useEffect(() => {
+		setDocumentTitle(`My Contracts`);
+	}, [])
+	
 	return <div style={{position: 'relative'}} className='w-100 text-start row mx-0 px-0'>
 		<h1>Your deployed contracts</h1>
 		<DeployContracts />

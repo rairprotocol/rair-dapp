@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux';
+import setTitle from '../utils/setTitle';
 
 import * as ethers from 'ethers'
 import * as MinterMarketplace from '../contracts/Minter_Marketplace.json';
@@ -33,6 +34,10 @@ const CreatorMode = ({account, addresses, programmaticProvider}) => {
 		setMinterInstance(ethersMinterInstance);
 
 	}, [addresses, programmaticProvider])
+
+	useEffect(() => {
+		setTitle('Old Factory')
+	}, [])
 
 	return <>
 		<br/>

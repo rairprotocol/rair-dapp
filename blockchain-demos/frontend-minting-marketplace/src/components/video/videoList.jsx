@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import VideoItem from './videoItem.jsx';
 import InputField from '../common/InputField.jsx';
+import setDocumentTitle from '../../utils/setTitle';
 
 const VideoList = ({props, primaryColor}) => {
 	const [mediaList, setMediaList] = useState();
@@ -24,7 +25,9 @@ const VideoList = ({props, primaryColor}) => {
 		if (localStorage.token) {
 			updateList();
 		}
+		setDocumentTitle(`Videos`);
 	}, [])
+
 	return <>
 	<div className='input-search-wrapper list-button-wrapper'>
 	<InputField

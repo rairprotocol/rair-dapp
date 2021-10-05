@@ -40,7 +40,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 			false && <button
 				style={{position: 'absolute', right: 0, top: 0}}
 				onClick={e => factoryInstance.initialize(10, erc777Instance.address)}
-				className='btn btn-success'>
+				className='btn btn-royal-ice'>
 				<i className='fas fa-arrow-up' />
 			</button>
 		}
@@ -60,7 +60,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 			<br/>
 			<button disabled={erc721Name === ''} onClick={() => {
 				erc777Instance.send(factoryInstance.address, tokensRequired, ethers.utils.toUtf8Bytes(erc721Name))
-			}} className='btn btn-success'>
+			}} className='btn btn-royal-ice'>
 				Buy an ERC721 contract for {tokensRequired.toString()} tokens!
 			</button>
 		</> : 'Fetching info...'}

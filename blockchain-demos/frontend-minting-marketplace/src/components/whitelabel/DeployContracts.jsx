@@ -17,7 +17,8 @@ const ModalContent = () => {
 	const [options, /*setOptions*/] = useState([
 		{value: '0x61', label: 'Binance Testnet'},
 		{value: '0x5', label: 'Ethereum Goerly'},
-		{value: '0x13881', label: 'Matic Mumbai'}
+		{value: '0x13881', label: 'Matic Mumbai'},
+		{value: '0x89', label: 'Matic Mainnet'}
 	])
 
 	const {factoryInstance, erc777Instance, programmaticProvider} = useSelector(store => store.contractStore);
