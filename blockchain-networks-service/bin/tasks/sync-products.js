@@ -4,7 +4,6 @@ const log = require('../utils/logger')(module);
 const { abi: Token } = require('../integrations/ethers/contracts/RAIR_ERC721.json');
 
 const lockLifetime = 1000 * 60 * 5; // 5 minutes - This could become very expensive and time consuming
-const NAME = 'sync products';
 
 const BigNumber = value => parseInt(value.toString());
 const BigNumberFromFunc = async func => Number((await func()).toString());
