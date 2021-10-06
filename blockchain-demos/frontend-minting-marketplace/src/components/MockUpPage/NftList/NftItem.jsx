@@ -10,10 +10,13 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
+// import VideoList from "../../video/videoList";
+import SelectBox from "../SelectBox/SelectBox";
 // import 'react-accessible-accordion/dist/fancy-example.css';
 Modal.setAppElement("#root");
 
 const NftItem = ({
+  price,
   pict,
   onClick,
   contract,
@@ -27,6 +30,83 @@ const NftItem = ({
 
   let subtitle;
 
+  function randomInteger(min, max) {
+    let rand = min + Math.random() * (max + 1 - min);
+    return Math.floor(rand);
+  }
+  
+  // function randomColor(brightness) {
+  //   function randomChannel(brightness) {
+  //     var r = 255 - brightness;
+  //     var n = 0 | (Math.random() * r + brightness);
+  //     var s = n.toString(16);
+  //     return s.length == 1 ? "0" + s : s;
+  //   }
+  //   return (
+  //     "#" +
+  //     randomChannel(brightness) +
+  //     randomChannel(brightness) +
+  //     randomChannel(brightness)
+  //   );
+  // }
+  // var strGET = window.location.href.replace( '/', '');
+  // console.log(strGET);
+  // drop down start
+
+  // function get_random_color2() {
+  //   var r = function () {
+  //     return Math.floor(Math.random() * 256);
+  //   };
+  //   return "rgb(" + r() + "," + r() + "," + r() + ")";
+  // }
+
+  function percentToRGB(percent) {
+    if (percent === 100) {
+      percent = 99;
+    }
+    var r, g, b;
+
+    if (percent < 50) {
+      // green to yellow
+      r = Math.floor(255 * (percent / 50));
+      g = 255;
+    } else {
+      // yellow to red
+      r = 255;
+      g = Math.floor(255 * ((50 - (percent % 50)) / 50));
+    }
+    b = 0;
+
+    return "rgb(" + r + "," + g + "," + b + ")";
+  }
+  function arrayMin(arr) {
+    var len = arr.length,
+      min = Infinity;
+    while (len--) {
+      if (arr[len] < min) {
+        min = arr[len];
+      }
+    }
+    return min;
+  }
+
+  function arrayMax(arr) {
+    var len = arr.length,
+      max = -Infinity;
+    while (len--) {
+      if (arr[len] > max) {
+        max = arr[len];
+      }
+    }
+    return max;
+  }
+  const allPrice = [price];
+
+  const minPrice = arrayMin(price);
+  const maxPrice = arrayMax(price);
+
+  // console.log([minPrice, "min", maxPrice, "max"]);
+  // drop down end
   const customStyles = {
     content: {
       top: "50%",
@@ -78,6 +158,7 @@ const NftItem = ({
     ).json();
 
     const metadata = responseAllProduct.result.map((item) => item.metadata);
+    // debugger;
     setMetadata(metadata);
     setSelected(metadata[0]);
   };
@@ -176,37 +257,111 @@ const NftItem = ({
             style={{
               margin: "auto",
               backgroundImage: `url(${selected.image})`,
-              width: "702px",
-              height: "394px",
+              width: "604px",
+              // height: "394px",
+              height: "45rem",
               backgroundPosition: "center",
               backgroundSize: "contain",
+              // backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
             }}
           ></div>
+          <div
+            className="main-tab"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: "1rem",
+              padding: "2rem",
+            }}
+          >
+            <div>
+              <span>Price range</span>
+              <div
+                style={{
+                  // border: "1px solid red",
+                  borderRadius: "16px",
+                  padding: "10px",
+                  width: "228px",
+                  height: "48px",
+                  backgroundColor: "#383637",
+                }}
+              >
+                <span
+                  style={{
+                    paddingLeft: "1rem",
+                    marginRight: "3rem",
+                  }}
+                >
+                  {minPrice} – {maxPrice} ETH
+                </span>
+                <span
+                  style={{
+                    color: "#E882D5",
+                  }}
+                >
+                  ERC
+                </span>
+              </div>
+            </div>
+            <div>
+              <span>Item rank</span>
+              <div>
+                {/* <select>
+                  <option>Ultra Rair 1/1</option>
+                  <option>Rair 842 / 1,000</option>
+                  <option>Common 1,620 / 10,000</option>
+                </select> */}
+                <SelectBox primaryColor={primaryColor}
+                  items={[
+                    // { pkey: `🔑`, value: "Ultra Rair 1/1", id: 1 },
+                    { pkey: `🔑`, value: "Rair", id: 2 },
+                    // { pkey: `🔑`, value: "Common 1,620 / 10,000", id: 3 },
+                  ]}
+                />
+              </div>
+            </div>
+            <div>
+              <span>Serial number</span>
+              <div>
+                <select>
+                  {metadata &&
+                    metadata.map((e, index) => (
+                      <option
+                        key={index}
+                        onChange={() => {
+                          setSelected(metadata[index]);
+                          console.log(metadata[index], "gg");
+                        }}
+                      >
+                        {e.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
+            <div>
+              <button
+                style={{
+                  width: "228px",
+                  height: "42px",
+                  border: "none",
+                  borderRadius: "16px",
+                  color: textColor,
+                  backgroundImage:
+                    "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
+                }}
+              >
+                Owned
+              </button>
+            </div>
+          </div>
           <Accordion allowZeroExpanded>
             <AccordionItem>
               <AccordionItemHeading>
-                <AccordionItemButton>Description</AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                <div className=" custom-desc-to-offer-wrapper">
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    {toUpper(selected?.artist)}
-                  </div>
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    {selected?.description}
-                  </div>
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    <a href={selected?.external_url}>
-                        {selected?.external_url}
-                    </a>
-                  </div>
-                </div>
-              </AccordionItemPanel>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionItemHeading>
-                <AccordionItemButton>Attributes</AccordionItemButton>
+                <AccordionItemButton>Properties</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <div className="col-12 row mx-0">
@@ -220,7 +375,7 @@ const NftItem = ({
                             style={{ color: textColor, textAlign: "center" }}
                           >
                             <span>{item?.trait_type}:</span>
-                            <br/>
+                            <br />
                             <a style={{ color: textColor }} href={item?.value}>
                               {item?.value}
                             </a>
@@ -243,11 +398,152 @@ const NftItem = ({
                               {item?.value}
                             </span>
                           </div>
+                          <span
+                            style={{
+                              marginLeft: "15rem",
+                              color: percentToRGB(randomInteger(1, 50)),
+                            }}
+                          >
+                            {randomInteger(1, 30)} %
+                          </span>
                         </div>
                       );
                     })}
                 </div>
               </AccordionItemPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>Description</AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>
+                <div className=" custom-desc-to-offer-wrapper">
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    {toUpper(selected?.artist)}
+                  </div>
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    {selected?.description}
+                  </div>
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    <a href={selected?.external_url}>
+                      {selected?.external_url}
+                    </a>
+                  </div>
+                </div>
+              </AccordionItemPanel>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>Unlockable content</AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>
+                <div
+                  onClick={onClick}
+                  style={{
+                    margin: "1rem",
+                    // backgroundImage: `url(${selected.image})`,
+                    // width: "240px",
+                    // height: "394px",
+                    height: "135px",
+                    // backgroundPosition: "center",
+                    // backgroundSize: "contain",
+                    // backgroundSize: "cover",
+                    // backgroundRepeat: "no-repeat",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      borderRadius: "16px",
+                      width: "592px",
+                      backgroundColor: "#4E4D4DCC",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "relative",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "32px",
+                          height: "32px",
+                          background: "#CCA541",
+                          borderRadius: "50%",
+                          position: "absolute",
+                          top: "35%",
+                          left: "50%",
+                          transform: "translate(-50%, -35%)",
+                          zIndex: "1",
+                        }}
+                      >
+                        <i
+                          style={{ paddingLeft: "8.5px", paddingTop: "7px" }}
+                          className="fa fa-lock"
+                          aria-hidden="true"
+                        ></i>
+                        <p
+                          style={{
+                            textAlign: "center",
+                            marginLeft: "-2rem",
+                            marginTop: "9px",
+                            width: "max-content",
+                          }}
+                        >
+                          Coming soon
+                        </p>
+                      </div>
+                      <img
+                        style={{
+                          width: "230px",
+                          opacity: "0.4",
+                          height: "135px",
+                          filter: "blur(3px)",
+                        }}
+                        src={selected.image}
+                        alt=""
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        borderLeft: "4px solid #CCA541",
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "inher",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingLeft: "1rem",
+                      }}
+                    >
+                      <div>
+                        <p>Video {selected?.name}</p>
+                      </div>
+                      <div>
+                        <p
+                          style={{
+                            color: "#A7A6A6",
+                          }}
+                        >
+                          00:03:23
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </AccordionItemPanel>
+            </AccordionItem>
+            {/* <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>Collection info</AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>VIDEO</AccordionItemPanel>
+            </AccordionItem> */}
+            <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>Authenticity</AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>Link</AccordionItemPanel>
             </AccordionItem>
           </Accordion>
         </div>
@@ -255,7 +551,7 @@ const NftItem = ({
           <Carousel
             itemWidth={"300px"}
             showDots={false}
-            infinite={true}
+            // infinite={true}
             responsive={responsive}
             itemClass="carousel-item-padding-4-px"
           >

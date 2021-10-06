@@ -1,0 +1,98 @@
+.select-box--container {
+    height: 48px;
+    /* border: 1px solid #aaa; */
+    /* border-color: violet; */
+
+    border-radius: 16px;
+    width: 100%;
+    /* margin: 0; */
+    /* padding: 0; */
+    /* background-color: darkblue; */
+  }
+
+  
+  /* * {
+    box-sizing: border-box;
+  } */
+  
+  .select-box--box {
+    width: 288px;
+    height: 48px;
+    position: relative;
+    /* left: 15px; */
+    background-image: linear-gradient( 96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    border-radius: 16px;
+    padding: 1px;
+    box-sizing: content-box;
+  }
+  
+  .select-box--selected-item {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    padding: 12px;
+    vertical-align: middle;
+  }
+  .select-box--items{
+      width: max-content;
+      margin-top: 0.5rem;
+  }
+  
+  .select-box--items div {
+      cursor: pointer;
+    padding: 6px;
+    padding-left: 20px;
+    background: #383637;
+  }
+  .select-box--items div:first-child{
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+  }
+  .select-box--items div:last-child{
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+  .select-box--selected-item::before{
+      /* content: '\1F511'; */
+      color: pink;
+      
+  }
+  
+  .select-box--arrow {
+    width: 220px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    /* background: #aaaaaa; */
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  
+  .select-box--arrow-down {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    border-top: 10px solid #D37AD6;
+      border-right: 10px solid #D37AD6;
+      width: 12px;
+      height: 12px;
+      transform: rotate(135deg);
+      border-width: thin;
+  }
+  
+  .select-box--arrow-up {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    border-top: 10px solid #D37AD6;
+    border-right: 10px solid #D37AD6;
+    width: 12px;
+    height: 12px;
+    transform: rotate(-45deg);
+    border-width: thin;
+  }
+  .selected{
+      width: 10rem;
+  }

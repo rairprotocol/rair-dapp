@@ -30,7 +30,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       cover: item.products.cover,
       title: item.title,
       name: item.products.name,
+      copiesProduct: item.products.copies,
       offerData: item.products.offers.map((elem) => ({
+        price: elem.price,
         offerName: elem.offerName,
         offerIndex: elem.offerIndex,
       })),

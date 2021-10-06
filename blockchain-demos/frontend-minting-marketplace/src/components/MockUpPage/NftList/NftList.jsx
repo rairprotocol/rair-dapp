@@ -23,6 +23,7 @@ const NftList = ({data, primaryColor, textColor}) => {
                             key={index} 
                             pict={pict.cover} 
                             contract={pict.contract}
+                            price={pict.offerData.map(p => p.price)}
                             primaryColor={primaryColor}
                             textColor={textColor}
                             collectionIndexInContract={pict.collectionIndexInContract}/>)
