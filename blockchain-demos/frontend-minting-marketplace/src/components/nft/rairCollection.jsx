@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 //import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from "react-router-dom";
 import { rFetch } from '../../utils/rFetch.js';
+import setDocumentTitle from '../../utils/setTitle';
 
 const MyNFTs = props => {
 	const params = useParams();
@@ -48,7 +49,11 @@ const MyNFTs = props => {
 	useEffect(() => {
 		getData();
 	}, [getData]);
-
+	
+	useEffect(() => {
+		setDocumentTitle(`${productName !== '' ? productName : `${params.contract}:${params.product}`}`);
+	}, [productName, params])
+	
 	return <div className='col-12'>
 		<br/>
 		<div className='row px-0 mx-0 w-100'>

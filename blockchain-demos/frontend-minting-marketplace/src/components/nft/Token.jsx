@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2'
 import VideoList from '../video/videoList';
 import ERC721Consumer from '../ConsumerMode/ERC721Consumer.jsx';
-
+import setDocumentTitle from '../../utils/setTitle';
 
 import * as ethers from 'ethers'
 
@@ -12,9 +12,7 @@ import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 import { Col } from '../../styled-components/nft/Token.styles';
 const erc721Abi = ERC721Token.default.abi;
 
-const MyNFTs = ({
-	addresses,
-}) => {
+const Token = (props) => {
 	const params = useParams();
 	const [metadata, setMetadata] = useState({ name: 'Loading...' });
 	const [owner, setOwner] = useState('');
@@ -88,6 +86,10 @@ const MyNFTs = ({
 	useEffect(() => {
 		getData();
 	}, [getData]);
+
+	useEffect(() => {
+		setDocumentTitle(`${name !== '' ? name : `${params.contract}:${params.identifier}`}`);
+	}, [name, params])
 
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-6'>
@@ -197,4 +199,4 @@ const MyNFTs = ({
 	</div>
 }
 
-export default MyNFTs;
+export default Token;

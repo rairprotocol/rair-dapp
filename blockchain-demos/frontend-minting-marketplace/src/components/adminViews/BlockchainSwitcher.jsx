@@ -44,12 +44,26 @@ const polygonMumbaiData = {
 	blockExplorerUrls: ['https://matic.network/']
 }
 
+const maticMainnetData = {
+	chainId: `0x${(137).toString(16)}`, // 0x89
+	chainName: 'Matic(Polygon) Mainnet',
+	nativeCurrency:
+	{
+		name: 'Matic Token',
+		symbol: 'MATIC',
+		decimals: 18
+	},
+	rpcUrls: ['https://rpc-mainnet.matic.network'],
+	blockExplorerUrls: ['https://polygonscan.com']
+}
+
 const blockchains = [
 	{chainData: binanceTestnetData, bootstrapColor: 'warning'},
 	{chainData: klaytnBaobabData, bootstrapColor: 'light'},
 	{chainData: {chainId: '0x3', chainName: 'Ropsten (Ethereum)'}, bootstrapColor: 'primary'},
 	{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},
-	{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
+	{chainData: polygonMumbaiData, bootstrapColor: 'danger'},
+	{chainData: maticMainnetData, bootstrapColor: 'stimorol'}
 ]
 
 const BlockChainSwitcher = () => {

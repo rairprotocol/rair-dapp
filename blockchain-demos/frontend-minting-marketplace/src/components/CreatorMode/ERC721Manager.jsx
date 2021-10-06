@@ -95,7 +95,7 @@ const ERC721Manager = ({ tokenAddress }) => {
 				<br />
 				<button disabled={productName === '' || productLength === 0} onClick={() => {
 					erc721Instance.createProduct(productName, productLength);
-				}} className='btn btn-success'>
+				}} className='btn btn-royal-ice'>
 					Create {productLength} tokens under product {productName}
 				</button>
 			</div>

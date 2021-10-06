@@ -21,21 +21,21 @@ pipeline {
       steps {
         echo 'for branch' + env.BRANCH_NAME
         dir("${env.WORKSPACE}/demo-decrypt-node"){
-          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_0.${VERSION} -t rairtechinc/rairservernode:dev_latest --no-cache .'
+          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_0.${VERSION} -t rairtechinc/rairservernode:dev_latest .'
         }
       }
     }
     stage('Build minting-network') {
       steps {
         dir("${env.WORKSPACE}/blockchain-demos/frontend-minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} -t rairtechinc/minting-network:dev_latest --no-cache .'
+          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} -t rairtechinc/minting-network:dev_latest .'
         }
       }
     }
     stage('Build blockchain-event-listener'){
       steps {
         dir("${env.WORKSPACE}/blockchain-networks-service"){
-          sh 'docker build -t rairtechinc/blockchain-event-listener${BRANCH}_0.${VERSION} -t rairtechinc/blockchain-event-listener:dev_latest --no-cache .'
+          sh 'docker build -t rairtechinc/blockchain-event-listener:${BRANCH}_0.${VERSION} -t rairtechinc/blockchain-event-listener:dev_latest .'
         }
       }
     }

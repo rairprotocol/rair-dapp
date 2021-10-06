@@ -5,6 +5,7 @@ import InputField from '../common/InputField.jsx';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import {rFetch} from '../../utils/rFetch.js';
+import setDocumentTitle from '../../utils/setTitle';
 
 const CreateBatchMetadata = () => {
 	const [fullContractData, setFullContractData] = useState([]);
@@ -77,6 +78,10 @@ const CreateBatchMetadata = () => {
 	useEffect(() => {
 		fetchContractsData();
 	}, [fetchContractsData]);
+
+	useEffect(() => {
+		setDocumentTitle(`Batch Metadata Upload`);
+	}, [])
 
 	useEffect(() => {
 		if (contractAddress === 'null') {

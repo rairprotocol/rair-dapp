@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
+import setDocumentTitle from '../../utils/setTitle';
 
 const VideoPlayer = () => {
 	const params = useParams();
@@ -55,6 +56,11 @@ const VideoPlayer = () => {
 			setMediaAddress();
 		};
 	}, [requestChallenge])
+
+	useEffect(() => {
+		setDocumentTitle(`Streaming`);
+	}, [videoName])
+
 	return <div className="col-12 row mx-0 bg-secondary h1" style={ { minHeight: '50vh' } }>
 		<video id={ 'vjs-' + videoName }
 					 className="video-js vjs-16-9"
