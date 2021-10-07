@@ -26,7 +26,7 @@ module.exports = {
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     matic: {
-      url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.MATIC_MAINNET_ALCHEMY_KEY}`,
+      url: process.env.MATIC_MAINNET_ENDPOINT,
       accounts: [process.env.ADDRESS_PRIVATE_KEY]
     },
     binanceSmartchain: {
