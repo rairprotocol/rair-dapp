@@ -27,57 +27,59 @@ const NftItem = ({
   const [metadata, setMetadata] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
-
+  // debugger
   let subtitle;
 
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
-  
-  // function randomColor(brightness) {
-  //   function randomChannel(brightness) {
-  //     var r = 255 - brightness;
-  //     var n = 0 | (Math.random() * r + brightness);
-  //     var s = n.toString(16);
-  //     return s.length == 1 ? "0" + s : s;
-  //   }
-  //   return (
-  //     "#" +
-  //     randomChannel(brightness) +
-  //     randomChannel(brightness) +
-  //     randomChannel(brightness)
-  //   );
-  // }
-  // var strGET = window.location.href.replace( '/', '');
-  // console.log(strGET);
-  // drop down start
 
-  // function get_random_color2() {
-  //   var r = function () {
-  //     return Math.floor(Math.random() * 256);
-  //   };
-  //   return "rgb(" + r() + "," + r() + "," + r() + ")";
-  // }
+  function getIndexFromName(str) {
+    return str.split("#").pop();
+  }
+  function onSelect(text) {
+    const index = getIndexFromName(text);
+    setSelected(metadata[index]);
+  }
 
   function percentToRGB(percent) {
-    if (percent === 100) {
-      percent = 99;
+    // switch (percent){
+    //   case (percent < 15):
+    //     return "#95F619"
+    //   case (15 < percent < 35):
+    //   return '#F6ED19'
+    //   case (35 <= percent <= 100):
+    //     return '#F63419'
+    //     default:
+    //     return '0'
+    // }
+    if (percent) {
+      if (percent < 15) {
+        return "#95F619";
+      } else if (15 <= percent && percent < 35) {
+        return "#F6ED19";
+      } else {
+        return "#F63419";
+      }
     }
-    var r, g, b;
+    // if (percent === 100) {
+    //   percent = 99;
+    // }
+    // let r, g, b;
 
-    if (percent < 50) {
-      // green to yellow
-      r = Math.floor(255 * (percent / 50));
-      g = 255;
-    } else {
-      // yellow to red
-      r = 255;
-      g = Math.floor(255 * ((50 - (percent % 50)) / 50));
-    }
-    b = 0;
+    // if (percent < 50) {
+    //   // green to yellow
+    //   r = Math.floor(255 * (percent / 50));
+    //   g = 255;
+    // } else {
+    //   // yellow to red
+    //   r = 255;
+    //   g = Math.floor(255 * ((50 - (percent % 50)) / 50));
+    // }
+    // b = 0;
 
-    return "rgb(" + r + "," + g + "," + b + ")";
+    // return "rgb(" + r + "," + g + "," + b + ")";
   }
   function arrayMin(arr) {
     var len = arr.length,
@@ -100,7 +102,6 @@ const NftItem = ({
     }
     return max;
   }
-  const allPrice = [price];
 
   const minPrice = arrayMin(price);
   const maxPrice = arrayMax(price);
@@ -275,6 +276,7 @@ const NftItem = ({
               justifyContent: "space-between",
               marginBottom: "1rem",
               padding: "2rem",
+              alignItems: 'center',
             }}
           >
             <div>
@@ -314,7 +316,8 @@ const NftItem = ({
                   <option>Rair 842 / 1,000</option>
                   <option>Common 1,620 / 10,000</option>
                 </select> */}
-                <SelectBox primaryColor={primaryColor}
+                <SelectBox
+                  primaryColor={primaryColor}
                   items={[
                     // { pkey: `🔑`, value: "Ultra Rair 1/1", id: 1 },
                     { pkey: `🔑`, value: "Rair", id: 2 },
@@ -326,27 +329,23 @@ const NftItem = ({
             <div>
               <span>Serial number</span>
               <div>
-                <select>
-                  {metadata &&
+                <SelectBox  primaryColor={primaryColor} selectItem={onSelect} items={metadata.length && metadata.map((e) =>{
+                  return {value: e.name, id: getIndexFromName(e.name)}
+                } )}>
+                  {/* {metadata &&
                     metadata.map((e, index) => (
-                      <option
-                        key={index}
-                        onChange={() => {
-                          setSelected(metadata[index]);
-                          console.log(metadata[index], "gg");
-                        }}
-                      >
-                        {e.name}
-                      </option>
-                    ))}
-                </select>
+                      <option key={index}>{e.name}</option>
+                    ))} */}
+                </SelectBox>
               </div>
             </div>
-            <div>
+            <div style={{
+              marginTop:'18px'
+            }}>
               <button
                 style={{
                   width: "228px",
-                  height: "42px",
+                  height: "48px",
                   border: "none",
                   borderRadius: "16px",
                   color: textColor,
@@ -382,6 +381,7 @@ const NftItem = ({
                           </div>
                         );
                       }
+                      const percent = randomInteger(1, 100);
                       return (
                         <div
                           key={index}
@@ -401,10 +401,10 @@ const NftItem = ({
                           <span
                             style={{
                               marginLeft: "15rem",
-                              color: percentToRGB(randomInteger(1, 50)),
+                              color: percentToRGB(percent),
                             }}
                           >
-                            {randomInteger(1, 30)} %
+                            {percent} %
                           </span>
                         </div>
                       );
@@ -441,14 +441,7 @@ const NftItem = ({
                   onClick={onClick}
                   style={{
                     margin: "1rem",
-                    // backgroundImage: `url(${selected.image})`,
-                    // width: "240px",
-                    // height: "394px",
                     height: "135px",
-                    // backgroundPosition: "center",
-                    // backgroundSize: "contain",
-                    // backgroundSize: "cover",
-                    // backgroundRepeat: "no-repeat",
                   }}
                 >
                   <div

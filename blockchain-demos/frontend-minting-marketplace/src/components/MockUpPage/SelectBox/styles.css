@@ -35,7 +35,7 @@
   }
   .select-box--items{
       width: max-content;
-      margin-top: 0.5rem;
+      margin-top: 8px;
   }
   
   .select-box--items div {
@@ -43,6 +43,7 @@
     padding: 6px;
     padding-left: 20px;
     background: #383637;
+    padding-right: 24px;
   }
   .select-box--items div:first-child{
       border-top-left-radius: 16px;
@@ -94,5 +95,6 @@
     border-width: thin;
   }
   .selected{
-      width: 10rem;
+      width: 100%;
+      min-width:160px;
   }

@@ -1,39 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 
-class SelectBox extends React.Component {
-  state = {
-    items: this.props.items || [],
-    showItems: false,
-    selectedItem: this.props.items && this.props.items[0],
-    primaryColor: this.props.primaryColor,
+const SelectBox = (props) => {
+  const [items, setItems] = useState([]);
+  const [showItems, setShowItems] = useState(false);
+  const [selectedItem, setSelectedItem] = useState({});
+
+  useEffect(()=>{
+    if(items.length === 0 && typeof(props.items)==="object"){
+      setItems([...props.items])
+      setSelectedItem(props.items[0])
+    }
+
+  },[props.items, items])
+
+  const dropDown = () => {
+    setShowItems(!showItems)
   };
 
-  dropDown = () => {
-    this.setState((prevState) => ({
-      showItems: !prevState.showItems,
-    }));
+  const selectItem = (item) => {
+    setSelectedItem(item)
+    setShowItems(false)
   };
 
-  selectItem = (item) => {
-    this.setState({
-      selectedItem: item,
-      showItems: false,
-    });
-  };
-
-  render() {
     return (
       <div className="select-box--box">
-        <div style={{backgroundColor: `var(--${this.state.primaryColor})`,}} className="select-box--container">
+        <div
+          style={{ backgroundColor: `var(--${props.primaryColor})` }}
+          className="select-box--container"
+        >
           <div className="select-box--selected-item">
-           <span style={{paddingRight: '10px'}}>{this.state.selectedItem.pkey}</span>
-           <span>{this.state.selectedItem.value}</span>  
+            <span style={{ paddingRight: "10px" }}>
+              {selectedItem?.pkey}
+            </span>
+            <span>{items !== null ? selectedItem.value : 'Need to select'}</span>
           </div>
-          <div className="select-box--arrow" onClick={this.dropDown}>
+          <div className="select-box--arrow" onClick={dropDown}>
             <span
               className={`${
-                this.state.showItems
+                showItems
                   ? "select-box--arrow-up"
                   : "select-box--arrow-down"
               }`}
@@ -41,16 +46,24 @@ class SelectBox extends React.Component {
           </div>
 
           <div
-            style={{ display: this.state.showItems ? "block" : "none" }}
+            onClick={(e) => {
+              if (selectedItem?.pkey) {
+                return 0;
+              } else {
+                props.selectItem(e.target.innerText);
+                // console.log(e,'ffff');
+              }
+            }}
+            style={{ display: showItems ? "block" : "none" }}
             className={"select-box--items"}
           >
-            {this.state.items.map((item) => (
+            {items !== null && items.map((item) => (
               <div
                 key={item.id}
-                onClick={() => this.selectItem(item)}
-                className={this.state.selectedItem === item ? "selected" : ""}
+                onClick={() => selectItem(item)}
+                className={selectedItem === item ? "selected" : ""}
               >
-                <span style={{paddingRight: '10px'}}>{item.pkey}</span>
+                <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
                 <span>{item.value}</span>
               </div>
             ))}
@@ -59,6 +72,5 @@ class SelectBox extends React.Component {
       </div>
     );
   }
-}
 
 export default SelectBox;
