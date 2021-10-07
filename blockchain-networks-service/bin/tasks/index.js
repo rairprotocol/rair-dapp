@@ -55,13 +55,21 @@ module.exports = async (context) => {
     switch (task.attrs.name) {
       case 'sync contracts':
         info = { network: task.attrs.data.network };
-        await agenda.create('sync products', task.attrs.data)
+        await agenda.create('sync products & locks', task.attrs.data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case 'sync products':
+      case 'sync products & locks':
+        info = { network: task.attrs.data.network };
+        await agenda.create('sync offerPools & offers', task.attrs.data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
+      case 'sync offerPools & offers':
         info = { network: task.attrs.data.network };
         break;
       default:
