@@ -6,10 +6,9 @@ module.exports = context => {
   const router = express.Router();
 
   // Get metadata of specific NFT token by contract name, product name, offer name and token id
-  router.get('/:adminToken/:contractName/:productName/:offerName/:tokenId', async (req, res, next) => {
+  router.get('/:adminToken/:contractName/:productName', async (req, res, next) => {
     try {
-      const { adminToken, contractName, productName, offerName, tokenId } = req.params;
-      const token = parseInt(tokenId);
+      const { adminToken, contractName, productName } = req.params;
       const adminContract = process.env.ADMIN_CONTRACT.toLowerCase();
       const user = await context.db.User.findOne({ adminNFT: `${ adminContract }:${ adminToken }` }, { publicAddress: 1 });
 
@@ -17,14 +16,14 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'User not found.' });
       }
 
-      const [metadata] = await context.db.Contract.aggregate([
+      const [product] = await context.db.Contract.aggregate([
         { $match: { user: user.publicAddress, title: contractName } },
         {
           $lookup: {
             from: 'Product',
             let: {
               contr: '$contractAddress',
-              productName: productName
+              productName
             },
             pipeline: [
               {
@@ -48,17 +47,16 @@ module.exports = context => {
                 }
               }
             ],
-            as: 'Products'
+            as: 'products'
           }
         },
-        { $unwind: '$Products' },
-        { $replaceRoot: { newRoot: '$Products' } },
+        { $unwind: '$products' },
         {
           $lookup: {
             from: 'OfferPool',
             let: {
-              contr: '$contract',
-              productIndex: '$collectionIndexInContract'
+              contr: '$contractAddress',
+              prod: '$products.collectionIndexInContract'
             },
             pipeline: [
               {
@@ -74,7 +72,7 @@ module.exports = context => {
                       {
                         $eq: [
                           '$product',
-                          '$$productIndex'
+                          '$$prod'
                         ]
                       }
                     ]
@@ -82,17 +80,16 @@ module.exports = context => {
                 }
               }
             ],
-            as: 'OfferPools'
+            as: 'offerPools'
           }
         },
-        { $unwind: '$OfferPools' },
+        { $unwind: '$offerPools' },
         {
           $lookup: {
             from: 'Offer',
             let: {
-              contr: '$contract',
-              productIndex: '$collectionIndexInContract',
-              offerN: offerName
+              contr: '$contractAddress',
+              productIndex: '$products.collectionIndexInContract',
             },
             pipeline: [
               {
@@ -111,77 +108,27 @@ module.exports = context => {
                           '$$productIndex'
                         ]
                       },
-                      {
-                        $eq: [
-                          '$offerName',
-                          '$$offerN'
-                        ]
-                      }
                     ]
                   }
                 }
               }
             ],
-            as: 'Offers'
+            as: 'products.offers'
           }
-        },
-        { $unwind: '$Offers' },
-        {
-          $lookup: {
-            from: 'MintedToken',
-            let: {
-              contr: '$contract',
-              offerPoolIndex: '$OfferPools.marketplaceCatalogIndex',
-              offerIndex: '$Offers.offerIndex',
-              tokenIndex: token
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          '$contract',
-                          '$$contr'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$offerPool',
-                          '$$offerPoolIndex'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$offer',
-                          '$$offerIndex'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$token',
-                          '$$tokenIndex'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            as: 'Tokens'
-          }
-        },
-        { $unwind: '$Tokens' },
-        { $replaceRoot: { newRoot: '$Tokens' } },
-        { $replaceRoot: { newRoot: '$metadata' } },
+        }
       ]);
 
-      if (_.isEmpty(metadata)) {
-        return res.status(404).send({ success: false, message: 'Token not found.' });
+      if (_.isEmpty(product)) {
+        return res.status(404).send({ success: false, message: 'Product or contract not found.' });
       }
 
-      res.json({ success: true, metadata });
+      const tokens = await context.db.MintedToken.find({ contract: product.contractAddress, offerPool: product.offerPools.marketplaceCatalogIndex });
+
+      if (_.isEmpty(tokens)) {
+        return res.status(404).send({ success: false, message: 'Tokens not found.' });
+      }
+
+      res.json({ success: true, result: { product: _.omit(product, ['offerPools']), tokens } });
     } catch (e) {
       next(e);
     }
