@@ -38,7 +38,9 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControlEnumerable {
 	/// @param  _rairAddress 	  Address of the primary ERC777 contract (RAIR contract)
 	constructor(uint _pricePerToken, address _rairAddress) {
 		_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
+		_setRoleAdmin(OWNER, OWNER);
 		_setRoleAdmin(ERC777, OWNER);
+		_setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
 		_setupRole(OWNER, msg.sender);
 		_setupRole(ERC777, _rairAddress);
 		deploymentCostForERC777[_rairAddress] = _pricePerToken;

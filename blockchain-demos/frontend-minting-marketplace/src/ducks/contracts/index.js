@@ -22,7 +22,7 @@ const contractAddresses = {
 	},
 	'0x89': {
 		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
-		factory: '0xC9eF9902fa24923A17326aDdb7da0E67fF46692a',
+		factory: '0x556a3Db6d800AAA56f8B09E476793c5100705Db5',
 		minterMarketplace: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df'
 	}
 }
