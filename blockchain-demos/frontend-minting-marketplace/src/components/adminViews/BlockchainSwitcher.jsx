@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as contractTypes from '../../ducks/contracts/types.js';
 import * as ethers from 'ethers'
 import Swal from 'sweetalert2';
+import InputField from '../common/InputField.jsx';
 
 const binanceTestnetData = {
 	chainId: '0x61',
@@ -39,8 +40,21 @@ const polygonMumbaiData = {
 		symbol: 'tMATIC',
 		decimals: 18
 	},
-	rpcUrls: ['https://rpc-mumbai.matic.today'],
+	rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
 	blockExplorerUrls: ['https://matic.network/']
+}
+
+const maticMainnetData = {
+	chainId: `0x${(137).toString(16)}`, // 0x89
+	chainName: 'Matic(Polygon) Mainnet',
+	nativeCurrency:
+	{
+		name: 'Matic Token',
+		symbol: 'MATIC',
+		decimals: 18
+	},
+	rpcUrls: ['https://rpc-mainnet.matic.network'],
+	blockExplorerUrls: ['https://polygonscan.com']
 }
 
 const blockchains = [
@@ -48,7 +62,8 @@ const blockchains = [
 	{chainData: klaytnBaobabData, bootstrapColor: 'light'},
 	{chainData: {chainId: '0x3', chainName: 'Ropsten (Ethereum)'}, bootstrapColor: 'primary'},
 	{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},
-	{chainData: polygonMumbaiData, bootstrapColor: 'danger'}
+	{chainData: polygonMumbaiData, bootstrapColor: 'danger'},
+	{chainData: maticMainnetData, bootstrapColor: 'stimorol'}
 ]
 
 const BlockChainSwitcher = () => {
@@ -60,9 +75,10 @@ const BlockChainSwitcher = () => {
 
 	const connectProgrammatically = async ({rpcUrls, chainId, chainName, nativeCurrency}) => {
 		try {
-			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], {
+			let networkData = {
 				chainId: Number(chainId), symbol: nativeCurrency.symbol, name: chainName, timeout: 1000000
-			});
+			}
+			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], networkData);
 			let currentWallet = await new ethers.Wallet(UNSAFE_PrivateKey, provider);
 			await dispatch({
 				type: contractTypes.SET_PROGRAMMATIC_PROVIDER,
@@ -102,35 +118,34 @@ const BlockChainSwitcher = () => {
 	}
 	
 	return <>
-		{!window.ethereum && <div className='row py-5 w-100 px-0 mx-0'>
-			<hr className='w-100' />
-			<h5 className='col-12'> For tests only! </h5>
-			<div className='col-1' />
-			<input
-				className='col-10 text-center'
-				type='password'
-				value={UNSAFE_PrivateKey}
-				onChange={e => setUNSAFE_PrivateKey(e.target.value)}
-			/>
-			<div className='col-1' />
-			<div className='col-12 text-center'>
-				Use my private key to connect to
+		{!window.ethereum && <div className='row w-100 px-0 mx-0'>
+			<div className='col-12 px-5'>
+				<InputField
+					customClass='form-control'
+					type='password'
+					placeholder='For testing purposes ONLY'
+					getter={UNSAFE_PrivateKey}
+					setter={setUNSAFE_PrivateKey}
+				/>
 			</div>
 			<div className='col-12'>
-				{blockchains.map((item, index) => {
-					if (!item.chainData.rpcUrls) {
-						return <></>
-					}
-					return <button
-						key={index}
-						className={`btn btn-${item.bootstrapColor}`}
-						disabled={currentChain === item.chainData.chainId?.toLowerCase() || UNSAFE_PrivateKey.length !== 64}
-						onClick={async e => {
-							await connectProgrammatically(item.chainData);
-						}}>
-						{item.chainData.chainName}
-					</button>
-				})}
+				<div className='col-12'>
+					{blockchains.map((item, index) => {
+						if (!item.chainData.rpcUrls) {
+							return <div className='d-none' key={index}></div>
+						}
+						return <button
+							key={index}
+							id={`connect_${item.chainData.nativeCurrency.symbol}`}
+							className={`btn btn-${item.bootstrapColor}`}
+							disabled={currentChain === item.chainData.chainId?.toLowerCase() || UNSAFE_PrivateKey.length !== 64}
+							onClick={async e => {
+								await connectProgrammatically(item.chainData);
+							}}>
+							{item.chainData.chainName}
+						</button>
+					})}
+				</div>
 			</div>
 			<hr className='w-100' />
 		</div>}

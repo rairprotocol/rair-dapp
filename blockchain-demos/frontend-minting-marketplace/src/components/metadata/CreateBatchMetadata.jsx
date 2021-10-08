@@ -1,24 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import InputSelect from '../common/InputSelect.jsx';
 import InputField from '../common/InputField.jsx';
 import styled from 'styled-components';
-import { erc721Abi } from '../../contracts';
-import * as ethers from 'ethers';
 import Swal from 'sweetalert2';
+import {rFetch} from '../../utils/rFetch.js';
+import setDocumentTitle from '../../utils/setTitle';
 
 const CreateBatchMetadata = () => {
+	const [fullContractData, setFullContractData] = useState([]);
+
 	const [contractOptions, setContractOptions] = useState([]);
 	const [contractAddress, setContractAddress] = useState('null');
 	const [productOptions, setProductOptions] = useState([]);
 	const [productId, setProductId] = useState('null');
-	const [csvData, setCsvData] = useState('null');
+	const [csvData, setCsvData] = useState(null);
 	const [responseSuccessful, setResponseSuccessful] = useState(false);
 
-	const [contractInstance, setContractInstance] = useState();
-
-	const {factoryInstance, currentUserAddress, programmaticProvider} = useSelector(state => state.contractStore);
+	const [contractInstance, ] = useState();
 
 	const params = useParams();
 
@@ -46,75 +45,61 @@ const CreateBatchMetadata = () => {
 			setResponseSuccessful(response?.success);
 			if (response?.success) {
 				Swal.fire('Success',`Generated ${response.result.length} metadata entries!`,'success');
+			} else {
+				Swal.fire('Error',response?.message,'error');
 			}
 		}
 	}
 
-	const fetchFactoryData = useCallback(async () => {
-		if (!factoryInstance || !currentUserAddress) {
-			return;
-		}
-		let contractsCreated = await factoryInstance.getContractCountOf(currentUserAddress);
-		let finalContractList = []
-		for await (let contractNumber of [...Array(Number(contractsCreated.toString())).keys()]) {
-			let address = await factoryInstance.ownerToContracts(currentUserAddress, contractNumber)
-			let signer = programmaticProvider;
-			if (window.ethereum) {
-				let provider = new ethers.providers.Web3Provider(window.ethereum);
-				signer = provider.getSigner(0);
+	const fetchContractsData = useCallback(async () => {
+		let finalContractData = [];
+		let contractData = await rFetch(`/api/contracts/`)
+		if (contractData.success) {
+			for await (let contract of contractData.contracts) {
+				let contractDetails = await rFetch(`/api/contracts/${contract.contractAddress}`);
+				if (contractDetails.success) {
+					let productsInfo = await rFetch(`/api/contracts/${contract.contractAddress}/products`);
+					if (productsInfo.success && productsInfo.products.length) {
+						contractDetails.contract.products = productsInfo.products;
+						finalContractData.push(contractDetails.contract);
+					}
+				}
 			}
-			let instance = new ethers.Contract(address, erc721Abi, signer);
-			setContractInstance(instance);
-			finalContractList.push({
-				value: address,
-				label: `${await instance.name()} (${address})`
-			});
 		}
-		setContractOptions(finalContractList);
-		if (finalContractList.filter(i => i.value === params.contract).length) {
+		setFullContractData(finalContractData);
+		setContractOptions(finalContractData.map(item => ({
+			label: `${item.title} on ${item.blockchain} (${item.contractAddress})`, value: item.contractAddress
+		})));
+		if (finalContractData.filter(i => i.contractAddress === params.contract).length) {
 			setContractAddress(params.contract);
 		}
-	}, [factoryInstance, currentUserAddress, programmaticProvider, params])
-
-	const fetchProductData = useCallback(async () => {
-		if (!contractInstance) {
-			return;
-		}
-		let productCount = Number((await contractInstance.getProductCount()).toString());
-		let finalProductList = [];
-		for await (let productNumber of [...Array(Number(productCount.toString())).keys()]) {
-			let productInfo = await contractInstance.getProduct(productNumber);
-			finalProductList.push({
-				value: productNumber,
-				label: `${productInfo.productName} (${productNumber})`
-			})
-		}
-		setProductOptions(finalProductList);
-		if (finalProductList.filter(i => i.value === Number(params.product)).length) {
-			setProductId(params.product);
-		}
-	}, [contractInstance, params])
+	}, [params])
 
 	useEffect(() => {
-		fetchFactoryData();
-	}, [fetchFactoryData]);
+		fetchContractsData();
+	}, [fetchContractsData]);
 
 	useEffect(() => {
-		fetchProductData();
-	}, [fetchProductData]);
+		setDocumentTitle(`Batch Metadata Upload`);
+	}, [])
 
 	useEffect(() => {
 		if (contractAddress === 'null') {
 			return;
 		}
-		let signer = programmaticProvider;
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
+		let [aux] = fullContractData.filter(i => i.contractAddress === contractAddress);
+		setProductOptions(aux.products.map(item => {
+			return {
+				value: item.collectionIndexInContract,
+				label: `${item.name} (${item.collectionIndexInContract})`
+			}
+		}))
+		if (params?.contract === contractAddress) {
+			setProductId(params.product);
+		} else {
+			setProductId('null');
 		}
-		let instance = new ethers.Contract(contractAddress, erc721Abi, signer);
-		setContractInstance(instance);
-	}, [contractAddress, programmaticProvider])
+	}, [contractAddress, fullContractData, params])
 
 	return (
 		<Form onSubmit={onSubmit}>

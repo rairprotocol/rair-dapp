@@ -48,11 +48,13 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
       })
     ).json();
 
-    const contracts = responseContract.contracts.map((item) => ({
-      value: item.contractAddress,
-      label: item.contractAddress,
-    }));
-    setContractOptions(contracts);
+    if (responseContract.success) {
+      const contracts = responseContract.contracts.map((item) => ({
+        value: item.contractAddress,
+        label: item.contractAddress,
+      }));
+      setContractOptions(contracts);
+    }
   };
 
   const getProduct = async () => {

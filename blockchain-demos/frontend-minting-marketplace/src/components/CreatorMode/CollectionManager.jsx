@@ -114,7 +114,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 			<button
 				disabled={locked <= 0}
 				onClick={e => locker(productIndex, rangeInit, endingRange, locked)}
-				className='btn btn-success h-50'>
+				className='btn btn-royal-ice h-50'>
 				<i className='fas fa-lock' />
 			</button>
 		</th>
@@ -240,7 +240,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 						});
 						setRanges(aux);
 					}}
-					className='btn btn-success'>
+					className='btn btn-royal-ice'>
 					<i className='fas fa-plus' />
 				</button>
 				<h5> On the Minter Marketplace </h5>

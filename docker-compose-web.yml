@@ -42,6 +42,20 @@ services:
       - 5000:5000
     networks:
       - rair-local
+  blockchain-networks:
+    image: raitechinc/blockchain-event-listener:dev_latest
+      context: blockchain-networks-service/
+      dockerfile: Dockerfile
+    environment:
+      PRODUCTION: "false"
+      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      PINATA_SECRET: ${pinata_secret}
+      INFURA_PROJECT_ID: ${infura_project_id}
+    ports:
+      - 5001:5001
+    networks:
+      - rair-local
   rairfront:
     container_name: 'rairfront'
     image: rairtechinc/rairfront:dev_latest
@@ -69,6 +83,11 @@ services:
     expose:
       - "80"
     image: rairtechinc/minting-network:dev_latest
+    environment:
+      REACT_APP_SENTRY_ENABLED: ${sentry_enabled}
+      REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
+      REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
+      REACT_APP_SENTRY_RELEASE: ${sentry_release}
     ports:
       - 3001:3001
     networks:
