@@ -82,7 +82,7 @@ const NftItem = ({
     // return "rgb(" + r + "," + g + "," + b + ")";
   }
   function arrayMin(arr) {
-    var len = arr.length,
+    let len = arr.length,
       min = Infinity;
     while (len--) {
       if (arr[len] < min) {
@@ -93,7 +93,7 @@ const NftItem = ({
   }
 
   function arrayMax(arr) {
-    var len = arr.length,
+    let len = arr.length,
       max = -Infinity;
     while (len--) {
       if (arr[len] > max) {
@@ -381,7 +381,7 @@ const NftItem = ({
                           </div>
                         );
                       }
-                      const percent = randomInteger(1, 100);
+                      const percent = randomInteger(1, 40);
                       return (
                         <div
                           key={index}
