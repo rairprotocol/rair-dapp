@@ -82,57 +82,7 @@ Returns founded user
             "creationDate": "2021-09-21T14:43:51.589Z",
             "copies": 11
           },
-          {
-            "_id": "61532a25a305c5001db4eaa7",
-            "soldCopies": 0,
-            "sold": false,
-            "range": [
-              0,
-              4
-            ],
-            "offerName": "Deluxe",
-            "offerIndex": 0,
-            "contract": "contractAddress",
-            "product": 0,
-            "offerPool": 14,
-            "price": 2000000,
-            "creationDate": "2021-09-28T14:43:49.668Z",
-            "copies": 5
-          },
-          {
-            "_id": "61532a25a305c5001db4eaa9",
-            "soldCopies": 0,
-            "sold": false,
-            "range": [
-              5,
-              15
-            ],
-            "offerName": "Special",
-            "offerIndex": 1,
-            "contract": "contractAddress",
-            "product": 0,
-            "offerPool": 14,
-            "price": 300000,
-            "creationDate": "2021-09-28T14:43:49.712Z",
-            "copies": 11
-          },
-          {
-            "_id": "61532a25a305c5001db4eaab",
-            "soldCopies": 0,
-            "sold": false,
-            "range": [
-              16,
-              29
-            ],
-            "offerName": "Standard",
-            "offerIndex": 2,
-            "contract": "contractAddress",
-            "product": 0,
-            "offerPool": 14,
-            "price": 40000,
-            "creationDate": "2021-09-28T14:43:49.715Z",
-            "copies": 14
-          }
+          ...
         ]
       }
     },
