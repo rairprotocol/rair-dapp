@@ -87,8 +87,32 @@ module.exports = context => {
         {
           $lookup: {
             from: 'Offer',
-            localField: 'offerPools.marketplaceCatalogIndex',
-            foreignField: 'offerPool',
+            let: {
+              contr: '$contractAddress',
+              productIndex: '$products.collectionIndexInContract',
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contr'
+                        ]
+                      },
+                      {
+                        $eq: [
+                          '$product',
+                          '$$productIndex'
+                        ]
+                      },
+                    ]
+                  }
+                }
+              }
+            ],
             as: 'products.offers'
           }
         }
