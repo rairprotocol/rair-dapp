@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import setTitle from './utils/setTitle';
-import jwt_decode from "jwt-decode";
-import jsonwebtoken from 'jsonwebtoken'
 
 import './App.css';
 import * as ethers from 'ethers'
@@ -146,6 +144,11 @@ function App({ sentryHistory }) {
 				let token = await getJWT(signer, user, currentUser);
 				localStorage.setItem('token', token);
 			}
+			if(!isTokenValid(localStorage.token)) {
+				let token = await getJWT(signer, user, currentUser);
+				localStorage.setItem('token', token);
+			}
+
 			setStartedLogin(false);
 			setLoginDone(true);
 		} catch (err) {
@@ -181,6 +184,7 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
+				{!localStorage.token && <Redirect to="/" />}
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 				<div
 					style={{
