@@ -6,9 +6,9 @@ module.exports = context => {
   const router = express.Router();
 
   // Get metadata of specific NFT token by contract name, product name, offer name and token id
-  router.get('/:adminToken/:contractName/:productName/:offerName', async (req, res, next) => {
+  router.get('/:adminToken/:contractName/:productName', async (req, res, next) => {
     try {
-      const { adminToken, contractName, productName, offerName } = req.params;
+      const { adminToken, contractName, productName } = req.params;
       const adminContract = process.env.ADMIN_CONTRACT.toLowerCase();
       const user = await context.db.User.findOne({ adminNFT: `${ adminContract }:${ adminToken }` }, { publicAddress: 1 });
 
@@ -16,7 +16,7 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'User not found.' });
       }
 
-      const tokens = await context.db.Contract.aggregate([
+      const [product] = await context.db.Contract.aggregate([
         { $match: { user: user.publicAddress, title: contractName } },
         {
           $lookup: {
@@ -47,16 +47,16 @@ module.exports = context => {
                 }
               }
             ],
-            as: 'Product'
+            as: 'products'
           }
         },
-        { $unwind: '$Product' },
+        { $unwind: '$products' },
         {
           $lookup: {
             from: 'OfferPool',
             let: {
               contr: '$contractAddress',
-              productIndex: '$Product.collectionIndexInContract'
+              prod: '$products.collectionIndexInContract'
             },
             pipeline: [
               {
@@ -72,7 +72,7 @@ module.exports = context => {
                       {
                         $eq: [
                           '$product',
-                          '$$productIndex'
+                          '$$prod'
                         ]
                       }
                     ]
@@ -80,90 +80,31 @@ module.exports = context => {
                 }
               }
             ],
-            as: 'OfferPool'
+            as: 'offerPools'
           }
         },
-        { $unwind: '$OfferPool' },
+        { $unwind: '$offerPools' },
         {
           $lookup: {
             from: 'Offer',
-            let: {
-              contr: '$contractAddress',
-              productIndex: '$Product.collectionIndexInContract',
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          '$contract',
-                          '$$contr'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$product',
-                          '$$productIndex'
-                        ]
-                      },
-                    ]
-                  }
-                }
-              }
-            ],
-            as: 'Offer'
+            localField: 'offerPools.marketplaceCatalogIndex',
+            foreignField: 'offerPool',
+            as: 'products.offers'
           }
-        },
-        { $unwind: '$Offer' },
-        {
-          $lookup: {
-            from: 'MintedToken',
-            let: {
-              contr: '$contractAddress',
-              offerPoolIndex: '$OfferPool.marketplaceCatalogIndex',
-              offerIndex: '$Offer.offerIndex',
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          '$contract',
-                          '$$contr'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$offerPool',
-                          '$$offerPoolIndex'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$offer',
-                          '$$offerIndex'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            as: 'Tokens'
-          }
-        },
-        { $unwind: '$Tokens' }
+        }
       ]);
 
-      if (_.isEmpty(tokens)) {
-        return res.status(404).send({ success: false, message: 'Token not found.' });
+      if (_.isEmpty(product)) {
+        return res.status(404).send({ success: false, message: 'Product or contract not found.' });
       }
 
-      res.json({ success: true, tokens });
+      const tokens = await context.db.MintedToken.find({ contract: product.contractAddress, offerPool: product.offerPools.marketplaceCatalogIndex });
+
+      if (_.isEmpty(tokens)) {
+        return res.status(404).send({ success: false, message: 'Tokens not found.' });
+      }
+
+      res.json({ success: true, result: { product: _.omit(product, ['offerPools']), tokens } });
     } catch (e) {
       next(e);
     }
