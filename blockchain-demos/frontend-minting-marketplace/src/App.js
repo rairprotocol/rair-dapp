@@ -240,6 +240,9 @@ function App({sentryHistory}) {
 								<SentryRoute path='/all'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
+								<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
+									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+								</SentryRoute>
 								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />

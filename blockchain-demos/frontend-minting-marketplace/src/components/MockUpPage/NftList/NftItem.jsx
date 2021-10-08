@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -13,6 +13,7 @@ import {
 // import VideoList from "../../video/videoList";
 import SelectBox from "../SelectBox/SelectBox";
 // import 'react-accessible-accordion/dist/fancy-example.css';
+import { useLocation, useParams } from "react-router-dom";
 Modal.setAppElement("#root");
 
 const NftItem = ({
@@ -27,8 +28,26 @@ const NftItem = ({
   const [metadata, setMetadata] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
-  // debugger
+
   let subtitle;
+  const location = useLocation();
+
+  // get location (useLocation)
+  const RedirectModal = async () => {
+    const { adminToken, contract, product, offer, token } = useParams();
+    const response = await (
+      await fetch(`/api/${adminToken}/${contract}/${product}`, {
+        method: "GET",
+      })
+    ).json();
+  };
+
+  useEffect(() => {
+    console.log({ location });
+    // check location with regex
+    //if true => send request, setSelected, openModal
+  }, []);
+  // getData fetch, filter bu offer and token
 
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
@@ -276,7 +295,7 @@ const NftItem = ({
               justifyContent: "space-between",
               marginBottom: "1rem",
               padding: "2rem",
-              alignItems: 'center',
+              alignItems: "center",
             }}
           >
             <div>
@@ -329,9 +348,16 @@ const NftItem = ({
             <div>
               <span>Serial number</span>
               <div>
-                <SelectBox  primaryColor={primaryColor} selectItem={onSelect} items={metadata.length && metadata.map((e) =>{
-                  return {value: e.name, id: getIndexFromName(e.name)}
-                } )}>
+                <SelectBox
+                  primaryColor={primaryColor}
+                  selectItem={onSelect}
+                  items={
+                    metadata.length &&
+                    metadata.map((e) => {
+                      return { value: e.name, id: getIndexFromName(e.name) };
+                    })
+                  }
+                >
                   {/* {metadata &&
                     metadata.map((e, index) => (
                       <option key={index}>{e.name}</option>
@@ -339,9 +365,11 @@ const NftItem = ({
                 </SelectBox>
               </div>
             </div>
-            <div style={{
-              marginTop:'18px'
-            }}>
+            <div
+              style={{
+                marginTop: "18px",
+              }}
+            >
               <button
                 style={{
                   width: "228px",
