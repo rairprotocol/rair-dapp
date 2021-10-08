@@ -71,6 +71,14 @@ module.exports = async (context) => {
         break;
       case 'sync offerPools & offers':
         info = { network: task.attrs.data.network };
+        await agenda.create('sync tokens', task.attrs.data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
+      case 'sync tokens':
+        info = { network: task.attrs.data.network };
         break;
       default:
         break;

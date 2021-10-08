@@ -36,12 +36,17 @@ module.exports = (context) => {
             const copies = (end - start) + 1;
 
             productsForSave.push({
-              name: productName,
-              collectionIndexInContract: productIndex,
-              contract: erc721Instance.address,
-              copies,
-              soldCopies: copies - left,
-              firstTokenIndex: start
+              updateOne: {
+                filter: { contract, collectionIndexInContract: productIndex },
+                update: {
+                  name: productName,
+                  copies,
+                  soldCopies: copies - left,
+                  firstTokenIndex: start
+                },
+                upsert: true,
+                setDefaultsOnInsert: true
+              }
             });
 
             // TODO: ranges have to be unique inside of collection
@@ -69,7 +74,7 @@ module.exports = (context) => {
 
       if (!_.isEmpty(productsForSave)) {
         try {
-          await context.db.Product.insertMany(productsForSave, { ordered: false });
+          await context.db.Product.bulkWrite(productsForSave, { ordered: false });
         } catch (e) {
         }
       }
