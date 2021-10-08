@@ -201,13 +201,13 @@ function App({sentryHistory}) {
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: 'My NFTs', route: '/my-nft'},
-							{name: 'My Contracts', route: '/new-factory', disabled: !loginDone},
-							{name: 'For Sale', route: '/on-sale', disabled: !loginDone},
-							{name: 'Admin', route: '/admin', disabled: !loginDone},
+							{name: <i className="fa fa-id-card" aria-hidden="true"/> , route: '/new-factory', disabled: !loginDone},
+							{name: <i className="fa fa-shopping-cart" aria-hidden="true"/>, route: '/on-sale', disabled: !loginDone},
+							{name: <i className="fa fa-user-secret" aria-hidden="true"/>, route: '/admin', disabled: !loginDone},
 							{name: 'All', route: '/all', disabled: !loginDone},
 							{name: 'Latest', route: '/latest'},
-							{name: 'Hot', route: '/hot'},
-							{name: 'Ending', route: '/ending'},
+							{name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot'},
+							{name: <i className="fas fa-hourglass-end"/>, route: '/ending'},
 							{name: 'Factory', route: '/factory', disabled: factoryInstance === undefined},
 							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
