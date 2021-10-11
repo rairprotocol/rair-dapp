@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -28,38 +28,42 @@ const NftItem = ({
   const [allProducts, setAllProducts] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [data,setData] = useState()
+  // const [data,setData] = useState()
 
   let subtitle;
   const location = useLocation();
   const { adminToken, contract, product, offer, token } = useParams();
 
-
   // get location (useLocation)
   const getData = async () => {
-    if( adminToken &&  contract && product){
+    if (adminToken && contract && product) {
       const response = await (
         await fetch(`/api/${adminToken}/${contract}/${product}`, {
           method: "GET",
-        })).json();
-        setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
-        console.log(data);
-      } else return null
-
+        })
+      ).json();
+      const data = response.result?.tokens.find(
+        (data) => String(data.token) === token
+      );
+      console.log({ data });
+      return data;
+      // return setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
+      // console.log(data);
+    } else return null;
   };
-
-  useEffect( () => {
-     const data = getData();
-    if(data){
-      setSelected(data);
-      setIsOpen(true);
-    } 
-
-    console.log( location);
-    console.log(data );
-
+  const waitResponse = async () => {
+    const data = await getData();
+    if (data && data.metadata) {
+      setSelected(data.metadata);
+      // setIsOpen(true);
+      openModal();
+    }
+    // console.log( location);
+    // console.log(data, 'data' );
+  };
+  useEffect(() => {
+    waitResponse();
   }, []);
-
 
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
@@ -71,12 +75,12 @@ const NftItem = ({
   }
   function onSelect(id) {
     // const index = getIndexFromName(text);
-  
-    allProducts.forEach(p => {
-      if(p._id === id){
-        setSelected(p.metadata)
+
+    allProducts.forEach((p) => {
+      if (p._id === id) {
+        setSelected(p.metadata);
       }
-    })
+    });
   }
 
   function percentToRGB(percent) {
@@ -132,8 +136,6 @@ const NftItem = ({
   const minPrice = arrayMin(price);
   const maxPrice = arrayMax(price);
 
-  // console.log([minPrice, "min", maxPrice, "max"]);
-  // drop down end
   const customStyles = {
     content: {
       top: "50%",
@@ -187,7 +189,12 @@ const NftItem = ({
     // const metadata = responseAllProduct.result.map((item) => item.metadata);
     // debugger;
     setAllProducts(responseAllProduct.result);
-    setSelected(responseAllProduct.result[0].metadata);
+    // if (!Object.keys(selected).length) setSelected(responseAllProduct.result[0].metadata);
+    if (!selected) setSelected(responseAllProduct.result[0].metadata);
+  };
+  const x = () => {
+    openModal();
+    if (allProducts.length) setSelected(allProducts[0].metadata);
   };
 
   function openModal() {
@@ -205,7 +212,7 @@ const NftItem = ({
   return (
     <>
       <button
-        onClick={openModal}
+        onClick={x}
         className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
         style={{
           height: "291px",
@@ -354,16 +361,15 @@ const NftItem = ({
                   primaryColor={primaryColor}
                   selectItem={onSelect}
                   items={
-                    allProducts.length && allProducts.map((p) => {
-
-                        return { value: p.metadata.name, id: p._id };
+                    allProducts.length &&
+                    allProducts.map((p) => {
+                      return { value: p.metadata.name, id: p._id };
                       // return p.metadata map((e) => {
                       //   return { value: e.name, id: p._id };
                       // })
                     })
                   }
-                >
-                </SelectBox>
+                ></SelectBox>
               </div>
             </div>
             <div
@@ -393,52 +399,56 @@ const NftItem = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <div className="col-12 row mx-0">
-                  {selected ?
-                  Object.keys(selected).length &&
-                    selected?.attributes.map((item, index) => {
-                      if (item.trait_type === "External URL") {
+                  {selected
+                    ? Object.keys(selected).length &&
+                      selected?.attributes.map((item, index) => {
+                        if (item.trait_type === "External URL") {
+                          return (
+                            <div
+                              key={index}
+                              className="col-4 my-2 p-1 custom-desc-to-offer"
+                              style={{ color: textColor, textAlign: "center" }}
+                            >
+                              <span>{item?.trait_type}:</span>
+                              <br />
+                              <a
+                                style={{ color: textColor }}
+                                href={item?.value}
+                              >
+                                {item?.value}
+                              </a>
+                            </div>
+                          );
+                        }
+                        const percent = randomInteger(1, 40);
                         return (
                           <div
                             key={index}
                             className="col-4 my-2 p-1 custom-desc-to-offer"
-                            style={{ color: textColor, textAlign: "center" }}
                           >
-                            <span>{item?.trait_type}:</span>
-                            <br />
-                            <a style={{ color: textColor }} href={item?.value}>
-                              {item?.value}
-                            </a>
-                          </div>
-                        );
-                      }
-                      const percent = randomInteger(1, 40);
-                      return (
-                        <div
-                          key={index}
-                          className="col-4 my-2 p-1 custom-desc-to-offer"
-                        >
-                          <div
-                            style={{
-                              padding: "0.1rem 1rem",
-                              textAlign: "center",
-                            }}
-                          >
-                            <span>{item?.trait_type}:</span>
-                            <span style={{ color: textColor }}>
-                              {item?.value}
+                            <div
+                              style={{
+                                padding: "0.1rem 1rem",
+                                textAlign: "center",
+                              }}
+                            >
+                              <span>{item?.trait_type}:</span>
+                              <span style={{ color: textColor }}>
+                                {item?.value}
+                              </span>
+                            </div>
+                            <span
+                              style={{
+                                marginLeft: "15rem",
+                                color: percentToRGB(percent),
+                              }}
+                            >
+                              {percent} %
                             </span>
                           </div>
-                          <span
-                            style={{
-                              marginLeft: "15rem",
-                              color: percentToRGB(percent),
-                            }}
-                          >
-                            {percent} %
-                          </span>
-                        </div>
-                      );
-                    }) : null}
+                        );
+                      })
+                    : null}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
