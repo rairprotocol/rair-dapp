@@ -79,6 +79,14 @@ li {
   -webkit-text-fill-color: transparent;
 }
 
+.active-rhyno {
+  color:black;
+  padding: 1rem;
+  border-radius: .25rem;
+  background-color:var(--rhyno-80);
+  border-color:var(--rhyno-60);
+}
+
 .btn-rhyno {
   color: black;
   background-color: var(--rhyno);
@@ -115,6 +123,16 @@ li {
   color:black;
   background-color:var(--rhyno);
   border-color:var(--rhyno)
+}
+
+.active-charcoal {
+  color:white;
+  padding: 1rem;
+  border-radius: .25rem;
+  background-color:var(--charcoal-80);
+  border-color:var(--charcoal-60);
+  padding-top: 1rem!important;
+  padding-bottom: 1rem!important;
 }
 
 .btn-charcoal {
@@ -242,6 +260,13 @@ li {
   border-radius: 50%;
   background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
 }
+
+/* .active-link {
+  color: white;
+  background-color: var(--charcoal);
+  border-color: var(--charcoal);
+  border-radius: .25rem!important;
+} */
 
 /* style to App (Connect Wallet) */
 
