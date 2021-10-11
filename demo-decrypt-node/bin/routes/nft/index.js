@@ -98,6 +98,8 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'Product not found.' });
       }
 
+      const foundTokens = await context.db.MintedToken.find({ contract: sanitizedContract, offerPool: _.head(offerPools).marketplaceCatalogIndex  });
+
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
         .pipe(csv({
           mapHeaders: ({ header, index }) => {
@@ -139,26 +141,29 @@ module.exports = context => {
                     return re;
                   }, [])
                   .value();
+                const isExist = !!_.find(foundTokens, t => t.offer === offerPool.offer.offerIndex && t.token === token);
 
-                forSave.push({
-                  token,
-                  ownerAddress: sanitizedOwnerAddress,
-                  offerPool: offerPool.marketplaceCatalogIndex,
-                  offer: offerPool.offer.offerIndex,
-                  contract: sanitizedContract,
-                  uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
-                  isMinted: false,
-                  metadata: {
-                    name: record.name,
-                    description: record.description,
-                    artist: record.artist,
-                    external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
-                    image: record.image,
-                    attributes: attributes
-                  }
-                });
+                if (!isExist) {
+                  forSave.push({
+                    token,
+                    ownerAddress: sanitizedOwnerAddress,
+                    offerPool: offerPool.marketplaceCatalogIndex,
+                    offer: offerPool.offer.offerIndex,
+                    contract: sanitizedContract,
+                    uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
+                    isMinted: false,
+                    metadata: {
+                      name: record.name,
+                      description: record.description,
+                      artist: record.artist,
+                      external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                      image: record.image,
+                      attributes: attributes
+                    }
+                  });
 
-                tokens.push(token);
+                  tokens.push(token);
+                }
               }
             });
 
@@ -173,14 +178,12 @@ module.exports = context => {
       await removeTempFile(roadToFile);
 
       if (_.isEmpty(forSave)) {
-        return res.json({ success: false, message: 'Don\'t have tokens for creating.' });
+        return res.json({ success: false, message: 'Don\'t have tokens for creation.' });
       }
 
       try {
         await context.db.MintedToken.insertMany(forSave, { ordered: false });
-      } catch (err) {
-        log.error(err);
-      }
+      } catch (err) {}
 
       const result = await context.db.MintedToken.find({
         contract: sanitizedContract,
