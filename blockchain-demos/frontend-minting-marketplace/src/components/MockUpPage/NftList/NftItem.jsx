@@ -28,37 +28,35 @@ const NftItem = ({
   const [metadata, setMetadata] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [data,setData] = useState()
+  const [data, setData] = useState()
 
   let subtitle;
   const location = useLocation();
   const { adminToken, contract, product, offer, token } = useParams();
-
+  console.log(product, "log");
 
   // get location (useLocation)
   const getData = async () => {
-    if( adminToken &&  contract && product){
+    if (adminToken && contract && product) {
       const response = await (
-        await fetch(`/api/${adminToken}/${contract}/${product}`, {
+        await fetch(`/api/${adminToken}/${contract}/${product}/${offer}/${token}`, {
           method: "GET",
         })).json();
-        setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
-        console.log(data);
-      } else return null
-
+      setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
+      console.log(response)
+      console.log(data);
+    } else return null;
   };
 
-  useEffect( () => {
-     const data = getData();
-    if(data){
+  useEffect(() => {
+    const data = getData();
+    console.log(data)
+    if (location.pathname === `/${adminToken}/${contract}/${product}/${offer}/${token}`) {
       setSelected(data);
-      setIsOpen(true);
-    } 
+      setIsOpen(prev => !prev);
+    }
 
-    console.log( location);
-    console.log(data );
-
-  }, []);
+  }, [data]);
 
 
   function randomInteger(min, max) {
