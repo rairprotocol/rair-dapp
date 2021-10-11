@@ -20,7 +20,7 @@ const NftItem = ({
   price,
   pict,
   onClick,
-  contract,
+  contractName,
   collectionIndexInContract,
   primaryColor,
   textColor,
@@ -28,26 +28,38 @@ const NftItem = ({
   const [metadata, setMetadata] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [data,setData] = useState()
 
   let subtitle;
   const location = useLocation();
+  const { adminToken, contract, product, offer, token } = useParams();
+
 
   // get location (useLocation)
-  const RedirectModal = async () => {
-    const { adminToken, contract, product, offer, token } = useParams();
-    const response = await (
-      await fetch(`/api/${adminToken}/${contract}/${product}`, {
-        method: "GET",
-      })
-    ).json();
+  const getData = async () => {
+    if( adminToken &&  contract && product){
+      const response = await (
+        await fetch(`/api/${adminToken}/${contract}/${product}`, {
+          method: "GET",
+        })).json();
+        setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
+        console.log(data);
+      } else return null
+
   };
 
-  useEffect(() => {
-    console.log({ location });
-    // check location with regex
-    //if true => send request, setSelected, openModal
+  useEffect( () => {
+     const data = getData();
+    if(data){
+      setSelected(data);
+      setIsOpen(true);
+    } 
+
+    console.log( location);
+    console.log(data );
+
   }, []);
-  // getData fetch, filter bu offer and token
+
 
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
@@ -172,7 +184,7 @@ const NftItem = ({
 
   const getAllProduct = async () => {
     const responseAllProduct = await (
-      await fetch(`/api/nft/${contract}/${collectionIndexInContract}`, {
+      await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
         method: "GET",
       })
     ).json();

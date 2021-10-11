@@ -198,18 +198,18 @@ function App({sentryHistory}) {
 								{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
 							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 						</button></div> : [
+							{name: <i className="fas fa-photo-video"/>, route: '/all', disabled: !loginDone},
 							{name: <i className='fas fa-search' />, route: '/search'},
 							{name: <i className='fas fa-user' />, route: '/user'},
-							{name: 'My NFTs', route: '/my-nft'},
+							{name: <i className="fas fa-key"/>, route: '/my-nft'},
 							{name: <i className="fa fa-id-card" aria-hidden="true"/> , route: '/new-factory', disabled: !loginDone},
 							{name: <i className="fa fa-shopping-cart" aria-hidden="true"/>, route: '/on-sale', disabled: !loginDone},
 							{name: <i className="fa fa-user-secret" aria-hidden="true"/>, route: '/admin', disabled: !loginDone},
-							{name: 'All', route: '/all', disabled: !loginDone},
-							{name: 'Latest', route: '/latest'},
+							{name: <i className="fas fa-history" />, route: '/latest'},
 							{name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot'},
 							{name: <i className="fas fa-hourglass-end"/>, route: '/ending'},
-							{name: 'Factory', route: '/factory', disabled: factoryInstance === undefined},
-							{name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined}
+							{name: <i className="fas fa-city"/>, route: '/factory', disabled: factoryInstance === undefined},
+							{name: <i className="fas fa-shopping-basket"/>, route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
 							if (!item.disabled) {
 								return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
