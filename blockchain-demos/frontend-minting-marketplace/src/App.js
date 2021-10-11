@@ -58,8 +58,6 @@ function App({ sentryHistory }) {
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
-	const [jwtValid, setJwtValid] = useState(false);
-
 	const connectUserData = async () => {
 		setStartedLogin(true);
 		let currentUser;
@@ -144,7 +142,7 @@ function App({ sentryHistory }) {
 				let token = await getJWT(signer, user, currentUser);
 				localStorage.setItem('token', token);
 			}
-			if(!isTokenValid(localStorage.token)) {
+			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
 				localStorage.setItem('token', token);
 			}
@@ -155,6 +153,15 @@ function App({ sentryHistory }) {
 			console.log('Error', err)
 		}
 	};
+
+	const checkToken = useCallback(() => {
+		const token = localStorage.getItem('token');
+		if (isTokenValid(token)) {
+			console.log('good');
+		} else if (!isTokenValid(token)) {
+			connectUserData()
+		}
+	}, [token])
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -167,15 +174,6 @@ function App({ sentryHistory }) {
 	useEffect(() => {
 		setTitle('Welcome');
 	}, [])
-
-	const checkToken = useCallback(() => {
-		const token = localStorage.getItem('token');
-		if (isTokenValid(token)) {
-			console.log('good');
-		} else if (!isTokenValid(token)) {
-			connectUserData()
-		}
-	}, [token])
 
 	useEffect(() => {
 		checkToken();

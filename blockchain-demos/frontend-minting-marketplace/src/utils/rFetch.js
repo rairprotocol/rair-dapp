@@ -122,5 +122,4 @@ const isTokenValid = (token) => {
 	return false;
 }
 
-
 export { rFetch, signIn, getJWT, isTokenValid };
