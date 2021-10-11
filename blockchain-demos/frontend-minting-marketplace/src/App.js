@@ -212,7 +212,7 @@ function App({sentryHistory}) {
 							{name: <i className="fas fa-shopping-basket"/>, route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
 							if (!item.disabled) {
-								return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+								return <div style={{width: "56px", height: "56px"}} key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
 									<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
 										{item.name}
 									</NavLink>
