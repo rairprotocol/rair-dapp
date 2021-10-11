@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Router, Switch, Route, Link, Redirect } from 'react-router-dom';
+import { Router, Switch, Route, Redirect, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import setTitle from './utils/setTitle';
 
@@ -213,9 +213,9 @@ function App({sentryHistory}) {
 						].map((item, index) => {
 							if (!item.disabled) {
 								return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
-									<Link className='py-3' to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
+									<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
 										{item.name}
-									</Link>
+									</NavLink>
 								</div>
 							}
 							return <div key={index}></div>
