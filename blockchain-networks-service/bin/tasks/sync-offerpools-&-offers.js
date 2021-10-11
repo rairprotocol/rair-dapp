@@ -1,6 +1,7 @@
 const ethers = require('ethers');
 const _ = require('lodash');
 const log = require('../utils/logger')(module);
+const providers = require('../integrations/ethers/providers');
 const { abi: MinterAbi } = require('../integrations/ethers/contracts/Minter_Marketplace.json');
 const { BigNumberFromFunc, BigNumber } = require('../utils/helpers');
 
@@ -9,10 +10,11 @@ const lockLifetime = 1000 * 60 * 5; // 5 minutes - This could become very expens
 module.exports = (context) => {
   context.agenda.define('sync offerPools & offers', { lockLifetime }, async (task, done) => {
     try {
-      const { providerData, network } = task.attrs.data;
+      const { network, name } = task.attrs.data;
       const offerPoolsForSave = [];
       const offersForSave = [];
-      const provider = new ethers.providers.JsonRpcProvider(providerData.url, providerData.network);
+      const providerData = _.find(providers, p => p.network === network);
+      const provider = providerData.provider;
       const minterInstance = await new ethers.Contract(providerData.minterAddress, MinterAbi, provider);
       const products = await context.db.Contract.aggregate([
         { $match: { blockchain: network } },

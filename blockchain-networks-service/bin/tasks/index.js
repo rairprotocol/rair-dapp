@@ -49,42 +49,38 @@ module.exports = async (context) => {
   });
 
   agenda.on('success', async task => {
-    let info = {};
+    let data = task.attrs.data;
     let additionalInfo = '';
 
     switch (task.attrs.name) {
       case 'sync contracts':
-        info = { network: task.attrs.data.network };
-        await agenda.create('sync products & locks', task.attrs.data)
+        await agenda.create('sync products & locks', data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
       case 'sync products & locks':
-        info = { network: task.attrs.data.network };
-        await agenda.create('sync offerPools & offers', task.attrs.data)
+        await agenda.create('sync offerPools & offers', data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
       case 'sync offerPools & offers':
-        info = { network: task.attrs.data.network };
-        await agenda.create('sync tokens', task.attrs.data)
+        await agenda.create('sync tokens', data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
       case 'sync tokens':
-        info = { network: task.attrs.data.network };
         break;
       default:
         break;
     }
 
-    log.info(`Agenda [${ task.attrs.name }][${ task.attrs._id }] > processed with data ${ JSON.stringify(info) }. ${ additionalInfo }`);
+    log.info(`Agenda [${ task.attrs.name }][${ task.attrs._id }] > processed with data ${ JSON.stringify(data) }. ${ additionalInfo }`);
   });
 
   agenda.on('fail', (err) => {

@@ -1,6 +1,7 @@
 const ethers = require('ethers');
 const _ = require('lodash');
 const log = require('../utils/logger')(module);
+const providers = require('../integrations/ethers/providers');
 const { abi: Token } = require('../integrations/ethers/contracts/RAIR_ERC721.json');
 const { BigNumberFromFunc, BigNumber } = require('../utils/helpers');
 
@@ -9,11 +10,12 @@ const lockLifetime = 1000 * 60 * 5; // 5 minutes - This could become very expens
 module.exports = (context) => {
   context.agenda.define('sync tokens', { lockLifetime }, async (task, done) => {
     try {
-      const { providerData, network } = task.attrs.data;
+      const { network, name } = task.attrs.data;
       const tokensForSave = [];
       const offersForUpdate = [];
+      const providerData = _.find(providers, p => p.network === network);
+      const provider = providerData.provider;
       const arrayOfContracts = await context.db.Contract.find({ blockchain: network }).distinct('contractAddress');
-      const provider = new ethers.providers.JsonRpcProvider(providerData.url, providerData.network);
 
       await Promise.all(_.map(arrayOfContracts, async contractAddress => {
         const tokenInstance = new ethers.Contract(contractAddress, Token, provider);
@@ -36,6 +38,8 @@ module.exports = (context) => {
             });
 
             const token = tokenId - foundProduct.firstTokenIndex;
+
+            // increasing number of minted tokens for a particular offer
             if (!_.isEmpty(foundProduct) && !_.isEmpty(foundOffers)) {
               const offer = _.find(foundOffers, offer => _.inRange(token, offer.range[0], (offer.range[1] + 1)));
               const index = _.findIndex(offersForUpdate, o => o.contract === offer.contract && o.offerPool === offer.offerPool && o.offerIndex === offer.offerIndex);

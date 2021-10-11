@@ -1,6 +1,7 @@
 const ethers = require('ethers');
 const _ = require('lodash');
 const log = require('../utils/logger')(module);
+const providers = require('../integrations/ethers/providers');
 const { abi: Token } = require('../integrations/ethers/contracts/RAIR_ERC721.json');
 const { abi: Factory } = require('../integrations/ethers/contracts/RAIR_Token_Factory.json');
 
@@ -9,9 +10,10 @@ const lockLifetime = 1000 * 60 * 5; // 5 minutes - This could become very expens
 module.exports = (context) => {
   context.agenda.define('sync contracts', { lockLifetime }, async (task, done) => {
     try {
-      const { providerData } = task.attrs.data;
+      const { network, name } = task.attrs.data;
       const contractsForSave = [];
-      const provider = new ethers.providers.JsonRpcProvider(providerData.url, providerData.network);
+      const providerData = _.find(providers, p => p.network === network);
+      const provider = providerData.provider;
       const factoryInstance = await new ethers.Contract(providerData.factoryAddress, Factory, provider);
 
       // get all users on platform

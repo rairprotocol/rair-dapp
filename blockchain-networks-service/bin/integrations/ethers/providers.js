@@ -1,23 +1,58 @@
+const ethers = require('ethers');
+
+const {
+  BINANCE_URL,
+  BINANCE_CHAIN_ID,
+  BINANCE_SYMBOL,
+  BINANCE_NAME,
+  BINANCE_FACTORY_ADDRESS,
+  BINANCE_MINTER_ADDRESS,
+  GOERLI_URL,
+  GOERLI_CHAIN_ID,
+  GOERLI_SYMBOL,
+  GOERLI_NAME,
+  GOERLI_FACTORY_ADDRESS,
+  GOERLI_MINTER_ADDRESS,
+  MATIC_MUMBAI_URL,
+  MATIC_MUMBAI_CHAIN_ID,
+  MATIC_MUMBAI_SYMBOL,
+  MATIC_MUMBAI_NAME,
+  MATIC_MUMBAI_FACTORY_ADDRESS,
+  MATIC_MUMBAI_MINTER_ADDRESS
+} = process.env;
+
 module.exports = [
   {
-    url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-    network: { chainId: 97, symbol: 'BNB', name: 'Binance Testnet' },
-    factoryAddress: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
-    minterAddress: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f',
-    symbol: 'BNB',
+    provider: new ethers.providers.JsonRpcProvider(BINANCE_URL, {
+      chainId: Number(BINANCE_CHAIN_ID),
+      symbol: BINANCE_SYMBOL,
+      name: BINANCE_NAME
+    }),
+    factoryAddress: BINANCE_FACTORY_ADDRESS,
+    minterAddress: BINANCE_MINTER_ADDRESS,
+    network: BINANCE_SYMBOL,
+    name: BINANCE_NAME
   },
   {
-    url: 'https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_',
-    network: { chainId: 5, symbol: 'ETH', name: 'Goerli Testnet' },
-    factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
-    minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba',
-    symbol: 'ETH'
+    provider: new ethers.providers.JsonRpcProvider(GOERLI_URL, {
+      chainId: Number(GOERLI_CHAIN_ID),
+      symbol: GOERLI_SYMBOL,
+      name: GOERLI_NAME
+    }),
+    factoryAddress: GOERLI_FACTORY_ADDRESS,
+    minterAddress: GOERLI_MINTER_ADDRESS,
+    network: GOERLI_SYMBOL,
+    name: GOERLI_NAME
   },
   {
-    url: 'https://rpc-mumbai.maticvigil.com',
-    network: { chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet' },
-    factoryAddress: '0x1A5bf89208Dddd09614919eE31EA6E40D42493CD',
-    minterAddress: '0x63Dd6821D902012B664dD80140C54A98CeE97068',
-    symbol: 'tMATIC'
+    provider: new ethers.providers.JsonRpcProvider(MATIC_MUMBAI_URL, {
+      chainId: Number(MATIC_MUMBAI_CHAIN_ID),
+      symbol: MATIC_MUMBAI_SYMBOL,
+      name: MATIC_MUMBAI_NAME
+    }),
+    factoryAddress: MATIC_MUMBAI_FACTORY_ADDRESS,
+    minterAddress: MATIC_MUMBAI_MINTER_ADDRESS,
+    network: MATIC_MUMBAI_SYMBOL,
+    name: MATIC_MUMBAI_NAME
   }
 ];
