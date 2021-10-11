@@ -25,7 +25,7 @@ const NftItem = ({
   primaryColor,
   textColor,
 }) => {
-  const [metadata, setMetadata] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
   const [data,setData] = useState()
@@ -69,22 +69,17 @@ const NftItem = ({
   function getIndexFromName(str) {
     return str.split("#").pop();
   }
-  function onSelect(text) {
-    const index = getIndexFromName(text);
-    setSelected(metadata[index]);
+  function onSelect(id) {
+    // const index = getIndexFromName(text);
+  
+    allProducts.forEach(p => {
+      if(p._id === id){
+        setSelected(p.metadata)
+      }
+    })
   }
 
   function percentToRGB(percent) {
-    // switch (percent){
-    //   case (percent < 15):
-    //     return "#95F619"
-    //   case (15 < percent < 35):
-    //   return '#F6ED19'
-    //   case (35 <= percent <= 100):
-    //     return '#F63419'
-    //     default:
-    //     return '0'
-    // }
     if (percent) {
       if (percent < 15) {
         return "#95F619";
@@ -189,10 +184,10 @@ const NftItem = ({
       })
     ).json();
 
-    const metadata = responseAllProduct.result.map((item) => item.metadata);
+    // const metadata = responseAllProduct.result.map((item) => item.metadata);
     // debugger;
-    setMetadata(metadata);
-    setSelected(metadata[0]);
+    setAllProducts(responseAllProduct.result);
+    setSelected(responseAllProduct.result[0].metadata);
   };
 
   function openModal() {
@@ -288,7 +283,7 @@ const NftItem = ({
             onClick={onClick}
             style={{
               margin: "auto",
-              backgroundImage: `url(${selected.image})`,
+              backgroundImage: `url(${selected?.image})`,
               width: "604px",
               // height: "394px",
               height: "45rem",
@@ -342,11 +337,6 @@ const NftItem = ({
             <div>
               <span>Item rank</span>
               <div>
-                {/* <select>
-                  <option>Ultra Rair 1/1</option>
-                  <option>Rair 842 / 1,000</option>
-                  <option>Common 1,620 / 10,000</option>
-                </select> */}
                 <SelectBox
                   primaryColor={primaryColor}
                   items={[
@@ -364,16 +354,15 @@ const NftItem = ({
                   primaryColor={primaryColor}
                   selectItem={onSelect}
                   items={
-                    metadata.length &&
-                    metadata.map((e) => {
-                      return { value: e.name, id: getIndexFromName(e.name) };
+                    allProducts.length && allProducts.map((p) => {
+
+                        return { value: p.metadata.name, id: p._id };
+                      // return p.metadata map((e) => {
+                      //   return { value: e.name, id: p._id };
+                      // })
                     })
                   }
                 >
-                  {/* {metadata &&
-                    metadata.map((e, index) => (
-                      <option key={index}>{e.name}</option>
-                    ))} */}
                 </SelectBox>
               </div>
             </div>
@@ -404,7 +393,8 @@ const NftItem = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <div className="col-12 row mx-0">
-                  {Object.keys(selected).length &&
+                  {selected ?
+                  Object.keys(selected).length &&
                     selected?.attributes.map((item, index) => {
                       if (item.trait_type === "External URL") {
                         return (
@@ -448,7 +438,7 @@ const NftItem = ({
                           </span>
                         </div>
                       );
-                    })}
+                    }) : null}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
@@ -533,7 +523,7 @@ const NftItem = ({
                           height: "135px",
                           filter: "blur(3px)",
                         }}
-                        src={selected.image}
+                        src={selected?.image}
                         alt=""
                       />
                     </div>
@@ -588,13 +578,12 @@ const NftItem = ({
             responsive={responsive}
             itemClass="carousel-item-padding-4-px"
           >
-            {metadata &&
-              metadata.map((e, index) => (
+            {allProducts &&
+              allProducts.map((p, index) => (
                 <OfferItem
                   key={index}
                   index={index}
-                  metadata={metadata}
-                  data={e}
+                  metadata={p.metadata}
                   setSelected={setSelected}
                 />
               ))}

@@ -18,7 +18,8 @@ const SelectBox = (props) => {
     setShowItems(!showItems)
   };
 
-  const selectItem = (item) => {
+  const onSelectItem = (item) => {
+    props.selectItem(item.id);
     setSelectedItem(item)
     setShowItems(false)
   };
@@ -46,21 +47,14 @@ const SelectBox = (props) => {
           </div>
 
           <div
-            onClick={(e) => {
-              if (selectedItem?.pkey) {
-                return 0;
-              } else {
-                props.selectItem(e.target.innerText);
-                // console.log(e,'ffff');
-              }
-            }}
+
             style={{ display: showItems ? "block" : "none" }}
             className={"select-box--items"}
           >
             {items !== null && items.map((item) => (
               <div
                 key={item.id}
-                onClick={() => selectItem(item)}
+                onClick={() => onSelectItem(item)}
                 className={selectedItem === item ? "selected" : ""}
               >
                 <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
