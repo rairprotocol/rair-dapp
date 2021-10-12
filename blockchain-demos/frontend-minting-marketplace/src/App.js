@@ -61,15 +61,15 @@ function App({ sentryHistory }) {
 
 	const getTrackToken = useCallback(() => {
 		setInterval(() => {
-			var token = localStorage.token;
-			setTokenJwt(token);
+			if (localStorage.token) {
+				setTokenJwt(localStorage.token);
+			} else setLoginDone(false)
 		}, 0)
-	}, [token, setTokenJwt])
+	}, [setTokenJwt])
 
 	useEffect(() => {
 		getTrackToken();
-		console.log(localStorage.token, 'token')
-	}, [tokenJwt])
+	}, [tokenJwt, getTrackToken])
 
 	const connectUserData = async () => {
 		setStartedLogin(true);
@@ -169,11 +169,10 @@ function App({ sentryHistory }) {
 
 	const checkToken = useCallback(() => {
 		const token = localStorage.getItem('token');
-		if (isTokenValid(token)) {
-			console.log('good');
-		} else if (!isTokenValid(token)) {
+		if (!isTokenValid(token)) {
 			connectUserData()
 		}
+		
 	}, [token])
 
 	useEffect(() => {
@@ -195,7 +194,8 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{!(isTokenValid(tokenJwt)) && <Redirect to="/" />}
+				{!isTokenValid(tokenJwt) && <Redirect to="/" />}
+				{!localStorage.token && <Redirect to="/" />}
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 				<div
 					style={{
