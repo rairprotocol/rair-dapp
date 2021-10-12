@@ -13,7 +13,8 @@ import {
 // import VideoList from "../../video/videoList";
 import SelectBox from "../SelectBox/SelectBox";
 // import 'react-accessible-accordion/dist/fancy-example.css';
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useHistory, Redirect } from "react-router-dom";
+
 Modal.setAppElement("#root");
 
 const NftItem = ({
@@ -28,11 +29,19 @@ const NftItem = ({
   const [allProducts, setAllProducts] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
-  // const [data,setData] = useState()
+  const [selectedToken, setSelectedToken] = useState();
+  // const [dataLoaded, setDataLoaded] = useState(false);
 
   let subtitle;
   const location = useLocation();
-  const { adminToken, contract, product, offer, token } = useParams();
+  const params = useParams();
+  const { adminToken, contract, product, token } = params;
+
+  // useEffect(()=>{
+  //   if(dataLoaded ===true) {
+  //     setSelected(allProducts[0].metadata);
+  //   }
+  // },[dataLoaded,setSelected,allProducts])
 
   // get location (useLocation)
   const getData = async () => {
@@ -45,7 +54,8 @@ const NftItem = ({
       const data = response.result?.tokens.find(
         (data) => String(data.token) === token
       );
-      console.log({ data });
+      console.log(data.token);
+      setSelectedToken(data.token);
       return data;
       // return setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
       // console.log(data);
@@ -70,9 +80,9 @@ const NftItem = ({
     return Math.floor(rand);
   }
 
-  function getIndexFromName(str) {
-    return str.split("#").pop();
-  }
+  // function getIndexFromName(str) {
+  //   return str.split("#").pop();
+  // }
   function onSelect(id) {
     // const index = getIndexFromName(text);
 
@@ -190,11 +200,8 @@ const NftItem = ({
     // debugger;
     setAllProducts(responseAllProduct.result);
     // if (!Object.keys(selected).length) setSelected(responseAllProduct.result[0].metadata);
-    if (!selected) setSelected(responseAllProduct.result[0].metadata);
-  };
-  const x = () => {
-    openModal();
-    if (allProducts.length) setSelected(allProducts[0].metadata);
+    if (!Object.keys(params).length)
+      setSelected(responseAllProduct.result[0].metadata);
   };
 
   function openModal() {
@@ -205,14 +212,19 @@ const NftItem = ({
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
   }
-
+  let history = useHistory();
+  function handleClick() {
+    history.push("/all");
+  }
   function closeModal() {
     setIsOpen(false);
+    // handleClick()
+    // setDataLoaded(false)
   }
   return (
     <>
       <button
-        onClick={x}
+        onClick={openModal}
         className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
         style={{
           height: "291px",
@@ -358,12 +370,17 @@ const NftItem = ({
               <span>Serial number</span>
               <div>
                 <SelectBox
+                  selectedToken={selectedToken}
                   primaryColor={primaryColor}
                   selectItem={onSelect}
                   items={
                     allProducts.length &&
                     allProducts.map((p) => {
-                      return { value: p.metadata.name, id: p._id };
+                      return {
+                        value: p.metadata.name,
+                        id: p._id,
+                        token: p.token,
+                      };
                       // return p.metadata map((e) => {
                       //   return { value: e.name, id: p._id };
                       // })
