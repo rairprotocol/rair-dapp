@@ -6,6 +6,7 @@ const Token = require('./contracts/RAIR_ERC721.json').abi;
 const log = require('../../utils/logger')(module);
 const { addMetadata, addPin } = require('../../integrations/ipfsService')();
 const providers = require('./providers');
+const { numberToHexadecimal } = require('../../utils/helpers')
 
 module.exports = async (db) => {
   // Helpers
@@ -95,7 +96,7 @@ module.exports = async (db) => {
             user,
             title,
             contractAddress: contract,
-            blockchain: provider._network.symbol
+            blockchain: numberToHexadecimal(provider._network.chainId)
           });
 
           log.info(`Factory: New Contract ${ contract } of User ${ user } was stored to the DB.`);
@@ -144,7 +145,7 @@ module.exports = async (db) => {
             user,
             title,
             contractAddress: contract,
-            blockchain: provider._network.symbol
+            blockchain: numberToHexadecimal(provider._network.chainId)
           });
 
           log.info(`Stored an additional Contract ${ contract } for User ${ user } from network ${ provider._network.name }`);
