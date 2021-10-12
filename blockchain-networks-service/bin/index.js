@@ -11,6 +11,8 @@ const morgan = require('morgan');
 const _ = require('lodash');
 require('dotenv').config();
 
+const config = require('./config');
+
 async function main() {
   const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, {
     useNewUrlParser: true,
@@ -43,7 +45,8 @@ async function main() {
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
-    }
+    },
+    config
   };
 
   app.use(morgan('dev'));
