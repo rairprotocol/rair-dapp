@@ -1,4 +1,6 @@
 const Joi = require('joi');
+const _ = require('lodash');
+const config = require('../config');
 
 module.exports = Joi.object({
   contractAddress: Joi.string()
@@ -8,6 +10,6 @@ module.exports = Joi.object({
   title: Joi.string()
     .required(),
   blockchain: Joi.any()
-    .valid('BNB', 'ETH', 'tMATIC')
+    .valid(...(_.keys(config.blockchain.networks)))
     .required()
 });
