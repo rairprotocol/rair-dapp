@@ -81,6 +81,8 @@ const getJWT = async (signer, userData, userAddress) => {
 	return token;
 }
 
+
+// Custom hook for taking jwt token from redux
 const useRfetch = () => {
 	const { token } = useSelector(store => store.accessStore);
 	return async (route, options, retryOptions = undefined) => {

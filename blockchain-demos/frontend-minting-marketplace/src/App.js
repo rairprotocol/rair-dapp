@@ -58,9 +58,10 @@ function App({ sentryHistory }) {
 	const dispatch = useDispatch()
 	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
-	const { token } = useSelector(store => store.accessStore);
+	const { token, error } = useSelector(store => store.accessStore);
 
 	const connectUserData = async () => {
+		setLoginDone(false);
 		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
@@ -85,7 +86,7 @@ function App({ sentryHistory }) {
 			setStartedLogin(false)
 			return;
 		}
-		
+
 		try {
 			// Check if user exists in DB
 			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
@@ -143,11 +144,13 @@ function App({ sentryHistory }) {
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+				dispatch({type: authTypes.GET_TOKEN_ERROR, payload: null})
 				localStorage.setItem('token', token);
 			}
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+				dispatch({type: authTypes.GET_TOKEN_ERROR, payload: null})
 				localStorage.setItem('token', token);
 			}
 
@@ -198,10 +201,19 @@ function App({ sentryHistory }) {
 	}, [])
 
 	useEffect(() => {
-		if(localStorage.token) {
+		if (localStorage.token && isTokenValid(localStorage.token)) {
 			connectUserData()
+			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
 	}, [])
+
+	useEffect(() => {
+		if(error) {
+			connectUserData();
+			dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
+		}
+		console.log(error)
+	}, [error])
 
 	useEffect(() => {
 		checkToken();
@@ -210,7 +222,7 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{!token && <Redirect to="/" />}
+				{!localStorage.token && !isTokenValid(token) && <Redirect to="/" />}
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 				<div
 					style={{
