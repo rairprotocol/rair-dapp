@@ -54,5 +54,15 @@ module.exports = [
     minterAddress: MATIC_MUMBAI_MINTER_ADDRESS,
     network: MATIC_MUMBAI_SYMBOL,
     name: MATIC_MUMBAI_NAME
+  },
+  {
+    provider: new ethers.providers.JsonRpcProvider('https://polygon-mainnet.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5', {
+      chainId: 137,
+      symbol: 'MATIC',
+      name: 'Matic Mainnet'
+    }),
+    factoryAddress: '0x556a3Db6d800AAA56f8B09E476793c5100705Db5',
+    minterAddress: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
+    symbol: 'MATIC'
   }
 ];

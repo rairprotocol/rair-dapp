@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const { DEFAULT_PRODUCT_COVER } = process.env;
+
 const Product = new Schema({
   name: { type: String, required: true },
   collectionIndexInContract: { type: Number, required: true },
@@ -11,7 +13,7 @@ const Product = new Schema({
   sold: { type: Boolean, default: false },
   royalty: { type: Number, default: 0 },
   firstTokenIndex: { type: Number, required: true },
-  cover: { type: String, default: 'none' },
+  cover: { type: String, default: DEFAULT_PRODUCT_COVER },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 

@@ -7,7 +7,10 @@ const BigNumberFromFunc = async (func, params) => {
   return Number((await func()).toString());
 }
 
+const numberToHexadecimal = number => '0x' + Number(number).toString(16);
+
 module.exports = {
   BigNumber,
-  BigNumberFromFunc
+  BigNumberFromFunc,
+  numberToHexadecimal
 }

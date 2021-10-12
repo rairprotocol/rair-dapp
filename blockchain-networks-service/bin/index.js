@@ -12,6 +12,8 @@ const _ = require('lodash');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
+const config = require('./config');
+
 const connectionString = process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL;
 
 async function main() {
@@ -48,7 +50,8 @@ async function main() {
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
       Task: _mongoose.model('Task', require('./models/task'), 'Task')
     },
-    mongo: _db
+    mongo: _db,
+    config
   };
 
   // run scheduled tasks flow

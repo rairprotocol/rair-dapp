@@ -15,6 +15,8 @@ const morgan = require('morgan');
 const _ = require('lodash');
 require('dotenv').config();
 
+const config = require('./config');
+
 async function main() {
   const adapter = new FileAsync('./db/store.json');
   const db = await low(adapter);
@@ -89,7 +91,8 @@ async function main() {
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
-    }
+    },
+    config
   };
 
   app.use(morgan('dev'));
