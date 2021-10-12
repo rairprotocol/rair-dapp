@@ -9,6 +9,7 @@ import * as ethers from 'ethers'
 import { getJWT, isTokenValid } from './utils/rFetch.js';
 
 // React Redux types
+import * as authTypes from './ducks/auth/types'
 import * as contractTypes from './ducks/contracts/types.js';
 import * as colorTypes from './ducks/colors/types.js';
 
@@ -141,10 +142,12 @@ function App({ sentryHistory }) {
 			}
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
+				dispatch({type: authTypes.GET_TOKEN_COMPLETE, payload: token})
 				localStorage.setItem('token', token);
 			}
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
+				dispatch({type: authTypes.GET_TOKEN_COMPLETE, payload: token})
 				localStorage.setItem('token', token);
 			}
 
@@ -162,18 +165,21 @@ function App({ sentryHistory }) {
 		}
 	}, [token])
 
-	useEffect(() => {
-		if (localStorage.token) {
-			const decoded = jsonwebtoken.decode(localStorage.token);
-
-			if (decoded.exp) {
-				console.log(decoded.exp)
-				setTimeout(() => {
-					connectUserData()
-				}, decoded.exp)
-			}
-		}
-	}, [loginDone])
+	// useEffect(() => {
+	// 	if (localStorage.token) {
+	// 		const decoded = jsonwebtoken.decode(localStorage.token);
+	// 		if (!decoded) connectUserData()
+	// 		// debugger
+	// 		if (decoded?.exp) {
+				
+	// 			console.log(decoded.exp)
+	// 			setTimeout(() => {
+					
+	// 				connectUserData()
+	// 			}, 1000)
+	// 		}
+	// 	}
+	// }, [token])
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -188,8 +194,12 @@ function App({ sentryHistory }) {
 	}, [])
 
 	useEffect(() => {
+		
+	})
+
+	useEffect(() => {
 		checkToken();
-	}, [checkToken, localStorage.token])
+	}, [checkToken, token])
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
