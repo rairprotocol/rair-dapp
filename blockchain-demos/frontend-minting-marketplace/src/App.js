@@ -85,7 +85,7 @@ function App({ sentryHistory }) {
 			setStartedLogin(false)
 			return;
 		}
-
+		
 		try {
 			// Check if user exists in DB
 			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
@@ -142,12 +142,12 @@ function App({ sentryHistory }) {
 			}
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
-				dispatch({type: authTypes.GET_TOKEN_COMPLETE, payload: token})
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				localStorage.setItem('token', token);
 			}
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
-				dispatch({type: authTypes.GET_TOKEN_COMPLETE, payload: token})
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				localStorage.setItem('token', token);
 			}
 
@@ -165,21 +165,25 @@ function App({ sentryHistory }) {
 		}
 	}, [token])
 
-	// useEffect(() => {
-	// 	if (localStorage.token) {
-	// 		const decoded = jsonwebtoken.decode(localStorage.token);
-	// 		if (!decoded) connectUserData()
-	// 		// debugger
-	// 		if (decoded?.exp) {
-				
-	// 			console.log(decoded.exp)
-	// 			setTimeout(() => {
-					
-	// 				connectUserData()
-	// 			}, 1000)
-	// 		}
-	// 	}
-	// }, [token])
+	useEffect(() => {
+		let timeout;
+		if (token) {
+			const decoded = jsonwebtoken.decode(token);
+			// debugger
+			if (decoded?.exp) {
+
+				console.log(decoded.exp)
+				timeout = setTimeout(() => {
+					connectUserData()
+				}, decoded.exp * 1000)
+			}
+		}
+		return () => {
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+		}
+	}, [token])
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -194,8 +198,10 @@ function App({ sentryHistory }) {
 	}, [])
 
 	useEffect(() => {
-		
-	})
+		if(localStorage.token) {
+			connectUserData()
+		}
+	}, [])
 
 	useEffect(() => {
 		checkToken();
@@ -204,8 +210,7 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{/* {!isTokenValid(tokenJwt) && <Redirect to="/" />} */}
-				{!localStorage.token && <Redirect to="/" />}
+				{!token && <Redirect to="/" />}
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 				<div
 					style={{

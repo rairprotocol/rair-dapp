@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 import jsonwebtoken from 'jsonwebtoken';
+import { useSelector } from 'react-redux'
 
 const signIn = async (provider) => {
 	let currentUser = provider?.address;
@@ -80,6 +81,36 @@ const getJWT = async (signer, userData, userAddress) => {
 	return token;
 }
 
+const useRfetch = () => {
+	const { token } = useSelector(store => store.accessStore);
+	return async (route, options, retryOptions = undefined) => {
+		const request = await fetch(route, {
+			headers: {
+				...options?.headers,
+				'X-rair-token': token
+			},
+			...options
+		});
+		try {
+			let parsing = await request.json()
+			if (!parsing.success) {
+				if (['jwt malformed', 'jwt expired'].includes(parsing.message) && (window.ethereum || retryOptions?.provider)) {
+					localStorage.removeItem('token');
+					let retry = await signIn(retryOptions?.provider);
+					if (retry) {
+						return rFetch(route, options);
+					}
+				}
+				Swal.fire('Error', parsing?.message, 'error');
+			}
+			return parsing;
+		} catch (err) {
+			console.error(request, err);
+		}
+		return request;
+	}
+}
+
 const rFetch = async (route, options, retryOptions = undefined) => {
 	let request = await fetch(route, {
 		headers: {
@@ -122,4 +153,4 @@ const isTokenValid = (token) => {
 	return false;
 }
 
-export { rFetch, signIn, getJWT, isTokenValid };
+export { rFetch, signIn, getJWT, isTokenValid, useRfetch };
