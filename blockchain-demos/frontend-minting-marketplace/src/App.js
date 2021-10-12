@@ -207,13 +207,13 @@ function App({ sentryHistory }) {
 		}
 	}, [])
 
-	useEffect(() => {
-		if(error) {
-			connectUserData();
-			dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
-		}
-		console.log(error)
-	}, [error])
+	// useEffect(() => {
+	// 	if(error) {
+	// 		connectUserData();
+	// 		dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
+	// 	}
+	// 	console.log(error)
+	// }, [error])
 
 	useEffect(() => {
 		checkToken();
@@ -222,7 +222,7 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{!localStorage.token && !isTokenValid(token) && <Redirect to="/" />}
+				{!localStorage.token && <Redirect to="/" />}
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 				<div
 					style={{
