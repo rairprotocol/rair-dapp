@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import jsonwebtoken from 'jsonwebtoken';
 import setTitle from './utils/setTitle';
 
 import './App.css';
@@ -51,25 +52,12 @@ function App({ sentryHistory }) {
 	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
-	const [tokenJwt, setTokenJwt] = useState('');
 
 	// Redux
 	const dispatch = useDispatch()
 	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
-
-	const getTrackToken = useCallback(() => {
-		setInterval(() => {
-			if (localStorage.token) {
-				setTokenJwt(localStorage.token);
-			} else setLoginDone(false)
-		}, 0)
-	}, [setTokenJwt])
-
-	useEffect(() => {
-		getTrackToken();
-	}, [tokenJwt, getTrackToken])
 
 	const connectUserData = async () => {
 		setStartedLogin(true);
@@ -172,8 +160,20 @@ function App({ sentryHistory }) {
 		if (!isTokenValid(token)) {
 			connectUserData()
 		}
-		
 	}, [token])
+
+	useEffect(() => {
+		if (localStorage.token) {
+			const decoded = jsonwebtoken.decode(localStorage.token);
+
+			if (decoded.exp) {
+				console.log(decoded.exp)
+				setTimeout(() => {
+					connectUserData()
+				}, decoded.exp)
+			}
+		}
+	}, [loginDone])
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -194,7 +194,7 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{!isTokenValid(tokenJwt) && <Redirect to="/" />}
+				{/* {!isTokenValid(tokenJwt) && <Redirect to="/" />} */}
 				{!localStorage.token && <Redirect to="/" />}
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 				<div
@@ -229,7 +229,7 @@ function App({ sentryHistory }) {
 									onClick={connectUserData}>
 									{startedLogin ? 'Please wait...' : 'Connect Wallet'}
 									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-								</button></div> : (isTokenValid(tokenJwt)) && [
+								</button></div> : [
 									{ name: <i className='fas fa-search' />, route: '/search' },
 									{ name: <i className='fas fa-user' />, route: '/user' },
 									{ name: 'My NFTs', route: '/my-nft' },
