@@ -36,6 +36,8 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
+import NftList from './components/MockUpPage/NftList/NftList';
+import NftItem from './components/MockUpPage/NftList/NftItem';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -246,6 +248,9 @@ function App({sentryHistory}) {
 								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
+								<SentryRoute path='/ss/:contract/:product'>
+									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+								</SentryRoute>
 								{adminAccess && <SentryRoute path='/admin'>
 									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
 								</SentryRoute>}

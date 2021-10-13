@@ -13,7 +13,7 @@ import {
 // import VideoList from "../../video/videoList";
 import SelectBox from "../SelectBox/SelectBox";
 // import 'react-accessible-accordion/dist/fancy-example.css';
-import { useLocation, useParams, useHistory, Redirect } from "react-router-dom";
+import { useLocation, useParams, useHistory } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -26,16 +26,17 @@ const NftItem = ({
   primaryColor,
   textColor,
 }) => {
+  const history = useHistory();
+  const location = useLocation();
+  const params = useParams();
+  const { adminToken, contract, product, token } = params;
+  let subtitle;
+
   const [allProducts, setAllProducts] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState();
   // const [dataLoaded, setDataLoaded] = useState(false);
-
-  let subtitle;
-  const location = useLocation();
-  const params = useParams();
-  const { adminToken, contract, product, token } = params;
 
   // useEffect(()=>{
   //   if(dataLoaded ===true) {
@@ -43,7 +44,6 @@ const NftItem = ({
   //   }
   // },[dataLoaded,setSelected,allProducts])
 
-  // get location (useLocation)
   const getData = async () => {
     if (adminToken && contract && product) {
       const response = await (
@@ -57,20 +57,46 @@ const NftItem = ({
       console.log(data.token);
       setSelectedToken(data.token);
       return data;
-      // return setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
-      // console.log(data);
     } else return null;
   };
+
+  const getAllProduct = async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
+        method: "GET",
+      })
+    ).json();
+
+    setAllProducts(responseAllProduct.result);
+
+    if (!Object.keys(params).length)
+      setSelected(responseAllProduct.result[0].metadata);
+  };
+
   const waitResponse = async () => {
     const data = await getData();
     if (data && data.metadata) {
       setSelected(data.metadata);
-      // setIsOpen(true);
       openModal();
     }
-    // console.log( location);
-    // console.log(data, 'data' );
   };
+
+  const handleClick1 = () => {
+    history.push(`/ss/${contractName}/${collectionIndexInContract}/0`);
+ };
+ function openModalOnClick(){
+  openModal()
+  handleClick1()
+ }
+  function openModal() {
+    setIsOpen(true);
+    getAllProduct();
+  }
+
+  const handelClickToken = (token) => {
+    history.push(`/ss/${contractName}/${collectionIndexInContract}/${token}`);
+    setSelectedToken(token)
+  }
   useEffect(() => {
     waitResponse();
   }, []);
@@ -80,12 +106,7 @@ const NftItem = ({
     return Math.floor(rand);
   }
 
-  // function getIndexFromName(str) {
-  //   return str.split("#").pop();
-  // }
   function onSelect(id) {
-    // const index = getIndexFromName(text);
-
     allProducts.forEach((p) => {
       if (p._id === id) {
         setSelected(p.metadata);
@@ -189,42 +210,22 @@ const NftItem = ({
     },
   };
 
-  const getAllProduct = async () => {
-    const responseAllProduct = await (
-      await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
-        method: "GET",
-      })
-    ).json();
-
-    // const metadata = responseAllProduct.result.map((item) => item.metadata);
-    // debugger;
-    setAllProducts(responseAllProduct.result);
-    // if (!Object.keys(selected).length) setSelected(responseAllProduct.result[0].metadata);
-    if (!Object.keys(params).length)
-      setSelected(responseAllProduct.result[0].metadata);
-  };
-
-  function openModal() {
-    setIsOpen(true);
-    getAllProduct();
-  }
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
   }
-  let history = useHistory();
   function handleClick() {
     history.push("/all");
   }
+  
   function closeModal() {
     setIsOpen(false);
-    // handleClick()
-    // setDataLoaded(false)
+    handleClick();
   }
   return (
     <>
       <button
-        onClick={openModal}
+        onClick={openModalOnClick}
         className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
         style={{
           height: "291px",
@@ -370,7 +371,9 @@ const NftItem = ({
               <span>Serial number</span>
               <div>
                 <SelectBox
+                  handelClickToken={handelClickToken}
                   selectedToken={selectedToken}
+                  contractName={contractName}
                   primaryColor={primaryColor}
                   selectItem={onSelect}
                   items={
@@ -611,6 +614,8 @@ const NftItem = ({
                   key={index}
                   index={index}
                   metadata={p.metadata}
+                  token={p.token}
+                  handelClickToken={handelClickToken}
                   setSelected={setSelected}
                 />
               ))}

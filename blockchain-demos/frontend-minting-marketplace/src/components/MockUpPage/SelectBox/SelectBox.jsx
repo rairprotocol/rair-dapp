@@ -21,6 +21,7 @@ const SelectBox = (props) => {
   const dropDown = () => {
     setShowItems(!showItems);
   };
+  // debugger
 
   const onSelectItem = (item) => {
     props.selectItem(item.id);
@@ -68,7 +69,8 @@ const SelectBox = (props) => {
             items.map((item) => (
               <div
                 key={item.id}
-                onClick={() => onSelectItem(item)}
+                onClick={() => {onSelectItem(item) 
+                  props.handelClickToken(item.token)}}
                 className={selectedItem === item ? "selected" : ""}
               >
                 <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
