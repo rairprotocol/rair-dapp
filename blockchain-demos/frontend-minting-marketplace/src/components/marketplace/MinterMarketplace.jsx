@@ -1,21 +1,13 @@
 import {useState, useEffect, useCallback} from 'react';
 import {rFetch} from '../../utils/rFetch.js';
-import {useSelector, useStore, Provider} from 'react-redux';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import chainData from '../../utils/blockchainData';
 import setDocumentTitle from '../../utils/setTitle';
 
-import BuyTokenModalContent from './BuyTokenModalContent.jsx';
+import MinterMarketplaceItem from './MinterMarketplaceItem.jsx';
 
-const rSwal = withReactContent(Swal);
 
 const MinterMarketplace = () => {
 
 	const [offerData, setOfferData] = useState([]);
-	const {primaryColor, secondaryColor, textColor} = useSelector(state => state.colorStore)
-	const {programmaticProvider} = useSelector(state => state.contractStore);
-	const store = useStore();
 
 	const fetchData = useCallback(async () => {
 		let aux = await rFetch('/api/contracts/full');
@@ -49,70 +41,7 @@ const MinterMarketplace = () => {
 	
 	return <div className='row px-0 mx-0 w-100'>
 		{offerData.map((item, index) => {
-			return <div key={index} className='col-4 p-2'>
-				<div style={{
-					border: `solid 1px ${textColor}`,
-					backgroundImage: `url(${chainData[item?.blockchain]?.image})`,
-					backgroundColor: `var(--${primaryColor}-transparent)`,
-				}} className='w-100 p-3 bg-blockchain'>
-					{item.productName}
-					<br/>
-					<small style={{fontSize: '0.7rem'}}>
-						{item.contractAddress} 
-					</small>
-					<br/>
-					<b>{item.offerName}</b>
-					<br/>
-					{item.range[1] - item.range[0] - item.soldCopies + 1} tokens up for sale <br/>
-						for {item.price} {item.blockchain} wei <br/>
-					<small>{/*item.totalCopies*/}</small>
-					<br/>
-					<button id={`button_${index}`} onClick={async e => {
-						let onMyChain = window.ethereum ?
-							chainData[item.blockchain]?.chainId === window.ethereum.chainId
-							:
-							chainData[item.blockchain]?.chainId === `0x${programmaticProvider.provider._network.chainId.toString(16)}`;
-						if (!onMyChain) {
-							if (window.ethereum) {
-								await window.ethereum.request({
-									method: 'wallet_switchEthereumChain',
-									params: [{ chainId: chainData[item.blockchain]?.chainId }],
-								});
-							} else {
-								// Code for suresh goes here
-							}
-						} else {
-							rSwal.fire({
-								html: <Provider store={store}>
-									<BuyTokenModalContent
-										blockchain={item.blockchain}
-										price={item.price}
-										start={item.range[0]}
-										end={item.range[1]}
-										offerName={item.offerName}
-										offerIndex={item.offerPool}
-										rangeIndex={item.offerIndex}
-									/>
-								</Provider>,
-								showConfirmButton: false,
-								width: '70vw',
-								customClass: {
-									popup: `bg-${primaryColor}`,
-									htmlContainer: `text-${secondaryColor}`,
-								}
-							})
-						}
-					}} className='btn btn-royal-ice py-0'>
-						{(window.ethereum ?
-							chainData[item.blockchain]?.chainId === window.ethereum.chainId
-							:
-							chainData[item.blockchain]?.chainId === `0x${programmaticProvider.provider._network.chainId.toString(16)}`) ?
-							<>Buy</> :
-							<>Switch to <b>{item.blockchain}</b></>
-						}
-					</button>
-				</div>
-			</div>
+			return <MinterMarketplaceItem item={item} index={index} key={index} />
 		})}
 	</div>
 }

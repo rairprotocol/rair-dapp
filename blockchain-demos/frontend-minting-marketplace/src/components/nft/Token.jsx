@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from "react-router-dom";
-import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2'
 import VideoList from '../video/videoList';
-import ERC721Consumer from '../ConsumerMode/ERC721Consumer.jsx';
 import setDocumentTitle from '../../utils/setTitle';
 
 import * as ethers from 'ethers'
 
 import { rFetch } from '../../utils/rFetch.js';
 
+import MinterMarketplaceItem from '../marketplace/MinterMarketplaceItem.jsx';
+
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
-import { Col } from '../../styled-components/nft/Token.styles';
 const erc721Abi = ERC721Token.default.abi;
 
 const Token = (props) => {
@@ -19,50 +18,38 @@ const Token = (props) => {
 	const [metadata, setMetadata] = useState({ name: 'Loading...' });
 	const [owner, setOwner] = useState('');
 	const [name, setName] = useState('');
-	const [specificItem, setSpecificItem] = useState([]);
-	const [tokenProduct, setTokenProduct] = useState();
-
-	const { minterInstance, programmaticProvider } = useSelector(state => state.contractStore);
+	const [productIndex, setProductIndex] = useState();
+	const [marketData, setMarketData] = useState();
 
 	const fetchData = useCallback(async () => {
 		try {
 			let {success, products} = await rFetch(`/api/contracts/${params.contract}/products/offers`);
-			if (success) {
+			let contractData = await rFetch(`/api/contracts/${params.contract}/`);
+			if (success && contractData.success) {
 				let [product] = products.filter(i => i.firstTokenIndex <= params.identifier && (i.firstTokenIndex + i.copies) >= params.identifier);
-				console.log(product)
-				setTokenProduct(product.collectionIndexInContract);
+				setProductIndex(product.collectionIndexInContract);
+				setMarketData(
+					product.offers.map(offer => {
+						return ({
+							blockchain: contractData.contract.blockchain,
+							contractAddress: contractData.contract.contractAddress,
+							productIndex: product.collectionIndexInContract,
+							productName: product.name,
+							totalCopies: product.copies,
+							...offer
+						})
+					})
+				);
 			}
-
-			let signer = programmaticProvider;
-			if (window.ethereum) {
-				let provider = new ethers.providers.Web3Provider(window.ethereum);
-				signer = provider.getSigner(0);
-			}
-
-			let RAIR721Instance = new ethers.Contract(params.contract, erc721Abi, signer);
-			let offerRangeIndex = (await minterInstance.contractToOfferRange(params.contract, await RAIR721Instance.tokenToProduct(params.identifier))).toString();
-			let rawOfferData = await minterInstance.getOfferInfo(offerRangeIndex);
-
-			let offerData = {
-				contractAddress: rawOfferData.contractAddress,
-				productIndex: rawOfferData.productIndex.toString(),
-				nodeAddress: rawOfferData.nodeAddress,
-				ranges: rawOfferData.availableRanges.toString(),
-				instance: RAIR721Instance
-			};
-
-			setSpecificItem({data: offerData, index: Number(offerRangeIndex.toString())});
 		} catch (err) {
 			console.error(err);
 		}
-	}, [programmaticProvider, minterInstance, params.contract, params.identifier]);
+	}, [params.contract, params.identifier]);
 
 
 	useEffect(() => {
-		if (minterInstance) {
-			fetchData();
-		}
-	}, [minterInstance, fetchData])
+		fetchData();
+	}, [fetchData])
 
 	const getData = useCallback(async () => {
 		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/token/${params.identifier}`)).json()
@@ -81,7 +68,6 @@ const Token = (props) => {
 				setOwner('No one!');
 			}
 			let meta = await (await fetch(await instance.tokenURI(params.identifier))).json();
-			//console.log(meta);
 			setMetadata(meta);
 		} catch (err) {
 			console.error(err);
@@ -188,26 +174,23 @@ const Token = (props) => {
 				</div>}
 			</>}
 		</div>
-		<Col
-			width='100%'
-			direction='row'
-		>
-			<Col width='50%' direction='column'>
+		<div className='row'>
+			<div className='col-12 row px-0 mx-0'>
 				<h1>
 					Associated Files
 				</h1>
-				{tokenProduct && <VideoList responseLabel='files' endpoint={`/api/nft/${params.contract}/${tokenProduct}/files/${params.identifier}`} />}
-			</Col>
-			<Col width='50%' align='center'>
-				{specificItem?.data && 
-					<ERC721Consumer
-						offerInfo={specificItem.data}
-						index={specificItem.index}
-						width='12'
-					/>}
-			</Col>
-		</Col>
-
+				{productIndex !== undefined && <VideoList responseLabel='files' endpoint={`/api/nft/${params.contract}/${productIndex}/files/${params.identifier}`} />}
+			</div>
+			<hr />
+			<h1>
+				On the Marketplace
+			</h1>
+			<div className='col-12 row px-0 mx-0'>
+				{marketData && marketData.map((item, index) => {
+					return <MinterMarketplaceItem item={item} index={index} key={index} />
+				})}
+			</div>
+		</div>
 	</div>
 }
 

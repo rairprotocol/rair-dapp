@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import VideoItem from './videoItem.jsx';
 import InputField from '../common/InputField.jsx';
 import setDocumentTitle from '../../utils/setTitle';
@@ -9,23 +9,23 @@ const VideoList = ({endpoint, responseLabel}) => {
 	const [mediaList, setMediaList] = useState();
 	const [titleSearch, setTitleSearch] = useState('');
 	const {primaryColor} = useSelector(state => state.colorStore);
-	const updateList = async () => {
+	const updateList = useCallback (async () => {
 		let response = await (await rFetch(endpoint ? endpoint : '/api/media/list'));
 		if (response.success) {
 			setMediaList(responseLabel ? response[responseLabel] : response.list);
 		} else if (response?.message === 'jwt expired' || response?.message === 'jwt malformed') {
 			localStorage.removeItem('token');
 		} else {
-			console.log(response?.message);
+			console.error(response?.message);
 		}
-	}
+	}, [endpoint, responseLabel]);
 
 	useEffect(() => {
 		if (localStorage.token) {
 			updateList();
 		}
 		setDocumentTitle(`Videos`);
-	}, [])
+	}, [updateList])
 
 	return <>
 	<div className='input-search-wrapper list-button-wrapper'>
@@ -39,9 +39,9 @@ const VideoList = ({endpoint, responseLabel}) => {
 		<i className="fas fa-search fa-lg fas-custom" aria-hidden="true" />
 	</>}
 	</div>
-		<div className='list-button-wrapper'>
+		<div className='list-button-wrapper' style={{verticalAlign: 'top'}}>
 		{mediaList ? 
-			mediaList?.length > 0 ?
+			Object.keys(mediaList).length > 0 ?
 				Object.keys(mediaList).filter(item => mediaList[item].title.toLowerCase().includes(titleSearch.toLowerCase())).map((item, index) => {
 					return <VideoItem key={index} mediaList={mediaList} item={item} />
 			}) :
