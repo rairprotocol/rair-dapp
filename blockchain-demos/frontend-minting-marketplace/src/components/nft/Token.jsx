@@ -20,12 +20,18 @@ const Token = (props) => {
 	const [owner, setOwner] = useState('');
 	const [name, setName] = useState('');
 	const [specificItem, setSpecificItem] = useState([]);
+	const [tokenProduct, setTokenProduct] = useState();
 
 	const { minterInstance, programmaticProvider } = useSelector(state => state.contractStore);
 
 	const fetchData = useCallback(async () => {
 		try {
-			let data = await rFetch(`/api/contracts/${params.contract}/products/offers`);
+			let {success, products} = await rFetch(`/api/contracts/${params.contract}/products/offers`);
+			if (success) {
+				let [product] = products.filter(i => i.firstTokenIndex <= params.identifier && (i.firstTokenIndex + i.copies) >= params.identifier);
+				console.log(product)
+				setTokenProduct(product.collectionIndexInContract);
+			}
 
 			let signer = programmaticProvider;
 			if (window.ethereum) {
@@ -190,7 +196,7 @@ const Token = (props) => {
 				<h1>
 					Associated Files
 				</h1>
-				<VideoList endpoint={`/api/nft/${params.contract}/:product/files/${params.identifier}`} />
+				{tokenProduct && <VideoList responseLabel='files' endpoint={`/api/nft/${params.contract}/${tokenProduct}/files/${params.identifier}`} />}
 			</Col>
 			<Col width='50%' align='center'>
 				{specificItem?.data && 
