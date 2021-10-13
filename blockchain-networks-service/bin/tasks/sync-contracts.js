@@ -4,6 +4,7 @@ const log = require('../utils/logger')(module);
 const providers = require('../integrations/ethers/providers');
 const { abi: Token } = require('../integrations/ethers/contracts/RAIR_ERC721.json');
 const { abi: Factory } = require('../integrations/ethers/contracts/RAIR_Token_Factory.json');
+const { numberToHexadecimal } = require('../utils/helpers');
 
 const lockLifetime = 1000 * 60 * 5; // 5 minutes - This could become very expensive and time consuming
 
@@ -34,7 +35,7 @@ module.exports = (context) => {
               user,
               title,
               contractAddress,
-              blockchain: provider._network.symbol
+              blockchain: numberToHexadecimal(provider._network.chainId)
             });
           }
         })
