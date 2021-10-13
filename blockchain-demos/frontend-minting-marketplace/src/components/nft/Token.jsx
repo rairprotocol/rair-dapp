@@ -8,6 +8,8 @@ import setDocumentTitle from '../../utils/setTitle';
 
 import * as ethers from 'ethers'
 
+import { rFetch } from '../../utils/rFetch.js';
+
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 import { Col } from '../../styled-components/nft/Token.styles';
 const erc721Abi = ERC721Token.default.abi;
@@ -23,6 +25,8 @@ const Token = (props) => {
 
 	const fetchData = useCallback(async () => {
 		try {
+			let data = await rFetch(`/api/contracts/${params.contract}/products/offers`);
+
 			let signer = programmaticProvider;
 			if (window.ethereum) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -183,8 +187,10 @@ const Token = (props) => {
 			direction='row'
 		>
 			<Col width='50%' direction='column'>
-					<h1>list videos</h1>
-					<VideoList />
+				<h1>
+					Associated Files
+				</h1>
+				<VideoList endpoint={`/api/nft/${params.contract}/:product/files/${params.identifier}`} />
 			</Col>
 			<Col width='50%' align='center'>
 				{specificItem?.data && 
