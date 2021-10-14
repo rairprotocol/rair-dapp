@@ -162,7 +162,7 @@ const ModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, of
 							Swal.fire('Error', err?.data?.message, 'error');
 						}
 					}} className='btn btn-stimorol col-8'>
-						Buy token #{tokenIndex} for {price}
+						Buy token #{tokenIndex} for {price} wei
 					</button>
 					<div className='col-2' />
 				</>
@@ -256,7 +256,7 @@ const MinterMarketplace = () => {
 					<b>{item.offerName}</b>
 					<br/>
 					{item.range[1] - item.range[0] - item.soldCopies + 1} tokens up for sale <br/>
-						for {item.price} {item.blockchain} wei <br/>
+						for {item.price} {chainData[item.blockchain]?.name} wei <br/>
 					<small>{/*item.totalCopies*/}</small>
 					<br/>
 					<button id={`button_${index}`} onClick={async e => {
@@ -300,7 +300,7 @@ const MinterMarketplace = () => {
 							:
 							chainData[item.blockchain]?.chainId === `0x${programmaticProvider.provider._network.chainId.toString(16)}`) ?
 							<>Buy</> :
-							<>Switch to <b>{item.blockchain}</b></>
+							<>Switch to <b>{chainData[item.blockchain]?.name}</b></>
 						}
 					</button>
 				</div>
