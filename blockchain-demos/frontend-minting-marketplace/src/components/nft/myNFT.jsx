@@ -45,7 +45,7 @@ const MyNFTs = props => {
 						{item.metadata ?
 							<>
 								<div className='w-100'>
-									<img alt='NFT' src={item.metadata.image} style={{width: '100%', height: 'auto', maxHeight: '25vh'}} />
+									<img alt='NFT' src={item.metadata.image} style={{width: 'auto', height: 'auto', maxHeight: '25vh', maxWidth: '100%'}} />
 								</div>
 								<b>{item.metadata.name}</b><br />
 								<small>{item.metadata.description}</small><br />

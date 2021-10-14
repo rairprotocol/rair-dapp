@@ -240,11 +240,7 @@ function App({sentryHistory}) {
 								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
-								{adminAccess && <SentryRoute path='/admin' 
-								// component={FileUpload} 
-								>
-									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
-								</SentryRoute>}
+								{adminAccess && <SentryRoute path='/admin' component={FileUpload}/>}
 								<SentryRoute exact path='/'>
 									<div className='col-6 text-left'>
 										<h1 className='w-100' style={{textAlign: 'left'}}>
