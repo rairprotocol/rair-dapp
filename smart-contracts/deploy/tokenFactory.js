@@ -6,9 +6,14 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
   console.log('Factory deployed at', (await deploy('RAIR_Token_Factory', {
     from: deployerAddress,
     //proxy: true,
-    // THIS IS THE ERC777 ADDRESS FOR *BINANCE*, DO NOT
+    // THIS IS THE ERC777 ADDRESS FOR *MATIC MAINNET*, DO NOT
     //    DEPLOY CONTRACTS WITHOUT UPDATING THIS ADDRESS
-    args: [15, '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1'],
+    args: [
+      // Price for deployment: 15 RAIR (15.000000000000000000)
+      '15000000000000000000',
+      // RAIR ERC777 Address
+      '0x0Ce668D271b8016a785Bf146e58739F432300B12'
+    ],
     //proxyContract: "OpenZeppelinTransparentProxy"
   })).receipt.contractAddress);
 };

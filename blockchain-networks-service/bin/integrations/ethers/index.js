@@ -318,8 +318,7 @@ module.exports = async ({ db, config }) => {
   };
 
   return Promise.all(_.map(providers, async providerData => {
-    console.log('Connected to', providerData.provider._network.name);
-    console.log('Symbol:', providerData.provider._network.symbol);
+    console.log(`Connected to ${ providerData.provider._network.name }. Symbol: ${ providerData.provider._network.symbol }`);
 
     // These connections don't have an address associated, so they can read but can't write to the blockchain
     let factoryInstance = await new ethers.Contract(providerData.factoryAddress, Factory, providerData.provider);
