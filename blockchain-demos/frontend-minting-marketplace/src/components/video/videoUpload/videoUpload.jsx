@@ -40,11 +40,10 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 	const getContract = async () => {
 		const {success, contracts} = await rFetch("/api/contracts");
-
 		if (success) {
 			const contractData = contracts.map((item) => ({
 				value: item.contractAddress,
-				label: item.contractAddress,
+				label: `${item.title} (...${item.contractAddress.slice(-4)})`,
 			}));
 			setContractOptions(contractData);
 		}
