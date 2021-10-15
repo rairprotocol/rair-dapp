@@ -29,6 +29,7 @@ const { MongoClient } = require('mongodb');
     background: true,
     unique: true
   });
+  await db.collection('Offer').createIndex({ contract: 1, product: 1 }, { background: true});
 
   await db.collection('LockedTokens').createIndex({ contract: 1, product: 1 }, { background: true });
 
