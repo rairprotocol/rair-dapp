@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
@@ -174,7 +174,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		newRange.lockCountdown = _lockedTokens;
 		newRange.productIndex = productIndex;
 		selectedProduct.locks.push(_lockedRange.length - 1);
-		emit RangeLocked(productIndex, selectedProduct.startingToken + _startingToken, selectedProduct.startingToken + _endingToken, _lockedTokens, selectedProduct.name);
+		emit RangeLocked(productIndex, selectedProduct.startingToken + _startingToken, selectedProduct.startingToken + _endingToken, _lockedTokens, selectedProduct.name, _lockedRange.length - 1);
 	}
 
 	/// @notice	Creates a product
