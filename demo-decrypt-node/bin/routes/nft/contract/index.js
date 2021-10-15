@@ -1,4 +1,6 @@
 const express = require('express');
+const _ = require('lodash');
+const { JWTVerification, validation } = require('../../../middleware');
 
 module.exports = context => {
   const router = express.Router()
@@ -8,7 +10,7 @@ module.exports = context => {
     try {
       const { contract } = req;
       const { tokenInContract } = req.params;
-      const uniqueIndexInContract = parseInt(tokenInContract);
+      const uniqueIndexInContract = Number(tokenInContract);
 
       const result = await context.db.MintedToken.findOne({ contract, uniqueIndexInContract });
 
@@ -18,8 +20,31 @@ module.exports = context => {
     }
   });
 
-  router.use('/:product', (req, res, next) => {
-    req.product = req.params.product;
+  router.post('/offerPool/:offerPool/token/:token', JWTVerification(context), validation('authenticityLinkParams', 'params'), validation('authenticityLink'), async (req, res, next) => {
+    try {
+      const { contract } = req;
+      const { token, offerPool } = req.params;
+      const { link } = req.body;
+      const sanitizedOfferPool = Number(offerPool);
+      const sanitizedToken = Number(token);
+
+      // TODO: have to be updated info about contract || offerPool || token if they not exist
+
+      const result = await context.db.AuthenticityLink.create({
+        link,
+        token: sanitizedToken,
+        offerPool: sanitizedOfferPool,
+        contract,
+      });
+
+      res.json({ success: true, result });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.use('/:product', validation('nftProduct', 'params'), (req, res, next) => {
+    req.product = Number(req.params.product);
     next();
   }, require('./product')(context));
 
