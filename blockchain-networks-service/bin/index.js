@@ -63,7 +63,7 @@ async function main() {
   });
 
   // Listen network events
-  await eventListeners(context.db);
+  await eventListeners(context);
 
   // TODO: should be found/stored all contracts for all users from DB and added all listeners for contracts/products/offerPools/offers
 }

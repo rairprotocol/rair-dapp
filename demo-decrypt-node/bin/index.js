@@ -90,8 +90,7 @@ async function main() {
       OfferPool: _mongoose.model('OfferPool', require('./models/offerPool'), 'OfferPool'),
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
-      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
-      AuthenticityLink: _mongoose.model('AuthenticityLink', require('./models/authenticityLink'), 'AuthenticityLink')
+      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
     },
     config
   };

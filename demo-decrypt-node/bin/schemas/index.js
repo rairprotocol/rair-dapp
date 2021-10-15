@@ -19,8 +19,6 @@ const singleContract = require('./singleContract');
 const getFilesByNFT = require('./getFilesByNFT');
 const nftContract = require('./nftContract');
 const nftProduct = require('./nftProduct');
-const authenticityLinkParams = require('./authenticityLinkParams');
-const authenticityLink = require('./authenticityLink');
 
 module.exports = {
   admin,
@@ -43,7 +41,5 @@ module.exports = {
   singleContract,
   getFilesByNFT,
   nftContract,
-  nftProduct,
-  authenticityLinkParams,
-  authenticityLink
+  nftProduct
 };

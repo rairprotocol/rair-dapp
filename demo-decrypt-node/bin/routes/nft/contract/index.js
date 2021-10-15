@@ -20,39 +20,6 @@ module.exports = context => {
     }
   });
 
-  router.post('/offerPool/:offerPool/authenticityLink', JWTVerification(context), validation('authenticityLinkParams', 'params'), validation('authenticityLink'), async (req, res, next) => {
-    try {
-      const { contract } = req;
-      const { offerPool } = req.params;
-      const { link, tokens, description } = req.body;
-      const sanitizedOfferPool = Number(offerPool);
-
-      // TODO: have to be updated info about contract || offerPool || token if they not exist
-
-      const tokensForSave = _.map(tokens, token => {
-        const sanitizedToken = Number(token);
-
-        return {
-          link,
-          token: sanitizedToken,
-          offerPool: sanitizedOfferPool,
-          contract,
-          description
-        }
-      });
-
-      if (!_.isEmpty(tokensForSave)) {
-        try {
-          await context.db.AuthenticityLink.insertMany(tokensForSave, { ordered: false });
-        } catch (e) {}
-      }
-
-      res.json({ success: true, storedLinks: tokensForSave.length });
-    } catch (err) {
-      next(err);
-    }
-  });
-
   router.use('/:product', validation('nftProduct', 'params'), (req, res, next) => {
     req.product = Number(req.params.product);
     next();
