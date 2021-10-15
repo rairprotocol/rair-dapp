@@ -64,7 +64,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
                 * [x] /token/:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index.md)
                 * [x] /files/:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft.md)
             * [x] /token/:tokenInContract - GET - Get specific token by contract address and unique toke ID in contract, [see details here](readme/get_minted_token_by_contract_index.md)
-            * [x] /offerPool/:offerPool/token/:token - POST - store authenticity link for specific token [see details here](readme/create_AuthenticityLink.md)
+            * [x] /offerPool/:offerPool/authenticityLink - POST - store authenticity link for bach of tokens [see details here](readme/create_AuthenticityLink.md)
     * [x] /docs - swagger documentation for the server
     * [x] /:adminToken/:contractName/:productName - GET - get full data about particular product and get list of tokens for it, [see details here](readme/get_token_metadata.md)
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)

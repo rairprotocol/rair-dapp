@@ -20,24 +20,34 @@ module.exports = context => {
     }
   });
 
-  router.post('/offerPool/:offerPool/token/:token', JWTVerification(context), validation('authenticityLinkParams', 'params'), validation('authenticityLink'), async (req, res, next) => {
+  router.post('/offerPool/:offerPool/authenticityLink', JWTVerification(context), validation('authenticityLinkParams', 'params'), validation('authenticityLink'), async (req, res, next) => {
     try {
       const { contract } = req;
-      const { token, offerPool } = req.params;
-      const { link } = req.body;
+      const { offerPool } = req.params;
+      const { link, tokens, description } = req.body;
       const sanitizedOfferPool = Number(offerPool);
-      const sanitizedToken = Number(token);
 
       // TODO: have to be updated info about contract || offerPool || token if they not exist
 
-      const result = await context.db.AuthenticityLink.create({
-        link,
-        token: sanitizedToken,
-        offerPool: sanitizedOfferPool,
-        contract,
+      const tokensForSave = _.map(tokens, token => {
+        const sanitizedToken = Number(token);
+
+        return {
+          link,
+          token: sanitizedToken,
+          offerPool: sanitizedOfferPool,
+          contract,
+          description
+        }
       });
 
-      res.json({ success: true, result });
+      if (!_.isEmpty(tokensForSave)) {
+        try {
+          await context.db.AuthenticityLink.insertMany(tokensForSave, { ordered: false });
+        } catch (e) {}
+      }
+
+      res.json({ success: true, storedLinks: tokensForSave.length });
     } catch (err) {
       next(err);
     }

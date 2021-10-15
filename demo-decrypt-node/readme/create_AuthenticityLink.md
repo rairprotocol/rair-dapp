@@ -1,8 +1,8 @@
 # Store authenticity link
 
-Store authenticity link for specific token
+store authenticity link for bach of tokens
 
-**URL** : `/api/nft/:contract/offerPool/:offerPool/token/:token`
+**URL** : `/api/nft/:contract/offerPool/:offerPool/authenticityLink`
 
 **Method** : `POST`
 
@@ -34,12 +34,6 @@ Store authenticity link for specific token
     "content": {
       "type": "number"
     }
-  },
-  "token": {
-    "required": true,
-    "content": {
-      "type": "number"
-    }
   }
 }
 ```
@@ -50,6 +44,21 @@ Store authenticity link for specific token
 {
   "link": {
     "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "tokens": {
+    "required": true,
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    }
+  },
+  "description": {
+    "required": false,
     "content": {
       "type": "string"
     }
@@ -70,14 +79,7 @@ Returns if created successfully
 ```json
 {
   "success": true,
-  "result": {
-    "_id": "61695aae9097df001c940fd8",
-    "link": "https://www.google.com/",
-    "token": 1,
-    "offerPool": 11,
-    "contract": "contractAddress",
-    "creationDate": "2021-10-15T10:40:46.997Z"
-  }
+  "storedLinks": 2
 }
 ```
 

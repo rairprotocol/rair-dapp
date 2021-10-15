@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const AuthenticityLink = new Schema({
   link: { type: String, required: true },
+  description: { type: String },
   token: { type: Number, required: true },
   offerPool: { type: Number, required: true },
   contract: { type: String, lowercase: true, required: true },
