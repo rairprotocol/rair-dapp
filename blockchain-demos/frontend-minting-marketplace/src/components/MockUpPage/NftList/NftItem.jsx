@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -12,12 +12,14 @@ import {
 } from "react-accessible-accordion";
 // import VideoList from "../../video/videoList";
 import SelectBox from "../SelectBox/SelectBox";
+import chainData from "../../../utils/blockchainData";
 // import 'react-accessible-accordion/dist/fancy-example.css';
 import { useLocation, useParams, useHistory } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
 const NftItem = ({
+  blockchain,
   price,
   pict,
   onClick,
@@ -25,6 +27,8 @@ const NftItem = ({
   collectionIndexInContract,
   primaryColor,
   textColor,
+  collectionName,
+  ownerCollectionUser,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -36,7 +40,8 @@ const NftItem = ({
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState();
-  // const [dataLoaded, setDataLoaded] = useState(false);
+  // const [hover, setHover] = useState(false);
+  // const [dataImg, setDataImg] = useState();
 
   // useEffect(()=>{
   //   if(dataLoaded ===true) {
@@ -54,7 +59,7 @@ const NftItem = ({
       const data = response.result?.tokens.find(
         (data) => String(data.token) === token
       );
-      console.log(data.token);
+
       setSelectedToken(data.token);
       return data;
     } else return null;
@@ -82,21 +87,23 @@ const NftItem = ({
   };
 
   const handleClick1 = () => {
-    history.push(`/ss/${contractName}/${collectionIndexInContract}/0`);
- };
- function openModalOnClick(){
-  openModal()
-  handleClick1()
- }
+    history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
+  };
+  function openModalOnClick() {
+    openModal();
+    handleClick1();
+  }
   function openModal() {
     setIsOpen(true);
     getAllProduct();
   }
 
   const handelClickToken = (token) => {
-    history.push(`/ss/${contractName}/${collectionIndexInContract}/${token}`);
-    setSelectedToken(token)
-  }
+    history.push(
+      `/tokens/${contractName}/${collectionIndexInContract}/${token}`
+    );
+    setSelectedToken(token);
+  };
   useEffect(() => {
     waitResponse();
   }, []);
@@ -209,7 +216,32 @@ const NftItem = ({
       items: 1,
     },
   };
-
+  // (function () {
+  //   let angle = 0;
+  //   let p = document.querySelector('p');
+  //   debugger
+  //   if(p){
+  //     let text = p.textContent.split('');
+  //     var len = text.length;
+  //     var phaseJump = 360 / len;
+  //     var spans;
+  //     p.innerHTML = text.map(function (char) {
+  //       return '<span>' + char + '</span>';
+  //     }).join('');
+    
+  //     spans = p.children;
+  //   }
+  //   else console.log('kik');
+  
+  //   (function wheee () {
+  //     for (var i = 0; i < len; i++) {
+  //       spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+  //     }
+  //     angle++;
+  //     requestAnimationFrame(wheee);
+  //   })();
+  // })();
+  
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
@@ -217,7 +249,7 @@ const NftItem = ({
   function handleClick() {
     history.push("/all");
   }
-  
+
   function closeModal() {
     setIsOpen(false);
     handleClick();
@@ -250,6 +282,36 @@ const NftItem = ({
             className="col-12 h-100 w-100"
           />
         </div>
+        <div className="col description-wrapper pic-description-wrapper">
+          <span className="description-title">
+            {collectionName}
+            <br />
+          </span>
+          <span className="description">
+            {ownerCollectionUser.slice(0, 7)}
+            {ownerCollectionUser.length > 10 ? "..." : ""}
+            <br></br>
+          </span>
+          <div className="description-small" style={{ paddingRight: "16px" }}>
+            <img
+              className="blockchain-img"
+              src={`${chainData[blockchain]?.image}`}
+              alt=""
+            />
+            <span className="description ">{minPrice} ETH </span>
+          </div>
+          <div className="description-big">
+            <img
+              className="blockchain-img"
+              src={`${chainData[blockchain]?.image}`}
+              alt=""
+            />
+            <span className="description description-price">
+              {minPrice} - {maxPrice} ETH{" "}
+            </span>
+            <span className="description-more">View item</span>
+          </div>
+        </div>
       </button>
       <Modal
         isOpen={modalIsOpen}
@@ -261,7 +323,6 @@ const NftItem = ({
         <h2
           ref={(_subtitle) => (subtitle = _subtitle)}
           style={{
-            // color: "white !Important",
             fontFamily: "Plus Jakarta Sans",
             fontSize: "40px",
             fontStyle: "normal",
@@ -276,6 +337,7 @@ const NftItem = ({
         >
           {selected?.name}
         </h2>
+        {/* <p className='rainbow-text'>RAIR</p> */}
         <button
           style={{
             float: "right",
@@ -303,13 +365,11 @@ const NftItem = ({
             onClick={onClick}
             style={{
               margin: "auto",
-              backgroundImage: `url(${selected?.image})`,
+              backgroundImage: `url(${selected?.image || pict})`,
               width: "604px",
-              // height: "394px",
               height: "45rem",
               backgroundPosition: "center",
               backgroundSize: "contain",
-              // backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
             }}
           ></div>
@@ -329,17 +389,23 @@ const NftItem = ({
               <span>Price range</span>
               <div
                 style={{
-                  // border: "1px solid red",
                   borderRadius: "16px",
                   padding: "10px",
                   width: "228px",
                   height: "48px",
                   backgroundColor: "#383637",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
+                <img
+                  style={{ width: "24px", transform: "scale(1.2)" }}
+                  src={`${chainData[blockchain]?.image}`}
+                  alt=""
+                />
                 <span
                   style={{
-                    paddingLeft: "1rem",
+                    paddingLeft: "9px",
                     marginRight: "3rem",
                   }}
                 >
@@ -384,9 +450,6 @@ const NftItem = ({
                         id: p._id,
                         token: p.token,
                       };
-                      // return p.metadata map((e) => {
-                      //   return { value: e.name, id: p._id };
-                      // })
                     })
                   }
                 ></SelectBox>
@@ -557,7 +620,6 @@ const NftItem = ({
                         alt=""
                       />
                     </div>
-
                     <div
                       style={{
                         borderLeft: "4px solid #CCA541",

@@ -25,11 +25,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       })
     ).json();
     const covers = responseContract.contracts.map((item) => ({
+      blockchain: item.blockchain,
       collectionIndexInContract: item.products.collectionIndexInContract,
       contract: item.contractAddress,
       cover: item.products.cover,
       title: item.title,
       name: item.products.name,
+      user: item.user,
       copiesProduct: item.products.copies,
       offerData: item.products.offers.map((elem) => ({
         price: elem.price,

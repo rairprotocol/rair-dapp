@@ -9,7 +9,7 @@ export default function OfferItem({ handelClickToken, token, index, metadata, se
     }} key={index} onClick={() => {handelClickToken(token)
      setSelected(metadata)}}>
       <img
-        style={{ width: "291px", height: "291px", margin: '1rem 1rem' }}
+        style={{ width: "291px", height: "291px", margin: '1rem 1rem', pointerEvents: "none" }}
         src={metadata.image}
         alt={metadata}
       />

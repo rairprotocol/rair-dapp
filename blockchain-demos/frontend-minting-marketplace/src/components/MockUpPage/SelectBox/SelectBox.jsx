@@ -41,7 +41,10 @@ const SelectBox = (props) => {
             props.selectedToken ? (
               items.map((i) => {
                 if (i.token === props.selectedToken) {
-                  return <span key={i.id}>{i.value}</span>;
+                  return <span key={i.id}> 
+                  {i.value} 
+                  {/* {i.token} */}
+                  </span>;
                 }
                 return null;
               })
@@ -75,6 +78,7 @@ const SelectBox = (props) => {
               >
                 <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
                 <span>{item.value}</span>
+                {/* <span>{item.token}</span> */}
               </div>
             ))}
         </div>

@@ -21,6 +21,9 @@ const NftList = ({data, primaryColor, textColor}) => {
                             price={pict.offerData.map(p => p.price)}
                             primaryColor={primaryColor}
                             textColor={textColor}
+                            blockchain={pict.blockchain}
+                            collectionName={pict.name}
+                            ownerCollectionUser={pict.user}
                             collectionIndexInContract={pict.collectionIndexInContract}/>)
                     } else {
                         return null
