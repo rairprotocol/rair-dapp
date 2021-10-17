@@ -89,10 +89,10 @@ pipeline {
         step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'kubernetes-manigests/manifests/dev-manifest', credentialsId: env.JENKINS_CRED, verifyDeployments: true])
     }
   }
+}
   post {
     always {
       sh 'docker logout'
     }
   }
-}
 }
