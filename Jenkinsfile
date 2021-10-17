@@ -83,7 +83,7 @@ pipeline {
       }
     }
     stage('Deploy to k8s'){
-      when { branch 'dev' }
+      when { branch 'update-jenkinsfile-with-gke' }
       steps {
         sh("sed -i.bak 's#:dev_latest#:dev_${VERSION}#' ./kubernetes-manigests/manifests/dev-manifest/*.yaml")
         step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'kubernetes-manigests/manifests/dev-manifest', credentialsId: env.JENKINS_CRED, verifyDeployments: true])
