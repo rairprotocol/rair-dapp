@@ -86,7 +86,7 @@ pipeline {
       when { branch 'update-jenkinsfile-with-gke' }
       steps {
         sh("sed -i.bak 's#dev_latest#${BRANCH}_0.${VERSION}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/dev-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.LOCATION, manifestPattern: 'kubernetes-manigests/manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT_ID, clusterName: env.CLUSTER, zone: env.LOCATION, manifestPattern: 'kubernetes-manigests/manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
     }
   }
 }
