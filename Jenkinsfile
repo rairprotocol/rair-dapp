@@ -8,7 +8,7 @@ pipeline {
     VERSION = "${env.BUILD_ID}"
     BRANCH = "${env.BRANCH_NAME}"
     PROJECT_ID = 'rair-314019'
-    CLUSTER_NAME = 'staging-1'
+    CLUSTER = 'staging-1'
     LOCATION = 'us-central1-c'
     CREDENTIALS_ID = 'rair-314019'
   }
@@ -86,7 +86,7 @@ pipeline {
       when { branch 'update-jenkinsfile-with-gke' }
       steps {
         sh("sed -i.bak 's#dev_latest#${BRANCH}_0.${VERSION}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/dev-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'kubernetes-manigests/manifests/dev-manifest', credentialsId: env.JENKINS_CRED, verifyDeployments: true])
+        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.LOCATION, manifestPattern: 'kubernetes-manigests/manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
     }
   }
 }
