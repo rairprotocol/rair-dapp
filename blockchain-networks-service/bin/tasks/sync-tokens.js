@@ -3,7 +3,7 @@ const _ = require('lodash');
 const log = require('../utils/logger')(module);
 const providers = require('../integrations/ethers/providers');
 const { abi: Token } = require('../integrations/ethers/contracts/RAIR_ERC721.json');
-const { BigNumberFromFunc, BigNumber } = require('../utils/helpers');
+const { BigNumberFromFunc, numberToHexadecimal } = require('../utils/helpers');
 
 const lockLifetime = 1000 * 60 * 5; // 5 minutes - This could become very expensive and time consuming
 
@@ -15,6 +15,7 @@ module.exports = (context) => {
       const offersForUpdate = [];
       const providerData = _.find(providers, p => p.network === network);
       const provider = providerData.provider;
+      const networkHex = numberToHexadecimal(provider._network.chainId);
       const arrayOfContracts = await context.db.Contract.find({ blockchain: network }).distinct('contractAddress');
 
       await Promise.all(_.map(arrayOfContracts, async contractAddress => {
@@ -38,6 +39,7 @@ module.exports = (context) => {
             });
 
             const token = tokenId - foundProduct.firstTokenIndex;
+            const authenticityLink = `${ context.config.blockchain.authenticityHost[networkHex] }/${ contractAddress }/?a=${ token }`;
 
             // increasing number of minted tokens for a particular offer
             if (!_.isEmpty(foundProduct) && !_.isEmpty(foundOffers)) {
@@ -58,6 +60,7 @@ module.exports = (context) => {
                     ownerAddress: owner,
                     offer: offer.offerIndex,
                     uniqueIndexInContract: tokenId,
+                    authenticityLink,
                     isMinted: true
                   },
                   upsert: true,
