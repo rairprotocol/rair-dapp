@@ -30,8 +30,8 @@ describe("Token Factory", function () {
 			erc777instance = await ERC777Factory.deploy(initialSupply, [addr1.address]);
 			erc777ExtraInstance = await ERC777Factory.deploy(initialSupply * 2, [addr2.address]);
 
-			expect(await erc777instance.name()).to.equal("RAIR Test");
-			expect(await erc777instance.symbol()).to.equal("RAIRTee");
+			expect(await erc777instance.name()).to.equal("RAIR Token");
+			expect(await erc777instance.symbol()).to.equal("RAIR");
 			expect(await erc777instance.decimals()).to.equal(18);
 			expect(await erc777instance.granularity()).to.equal(1);
 			expect(await erc777instance.totalSupply()).to.equal(initialSupply);
@@ -272,10 +272,11 @@ describe("Token Factory", function () {
 			})
 
 			it ("Should lock ranges inside collections", async function() {
-				await expect(await rair721Instance.createRangeLock(0, 0, 1, 2)).to.emit(rair721Instance, 'RangeLocked').withArgs(0, 0, 1, 2, 'COLLECTION #1');
-				await expect(await rair721Instance.createRangeLock(1, 0, 4, 3)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 2, 6, 3, 'COLLECTION #2');
-				await expect(await rair721Instance.createRangeLock(1, 5, 9, 5)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 7, 11, 5, 'COLLECTION #2');
-				await expect(await rair721Instance.createRangeLock(2, 0, 169, 10)).to.emit(rair721Instance, 'RangeLocked').withArgs(2, 12, 181, 10, 'COLLECTION #3');
+				// RangeLocked Emits: productIndex, startingToken, endingToken, tokensLocked, productName, lockIndex
+				await expect(await rair721Instance.createRangeLock(0, 0, 1, 2)).to.emit(rair721Instance, 'RangeLocked').withArgs(0, 0, 1, 2, 'COLLECTION #1', 0);
+				await expect(await rair721Instance.createRangeLock(1, 0, 4, 3)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 2, 6, 3, 'COLLECTION #2', 1);
+				await expect(await rair721Instance.createRangeLock(1, 5, 9, 5)).to.emit(rair721Instance, 'RangeLocked').withArgs(1, 7, 11, 5, 'COLLECTION #2', 2);
+				await expect(await rair721Instance.createRangeLock(2, 0, 169, 10)).to.emit(rair721Instance, 'RangeLocked').withArgs(2, 12, 181, 10, 'COLLECTION #3', 3);
 			});
 
 			it ("Should say if more locks can be created", async function() {

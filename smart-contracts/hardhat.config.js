@@ -2,7 +2,8 @@ require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
 require('@openzeppelin/hardhat-upgrades');
 require('hardhat-deploy');
-require("@nomiclabs/hardhat-ethers")
+require("@nomiclabs/hardhat-ethers");
+require('hardhat-contract-sizer');
 require('dotenv').config()
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -24,6 +25,10 @@ module.exports = {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_ALCHEMY_URL}`,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
+    matic: {
+      url: process.env.MATIC_MAINNET_ENDPOINT,
+      accounts: [process.env.ADDRESS_PRIVATE_KEY]
+    },
     binanceSmartchain: {
       url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       chainId: 97,
@@ -33,7 +38,7 @@ module.exports = {
   },
   solidity: {
     compilers: [{
-      version: "0.8.7",
+      version: "0.8.9",
       settings: {
         optimizer: {
           enabled: true,
@@ -46,6 +51,10 @@ module.exports = {
     currency: 'USD',
     showTimeSpent: true,
     coinmarketcap: process.env.COINMARKETCAP || undefined
+  },
+  contractSizer: {
+    runOnCompile: true,
+    strict: true
   },
   mocha: {
     timeout: 0
