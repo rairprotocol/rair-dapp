@@ -49,6 +49,28 @@ spec:
               value: "dev.rair.tech"
             - name: PINATA_SECRET
               value: "92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1"
+            - name: sentry_enabled
+              value: "true"
+            - name: sentry_endpoint
+              value: "https://b1b9b63c8d484d35a7f47235c681201b@o1004167.ingest.sentry.io/5965143"
+            - name: sentry_trace_rate
+              value: "1.0"
+            - name: sentry_release
+              value: "unknown_development_build"
+            - name: default_product_cover
+              value: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
+            - name: matic_testnet_rpc
+              value: "https://polygon-mumbai.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: matic_mainnet_rpc
+              value: "https://polygon-mainnet.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: ethereum_mainnet_rpc
+              value: "https://mainnet.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: ethereum_testnet_goerli_rpc
+              value: "https://goerli.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: binance_testnet_rpc
+              value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+            - name: binance_mainnet_rpc
+              value: "https://bsc-dataseed.binance.org/"
           resources: {}
           volumeMounts:
             - mountPath: /usr/local/src/db
