@@ -44,7 +44,7 @@ spec:
             - name: ADMIN_NETWORK
               value: mumbai
             - name: ADMIN_CONTRACT
-              value: "0x0758C7d8B14cc586d115e7Bc187AbD31bE2d35FD:0"
+              value: "0x0758C7d8B14cc586d115e7Bc187AbD31bE2d35FD"
             - name: SERVICE_HOST
               value: "dev.rair.tech"
             - name: PINATA_SECRET
