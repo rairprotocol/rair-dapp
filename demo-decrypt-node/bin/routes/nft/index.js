@@ -1,6 +1,5 @@
 const express = require('express');
-const { validation } = require('../../middleware');
-const { JWTVerification } = require('../../middleware');
+const { JWTVerification, validation } = require('../../middleware');
 const upload = require('../../Multer/Config.js');
 const log = require('../../utils/logger')(module);
 const fs = require('fs');
@@ -20,7 +19,7 @@ module.exports = context => {
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product } = req.body;
-      const prod = parseInt(product);
+      const prod = Number(product);
       const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
@@ -128,7 +127,7 @@ module.exports = context => {
         .on('end', () => {
           _.forEach(offerPools, offerPool => {
             _.forEach(records, record => {
-              const token = parseInt(record.nftid);
+              const token = Number(record.nftid);
 
               if (_.inRange(token, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
                 const address = !!record.publicaddress ? record.publicaddress : '0xooooooooooooooooooooooooooooooooooo' + token;
@@ -211,7 +210,7 @@ module.exports = context => {
     }
   });
 
-  router.use('/:contract', (req, res, next) => {
+  router.use('/:contract', validation('nftContract', 'params'), (req, res, next) => {
     req.contract = req.params.contract.toLowerCase();
     next();
   }, require('./contract')(context));
