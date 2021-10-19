@@ -4,6 +4,7 @@ import withReactContent from 'sweetalert2-react-content';
 import InputField from '../common/InputField.jsx';
 import {useSelector, Provider, useStore} from 'react-redux';
 import {erc721Abi} from '../../contracts';
+import chainData from '../../utils/blockchainData';
 
 const rSwal = withReactContent(Swal.mixin({
 	showConfirmButton: false
@@ -235,18 +236,13 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 	</>
 }
 
-const blockchains = {
-	'BNB': '0x61',
-	'ETH': '0x5',
-	'tMATIC': '0x13881'
-}
 
 const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers}) => {
 	const {contractCreator, programmaticProvider} = useSelector(store => store.contractStore);
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	const store = useStore();
-	let onMyChain = window.ethereum ? blockchains[blockchain] === window.ethereum.chainId : blockchains[blockchain] === programmaticProvider.provider._network.chainId;
+	let onMyChain = window.ethereum ? chainData[blockchain].chainId === window.ethereum.chainId : chainData[blockchain].chainId === programmaticProvider.provider._network.chainId;
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
@@ -256,7 +252,7 @@ const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers
 				if (window.ethereum) {
 					await window.ethereum.request({
 						method: 'wallet_switchEthereumChain',
-						params: [{ chainId: blockchains[blockchain] }],
+						params: [{ chainId: chainData[blockchain].chainId }],
 					});
 				} else {
 					// Code for suresh goes here
@@ -281,7 +277,7 @@ const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers
 		}}>
 			{onMyChain ?
 				<>Add Offer <i className='fas fa-plus'/></> :
-				<>Switch to <b>{blockchain}</b></>
+				<>Switch to <b>{chainData[blockchain]?.name}</b></>
 			}
 	</button>
 };

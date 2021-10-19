@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 // React Redux types
 import * as authTypes from './../../ducks/auth/types';
 
-
 import chainData from '../../utils/blockchainData';
 
 const MyNFTs = (props) => {
@@ -16,12 +15,12 @@ const MyNFTs = (props) => {
 	const [tokens, setTokens] = useState([])
 
 	const fetchData = useCallback(async () => {
-		let response = rFetch('/api/nft');
+		let response = await rFetch('/api/nft');
 
 		if (response.success) {
 			let tokenData = []
 			for await (let token of response.result) {
-				let contractData = rFetch(`/api/contracts/${token.contract}`)
+				let contractData = await rFetch(`/api/contracts/${token.contract}`)
 				tokenData.push({
 					...token,
 					...contractData.contract
@@ -43,7 +42,7 @@ const MyNFTs = (props) => {
 	}, [fetchData]);
 
 	return <div className='row px-0 mx-0'>
-		{tokens.map((item, index) => {
+		{tokens.length > 0 ? tokens.map((item, index) => {
 			return <div
 				key={index}
 				className='p-2 my-2 col-4'>
@@ -57,7 +56,7 @@ const MyNFTs = (props) => {
 					{item.metadata ?
 						<>
 							<div className='w-100'>
-								<img alt='NFT' src={item.metadata.image} style={{ width: '100%', height: 'auto', maxHeight: '25vh' }} />
+								<img alt='NFT' src={item.metadata.image} style={{ width: 'auto', height: 'auto', maxHeight: '30vh' }} />
 							</div>
 							<b>{item.metadata.name}</b><br />
 							<small>{item.metadata.description}</small><br />
@@ -72,7 +71,7 @@ const MyNFTs = (props) => {
 					</Link>
 				</div>
 			</div>
-		})}
+		}) : 'Fetching data...'}
 	</div>
 }
 

@@ -131,15 +131,23 @@ const Token = (props) => {
 									value: metadata.attributes[item]
 								}
 							}
-							return <div key={index} className='col-4 my-2'>
+							return <div key={index} className='col-4 px-1 my-2'>
 								<div style={{
-									backgroundColor: '#77FA',
+									overflowX: 'hidden',
+									backgroundColor: '#77F9',
 									borderRadius: '10px',
 									border: 'solid blue 1px',
 									height: '5vh'
 								}}
 									className='w-100 h-100 py-auto'>
-									{itm.trait_type}: <b>{itm.value}</b>
+									{itm.trait_type === 'External URL' ?
+										<a href={itm.value} style={{color: 'inherit'}}>
+											{itm.value}
+										</a> 
+										:
+										<b>
+											{itm.value}
+										</b>}
 								</div>
 							</div>
 						})}
