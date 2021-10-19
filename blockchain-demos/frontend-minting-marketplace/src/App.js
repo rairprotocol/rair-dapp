@@ -38,6 +38,8 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
+import NftList from './components/MockUpPage/NftList/NftList';
+import NftItem from './components/MockUpPage/NftList/NftItem';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -300,7 +302,7 @@ function App({ sentryHistory }) {
 									<SentryRoute path='/all'>
 										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
-									<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
+									<SentryRoute path='/:adminToken/:contract/:product'>
 										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}

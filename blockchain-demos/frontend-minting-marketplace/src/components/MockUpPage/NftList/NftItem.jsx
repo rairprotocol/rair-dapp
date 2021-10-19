@@ -12,11 +12,14 @@ import {
 } from "react-accessible-accordion";
 // import VideoList from "../../video/videoList";
 import SelectBox from "../SelectBox/SelectBox";
+import chainData from "../../../utils/blockchainData";
 // import 'react-accessible-accordion/dist/fancy-example.css';
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useHistory } from "react-router-dom";
+
 Modal.setAppElement("#root");
 
 const NftItem = ({
+  blockchain,
   price,
   pict,
   onClick,
@@ -24,65 +27,101 @@ const NftItem = ({
   collectionIndexInContract,
   primaryColor,
   textColor,
+  collectionName,
+  ownerCollectionUser,
 }) => {
-  const [metadata, setMetadata] = useState([]);
+  const history = useHistory();
+  const location = useLocation();
+  const params = useParams();
+  const { adminToken, contract, product, token } = params;
+  let subtitle;
+
+  const [allProducts, setAllProducts] = useState([]);
   const [selected, setSelected] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState()
+  const [selectedToken, setSelectedToken] = useState();
+  // const [hover, setHover] = useState(false);
+  // const [dataImg, setDataImg] = useState();
 
-  let subtitle;
-  const location = useLocation();
-  const { adminToken, contract, product, offer, token } = useParams();
-  console.log(product, "log");
+  // useEffect(()=>{
+  //   if(dataLoaded ===true) {
+  //     setSelected(allProducts[0].metadata);
+  //   }
+  // },[dataLoaded,setSelected,allProducts])
 
-  // get location (useLocation)
   const getData = async () => {
     if (adminToken && contract && product) {
       const response = await (
-        await fetch(`/api/${adminToken}/${contract}/${product}/${offer}/${token}`, {
+        await fetch(`/api/${adminToken}/${contract}/${product}/`, {
           method: "GET",
-        })).json();
-      setData(response.result?.tokens.find(data => String(data.token) === token), 'ddd');
-      console.log(response)
-      console.log(data);
+        })
+      ).json();
+      const data = response.result?.tokens.find(
+        (data) => String(data.token) === token
+      );
+
+      setSelectedToken(data.token);
+      return data;
     } else return null;
   };
 
-  useEffect(() => {
-    const data = getData();
-    console.log(data)
-    if (location.pathname === `/${adminToken}/${contract}/${product}/${offer}/${token}`) {
-      setSelected(data);
-      setIsOpen(prev => !prev);
+  const getAllProduct = async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
+        method: "GET",
+      })
+    ).json();
+
+    setAllProducts(responseAllProduct.result);
+
+    if (!Object.keys(params).length)
+      setSelected(responseAllProduct.result[0].metadata);
+  };
+
+  const waitResponse = async () => {
+    const data = await getData();
+    if (data && data.metadata) {
+      setSelected(data.metadata);
+      openModal();
     }
+  };
 
-  }, [data]);
+  const handleClick1 = () => {
+    history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
+  };
+  function openModalOnClick() {
+    openModal();
+    handleClick1();
+  }
+  function openModal() {
+    setIsOpen(true);
+    getAllProduct();
+  }
 
+  const handelClickToken = (token) => {
+    history.push(
+      `/tokens/${contractName}/${collectionIndexInContract}/${token}`
+    );
+    setSelectedToken(token);
+  };
+  useEffect(() => {
+    waitResponse();
+  }, []);
 
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
 
-  function getIndexFromName(str) {
-    return str.split("#").pop();
-  }
-  function onSelect(text) {
-    const index = getIndexFromName(text);
-    setSelected(metadata[index]);
+  function onSelect(id) {
+    allProducts.forEach((p) => {
+      if (p._id === id) {
+        setSelected(p.metadata);
+      }
+    });
   }
 
   function percentToRGB(percent) {
-    // switch (percent){
-    //   case (percent < 15):
-    //     return "#95F619"
-    //   case (15 < percent < 35):
-    //   return '#F6ED19'
-    //   case (35 <= percent <= 100):
-    //     return '#F63419'
-    //     default:
-    //     return '0'
-    // }
     if (percent) {
       if (percent < 15) {
         return "#95F619";
@@ -135,8 +174,6 @@ const NftItem = ({
   const minPrice = arrayMin(price);
   const maxPrice = arrayMax(price);
 
-  // console.log([minPrice, "min", maxPrice, "max"]);
-  // drop down end
   const customStyles = {
     content: {
       top: "50%",
@@ -179,36 +216,48 @@ const NftItem = ({
       items: 1,
     },
   };
-
-  const getAllProduct = async () => {
-    const responseAllProduct = await (
-      await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
-        method: "GET",
-      })
-    ).json();
-
-    const metadata = responseAllProduct.result.map((item) => item.metadata);
-    // debugger;
-    setMetadata(metadata);
-    setSelected(metadata[0]);
-  };
-
-  function openModal() {
-    setIsOpen(true);
-    getAllProduct();
-  }
+  // (function () {
+  //   let angle = 0;
+  //   let p = document.querySelector('p');
+  //   debugger
+  //   if(p){
+  //     let text = p.textContent.split('');
+  //     var len = text.length;
+  //     var phaseJump = 360 / len;
+  //     var spans;
+  //     p.innerHTML = text.map(function (char) {
+  //       return '<span>' + char + '</span>';
+  //     }).join('');
+    
+  //     spans = p.children;
+  //   }
+  //   else console.log('kik');
+  
+  //   (function wheee () {
+  //     for (var i = 0; i < len; i++) {
+  //       spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+  //     }
+  //     angle++;
+  //     requestAnimationFrame(wheee);
+  //   })();
+  // })();
+  
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
   }
+  function handleClick() {
+    history.push("/all");
+  }
 
   function closeModal() {
     setIsOpen(false);
+    handleClick();
   }
   return (
     <>
       <button
-        onClick={openModal}
+        onClick={openModalOnClick}
         className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
         style={{
           height: "291px",
@@ -233,6 +282,36 @@ const NftItem = ({
             className="col-12 h-100 w-100"
           />
         </div>
+        <div className="col description-wrapper pic-description-wrapper">
+          <span className="description-title">
+            {collectionName}
+            <br />
+          </span>
+          <span className="description">
+            {ownerCollectionUser.slice(0, 7)}
+            {ownerCollectionUser.length > 10 ? "..." : ""}
+            <br></br>
+          </span>
+          <div className="description-small" style={{ paddingRight: "16px" }}>
+            <img
+              className="blockchain-img"
+              src={`${chainData[blockchain]?.image}`}
+              alt=""
+            />
+            <span className="description ">{minPrice} ETH </span>
+          </div>
+          <div className="description-big">
+            <img
+              className="blockchain-img"
+              src={`${chainData[blockchain]?.image}`}
+              alt=""
+            />
+            <span className="description description-price">
+              {minPrice} - {maxPrice} ETH{" "}
+            </span>
+            <span className="description-more">View item</span>
+          </div>
+        </div>
       </button>
       <Modal
         isOpen={modalIsOpen}
@@ -244,7 +323,6 @@ const NftItem = ({
         <h2
           ref={(_subtitle) => (subtitle = _subtitle)}
           style={{
-            // color: "white !Important",
             fontFamily: "Plus Jakarta Sans",
             fontSize: "40px",
             fontStyle: "normal",
@@ -259,6 +337,7 @@ const NftItem = ({
         >
           {selected?.name}
         </h2>
+        {/* <p className='rainbow-text'>RAIR</p> */}
         <button
           style={{
             float: "right",
@@ -286,13 +365,11 @@ const NftItem = ({
             onClick={onClick}
             style={{
               margin: "auto",
-              backgroundImage: `url(${selected.image})`,
+              backgroundImage: `url(${selected?.image || pict})`,
               width: "604px",
-              // height: "394px",
               height: "45rem",
               backgroundPosition: "center",
               backgroundSize: "contain",
-              // backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
             }}
           ></div>
@@ -312,17 +389,23 @@ const NftItem = ({
               <span>Price range</span>
               <div
                 style={{
-                  // border: "1px solid red",
                   borderRadius: "16px",
                   padding: "10px",
                   width: "228px",
                   height: "48px",
                   backgroundColor: "#383637",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
+                <img
+                  style={{ width: "24px", transform: "scale(1.2)" }}
+                  src={`${chainData[blockchain]?.image}`}
+                  alt=""
+                />
                 <span
                   style={{
-                    paddingLeft: "1rem",
+                    paddingLeft: "9px",
                     marginRight: "3rem",
                   }}
                 >
@@ -340,11 +423,6 @@ const NftItem = ({
             <div>
               <span>Item rank</span>
               <div>
-                {/* <select>
-                  <option>Ultra Rair 1/1</option>
-                  <option>Rair 842 / 1,000</option>
-                  <option>Common 1,620 / 10,000</option>
-                </select> */}
                 <SelectBox
                   primaryColor={primaryColor}
                   items={[
@@ -359,20 +437,22 @@ const NftItem = ({
               <span>Serial number</span>
               <div>
                 <SelectBox
+                  handelClickToken={handelClickToken}
+                  selectedToken={selectedToken}
+                  contractName={contractName}
                   primaryColor={primaryColor}
                   selectItem={onSelect}
                   items={
-                    metadata.length &&
-                    metadata.map((e) => {
-                      return { value: e.name, id: getIndexFromName(e.name) };
+                    allProducts.length &&
+                    allProducts.map((p) => {
+                      return {
+                        value: p.metadata.name,
+                        id: p._id,
+                        token: p.token,
+                      };
                     })
                   }
-                >
-                  {/* {metadata &&
-                    metadata.map((e, index) => (
-                      <option key={index}>{e.name}</option>
-                    ))} */}
-                </SelectBox>
+                ></SelectBox>
               </div>
             </div>
             <div
@@ -402,51 +482,56 @@ const NftItem = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <div className="col-12 row mx-0">
-                  {Object.keys(selected).length &&
-                    selected?.attributes.map((item, index) => {
-                      if (item.trait_type === "External URL") {
+                  {selected
+                    ? Object.keys(selected).length &&
+                      selected?.attributes.map((item, index) => {
+                        if (item.trait_type === "External URL") {
+                          return (
+                            <div
+                              key={index}
+                              className="col-4 my-2 p-1 custom-desc-to-offer"
+                              style={{ color: textColor, textAlign: "center" }}
+                            >
+                              <span>{item?.trait_type}:</span>
+                              <br />
+                              <a
+                                style={{ color: textColor }}
+                                href={item?.value}
+                              >
+                                {item?.value}
+                              </a>
+                            </div>
+                          );
+                        }
+                        const percent = randomInteger(1, 40);
                         return (
                           <div
                             key={index}
                             className="col-4 my-2 p-1 custom-desc-to-offer"
-                            style={{ color: textColor, textAlign: "center" }}
                           >
-                            <span>{item?.trait_type}:</span>
-                            <br />
-                            <a style={{ color: textColor }} href={item?.value}>
-                              {item?.value}
-                            </a>
-                          </div>
-                        );
-                      }
-                      const percent = randomInteger(1, 40);
-                      return (
-                        <div
-                          key={index}
-                          className="col-4 my-2 p-1 custom-desc-to-offer"
-                        >
-                          <div
-                            style={{
-                              padding: "0.1rem 1rem",
-                              textAlign: "center",
-                            }}
-                          >
-                            <span>{item?.trait_type}:</span>
-                            <span style={{ color: textColor }}>
-                              {item?.value}
+                            <div
+                              style={{
+                                padding: "0.1rem 1rem",
+                                textAlign: "center",
+                              }}
+                            >
+                              <span>{item?.trait_type}:</span>
+                              <span style={{ color: textColor }}>
+                                {item?.value}
+                              </span>
+                            </div>
+                            <span
+                              style={{
+                                marginLeft: "15rem",
+                                color: percentToRGB(percent),
+                              }}
+                            >
+                              {percent} %
                             </span>
                           </div>
-                          <span
-                            style={{
-                              marginLeft: "15rem",
-                              color: percentToRGB(percent),
-                            }}
-                          >
-                            {percent} %
-                          </span>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    : null}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
@@ -531,11 +616,10 @@ const NftItem = ({
                           height: "135px",
                           filter: "blur(3px)",
                         }}
-                        src={selected.image}
+                        src={selected?.image}
                         alt=""
                       />
                     </div>
-
                     <div
                       style={{
                         borderLeft: "4px solid #CCA541",
@@ -586,13 +670,14 @@ const NftItem = ({
             responsive={responsive}
             itemClass="carousel-item-padding-4-px"
           >
-            {metadata &&
-              metadata.map((e, index) => (
+            {allProducts &&
+              allProducts.map((p, index) => (
                 <OfferItem
                   key={index}
                   index={index}
-                  metadata={metadata}
-                  data={e}
+                  metadata={p.metadata}
+                  token={p.token}
+                  handelClickToken={handelClickToken}
                   setSelected={setSelected}
                 />
               ))}
