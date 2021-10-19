@@ -15,5 +15,5 @@ module.exports = Joi.object({
     .messages({ 'string.pattern.base': 'Invalid contract address' })
     .required(),
   product: Joi.number().required(),
-  offer: Joi.array().items(Joi.number()).required()
+  offer: Joi.array().min(1).items(Joi.number()).required()
 });
