@@ -23,6 +23,7 @@ const MintedToken = new Schema({
   contract: { type: String, lowercase: true, required: true },
   metadata: { type: Metadata, default: () => ({}) },
   metadataURI: { type: String, default: 'none' },
+  authenticityLink: { type: String, default: 'none' },
   isMinted: { type: Boolean, required: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
