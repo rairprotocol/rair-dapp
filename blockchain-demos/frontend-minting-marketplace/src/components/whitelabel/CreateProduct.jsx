@@ -4,6 +4,7 @@ import withReactContent from 'sweetalert2-react-content';
 import InputField from '../common/InputField.jsx';
 import {useSelector} from 'react-redux';
 import {erc721Abi} from '../../contracts';
+import chainData from '../../utils/blockchainData';
 
 const rSwal = withReactContent(Swal);
 
@@ -29,7 +30,7 @@ const ModalContent = ({instance, blockchain}) => {
 			setter={setProductLength}
 		/>
 		<br /> 
-		<button disabled={blockchains[blockchain] !== window.ethereum.chainId} onClick={async e => {
+		<button disabled={chainData[blockchain].chainId !== window.ethereum.chainId} onClick={async e => {
 			await instance.createProduct(productName, productLength);
 			rSwal.close();
 		}} className='btn my-3 btn-stimorol'>
@@ -38,17 +39,11 @@ const ModalContent = ({instance, blockchain}) => {
 	</>
 }
 
-const blockchains = {
-	'BNB': '0x61',
-	'ETH': '0x5',
-	'tMATIC': '0x13881'
-}
-
 const CreateProduct = ({address, blockchain}) => {
 	const {contractCreator, programmaticProvider} = useSelector(store => store.contractStore);
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
-	let onMyChain = window.ethereum ? blockchains[blockchain] === window.ethereum.chainId : blockchains[blockchain] === programmaticProvider.provider._network.chainId;
+	let onMyChain = window.ethereum ? chainData[blockchain].chainId === window.ethereum.chainId : chainData[blockchain].chainId === programmaticProvider.provider._network.chainId;
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
@@ -58,7 +53,7 @@ const CreateProduct = ({address, blockchain}) => {
 				if (window.ethereum) {
 					await window.ethereum.request({
 						method: 'wallet_switchEthereumChain',
-						params: [{ chainId: blockchains[blockchain] }],
+						params: [{ chainId: chainData[blockchain].chainId }],
 					});
 				} else {
 					// Code for suresh goes here
@@ -76,7 +71,7 @@ const CreateProduct = ({address, blockchain}) => {
 		}}>
 			{onMyChain ?
 				<>New Product <i className='fas fa-plus'/></> :
-				<>Switch to <b>{blockchain}</b></>
+				<>Switch to <b>{chainData[blockchain]?.name}</b></>
 			}
 	</button>
 };

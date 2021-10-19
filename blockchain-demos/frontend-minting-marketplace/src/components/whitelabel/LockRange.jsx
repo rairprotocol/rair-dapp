@@ -4,6 +4,7 @@ import withReactContent from 'sweetalert2-react-content';
 import InputField from '../common/InputField.jsx';
 import {useSelector} from 'react-redux';
 import {erc721Abi} from '../../contracts';
+import chainData from '../../utils/blockchainData';
 
 const rSwal = withReactContent(Swal);
 
@@ -42,7 +43,7 @@ const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) =
 	const {programmaticProvider, contractCreator} = useSelector(store => store.contractStore);
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
-	let onMyChain = window.ethereum ? blockchains[blockchain] === window.ethereum.chainId : blockchains[blockchain] === programmaticProvider.provider._network.chainId;
+	let onMyChain = window.ethereum ? chainData[blockchain].chainId === window.ethereum.chainId : chainData[blockchain].chainId === programmaticProvider.provider._network.chainId;
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
@@ -52,7 +53,7 @@ const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) =
 				if (window.ethereum) {
 					await window.ethereum.request({
 						method: 'wallet_switchEthereumChain',
-						params: [{ chainId: blockchains[blockchain] }],
+						params: [{ chainId: chainData[blockchain].chainId }],
 					});
 				} else {
 					// Code for suresh goes here
@@ -80,7 +81,7 @@ const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) =
 				</>
 				:
 				<>
-					Switch to <b>{blockchain}</b>
+					Switch to <b>{chainData[blockchain].name}</b>
 				</>
 			}
 	</button>
