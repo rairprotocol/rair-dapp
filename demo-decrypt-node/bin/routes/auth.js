@@ -9,6 +9,58 @@ const { JWTVerification, validation } = require('../middleware');
 const { nanoid } = require('nanoid');
 const log = require('../utils/logger')(module);
 
+const getTokensForUser = async (context, ownerAddress, { offer, contract, product }) => context.db.Offer.aggregate([
+  { $match: { offerIndex: { $in: offer }, contract, product } },
+  {
+    $lookup: {
+      from: 'MintedToken',
+      let: {
+        contractT: '$contract',
+        offerP: '$offerPool',
+        of: '$offerIndex',
+        owner: ownerAddress.toLowerCase()
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: [
+                    '$contract',
+                    '$$contractT'
+                  ]
+                },
+                {
+                  $eq: [
+                    '$offerPool',
+                    '$$offerP'
+                  ]
+                },
+                {
+                  $eq: [
+                    '$offer',
+                    '$$of'
+                  ]
+                },
+                {
+                  $eq: [
+                    '$ownerAddress',
+                    '$$owner'
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      as: 'tokens'
+    },
+  },
+  { $unwind: '$tokens' },
+  { $replaceRoot: { newRoot: '$tokens' } }
+]);
+
 module.exports = context => {
   const router = express.Router();
   /**
@@ -68,23 +120,36 @@ module.exports = context => {
     const ethAddres = req.metaAuth.recovered;
     const { mediaId } = req.params;
     try {
-      const { author } = await context.db.File.find({ _id: mediaId });
-      if (ethAddres) {
-        if (typeof author === 'string' && author.length > 0) { // verify the account holds the required NFT!
-          const [contractAddress, tokenId] = author.split(':');
-          log.info('verifying account has token', contractAddress, tokenId);
-          try {
-            const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
+      let ownsTheAdminToken;
+      let ownsTheAccessTokens;
+      const file = await context.db.File.findOne({ _id: mediaId });
 
-            if (!ownsTheToken) {
-              res.json({ success: false, message: 'You don\'t hold the current admin token' });
-            } else {
-              res.json({ success: true, message: 'Admin token holder' });
-            }
+      if (ethAddres) {
+        // verify the account holds the required NFT
+        if (typeof file.author === 'string' && file.author.length > 0) {
+          const [contractAddress, tokenId] = file.author.split(':');
+          log.info('Verifying account has token');
+          try {
+            ownsTheAdminToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
           } catch (e) {
-            return next(new Error('Could not verify account', e));
+            return next(new Error(`Could not verify account: ${ e }`));
           }
         }
+
+        // verify the user have needed tokens
+        if (!ownsTheAdminToken) {
+          ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
+
+          // TODO: have to be the call functionality of tokens sync
+          // if (_.isEmpty(ownsTheAccessTokens)) {
+          //   ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
+          // }
+        }
+
+        if (!ownsTheAdminToken && _.isEmpty(ownsTheAccessTokens)) {
+          res.status(403).send({ success: false, message: 'You don\'t have permission.' });
+        }
+
         jwt.sign(
           { eth_addr: ethAddres, media_id: mediaId },
           process.env.JWT_SECRET,
