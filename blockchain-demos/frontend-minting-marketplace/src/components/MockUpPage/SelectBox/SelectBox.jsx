@@ -73,7 +73,7 @@ const SelectBox = (props) => {
               <div
                 key={item.id}
                 onClick={() => {onSelectItem(item) 
-                  props.handelClickToken(item.token)}}
+                  props.handleClickToken(item.token)}}
                 className={selectedItem === item ? "selected" : ""}
               >
                 <span style={{ paddingRight: "10px" }}>{item.pkey}</span>

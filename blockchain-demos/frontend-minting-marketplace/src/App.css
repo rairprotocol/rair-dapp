@@ -478,6 +478,9 @@ margin-left: -36px;
 .description-big{
   display: none;
 }
+.description-more:hover{
+  color: #d779c6;
+}
 .description-more::after{
   content: '\2794';
   padding-left: 6px;
@@ -546,3 +549,25 @@ margin-left: -36px;
   width: 100%;
 
 } */
+
+
+/* accordion__button */
+.accordion__button::after{
+  content: '\002B';
+  float: right;
+  color: black;
+  background-color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 23px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.accordion__button[aria-expanded='true']::after,
+.accordion__button[aria-selected='true']::after {
+  content: "\2212";
+}
