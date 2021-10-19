@@ -13,39 +13,49 @@ const blockchainData = {
 	}
 }
 
-const getEventData = (abi, eventName) => {
-	const [eventAbi] = abi.filter(item => {
-		return item.type === 'event' && item.name === eventName
+const getABIData = (abi, type, eventName) => {
+	const [resultingAbi] = abi.filter(item => {
+		return item.type === type && item.name === eventName
 	})
 	const instance = new Ethers.Contract(Ethers.constants.AddressZero, abi);
 	const [topic] = Object.keys(instance.filters).filter(item => item.includes(`${eventName}(`)).map(item => {
 		return Ethers.utils.id(item);
 	});
-	return {eventAbi, topic};
+	return {abi: resultingAbi, topic};
 };
 
 const getDeployedContracts = async (factoryAddress, chainName) => {
-	const {eventAbi, topic} = getEventData(factoryAbi, 'NewContractDeployed');
+	const {abi, topic} = getABIData(factoryAbi, 'event', 'NewContractDeployed');
 	const options = {
 		address: factoryAddress,
 		chain: blockchainData[chainName].chainId,
 		topic,
-		abi: eventAbi
+		abi
 	}
 	let events = await Moralis.Web3API.native.getContractEvents(options);
 	events.result.forEach(async result => {
-		const deployedAddress = Moralis.Object.extend("deployedAddress");
-		const deployedQuery = new Moralis.Query(deployedAddress);
-		deployedQuery.equalTo('transactionHash', result.transaction_hash);
-		const deployedResults = await deployedQuery.find();
-		if (deployedResults.length === 0) {
-			const address = new deployedAddress();
+		const Contract = Moralis.Object.extend("Contract");
+		const contractQuery = new Moralis.Query(Contract);
+		contractQuery.equalTo('transactionHash', result.transaction_hash);
+		const contractResults = await contractQuery.find();
+		if (contractResults.length === 0) {
+			const nameAbi = getABIData(erc721Abi, 'function', 'name')
+			const options = {
+				chain: blockchainData[chainName].chainId,
+				address: result.data.token,
+				function_name: "name",
+				abi: [nameAbi.abi]
+			};
+			const name = await Moralis.Web3API.native.runContractFunction(options).catch(console.error);
+
+			const address = new Contract();
 			address.set("factoryAddress", result.address);
 			address.set("transactionHash", result.transaction_hash);
-			address.set("chainId", blockchainData[chainName].chainId);
-			address.set("owner", result.data.owner);
+			address.set("blockchain", blockchainData[chainName].chainId);
+			address.set("user", result.data.owner);
 			address.set("indexOfOwner", result.data.uid);
-			address.set("deployedAddress", result.data.token);
+			address.set("contractAddress", result.data.token);
+			address.set("title", name);
 			await address.save();
 			// Listen to this contract's events
 			console.log(`[${chainName}] Saved contract #${result.data.uid} of ${result.data.owner}`);
@@ -57,40 +67,49 @@ const getDeployedContracts = async (factoryAddress, chainName) => {
 	})
 }
 
-const getProducts = async () => {
-	const WatchedAddresses = Moralis.Object.extend("WatchedPolygonAddress");
-	const query = new Moralis.Query(WatchedAddresses); 
-	const results = await query.find();
-	const {eventAbi, topic} = getEventData(erc721Abi, 'ProductCreated');
+const getProducts = async (chainName) => {
+	const Contract = Moralis.Object.extend("Contract");
+	const contractQuery = new Moralis.Query(Contract); 
+	contractQuery.equalTo('blockchain', blockchainData[chainName].chainId);
+	const contractResult = await contractQuery.find();
+
+	const {abi, topic} = getABIData(erc721Abi, 'event', 'ProductCreated');
 	const generalOptions = {
-		chain: "mumbai",
+		chain: blockchainData[chainName].chainId,
 		topic,
-		abi: eventAbi
+		abi
 	};
-	results.forEach(
+	
+	contractResult.forEach(
 		async item => {
+			
 			const options = {
-				address: item.get('address'),
+				address: item.get('contractAddress'),
 				...generalOptions
 			}
 			let events = await Moralis.Web3API.native.getContractEvents(options);
+
+			const Product = Moralis.Object.extend("Product");
 			events.result.forEach(async result => {
-				const Product = Moralis.Object.extend("Product");
 				const productQuery = new Moralis.Query(Product);
 				productQuery.equalTo('transactionHash', result.transaction_hash);
 				const productResults = await productQuery.find();
+				
 				if (productResults.length === 0) {
 					const product = new Product();
-					product.set("contractAddress", result.address);
+					product.set("contract", result.address);
 					product.set("transactionHash", result.transaction_hash);
-					product.set("productId", result.data.uid);
-					product.set("productName", result.data.name);
-					product.set("productStartingToken", result.data.startingToken);
-					product.set("productLength", result.data.length);
-					product.set("productEndingToken", (Ethers.BigNumber.from(result.data.length).add(result.data.startingToken)).toString());
-					product.set("chainId", '0x13881');
+					product.set("collectionIndexInContract", result.data.uid);
+					product.set("name", result.data.name);
+					product.set("firstTokenIndex", result.data.startingToken);
+					product.set("copies", result.data.length);
+					product.set("soldCopies", 0);
+					product.set("sold", false);
+					product.set("lastTokenIndex", (Ethers.BigNumber.from(result.data.length).add(result.data.startingToken)).toString());
+					product.set("chainId", blockchainData[chainName].chainId);
 					await product.save();
-					console.log('Saved product', result.data.uid, 'of', result.address);
+					
+					console.log(`[${chainName}] Saved product #${result.data.uid} of ${result.address}`);
 				}
 			})
 		});
@@ -123,18 +142,16 @@ const main = async () => {
 		await Moralis.Cloud.run('watchPolygonAddress', { address: item.data.token.toLowerCase(), 'sync_historical': true });
 	});
 	*/
-
-	// Gets the Products from all Watched Contracts
-	//getProducts();
 	
-	// Gets the topics of the contract
+	// Gets the topics of the contract. Useless now that getABIData exists
 	//logEventTopics();
-	
 	// Returns the ABI entry and the Event's hash (topic) so Moralis can use it
-	//getEventData(erc721Abi, 'ProductCreated')
+	//getABIData(erc721Abi, 'event', 'ProductCreated');
 
 	// Queries a factory and stores all deployed contracts
-	//getDeployedContracts(blockchainData.mumbai.factoryAddress, 'mumbai');
+	await getDeployedContracts(blockchainData.mumbai.factoryAddress, 'mumbai');
+	// Gets the Products from all Deployed Contracts
+	await getProducts('mumbai');
 }
 
 try {
