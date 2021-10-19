@@ -42,7 +42,6 @@ const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) =
 	const {programmaticProvider, contractCreator} = useSelector(store => store.contractStore);
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
-	console.log(programmaticProvider);
 	let onMyChain = window.ethereum ? blockchains[blockchain] === window.ethereum.chainId : blockchains[blockchain] === programmaticProvider.provider._network.chainId;
 
 	return <button
