@@ -216,21 +216,47 @@ module.exports = async ({ db, config }) => {
           const contract = contractAddress.toLowerCase();
           const OfferP = parseInt(offerPool);
           const network = numberToHexadecimal(provider._network.chainId);
-          const authenticityLink = `${ config.blockchain.authenticityHost[network] }/${ contract }/?a=${ tokenIndex }`;
 
           const product = await db.OfferPool.aggregate([
             { $match: { contract, marketplaceCatalogIndex: OfferP } },
             {
               $lookup: {
                 from: 'Product',
-                localField: 'product',
-                foreignField: 'collectionIndexInContract',
+                let: {
+                  contr: '$contract',
+                  prod: '$product'
+                },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          {
+                            $eq: [
+                              '$contract',
+                              '$$contr'
+                            ]
+                          },
+                          {
+                            $eq: [
+                              '$collectionIndexInContract',
+                              '$$prod'
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
                 as: 'products'
               }
             },
             { $unwind: '$products' },
             { $replaceRoot: { newRoot: '$products' } },
           ]);
+
+          const uniqueIndexInContract = product[0].firstTokenIndex + parseInt(tokenIndex);
+          const authenticityLink = `${ config.blockchain.authenticityHost[network] }/${ contract }/?a=${ uniqueIndexInContract }`;
 
           const foundToken = await db.MintedToken.findOne({
             contract,
