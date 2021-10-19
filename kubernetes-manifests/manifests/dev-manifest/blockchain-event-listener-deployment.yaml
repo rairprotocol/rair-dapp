@@ -48,6 +48,83 @@ spec:
               value: "dev.rair.tech"
             - name: PINATA_SECRET
               value: "92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1"
+            
+          
+            - name: matic_testnet_rpc
+              value: "https://polygon-mumbai.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: matic_mainnet_rpc
+              value: "https://polygon-mainnet.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: ethereum_mainnet_rpc
+              value: "https://mainnet.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: ethereum_testnet_goerli_rpc
+              value: "https://goerli.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: binance_testnet_rpc
+              value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+            - name: binance_mainnet_rpc
+              value: "https://bsc-dataseed.binance.org/"
+            
+            
+            - name: BINANCE_URL
+              value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+            - name: BINANCE_CHAIN_ID
+              value: "97"
+            - name: BINANCE_SYMBOL
+              value: "BNB"
+            - name: BINANCE_NAME
+              value: "Binance Testnet"
+            - name: BINANCE_FACTORY_ADDRESS
+              value: "0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4"
+            - name: BINANCE_MINTER_ADDRESS
+              value: "0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f"
+            - name: BINANCE_CHAINID_HEX
+              value: "0x61"
+            - name: GOERLI_URL
+              value: "https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_
+goerli_chain_id=5"
+            - name: GOERLI_CHAIN_ID
+              value: "5"
+            - name: GOERLI_SYMBOL
+              value: "ETH"
+            - name: GOERLI_NAME
+              value: "Goerli Testnet"
+            - name: GOERLI_FACTORY_ADDRESS
+              value: "0x74278C22BfB1DCcc3d42F8b71280C25691E8C157"
+            - name: GOERLI_MINTER_ADDRESS
+              value: "0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba"
+            - name: GOERLI_CHAINID_HEX
+              value: "0x5"
+            - name: MATIC_MUMBAI_URL
+              value: "https://polygon-mumbai.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: MATIC_MUMBAI_CHAIN_ID
+              value: "80001"
+            - name: MATIC_MUMBAI_SYMBOL
+              value: "tMATIC"
+            - name: MATIC_MUMBAI_NAME
+              value: "Matic Mumbai Testnet"
+            - name: MATIC_MUMBAI_FACTORY_ADDRESS
+              value: "0x1A5bf89208Dddd09614919eE31EA6E40D42493CD"
+            - name: MATIC_MUMBAI_MINTER_ADDRESS
+              value: "0x63Dd6821D902012B664dD80140C54A98CeE97068"
+            - name: MATIC_MUMBAI_CHAINID_HEX
+              value: "0x13881"
+            - name: MATIC_MAINNET_URL
+              value: "https://polygon-mainnet.infura.io/v3/5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: MATIC_MAINNET_CHAIN_ID
+              value: "137"
+            - name: MATIC_MAINNET_SYMBOL
+              value: "MATIC"
+            - name: MATIC_MAINNET_NAME
+              value: "Matic Mainnet"
+            - name: MATIC_MAINNET_FACTORY_ADDRESS
+              value: "0x556a3Db6d800AAA56f8B09E476793c5100705Db5"
+            - name: MATIC_MAINNET_MINTER_ADDRESS
+              value: "0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df"
+            - name: MATIC_MAINNET_CHAINID_HEX
+              value: "0x89"
+            - name: SYNC_CONTRACT_REPEAT_EVERY
+              value: "30"
+            - name: SYNC_CONTRACT_TASK_INTERVAL
+              value: "5"
           resources: {}
       imagePullSecrets:
         - name: regcred

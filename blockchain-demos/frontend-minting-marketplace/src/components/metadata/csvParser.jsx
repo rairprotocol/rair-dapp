@@ -34,7 +34,6 @@ const CSVParser = () => {
 				headers.forEach((headerItem, headerIndex) => {
 					insert[headerItem] = textItem.split(',')[headerIndex]
 				})
-				console.log(insert);
 				final.push(insert);
 			})
 
