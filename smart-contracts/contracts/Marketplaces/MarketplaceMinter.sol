@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.7; 
+pragma solidity ^0.8.9; 
 
 // Used on interfaces
 import '@openzeppelin/contracts/access/AccessControl.sol';
@@ -7,7 +7,7 @@ import "../Tokens/IRAIR-ERC721.sol";
 import "../Tokens/IERC2981.sol";
 
 // Parent classes
-import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 
 //import 'hardhat/console.sol';
 
@@ -15,7 +15,7 @@ import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 /// @notice Handles the minting of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the minting mechanisms on other tokens!
-contract Minter_Marketplace is OwnableUpgradeable {
+contract Minter_Marketplace is Ownable {
 	struct offer {
 		address contractAddress;
 		address nodeAddress;

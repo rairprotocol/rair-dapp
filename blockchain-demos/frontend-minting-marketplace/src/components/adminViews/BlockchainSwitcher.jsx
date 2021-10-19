@@ -89,7 +89,7 @@ const BlockChainSwitcher = () => {
 				payload: chainId
 			});
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			Swal.fire('Error', err, 'error');
 		}
 	}

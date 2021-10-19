@@ -6,9 +6,9 @@ const Token = require('./contracts/RAIR_ERC721.json').abi;
 const log = require('../../utils/logger')(module);
 const { addMetadata, addPin } = require('../../integrations/ipfsService')();
 const providers = require('./providers');
-const { numberToHexadecimal } = require('../../utils/helpers')
+const { numberToHexadecimal } = require('../../utils/helpers');
 
-module.exports = async (db) => {
+module.exports = async ({ db, config }) => {
   // Helpers
   const setProductListeners = async (contractAddress, provider) => {
     const tokenInstance = new ethers.Contract(contractAddress, Token, provider);
@@ -129,7 +129,7 @@ module.exports = async (db) => {
       const numberOfTokens = await factoryInstance.getContractCountOf(ownerAddress);
       const foundContracts = await db.Contract.find({ user: ownerAddress }).distinct('contractAddress');
 
-      log.info(`${ ownerAddress } has deployed, ${ numberOfTokens.toString() }, contracts in ${provider._network.name} network.`);
+      log.info(`${ ownerAddress } has deployed, ${ numberOfTokens.toString() }, contracts in ${ provider._network.name } network.`);
 
       for (let j = 0; j < numberOfTokens; j++) {
         const contractAddress = await factoryInstance.ownerToContracts(ownerAddress, j);
@@ -138,7 +138,7 @@ module.exports = async (db) => {
         const erc777Instance = new ethers.Contract(contract, Token, provider);
         const title = await erc777Instance.name();
 
-        log.info(`Contract ${ contractAddress } found for network ${provider._network.name}!`);
+        log.info(`Contract ${ contractAddress } found for network ${ provider._network.name }!`);
 
         if (!_.includes(foundContracts, contract)) {
           await db.Contract.create({
@@ -160,7 +160,7 @@ module.exports = async (db) => {
     }
   };
 
-  const offerListeners = (minterInstance) => {
+  const offerListeners = (provider, minterInstance) => {
     try {
       minterInstance.on('AddedOffer(address,uint256,uint256,uint256)', async (contractAddress, product, rangeNumber, catalogIndex) => {
         try {
@@ -215,20 +215,48 @@ module.exports = async (db) => {
         try {
           const contract = contractAddress.toLowerCase();
           const OfferP = parseInt(offerPool);
+          const network = numberToHexadecimal(provider._network.chainId);
 
           const product = await db.OfferPool.aggregate([
             { $match: { contract, marketplaceCatalogIndex: OfferP } },
             {
               $lookup: {
                 from: 'Product',
-                localField: 'product',
-                foreignField: 'collectionIndexInContract',
+                let: {
+                  contr: '$contract',
+                  prod: '$product'
+                },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          {
+                            $eq: [
+                              '$contract',
+                              '$$contr'
+                            ]
+                          },
+                          {
+                            $eq: [
+                              '$collectionIndexInContract',
+                              '$$prod'
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
                 as: 'products'
               }
             },
             { $unwind: '$products' },
             { $replaceRoot: { newRoot: '$products' } },
           ]);
+
+          const uniqueIndexInContract = product[0].firstTokenIndex + parseInt(tokenIndex);
+          const authenticityLink = `${ config.blockchain.authenticityHost[network] }/${ contract }/?a=${ uniqueIndexInContract }`;
 
           const foundToken = await db.MintedToken.findOne({
             contract,
@@ -252,6 +280,7 @@ module.exports = async (db) => {
             }, {
               ownerAddress,
               metadataURI,
+              authenticityLink,
               isMinted: true
             });
           } else {
@@ -261,6 +290,7 @@ module.exports = async (db) => {
               offerPool,
               offer: offerIndex,
               contract,
+              authenticityLink,
               uniqueIndexInContract: (product[0].firstTokenIndex + parseInt(tokenIndex)),
               isMinted: true
             });
@@ -314,8 +344,7 @@ module.exports = async (db) => {
   };
 
   return Promise.all(_.map(providers, async providerData => {
-    console.log('Connected to', providerData.provider._network.name);
-    console.log('Symbol:', providerData.provider._network.symbol);
+    console.log(`Connected to ${ providerData.provider._network.name }. Symbol: ${ providerData.provider._network.symbol }`);
 
     // These connections don't have an address associated, so they can read but can't write to the blockchain
     let factoryInstance = await new ethers.Contract(providerData.factoryAddress, Factory, providerData.provider);
@@ -329,6 +358,6 @@ module.exports = async (db) => {
     await Promise.all(_.map(arrayOfUsers, user => productListeners(providerData.provider, factoryInstance, user)));
 
     // Offers
-    offerListeners(minterInstance);
+    offerListeners(providerData.provider, minterInstance);
   }));
 };

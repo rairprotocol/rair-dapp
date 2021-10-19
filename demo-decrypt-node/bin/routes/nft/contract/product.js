@@ -9,10 +9,8 @@ module.exports = context => {
   router.get('/', async (req, res, next) => {
     try {
       const { contract, product } = req;
-      const prod = parseInt(product);
-
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract, product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -60,11 +58,9 @@ module.exports = context => {
     try {
       const { contract, product } = req;
       const { token } = req.params;
-      const prod = parseInt(product);
-      const sanitizedToken = parseInt(token);
-
+      const sanitizedToken = Number(token);
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract, product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -121,11 +117,8 @@ module.exports = context => {
     try {
       const { token } = req.params;
       const { contract, product } = req;
-      const sanitizedToken = parseInt(token);
-
-      const prod = parseInt(product);
-
-      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product: prod });
+      const sanitizedToken = Number(token);
+      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product });
 
       if (_.isEmpty(offerPoolRaw)) {
         res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
@@ -142,7 +135,7 @@ module.exports = context => {
             let: {
               contractT: '$contract',
               offerIndex: '$offer',
-              productT: prod
+              productT: product
             },
             pipeline: [
               {

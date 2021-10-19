@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Metadata = new Schema({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
+  name: { type: String, required: true, default: 'none' },
+  description: { type: String, required: true, default: 'none' },
   artist: { type: String, default: 'none' },
   external_url: { type: String, default: 'none' },
   image: { type: String },
@@ -21,8 +21,9 @@ const MintedToken = new Schema({
   offerPool: { type: Number, required: true },
   offer: { type: Number, required: true },
   contract: { type: String, lowercase: true, required: true },
-  metadata: Metadata,
+  metadata: { type: Metadata, default: () => ({}) },
   metadataURI: { type: String, default: 'none' },
+  authenticityLink: { type: String, default: 'none' },
   isMinted: { type: Boolean, required: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });

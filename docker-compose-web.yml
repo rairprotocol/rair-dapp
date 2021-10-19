@@ -52,6 +52,37 @@ services:
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       PINATA_SECRET: ${pinata_secret}
       INFURA_PROJECT_ID: ${infura_project_id}
+      DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      BINANCE_URL: ${binance_url}
+      BINANCE_CHAIN_ID: ${binance_chain_id}
+      BINANCE_SYMBOL: ${binance_symbol}
+      BINANCE_NAME: ${binance_name}
+      BINANCE_FACTORY_ADDRESS: ${binance_factory_addres}
+      BINANCE_MINTER_ADDRESS: ${binance_minter_address}
+      BINANCE_CHAINID_HEX: ${binance_chainid_hex}
+      GOERLI_URL: ${goerli_url}
+      GOERLI_CHAIN_ID: ${goerli_chain_id}
+      GOERLI_SYMBOL: ${goerli_symbol}
+      GOERLI_NAME: ${goerli_name}
+      GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
+      GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
+      GOERLI_CHAINID_HEX: ${goerli_chainid_hex}
+      MATIC_MUMBAI_URL: ${matic_mumbai_url}
+      MATIC_MUMBAI_CHAIN_ID: ${matic_mumbai_chain_id}
+      MATIC_MUMBAI_SYMBOL: ${matic_mumbai_symbol}
+      MATIC_MUMBAI_NAME: ${matic_mumbai_name}
+      MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
+      MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
+      MATIC_MUMBAI_CHAINID_HEX: ${matic_mumbai_chainid_hex}
+      MATIC_MAINNET_URL: ${matic_mainnet_url}
+      MATIC_MAINNET_CHAIN_ID: ${matic_mainnet_chain_id}
+      MATIC_MAINNET_SYMBOL: ${matic_mainnet_symbol}
+      MATIC_MAINNET_NAME: ${matic_mainnet_name}
+      MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
+      MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
+      MATIC_MAINNET_CHAINID_HEX: ${matic_mainnet_chainid_hex}
+      SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
+      SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
     ports:
       - 5001:5001
     networks:

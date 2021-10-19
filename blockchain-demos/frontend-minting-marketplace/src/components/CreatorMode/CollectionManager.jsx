@@ -310,10 +310,10 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								ranges.map((item) => item.endingToken),
 								ranges.map((item) => item.price),
 								ranges.map((item) => item.name),
-								'0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
+								'0x3fD4268B03cce553f180E77dfC14fde00271F9B7');
 						}
 					} catch (err) {
-						console.log(err);
+						console.error(err);
 						Swal.fire('Error', err?.data?.message, 'error');
 					}
 				}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>
