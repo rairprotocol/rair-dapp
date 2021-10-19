@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.7; 
+pragma solidity ^0.8.9; 
 
 import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 
 interface IRAIR_ERC721 is IERC721 {
 
 	event ProductCreated(uint indexed id, string name, uint startingToken, uint length);
-	event RangeLocked(uint productIndex, uint startingToken, uint endingToken, uint tokensLocked, string productName);
+	event RangeLocked(uint productIndex, uint startingToken, uint endingToken, uint tokensLocked, string productName, uint lockIndex);
 	event ProductCompleted(uint indexed id, string name);
 	event RangeUnlocked(uint productID, uint startingToken, uint endingToken);
 	event BaseURIChanged(string newURI);

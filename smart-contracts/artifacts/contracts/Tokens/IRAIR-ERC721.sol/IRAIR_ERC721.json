@@ -167,6 +167,12 @@
           "internalType": "string",
           "name": "productName",
           "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lockIndex",
+          "type": "uint256"
         }
       ],
       "name": "RangeLocked",

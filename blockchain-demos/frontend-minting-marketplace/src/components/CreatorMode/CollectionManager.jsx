@@ -310,7 +310,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								ranges.map((item) => item.endingToken),
 								ranges.map((item) => item.price),
 								ranges.map((item) => item.name),
-								'0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
+								'0x3fD4268B03cce553f180E77dfC14fde00271F9B7');
 						}
 					} catch (err) {
 						console.error(err);

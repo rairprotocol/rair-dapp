@@ -6,7 +6,14 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
   console.log('Minter Marketplace deployed at', (await deploy('Minter_Marketplace', {
     from: deployerAddress,
     //proxy: true,
-    args: ['0xEC30759D0A3F3CE0A730920DC29d74e441f492C3', 9000, 1000],
+    args: [
+      // RAIR Treasury address FOR MATIC
+      '0x3fD4268B03cce553f180E77dfC14fde00271F9B7',
+      // Treasury fee: 9% (9.000)
+      9000,
+      // Node Fee: 1% (1.000)
+      1000
+    ],
     //proxyContract: "OpenZeppelinTransparentProxy"
   })).receipt.contractAddress);
 };
