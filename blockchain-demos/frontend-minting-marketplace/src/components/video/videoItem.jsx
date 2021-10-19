@@ -7,7 +7,7 @@ const VideoItem = ({mediaList, item}) => {
 	return <button
 		className='col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper'
 		style={{height: '291px', width:'291px', border: 'none', backgroundColor: 'transparent'}} onClick={e => {
-			history.push(`/watch/${item}/${mediaList[item].mainManifest}`);
+			history.push(`/watch/${mediaList[item]._id}/${mediaList[item].mainManifest}`);
 		}}
 		onMouseEnter={e => setHovering(true)}
 		onMouseLeave={e => setHovering(false)}
