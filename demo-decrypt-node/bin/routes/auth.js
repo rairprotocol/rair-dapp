@@ -125,8 +125,16 @@ module.exports = context => {
       const file = await context.db.File.findOne({ _id: mediaId });
 
       if (ethAddres) {
+        // verify the user have needed tokens
+        ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
+
+        // TODO: have to be the call functionality of tokens sync
+        // if (_.isEmpty(ownsTheAccessTokens)) {
+        //   ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
+        // }
+
         // verify the account holds the required NFT
-        if (typeof file.author === 'string' && file.author.length > 0) {
+        if (typeof file.author === 'string' && file.author.length > 0 && _.isEmpty(ownsTheAccessTokens)) {
           const [contractAddress, tokenId] = file.author.split(':');
           log.info('Verifying account has token');
           try {
@@ -134,16 +142,6 @@ module.exports = context => {
           } catch (e) {
             return next(new Error(`Could not verify account: ${ e }`));
           }
-        }
-
-        // verify the user have needed tokens
-        if (!ownsTheAdminToken) {
-          ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
-
-          // TODO: have to be the call functionality of tokens sync
-          // if (_.isEmpty(ownsTheAccessTokens)) {
-          //   ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
-          // }
         }
 
         if (!ownsTheAdminToken && _.isEmpty(ownsTheAccessTokens)) {
