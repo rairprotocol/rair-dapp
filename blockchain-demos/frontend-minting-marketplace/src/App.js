@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, Link, Redirect } from 'react-router-dom';
+import { Router, Switch, Route, NavLink, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import jsonwebtoken from 'jsonwebtoken';
 import setTitle from './utils/setTitle';
@@ -27,13 +27,14 @@ import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
 
-import VideoList from './components/video/videoList.jsx';
+// import VideoList from './components/video/videoList.jsx';
 import VideoPlayer from './components/video/videoPlayer.jsx';
 import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 
 import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
+import MockUpPage from './components/MockUpPage/MockUpPage';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
@@ -144,13 +145,13 @@ function App({ sentryHistory }) {
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				dispatch({type: authTypes.GET_TOKEN_ERROR, payload: null})
+				dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
 				localStorage.setItem('token', token);
 			}
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				dispatch({type: authTypes.GET_TOKEN_ERROR, payload: null})
+				dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
 				localStorage.setItem('token', token);
 			}
 
@@ -257,24 +258,24 @@ function App({ sentryHistory }) {
 									{startedLogin ? 'Please wait...' : 'Connect Wallet'}
 									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 								</button></div> : [
+									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className='fas fa-search' />, route: '/search' },
 									{ name: <i className='fas fa-user' />, route: '/user' },
-									{ name: 'My NFTs', route: '/my-nft' },
-									{ name: 'My Contracts', route: '/new-factory', disabled: !loginDone },
-									{ name: 'For Sale', route: '/on-sale', disabled: !loginDone },
-									{ name: 'Admin', route: '/admin', disabled: !loginDone },
-									{ name: 'All', route: '/all', disabled: !loginDone },
-									{ name: 'Latest', route: '/latest' },
-									{ name: 'Hot', route: '/hot' },
-									{ name: 'Ending', route: '/ending' },
-									{ name: 'Factory', route: '/factory', disabled: factoryInstance === undefined },
-									{ name: 'Minter Marketplace', route: '/minter', disabled: minterInstance === undefined }
+									{ name: <i className="fas fa-key" />, route: '/my-nft' },
+									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+									{ name: <i className="fas fa-history" />, route: '/latest' },
+									{ name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot' },
+									{ name: <i className="fas fa-hourglass-end" />, route: '/ending' },
+									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined }
 								].map((item, index) => {
 									if (!item.disabled) {
-										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
-											<Link className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
+										return <div style={{ width: "56px", height: "56px" }} key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+											<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
 												{item.name}
-											</Link>
+											</NavLink>
 										</div>
 									}
 									return <div key={index}></div>
@@ -296,13 +297,16 @@ function App({ sentryHistory }) {
 									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
-									{loginDone && <SentryRoute path='/all' component={VideoList} />}
+									<SentryRoute path='/all'>
+										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
+									<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
+										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
-									{adminAccess && <SentryRoute path='/admin'
-									// component={FileUpload} 
-									>
+									{adminAccess && <SentryRoute path='/admin'>
 										<FileUpload primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>}
 									<SentryRoute exact path='/'>
@@ -316,14 +320,14 @@ function App({ sentryHistory }) {
 												RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
 											</p>
 										</div>
-										{/* <div className='col-12 mt-3 row' >
-										<VideoList primaryColor={primaryColor}/>
-									</div> */}
+										<div className='col-12 mt-3 row' >
+											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+										</div>
 									</SentryRoute>
 								</Switch>
 							</div>
+							<div className='col-1 d-none d-xl-inline-block' />
 						</div>
-						<div className='col-1 d-none d-xl-inline-block' />
 					</div>
 				</div>
 			</Router>

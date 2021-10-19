@@ -39,7 +39,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
   const getContract = async () => {
     const responseContract = await (
-      await fetch("/api/contracts", {
+      await fetch("/api/contracts/", {
         method: "GET",
         headers: {
           Accept: "application/json",

@@ -47,6 +47,10 @@
   text-align: center;
 }
 
+li {
+  list-style: none;
+}
+
 .App-logo {
   height: 20vmin;
   pointer-events: none;
@@ -73,6 +77,14 @@
   background: var(--stimorol);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.active-rhyno {
+  color:black;
+  padding: 1rem;
+  border-radius: .25rem;
+  background-color:var(--rhyno-80);
+  border-color:var(--rhyno-60);
 }
 
 .btn-rhyno {
@@ -111,6 +123,16 @@
   color:black;
   background-color:var(--rhyno);
   border-color:var(--rhyno)
+}
+
+.active-charcoal {
+  color:white;
+  padding: 1rem;
+  border-radius: .25rem;
+  background-color:var(--charcoal-80);
+  border-color:var(--charcoal-60);
+  padding-top: 1rem!important;
+  padding-bottom: 1rem!important;
 }
 
 .btn-charcoal {
@@ -239,12 +261,19 @@
   background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
 }
 
+/* .active-link {
+  color: white;
+  background-color: var(--charcoal);
+  border-color: var(--charcoal);
+  border-radius: .25rem!important;
+} */
+
 /* style to App (Connect Wallet) */
 
 .btn-connect-wallet-wrapper {
 	background-image: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
 	border-radius: 40px;
-  box-sizing: border-box;
+  box-sizing: content-box;
 	letter-spacing: 1px;
 	margin: 0 auto;
 	padding: 1px;
@@ -253,7 +282,6 @@
     top: 16px;
     width: 150px;
     height: 28px;
-
 }
 
 .btn-connect-wallet-wrapper:hover {
@@ -279,6 +307,10 @@
 .video-wrapper{
   font-family: 'Plus Jakarta Text', sans-serif;
 }
+.pictures-wrapper{
+  border-radius: 16px;
+  width: 291px;
+}
 .description-wrapper{
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
@@ -292,6 +324,7 @@
 .description-wrapper:hover{
   height: 17.35rem;
   top: -17.35rem;
+  margin-bottom: -16.35rem;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   transition-duration: 0.5s;
@@ -334,14 +367,12 @@
 }
 .input-styled:focus{
   background: #E5E5E5;
-  /* border: 1px solid #4E4D4D */
 }
 i.fas-custom {
-  position: relative;
-  bottom: 4rem;
-  z-index: 1;
+  position: absolute;
+  top: 1.1rem;
   color: #E882D5;
-  left: 1.2rem;
+  left: 1.3rem;
   margin-bottom: -1rem;
   font-weight: lighter;
   transform: scale(0.7);
@@ -357,5 +388,79 @@ i.fas-custom {
 }
 .input-select-custom-style::-webkit-file-upload-button {
   background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
-  /* color: red; */
 }
+
+/* for mack-up-page */
+
+.category-wrapper{
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding-left: 0;
+  /* position: absolute; */
+
+}
+.category-button{
+  border: 1px solid var(--charcoal-80);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  width: 204px;
+  height: 32px;
+  border-bottom: none;
+  padding: 5px 0;
+}
+.react-tabs__tab.react-tabs__tab--selected{
+  /* background-color: var(--charcoal-80); */
+  /* background-color: red; */
+}
+#react-tabs-3{
+  margin-bottom: 4rem;
+}
+.react-tabs{
+  width: -webkit-fill-available;
+}
+.category-button-videos{
+margin-left: -36px;
+}
+.react-tabs__tab--selected{
+  background-color: var(--charcoal-80)  !important;
+  z-index: 0;
+}
+.styles-module_carousel-arrow__26sRw{
+  display: none;
+  /* background: url(https://cdn.dsmcdn.com/web/production/slick-arrow.svg) no-repeat 50%;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    position: relative; */
+}
+.ReactModal__Overlay--after-open{
+  background-color: #434343 !important;
+}
+/* style to desc */
+.custom-desc-to-offer-wrapper{
+  margin-top: 2rem;
+  /* padding: 2rem ; */
+  padding-bottom: 0;
+  margin-bottom: 0.5rem;
+
+}
+.custom-desc-to-offer{
+  padding: 1rem 1rem;
+  border: 1px solid #4E4D4D;
+  background-color: transparent;
+  border-radius: 16px;
+}
+.carousel-item-padding-4-px{
+  /* width: auto !important; */
+  /* background-color: red; */
+  padding-left: 2rem;
+}
+.accordion__item{
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #383637;
+}
+
+/* drop-down */
