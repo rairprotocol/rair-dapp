@@ -24,6 +24,100 @@ const getABIData = (abi, type, eventName) => {
 	return {abi: resultingAbi, topic};
 };
 
+const getTokenTransfers = async (chainName) => {
+	const Contract = Moralis.Object.extend("Contract");
+	const contractQuery = new Moralis.Query(Contract); 
+	contractQuery.equalTo('blockchain', blockchainData[chainName].chainId);
+	const contractResult = await contractQuery.find();
+
+	const {abi, topic} = getABIData(erc721Abi, 'event', 'Transfer');
+	const generalOptions = {
+		chain: blockchainData[chainName].chainId,
+		topic,
+		abi
+	};
+	
+	contractResult.forEach(
+		async item => {
+			const options = {
+				address: item.get('contractAddress'),
+				...generalOptions
+			}
+			let events = await Moralis.Web3API.native.getContractEvents(options);
+
+			const MintedToken = Moralis.Object.extend("MintedToken");
+			const Product = Moralis.Object.extend("Product");
+			const OfferPool = Moralis.Object.extend("OfferPool");
+			const Offer = Moralis.Object.extend("Offer");
+			events.result.forEach(async result => {
+				const mintedTokenQuery = new Moralis.Query(MintedToken);
+				mintedTokenQuery.equalTo('transactionHash', result.transaction_hash);
+				const mintedTokenResult = await mintedTokenQuery.find();
+				
+				if (mintedTokenResult.length === 0) {
+					const mintedToken = new MintedToken();
+					mintedToken.set("contract", result.address);
+					mintedToken.set("transactionHash", result.transaction_hash);
+					mintedToken.set("blockchain", blockchainData[chainName].chainId);
+
+					mintedToken.set("internalTokenIndex", result.data.tokenId);
+					mintedToken.set("fromAddress", result.data.from);
+					mintedToken.set("toAddress", result.data.to);
+					mintedToken.set("blockNumber", result.block_number);
+
+					const productQuery = new Moralis.Query(Product);
+					productQuery.equalTo('contract', result.address);
+					productQuery.equalTo('blockchain', blockchainData[chainName].chainId);
+					const productResult = await productQuery.find();
+					if (!productResult.length) {
+						console.log(`Can't find products for #${result.data.tokenId} of ${result.address}`);
+						return;
+					}
+					let aux = productResult.filter(i => {
+						let firstToken = Ethers.BigNumber.from(i.get('firstTokenIndex'));
+						let lastToken = Ethers.BigNumber.from(i.get('lastTokenIndex'));
+						return firstToken.lte(result.data.tokenId) && lastToken.gte(result.data.tokenId);
+					});
+					if (aux.length !== 1) {
+						console.log(`Can't find a specific product for #${result.data.tokenId}`);
+						return;
+					}
+					const productIndex = aux[0].get('collectionIndexInContract')
+					mintedToken.set("product", productIndex);
+					mintedToken.set("productIndex",  (Ethers.BigNumber.from(aux[0].get('firstTokenIndex')).add(result.data.tokenId)).toString());
+
+					const offerPoolQuery = new Moralis.Query(OfferPool);
+					offerPoolQuery.equalTo('contract', result.address);
+					offerPoolQuery.equalTo('product', productIndex);
+					offerPoolQuery.equalTo('blockchain', blockchainData[chainName].chainId);
+					const offerPoolResult = await offerPoolQuery.first();
+					if (!offerPoolResult) {
+						console.log(`Can't find offer pool for product #${productIndex} of contract ${result.address}`);
+						return;
+					}
+					const offerPoolIndex = offerPoolResult.get('marketplaceCatalogIndex');
+					mintedToken.set("offerPool", offerPoolIndex);
+
+					const offerQuery = new Moralis.Query(Offer);
+					offerPoolQuery.equalTo('contract', result.address);
+					offerPoolQuery.equalTo('product', productIndex);
+					offerPoolQuery.equalTo('blockchain', blockchainData[chainName].chainId);
+					productQuery.lessThanOrEqualTo('range.0', result.data.tokenId);
+					productQuery.greaterThanOrEqualTo('range.1', result.data.tokenId);
+					const offerResult = await offerQuery.first();
+					if (!offerResult) {
+						console.log(`Can't find offer for product #${productIndex}`);
+						return;
+					}
+					mintedToken.set("offer", offerResult.get('offerIndex'));
+					
+					await mintedToken.save();
+					console.log(`[${chainName}] New token transfer for #${result.data.tokenId} of ${result.address}`);
+				}
+			})
+		});
+}
+
 const getAppendedRanges = async (minterAddress, chainName) => {
 	await Moralis.Cloud.run(blockchainData[chainName].watchFunction, {
 		address: minterAddress,
@@ -200,8 +294,8 @@ const getProducts = async (chainName) => {
 					product.set("copies", result.data.length);
 					product.set("soldCopies", 0);
 					product.set("sold", false);
-					product.set("lastTokenIndex", (Ethers.BigNumber.from(result.data.length).add(result.data.startingToken)).toString());
-					product.set("chainId", blockchainData[chainName].chainId);
+					product.set("lastTokenIndex", (Ethers.BigNumber.from(result.data.length).add(result.data.startingToken).sub(1)).toString());
+					product.set("blockchain", blockchainData[chainName].chainId);
 					await product.save();
 					
 					console.log(`[${chainName}] Saved product #${result.data.uid} of ${result.address}`);
@@ -229,21 +323,7 @@ const main = async () => {
 
 
 	/*
-	Offer
 	
-
-	MintedToken
-	token: { type: Number, required: true },
-	uniqueIndexInContract: { type: Number, required: true },
-	ownerAddress: { type: String, lowercase: true },
-	offerPool: { type: Number, required: true },
-	offer: { type: Number, required: true },
-	contract: { type: String, lowercase: true, required: true },
-	metadata: { type: Metadata, default: () => ({}) },
-	metadataURI: { type: String, default: 'none' },
-	authenticityLink: { type: String, default: 'none' },
-	isMinted: { type: Boolean, required: true },
-	creationDate: { type: Date, default: Date.now }
 
 	console.log('Minter');
 	let events = await Moralis.Web3API.native.getContractEvents(options)
@@ -267,6 +347,8 @@ const main = async () => {
 	//await getOfferPools(blockchainData.mumbai.minterAddress ,'mumbai');
 	// Gets the ranges appended on the minter marketplace
 	//await getAppendedRanges(blockchainData.mumbai.minterAddress ,'mumbai');
+	// Gets all token transfers made on all deployed contracts
+	await getTokenTransfers('mumbai');
 }
 
 try {
