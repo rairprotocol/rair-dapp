@@ -1,0 +1,119 @@
+.select-filters-wrapper {
+    position: relative;
+  }
+  
+.select-filters {
+    height: 48px;
+    color: var(--white);
+    border-radius: 16px;
+    border: 1px solid #4E4D4D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 129px; 
+    margin: 0 16px;
+    cursor: pointer;
+}
+  
+.select-filters-title {
+    
+}
+  
+.select-filters-title i {
+    color: #E882D5;
+    margin-right: 8px;
+}
+  
+.select-filters-popup {
+    width: 129px;
+    border-radius: 16px;
+    border: 1px solid #4E4D4D;
+    position: absolute;
+    top: 64px;
+    left: 16px;
+    overflow: hidden;
+  }
+  
+.select-filters-item {
+    padding: 10px 0;
+}
+  
+.select-filters-item:hover {
+    background: #9e9e9e;
+    color: #000;
+    cursor: pointer;
+}
+  
+.modal-portal {
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+}
+
+.modal-block {
+    border-radius: 16px;
+    color: #fff;
+    width: 949px;
+    height: 417px;
+    background-color: #222021;
+    /* position: absolute; */
+}
+  
+.select-sort-wrapper {
+    position: relative;
+}
+  
+.select-sort {
+    height: 48px;
+    color: var(--white);
+    border-radius: 16px;
+    border: 1px solid #4E4D4D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 244px; 
+    cursor: pointer;
+}
+  
+.select-sort-title {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 15px 0 24px;
+}
+  
+.select-sort-title-pop-up {
+    height: 48px;
+    width: 244px;
+    border-radius: 16px;
+    border: 1px solid #4E4D4D;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    overflow: hidden;
+}
+  
+.select-sort-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 48px;
+    width: 244px;
+    padding: 0 15px 0 24px;
+}
+  
+.select-sort-item:hover {
+    background: #9e9e9e;
+    color: #000;
+    cursor: pointer;
+}
+  
+.select-sort i, .select-sort-title-pop-up  i {
+    color: #E882D5;
+    margin-right: 8px;
+}

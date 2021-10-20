@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react';
+import "./FilteringBlock.css";
+import Modal from './modal';
+import Portal from './portal';
 
 const FilteringBlock = ({ primaryColor, textColor }) => {
     const [filterPopUp, setFilterPopUp] = useState(false);
@@ -6,8 +9,10 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
     const filterRef = useRef();
 
     const [sortPopUp, setSortPopUp] = useState(false);
-    const [sortItem, setSortItem] = useState(<i class="fas fa-sort-amount-down-alt"></i>);
+    const [sortItem, setSortItem] = useState(<i className="fas fa-sort-amount-down-alt"></i>);
     const sortRef = useRef();
+
+    const [isOpen, setIsOpen] = React.useState(false);
 
     const onChangeFilterItem = (item) => {
         setFilterItem(item);
@@ -60,7 +65,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                     className="select-filters"
                     onClick={onChangeFilterPopUp}
                 >
-                    <div className="select-filters-title"><i class="fas fa-sliders-h"></i>{filterItem}</div>
+                    <div className="select-filters-title"><i className="fas fa-sliders-h"></i>Filters</div>
                 </div>
 
                 {
@@ -88,7 +93,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                             {sortItem}Sort by name
                         </div>
                         <div className="title-right-arrow">
-                            {sortPopUp ? <i class="fas fa-chevron-up"></i> : <i class="fas fa-chevron-down"></i>}
+                            {sortPopUp ? <i className="fas fa-chevron-up"></i> : <i className="fas fa-chevron-down"></i>}
                         </div>
                     </div>
                 </div>
@@ -98,13 +103,41 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                         color: `var(--${textColor})`
                     }}
                         className="select-sort-title-pop-up"
-                        onClick={() => onChangeSortItem(<i class="fas fa-sort-amount-up"></i>)}
+                        onClick={() => onChangeSortItem(<i className="fas fa-sort-amount-up"></i>)}
                     >
                         <div className="select-sort-item">
-                            <i class="fas fa-sort-amount-up"></i>
+                            <i className="fas fa-sort-amount-up"></i>
                         </div>
                     </div>
                 }
+                <button
+                    onClick={() => {
+                        setIsOpen(true);
+                    }}
+                >
+                    Open Modal
+                </button>
+                <Modal
+                    onClose={() => {
+                        setIsOpen(false);
+                    }}
+                    open={isOpen}
+                >
+                    <p>I'm a modal window, I use portal so I only exist when I'm open.</p>
+                    <p>
+                        Also tabbing is locked inside me go ahead and try tabbing to the
+                        button behind me.
+                    </p>
+                    <p style={{ textAlign: "center" }}>
+                        <button
+                            onClick={() => {
+                                setIsOpen(false);
+                            }}
+                        >
+                            Close
+                        </button>
+                    </p>
+                </Modal>
             </div>
         </>
     )
