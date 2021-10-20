@@ -83,6 +83,7 @@ const getTokenTransfers = async (chainName) => {
 						return;
 					}
 					const productIndex = aux[0].get('collectionIndexInContract')
+					aux[0].set('soldCopies', Number((Ethers.BigNumber.from(aux[0].get('soldCopies')).add(1)).toString()))
 					mintedToken.set("product", productIndex);
 					mintedToken.set("productIndex",  (Ethers.BigNumber.from(aux[0].get('firstTokenIndex')).add(result.data.tokenId)).toString());
 
@@ -109,9 +110,12 @@ const getTokenTransfers = async (chainName) => {
 						console.log(`Can't find offer for product #${productIndex}`);
 						return;
 					}
+					offerResult.set('soldCopies', Number((Ethers.BigNumber.from(offerResult.get('soldCopies')).add(1)).toString()))
 					mintedToken.set("offer", offerResult.get('offerIndex'));
 					
 					await mintedToken.save();
+					await aux[0].save()
+					await offerResult.save();
 					console.log(`[${chainName}] New token transfer for #${result.data.tokenId} of ${result.address}`);
 				}
 			})
