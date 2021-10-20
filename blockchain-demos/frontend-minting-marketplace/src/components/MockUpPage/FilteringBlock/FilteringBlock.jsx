@@ -13,6 +13,12 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
     const sortRef = useRef();
 
     const [isOpen, setIsOpen] = React.useState(false);
+    const categories = ['Music video', 'Art', 'Abstract', 'Interview', 'Course', '18+'];
+    const [arrCategories, setArrCategories] = useState([]);
+
+    const addCategories = (item) => {
+        setArrCategories([...arrCategories, item]);
+    }
 
     const onChangeFilterItem = (item) => {
         setFilterItem(item);
@@ -75,7 +81,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                     }} className="select-filters-popup">
                         <div onClick={() => onChangeFilterItem("Price")} className="select-filters-item">Price</div>
                         <div onClick={() => onChangeFilterItem("Creator")} className="select-filters-item">Creator</div>
-                        <div onClick={() => onChangeFilterItem("Metadata")} className="select-filters-item">Metadata</div>
+                        <div onClick={() => { onChangeFilterItem("Metadata"); setIsOpen(true) }} className="select-filters-item">Categories</div>
                     </div>
                 }
             </div>
@@ -110,33 +116,54 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                         </div>
                     </div>
                 }
-                <button
-                    onClick={() => {
-                        setIsOpen(true);
-                    }}
-                >
-                    Open Modal
-                </button>
                 <Modal
                     onClose={() => {
                         setIsOpen(false);
                     }}
                     open={isOpen}
                 >
-                    <p>I'm a modal window, I use portal so I only exist when I'm open.</p>
-                    <p>
-                        Also tabbing is locked inside me go ahead and try tabbing to the
-                        button behind me.
-                    </p>
-                    <p style={{ textAlign: "center" }}>
-                        <button
-                            onClick={() => {
-                                setIsOpen(false);
-                            }}
-                        >
-                            Close
-                        </button>
-                    </p>
+                    <div className="modal-content-metadata">
+                        <div className="block-close">
+                            <button onClick={() => setIsOpen(false)}>
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div className="modal-filtering">
+                            <div className="categories-wraper">
+                                <div className="modal-filtering-title">
+                                    <h4>Categories</h4>
+                                </div>
+                                <div className="filtering-categories">
+                                    {
+                                        categories.map((c) => {
+                                            return <button onClick={() => {addCategories(c)}}>{c}</button>
+                                        })
+                                    }
+                                </div>
+                            </div>
+                            <div className="price-wrapper">
+                                <div className="modal-filtering-price-title">
+                                    <h4>Price</h4>
+                                </div>
+                                <div className="filtering-price">
+                                    <div className="select-price">
+                                        <span>Ethereum(ETH)</span>
+                                        <span className="price-arrow"><i class="fas fa-chevron-down"></i></span>
+                                    </div>
+                                    <div className="block-min-max">
+                                        <input type="text" placeholder="Min" />
+                                        <span>to</span>
+                                        <input type="text" placeholder="Max" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div className="modal-filtering-btn">
+                            <button>Clear All</button>
+                            <button>Apply</button>
+                        </div>
+                    </div>
                 </Modal>
             </div>
         </>

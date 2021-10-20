@@ -20,6 +20,8 @@ const Backdrop = styled.div`
   justify-content: center;
 
   & .modal-content {
+    transform: translateY(100px);
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
   }
 
@@ -29,22 +31,23 @@ const Backdrop = styled.div`
     opacity: 1;
 
     & .modal-content {
-        width: 949px;
-        height: 417px;
-        border-radius: 16px;
-        background-color: #222021;
-        color: #fff;
       transform: translateY(0);
       opacity: 1;
       transition-delay: 150ms;
       transition-duration: 350ms;
+      width: 949px;
+      height: 417px;
+      border-radius: 16px;
+      background-color: #222021;
+      color: #fff;
     }
   }
 `;
 
 const Content = styled.div`
   position: relative;
-  padding: 20px;
+  height: 417px;
+  width: 949px;
   box-sizing: border-box;
   min-height: 50px;
   min-width: 50px;

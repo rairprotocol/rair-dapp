@@ -26,6 +26,8 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       })
     ).json();
     const covers = responseContract.contracts.map((item) => ({
+      id: item._id,
+      productId: item.products?._id ?? 'wut',
       blockchain: item.blockchain,
       collectionIndexInContract: item.products.collectionIndexInContract,
       contract: item.contractAddress,

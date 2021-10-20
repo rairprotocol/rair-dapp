@@ -1,3 +1,5 @@
+/* filtering*/
+
 .select-filters-wrapper {
     position: relative;
   }
@@ -62,7 +64,115 @@
     background-color: #222021;
     /* position: absolute; */
 }
-  
+
+.modal-filtering {
+    padding: 0 32px;
+}
+
+.block-close {
+    display: flex;
+    justify-content: flex-end;
+    padding: 24px 24px 0 0;
+}
+
+.block-close button {
+    border: none;
+    background: none;
+    color: #fff;
+    font-size: 20px;
+}
+
+.filtering-categories {
+    margin: 16px 0 48px;
+}
+
+.filtering-categories button {
+    border: 1.3px solid #4E4D4D;
+    border-radius: 16px;
+    box-sizing: border-box;
+    background: none;
+    font-size: 20px;
+    color: #fff;
+    padding: 9px 24px 11px;
+    margin-right: 16px;
+}
+
+.filtering-categories button:last-child {
+    margin-right: 0;
+}
+
+.modal-filtering-btn {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 32px 42px;
+}
+
+.modal-filtering-btn button:first-child {
+    box-sizing: border-box;
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 20px;
+}
+
+.modal-filtering-btn button:last-child {
+    box-sizing: border-box;
+    padding: 10px 53px;
+    border-radius: 16px;
+    border: none;
+    font-size: 20px;
+    color: #fff;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+
+.filtering-price {
+    display: flex;
+    margin-top: 16px;
+}
+
+.price-wrapper {
+    margin-bottom: 40px;
+}
+
+.select-price {
+    border: 1px solid #4E4D4D;
+    box-sizing: border-box;
+    border-radius: 16px;
+    padding: 14px 16px;
+    width: 243px;
+    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 16px;
+}
+
+.price-arrow {
+    color: #E882D5;
+}
+
+.block-min-max input {
+    width: 87px;
+    height: 48px;
+    font-size: 16px;
+    text-align: center;
+    color: #7A797A;
+    border: 1px solid #4E4D4D;
+    box-sizing: border-box;
+    border-radius: 16px;
+    background: none;
+    outline: none;
+}
+
+.block-min-max span {
+    font-size: 14px;
+    margin: 0 16px;
+    color: #4E4D4D;
+}
+
+
+/* sorting */
+
 .select-sort-wrapper {
     position: relative;
 }
