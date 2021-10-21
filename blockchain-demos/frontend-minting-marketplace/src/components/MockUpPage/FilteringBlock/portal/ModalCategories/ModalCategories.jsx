@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useInput } from '../../hooks';
 import Modal from '../../modal';
 
 const categories = [{
@@ -27,16 +28,8 @@ const categories = [{
 }];
 
 const ModalCategories = ({ setIsOpenCategories, isOpenCategories }) => {
-    const [minValue, setMinValue] = useState('');
-    const [maxValue, setMaxValue] = useState('');
-
-    const onChangeMin = (e) => {
-        setMinValue(e.target.value)
-    }
-
-    const onChangeMax = (e) => {
-        console.log(e.target.value);
-    }
+    const minValue = useInput('');
+    const maxValue = useInput('');
 
     const [arrCategories, setArrCategories] = useState(categories);
 
@@ -48,8 +41,8 @@ const ModalCategories = ({ setIsOpenCategories, isOpenCategories }) => {
             }
         })
         setArrCategories(clearArrCategories);
-        setMaxValue('');
-        setMinValue('');
+        minValue.setValue('');
+        maxValue.setValue('');
     }
 
     const onChangeClicked = (name) => {
@@ -109,9 +102,9 @@ const ModalCategories = ({ setIsOpenCategories, isOpenCategories }) => {
                                 {/* <span className="price-arrow"><i className="fas fa-chevron-down"></i></span> */}
                             </select>
                             <div className="block-min-max">
-                                <input name="minValue" onChange={onChangeMin} type="text" placeholder="Min" />
+                                <input value={minValue.value} onChange={minValue.onChange} type="text" placeholder="Min" />
                                 <span>to</span>
-                                <input value={maxValue} onChange={(e) => onChangeMax(e)} type="text" placeholder="Max" />
+                                <input value={maxValue.value} onChange={maxValue.onChange} type="text" placeholder="Max" />
                             </div>
                         </div>
                     </div>

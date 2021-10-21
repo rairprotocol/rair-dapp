@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "./FilteringBlock.css";
-import Modal from './modal';
-import Portal from './portal';
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 

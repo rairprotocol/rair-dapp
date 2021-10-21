@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useInput } from '../../hooks';
 import Modal from '../../modal';
 
 const blockchains = [{
@@ -19,6 +20,9 @@ const blockchains = [{
 }];
 
 const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
+    const minValue = useInput('');
+    const maxValue = useInput('');
+
     const [arrBlockchains, setArrBlockchains] = useState(blockchains);
 
     const onChangeClicked = (name) => {
@@ -36,6 +40,8 @@ const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
             }
         })
         setArrBlockchains(updatedBlockchains);
+        minValue.setValue('')
+        maxValue.setValue('')
     }
 
     const clearAllFilters = () => {
@@ -76,9 +82,9 @@ const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
                                 {/* <span className="price-arrow"><i className="fas fa-chevron-down"></i></span> */}
                             </select>
                             <div className="block-min-max">
-                                <input name="minValue" type="text" placeholder="Min" />
+                                <input value={minValue.value} onChange={minValue.onChange} type="text" placeholder="Min" />
                                 <span>to</span>
-                                <input type="text" placeholder="Max" />
+                                <input value={maxValue.value} onChange={maxValue.onChange} type="text" placeholder="Max" />
                             </div>
                         </div>
                     </div>
