@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import "./FilteringBlock.css";
 import Modal from './modal';
 import Portal from './portal';
+import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
+import ModalCategories from './portal/ModalCategories/ModalCategories';
 
 const FilteringBlock = ({ primaryColor, textColor }) => {
     const [filterPopUp, setFilterPopUp] = useState(false);
@@ -12,13 +14,8 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
     const [sortItem, setSortItem] = useState(<i className="fas fa-sort-amount-down-alt"></i>);
     const sortRef = useRef();
 
-    const [isOpen, setIsOpen] = React.useState(false);
-    const categories = ['Music video', 'Art', 'Abstract', 'Interview', 'Course', '18+'];
-    const [arrCategories, setArrCategories] = useState([]);
-
-    const addCategories = (item) => {
-        setArrCategories([...arrCategories, item]);
-    }
+    const [isOpenCategories, setIsOpenCategories] = useState(false);
+    const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
 
     const onChangeFilterItem = (item) => {
         setFilterItem(item);
@@ -79,9 +76,9 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                         backgroundColor: `var(--${primaryColor})`,
                         color: `var(--${textColor})`
                     }} className="select-filters-popup">
-                        <div onClick={() => onChangeFilterItem("Price")} className="select-filters-item">Price</div>
+                        <div onClick={() => {onChangeFilterItem("Price"); setIsOpenBlockchain(true)}} className="select-filters-item">Blockchain</div>
                         <div onClick={() => onChangeFilterItem("Creator")} className="select-filters-item">Creator</div>
-                        <div onClick={() => { onChangeFilterItem("Metadata"); setIsOpen(true) }} className="select-filters-item">Categories</div>
+                        <div onClick={() => { onChangeFilterItem("Metadata"); setIsOpenCategories(true) }} className="select-filters-item">Categories</div>
                     </div>
                 }
             </div>
@@ -116,55 +113,8 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                         </div>
                     </div>
                 }
-                <Modal
-                    onClose={() => {
-                        setIsOpen(false);
-                    }}
-                    open={isOpen}
-                >
-                    <div className="modal-content-metadata">
-                        <div className="block-close">
-                            <button onClick={() => setIsOpen(false)}>
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div className="modal-filtering">
-                            <div className="categories-wraper">
-                                <div className="modal-filtering-title">
-                                    <h4>Categories</h4>
-                                </div>
-                                <div className="filtering-categories">
-                                    {
-                                        categories.map((c) => {
-                                            return <button onClick={() => {addCategories(c)}}>{c}</button>
-                                        })
-                                    }
-                                </div>
-                            </div>
-                            <div className="price-wrapper">
-                                <div className="modal-filtering-price-title">
-                                    <h4>Price</h4>
-                                </div>
-                                <div className="filtering-price">
-                                    <div className="select-price">
-                                        <span>Ethereum(ETH)</span>
-                                        <span className="price-arrow"><i class="fas fa-chevron-down"></i></span>
-                                    </div>
-                                    <div className="block-min-max">
-                                        <input type="text" placeholder="Min" />
-                                        <span>to</span>
-                                        <input type="text" placeholder="Max" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="modal-filtering-btn">
-                            <button>Clear All</button>
-                            <button>Apply</button>
-                        </div>
-                    </div>
-                </Modal>
+                <ModalCategories setIsOpenCategories={setIsOpenCategories} isOpenCategories={isOpenCategories} />
+                <ModalBlockchain setIsOpenBlockchain={setIsOpenBlockchain} isOpenBlockchain={isOpenBlockchain} />
             </div>
         </>
     )

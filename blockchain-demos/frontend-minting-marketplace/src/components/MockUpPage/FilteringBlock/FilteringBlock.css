@@ -2,7 +2,7 @@
 
 .select-filters-wrapper {
     position: relative;
-  }
+}
   
 .select-filters {
     height: 48px;
@@ -86,6 +86,10 @@
     margin: 16px 0 48px;
 }
 
+.filtering-categories button.categories-clicked {
+    background: #4E4D4D;
+}
+
 .filtering-categories button {
     border: 1.3px solid #4E4D4D;
     border-radius: 16px;
@@ -134,17 +138,23 @@
     margin-bottom: 40px;
 }
 
-.select-price {
+select.select-price {
+    outline: none;
+    color: #fff;
     border: 1px solid #4E4D4D;
     box-sizing: border-box;
     border-radius: 16px;
     padding: 14px 16px;
     width: 243px;
     height: 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-right: 16px;
+    background: none;
+    background-image:  url('./Vector.png');
+    background-repeat: no-repeat;
+    background-position: center right;
+    appearance: none;
+    background-position-x: 210px;
+    background-size: 12px;
 }
 
 .price-arrow {
@@ -156,12 +166,11 @@
     height: 48px;
     font-size: 16px;
     text-align: center;
-    color: #7A797A;
+    color: #fff;
     border: 1px solid #4E4D4D;
     box-sizing: border-box;
     border-radius: 16px;
     background: none;
-    outline: none;
 }
 
 .block-min-max span {
