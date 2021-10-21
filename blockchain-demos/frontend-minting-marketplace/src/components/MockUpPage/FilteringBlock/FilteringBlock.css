@@ -157,6 +157,12 @@ select.select-price {
     background-size: 12px;
 }
 
+select.select-price option {
+    color: #fff;
+    background: #4E4D4D;
+    border: none;
+}
+
 .price-arrow {
     color: #E882D5;
 }

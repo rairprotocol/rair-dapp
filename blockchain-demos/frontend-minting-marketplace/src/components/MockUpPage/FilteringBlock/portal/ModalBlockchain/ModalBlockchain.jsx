@@ -72,6 +72,7 @@ const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
                         <div className="filtering-price">
                             <select className="select-price">
                                 <option>Ethereum(ETH)</option>
+                                <option>Bitcoin(BTC)</option>
                                 {/* <span className="price-arrow"><i className="fas fa-chevron-down"></i></span> */}
                             </select>
                             <div className="block-min-max">

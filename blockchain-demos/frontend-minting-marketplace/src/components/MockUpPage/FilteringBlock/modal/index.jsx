@@ -10,7 +10,7 @@ const Backdrop = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(51, 51, 51, 0.3);
+  background-color: rgba(78, 77, 77, 0.8);
   backdrop-filter: blur(1px);
   opacity: 0;
   transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1);
