@@ -13,6 +13,7 @@ import {
 import SelectBox from "../SelectBox/SelectBox";
 import chainData from "../../../utils/blockchainData";
 import { useLocation, useParams, useHistory } from "react-router-dom";
+import { SvgKey } from "./SvgKey";
 // import Swal from 'sweetalert2';
 // import 'react-accessible-accordion/dist/fancy-example.css';
 // import VideoList from "../../video/videoList";
@@ -33,9 +34,11 @@ const NftItem = ({
   allData: dataVerification,
 }) => {
   const history = useHistory();
+  // eslint-disable-next-line no-unused-vars
   const location = useLocation();
   const params = useParams();
   const { adminToken, contract, product, token, offer } = params;
+  // eslint-disable-next-line no-unused-vars
   let subtitle;
 
   const [allProducts, setAllProducts] = useState([]);
@@ -66,8 +69,6 @@ const NftItem = ({
   // },[dataLoaded,setSelected,allProducts])
 
   const getData = useCallback(async () => {
-    debugger;
-    // const { adminToken, contract, product, token } = params;
     if (adminToken && contract && product) {
       const response = await (
         await fetch(`/api/${adminToken}/${contract}/${product}`, {
@@ -77,10 +78,6 @@ const NftItem = ({
       const data = response.result?.tokens.find(
         (data) => String(data.token) === token
       );
-      // if(data){
-      //   setSelectedToken(data.token);
-      // }
-      // // Swal.fire('Error', 'User not found', 'error')
       return data;
     } else return null;
   }, [adminToken, contract, product, token]);
@@ -123,14 +120,13 @@ const NftItem = ({
   }
 
   const waitResponse = useCallback(async () => {
-    debugger;
     const data = await getData();
-    if (data && data.metadata && data.token) {
+    if (data && data.metadata) {
       setSelected(data.metadata);
       setSelectedToken(data.token);
       openModal();
     }
-  }, [getData, openModal]);
+  }, [getData, openModal, setSelected]);
 
   const redirection = () => {
     history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
@@ -256,32 +252,32 @@ const NftItem = ({
       items: 1,
     },
   };
-  // (function () {
-  //   let angle = 0;
-  //   let p = document.querySelector('p');
-  //   debugger
-  //   if(p){
-  //     let text = p.textContent.split('');
-  //     var len = text.length;
-  //     var phaseJump = 360 / len;
-  //     var spans;
-  //     p.innerHTML = text.map(function (char) {
-  //       return '<span>' + char + '</span>';
-  //     }).join('');
-
-  //     spans = p.children;
-  //   }
-  //   else console.log('kik');
-
-  //   (function wheee () {
-  //     for (var i = 0; i < len; i++) {
-  //       spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+  // if(primaryColor === 'charcoal'){
+  //   (function () {
+  //     let angle = 0;
+  //     let p = document.querySelector('p');
+  //     if(p){
+  //       let text = p.textContent.split('');
+  //       var len = text.length;
+  //       var phaseJump = 360 / len;
+  //       var spans;
+  //       p.innerHTML = text.map(function (char) {
+  //         return '<span>' + char + '</span>';
+  //       }).join('');
+  
+  //       spans = p.children;
   //     }
-  //     angle++;
-  //     requestAnimationFrame(wheee);
+  //     else console.log('kik');
+  
+  //     (function wheee () {
+  //       for (var i = 0; i < len; i++) {
+  //         spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+  //       }
+  //       angle++;
+  //       requestAnimationFrame(wheee);
+  //     })();
   //   })();
-  // })();
-
+  // }
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
@@ -322,6 +318,7 @@ const NftItem = ({
             style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
             className="col-12 h-100 w-100"
           />
+        {<SvgKey />}
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">
