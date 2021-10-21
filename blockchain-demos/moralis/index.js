@@ -10,6 +10,20 @@ const blockchainData = {
 		minterAddress: '0x63Dd6821D902012B664dD80140C54A98CeE97068',
 		watchFunction: 'watchPolygonAddress',
 		watchCollection: 'watchedPolygonAddress'
+	},
+	goerli: {
+		chainId: '0x5', 
+		factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
+		minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba',
+		watchFunction: 'watchEthAddress',
+		watchCollection: 'watchedEthAddress'
+	},
+	binance: {
+		chainId: '0x61', 
+		factoryAddress: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
+		minterAddress: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f',
+		watchFunction: 'watchBscAddress',
+		watchCollection: 'watchedBscAddress'
 	}
 }
 
@@ -325,34 +339,23 @@ const main = async () => {
 	const appId = process.env.MORALIS_API_KEY;
 	Moralis.start({ serverUrl, appId });
 
+	Object.keys(blockchainData).forEach(async blockchain => {
+		// Queries a factory and stores all deployed contracts
+		await getDeployedContracts(blockchainData[blockchain].factoryAddress, blockchain);
+		// Gets the Products from all Deployed Contracts
+		await getProducts(blockchain);
+		// Gets the Offers (OfferPool) created
+		await getOfferPools(blockchainData[blockchain].minterAddress, blockchain);
+		// Gets the ranges appended on the minter marketplace
+		await getAppendedRanges(blockchainData[blockchain].minterAddress, blockchain);
+		// Gets all token transfers made on all deployed contracts
+		await getTokenTransfers(blockchain);
+	})
 
-	/*
-	
-
-	console.log('Minter');
-	let events = await Moralis.Web3API.native.getContractEvents(options)
-		.catch(err => console.error(err.error));
-	events.result.forEach(async item => {
-		console.log(item.data.token)
-		await Moralis.Cloud.run('watchPolygonAddress', { address: item.data.token.toLowerCase(), 'sync_historical': true });
-	});
-	*/
-	
 	// Gets the topics of the contract. Useless now that getABIData exists
 	//logEventTopics();
 	// Returns the ABI entry and the Event's hash (topic) so Moralis can use it
 	//getABIData(erc721Abi, 'event', 'ProductCreated');
-
-	// Queries a factory and stores all deployed contracts
-	//await getDeployedContracts(blockchainData.mumbai.factoryAddress, 'mumbai');
-	// Gets the Products from all Deployed Contracts
-	//await getProducts('mumbai');
-	// Gets the Offers (OfferPool) created
-	//await getOfferPools(blockchainData.mumbai.minterAddress ,'mumbai');
-	// Gets the ranges appended on the minter marketplace
-	//await getAppendedRanges(blockchainData.mumbai.minterAddress ,'mumbai');
-	// Gets all token transfers made on all deployed contracts
-	await getTokenTransfers('mumbai');
 }
 
 try {
