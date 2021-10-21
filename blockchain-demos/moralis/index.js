@@ -9,21 +9,32 @@ const blockchainData = {
 		factoryAddress: '0x1A5bf89208Dddd09614919eE31EA6E40D42493CD',
 		minterAddress: '0x63Dd6821D902012B664dD80140C54A98CeE97068',
 		watchFunction: 'watchPolygonAddress',
-		watchCollection: 'watchedPolygonAddress'
+		watchCollection: 'watchedPolygonAddress',
+		testnet: true
 	},
 	goerli: {
 		chainId: '0x5', 
 		factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
 		minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba',
 		watchFunction: 'watchEthAddress',
-		watchCollection: 'watchedEthAddress'
+		watchCollection: 'watchedEthAddress',
+		testnet: true
 	},
 	binance: {
 		chainId: '0x61', 
 		factoryAddress: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
 		minterAddress: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f',
 		watchFunction: 'watchBscAddress',
-		watchCollection: 'watchedBscAddress'
+		watchCollection: 'watchedBscAddress',
+		testnet: true
+	},
+	matic: {
+		chainId: '0x89', 
+		factoryAddress: '0x556a3Db6d800AAA56f8B09E476793c5100705Db5',
+		minterAddress: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
+		watchFunction: 'watchPolygonAddress',
+		watchCollection: 'watchedPolygonAddress',
+		testnet: false
 	}
 }
 
@@ -335,11 +346,14 @@ const logEventTopics = async () => {
 }
 
 const main = async () => {
-	const serverUrl = process.env.MORALIS_SERVER;
-	const appId = process.env.MORALIS_API_KEY;
+	const serverUrl = process.env.MORALIS_SERVER_MAIN;
+	const appId = process.env.MORALIS_API_KEY_MAIN;
 	Moralis.start({ serverUrl, appId });
 
 	Object.keys(blockchainData).forEach(async blockchain => {
+		if (blockchainData[blockchain].testnet) {
+			return;
+		}
 		// Queries a factory and stores all deployed contracts
 		await getDeployedContracts(blockchainData[blockchain].factoryAddress, blockchain);
 		// Gets the Products from all Deployed Contracts
