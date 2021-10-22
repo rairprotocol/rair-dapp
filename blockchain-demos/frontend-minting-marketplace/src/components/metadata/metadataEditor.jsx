@@ -5,6 +5,7 @@ import {rFetch} from '../../utils/rFetch.js';
 import setDocumentTitle from '../../utils/setTitle';
 import {useSelector} from 'react-redux';
 import { erc721Abi } from '../../contracts'
+import chainData from '../../utils/blockchainData';
 import swal from 'sweetalert2';
 /*
 	"metadata": {
@@ -230,13 +231,13 @@ const MetadataEditor = (props) => {
 			{productName} from <b>{contractName}</b>
 		</h5>
 		<small>
-			({params.contract}) on {contractNetwork}
+			({params.contract}) on {chainData[contractNetwork].name}
 		</small>
 		<div className='col-6'>
 			<div className='col-3' />
 			{existingMetadataArray && <button onClick={async e => {
 					if (window.ethereum.chainId !== contractNetwork) {
-						swal.fire(`Switch to ${contractNetwork}!`);
+						swal.fire(`Switch to ${chainData[contractNetwork].name}!`);
 						return;
 					}
 					let instance = contractCreator(params.contract, erc721Abi);
@@ -384,7 +385,7 @@ const MetadataEditor = (props) => {
 					/>
 				<button onClick={async e => {
 					if (window.ethereum.chainId !== contractNetwork) {
-						swal.fire(`Switch to ${contractNetwork}!`);
+						swal.fire(`Switch to ${chainData[contractNetwork].name}!`);
 						return;
 					}
 					setSendingMetadata(true);
