@@ -422,21 +422,18 @@ i.fas-custom {
 .category-button-videos{
 margin-left: -36px;
 }
+
 .react-tabs__tab--selected{
-  background-color: var(--charcoal-80)  !important;
+  background-color: var(--charcoal-80) !important;
   z-index: 0;
 }
 .styles-module_carousel-arrow__26sRw{
   display: none;
-  /* background: url(https://cdn.dsmcdn.com/web/production/slick-arrow.svg) no-repeat 50%;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    position: relative; */
 }
 .ReactModal__Overlay--after-open{
   background-color: #434343 !important;
 }
+
 /* style to desc */
 
 .custom-desc-to-offer-wrapper{

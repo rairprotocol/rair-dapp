@@ -14,6 +14,7 @@ import SelectBox from "../SelectBox/SelectBox";
 import chainData from "../../../utils/blockchainData";
 import { useLocation, useParams, useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
+import ItemRank from "../SelectBox/ItemRank";
 // import Swal from 'sweetalert2';
 // import 'react-accessible-accordion/dist/fancy-example.css';
 // import VideoList from "../../video/videoList";
@@ -43,6 +44,13 @@ const NftItem = ({
 
   const [allProducts, setAllProducts] = useState([]);
   const [selected, setSelected] = useState({});
+  const [selectedToken, setSelectedToken] = useState();
+  const [modalIsOpen, setIsOpen] = useState(
+    () =>
+      contract === dataVerification?.title &&
+      product === dataVerification?.name &&
+      dataVerification.offerData.some((item) => item.offerName === offer)
+  );
   // if (JSON.stringify(z).indexOf('sTest29') > -1) {
   // console.log({
 
@@ -52,13 +60,7 @@ const NftItem = ({
   //   },
   //   z,
   // })}
-  const [modalIsOpen, setIsOpen] = useState(
-    () =>
-      contract === dataVerification?.title &&
-      product === dataVerification?.name &&
-      dataVerification.offerData.some((item) => item.offerName === offer)
-  );
-  const [selectedToken, setSelectedToken] = useState();
+
   // const [hover, setHover] = useState(false);
   // const [dataImg, setDataImg] = useState();
 
@@ -110,10 +112,12 @@ const NftItem = ({
     if (!Object.keys(params).length)
       setSelected(responseAllProduct.result[0].metadata);
   }, [collectionIndexInContract, contractName, params]);
+
   const openModal = useCallback(() => {
     setIsOpen(true);
     getAllProduct();
   }, [getAllProduct]);
+
   function openModalOnClick() {
     openModal();
     redirection();
@@ -138,6 +142,7 @@ const NftItem = ({
     );
     setSelectedToken(token);
   };
+
   useEffect(() => {
     if (modalIsOpen) {
       waitResponse();
@@ -264,11 +269,11 @@ const NftItem = ({
   //       p.innerHTML = text.map(function (char) {
   //         return '<span>' + char + '</span>';
   //       }).join('');
-  
+
   //       spans = p.children;
   //     }
   //     else console.log('kik');
-  
+
   //     (function wheee () {
   //       for (var i = 0; i < len; i++) {
   //         spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
@@ -282,6 +287,7 @@ const NftItem = ({
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
   }
+
   function handleClick() {
     history.push("/all");
   }
@@ -290,6 +296,7 @@ const NftItem = ({
     setIsOpen(false);
     handleClick();
   }
+
   return (
     <>
       <button
@@ -318,7 +325,7 @@ const NftItem = ({
             style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
             className="col-12 h-100 w-100"
           />
-        {<SvgKey />}
+          {<SvgKey />}
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">
@@ -356,7 +363,6 @@ const NftItem = ({
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal"
       >
         <h2
           ref={(_subtitle) => (subtitle = _subtitle)}
@@ -375,7 +381,6 @@ const NftItem = ({
         >
           {selected?.name}
         </h2>
-        {/* <p className='rainbow-text'>RAIR</p> */}
         <button
           style={{
             float: "right",
@@ -461,12 +466,14 @@ const NftItem = ({
             <div>
               <span>Item rank</span>
               <div>
-                <SelectBox
+                  <ItemRank 
+                /*  <SelectBox */
+
                   primaryColor={primaryColor}
                   items={[
-                    // { pkey: `🔑`, value: "Ultra Rair 1/1", id: 1 },
-                    { pkey: `🔑`, value: "Rair", id: 2 },
-                    // { pkey: `🔑`, value: "Common 1,620 / 10,000", id: 3 },
+                    { pkey: `🔑`, value: "Rair", id: 1 },
+                    // { pkey: `🔑`, value: "Ultra Rair", id: 2 },
+                    // { pkey: `🔑`, value: "Common", id: 3 },
                   ]}
                 />
               </div>

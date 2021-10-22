@@ -42,7 +42,7 @@
       cursor: pointer;
     padding: 6px;
     padding-left: 20px;
-    background: #383637;
+    /* background: #7A797A; */
     padding-right: 24px;
   }
   .select-box--items div:first-child{
@@ -95,6 +95,17 @@
     border-width: thin;
   }
   .selected{
-      width: 100%;
-      min-width:160px;
+      /* width: 100%;
+      min-width:160px; */
+  }
+
+  .olo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    /* height: 32px; */
+    border-radius: 16px;
+    margin: 6px;
+    padding: 10px 5px;
   }
