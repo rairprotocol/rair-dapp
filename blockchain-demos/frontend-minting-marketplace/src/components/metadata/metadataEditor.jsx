@@ -3,7 +3,9 @@ import InputField from '../common/InputField.jsx';
 import { Link, useParams } from "react-router-dom";
 import {rFetch} from '../../utils/rFetch.js';
 import setDocumentTitle from '../../utils/setTitle';
-
+import {useSelector} from 'react-redux';
+import { erc721Abi } from '../../contracts'
+import swal from 'sweetalert2';
 /*
 	"metadata": {
         "artist": "none",
@@ -125,8 +127,13 @@ const MetadataEditor = (props) => {
 	const [currentOffer, setCurrentOffer] = useState('');
 
 	const [existingMetadataArray, setExistingMetadataArray] = useState([]);
+	
+	const [sendingMetadata, setSendingMetadata] = useState(false);
+	const [ipfsLink, setIpfsLink] = useState('');
 
 	const params = useParams();
+
+	const {contractCreator} = useSelector(state => state.contractStore);
 
 	const fetchContractData = useCallback(async () => {
 		
@@ -227,6 +234,26 @@ const MetadataEditor = (props) => {
 		</small>
 		<div className='col-6'>
 			<div className='col-3' />
+			{existingMetadataArray && <button onClick={async e => {
+					if (window.ethereum.chainId !== contractNetwork) {
+						swal.fire(`Switch to ${contractNetwork}!`);
+						return;
+					}
+					let instance = contractCreator(params.contract, erc721Abi);
+					swal.fire('Fetching Metadata URL...');
+					let metadataLink = await instance.tokenURI(tokenNumber);
+					if (metadataLink === '') {
+						swal.fire('No metadata URL found!')
+						return;
+					}
+					swal.fire('Fetching Metadata from URL...');
+					let metadataData = await fetch(metadataLink).then(blob => blob.json());
+					let workaroundToDisplayMetadata = [...existingMetadataArray];
+					workaroundToDisplayMetadata[tokenNumber] = metadataData;
+					setExistingMetadataArray(workaroundToDisplayMetadata);
+				}} disabled={sendingMetadata} className='col-12 btn btn-primary'>
+				Check metadata on blockchain!
+			</button>}
 			<button disabled className='btn btn-primary col-3'>
 				Single
 			</button>
@@ -343,6 +370,36 @@ const MetadataEditor = (props) => {
 				<hr />
 				<button disabled className='col-12 btn btn-primary'>
 					Update Metadata
+				</button>
+
+				<InputField
+					label='Metadata URL'
+					placeholder='Full link'
+					getter={ipfsLink}
+					setter={setIpfsLink}
+					customClass='form-control'
+					labelClass='w-100'
+					labelCSS={{textAlign: 'left'}}
+					/>
+				<button onClick={async e => {
+					if (window.ethereum.chainId !== contractNetwork) {
+						swal.fire(`Switch to ${contractNetwork}!`);
+						return;
+					}
+					setSendingMetadata(true);
+					let instance = contractCreator(params.contract, erc721Abi);
+					try {
+						await instance.setUniqueURI(tokenNumber, ipfsLink);
+					} catch (err) {
+						swal.fire('Error', err.data.message);
+						console.log(err);
+						setSendingMetadata(false);
+						return;
+					}
+					setSendingMetadata(false);
+					swal.fire('Metadata Set!');
+				}} disabled={sendingMetadata} className='col-12 btn btn-primary'>
+					{sendingMetadata ? 'Sending Metadata...' : 'Send Metadata link to the contract!'}
 				</button>
 		</div>
 	</div>
