@@ -250,6 +250,10 @@ select.select-price option {
     margin-right: 12px;
 }
 
+.arrows-sort i:first-child {
+    margin-right: 4px;
+}
+
 .arrows-sort i {
     font-size: 16px;
 }

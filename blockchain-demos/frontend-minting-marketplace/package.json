@@ -2,7 +2,7 @@
   "name": "frontend-minting-marketplace",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://rairnode:5000",
   "dependencies": {
     "@sentry/react": "^6.13.2",
     "@sentry/tracing": "^6.13.2",
@@ -16,6 +16,7 @@
     "react": "^17.0.2",
     "react-accessible-accordion": "^4.0.0",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.17.5",
     "react-modal": "^3.14.3",
     "react-multi-carousel": "^2.6.5",
     "react-redux": "^7.2.4",

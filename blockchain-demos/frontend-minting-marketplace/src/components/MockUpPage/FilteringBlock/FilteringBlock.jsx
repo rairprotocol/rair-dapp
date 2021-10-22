@@ -117,7 +117,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                                 <i className="fas fa-arrow-down"></i>
                             </div>
                                 : <div onClick={() => onChangeSortItem("up")} className="select-sort-item">
-                                    <i className="fas fa-arrow-down"></i>
+                                    <i className="fas fa-arrow-up"></i>
                                 </div>
                         }
                     </div>

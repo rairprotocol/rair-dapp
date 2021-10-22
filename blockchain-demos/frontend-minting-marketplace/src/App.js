@@ -38,8 +38,8 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
-import NftList from './components/MockUpPage/NftList/NftList';
-import NftItem from './components/MockUpPage/NftList/NftItem';
+// import NftList from './components/MockUpPage/NftList/NftList';
+// import NftItem from './components/MockUpPage/NftList/NftItem';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -61,7 +61,7 @@ function App({ sentryHistory }) {
 	const dispatch = useDispatch()
 	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
-	const { token, error } = useSelector(store => store.accessStore);
+	const { token } = useSelector(store => store.accessStore);
 
 	const connectUserData = async () => {
 		setLoginDone(false);
