@@ -237,8 +237,25 @@ select.select-price option {
     color: #000;
     cursor: pointer;
 }
-  
-.select-sort i, .select-sort-title-pop-up  i {
+
+.select-sort-item i {
     color: #E882D5;
-    margin-right: 8px;
 }
+
+.title-left {
+    display: flex;
+}
+
+.arrows-sort {
+    margin-right: 12px;
+}
+
+.arrows-sort i {
+    font-size: 16px;
+}
+
+.title-right-arrow {
+    color: #E882D5;
+}
+
+

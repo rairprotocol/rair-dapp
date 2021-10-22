@@ -9,7 +9,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
     const filterRef = useRef();
 
     const [sortPopUp, setSortPopUp] = useState(false);
-    const [sortItem, setSortItem] = useState(<i className="fas fa-sort-amount-down-alt"></i>);
+    const [sortItem, setSortItem] = useState("up");
     const sortRef = useRef();
 
     const [isOpenCategories, setIsOpenCategories] = useState(false);
@@ -74,7 +74,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                         backgroundColor: `var(--${primaryColor})`,
                         color: `var(--${textColor})`
                     }} className="select-filters-popup">
-                        <div onClick={() => {onChangeFilterItem("Price"); setIsOpenBlockchain(true)}} className="select-filters-item">Blockchain</div>
+                        <div onClick={() => { onChangeFilterItem("Price"); setIsOpenBlockchain(true) }} className="select-filters-item">Blockchain</div>
                         <div onClick={() => onChangeFilterItem("Creator")} className="select-filters-item">Creator</div>
                         <div onClick={() => { onChangeFilterItem("Metadata"); setIsOpenCategories(true) }} className="select-filters-item">Categories</div>
                     </div>
@@ -91,7 +91,13 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                 >
                     <div className="select-sort-title">
                         <div className="title-left">
-                            {sortItem}Sort by name
+                            <div className="arrows-sort">
+                                <i style={{ color: `${sortItem === "up" ? "#E882D5" : "#A7A6A6"}` }} class="fas fa-arrow-up"></i>
+                                <i style={{ color: `${sortItem === "down" ? "#E882D5" : "#A7A6A6"}` }} class="fas fa-arrow-down"></i>
+                            </div>
+                            <div>
+                                Sort by name
+                            </div>
                         </div>
                         <div className="title-right-arrow">
                             {sortPopUp ? <i className="fas fa-chevron-up"></i> : <i className="fas fa-chevron-down"></i>}
@@ -104,11 +110,16 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                         color: `var(--${textColor})`
                     }}
                         className="select-sort-title-pop-up"
-                        onClick={() => onChangeSortItem(<i className="fas fa-sort-amount-up"></i>)}
+                    // onClick={() => onChangeSortItem(<i className="fas fa-sort-amount-up"></i>)}
                     >
-                        <div className="select-sort-item">
-                            <i className="fas fa-sort-amount-up"></i>
-                        </div>
+                        {
+                            sortItem === "up" ? <div onClick={() => onChangeSortItem("down")} className="select-sort-item">
+                                <i className="fas fa-arrow-down"></i>
+                            </div>
+                                : <div onClick={() => onChangeSortItem("up")} className="select-sort-item">
+                                    <i className="fas fa-arrow-down"></i>
+                                </div>
+                        }
                     </div>
                 }
                 <ModalCategories setIsOpenCategories={setIsOpenCategories} isOpenCategories={isOpenCategories} />

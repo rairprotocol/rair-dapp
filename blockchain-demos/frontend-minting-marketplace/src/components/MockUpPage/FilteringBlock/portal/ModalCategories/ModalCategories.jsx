@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useInput } from '../../hooks';
 import Modal from '../../modal';
 import BlockMinMax from '../BlockMinMax/BlockMinMax';
 
