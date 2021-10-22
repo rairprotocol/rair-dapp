@@ -53,14 +53,14 @@ module.exports = async (context) => {
     let additionalInfo = '';
 
     switch (task.attrs.name) {
-      // case 'sync contracts':
-      //   await agenda.create('sync products & locks', data)
-      //     .schedule(moment()
-      //       .utc()
-      //       .toDate())
-      //     .save();
-      //   break;
-      // case 'sync products & locks':
+      case 'sync contracts':
+        await agenda.create('sync products', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
+      // case 'sync products':
       //   await agenda.create('sync offerPools & offers', data)
       //     .schedule(moment()
       //       .utc()
@@ -75,6 +75,11 @@ module.exports = async (context) => {
       //     .save();
       //   break;
       // case 'sync tokens':
+      //   await agenda.create('sync locks', data)
+      //     .schedule(moment()
+      //       .utc()
+      //       .toDate())
+      //     .save();
       //   break;
       default:
         break;

@@ -14,6 +14,7 @@ module.exports = (context) => {
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
 
+      // Initialize moralis instances
       Moralis.start({ serverUrl, appId });
 
       await Moralis.Cloud.run(networkData.watchFunction, {
@@ -33,18 +34,19 @@ module.exports = (context) => {
 
       await Promise.all(_.map(events.result, async contract => {
         const nameAbi = getABIData(erc721Abi, 'function', 'name')
+        const { token, owner } = contract.data
         const nameOptions = {
           chain: networkData.network,
-          address: contract.data.token,
+          address: token,
           function_name: "name",
           abi: [nameAbi.abi]
         };
         const title = await Moralis.Web3API.native.runContractFunction(nameOptions).catch(console.error);
 
         contractsForSave.push({
-          user: contract.data.owner,
+          user: owner,
           title,
-          contractAddress: contract.data.token,
+          contractAddress: token,
           blockchain: networkData.network
         });
       }))
