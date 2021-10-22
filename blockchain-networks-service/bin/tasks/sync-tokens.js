@@ -39,7 +39,7 @@ module.exports = (context) => {
             });
 
             const token = tokenId - foundProduct.firstTokenIndex;
-            const authenticityLink = `${ context.config.blockchain.authenticityHost[networkHex] }/${ contractAddress }/?a=${ tokenId }`;
+            const authenticityLink = `${ context.config.blockchain.networks[network].authenticityHost }/${ contractAddress }/?a=${ tokenId }`;
 
             // increasing number of minted tokens for a particular offer
             if (!_.isEmpty(foundProduct) && !_.isEmpty(foundOffers)) {

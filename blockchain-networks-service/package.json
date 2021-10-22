@@ -34,6 +34,7 @@
     "moment-timezone": "^0.5.33",
     "mongodb": "^3.6.8",
     "mongoose": "^5.12.14",
+    "moralis": "^0.0.98",
     "morgan": "^1.10.0",
     "nanoid": "^3.1.20",
     "path": "^0.12.7",

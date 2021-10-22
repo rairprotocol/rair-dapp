@@ -1,46 +1,53 @@
-const ethers = require('ethers');
+const Moralis = require('moralis/node');
 const _ = require('lodash');
 const log = require('../utils/logger')(module);
-const providers = require('../integrations/ethers/providers');
-const { abi: Token } = require('../integrations/ethers/contracts/RAIR_ERC721.json');
-const { abi: Factory } = require('../integrations/ethers/contracts/RAIR_Token_Factory.json');
-const { numberToHexadecimal } = require('../utils/helpers');
+const { getABIData } = require('../utils/helpers');
+const { factoryAbi, erc721Abi } = require('../integrations/ethers/contracts');
 
-const lockLifetime = 1000 * 60 * 5; // 5 minutes - This could become very expensive and time consuming
+const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
   context.agenda.define('sync contracts', { lockLifetime }, async (task, done) => {
     try {
       const { network, name } = task.attrs.data;
       const contractsForSave = [];
-      const providerData = _.find(providers, p => p.network === network);
-      const provider = providerData.provider;
-      const factoryInstance = await new ethers.Contract(providerData.factoryAddress, Factory, provider);
+      const networkData = context.config.blockchain.networks[network];
+      const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
 
-      // get all users on platform
-      const numberOfCreators = await factoryInstance.getCreatorsCount();
+      Moralis.start({ serverUrl, appId });
 
-      await Promise.all(_.chain()
-        .range(numberOfCreators)
-        .map(async indexOfUser => {
-          const user = await factoryInstance.creators(indexOfUser);
-          const numberOfTokens = await factoryInstance.getContractCountOf(user);
+      await Moralis.Cloud.run(networkData.watchFunction, {
+        address: networkData.factoryAddress,
+        'sync_historical': true
+      });
 
-          for (let j = 0; j < numberOfTokens; j++) {
-            const contractAddress = await factoryInstance.ownerToContracts(user, j);
-            const erc721Instance = new ethers.Contract(contractAddress, Token, provider);
-            const title = await erc721Instance.name();
+      const {abi, topic} = getABIData(factoryAbi, 'event', 'NewContractDeployed');
+      const options = {
+        address: networkData.factoryAddress,
+        chain: networkData.network,
+        topic,
+        abi
+      }
 
-            contractsForSave.push({
-              user,
-              title,
-              contractAddress,
-              blockchain: numberToHexadecimal(provider._network.chainId)
-            });
-          }
-        })
-        .value()
-      );
+      let events = await Moralis.Web3API.native.getContractEvents(options);
+
+      await Promise.all(_.map(events.result, async contract => {
+        const nameAbi = getABIData(erc721Abi, 'function', 'name')
+        const nameOptions = {
+          chain: networkData.network,
+          address: contract.data.token,
+          function_name: "name",
+          abi: [nameAbi.abi]
+        };
+        const title = await Moralis.Web3API.native.runContractFunction(nameOptions).catch(console.error);
+
+        contractsForSave.push({
+          user: contract.data.owner,
+          title,
+          contractAddress: contract.data.token,
+          blockchain: networkData.network
+        });
+      }))
 
       if (!_.isEmpty(contractsForSave)) {
         try {
