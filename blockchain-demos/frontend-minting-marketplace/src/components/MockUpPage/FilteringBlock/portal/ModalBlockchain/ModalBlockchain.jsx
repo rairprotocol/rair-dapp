@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useInput } from '../../hooks';
 import Modal from '../../modal';
+import BlockMinMax from '../BlockMinMax/BlockMinMax';
 
 const blockchains = [{
     name: 'ERC',
@@ -20,10 +21,8 @@ const blockchains = [{
 }];
 
 const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
-    const minValue = useInput('');
-    const maxValue = useInput('');
-
     const [arrBlockchains, setArrBlockchains] = useState(blockchains);
+    const [clearAll, setClearAll] = useState(false);
 
     const onChangeClicked = (name) => {
         const updatedBlockchains = arrBlockchains.map((bch, index) => {
@@ -39,9 +38,8 @@ const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
                 }
             }
         })
+        setClearAll(false);
         setArrBlockchains(updatedBlockchains);
-        minValue.setValue('')
-        maxValue.setValue('')
     }
 
     const clearAllFilters = () => {
@@ -52,11 +50,13 @@ const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
             }
         })
         setArrBlockchains(clearArrBlockchains);
+        setClearAll(true)
     }
 
     const onCloseModal = () => {
         setIsOpenBlockchain(false);
-        clearAllFilters()
+        clearAllFilters();
+        setClearAll(true);
     }
 
     return (
@@ -77,15 +77,12 @@ const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
                         </div>
                         <div className="filtering-price">
                             <select className="select-price">
-                                <option>Ethereum(ETH)</option>
-                                <option>Bitcoin(BTC)</option>
+                                <option value="0">Select</option>
+                                <option value="1">Ethereum(ETH)</option>
+                                <option value="2" >Bitcoin(BTC)</option>
                                 {/* <span className="price-arrow"><i className="fas fa-chevron-down"></i></span> */}
                             </select>
-                            <div className="block-min-max">
-                                <input value={minValue.value} onChange={minValue.onChange} type="text" placeholder="Min" />
-                                <span>to</span>
-                                <input value={maxValue.value} onChange={maxValue.onChange} type="text" placeholder="Max" />
-                            </div>
+                            <BlockMinMax clearAll={clearAll} />
                         </div>
                     </div>
                     <div className="categories-wraper">

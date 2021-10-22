@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+/* Portal for filtering Modal*/
+
 export default function Portal({ children, parent, className }) {
     const el = React.useMemo(() => document.createElement("div"), []);
     React.useEffect(() => {
