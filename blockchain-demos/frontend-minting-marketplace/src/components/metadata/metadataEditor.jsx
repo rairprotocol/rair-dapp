@@ -250,6 +250,7 @@ const MetadataEditor = (props) => {
 					let metadataData = await fetch(metadataLink).then(blob => blob.json());
 					let workaroundToDisplayMetadata = [...existingMetadataArray];
 					workaroundToDisplayMetadata[tokenNumber] = metadataData;
+					swal.close();
 					setExistingMetadataArray(workaroundToDisplayMetadata);
 				}} disabled={sendingMetadata} className='col-12 btn btn-primary'>
 				Check metadata on blockchain!
