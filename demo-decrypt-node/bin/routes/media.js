@@ -10,6 +10,7 @@ const _ = require('lodash');
 const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
 const log = require('../utils/logger')(module);
 const { execPromise } = require('../utils/helpers');
+const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 
 const rareify = async (fsRoot, socketInstance) => {
   // Generate a key
@@ -216,14 +217,31 @@ module.exports = context => {
     }
   });
 
-  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res) => {
+  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
     const { title, description, contract, product, offer } = req.body;
-    const { adminNFT: author } = req.user;
+    const { adminNFT: author, publicAddress } = req.user;
     const { socketSessionId } = req.query;
     const reg = new RegExp(/^0x\w{40}:\w+$/);
 
     if (!author || !reg.test(author)) {
       return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
+    }
+
+    try {
+      const [contractAddress, tokenId] = author.split(':');
+      const ownsTheAdminToken = await checkBalanceSingle(publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
+
+      if (!ownsTheAdminToken) {
+        if (req.file) await execPromise(`rm -f ${ req.file.path }`);
+
+        return res.status(403).send({ success: false, message: 'You don\'t hold the current admin token.' });
+      }
+    } catch (e) {
+      if (req.file) await execPromise(`rm -f ${ req.file.path }`);
+
+      log.error(`Could not verify account: ${ e }`);
+
+      return next(new Error('Could not verify account.'));
     }
 
     // Get the socket connection from Express app
