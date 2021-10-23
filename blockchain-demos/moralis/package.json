@@ -1,0 +1,18 @@
+{
+  "name": "moralis-sdk-demo",
+  "version": "1.0.0",
+  "description": "Backend Demo Using Moralis SDK",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "setup": "node cloudSetup.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juan Miguel Sanchez Mola",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "ethers": "^5.4.7",
+    "moralis": "^0.0.96"
+  }
+}
