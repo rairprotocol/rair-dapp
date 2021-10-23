@@ -230,14 +230,14 @@ const MetadataEditor = (props) => {
 		<h5>
 			{productName} from <b>{contractName}</b>
 		</h5>
-		<small>
-			({params.contract}) on {chainData[contractNetwork].name}
-		</small>
+		{contractNetwork && <small>
+			({params.contract}) on {chainData[contractNetwork]?.name}
+		</small>}
 		<div className='col-6'>
 			<div className='col-3' />
 			{existingMetadataArray && <button onClick={async e => {
 					if (window.ethereum.chainId !== contractNetwork) {
-						swal.fire(`Switch to ${chainData[contractNetwork].name}!`);
+						swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
 						return;
 					}
 					let instance = contractCreator(params.contract, erc721Abi);
@@ -385,7 +385,7 @@ const MetadataEditor = (props) => {
 					/>
 				<button onClick={async e => {
 					if (window.ethereum.chainId !== contractNetwork) {
-						swal.fire(`Switch to ${chainData[contractNetwork].name}!`);
+						swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
 						return;
 					}
 					setSendingMetadata(true);
