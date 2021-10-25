@@ -60,20 +60,27 @@ module.exports = async (context) => {
             .toDate())
           .save();
         break;
-      // case 'sync products':
-      //   await agenda.create('sync offerPools & offers', data)
-      //     .schedule(moment()
-      //       .utc()
-      //       .toDate())
-      //     .save();
-      //   break;
-      // case 'sync offerPools & offers':
-      //   await agenda.create('sync tokens', data)
-      //     .schedule(moment()
-      //       .utc()
-      //       .toDate())
-      //     .save();
-      //   break;
+      case 'sync products':
+        await agenda.create('sync offerPools', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
+      case 'sync offerPools':
+        await agenda.create('sync offers', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
+      case 'sync offers':
+        await agenda.create('sync tokens', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
       // case 'sync tokens':
       //   await agenda.create('sync locks', data)
       //     .schedule(moment()
