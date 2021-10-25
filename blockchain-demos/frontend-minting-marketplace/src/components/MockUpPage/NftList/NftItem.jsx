@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Modal from "react-modal";
 import "react-multi-carousel/lib/styles.css";
 import chainData from "../../../utils/blockchainData";
-import { useLocation, useParams, useHistory } from "react-router-dom";
+import { useLocation, useParams, useHistory, NavLink } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import NftDataPage from "./NftData/NftDataPage";
 
@@ -24,8 +24,8 @@ const NftItem = ({
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
   const location = useLocation();
-  const params = useParams();
-  const { adminToken, contract, product, token, offer } = params;
+  // const params = useParams();
+  // const { adminToken, contract, product, token, offer } = params;
   // eslint-disable-next-line no-unused-vars
   let subtitle;
 
@@ -33,57 +33,59 @@ const NftItem = ({
   const [selected, setSelected] = useState({});
   const [selectedToken, setSelectedToken] = useState();
   const [modalIsOpen, setIsOpen] = useState(
-    () =>
-      contract === dataVerification?.title &&
-      product === dataVerification?.name &&
-      dataVerification.offerData.some((item) => item.offerName === offer)
+    // () =>
+      // contract === dataVerification?.title &&
+      // product === dataVerification?.name &&
+      // dataVerification.offerData.some((item) => item.offerName === offer)
   );
 
-  const getData = useCallback(async () => {
-    if (adminToken && contract && product) {
-      const response = await (
-        await fetch(`/api/${adminToken}/${contract}/${product}`, {
-          method: "GET",
-        })
-      ).json();
-      const data = response.result?.tokens.find(
-        (data) => String(data.token) === token
-      );
-      return data;
-    } else return null;
-  }, [adminToken, contract, product, token]);
+  // const getData = useCallback(async () => {
+  //   if (adminToken && contract && product) {
+  //     const response = await (
+  //       await fetch(`/api/${adminToken}/${contract}/${product}`, {
+  //         method: "GET",
+  //       })
+  //     ).json();
+  //     const data = response.result?.tokens.find(
+  //       (data) => String(data.token) === token
+  //     );
+  //     return data;
+  //   } else return null;
+  // }, [adminToken, contract, product, token]);
 
-  const getAllProduct = useCallback(async () => {
-    const responseAllProduct = await (
-      await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
-        method: "GET",
-      })
-    ).json();
+  // const getAllProduct = useCallback(async () => {
+  //   const responseAllProduct = await (
+  //     await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
+  //       method: "GET",
+  //     })
+  //   ).json();
 
-    setAllProducts(responseAllProduct.result);
+  //   setAllProducts(responseAllProduct.result);
 
-    if (!Object.keys(params).length)
-      setSelected(responseAllProduct.result[0].metadata);
-  }, [collectionIndexInContract, contractName, params]);
+  //   if (!Object.keys(params).length)
+  //     setSelected(responseAllProduct.result[0].metadata);
+  // }, [collectionIndexInContract, contractName, params]);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
-    getAllProduct();
-  }, [getAllProduct]);
+    // getAllProduct();
+  }, 
+  // [getAllProduct]
+  );
 
   function openModalOnClick() {
     openModal();
     redirection();
   }
 
-  const waitResponse = useCallback(async () => {
-    const data = await getData();
-    if (data && data.metadata) {
-      setSelected(data.metadata);
-      setSelectedToken(data.token);
-      openModal();
-    }
-  }, [getData, openModal, setSelected]);
+  // const waitResponse = useCallback(async () => {
+    // const data = await getData();
+    // if (data && data.metadata) {
+      // setSelected(data.metadata);
+      // setSelectedToken(data.token);
+      // openModal();
+    // }
+  // }, [getData, openModal, setSelected]);
 
   const redirection = () => {
     history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
@@ -96,11 +98,11 @@ const NftItem = ({
     setSelectedToken(token);
   };
 
-  useEffect(() => {
-    if (modalIsOpen) {
-      waitResponse();
-    }
-  }, [modalIsOpen, waitResponse]);
+  // useEffect(() => {
+    // if (modalIsOpen) {
+      // waitResponse();
+    // }
+  // }, [modalIsOpen, waitResponse]);
 
   function onSelect(id) {
     allProducts.forEach((p) => {
@@ -164,7 +166,7 @@ const NftItem = ({
   };
 
   return (
-    <>
+   <>
       <button
         onClick={openModalOnClick}
         className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
@@ -225,13 +227,13 @@ const NftItem = ({
         </div>
       </button>
 
-     <Modal
+     {/* <Modal
       isOpen={modalIsOpen}
         // onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
-     >
-     <NftDataPage
+     > */}
+     {/* <NftDataPage
         selected={selected}
         pict={pict}
         primaryColor={primaryColor}
@@ -248,8 +250,8 @@ const NftItem = ({
         setSelected={setSelected}
         minPrice={minPrice}
         maxPrice={maxPrice}
-      />
-     </Modal>
+      /> */}
+     {/* </Modal> */}
     </>
   );
 };

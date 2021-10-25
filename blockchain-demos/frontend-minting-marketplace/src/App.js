@@ -36,6 +36,7 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
+import NftDataPage from './components/MockUpPage/NftList/NftData/NftDataPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -243,13 +244,13 @@ function App({sentryHistory}) {
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
 								<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
-									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+									<NftDataPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
 								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 								<SentryRoute path='/tokens/:contract/:product/:tokenId'>
-									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+									<NftDataPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
 								{adminAccess && <SentryRoute path='/admin'>
 									<FileUpload primaryColor={primaryColor} textColor={textColor}/>

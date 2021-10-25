@@ -5,6 +5,7 @@ import thirdPict from '../assets/Graphics-WEB-2021-03.png'
 import NftItem from './NftItem'
 
 const NftList = ({data, primaryColor, textColor}) => {
+
     return (
         <div className={'list-button-wrapper'}>
             {
@@ -24,7 +25,8 @@ const NftList = ({data, primaryColor, textColor}) => {
                             blockchain={pict.blockchain}
                             collectionName={pict.name}
                             ownerCollectionUser={pict.user}
-                            collectionIndexInContract={pict.collectionIndexInContract}/>)
+                            collectionIndexInContract={pict.collectionIndexInContract}
+                            />)
                     } else {
                         return null
                         // return(<img width="291" height="291" key={index} src={firstPict} alt="first" />)
