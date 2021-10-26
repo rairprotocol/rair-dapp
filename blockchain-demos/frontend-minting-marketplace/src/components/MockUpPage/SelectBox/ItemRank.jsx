@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 // import { useHistory } from "react-router-dom";
 
 import "./styles.css";
@@ -8,6 +8,8 @@ const ItemRank = (props) => {
   const [showItems, setShowItems] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   // let history = useHistory();
+
+  const rankRef = useRef();
 
 
   useEffect(() => {
@@ -29,8 +31,20 @@ const ItemRank = (props) => {
     setShowItems(false);
   };
 
+
+  const handleClickOutSideItemRank = (e) => {
+    if (!rankRef.current.contains(e.target)) {
+      setShowItems(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutSideItemRank);
+    return () => document.removeEventListener('mousedown', handleClickOutSideItemRank);
+  })
+
   return (
-    <div className="select-box--box">
+    <div ref={rankRef} className="select-box--box">
       <div
         style={{ backgroundColor: `var(--${props.primaryColor})` }}
         className="select-box--container"
@@ -41,9 +55,9 @@ const ItemRank = (props) => {
             props.selectedToken ? (
               items.map((i) => {
                 if (i.token === props.selectedToken) {
-                  return <span key={i.id}> 
-                  {i.value} 
-                  {/* {i.token} */}
+                  return <span key={i.id}>
+                    {i.value}
+                    {/* {i.token} */}
                   </span>;
                 }
                 return null;
@@ -58,9 +72,8 @@ const ItemRank = (props) => {
         </div>
         <div className="select-box--arrow" onClick={dropDown}>
           <span
-            className={`${
-              showItems ? "select-box--arrow-up" : "select-box--arrow-down"
-            }`}
+            className={`${showItems ? "select-box--arrow-up" : "select-box--arrow-down"
+              }`}
           />
         </div>
 
@@ -72,7 +85,8 @@ const ItemRank = (props) => {
             items.map((item) => (
               <div
                 key={item.id}
-                onClick={() => {onSelectItem(item) 
+                onClick={() => {
+                  onSelectItem(item)
                   // props.handleClickToken(item.token)
                 }}
                 className={selectedItem === item ? "selected" : ""}

@@ -109,3 +109,18 @@
     margin: 6px;
     padding: 10px 5px;
   }
+
+.ntf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ntf-header .btn-share button {
+  font-size: 20px;
+  padding: 10px 53px;
+  border-radius: 16px;
+  background: none;
+  color: #fff;
+  border: 1px solid #D37AD6;
+}

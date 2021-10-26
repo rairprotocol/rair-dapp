@@ -273,7 +273,7 @@ function App({sentryHistory}) {
 							</Switch>
 						</div>
 					</div>
-					<div className='col-1 d-none d-xl-inline-block' />
+					{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 				</div>
 			</div>
 		</Router>
