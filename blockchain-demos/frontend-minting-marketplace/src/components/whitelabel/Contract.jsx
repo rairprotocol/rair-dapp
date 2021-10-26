@@ -7,6 +7,7 @@ import AddOffer from './AddOffer.jsx';
 import LockRange from './LockRange.jsx';
 
 import chainData from '../../utils/blockchainData';
+import { rFetch } from '../../utils/rFetch.js';
 
 const Contract = ({address}) => {
 
@@ -18,24 +19,12 @@ const Contract = ({address}) => {
 		if (!address) {
 			return;
 		}
-		let response2 = await (await fetch(`/api/contracts/${address}`, {
-			headers: {
-				'x-rair-token': localStorage.token
-			}
-		})).json();
-		let response3 = await (await fetch(`/api/contracts/${address}/products`, {
-			headers: {
-				'x-rair-token': localStorage.token
-			}
-		})).json();
+		let response2 = await rFetch(`/api/contracts/${address}`);
+		let response3 = await rFetch(`/api/contracts/${address}/products`);
 		if (response3.success) {
 			response2.contract.products = response3.products
 		}
-		let response4 = await (await fetch(`/api/contracts/${address}/products/offers`, {
-			headers: {
-				'x-rair-token': localStorage.token
-			}
-		})).json();
+		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
 		// Special case where a product exists but it has no offers
 		if (response4.success) {
 			response4.products.forEach(item => {

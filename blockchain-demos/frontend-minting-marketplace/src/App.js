@@ -251,9 +251,7 @@ function App({sentryHistory}) {
 								<SentryRoute path='/tokens/:contract/:product/:tokenId'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
-								{adminAccess && <SentryRoute path='/admin'>
-									<FileUpload primaryColor={primaryColor} textColor={textColor}/>
-								</SentryRoute>}
+								{adminAccess && <SentryRoute path='/admin' component={FileUpload}/>}
 								<SentryRoute exact path='/'>
 									<div className='col-6 text-left'>
 										<h1 className='w-100' style={{textAlign: 'left'}}>

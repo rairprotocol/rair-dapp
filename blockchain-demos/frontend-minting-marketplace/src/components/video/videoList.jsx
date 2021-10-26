@@ -37,18 +37,16 @@ const VideoList = ({mediaList, titleSearch,  primaryColor}) => {
 				<i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i> */}
 
 	</div>
-		{/* <details className='col-12'> */}
-			{/* <summary> Search </summary> */}
-			{/* <InputField
-				getter={titleSearch}
-				setter={setTitleSearch}
-				placeholder={'Search'}
-				customClass='form-control input-styled' /> */}
-		{/* </details> */}
-		<div className='list-button-wrapper'>
-		{mediaList ? Object.keys(mediaList).filter(item => mediaList[item].title.toLowerCase().includes(titleSearch.toLowerCase())).map((item, index) => {
-			return <VideoItem key={index} mediaList={mediaList} item={item} />
-		}) : 'Searching...'}
+		<div className='list-button-wrapper' style={{verticalAlign: 'top'}}>
+		{mediaList ? 
+			Object.keys(mediaList).length > 0 ?
+				Object.keys(mediaList).filter(item => mediaList[item].title.toLowerCase().includes(titleSearch.toLowerCase())).map((item, index) => {
+					return <VideoItem key={index} mediaList={mediaList} item={item} />
+			}) :
+				<h5 className='w-100 text-center'>
+					No files found
+				</h5>
+			: 'Searching...'}
 		</div>
 	</>
 };

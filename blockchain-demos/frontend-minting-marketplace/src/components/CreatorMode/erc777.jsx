@@ -53,7 +53,7 @@ const ERC777Manager = () => {
 				try {
 					await erc777Instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''));
 				} catch (err) {
-					console.log('Error sending ERC777 tokens', err)
+					console.error('Error sending ERC777 tokens', err)
 					Swal.fire('Error', err, 'error');
 				}
 			}} className='btn btn-royal-ice'>
