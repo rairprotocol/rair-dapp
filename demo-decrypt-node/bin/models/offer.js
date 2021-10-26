@@ -21,4 +21,15 @@ Offer.pre('save', function (next) {
   next();
 });
 
+Offer.pre('insertMany', async function (next, offers) {
+  if (Array.isArray(offers) && offers.length) {
+    offers = offers.map(offer => {
+      offer.copies = (offer.range[1] - offer.range[0]) + 1;
+      return offer;
+    });
+  }
+
+  next();
+});
+
 module.exports = Offer;
