@@ -256,7 +256,7 @@ module.exports = async ({ db, config }) => {
           ]);
 
           const uniqueIndexInContract = product[0].firstTokenIndex + parseInt(tokenIndex);
-          const authenticityLink = `${ config.blockchain.authenticityHost[network] }/${ contract }/?a=${ uniqueIndexInContract }`;
+          const authenticityLink = `${ config.blockchain.networks[network].authenticityHost }/${ contract }/?a=${ uniqueIndexInContract }`;
 
           const foundToken = await db.MintedToken.findOne({
             contract,

@@ -40,11 +40,11 @@ spec:
             - name: MONGO_URI_LOCAL
               value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
             - name: INFURA_PROJECT_ID
-              value: "92a88973a28d41318792f77451db4c5b"
+              value: "2dc4938a58624f9aa422053e6d2e90f8"
             - name: ADMIN_NETWORK
-              value: mumbai
+              value: polygon
             - name: ADMIN_CONTRACT
-              value: "0x0758C7d8B14cc586d115e7Bc187AbD31bE2d35FD"
+              value: "0xe5a9efb29b82517166fcef23722452543b5f380f"
             - name: SERVICE_HOST
               value: "dev.rair.tech"
             - name: PINATA_SECRET
@@ -52,13 +52,13 @@ spec:
             
           
             - name: matic_testnet_rpc
-              value: "https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://polygon-mumbai.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: matic_mainnet_rpc
-              value: "https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://polygon-mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: ethereum_mainnet_rpc
-              value: "https://mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: ethereum_testnet_goerli_rpc
-              value: "https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://goerli.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: binance_testnet_rpc
               value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
             - name: binance_mainnet_rpc
@@ -95,7 +95,7 @@ goerli_chain_id=5"
             - name: GOERLI_CHAINID_HEX
               value: "0x5"
             - name: MATIC_MUMBAI_URL
-              value: "https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://polygon-mumbai.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: MATIC_MUMBAI_CHAIN_ID
               value: "80001"
             - name: MATIC_MUMBAI_SYMBOL
@@ -109,7 +109,7 @@ goerli_chain_id=5"
             - name: MATIC_MUMBAI_CHAINID_HEX
               value: "0x13881"
             - name: MATIC_MAINNET_URL
-              value: "https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://polygon-mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: MATIC_MAINNET_CHAIN_ID
               value: "137"
             - name: MATIC_MAINNET_SYMBOL

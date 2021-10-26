@@ -78,7 +78,7 @@ async function main() {
   });
 
   // Listen network events
-  await eventListeners(context);
+  // await eventListeners(context);
 }
 
 (async () => {
