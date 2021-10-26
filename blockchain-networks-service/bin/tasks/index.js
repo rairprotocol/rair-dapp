@@ -81,13 +81,13 @@ module.exports = async (context) => {
             .toDate())
           .save();
         break;
-      // case 'sync tokens':
-      //   await agenda.create('sync locks', data)
-      //     .schedule(moment()
-      //       .utc()
-      //       .toDate())
-      //     .save();
-      //   break;
+      case 'sync tokens':
+        await agenda.create('sync locks', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
       default:
         break;
     }
@@ -96,7 +96,7 @@ module.exports = async (context) => {
   });
 
   agenda.on('fail', (err) => {
-    log.error(`Agenda > Fail: ${ err }`);
+    log.error(`Agenda > Fail: ${ JSON.stringify(err) }`);
   });
 
 
