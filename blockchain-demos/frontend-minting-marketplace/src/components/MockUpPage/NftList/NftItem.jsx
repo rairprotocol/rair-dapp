@@ -24,8 +24,8 @@ const NftItem = ({
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
   const location = useLocation();
-  // const params = useParams();
-  // const { adminToken, contract, product, token, offer } = params;
+  const params = useParams();
+  const { adminToken, contract, product, token, offer } = params;
   // eslint-disable-next-line no-unused-vars
   let subtitle;
 
@@ -68,6 +68,7 @@ const NftItem = ({
 
   const openModal = useCallback(() => {
     setIsOpen(true);
+    console.log('open');
     // getAllProduct();
   }, 
   // [getAllProduct]
@@ -76,6 +77,7 @@ const NftItem = ({
   function openModalOnClick() {
     openModal();
     redirection();
+    // handleClickToken();
   }
 
   // const waitResponse = useCallback(async () => {
@@ -88,7 +90,10 @@ const NftItem = ({
   // }, [getData, openModal, setSelected]);
 
   const redirection = () => {
-    history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
+    // history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
+    console.log(dataVerification, 'dataVerification');
+    console.log(dataVerification.offerData[0].productNumber, 'dataVerification.offerData[0].productNumber');
+    history.push(`/${0}/${dataVerification.title}/${dataVerification.name}/${dataVerification.offerData[0].offerName}/${dataVerification.offerData[0].productNumber}`)
   };
 
   const handleClickToken = (token) => {

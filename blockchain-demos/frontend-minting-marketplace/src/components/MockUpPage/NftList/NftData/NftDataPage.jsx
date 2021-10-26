@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useLocation, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import {
   Accordion,
   AccordionItem,
@@ -13,33 +13,25 @@ import ItemRank from "../../SelectBox/ItemRank";
 import SelectBox from "../../SelectBox/SelectBox";
 import OfferItem from "../OfferItem";
 
-const NftDataPage = ({
-  //   selected,
-  //   pict,
-  primaryColor,
-  //   chainData,
-  //   blockchain,
-  textColor,
-  //   allProducts,
-  //   closeModal,
-  //   onClick,
-  //   handleClickToken,
-  //   selectedToken,
-  //   contractName,
-  //   onSelect,
-  //   setSelected,
-  //   minPrice,
-  //   maxPrice,
-}) => {
+const NftDataPage = ({ primaryColor, textColor }) => {
   const history = useHistory();
   const params = useParams();
   const { adminToken, contract, product, token, offer } = params;
+
   const [data, setData] = useState();
-  const [tokenData, setTokenData] = useState({});
+  const [tokenData, _setTokenData] = useState([]);
+  const setTokenData = useCallback((ololo) => {
+    debugger
+    console.log('!!!!', {ololo});
+    _setTokenData(ololo);
+  }, [_setTokenData])
   const [offerPrice, setOfferPrice] = useState([]);
   const [selectedToken, setSelectedToken] = useState(token);
+  const [allProducts, setAllProducts] = useState([]);
 
   //   const [contractAddress, setContractAddress] = useState();
+
+  // console.log(params, "params");
 
   const responsive = {
     superLargeDesktop: {
@@ -60,11 +52,13 @@ const NftDataPage = ({
       items: 1,
     },
   };
+
   const handleClickToken = () => {
     history.push(
       `/${adminToken}/${contract}/${product}/${offer}/${selectedToken}`
     );
   };
+
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
@@ -139,36 +133,58 @@ const NftDataPage = ({
       //   const data = response.result?.tokens.find(
       //     (data) => String(data.token) === token
       //   );
+      setTokenData(response.result.tokens);
 
       setData(response.result);
-      setTokenData(response.result.tokens);
+
       setOfferPrice(
         response.result.product.products.offers.map((p) => p.price)
       );
+
       // setContractAddress(response.result.product.contractAddress)
       //   return response.result;
     } else return null;
   }, [adminToken, contract, product]);
 
+
+
+
+  const getAllProduct = useCallback(async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/nft/${contract}/${product}`, {
+        method: "GET",
+      })
+    ).json();
+
+    setTokenData(responseAllProduct.result);
+    setData(responseAllProduct)
+    debugger
+    setSelectedToken(0)
+    // if (!Object.keys(params).length)
+    //   setSelected(responseAllProduct.result[0].metadata);
+  }, [product, contract]);
+  console.log(data, 'data');
+
   useEffect(() => {
     getData();
-  }, [getData]);
-  console.log(tokenData, selectedToken);
-  //   const getAllProduct = useCallback(async () => {
-  //     const responseAllProduct = await (
-  //       await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
-  //         method: "GET",
-  //       })
-  //     ).json();
+    getAllProduct();
+  }, [getData,
+     getAllProduct
+    ]);
 
-  //     setAllProducts(responseAllProduct.result);
+  console.log(tokenData, "tokenData");
 
-  //     // if (!Object.keys(params).length)
-  //     //   setSelected(responseAllProduct.result[0].metadata);
-  //   }, [collectionIndexInContract, contractName, params]);
+    if (!tokenData[selectedToken]) {
+      return 'No token, sorry, go away:('
+    }
+    if (!data?.tokens) {
+      return 'No data.tokens, sorry :('
+    }
+    console.log('@@@', data?.tokens)
+
   return (
     <div>
-      {data && tokenData && (
+      {tokenData && data && (
         <div>
           {/* <button
         style={{
@@ -253,7 +269,7 @@ const NftDataPage = ({
                 >
                   <img
                     style={{ width: "24px", transform: "scale(1.2)" }}
-                    src={`${chainData[data?.product.blockchain]?.image}`}
+                    // src={`${chainData[data?.product.blockchain]?.image}`}
                     alt=""
                   />
                   <span
@@ -337,60 +353,60 @@ const NftDataPage = ({
                 </AccordionItemHeading>
                 <AccordionItemPanel>
                   <div className="col-12 row mx-0">
-                    {data?.tokens[selectedToken].metadata
-                      ? Object.keys(data?.tokens[selectedToken]).length &&
-                      data?.tokens[selectedToken].metadata?.attributes.map(
-                        (item, index) => {
-                          if (item.trait_type === "External URL") {
+                    {tokenData[selectedToken].metadata
+                      ? Object.keys(tokenData[selectedToken]).length &&
+                        tokenData[selectedToken].metadata?.attributes.map(
+                          (item, index) => {
+                            if (item.trait_type === "External URL") {
+                              return (
+                                <div
+                                  key={index}
+                                  className="col-4 my-2 p-1 custom-desc-to-offer"
+                                  style={{
+                                    color: textColor,
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  <span>{item?.trait_type}:</span>
+                                  <br />
+                                  <a
+                                    style={{ color: textColor }}
+                                    href={item?.value}
+                                  >
+                                    {item?.value}
+                                  </a>
+                                </div>
+                              );
+                            }
+                            const percent = randomInteger(1, 40);
                             return (
                               <div
                                 key={index}
                                 className="col-4 my-2 p-1 custom-desc-to-offer"
-                                style={{
-                                  color: textColor,
-                                  textAlign: "center",
-                                }}
                               >
-                                <span>{item?.trait_type}:</span>
-                                <br />
-                                <a
-                                  style={{ color: textColor }}
-                                  href={item?.value}
+                                <div
+                                  style={{
+                                    padding: "0.1rem 1rem",
+                                    textAlign: "center",
+                                  }}
                                 >
-                                  {item?.value}
-                                </a>
+                                  <span>{item?.trait_type}:</span>
+                                  <span style={{ color: textColor }}>
+                                    {item?.value}
+                                  </span>
+                                </div>
+                                <span
+                                  style={{
+                                    marginLeft: "15rem",
+                                    color: percentToRGB(percent),
+                                  }}
+                                >
+                                  {percent} %
+                                </span>
                               </div>
                             );
                           }
-                          const percent = randomInteger(1, 40);
-                          return (
-                            <div
-                              key={index}
-                              className="col-4 my-2 p-1 custom-desc-to-offer"
-                            >
-                              <div
-                                style={{
-                                  padding: "0.1rem 1rem",
-                                  textAlign: "center",
-                                }}
-                              >
-                                <span>{item?.trait_type}:</span>
-                                <span style={{ color: textColor }}>
-                                  {item?.value}
-                                </span>
-                              </div>
-                              <span
-                                style={{
-                                  marginLeft: "15rem",
-                                  color: percentToRGB(percent),
-                                }}
-                              >
-                                {percent} %
-                              </span>
-                            </div>
-                          );
-                        }
-                      )
+                        )
                       : null}
                   </div>
                 </AccordionItemPanel>
@@ -402,14 +418,18 @@ const NftDataPage = ({
                 <AccordionItemPanel>
                   <div className=" custom-desc-to-offer-wrapper">
                     <div className="my-2 px-4 custom-desc-to-offer">
-                      {toUpper(data?.tokens[selectedToken].metadata?.artist)}
+                      {toUpper(tokenData[selectedToken].metadata?.artist)}
                     </div>
                     <div className="my-2 px-4 custom-desc-to-offer">
-                      {data?.tokens[selectedToken].metadata?.description}
+                      {tokenData[selectedToken].metadata?.description}
                     </div>
                     <div className="my-2 px-4 custom-desc-to-offer">
-                      <a href={data?.tokens[selectedToken].metadata?.external_url}>
-                        {data?.tokens[selectedToken].metadata?.external_url}
+                      <a
+                        href={
+                          tokenData[selectedToken].metadata?.external_url
+                        }
+                      >
+                        {tokenData[selectedToken].metadata?.external_url}
                       </a>
                     </div>
                   </div>
@@ -524,7 +544,7 @@ const NftDataPage = ({
             </Accordion>
           </div>
           <div style={{ maxWidth: "1600px", margin: "auto" }}>
-            {data && (
+            {tokenData && (
               <Carousel
                 itemWidth={"300px"}
                 showDots={false}
@@ -532,7 +552,7 @@ const NftDataPage = ({
                 responsive={responsive}
                 itemClass="carousel-item-padding-4-px"
               >
-                {data.tokens.map((p, index) => (
+                {tokenData.map((p, index) => (
                   <OfferItem
                     key={index}
                     index={index}

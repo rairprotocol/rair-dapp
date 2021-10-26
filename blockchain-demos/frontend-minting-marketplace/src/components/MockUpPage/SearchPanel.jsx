@@ -39,6 +39,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
         price: elem.price,
         offerName: elem.offerName,
         offerIndex: elem.offerIndex,
+        productNumber: elem.product,
       })),
     }));
     setData(covers);
