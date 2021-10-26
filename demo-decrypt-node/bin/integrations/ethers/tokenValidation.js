@@ -43,7 +43,6 @@ async function checkBalanceSingle (accountAddress, blockchain, contractAddress, 
 	);
 	const tokenInstance = new ethers.Contract(contractAddress, RAIR_ERC721Abi, provider);
 	const result = await tokenInstance.ownerOf(tokenId);
-	console.log(result);
 	return result.toLowerCase() === accountAddress;
 }
 
