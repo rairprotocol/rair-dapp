@@ -111,6 +111,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
               borderTopLeftRadius: "0",
+              width: "100%"
             }}
             customClass="form-control input-styled"
           />

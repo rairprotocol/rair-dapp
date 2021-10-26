@@ -79,7 +79,7 @@ const ItemRank = (props) => {
 
         <div
           style={{ display: showItems ? "block" : "none" }}
-          className={"select-box--items"}
+          className={"select-box--items items-rank"}
         >
           {items !== null &&
             items.map((item) => (

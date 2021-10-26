@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./styles.css";
 
@@ -7,7 +7,7 @@ const SelectBox = (props) => {
   const [showItems, setShowItems] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   // const [moreThen, setMoreThen] = useState();
-  
+
   useEffect(() => {
     if (items.length === 0 && typeof props.items === "object") {
       setItems([...props.items]);
@@ -40,9 +40,8 @@ const SelectBox = (props) => {
           <div className="select-box--selected-item">Choose Serial Number</div>
           <div className="select-box--arrow" onClick={dropDown}>
             <span
-              className={`${
-                showItems ? "select-box--arrow-up" : "select-box--arrow-down"
-              }`}
+              className={`${showItems ? "select-box--arrow-up" : "select-box--arrow-down"
+                }`}
             />
           </div>
 
@@ -63,7 +62,8 @@ const SelectBox = (props) => {
           >
             <div className="olo" onClick={(e) => {
               e.preventDefault()
-              console.log(123)}}>1-100</div>
+              console.log(123)
+            }}>1-100</div>
             <div className="olo">101-200</div>
             <div className="olo">201-300</div>
             <div className="olo">301-400</div>
@@ -111,17 +111,17 @@ const SelectBox = (props) => {
           </div>
           <div className="select-box--arrow" onClick={dropDown}>
             <span
-              className={`${
-                showItems ? "select-box--arrow-up" : "select-box--arrow-down"
-              }`}
+              className={`${showItems ? "select-box--arrow-up" : "select-box--arrow-down"
+                }`}
             />
           </div>
 
           <div
-            style={{ display: showItems ? "block" : "none", 
-            background: '#383637',
-            borderRadius: '16px'
-          }}
+            style={{
+              display: showItems ? "block" : "none",
+              background: '#383637',
+              borderRadius: '16px'
+            }}
             className={"select-box--items"}
           >
             {items !== null &&

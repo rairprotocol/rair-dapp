@@ -16,6 +16,7 @@
   } */
   
   .select-box--box {
+    cursor: pointer;
     width: 288px;
     height: 48px;
     position: relative;
@@ -36,14 +37,17 @@
   .select-box--items{
       width: max-content;
       margin-top: 8px;
+      background: #383637;
+      border-radius: 16px;
+  }
+
+  .items-rank {
+    width: 100%;
   }
   
   .select-box--items div {
       cursor: pointer;
-    padding: 6px;
-    padding-left: 20px;
-    /* background: #7A797A; */
-    padding-right: 24px;
+      padding: 16px 12px;
   }
   .select-box--items div:first-child{
       border-top-left-radius: 16px;
