@@ -225,7 +225,7 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{!localStorage.token && <Redirect to="/" />}
+				{/* {!localStorage.token && <Redirect to="/" />} */}
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 				<div
 					style={{

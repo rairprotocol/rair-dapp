@@ -72,7 +72,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                 {
                     filterPopUp && <div style={{
                         backgroundColor: `var(--${primaryColor})`,
-                        color: `var(--${textColor})`
+                        color: `var(--${textColor})`, zIndex: 100
                     }} className="select-filters-popup">
                         <div onClick={() => { onChangeFilterItem("Price"); setIsOpenBlockchain(true) }} className="select-filters-item">Blockchain</div>
                         <div onClick={() => onChangeFilterItem("Creator")} className="select-filters-item">Creator</div>
