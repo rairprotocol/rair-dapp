@@ -188,7 +188,7 @@ module.exports = context => {
       const pageSize = parseInt(filesPerPage, 10);
       const sortDirection = parseInt(sort, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-      const data = await context.db.File.find(searchQuery)
+      const data = await context.db.File.find(searchQuery, { key: 0 })
         .skip(skip)
         .limit(pageSize)
         .sort([[sortBy, sortDirection]]);
