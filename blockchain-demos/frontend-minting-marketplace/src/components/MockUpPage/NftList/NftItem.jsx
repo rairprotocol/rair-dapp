@@ -90,10 +90,10 @@ const NftItem = ({
   // }, [getData, openModal, setSelected]);
 
   const redirection = () => {
-    // history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
-    console.log(dataVerification, 'dataVerification');
-    console.log(dataVerification.offerData[0].productNumber, 'dataVerification.offerData[0].productNumber');
-    history.push(`/${0}/${dataVerification.title}/${dataVerification.name}/${dataVerification.offerData[0].offerName}/${dataVerification.offerData[0].productNumber}`)
+    history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
+    // console.log(dataVerification, 'dataVerification');
+    // console.log(dataVerification.offerData[0].productNumber, 'dataVerification.offerData[0].productNumber');
+    // history.push(`/${0}/${dataVerification.title}/${dataVerification.name}/${dataVerification.offerData[0].offerName}/${dataVerification.offerData[0].productNumber}`)
   };
 
   const handleClickToken = (token) => {

@@ -27,7 +27,7 @@ const SelectBox = (props) => {
   };
 
   const RenderOption = () => {
-    if (items.length > 3) {
+    if (items.length > 1) {
       return <RenderToken />;
     }
     return <RenderListTokens />;
