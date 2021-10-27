@@ -157,3 +157,38 @@
   border-radius: 16px;
   padding: 24px 0;
 }
+
+/* .custom-desc-to-offer {
+  margin: 12px;
+} */
+
+.custom-offer-percents span{
+  font-size: 20px;
+}
+
+.custom-desc-item {
+  /* padding: 0.1rem 1rem;
+  text-align: center; */
+}
+
+.custom-desc-item span {
+  font-size: 14px;
+}
+
+.main-tab {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  /* padding: 2rem; */
+  padding: 30px 0 58px 0;
+  align-items: center;
+}
+
+.collection-label-name {
+  font-size: 16px;
+  text-align: left;
+  color: #A7A6A6;
+  margin-bottom: 3px;
+}

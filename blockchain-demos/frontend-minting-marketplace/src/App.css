@@ -548,10 +548,17 @@ margin-left: -36px;
 } */
 
 
+/* accordion__item*/
+
+.accordion__item {
+  margin-left: 0;
+}
+
 /* accordion__button */
 
 .accordion__button {
   text-align: left;
+  font-size: 20px;
 }
 
 .accordion__button::after{

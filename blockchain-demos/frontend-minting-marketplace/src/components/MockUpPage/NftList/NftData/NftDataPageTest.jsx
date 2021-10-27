@@ -171,20 +171,9 @@ const NftDataPageTest = ({
               }}
             ></div>
           </div>
-          <div
-            className="main-tab"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: "1rem",
-              padding: "2rem",
-              alignItems: "center",
-            }}
-          >
+          <div className="main-tab">
             <div>
-              <span>Price range</span>
+              <div className="collection-label-name">Price range</div>
               <div
                 style={{
                   borderRadius: "16px",
@@ -219,7 +208,7 @@ const NftDataPageTest = ({
               </div>
             </div>
             <div>
-              <span>Item rank</span>
+              <div className="collection-label-name">Item rank</div>
               <div>
                 <ItemRank
                   primaryColor={primaryColor}
@@ -232,7 +221,7 @@ const NftDataPageTest = ({
               </div>
             </div>
             <div>
-              <span>Serial number</span>
+              <div className="collection-label-name">Serial number</div>
               <div>
                 {/* <SelectBox
                   handleClickToken={handleClickToken}
@@ -291,7 +280,7 @@ const NftDataPageTest = ({
                 <AccordionItemButton>Properties</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
-                <div className="col-12 row mx-0">
+                <div className="col-12 row mx-0 box--properties">
                   {selectedData
                     ? Object.keys(selectedData).length &&
                     selectedData?.attributes.map((item, index) => {
@@ -322,25 +311,21 @@ const NftDataPageTest = ({
                           key={index}
                           className="col-4 my-2 p-1 custom-desc-to-offer"
                         >
-                          <div
-                            style={{
-                              padding: "0.1rem 1rem",
-                              textAlign: "center",
-                            }}
-                          >
+                          <div className="custom-desc-item">
                             <span>{item?.trait_type}:</span>
                             <span style={{ color: textColor }}>
                               {item?.value}
                             </span>
                           </div>
-                          <span
-                            style={{
-                              marginLeft: "15rem",
-                              color: percentToRGB(percent),
-                            }}
-                          >
-                            {percent} %
-                          </span>
+                          <div className="custom-offer-percents">
+                            <span
+                              style={{
+                                color: percentToRGB(percent),
+                              }}
+                            >
+                              {percent}%
+                            </span>
+                          </div>
                         </div>
                       );
                     })
@@ -440,18 +425,19 @@ const NftDataPageTest = ({
                         flexDirection: "column",
                         width: "inher",
                         justifyContent: "center",
-                        alignItems: "center",
-                        paddingLeft: "1rem",
+                        alignItems: "flex-start",
+                        paddingLeft: "24px",
                       }}
                     >
                       <div>
                         {" "}
-                        <p>Video {selectedData?.name}</p>{" "}
+                        <p style={{fontSize: 20}}>Video {selectedData?.name}</p>{" "}
                       </div>
                       <div>
                         <p
                           style={{
                             color: "#A7A6A6",
+                            fontSize: 20
                           }}
                         >
                           00:03:23
