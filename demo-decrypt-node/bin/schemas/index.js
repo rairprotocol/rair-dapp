@@ -17,6 +17,8 @@ const updateContract = require('./updateContract');
 const updateUser = require('./updateUser');
 const singleContract = require('./singleContract');
 const getFilesByNFT = require('./getFilesByNFT');
+const nftContract = require('./nftContract');
+const nftProduct = require('./nftProduct');
 
 module.exports = {
   admin,
@@ -37,5 +39,7 @@ module.exports = {
   updateContract,
   updateUser,
   singleContract,
-  getFilesByNFT
+  getFilesByNFT,
+  nftContract,
+  nftProduct
 };

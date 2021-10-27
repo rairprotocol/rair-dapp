@@ -45,7 +45,7 @@ const polygonMumbaiData = {
 }
 
 const maticMainnetData = {
-	chainId: `0x${(137).toString(16)}`, // 0x89
+	chainId: '0x89', // 0x89
 	chainName: 'Matic(Polygon) Mainnet',
 	nativeCurrency:
 	{

@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Router, Switch, Route, NavLink, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import jsonwebtoken from 'jsonwebtoken';
 import setTitle from './utils/setTitle';
 
 import './App.css';
 import * as ethers from 'ethers'
-import { getJWT, isTokenValid } from './utils/rFetch.js';
+import {getJWT} from './utils/rFetch.js';
 
 // React Redux types
-import * as authTypes from './ducks/auth/types'
 import * as contractTypes from './ducks/contracts/types.js';
 import * as colorTypes from './ducks/colors/types.js';
+import * as authTypes from './ducks/auth/types'
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -50,7 +49,7 @@ const ErrorFallback = () => {
 	</div>
 }
 
-function App({ sentryHistory }) {
+function App({sentryHistory}) {
 
 	const [/*userData*/, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(undefined);
@@ -59,24 +58,22 @@ function App({ sentryHistory }) {
 
 	// Redux
 	const dispatch = useDispatch()
-	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
-	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
-	const { token } = useSelector(store => store.accessStore);
+	const {currentUserAddress, minterInstance, factoryInstance, programmaticProvider} = useSelector(store => store.contractStore);
+	const {primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect} = useSelector(store => store.colorStore);
 
 	const connectUserData = async () => {
-		setLoginDone(false);
 		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
 			let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-			dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] });
+			dispatch({type: contractTypes.SET_USER_ADDRESS, payload: accounts[0]});
 			dispatch({
 				type: contractTypes.SET_CHAIN_ID,
 				payload: window.ethereum.chainId?.toLowerCase()
 			});
 			currentUser = accounts[0];
 		} else if (programmaticProvider) {
-			dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
+			dispatch({type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address});
 			dispatch({
 				type: contractTypes.SET_CHAIN_ID,
 				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
@@ -92,7 +89,7 @@ function App({ sentryHistory }) {
 
 		try {
 			// Check if user exists in DB
-			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
+			const {success, user} = await (await fetch(`/api/users/${currentUser}`)).json();
 			if (!success || !user) {
 				// If the user doesn't exist, send a request to register him using a TEMP adminNFT
 				console.log('Address is not registered!');
@@ -125,7 +122,7 @@ function App({ sentryHistory }) {
 				} else if (programmaticProvider) {
 					let parsedResponse = JSON.parse(response);
 					// EIP712Domain is added automatically by Ethers.js!
-					let { EIP712Domain, ...revisedTypes } = parsedResponse.types;
+					let {EIP712Domain, ...revisedTypes} = parsedResponse.types;
 					ethResponse = await programmaticProvider._signTypedData(
 						parsedResponse.domain,
 						revisedTypes,
@@ -134,7 +131,7 @@ function App({ sentryHistory }) {
 					Swal.fire('Error', "Can't sign messages", 'error');
 					return;
 				}
-				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
+				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
 				setAdminAccess(adminResponse.success);
 				//adminRights = adminResponse.success;
 			}
@@ -150,12 +147,12 @@ function App({ sentryHistory }) {
 				dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
 				localStorage.setItem('token', token);
 			}
-			if (!isTokenValid(localStorage.token)) {
-				let token = await getJWT(signer, user, currentUser);
-				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
-				localStorage.setItem('token', token);
-			}
+			// if (!isTokenValid(localStorage.token)) {
+			// 	let token = await getJWT(signer, user, currentUser);
+			// 	dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+			// 	dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
+			// 	localStorage.setItem('token', token);
+			// }
 
 			setStartedLogin(false);
 			setLoginDone(true);
@@ -164,37 +161,10 @@ function App({ sentryHistory }) {
 		}
 	};
 
-	const checkToken = useCallback(() => {
-		const token = localStorage.getItem('token');
-		if (!isTokenValid(token)) {
-			connectUserData()
-		}
-	}, [token])
-
-	useEffect(() => {
-		let timeout;
-		if (token) {
-			const decoded = jsonwebtoken.decode(token);
-			// debugger
-			if (decoded?.exp) {
-
-				console.log(decoded.exp)
-				timeout = setTimeout(() => {
-					connectUserData()
-				}, decoded.exp * 1000)
-			}
-		}
-		return () => {
-			if (timeout) {
-				clearTimeout(timeout);
-			}
-		}
-	}, [token])
-
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
-				dispatch({ type: contractTypes.SET_CHAIN_ID, payload: chainId });
+				dispatch({type: contractTypes.SET_CHAIN_ID, payload: chainId});
 			});
 		}
 	}, [dispatch])
@@ -202,25 +172,6 @@ function App({ sentryHistory }) {
 	useEffect(() => {
 		setTitle('Welcome');
 	}, [])
-
-	useEffect(() => {
-		if (localStorage.token && isTokenValid(localStorage.token)) {
-			connectUserData()
-			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-		}
-	}, [])
-
-	// useEffect(() => {
-	// 	if(error) {
-	// 		connectUserData();
-	// 		dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
-	// 	}
-	// 	console.log(error)
-	// }, [error])
-
-	useEffect(() => {
-		checkToken();
-	}, [checkToken, token])
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
@@ -331,8 +282,9 @@ function App({ sentryHistory }) {
 							<div className='col-1 d-none d-xl-inline-block' />
 						</div>
 					</div>
-				</div>
-			</Router>
+					<div className='col-1 d-none d-xl-inline-block' />
+			</div>
+		</Router>
 		</Sentry.ErrorBoundary>
 	);
 }
