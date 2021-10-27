@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   Accordion,
@@ -12,6 +12,7 @@ import Carousel from "react-multi-carousel";
 import ItemRank from "../../SelectBox/ItemRank";
 import SelectBox from "../../SelectBox/SelectBox";
 import OfferItem from "../OfferItem";
+import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
 
 const NftDataPageTest = ({
   tokenData,
@@ -45,6 +46,8 @@ const NftDataPageTest = ({
     },
   };
 
+  const numberRef = useRef();
+
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
@@ -67,35 +70,35 @@ const NftDataPageTest = ({
       return string[0].toUpperCase() + string.slice(1);
     }
   }
-if(offerPrice){
-  
+  if (offerPrice) {
 
-  var minPrice = arrayMin(offerPrice);
-  var maxPrice = arrayMax(offerPrice);
-}
-function arrayMin(arr) {
-  let len = arr.length,
-    min = Infinity;
-  while (len--) {
-    if (arr[len] < min) {
-      min = arr[len];
-    }
+
+    var minPrice = arrayMin(offerPrice);
+    var maxPrice = arrayMax(offerPrice);
   }
-  return min;
-}
-
-function arrayMax(arr) {
-  let len = arr.length,
-    max = -Infinity;
-  while (len--) {
-    if (arr[len] > max) {
-      max = arr[len];
+  function arrayMin(arr) {
+    let len = arr.length,
+      min = Infinity;
+    while (len--) {
+      if (arr[len] < min) {
+        min = arr[len];
+      }
     }
+    return min;
   }
-  return max;
-}
 
-  
+  function arrayMax(arr) {
+    let len = arr.length,
+      max = -Infinity;
+    while (len--) {
+      if (arr[len] > max) {
+        max = arr[len];
+      }
+    }
+    return max;
+  }
+
+
 
   // if (!tokenData[selectedToken]) {
   //   return 'No token, sorry, go away:('
@@ -154,18 +157,20 @@ function arrayMax(arr) {
               <button>Share</button>
             </div>
           </div>
-          <div
-            //   onClick={onClick}
-            style={{
-              margin: "auto",
-              backgroundImage: `url(${selectedData?.image})`,
-              width: "604px",
-              height: "45rem",
-              backgroundPosition: "center",
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-            }}
-          ></div>
+          <div className="nft-collection">
+            <div
+              //   onClick={onClick}
+              style={{
+                margin: "auto",
+                backgroundImage: `url(${selectedData?.image})`,
+                width: "604px",
+                height: "45rem",
+                backgroundPosition: "center",
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+              }}
+            ></div>
+          </div>
           <div
             className="main-tab"
             style={{
@@ -202,7 +207,7 @@ function arrayMax(arr) {
                     marginRight: "3rem",
                   }}
                 >
-                  { offerPrice &&  `${minPrice} – ${maxPrice} ETH` }
+                  {offerPrice && `${minPrice} – ${maxPrice} ETH`}
                 </span>
                 <span
                   style={{
@@ -229,7 +234,7 @@ function arrayMax(arr) {
             <div>
               <span>Serial number</span>
               <div>
-                <SelectBox
+                {/* <SelectBox
                   handleClickToken={handleClickToken}
                   selectedToken={selectedToken}
                   contractName={contract}
@@ -245,7 +250,19 @@ function arrayMax(arr) {
                       };
                     })
                   }
-                ></SelectBox>
+                ></SelectBox> */}
+                <SelectNumber
+                  items={
+                    tokenData &&
+                    tokenData.map((p) => {
+                      return {
+                        value: p.metadata.name,
+                        id: p._id,
+                        token: p.token,
+                      };
+                    })
+                  }
+                />
               </div>
             </div>
             <div
@@ -277,56 +294,56 @@ function arrayMax(arr) {
                 <div className="col-12 row mx-0">
                   {selectedData
                     ? Object.keys(selectedData).length &&
-                      selectedData?.attributes.map((item, index) => {
-                        if (item.trait_type === "External URL") {
-                          return (
-                            <div
-                              key={index}
-                              className="col-4 my-2 p-1 custom-desc-to-offer"
-                              style={{
-                                color: textColor,
-                                textAlign: "center",
-                              }}
-                            >
-                              <span>{item?.trait_type}:</span>
-                              <br />
-                              <a
-                                style={{ color: textColor }}
-                                href={item?.value}
-                              >
-                                {item?.value}
-                              </a>
-                            </div>
-                          );
-                        }
-                        const percent = randomInteger(1, 40);
+                    selectedData?.attributes.map((item, index) => {
+                      if (item.trait_type === "External URL") {
                         return (
                           <div
                             key={index}
                             className="col-4 my-2 p-1 custom-desc-to-offer"
+                            style={{
+                              color: textColor,
+                              textAlign: "center",
+                            }}
                           >
-                            <div
-                              style={{
-                                padding: "0.1rem 1rem",
-                                textAlign: "center",
-                              }}
+                            <span>{item?.trait_type}:</span>
+                            <br />
+                            <a
+                              style={{ color: textColor }}
+                              href={item?.value}
                             >
-                              <span>{item?.trait_type}:</span>
-                              <span style={{ color: textColor }}>
-                                {item?.value}
-                              </span>
-                            </div>
-                            <span
-                              style={{
-                                marginLeft: "15rem",
-                                color: percentToRGB(percent),
-                              }}
-                            >
-                              {percent} %
-                            </span>
+                              {item?.value}
+                            </a>
                           </div>
                         );
-                      })
+                      }
+                      const percent = randomInteger(1, 40);
+                      return (
+                        <div
+                          key={index}
+                          className="col-4 my-2 p-1 custom-desc-to-offer"
+                        >
+                          <div
+                            style={{
+                              padding: "0.1rem 1rem",
+                              textAlign: "center",
+                            }}
+                          >
+                            <span>{item?.trait_type}:</span>
+                            <span style={{ color: textColor }}>
+                              {item?.value}
+                            </span>
+                          </div>
+                          <span
+                            style={{
+                              marginLeft: "15rem",
+                              color: percentToRGB(percent),
+                            }}
+                          >
+                            {percent} %
+                          </span>
+                        </div>
+                      );
+                    })
                     : null}
                 </div>
               </AccordionItemPanel>
@@ -475,7 +492,7 @@ function arrayMax(arr) {
                   metadata={p.metadata}
                   token={p.token}
                   handleClickToken={handleClickToken}
-                  // setSelectedToken={setSelectedToken}
+                // setSelectedToken={setSelectedToken}
                 />
               ))}
             </Carousel>

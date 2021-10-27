@@ -549,6 +549,11 @@ margin-left: -36px;
 
 
 /* accordion__button */
+
+.accordion__button {
+  text-align: left;
+}
+
 .accordion__button::after{
   content: '\002B';
   float: right;

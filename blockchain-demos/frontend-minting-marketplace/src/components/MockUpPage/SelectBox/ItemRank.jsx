@@ -44,10 +44,10 @@ const ItemRank = (props) => {
   })
 
   return (
-    <div ref={rankRef} className="select-box--box">
+    <div ref={rankRef} className="item-rant--box">
       <div
         style={{ backgroundColor: `var(--${props.primaryColor})` }}
-        className="select-box--container"
+        className="item-rank--container"
       >
         <div className="select-box--selected-item">
           <span style={{ paddingRight: "10px" }}>{selectedItem?.pkey}</span>
