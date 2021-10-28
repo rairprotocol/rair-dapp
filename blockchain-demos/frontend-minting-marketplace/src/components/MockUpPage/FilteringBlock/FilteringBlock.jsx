@@ -92,8 +92,8 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                     <div className="select-sort-title">
                         <div className="title-left">
                             <div className="arrows-sort">
-                                <i style={{ color: `${sortItem === "up" ? "#E882D5" : "#A7A6A6"}` }} class="fas fa-arrow-up"></i>
-                                <i style={{ color: `${sortItem === "down" ? "#E882D5" : "#A7A6A6"}` }} class="fas fa-arrow-down"></i>
+                                <i style={{ color: `${sortItem === "up" ? "#E882D5" : "#A7A6A6"}` }} className="fas fa-arrow-up"></i>
+                                <i style={{ color: `${sortItem === "down" ? "#E882D5" : "#A7A6A6"}` }} className="fas fa-arrow-down"></i>
                             </div>
                             <div>
                                 Sort by name
