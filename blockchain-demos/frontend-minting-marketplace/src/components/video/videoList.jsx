@@ -1,9 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
+// import { useEffect, useState } from 'react';
 import VideoItem from './videoItem.jsx';
-import InputField from '../common/InputField.jsx';
-import setDocumentTitle from '../../utils/setTitle';
-import { rFetch } from '../../utils/rFetch';
-import { useSelector } from 'react-redux';
+// import InputField from '../common/InputField.jsx';
+// import setDocumentTitle from '../../utils/setTitle';
 
 const VideoList = ({mediaList, titleSearch,  primaryColor}) => {
 	// const [mediaList, setMediaList] = useState();

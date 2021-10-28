@@ -311,6 +311,25 @@ li {
   border-radius: 16px;
   width: 291px;
 }
+.description-wrapper-video{
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  background-color: rgba(34, 32, 33, 0.5);
+  color: white;
+  position: relative;
+  top: -3.7rem;
+  height: 59px;
+  padding: 0px 0px 8px 16px;
+}
+.description-wrapper-video:hover{
+  padding-top: 1rem;
+  height: 17.35rem;
+  top: -17.35rem;
+  margin-bottom: -16.35rem;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  transition-duration: 0.5s;
+}
 .description-wrapper{
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
@@ -329,7 +348,8 @@ li {
   border-top-right-radius: 16px;
   transition-duration: 0.5s;
 }
-.description-wrapper:not(:hover){
+.description-wrapper:not(:hover),
+.description-wrapper-video:not(:hover){
   transition-duration: 0.5s;
 }
 .description-title{
@@ -422,21 +442,18 @@ i.fas-custom {
 .category-button-videos{
 margin-left: -36px;
 }
+
 .react-tabs__tab--selected{
-  background-color: var(--charcoal-80)  !important;
+  background-color: var(--charcoal-80) !important;
   z-index: 0;
 }
 .styles-module_carousel-arrow__26sRw{
   display: none;
-  /* background: url(https://cdn.dsmcdn.com/web/production/slick-arrow.svg) no-repeat 50%;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    position: relative; */
 }
 .ReactModal__Overlay--after-open{
   background-color: #434343 !important;
 }
+
 /* style to desc */
 
 .custom-desc-to-offer-wrapper{
@@ -487,16 +504,14 @@ margin-left: -36px;
   color: #d779c6;
 }
 .pic-description-wrapper:hover .description-big{
-/* display: block; */
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* margin-left: 30%; */
-    /* margin-top: 52px; */
-    margin: 50px 0 20px 47px;
     position: absolute;
-    top: 65px;
-
+    top: 107px;
+    width: 203px;
+    left: 67%;
+    margin-left: -150px;
 }
 .pic-description-wrapper:hover{
   justify-content: flex-start;
@@ -504,8 +519,9 @@ margin-left: -36px;
 
 }
 .pic-description-wrapper:hover .description-price{
- font-size: 32px;
-
+ font-size: 26px;
+ text-align: center;
+ line-height: 1.1;
 }
 .pic-description-wrapper:hover .description-more{
   margin-top: 60px;

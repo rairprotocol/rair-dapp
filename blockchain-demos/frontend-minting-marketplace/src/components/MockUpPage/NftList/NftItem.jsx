@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -10,11 +10,14 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-// import VideoList from "../../video/videoList";
 import SelectBox from "../SelectBox/SelectBox";
-import chainData from "../../../utils/blockchainData";
-// import 'react-accessible-accordion/dist/fancy-example.css';
+import chainDataFront from "../utils/blockchainDataFront";
 import { useLocation, useParams, useHistory } from "react-router-dom";
+import { SvgKey } from "./SvgKey";
+import ItemRank from "../SelectBox/ItemRank";
+// import Swal from 'sweetalert2';
+// import 'react-accessible-accordion/dist/fancy-example.css';
+// import VideoList from "../../video/videoList";
 
 Modal.setAppElement("#root");
 
@@ -29,17 +32,35 @@ const NftItem = ({
   textColor,
   collectionName,
   ownerCollectionUser,
+  allData: dataVerification,
 }) => {
   const history = useHistory();
+  // eslint-disable-next-line no-unused-vars
   const location = useLocation();
   const params = useParams();
-  const { adminToken, contract, product, token } = params;
+  const { adminToken, contract, product, token, offer } = params;
+  // eslint-disable-next-line no-unused-vars
   let subtitle;
 
   const [allProducts, setAllProducts] = useState([]);
   const [selected, setSelected] = useState({});
-  const [modalIsOpen, setIsOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState();
+  const [modalIsOpen, setIsOpen] = useState(
+    () =>
+      contract === dataVerification?.title &&
+      product === dataVerification?.name &&
+      dataVerification.offerData.some((item) => item.offerName === offer)
+  );
+  // if (JSON.stringify(z).indexOf('sTest29') > -1) {
+  // console.log({
+
+  //   q: {token, contract, product},
+  //   i: {token: z?.token,
+  //   contract: z?.contract,
+  //   },
+  //   z,
+  // })}
+
   // const [hover, setHover] = useState(false);
   // const [dataImg, setDataImg] = useState();
 
@@ -49,23 +70,37 @@ const NftItem = ({
   //   }
   // },[dataLoaded,setSelected,allProducts])
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     if (adminToken && contract && product) {
       const response = await (
-        await fetch(`/api/${adminToken}/${contract}/${product}/`, {
+        await fetch(`/api/${adminToken}/${contract}/${product}`, {
           method: "GET",
         })
       ).json();
       const data = response.result?.tokens.find(
         (data) => String(data.token) === token
       );
-
-      setSelectedToken(data.token);
       return data;
     } else return null;
-  };
+  }, [adminToken, contract, product, token]);
 
-  const getAllProduct = async () => {
+  // const getData = async () => {
+  //   if (adminToken && contract && product) {
+  //     const response = await (
+  //       await fetch(`/api/${adminToken}/${contract}/${product}`, {
+  //         method: "GET",
+  //       })
+  //     ).json();
+  //     const data = response.result?.tokens.find(
+  //       (data) => String(data.token) === token
+  //     );
+  //       if(data){
+  //         setSelectedToken(data.token);
+  //       } Swal.fire('Error', 'User not found', 'error')
+  //     return data;
+  //   } else return null;
+  // };
+  const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
       await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
         method: "GET",
@@ -76,37 +111,43 @@ const NftItem = ({
 
     if (!Object.keys(params).length)
       setSelected(responseAllProduct.result[0].metadata);
-  };
+  }, [collectionIndexInContract, contractName, params]);
 
-  const waitResponse = async () => {
+  const openModal = useCallback(() => {
+    setIsOpen(true);
+    getAllProduct();
+  }, [getAllProduct]);
+
+  function openModalOnClick() {
+    openModal();
+    redirection();
+  }
+
+  const waitResponse = useCallback(async () => {
     const data = await getData();
     if (data && data.metadata) {
       setSelected(data.metadata);
+      setSelectedToken(data.token);
       openModal();
     }
-  };
+  }, [getData, openModal, setSelected]);
 
-  const handleClick1 = () => {
+  const redirection = () => {
     history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
   };
-  function openModalOnClick() {
-    openModal();
-    handleClick1();
-  }
-  function openModal() {
-    setIsOpen(true);
-    getAllProduct();
-  }
 
-  const handelClickToken = (token) => {
+  const handleClickToken = (token) => {
     history.push(
       `/tokens/${contractName}/${collectionIndexInContract}/${token}`
     );
     setSelectedToken(token);
   };
+
   useEffect(() => {
-    waitResponse();
-  }, []);
+    if (modalIsOpen) {
+      waitResponse();
+    }
+  }, [modalIsOpen, waitResponse]);
 
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
@@ -216,36 +257,37 @@ const NftItem = ({
       items: 1,
     },
   };
-  // (function () {
-  //   let angle = 0;
-  //   let p = document.querySelector('p');
-  //   debugger
-  //   if(p){
-  //     let text = p.textContent.split('');
-  //     var len = text.length;
-  //     var phaseJump = 360 / len;
-  //     var spans;
-  //     p.innerHTML = text.map(function (char) {
-  //       return '<span>' + char + '</span>';
-  //     }).join('');
-    
-  //     spans = p.children;
-  //   }
-  //   else console.log('kik');
-  
-  //   (function wheee () {
-  //     for (var i = 0; i < len; i++) {
-  //       spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+  // if(primaryColor === 'charcoal'){
+  //   (function () {
+  //     let angle = 0;
+  //     let p = document.querySelector('p');
+  //     if(p){
+  //       let text = p.textContent.split('');
+  //       var len = text.length;
+  //       var phaseJump = 360 / len;
+  //       var spans;
+  //       p.innerHTML = text.map(function (char) {
+  //         return '<span>' + char + '</span>';
+  //       }).join('');
+
+  //       spans = p.children;
   //     }
-  //     angle++;
-  //     requestAnimationFrame(wheee);
+  //     else console.log('kik');
+
+  //     (function wheee () {
+  //       for (var i = 0; i < len; i++) {
+  //         spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+  //       }
+  //       angle++;
+  //       requestAnimationFrame(wheee);
+  //     })();
   //   })();
-  // })();
-  
+  // }
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "white";
   }
+
   function handleClick() {
     history.push("/all");
   }
@@ -254,6 +296,7 @@ const NftItem = ({
     setIsOpen(false);
     handleClick();
   }
+debugger
   return (
     <>
       <button
@@ -264,6 +307,7 @@ const NftItem = ({
           width: "291px",
           border: "none",
           backgroundColor: "transparent",
+          overflow: "hidden",
         }}
       >
         <div
@@ -281,6 +325,7 @@ const NftItem = ({
             style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
             className="col-12 h-100 w-100"
           />
+          {<SvgKey />}
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">
@@ -295,7 +340,7 @@ const NftItem = ({
           <div className="description-small" style={{ paddingRight: "16px" }}>
             <img
               className="blockchain-img"
-              src={`${chainData[blockchain]?.image}`}
+              src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
             <span className="description ">{minPrice} ETH </span>
@@ -303,7 +348,7 @@ const NftItem = ({
           <div className="description-big">
             <img
               className="blockchain-img"
-              src={`${chainData[blockchain]?.image}`}
+              src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
             <span className="description description-price">
@@ -318,7 +363,6 @@ const NftItem = ({
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal"
       >
         <h2
           ref={(_subtitle) => (subtitle = _subtitle)}
@@ -337,7 +381,6 @@ const NftItem = ({
         >
           {selected?.name}
         </h2>
-        {/* <p className='rainbow-text'>RAIR</p> */}
         <button
           style={{
             float: "right",
@@ -400,7 +443,7 @@ const NftItem = ({
               >
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
-                  src={`${chainData[blockchain]?.image}`}
+                  src={`${chainDataFront[blockchain]?.image}`}
                   alt=""
                 />
                 <span
@@ -423,12 +466,14 @@ const NftItem = ({
             <div>
               <span>Item rank</span>
               <div>
-                <SelectBox
+                  <ItemRank 
+                /*  <SelectBox */
+
                   primaryColor={primaryColor}
                   items={[
-                    // { pkey: `🔑`, value: "Ultra Rair 1/1", id: 1 },
-                    { pkey: `🔑`, value: "Rair", id: 2 },
-                    // { pkey: `🔑`, value: "Common 1,620 / 10,000", id: 3 },
+                    { pkey: `🔑`, value: "Rair", id: 1 },
+                    // { pkey: `🔑`, value: "Ultra Rair", id: 2 },
+                    // { pkey: `🔑`, value: "Common", id: 3 },
                   ]}
                 />
               </div>
@@ -437,7 +482,7 @@ const NftItem = ({
               <span>Serial number</span>
               <div>
                 <SelectBox
-                  handelClickToken={handelClickToken}
+                  handleClickToken={handleClickToken}
                   selectedToken={selectedToken}
                   contractName={contractName}
                   primaryColor={primaryColor}
@@ -475,7 +520,7 @@ const NftItem = ({
               </button>
             </div>
           </div>
-          <Accordion allowZeroExpanded>
+          <Accordion allowZeroExpanded /* allowMultipleExpanded*/>
             <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>Properties</AccordionItemButton>
@@ -677,7 +722,7 @@ const NftItem = ({
                   index={index}
                   metadata={p.metadata}
                   token={p.token}
-                  handelClickToken={handelClickToken}
+                  handleClickToken={handleClickToken}
                   setSelected={setSelected}
                 />
               ))}

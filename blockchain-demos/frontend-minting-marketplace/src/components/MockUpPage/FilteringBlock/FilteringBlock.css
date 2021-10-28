@@ -220,6 +220,7 @@ select.select-price option {
     top: 64px;
     left: 0;
     overflow: hidden;
+    z-index: 1;
 }
   
 .select-sort-item {
