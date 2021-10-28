@@ -47,7 +47,7 @@ services:
       context: blockchain-networks-service/
       dockerfile: Dockerfile
     environment:
-      PRODUCTION: "false"
+      PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       PINATA_SECRET: ${pinata_secret}
