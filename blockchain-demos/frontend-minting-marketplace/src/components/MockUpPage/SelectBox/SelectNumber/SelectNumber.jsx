@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import "./SelectNumber.css"
 
-const SelectNumber = ({items}) => {
+const SelectNumber = ({items, handleClickToken}) => {
+    console.log(items, "items");
     const [selectedItem, setSelectedItem] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -13,6 +14,7 @@ const SelectNumber = ({items}) => {
 
     const onClickItem = (el) => {
         setSelectedItem(el);
+        handleClickToken(el)
         handleIsOpen()
     }
 

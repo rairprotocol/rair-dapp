@@ -241,6 +241,8 @@ const NftDataPageTest = ({
                   }
                 ></SelectBox> */}
                 <SelectNumber
+                  handleClickToken={handleClickToken}
+                  selectedToken={selectedToken}
                   items={
                     tokenData &&
                     tokenData.map((p) => {
@@ -431,7 +433,7 @@ const NftDataPageTest = ({
                     >
                       <div>
                         {" "}
-                        <p style={{fontSize: 20}}>Video {selectedData?.name}</p>{" "}
+                        <p style={{ fontSize: 20 }}>Video {selectedData?.name}</p>{" "}
                       </div>
                       <div>
                         <p
