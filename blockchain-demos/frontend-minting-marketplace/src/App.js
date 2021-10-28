@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, NavLink, Redirect } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Router, Switch, Route, Redirect, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import setTitle from './utils/setTitle';
 
@@ -10,7 +10,6 @@ import {getJWT} from './utils/rFetch.js';
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
 import * as colorTypes from './ducks/colors/types.js';
-import * as authTypes from './ducks/auth/types'
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -143,17 +142,8 @@ function App({sentryHistory}) {
 			}
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
-				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
 				localStorage.setItem('token', token);
 			}
-			// if (!isTokenValid(localStorage.token)) {
-			// 	let token = await getJWT(signer, user, currentUser);
-			// 	dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-			// 	dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
-			// 	localStorage.setItem('token', token);
-			// }
-
 			setStartedLogin(false);
 			setLoginDone(true);
 		} catch (err) {
@@ -176,7 +166,6 @@ function App({sentryHistory}) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 		<Router history={sentryHistory}>
-			{/* {!localStorage.token && <Redirect to="/" />} */}
 			{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
 			<div 
 				style={{

@@ -11,7 +11,7 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import SelectBox from "../SelectBox/SelectBox";
-import chainData from "../../../utils/blockchainData";
+import chainDataFront from "../utils/blockchainDataFront";
 import { useLocation, useParams, useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import ItemRank from "../SelectBox/ItemRank";
@@ -296,7 +296,7 @@ const NftItem = ({
     setIsOpen(false);
     handleClick();
   }
-
+debugger
   return (
     <>
       <button
@@ -340,7 +340,7 @@ const NftItem = ({
           <div className="description-small" style={{ paddingRight: "16px" }}>
             <img
               className="blockchain-img"
-              src={`${chainData[blockchain]?.image}`}
+              src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
             <span className="description ">{minPrice} ETH </span>
@@ -348,7 +348,7 @@ const NftItem = ({
           <div className="description-big">
             <img
               className="blockchain-img"
-              src={`${chainData[blockchain]?.image}`}
+              src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
             <span className="description description-price">
@@ -443,7 +443,7 @@ const NftItem = ({
               >
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
-                  src={`${chainData[blockchain]?.image}`}
+                  src={`${chainDataFront[blockchain]?.image}`}
                   alt=""
                 />
                 <span

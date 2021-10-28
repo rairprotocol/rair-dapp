@@ -123,9 +123,9 @@ goerli_chain_id=5"
             - name: MATIC_MAINNET_CHAINID_HEX
               value: "0x89"
             - name: SYNC_CONTRACT_REPEAT_EVERY
-              value: "30"
+              value: "3"
             - name: SYNC_CONTRACT_TASK_INTERVAL
-              value: "5"
+              value: "1"
           resources: {}
       imagePullSecrets:
         - name: regcred
