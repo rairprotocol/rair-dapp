@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const eventListeners = require('./integrations/ethers');
 const log = require('./utils/logger')(module);
 const morgan = require('morgan');
 const _ = require('lodash');
@@ -76,9 +75,6 @@ async function main() {
   app.listen(port, () => {
     log.info(`Blockchain networks service listening at http://localhost:${ port }`);
   });
-
-  // Listen network events
-  // await eventListeners(context);
 }
 
 (async () => {
