@@ -1,4 +1,5 @@
 const express = require('express');
+const _ = require('lodash');
 const { validation } = require('../middleware');
 const { nanoid } = require('nanoid');
 
@@ -17,7 +18,7 @@ module.exports = context => {
 
       let user = await context.db.User.create({ publicAddress, adminNFT });
 
-      res.json({ success: true, user });
+      res.json({ success: true, user: _.omit(user, ['nonce']) });
     } catch (e) {
       next(e);
     }

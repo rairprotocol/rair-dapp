@@ -20,7 +20,7 @@ module.exports = context => {
     try {
       const { contract, product } = req.body;
       const prod = Number(product);
-      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist'];
+      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist', 'animation_url'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
@@ -157,6 +157,7 @@ module.exports = context => {
                       artist: record.artist,
                       external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                       image: record.image,
+                      animation_url: record.animation_url,
                       attributes: attributes
                     }
                   });
