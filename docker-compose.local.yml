@@ -13,6 +13,7 @@ services:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
       ADMIN_CONTRACT: ${admin_contract}
@@ -33,7 +34,9 @@ services:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
+      PINATA_GATEWAY: ${pinata_gateway}
       INFURA_PROJECT_ID: ${infura_project_id}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
       BINANCE_FACTORY_ADDRESS: ${binance_factory_addres}
