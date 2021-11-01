@@ -54,20 +54,27 @@ module.exports = async (context) => {
 
     switch (task.attrs.name) {
       case 'sync contracts':
-        await agenda.create('sync products & locks', data)
+        await agenda.create('sync products', data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case 'sync products & locks':
-        await agenda.create('sync offerPools & offers', data)
+      case 'sync products':
+        await agenda.create('sync offerPools', data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case 'sync offerPools & offers':
+      case 'sync offerPools':
+        await agenda.create('sync offers', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
+      case 'sync offers':
         await agenda.create('sync tokens', data)
           .schedule(moment()
             .utc()
@@ -75,6 +82,11 @@ module.exports = async (context) => {
           .save();
         break;
       case 'sync tokens':
+        await agenda.create('sync locks', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
         break;
       default:
         break;
@@ -84,7 +96,7 @@ module.exports = async (context) => {
   });
 
   agenda.on('fail', (err) => {
-    log.error(`Agenda > Fail: ${ err }`);
+    log.error(`Agenda > Fail: ${ JSON.stringify(err) }`);
   });
 
 

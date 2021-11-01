@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 // import 'react-tabs/style/react-tabs.css';
 import NftList from "./NftList/NftList.jsx";
 import VideoList from "../video/videoList.jsx";
+import FilteringBlock from "./FilteringBlock/FilteringBlock.jsx";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
   const [titleSearch, setTitleSearch] = useState("");
@@ -103,7 +104,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             Videos
           </Tab>
         </TabList>
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", display: "flex" }}>
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
@@ -117,6 +118,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             customClass="form-control input-styled"
           />
           <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
+          <FilteringBlock primaryColor={primaryColor} textColor={textColor} />
         </div>
         <TabPanel>
           <NftList primaryColor={primaryColor} textColor={textColor} handleClick={handleClick} data={data} />

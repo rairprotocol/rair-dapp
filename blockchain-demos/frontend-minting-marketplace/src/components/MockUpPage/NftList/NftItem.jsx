@@ -19,7 +19,6 @@ const NftItem = ({
   textColor,
   collectionName,
   ownerCollectionUser,
-  allData: dataVerification,
 }) => {
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
@@ -96,7 +95,7 @@ const NftItem = ({
     // history.push(`/${0}/${dataVerification.title}/${dataVerification.name}/${dataVerification.offerData[0].offerName}/${dataVerification.offerData[0].productNumber}`)
   };
 
-  const handleClickToken = (token) => {
+  const handelClickToken = (token) => {
     history.push(
       `/tokens/${contractName}/${collectionIndexInContract}/${token}`
     );
@@ -180,7 +179,6 @@ const NftItem = ({
           width: "291px",
           border: "none",
           backgroundColor: "transparent",
-          overflow: "hidden",
         }}
       >
         <div
@@ -231,32 +229,6 @@ const NftItem = ({
           </div>
         </div>
       </button>
-
-     {/* <Modal
-      isOpen={modalIsOpen}
-        // onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
-        style={customStyles}
-     > */}
-     {/* <NftDataPage
-        selected={selected}
-        pict={pict}
-        primaryColor={primaryColor}
-        chainData={chainData}
-        blockchain={blockchain}
-        textColor={textColor}
-        allProducts={allProducts}
-        closeModal={closeModal}
-        onClick={onClick}
-        handleClickToken={handleClickToken}
-        selectedToken={selectedToken}
-        contractName={contractName}
-        onSelect={onSelect}
-        setSelected={setSelected}
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-      /> */}
-     {/* </Modal> */}
     </>
   );
 };

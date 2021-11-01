@@ -313,7 +313,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								'0x3fD4268B03cce553f180E77dfC14fde00271F9B7');
 						}
 					} catch (err) {
-						console.log(err);
+						console.error(err);
 						Swal.fire('Error', err?.data?.message, 'error');
 					}
 				}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>

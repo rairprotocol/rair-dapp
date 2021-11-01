@@ -1,4 +1,6 @@
 const express = require('express');
+const _ = require('lodash');
+const { JWTVerification, validation } = require('../../../middleware');
 
 module.exports = context => {
   const router = express.Router()
@@ -8,7 +10,7 @@ module.exports = context => {
     try {
       const { contract } = req;
       const { tokenInContract } = req.params;
-      const uniqueIndexInContract = parseInt(tokenInContract);
+      const uniqueIndexInContract = Number(tokenInContract);
 
       const result = await context.db.MintedToken.findOne({ contract, uniqueIndexInContract });
 
@@ -18,8 +20,8 @@ module.exports = context => {
     }
   });
 
-  router.use('/:product', (req, res, next) => {
-    req.product = req.params.product;
+  router.use('/:product', validation('nftProduct', 'params'), (req, res, next) => {
+    req.product = Number(req.params.product);
     next();
   }, require('./product')(context));
 

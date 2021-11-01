@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const Offer = new Schema({
   offerIndex: { type: Number, required: true },
-  contract: { type: String, lowercase:true, required: true },
+  contract: { type: String, lowercase: true, required: true },
   product: { type: Number, required: true },
   offerPool: { type: Number, required: true },
   copies: { type: Number },
@@ -18,6 +18,17 @@ const Offer = new Schema({
 
 Offer.pre('save', function (next) {
   this.copies = (this.range[1] - this.range[0]) + 1;
+  next();
+});
+
+Offer.pre('insertMany', async function (next, offers) {
+  if (Array.isArray(offers) && offers.length) {
+    offers = offers.map(offer => {
+      offer.copies = (offer.range[1] - offer.range[0]) + 1;
+      return offer;
+    });
+  }
+
   next();
 });
 

@@ -154,6 +154,10 @@ function App({sentryHistory}) {
 		}
 	};
 
+	const goHome = () =>{
+		sentryHistory.push(`/all`)
+	}
+
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
@@ -194,7 +198,7 @@ function App({sentryHistory}) {
 					<div className='col-1 d-none d-xl-inline-block' />
 					<div className='col-1 rounded'>
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
-							<img alt='Header Logo' src={headerLogo} className='h-100'/>
+							<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100'/>
 						</div>
 						{!loginDone ? <div className='btn-connect-wallet-wrapper'>
 							<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
@@ -282,5 +286,4 @@ function App({sentryHistory}) {
 		</Sentry.ErrorBoundary>
 	);
 }
-
 export default App;

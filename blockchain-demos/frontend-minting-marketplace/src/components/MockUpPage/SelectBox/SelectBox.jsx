@@ -8,22 +8,21 @@ const SelectBox = (props) => {
   const [selectedItem, setSelectedItem] = useState({});
   // const [moreThen, setMoreThen] = useState();
 
-  useEffect(() => {
-    if (items.length === 0 && typeof props.items === "object") {
-      setItems([...props.items]);
-      setSelectedItem(props.items[0]);
-      // console.log(props.selectedToken, 'items');
+  useEffect(()=>{
+    if(items.length === 0 && typeof(props.items)==="object"){
+      setItems([...props.items])
+      setSelectedItem(props.items[0])
     }
-  }, [props.items, items]);
+
+  },[props.items, items])
 
   const dropDown = () => {
-    setShowItems(!showItems);
+    setShowItems(!showItems)
   };
 
-  const onSelectItem = (item) => {
-    props.selectItem(item.id);
-    setSelectedItem(item);
-    setShowItems(false);
+  const selectItem = (item) => {
+    setSelectedItem(item)
+    setShowItems(false)
   };
 
   const RenderOption = () => {
@@ -117,28 +116,27 @@ const SelectBox = (props) => {
           </div>
 
           <div
-            style={{
-              display: showItems ? "block" : "none",
-              background: '#383637',
-              borderRadius: '16px'
+            onClick={(e) => {
+              if (selectedItem?.pkey) {
+                return 0;
+              } else {
+                props.selectItem(e.target.innerText);
+                // console.log(e,'ffff');
+              }
             }}
+            style={{ display: showItems ? "block" : "none" }}
             className={"select-box--items"}
           >
-            {items !== null &&
-              items.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    onSelectItem(item);
-                    props.handleClickToken(item.token);
-                  }}
-                  className={selectedItem === item ? "selected" : ""}
-                >
-                  <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
-                  {/* <span>{item.value}</span> */}
-                  <span>{item.token}</span>
-                </div>
-              ))}
+            {items !== null && items.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => selectItem(item)}
+                className={selectedItem === item ? "selected" : ""}
+              >
+                <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
+                <span>{item.value}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

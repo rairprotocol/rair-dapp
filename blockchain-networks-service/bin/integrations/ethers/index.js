@@ -6,9 +6,9 @@ const Token = require('./contracts/RAIR_ERC721.json').abi;
 const log = require('../../utils/logger')(module);
 const { addMetadata, addPin } = require('../../integrations/ipfsService')();
 const providers = require('./providers');
-const { numberToHexadecimal } = require('../../utils/helpers')
+const { numberToHexadecimal } = require('../../utils/helpers');
 
-module.exports = async (db) => {
+module.exports = async ({ db, config }) => {
   // Helpers
   const setProductListeners = async (contractAddress, provider) => {
     const tokenInstance = new ethers.Contract(contractAddress, Token, provider);
@@ -160,7 +160,7 @@ module.exports = async (db) => {
     }
   };
 
-  const offerListeners = (minterInstance) => {
+  const offerListeners = (provider, minterInstance) => {
     try {
       minterInstance.on('AddedOffer(address,uint256,uint256,uint256)', async (contractAddress, product, rangeNumber, catalogIndex) => {
         try {
@@ -215,20 +215,48 @@ module.exports = async (db) => {
         try {
           const contract = contractAddress.toLowerCase();
           const OfferP = parseInt(offerPool);
+          const network = numberToHexadecimal(provider._network.chainId);
 
           const product = await db.OfferPool.aggregate([
             { $match: { contract, marketplaceCatalogIndex: OfferP } },
             {
               $lookup: {
                 from: 'Product',
-                localField: 'product',
-                foreignField: 'collectionIndexInContract',
+                let: {
+                  contr: '$contract',
+                  prod: '$product'
+                },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          {
+                            $eq: [
+                              '$contract',
+                              '$$contr'
+                            ]
+                          },
+                          {
+                            $eq: [
+                              '$collectionIndexInContract',
+                              '$$prod'
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
                 as: 'products'
               }
             },
             { $unwind: '$products' },
             { $replaceRoot: { newRoot: '$products' } },
           ]);
+
+          const uniqueIndexInContract = product[0].firstTokenIndex + parseInt(tokenIndex);
+          const authenticityLink = `${ config.blockchain.networks[network].authenticityHost }/${ contract }/?a=${ uniqueIndexInContract }`;
 
           const foundToken = await db.MintedToken.findOne({
             contract,
@@ -252,6 +280,7 @@ module.exports = async (db) => {
             }, {
               ownerAddress,
               metadataURI,
+              authenticityLink,
               isMinted: true
             });
           } else {
@@ -261,6 +290,7 @@ module.exports = async (db) => {
               offerPool,
               offer: offerIndex,
               contract,
+              authenticityLink,
               uniqueIndexInContract: (product[0].firstTokenIndex + parseInt(tokenIndex)),
               isMinted: true
             });
@@ -328,6 +358,6 @@ module.exports = async (db) => {
     await Promise.all(_.map(arrayOfUsers, user => productListeners(providerData.provider, factoryInstance, user)));
 
     // Offers
-    offerListeners(minterInstance);
+    offerListeners(providerData.provider, minterInstance);
   }));
 };

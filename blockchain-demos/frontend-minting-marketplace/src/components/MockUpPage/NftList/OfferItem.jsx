@@ -8,6 +8,7 @@ export default function OfferItem({
   setSelectedToken,
 }) {
   const select = () => {
+
     setSelectedToken(token)
     handleClickToken(token)
   }
