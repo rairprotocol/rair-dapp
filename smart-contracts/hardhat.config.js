@@ -3,6 +3,7 @@ require("hardhat-gas-reporter");
 require('@openzeppelin/hardhat-upgrades');
 require('hardhat-deploy');
 require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-etherscan");
 require('hardhat-contract-sizer');
 require('dotenv').config()
 /**
@@ -58,5 +59,8 @@ module.exports = {
   },
   mocha: {
     timeout: 0
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCANKEY
   }
 };

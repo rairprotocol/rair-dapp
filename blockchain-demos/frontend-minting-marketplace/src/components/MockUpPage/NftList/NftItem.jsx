@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Modal from "react-modal";
 import "react-multi-carousel/lib/styles.css";
-import chainData from "../../../utils/blockchainData";
-import { useLocation, useParams, useHistory, NavLink } from "react-router-dom";
+import { useLocation, useParams, useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
-import NftDataPage from "./NftData/NftDataPage";
+import chainDataFront from "../utils/blockchainDataFront";
+
+// import Swal from 'sweetalert2';
+// import 'react-accessible-accordion/dist/fancy-example.css';
+// import VideoList from "../../video/videoList";
 
 Modal.setAppElement("#root");
 
@@ -19,6 +22,7 @@ const NftItem = ({
   textColor,
   collectionName,
   ownerCollectionUser,
+  allData: dataVerification,
 }) => {
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
@@ -95,7 +99,7 @@ const NftItem = ({
     // history.push(`/${0}/${dataVerification.title}/${dataVerification.name}/${dataVerification.offerData[0].offerName}/${dataVerification.offerData[0].productNumber}`)
   };
 
-  const handelClickToken = (token) => {
+  const handleClickToken = (token) => {
     history.push(
       `/tokens/${contractName}/${collectionIndexInContract}/${token}`
     );
@@ -179,6 +183,7 @@ const NftItem = ({
           width: "291px",
           border: "none",
           backgroundColor: "transparent",
+          overflow: "hidden",
         }}
       >
         <div
@@ -211,7 +216,7 @@ const NftItem = ({
           <div className="description-small" style={{ paddingRight: "16px" }}>
             <img
               className="blockchain-img"
-              src={`${chainData[blockchain]?.image}`}
+              src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
             <span className="description ">{minPrice} ETH </span>
@@ -219,7 +224,7 @@ const NftItem = ({
           <div className="description-big">
             <img
               className="blockchain-img"
-              src={`${chainData[blockchain]?.image}`}
+              src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
             <span className="description description-price">

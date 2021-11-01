@@ -11,7 +11,11 @@ module.exports = (context) => {
     try {
       await Promise.all(_.chain(context.config.blockchain.networks)
         .values()
-        .map(async (networkData, i) =>
+        .filter(i => {
+          if (process.env.PRODUCTION === 'true') return !i.testnet;
+          return true;
+        })
+        .forEach((networkData, i) =>
           context.agenda.create('sync contracts', _.pick(networkData, ['network', 'name']))
             .repeatEvery(`${ SYNC_CONTRACT_REPEAT_EVERY } minutes`)
             .schedule(moment()
