@@ -6,23 +6,23 @@ import {minterAbi, factoryAbi, erc777Abi} from '../../contracts';
 
 const contractAddresses = {
 	'0x61': { // Binance Testnet
-		factory: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
+		factory: '0x122D66159CBe0F9021aC120923847E79a4dCFC2C',
 		erc777: '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1',
 		minterMarketplace: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f'
 	},
 	'0x5': { // Ethereum Goerli
-		factory: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
+		factory: '0x0C7A7D9641AB33228fD9C202DB4290B304963592',
 		erc777: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
 		minterMarketplace: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba'
 	},
 	'0x13881': { // Matic Mumbai
-		factory: '0x1A5bf89208Dddd09614919eE31EA6E40D42493CD',
+		factory: '0x5535FE9ABdA206F6780cc87b4e1fe4733b98bd9C',
 		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
 		minterMarketplace: '0x63Dd6821D902012B664dD80140C54A98CeE97068'
 	},
 	'0x89': {
-		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
 		factory: '0x556a3Db6d800AAA56f8B09E476793c5100705Db5',
+		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
 		minterMarketplace: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df'
 	}
 }
