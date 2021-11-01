@@ -2,17 +2,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import NftDataPageTest from "./NftDataPageTest";
 
-const NftDataExternalLink = ( primaryColor, textColor ) => {
+const NftDataExternalLink = ({ primaryColor, textColor }) => {
   const [data, setData] = useState();
+  const [offerPrice, setOfferPrice] = useState();
+
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedToken, setSelectedToken] = useState();
-  const [offerPrice, setOfferPrice] = useState();
 
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
-  const { adminToken, contract, product, token, offer, tokenId } = params;
+  const { adminToken, contract, product, token, offer } = params;
 
   const getData = useCallback(async () => {
     if (adminToken && contract && product) {
@@ -21,29 +22,49 @@ const NftDataExternalLink = ( primaryColor, textColor ) => {
           method: "GET",
         })
       ).json();
-      //   const data = response.result?.tokens.find(
-      //     (data) => String(data.token) === token
-      //   );
-      setTokenData(response.result.tokens);
-      setSelectedData(response.result.tokens[token].metadata)
+
       setData(response.result);
-    // setSelectedToken(tokenId)
+
+      setTokenData(response.result.tokens);
+      setSelectedData(response.result.tokens[token].metadata);
+      setSelectedToken(token);
       setOfferPrice(
         response.result.product.products.offers.map((p) => p.price)
       );
-
-      // setContractAddress(response.result.product.contractAddress)
-      //   return response.result;
     } else return null;
-  }, [adminToken, contract, product]);
+  }, [adminToken, contract, product, token]);
 
-  console.log(params, "selectedToken");
-
+  function onSelect(id) {
+    tokenData.forEach((p) => {
+      if (p._id === id) {
+        setSelectedData(p.metadata);
+      }
+    });
+  }
+  const handleClickToken = async (token) => {
+    history.push(`/${adminToken}/${contract}/${product}/${offer}/${token}`);
+    setSelectedData(tokenData[token].metadata);
+    setSelectedToken(token);
+  };
   useEffect(() => {
     getData();
   }, [getData]);
 
-  return <NftDataPageTest data={data} primaryColor={primaryColor} textColor={textColor} tokenData={tokenData} selectedData={selectedData} selectedToken={selectedToken} offerPrice={offerPrice} />;
+  return (
+    <NftDataPageTest
+      onSelect={onSelect}
+      handleClickToken={handleClickToken}
+      setSelectedToken={setSelectedToken}
+      contract={contract}
+      tokenData={tokenData}
+      selectedData={selectedData}
+      selectedToken={selectedToken}
+      data={data}
+      offerPrice={offerPrice}
+      primaryColor={primaryColor}
+      textColor={textColor}
+    />
+  );
 };
 
 export default NftDataExternalLink;
