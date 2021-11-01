@@ -1,8 +1,7 @@
 const express = require('express');
-const { validation } = require('../../middleware');
 
 module.exports = context => {
-  const router = express.Router();
+  const router = express.Router()
 
   // Get specific contract
   router.get('/', async (req, res, next) => {
@@ -104,4 +103,4 @@ module.exports = context => {
   });
 
   return router;
-};
+}
