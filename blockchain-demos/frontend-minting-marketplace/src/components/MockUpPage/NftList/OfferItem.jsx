@@ -7,6 +7,7 @@ export default function OfferItem({
   metadata,
   setSelectedToken,
 }) {
+  console.log(metadata)
   const select = () => {
 
     setSelectedToken(token)
@@ -33,7 +34,7 @@ export default function OfferItem({
           margin: "1rem 1rem",
           pointerEvents: "none",
         }}
-        src={metadata?.image}
+        src={metadata.image ? metadata.image : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"}
         alt={metadata}
       />
     </button>

@@ -494,6 +494,7 @@ margin-left: -36px;
 }
 .description-big{
   display: none;
+  cursor: pointer;
 }
 .description-more:hover{
   color: #d779c6;
@@ -599,4 +600,43 @@ margin-left: -36px;
 .accordion__button[aria-selected='true']::after {
   content: "\2212";
   color: red;
+}
+
+.btn-play {
+    position: absolute;
+    border-radius: 50%;
+    top: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    color: #000;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    z-index: 1;
+    cursor: pointer;
+  }
+  
+.btn-play div {
+    margin: auto;
+  }
+
+/* .react-player__play-icon {
+  display: none;
+} */
+
+
+.nft-collection .react-player__preview {
+  width: auto !important;
+  height: 600px !important;
+}
+
+.col-12 .rounded .react-player__play-icon {
+  position: absolute;
+  top: 28px;
+  left: 23px;
+  border-color: transparent transparent transparent #000 !important;
+  border-width: 7px 0px 9px 13px !important;
+  z-index: 2;
 }

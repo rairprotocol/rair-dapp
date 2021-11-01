@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import "./SelectNumber.css"
 
 const SelectNumber = ({items, handleClickToken}) => {
-    console.log(items, "items");
     const [selectedItem, setSelectedItem] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
 
