@@ -60,7 +60,7 @@ const BatchDataItem = ({tokenId, metadataURI, deleter, index, array, endingToken
 	</tr>
 }
 
-const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNumber, setExistingMetadataArray, endingToken}) => {
+const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNumber, setExistingMetadataArray, endingToken, internalFirstToken}) => {
 
 	const [sendingMetadata, setSendingMetadata] = useState(false);
 	const [metadataArray, setMetadataArray] = useState([]);
@@ -85,8 +85,11 @@ const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNu
 
 	const {contractCreator} = useSelector(state => state.contractStore);
 
-	return <div style={{position: 'relative'}} className='p-5 col-12'>
-		<h5> Update On-Chain Metadata </h5>
+	return <details style={{position: 'relative'}} className='col-12 py-3'>
+		<summary>
+			<h5> Unique URI for tokens </h5>
+			<small> tokenURI will return this as the first option </small>
+		</summary>
 
 		<table style={{color: 'inherit'}} className='table table-responsive w-100'>
 			<thead>
@@ -134,7 +137,7 @@ const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNu
 				} else {
 					await instance.setUniqueURIBatch(
 					//console.log(
-						metadataArray.map(item => item.tokenId),
+						metadataArray.map(item => Number(internalFirstToken) + Number(item.tokenId)),
 						metadataArray.map(item => item.metadataURI)
 					)
 				}
@@ -152,7 +155,7 @@ const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNu
 		}} disabled={sendingMetadata || metadataArray.length <= 0} className='col-12 btn btn-primary'>
 			{sendingMetadata ? 'Sending Metadata...' : 'Send Metadata link to the contract!'}
 		</button>
-	</div>
+	</details>
 }
 
 export default MetadataSender;
