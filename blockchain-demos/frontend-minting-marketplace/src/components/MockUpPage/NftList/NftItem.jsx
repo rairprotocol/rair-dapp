@@ -42,7 +42,7 @@ const NftItem = ({
     getProductAsync();
   }, [getProductAsync]);
 
-  function openModalOnClick() {
+  function RedirectToMockUp() {
     redirection();
   }
 
@@ -87,7 +87,6 @@ const NftItem = ({
   return (
     <>
       <div
-        // onClick={openModalOnClick}
         className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
         style={{
           height: "291px",
@@ -98,12 +97,13 @@ const NftItem = ({
         }}
       >
         <div
+          onClick={() => {if(!metaDataProducts?.metadata?.animation_url) RedirectToMockUp()}}
           className="col-12 rounded"
           style={{
             top: 0,
             position: "relative",
             height: "96%",
-            // pointerEvents: "none",
+            cursor: "pointer"
           }}
         >
           {metaDataProducts?.metadata?.animation_url && (
@@ -173,7 +173,7 @@ const NftItem = ({
             />
             <span className="description ">{minPrice} ETH </span>
           </div>
-          <div onClick={openModalOnClick} className="description-big">
+          <div onClick={RedirectToMockUp} className="description-big">
             <img
               className="blockchain-img"
               src={`${chainDataFront[blockchain]?.image}`}
