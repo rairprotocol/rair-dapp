@@ -19,6 +19,7 @@
     "react-hook-form": "^7.17.5",
     "react-modal": "^3.14.3",
     "react-multi-carousel": "^2.6.5",
+    "react-player": "^2.9.0",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
