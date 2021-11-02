@@ -178,5 +178,57 @@ module.exports = context => {
     }
   });
 
+  // get single product with all related offers
+  router.get('/offers', async (req, res, next) => {
+    try {
+      const { contract, product: collectionIndexInContract } = req;
+
+      const [product] = await context.db.Product.aggregate([
+        { $match: { contract, collectionIndexInContract } },
+        {
+          $lookup: {
+            from: 'Offer',
+            let: {
+              contr: '$contract',
+              prod: '$collectionIndexInContract'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contr'
+                        ]
+                      },
+                      {
+                        $eq: [
+                          '$product',
+                          '$$prod'
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'offers'
+          }
+        }
+      ]);
+
+      if (!product) {
+        res.json({ success: false, message: 'Product not found.' });
+        return;
+      }
+
+      res.json({ success: true, product });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   return router;
 };
