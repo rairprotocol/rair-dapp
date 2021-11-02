@@ -31,7 +31,7 @@ const BatchDataItem = ({tokenId, metadataURI, deleter, index, array, endingToken
 	return <tr>
 		<th>
 			<InputField
-				placeholder='Full link'
+				placeholder='Token Index'
 				getter={tokenIndex}
 				setter={tokenIdSetter}
 				type='number'
@@ -98,7 +98,7 @@ const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNu
 						Token URI
 					</th>
 					<th className='px-0'>
-						<button disabled={metadataArray.length >= endingToken} onClick={addRow} className='btn mx-0 btn-stimorol'>
+						<button disabled={metadataArray.length > endingToken} onClick={addRow} className='btn mx-0 btn-stimorol'>
 							Add <i className='fas fa-plus' />
 						</button>
 					</th>

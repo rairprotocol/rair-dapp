@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 
 //import CSVParser from './components/metadata/csvParser.jsx';
 import MetadataEditor from './components/metadata/metadataEditor.jsx';
+import ContractMetadata from './components/metadata/contractMetadata.jsx';
 import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
@@ -236,6 +237,7 @@ function App({sentryHistory}) {
 								{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor}/>}
 								{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+								{loginDone && <SentryRoute path='/contract-metadata/:contract/:product' component={ContractMetadata} />}
 								{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 								{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 								{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}

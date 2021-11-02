@@ -234,14 +234,17 @@ const MetadataEditor = (props) => {
 			({params.contract}) on {chainData[contractNetwork]?.name}
 		</small>}
 		<div className='col-6'>
-			<div className='col-3' />
-			<button disabled className='btn btn-primary col-3'>
+			<div className='col-2' />
+			<button disabled className='btn btn-royal-ice col-3'>
 				Single
 			</button>
-			<Link to={`/batch-metadata/${params.contract}/${params.product}`} className='btn btn-secondary col-3'>
+			<Link to={`/batch-metadata/${params.contract}/${params.product}`} className='btn btn-royal-ice col-3'>
 				Batch
 			</Link>
-			<div className='col-3' />
+			<Link to={`/contract-metadata/${params.contract}/${params.product}`} className='btn btn-royal-ice col-5'>
+				Contract Level
+			</Link>
+			<div className='col-2' />
 			<InputField
 				label='Title'
 				getter={title}
