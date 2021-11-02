@@ -253,7 +253,12 @@ li {
   color: #22202188!important
 }
 
-
+.header_logo:hover{
+  cursor: pointer;
+  filter: sepia(1);
+  transform: rotate3d(1, 1, 1, 360deg);
+  transition-duration: 1.5s;
+}
 
 
 .some-element-hover:hover{
@@ -588,13 +593,13 @@ margin-left: -36px;
   float: right;
   color: black;
   background-color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 23px;
+  border-radius: 16px;
+  width: 26px;
+  height: 26px;
   font-weight: bold;
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: end;
   align-content: center;
 }
 

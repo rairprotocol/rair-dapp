@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import NftDataPageTest from "./NftDataPageTest";
 
-const NftDataCommonLink = () => {
+const NftDataCommonLink = ({currentUser, primaryColor, textColor}) => {
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedToken, setSelectedToken] = useState();
@@ -38,30 +38,13 @@ const NftDataCommonLink = () => {
     setSelectedToken(tokenId);
   };
 
-
-  console.log(selectedData, "selectedData");
-  // console.log(tokenId, 'tokenId');
-
-  useEffect(() => {
-        // const responseAllProduct = 
-        //     fetch(`/api/nft/${contract}/${product}`).then(res => {
-        //         return res.json()
-        //     }).then(res => res)
-        
-        // console.log(responseAllProduct)
-        // setSelectedData(responseAllProduct?.result[tokenId].metadata);
-        // setSelectedToken(tokenId);
-        
-    console.log(tokenId, "tokenId");
-  }, [tokenId, contract, product]);
-
-
   useEffect(() => {
     getAllProduct();
   }, [getAllProduct]);
 
   return (
     <NftDataPageTest
+      currentUser={currentUser}
       onSelect={onSelect}
       handleClickToken={handleClickToken}
       setSelectedToken={setSelectedToken}
@@ -69,6 +52,8 @@ const NftDataCommonLink = () => {
       tokenData={tokenData}
       selectedData={selectedData}
       selectedToken={selectedToken}
+      primaryColor={primaryColor}
+      textColor={textColor}
     />
   );
 };

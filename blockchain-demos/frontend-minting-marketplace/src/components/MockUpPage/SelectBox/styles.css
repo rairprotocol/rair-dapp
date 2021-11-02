@@ -143,7 +143,7 @@
   padding: 10px 53px;
   border-radius: 16px;
   background: none;
-  color: #fff;
+  /* color: #fff; */
   border: 1px solid #D37AD6;
   transition: .3s all ease;
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import NftDataPageTest from "./NftDataPageTest";
 
-const NftDataExternalLink = ({ primaryColor, textColor }) => {
+const NftDataExternalLink = ({currentUser, primaryColor, textColor}) => {
   const [data, setData] = useState();
   const [offerPrice, setOfferPrice] = useState();
 
@@ -46,13 +46,14 @@ const NftDataExternalLink = ({ primaryColor, textColor }) => {
     setSelectedData(tokenData[token].metadata);
     setSelectedToken(token);
   };
-  
+
   useEffect(() => {
     getData();
   }, [getData]);
 
   return (
     <NftDataPageTest
+      currentUser={currentUser}
       onSelect={onSelect}
       handleClickToken={handleClickToken}
       setSelectedToken={setSelectedToken}

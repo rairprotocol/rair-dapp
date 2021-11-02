@@ -7,12 +7,9 @@ export default function OfferItem({
   metadata,
   setSelectedToken,
 }) {
-  console.log(metadata)
   const select = () => {
-
     setSelectedToken(token)
     handleClickToken(token)
-    console.log(metadata?.image, 'metadata?.image');
   }
   return (
     <button

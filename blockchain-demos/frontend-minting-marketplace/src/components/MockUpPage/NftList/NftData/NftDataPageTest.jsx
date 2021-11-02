@@ -7,15 +7,18 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-import chainData from "../../../../utils/blockchainData";
+
 import Carousel from "react-multi-carousel";
+import chainDataFront from "../../utils/blockchainDataFront";
 import ItemRank from "../../SelectBox/ItemRank";
-import SelectBox from "../../SelectBox/SelectBox";
 import OfferItem from "../OfferItem";
 import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
+
+import "react-multi-carousel/lib/styles.css";
 
 const NftDataPageTest = ({
+  currentUser,
   tokenData,
   selectedData,
   primaryColor,
@@ -28,6 +31,7 @@ const NftDataPageTest = ({
   contract,
   onSelect,
 }) => {
+  // console.log(contract, 'contract');
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -70,10 +74,12 @@ const NftDataPageTest = ({
       return string[0].toUpperCase() + string.slice(1);
     }
   }
+
   if (offerPrice) {
     var minPrice = arrayMin(offerPrice);
     var maxPrice = arrayMax(offerPrice);
   }
+
   function arrayMin(arr) {
     let len = arr.length,
       min = Infinity;
@@ -94,6 +100,42 @@ const NftDataPageTest = ({
       }
     }
     return max;
+  }
+
+  function checkOwner() {
+    if (currentUser === tokenData[selectedToken]?.ownerAddress) {
+      return (
+        <button
+          style={{
+            width: "228px",
+            height: "48px",
+            border: "none",
+            borderRadius: "16px",
+            color: `var(--${textColor})`,
+            backgroundImage:
+              "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
+          }}
+        >
+          Owned
+        </button>
+      );
+    } else
+      return (
+        <button
+          onClick={() => alert("Coming soon")}
+          style={{
+            width: "228px",
+            height: "48px",
+            border: "none",
+            borderRadius: "16px",
+            color: `var(--${textColor})`,
+            backgroundImage:
+              "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
+          }}
+        >
+          Purchase • {minPrice} {data?.product.blockchain}
+        </button>
+      );
   }
   //  const closeModal = ( ) => {
   //    history.push(`/all`)
@@ -127,7 +169,7 @@ const NftDataPageTest = ({
           style={{
             maxWidth: "1600px",
             margin: "auto",
-            backgroundColor: `var(--${primaryColor})`,
+            // backgroundColor: `var(--${primaryColor})`,
             borderRadius: "16px",
             padding: "24px 0",
           }}
@@ -150,36 +192,49 @@ const NftDataPageTest = ({
               {selectedData.name}
             </h2>
             <div className="btn-share">
-              <button>Share</button>
+              <button 
+              style={{
+                color: `var(--${textColor})`,
+                }}
+                >Share</button>
             </div>
           </div>
           <div className="nft-collection">
-            {
-              selectedData.animation_url ?
-                <div style={{
+            {selectedData.animation_url ? (
+              <div
+                style={{
                   width: "600px",
                   height: "600px",
-                  margin: "auto"
-                }}>
-                  <ReactPlayer width={"100%"} height={"auto"} controls url={selectedData.animation_url}
-                  light={selectedData.image ? selectedData.image : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"}
+                  margin: "auto",
+                }}
+              >
+                <ReactPlayer
+                  width={"100%"}
+                  height={"auto"}
+                  controls
+                  url={selectedData.animation_url}
+                  light={
+                    selectedData.image
+                      ? selectedData.image
+                      : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
+                  }
                   loop={false}
-                  />
-
-                </div>
-                : <div
-                  //   onClick={onClick}
-                  style={{
-                    margin: "auto",
-                    backgroundImage: `url(${selectedData?.image})`,
-                    width: "604px",
-                    height: "45rem",
-                    backgroundPosition: "center",
-                    backgroundSize: "contain",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                ></div>
-            }
+                />
+              </div>
+            ) : (
+              <div
+                //   onClick={onClick}
+                style={{
+                  margin: "auto",
+                  backgroundImage: `url(${selectedData?.image})`,
+                  width: "604px",
+                  height: "45rem",
+                  backgroundPosition: "center",
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                }}
+              ></div>
+            )}
           </div>
           <div className="main-tab">
             <div>
@@ -190,14 +245,15 @@ const NftDataPageTest = ({
                   padding: "10px",
                   width: "228px",
                   height: "48px",
-                  backgroundColor: "#383637",
+                  // backgroundColor: `var(--${primaryColor })`,
+                  backgroundColor: "#383637" || `var(--${primaryColor })` ,
                   display: "flex",
                   alignItems: "center",
                 }}
               >
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
-                  src={`${chainData[data?.product.blockchain]?.image}`}
+                  src={`${chainDataFront[data?.product.blockchain]?.image}`}
                   alt=""
                 />
                 <span
@@ -206,7 +262,8 @@ const NftDataPageTest = ({
                     marginRight: "3rem",
                   }}
                 >
-                  {offerPrice && `${minPrice} – ${maxPrice} ETH`}
+                  {offerPrice &&
+                    `${minPrice} – ${maxPrice} ${data?.product.blockchain}`}
                 </span>
                 <span
                   style={{
@@ -233,23 +290,6 @@ const NftDataPageTest = ({
             <div>
               <div className="collection-label-name">Serial number</div>
               <div>
-                {/* <SelectBox
-                  handleClickToken={handleClickToken}
-                  selectedToken={selectedToken}
-                  contractName={contract}
-                  primaryColor={primaryColor}
-                  selectItem={onSelect}
-                  items={
-                    tokenData.length &&
-                    tokenData.map((p) => {
-                      return {
-                        value: p.metadata.name,
-                        id: p._id,
-                        token: p.token,
-                      };
-                    })
-                  }
-                ></SelectBox> */}
                 <SelectNumber
                   handleClickToken={handleClickToken}
                   selectedToken={selectedToken}
@@ -271,19 +311,7 @@ const NftDataPageTest = ({
                 marginTop: "18px",
               }}
             >
-              <button
-                style={{
-                  width: "228px",
-                  height: "48px",
-                  border: "none",
-                  borderRadius: "16px",
-                  color: `var(--${textColor})`,
-                  backgroundImage:
-                    "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
-                }}
-              >
-                Owned
-              </button>
+              {checkOwner()}
             </div>
           </div>
           <Accordion allowZeroExpanded /* allowMultipleExpanded*/>
@@ -295,52 +323,52 @@ const NftDataPageTest = ({
                 <div className="col-12 row mx-0 box--properties">
                   {selectedData
                     ? Object.keys(selectedData).length &&
-                    selectedData?.attributes.map((item, index) => {
-                      if (item.trait_type === "External URL") {
+                      selectedData?.attributes.map((item, index) => {
+                        if (item.trait_type === "External URL") {
+                          return (
+                            <div
+                              key={index}
+                              className="col-4 my-2 p-1 custom-desc-to-offer"
+                              style={{
+                                color: textColor,
+                                textAlign: "center",
+                              }}
+                            >
+                              <span>{item?.trait_type}:</span>
+                              <br />
+                              <a
+                                style={{ color: textColor }}
+                                href={item?.value}
+                              >
+                                {item?.value}
+                              </a>
+                            </div>
+                          );
+                        }
+                        const percent = randomInteger(1, 40);
                         return (
                           <div
                             key={index}
                             className="col-4 my-2 p-1 custom-desc-to-offer"
-                            style={{
-                              color: textColor,
-                              textAlign: "center",
-                            }}
                           >
-                            <span>{item?.trait_type}:</span>
-                            <br />
-                            <a
-                              style={{ color: textColor }}
-                              href={item?.value}
-                            >
-                              {item?.value}
-                            </a>
+                            <div className="custom-desc-item">
+                              <span>{item?.trait_type}:</span>
+                              <span style={{ color: textColor }}>
+                                {item?.value}
+                              </span>
+                            </div>
+                            <div className="custom-offer-percents">
+                              <span
+                                style={{
+                                  color: percentToRGB(percent),
+                                }}
+                              >
+                                {percent}%
+                              </span>
+                            </div>
                           </div>
                         );
-                      }
-                      const percent = randomInteger(1, 40);
-                      return (
-                        <div
-                          key={index}
-                          className="col-4 my-2 p-1 custom-desc-to-offer"
-                        >
-                          <div className="custom-desc-item">
-                            <span>{item?.trait_type}:</span>
-                            <span style={{ color: textColor }}>
-                              {item?.value}
-                            </span>
-                          </div>
-                          <div className="custom-offer-percents">
-                            <span
-                              style={{
-                                color: percentToRGB(percent),
-                              }}
-                            >
-                              {percent}%
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })
+                      })
                     : null}
                 </div>
               </AccordionItemPanel>
@@ -404,7 +432,7 @@ const NftDataPageTest = ({
                         }}
                       >
                         <i
-                          style={{ paddingLeft: "8.5px", paddingTop: "7px" }}
+                          style={{ paddingLeft: "1px", paddingTop: "8px" }}
                           className="fa fa-lock"
                           aria-hidden="true"
                         ></i>
@@ -476,20 +504,24 @@ const NftDataPageTest = ({
                 <div>
                   {tokenData[selectedToken]?.authenticityLink ? (
                     <div>
-                      {tokenData[selectedToken]?.authenticityLink !== 'none' ? <a href={tokenData[selectedToken]?.authenticityLink}>
-                        {tokenData[selectedToken]?.authenticityLink}
-                      </a> : "Have not bought yet"}
+                      {tokenData[selectedToken]?.authenticityLink !== "none" ? (
+                        <a href={tokenData[selectedToken]?.authenticityLink}>
+                          {tokenData[selectedToken]?.authenticityLink}
+                        </a>
+                      ) : (
+                        "Not minted yet"
+                      )}
                     </div>
-                  ) : <span>
-                    Have not bought yet
-                  </span>
-                  }
+                  ) : (
+                    <span>Not minted yet</span>
+                  )}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
           </Accordion>
         </div>
         <div style={{ maxWidth: "1600px", margin: "auto" }}>
+          {/* <span style={{}}>More by {tokenData[selectedToken]?.ownerAddress ? tokenData[selectedToken]?.ownerAddress : "User" }</span> */}
           {tokenData && (
             <Carousel
               itemWidth={"300px"}

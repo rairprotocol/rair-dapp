@@ -198,7 +198,7 @@ function App({sentryHistory}) {
 					<div className='col-1 d-none d-xl-inline-block' />
 					<div className='col-1 rounded'>
 						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
-							<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100'/>
+							<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo'/>
 						</div>
 						{!loginDone ? <div className='btn-connect-wallet-wrapper'>
 							<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
@@ -250,13 +250,13 @@ function App({sentryHistory}) {
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
 								<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
-									<NftDataExternalLink primaryColor={primaryColor} textColor={textColor} />
+									<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
 								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 								<SentryRoute path='/tokens/:contract/:product/:tokenId'>
-									<NftDataCommonLink primaryColor={primaryColor} textColor={textColor} />
+									<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
 								{adminAccess && <SentryRoute path='/admin'>
 									<FileUpload primaryColor={primaryColor} textColor={textColor}/>

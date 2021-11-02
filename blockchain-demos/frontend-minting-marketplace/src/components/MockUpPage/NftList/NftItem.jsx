@@ -1,111 +1,49 @@
 import React, { useState, useCallback, useEffect } from "react";
-import Modal from "react-modal";
-import "react-multi-carousel/lib/styles.css";
-import { useLocation, useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
 
 // import Swal from 'sweetalert2';
 // import 'react-accessible-accordion/dist/fancy-example.css';
 // import VideoList from "../../video/videoList";
 
-Modal.setAppElement("#root");
-
 const NftItem = ({
   blockchain,
   price,
   pict,
-  onClick,
   contractName,
   collectionIndexInContract,
   primaryColor,
   textColor,
   collectionName,
   ownerCollectionUser,
-  allData: dataVerification,
 }) => {
   const history = useHistory();
-  // eslint-disable-next-line no-unused-vars
-  const location = useLocation();
-  const params = useParams();
-  const { adminToken, contract, product, token, offer } = params;
-  // eslint-disable-next-line no-unused-vars
-  let subtitle;
-
   const [metaDataProducts, setMetaDataProducts] = useState();
   const [playing, setPlaying] = useState(false);
 
-  const [allProducts, setAllProducts] = useState([]);
-  const [selected, setSelected] = useState({});
-  const [selectedToken, setSelectedToken] = useState();
-  const [modalIsOpen, setIsOpen] = useState(
-    // () =>
-    // contract === dataVerification?.title &&
-    // product === dataVerification?.name &&
-    // dataVerification.offerData.some((item) => item.offerName === offer)
-  );
-
   const handlePlaying = () => {
-    setPlaying(prev => !prev);
-  }
+    setPlaying((prev) => !prev);
+  };
 
-  // const getData = useCallback(async () => {
-  //   if (adminToken && contract && product) {
-  //     const response = await (
-  //       await fetch(`/api/${adminToken}/${contract}/${product}`, {
-  //         method: "GET",
-  //       })
-  //     ).json();
-  //     const data = response.result?.tokens.find(
-  //       (data) => String(data.token) === token
-  //     );
-  //     return data;
-  //   } else return null;
-  // }, [adminToken, contract, product, token]);
-
-  // const getAllProduct = useCallback(async () => {
-  //   const responseAllProduct = await (
-  //     await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
-  //       method: "GET",
-  //     })
-  //   ).json();
-
-  //   setAllProducts(responseAllProduct.result);
-
-  //   if (!Object.keys(params).length)
-  //     setSelected(responseAllProduct.result[0].metadata);
-  // }, [collectionIndexInContract, contractName, params]);
-
-  const getProductAsync = async () => {
+  const getProductAsync = useCallback(async () => {
     const responseProductMetadata = await (
       await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
         method: "GET",
       })
     ).json();
     if (responseProductMetadata.result.length > 0) {
-      // console.log(responseProductMetadata.result[0])
       setMetaDataProducts(responseProductMetadata.result[0]);
     }
-    // setMetaDataProducts(responseProductMetadata);
-  }
+  }, [collectionIndexInContract, contractName]);
 
   useEffect(() => {
     getProductAsync();
-  }, [])
-
-  const openModal = useCallback(() => {
-    setIsOpen(true);
-    // console.log('open');
-    // getAllProduct();
-  },
-    // [getAllProduct]
-  );
+  }, [getProductAsync]);
 
   function openModalOnClick() {
-    openModal();
     redirection();
-    // handleClickToken();
   }
 
   // const waitResponse = useCallback(async () => {
@@ -119,31 +57,7 @@ const NftItem = ({
 
   const redirection = () => {
     history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
-    // console.log(dataVerification, 'dataVerification');
-    // console.log(dataVerification.offerData[0].productNumber, 'dataVerification.offerData[0].productNumber');
-    // history.push(`/${0}/${dataVerification.title}/${dataVerification.name}/${dataVerification.offerData[0].offerName}/${dataVerification.offerData[0].productNumber}`)
   };
-
-  const handleClickToken = (token) => {
-    history.push(
-      `/tokens/${contractName}/${collectionIndexInContract}/${token}`
-    );
-    setSelectedToken(token);
-  };
-
-  // useEffect(() => {
-  // if (modalIsOpen) {
-  // waitResponse();
-  // }
-  // }, [modalIsOpen, waitResponse]);
-
-  function onSelect(id) {
-    allProducts.forEach((p) => {
-      if (p._id === id) {
-        setSelected(p.metadata);
-      }
-    });
-  }
 
   function arrayMin(arr) {
     let len = arr.length,
@@ -170,34 +84,6 @@ const NftItem = ({
   const minPrice = arrayMin(price);
   const maxPrice = arrayMax(price);
 
-
-  function handleClick() {
-    history.push("/all");
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-    handleClick();
-  }
-
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: `var(--${primaryColor})`,
-      width: "100%",
-      height: "95%",
-      borderRadius: "16px",
-      border: "none",
-      zIndex: 20000,
-      color: textColor,
-    },
-  };
-
   return (
     <>
       <div
@@ -220,35 +106,53 @@ const NftItem = ({
             // pointerEvents: "none",
           }}
         >
-          {
-            metaDataProducts?.metadata?.animation_url && <div onClick={handlePlaying} className="btn-play">
-              {
-                playing ? <div><i className="fas fa-pause"></i></div> : <div>
+          {metaDataProducts?.metadata?.animation_url && (
+            <div onClick={handlePlaying} className="btn-play">
+              {playing ? (
+                <div>
+                  <i className="fas fa-pause"></i>
+                </div>
+              ) : (
+                <div>
                   <i className="fas fa-play"></i>
                 </div>
-              }
+              )}
             </div>
-          }
-          {metaDataProducts?.metadata?.animation_url ? <div style={{
-            borderRadius: "16px",
-            overflow: "hidden"
-          }}>
-            <ReactPlayer
+          )}
+          {metaDataProducts?.metadata?.animation_url ? (
+            <div
+              style={{
+                borderRadius: "16px",
+                overflow: "hidden",
+              }}
+            >
+              <ReactPlayer
+                alt="thumbnail"
+                url={`${metaDataProducts.metadata?.animation_url}`}
+                light={
+                  metaDataProducts.metadata?.image
+                    ? metaDataProducts.metadata?.image
+                    : pict
+                }
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                }}
+                className="col-12 h-100 w-100"
+                onReady={handlePlaying}
+                playing={playing}
+              />
+            </div>
+          ) : (
+            <img
               alt="thumbnail"
-              url={`${metaDataProducts.metadata?.animation_url}`}
-              light={metaDataProducts.metadata?.image ? metaDataProducts.metadata?.image : pict}
-              style={{ position: "absolute", bottom: 0, borderRadius: "16px", overflow: "hidden" }}
+              src={pict}
+              style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
               className="col-12 h-100 w-100"
-              onReady={handlePlaying}
-              playing={playing}
             />
-          </div> : <img
-            alt="thumbnail"
-            src={pict}
-            src={`${pict}`}
-            style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
-            className="col-12 h-100 w-100"
-          />}
+          )}
           {<SvgKey />}
         </div>
         <div className="col description-wrapper pic-description-wrapper">
