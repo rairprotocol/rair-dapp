@@ -487,6 +487,7 @@ margin-left: -36px;
   flex-wrap: wrap;
   align-content: space-between;
   justify-content: center;
+  z-index: 1;
 }
 .blockchain-img{
   width: 24px;
@@ -517,6 +518,7 @@ margin-left: -36px;
 .pic-description-wrapper:hover{
   justify-content: flex-start;
   transition-duration: 0.5s;
+  z-index: 1;
 
 }
 .pic-description-wrapper:hover .description-price{
@@ -639,4 +641,14 @@ margin-left: -36px;
   border-color: transparent transparent transparent #000 !important;
   border-width: 7px 0px 9px 13px !important;
   z-index: 2;
+}
+
+.col-12 .rounded .react-player__preview {
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+.col-12 .rounded .react-player__shadow {
+  z-index: 2;
+  background: none !important;
 }
