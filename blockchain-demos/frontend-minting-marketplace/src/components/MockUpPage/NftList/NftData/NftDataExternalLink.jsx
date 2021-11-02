@@ -46,6 +46,7 @@ const NftDataExternalLink = ({ primaryColor, textColor }) => {
     setSelectedData(tokenData[token].metadata);
     setSelectedToken(token);
   };
+  
   useEffect(() => {
     getData();
   }, [getData]);

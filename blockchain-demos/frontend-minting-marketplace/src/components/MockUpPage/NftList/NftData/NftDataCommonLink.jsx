@@ -20,7 +20,7 @@ const NftDataCommonLink = () => {
     ).json();
 
     setTokenData(responseAllProduct.result);
-    setSelectedData(responseAllProduct.result[0].metadata);
+    setSelectedData(responseAllProduct.result[tokenId].metadata);
     setSelectedToken(tokenId);
   }, [product, contract, tokenId]);
 
@@ -37,6 +37,24 @@ const NftDataCommonLink = () => {
     setSelectedData(tokenData[tokenId].metadata);
     setSelectedToken(tokenId);
   };
+
+
+  console.log(selectedData, "selectedData");
+  // console.log(tokenId, 'tokenId');
+
+  useEffect(() => {
+        // const responseAllProduct = 
+        //     fetch(`/api/nft/${contract}/${product}`).then(res => {
+        //         return res.json()
+        //     }).then(res => res)
+        
+        // console.log(responseAllProduct)
+        // setSelectedData(responseAllProduct?.result[tokenId].metadata);
+        // setSelectedToken(tokenId);
+        
+    console.log(tokenId, "tokenId");
+  }, [tokenId, contract, product]);
+
 
   useEffect(() => {
     getAllProduct();

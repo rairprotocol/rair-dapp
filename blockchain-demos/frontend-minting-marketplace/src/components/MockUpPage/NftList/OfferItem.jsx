@@ -11,6 +11,7 @@ export default function OfferItem({
 
     setSelectedToken(token)
     handleClickToken(token)
+    console.log(metadata?.image, 'metadata?.image');
   }
   return (
     <button
