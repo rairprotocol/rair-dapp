@@ -6,7 +6,7 @@
     cursor: pointer;
     width: 288px;
     height: 48px;
-    background: #383637;
+    /* background: #383637; */
     border-radius: 16px;
     border: 1px solid #D37AD6;
     padding: 0 16px;
@@ -28,9 +28,10 @@
     border-radius: 16px;
     position: absolute;
     top: 60px;
-    background: #383637;
+    /* background: #383637; */
     width: 288px;
     padding: 12px 0;
+    z-index: 1;
 }
 
 .select-number-popup div {

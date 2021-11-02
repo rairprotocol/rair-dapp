@@ -1,59 +1,67 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import "./SelectNumber.css";
 
 const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
-  const [selectedItem, setSelectedItem] = useState(selectedToken);
-  const [isOpen, setIsOpen] = useState(false);
+    const { primaryColor } = useSelector(store => store.colorStore);
+    console.log(primaryColor)
 
-  const numberRef = useRef();
+    const [selectedItem, setSelectedItem] = useState(selectedToken);
+    const [isOpen, setIsOpen] = useState(false);
 
-  const handleIsOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
+    const numberRef = useRef();
 
-  const onClickItem = (el) => {
-    setSelectedItem(el);
-    handleClickToken(el);
-    handleIsOpen();
-  };
+    const handleIsOpen = () => {
+        setIsOpen((prev) => !prev);
+    };
 
-  const handleClickOutSideNumberItem = (e) => {
-    if (!numberRef.current.contains(e.target)) {
-      setIsOpen(false);
-    }
-  };
+    const onClickItem = (el) => {
+        setSelectedItem(el);
+        handleClickToken(el);
+        handleIsOpen();
+    };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutSideNumberItem);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutSideNumberItem);
-  });
+    const handleClickOutSideNumberItem = (e) => {
+        if (!numberRef.current.contains(e.target)) {
+            setIsOpen(false);
+        }
+    };
 
-  return (
-    <div ref={numberRef} className="select-number-container">
-      <div onClick={handleIsOpen} className="select-field">
-        <div className="number-item">
-          {selectedItem ? selectedItem : selectedToken}
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutSideNumberItem);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutSideNumberItem);
+    });
+
+    return (
+        <div ref={numberRef} className="select-number-container">
+            <div onClick={handleIsOpen} className="select-field" style={{background: `${primaryColor === "rhyno" ? "none" : "#383637"}`}}>
+                <div className="number-item">
+                    {selectedItem ? selectedItem : selectedToken}
+                </div>
+                <div className="select-number-arrow">
+                    <i className={`fas fa-chevron-${isOpen ? "up" : "down"}`}></i>
+                </div>
+            </div>
+            <div
+                style={{ 
+                    display: `${isOpen ? "block" : "none"}`,
+                     borderRadius: 16,
+                     background: `${primaryColor === "rhyno" ? "#fff" : "#383637"}`
+                    }}
+                className="select-number-popup"
+            >
+                {items &&
+                    items.map((el) => {
+                        return (
+                            <div key={el.id} onClick={() => onClickItem(el.token)}>
+                                {el.token}
+                            </div>
+                        );
+                    })}
+            </div>
         </div>
-        <div className="select-number-arrow">
-          <i className={`fas fa-chevron-${isOpen ? "up" : "down"}`}></i>
-        </div>
-      </div>
-      <div
-        style={{ display: `${isOpen ? "block" : "none"}`, borderRadius: 16 }}
-        className="select-number-popup"
-      >
-        {items &&
-          items.map((el) => {
-            return (
-              <div key={el.id} onClick={() => onClickItem(el.token)}>
-                {el.token}
-              </div>
-            );
-          })}
-      </div>
-    </div>
-  );
+    );
 };
 
 export default SelectNumber;
