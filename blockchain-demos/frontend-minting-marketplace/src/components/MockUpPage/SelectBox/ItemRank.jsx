@@ -3,27 +3,23 @@ import React, { useEffect, useState, useRef } from "react";
 
 import "./styles.css";
 
-const ItemRank = (props) => {
-  const [items, setItems] = useState([]);
+const ItemRank = ({ items, primaryColor, selectedToken }) => {
+  const [itemsToken, setItemsToken] = useState([]);
   const [showItems, setShowItems] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  // let history = useHistory();
 
   const rankRef = useRef();
 
-
   useEffect(() => {
-    if (items.length === 0 && typeof props.items === "object") {
-      setItems([...props.items]);
-      setSelectedItem(props.items[0]);
-      // console.log(props.selectedToken, 'items');
+    if (itemsToken.length === 0 && typeof items === "object") {
+      setItemsToken([...items]);
+      setSelectedItem(items[0]);
     }
-  }, [props.items, items]);
+  }, [items, itemsToken]);
 
   const dropDown = () => {
     setShowItems(!showItems);
   };
-  // debugger
 
   const onSelectItem = (item) => {
     // props.selectItem(item.id);
@@ -46,15 +42,15 @@ const ItemRank = (props) => {
   return (
     <div ref={rankRef} className="item-rant--box">
       <div
-        style={{ backgroundColor: `var(--${props.primaryColor})` }}
+        style={{ backgroundColor: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}` }}
         className="item-rank--container"
       >
-        <div className="select-box--selected-item">
+        <div className="select-box--selected-item" onClick={dropDown}>
           <span style={{ paddingRight: "10px" }}>{selectedItem?.pkey}</span>
-          {items !== null ? (
-            props.selectedToken ? (
-              items.map((i) => {
-                if (i.token === props.selectedToken) {
+          {itemsToken !== null ? (
+            selectedToken ? (
+              itemsToken.map((i) => {
+                if (i.token === selectedToken) {
                   return <span key={i.id}>
                     {i.value}
                     {/* {i.token} */}
@@ -70,19 +66,24 @@ const ItemRank = (props) => {
           )}
           {/* <span>{items !== null ? selectedItem.value : 'Need to select'}</span> */}
         </div>
-        <div className="select-box--arrow" onClick={dropDown}>
-          <span
+        <div className="select-box--arrow">
+          <i className={`fas fa-chevron-${showItems ? "up" : "down"}`}></i>
+          {/* <span
             className={`${showItems ? "select-box--arrow-up" : "select-box--arrow-down"
               }`}
-          />
+          /> */}
         </div>
 
         <div
-          style={{ display: showItems ? "block" : "none" }}
+          style={{
+            display: showItems ? "block" : "none",
+            backgroundColor: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
+            border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`
+          }}
           className={"select-box--items items-rank"}
         >
-          {items !== null &&
-            items.map((item) => (
+          {itemsToken !== null &&
+            itemsToken.map((item) => (
               <div
                 key={item.id}
                 onClick={() => {

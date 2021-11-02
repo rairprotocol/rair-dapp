@@ -4,7 +4,6 @@ import "./SelectNumber.css";
 
 const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
     const { primaryColor } = useSelector(store => store.colorStore);
-    console.log(primaryColor)
 
     const [selectedItem, setSelectedItem] = useState(selectedToken);
     const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +34,7 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
 
     return (
         <div ref={numberRef} className="select-number-container">
-            <div onClick={handleIsOpen} className="select-field" style={{background: `${primaryColor === "rhyno" ? "none" : "#383637"}`}}>
+            <div onClick={handleIsOpen} className="select-field" style={{background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}` }}>
                 <div className="number-item">
                     {selectedItem ? selectedItem : selectedToken}
                 </div>
@@ -47,7 +46,8 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
                 style={{ 
                     display: `${isOpen ? "block" : "none"}`,
                      borderRadius: 16,
-                     background: `${primaryColor === "rhyno" ? "#fff" : "#383637"}`
+                     background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
+                     border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`
                     }}
                 className="select-number-popup"
             >

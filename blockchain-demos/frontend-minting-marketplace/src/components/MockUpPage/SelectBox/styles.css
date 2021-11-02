@@ -46,7 +46,10 @@
   }
   
   .select-box--selected-item {
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
     height: 100%;
     width: 100%;
     padding: 12px;
@@ -82,18 +85,13 @@
   }
   
   .select-box--arrow {
-    width: 220px;
-    height: 48px;
-    margin: 0;
-    padding: 0;
-    display: inline-block;
-    /* background: #aaaaaa; */
     position: absolute;
-    right: 0;
-    top: 0;
+    top:13px;
+    right: 16px;
+    color: #D37AD6;
   }
   
-  .select-box--arrow-down {
+  /* .select-box--arrow-down {
     position: absolute;
     top: 15px;
     right: 10px;
@@ -115,7 +113,8 @@
     height: 12px;
     transform: rotate(-45deg);
     border-width: thin;
-  }
+  } */
+
   .selected{
       /* width: 100%;
       min-width:160px; */
@@ -183,7 +182,7 @@
   margin-bottom: 1rem;
   /* padding: 2rem; */
   padding: 30px 0 58px 0;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .collection-label-name {
