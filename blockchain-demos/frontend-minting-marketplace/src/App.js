@@ -145,14 +145,26 @@ function App({ sentryHistory }) {
 			}
 
 			let signer = programmaticProvider;
+
 			if (window.ethereum) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
 				signer = provider.getSigner();
 			}
+
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
 				localStorage.setItem('token', token);
 			}
+
+			if (!isTokenValid(localStorage.token)) {
+				let token = await getJWT(signer, user, currentUser);
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
+				localStorage.setItem('token', token);
+			}
+
 			setStartedLogin(false);
 			setLoginDone(true);
 		} catch (err) {
@@ -184,6 +196,7 @@ function App({ sentryHistory }) {
 		const token = localStorage.getItem('token');
 		if (!isTokenValid(token)) {
 			connectUserData()
+			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
 	}, [token])
 

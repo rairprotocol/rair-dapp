@@ -146,6 +146,7 @@ const NftItem = ({
                 className="col-12 h-100 w-100"
                 onReady={handlePlaying}
                 playing={playing}
+                onEnded={handlePlaying}
               />
             </div>
           ) : (

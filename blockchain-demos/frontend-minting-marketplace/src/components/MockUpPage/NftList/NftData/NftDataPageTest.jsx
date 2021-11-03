@@ -227,6 +227,7 @@ const NftDataPageTest = ({
                       : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
                   }
                   loop={false}
+                  onEnded={handlePlaying}
                 />
               </div>
             ) : (
