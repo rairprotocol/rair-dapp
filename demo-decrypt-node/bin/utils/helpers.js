@@ -9,6 +9,22 @@ const execPromise = (command, options = {}) => new Promise((resolve, reject) => 
   });
 });
 
+const getClients = (context) => ({
+  publisher: context.pubSub.duplicate(),
+  subscriber: context.pubSub.duplicate()
+});
+
+const unsubscribeClose = (subscriber, publisher = null) => {
+  if (subscriber) {
+    subscriber.unsubscribe();
+    subscriber.quit();
+  }
+
+  if (publisher) publisher.quit();
+};
+
 module.exports = {
-  execPromise
+  execPromise,
+  getClients,
+  unsubscribeClose
 }

@@ -6,7 +6,6 @@ module.exports = (context) => {
       await context.agenda.cancel({ nextRunAt: null });
       return done();
     } catch (e) {
-      console.error(e);
       return done(e);
     }
   });

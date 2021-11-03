@@ -21,8 +21,10 @@ services:
       SERVICE_HOST: ${hostname}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
     ports:
-      - 3000:3000
-      - 5000:5000
+      - "3000:3000"
+      - "5000:5000"
+    depends_on:
+      - rair-redis
     networks:
       - rair-local
   blockchain-networks:
@@ -50,7 +52,9 @@ services:
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
     ports:
-      - 5001:5001
+      - "5001:5001"
+    depends_on:
+      - rair-redis
     networks:
       - rair-local
   mongo:
@@ -65,7 +69,18 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${localdbpass}
       MONGO_INITDB_DATABASE: rair-db
     ports:
-      - 27017:27017
+      - "27017:27017"
+    networks:
+      - rair-local
+  rair-redis:
+    container_name: "rair-redis"
+    image: redis
+    command: redis-server --appendonly yes
+    restart: always
+    volumes:
+      - ./demo-decrypt-node/dev/redis:/data
+    ports:
+      - "6379:6379"
     networks:
       - rair-local
   minting-network:
@@ -79,7 +94,7 @@ services:
       REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
       REACT_APP_SENTRY_RELEASE: ${sentry_release}
     ports:
-      - 80:3001
+      - "80:3001"
     networks:
       - rair-local
 networks:

@@ -8,5 +8,8 @@ module.exports = {
       '0x89': 'Matic Mainnet',
       '0x13881': 'Matic Mumbai'
     }
+  },
+  redis: {
+    connection: { host: 'rair-redis', port: '6379' }
   }
 }

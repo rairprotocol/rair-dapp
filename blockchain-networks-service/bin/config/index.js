@@ -82,6 +82,9 @@ module.exports = {
         appId: MORALIS_API_KEY_TEST
       }
     }
+  },
+  redis: {
+    connection: { host: 'rair-redis', port: '6379' }
   }
 };
 

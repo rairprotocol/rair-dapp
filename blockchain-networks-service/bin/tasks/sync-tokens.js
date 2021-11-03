@@ -1,6 +1,5 @@
 const Moralis = require('moralis/node');
 const _ = require('lodash');
-const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
 const { addMetadata, addPin } = require('../integrations/ipfsService')();
@@ -182,7 +181,6 @@ module.exports = (context) => {
 
       return done();
     } catch (e) {
-      log.error(e);
       return done(e);
     }
   });

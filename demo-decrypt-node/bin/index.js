@@ -13,6 +13,7 @@ const Socket = require('socket.io');
 const log = require('./utils/logger')(module);
 const morgan = require('morgan');
 const _ = require('lodash');
+const redis = require('redis');
 require('dotenv').config();
 
 const config = require('./config');
@@ -21,6 +22,7 @@ async function main() {
   const adapter = new FileAsync('./db/store.json');
   const db = await low(adapter);
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
+  const client = redis.createClient({ host: 'rair-redis', port: '6379' });
 
   for (const folder of mediaDirectories) {
     if (!fs.existsSync(folder)) {
@@ -92,7 +94,8 @@ async function main() {
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
     },
-    config
+    config,
+    pubSub: client
   };
 
   app.use(morgan('dev'));
