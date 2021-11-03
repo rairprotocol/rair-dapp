@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-//import { Link, useParams } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import InputField from '../common/InputField.jsx';
 //import setDocumentTitle from '../../utils/setTitle';
-//import {useSelector} from 'react-redux';
-//import { erc721Abi } from '../../contracts'
-//import chainData from '../../utils/blockchainData';
-//import swal from 'sweetalert2';
+import {rFetch} from '../../utils/rFetch.js';
+import {useSelector} from 'react-redux';
+import { erc721Abi } from '../../contracts'
+import chainData from '../../utils/blockchainData';
+import swal from 'sweetalert2';
 
 const AttributeRow = ({name, value, array, index}) => {
 	const [attributeName, setAttributeName] = useState(name);
@@ -64,7 +65,26 @@ const ContractMetadata = () => {
 		{name: "fee_recipient", value: ""}
 	]);
 
+	const params = useParams();
+
+	const [contractNetwork, setContractNetwork] = useState()
+	
 	const [generatedMetadata, setGeneratedMetadata] = useState({});
+	const [contractURI, setContractURI] = useState('');
+	const [sendingContractURI, setSendingContractURI] = useState(false);
+
+	const { contractCreator } = useSelector(state => state.contractStore);
+
+	const fetchContractData = useCallback(async () => {
+		let contractData = await rFetch(`/api/contracts/${params.contract}`)
+		if (contractData.success) {
+			setContractNetwork(contractData.contract.blockchain);
+		}
+	}, [params])
+
+	useEffect(() => {
+		fetchContractData();
+	}, [fetchContractData])
 
 	return <>
 		<table>
@@ -101,6 +121,36 @@ const ContractMetadata = () => {
 			navigator.clipboard.writeText(JSON.stringify(generatedMetadata));
 		}} className='btn btn-stimorol'>
 			Copy to Clipboard
+		</button>
+		<hr className='my-5' />
+		<InputField
+			label='If you already have an IPFS link'
+			placeholder='Contract URI'
+			getter={contractURI}
+			setter={setContractURI}
+			customClass='form-control'
+			labelClass='w-100'
+			labelCSS={{textAlign: 'left'}}
+			/>
+		<button disabled={sendingContractURI} className='btn btn-royal-ice' onClick={async e => {
+			if (window.ethereum.chainId !== contractNetwork) {
+				swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
+				return;
+			}
+			setSendingContractURI(true);
+			let instance = contractCreator(params.contract, erc721Abi);
+			try {
+				await instance.setContractURI(contractURI);
+			} catch (err) {
+				swal.fire('Error', err?.data?.message);
+				console.log(err);
+				setSendingContractURI(false);
+				return;
+			}
+			setSendingContractURI(false);
+			swal.fire('Product Metadata Set!');
+		}} >
+			{contractURI ? 'Update' : 'Delete'} Contract-Level URI
 		</button>
 	</>
 };
