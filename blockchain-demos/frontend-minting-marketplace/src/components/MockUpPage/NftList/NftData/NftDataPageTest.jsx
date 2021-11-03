@@ -253,8 +253,9 @@ const NftDataPageTest = ({
                   padding: "10px",
                   width: "228px",
                   height: "48px",
-                  // backgroundColor: `var(--${primaryColor })`,
-                  backgroundColor: "#383637" || `var(--${primaryColor})`,
+                  // backgroundColor: "#383637" || `var(--${primaryColor})`,
+                  background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
+
                   display: "flex",
                   alignItems: "center",
                 }}
@@ -322,7 +323,7 @@ const NftDataPageTest = ({
               {checkOwner()}
             </div>
           </div>
-          <Accordion allowZeroExpanded /* allowMultipleExpanded*/>
+          <Accordion allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/>
             <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>Properties</AccordionItemButton>

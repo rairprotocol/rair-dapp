@@ -6,6 +6,7 @@ const NftDataCommonLink = ({currentUser, primaryColor, textColor}) => {
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedToken, setSelectedToken] = useState();
+  const [offer, setOffer] = useState({});
 
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
@@ -24,6 +25,27 @@ const NftDataCommonLink = ({currentUser, primaryColor, textColor}) => {
     setSelectedToken(tokenId);
   }, [product, contract, tokenId]);
 
+
+const getParticularOffer = useCallback( async () => {
+		let response = await (await fetch(`/api/contracts/${contract}/products/offers`, {
+            method: "GET",
+			headers: {
+				'x-rair-token': localStorage.token
+			}
+		})).json()
+		if (response.success) {
+			setOffer(response.products)
+		} else if (response?.message === 'jwt expired' || response?.message === 'jwt malformed') {
+			localStorage.removeItem('token');
+		} else {
+			console.log(response?.message);
+		}
+	}, [contract])
+
+
+
+console.log(offer, 'offer!!!!');
+
   function onSelect(id) {
     tokenData.forEach((p) => {
       if (p._id === id) {
@@ -40,7 +62,8 @@ const NftDataCommonLink = ({currentUser, primaryColor, textColor}) => {
 
   useEffect(() => {
     getAllProduct();
-  }, [getAllProduct]);
+    getParticularOffer();
+  }, [getAllProduct, getParticularOffer]);
 
   return (
     <NftDataPageTest
