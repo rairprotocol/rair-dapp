@@ -10,8 +10,8 @@ const execPromise = (command, options = {}) => new Promise((resolve, reject) => 
 });
 
 const getClients = (context) => ({
-  publisher: context.pubSub.duplicate(),
-  subscriber: context.pubSub.duplicate()
+  publisher: context.redis.client.duplicate(),
+  subscriber: context.redis.client.duplicate()
 });
 
 const unsubscribeClose = (subscriber, publisher = null) => {

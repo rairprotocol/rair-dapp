@@ -35,7 +35,7 @@ async function main() {
   mongoose.set('useFindAndModify', false);
 
   const app = express();
-  const redisClient = redis.createClient({ host: 'rair-redis', port: '6379' });
+  const redisClient = redis.createClient(config.redis.connection);
 
   const client = await MongoClient.connect(connectionString, { useNewUrlParser: true });
   const _db = client.db(client.s.options.dbName);
@@ -54,8 +54,13 @@ async function main() {
     },
     mongo: _db,
     config,
-    pubSub: redisClient
+    redis: {
+      client: redisClient
+    }
   };
+
+  // connect redisService
+  context.redis.redisService = require('./services/redis')(context);
 
   // run events listeners
   eventsInit(context);

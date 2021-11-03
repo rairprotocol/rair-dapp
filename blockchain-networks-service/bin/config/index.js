@@ -15,7 +15,9 @@ const {
   MORALIS_SERVER_TEST,
   MORALIS_SERVER_MAIN,
   MORALIS_API_KEY_TEST,
-  MORALIS_API_KEY_MAIN
+  MORALIS_API_KEY_MAIN,
+  REDIS_HOST,
+  REDIS_PORT
 } = process.env;
 
 module.exports = {
@@ -84,7 +86,7 @@ module.exports = {
     }
   },
   redis: {
-    connection: { host: 'rair-redis', port: '6379' }
+    connection: { host: REDIS_HOST, port: REDIS_PORT }
   }
 };
 

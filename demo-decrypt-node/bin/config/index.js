@@ -1,3 +1,8 @@
+const {
+  REDIS_HOST,
+  REDIS_PORT
+} = process.env;
+
 module.exports = {
   blockchain: {
     networks: {
@@ -10,6 +15,6 @@ module.exports = {
     }
   },
   redis: {
-    connection: { host: 'rair-redis', port: '6379' }
+    connection: { host: REDIS_HOST, port: REDIS_PORT }
   }
 }

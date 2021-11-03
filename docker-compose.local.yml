@@ -20,6 +20,8 @@ services:
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
       - "3000:3000"
       - "5000:5000"
@@ -51,6 +53,8 @@ services:
       MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
       - "5001:5001"
     depends_on:
@@ -77,8 +81,9 @@ services:
     image: redis
     command: redis-server --appendonly yes
     restart: always
-    volumes:
-      - ./demo-decrypt-node/dev/redis:/data
+#    volumes:
+#      - ./demo-decrypt-node/dev/redis:/data
+#      - ./demo-decrypt-node/dev/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - "6379:6379"
     networks:

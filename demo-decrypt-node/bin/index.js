@@ -22,7 +22,7 @@ async function main() {
   const adapter = new FileAsync('./db/store.json');
   const db = await low(adapter);
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
-  const client = redis.createClient({ host: 'rair-redis', port: '6379' });
+  const client = redis.createClient(config.redis.connection);
 
   for (const folder of mediaDirectories) {
     if (!fs.existsSync(folder)) {
@@ -95,7 +95,9 @@ async function main() {
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens')
     },
     config,
-    pubSub: client
+    redis: {
+      client
+    }
   };
 
   app.use(morgan('dev'));
