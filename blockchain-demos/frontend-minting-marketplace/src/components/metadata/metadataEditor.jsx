@@ -205,9 +205,9 @@ const MetadataEditor = (props) => {
 				setImage('');
 				return;
 			}
-			setTitle(metadata.name);
-			setDescription(metadata.description);
-			setImage(metadata.image);
+			setTitle(metadata.name ? metadata.name : '');
+			setDescription(metadata.description ? metadata.description : '');
+			setImage(metadata.image ? metadata.image : '');
 			setAttributes(Object.keys(metadata.attributes).map((item, index) => {
 				let itm = metadata.attributes[item];
 				if (itm.trait_type === undefined) {
@@ -446,7 +446,7 @@ const MetadataEditor = (props) => {
 					/>
 					<small> The token ID (using the internal numbering) will be appended at the end of the URI (Remember the slash at the end!) </small>
 					<br />
-						<small> Preview: <a href={`${contractURI}${internalFirstToken + tokenNumber}`}>{contractURI}<b>{internalFirstToken + tokenNumber}</b></a> </small>
+						<small> Preview: <a href={`${contractURI}${internalFirstToken + tokenNumber}`}>{contractURI}<b>{Number(internalFirstToken) + Number(tokenNumber)}</b></a> </small>
 						<br />
 						<button disabled={sendingContractMetadata} className='btn btn-royal-ice' onClick={async e => {
 							if (window.ethereum.chainId !== contractNetwork) {
@@ -456,7 +456,7 @@ const MetadataEditor = (props) => {
 							setSendingContractMetadata(true);
 							let instance = contractCreator(params.contract, erc721Abi);
 							try {
-								await instance.setBaseURI(productURI);
+								await instance.setBaseURI(contractURI);
 							} catch (err) {
 								swal.fire('Error', err?.data?.message);
 								console.log(err);
