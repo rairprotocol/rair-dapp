@@ -377,6 +377,8 @@ const MetadataEditor = (props) => {
 					if (metadataLink === '') {
 						swal.fire('No metadata URL found!')
 						return;
+					} else {
+						console.log('Found URI:', metadataLink);
 					}
 					swal.fire('Fetching Metadata from URL...');
 					let metadataData = await fetch(metadataLink).then(blob => blob.json());
@@ -405,7 +407,6 @@ const MetadataEditor = (props) => {
 					/>
 					<small> The token ID (using the product numbering) will be appended at the end of the URI </small>
 					<br />
-					{productURI && <>
 						<small> Preview: <a href={`${productURI}${tokenNumber}`}>{productURI}<b>{tokenNumber}</b></a> </small>
 						<br />
 						<button disabled={sendingProductMetadata} className='btn btn-royal-ice' onClick={async e => {
@@ -416,7 +417,7 @@ const MetadataEditor = (props) => {
 							setSendingProductMetadata(true);
 							let instance = contractCreator(params.contract, erc721Abi);
 							try {
-								await instance.setProductURI(params.product, productURI);
+									await instance.setProductURI(params.product, productURI);
 							} catch (err) {
 								swal.fire('Error', err?.data?.message);
 								console.log(err);
@@ -426,9 +427,8 @@ const MetadataEditor = (props) => {
 							setSendingProductMetadata(false);
 							swal.fire('Product Metadata Set!');
 						}} >
-							Set Product Metadata URI
+							{productURI ? 'Update' : 'Delete'} product Metadata URI
 						</button> 
-					</>}
 				</details>
 				
 				<details className='col-12 py-3'>
@@ -446,7 +446,6 @@ const MetadataEditor = (props) => {
 					/>
 					<small> The token ID (using the internal numbering) will be appended at the end of the URI (Remember the slash at the end!) </small>
 					<br />
-					{contractURI && <>
 						<small> Preview: <a href={`${contractURI}${internalFirstToken + tokenNumber}`}>{contractURI}<b>{internalFirstToken + tokenNumber}</b></a> </small>
 						<br />
 						<button disabled={sendingContractMetadata} className='btn btn-royal-ice' onClick={async e => {
@@ -457,7 +456,7 @@ const MetadataEditor = (props) => {
 							setSendingContractMetadata(true);
 							let instance = contractCreator(params.contract, erc721Abi);
 							try {
-								await instance.setContractURI(productURI);
+								await instance.setBaseURI(productURI);
 							} catch (err) {
 								swal.fire('Error', err?.data?.message);
 								console.log(err);
@@ -467,9 +466,8 @@ const MetadataEditor = (props) => {
 							setSendingContractMetadata(false);
 							swal.fire('Contract Metadata Set!');
 						}} >
-							Set Product Metadata URI
+							{contractURI ? 'Update' : 'Delete'} contract Metadata URI
 						</button> 
-					</>}
 				</details>
 
 			</div>
