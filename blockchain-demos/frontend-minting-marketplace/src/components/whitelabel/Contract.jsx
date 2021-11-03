@@ -106,7 +106,7 @@ const Contract = ({address}) => {
 														/>
 														<div className='row px-0 mx-0'>
 															<div className='col-12'>
-																{offer.soldCopies} of {offer.range[1]} tokens sold
+																{offer.soldCopies} of {Number(offer.range[1]) - Number(offer.range[0]) + 1} tokens sold
 															</div>
 															<LockRange
 																firstToken={offer.range[0]}
