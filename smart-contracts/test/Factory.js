@@ -490,13 +490,16 @@ describe("Token Factory", function () {
 			});
 
 			it ("Should set a new specific product URI", async function() {
+				await expect(await rair721Instance.setProductURI(0, 'ProductURI/')).to.emit(rair721Instance, "ProductURIChanged").withArgs(0, 'ProductURI/');
 				await expect(await rair721Instance.setProductURI(1, 'CCCCCCCCCCCCCCCCCCCCCCCC/')).to.emit(rair721Instance, "ProductURIChanged").withArgs(1, 'CCCCCCCCCCCCCCCCCCCCCCCC/');
 			});
 
 			it ("Should get the token URIs", async function() {
+				// Unique URI has more priority than Product URI
 				await expect(await rair721Instance.tokenURI(0)).to.equal("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/");
 				await expect(await rair721Instance.tokenURI(1)).to.equal("BBBBBBBBB/");
-				await expect(await rair721Instance.tokenURI(2)).to.equal("CCCCCCCCCCCCCCCCCCCCCCCC/0"); // Token #0 in this product!
+				// Token #0 in this product!
+				await expect(await rair721Instance.tokenURI(2)).to.equal("CCCCCCCCCCCCCCCCCCCCCCCC/0"); 
 				await expect(await rair721Instance.tokenURI(12)).to.equal("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD/12");
 			});
 
@@ -532,6 +535,16 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.freezeMetadata(0))
 					.to.emit(rair721Instance, "PermanentURI").withArgs('R/', 0);
 			})
+
+			it ("Should delete unique URI and fallback to Product URI", async function() {
+				await expect(await rair721Instance.setUniqueURI(1, '')).to.emit(rair721Instance, "TokenURIChanged").withArgs(1, '');
+				await expect(await rair721Instance.tokenURI(1)).to.equal("ProductURI/1");
+			});
+
+			it ("Should delete product URI and fallback to Contract URI", async function() {
+				await expect(await rair721Instance.setProductURI(0, '')).to.emit(rair721Instance, "ProductURIChanged").withArgs(0, '');
+				await expect(await rair721Instance.tokenURI(1)).to.equal("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD/1");
+			});
 		});
 
 		describe('Token Operations', function() {
