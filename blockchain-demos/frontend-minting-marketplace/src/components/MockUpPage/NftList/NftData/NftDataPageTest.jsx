@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Accordion,
@@ -31,7 +31,13 @@ const NftDataPageTest = ({
   contract,
   onSelect,
 }) => {
-  // console.log(contract, 'contract');
+  const [playing, setPlaying] = useState(false);
+
+  const handlePlaying = () => {
+    setPlaying(prev => !prev);
+  }
+
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -192,15 +198,15 @@ const NftDataPageTest = ({
               {selectedData.name}
             </h2>
             <div className="btn-share">
-              <button 
-              style={{
-                color: `var(--${textColor})`,
+              <button
+                style={{
+                  color: `var(--${textColor})`,
                 }}
-                >Share</button>
+              >Share</button>
             </div>
           </div>
           <div className="nft-collection">
-            {selectedData.animation_url ? (
+            {selectedData?.animation_url ? (
               <div
                 style={{
                   width: "600px",
@@ -212,10 +218,12 @@ const NftDataPageTest = ({
                   width={"100%"}
                   height={"auto"}
                   controls
-                  url={selectedData.animation_url}
+                  playing={playing}
+                  onReady={handlePlaying}
+                  url={selectedData?.animation_url}
                   light={
                     selectedData.image
-                      ? selectedData.image
+                      ? selectedData?.image
                       : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
                   }
                   loop={false}
@@ -246,7 +254,7 @@ const NftDataPageTest = ({
                   width: "228px",
                   height: "48px",
                   // backgroundColor: `var(--${primaryColor })`,
-                  backgroundColor: "#383637" || `var(--${primaryColor })` ,
+                  backgroundColor: "#383637" || `var(--${primaryColor})`,
                   display: "flex",
                   alignItems: "center",
                 }}
@@ -323,52 +331,52 @@ const NftDataPageTest = ({
                 <div className="col-12 row mx-0 box--properties">
                   {selectedData
                     ? Object.keys(selectedData).length &&
-                      selectedData?.attributes.map((item, index) => {
-                        if (item.trait_type === "External URL") {
-                          return (
-                            <div
-                              key={index}
-                              className="col-4 my-2 p-1 custom-desc-to-offer"
-                              style={{
-                                color: textColor,
-                                textAlign: "center",
-                              }}
-                            >
-                              <span>{item?.trait_type}:</span>
-                              <br />
-                              <a
-                                style={{ color: textColor }}
-                                href={item?.value}
-                              >
-                                {item?.value}
-                              </a>
-                            </div>
-                          );
-                        }
-                        const percent = randomInteger(1, 40);
+                    selectedData?.attributes.map((item, index) => {
+                      if (item.trait_type === "External URL") {
                         return (
                           <div
                             key={index}
                             className="col-4 my-2 p-1 custom-desc-to-offer"
+                            style={{
+                              color: textColor,
+                              textAlign: "center",
+                            }}
                           >
-                            <div className="custom-desc-item">
-                              <span>{item?.trait_type}:</span>
-                              <span style={{ color: textColor }}>
-                                {item?.value}
-                              </span>
-                            </div>
-                            <div className="custom-offer-percents">
-                              <span
-                                style={{
-                                  color: percentToRGB(percent),
-                                }}
-                              >
-                                {percent}%
-                              </span>
-                            </div>
+                            <span>{item?.trait_type}:</span>
+                            <br />
+                            <a
+                              style={{ color: textColor }}
+                              href={item?.value}
+                            >
+                              {item?.value}
+                            </a>
                           </div>
                         );
-                      })
+                      }
+                      const percent = randomInteger(1, 40);
+                      return (
+                        <div
+                          key={index}
+                          className="col-4 my-2 p-1 custom-desc-to-offer"
+                        >
+                          <div className="custom-desc-item">
+                            <span>{item?.trait_type}:</span>
+                            <span style={{ color: textColor }}>
+                              {item?.value}
+                            </span>
+                          </div>
+                          <div className="custom-offer-percents">
+                            <span
+                              style={{
+                                color: percentToRGB(percent),
+                              }}
+                            >
+                              {percent}%
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })
                     : null}
                 </div>
               </AccordionItemPanel>
@@ -538,6 +546,7 @@ const NftDataPageTest = ({
                   token={p.token}
                   handleClickToken={handleClickToken}
                   setSelectedToken={setSelectedToken}
+                  selectedToken={selectedToken}
                 />
               ))}
             </Carousel>

@@ -657,3 +657,26 @@ margin-left: -36px;
   z-index: 2;
   background: none !important;
 }
+
+/* .activeClassToken {
+  background: #cdcdcd !important;
+  border-radius: 16px !important;
+  border: none;
+} */
+
+.activeClassToken img {
+  border-radius: 16px;
+}
+
+.activeClassBg {
+  position: absolute;
+  width: 291px;
+  border-radius: 16px;
+  height: 291px;
+  background-color: rgba(34, 32, 33, 0.5);
+  display: 
+  flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}

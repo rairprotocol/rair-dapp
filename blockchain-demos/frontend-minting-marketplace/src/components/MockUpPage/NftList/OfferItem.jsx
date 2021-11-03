@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useParams } from "react-router";
 
 export default function OfferItem({
   handleClickToken,
@@ -6,7 +7,10 @@ export default function OfferItem({
   index,
   metadata,
   setSelectedToken,
+  selectedToken,
 }) {
+
+
   const select = () => {
     setSelectedToken(token)
     handleClickToken(token)
@@ -17,6 +21,10 @@ export default function OfferItem({
         border: "none",
         background: "none",
         marginTop: "1rem",
+        overflow: "hidden",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
       }}
       key={index}
       onClick={() => {
@@ -24,7 +32,13 @@ export default function OfferItem({
         // handleClickToken(token)
         //  setSelected(metadata)}
       }}
+      className={selectedToken === token ? "activeClassToken" : ""}
     >
+      {
+        selectedToken === token && <div className="activeClassBg">
+          Chose
+        </div>
+      }
       <img
         style={{
           width: "291px",

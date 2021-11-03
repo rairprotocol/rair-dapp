@@ -22,20 +22,23 @@ const NftItem = ({
   const history = useHistory();
   const [metaDataProducts, setMetaDataProducts] = useState();
   const [playing, setPlaying] = useState(false);
+  const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
 
   const getProductAsync = useCallback(async () => {
-    const responseProductMetadata = await (
-      await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
-        method: "GET",
-      })
-    ).json();
-    if (responseProductMetadata.result.length > 0) {
-      setMetaDataProducts(responseProductMetadata.result[0]);
-    }
+    // if (pict === defaultImg) {
+      const responseProductMetadata = await (
+        await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
+          method: "GET",
+        })
+      ).json();
+      if (responseProductMetadata.result.length > 0) {
+        setMetaDataProducts(responseProductMetadata.result[0]);
+      }
+    // }
   }, [collectionIndexInContract, contractName]);
 
   useEffect(() => {
@@ -97,7 +100,7 @@ const NftItem = ({
         }}
       >
         <div
-          onClick={() => {if(!metaDataProducts?.metadata?.animation_url) RedirectToMockUp()}}
+          onClick={() => { if (!metaDataProducts?.metadata?.animation_url) RedirectToMockUp() }}
           className="col-12 rounded"
           style={{
             top: 0,
