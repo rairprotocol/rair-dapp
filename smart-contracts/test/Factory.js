@@ -83,7 +83,7 @@ describe("Token Factory", function () {
 				expect(await factoryInstance.hasRole(await factoryInstance.OWNER(), owner.address)).to.equal(true);
 				expect(await factoryInstance.hasRole(await factoryInstance.ERC777(), erc777instance.address)).to.equal(true);
 				expect(await factoryInstance.getRoleAdmin(await factoryInstance.ERC777())).to.equal(await factoryInstance.OWNER());
-				expect(await factoryInstance.getRoleAdmin(await factoryInstance.OWNER())).to.equal(await factoryInstance.DEFAULT_ADMIN_ROLE());
+				expect(await factoryInstance.getRoleAdmin(await factoryInstance.OWNER())).to.equal(await factoryInstance.OWNER());
 			});
 
 			it ("Only approved ERC777s can send tokens", async function() {
@@ -490,14 +490,60 @@ describe("Token Factory", function () {
 			});
 
 			it ("Should set a new specific product URI", async function() {
+				await expect(await rair721Instance.setProductURI(0, 'ProductURI/')).to.emit(rair721Instance, "ProductURIChanged").withArgs(0, 'ProductURI/');
 				await expect(await rair721Instance.setProductURI(1, 'CCCCCCCCCCCCCCCCCCCCCCCC/')).to.emit(rair721Instance, "ProductURIChanged").withArgs(1, 'CCCCCCCCCCCCCCCCCCCCCCCC/');
 			});
 
 			it ("Should get the token URIs", async function() {
+				// Unique URI has more priority than Product URI
 				await expect(await rair721Instance.tokenURI(0)).to.equal("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/");
 				await expect(await rair721Instance.tokenURI(1)).to.equal("BBBBBBBBB/");
-				await expect(await rair721Instance.tokenURI(2)).to.equal("CCCCCCCCCCCCCCCCCCCCCCCC/0"); // Token #0 in this product!
+				// Token #0 in this product!
+				await expect(await rair721Instance.tokenURI(2)).to.equal("CCCCCCCCCCCCCCCCCCCCCCCC/0"); 
 				await expect(await rair721Instance.tokenURI(12)).to.equal("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD/12");
+			});
+
+			it ("Should update unique URIs in batches", async function() {
+				await expect(await rair721Instance.setUniqueURIBatch(
+					[0, 1, 2, 12],
+					['R/', 'A/', 'I/','R/']
+				))
+				.to.emit(rair721Instance, "TokenURIChanged").withArgs(0, 'R/')
+				.to.emit(rair721Instance, "TokenURIChanged").withArgs(1, 'A/')
+				.to.emit(rair721Instance, "TokenURIChanged").withArgs(2, 'I/')
+				.to.emit(rair721Instance, "TokenURIChanged").withArgs(12, 'R/');
+				await expect(await rair721Instance.tokenURI(0)).to.equal("R/");
+				await expect(await rair721Instance.tokenURI(1)).to.equal("A/");
+				await expect(await rair721Instance.tokenURI(2)).to.equal("I/");
+				await expect(await rair721Instance.tokenURI(12)).to.equal("R/");
+			});
+
+			it ("Should start with an empty contract URI", async function() {
+				await expect(await rair721Instance.contractURI()).to.equal("");
+			});
+
+			it ("Should update the contract URI", async function() {
+				await expect(await rair721Instance.setContractURI("dev.rair.tech/Metadata"))
+					.to.emit(rair721Instance, "ContractURIChanged").withArgs("dev.rair.tech/Metadata");
+			});
+
+			it ("Should have the updated metadata URI", async function () {
+				await expect(await rair721Instance.contractURI()).to.equal("dev.rair.tech/Metadata");
+			})
+
+			it ("Should emit the event OpenSea wants to freeze Metadata", async function () {
+				await expect(await rair721Instance.freezeMetadata(0))
+					.to.emit(rair721Instance, "PermanentURI").withArgs('R/', 0);
+			})
+
+			it ("Should delete unique URI and fallback to Product URI", async function() {
+				await expect(await rair721Instance.setUniqueURI(1, '')).to.emit(rair721Instance, "TokenURIChanged").withArgs(1, '');
+				await expect(await rair721Instance.tokenURI(1)).to.equal("ProductURI/1");
+			});
+
+			it ("Should delete product URI and fallback to Contract URI", async function() {
+				await expect(await rair721Instance.setProductURI(0, '')).to.emit(rair721Instance, "ProductURIChanged").withArgs(0, '');
+				await expect(await rair721Instance.tokenURI(1)).to.equal("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD/1");
 			});
 		});
 
