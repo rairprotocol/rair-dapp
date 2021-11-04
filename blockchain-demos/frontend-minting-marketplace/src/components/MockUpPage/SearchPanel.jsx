@@ -123,7 +123,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           <FilteringBlock primaryColor={primaryColor} textColor={textColor} />
         </div>
         <TabPanel>
-          <NftList primaryColor={primaryColor} textColor={textColor} handleClick={handleClick} data={data} />
+          <NftList titleSearch={titleSearch} primaryColor={primaryColor} textColor={textColor} handleClick={handleClick} data={data} />
         </TabPanel>
         <TabPanel>
           <VideoList mediaList={mediaList} titleSearch={titleSearch} />

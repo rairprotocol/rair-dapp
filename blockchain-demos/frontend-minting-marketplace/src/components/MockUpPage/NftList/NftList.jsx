@@ -4,12 +4,19 @@ import secondPict from '../assets/Graphics-WEB-2021-02.png'
 import thirdPict from '../assets/Graphics-WEB-2021-03.png'
 import NftItem from './NftItem'
 
-const NftList = ({data, primaryColor, textColor}) => {
+const NftList = ({data, primaryColor, textColor, titleSearch}) => {
+    const filteredData = data && data.filter(
+        item => {
+            return (
+                item.name.toLowerCase().includes(titleSearch.toLowerCase())     
+            )
+        }
+    )
 
     return (
         <div className={'list-button-wrapper'}>
             {
-                data?.map((pict, index) => {
+                filteredData && filteredData.map((pict, index) => {
                     if (pict.cover !== 'none') {
                         return (<NftItem onClick={() => console.log('nftList', data)}
                             key={`${pict.id}-${pict.productId}`}

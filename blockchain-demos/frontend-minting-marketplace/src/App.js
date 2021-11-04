@@ -237,7 +237,7 @@ function App({ sentryHistory }) {
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
-				{!loginDone && <Redirect to="/all" />}
+				{/* {!loginDone && <Redirect to="/all" />} */}
 				<div
 					style={{
 						...backgroundImageEffect,
