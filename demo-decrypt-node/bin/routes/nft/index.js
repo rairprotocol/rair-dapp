@@ -19,33 +19,30 @@ module.exports = context => {
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product } = req.body;
+      const { user } = req;
       const prod = Number(product);
-      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist'];
+      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist', 'animation_url'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
       const tokens = [];
-      const re = new RegExp(/^0x\w{40}:\w+$/);
       const sanitizedContract = contract.toLowerCase();
 
-      const [foundContract] = await context.db.Contract.aggregate([
-        { $match: { contractAddress: sanitizedContract } },
-        { $lookup: { from: 'User', localField: 'user', foreignField: 'publicAddress', as: 'user' } },
-        { $unwind: '$user' },
-        { $project: { title: 1, 'user.adminNFT': 1 } },
-      ]);
+      if (!user.adminRights) {
+        return res.status(403).send({ success: false, message: 'Not have admin rights.' });
+      }
+
+      const foundContract = await context.db.Contract.findOne({ contractAddress: sanitizedContract });
 
       if (_.isEmpty(foundContract)) {
-        return res.status(404).send({ success: false, message: 'Contract or User not found.' });
+        return res.status(404).send({ success: false, message: 'Contract not found.' });
       }
 
-      const adminNFT = _.get(foundContract, 'user.adminNFT', null);
-
-      if (_.isEmpty(adminNFT) || !re.test(adminNFT)) {
-        return res.status(404).send({ success: false, message: 'Admin token not found or invalid.' });
+      if (user.publicAddress !== foundContract.user) {
+        return res.status(403).send({ success: false, message: 'This contract not belong to you.' });
       }
 
-      const [contractAddress, adminToken] = adminNFT.split(':');
+      const [contractAddress, adminToken] = user.adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
         { $match: { contract: sanitizedContract, product: prod } },
@@ -157,6 +154,7 @@ module.exports = context => {
                       artist: record.artist,
                       external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                       image: record.image,
+                      animation_url: record.animation_url,
                       attributes: attributes
                     }
                   });

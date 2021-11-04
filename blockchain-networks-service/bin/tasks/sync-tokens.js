@@ -3,6 +3,7 @@ const _ = require('lodash');
 const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
+const { addMetadata, addPin } = require('../integrations/ipfsService')();
 
 const lockLifetime = 1000 * 60 * 5;
 
@@ -23,10 +24,10 @@ module.exports = (context) => {
         abi
       };
 
-      const events = await Moralis.Web3API.native.getContractEvents(options);
-
       // Initialize moralis instances
       Moralis.start({ serverUrl, appId });
+
+      const events = await Moralis.Web3API.native.getContractEvents(options);
 
       await Promise.all(_.map(events.result, async tokenData => {
         const {
@@ -108,16 +109,30 @@ module.exports = (context) => {
               ++productsForUpdate[productIndex].soldCopies;
             }
 
+            const foundToken = await context.db.MintedToken.findOne({
+              contract: contractAddress,
+              offerPool: catalogIndex,
+              token: tokenIndex
+            });
+
+            const update = {
+              ownerAddress,
+              offer: rangeIndex,
+              uniqueIndexInContract,
+              authenticityLink,
+              isMinted: true
+            }
+
+            if (!_.isEmpty(foundToken) && !_.isEmpty(foundToken.metadata) && foundToken.metadata.name !== 'none' && foundToken.metadataURI === 'none') {
+              const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
+              await addPin(CID, `metadata_${ foundToken.metadata.name }`);
+              update.metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
+            }
+
             tokensForSave.push({
               updateOne: {
                 filter: { contract: contractAddress, offerPool: catalogIndex, token: tokenIndex },
-                update: {
-                  ownerAddress,
-                  offer: rangeIndex,
-                  uniqueIndexInContract,
-                  authenticityLink,
-                  isMinted: true
-                },
+                update,
                 upsert: true,
                 setDefaultsOnInsert: true
               }

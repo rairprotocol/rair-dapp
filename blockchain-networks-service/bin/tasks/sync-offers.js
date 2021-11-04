@@ -11,6 +11,7 @@ module.exports = (context) => {
     try {
       const { network, name } = task.attrs.data;
       const offersForSave = [];
+      const offerPoolsForUpdate = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AppendedRange');
@@ -37,6 +38,19 @@ module.exports = (context) => {
           price,
           name
         } = offerPool.data;
+        const contract = contractAddress.toLowerCase();
+        const marketplaceCatalogIndex = Number(offerIndex);
+        const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract === contract && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
+
+        if (offerPoolIndex < 0) {
+          offerPoolsForUpdate.push({
+            contract,
+            marketplaceCatalogIndex,
+            rangeNumber: 1
+          });
+        } else {
+          ++offerPoolsForUpdate[offerPoolIndex].rangeNumber;
+        }
 
         offersForSave.push({
           offerIndex: rangeIndex,
@@ -55,7 +69,20 @@ module.exports = (context) => {
         } catch (e) {}
       }
 
-      // TODO: Have to be updated the number of offers per offerPooll
+      if (!_.isEmpty(offerPoolsForUpdate)) {
+        try {
+          const resultOfferPools = _.map(offerPoolsForUpdate, of => ({
+            updateOne: {
+              filter: { contract: of.contract, marketplaceCatalogIndex: of.marketplaceCatalogIndex },
+              update: {
+                rangeNumber: of.rangeNumber
+              }
+            }
+          }));
+
+          await context.db.OfferPool.bulkWrite(resultOfferPools, { ordered: false });
+        } catch (e) {}
+      }
 
       return done();
     } catch (e) {

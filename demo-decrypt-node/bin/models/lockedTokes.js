@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const LockedTokens = new Schema({
+  lockIndex: { type: Number, required: true },
   contract: { type: String, lowercase: true, required: true },
   product: { type: Number, required: true },
   range: { type: [Number], required: true },

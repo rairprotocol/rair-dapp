@@ -49,6 +49,12 @@ module.exports = (context) => {
           contractAddress: token,
           blockchain: networkData.network
         });
+
+        // Listen to this contract's events
+        await Moralis.Cloud.run(networkData.watchFunction, {
+          address: token.toLowerCase(),
+          'sync_historical': true
+        });
       }))
 
       if (!_.isEmpty(contractsForSave)) {

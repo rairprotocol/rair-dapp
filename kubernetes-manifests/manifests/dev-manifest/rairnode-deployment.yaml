@@ -36,15 +36,15 @@ spec:
             - name: PRODUCTION
               value: "true"
             - name: MONGO_URI
-              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/RairDev1?retryWrites=true&w=majority"
+              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority"
             - name: MONGO_URI_LOCAL
               value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
             - name: INFURA_PROJECT_ID
               value: "5c77a63a0aa74452a7c77a64fe9a90d5"
             - name: ADMIN_NETWORK
-              value: mumbai
+              value: polygon
             - name: ADMIN_CONTRACT
-              value: "0x0758C7d8B14cc586d115e7Bc187AbD31bE2d35FD"
+              value: "0xe5a9efb29b82517166fcef23722452543b5f380f"
             - name: SERVICE_HOST
               value: "dev.rair.tech"
             - name: PINATA_SECRET
@@ -60,13 +60,13 @@ spec:
             - name: default_product_cover
               value: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
             - name: matic_testnet_rpc
-              value: "https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://polygon-mumbai.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: matic_mainnet_rpc
-              value: "https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://polygon-mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: ethereum_mainnet_rpc
-              value: "https://mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: ethereum_testnet_goerli_rpc
-              value: "https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b"
+              value: "https://goerli.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: binance_testnet_rpc
               value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
             - name: binance_mainnet_rpc

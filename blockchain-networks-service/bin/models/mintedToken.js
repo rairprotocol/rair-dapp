@@ -8,6 +8,7 @@ const Metadata = new Schema({
   artist: { type: String, default: 'none' },
   external_url: { type: String, default: 'none' },
   image: { type: String },
+  animation_url: { type: String },
   attributes: { type: [{
       trait_type: String,
       value: String

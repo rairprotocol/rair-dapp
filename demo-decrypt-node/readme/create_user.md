@@ -44,7 +44,6 @@ Returns if created successfully
     "email": null,
     "firstName": null,
     "lastName": null,
-    "key": "zw5Ne122KxV2CSr_4HYKu",
     "publicAddress": "some public address",
     "_id": "60a3cd21abe49f001d168767"
   }

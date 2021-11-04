@@ -5,8 +5,8 @@ const log = require('../utils/logger')(module);
 module.exports = async (context) => {
   const db = context.mongo;
 
-  // remove all old sync contracts tasks
-  await context.db.Task.deleteMany({ name: 'sync contracts' })
+  // remove all old sync and sync-contracts tasks
+  await context.db.Task.deleteMany({ name: { $in: ['sync', 'sync contracts'] } })
 
   // Start a new instance of agenda
   const agenda = new Agenda({
@@ -81,13 +81,13 @@ module.exports = async (context) => {
             .toDate())
           .save();
         break;
-      // case 'sync tokens':
-      //   await agenda.create('sync locks', data)
-      //     .schedule(moment()
-      //       .utc()
-      //       .toDate())
-      //     .save();
-      //   break;
+      case 'sync tokens':
+        await agenda.create('sync locks', data)
+          .schedule(moment()
+            .utc()
+            .toDate())
+          .save();
+        break;
       default:
         break;
     }
@@ -96,7 +96,7 @@ module.exports = async (context) => {
   });
 
   agenda.on('fail', (err) => {
-    log.error(`Agenda > Fail: ${ err }`);
+    log.error(`Agenda > Fail: ${ JSON.stringify(err) }`);
   });
 
 
