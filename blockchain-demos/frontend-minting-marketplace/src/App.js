@@ -172,10 +172,7 @@ function App({ sentryHistory }) {
 			setLoginDone(true);
 		} catch (err) {
 			console.log("Error", err)
-			if (err.code) {
-				// setErrorAuth(err.error);
-				setStartedLogin(false);
-			}
+			setStartedLogin(false);
 		}
 	};
 
@@ -240,7 +237,7 @@ function App({ sentryHistory }) {
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
-				{!token && <Redirect to="/all" />}
+				{!loginDone && <Redirect to="/all" />}
 				<div
 					style={{
 						...backgroundImageEffect,
@@ -321,7 +318,7 @@ function App({ sentryHistory }) {
 										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
-									{loginDone && token && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 									<SentryRoute path='/tokens/:contract/:product/:tokenId'>
 										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
