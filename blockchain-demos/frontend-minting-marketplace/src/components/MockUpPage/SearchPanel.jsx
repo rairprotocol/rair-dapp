@@ -87,9 +87,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           <Tab
             style={{
               backgroundColor: `var(--${primaryColor})`,
-              // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
               color: `var(--${textColor})`,
             }}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"}`}
             className="category-button-nft category-button"
           >
             NFT
@@ -98,9 +98,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           <Tab
             style={{
               backgroundColor: `var(--${primaryColor})`,
-              // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
               color: `var(--${textColor})`,
             }}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"}`}
             className="category-button-videos category-button"
           >
             Videos

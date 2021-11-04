@@ -433,6 +433,7 @@ i.fas-custom {
   height: 32px;
   border-bottom: none;
   padding: 5px 0;
+  cursor: pointer;
 }
 .react-tabs__tab.react-tabs__tab--selected{
   /* background-color: var(--charcoal-80); */
@@ -448,10 +449,17 @@ i.fas-custom {
 margin-left: -36px;
 }
 
-.react-tabs__tab--selected{
+.react-tabs__tab--selected, .search-tab-selected-dark{
   background-color: var(--charcoal-80) !important;
   z-index: 0;
 }
+
+.search-tab-selected-default {
+  background-color: #c0c0c0 !important;
+  color: rgb(41, 41, 41) !important;
+  z-index: 0;
+}
+
 .styles-module_carousel-arrow__26sRw{
   display: none;
 }
