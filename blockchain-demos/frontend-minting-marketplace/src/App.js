@@ -37,6 +37,7 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 
 import Deploy from './components/creatorStudio/Deploy.jsx';
 import Contracts from './components/creatorStudio/Contracts.jsx';
+import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
@@ -247,6 +248,9 @@ function App({sentryHistory}) {
 								{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
 								{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 								{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ContractDetails} />}
+
 								<SentryRoute path='/all'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>

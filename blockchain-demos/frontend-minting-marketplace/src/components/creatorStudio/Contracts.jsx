@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import chainData from '../../utils/blockchainData.js'
 import { rFetch } from '../../utils/rFetch.js';
-
+import { NavLink } from 'react-router-dom';
 import NavigatorFactory from './NavigatorFactory.jsx';
 
 // React Redux types
@@ -36,13 +36,14 @@ const Contracts = () => {
 		setDocumentTitle(`Contracts`);
 	}, []);
 
+
 	return <NavigatorFactory>
 		{contractArray.length ? contractArray.map((item, index) => {
-			return <div key={index} style={{position: 'relative' }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
+			return <NavLink to={`/creator/contract/${item.address}/createCollection`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
 				{item?.chainId && <img alt={chainData[item.chainId].name} src={chainData[item.chainId].image} style={{maxHeight: '1.5rem', maxWidth: '1.5rem'}} />}
 				{item.name}
 				<i className='fas fa-arrow-right' style={{position: 'absolute', right: '10px', top: '10px', color: 'var(--bubblegum)'}}/>
-			</div>
+			</NavLink>
 		}) : 'Fetching data...'}
 	</NavigatorFactory>
 }

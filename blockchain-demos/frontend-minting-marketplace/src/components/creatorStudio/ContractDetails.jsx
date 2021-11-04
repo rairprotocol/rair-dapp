@@ -1,0 +1,129 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import chainData from '../../utils/blockchainData.js'
+import InputField from '../common/InputField.jsx';
+import InputSelect from '../common/InputSelect.jsx';
+import { rFetch } from '../../utils/rFetch.js';
+import Swal from 'sweetalert2';
+import { utils } from 'ethers';
+import { useParams, useHistory } from 'react-router-dom';
+import {erc721Abi} from '../../contracts';
+
+import FixedBottomNavigation from './FixedBottomNavigation.jsx';
+import NavigatorContract from './NavigatorContract.jsx';
+
+const ContractDetails = () => {
+
+	const [collectionName, setCollectionName] = useState('');
+	const [collectionLength, setCollectionLength] = useState(0);
+
+	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
+	const { programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
+	const { address } = useParams();
+
+	const [data, setData] = useState();
+
+	const history = useHistory();
+
+	const getContractData = useCallback(async () => {
+		if (!address) {
+			return;
+		}
+		let response2 = await rFetch(`/api/contracts/${address}`);
+		let response3 = await rFetch(`/api/contracts/${address}/products`);
+		if (response3.success) {
+			response2.contract.products = response3.products
+		}
+		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
+		// Special case where a product exists but it has no offers
+		if (response4.success) {
+			response4.products.forEach(item => {
+				response2.contract.products.forEach(existingItem => {
+					if (item._id.toString() === existingItem._id.toString()) {
+						existingItem.offers = item.offers;
+					}
+				})
+			})
+		}
+		setData(response2.contract);
+	}, [address])
+
+	useEffect(() => {
+		getContractData();
+	}, [getContractData])
+
+	console.log(data);
+
+	let onMyChain = window.ethereum ?
+		chainData[data?.blockchain]?.chainId === window.ethereum.chainId
+		:
+		chainData[data?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId;
+
+	return <div className='row px-0 mx-0'>
+		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} >
+			<div className='col-8 p-2'>
+				<InputField
+					getter={collectionName}
+					setter={setCollectionName}
+					placeholder='Name your collection'
+					label="New Collection name"
+					customClass='rounded-rair form-control'
+					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+					labelClass='text-start w-100'
+					/>
+			</div>
+			<div className='col-4 p-2'>
+				<InputField
+					getter={collectionLength}
+					setter={setCollectionLength}
+					placeholder='Length'
+					label="Length"
+					type='number'
+					min={0}
+					customClass='rounded-rair form-control'
+					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+					labelClass='text-start w-100'
+					/>
+			</div>
+			<div className='col-12 p-3 mt-5 rounded-rair' style={{border: '1.3px dashed var(--charcoal-80)'}}>
+				Contract Information: <br />
+				<ul className='col-12 mt-3 px-4 text-start'>
+					<li className='row'>
+						<span className='col-12 py-1 text-start'>
+							Total Supply: <b>0</b>
+						</span>
+						<span className='col-12 py-1 text-start'>
+							Collections Created: <b>{data?.products?.length}</b>
+						</span>
+						<span className='col-12 py-1 text-start'>
+							Current Balance: <b>0</b>
+						</span>
+					</li>
+				</ul>
+			</div>
+		</NavigatorContract> : 'Fetching data...'}
+		<FixedBottomNavigation
+			backwardFunction={() => {
+				history.goBack()
+			}}
+			forwardFunction={collectionLength > 0 && collectionName !== '' ? async () => {
+				if (!onMyChain) {
+					if (window.ethereum) {
+						await window.ethereum.request({
+							method: 'wallet_switchEthereumChain',
+							params: [{ chainId: chainData[data.blockchain].chainId }],
+						});
+					} else {
+						// Code for suresh goes here
+					}
+				} else {
+					let instance = await contractCreator(data.contractAddress, erc721Abi);
+					await instance.createProduct(collectionName, collectionLength);
+				}
+			} : undefined}
+			forwardLabel={(data && !onMyChain) ? `Switch to ${chainData[data?.blockchain].name}` : undefined}
+		/>
+	</div>
+}
+
+export default ContractDetails;
