@@ -153,13 +153,16 @@ function App({ sentryHistory }) {
 
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
+				
+				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
+				console.log(token, "token");
 				localStorage.setItem('token', token);
 			}
 
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
+				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
 				localStorage.setItem('token', token);
@@ -196,6 +199,7 @@ function App({ sentryHistory }) {
 		const token = localStorage.getItem('token');
 		if (!isTokenValid(token)) {
 			connectUserData()
+			dispatch({ type: authTypes.GET_TOKEN_START });
 			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
 	}, [token])
@@ -205,10 +209,9 @@ function App({ sentryHistory }) {
 		let timeout;
 		if (token) {
 			const decoded = jsonwebtoken.decode(token);
-			// debugger
+			
 			if (decoded?.exp) {
 
-				console.log(decoded.exp)
 				timeout = setTimeout(() => {
 					connectUserData()
 				}, decoded.exp * 1000)
@@ -224,6 +227,7 @@ function App({ sentryHistory }) {
 	useEffect(() => {
 		if (localStorage.token && isTokenValid(localStorage.token)) {
 			connectUserData()
+			dispatch({ type: authTypes.GET_TOKEN_START });
 			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
 	}, [])
@@ -236,6 +240,7 @@ function App({ sentryHistory }) {
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
+				{!token && <Redirect to="/all" />}
 				<div
 					style={{
 						...backgroundImageEffect,
@@ -295,7 +300,7 @@ function App({ sentryHistory }) {
 						</div>
 						<div className='col'>
 							<div className='col-12' style={{ height: '10vh' }}>
-								{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
+								{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
 								<Switch>
 									<SentryRoute path='/admin' component={BlockChainSwitcher} />
 								</Switch>
@@ -316,7 +321,7 @@ function App({ sentryHistory }) {
 										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
-									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+									{loginDone && token && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 									<SentryRoute path='/tokens/:contract/:product/:tokenId'>
 										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
