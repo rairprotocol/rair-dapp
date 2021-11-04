@@ -43,7 +43,7 @@ const CreateProduct = ({address, blockchain}) => {
 	const {contractCreator, programmaticProvider} = useSelector(store => store.contractStore);
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
-	let onMyChain = window.ethereum ? chainData[blockchain].chainId === window.ethereum.chainId : chainData[blockchain].chainId === programmaticProvider.provider._network.chainId;
+	let onMyChain = window.ethereum ? chainData[blockchain]?.chainId === window.ethereum.chainId : chainData[blockchain]?.chainId === programmaticProvider.provider._network.chainId;
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
