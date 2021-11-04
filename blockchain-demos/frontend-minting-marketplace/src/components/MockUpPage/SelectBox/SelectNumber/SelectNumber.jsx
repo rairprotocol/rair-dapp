@@ -36,7 +36,7 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
         <div ref={numberRef} className="select-number-container">
             <div onClick={handleIsOpen} className="select-field" style={{background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}` }}>
                 <div className="number-item">
-                    {selectedItem ? selectedItem : selectedToken}
+                    {selectedToken}
                 </div>
                 <div className="select-number-arrow">
                     <i className={`fas fa-chevron-${isOpen ? "up" : "down"}`}></i>

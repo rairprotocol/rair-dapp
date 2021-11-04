@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import {
   Accordion,
@@ -30,13 +31,13 @@ const NftDataPageTest = ({
   setSelectedToken,
   contract,
   onSelect,
+  productsFromOffer,
 }) => {
+  const history = useHistory();
   const [playing, setPlaying] = useState(false);
-
   const handlePlaying = () => {
-    setPlaying(prev => !prev);
-  }
-
+    setPlaying((prev) => !prev);
+  };
 
   const responsive = {
     superLargeDesktop: {
@@ -143,6 +144,10 @@ const NftDataPageTest = ({
         </button>
       );
   }
+
+  // function openVideo() {
+  //   history.push(`/watch/${productsFromOffer[selectedToken]._id}/${productsFromOffer[selectedToken].mainManifest}`);
+  // }
   //  const closeModal = ( ) => {
   //    history.push(`/all`)
   //  }
@@ -154,6 +159,34 @@ const NftDataPageTest = ({
   // }
   // console.log('@@@', data?.tokens)
 
+  // console.log(productsFromOffer, "@!!productsFromOffer!!@");
+
+    // if(primaryColor === 'charcoal'){
+  //   (function () {
+  //     let angle = 0;
+  //     let p = document.querySelector('p');
+  //     if(p){
+  //       let text = p.textContent.split('');
+  //       var len = text.length;
+  //       var phaseJump = 360 / len;
+  //       var spans;
+  //       p.innerHTML = text.map(function (char) {
+  //         return '<span>' + char + '</span>';
+  //       }).join('');
+
+  //       spans = p.children;
+  //     }
+  //     else console.log('kik');
+
+  //     (function wheee () {
+  //       for (var i = 0; i < len; i++) {
+  //         spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+  //       }
+  //       angle++;
+  //       requestAnimationFrame(wheee);
+  //     })();
+  //   })();
+  // }
   return (
     <div>
       <div>
@@ -175,7 +208,6 @@ const NftDataPageTest = ({
           style={{
             maxWidth: "1600px",
             margin: "auto",
-            // backgroundColor: `var(--${primaryColor})`,
             borderRadius: "16px",
             padding: "24px 0",
           }}
@@ -202,7 +234,9 @@ const NftDataPageTest = ({
                 style={{
                   color: `var(--${textColor})`,
                 }}
-              >Share</button>
+              >
+                Share
+              </button>
             </div>
           </div>
           <div className="nft-collection">
@@ -232,7 +266,6 @@ const NftDataPageTest = ({
               </div>
             ) : (
               <div
-                //   onClick={onClick}
                 style={{
                   margin: "auto",
                   backgroundImage: `url(${selectedData?.image})`,
@@ -252,11 +285,11 @@ const NftDataPageTest = ({
                 style={{
                   borderRadius: "16px",
                   padding: "10px",
-                  width: "228px",
+                  width: "288px",
                   height: "48px",
-                  // backgroundColor: "#383637" || `var(--${primaryColor})`,
-                  background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
-
+                  background: `${
+                    primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"
+                  }`,
                   display: "flex",
                   alignItems: "center",
                 }}
@@ -324,7 +357,9 @@ const NftDataPageTest = ({
               {checkOwner()}
             </div>
           </div>
-          <Accordion allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/>
+          <Accordion
+            allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/
+          >
             <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>Properties</AccordionItemButton>
@@ -332,53 +367,53 @@ const NftDataPageTest = ({
               <AccordionItemPanel>
                 <div className="col-12 row mx-0 box--properties">
                   {selectedData
-                    ? Object.keys(selectedData).length &&
-                    selectedData?.attributes.map((item, index) => {
-                      if (item.trait_type === "External URL") {
+                    ? selectedData.length &&
+                      selectedData?.attributes.map((item, index) => {
+                        if (item.trait_type === "External URL") {
+                          return (
+                            <div
+                              key={index}
+                              className="col-4 my-2 p-1 custom-desc-to-offer"
+                              style={{
+                                color: textColor,
+                                textAlign: "center",
+                              }}
+                            >
+                              <span>{item?.trait_type}:</span>
+                              <br />
+                              <a
+                                style={{ color: textColor }}
+                                href={item?.value}
+                              >
+                                {item?.value}
+                              </a>
+                            </div>
+                          );
+                        }
+                        const percent = randomInteger(1, 40);
                         return (
                           <div
                             key={index}
                             className="col-4 my-2 p-1 custom-desc-to-offer"
-                            style={{
-                              color: textColor,
-                              textAlign: "center",
-                            }}
                           >
-                            <span>{item?.trait_type}:</span>
-                            <br />
-                            <a
-                              style={{ color: textColor }}
-                              href={item?.value}
-                            >
-                              {item?.value}
-                            </a>
+                            <div className="custom-desc-item">
+                              <span>{item?.trait_type}:</span>
+                              <span style={{ color: textColor }}>
+                                {item?.value}
+                              </span>
+                            </div>
+                            <div className="custom-offer-percents">
+                              <span
+                                style={{
+                                  color: percentToRGB(percent),
+                                }}
+                              >
+                                {percent}%
+                              </span>
+                            </div>
                           </div>
                         );
-                      }
-                      const percent = randomInteger(1, 40);
-                      return (
-                        <div
-                          key={index}
-                          className="col-4 my-2 p-1 custom-desc-to-offer"
-                        >
-                          <div className="custom-desc-item">
-                            <span>{item?.trait_type}:</span>
-                            <span style={{ color: textColor }}>
-                              {item?.value}
-                            </span>
-                          </div>
-                          <div className="custom-offer-percents">
-                            <span
-                              style={{
-                                color: percentToRGB(percent),
-                              }}
-                            >
-                              {percent}%
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })
+                      })
                     : null}
                 </div>
               </AccordionItemPanel>
@@ -409,94 +444,218 @@ const NftDataPageTest = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <div
-                  // onClick={onClick}
                   style={{
-                    margin: "1rem",
-                    height: "135px",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      borderRadius: "16px",
-                      width: "592px",
-                      backgroundColor: "#4E4D4DCC",
-                    }}
-                  >
+                  {(productsFromOffer.length &&
+                    productsFromOffer.map((v) => {
+                      return (
+                        <div
+                          key={v._id}
+                          style={{
+                            margin: "1rem",
+                            height: "135px",
+                          }}
+                        >
+                          <div
+                            onClick={() =>
+                              history.push(`/watch/${v._id}/${v.mainManifest}`)
+                            }
+                            style={{
+                              display: "flex",
+                              borderRadius: "16px",
+                              width: "592px",
+                              backgroundColor: "#4E4D4DCC",
+                            }}
+                          >
+                            <div
+                              style={{
+                                position: "relative",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  width: "32px",
+                                  height: "32px",
+                                  background: "#CCA541",
+                                  borderRadius: "50%",
+                                  position: "absolute",
+                                  top: "35%",
+                                  left: "50%",
+                                  transform: "translate(-50%, -35%)",
+                                  zIndex: "1",
+                                }}
+                              >
+                                <i
+                                  style={{
+                                    paddingLeft: "1px",
+                                    paddingTop: "8px",
+                                  }}
+                                  className="fa fa-lock"
+                                  aria-hidden="true"
+                                ></i>
+                                <p
+                                  style={{
+                                    textAlign: "center",
+                                    marginLeft: "-2rem",
+                                    marginTop: "9px",
+                                    width: "max-content",
+                                  }}
+                                >
+                                  Coming soon
+                                </p>
+                              </div>
+                              {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
+                              <img
+                                style={{
+                                  width: "230px",
+                                  opacity: "0.4",
+                                  height: "135px",
+                                  filter: "blur(3px)",
+                                }}
+                                src={`/thumbnails/${v?.thumbnail}.png`}
+                                // src={selectedData?.image}
+                                alt=""
+                              />
+                            </div>
+                            <div
+                              style={{
+                                borderLeft: "4px solid #CCA541",
+                                display: "flex",
+                                flexDirection: "column",
+                                width: "inher",
+                                justifyContent: "center",
+                                alignItems: "flex-start",
+                                paddingLeft: "24px",
+                              }}
+                            >
+                              <div>
+                                {" "}
+                                <p style={{ fontSize: 20 }}>
+                                  {v?.title}
+                                  {/* Video {selectedData?.name} */}
+                                </p>{" "}
+                              </div>
+                              <div>
+                                <p
+                                  style={{
+                                    color: "#A7A6A6",
+                                    fontSize: 20,
+                                  }}
+                                >
+                                  00:03:23
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })) || (
                     <div
                       style={{
-                        position: "relative",
+                        margin: "1rem",
+                        height: "135px",
                       }}
                     >
                       <div
+                        onClick={() =>
+                          console.log("Cooming soon")
+                          // history.push(
+                          //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
+                          // )
+                        }
                         style={{
-                          width: "32px",
-                          height: "32px",
-                          background: "#CCA541",
-                          borderRadius: "50%",
-                          position: "absolute",
-                          top: "35%",
-                          left: "50%",
-                          transform: "translate(-50%, -35%)",
-                          zIndex: "1",
+                          display: "flex",
+                          borderRadius: "16px",
+                          width: "592px",
+                          backgroundColor: "#4E4D4DCC",
                         }}
                       >
-                        <i
-                          style={{ paddingLeft: "1px", paddingTop: "8px" }}
-                          className="fa fa-lock"
-                          aria-hidden="true"
-                        ></i>
-                        <p
+                        <div
                           style={{
-                            textAlign: "center",
-                            marginLeft: "-2rem",
-                            marginTop: "9px",
-                            width: "max-content",
+                            position: "relative",
                           }}
                         >
-                          Coming soon
-                        </p>
-                      </div>
-                      <img
-                        style={{
-                          width: "230px",
-                          opacity: "0.4",
-                          height: "135px",
-                          filter: "blur(3px)",
-                        }}
-                        src={selectedData?.image}
-                        alt=""
-                      />
-                    </div>
-                    <div
-                      style={{
-                        borderLeft: "4px solid #CCA541",
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "inher",
-                        justifyContent: "center",
-                        alignItems: "flex-start",
-                        paddingLeft: "24px",
-                      }}
-                    >
-                      <div>
-                        {" "}
-                        <p style={{ fontSize: 20 }}>
-                          Video {selectedData?.name}
-                        </p>{" "}
-                      </div>
-                      <div>
-                        <p
+                          <div
+                            style={{
+                              width: "32px",
+                              height: "32px",
+                              background: "#CCA541",
+                              borderRadius: "50%",
+                              position: "absolute",
+                              top: "35%",
+                              left: "50%",
+                              transform: "translate(-50%, -35%)",
+                              zIndex: "1",
+                            }}
+                          >
+                            <i
+                              style={{
+                                paddingLeft: "1px",
+                                paddingTop: "8px",
+                              }}
+                              className="fa fa-lock"
+                              aria-hidden="true"
+                            ></i>
+                            <p
+                              style={{
+                                textAlign: "center",
+                                marginLeft: "-2rem",
+                                marginTop: "9px",
+                                width: "max-content",
+                              }}
+                            >
+                              Coming soon
+                            </p>
+                          </div>
+                          {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
+                          <img
+                            style={{
+                              width: "230px",
+                              opacity: "0.4",
+                              height: "135px",
+                              filter: "blur(3px)",
+                            }}
+                            // src={`/thumbnails/${v?.thumbnail}.png`}
+                            src={selectedData?.image}
+                            alt=""
+                          />
+                        </div>
+                        <div
                           style={{
-                            color: "#A7A6A6",
-                            fontSize: 20,
+                            borderLeft: "4px solid #CCA541",
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "inher",
+                            justifyContent: "center",
+                            alignItems: "flex-start",
+                            paddingLeft: "24px",
                           }}
                         >
-                          00:03:23
-                        </p>
+                          <div>
+                            {" "}
+                            <p style={{ fontSize: 20 }}>
+                              {/* {v?.title} */}
+                              Video {selectedData?.name}
+                            </p>{" "}
+                          </div>
+                          <div>
+                            <p
+                              style={{
+                                color: "#A7A6A6",
+                                fontSize: 20,
+                              }}
+                            >
+                              00:03:23
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
@@ -555,7 +714,6 @@ const NftDataPageTest = ({
           )}
         </div>
       </div>
-      {/* ) */}
     </div>
   );
 };

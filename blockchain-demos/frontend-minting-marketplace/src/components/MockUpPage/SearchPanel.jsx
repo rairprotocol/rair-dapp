@@ -87,6 +87,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           <Tab
             style={{
               backgroundColor: `var(--${primaryColor})`,
+              // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
               color: `var(--${textColor})`,
             }}
             className="category-button-nft category-button"
@@ -97,6 +98,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           <Tab
             style={{
               backgroundColor: `var(--${primaryColor})`,
+              // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
               color: `var(--${textColor})`,
             }}
             className="category-button-videos category-button"

@@ -176,8 +176,8 @@ function App({ sentryHistory }) {
 		}
 	};
 
-	const goHome = () => {
-		sentryHistory.push(`/all`)
+	const goHome = () =>{
+		sentryHistory.push(`/`)
 	}
 
 	useEffect(() => {
