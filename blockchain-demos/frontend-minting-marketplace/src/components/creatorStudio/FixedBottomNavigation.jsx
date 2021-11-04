@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-const FixedBottomNavigation = ({forwardFunction, backwardFunction, forwardLabel}) => {
+const FixedBottomNavigation = ({forwardFunction, backwardFunction, forwardLabel, backwardDisabled, forwardDisabled}) => {
 	const { primaryColor } = useSelector(store => store.colorStore);
 
 	if (!forwardFunction && !backwardFunction) {
@@ -18,6 +18,7 @@ const FixedBottomNavigation = ({forwardFunction, backwardFunction, forwardLabel}
 				</div>
 				{backwardFunction &&
 					<button
+						disabled={backwardDisabled}
 						style={{position: 'absolute', left: '5rem'}}
 						className={`btn btn-${primaryColor}`}
 						onClick={backwardFunction}>
@@ -26,6 +27,7 @@ const FixedBottomNavigation = ({forwardFunction, backwardFunction, forwardLabel}
 				}
 				{forwardFunction && 
 					<button
+						disabled={forwardDisabled}
 						style={{position: 'absolute', right: '5rem'}}
 						className='btn btn-stimorol'
 						onClick={forwardFunction}>

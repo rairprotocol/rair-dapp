@@ -17,6 +17,8 @@ const ContractDetails = () => {
 	const [collectionName, setCollectionName] = useState('');
 	const [collectionLength, setCollectionLength] = useState(0);
 
+	const [creatingCollection, setCreatingCollection] = useState(false);
+
 	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
 	const { programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
 	const { address } = useParams();
@@ -117,11 +119,19 @@ const ContractDetails = () => {
 						// Code for suresh goes here
 					}
 				} else {
-					let instance = await contractCreator(data.contractAddress, erc721Abi);
-					await instance.createProduct(collectionName, collectionLength);
+					try {
+						setCreatingCollection(true);
+						let instance = await contractCreator(data.contractAddress, erc721Abi);
+						await (await instance.createProduct(collectionName, collectionLength)).wait();
+					} catch (err) {
+						console.error(err)
+						Swal.fire('Error', err?.message ? err.message : err.toString(), 'error');
+					}
+					setCreatingCollection(false);
 				}
 			} : undefined}
 			forwardLabel={(data && !onMyChain) ? `Switch to ${chainData[data?.blockchain].name}` : undefined}
+			forwardDisabled={creatingCollection}
 		/>
 	</div>
 }
