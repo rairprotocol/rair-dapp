@@ -155,7 +155,7 @@ function App({sentryHistory}) {
 	};
 
 	const goHome = () =>{
-		sentryHistory.push(`/all`)
+		sentryHistory.push(`/`)
 	}
 
 	useEffect(() => {

@@ -242,7 +242,7 @@ const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	const store = useStore();
-	let onMyChain = window.ethereum ? chainData[blockchain].chainId === window.ethereum.chainId : chainData[blockchain].chainId === programmaticProvider.provider._network.chainId;
+	let onMyChain = window.ethereum ? chainData[blockchain]?.chainId === window.ethereum.chainId : chainData[blockchain]?.chainId === programmaticProvider.provider._network.chainId;
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
