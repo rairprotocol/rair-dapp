@@ -7,12 +7,11 @@ const SelectBox = (props) => {
   const [showItems, setShowItems] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   // const [moreThen, setMoreThen] = useState();
-  
-  useEffect(() => {
-    if (items.length === 0 && typeof props.items === "object") {
-      setItems([...props.items]);
-      setSelectedItem(props.items[0]);
-      // console.log(props.selectedToken, 'items');
+
+  useEffect(()=>{
+    if(items.length === 0 && typeof(props.items)==="object"){
+      setItems([...props.items])
+      setSelectedItem(props.items[0])
     }
   }, [props.items, items]);
 
@@ -27,7 +26,7 @@ const SelectBox = (props) => {
   };
 
   const RenderOption = () => {
-    if (items.length > 3) {
+    if (items.length > 1) {
       return <RenderToken />;
     }
     return <RenderListTokens />;
@@ -40,9 +39,8 @@ const SelectBox = (props) => {
           <div className="select-box--selected-item">Choose Serial Number</div>
           <div className="select-box--arrow" onClick={dropDown}>
             <span
-              className={`${
-                showItems ? "select-box--arrow-up" : "select-box--arrow-down"
-              }`}
+              className={`${showItems ? "select-box--arrow-up" : "select-box--arrow-down"
+                }`}
             />
           </div>
 
@@ -63,7 +61,8 @@ const SelectBox = (props) => {
           >
             <div className="olo" onClick={(e) => {
               e.preventDefault()
-              console.log(123)}}>1-100</div>
+              console.log(123)
+            }}>1-100</div>
             <div className="olo">101-200</div>
             <div className="olo">201-300</div>
             <div className="olo">301-400</div>
