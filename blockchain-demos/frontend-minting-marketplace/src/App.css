@@ -688,3 +688,8 @@ margin-left: -36px;
   justify-content: center;
   color: #fff;
 }
+
+.skeloton-product {
+  margin: 8px;
+  border-radius: 16px;
+}
