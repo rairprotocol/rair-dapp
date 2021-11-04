@@ -10,6 +10,7 @@ import {getJWT} from './utils/rFetch.js';
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
 import * as colorTypes from './ducks/colors/types.js';
+import * as userTypes from './ducks/users/types.js';
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -33,6 +34,9 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 import MockUpPage from './components/MockUpPage/MockUpPage';
+
+import Deploy from './components/creatorStudio/Deploy.jsx';
+import Contracts from './components/creatorStudio/Contracts.jsx';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
@@ -131,6 +135,7 @@ function App({sentryHistory}) {
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
+				dispatch({type: userTypes.SET_ADMIN_RIGHTS, payload: adminResponse.success});
 				setAdminAccess(adminResponse.success);
 				//adminRights = adminResponse.success;
 			}
@@ -210,6 +215,7 @@ function App({sentryHistory}) {
 							{name: <i className="fas fa-history" />, route: '/latest'},
 							{name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot'},
 							{name: <i className="fas fa-hourglass-end"/>, route: '/ending'},
+							{name: <i className="fas fa-cog"/>, route: '/creator/deploy'},
 							{name: <i className="fas fa-city"/>, route: '/factory', disabled: factoryInstance === undefined},
 							{name: <i className="fas fa-shopping-basket"/>, route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
@@ -239,6 +245,8 @@ function App({sentryHistory}) {
 								{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 								{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 								{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+								{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
+								{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
 								<SentryRoute path='/all'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
