@@ -4,8 +4,9 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 COPY package*.json ./
 
+RUN npm i @trendyol-js/react-carousel@"^2.0.0" --legacy-peer-deps
 RUN npm install
-RUN npm run build
+
 
 EXPOSE 3001
 

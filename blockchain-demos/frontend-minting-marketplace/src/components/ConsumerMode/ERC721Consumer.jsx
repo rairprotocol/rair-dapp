@@ -44,7 +44,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 			await minterInstance.buyTokenBatch(offerIndex, rangeIndex, tokens, addresses, {value: price * tokens.length});
 			Swal.close();
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			Swal.fire('Error', err?.data?.message, 'error');
 		}
 	}

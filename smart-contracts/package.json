@@ -11,7 +11,8 @@
     "hardhat:test": "hardhat test",
     "deploy-binance": "npx hardhat --network binanceSmartchain deploy",
     "deploy-goerli": "npx hardhat --network goerli deploy",
-    "deploy-mumbai": "npx hardhat --network mumbai deploy"
+    "deploy-mumbai": "npx hardhat --network mumbai deploy",
+    "PAYABLE-deploy-matic": "npx hardhat --network matic deploy"
   },
   "author": "Juan Miguel Sanchez Mola <jmsm412@gmail.com>",
   "homepage": "",
@@ -29,8 +30,10 @@
     "hardhat-gas-reporter": "^1.0.4"
   },
   "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^2.1.7",
     "@openzeppelin/contracts-upgradeable": "^4.2.0",
     "@openzeppelin/hardhat-upgrades": "^1.9.0",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "hardhat-contract-sizer": "^2.1.1"
   }
 }

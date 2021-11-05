@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.7; 
+pragma solidity ^0.8.9; 
 
 // Interfaces
-import "@openzeppelin/contracts-upgradeable/utils/introspection/IERC1820RegistryUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC777/IERC777Upgradeable.sol";
+import "@openzeppelin/contracts/utils/introspection/IERC1820Registry.sol";
+import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
 
 // Parent classes
-import "@openzeppelin/contracts-upgradeable/token/ERC777/IERC777RecipientUpgradeable.sol";
-import '@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol';
+import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
+import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
 
 import './Tokens/RAIR-ERC721.sol';
 
@@ -15,8 +15,8 @@ import './Tokens/RAIR-ERC721.sol';
 /// @notice Handles the deployment of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the reception of ERC777 tokens!
-contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumerableUpgradeable {
-	IERC1820RegistryUpgradeable internal constant _ERC1820_REGISTRY = IERC1820RegistryUpgradeable(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
+contract RAIR_Token_Factory is IERC777Recipient, AccessControlEnumerable {
+	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 	
 	bytes32 public constant OWNER = keccak256("OWNER");
 	bytes32 public constant ERC777 = keccak256("ERC777");
@@ -38,7 +38,9 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumera
 	/// @param  _rairAddress 	  Address of the primary ERC777 contract (RAIR contract)
 	constructor(uint _pricePerToken, address _rairAddress) {
 		_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
+		_setRoleAdmin(OWNER, OWNER);
 		_setRoleAdmin(ERC777, OWNER);
+		_setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
 		_setupRole(OWNER, msg.sender);
 		_setupRole(ERC777, _rairAddress);
 		deploymentCostForERC777[_rairAddress] = _pricePerToken;
@@ -64,7 +66,7 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumera
 	/// @param 	amount	Amount of tokens to withdraw
 	function withdrawTokens(address erc777, uint amount) public onlyRole(OWNER) {
 		require(hasRole(ERC777, erc777), "RAIR Factory: Specified contract isn't an approved erc777 contract");
-		IERC777Upgradeable(erc777).send(msg.sender, amount, "Factory Withdraw");
+		IERC777(erc777).send(msg.sender, amount, "Factory Withdraw");
 		emit TokensWithdrawn(msg.sender, erc777, amount);
 	}
 
@@ -94,22 +96,19 @@ contract RAIR_Token_Factory is IERC777RecipientUpgradeable, AccessControlEnumera
 	/// @param operatorData	bytes sent from the operator
 	function tokensReceived(address operator, address from, address to, uint256 amount, bytes calldata userData, bytes calldata operatorData) external onlyRole(ERC777) override {
 		require(amount >= deploymentCostForERC777[msg.sender], 'RAIR Factory: not enough RAIR tokens to deploy a contract');
-		uint tokensBought = uint((amount / deploymentCostForERC777[msg.sender]));
-		if (amount - (deploymentCostForERC777[msg.sender] * tokensBought) > 0) {
-			IERC777Upgradeable(msg.sender).send(from, amount - (deploymentCostForERC777[msg.sender] * tokensBought), userData);
-		}
 
+		if (amount - (deploymentCostForERC777[msg.sender]) > 0) {
+			IERC777(msg.sender).send(from, amount - (deploymentCostForERC777[msg.sender]), userData);
+		}
 		address[] storage tokensFromOwner = ownerToContracts[from];
 		
 		if (tokensFromOwner.length == 0) {
 			creators.push(from);
 		}
 
-		for (uint i = 0; i < tokensBought; i++) {
-			RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
-			tokensFromOwner.push(address(newToken));
-			contractToOwner[address(newToken)] = from;
-			emit NewContractDeployed(from, tokensFromOwner.length, address(newToken));
-		}
+		RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
+		tokensFromOwner.push(address(newToken));
+		contractToOwner[address(newToken)] = from;
+		emit NewContractDeployed(from, tokensFromOwner.length, address(newToken));
 	}
 }

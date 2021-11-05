@@ -114,7 +114,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 			<button
 				disabled={locked <= 0}
 				onClick={e => locker(productIndex, rangeInit, endingRange, locked)}
-				className='btn btn-success h-50'>
+				className='btn btn-royal-ice h-50'>
 				<i className='fas fa-lock' />
 			</button>
 		</th>
@@ -240,7 +240,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 						});
 						setRanges(aux);
 					}}
-					className='btn btn-success'>
+					className='btn btn-royal-ice'>
 					<i className='fas fa-plus' />
 				</button>
 				<h5> On the Minter Marketplace </h5>
@@ -310,10 +310,10 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								ranges.map((item) => item.endingToken),
 								ranges.map((item) => item.price),
 								ranges.map((item) => item.name),
-								'0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
+								'0x3fD4268B03cce553f180E77dfC14fde00271F9B7');
 						}
 					} catch (err) {
-						console.log(err);
+						console.error(err);
 						Swal.fire('Error', err?.data?.message, 'error');
 					}
 				}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>

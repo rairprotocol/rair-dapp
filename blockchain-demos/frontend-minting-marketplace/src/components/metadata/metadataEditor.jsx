@@ -1,10 +1,12 @@
 import {useState, useEffect, useCallback} from 'react';
 import InputField from '../common/InputField.jsx';
 import { Link, useParams } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import { erc721Abi } from '../../contracts';
-import * as ethers from 'ethers';
-
+import {rFetch} from '../../utils/rFetch.js';
+import setDocumentTitle from '../../utils/setTitle';
+import {useSelector} from 'react-redux';
+import { erc721Abi } from '../../contracts'
+import chainData from '../../utils/blockchainData';
+import swal from 'sweetalert2';
 /*
 	"metadata": {
         "artist": "none",
@@ -20,6 +22,7 @@ import * as ethers from 'ethers';
       },
 */
 
+/// OpenSea Standard
 /*
 	"tokenId": 9,
 	"name": "BASTARD GAN PUNK V2 #9",
@@ -104,6 +107,8 @@ const AttributeRow = ({array, index, deleter, refetch}) => {
 
 const MetadataEditor = (props) => {
 	const [contractName, setContractName] = useState('');
+	const [contractNetwork, setContractNetwork] = useState('');
+	const [productName, setProductName] = useState('');
 	const [title, setTitle] = useState('');
 	//const [symbol, setSymbol] = useState('#');
 	//From the brilliant mind of @Ed Wood comes.. How many plans are
@@ -112,6 +117,7 @@ const MetadataEditor = (props) => {
 	
 	const [tokenNumber, setTokenNumber] = useState(0);
 
+	const [internalFirstToken, setInternalFirstToken] = useState(0);
 	const [endingToken, setEndingToken] = useState(0);
 	
 	const [attributes, setAttributes] = useState([]);
@@ -122,20 +128,35 @@ const MetadataEditor = (props) => {
 	const [currentOffer, setCurrentOffer] = useState('');
 
 	const [existingMetadataArray, setExistingMetadataArray] = useState([]);
-
-	// Causes the component to rerender
+	
+	const [sendingMetadata, setSendingMetadata] = useState(false);
+	const [ipfsLink, setIpfsLink] = useState('');
 
 	const params = useParams();
-	const {minterInstance, programmaticProvider} = useSelector(state => state.contractStore);
+
+	const {contractCreator} = useSelector(state => state.contractStore);
 
 	const fetchContractData = useCallback(async () => {
-		if (!params || !minterInstance) {
-			return;
+		
+		let contractData = await rFetch(`/api/contracts/${params.contract}`)
+		if (contractData.success) {
+			setContractName(contractData.contract.title);
+			setContractNetwork(contractData.contract.blockchain);
 		}
-		let signer = programmaticProvider;
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
+		
+		let productsData = await rFetch(`/api/contracts/${params.contract}/products/offers`)
+		if (productsData.success) {
+			let [aux] = productsData.products.filter(item => item.collectionIndexInContract === Number(params.product));
+			if (aux) {
+				setProductName(aux.name);
+				setEndingToken(aux.copies - 1);
+				setInternalFirstToken(Number(aux.firstTokenIndex));
+				setOfferArray(aux.offers.map(item => ({
+					tokenStart: item.range[0],
+					tokenEnd: item.range[1],
+					name: item.offerName
+				})))
+			}
 		}
 
 		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
@@ -144,32 +165,9 @@ const MetadataEditor = (props) => {
 			sortedMetadataArray[token.token] = token.metadata;
 		}
 		setExistingMetadataArray(sortedMetadataArray);
-		
-		let finalOfferArray = []
-		let offerIndex = await minterInstance.contractToOfferRange(params.contract, params.product);
-		let offerRanges = (await minterInstance.getOfferInfo(offerIndex)).availableRanges;
-		for await (let offerInfo of [...Array(Number(offerRanges.toString())).keys()]) {
-			let aux = await minterInstance.getOfferRangeInfo(offerIndex, offerInfo);
-			finalOfferArray.push({
-				tokenStart: aux.tokenStart.toString(),
-				tokenEnd: aux.tokenEnd.toString(),
-				name: aux.name
-			});
-		}
-		setOfferArray(finalOfferArray);
 
-		let instance = new ethers.Contract(params.contract, erc721Abi, signer);
-		let productInfo = await instance.getProduct(params.product)
-		setContractName(await instance.name());
-		if (aux.result.length === 0) {
-			setTitle(productInfo.productName);
-		}
-		let firstToken = Number(productInfo.startingToken.toString());
-		let lastToken = Number(productInfo.endingToken.toString())
-
-		setEndingToken(lastToken - firstToken);
 		setTokenNumber(0);
-	}, [params, programmaticProvider, minterInstance])
+	}, [params])
 
 	const addAttribute = () => {
 		let aux = [...attributes];
@@ -191,14 +189,6 @@ const MetadataEditor = (props) => {
 	useEffect(() => {
 		fetchContractData()
 	}, [fetchContractData])
-
-	const imageSetter = async (file) => {
-		let reader = new FileReader();
-		reader.onload = function () {
-			setImage(reader.result);
-		}
-		await reader.readAsDataURL(file);
-	}
 
 	useEffect(() => {
 		if (existingMetadataArray.length) {
@@ -231,13 +221,41 @@ const MetadataEditor = (props) => {
 			}))
 		}
 	}, [tokenNumber, existingMetadataArray])
+	
+	useEffect(() => {
+		setDocumentTitle(`Metadata Editor for ${contractName !== '' ? contractName : params.contract}`);
+	}, [params, contractName])
 
 	return <div className='row w-100 px-0 mx-0'>
 		<h5>
-			Contract: <b>{contractName} ({params.contract})</b>
+			{productName} from <b>{contractName}</b>
 		</h5>
+		{contractNetwork && <small>
+			({params.contract}) on {chainData[contractNetwork]?.name}
+		</small>}
 		<div className='col-6'>
 			<div className='col-3' />
+			{existingMetadataArray && <button onClick={async e => {
+					if (window.ethereum.chainId !== contractNetwork) {
+						swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
+						return;
+					}
+					let instance = contractCreator(params.contract, erc721Abi);
+					swal.fire('Fetching Metadata URL...');
+					let metadataLink = await instance.tokenURI(tokenNumber);
+					if (metadataLink === '') {
+						swal.fire('No metadata URL found!')
+						return;
+					}
+					swal.fire('Fetching Metadata from URL...');
+					let metadataData = await fetch(metadataLink).then(blob => blob.json());
+					let workaroundToDisplayMetadata = [...existingMetadataArray];
+					workaroundToDisplayMetadata[tokenNumber] = metadataData;
+					swal.close();
+					setExistingMetadataArray(workaroundToDisplayMetadata);
+				}} disabled={sendingMetadata} className='col-12 btn btn-primary'>
+				Check metadata on blockchain!
+			</button>}
 			<button disabled className='btn btn-primary col-3'>
 				Single
 			</button>
@@ -348,8 +366,42 @@ const MetadataEditor = (props) => {
 					labelCSS={{textAlign: 'left'}}
 				/>
 				<hr />
+				<Link className='btn btn-stimorol' to={`/token/${params.contract}/${Number(internalFirstToken) + Number(tokenNumber)}`}>
+					View token!
+				</Link>
+				<hr />
 				<button disabled className='col-12 btn btn-primary'>
 					Update Metadata
+				</button>
+
+				<InputField
+					label='Metadata URL'
+					placeholder='Full link'
+					getter={ipfsLink}
+					setter={setIpfsLink}
+					customClass='form-control'
+					labelClass='w-100'
+					labelCSS={{textAlign: 'left'}}
+					/>
+				<button onClick={async e => {
+					if (window.ethereum.chainId !== contractNetwork) {
+						swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
+						return;
+					}
+					setSendingMetadata(true);
+					let instance = contractCreator(params.contract, erc721Abi);
+					try {
+						await instance.setUniqueURI(tokenNumber, ipfsLink);
+					} catch (err) {
+						swal.fire('Error', err.data.message);
+						console.log(err);
+						setSendingMetadata(false);
+						return;
+					}
+					setSendingMetadata(false);
+					swal.fire('Metadata Set!');
+				}} disabled={sendingMetadata} className='col-12 btn btn-primary'>
+					{sendingMetadata ? 'Sending Metadata...' : 'Send Metadata link to the contract!'}
 				</button>
 		</div>
 	</div>

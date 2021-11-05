@@ -1,6 +1,5 @@
 const express = require('express');
-const { validation } = require('../../middleware');
-const { JWTVerification } = require('../../middleware');
+const { JWTVerification, validation } = require('../../middleware');
 const upload = require('../../Multer/Config.js');
 const log = require('../../utils/logger')(module);
 const fs = require('fs');
@@ -20,15 +19,33 @@ module.exports = context => {
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product } = req.body;
-      const prod = parseInt(product);
-      const defaultFields = ['NFTID', 'owneraddress', 'name', 'description', 'image'];
+      const { user } = req;
+      const prod = Number(product);
+      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist', 'animation_url'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
       const tokens = [];
+      const sanitizedContract = contract.toLowerCase();
+
+      if (!user.adminRights) {
+        return res.status(403).send({ success: false, message: 'Not have admin rights.' });
+      }
+
+      const foundContract = await context.db.Contract.findOne({ contractAddress: sanitizedContract });
+
+      if (_.isEmpty(foundContract)) {
+        return res.status(404).send({ success: false, message: 'Contract not found.' });
+      }
+
+      if (user.publicAddress !== foundContract.user) {
+        return res.status(403).send({ success: false, message: 'This contract not belong to you.' });
+      }
+
+      const [contractAddress, adminToken] = user.adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract: sanitizedContract, product: prod } },
         {
           $lookup: {
             from: 'Offer',
@@ -70,15 +87,28 @@ module.exports = context => {
       }
 
 
-      const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
+      const foundProduct = await context.db.Product.findOne({ contract: sanitizedContract, collectionIndexInContract: product });
 
       if (_.isEmpty(foundProduct)) {
         await removeTempFile(roadToFile);
         return res.status(404).send({ success: false, message: 'Product not found.' });
       }
 
+      const foundTokens = await context.db.MintedToken.find({ contract: sanitizedContract, offerPool: _.head(offerPools).marketplaceCatalogIndex  });
+
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
-        .pipe(csv())
+        .pipe(csv({
+          mapHeaders: ({ header, index }) => {
+            let h = header.toLowerCase();
+            h = h.replace(/\s/g, '');
+
+            if (_.includes(defaultFields, h)) {
+              return h;
+            }
+
+            return header;
+          }
+        }))
         .on('data', data => {
           const foundFields = _.keys(data);
           let isValid = true;
@@ -94,9 +124,11 @@ module.exports = context => {
         .on('end', () => {
           _.forEach(offerPools, offerPool => {
             _.forEach(records, record => {
-              const token = parseInt(record.NFTID);
+              const token = Number(record.nftid);
 
               if (_.inRange(token, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
+                const address = !!record.publicaddress ? record.publicaddress : '0xooooooooooooooooooooooooooooooooooo' + token;
+                const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
                   .assign({})
                   .omit(defaultFields)
@@ -105,26 +137,30 @@ module.exports = context => {
                     return re;
                   }, [])
                   .value();
+                const isExist = !!_.find(foundTokens, t => t.offer === offerPool.offer.offerIndex && t.token === token);
 
-                forSave.push({
-                  token,
-                  ownerAddress: record['owneraddress'],
-                  offerPool: offerPool.marketplaceCatalogIndex,
-                  offer: offerPool.offer.offerIndex,
-                  contract,
-                  uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
-                  isMinted: false,
-                  metadata: {
-                    name: record.name,
-                    description: record.description,
-                    // artist: { type: String },
-                    // external_url: { type: String, required: true },
-                    image: record.image,
-                    attributes: attributes
-                  }
-                });
+                if (!isExist) {
+                  forSave.push({
+                    token,
+                    ownerAddress: sanitizedOwnerAddress,
+                    offerPool: offerPool.marketplaceCatalogIndex,
+                    offer: offerPool.offer.offerIndex,
+                    contract: sanitizedContract,
+                    uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
+                    isMinted: false,
+                    metadata: {
+                      name: record.name,
+                      description: record.description,
+                      artist: record.artist,
+                      external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                      image: record.image,
+                      animation_url: record.animation_url,
+                      attributes: attributes
+                    }
+                  });
 
-                tokens.push(token);
+                  tokens.push(token);
+                }
               }
             });
 
@@ -139,17 +175,15 @@ module.exports = context => {
       await removeTempFile(roadToFile);
 
       if (_.isEmpty(forSave)) {
-        return res.json({ success: false, message: 'Don\'t have tokens for creating.' });
+        return res.json({ success: false, message: 'Don\'t have tokens for creation.' });
       }
 
       try {
         await context.db.MintedToken.insertMany(forSave, { ordered: false });
-      } catch (err) {
-        log.error(err);
-      }
+      } catch (err) {}
 
       const result = await context.db.MintedToken.find({
-        contract,
+        contract: sanitizedContract,
         offerPool: offerPools[0].marketplaceCatalogIndex,
         token: { $in: tokens },
         isMinted: false
@@ -162,8 +196,20 @@ module.exports = context => {
     }
   });
 
-  router.use('/:contract', (req, res, next) => {
-    req.contract = req.params.contract;
+  // Get all tokens which belongs to current user
+  router.get('/', JWTVerification(context), async (req, res, next) => {
+    try {
+      const { publicAddress: ownerAddress } = req.user;
+      const result = await context.db.MintedToken.find({ ownerAddress });
+
+      res.json({ success: true, result });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  router.use('/:contract', validation('nftContract', 'params'), (req, res, next) => {
+    req.contract = req.params.contract.toLowerCase();
     next();
   }, require('./contract')(context));
 

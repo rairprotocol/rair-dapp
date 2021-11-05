@@ -9,10 +9,8 @@ module.exports = context => {
   router.get('/', async (req, res, next) => {
     try {
       const { contract, product } = req;
-      const prod = parseInt(product);
-
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract, product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -60,17 +58,16 @@ module.exports = context => {
     try {
       const { contract, product } = req;
       const { token } = req.params;
-      const prod = parseInt(product);
-
+      const sanitizedToken = Number(token);
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract, product } },
         {
           $lookup: {
             from: "MintedToken",
             let: {
               contractOP: '$contract',
               offerPoolIndex: '$marketplaceCatalogIndex',
-              tokenRequested: token
+              tokenRequested: sanitizedToken
             },
             pipeline: [
               {
@@ -120,10 +117,8 @@ module.exports = context => {
     try {
       const { token } = req.params;
       const { contract, product } = req;
-
-      const prod = parseInt(product);
-
-      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product: prod });
+      const sanitizedToken = Number(token);
+      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product });
 
       if (_.isEmpty(offerPoolRaw)) {
         res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
@@ -133,14 +128,14 @@ module.exports = context => {
       const offerPool = offerPoolRaw.toObject();
 
       const files = await context.db.MintedToken.aggregate([
-        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token } },
+        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
         {
           $lookup: {
             from: 'File',
             let: {
               contractT: '$contract',
               offerIndex: '$offer',
-              productT: prod
+              productT: product
             },
             pipeline: [
               {
@@ -178,6 +173,58 @@ module.exports = context => {
       ]);
 
       res.json({ success: true, files });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // get single product with all related offers
+  router.get('/offers', async (req, res, next) => {
+    try {
+      const { contract, product: collectionIndexInContract } = req;
+
+      const [product] = await context.db.Product.aggregate([
+        { $match: { contract, collectionIndexInContract } },
+        {
+          $lookup: {
+            from: 'Offer',
+            let: {
+              contr: '$contract',
+              prod: '$collectionIndexInContract'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contr'
+                        ]
+                      },
+                      {
+                        $eq: [
+                          '$product',
+                          '$$prod'
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'offers'
+          }
+        }
+      ]);
+
+      if (!product) {
+        res.json({ success: false, message: 'Product not found.' });
+        return;
+      }
+
+      res.json({ success: true, product });
     } catch (err) {
       next(err);
     }
