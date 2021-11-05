@@ -20,7 +20,7 @@ const NavigatorContract = ({children, contractAddress, contractName}) => {
 				</div>
 				<div className='col-6 p-2'>
 					<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractAddress}/listCollections`} className={`btn btn-${primaryColor} w-100 rounded-rair`}>
-						List Collections
+						Existing Collections
 					</NavLink>
 				</div>
 			</div>

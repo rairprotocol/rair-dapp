@@ -2,10 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import chainData from '../../utils/blockchainData.js'
 import InputField from '../common/InputField.jsx';
-import InputSelect from '../common/InputSelect.jsx';
 import { rFetch } from '../../utils/rFetch.js';
 import Swal from 'sweetalert2';
-import { utils } from 'ethers';
 import { useParams, useHistory } from 'react-router-dom';
 import {erc721Abi} from '../../contracts';
 
@@ -31,30 +29,15 @@ const ContractDetails = () => {
 		if (!address) {
 			return;
 		}
-		let response2 = await rFetch(`/api/contracts/${address}`);
-		let response3 = await rFetch(`/api/contracts/${address}/products`);
-		if (response3.success) {
-			response2.contract.products = response3.products
+		let dataRequest = await rFetch(`/api/contracts/${address}`);
+		if (dataRequest.success) {
+			setData(dataRequest.contract);
 		}
-		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
-		// Special case where a product exists but it has no offers
-		if (response4.success) {
-			response4.products.forEach(item => {
-				response2.contract.products.forEach(existingItem => {
-					if (item._id.toString() === existingItem._id.toString()) {
-						existingItem.offers = item.offers;
-					}
-				})
-			})
-		}
-		setData(response2.contract);
 	}, [address])
 
 	useEffect(() => {
 		getContractData();
 	}, [getContractData])
-
-	console.log(data);
 
 	let onMyChain = window.ethereum ?
 		chainData[data?.blockchain]?.chainId === window.ethereum.chainId

@@ -40,6 +40,7 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 import Deploy from './components/creatorStudio/Deploy.jsx';
 import Contracts from './components/creatorStudio/Contracts.jsx';
 import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
+import ListCollections from './components/creatorStudio/ListCollections.jsx';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
@@ -279,16 +280,10 @@ function App({ sentryHistory }) {
 							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 						</button></div> : [
 							{name: <i className="fas fa-photo-video"/>, route: '/all', disabled: !loginDone},
-							{name: <i className='fas fa-search' />, route: '/search'},
-							{name: <i className='fas fa-user' />, route: '/user'},
 							{name: <i className="fas fa-key"/>, route: '/my-nft'},
 							{name: <i className="fa fa-id-card" aria-hidden="true"/> , route: '/new-factory', disabled: !loginDone},
 							{name: <i className="fa fa-shopping-cart" aria-hidden="true"/>, route: '/on-sale', disabled: !loginDone},
 							{name: <i className="fa fa-user-secret" aria-hidden="true"/>, route: '/admin', disabled: !loginDone},
-							{name: <i className="fas fa-history" />, route: '/latest'},
-							{name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot'},
-							{name: <i className="fas fa-hourglass-end"/>, route: '/ending'},
-							{name: <i className="fas fa-cog"/>, route: '/creator/deploy'},
 							{name: <i className="fas fa-city"/>, route: '/factory', disabled: factoryInstance === undefined},
 							{name: <i className="fas fa-shopping-basket"/>, route: '/minter', disabled: minterInstance === undefined}
 						].map((item, index) => {
@@ -321,7 +316,7 @@ function App({ sentryHistory }) {
 								{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 								{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
 								{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ContractDetails} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
 
 								<SentryRoute path='/all'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />

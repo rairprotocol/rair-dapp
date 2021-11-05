@@ -33,7 +33,7 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
     }
 
     const pushToFactory = () => {
-        history.push('/factory');
+        history.push('/creator/deploy');
     }
 
     return (
