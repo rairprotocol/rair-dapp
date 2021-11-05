@@ -78,7 +78,7 @@ const ContractDetails = () => {
 							Total Supply: <b>0</b>
 						</span>
 						<span className='col-12 py-1 text-start'>
-							Collections Created: <b>{data?.products?.length}</b>
+							Collections Created: <b>{data?.products?.length ? data?.products?.length : 0}</b>
 						</span>
 						<span className='col-12 py-1 text-start'>
 							Current Balance: <b>0</b>

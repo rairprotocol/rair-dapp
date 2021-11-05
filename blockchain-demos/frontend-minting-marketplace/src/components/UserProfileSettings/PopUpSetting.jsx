@@ -23,7 +23,7 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
 
     const logout = () => {
         dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null })
-        localStorage.clear();
+        localStorage.removeItem("token");
         setLoginDone(false);
         history.push("/all")
     }
