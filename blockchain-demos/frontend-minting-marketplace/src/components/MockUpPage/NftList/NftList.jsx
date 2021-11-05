@@ -5,14 +5,24 @@ import thirdPict from '../assets/Graphics-WEB-2021-03.png'
 import Skeleton from '@mui/material/Skeleton';
 import NftItem from './NftItem'
 
-const NftList = ({ data, primaryColor, textColor, titleSearch }) => {
+const NftList = ({ data, primaryColor, textColor, titleSearch, sortItem }) => {
     const filteredData = data && data.filter(
         item => {
             return (
                 item.name.toLowerCase().includes(titleSearch.toLowerCase())
             )
         }
-    )
+    ).sort((a, b) => {
+        if(sortItem === "up") {
+            if(a.name < b.name) { return -1; }
+        }
+
+        if(sortItem === "down") {
+            if(a.name > b.name) { return 1; }
+        }
+
+        return 0
+    })
 
     return (
         <div className={'list-button-wrapper'}>
@@ -36,8 +46,9 @@ const NftList = ({ data, primaryColor, textColor, titleSearch }) => {
                         return null
                     }
                 }) :
-                    Array.from(new Array(10)).map((index) => {
+                    Array.from(new Array(10)).map((item, index) => {
                         return <Skeleton
+                            key={index}
                             className={"skeloton-product"}
                             variant="rectangular"
                             width={283}

@@ -3,13 +3,12 @@ import "./FilteringBlock.css";
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
-const FilteringBlock = ({ primaryColor, textColor }) => {
+const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem }) => {
     const [filterPopUp, setFilterPopUp] = useState(false);
     const [filterItem, setFilterItem] = useState('Filters');
     const filterRef = useRef();
 
     const [sortPopUp, setSortPopUp] = useState(false);
-    const [sortItem, setSortItem] = useState("up");
     const sortRef = useRef();
 
     const [isOpenCategories, setIsOpenCategories] = useState(false);

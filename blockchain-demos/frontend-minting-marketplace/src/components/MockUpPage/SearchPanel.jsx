@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import InputField from "../common/InputField.jsx";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 // import 'react-tabs/style/react-tabs.css';
@@ -8,6 +8,7 @@ import FilteringBlock from "./FilteringBlock/FilteringBlock.jsx";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
   const [titleSearch, setTitleSearch] = useState("");
+  const [sortItem, setSortItem] = useState("");
   const [mediaList, setMediaList] = useState();
   const [data, setData] = useState();
 
@@ -72,13 +73,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     }
   }, []);
 
-  const handleClick = (cover) => {
+  const handleClick = useCallback((cover) => {
     data.forEach((item) => {
       if (cover === item.cover) {
         console.log(1);
       }
     });
-  };
+  }, [data])
 
   return (
     <div className="input-search-wrapper list-button-wrapper">
@@ -120,10 +121,22 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             customClass="form-control input-styled"
           />
           <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
-          <FilteringBlock primaryColor={primaryColor} textColor={textColor} />
+          <FilteringBlock
+            sortItem={sortItem}
+            setSortItem={setSortItem}
+            primaryColor={primaryColor}
+            textColor={textColor}
+          />
         </div>
         <TabPanel>
-          <NftList titleSearch={titleSearch} primaryColor={primaryColor} textColor={textColor} handleClick={handleClick} data={data} />
+          <NftList
+            sortItem={sortItem}
+            titleSearch={titleSearch}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            handleClick={handleClick}
+            data={data}
+          />
         </TabPanel>
         <TabPanel>
           <VideoList mediaList={mediaList} titleSearch={titleSearch} />
