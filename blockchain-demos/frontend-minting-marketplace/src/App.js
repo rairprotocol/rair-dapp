@@ -11,7 +11,11 @@ import { getJWT, isTokenValid } from './utils/rFetch.js';
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
 import * as colorTypes from './ducks/colors/types.js';
+<<<<<<< HEAD
 import * as authTypes from './ducks/auth/types.js';
+=======
+import * as userTypes from './ducks/users/types.js';
+>>>>>>> f90417593c169cb831d8fcc3851526c0f31c6c70
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -35,6 +39,10 @@ import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 import MockUpPage from './components/MockUpPage/MockUpPage';
+
+import Deploy from './components/creatorStudio/Deploy.jsx';
+import Contracts from './components/creatorStudio/Contracts.jsx';
+import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
@@ -139,7 +147,12 @@ function App({ sentryHistory }) {
 					console.log("Nahuy")
 					return;
 				}
+<<<<<<< HEAD
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
+=======
+				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
+				dispatch({type: userTypes.SET_ADMIN_RIGHTS, payload: adminResponse.success});
+>>>>>>> f90417593c169cb831d8fcc3851526c0f31c6c70
 				setAdminAccess(adminResponse.success);
 				//adminRights = adminResponse.success;
 			}
@@ -269,6 +282,7 @@ function App({ sentryHistory }) {
 								<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
 									className={`btn btn-${primaryColor} btn-connect-wallet`}
 									onClick={connectUserData}>
+<<<<<<< HEAD
 									{startedLogin ? 'Please wait...' : 'Connect Wallet'}
 									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 								</button></div> : [
@@ -312,6 +326,81 @@ function App({ sentryHistory }) {
 									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
 									<SentryRoute path='/all'>
+=======
+								{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
+							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+						</button></div> : [
+							{name: <i className="fas fa-photo-video"/>, route: '/all', disabled: !loginDone},
+							{name: <i className='fas fa-search' />, route: '/search'},
+							{name: <i className='fas fa-user' />, route: '/user'},
+							{name: <i className="fas fa-key"/>, route: '/my-nft'},
+							{name: <i className="fa fa-id-card" aria-hidden="true"/> , route: '/new-factory', disabled: !loginDone},
+							{name: <i className="fa fa-shopping-cart" aria-hidden="true"/>, route: '/on-sale', disabled: !loginDone},
+							{name: <i className="fa fa-user-secret" aria-hidden="true"/>, route: '/admin', disabled: !loginDone},
+							{name: <i className="fas fa-history" />, route: '/latest'},
+							{name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot'},
+							{name: <i className="fas fa-hourglass-end"/>, route: '/ending'},
+							{name: <i className="fas fa-cog"/>, route: '/creator/deploy'},
+							{name: <i className="fas fa-city"/>, route: '/factory', disabled: factoryInstance === undefined},
+							{name: <i className="fas fa-shopping-basket"/>, route: '/minter', disabled: minterInstance === undefined}
+						].map((item, index) => {
+							if (!item.disabled) {
+								return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+									<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
+										{item.name}
+									</NavLink>
+								</div>
+							}
+							return <div key={index}></div>
+						})}
+					</div>
+					<div className='col'>
+						<div className='col-12' style={{height: '10vh'}}>
+							{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
+							<Switch>
+								<SentryRoute path='/admin' component={BlockChainSwitcher} />
+							</Switch>
+						</div>
+						<div className='col-12 mt-3 row'>
+							<Switch>
+								{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
+								{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
+								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor}/>}
+								{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+								{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
+								{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
+								{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+								{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
+								{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ContractDetails} />}
+
+								<SentryRoute path='/all'>
+									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+								</SentryRoute>
+								<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
+									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+								</SentryRoute>
+								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
+								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
+								<SentryRoute path='/tokens/:contract/:product/:tokenId'>
+									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+								</SentryRoute>
+								{adminAccess && <SentryRoute path='/admin' component={FileUpload}/>}
+								<SentryRoute exact path='/'>
+									<div className='col-6 text-left'>
+										<h1 className='w-100' style={{textAlign: 'left'}}>
+											Digital <b className='title'>Ownership</b>
+											<br />
+											Encryption
+										</h1>
+										<p className='w-100' style={{textAlign: 'left'}}>
+											RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
+										</p>
+									</div>
+									<div className='col-12 mt-3 row' >
+>>>>>>> f90417593c169cb831d8fcc3851526c0f31c6c70
 										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
