@@ -1,16 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Router, Switch, Route, Redirect, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import jsonwebtoken from 'jsonwebtoken';
 import setTitle from './utils/setTitle';
 
 import './App.css';
 import * as ethers from 'ethers'
-import {getJWT} from './utils/rFetch.js';
+import { getJWT, isTokenValid } from './utils/rFetch.js';
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
 import * as colorTypes from './ducks/colors/types.js';
 import * as userTypes from './ducks/users/types.js';
+import * as authTypes from './ducks/auth/types.js';
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -41,6 +43,10 @@ import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
+import NftDataPage from './components/MockUpPage/NftList/NftData/NftDataPage';
+import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
+import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -53,31 +59,33 @@ const ErrorFallback = () => {
 	</div>
 }
 
-function App({sentryHistory}) {
+function App({ sentryHistory }) {
 
 	const [/*userData*/, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
+	const [errorAuth, setErrorAuth] = useState('');
 
 	// Redux
 	const dispatch = useDispatch()
-	const {currentUserAddress, minterInstance, factoryInstance, programmaticProvider} = useSelector(store => store.contractStore);
-	const {primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect} = useSelector(store => store.colorStore);
+	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
+	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
+	const { token } = useSelector(store => store.accessStore);
 
 	const connectUserData = async () => {
 		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
 			let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-			dispatch({type: contractTypes.SET_USER_ADDRESS, payload: accounts[0]});
+			dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] });
 			dispatch({
 				type: contractTypes.SET_CHAIN_ID,
 				payload: window.ethereum.chainId?.toLowerCase()
 			});
 			currentUser = accounts[0];
 		} else if (programmaticProvider) {
-			dispatch({type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address});
+			dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
 			dispatch({
 				type: contractTypes.SET_CHAIN_ID,
 				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
@@ -87,13 +95,13 @@ function App({sentryHistory}) {
 
 		if (!currentUser && currentUser !== undefined) {
 			Swal.fire('Error', 'No user address found', 'error');
-			setStartedLogin(false)
+			setStartedLogin(false);
 			return;
 		}
 
 		try {
 			// Check if user exists in DB
-			const {success, user} = await (await fetch(`/api/users/${currentUser}`)).json();
+			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
 			if (!success || !user) {
 				// If the user doesn't exist, send a request to register him using a TEMP adminNFT
 				console.log('Address is not registered!');
@@ -126,13 +134,14 @@ function App({sentryHistory}) {
 				} else if (programmaticProvider) {
 					let parsedResponse = JSON.parse(response);
 					// EIP712Domain is added automatically by Ethers.js!
-					let {EIP712Domain, ...revisedTypes} = parsedResponse.types;
+					let { EIP712Domain, ...revisedTypes } = parsedResponse.types;
 					ethResponse = await programmaticProvider._signTypedData(
 						parsedResponse.domain,
 						revisedTypes,
 						parsedResponse.message);
 				} else {
 					Swal.fire('Error', "Can't sign messages", 'error');
+					console.log("Nahuy")
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
@@ -142,25 +151,45 @@ function App({sentryHistory}) {
 			}
 
 			let signer = programmaticProvider;
+
 			if (window.ethereum) {
 				let provider = new ethers.providers.Web3Provider(window.ethereum);
 				signer = provider.getSigner();
 			}
+
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
+				
+				dispatch({ type: authTypes.GET_TOKEN_START });
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+				console.log(token, "token");
 				localStorage.setItem('token', token);
 			}
+
+			if (!isTokenValid(localStorage.token)) {
+				let token = await getJWT(signer, user, currentUser);
+				dispatch({ type: authTypes.GET_TOKEN_START });
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
+				localStorage.setItem('token', token);
+			}
+
 			setStartedLogin(false);
 			setLoginDone(true);
 		} catch (err) {
-			console.log('Error', err)
+			console.log("Error", err)
+			setStartedLogin(false);
 		}
 	};
+
+	const goHome = () =>{
+		sentryHistory.push(`/`)
+	}
 
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
-				dispatch({type: contractTypes.SET_CHAIN_ID, payload: chainId});
+				dispatch({ type: contractTypes.SET_CHAIN_ID, payload: chainId });
 			});
 		}
 	}, [dispatch])
@@ -169,38 +198,81 @@ function App({sentryHistory}) {
 		setTitle('Welcome');
 	}, [])
 
+	const checkToken = useCallback(() => {
+		const token = localStorage.getItem('token');
+		if (!isTokenValid(token)) {
+			connectUserData()
+			dispatch({ type: authTypes.GET_TOKEN_START });
+			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+		}
+	}, [token])
+
+
+	useEffect(() => {
+		let timeout;
+		if (token) {
+			const decoded = jsonwebtoken.decode(token);
+			
+			if (decoded?.exp) {
+
+				timeout = setTimeout(() => {
+					connectUserData()
+				}, decoded.exp * 1000)
+			}
+		}
+		return () => {
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+		}
+	}, [token])
+
+	useEffect(() => {
+		if (localStorage.token && isTokenValid(localStorage.token)) {
+			connectUserData()
+			dispatch({ type: authTypes.GET_TOKEN_START });
+			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+		}
+	}, [])
+
+	useEffect(() => {
+		checkToken();
+	}, [checkToken, token])
+
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
-		<Router history={sentryHistory}>
-			{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
-			<div 
-				style={{
-					...backgroundImageEffect,
-					backgroundSize: '100vw 100vh',
-					minHeight: '100vh',
-					position: 'relative',
-					backgroundColor: `var(--${primaryColor})`,
-					color: textColor,
-					backgroundImage: `url(${backgroundImage})`,
-				    backgroundPosition: 'center top',
-					backgroundRepeat: 'no-repeat',
-				}}
-				className="App p-0 container-fluid">
-				<div style={{position: 'absolute', top: '1rem', right: '1rem'}}>
-					<button style={{color: 'var(--royal-purple)', border: 'solid 1px var(--royal-purple)', backgroundColor: 'inherit', borderRadius: '50%'}} onClick={e => {
-						dispatch({type: colorTypes.SET_COLOR_SCHEME, payload: primaryColor === 'rhyno' ? 'charcoal' : 'rhyno'});
-					}}>
-						{primaryColor === 'rhyno' ? <i className='far fa-moon' /> : <i className='fas fa-sun' />}
-					</button>
-				</div>
-				<div className='row w-100 m-0 p-0'>
-					<div className='col-1 d-none d-xl-inline-block' />
-					<div className='col-1 rounded'>
-						<div className='col-12 pt-2 mb-4' style={{height: '10vh'}}>
-							<img alt='Header Logo' src={headerLogo} className='h-100'/>
-						</div>
-						{!loginDone ? <div className='btn-connect-wallet-wrapper'>
-							<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
+			<Router history={sentryHistory}>
+				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
+				{!loginDone && <Redirect to="/all" />}
+				<div
+					style={{
+						...backgroundImageEffect,
+						backgroundSize: '100vw 100vh',
+						minHeight: '100vh',
+						position: 'relative',
+						backgroundColor: `var(--${primaryColor})`,
+						color: textColor,
+						backgroundImage: `url(${backgroundImage})`,
+						backgroundPosition: 'center top',
+						backgroundRepeat: 'no-repeat',
+					}}
+					className="App p-0 container-fluid">
+					<UserProfileSettings
+						errorAuth={errorAuth}
+						adminAccess={adminAccess}
+						primaryColor={primaryColor}
+						currentUserAddress={currentUserAddress}
+						loginDone={loginDone}
+						setLoginDone={setLoginDone}
+					/>
+					<div className='row w-100 m-0 p-0'>
+						<div className='col-1 d-none d-xl-inline-block' />
+						<div className='col-1 rounded'>
+							<div className='col-12 pt-2 mb-4' style={{ height: '10vh' }}>
+								<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
+							</div>
+							{!loginDone ? <div className='btn-connect-wallet-wrapper'>
+								<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
 									className={`btn btn-${primaryColor} btn-connect-wallet`}
 									onClick={connectUserData}>
 								{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
@@ -232,7 +304,7 @@ function App({sentryHistory}) {
 					</div>
 					<div className='col'>
 						<div className='col-12' style={{height: '10vh'}}>
-							{currentUserAddress && `Connected with ${currentUserAddress}!`}<br />
+							{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
 							<Switch>
 								<SentryRoute path='/admin' component={BlockChainSwitcher} />
 							</Switch>
@@ -278,16 +350,42 @@ function App({sentryHistory}) {
 									<div className='col-12 mt-3 row' >
 										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 									</div>
-								</SentryRoute>
-							</Switch>
+									</SentryRoute>
+									<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
+										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
+									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
+									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
+									<SentryRoute path='/tokens/:contract/:product/:tokenId'>
+										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
+									{adminAccess && <SentryRoute path='/admin'>
+										<FileUpload primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>}
+									<SentryRoute exact path='/'>
+										<div className='col-6 text-left'>
+											<h1 className='w-100' style={{ textAlign: 'left' }}>
+												Digital <b className='title'>Ownership</b>
+												<br />
+												Encryption
+											</h1>
+											<p className='w-100' style={{ textAlign: 'left' }}>
+												RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
+											</p>
+										</div>
+										<div className='col-12 mt-3 row' >
+											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+										</div>
+									</SentryRoute>
+								</Switch>
+							</div>
 						</div>
+						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 					</div>
-					<div className='col-1 d-none d-xl-inline-block' />
 				</div>
-			</div>
-		</Router>
+			</Router>
 		</Sentry.ErrorBoundary>
 	);
 }
-
 export default App;

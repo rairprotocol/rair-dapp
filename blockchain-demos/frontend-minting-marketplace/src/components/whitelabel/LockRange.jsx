@@ -43,7 +43,7 @@ const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) =
 	const {programmaticProvider, contractCreator} = useSelector(store => store.contractStore);
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
-	let onMyChain = window.ethereum ? chainData[blockchain].chainId === window.ethereum.chainId : chainData[blockchain].chainId === programmaticProvider.provider._network.chainId;
+	let onMyChain = window.ethereum ? chainData[blockchain]?.chainId === window.ethereum.chainId : chainData[blockchain]?.chainId === programmaticProvider.provider._network.chainId;
 
 	return <button
 		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
@@ -81,7 +81,7 @@ const LockRange = ({address, blockchain, firstToken, lastToken, productIndex}) =
 				</>
 				:
 				<>
-					Switch to <b>{chainData[blockchain].name}</b>
+					Switch to <b>{chainData[blockchain]?.chainId}</b>
 				</>
 			}
 	</button>

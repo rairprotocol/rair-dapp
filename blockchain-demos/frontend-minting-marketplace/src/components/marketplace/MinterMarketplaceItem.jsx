@@ -26,7 +26,7 @@ const MinterMarketplaceItem = ({item, index, colWidth}) => {
 			<b>{item.offerName}</b>
 			<br/>
 			{item.range[1] - item.range[0] - item.soldCopies + 1} tokens up for sale <br/>
-				for {item.price} {chainData[item.blockchain].name} wei <br/>
+				for {item.price} {chainData[item.blockchain]?.chainId} wei <br/>
 			<small>{/*item.totalCopies*/}</small>
 			<br/>
 			<button id={`button_${index}`} onClick={async e => {
