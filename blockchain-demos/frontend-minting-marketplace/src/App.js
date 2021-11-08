@@ -47,6 +47,7 @@ import NftDataPage from './components/MockUpPage/NftList/NftData/NftDataPage';
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
+import FormMetadata from './components/metadata';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -313,7 +314,7 @@ function App({ sentryHistory }) {
 							<Switch>
 								{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 								{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
-								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor}/>}
+								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={FormMetadata}/>}
 								{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
 								{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 								{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
