@@ -13,6 +13,7 @@ describe("Token Factory", function () {
 	const collection1Limit = 2;
 	const collection2Limit = 10;
 	const collection3Limit = 250;
+	const collection4Limit = 50;
 
 	const rairFeePercentage = 9000; // 9.000%
 	const nodeFeePercentage = 1000; // 1.000%
@@ -224,10 +225,12 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.createProduct("COLLECTION #1", collection1Limit)).to.emit(rair721Instance, 'ProductCreated').withArgs(0, 'COLLECTION #1', 0, collection1Limit);
 				await expect(await rair721Instance.createProduct("COLLECTION #2", collection2Limit)).to.emit(rair721Instance, 'ProductCreated').withArgs(1, 'COLLECTION #2', collection1Limit, collection2Limit);
 				await expect(await rair721Instance.createProduct("COLLECTION #3", collection3Limit)).to.emit(rair721Instance, 'ProductCreated').withArgs(2, 'COLLECTION #3', collection2Limit + collection1Limit, collection3Limit);
-				await expect(await rair721Instance.getProductCount()).to.equal(3);
+				await expect(await rair721Instance.createProduct("COLLECTION #4", collection4Limit)).to.emit(rair721Instance, 'ProductCreated').withArgs(3, 'COLLECTION #4', collection3Limit + collection2Limit + collection1Limit, collection4Limit);
+				await expect(await rair721Instance.getProductCount()).to.equal(4);
 				await expect((await rair721Instance.getProduct(0)).productName).to.equal("COLLECTION #1");
 				await expect((await rair721Instance.getProduct(1)).productName).to.equal("COLLECTION #2");
 				await expect((await rair721Instance.getProduct(2)).productName).to.equal("COLLECTION #3");
+				await expect((await rair721Instance.getProduct(3)).productName).to.equal("COLLECTION #4");
 			});
 
 			it ("Should show the next index for collections", async function() {
@@ -237,6 +240,7 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.getNextSequentialIndex(1, 1, collection2Limit)).to.equal(1);
 				expect(await rair721Instance.getNextSequentialIndex(2, 0, collection3Limit)).to.equal(0);
 				expect(await rair721Instance.getNextSequentialIndex(2, 23, collection3Limit)).to.equal(23);
+				expect(await rair721Instance.getNextSequentialIndex(3, 0, collection4Limit)).to.equal(0);
 			})
 
 			it ("Shouldn't let unauthorized addresses mint", async function() {
@@ -767,6 +771,20 @@ describe("Token Factory", function () {
 				await expect(rair721Instance.getNextSequentialIndex(1, 0, 1)).to.be.revertedWith('RAIR ERC721: There are no available tokens in this range');
 			});
 
+			it ("Should create a new offer (Used on the custom payment rate)", async function() {
+				// Token Address, Tokens Allowed, Product Index, Token Price, Node Address
+				expect(await minterInstance.addOffer(
+					rair721Instance.address, 				// Token Address
+					3,										// Product Index
+					[0,1,2],								// Starting token in Range
+					[0,1,49],								// Ending token in Range
+					[888,9999,10000],						// Price
+					['DX','Spcial','Standard'],				// Range Name
+					owner.address							// Node Address
+				)).to.emit(minterInstance, 'AddedOffer').withArgs(rair721Instance.address, 3, 3, 2);
+				expect(await minterInstance.openSales()).to.equal(10);
+			});
+
 			it ("Shouldn't batch mint with wrong info", async function() {
 				let minterAsAddress2 = await minterInstance.connect(addr2);
 				
@@ -890,12 +908,26 @@ describe("Token Factory", function () {
 				await expect(minterAsAddress2.buyToken(0, 2, next + 1, {value: 9999})).to.be.revertedWith('Minting Marketplace: Cannot mint more tokens for this range!');
 				await expect(minterAsAddress2.buyToken(0, 3, next + 1, {value: 9999})).to.be.revertedWith('Minting Marketplace: Invalid range!');
 			});
+
+			it ("Should set up custom payment rates", async function() {
+				await expect(await minterInstance.setCustomPayment(2, [addr1.address, addr2.address, addr3.address, addr4.address], [30000, 10000, 25000, 25000]))
+					.to.emit(minterInstance, "CustomPaymentSet")
+					.withArgs(2, [addr1.address, addr2.address, addr3.address, addr4.address], [30000, 10000, 25000, 25000]);
+			});
+
+			it ("Should do a custom payment split (Single)", async function() {
+				await expect(await minterInstance.buyToken(2, 0, 0, {value: 888}))
+					.to.emit(rair721Instance, "Transfer")
+					.to.changeEtherBalances([addr1, addr2, addr3, addr4], [266, 88, 222, 222]);
+			});
 		})
 
 		it ("721 instance returns the correct creator fee", async function() {
 			expect((await rair721Instance.royaltyInfo(1, 123000))[0]).to.equal(owner.address);
 			expect((await rair721Instance.royaltyInfo(1, 123000))[1]).to.equal(36900);
 		});
+
+
 	});
 
 	describe("Resale Marketplace", async function() {
