@@ -4,7 +4,10 @@ import './SplashPage.css';
 
 /* importing images*/
 import logoAuthor from './images/nispsey-hussle.png';
-import offerFansOne from './images/special-offer_1.jpeg';
+import Nft_1 from './images/special-offer_1.jpeg';
+import Nft_2 from './images/special-offer_3.jpeg';
+import Nft_3 from './images/img-left-tokens.jpeg';
+import NftImage from './images/nft-img.jpeg';
 
 const SplashPage = () => {
     return (
@@ -84,16 +87,39 @@ const SplashPage = () => {
                     </div>
                 </div>
                 <div className="offer-fans">
-                    {/* <img src={offerFansOne} alt="offer-picture" /> */}
-                    <div className="offer-1">
-                
+                    <div className="offer-1"></div>
+                    <div className="offer-2"></div>
+                    <div className="offer-3"></div>
+                </div>
+            </div>
+            <div className="exclusive-nfts">
+                <div className="title-nft">
+                    <h3>Explore <span className="text-gradient">1000</span> exclusive NFTs</h3>
+                </div>
+                <div className="nfts-select">
+                    <div className="main-nft" style={{
+                        background: `url(${NftImage}) no-repeat`,
+                        backgroundSize: "cover"
+                    }}>
+                        <div className="btn-open-store">
+                            <span>Open in Store</span> <i class="fas fa-arrow-right"></i>
+                        </div>
                     </div>
-                    <div className="offer-2">
-                        
+                    <div className="block-nfts">
+                        <div className="box-nft">
+                            <img src={Nft_3} alt="img" />
+                            <img src={Nft_1} alt="img" />
+                        </div>
+                        <div className="box-nft">
+                            <img src={Nft_1} alt="img" />
+                            <img src={Nft_2} alt="img" />
+                        </div>
                     </div>
-                    <div className="offer-3">
-                        
-                    </div>
+                </div>
+            </div>
+            <div className="unlockble-video">
+                <div className="title-gets">
+                    <h3>What <span className="text-gradient">you</span> get?</h3>
                 </div>
             </div>
         </div>

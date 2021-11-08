@@ -1,3 +1,5 @@
+/* Repeating properties*/
+
 .text-gradient {
     background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
     -webkit-background-clip: text;
@@ -8,6 +10,8 @@
     font-weight: 700;
 }
 
+/* main block */
+
 .home-splash--page {
     width: 100%;
     display: flex;
@@ -15,6 +19,8 @@
     flex-direction: column;
     margin-top: 54px;
 }
+
+/* Author Information Block*/
 
 .information-author {
     position: relative;
@@ -101,23 +107,15 @@
     height: 494px;
 }
 
-/* .block-splash-img .shadow-box {
-    position: absolute;
-    top: -45px;
-    width: 492px;
-    height: 90px;
-    background-color: rgba(255, 255, 255, .4);
-} */
+/* Left Tokens Block*/
 
 .left-tokens {
     display: flex;
     margin-top: 108px;
-    /* justify-content: space-between; */
 }
 
 .left-tokens .block-left-tokens {
     border-radius: 24px;
-    /* background-color: #fff; */
     width: 456px;
     height: 584px;
     margin-right: 91px;
@@ -161,6 +159,8 @@
     font-weight: 400;
 }
 
+/* Special Offer Block */
+
 .special-offer {
     display: flex;
     margin-bottom: 108px;
@@ -187,8 +187,6 @@
 .special-offer h3 {
     font-size: 40px;
 }
-
-/* offers images*/
 
 .offer-fans {
     position: relative;
@@ -236,5 +234,87 @@
     background: url('./images/special-offer_3.jpeg') no-repeat;
     background-size: cover;
     background-position: center top;
+}
 
+/* Exclusive NFTs Block*/
+
+.exclusive-nfts {
+    display: flex;
+    flex-direction: column;
+    margin: 108px 0;
+}
+
+.title-nft {
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.title-nft h3 {
+    font-size: 40px;
+}
+
+.nfts-select .main-nft {
+    width: 589px;
+    height: 589px;
+    border-radius: 16px;
+
+    display: flex;
+    align-items: flex-end;
+}
+
+.btn-open-store {
+    background: rgba(34, 32, 33, 0.8);
+    /* filter: blur(8px); */
+    width: 100%;
+    height: 94px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-open-store span {
+    font-size: 24px;
+}
+
+.btn-open-store i {
+    margin-left: 13px;
+    color: #E882D5;
+}
+
+.nfts-select {
+    display: flex;
+}
+
+.block-nfts .box-nft img{
+    width: 283.49px;
+    height: 283.49px;
+    object-fit: cover;
+    object-position: 0 0;
+    border-radius: 16px;
+}
+
+.box-nft img:first-child {
+    margin-right: 22px;
+}
+
+.box-nft:first-child {
+    margin-bottom: 22px;
+}
+
+.block-nfts {
+    margin-left: 22px;
+}
+
+/* Unlockble Video Block*/
+
+.unlockble-video {
+    margin-bottom: 108px;
+}
+
+.title-gets {
+    text-align: left;
+}
+
+.title-gets h3 {
+    font-size: 40px;
 }
