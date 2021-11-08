@@ -20,8 +20,7 @@ const Contracts = () => {
 		let response = await rFetch('/api/contracts', undefined, { provider: programmaticProvider });
 
 		if (response.success) {
-			setContractArray([])
-//				response.contracts.map(item => ({address: item.contractAddress, name: item.title})));
+			setContractArray(response.contracts.map(item => ({address: item.contractAddress, name: item.title})));
 		}
 
 		if (response.error && response.message) {
