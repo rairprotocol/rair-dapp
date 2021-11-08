@@ -42,6 +42,7 @@ import NftDataPage from './components/MockUpPage/NftList/NftData/NftDataPage';
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
+import SplashPage from './components/SplashPage/SplashPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -237,7 +238,7 @@ function App({ sentryHistory }) {
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
-				{!loginDone && <Redirect to="/all" />}
+				{/* {!loginDone && <Redirect to="/all" />} */}
 				<div
 					style={{
 						...backgroundImageEffect,
@@ -304,6 +305,7 @@ function App({ sentryHistory }) {
 							</div>
 							<div className='col-12 mt-3 row'>
 								<Switch>
+									<SentryRoute exact path="/splash-page" component={SplashPage} />
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
