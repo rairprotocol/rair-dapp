@@ -246,9 +246,6 @@ const MetadataEditor = (props) => {
 			<Link to={`/batch-metadata/${params.contract}/${params.product}`} className='btn btn-royal-ice col-3'>
 				Batch
 			</Link>
-			<Link to={`/contract-metadata/${params.contract}/${params.product}`} className='btn btn-royal-ice col-5'>
-				Contract Level
-			</Link>
 			<div className='col-2' />
 			<InputField
 				label='Title'
