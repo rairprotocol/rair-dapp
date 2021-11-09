@@ -39,7 +39,7 @@ contract Minter_Marketplace is Ownable {
 		uint[] percentages;
 	}
 
-	uint16 public constant feeDecimals = 2;
+	uint16 public constant feeDecimals = 3;
 
 	mapping(address => mapping(uint => uint)) internal _contractToOffers;
 	mapping(uint => customPayment) internal customPayments;
