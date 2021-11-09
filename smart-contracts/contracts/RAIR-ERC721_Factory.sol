@@ -96,22 +96,19 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControlEnumerable {
 	/// @param operatorData	bytes sent from the operator
 	function tokensReceived(address operator, address from, address to, uint256 amount, bytes calldata userData, bytes calldata operatorData) external onlyRole(ERC777) override {
 		require(amount >= deploymentCostForERC777[msg.sender], 'RAIR Factory: not enough RAIR tokens to deploy a contract');
-		uint tokensBought = uint((amount / deploymentCostForERC777[msg.sender]));
-		if (amount - (deploymentCostForERC777[msg.sender] * tokensBought) > 0) {
-			IERC777(msg.sender).send(from, amount - (deploymentCostForERC777[msg.sender] * tokensBought), userData);
-		}
 
+		if (amount - (deploymentCostForERC777[msg.sender]) > 0) {
+			IERC777(msg.sender).send(from, amount - (deploymentCostForERC777[msg.sender]), userData);
+		}
 		address[] storage tokensFromOwner = ownerToContracts[from];
 		
 		if (tokensFromOwner.length == 0) {
 			creators.push(from);
 		}
 
-		for (uint i = 0; i < tokensBought; i++) {
-			RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
-			tokensFromOwner.push(address(newToken));
-			contractToOwner[address(newToken)] = from;
-			emit NewContractDeployed(from, tokensFromOwner.length, address(newToken));
-		}
+		RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
+		tokensFromOwner.push(address(newToken));
+		contractToOwner[address(newToken)] = from;
+		emit NewContractDeployed(from, tokensFromOwner.length, address(newToken));
 	}
 }

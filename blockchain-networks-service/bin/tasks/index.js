@@ -5,8 +5,8 @@ const log = require('../utils/logger')(module);
 module.exports = async (context) => {
   const db = context.mongo;
 
-  // remove all old sync contracts tasks
-  await context.db.Task.deleteMany({ name: 'sync contracts' })
+  // remove all old sync and sync-contracts tasks
+  await context.db.Task.deleteMany({ name: { $in: ['sync', 'sync contracts'] } })
 
   // Start a new instance of agenda
   const agenda = new Agenda({

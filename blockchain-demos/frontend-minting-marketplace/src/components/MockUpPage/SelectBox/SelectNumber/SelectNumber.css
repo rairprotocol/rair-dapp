@@ -1,0 +1,45 @@
+.select-number-container {
+    position: relative;
+}
+
+.select-field {
+    cursor: pointer;
+    width: 288px;
+    height: 48px;
+    /* background: #383637; */
+    border-radius: 16px;
+    border: 1px solid #D37AD6;
+    padding: 0 16px;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.number-item {
+    font-size: 20px;
+}
+
+.select-number-arrow {
+    color: #E882D5;
+}
+
+.select-number-popup {
+    border-radius: 16px;
+    position: absolute;
+    top: 60px;
+    /* background: #383637; */
+    width: 288px;
+    padding: 12px 0;
+    z-index: 1;
+    border: 1px solid #D37AD6;
+}
+
+.select-number-popup div {
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.select-number-popup div:last-child {
+    margin-bottom: 0;
+}
