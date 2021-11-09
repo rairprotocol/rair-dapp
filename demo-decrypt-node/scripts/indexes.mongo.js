@@ -49,6 +49,9 @@ const { MongoClient } = require('mongodb');
 
   await db.collection('LockedTokens').createIndex({ contract: 1, lockIndex: 1 }, { background: true, unique: true });
 
+
+  await db.collection('Versioning').createIndex({ name: 1, network: 1 }, { background: true, unique: true });
+
   console.log('Completed Database Indexes');
 
   process.exit(0);
