@@ -7,7 +7,7 @@ const { DEFAULT_PRODUCT_COVER } = process.env;
 const Product = new Schema({
   name: { type: String, required: true },
   collectionIndexInContract: { type: Number, required: true },
-  contract: { type: String, lowercase: true, required: true },
+  contract: { type: String, required: true },
   copies: { type: Number, required: true },
   soldCopies: { type: Number, default: 0 },
   sold: { type: Boolean, default: false },

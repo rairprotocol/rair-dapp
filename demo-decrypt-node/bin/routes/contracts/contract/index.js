@@ -6,12 +6,12 @@ module.exports = context => {
   // Get specific contract
   router.get('/', async (req, res, next) => {
     try {
-      // const { adminNFT: user } = req.user;
-      const { contractAddress } = req;
+      // // const { adminNFT: user } = req.user;
+      // const { contractAddress, blockchain } = req;
+      //
+      // const contract = await context.db.Contract.findOne({ contractAddress, blockchain });
 
-      const contract = await context.db.Contract.findOne({ contractAddress });
-
-      res.json({ success: true, contract });
+      res.json({ success: true, contract: req.contract });
     } catch (e) {
       next(e);
     }
@@ -21,9 +21,9 @@ module.exports = context => {
   router.delete('/', async (req, res, next) => {
     try {
       // const { adminNFT: user } = req.user;
-      const { contractAddress } = req;
+      const { contract } = req;
 
-      await context.db.Contract.deleteOne({ contractAddress });
+      await context.db.Contract.deleteOne({ _id: contract._id });
 
       res.json({ success: true });
     } catch (e) {
@@ -34,9 +34,9 @@ module.exports = context => {
   // Find all products for particular contracts
   router.get('/products', async (req, res, next) => {
     try {
-      const { contractAddress: contract } = req;
+      const { contract } = req;
 
-      const products = await context.db.Product.find({ contract });
+      const products = await context.db.Product.find({ contract: contract._id });
 
       res.json({ success: true, products });
     } catch (err) {
@@ -47,10 +47,10 @@ module.exports = context => {
   // Find all products with all offers for each of them for particular contract
   router.get('/products/offers', async (req, res, next) => {
     try {
-      const { contractAddress: contract } = req;
+      const { contract } = req;
 
       const products = await context.db.Product.aggregate([
-        { $match: { contract } },
+        { $match: { contract: contract._id } },
         { $sort: { creationDate: -1 } },
         {
           $lookup: {

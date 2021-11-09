@@ -10,7 +10,7 @@ module.exports = context => {
     try {
       const { contract, product } = req;
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product } },
+        { $match: { contract: contract._id, product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -60,7 +60,7 @@ module.exports = context => {
       const { token } = req.params;
       const sanitizedToken = Number(token);
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product } },
+        { $match: { contract: contract._id, product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -118,7 +118,7 @@ module.exports = context => {
       const { token } = req.params;
       const { contract, product } = req;
       const sanitizedToken = Number(token);
-      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product });
+      const offerPoolRaw = await context.db.OfferPool.findOne({ contract: contract._id, product });
 
       if (_.isEmpty(offerPoolRaw)) {
         res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
@@ -128,7 +128,7 @@ module.exports = context => {
       const offerPool = offerPoolRaw.toObject();
 
       const files = await context.db.MintedToken.aggregate([
-        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
+        { $match: { contract: contract._id, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
         {
           $lookup: {
             from: 'File',
@@ -184,7 +184,7 @@ module.exports = context => {
       const { contract, product: collectionIndexInContract } = req;
 
       const [product] = await context.db.Product.aggregate([
-        { $match: { contract, collectionIndexInContract } },
+        { $match: { contract: contract._id, collectionIndexInContract } },
         {
           $lookup: {
             from: 'Offer',

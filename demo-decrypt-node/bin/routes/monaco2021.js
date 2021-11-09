@@ -22,7 +22,7 @@ module.exports = context => {
           $lookup: {
             from: 'Product',
             let: {
-              contr: '$contractAddress',
+              contr: '$_id',
               productName
             },
             pipeline: [
@@ -55,7 +55,7 @@ module.exports = context => {
           $lookup: {
             from: 'OfferPool',
             let: {
-              contr: '$contractAddress',
+              contr: '$_id',
               prod: '$products.collectionIndexInContract'
             },
             pipeline: [
@@ -88,7 +88,7 @@ module.exports = context => {
           $lookup: {
             from: 'Offer',
             let: {
-              contr: '$contractAddress',
+              contr: '$_id',
               productIndex: '$products.collectionIndexInContract',
             },
             pipeline: [
@@ -122,7 +122,7 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'Product or contract not found.' });
       }
 
-      const tokens = await context.db.MintedToken.find({ contract: product.contractAddress, offerPool: product.offerPools.marketplaceCatalogIndex });
+      const tokens = await context.db.MintedToken.find({ contract: product.contract, offerPool: product.offerPools.marketplaceCatalogIndex });
 
       if (_.isEmpty(tokens)) {
         return res.status(404).send({ success: false, message: 'Tokens not found.' });

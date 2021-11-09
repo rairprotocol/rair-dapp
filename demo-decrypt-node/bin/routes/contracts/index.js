@@ -1,4 +1,5 @@
 const express = require('express');
+const _ = require('lodash');
 const { JWTVerification, validation } = require('../../middleware');
 
 module.exports = context => {
@@ -32,13 +33,13 @@ module.exports = context => {
   router.get('/full', async (req, res, next) => {
     try {
       const contracts = await context.db.Contract.aggregate([
-        { $lookup: { from: 'Product', localField: 'contractAddress', foreignField: 'contract', as: 'products' } },
+        { $lookup: { from: 'Product', localField: '_id', foreignField: 'contract', as: 'products' } },
         { $unwind: '$products' },
         {
           $lookup: {
             from: 'OfferPool',
             let: {
-              contr: '$contractAddress',
+              contr: '$_id',
               prod: '$products.collectionIndexInContract'
             },
             pipeline: [
@@ -84,8 +85,13 @@ module.exports = context => {
     }
   });
 
-  router.use('/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), (req, res, next) => {
-    req.contractAddress = req.params.contractAddress.toLowerCase();
+  router.use('network/:networkId/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), async (req, res, next) => {
+    const contract = await context.db.Contract.findOne({ _id: req.params.contractAddress.toLowerCase(), blockchain: req.params.networkId });
+
+    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+
+    req.contract = contract;
+
     next();
   }, require('./contract')(context));
 

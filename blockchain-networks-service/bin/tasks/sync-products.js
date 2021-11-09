@@ -23,12 +23,13 @@ module.exports = (context) => {
         abi,
         from_block: _.get(version, ['number'], 0)
       };
-      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }).distinct('contractAddress');
+      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }, { _id: 1, contractAddress: 1 });
 
       // Initialize moralis instances
       Moralis.start({ serverUrl, appId });
 
-      await Promise.all(_.map(arrayOfContracts, async contract => {
+      await Promise.all(_.map(arrayOfContracts, async item => {
+        const { _id, contractAddress: contract } = item;
         const options = {
           address: contract,
           ...generalOptions
@@ -41,7 +42,7 @@ module.exports = (context) => {
           block_number.push(Number(product.block_number));
 
           productsForSave.push({
-            contract,
+            contract: _id,
             collectionIndexInContract: uid,
             name,
             copies: length,
