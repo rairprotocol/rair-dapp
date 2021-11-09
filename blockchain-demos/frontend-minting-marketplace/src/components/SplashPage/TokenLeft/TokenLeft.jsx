@@ -1,9 +1,28 @@
-import React from 'react'
+import React from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const TokenLeft = () => {
     return (
         <div className="left-tokens">
             <div className="block-left-tokens">
+                <div className="progress-tokens">
+                    <CircularProgress
+                        value={75}
+                        // color="secondary"
+                        variant="determinate"
+                        sx={{
+                            color: (theme) => (theme.palette.mode === 'light' ? '#AF6FD8' : '#308fe8')
+                        }}
+                    />
+                    <div className="text-progress">
+                        350<br />
+                        left
+                    </div>
+                </div>
+                <div className="down-text">
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum<br />
+                    dolore eu fugiat nulla pariatur.   Excepteur sint occaecat.
+                </div>
             </div>
             <div className="left-tokens-content">
                 <div className="title-tokens">

@@ -124,9 +124,45 @@
     width: 456px;
     height: 584px;
     margin-right: 91px;
+    overflow: hidden;
 
     background: url('./images/img-left-tokens.jpeg') center center;
     background-size: cover;
+    position: relative;
+}
+
+.block-left-tokens .down-text {
+    position: absolute;
+    bottom: 16px;
+    left: 32px;
+    font-size: 12px;
+    list-style: 21px;
+    text-align: left;
+}
+
+.progress-tokens {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:rgba(34, 32, 33, 0.7);
+
+    position: relative;
+}
+.progress-tokens span {
+    margin-top: 200px;
+    margin-right: 200px;
+}
+
+.text-progress {
+    position: absolute;
+    line-height: 50px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.progress-tokens svg {
+    width: 240px;
 }
 
 .left-tokens-content {

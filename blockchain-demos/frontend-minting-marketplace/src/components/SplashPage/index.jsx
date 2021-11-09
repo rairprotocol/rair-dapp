@@ -44,10 +44,6 @@ const SplashPage = () => {
                         </div>
                     </div>
                 </div>
-                {/* <div className="block-splash-img">
-                    <div className="shadow-box" />
-                    <img src={pictureSplash} alt="splash" />
-                </div> */}
             </div>
             <TokenLeft />
             <div className="special-offer">
