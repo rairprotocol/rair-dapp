@@ -43,9 +43,25 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
                 if (!open) {
                     setNext(false)
                 };
-                return <button className="button profile-btn" style={{ border: `1px solid ${primaryColor === "charcoal" ? "#fff" : "#383637"}` }}>
-                    <img style={{ position: "absolute", width: "auto", height: 30, left: -10, top: 0 }} src="https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg" alt="avatart-user" />
-                    <span style={{ padding: "0 10px 0 5px", color: primaryColor === 'charcoal' ? "#fff" : "#383637" }}>{currentUserAddress && `${currentUserAddress.substr(0, 6)}...${currentUserAddress.substr(2, 4)}   `}</span>
+                return <button className="button profile-btn" style={{
+                    border: `1px solid ${primaryColor === "charcoal" ? "#fff" : "#383637"}`,
+                    backgroundColor: `${primaryColor === "charcoal" ? "#222021" : "#D3D2D3"}`
+                }}>
+                    <img style={{
+                        position: "absolute",
+                        width: "auto",
+                        height: 30,
+                        left: -10,
+                        top: 0
+                    }}
+                        src="https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+                        alt="avatart-user"
+                    />
+                    <span style={{
+                        padding: "0 10px 0 5px",
+                        color: primaryColor === 'charcoal' ? "#fff" : "#383637"
+                    }}
+                    >{currentUserAddress && `${currentUserAddress.substr(0, 6)}...${currentUserAddress.substr(2, 4)}   `}</span>
                     <i className="icon-menu" className="fas fa-bars"></i>
                 </button>
             }}
@@ -69,13 +85,22 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
                     </div>
                     <div className="profile-info">
                         <div className="user-avatar">
-                            <img style={{ width: "auto", height: 56, borderRadius: 16 }} src="https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg" alt="avatart" />
+                            <img style={{
+                                width: "auto",
+                                height: 56,
+                                borderRadius: 16
+                            }}
+                                src="https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+                                alt="avatart" />
                         </div>
                         <div className="profile-form">
                             <div>
                                 <label>Name</label>
                                 <div className="profile-input">
-                                    <input value={userName} onChange={onChangeName} type="text" />
+                                    <input
+                                        value={userName}
+                                        onChange={onChangeName}
+                                        type="text" />
                                 </div>
 
                                 <label>Email</label>
