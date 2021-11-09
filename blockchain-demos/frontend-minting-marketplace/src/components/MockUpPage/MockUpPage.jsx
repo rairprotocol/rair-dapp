@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux';
 import SearchPanel from './SearchPanel'
 
-const mockUpPage = ({item, primaryColor, textColor}) => {
+const MockUpPage = ({item, primaryColor, textColor}) => {
+    const dispatch = useDispatch()
+    useEffect(() => {
+		dispatch({
+			type: 'SHOW_SIDEBAR_TRUE'
+		})
+	}, []);
     return (
     <div className={'mock-up-page-wrapper'}>
         <SearchPanel primaryColor={primaryColor} textColor={textColor} />
     </div>
     )
 }
-export default mockUpPage;
+export default MockUpPage;
