@@ -11,8 +11,10 @@ module.exports = (context) => {
     try {
       const { network, name } = task.attrs.data;
       const contractsForSave = [];
+      const block_number = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
+      const version = await context.db.Versioning.findOne({ name: 'sync contracts', network });
 
       // Initialize moralis instances
       Moralis.start({ serverUrl, appId });
@@ -27,7 +29,8 @@ module.exports = (context) => {
         address: networkData.factoryAddress,
         chain: networkData.network,
         topic,
-        abi
+        abi,
+        from_block: _.get(version, ['number'], 0)
       }
 
       let events = await Moralis.Web3API.native.getContractEvents(options);
@@ -41,7 +44,9 @@ module.exports = (context) => {
           function_name: "name",
           abi: [nameAbi.abi]
         };
-        const title = await Moralis.Web3API.native.runContractFunction(nameOptions).catch(console.error);
+        const title = await Moralis.Web3API.native.runContractFunction(nameOptions);
+
+        block_number.push(Number(contract.block_number));
 
         contractsForSave.push({
           user: owner,
@@ -61,6 +66,13 @@ module.exports = (context) => {
         try {
           await context.db.Contract.insertMany(contractsForSave, { ordered: false });
         } catch (e) {}
+      }
+
+      if (!_.isEmpty(block_number)) {
+        await context.db.Versioning.updateOne({
+          name: 'sync contracts',
+          network
+        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
       }
 
       return done();
