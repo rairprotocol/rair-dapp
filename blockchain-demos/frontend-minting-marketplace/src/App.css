@@ -253,12 +253,67 @@ li {
   color: #22202188!important
 }
 
+/* v1 */
 .header_logo:hover{
   cursor: pointer;
   filter: sepia(1);
   transform: rotate3d(1, 1, 1, 360deg);
   transition-duration: 1.5s;
 }
+
+/* v2 */
+/* .header_logo:hover{
+  
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+} */
+
+/* v3 */
+/* .header_logo:hover, 
+.header_logo:focus, 
+.header_logo:active {
+	-webkit-animation-name: buzz;
+	animation-name: buzz;
+	-webkit-animation-duration: 0.15s;
+	animation-duration: 0.15s;
+	-webkit-animation-timing-function: linear;
+	animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+}
+	
+@-webkit-keyframes buzz {
+  50% {
+      -ms-transform: translateX(3px) rotate(2deg);
+    -webkit-transform: translateX(3px) rotate(2deg);
+    transform: translateX(3px) rotate(2deg);
+  }
+  100% {
+    -ms-transform: translateX(-3px) rotate(-2deg);
+    -webkit-transform: translateX(-3px) rotate(-2deg);
+    transform: translateX(-3px) rotate(-2deg);
+  }
+}
+@keyframes buzz {
+  50% {
+    -ms-transform: translateX(3px) rotate(2deg);
+    -webkit-transform: translateX(3px) rotate(2deg);
+    transform: translateX(3px) rotate(2deg);
+  }
+  100% {
+    -ms-transform: translateX(-3px) rotate(-2deg);
+    -webkit-transform: translateX(-3px) rotate(-2deg);
+    transform: translateX(-3px) rotate(-2deg);
+  }
+} */
 
 
 .some-element-hover:hover{
@@ -607,7 +662,7 @@ margin-left: -36px;
   font-weight: bold;
   display: flex;
   justify-content: space-around;
-  align-items: end;
+  align-items: flex-end;
   align-content: center;
 }
 

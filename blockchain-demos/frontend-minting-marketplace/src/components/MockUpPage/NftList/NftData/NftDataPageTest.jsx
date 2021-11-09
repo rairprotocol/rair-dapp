@@ -29,8 +29,6 @@ const NftDataPageTest = ({
   data,
   handleClickToken,
   setSelectedToken,
-  contract,
-  onSelect,
   productsFromOffer,
 }) => {
   const history = useHistory();
@@ -109,6 +107,24 @@ const NftDataPageTest = ({
     return max;
   }
 
+  function showLink () {
+    if (currentUser === tokenData[selectedToken]?.ownerAddress) {
+      return (
+        <div>
+          {tokenData[selectedToken]?.authenticityLink !== "none" ? (
+            <a href={tokenData[selectedToken]?.authenticityLink}>
+              {tokenData[selectedToken]?.authenticityLink}
+            </a>
+          ) : (
+            "Not minted yet"
+          )}
+        </div>
+      );
+    } else {
+      return <span>Not minted yet</span>;
+    }
+  };
+
   function checkOwner() {
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
       return (
@@ -144,66 +160,103 @@ const NftDataPageTest = ({
         </button>
       );
   }
+// function checkDataOfProperty() {
+//   if ( selectedData === 'object' && selectedData !== null) {
+//       if(selectedData.length){
+//       return selectedData?.attributes.map((item, index) => {
+//         if (item.trait_type === "External URL") {
+//           return (
+//             <div
+//               key={index}
+//               className="col-4 my-2 p-1 custom-desc-to-offer"
+//               style={{
+//                 color: textColor,
+//                 textAlign: "center",
+//               }}
+//             >
+//               <span>{item?.trait_type}:</span>
+//               <br />
+//               <a
+//                 style={{ color: textColor }}
+//                 href={item?.value}
+//               >
+//                 {item?.value}
+//               </a>
+//             </div>
+//           );
+//         }
+//         const percent = randomInteger(1, 40);
+//         return (
+//           <div
+//             key={index}
+//             className="col-4 my-2 p-1 custom-desc-to-offer"
+//           >
+//             <div className="custom-desc-item">
+//               <span>{item?.trait_type}:</span>
+//               <span style={{ color: textColor }}>
+//                 {item?.value}
+//               </span>
+//             </div>
+//             <div className="custom-offer-percents">
+//               <span
+//                 style={{
+//                   color: percentToRGB(percent),
+//                 }}
+//               >
+//                 {percent}%
+//               </span>
+//             </div>
+//           </div>
+//         );
+//       })
+//       }
+//   } else {
+//     if (Object.keys(selectedData).length) {
+//       return selectedData?.attributes.map((item, index) => {
+//         if (item.trait_type === "External URL") {
+//           return (
+//             <div
+//               key={index}
+//               className="col-4 my-2 p-1 custom-desc-to-offer"
+//               style={{
+//                 color: textColor,
+//                 textAlign: "center",
+//               }}
+//             >
+//               <span>{item?.trait_type}:</span>
+//               <br />
+//               <a style={{ color: textColor }} href={item?.value}>
+//                 {item?.value}
+//               </a>
+//             </div>
+//           );
+//         }
+//         const percent = randomInteger(1, 40);
+//         return (
+//           <div key={index} className="col-4 my-2 p-1 custom-desc-to-offer">
+//             <div className="custom-desc-item">
+//               <span>{item?.trait_type}:</span>
+//               <span style={{ color: textColor }}>{item?.value}</span>
+//             </div>
+//             <div className="custom-offer-percents">
+//               <span
+//                 style={{
+//                   color: percentToRGB(percent),
+//                 }}
+//               >
+//                 {percent}%
+//               </span>
+//             </div>
+//           </div>
+//         );
+//       });
+//     }
+//   }
+// }
 
-  // function openVideo() {
-  //   history.push(`/watch/${productsFromOffer[selectedToken]._id}/${productsFromOffer[selectedToken].mainManifest}`);
-  // }
-  //  const closeModal = ( ) => {
-  //    history.push(`/all`)
-  //  }
-  // if (!tokenData[selectedToken]) {
-  //   return 'No token, sorry, go away:('
-  // }
-  // if (!data?.tokens) {
-  //   return 'No data.tokens, sorry :('
-  // }
-  // console.log('@@@', data?.tokens)
-
-  // console.log(productsFromOffer, "@!!productsFromOffer!!@");
-
-    // if(primaryColor === 'charcoal'){
-  //   (function () {
-  //     let angle = 0;
-  //     let p = document.querySelector('p');
-  //     if(p){
-  //       let text = p.textContent.split('');
-  //       var len = text.length;
-  //       var phaseJump = 360 / len;
-  //       var spans;
-  //       p.innerHTML = text.map(function (char) {
-  //         return '<span>' + char + '</span>';
-  //       }).join('');
-
-  //       spans = p.children;
-  //     }
-  //     else console.log('kik');
-
-  //     (function wheee () {
-  //       for (var i = 0; i < len; i++) {
-  //         spans[i].style.color = 'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
-  //       }
-  //       angle++;
-  //       requestAnimationFrame(wheee);
-  //     })();
-  //   })();
-  // }
   return (
     <div>
       <div>
-        {/* <button
-        style={{
-          float: "right",
-          position: "relative",
-          bottom: "6rem",
-          border: "none",
-          background: "transparent",
-          color: "mediumpurple",
-          transform: "scale(1.5)",
-        }}
-        onClick={closeModal}
-      >
-        &#215;
-      </button> */}
         <div
           style={{
             maxWidth: "1600px",
@@ -306,7 +359,9 @@ const NftDataPageTest = ({
                   }}
                 >
                   {offerPrice &&
-                    `${minPrice} – ${maxPrice} ${data?.product.blockchain}`}
+                    `${minPrice} – ${maxPrice} ${
+                      data?.product.blockchain || "BNB"
+                    } `}
                 </span>
                 <span
                   style={{
@@ -358,7 +413,7 @@ const NftDataPageTest = ({
             </div>
           </div>
           <Accordion
-            allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/
+            allowZeroExpanded /* allowZeroExpanded allowMultipleExpanded*/
           >
             <AccordionItem>
               <AccordionItemHeading>
@@ -366,7 +421,9 @@ const NftDataPageTest = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <div className="col-12 row mx-0 box--properties">
+                  {/* {checkDataOfProperty()} */}
                   {selectedData
+                  // ? Object.keys(selectedData).length &&
                     ? selectedData.length &&
                       selectedData?.attributes.map((item, index) => {
                         if (item.trait_type === "External URL") {
@@ -450,7 +507,7 @@ const NftDataPageTest = ({
                     justifyContent: "center",
                   }}
                 >
-                  {(productsFromOffer.length &&
+                  {(productsFromOffer?.length &&
                     productsFromOffer.map((v) => {
                       return (
                         <div
@@ -561,8 +618,8 @@ const NftDataPageTest = ({
                       }}
                     >
                       <div
-                        onClick={() =>
-                          console.log("Cooming soon")
+                        onClick={
+                          () => console.log("Cooming soon")
                           // history.push(
                           //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
                           // )
@@ -671,19 +728,7 @@ const NftDataPageTest = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <div>
-                  {tokenData[selectedToken]?.authenticityLink ? (
-                    <div>
-                      {tokenData[selectedToken]?.authenticityLink !== "none" ? (
-                        <a href={tokenData[selectedToken]?.authenticityLink}>
-                          {tokenData[selectedToken]?.authenticityLink}
-                        </a>
-                      ) : (
-                        "Not minted yet"
-                      )}
-                    </div>
-                  ) : (
-                    <span>Not minted yet</span>
-                  )}
+                  {showLink()}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>

@@ -6,9 +6,9 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedToken, setSelectedToken] = useState();
-  const [offer, setOffer] = useState({});
+  const [, /*offer*/ setOffer] = useState({});
+  const [offerPrice, setOfferPrice] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
-
 
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
@@ -36,8 +36,18 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
         },
       })
     ).json();
+
     if (response.success) {
-      setOffer(response.products);
+      response?.products.map((patOffer) => {
+        if (patOffer.collectionIndexInContract === Number(product)) {
+          setOffer(patOffer);
+          const priceOfData = patOffer?.offers.map((p) => {
+            return p.price;
+          });
+          setOfferPrice(priceOfData);
+        }
+        return patOffer;
+      });
     } else if (
       response?.message === "jwt expired" ||
       response?.message === "jwt malformed"
@@ -46,7 +56,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     } else {
       console.log(response?.message);
     }
-  }, [contract]);
+  }, [product, contract]);
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await (
@@ -55,11 +65,10 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
       })
     ).json();
     setProductsFromOffer(response.files);
-
   }, [product, contract, tokenId]);
 
-//   console.log(offer, "offer!!!!");
-//   console.log(productsFromOffer, "@productsFromOffer@");
+  //   console.log(offer, "offer!!!!");
+  //   console.log(params, "@params@");
 
   function onSelect(id) {
     tokenData.forEach((p) => {
@@ -85,18 +94,14 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     <NftDataPageTest
       contract={contract}
       currentUser={currentUser}
-      
       handleClickToken={handleClickToken}
-      
       onSelect={onSelect}
-      
+      offerPrice={offerPrice}
       primaryColor={primaryColor}
       productsFromOffer={productsFromOffer}
-      
       setSelectedToken={setSelectedToken}
       selectedData={selectedData}
       selectedToken={selectedToken}
-      
       textColor={textColor}
       tokenData={tokenData}
     />

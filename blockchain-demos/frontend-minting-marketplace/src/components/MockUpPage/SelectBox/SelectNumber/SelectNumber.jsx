@@ -5,7 +5,7 @@ import "./SelectNumber.css";
 const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
     const { primaryColor } = useSelector(store => store.colorStore);
 
-    const [selectedItem, setSelectedItem] = useState(selectedToken);
+    const [/*selectedItem*/, setSelectedItem] = useState(selectedToken);
     const [isOpen, setIsOpen] = useState(false);
 
     const numberRef = useRef();
@@ -44,17 +44,27 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
             </div>
             <div
                 style={{ 
-                    display: `${isOpen ? "block" : "none"}`,
+                    display: `${isOpen ? "flex" : "none"}`,
                      borderRadius: 16,
                      background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
-                     border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`
+                     border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`,
+                     flexDirection: 'row',
+                     flexWrap: 'wrap',
+                     alignContent:'flex-start',
+                     justifyContent: 'flex-start',
+                     naxWidth: '440px',
+                     maxHeight: '330px',
+                     zIndex: '2',
+                     overflow: 'auto',
                     }}
                 className="select-number-popup"
             >
                 {items &&
                     items.map((el) => {
                         return (
-                            <div key={el.id} onClick={() => onClickItem(el.token)}>
+                            <div style={{
+                                background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "grey"}`,
+                            }} key={el.id} onClick={() => onClickItem(el.token)}>
                                 {el.token}
                             </div>
                         );

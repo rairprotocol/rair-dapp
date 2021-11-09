@@ -5,7 +5,7 @@ import ModalCategories from './portal/ModalCategories/ModalCategories';
 
 const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem }) => {
     const [filterPopUp, setFilterPopUp] = useState(false);
-    const [filterItem, setFilterItem] = useState('Filters');
+    const [/*filterItem*/, setFilterItem] = useState('Filters');
     const filterRef = useRef();
 
     const [sortPopUp, setSortPopUp] = useState(false);

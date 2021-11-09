@@ -22,7 +22,7 @@ const NftItem = ({
   const history = useHistory();
   const [metaDataProducts, setMetaDataProducts] = useState();
   const [playing, setPlaying] = useState(false);
-  const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
+  // const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -161,7 +161,9 @@ const NftItem = ({
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">
-            {collectionName}
+            {/* {collectionName} */}
+            {collectionName.slice(0, 14)}
+            {collectionName.length > 12 ? "..." : ""}
             <br />
           </span>
           <span className="description">

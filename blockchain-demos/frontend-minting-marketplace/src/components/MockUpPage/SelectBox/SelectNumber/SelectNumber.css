@@ -38,8 +38,13 @@
 .select-number-popup div {
     margin-bottom: 12px;
     cursor: pointer;
+    margin: 10px;
+    /* border: 1px solid red; */
+    border-radius: 16px;
+    width: 50px;
+    padding: 4px;
 }
 
 .select-number-popup div:last-child {
-    margin-bottom: 0;
+    /* margin-bottom: 0; */
 }

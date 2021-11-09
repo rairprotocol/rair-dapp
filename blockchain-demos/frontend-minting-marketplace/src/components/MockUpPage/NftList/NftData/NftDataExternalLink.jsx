@@ -9,6 +9,11 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedToken, setSelectedToken] = useState();
+  const [productsFromOffer, setProductsFromOffer] = useState([]);
+  const [selectedContract, setSelectedContract] = useState();
+  const [selectedIndexInContract, setSelectedIndexInContract] = useState();
+
+
 
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
@@ -24,6 +29,8 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
       ).json();
 
       setData(response.result);
+      setSelectedContract(response.result.product.products.contract)
+      setSelectedIndexInContract(response.result.product.products.collectionIndexInContract)
 
       setTokenData(response.result.tokens);
       setSelectedData(response.result.tokens[token].metadata);
@@ -33,6 +40,15 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
       );
     } else return null;
   }, [adminToken, contract, product, token]);
+
+  const getProductsFromOffer = useCallback(async () => {
+    const response = await (
+      await fetch(`/api/nft/${selectedContract}/${selectedIndexInContract}/files/${token}`, {
+        method: "GET",
+      })
+    ).json();
+    setProductsFromOffer(response.files);
+  }, [selectedContract, selectedIndexInContract, token]);
 
   function onSelect(id) {
     tokenData.forEach((p) => {
@@ -49,7 +65,8 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
 
   useEffect(() => {
     getData();
-  }, [getData]);
+    getProductsFromOffer();
+  }, [getData, getProductsFromOffer]);
 
   return (
     <NftDataPageTest
@@ -64,6 +81,7 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
       data={data}
       offerPrice={offerPrice}
       primaryColor={primaryColor}
+      productsFromOffer={productsFromOffer}
       textColor={textColor}
     />
   );

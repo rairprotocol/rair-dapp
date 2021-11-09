@@ -10,7 +10,7 @@ import { getJWT, isTokenValid } from './utils/rFetch.js';
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
-import * as colorTypes from './ducks/colors/types.js';
+// import * as colorTypes from './ducks/colors/types.js';
 import * as authTypes from './ducks/auth/types.js';
 
 // Sweetalert2 for the popup messages
@@ -38,7 +38,6 @@ import MockUpPage from './components/MockUpPage/MockUpPage';
 
 // import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
-import NftDataPage from './components/MockUpPage/NftList/NftData/NftDataPage';
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
@@ -60,7 +59,7 @@ function App({ sentryHistory }) {
 	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
-	const [errorAuth, setErrorAuth] = useState('');
+	const [errorAuth, /*setErrorAuth*/] = useState('');
 
 	// Redux
 	const dispatch = useDispatch()
@@ -68,7 +67,7 @@ function App({ sentryHistory }) {
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
-	const connectUserData = async () => {
+	const connectUserData = useCallback( async () => {
 		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
@@ -156,7 +155,6 @@ function App({ sentryHistory }) {
 				
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				console.log(token, "token");
 				localStorage.setItem('token', token);
 			}
 
@@ -174,7 +172,7 @@ function App({ sentryHistory }) {
 			console.log("Error", err)
 			setStartedLogin(false);
 		}
-	};
+	}, [adminAccess, programmaticProvider, dispatch]);
 
 	const goHome = () =>{
 		sentryHistory.push(`/`)
@@ -199,7 +197,7 @@ function App({ sentryHistory }) {
 			dispatch({ type: authTypes.GET_TOKEN_START });
 			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
-	}, [token])
+	}, [ connectUserData, dispatch ])
 
 
 	useEffect(() => {
@@ -219,7 +217,7 @@ function App({ sentryHistory }) {
 				clearTimeout(timeout);
 			}
 		}
-	}, [token])
+	}, [token, connectUserData])
 
 	useEffect(() => {
 		if (localStorage.token && isTokenValid(localStorage.token)) {
@@ -227,11 +225,42 @@ function App({ sentryHistory }) {
 			dispatch({ type: authTypes.GET_TOKEN_START });
 			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
-	}, [])
+	}, [connectUserData, dispatch, token])
 
 	useEffect(() => {
 		checkToken();
 	}, [checkToken, token])
+
+	useEffect(() => {
+    if (primaryColor === "charcoal") {
+      (function () {
+        let angle = 0;
+        let p = document.querySelector("p");
+        if (p) {
+          let text = p.textContent.split("");
+          var len = text.length;
+          var phaseJump = 360 / len;
+          var spans;
+          p.innerHTML = text
+            .map(function (char) {
+              return "<span>" + char + "</span>";
+            })
+            .join("");
+
+          spans = p.children;
+        } else console.log("kik");
+
+        (function wheee() {
+          for (var i = 0; i < len; i++) {
+            spans[i].style.color =
+              "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+          }
+          angle++;
+          requestAnimationFrame(wheee);
+        })();
+      })();
+    } 
+  } , [primaryColor]);
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
