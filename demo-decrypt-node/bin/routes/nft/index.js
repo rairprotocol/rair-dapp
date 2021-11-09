@@ -21,7 +21,8 @@ module.exports = context => {
       const { contract, product } = req.body;
       const { user } = req;
       const prod = Number(product);
-      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'image', 'artist', 'animation_url'];
+      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'artist'];
+      const optionalFields = ['image', 'animation_url'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
@@ -102,7 +103,7 @@ module.exports = context => {
             let h = header.toLowerCase();
             h = h.replace(/\s/g, '');
 
-            if (_.includes(defaultFields, h)) {
+            if (_.includes(defaultFields, h) || _.includes(optionalFields, h)) {
               return h;
             }
 
@@ -112,6 +113,7 @@ module.exports = context => {
         .on('data', data => {
           const foundFields = _.keys(data);
           let isValid = true;
+          let isCoverPresent = false;
 
           _.forEach(defaultFields, field => {
             if (!_.includes(foundFields, field)) {
@@ -119,7 +121,13 @@ module.exports = context => {
             }
           });
 
-          if (isValid) records.push(data);
+          _.forEach(optionalFields, field => {
+            if (_.includes(foundFields, field)) {
+              isCoverPresent = true;
+            }
+          });
+
+          if (isValid && isCoverPresent) records.push(data);
         })
         .on('end', () => {
           _.forEach(offerPools, offerPool => {
@@ -153,8 +161,8 @@ module.exports = context => {
                       description: record.description,
                       artist: record.artist,
                       external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
-                      image: record.image,
-                      animation_url: record.animation_url,
+                      image: record.image || '',
+                      animation_url: record.animation_url || '',
                       attributes: attributes
                     }
                   });

@@ -40,6 +40,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
         price: elem.price,
         offerName: elem.offerName,
         offerIndex: elem.offerIndex,
+        productNumber: elem.product,
       })),
     }));
     setData(covers);
@@ -88,6 +89,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"}`}
             className="category-button-nft category-button"
           >
             NFT
@@ -98,6 +100,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"}`}
             className="category-button-videos category-button"
           >
             Videos

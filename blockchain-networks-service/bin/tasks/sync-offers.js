@@ -11,14 +11,18 @@ module.exports = (context) => {
       const { network, name } = task.attrs.data;
       const offersForSave = [];
       const offerPoolsForUpdate = [];
+      const block_number = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AppendedRange');
+      const version = await context.db.Versioning.findOne({ name: 'sync offers', network });
+
       const options = {
         address: networkData.minterAddress,
         chain: networkData.network,
         topic,
-        abi
+        abi,
+        from_block: _.get(version, ['number'], 0)
       };
 
       // Initialize moralis instances
@@ -26,7 +30,7 @@ module.exports = (context) => {
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 
-      _.forEach(events.result, offerPool => {
+      _.forEach(events.result, offer => {
         const {
           contractAddress,
           productIndex,
@@ -36,10 +40,12 @@ module.exports = (context) => {
           endToken,
           price,
           name
-        } = offerPool.data;
+        } = offer.data;
         const contract = contractAddress.toLowerCase();
         const marketplaceCatalogIndex = Number(offerIndex);
         const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract === contract && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
+
+        block_number.push(Number(offer.block_number));
 
         if (offerPoolIndex < 0) {
           offerPoolsForUpdate.push({
@@ -81,6 +87,13 @@ module.exports = (context) => {
 
           await context.db.OfferPool.bulkWrite(resultOfferPools, { ordered: false });
         } catch (e) {}
+      }
+
+      if (!_.isEmpty(block_number)) {
+        await context.db.Versioning.updateOne({
+          name: 'sync offers',
+          network
+        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
       }
 
       return done();

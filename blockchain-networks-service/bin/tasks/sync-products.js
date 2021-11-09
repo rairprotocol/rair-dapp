@@ -10,13 +10,17 @@ module.exports = (context) => {
     try {
       const { network, name } = task.attrs.data;
       const productsForSave = [];
+      const block_number = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(erc721Abi, 'event', 'ProductCreated');
+      const version = await context.db.Versioning.findOne({ name: 'sync products', network });
+
       const generalOptions = {
         chain: networkData.network,
         topic,
-        abi
+        abi,
+        from_block: _.get(version, ['number'], 0)
       };
       const arrayOfContracts = await context.db.Contract.find({ blockchain: network }).distinct('contractAddress');
 
@@ -33,6 +37,8 @@ module.exports = (context) => {
         await Promise.all(_.map(events.result, async product => {
           const { uid, name, startingToken, length } = product.data;
 
+          block_number.push(Number(product.block_number));
+
           productsForSave.push({
             contract,
             collectionIndexInContract: uid,
@@ -47,6 +53,13 @@ module.exports = (context) => {
         try {
           await context.db.Product.insertMany(productsForSave, { ordered: false });
         } catch (e) {}
+      }
+
+      if (!_.isEmpty(block_number)) {
+        await context.db.Versioning.updateOne({
+          name: 'sync products',
+          network
+        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
       }
 
       return done();
