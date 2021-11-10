@@ -46,7 +46,7 @@ const ListCollections = () => {
 	return <div className='row px-0 mx-0'>
 		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} >
 			{data.products.map((item, index) => {
-				return <NavLink to={`/creator/contract/${data.contractAddress}/collection/${item.collectionIndexInContract}`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
+				return <NavLink to={`/creator/contract/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
 					{item.name}
 					<i className='fas fa-arrow-right' style={{position: 'absolute', right: '10px', top: '10px', color: 'var(--bubblegum)'}}/>
 				</NavLink>
@@ -56,9 +56,6 @@ const ListCollections = () => {
 			backwardFunction={() => {
 				history.goBack()
 			}}
-			forwardFunction={data ? async () => {
-				console.log('next'); 
-			} : undefined}
 		/>
 	</div>
 }

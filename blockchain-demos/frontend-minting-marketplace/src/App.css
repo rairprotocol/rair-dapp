@@ -36,11 +36,11 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Text';
+  font-family: 'Plus Jakarta Text'!important;
 }
 
 .rounded-rair {
-  border-radius: 16px;
+  border-radius: 16px!important;
 }
 
 input.stimorol-radio[type='radio'] {

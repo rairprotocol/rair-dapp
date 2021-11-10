@@ -51,6 +51,9 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
+import ListOffers from './components/creatorStudio/ListOffers.jsx';
+import FormMetadata from './components/metadata/index.jsx';
+
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -317,6 +320,7 @@ function App({ sentryHistory }) {
 								{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
 								{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
 								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/offers' component={ListOffers} />}
 
 								<SentryRoute path='/all'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
