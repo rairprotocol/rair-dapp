@@ -1,6 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import InputField from '../common/InputField.jsx';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer}) => {
 	const [receiverAddress, setReceiverAddress] = useState(receiver);
@@ -64,7 +65,7 @@ const CustomizePayRate = () => {
 	const [nodeFee, setNodeFee] = useState(0);
 	const [treasuryFee, setTreasuryFee] = useState(0);
 	const [minterDecimals, setMinterDecimals] = useState(0);
-
+	const [settingCustomSplits, setSettingCustomSplits] = useState(false);
 	const {minterInstance} = useSelector(store => store.contractStore);
 
 	const addPayment = () => {
@@ -75,6 +76,8 @@ const CustomizePayRate = () => {
 		});
 		setCustomPayments(aux);
 	}
+
+	let catalogIndex = 0;
 
 	const getContractData = useCallback(async () => {
 		setNodeFee(await minterInstance.nodeFee());
@@ -109,7 +112,24 @@ const CustomizePayRate = () => {
 		<div className='col-12'>
 			Total: {(total) + (nodeFee / Math.pow(10, minterDecimals)) + (treasuryFee / Math.pow(10, minterDecimals))}%
 		</div>
-		<button disabled={total !== 90 || !treasuryFee || !nodeFee || !minterDecimals} onClick={e => console.log(customPayments.map(i => i.receiver), customPayments.map(i => i.percentage * Math.pow(10, minterDecimals)))} className='btn btn-royal-ice'>
+		<button
+			disabled={total !== 90 || !treasuryFee || !nodeFee || !minterDecimals || !minterInstance || settingCustomSplits}
+			onClick={async e => {
+				Swal.fire('Setting data', '', 'info');
+				setSettingCustomSplits(true);
+				try {
+					await (await minterInstance.setCustomPayment(
+						catalogIndex,
+						customPayments.map(i => i.receiver),
+						customPayments.map(i => i.percentage * Math.pow(10, minterDecimals))
+					)).wait();
+				} catch(e) {
+					console.error(e);
+					Swal.fire('Error', '', 'error');
+				}
+				setSettingCustomSplits(false)
+			}}
+			className='btn btn-royal-ice'>
 			Set data
 		</button>
 	</div>

@@ -73,8 +73,12 @@ contract Minter_Marketplace is Ownable {
 		openSales = 0;
 	}
 
-	function setCustomPayment(uint catalogIndex, address[] calldata recipients, uint[] calldata percentages) external onlyOwner {
+	function setCustomPayment(uint catalogIndex, address[] calldata recipients, uint[] calldata percentages) external {
 		require(recipients.length == percentages.length, "Minting Marketplace: Recipients and Percentages should have the same length");
+		require(offerCatalog.length > 0, "Minting Marketplace: There are no offer pools");
+		require(catalogIndex <= offerCatalog.length, "Minting Marketplace: Offer Pool doesn't exist");
+		require(offerCatalog[catalogIndex].contractAddress != address(0), "Minting Marketplace: Invalid offer pool data");
+		validateRoles(offerCatalog[catalogIndex].contractAddress);
 		uint total = 0;
 		for (uint i = 0; i < recipients.length; i++) {
 			total = total + percentages[i];

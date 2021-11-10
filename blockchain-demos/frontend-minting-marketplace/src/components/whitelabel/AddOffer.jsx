@@ -142,6 +142,9 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 		</> 
 		: 
 		<div style={{maxHeight: '70vh', overflowY: 'auto'}}>
+			<button className='btn btn-royal-ice'>
+				Set custom fee splits
+			</button>
 			<table className='w-100'>
 				<thead>
 					<tr>

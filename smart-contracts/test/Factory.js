@@ -653,6 +653,11 @@ describe("Token Factory", function () {
 		});
 
 		describe("Adding Products and Minting", function() {
+			it ("Shouldn't set up custom payment rates if the offer doesn't exist (Part 1 - The first offer)", async function() {
+				await expect(minterInstance.setCustomPayment(0, [addr1.address, addr2.address, addr3.address, addr4.address], [30000, 10000, 25000, 25000]))
+					.to.be.revertedWith("Minting Marketplace: There are no offer pools");
+			});
+
 			it ("Shouldn't add a number of tokens higher than the mintable limit", async function() {
 				// Token Address, Tokens Allowed, Product Index, Token Price, Node Address
 				//console.log(await rair721Instance.getProduct(1));
@@ -914,6 +919,13 @@ describe("Token Factory", function () {
 					.to.be.revertedWith("Minting Marketplace: Percentages should add up to 100% (100000, including node fee and treasury fee)");
 				await expect(minterInstance.setCustomPayment(2, [addr1.address, addr2.address, addr3.address, addr4.address], [31000, 10000, 25000, 25000]))
 					.to.be.revertedWith("Minting Marketplace: Percentages should add up to 100% (100000, including node fee and treasury fee)");
+			});
+
+			it ("Shouldn't set up custom payment rates if the offer doesn't exist", async function() {
+				await expect(minterInstance.setCustomPayment(4, [addr1.address, addr2.address, addr3.address, addr4.address], [30000, 10000, 25000, 25000]))
+					.to.be.revertedWith("Minting Marketplace: Offer Pool doesn't exist");
+				await expect(minterInstance.setCustomPayment(5, [addr1.address, addr2.address, addr3.address, addr4.address], [30000, 10000, 25000, 25000]))
+					.to.be.revertedWith("Minting Marketplace: Offer Pool doesn't exist");
 			});
 
 			it ("Should set up custom payment rates", async function() {
