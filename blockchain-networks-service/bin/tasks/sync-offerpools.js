@@ -30,19 +30,20 @@ module.exports = (context) => {
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 
-      _.forEach(events.result, offerPool => {
+      _.forEach(events.result, async offerPool => {
         const {
           contractAddress,
           productIndex,
           rangesCreated,
           catalogIndex
         } = offerPool.data;
+        const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1 });
 
         block_number.push(Number(offerPool.block_number));
 
         offerPoolsForSave.push({
           marketplaceCatalogIndex: catalogIndex,
-          contract: contractAddress,
+          contract: contract._id,
           product: productIndex,
           rangeNumber: rangesCreated
         });

@@ -44,12 +44,13 @@ module.exports = (context) => {
 
         block_number.push(Number(tokenData.block_number));
 
-        const contract = contractAddress.toLowerCase();
+        // const contract = contractAddress.toLowerCase();
         const OfferP = Number(catalogIndex);
         const network = networkData.network;
+        const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1, contractAddress: 1 });
 
         const [product] = await context.db.OfferPool.aggregate([
-          { $match: { contract, marketplaceCatalogIndex: OfferP } },
+          { $match: { contract: contract._id, marketplaceCatalogIndex: OfferP } },
           {
             $lookup: {
               from: 'Product',
@@ -88,10 +89,10 @@ module.exports = (context) => {
 
         if (!_.isUndefined(product) && !_.isEmpty(product)) {
           const uniqueIndexInContract = product.firstTokenIndex + Number(tokenIndex);
-          const authenticityLink = `${ context.config.blockchain.networks[network].authenticityHost }/${ contract }/?a=${ uniqueIndexInContract }`;
+          const authenticityLink = `${ context.config.blockchain.networks[network].authenticityHost }/${ contract.contractAddress }/?a=${ uniqueIndexInContract }`;
 
           const foundOffers = await context.db.Offer.find({
-            contract: contractAddress,
+            contract: contract._id,
             product: product.collectionIndexInContract
           });
 
@@ -117,7 +118,7 @@ module.exports = (context) => {
             }
 
             const foundToken = await context.db.MintedToken.findOne({
-              contract: contractAddress,
+              contract: contract._id,
               offerPool: catalogIndex,
               token: tokenIndex
             });
@@ -138,7 +139,7 @@ module.exports = (context) => {
 
             tokensForSave.push({
               updateOne: {
-                filter: { contract: contractAddress, offerPool: catalogIndex, token: tokenIndex },
+                filter: { contract: contract._id, offerPool: catalogIndex, token: tokenIndex },
                 update,
                 upsert: true,
                 setDefaultsOnInsert: true

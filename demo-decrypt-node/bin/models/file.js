@@ -13,7 +13,7 @@ const File = new Schema({
   mainManifest: { type: String, required: true },
   thumbnail: { type: String, required: true },
   uri: { type: String, required: true },
-  contract: { type: String, required: true, lowercase: true },
+  contract: { type: String, required: true },
   product: { type: Number, required: true },
   offer: { type: [Number], required: true },
   creationDate: { type: Date, default: Date.now }

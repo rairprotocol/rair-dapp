@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const Offer = new Schema({
   offerIndex: { type: Number, required: true },
-  contract: { type: String, lowercase:true, required: true },
+  contract: { type: String, required: true },
   product: { type: Number, required: true },
   offerPool: { type: Number, required: true },
   copies: { type: Number },

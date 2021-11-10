@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const OfferPool = new Schema({
   marketplaceCatalogIndex: { type: Number,  required: true },
-  contract: { type: String, lowercase:true, required: true },
+  contract: { type: String, required: true },
   product: { type: Number },
   rangeNumber: { type: Number },
   creationDate: { type: Date, default: Date.now }

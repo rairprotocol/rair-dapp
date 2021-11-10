@@ -31,12 +31,13 @@ module.exports = (context) => {
         from_block: _.get(versionUnlocked, ['number'], 0),
         ...unlocked
       };
-      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }).distinct('contractAddress');
+      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }, { _id: 1, contractAddress: 1 });
 
       // Initialize moralis instances
       Moralis.start({ serverUrl, appId });
 
-      await Promise.all(_.map(arrayOfContracts, async contract => {
+      await Promise.all(_.map(arrayOfContracts, async item => {
+        const { _id, contractAddress: contract } = item;
         const optionsLocked = {
           address: contract,
           ...generalOptionsForLocked
@@ -64,7 +65,7 @@ module.exports = (context) => {
 
               locksForSave.push({
                 lockIndex: lockIndex ? lockIndex : lock.block_number, // using block_number as lockIndex for test networks
-                contract,
+                contract: _id,
                 product: productIndex,
                 range: [startingToken, endingToken],
                 lockedTokens: tokensLocked,
@@ -81,7 +82,7 @@ module.exports = (context) => {
 
               locksForUpdate.push({
                 updateOne: {
-                  filter: { contract, lockIndex: lockIndex ? lockIndex : lock.block_number }, // using block_number as lockIndex for test networks
+                  filter: { contract: _id, lockIndex: lockIndex || lock.block_number }, // using block_number as lockIndex for test networks
                   update: {
                     product: productID,
                     range: [startingToken, endingToken],

@@ -31,7 +31,7 @@ module.exports = (context) => {
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 
-      _.forEach(events.result, offer => {
+      _.forEach(events.result, async offer => {
         const {
           contractAddress,
           productIndex,
@@ -42,15 +42,15 @@ module.exports = (context) => {
           price,
           name
         } = offer.data;
-        const contract = contractAddress.toLowerCase();
+        const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1 });
         const marketplaceCatalogIndex = Number(offerIndex);
-        const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract === contract && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
+        const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract === contract._id && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
 
         block_number.push(Number(offer.block_number));
 
         if (offerPoolIndex < 0) {
           offerPoolsForUpdate.push({
-            contract,
+            contract: contract._id,
             marketplaceCatalogIndex,
             rangeNumber: 1
           });
@@ -60,7 +60,7 @@ module.exports = (context) => {
 
         offersForSave.push({
           offerIndex: rangeIndex,
-          contract: contractAddress,
+          contract: contract._id,
           product: productIndex,
           offerPool: offerIndex,
           price,

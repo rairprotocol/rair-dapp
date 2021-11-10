@@ -86,7 +86,7 @@ module.exports = context => {
   });
 
   router.use('network/:networkId/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), async (req, res, next) => {
-    const contract = await context.db.Contract.findOne({ _id: req.params.contractAddress.toLowerCase(), blockchain: req.params.networkId });
+    const contract = await context.db.Contract.findOne({ contractAddress: req.params.contractAddress.toLowerCase(), blockchain: req.params.networkId });
 
     if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
 
