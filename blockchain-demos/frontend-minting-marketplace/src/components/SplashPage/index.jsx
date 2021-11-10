@@ -13,10 +13,6 @@ import Nft_3 from './images/exclusive_3.jpeg';
 import Nft_4 from './images/image_3.png';
 import NftImage from './images/circle_nipsey.png';
 import UnlockableVideo from './images/unlockbleVideo.png';
-import Teammate_1 from './images/mrlee.jpeg';
-import Teammate_2 from './images/blacc-sam.png';
-import Teammate_3 from './images/south-dig.png';
-import Teammate_4 from './images/rair-block.png';
 import JoinCommunity from './images/join_com.jpeg';
 
 
@@ -24,7 +20,7 @@ import JoinCommunity from './images/join_com.jpeg';
 import TokenLeft from './TokenLeft/TokenLeft';
 import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
 import UnlockVideos from './UnlockVideos/UnlockVideos';
-import TeamMeet from './TeamMeet/TeamMeet';
+import TeamMeet from './TeamMeet/TeamMeetList';
 import JoinCom from './JoinCom/JoinCom';
 
 const SplashPage = () => {
@@ -101,13 +97,7 @@ const SplashPage = () => {
                 JoinCommunity={JoinCommunity}
                 primaryColor={primaryColor}
             />
-            <TeamMeet
-            primaryColor={primaryColor}
-                Teammate_1={Teammate_1}
-                Teammate_2={Teammate_2}
-                Teammate_3={Teammate_3}
-                Teammate_4={Teammate_4}
-            />
+            <TeamMeet primaryColor={primaryColor} />
         </div>
     )
 }
