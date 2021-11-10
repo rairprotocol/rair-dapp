@@ -1,24 +1,21 @@
 import React from 'react'
 
-const JoinCom = ({ JoinCommunity }) => {
+const JoinCom = ({ JoinCommunity, Metamask }) => {
     return (
         <div className="join-community">
             <div className="title-join">
-                <h3>Join <span className="text-gradient">the</span> community</h3>
+                <h3><span className="text-gradient">Community</span> rewards</h3>
             </div>
             <div className="community-description">
                 <div className="community-text">
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                        anim id est laborum. Duis aute irure dolor in reprehenderit in
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                        sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                        mollit anim id est laborum. Duis aute irure dolor.
+                    <p>
+                        Private Discord server for the 1000 member Nipseyverse where you
+                        will receive exclusive drops before anyone else. First access to
+                        NFTs, real world auctions, merch before anyone else.
                     </p>
 
                     <div className="btn-buy-metamask">
-                        <button>Join with Telegram</button>
+                        <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" />Join with Telegram</button>
                     </div>
                 </div>
                 <div className="join-pic">

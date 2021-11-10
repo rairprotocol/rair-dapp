@@ -35,8 +35,8 @@
 
     background-image: url('./images/nipsey.png');
     background-repeat: no-repeat;
-    background-size: 667px 494px;
-    background-position: center right;
+    background-size: 750px 650px;
+    background-position: right center;
 }
 
 .block-splash {
@@ -49,12 +49,17 @@
 }
 
 .block-splash .logo-author {
-    margin-left: -27px;
+    /* margin-left: -27px;
     margin-top: -24px;
-    margin-bottom: 24px;
+    margin-bottom: 24px; */
 }
 
-.block-splash .logo-author img {
+.block-splash .logo-author img:first-child {
+    width: 194px;
+    height: 77px;
+}
+
+.block-splash .logo-author img:last-child {
     width: 222px;
     height: 166px;
 }
@@ -71,7 +76,7 @@
 }
 
 .text-splash .text-description {
-    width: 502px;
+    width: 402px;
 }
 
 .text-splash p {
@@ -94,11 +99,21 @@
 
     border: none;
     border-radius: 16px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-buy-metamask button:hover {
     background: linear-gradient(320.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
     /* background: red; */
+}
+
+.btn-buy-metamask button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
 }
 
 .block-splash-img {
@@ -117,6 +132,8 @@
 .left-tokens {
     display: flex;
     margin-top: 108px;
+    justify-content: space-between;
+    max-width: 1200px;
 }
 
 .left-tokens .block-left-tokens {
@@ -126,7 +143,7 @@
     margin-right: 91px;
     overflow: hidden;
 
-    background: url('./images/img-left-tokens.jpeg') center center;
+    background: url('./images/left-tokens.jpeg') center center;
     background-size: cover;
     position: relative;
 }
@@ -161,8 +178,14 @@
     font-weight: 700;
 }
 
-.progress-tokens svg {
+.progress-main svg {
     width: 240px;
+    color: #AF6FD8;
+}
+
+.progress-grey svg {
+    width: 230px;
+    margin-top: 6px;
 }
 
 .left-tokens-content {
@@ -188,29 +211,43 @@
 }
 
 .tokens-description {
-    width: 630px;
+    width: 650px;
     text-align: left;
-    line-height: 28px;
     height: 224px;
 }
 
 .tokens-description p{
+    line-height: 28px;
     color: #A7A6A6;
     font: 20px;
     font-weight: 400;
+}
+.tokens-description p:first-child {
+    margin-bottom: 30px;
+}
+
+.left-tokens-content .btn-buy-metamask{
+    display: flex;
+    justify-content: center;
 }
 
 /* Special Offer Block */
 
 .special-offer {
+    position: relative;
     display: flex;
-    margin-bottom: 108px;
+    margin-bottom: 30px;
     margin-top: 120px;
 }
 
 .offer-desp {
     text-align: left;
     margin-right: 51px;
+}
+
+.offer-desp .btn-buy-metamask {
+    display: flex;
+    justify-content: center;
 }
 
 .offer-desp p {
@@ -242,7 +279,7 @@
     width: 424px;
     height: 424px;
     border-radius: 16px;
-    background: url('./images/special-offer_1.jpeg') no-repeat;
+    background: url('./images/image_1.png') no-repeat;
     background-size: cover;
 }
 
@@ -256,7 +293,7 @@
     width: 376px;
     height: 376px;
     border-radius: 16px;
-    background: url('./images/img-left-tokens.jpeg') no-repeat;
+    background: url('./images/image_2.png') no-repeat;
     background-size: cover;
     background-position: center top;
 }
@@ -272,7 +309,7 @@
     width: 328px;
     height: 328px;
     border-radius: 16px;
-    background: url('./images/special-offer_3.jpeg') no-repeat;
+    background: url('./images/image_3.png') no-repeat;
     background-size: cover;
     background-position: center top;
 }
@@ -454,12 +491,8 @@
     display: flex;
 }
 
-.meet-team .box-teammate:first-child {
+.meet-team .box-teammate {
     margin-bottom: 24px;
-}
-
-.box-teammate .img-teammate {
-    margin-right: 40px;
 }
 
 .img-teammate img {
@@ -467,6 +500,13 @@
     width: 384px;
     height: 384px;
     object-fit: cover;
+}
+
+.position-teammate {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px;
 }
 
 .position-teammate .teammate-description {
@@ -526,7 +566,12 @@
     overflow: hidden;
 }
 
-
+.community-description .join-pic img{
+    object-fit: cover;
+    width: 415px;
+    height: 329.50px;
+    border-radius: 16px;
+}
 
 .community-description .community-text {
     width: 694px;
@@ -535,7 +580,7 @@
 
 .community-description .community-text p {
     color: #A7A6A6;
-    font: 20px;
+    font-size: 24px;
     line-height: 28px;
     font-weight: 400;
 }
