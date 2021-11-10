@@ -909,6 +909,13 @@ describe("Token Factory", function () {
 				await expect(minterAsAddress2.buyToken(0, 3, next + 1, {value: 9999})).to.be.revertedWith('Minting Marketplace: Invalid range!');
 			});
 
+			it ("Shouldn't set up custom payment rates if the percentages don't add up to 100%", async function() {
+				await expect(minterInstance.setCustomPayment(2, [addr1.address, addr2.address, addr3.address, addr4.address], [29000, 10000, 25000, 25000]))
+					.to.be.revertedWith("Minting Marketplace: Percentages should add up to 100% (100000, including node fee and treasury fee)");
+				await expect(minterInstance.setCustomPayment(2, [addr1.address, addr2.address, addr3.address, addr4.address], [31000, 10000, 25000, 25000]))
+					.to.be.revertedWith("Minting Marketplace: Percentages should add up to 100% (100000, including node fee and treasury fee)");
+			});
+
 			it ("Should set up custom payment rates", async function() {
 				await expect(await minterInstance.setCustomPayment(2, [addr1.address, addr2.address, addr3.address, addr4.address], [30000, 10000, 25000, 25000]))
 					.to.emit(minterInstance, "CustomPaymentSet")
