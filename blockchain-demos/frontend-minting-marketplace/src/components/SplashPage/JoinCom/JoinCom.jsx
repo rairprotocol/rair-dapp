@@ -1,14 +1,17 @@
 import React from 'react'
 
-const JoinCom = ({ JoinCommunity, Metamask }) => {
+const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {
     return (
         <div className="join-community">
             <div className="title-join">
                 <h3><span className="text-gradient">Community</span> rewards</h3>
             </div>
-            <div className="community-description">
+            <div
+                className="community-description"
+                style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.6)" : "#383637"}` }}
+            >
                 <div className="community-text">
-                    <p>
+                    <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>
                         Private Discord server for the 1000 member Nipseyverse where you
                         will receive exclusive drops before anyone else. First access to
                         NFTs, real world auctions, merch before anyone else.

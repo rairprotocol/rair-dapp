@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TeamMeet = ({ Teammate_1, Teammate_2, Teammate_3, Teammate_4 }) => {
+const TeamMeet = ({ Teammate_1, Teammate_2, Teammate_3, Teammate_4, primaryColor }) => {
     return (
         <div className="splash-team">
             <div className="title-team">
@@ -15,14 +15,14 @@ const TeamMeet = ({ Teammate_1, Teammate_2, Teammate_3, Teammate_4 }) => {
                         <div className="temmate-content-up">
                             <h4>Mr. Lee</h4>
                             <div className="teammate-description">
-                                <p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                                     Mr. Lee, is an American record producer and entrepreneur from Houston,
                                     Texas. He has produced several albums, which achieved platinum and gold
                                     status, such as Scarface's My Homies, 2Pac's Still I Rise, Paul Wall's The
                                     Peoples Champ. He was one of the in-house producers of Rap-A-Lot Records,
                                     and a founder and CEO of Noddfactor Entertainment.
                                 </p>
-                                <p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                                     Mr Lee. worked closed with Nipsey on his 2018 album Victory Lap.
                                 </p>
                             </div>
@@ -41,7 +41,7 @@ const TeamMeet = ({ Teammate_1, Teammate_2, Teammate_3, Teammate_4 }) => {
                         <div className="temmate-content-up">
                             <h4>Samiel Asghedom “Blacc Sam”</h4>
                             <div className="teammate-description">
-                                <p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                                     Samiel Asghedom otherwise known as Blacc Sam is a Los Angeles native,
                                     Eritrean man who serves the community and approaches life like a business
                                     tycoon. Sam’s ability to hustle serves as an inspiration to his peers
@@ -70,7 +70,7 @@ const TeamMeet = ({ Teammate_1, Teammate_2, Teammate_3, Teammate_4 }) => {
                         <div className="temmate-content-up">
                             <h4>JP</h4>
                             <div className="teammate-description">
-                                <p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                                     For content owners, record labels, and distributors,
                                     Southwest Digital offers a complete ecosystem for the digital
                                     music cycle that optimizes your business processes. With headquarters
@@ -93,7 +93,7 @@ const TeamMeet = ({ Teammate_1, Teammate_2, Teammate_3, Teammate_4 }) => {
                         <div className="temmate-content-up">
                             <h4>Robert Guillerman</h4>
                             <div className="teammate-description">
-                                <p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                                     RAIR is a blockchain-based digital rights management platform that
                                     uses NFTs to gate access to streaming content.Data monopolies like Amazon,
                                     YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
@@ -102,7 +102,7 @@ const TeamMeet = ({ Teammate_1, Teammate_2, Teammate_3, Teammate_4 }) => {
                                     help package works into a scarce, valuable, tradeable framework.
 
                                 </p>
-                                <p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                                     RAIR, through its decentralized key management node system, empowers
                                     anyone to create unique, controllable, and transferable digital assets
                                     tied to the actual underlying content.

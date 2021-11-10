@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './SplashPage.css';
 
@@ -27,6 +28,8 @@ import TeamMeet from './TeamMeet/TeamMeet';
 import JoinCom from './JoinCom/JoinCom';
 
 const SplashPage = () => {
+    const { primaryColor } = useSelector(store => store.colorStore);
+
     return (
         <div className="home-splash--page">
             <div className="information-author">
@@ -54,7 +57,7 @@ const SplashPage = () => {
                     </div>
                 </div>
             </div>
-            <TokenLeft Metamask={Metamask} />
+            <TokenLeft primaryColor={primaryColor} />
             <div className="special-offer">
                 <div className="offer-desp">
                     <div className="offer-title">
@@ -62,12 +65,12 @@ const SplashPage = () => {
                     </div>
 
                     <div className="text-offer">
-                        <p>
+                        <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                             Nipsey invented Proud to Pay, a movement adopted and expanded by the NFT
                             community. Your NFT is access and ownership in an eclusive community of
                             like minded fans, artists, and industry veterans.
                         </p>
-                        <p>
+                        <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                             Now is your opportunity to own a unique piece of internet history.
                             Mint today and receive unique streaming NFT artwork at launch.
                         </p>
@@ -90,13 +93,16 @@ const SplashPage = () => {
                 NftImage={NftImage}
             />
             <UnlockVideos
+                primaryColor={primaryColor}
                 UnlockableVideo={UnlockableVideo}
             />
             <JoinCom
                 Metamask={Metamask}
                 JoinCommunity={JoinCommunity}
+                primaryColor={primaryColor}
             />
             <TeamMeet
+            primaryColor={primaryColor}
                 Teammate_1={Teammate_1}
                 Teammate_2={Teammate_2}
                 Teammate_3={Teammate_3}

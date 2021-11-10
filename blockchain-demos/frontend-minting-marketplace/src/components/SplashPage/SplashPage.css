@@ -18,6 +18,7 @@
     justify-content: center;
     flex-direction: column;
     margin-top: 54px;
+    padding-left: 80px;
 }
 
 /* Author Information Block*/
@@ -155,6 +156,7 @@
     font-size: 12px;
     list-style: 21px;
     text-align: left;
+    color: #fff;
 }
 
 .progress-tokens {
@@ -162,7 +164,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background:rgba(34, 32, 33, 0.7);
 
     position: relative;
 }
@@ -172,6 +173,7 @@
 }
 
 .text-progress {
+    color: #fff;
     position: absolute;
     line-height: 50px;
     font-size: 40px;
@@ -335,6 +337,7 @@
     width: 589px;
     height: 589px;
     border-radius: 16px;
+    overflow: hidden;
 
     display: flex;
     align-items: flex-end;
@@ -348,6 +351,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #fff;
 }
 
 .btn-open-store span {
@@ -412,6 +416,7 @@
     border-radius: 16px;
     width: 592px;
     background-color: #4E4D4DCC;
+    overflow: hidden;
 }
 
 .video-icon {
@@ -435,6 +440,8 @@
 }
 .video-icon p {
     margin-top: 10px;
+    color: #fff;
+    font-size: 16px;
 }
 
 .video-locked img {
@@ -456,8 +463,12 @@
     width: 100%;
 }
 
+.video-description .video-title {
+    color: #fff;
+}
+
 .video-description .video-timer p{
-    color: #A7A6A6;
+    color: #fff;
 }
 
 .video-key {

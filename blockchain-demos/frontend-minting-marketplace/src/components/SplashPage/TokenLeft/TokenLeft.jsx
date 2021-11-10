@@ -2,11 +2,14 @@ import React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
-const TokenLeft = ({ Metamask }) => {
+const TokenLeft = ({ primaryColor }) => {
     return (
         <div className="left-tokens">
             <div className="block-left-tokens">
-                <div className="progress-tokens">
+                <div
+                    className="progress-tokens"
+                    style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "rgba(34, 32, 33, 0.7)"}` }}
+                >
                     {/* <CircularProgress
                         value={75}
                         // color="secondary"
@@ -45,7 +48,9 @@ const TokenLeft = ({ Metamask }) => {
                             value={75}
                         />
                     </Box>
-                    <div className="text-progress">
+                    <div
+                        className="text-progress"
+                    >
                         350<br />
                         left
                     </div>
@@ -60,13 +65,13 @@ const TokenLeft = ({ Metamask }) => {
                     <h3>The <span className="text-gradient">Nipsey Hussle</span> legacy</h3>
                 </div>
                 <div className="tokens-description">
-                    <p>
+                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                         October 2013, Nipsey unveils the Crenshaw EP with a groundbreaking
                         release strategy. Sell 1000 copies for $100 each. Within 24 hours all
                         1000 were spoken for. With his next release Mailbox Money, Nipsey
                         upped the ante to $1000 for only 100 copies.
                     </p>
-                    <p>
+                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                         In collaboration with award winning producer Mr. Lee and the
                         Asghedom estate comes the final album as an exclusive 1000 only
                         streaming NFT.
