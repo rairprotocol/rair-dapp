@@ -1,5 +1,6 @@
 import {useState, useEffect, useCallback} from 'react';
 import InputField from '../common/InputField.jsx';
+import { useSelector } from 'react-redux';
 
 const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer}) => {
 	const [receiverAddress, setReceiverAddress] = useState(receiver);
@@ -21,7 +22,7 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 
 	const updateReceiver = (value) => {
 		setReceiverAddress(value);
-		array[index].receiver = Number(value);
+		array[index].receiver = value;
 		renderer()
 	}
 
@@ -60,6 +61,12 @@ const CustomizePayRate = () => {
 	const [customPayments, setCustomPayments] = useState([]);
 	const [rerender, setRerender] = useState(false);
 
+	const [nodeFee, setNodeFee] = useState(0);
+	const [treasuryFee, setTreasuryFee] = useState(0);
+	const [minterDecimals, setMinterDecimals] = useState(0);
+
+	const {minterInstance} = useSelector(store => store.contractStore);
+
 	const addPayment = () => {
 		let aux = [...customPayments];
 		aux.push({
@@ -67,7 +74,18 @@ const CustomizePayRate = () => {
 			percentage: 0
 		});
 		setCustomPayments(aux);
-	} 
+	}
+
+	const getContractData = useCallback(async () => {
+		setNodeFee(await minterInstance.nodeFee());
+		setTreasuryFee(await minterInstance.treasuryFee());
+		setMinterDecimals(3)
+			//await minterInstance.feeDecimals());
+	}, [minterInstance])
+
+	useEffect(() => {
+		getContractData()
+	}, [getContractData])
 
 	const removePayment = (index) => {
 		let aux = [...customPayments];
@@ -89,11 +107,11 @@ const CustomizePayRate = () => {
 				return <CustomPayRateRow key={index} index={index} array={customPayments} deleter={removePayment} renderer={e => setRerender(!rerender)} {...item}/>
 			})}
 		</div>
-		<div className='col-12'>Node Fee: 9%, Treasury Fee: 1%</div>
+		<div className='col-12'>Node Fee: {nodeFee / Math.pow(10, minterDecimals)}%, Treasury Fee: {treasuryFee / Math.pow(10, minterDecimals)}%</div>
 		<div className='col-12'>
-			Total: {total + 9 + 1}
+			Total: {(total) + (nodeFee / Math.pow(10, minterDecimals)) + (treasuryFee / Math.pow(10, minterDecimals))}%
 		</div>
-		<button disabled={total !== 90} onClick={e => console.log(customPayments.map(i => i.receiver), customPayments.map(i => i.percentage * 1000))} className='btn btn-royal-ice'>
+		<button disabled={total !== 90} onClick={e => console.log(customPayments.map(i => i.receiver), customPayments.map(i => i.percentage * Math.pow(10, minterDecimals)))} className='btn btn-royal-ice'>
 			Set data
 		</button>
 	</div>
