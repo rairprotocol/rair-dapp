@@ -89,9 +89,7 @@ const CustomizePayRate = () => {
 
 	const removePayment = (index) => {
 		let aux = [...customPayments];
-		console.log(aux, index)
 		aux.splice(index, 1);
-		console.log(aux)
 		setCustomPayments(aux);
 	}
 
@@ -111,7 +109,7 @@ const CustomizePayRate = () => {
 		<div className='col-12'>
 			Total: {(total) + (nodeFee / Math.pow(10, minterDecimals)) + (treasuryFee / Math.pow(10, minterDecimals))}%
 		</div>
-		<button disabled={total !== 90} onClick={e => console.log(customPayments.map(i => i.receiver), customPayments.map(i => i.percentage * Math.pow(10, minterDecimals)))} className='btn btn-royal-ice'>
+		<button disabled={total !== 90 || !treasuryFee || !nodeFee || !minterDecimals} onClick={e => console.log(customPayments.map(i => i.receiver), customPayments.map(i => i.percentage * Math.pow(10, minterDecimals)))} className='btn btn-royal-ice'>
 			Set data
 		</button>
 	</div>
