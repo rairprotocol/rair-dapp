@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import CustomPayRate from '../whitelabel/customizePayRate.jsx';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
@@ -128,6 +129,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 	const [ranges, setRanges] = useState([]);
 	const [/*locks*/, setLocks] = useState([]);
 	const [forceSync, setForceSync] = useState(false);
+	const [offerIndex, setOfferIndex] = useState();
 
 	const deleter = index => {
 		let aux = [...ranges];
@@ -153,6 +155,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		try {
 			// Marketplace Ranges
 			let offerIndex = (await minterInstance.contractToOfferRange(tokenInstance.address, productIndex)).toString();
+			setOfferIndex(offerIndex);
 			let offerData = await minterInstance.getOfferInfo(offerIndex);
 			let existingRanges = [];
 			for await (let rangeIndex of [...Array.apply(null, { length: offerData.availableRanges.toString() }).keys()]) {
@@ -208,7 +211,6 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			refresher()
 		}
 	}, [productInfo, tokenInstance, minterInstance, refresher])
-
 	return <details style={{position: 'relative'}} className='w-100 border border-secondary rounded'>
 		<Link
 			className='btn btn-warning'
@@ -220,6 +222,12 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		<summary>
 			Product #{productIndex + 1}: {productInfo.name}
 		</summary>
+		<CustomPayRate
+			address={tokenInstance.address}
+			blockchain={window.ethereum.chainId}
+			catalogIndex={offerIndex}
+			customStyle={{position: 'absolute', top: 0, left: 0}}
+		/>
 		<div className='row mx-0 px-0'>
 			<div className='col-12'>
 				<h5> Product Info </h5>

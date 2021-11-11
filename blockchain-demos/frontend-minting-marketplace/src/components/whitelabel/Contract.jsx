@@ -86,6 +86,7 @@ const Contract = ({address}) => {
 												address={data.contractAddress}
 												blockchain={data.blockchain}
 												catalogIndex={product.offers?.length ? product.offers[0]?.offerPool : undefined}
+												customStyle={{borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRight: 'none', paddingTop: 0, paddingBottom: 0}}
 											/>
 											<Link className='btn py-0 btn-stimorol' style={{borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0}} to={`/metadata/${data.contractAddress}/${product.collectionIndexInContract}`}>
 												Edit Metadata!

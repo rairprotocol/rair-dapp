@@ -133,7 +133,7 @@ const ModalContent = ({instance, catalogIndex}) => {
 	</div>
 };
 
-const CustomizePayRate = ({address, blockchain, catalogIndex}) => {
+const CustomizePayRate = ({address, blockchain, catalogIndex, customStyle}) => {
 	const { textColor, primaryColor } = useSelector(store => store.colorStore);
 	const { minterInstance, programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
 
@@ -144,9 +144,9 @@ const CustomizePayRate = ({address, blockchain, catalogIndex}) => {
 	}
 
 	return <button
-		style={{borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRight: 'none'}}
+		style={customStyle}
 		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
-		className={`btn btn-royal-ice py-0`}
+		className={`btn btn-royal-ice`}
 		onClick={async e => {
 			if (!onMyChain) {
 				if (window.ethereum) {
