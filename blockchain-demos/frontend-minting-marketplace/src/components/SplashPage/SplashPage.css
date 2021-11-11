@@ -167,9 +167,20 @@
 
     position: relative;
 }
-.progress-tokens span {
+
+/* .progress-tokens span {
     margin-top: 200px;
     margin-right: 200px;
+} */
+
+.box-progress {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    margin-left: 108px;
+    margin-top: 172px;
 }
 
 .text-progress {
@@ -178,6 +189,33 @@
     line-height: 50px;
     font-size: 40px;
     font-weight: 700;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-progress .progress-info {
+    display: flex;
+    align-items: center;
+    /* padding-bottom: 40px; */
+    width: 240px;
+    height: 240px;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.text-progress .text-numbers {
+    display: flex;
+}
+
+.text-left-tokens {
+    font-size: 45px;
+    margin-right: 6px;
+}
+
+.text-whole-tokens {
+    font-size: 28px;
 }
 
 .progress-main svg {

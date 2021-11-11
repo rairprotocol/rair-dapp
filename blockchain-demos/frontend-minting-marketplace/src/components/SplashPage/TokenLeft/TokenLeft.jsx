@@ -5,21 +5,26 @@ import Box from '@mui/material/Box';
 const TokenLeft = ({ primaryColor }) => {
     const [percentTokens, setPersentTokens] = useState(0);
 
-    const leftTokensNumber = 999;
+    const leftTokensNumber = 990;
     const wholeTokens = 1000;
 
     useEffect(() => {
-        const percentLeft = (leftTokensNumber * 100) / wholeTokens;
-        if (percentLeft > 1) {
-            setPersentTokens(Math.floor(percentLeft));
+        if (leftTokensNumber <= wholeTokens) {
+            const percentLeft = (leftTokensNumber * 100) / wholeTokens;
+            if (percentLeft > 1) {
+                setPersentTokens(Math.floor(percentLeft));
 
-        } 
-        else if(percentLeft > 990) {
-            setPersentTokens(Math.floor(percentLeft));
+            }
+            else if (percentLeft > 990) {
+                setPersentTokens(Math.floor(percentLeft));
+            }
+            else {
+                setPersentTokens(Math.ceil(percentLeft));
+                console.log(percentLeft)
+            }
         }
-        else {
-            setPersentTokens(Math.ceil(percentLeft));
-            console.log(percentLeft)
+        if (leftTokensNumber > wholeTokens) {
+            setPersentTokens(100)
         }
     }, [setPersentTokens])
 
@@ -30,19 +35,7 @@ const TokenLeft = ({ primaryColor }) => {
                     className="progress-tokens"
                     style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "rgba(34, 32, 33, 0.7)"}` }}
                 >
-                    {/* <CircularProgress
-                        value={75}
-                        // color="secondary"
-                        variant="determinate"
-                        sx={{
-                            color: (theme) => (theme.palette.mode === 'light' ? '#AF6FD8' : '#308fe8')
-                        }}
-                    />
-                    <div className="text-progress">
-                        350<br />
-                        left
-                    </div> */}
-                    <Box sx={{ position: 'relative' }}>
+                    <Box className="box-progress" sx={{ position: 'relative' }}>
                         <CircularProgress
                             className="progress-grey"
                             variant="determinate"
@@ -70,9 +63,15 @@ const TokenLeft = ({ primaryColor }) => {
                     </Box>
                     <div
                         className="text-progress"
+                        style={{ fontSize: `${leftTokensNumber === 1000 && "32px"}` }}
                     >
-                        {wholeTokens}/{leftTokensNumber}<br />
-                        left
+                        <div className="progress-info">
+                            <div className="text-numbers">
+                                <div className="text-left-tokens text-gradient">{leftTokensNumber} </div>
+                                <div className="text-whole-tokens"> / {wholeTokens}</div>
+                            </div>
+                            <div>left</div>
+                        </div>
                     </div>
                 </div>
                 <div className="down-text">
