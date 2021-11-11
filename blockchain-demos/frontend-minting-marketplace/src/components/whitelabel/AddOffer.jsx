@@ -142,9 +142,6 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 		</> 
 		: 
 		<div style={{maxHeight: '70vh', overflowY: 'auto'}}>
-			<button className='btn btn-royal-ice'>
-				Set custom fee splits
-			</button>
 			<table className='w-100'>
 				<thead>
 					<tr>
@@ -242,7 +239,7 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 
 const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers}) => {
 	const {contractCreator, programmaticProvider} = useSelector(store => store.contractStore);
-	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
+	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 
 	const store = useStore();
 	let onMyChain = window.ethereum ? chainData[blockchain]?.chainId === window.ethereum.chainId : chainData[blockchain]?.chainId === programmaticProvider.provider._network.chainId;
@@ -273,7 +270,7 @@ const AddOffer = ({address, blockchain, productIndex, tokenLimit, existingOffers
 					width: '90vw',
 					customClass: {
 						popup: `bg-${primaryColor}`,
-						htmlContainer: `text-${secondaryColor}`,
+						htmlContainer: `text-${textColor}`,
 					}
 				})
 			}
