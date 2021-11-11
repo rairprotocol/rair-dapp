@@ -21,7 +21,7 @@ const MintedToken = new Schema({
   ownerAddress: { type: String, lowercase: true },
   offerPool: { type: Number, required: true },
   offer: { type: Number, required: true },
-  contract: { type: String, required: true },
+  contract: { type: Schema.ObjectId, required: true },
   metadata: { type: Metadata, default: () => ({}) },
   metadataURI: { type: String, default: 'none' },
   authenticityLink: { type: String, default: 'none' },

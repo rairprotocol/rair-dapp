@@ -1,16 +1,17 @@
 const express = require('express');
-const { validation, JWTVerification } = require('../../../middleware');
 const _ = require('lodash');
+const { ObjectId } = require('mongodb');
+const { validation, JWTVerification } = require('../../../middleware');
 
 module.exports = context => {
   const router = express.Router();
 
-  // Get minted tokens fro a product
+  // Get minted tokens from a product
   router.get('/', async (req, res, next) => {
     try {
       const { contract, product } = req;
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract: contract._id, product } },
+        { $match: { contract: ObjectId(contract._id), product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -60,7 +61,7 @@ module.exports = context => {
       const { token } = req.params;
       const sanitizedToken = Number(token);
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract: contract._id, product } },
+        { $match: { contract: ObjectId(contract._id), product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -128,7 +129,7 @@ module.exports = context => {
       const offerPool = offerPoolRaw.toObject();
 
       const files = await context.db.MintedToken.aggregate([
-        { $match: { contract: contract._id, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
+        { $match: { contract: ObjectId(contract._id), offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
         {
           $lookup: {
             from: 'File',

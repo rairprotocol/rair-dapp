@@ -6,6 +6,8 @@ Adding new lazy minted tokens from csv file
 
 **Method** : `POST`
 
+**Content-Type** : `multipart/form-data`
+
 **Headers:**
 
 ```json
@@ -33,7 +35,8 @@ Adding new lazy minted tokens from csv file
     "required": true,
     "content": {
       "type": "string"
-    }
+    },
+    "description": "contract ID"
   },
   "product": {
     "required": true,

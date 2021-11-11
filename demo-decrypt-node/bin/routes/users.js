@@ -38,7 +38,7 @@ module.exports = context => {
   router.put('/:publicAddress', validation('updateUser'), validation('singleUser', 'params'),  async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
-      const adminNFT = req.body.adminNFT;
+      const { adminNFT } = req.body;
       const foundUser = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
 
       if (!foundUser) {

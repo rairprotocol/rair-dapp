@@ -20,6 +20,7 @@ module.exports = context => {
     }
   });
 
+  // Get all minted tokens from a product
   router.use('/:product', validation('nftProduct', 'params'), (req, res, next) => {
     req.product = Number(req.params.product);
     next();

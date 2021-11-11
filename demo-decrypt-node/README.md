@@ -54,7 +54,6 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
         * [x] / - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
             * [x] /network/:networkId
                 * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
-                * [x] /:contractAddress - DELETE - remove specific contract, [see details here](readme/delete_contract.md)
                     * [x] /products - GET - get all products for specific contract, [see details here](readme/get_products_for_contract.md)
                         * [x] /offers - GET - get all products with all offers for each of them for particular user, [see details here](readme/get_products_offers.md)
         * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts.md)

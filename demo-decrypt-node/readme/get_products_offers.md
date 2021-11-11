@@ -2,7 +2,7 @@
 
 Find all products with all offers for each of them for particular user
 
-**URL** : `/api/contracts/:contractAddress/products/offers`
+**URL** : `/api/contracts/network/:networkId/:contractAddress/products/offers`
 
 **Method** : `GET`
 
@@ -11,6 +11,25 @@ Find all products with all offers for each of them for particular user
 ```json
 {
   "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
+**Parameters:**
+
+```json
+{
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contractAddress": {
     "required": true,
     "content": {
       "type": "string"

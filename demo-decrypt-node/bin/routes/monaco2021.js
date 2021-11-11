@@ -5,7 +5,7 @@ const { validation } = require('../middleware');
 module.exports = context => {
   const router = express.Router();
 
-  // Get metadata of specific NFT token by contract name, product name, offer name and token id
+  // Get full data about particular product and get list of tokens for it
   router.get('/:adminToken/:contractName/:productName', async (req, res, next) => {
     try {
       const { adminToken, contractName, productName } = req.params;
@@ -16,7 +16,7 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'User not found.' });
       }
 
-      const [product] = await context.db.Contract.aggregate([
+      const [contract] = await context.db.Contract.aggregate([
         { $match: { user: user.publicAddress, title: contractName } },
         {
           $lookup: {
@@ -118,17 +118,17 @@ module.exports = context => {
         }
       ]);
 
-      if (_.isEmpty(product)) {
+      if (_.isEmpty(contract)) {
         return res.status(404).send({ success: false, message: 'Product or contract not found.' });
       }
 
-      const tokens = await context.db.MintedToken.find({ contract: product.contract, offerPool: product.offerPools.marketplaceCatalogIndex });
+      const tokens = await context.db.MintedToken.find({ contract: contract._id, offerPool: contract.offerPools.marketplaceCatalogIndex });
 
       if (_.isEmpty(tokens)) {
         return res.status(404).send({ success: false, message: 'Tokens not found.' });
       }
 
-      res.json({ success: true, result: { product: _.omit(product, ['offerPools']), tokens } });
+      res.json({ success: true, result: { product: _.omit(contract, ['offerPools']), tokens } });
     } catch (e) {
       next(e);
     }

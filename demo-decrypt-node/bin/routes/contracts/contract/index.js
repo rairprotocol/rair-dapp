@@ -17,21 +17,7 @@ module.exports = context => {
     }
   });
 
-  // Delete specific contract
-  router.delete('/', async (req, res, next) => {
-    try {
-      // const { adminNFT: user } = req.user;
-      const { contract } = req;
-
-      await context.db.Contract.deleteOne({ _id: contract._id });
-
-      res.json({ success: true });
-    } catch (e) {
-      next(e);
-    }
-  });
-
-  // Find all products for particular contracts
+  // Find all products for particular contract
   router.get('/products', async (req, res, next) => {
     try {
       const { contract } = req;

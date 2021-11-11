@@ -2,9 +2,34 @@
 
 Get all minted tokens from the product
 
-**URL** : `/api/nft/:contract/:product`
+**URL** : `/api/nft/network/:networkId/:contract/:product`
 
 **Method** : `GET`
+
+**Parameters:**
+
+```json
+{
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contract": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "product": {
+    "required": true,
+    "content": {
+      "type": "number"
+    }
+  }
+}
+```
 
 ## Success Response
 

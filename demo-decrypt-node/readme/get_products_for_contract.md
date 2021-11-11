@@ -2,7 +2,7 @@
 
 Get all products for specific contract
 
-**URL** : `/api/contracts/:contractAddress/products`
+**URL** : `/api/contracts/network/:networkId/:contractAddress/products`
 
 **Method** : `GET`
 
@@ -11,6 +11,25 @@ Get all products for specific contract
 ```json
 {
   "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
+**Parameters:**
+
+```json
+{
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contractAddress": {
     "required": true,
     "content": {
       "type": "string"

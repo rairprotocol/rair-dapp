@@ -5,6 +5,7 @@ const log = require('../../utils/logger')(module);
 const fs = require('fs');
 const csv = require('csv-parser');
 const _ = require('lodash');
+const { ObjectId } = require('mongodb');
 const { execPromise } = require('../../utils/helpers');
 
 const removeTempFile = async (roadToFile) => {
@@ -45,7 +46,7 @@ module.exports = context => {
       const [, adminToken] = user.adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract: ObjectId(contract), product: prod } },
         {
           $lookup: {
             from: 'Offer',
@@ -215,7 +216,7 @@ module.exports = context => {
     }
   });
 
-  router.use('network/:networkId/:contract', validation('nftContract', 'params'), async (req, res, next) => {
+  router.use('/network/:networkId/:contract', validation('nftContract', 'params'), async (req, res, next) => {
     const contract = await context.db.Contract.findOne({ contractAddress: req.params.contract.toLowerCase(), blockchain: req.params.networkId });
 
     if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
