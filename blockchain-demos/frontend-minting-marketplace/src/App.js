@@ -10,7 +10,7 @@ import { getJWT, isTokenValid } from './utils/rFetch.js';
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
-import * as colorTypes from './ducks/colors/types.js';
+// import * as colorTypes from './ducks/colors/types.js';
 import * as authTypes from './ducks/auth/types.js';
 
 // Sweetalert2 for the popup messages

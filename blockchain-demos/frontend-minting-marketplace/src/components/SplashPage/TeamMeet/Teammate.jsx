@@ -4,7 +4,7 @@ const Teammate = ({ url, nameTeammate, desc, primaryColor }) => {
     return (
         <div className="box-teammate">
             <div className="img-teammate">
-                <img src={url} alt="photo" />
+                <img src={url} alt="teamate-img" />
             </div>
             <div className="position-teammate">
                 <div className="temmate-content-up">

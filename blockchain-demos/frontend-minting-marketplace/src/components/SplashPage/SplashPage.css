@@ -596,3 +596,18 @@
     font-weight: 400;
 }
 
+
+
+/* Media Pesponsive*/
+
+@media screen and (max-width: 1900px) {
+    .home-splash--page {
+        padding-left: 0px;
+    }
+}
+
+@media screen and (max-width: 1700px) {
+    .home-splash--page {
+        margin-left: -50px;
+    }
+}

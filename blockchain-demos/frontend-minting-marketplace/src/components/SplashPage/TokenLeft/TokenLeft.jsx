@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
 const TokenLeft = ({ primaryColor }) => {
+    const [percentTokens, setPersentTokens] = useState(0);
+
+    const leftTokensNumber = 999;
+    const wholeTokens = 1000;
+
+    useEffect(() => {
+        const percentLeft = (leftTokensNumber * 100) / wholeTokens;
+        if (percentLeft > 1) {
+            setPersentTokens(Math.floor(percentLeft));
+
+        } 
+        else if(percentLeft > 990) {
+            setPersentTokens(Math.floor(percentLeft));
+        }
+        else {
+            setPersentTokens(Math.ceil(percentLeft));
+            console.log(percentLeft)
+        }
+    }, [setPersentTokens])
+
     return (
         <div className="left-tokens">
             <div className="block-left-tokens">
@@ -45,13 +65,13 @@ const TokenLeft = ({ primaryColor }) => {
                             }}
                             size={40}
                             thickness={4}
-                            value={75}
+                            value={percentTokens}
                         />
                     </Box>
                     <div
                         className="text-progress"
                     >
-                        350<br />
+                        {wholeTokens}/{leftTokensNumber}<br />
                         left
                     </div>
                 </div>
