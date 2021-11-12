@@ -423,8 +423,8 @@ const NftDataPageTest = ({
                 <div className="col-12 row mx-0 box--properties">
                   {/* {checkDataOfProperty()} */}
                   {selectedData
-                  // ? Object.keys(selectedData).length &&
-                    ? selectedData.length &&
+                  ? Object.keys(selectedData).length &&
+                    // ? selectedData.length &&
                       selectedData?.attributes.map((item, index) => {
                         if (item.trait_type === "External URL") {
                           return (
