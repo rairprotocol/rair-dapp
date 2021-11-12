@@ -41,8 +41,6 @@ const ListCollections = () => {
 		getContractData();
 	}, [getContractData])
 
-	console.log(data);
-
 	return <div className='row px-0 mx-0'>
 		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} >
 			{data.products.map((item, index) => {

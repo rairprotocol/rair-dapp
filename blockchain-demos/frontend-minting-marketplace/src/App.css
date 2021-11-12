@@ -43,6 +43,12 @@ body {
   border-radius: 16px!important;
 }
 
+.border-stimorol {
+  background: var(--stimorol);
+  display: inline-block;
+  padding: 1px!important;
+}
+
 input.stimorol-radio[type='radio'] {
   margin-right: 15px;
 }
