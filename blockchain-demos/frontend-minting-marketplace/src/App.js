@@ -27,23 +27,19 @@ import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
 
-// import VideoList from './components/video/videoList.jsx';
 import VideoPlayer from './components/video/videoPlayer.jsx';
 import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 
-// import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 import MockUpPage from './components/MockUpPage/MockUpPage';
 
-// import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
 import MyItems from './components/nft/myItems';
-// import NftList from './components/MockUpPage/NftList/NftList';
-// import NftItem from './components/MockUpPage/NftList/NftItem';
+import { OnboardingButton } from './components/common/OnboardingButton';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -61,6 +57,7 @@ function App({ sentryHistory }) {
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	const [errorAuth, /*setErrorAuth*/] = useState('');
+	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
 	// Redux
 	const dispatch = useDispatch()
@@ -178,6 +175,14 @@ function App({ sentryHistory }) {
 		sentryHistory.push(`/`)
 	}
 
+	const btnCheck = () => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      setRenderBtnConnect(false);
+    } else {
+      setRenderBtnConnect(true);
+    }
+  };
+
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
@@ -191,6 +196,7 @@ function App({ sentryHistory }) {
 	}, [])
 
 	const checkToken = useCallback(() => {
+		btnCheck()
 		const token = localStorage.getItem('token');
 		if (!isTokenValid(token)) {
 			connectUserData()
@@ -294,13 +300,15 @@ function App({ sentryHistory }) {
 							<div className='col-12 pt-2 mb-4' style={{ height: '10vh' }}>
 								<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
 							</div>
-							{!loginDone ? <div className='btn-connect-wallet-wrapper'>
+							{!loginDone ? <div className='btn-connect-wallet-wrapper'> 
 								<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
 									className={`btn btn-${primaryColor} btn-connect-wallet`}
 									onClick={connectUserData}>
 									{startedLogin ? 'Please wait...' : 'Connect Wallet'}
 									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-								</button></div> : [
+								</button> 
+									{renderBtnConnect ? <OnboardingButton /> : <> </>}
+								</div> : [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className='fas fa-search' />, route: '/search' },
 									{ name: <i className='fas fa-user' />, route: '/user' },
