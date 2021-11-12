@@ -154,7 +154,7 @@ function App({ sentryHistory }) {
 
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
-				
+
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				console.log(token, "token");
@@ -177,7 +177,7 @@ function App({ sentryHistory }) {
 		}
 	};
 
-	const goHome = () =>{
+	const goHome = () => {
 		sentryHistory.push(`/`)
 	}
 
@@ -207,7 +207,7 @@ function App({ sentryHistory }) {
 		let timeout;
 		if (token) {
 			const decoded = jsonwebtoken.decode(token);
-			
+
 			if (decoded?.exp) {
 
 				timeout = setTimeout(() => {
@@ -260,7 +260,7 @@ function App({ sentryHistory }) {
 						loginDone={loginDone}
 						setLoginDone={setLoginDone}
 					/>
-					<div className='row w-100 m-0 p-0'>
+					<div className='row w-100 m-0 p-0 main-content'>
 						<div className='col-1 d-none d-xl-inline-block' />
 						<div className='col-1 rounded'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '10vh' }}>
@@ -348,6 +348,21 @@ function App({ sentryHistory }) {
 						</div>
 						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 					</div>
+					<footer 
+					className="footer col"
+					style={{
+						background: `${primaryColor === "rhyno" ? "#ccc": ""}`
+					}}
+					>
+						<div className="text-rairtech" style={{color: `${primaryColor === "rhyno" ? "#000" : ""}`}}>
+							© Rairtech 2021. All rights reserved
+						</div>
+						<ul>
+							<li>newsletter</li>
+							<li>contract</li>
+							<li>inquiries</li>
+						</ul>
+					</footer>
 				</div>
 			</Router>
 		</Sentry.ErrorBoundary>
