@@ -649,3 +649,15 @@
         margin-left: -50px;
     }
 }
+
+@media screen and (max-width: 1430px) {
+    .home-splash--page {
+        margin-left: 100px;
+    }
+}
+
+/* @media screen and (max-width: 1398px) {
+    .home-splash--page {
+        margin-left: 0px;
+    }
+} */
