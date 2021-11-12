@@ -162,7 +162,7 @@ const CustomizePayRate = ({address, blockchain, catalogIndex, customStyle}) => {
 					html: <ModalContent
 						blockchain={blockchain}
 						instance={minterInstance}
-						catalogIndex={0}
+						catalogIndex={catalogIndex}
 					/>,
 					showConfirmButton: false,
 					customClass: {
