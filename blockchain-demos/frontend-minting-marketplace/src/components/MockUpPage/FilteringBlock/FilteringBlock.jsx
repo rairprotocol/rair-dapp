@@ -3,7 +3,7 @@ import "./FilteringBlock.css";
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
-const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem }) => {
+const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilterShow }) => {
     const [filterPopUp, setFilterPopUp] = useState(false);
     const [/*filterItem*/, setFilterItem] = useState('Filters');
     const filterRef = useRef();
@@ -56,7 +56,7 @@ const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem }) => {
 
     return (
         <>
-            <div ref={filterRef} className="select-filters-wrapper">
+            {!isFilterShow ? <div ref={filterRef} className='emptyFilter'> </div> : <div ref={filterRef} className="select-filters-wrapper">
                 <div
                     style={{
                         backgroundColor: `var(--${primaryColor})`,
@@ -78,7 +78,7 @@ const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem }) => {
                         <div onClick={() => { onChangeFilterItem("Metadata"); setIsOpenCategories(true) }} className="select-filters-item">Categories</div>
                     </div>
                 }
-            </div>
+            </div>}
             <div ref={sortRef} className="select-sort-wrapper">
                 <div
                     onClick={onChangeSortPopUp}

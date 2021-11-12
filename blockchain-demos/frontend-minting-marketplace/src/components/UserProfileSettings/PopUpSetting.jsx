@@ -34,7 +34,7 @@ const PopUpSettings = ({
   };
 
   const pushToMyItems = () => {
-    history.push("/my-nft");
+    history.push("/my-items");
   };
 
   const pushToFactory = () => {

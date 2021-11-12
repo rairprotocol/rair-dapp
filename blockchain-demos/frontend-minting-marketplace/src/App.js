@@ -31,7 +31,7 @@ import ConsumerMode from './components/consumerMode.jsx';
 import VideoPlayer from './components/video/videoPlayer.jsx';
 import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 
-import MyNFTs from './components/nft/myNFT.jsx';
+// import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 import MockUpPage from './components/MockUpPage/MockUpPage';
@@ -41,6 +41,7 @@ import * as Sentry from "@sentry/react";
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
+import MyItems from './components/nft/myItems';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -135,7 +136,6 @@ function App({ sentryHistory }) {
 						parsedResponse.message);
 				} else {
 					Swal.fire('Error', "Can't sign messages", 'error');
-					console.log("Nahuy")
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
@@ -304,7 +304,7 @@ function App({ sentryHistory }) {
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className='fas fa-search' />, route: '/search' },
 									{ name: <i className='fas fa-user' />, route: '/user' },
-									{ name: <i className="fas fa-key" />, route: '/my-nft' },
+									{ name: <i className="fas fa-key" />, route: '/my-items' },
 									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
 									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
 									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
@@ -347,7 +347,8 @@ function App({ sentryHistory }) {
 										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
-									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+									{loginDone && <SentryRoute exact path='/my-items' ><MyItems goHome={goHome}/>
+										</SentryRoute>}
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 									<SentryRoute path='/tokens/:contract/:product/:tokenId'>
 										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />

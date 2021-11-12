@@ -28,7 +28,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     ).json();
     const covers = responseContract.contracts.map((item) => ({
       id: item._id,
-      productId: item.products?._id ?? 'wut',
+      productId: item.products?._id ?? "wut",
       blockchain: item.blockchain,
       collectionIndexInContract: item.products.collectionIndexInContract,
       contract: item.contractAddress,
@@ -73,13 +73,16 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     }
   }, []);
 
-  const handleClick = useCallback((cover) => {
-    data.forEach((item) => {
-      if (cover === item.cover) {
-        console.log(1);
-      }
-    });
-  }, [data])
+  const handleClick = useCallback(
+    (cover) => {
+      data.forEach((item) => {
+        if (cover === item.cover) {
+          console.log(1);
+        }
+      });
+    },
+    [data]
+  );
 
   return (
     <div className="input-search-wrapper list-button-wrapper">
@@ -90,7 +93,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"}`}
+            selectedClassName={`search-tab-selected-${
+              primaryColor === "rhyno" ? "default" : "dark"
+            }`}
             className="category-button-nft category-button"
           >
             NFT
@@ -101,7 +106,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"}`}
+            selectedClassName={`search-tab-selected-${
+              primaryColor === "rhyno" ? "default" : "dark"
+            }`}
             className="category-button-videos category-button"
           >
             Videos
@@ -116,7 +123,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
               borderTopLeftRadius: "0",
-              width: "100%"
+              width: "100%",
             }}
             customClass="form-control input-styled"
           />
@@ -126,6 +133,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             setSortItem={setSortItem}
             primaryColor={primaryColor}
             textColor={textColor}
+            isFilterShow={true}
           />
         </div>
         <TabPanel>
