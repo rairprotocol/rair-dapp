@@ -10,7 +10,7 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                 <div className="box-video">
                     <div
                         className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "#4E4D4DCC"}` }}
+                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}
                     >
                         <div style={{ position: "relative" }}>
                             <div className="video-icon">
@@ -21,10 +21,10 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                         </div>
                         <div className="video-description">
                             <div className="video-title">
-                                <p>Victory Lap </p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Victory Lap </p>
                             </div>
                             <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>00:03:23</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
                             </div>
                             <div className="video-key">
                                 <i className="fas fa-key"></i>
@@ -34,7 +34,7 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                 </div>
                 <div className="box-video">
                     <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "#4E4D4DCC"}` }}>
+                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
                         <div style={{ position: "relative" }}>
                             <div className="video-icon">
                                 <i className="fa fa-lock" aria-hidden="true"></i>
@@ -44,10 +44,10 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                         </div>
                         <div className="video-description">
                             <div className="video-title">
-                                <p>Dedication (featuring Kendrick Lamar)</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Dedication (featuring Kendrick Lamar)</p>
                             </div>
                             <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>00:03:23</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
                             </div>
                             <div className="video-key">
                                 <i className="fas fa-key"></i>
@@ -57,7 +57,7 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                 </div>
                 <div className="box-video">
                     <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "#4E4D4DCC"}` }}>
+                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
                         <div style={{ position: "relative" }}>
                             <div className="video-icon">
                                 <i className="fa fa-lock" aria-hidden="true"></i>
@@ -67,10 +67,10 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                         </div>
                         <div className="video-description">
                             <div className="video-title">
-                                <p>Last Time That I Checc'd</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Last Time That I Checc'd</p>
                             </div>
                             <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>00:03:23</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
                             </div>
                             <div className="video-key">
                                 <i className="fas fa-key"></i>
@@ -80,7 +80,7 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                 </div>
                 <div className="box-video">
                     <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "#4E4D4DCC"}` }}>
+                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
                         <div style={{ position: "relative" }}>
                             <div className="video-icon">
                                 <i className="fa fa-lock" aria-hidden="true"></i>
@@ -90,10 +90,10 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                         </div>
                         <div className="video-description">
                             <div className="video-title">
-                                <p>Keyz 2 the City 2</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Keyz 2 the City 2</p>
                             </div>
                             <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>00:03:23</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
                             </div>
                             <div className="video-key">
                                 <i className="fas fa-key"></i>
@@ -103,7 +103,7 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                 </div>
                 <div className="box-video">
                     <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "#4E4D4DCC"}` }}>
+                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
                         <div style={{ position: "relative" }}>
                             <div className="video-icon">
                                 <i className="fa fa-lock" aria-hidden="true"></i>
@@ -113,10 +113,10 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                         </div>
                         <div className="video-description">
                             <div className="video-title">
-                                <p>Grinding All My Life</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Grinding All My Life</p>
                             </div>
                             <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>00:03:23</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
                             </div>
                             <div className="video-key">
                                 <i className="fas fa-key"></i>
@@ -126,7 +126,7 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                 </div>
                 <div className="box-video">
                     <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "#4E4D4DCC"}` }}>
+                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
                         <div style={{ position: "relative" }}>
                             <div className="video-icon">
                                 <i className="fa fa-lock" aria-hidden="true"></i>
@@ -136,10 +136,10 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
                         </div>
                         <div className="video-description">
                             <div className="video-title">
-                                <p>Million While You Young</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Million While You Young</p>
                             </div>
                             <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>00:03:23</p>
+                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
                             </div>
                             <div className="video-key">
                                 <i className="fas fa-key"></i>

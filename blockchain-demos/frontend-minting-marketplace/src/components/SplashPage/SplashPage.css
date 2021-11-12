@@ -19,6 +19,12 @@
     flex-direction: column;
     margin-top: 54px;
     padding-left: 80px;
+
+    background-image: url('./images/victory_lap.png'), url('./images/maraphon.png'), url('./images/or.png'), url('./images/humble.png');
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
+    background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
+    
 }
 
 /* Author Information Block*/
@@ -252,6 +258,8 @@
 
 .left-tokens-content .btn-buy-metamask {
     margin-top: 0;
+    display: flex;
+    justify-content: flex-start !important;
 }
 
 .left-tokens-content .title-tokens h3{

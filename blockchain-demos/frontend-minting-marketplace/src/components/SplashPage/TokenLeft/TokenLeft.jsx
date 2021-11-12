@@ -100,7 +100,7 @@ const TokenLeft = ({ primaryColor }) => {
                     </p>
                 </div>
                 <div className="btn-buy-metamask">
-                    <button>Newsletter</button>
+                    <button>Stay Connected</button>
                 </div>
             </div>
         </div>

@@ -8,10 +8,10 @@ const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {
             </div>
             <div
                 className="community-description"
-                style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.6)" : "#383637"}` }}
+                style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#383637"}` }}
             >
                 <div className="community-text">
-                    <p style={{ color: `${primaryColor === "rhyno" ? "#fff" : "#A7A6A6"}` }}>
+                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                         Private Discord server for the 1000 member Nipseyverse where you
                         will receive exclusive drops before anyone else. First access to
                         NFTs, real world auctions, merch before anyone else.
