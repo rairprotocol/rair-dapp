@@ -155,7 +155,9 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		try {
 			// Marketplace Ranges
 			let offerIndex = (await minterInstance.contractToOfferRange(tokenInstance.address, productIndex)).toString();
-			setOfferIndex(offerIndex);
+			if (offerIndex) {
+				setOfferIndex(offerIndex);
+			}
 			let offerData = await minterInstance.getOfferInfo(offerIndex);
 			let existingRanges = [];
 			for await (let rangeIndex of [...Array.apply(null, { length: offerData.availableRanges.toString() }).keys()]) {
@@ -222,12 +224,12 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		<summary>
 			Product #{productIndex + 1}: {productInfo.name}
 		</summary>
-		<CustomPayRate
+		{offerIndex && <CustomPayRate
 			address={tokenInstance.address}
 			blockchain={window.ethereum.chainId}
 			catalogIndex={offerIndex}
 			customStyle={{position: 'absolute', top: 0, left: 0}}
-		/>
+		/>}
 		<div className='row mx-0 px-0'>
 			<div className='col-12'>
 				<h5> Product Info </h5>
