@@ -7,6 +7,9 @@ import {useSelector} from 'react-redux';
 import { erc721Abi } from '../../contracts'
 import chainData from '../../utils/blockchainData';
 import swal from 'sweetalert2';
+
+import MetadataSender from './metadataSender.jsx';
+
 /*
 	"metadata": {
         "artist": "none",
@@ -129,9 +132,11 @@ const MetadataEditor = (props) => {
 
 	const [existingMetadataArray, setExistingMetadataArray] = useState([]);
 	
-	const [sendingMetadata, setSendingMetadata] = useState(false);
-	const [ipfsLink, setIpfsLink] = useState('');
-
+	const [sendingProductMetadata, setSendingProductMetadata] = useState(false);
+	const [sendingContractMetadata, setSendingContractMetadata] = useState(false);
+	const [productURI, setProductURI] = useState('');
+	const [contractURI, setContractURI] = useState('');
+	
 	const params = useParams();
 
 	const {contractCreator} = useSelector(state => state.contractStore);
@@ -200,9 +205,9 @@ const MetadataEditor = (props) => {
 				setImage('');
 				return;
 			}
-			setTitle(metadata.name);
-			setDescription(metadata.description);
-			setImage(metadata.image);
+			setTitle(metadata.name ? metadata.name : '');
+			setDescription(metadata.description ? metadata.description : '');
+			setImage(metadata.image ? metadata.image : '');
 			setAttributes(Object.keys(metadata.attributes).map((item, index) => {
 				let itm = metadata.attributes[item];
 				if (itm.trait_type === undefined) {
@@ -234,35 +239,14 @@ const MetadataEditor = (props) => {
 			({params.contract}) on {chainData[contractNetwork]?.name}
 		</small>}
 		<div className='col-6'>
-			<div className='col-3' />
-			{existingMetadataArray && <button onClick={async e => {
-					if (window.ethereum.chainId !== contractNetwork) {
-						swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
-						return;
-					}
-					let instance = contractCreator(params.contract, erc721Abi);
-					swal.fire('Fetching Metadata URL...');
-					let metadataLink = await instance.tokenURI(tokenNumber);
-					if (metadataLink === '') {
-						swal.fire('No metadata URL found!')
-						return;
-					}
-					swal.fire('Fetching Metadata from URL...');
-					let metadataData = await fetch(metadataLink).then(blob => blob.json());
-					let workaroundToDisplayMetadata = [...existingMetadataArray];
-					workaroundToDisplayMetadata[tokenNumber] = metadataData;
-					swal.close();
-					setExistingMetadataArray(workaroundToDisplayMetadata);
-				}} disabled={sendingMetadata} className='col-12 btn btn-primary'>
-				Check metadata on blockchain!
-			</button>}
-			<button disabled className='btn btn-primary col-3'>
+			<div className='col-2' />
+			<button disabled className='btn btn-royal-ice col-3'>
 				Single
 			</button>
-			<Link to={`/batch-metadata/${params.contract}/${params.product}`} className='btn btn-secondary col-3'>
+			<Link to={`/batch-metadata/${params.contract}/${params.product}`} className='btn btn-royal-ice col-3'>
 				Batch
 			</Link>
-			<div className='col-3' />
+			<div className='col-2' />
 			<InputField
 				label='Title'
 				getter={title}
@@ -374,36 +358,117 @@ const MetadataEditor = (props) => {
 					Update Metadata
 				</button>
 
-				<InputField
-					label='Metadata URL'
-					placeholder='Full link'
-					getter={ipfsLink}
-					setter={setIpfsLink}
-					customClass='form-control'
-					labelClass='w-100'
-					labelCSS={{textAlign: 'left'}}
-					/>
+		</div>
+		<hr />
+
+		{existingMetadataArray && 
+			<div className='p-5 col-12'>
 				<button onClick={async e => {
 					if (window.ethereum.chainId !== contractNetwork) {
 						swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
 						return;
 					}
-					setSendingMetadata(true);
 					let instance = contractCreator(params.contract, erc721Abi);
-					try {
-						await instance.setUniqueURI(tokenNumber, ipfsLink);
-					} catch (err) {
-						swal.fire('Error', err.data.message);
-						console.log(err);
-						setSendingMetadata(false);
+					swal.fire('Fetching Metadata URL...');
+					let metadataLink = await instance.tokenURI(tokenNumber);
+					if (metadataLink === '') {
+						swal.fire('No metadata URL found!')
 						return;
+					} else {
+						console.log('Found URI:', metadataLink);
 					}
-					setSendingMetadata(false);
-					swal.fire('Metadata Set!');
-				}} disabled={sendingMetadata} className='col-12 btn btn-primary'>
-					{sendingMetadata ? 'Sending Metadata...' : 'Send Metadata link to the contract!'}
+					swal.fire('Fetching Metadata from URL...');
+					let metadataData = await fetch(metadataLink).then(blob => blob.json());
+					let workaroundToDisplayMetadata = [...existingMetadataArray];
+					workaroundToDisplayMetadata[tokenNumber] = metadataData;
+					swal.close();
+					setExistingMetadataArray(workaroundToDisplayMetadata);
+				}} className='col-12 btn btn-primary'>
+					Check metadata on the blockchain!
 				</button>
-		</div>
+
+				<MetadataSender {...{contractNetwork, existingMetadataArray, params, tokenNumber, internalFirstToken, endingToken}} />
+
+				<details className='col-12 py-3'>
+					<summary>
+						<h5> Product-Wide metadata </h5>
+						<small> tokenURI will return this if an unique URI doesn't exist </small>
+					</summary>
+					<InputField
+						label='Product Metadata URI'
+						getter={productURI}
+						setter={setProductURI}
+						customClass='form-control'
+						labelClass='w-100'
+						labelCSS={{textAlign: 'left'}}
+					/>
+					<small> The token ID (using the product numbering) will be appended at the end of the URI </small>
+					<br />
+						<small> Preview: <a href={`${productURI}${tokenNumber}`}>{productURI}<b>{tokenNumber}</b></a> </small>
+						<br />
+						<button disabled={sendingProductMetadata} className='btn btn-royal-ice' onClick={async e => {
+							if (window.ethereum.chainId !== contractNetwork) {
+								swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
+								return;
+							}
+							setSendingProductMetadata(true);
+							let instance = contractCreator(params.contract, erc721Abi);
+							try {
+									await instance.setProductURI(params.product, productURI);
+							} catch (err) {
+								swal.fire('Error', err?.data?.message);
+								console.log(err);
+								setSendingProductMetadata(false);
+								return;
+							}
+							setSendingProductMetadata(false);
+							swal.fire('Product Metadata Set!');
+						}} >
+							{productURI ? 'Update' : 'Delete'} product Metadata URI
+						</button> 
+				</details>
+				
+				<details className='col-12 py-3'>
+					<summary>
+						<h5> Contract-Wide metadata </h5>
+						<small> tokenURI will return this as a last resort </small>
+					</summary>
+					<InputField
+						label='Product Metadata URI'
+						getter={contractURI}
+						setter={setContractURI}
+						customClass='form-control'
+						labelClass='w-100'
+						labelCSS={{textAlign: 'left'}}
+					/>
+					<small> The token ID (using the internal numbering) will be appended at the end of the URI (Remember the slash at the end!) </small>
+					<br />
+						<small> Preview: <a href={`${contractURI}${internalFirstToken + tokenNumber}`}>{contractURI}<b>{Number(internalFirstToken) + Number(tokenNumber)}</b></a> </small>
+						<br />
+						<button disabled={sendingContractMetadata} className='btn btn-royal-ice' onClick={async e => {
+							if (window.ethereum.chainId !== contractNetwork) {
+								swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
+								return;
+							}
+							setSendingContractMetadata(true);
+							let instance = contractCreator(params.contract, erc721Abi);
+							try {
+								await instance.setBaseURI(contractURI);
+							} catch (err) {
+								swal.fire('Error', err?.data?.message);
+								console.log(err);
+								setSendingContractMetadata(false);
+								return;
+							}
+							setSendingContractMetadata(false);
+							swal.fire('Contract Metadata Set!');
+						}} >
+							{contractURI ? 'Update' : 'Delete'} contract Metadata URI
+						</button> 
+				</details>
+
+			</div>
+		}
 	</div>
 }
 
