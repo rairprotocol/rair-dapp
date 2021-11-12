@@ -5,7 +5,7 @@ import './SplashPage.css';
 
 /* importing images*/
 import Metamask from './images/metamask_logo.png';
-import logoAuthor from './images/nispsey-hussle.png';
+import logoAuthor from './images/colab.png';
 import logoDigital from './images/digital.png';
 import Nft_1 from './images/exclusive_1.jpeg';
 import Nft_2 from './images/exclusive_2.jpeg';
@@ -30,25 +30,24 @@ const SplashPage = () => {
         <div className="home-splash--page">
             <div className="information-author">
                 <div className="block-splash">
-                    <div className="logo-author">
-                        <img src={logoDigital} alt="southwest digital" />
-                        <img src={logoAuthor} alt="logo-author" />
-                    </div>
                     <div className="text-splash">
                         <div className="title-splash">
                             <h3>Enter the</h3>
-                            <span className="text-gradient">Nipseyverse</span>
+                            <span>Nipseyverse</span>
                         </div>
                         <div className="text-description">
                             <p>
-                                1000 Unique NFTs unlock exlusive streaming
-                                for the final Nipsey Hussle album. Proceeds
-                                directly benefit the Airmiess Asghedom
-                                estate on chain and Eritrean Charity
+                                1000 Unique NFTs unlock exlusive streaming for the final
+                                Nipsey Hussle album. Proceeds directly benefit the Airmiess
+                                Asghedom estate on chain.
                             </p>
                         </div>
                         <div className="btn-buy-metamask">
                             <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Preorder with ETH</button>
+                        </div>
+                        <div className="logo-author">
+                            {/* <img src={logoDigital} alt="southwest digital" /> */}
+                            <img src={logoAuthor} alt="logo-author" />
                         </div>
                     </div>
                 </div>

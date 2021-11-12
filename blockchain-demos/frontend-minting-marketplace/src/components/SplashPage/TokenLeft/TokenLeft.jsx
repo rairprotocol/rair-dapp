@@ -33,8 +33,11 @@ const TokenLeft = ({ primaryColor }) => {
             <div className="block-left-tokens">
                 <div
                     className="progress-tokens"
-                    style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "rgba(34, 32, 33, 0.7)"}` }}
+                    style={{ background: `${primaryColor === "rhyno" ? "rgba(34, 32, 33, 0.4)" : "rgba(34, 32, 33, 0.6)"}` }}
                 >
+                    <div className="title-progress-left">
+                        NFTs remaining
+                    </div>
                     <Box className="box-progress" sx={{ position: 'relative' }}>
                         <CircularProgress
                             className="progress-grey"

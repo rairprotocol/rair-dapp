@@ -32,12 +32,12 @@
     display: flex;
     justify-content: flex-start;
     max-width: 1200px;
-    height: 694px;
+    /* height: 694px; */
 
     background-image: url('./images/nipsey.png');
     background-repeat: no-repeat;
-    background-size: 750px 650px;
-    background-position: right center;
+    background-size: 530px auto;
+    background-position: 95% center;
 }
 
 .block-splash {
@@ -50,19 +50,12 @@
 }
 
 .block-splash .logo-author {
-    /* margin-left: -27px;
-    margin-top: -24px;
-    margin-bottom: 24px; */
+    margin-top: 88px;
 }
 
 .block-splash .logo-author img:first-child {
-    width: 194px;
-    height: 77px;
-}
-
-.block-splash .logo-author img:last-child {
-    width: 222px;
-    height: 166px;
+    width: 313px;
+    height: auto;
 }
 
 .text-splash .title-splash {
@@ -70,20 +63,27 @@
 }
 
 .text-splash .title-splash h3{
-    font-size: 32px;
-    line-height: 35px;
-    font-weight: 700;
-    color: #000;
+    font-size: 24px;
+    font-weight: 800;
+    color: #A7A6A6;
+    margin: 0;
+}
+
+.text-splash .title-splash span {
+    font-size: 64px;
+    color: #4E4D4D;
+    font-weight: 800;
 }
 
 .text-splash .text-description {
-    width: 402px;
+    width: 500px;
+    font-size: 20px;
 }
 
 .text-splash p {
     color: #A7A6A6;
     font: 20px;
-    line-height: 28px;
+    line-height: 36px;
     font-weight: 400;
 }
 
@@ -215,7 +215,7 @@
 }
 
 .text-whole-tokens {
-    font-size: 28px;
+    font-size: 20px;
 }
 
 .progress-main svg {
@@ -234,6 +234,16 @@
     text-align: left;
     justify-content: center;
 
+}
+
+.title-progress-left {
+    position: absolute;
+    font-size: 36px;
+    top: 72px;
+    font-weight: 700;
+    line-height: 60px;
+    color: #fff;
+    
 }
 
 .left-tokens-content .title-tokens {
