@@ -262,7 +262,7 @@ const getCustomPayments = async (minterAddress, chainName) => {
 			customPayment.set('blockchain', blockchainData[chainName].chainId);
 			customPayment.set('minterAddress', result.address);
 			customPayment.set('recipients', result.data.recipients);
-			customPayment.set('percentages', result.data.contractAddress);
+			customPayment.set('percentages', result.data.percentages);
 			await customPayment.save();
 			console.log(`[${chainName}] Saved Custom Payment on offer pool index ${result.data.catalogIndex}`);
 		}
