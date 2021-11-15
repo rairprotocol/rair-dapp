@@ -38,7 +38,7 @@ const PopUpSettings = ({
   };
 
   const pushToFactory = () => {
-    history.push("/factory");
+    history.push("/new-factory");
   };
 
   return (
@@ -99,7 +99,7 @@ const PopUpSettings = ({
             <li onClick={pushToMyItems}>
               <i className="fas fa-boxes"></i>My items
             </li>
-            {adminAccess && (
+            { (
               <li onClick={pushToFactory}>
                 <i className="fas fa-hammer"></i>Factory
               </li>
