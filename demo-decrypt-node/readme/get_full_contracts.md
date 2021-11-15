@@ -74,6 +74,15 @@ Returns found full contracts
             "copies": 40
           }
         ]
+      },
+      "offerPool": {
+        "_id": "618e82eb23dc5b001d58946e",
+        "marketplaceCatalogIndex": 12,
+        "contract": "contractAddress",
+        "product": 0,
+        "rangeNumber": 1,
+        "minterAddress": "minterAddress",
+        "creationDate": "2021-11-12T15:06:19.756Z"
       }
     },
     ...
