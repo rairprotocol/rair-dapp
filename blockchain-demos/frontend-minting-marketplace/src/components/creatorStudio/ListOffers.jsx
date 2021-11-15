@@ -5,6 +5,25 @@ import FixedBottomNavigation from './FixedBottomNavigation.jsx';
 import { useParams, useHistory, NavLink } from 'react-router-dom';
 import {rFetch} from '../../utils/rFetch.js';
 
+
+
+const colors = [
+	'#E4476D',
+	//'#73B8E5',
+	//'#CCA541',
+	'gold',
+	'silver',
+	'#b08d57',
+	'#000000',
+	'#393939',
+	'#636363',
+	'#9a9a9a',
+	'#bdbdbd',
+	'#eoeoeo',
+	'#f3f3f3',
+	'#ffffff'
+];
+
 const OfferRow = ({index, deleter, name, starts, ends, price, array, rerender}) => {
 
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
@@ -14,7 +33,8 @@ const OfferRow = ({index, deleter, name, starts, ends, price, array, rerender}) 
 	const [endingToken, setEndingToken] = useState(ends);
 	const [individualPrice, setIndividualPrice] = useState(price);
 
-	const [randColor, ] = useState(Math.round(Math.random() * 0xFFFFFF));
+	//const [randColor, ] = useState(Math.abs(0xE4476D - (0x58ec5c * index)));
+	const randColor = colors[index];
 
 	const updater = (name, setter, value) => {
 		array[index][name] = value;
@@ -59,7 +79,7 @@ const OfferRow = ({index, deleter, name, starts, ends, price, array, rerender}) 
 	return <tr>
 		<th>
 			<button disabled className='btn btn-charcoal rounded-rair'>
-				<i style={{color: `#${randColor.toString(16)}`}} className='fas fa-key' />
+				<i style={{color: `${randColor}`}} className='fas fa-key' />
 			</button>
 		</th>
 		<th className='p-1'>
@@ -220,7 +240,7 @@ const ListOffers = () => {
 		</table>}
 		<div className='col-12 mt-3 text-center'>
 			<div className='border-stimorol rounded-rair'>
-				<button onClick={addOffer} className={`btn btn-${primaryColor} rounded-rair px-4`}>
+				<button onClick={addOffer} disabled={offerList.length >= 12} className={`btn btn-${primaryColor} rounded-rair px-4`}>
 					Add new <i className='fas fa-plus' style={{border: `solid 1px ${textColor}`, borderRadius: '50%', padding: '5px'}} />
 				</button>
 			</div>
