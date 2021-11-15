@@ -70,6 +70,7 @@ li {
 
 .row.w-100.main-content {
   padding-bottom: 200px !important;
+  overflow: hidden;
 }
 
 .App-link {
@@ -651,6 +652,10 @@ margin-left: -36px;
   height: 600px !important;
 }
 
+/* .col-12.mt-3.row {
+  overflow: hidden;
+} */
+
 .col-12 .rounded .react-player__play-icon {
   position: absolute;
   top: 28px;
@@ -659,6 +664,8 @@ margin-left: -36px;
   border-width: 7px 0px 9px 13px !important;
   z-index: 2;
 }
+
+
 
 .col-12 .rounded .react-player__preview {
   justify-content: flex-start !important;
