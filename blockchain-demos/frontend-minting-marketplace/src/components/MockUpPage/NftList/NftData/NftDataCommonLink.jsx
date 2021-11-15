@@ -6,7 +6,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedToken, setSelectedToken] = useState();
-  const [, /*offer*/ setOffer] = useState({});
+  // const [, /*offer*/ setOffer] = useState({});
   const [offerPrice, setOfferPrice] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
 
@@ -27,27 +27,53 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     setSelectedToken(tokenId);
   }, [product, contract, tokenId]);
 
+// ---- return only offers for particular contract with x-token ----
+
+  // const getParticularOffer = useCallback(async () => {
+  //   let response = await (
+  //     await fetch(`/api/contracts/${contract}/products/offers`, {
+  //     // await fetch(`/api/nft/${contract}/${product}/offers`, {
+  //       method: "GET",
+  //       headers: {
+  //         "x-rair-token": localStorage.token,
+  //       },
+  //     })
+  //   ).json();
+
+  //   if (response.success) {
+  //     response?.products.map((patOffer) => {
+  //       if (patOffer.collectionIndexInContract === Number(product)) {
+  //         setOffer(patOffer);
+  //         const priceOfData = patOffer?.offers.map((p) => {
+  //           return p.price;
+  //         });
+  //         setOfferPrice(priceOfData);
+  //       }
+  //       return patOffer;
+  //     });
+  //   } else if (
+  //     response?.message === "jwt expired" ||
+  //     response?.message === "jwt malformed"
+  //   ) {
+  //     localStorage.removeItem("token");
+  //   } else {
+  //     console.log(response?.message);
+  //   }
+  // }, [product, contract]);
+
+// ---- return only offers for particular contract with x-token END ----
+
   const getParticularOffer = useCallback(async () => {
     let response = await (
-      await fetch(`/api/contracts/${contract}/products/offers`, {
+      await fetch(`/api/nft/${contract}/${product}/offers`, {
         method: "GET",
-        headers: {
-          "x-rair-token": localStorage.token,
-        },
       })
     ).json();
 
     if (response.success) {
-      response?.products.map((patOffer) => {
-        if (patOffer.collectionIndexInContract === Number(product)) {
-          setOffer(patOffer);
-          const priceOfData = patOffer?.offers.map((p) => {
-            return p.price;
-          });
-          setOfferPrice(priceOfData);
-        }
-        return patOffer;
-      });
+      setOfferPrice(response?.product.offers.map((p) => {
+       return p.price
+      }))
     } else if (
       response?.message === "jwt expired" ||
       response?.message === "jwt malformed"
