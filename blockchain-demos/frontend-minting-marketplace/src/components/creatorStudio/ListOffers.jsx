@@ -4,8 +4,9 @@ import InputField from '../common/InputField.jsx'
 import FixedBottomNavigation from './FixedBottomNavigation.jsx';
 import { useParams, useHistory, NavLink } from 'react-router-dom';
 import {rFetch} from '../../utils/rFetch.js';
-
-
+import {erc721Abi} from '../../contracts'
+import Swal from 'sweetalert2';
+import chainData from '../../utils/blockchainData.js'
 
 const colors = [
 	'#E4476D',
@@ -24,7 +25,7 @@ const colors = [
 	'#ffffff'
 ];
 
-const OfferRow = ({index, deleter, name, starts, ends, price, array, rerender}) => {
+const OfferRow = ({index, deleter, name, starts, ends, price, array, rerender, maxCopies}) => {
 
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
@@ -111,6 +112,7 @@ const OfferRow = ({index, deleter, name, starts, ends, price, array, rerender}) 
 					customClass='form-control rounded-rair'
 					type='number'
 					min='0'
+					max={maxCopies}
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
@@ -136,16 +138,40 @@ const OfferRow = ({index, deleter, name, starts, ends, price, array, rerender}) 
 };
 
 const ListOffers = () => {
-
+	const [contractData,setContractData] = useState();
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
+	const [hasMinterRole, setHasMinterRole] = useState(false);
+	const [instance, setInstance] = useState();
 
+	const { minterInstance, contractCreator, programmaticProvider } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
 
 	const fetchData = useCallback(async () => {
-		let response = await rFetch(`/api/contracts/${address}/products/offers`);
-	}, [address])
+		if (!address) {
+			return;
+		}
+		let response2 = await rFetch(`/api/contracts/${address}`);
+		let response3 = await rFetch(`/api/contracts/${address}/products`);
+		if (response3.success) {
+			response2.contract.products = response3.products
+		}
+		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
+		// Special case where a product exists but it has no offers
+		if (response4.success) {
+			response4.products.forEach(item => {
+				response2.contract.products.forEach(existingItem => {
+					if (item._id.toString() === existingItem._id.toString()) {
+						existingItem.offers = item.offers;
+					}
+				})
+			})
+		}
+		response2.contract.product = (response2.contract.products.filter(i => i.collectionIndexInContract === Number(collectionIndex)))[0];
+		delete response2.contract.products;
+		setContractData(response2.contract);
+	}, [address, collectionIndex])
 
 	useState(() => {
 		fetchData();
@@ -173,6 +199,22 @@ const ListOffers = () => {
 	}
 	const history = useHistory();
 
+	useEffect(() => {
+		setInstance();
+	}, [erc721Abi, address])
+
+	const fetchMintingStatus = useCallback(async () => {
+		if (!address || !contractData) {
+			return;
+		}
+		let instance = contractCreator(address, erc721Abi);
+		setHasMinterRole(await instance.hasRole(await instance.MINTER(), minterInstance.address));
+	}, [minterInstance, address, contractData])
+
+	useEffect(() => {
+		fetchMintingStatus()
+	}, [fetchMintingStatus])
+
 	const steps = [
 		{label: 1, active: true},
 		{label: 2, active: false},
@@ -180,8 +222,55 @@ const ListOffers = () => {
 		{label: 4, active: false},
 	 ]
 
+	const giveMinterRole = async () => {
+		Swal.fire({title: 'Granting Role...', html: 'Please wait', icon: 'info', showConfirmButton: false});
+		await (instance.grantRole(await instance.MINTER(), minterInstance.address)).wait();
+		Swal.fire('Success!','You can create offers now!','success');
+	}
+
+	const createOffers = async () => {
+		Swal.fire('Creating offers...','Please wait','info');
+		//await (minterInstance.addOffer(
+		console.log(
+			instance.address,
+			collectionIndex,
+			offerList.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
+			offerList.map((item) => item.endingToken),
+			offerList.map((item) => item.price),
+			offerList.map((item) => item.name),
+			'0x3fD4268B03cce553f180E77dfC14fde00271F9B7')
+		//).wait();
+		Swal.fire('Success!','You can create offers now!','success');
+	}
+
+	const appendOffers = async () => {
+		Swal.fire('Creating offers...','Please wait','info');
+		//await (minterInstance.addOffer(
+		console.log(
+			instance.address,
+			collectionIndex,
+			offerList.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
+			offerList.map((item) => item.endingToken),
+			offerList.map((item) => item.price),
+			offerList.map((item) => item.name),
+			'0x3fD4268B03cce553f180E77dfC14fde00271F9B7')
+		//).wait();
+		Swal.fire('Success!','You can create offers now!','success');
+	}
+
+	const switchBlockchain = async () => {
+
+	}
+
+	let onMyChain = window.ethereum ?
+		chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
+		:
+		chainData[contractData?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId;
+
 	return <div className='row px-0 mx-0'>
 		<div className='col-12 my-5'>
+			<h4>{contractData?.title}</h4>
+			<small>{contractData?.product?.name}</small>
 			<div className='w-75 mx-auto px-0' style={{position: 'relative'}}>
 				<div style={{border: `solid 1px var(--charcoal-60)`, width: '76%', right: '12%', top: '50%', position: 'absolute', zIndex: 0}} />
 				<div className='row px-0 mx-0' style={{width: '100%', position: 'absolute', zIndex: 1}} >
@@ -234,7 +323,7 @@ const ListOffers = () => {
 			</thead>
 			<tbody style={{maxHeight: '50vh', overflowY: 'scroll'}}>
 				{offerList.map((item, index, array) => {
-					return <OfferRow array={array} deleter={e => deleter(index)} key={index} index={index} {...item} rerender={e => setForceRerender(!forceRerender)} />
+					return <OfferRow array={array} deleter={e => deleter(index)} key={index} index={index} {...item} rerender={e => setForceRerender(!forceRerender)} maxCopies={contractData?.product?.copies} />
 				})}
 			</tbody>
 		</table>}
@@ -246,13 +335,15 @@ const ListOffers = () => {
 			</div>
 		</div>
 		<div className='col-12 mt-3 p-5 text-center rounded-rair' style={{border: 'dashed 2px var(--charcoal-80)'}}>
-			First Token: 0, Last Token: 999, Mintable Tokens Left: 1000
+			First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
 		</div>
 		<div className='py-3 my-5' />
 		<FixedBottomNavigation
 			backwardFunction={() => {
 				history.goBack()
 			}}
+			forwardFunction={!onMyChain ? switchBlockchain : (hasMinterRole ? (offerList[0]?.set ? () => createOffers : appendOffers) : giveMinterRole)}
+			forwardLabel={!onMyChain ? `Switch to ` : (hasMinterRole ? (offerList[0]?.set ? 'Append to Offer' : 'Create Offer') : 'Approve Minter Marketplace')}
 		/>
 	</div>
 }
