@@ -61,7 +61,7 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
                         padding: "0 10px 0 5px",
                         color: primaryColor === 'charcoal' ? "#fff" : "#383637"
                     }}
-                    >{currentUserAddress && `${currentUserAddress.substr(0, 6)}...${currentUserAddress.substr(2, 4)}   `}</span>
+                    >{currentUserAddress && `${currentUserAddress.substr(0, 6)}...${currentUserAddress.substr(currentUserAddress.length - 4)}   `}</span>
                     <i className="icon-menu" className="fas fa-bars"></i>
                 </button>
             }}

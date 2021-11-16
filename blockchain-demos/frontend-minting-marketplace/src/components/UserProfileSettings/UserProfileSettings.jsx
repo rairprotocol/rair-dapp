@@ -6,7 +6,7 @@ import './UserProfileSettings.css';
 import * as colorTypes from './../../ducks/colors/types';
 import PopUpSettings from './PopUpSetting';
 
-const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLoginDone, errorAuth }) => {
+const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLoginDone }) => {
     const dispatch = useDispatch();
     const { primaryColor } = useSelector(store => store.colorStore);
 

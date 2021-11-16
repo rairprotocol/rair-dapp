@@ -61,7 +61,6 @@ function App({ sentryHistory }) {
 	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
-	const [errorAuth, setErrorAuth] = useState('');
 
 	// Redux
 	const dispatch = useDispatch()
@@ -137,7 +136,6 @@ function App({ sentryHistory }) {
 						parsedResponse.message);
 				} else {
 					Swal.fire('Error', "Can't sign messages", 'error');
-					console.log("Nahuy")
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
@@ -253,7 +251,6 @@ function App({ sentryHistory }) {
 					}}
 					className="App p-0 container-fluid">
 					<UserProfileSettings
-						errorAuth={errorAuth}
 						adminAccess={adminAccess}
 						primaryColor={primaryColor}
 						currentUserAddress={currentUserAddress}
@@ -359,7 +356,7 @@ function App({ sentryHistory }) {
 						</div>
 						<ul>
 							<li>newsletter</li>
-							<li>contract</li>
+							<li>contact</li>
 							<li>inquiries</li>
 						</ul>
 					</footer>
