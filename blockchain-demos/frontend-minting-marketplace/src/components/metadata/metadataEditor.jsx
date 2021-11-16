@@ -131,6 +131,7 @@ const MetadataEditor = (props) => {
 	const [currentOffer, setCurrentOffer] = useState('');
 
 	const [existingMetadataArray, setExistingMetadataArray] = useState([]);
+	const [existingURIArray, setExistingURIArray] = useState([]);
 	
 	const [sendingProductMetadata, setSendingProductMetadata] = useState(false);
 	const [sendingContractMetadata, setSendingContractMetadata] = useState(false);
@@ -166,10 +167,13 @@ const MetadataEditor = (props) => {
 
 		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
 		let sortedMetadataArray = [];
+		let sortedURIArray = [];
 		for await (let token of aux.result) {
 			sortedMetadataArray[token.token] = token.metadata;
+			sortedURIArray[token.token] = token.metadataURI;
 		}
 		setExistingMetadataArray(sortedMetadataArray);
+		setExistingURIArray(sortedURIArray);
 
 		setTokenNumber(0);
 	}, [params])
@@ -387,7 +391,7 @@ const MetadataEditor = (props) => {
 					Check metadata on the blockchain!
 				</button>
 
-				<MetadataSender {...{contractNetwork, existingMetadataArray, params, tokenNumber, internalFirstToken, endingToken}} />
+				<MetadataSender {...{contractNetwork, existingMetadataArray, params, tokenNumber, internalFirstToken, endingToken, existingURIArray}} />
 
 				<details className='col-12 py-3'>
 					<summary>
