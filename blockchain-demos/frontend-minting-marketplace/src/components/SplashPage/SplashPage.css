@@ -12,21 +12,23 @@
 
 /* main block */
 
-.home-splash--page {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: 54px;
-    padding-left: 80px;
+.wrapper-splash-page {
+    overflow: hidden;
 
     background-image: url('./images/victory_lap.png'), url('./images/maraphon.png'), url('./images/or.png'), url('./images/humble.png');
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
     background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
+}
 
-    overflow: hidden;
-    
+.home-splash--page {
+    max-width: 1300px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 54px;
+    /* padding-left: 80px; */
+   
 }
 
 /* Author Information Block*/
@@ -658,26 +660,20 @@
 
 /* Media Pesponsive*/
 
-@media screen and (max-width: 1900px) {
-    .home-splash--page {
+@media screen and (max-width: 1488px) {
+    .wrapper-splash-page {
+        display: flex;
+        justify-content: center;
         padding-left: 0px;
     }
-}
 
-@media screen and (max-width: 1700px) {
     .home-splash--page {
-        margin-left: -50px;
+        padding-left: 80px;
     }
 }
 
 @media screen and (max-width: 1430px) {
-    .home-splash--page {
-        margin-left: 100px;
+    .block-videos {
+        justify-content: center;
     }
 }
-
-/* @media screen and (max-width: 1398px) {
-    .home-splash--page {
-        margin-left: 0px;
-    }
-} */
