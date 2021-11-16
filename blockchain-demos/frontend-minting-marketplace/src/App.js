@@ -52,7 +52,6 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
 import ListOffers from './components/creatorStudio/ListOffers.jsx';
-import FormMetadata from './components/metadata/index.jsx';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
