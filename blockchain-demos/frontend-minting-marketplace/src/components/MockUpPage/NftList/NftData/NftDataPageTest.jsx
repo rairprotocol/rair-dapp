@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, /*useCallback*/ } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
+// import { useSelector } from 'react-redux';
+// import Swal from 'sweetalert2';
 
 
 import {
@@ -444,7 +444,7 @@ const NftDataPageTest = ({
             </div>
           </div>
           <Accordion
-            allowZeroExpanded /* allowZeroExpanded allowMultipleExpanded*/
+            allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/
           >
             <AccordionItem>
               <AccordionItemHeading>
