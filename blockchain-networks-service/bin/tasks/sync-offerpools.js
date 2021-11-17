@@ -11,7 +11,7 @@ module.exports = (context) => {
     try {
       const { network, name } = task.attrs.data;
       const offerPoolsForSave = [];
-      const block_number = [];
+      let block_number = null;
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AddedOffer');
@@ -30,7 +30,7 @@ module.exports = (context) => {
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 
-      _.forEach(events.result, async offerPool => {
+      await Promise.all(_.map(events.result, async offerPool => {
         const {
           contractAddress,
           productIndex,
@@ -48,7 +48,9 @@ module.exports = (context) => {
           rangeNumber: rangesCreated,
           minterAddress: networkData.minterAddress,
         });
-      });
+
+        block_number = Number(offerPool.block_number);
+      }));
 
       if (!_.isEmpty(offerPoolsForSave)) {
         try {
@@ -60,7 +62,7 @@ module.exports = (context) => {
         await context.db.Versioning.updateOne({
           name: 'sync offerPools',
           network
-        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
+        }, { number: block_number }, { upsert: true });
       }
 
       return done();

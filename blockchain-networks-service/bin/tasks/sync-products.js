@@ -11,7 +11,7 @@ module.exports = (context) => {
     try {
       const { network, name } = task.attrs.data;
       const productsForSave = [];
-      const block_number = [];
+      let block_number = null;
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(erc721Abi, 'event', 'ProductCreated');
@@ -39,8 +39,6 @@ module.exports = (context) => {
         await Promise.all(_.map(events.result, async product => {
           const { uid, name, startingToken, length } = product.data;
 
-          block_number.push(Number(product.block_number));
-
           productsForSave.push({
             contract: _id,
             collectionIndexInContract: uid,
@@ -48,6 +46,8 @@ module.exports = (context) => {
             copies: length,
             firstTokenIndex: startingToken
           });
+
+          block_number = Number(product.block_number);
         }));
       }));
 
@@ -61,7 +61,7 @@ module.exports = (context) => {
         await context.db.Versioning.updateOne({
           name: 'sync products',
           network
-        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
+        }, { number: block_number }, { upsert: true });
       }
 
       return done();

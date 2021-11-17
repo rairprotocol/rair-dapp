@@ -12,8 +12,8 @@ module.exports = (context) => {
       const { network, name } = task.attrs.data;
       const locksForSave = [];
       const locksForUpdate = [];
-      const block_number_locked = [];
-      const block_number_unlocked = [];
+      let block_number_locked = null;
+      let block_number_unlocked = null;
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const locked = getABIData(erc721Abi, 'event', 'RangeLocked');
@@ -61,8 +61,6 @@ module.exports = (context) => {
                 productName
               } = lock.data;
 
-            block_number_locked.push(Number(lock.block_number));
-
               locksForSave.push({
                 lockIndex: lockIndex ? lockIndex : lock.block_number, // using block_number as lockIndex for test networks
                 contract: _id,
@@ -71,14 +69,14 @@ module.exports = (context) => {
                 lockedTokens: tokensLocked,
                 isLocked: true
               });
+
+            block_number_locked = Number(lock.block_number);
             });
         }
 
         if (!_.isEmpty(eventsUnlocked.result)) {
           _.forEach(eventsUnlocked.result, lock => {
               const { lockIndex, productID, startingToken, endingToken } = lock.data;
-
-            block_number_unlocked.push(Number(lock.block_number));
 
               locksForUpdate.push({
                 updateOne: {
@@ -93,6 +91,8 @@ module.exports = (context) => {
                   setDefaultsOnInsert: true
                 }
               });
+
+            block_number_unlocked = Number(lock.block_number);
             });
         }
       }));
@@ -115,14 +115,14 @@ module.exports = (context) => {
         await context.db.Versioning.updateOne({
           name: 'sync locks locked',
           network
-        }, { number: _.chain(block_number_locked).sortBy().last().value() }, { upsert: true });
+        }, { number: block_number_locked }, { upsert: true });
       }
 
       if (!_.isEmpty(block_number_unlocked)) {
         await context.db.Versioning.updateOne({
           name: 'sync locks unlocked',
           network
-        }, { number: _.chain(block_number_unlocked).sortBy().last().value() }, { upsert: true });
+        }, { number: block_number_unlocked }, { upsert: true });
       }
 
       return done();

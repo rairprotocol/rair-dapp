@@ -14,7 +14,7 @@ module.exports = (context) => {
       const tokensForSave = [];
       const offersForUpdate = [];
       const productsForUpdate = [];
-      const block_number = [];
+      let block_number = null;
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'TokenMinted');
@@ -41,8 +41,6 @@ module.exports = (context) => {
           rangeIndex,
           tokenIndex,
         } = tokenData.data;
-
-        block_number.push(Number(tokenData.block_number));
 
         // const contract = contractAddress.toLowerCase();
         const OfferP = Number(catalogIndex);
@@ -145,6 +143,8 @@ module.exports = (context) => {
                 setDefaultsOnInsert: true
               }
             });
+
+            block_number = Number(tokenData.block_number);
           }
         }
       }));
@@ -192,7 +192,7 @@ module.exports = (context) => {
         await context.db.Versioning.updateOne({
           name: 'sync tokens',
           network
-        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
+        }, { number: block_number }, { upsert: true });
       }
 
       return done();
