@@ -6,32 +6,32 @@ const {erc721Abi, minterAbi, factoryAbi, erc777Abi} = require('./ABI');
 const blockchainData = {
 	mumbai: {
 		chainId: '0x13881', 
-		factoryAddress: '0x1A5bf89208Dddd09614919eE31EA6E40D42493CD',
-		minterAddress: '0x63Dd6821D902012B664dD80140C54A98CeE97068',
+		factoryAddress: '0x5535FE9ABdA206F6780cc87b4e1fe4733b98bd9C',
+		minterAddress: '0x4594D508cDa05D016571082d467889f4629e1f56',
 		watchFunction: 'watchPolygonAddress',
 		watchCollection: 'watchedPolygonAddress',
 		testnet: true
 	},
 	goerli: {
 		chainId: '0x5', 
-		factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
-		minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba',
+		factoryAddress: '0x0C7A7D9641AB33228fD9C202DB4290B304963592',
+		minterAddress: '0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5',
 		watchFunction: 'watchEthAddress',
 		watchCollection: 'watchedEthAddress',
 		testnet: true
 	},
 	binance: {
 		chainId: '0x61', 
-		factoryAddress: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
-		minterAddress: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f',
+		factoryAddress: '0x122D66159CBe0F9021aC120923847E79a4dCFC2C',
+		minterAddress: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD',
 		watchFunction: 'watchBscAddress',
 		watchCollection: 'watchedBscAddress',
 		testnet: true
 	},
 	matic: {
 		chainId: '0x89', 
-		factoryAddress: '0x556a3Db6d800AAA56f8B09E476793c5100705Db5',
-		minterAddress: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
+		factoryAddress: '0x92FBe344513e108B581170E73CFA352B729E47EA',
+		minterAddress: '0x781F15a23506CF28539EA057e3f33008E6339E49',
 		watchFunction: 'watchPolygonAddress',
 		watchCollection: 'watchedPolygonAddress',
 		testnet: false
@@ -237,6 +237,38 @@ const getOfferPools = async (minterAddress, chainName) => {
 	})
 }
 
+const getCustomPayments = async (minterAddress, chainName) => {
+	await Moralis.Cloud.run(blockchainData[chainName].watchFunction, {
+		address: minterAddress,
+		'sync_historical': true
+	});
+
+	const {abi, topic} = getABIData(minterAbi, 'event', 'CustomPaymentSet');
+	const options = {
+		address: minterAddress,
+		chain: blockchainData[chainName].chainId,
+		topic,
+		abi
+	}
+	let events = await Moralis.Web3API.native.getContractEvents(options);
+	events.result.forEach(async result => {
+		const CustomPayment = Moralis.Object.extend("CustomPayment");
+		const customPaymentQuery = new Moralis.Query(CustomPayment);
+		customPaymentQuery.equalTo('transactionHash', result.transaction_hash);
+		const customPaymentResult = await customPaymentQuery.find();
+		if (customPaymentResult.length === 0) {
+			const customPayment = new CustomPayment();
+			customPayment.set('transactionHash', result.transaction_hash);
+			customPayment.set('blockchain', blockchainData[chainName].chainId);
+			customPayment.set('minterAddress', result.address);
+			customPayment.set('recipients', result.data.recipients);
+			customPayment.set('percentages', result.data.percentages);
+			await customPayment.save();
+			console.log(`[${chainName}] Saved Custom Payment on offer pool index ${result.data.catalogIndex}`);
+		}
+	})
+}
+
 const getDeployedContracts = async (factoryAddress, chainName) => {
 	await Moralis.Cloud.run(blockchainData[chainName].watchFunction, {
 		address: factoryAddress,
@@ -365,8 +397,10 @@ const main = async () => {
 		await getAppendedRanges(blockchainData[blockchain].minterAddress, blockchain).catch(console.error);
 		// Gets all token transfers made on all deployed contracts
 		await getTokenTransfers(blockchain).catch(console.error);
+		// Gets all custom payments set on the minter marketplace
+		await getCustomPayments(blockchainData[blockchain].minterAddress, blockchain).catch(console.error);
 		console.log(`Done with ${blockchain}!`);
-	})
+	});
 
 	// Gets the topics of the contract. Useless now that getABIData exists
 	//logEventTopics();

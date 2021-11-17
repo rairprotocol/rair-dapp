@@ -9,7 +9,7 @@ import "../Tokens/IERC2981.sol";
 // Parent classes
 import '@openzeppelin/contracts/access/Ownable.sol';
 
-//import 'hardhat/console.sol';
+import 'hardhat/console.sol';
 
 /// @title  Minter Marketplace 
 /// @notice Handles the minting of ERC721 RAIR Tokens
@@ -34,9 +34,15 @@ contract Minter_Marketplace is Ownable {
 		uint mintableTokens;
 	}
 
-	uint16 public constant feeDecimals = 2;
+	struct customPayment {
+		address[] recipients;
+		uint[] percentages;
+	}
+
+	uint16 public constant feeDecimals = 3;
 
 	mapping(address => mapping(uint => uint)) internal _contractToOffers;
+	mapping(uint => customPayment) internal customPayments;
 
 	offer[] offerCatalog;
 
@@ -50,6 +56,7 @@ contract Minter_Marketplace is Ownable {
 	event AppendedRange(address contractAddress, uint productIndex, uint offerIndex, uint rangeIndex,  uint startToken, uint endToken, uint price, string name);
 	event TokenMinted(address ownerAddress, address contractAddress, uint catalogIndex, uint rangeIndex, uint tokenIndex);
 	event SoldOut(address contractAddress, uint catalogIndex, uint rangeIndex);
+	event CustomPaymentSet(uint catalogIndex, address[] recipients, uint[] percentages);
 	event ChangedTreasury(address newTreasury);
 	event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
 	event ChangedNodeFee(uint16 newNodeFee);
@@ -64,6 +71,23 @@ contract Minter_Marketplace is Ownable {
 		treasuryFee = _treasuryFee;
 		nodeFee = _nodeFee;
 		openSales = 0;
+	}
+
+	function setCustomPayment(uint catalogIndex, address[] calldata recipients, uint[] calldata percentages) external {
+		require(recipients.length == percentages.length, "Minting Marketplace: Recipients and Percentages should have the same length");
+		require(offerCatalog.length > 0, "Minting Marketplace: There are no offer pools");
+		require(catalogIndex <= offerCatalog.length, "Minting Marketplace: Offer Pool doesn't exist");
+		require(offerCatalog[catalogIndex].contractAddress != address(0), "Minting Marketplace: Invalid offer pool data");
+		validateRoles(offerCatalog[catalogIndex].contractAddress);
+		uint total = 0;
+		for (uint i = 0; i < recipients.length; i++) {
+			total = total + percentages[i];
+		}
+		require(total + treasuryFee + nodeFee == 100000, "Minting Marketplace: Percentages should add up to 100% (100000, including node fee and treasury fee)");
+		customPayment storage aux = customPayments[catalogIndex];
+		aux.recipients = recipients;
+		aux.percentages = percentages;
+		emit CustomPaymentSet(catalogIndex, recipients, percentages);
 	}
 
 	/// @notice	View function that returns the offer given a contract address and a product index
@@ -335,25 +359,34 @@ contract Minter_Marketplace is Ownable {
 				internalTokenIndex <= selectedProduct.tokenRangeEnd[rangeIndex],
 					"Minting Marketplace: Token doesn't belong in that offer range!");
 		require(msg.value >= selectedProduct.rangePrice[rangeIndex], "Minting Marketplace: Insuficient Funds!");
-		
-		address creatorAddress;
-		uint256 amount;
 
-		bool hasFees = IERC2981(selectedProduct.contractAddress).supportsInterface(type(IERC2981).interfaceId);
-		// If the token minted supports the EIP2981 interface, ask for the creator fee!
-		if (hasFees) {
-			(creatorAddress, amount) = IRAIR_ERC721(selectedProduct.contractAddress).royaltyInfo(0, selectedProduct.rangePrice[rangeIndex]);
-			// Send the creator fee to the creator
-			// Should send whatever's left after transferring treasury and node fees
-			payable(creatorAddress).transfer(selectedProduct.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000);
+		customPayment storage aux = customPayments[catalogIndex];
+
+		if (aux.recipients.length > 0) {
+			for (uint i = 0; i < aux.recipients.length; i++) {
+				payable(aux.recipients[i]).transfer((selectedProduct.rangePrice[rangeIndex] * aux.percentages[i]) / 100000);
+			}
+		} else {
+			address creatorAddress;
+			uint256 amount;
+
+			bool hasFees = IERC2981(selectedProduct.contractAddress).supportsInterface(type(IERC2981).interfaceId);
+			// If the token minted supports the EIP2981 interface, ask for the creator fee!
+			if (hasFees) {
+				(creatorAddress, amount) = IRAIR_ERC721(selectedProduct.contractAddress).royaltyInfo(0, selectedProduct.rangePrice[rangeIndex]);
+				// Send the creator fee to the creator
+				// Should send whatever's left after transferring treasury and node fees
+				payable(creatorAddress).transfer(selectedProduct.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000);
+			}
+
 		}
-
 		// Pay the buyer any excess they transferred
 		payable(msg.sender).transfer(msg.value - selectedProduct.rangePrice[rangeIndex]);
 		// Pay the treasury
 		payable(treasury).transfer((selectedProduct.rangePrice[rangeIndex] * treasuryFee) / 100000);
 		// Pay the node
 		payable(selectedProduct.nodeAddress).transfer((selectedProduct.rangePrice[rangeIndex] * nodeFee) / 100000);
+
 		selectedProduct.tokensAllowed[rangeIndex]--;
 		if (selectedProduct.tokensAllowed[rangeIndex] == 0) {
 			openSales--;
@@ -371,22 +404,29 @@ contract Minter_Marketplace is Ownable {
 		require(msg.value >= (selectedProduct.rangePrice[rangeIndex] * tokenIndexes.length), "Minting Marketplace: Insuficient Funds!");
 		require(tokenIndexes.length == recipients.length, "Minting Marketplace: Token Indexes and Recipients should have the same length");
 
-		address creatorAddress;
-		uint256 amount;
+		customPayment storage aux = customPayments[catalogIndex];
 
-		bool hasFees = IERC2981(selectedProduct.contractAddress).supportsInterface(type(IERC2981).interfaceId);
+		if (aux.recipients.length > 0) {
+			for (uint i = 0; i < aux.recipients.length; i++) {
+				payable(aux.recipients[i]).transfer(((selectedProduct.rangePrice[rangeIndex] * aux.percentages[i]) / 100000) * tokenIndexes.length);
+			}
+		} else {
+			address creatorAddress;
+			uint256 amount;
 
+			bool hasFees = IERC2981(selectedProduct.contractAddress).supportsInterface(type(IERC2981).interfaceId);
+			
+			// If the token minted supports the EIP2981 interface, ask for the creator fee!
+			if (hasFees) {
+				(creatorAddress, amount) = IRAIR_ERC721(selectedProduct.contractAddress).royaltyInfo(0, selectedProduct.rangePrice[rangeIndex]);
+				// Send the creator fee to the creator
+				// Should send whatever's left after transferring treasury and node fees
+				payable(creatorAddress).transfer((selectedProduct.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000) * tokenIndexes.length);
+			}
+		}
 		// Pay the buyer any excess they transferred
 		payable(msg.sender).transfer(msg.value - (selectedProduct.rangePrice[rangeIndex] * tokenIndexes.length));
-		
-		// If the token minted supports the EIP2981 interface, ask for the creator fee!
-		if (hasFees) {
-			(creatorAddress, amount) = IRAIR_ERC721(selectedProduct.contractAddress).royaltyInfo(0, selectedProduct.rangePrice[rangeIndex]);
-			// Send the creator fee to the creator
-			// Should send whatever's left after transferring treasury and node fees
-			payable(creatorAddress).transfer((selectedProduct.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000) * tokenIndexes.length);
-		}
-		
+
 		// Pay the treasury
 		payable(treasury).transfer(((selectedProduct.rangePrice[rangeIndex] * treasuryFee) / 100000) * tokenIndexes.length);
 		
