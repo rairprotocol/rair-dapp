@@ -64,11 +64,13 @@
 }
 
 .select-number-popup .selected-box {
+    background: #D37AD6 !important;
     color: #fff;
 }
 
-.select-number-popup .select-number-box:hover {
+.select-number-popup .select-number-box.select-number-box:hover {
     color: #fff;
+    background: #D37AD6 !important;
 }
 
 .select-number-popup div:last-child {
