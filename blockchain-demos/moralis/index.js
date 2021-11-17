@@ -53,7 +53,7 @@ const getTokenTransfers = async (chainName) => {
 	const Contract = Moralis.Object.extend("Contract");
 	const contractQuery = new Moralis.Query(Contract); 
 	contractQuery.equalTo('blockchain', blockchainData[chainName].chainId);
-	const contractResult = await contractQuery.find();
+	const contractResult = await contractQuery.find().catch(console.error);
 
 	const {abi, topic} = getABIData(erc721Abi, 'event', 'Transfer');
 	const generalOptions = {
@@ -68,16 +68,16 @@ const getTokenTransfers = async (chainName) => {
 				address: item.get('contractAddress'),
 				...generalOptions
 			}
-			let events = await Moralis.Web3API.native.getContractEvents(options);
+			let events = await Moralis.Web3API.native.getContractEvents(options).catch(console.error);
 
 			const MintedToken = Moralis.Object.extend("MintedToken");
 			const Product = Moralis.Object.extend("Product");
 			const OfferPool = Moralis.Object.extend("OfferPool");
 			const Offer = Moralis.Object.extend("Offer");
-			events.result.forEach(async result => {
+			events?.result?.forEach(async result => {
 				const mintedTokenQuery = new Moralis.Query(MintedToken);
 				mintedTokenQuery.equalTo('transactionHash', result.transaction_hash);
-				const mintedTokenResult = await mintedTokenQuery.find();
+				const mintedTokenResult = await mintedTokenQuery.find().catch(console.error);
 				
 				if (mintedTokenResult.length === 0) {
 					const mintedToken = new MintedToken();
@@ -93,7 +93,7 @@ const getTokenTransfers = async (chainName) => {
 					const productQuery = new Moralis.Query(Product);
 					productQuery.equalTo('contract', result.address);
 					productQuery.equalTo('blockchain', blockchainData[chainName].chainId);
-					const productResult = await productQuery.find();
+					const productResult = await productQuery.find().catch(console.error);
 					if (!productResult.length) {
 						console.log(`Can't find products for #${result.data.tokenId} of ${result.address}`);
 						return;
@@ -116,7 +116,7 @@ const getTokenTransfers = async (chainName) => {
 					offerPoolQuery.equalTo('contract', result.address);
 					offerPoolQuery.equalTo('product', productIndex);
 					offerPoolQuery.equalTo('blockchain', blockchainData[chainName].chainId);
-					const offerPoolResult = await offerPoolQuery.first();
+					const offerPoolResult = await offerPoolQuery.first().catch(console.error);
 					if (!offerPoolResult) {
 						console.log(`Can't find offer pool for product #${productIndex} of contract ${result.address}`);
 						return;
@@ -130,7 +130,7 @@ const getTokenTransfers = async (chainName) => {
 					offerPoolQuery.equalTo('blockchain', blockchainData[chainName].chainId);
 					productQuery.lessThanOrEqualTo('range.0', result.data.tokenId);
 					productQuery.greaterThanOrEqualTo('range.1', result.data.tokenId);
-					const offerResult = await offerQuery.first();
+					const offerResult = await offerQuery.first().catch(console.error);
 					if (!offerResult) {
 						console.log(`Can't find offer for product #${productIndex}`);
 						return;
@@ -138,9 +138,9 @@ const getTokenTransfers = async (chainName) => {
 					offerResult.set('soldCopies', Number((Ethers.BigNumber.from(offerResult.get('soldCopies')).add(1)).toString()))
 					mintedToken.set("offer", offerResult.get('offerIndex'));
 					
-					await mintedToken.save();
-					await aux[0].save()
-					await offerResult.save();
+					await mintedToken.save().catch(console.error);
+					await aux[0].save().catch(console.error)
+					await offerResult.save().catch(console.error);
 					console.log(`[${chainName}] New token transfer for #${result.data.tokenId} of ${result.address}`);
 				}
 			})
@@ -151,7 +151,7 @@ const getAppendedRanges = async (minterAddress, chainName) => {
 	await Moralis.Cloud.run(blockchainData[chainName].watchFunction, {
 		address: minterAddress,
 		'sync_historical': true
-	});
+	}).catch(console.error);
 
 	const {abi, topic} = getABIData(minterAbi, 'event', 'AppendedRange');
 	const options = {
@@ -160,12 +160,12 @@ const getAppendedRanges = async (minterAddress, chainName) => {
 		topic,
 		abi
 	}
-	let events = await Moralis.Web3API.native.getContractEvents(options);
-	events.result.forEach(async result => {
+	let events = await Moralis.Web3API.native.getContractEvents(options).catch(console.error);
+	events?.result?.forEach(async result => {
 		const Offer = Moralis.Object.extend("Offer");
 		const offerQuery = new Moralis.Query(Offer);
 		offerQuery.equalTo('transactionHash', result.transaction_hash);
-		const offerResult = await offerQuery.find();
+		const offerResult = await offerQuery.find().catch(console.error);
 		if (offerResult.length === 0) {
 
 			const offer = new Offer();
@@ -184,7 +184,7 @@ const getAppendedRanges = async (minterAddress, chainName) => {
 			offer.set('range', [result.data.startToken, result.data.endToken]);
 			offer.set('name', result.data.name);
 
-			await offer.save();
+			await offer.save().catch(console.error);
 			console.log(`[${chainName}] Saved Offer #${result.data.rangeIndex} of pool ${result.data.offerIndex}`);
 
 			const OfferPool = Moralis.Object.extend("OfferPool");
@@ -197,7 +197,7 @@ const getAppendedRanges = async (minterAddress, chainName) => {
 			if (offerPoolResult && offerPoolResult.get('transactionHash') !== result.transaction_hash) {
 				offerPoolResult.set('rangeNumber', (Ethers.BigNumber.from(offerPoolResult.get('rangeNumber')).add(1)).toString());
 				console.log(`[${chainName}] Updated offer count of pool ${offerPoolResult.get('marketplaceCatalogIndex')}`);
-				await offerPoolResult.save();
+				await offerPoolResult.save().catch(console.error);
 			}
 		}
 	})
@@ -207,7 +207,7 @@ const getOfferPools = async (minterAddress, chainName) => {
 	await Moralis.Cloud.run(blockchainData[chainName].watchFunction, {
 		address: minterAddress,
 		'sync_historical': true
-	});
+	}).catch(console.error);
 
 	const {abi, topic} = getABIData(minterAbi, 'event', 'AddedOffer');
 	const options = {
@@ -216,12 +216,12 @@ const getOfferPools = async (minterAddress, chainName) => {
 		topic,
 		abi
 	}
-	let events = await Moralis.Web3API.native.getContractEvents(options);
-	events.result.forEach(async result => {
+	let events = await Moralis.Web3API.native.getContractEvents(options).catch(console.error);
+	events?.result?.forEach(async result => {
 		const OfferPool = Moralis.Object.extend("OfferPool");
 		const offerPoolQuery = new Moralis.Query(OfferPool);
 		offerPoolQuery.equalTo('transactionHash', result.transaction_hash);
-		const offerPoolResult = await offerPoolQuery.find();
+		const offerPoolResult = await offerPoolQuery.find().catch(console.error);
 		if (offerPoolResult.length === 0) {
 			const offerPool = new OfferPool();
 			offerPool.set('transactionHash', result.transaction_hash);
@@ -231,7 +231,7 @@ const getOfferPools = async (minterAddress, chainName) => {
 			offerPool.set('contract', result.data.contractAddress);
 			offerPool.set('product', result.data.productIndex);
 			offerPool.set('rangeNumber', result.data.rangesCreated);
-			await offerPool.save();
+			await offerPool.save().catch(console.error);
 			console.log(`[${chainName}] Saved Offer Pool #${result.data.catalogIndex} of ${result.address}`);
 		}
 	})
@@ -241,7 +241,7 @@ const getDeployedContracts = async (factoryAddress, chainName) => {
 	await Moralis.Cloud.run(blockchainData[chainName].watchFunction, {
 		address: factoryAddress,
 		'sync_historical': true
-	});
+	}).catch(console.error);
 
 	const {abi, topic} = getABIData(factoryAbi, 'event', 'NewContractDeployed');
 	const options = {
@@ -250,8 +250,8 @@ const getDeployedContracts = async (factoryAddress, chainName) => {
 		topic,
 		abi
 	}
-	let events = await Moralis.Web3API.native.getContractEvents(options);
-	events.result.forEach(async result => {
+	let events = await Moralis.Web3API.native.getContractEvents(options).catch(console.error);
+	events?.result?.forEach(async result => {
 		const Contract = Moralis.Object.extend("Contract");
 		const contractQuery = new Moralis.Query(Contract);
 		contractQuery.equalTo('transactionHash', result.transaction_hash);
@@ -274,13 +274,13 @@ const getDeployedContracts = async (factoryAddress, chainName) => {
 			address.set("indexOfOwner", result.data.uid);
 			address.set("contractAddress", result.data.token);
 			address.set("title", name);
-			await address.save();
+			await address.save().catch(console.error);
 			// Listen to this contract's events
 			console.log(`[${chainName}] Saved contract #${result.data.uid} of ${result.data.owner}`);
 			await Moralis.Cloud.run(blockchainData[chainName].watchFunction, {
 				address: result.data.token.toLowerCase(),
 				'sync_historical': true
-			});
+			}).catch(console.error);
 		}
 	})
 }
@@ -289,7 +289,7 @@ const getProducts = async (chainName) => {
 	const Contract = Moralis.Object.extend("Contract");
 	const contractQuery = new Moralis.Query(Contract); 
 	contractQuery.equalTo('blockchain', blockchainData[chainName].chainId);
-	const contractResult = await contractQuery.find();
+	const contractResult = await contractQuery.find().catch(console.error);
 
 	const {abi, topic} = getABIData(erc721Abi, 'event', 'ProductCreated');
 	const generalOptions = {
@@ -305,13 +305,13 @@ const getProducts = async (chainName) => {
 				address: item.get('contractAddress'),
 				...generalOptions
 			}
-			let events = await Moralis.Web3API.native.getContractEvents(options);
+			let events = await Moralis.Web3API.native.getContractEvents(options).catch(console.error);
 
 			const Product = Moralis.Object.extend("Product");
-			events.result.forEach(async result => {
+			events?.result?.forEach(async result => {
 				const productQuery = new Moralis.Query(Product);
 				productQuery.equalTo('transactionHash', result.transaction_hash);
-				const productResults = await productQuery.find();
+				const productResults = await productQuery.find().catch(console.error);
 				
 				if (productResults.length === 0) {
 					const product = new Product();
@@ -325,7 +325,7 @@ const getProducts = async (chainName) => {
 					product.set("sold", false);
 					product.set("lastTokenIndex", (Ethers.BigNumber.from(result.data.length).add(result.data.startingToken).sub(1)).toString());
 					product.set("blockchain", blockchainData[chainName].chainId);
-					await product.save();
+					await product.save().catch(console.error);
 					
 					console.log(`[${chainName}] Saved product #${result.data.uid} of ${result.address}`);
 				}
@@ -346,24 +346,26 @@ const logEventTopics = async () => {
 }
 
 const main = async () => {
-	const serverUrl = process.env.MORALIS_SERVER_MAIN;
-	const appId = process.env.MORALIS_API_KEY_MAIN;
+	const serverUrl = process.env.MORALIS_SERVER_TEST;
+	const appId = process.env.MORALIS_API_KEY_TEST;
 	Moralis.start({ serverUrl, appId });
 
 	Object.keys(blockchainData).forEach(async blockchain => {
-		if (blockchainData[blockchain].testnet) {
+		if (!blockchainData[blockchain].testnet) {
 			return;
 		}
+		console.log(`Validating ${blockchain}`);
 		// Queries a factory and stores all deployed contracts
-		await getDeployedContracts(blockchainData[blockchain].factoryAddress, blockchain);
+		await getDeployedContracts(blockchainData[blockchain].factoryAddress, blockchain).catch(console.error);
 		// Gets the Products from all Deployed Contracts
-		await getProducts(blockchain);
+		await getProducts(blockchain).catch(console.error);
 		// Gets the Offers (OfferPool) created
-		await getOfferPools(blockchainData[blockchain].minterAddress, blockchain);
+		await getOfferPools(blockchainData[blockchain].minterAddress, blockchain).catch(console.error);
 		// Gets the ranges appended on the minter marketplace
-		await getAppendedRanges(blockchainData[blockchain].minterAddress, blockchain);
+		await getAppendedRanges(blockchainData[blockchain].minterAddress, blockchain).catch(console.error);
 		// Gets all token transfers made on all deployed contracts
-		await getTokenTransfers(blockchain);
+		await getTokenTransfers(blockchain).catch(console.error);
+		console.log(`Done with ${blockchain}!`);
 	})
 
 	// Gets the topics of the contract. Useless now that getABIData exists
