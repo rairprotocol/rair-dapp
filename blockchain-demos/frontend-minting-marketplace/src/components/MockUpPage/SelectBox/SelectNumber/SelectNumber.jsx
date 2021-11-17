@@ -5,7 +5,7 @@ import "./SelectNumber.css";
 const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
     const { primaryColor } = useSelector(store => store.colorStore);
 
-    const [/*selectedItem*/, setSelectedItem] = useState(selectedToken);
+    const [selectedItem, setSelectedItem] = useState(selectedToken);
     const [isOpen, setIsOpen] = useState(false);
 
     const numberRef = useRef();
@@ -13,6 +13,12 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
     const handleIsOpen = () => {
         setIsOpen((prev) => !prev);
     };
+
+    const blockMoreThousand = () => {
+        if(items && items.length > 100) {
+            return 
+        }
+    }
 
     const onClickItem = (el) => {
         setSelectedItem(el);
@@ -34,7 +40,7 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
 
     return (
         <div ref={numberRef} className="select-number-container">
-            <div onClick={handleIsOpen} className="select-field" style={{background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}` }}>
+            <div onClick={handleIsOpen} className="select-field" style={{ background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}` }}>
                 <div className="number-item">
                     {selectedToken}
                 </div>
@@ -43,27 +49,23 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
                 </div>
             </div>
             <div
-                style={{ 
-                    display: `${isOpen ? "flex" : "none"}`,
-                     borderRadius: 16,
-                     background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
-                     border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`,
-                     flexDirection: 'row',
-                     flexWrap: 'wrap',
-                     alignContent:'flex-start',
-                     justifyContent: 'flex-start',
-                     naxWidth: '440px',
-                     maxHeight: '330px',
-                     zIndex: '2',
-                     overflow: 'auto',
-                    }}
+                style={{
+                    display: `${isOpen ? "grid" : "none"}`,
+                    background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
+                    border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`,
+                    //  overflowY: 'auto',
+                }}
                 className="select-number-popup"
             >
+                <div className="select-number-title">
+                    Serial number
+                </div>
                 {items &&
-                    items.map((el) => {
+                    items.map((el, index) => {
                         return (
-                            <div style={{
-                                background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "grey"}`,
+                            <div className={`select-number-box ${selectedItem === el.token ? "selected-box" : ''}`} style={{
+                                background: `${primaryColor === "rhyno" ? "#A7A6A6" : "grey"}`,
+                                color: `${primaryColor === "rhyno" ? "#fff" : "A7A6A6"}`,
                             }} key={el.id} onClick={() => onClickItem(el.token)}>
                                 {el.token}
                             </div>

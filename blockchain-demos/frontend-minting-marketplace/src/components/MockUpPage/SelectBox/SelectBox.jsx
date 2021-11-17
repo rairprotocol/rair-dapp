@@ -59,19 +59,19 @@ const SelectBox = (props) => {
             }}
             className={"select-box--items"}
           >
-            <div className="olo" onClick={(e) => {
+            <div className="serial-box" onClick={(e) => {
               e.preventDefault()
               console.log(123)
             }}>1-100</div>
-            <div className="olo">101-200</div>
-            <div className="olo">201-300</div>
-            <div className="olo">301-400</div>
-            <div className="olo">401-500</div>
-            <div className="olo">501-600</div>
-            <div className="olo">601-700</div>
-            <div className="olo">701-800</div>
-            <div className="olo">801-900</div>
-            <div className="olo">901-1000</div>
+            <div className="serial-box">101-200</div>
+            <div className="serial-box">201-300</div>
+            <div className="serial-box">301-400</div>
+            <div className="serial-box">401-500</div>
+            <div className="serial-box">501-600</div>
+            <div className="serial-box">601-700</div>
+            <div className="serial-box">701-800</div>
+            <div className="serial-box">801-900</div>
+            <div className="serial-box">901-1000</div>
           </div>
         </div>
       </div>
