@@ -1,3 +1,9 @@
+// Cleanup the OfferPoll collection
+db.OfferPool.deleteMany({});
+
+// Cleanup the  collection
+db.Versioning.deleteMany({ name: 'sync offerPools' });
+
 // drop old contract index
 db.Contract.dropIndexes('contractAddress_1');
 

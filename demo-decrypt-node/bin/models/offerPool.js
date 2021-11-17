@@ -7,6 +7,7 @@ const OfferPool = new Schema({
   contract: { type: Schema.ObjectId, required: true },
   product: { type: Number },
   rangeNumber: { type: Number },
+  minterAddress: { type: String },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 

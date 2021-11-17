@@ -158,11 +158,10 @@ module.exports = context => {
             res.send({ success: true, token });
           });
       } else {
-        return res.sendStatus(400);
+        return res.status(400).send({ success: false });
       }
     } catch (err) {
-      log.error(err);
-      res.sendStatus(404);
+      return next(err);
     }
   });
 
@@ -197,15 +196,14 @@ module.exports = context => {
             }
           } catch (e) {
             log.error(e);
-            next(new Error('Could not verify account', e));
+            next(new Error('Could not verify account.', ));
           }
         }
       } else {
-        res.sendStatus(400);
+        return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
       }
     } catch (err) {
-      vdlog(err);
-      res.sendStatus(400);
+      return next(err);
     }
   });
 
@@ -255,7 +253,7 @@ module.exports = context => {
           }
         }
       } else {
-        res.sendStatus(400);
+        return res.status(400).send({ success: false });
       }
     } catch (err) {
       log.error('New NFT Admin Error:', err);

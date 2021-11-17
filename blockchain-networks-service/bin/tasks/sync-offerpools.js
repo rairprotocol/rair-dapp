@@ -45,7 +45,8 @@ module.exports = (context) => {
           marketplaceCatalogIndex: catalogIndex,
           contract: contract._id,
           product: productIndex,
-          rangeNumber: rangesCreated
+          rangeNumber: rangesCreated,
+          minterAddress: networkData.minterAddress,
         });
       });
 
