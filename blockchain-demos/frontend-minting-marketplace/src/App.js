@@ -271,7 +271,7 @@ function App({ sentryHistory }) {
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
+				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />}
 				{/* {!loginDone && <Redirect to="/all" />} */}
 				<div
 					style={{

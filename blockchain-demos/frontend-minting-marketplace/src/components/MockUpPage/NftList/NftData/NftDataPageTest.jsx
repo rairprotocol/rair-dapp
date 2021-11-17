@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+
 
 import {
   Accordion,
@@ -30,6 +33,7 @@ const NftDataPageTest = ({
   handleClickToken,
   setSelectedToken,
   productsFromOffer,
+  offerData,
 }) => {
   const history = useHistory();
   const [playing, setPlaying] = useState(false);
@@ -39,13 +43,13 @@ const NftDataPageTest = ({
 
   const responsive = {
     superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
+      breakpoint: { max: 4000, min: 1500 },
       items: 4,
     },
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 1500, min: 1024 },
       paddingLeft: "2rem",
-      items: 4,
+      items: 3,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
@@ -124,7 +128,33 @@ const NftDataPageTest = ({
       return <span>Not minted yet</span>;
     }
   };
+	// const [next, setNext] = useState();
+	// const [name, setName] = useState();
+	// const [price, setPrice] = useState();
+	// const [start, setStart] = useState();
+	// const [end, setEnd] = useState();
+	// const [allowed, setAllowed] = useState();
 
+
+  //   const refreshData = useCallback(async () => {
+  //     let data = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
+  //     setName(data.name);
+  //     setPrice(data.price.toString());
+  //     setStart(data.tokenStart.toString());
+  //     setEnd(data.tokenEnd.toString());
+  //     setAllowed(data.tokensAllowed.toString());
+  //     setNext((await tokenInstance.getNextSequentialIndex(productIndex, data.tokenStart, data.tokenEnd)).toString());
+  //   }, [minterInstance, offerIndex, rangeIndex, productIndex, tokenInstance])
+  // console.log(offerData , '!!!@');
+	// const { minterInstance } = useSelector(state => state.contractStore);
+
+  // const buyContract = async () => { 
+  //   try {
+  //     await minterInstance.buyToken(offerData[1].offerIndex, 0, selectedToken, { value: offerData[1].price });
+  //   } catch (err) {
+  //     Swal.fire('Error', err?.data?.message, 'error');
+  //   }
+  // }
   function checkOwner() {
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
       return (
@@ -145,6 +175,7 @@ const NftDataPageTest = ({
     } else
       return (
         <button
+          // onClick={() => buyContract()}
           onClick={() => alert("Coming soon")}
           style={{
             width: "228px",
@@ -255,7 +286,7 @@ const NftDataPageTest = ({
 // }
 
   return (
-    <div>
+    <div id='nft-data-page-wrapper'>
       <div>
         <div
           style={{

@@ -8,6 +8,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   const [selectedToken, setSelectedToken] = useState();
   // const [, /*offer*/ setOffer] = useState({});
   const [offerPrice, setOfferPrice] = useState([]);
+  const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
 
   // eslint-disable-next-line no-unused-vars
@@ -71,6 +72,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     ).json();
 
     if (response.success) {
+      setOfferData(response.product.offers)
       setOfferPrice(response?.product.offers.map((p) => {
        return p.price
       }))
@@ -122,6 +124,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
       currentUser={currentUser}
       handleClickToken={handleClickToken}
       onSelect={onSelect}
+      offerData={offerData}
       offerPrice={offerPrice}
       primaryColor={primaryColor}
       productsFromOffer={productsFromOffer}
