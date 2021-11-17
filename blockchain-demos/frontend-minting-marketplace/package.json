@@ -7,7 +7,7 @@
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@metamask/onboarding": "^1.0.1",
-    "@mui/material": "^5.0.6",
+    "@mui/material": "^5.1.0",
     "@sentry/react": "^6.13.2",
     "@sentry/tracing": "^6.13.2",
     "@testing-library/jest-dom": "^5.14.1",
