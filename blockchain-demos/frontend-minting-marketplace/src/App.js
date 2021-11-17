@@ -10,7 +10,7 @@ import { getJWT, isTokenValid } from './utils/rFetch.js';
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
-import * as colorTypes from './ducks/colors/types.js';
+// import * as colorTypes from './ducks/colors/types.js';
 import * as authTypes from './ducks/auth/types.js';
 
 // Sweetalert2 for the popup messages
@@ -42,6 +42,7 @@ import NftDataPage from './components/MockUpPage/NftList/NftData/NftDataPage';
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
+import SplashPage from './components/SplashPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -60,7 +61,6 @@ function App({ sentryHistory }) {
 	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
-	const [errorAuth, setErrorAuth] = useState('');
 
 	// Redux
 	const dispatch = useDispatch()
@@ -136,7 +136,6 @@ function App({ sentryHistory }) {
 						parsedResponse.message);
 				} else {
 					Swal.fire('Error', "Can't sign messages", 'error');
-					console.log("Nahuy")
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
@@ -153,7 +152,7 @@ function App({ sentryHistory }) {
 
 			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
-				
+
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				console.log(token, "token");
@@ -176,7 +175,7 @@ function App({ sentryHistory }) {
 		}
 	};
 
-	const goHome = () =>{
+	const goHome = () => {
 		sentryHistory.push(`/`)
 	}
 
@@ -206,7 +205,7 @@ function App({ sentryHistory }) {
 		let timeout;
 		if (token) {
 			const decoded = jsonwebtoken.decode(token);
-			
+
 			if (decoded?.exp) {
 
 				timeout = setTimeout(() => {
@@ -237,7 +236,7 @@ function App({ sentryHistory }) {
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
-				{!loginDone && <Redirect to="/all" />}
+				{/* {!loginDone && <Redirect to="/all" />} */}
 				<div
 					style={{
 						...backgroundImageEffect,
@@ -252,14 +251,13 @@ function App({ sentryHistory }) {
 					}}
 					className="App p-0 container-fluid">
 					<UserProfileSettings
-						errorAuth={errorAuth}
 						adminAccess={adminAccess}
 						primaryColor={primaryColor}
 						currentUserAddress={currentUserAddress}
 						loginDone={loginDone}
 						setLoginDone={setLoginDone}
 					/>
-					<div className='row w-100 m-0 p-0'>
+					<div className='row w-100 m-0 p-0 main-content'>
 						<div className='col-1 d-none d-xl-inline-block' />
 						<div className='col-1 rounded'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '10vh' }}>
@@ -304,6 +302,7 @@ function App({ sentryHistory }) {
 							</div>
 							<div className='col-12 mt-3 row'>
 								<Switch>
+									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
@@ -346,6 +345,21 @@ function App({ sentryHistory }) {
 						</div>
 						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 					</div>
+					<footer 
+					className="footer col"
+					style={{
+						background: `${primaryColor === "rhyno" ? "#ccc": ""}`
+					}}
+					>
+						<div className="text-rairtech" style={{color: `${primaryColor === "rhyno" ? "#000" : ""}`}}>
+							© Rairtech 2021. All rights reserved
+						</div>
+						<ul>
+							<li>newsletter</li>
+							<li>contact</li>
+							<li>inquiries</li>
+						</ul>
+					</footer>
 				</div>
 			</Router>
 		</Sentry.ErrorBoundary>
