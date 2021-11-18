@@ -22,7 +22,6 @@ const NftItem = ({
   const history = useHistory();
   const [metaDataProducts, setMetaDataProducts] = useState();
   const [playing, setPlaying] = useState(false);
-  // const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -152,7 +151,7 @@ const NftItem = ({
           ) : (
             <img
               alt="thumbnail"
-              src={pict}
+              src={metaDataProducts?.metadata.image ? metaDataProducts?.metadata.image : pict}
               style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
               className="col-12 h-100 w-100"
             />

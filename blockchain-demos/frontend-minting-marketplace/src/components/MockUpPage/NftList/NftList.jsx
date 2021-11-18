@@ -6,6 +6,8 @@ import Skeleton from '@mui/material/Skeleton';
 import NftItem from './NftItem'
 
 const NftList = ({ data, primaryColor, textColor, titleSearch, sortItem }) => {
+    const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
+
     const filteredData = data && data.filter(
         item => {
             return (
@@ -31,7 +33,7 @@ const NftList = ({ data, primaryColor, textColor, titleSearch, sortItem }) => {
                     if (pict.cover !== 'none') {
                         return (<NftItem onClick={() => console.log('nftList', data)}
                             key={`${pict.id}-${pict.productId}`}
-                            pict={pict.cover}
+                            pict={pict.cover ? pict.cover : defaultImg}
                             allData={pict}
                             contractName={pict.contract}
                             price={pict.offerData.map(p => p.price)}
