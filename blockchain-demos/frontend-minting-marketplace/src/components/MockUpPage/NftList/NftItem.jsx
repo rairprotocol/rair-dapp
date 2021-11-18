@@ -151,7 +151,7 @@ const NftItem = ({
           ) : (
             <img
               alt="thumbnail"
-              src={metaDataProducts?.metadata.image ? metaDataProducts?.metadata.image : pict}
+              src={metaDataProducts?.metadata?.image ? metaDataProducts?.metadata?.image : pict}
               style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
               className="col-12 h-100 w-100"
             />

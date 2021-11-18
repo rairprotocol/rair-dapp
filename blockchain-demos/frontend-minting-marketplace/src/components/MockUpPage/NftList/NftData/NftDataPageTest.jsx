@@ -1,7 +1,7 @@
 import React, { useState, /*useCallback*/ } from "react";
 import { useHistory } from "react-router-dom";
-// import { useSelector } from 'react-redux';
-// import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 
 import {
@@ -36,6 +36,7 @@ const NftDataPageTest = ({
   offerData,
 }) => {
   const history = useHistory();
+  const { minterInstance } = useSelector(state => state.contractStore);
   const [playing, setPlaying] = useState(false);
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -48,7 +49,7 @@ const NftDataPageTest = ({
     },
     desktop: {
       breakpoint: { max: 1500, min: 1024 },
-      paddingLeft: "2rem",
+      // paddingLeft: "2rem",
       items: 3,
     },
     tablet: {
@@ -128,33 +129,17 @@ const NftDataPageTest = ({
       return <span>Not minted yet</span>;
     }
   };
-  // const [next, setNext] = useState();
-  // const [name, setName] = useState();
-  // const [price, setPrice] = useState();
-  // const [start, setStart] = useState();
-  // const [end, setEnd] = useState();
-  // const [allowed, setAllowed] = useState();
 
+  const buyContract = async () => { 
+    try {
+      await minterInstance.buyToken(offerData.offerPool, offerData.offerIndex, selectedToken, { value: offerData.price });
+      debugger
+      Swal.fire('Success', "Now, you are the owner of this token", 'Success');
 
-  //   const refreshData = useCallback(async () => {
-  //     let data = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
-  //     setName(data.name);
-  //     setPrice(data.price.toString());
-  //     setStart(data.tokenStart.toString());
-  //     setEnd(data.tokenEnd.toString());
-  //     setAllowed(data.tokensAllowed.toString());
-  //     setNext((await tokenInstance.getNextSequentialIndex(productIndex, data.tokenStart, data.tokenEnd)).toString());
-  //   }, [minterInstance, offerIndex, rangeIndex, productIndex, tokenInstance])
-  // console.log(offerData , '!!!@');
-  // const { minterInstance } = useSelector(state => state.contractStore);
-
-  // const buyContract = async () => { 
-  //   try {
-  //     await minterInstance.buyToken(offerData[1].offerIndex, 0, selectedToken, { value: offerData[1].price });
-  //   } catch (err) {
-  //     Swal.fire('Error', err?.data?.message, 'error');
-  //   }
-  // }
+    } catch (err) {
+      Swal.fire('Error', err?.data?.message, 'error');
+    }
+  }
   function checkOwner() {
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
       return (
@@ -187,7 +172,8 @@ const NftDataPageTest = ({
               "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
           }}
         >
-          Purchase • {minPrice} {data?.product.blockchain}
+          {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
+          { `Purchase • ${offerData?.price || minPrice} `}
         </button>
       );
   }
@@ -290,7 +276,7 @@ const NftDataPageTest = ({
       <div>
         <div
           style={{
-            maxWidth: "1600px",
+            maxWidth: "1200px",
             margin: "auto",
             borderRadius: "16px",
             padding: "24px 0",
@@ -456,6 +442,10 @@ const NftDataPageTest = ({
                       // ? selectedData.length &&
                       selectedData?.attributes.length > 0 ? selectedData?.attributes.map((item, index) => {
                         if (item.trait_type === "External URL") {
+                          if(item?.value ){
+                            console.log(item?.value.length);
+                            console.log(selectedData);
+                          }
                           return (
                             <div
                               key={index}
@@ -471,7 +461,8 @@ const NftDataPageTest = ({
                                 style={{ color: textColor }}
                                 href={item?.value}
                               >
-                                {item?.value}
+                                {/* {item?.value.substr(item?.value.length-25)} */}
+                                {item?.value.substr(item?.value.indexOf("\n") + 19)}
                               </a>
                             </div>
                           );
@@ -765,7 +756,7 @@ const NftDataPageTest = ({
             </AccordionItem>
           </Accordion>
         </div>
-        <div style={{ maxWidth: "1600px", margin: "auto" }}>
+        <div style={{ maxWidth: "1200px", margin: "auto" }}>
           {/* <span style={{}}>More by {tokenData[selectedToken]?.ownerAddress ? tokenData[selectedToken]?.ownerAddress : "User" }</span> */}
           {tokenData && (
             <Carousel

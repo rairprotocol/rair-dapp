@@ -545,7 +545,10 @@ margin-left: -36px;
 .carousel-item-padding-4-px{
   /* width: auto !important; */
   /* background-color: red; */
-  padding-left: 2rem;
+  /* padding-left: 2rem; */
+}
+.carousel-item-padding-4-px button{
+  padding-left: 0px;
 }
 .accordion__item{
   margin-left: 2rem;

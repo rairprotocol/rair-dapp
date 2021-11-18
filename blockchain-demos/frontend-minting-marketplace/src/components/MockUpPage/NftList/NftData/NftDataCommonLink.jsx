@@ -3,10 +3,12 @@ import { useParams, useHistory } from "react-router-dom";
 import NftDataPageTest from "./NftDataPageTest";
 
 const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
+  // const [, /*offer*/ setOffer] = useState({});
+
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
+  const [selectedOfferIndex, setSelectedOfferIndex] = useState();
   const [selectedToken, setSelectedToken] = useState();
-  // const [, /*offer*/ setOffer] = useState({});
   const [offerPrice, setOfferPrice] = useState([]);
   const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
@@ -24,11 +26,13 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     ).json();
 
     setTokenData(responseAllProduct.result);
-    setSelectedData(responseAllProduct.result[tokenId].metadata);
+    if(responseAllProduct.result.length >= Number(tokenId)){
+      setSelectedData(responseAllProduct.result[tokenId].metadata);
+    } 
     setSelectedToken(tokenId);
   }, [product, contract, tokenId]);
 
-// ---- return only offers for particular contract with x-token ----
+  // ---- return only offers for particular contract with x-token ----
 
   // const getParticularOffer = useCallback(async () => {
   //   let response = await (
@@ -62,7 +66,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   //   }
   // }, [product, contract]);
 
-// ---- return only offers for particular contract with x-token END ----
+  // ---- return only offers for particular contract with x-token END ----
 
   const getParticularOffer = useCallback(async () => {
     let response = await (
@@ -72,10 +76,17 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     ).json();
 
     if (response.success) {
-      setOfferData(response.product.offers)
-      setOfferPrice(response?.product.offers.map((p) => {
-       return p.price
-      }))
+      setOfferData(
+        response.product.offers.find(
+          (neededOfferIndex) =>
+            neededOfferIndex.offerIndex === selectedOfferIndex
+        )
+      );
+      setOfferPrice(
+        response?.product.offers.map((p) => {
+          return p.price;
+        })
+      );
     } else if (
       response?.message === "jwt expired" ||
       response?.message === "jwt malformed"
@@ -84,7 +95,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     } else {
       console.log(response?.message);
     }
-  }, [product, contract]);
+  }, [product, contract, selectedOfferIndex]);
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await (
@@ -93,6 +104,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
       })
     ).json();
     setProductsFromOffer(response.files);
+    setSelectedOfferIndex(tokenData[tokenId]?.offer);
   }, [product, contract, tokenId]);
 
   //   console.log(offer, "offer!!!!");
@@ -108,7 +120,9 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
 
   const handleClickToken = async (tokenId) => {
     history.push(`/tokens/${contract}/${product}/${tokenId}`);
-    setSelectedData(tokenData[tokenId].metadata);
+    if(tokenData.length >= Number(tokenId)){
+      setSelectedData(tokenData[tokenId].metadata);
+    }
     setSelectedToken(tokenId);
   };
 
@@ -133,6 +147,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
       selectedToken={selectedToken}
       textColor={textColor}
       tokenData={tokenData}
+      product={product}
     />
   );
 };

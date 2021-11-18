@@ -10,7 +10,7 @@ export default function OfferItem({
   selectedToken
 }) {
   const [selectedItem, setSelectedItem] = useState(selectedToken);
-  console.log(selectedToken, "selectedToken");
+  // console.log(selectedToken, "selectedToken");
 
   const select = () => {
     setSelectedToken(token)
