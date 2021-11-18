@@ -199,6 +199,13 @@ function App({ sentryHistory }) {
 
 	useEffect(() => {
 		setTitle('Welcome');
+		if (process.env.NODE_ENV === 'development') {
+			window.gotoRouteBackdoor = sentryHistory.push
+			window.adminAccessBackdoor = (boolean) => {
+				setAdminAccess(boolean);
+				dispatch({type: userTypes.SET_ADMIN_RIGHTS, payload: boolean});
+			}
+		}
 	}, [])
 
 	const checkToken = useCallback(() => {
