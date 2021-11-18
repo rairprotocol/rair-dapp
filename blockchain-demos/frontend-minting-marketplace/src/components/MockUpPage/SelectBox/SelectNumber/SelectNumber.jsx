@@ -15,8 +15,8 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
     };
 
     const blockMoreThousand = () => {
-        if(items && items.length > 100) {
-            return 
+        if (items && items.length > 100) {
+            return
         }
     }
 

@@ -142,6 +142,7 @@ const NftItem = ({
                   borderRadius: "16px",
                   overflow: "hidden",
                 }}
+                autoPlay={false}
                 className="col-12 h-100 w-100"
                 onReady={handlePlaying}
                 playing={playing}
