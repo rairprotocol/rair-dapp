@@ -1,10 +1,13 @@
 const Moralis = require('moralis/node');
 const _ = require('lodash');
+const moment = require('moment-timezone');
 const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
-const { addMetadata, addPin } = require('../integrations/ipfsService')();
+const config = require('../config');
 
 const lockLifetime = 1000 * 60 * 5;
+
+const { IPFS_METADATA_UPLOAD_INTERVAL } = process.env;
 
 module.exports = (context) => {
   context.agenda.define('sync tokens', { lockLifetime }, async (task, done) => {
@@ -13,6 +16,7 @@ module.exports = (context) => {
       const tokensForSave = [];
       const offersForUpdate = [];
       const productsForUpdate = [];
+      const tokensWithMetadata = [];
       const block_number = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
@@ -130,9 +134,7 @@ module.exports = (context) => {
             }
 
             if (!_.isEmpty(foundToken) && !_.isEmpty(foundToken.metadata) && foundToken.metadata.name !== 'none' && foundToken.metadataURI === 'none') {
-              const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
-              await addPin(CID, `metadata_${ foundToken.metadata.name }`);
-              update.metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
+              tokensWithMetadata.push(foundToken._id);
             }
 
             tokensForSave.push({
@@ -191,6 +193,32 @@ module.exports = (context) => {
           name: 'sync tokens',
           network
         }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
+      }
+
+      if (!_.isEmpty(tokensWithMetadata)) {
+        let count = 1;
+        let taskTime;
+        let time = await context.redis.redisService.get(config.redis.db.field.addMetadataToIpfsTime);
+        const timeNow = moment().valueOf();
+
+        if (!time || Number(time) < timeNow || Number(time) === timeNow) {
+          time = moment().add(10, 'seconds').valueOf();
+        } else {
+          time = Number(time);
+        }
+
+        for (const tokenId of tokensWithMetadata) {
+          taskTime = moment(time)
+            .utc()
+            .add(Number(IPFS_METADATA_UPLOAD_INTERVAL) * count, 'seconds');
+          count++;
+
+          await context.agenda.create('add metadata to ipfs', { tokenId })
+            .schedule(taskTime.toDate())
+            .save()
+        }
+
+        await context.redis.redisService.set(config.redis.db.field.addMetadataToIpfsTime, taskTime.valueOf());
       }
 
       return done();
