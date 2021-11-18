@@ -7,6 +7,7 @@ import {rFetch} from '../../utils/rFetch.js';
 import {erc721Abi} from '../../contracts'
 import Swal from 'sweetalert2';
 import chainData from '../../utils/blockchainData.js'
+import {web3Switch} from '../../utils/switchBlockchain.js';
 
 const colors = [
 	'#E4476D',
@@ -143,10 +144,13 @@ const ListOffers = () => {
 	const [forceRerender, setForceRerender] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState(false);
 	const [instance, setInstance] = useState();
+	const [onMyChain, setOnMyChain] = useState();
 
-	const { minterInstance, contractCreator, programmaticProvider } = useSelector(store => store.contractStore);
+	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
+
+	console.log()
 
 	const fetchData = useCallback(async () => {
 		if (!address) {
@@ -200,16 +204,23 @@ const ListOffers = () => {
 	const history = useHistory();
 
 	useEffect(() => {
-		setInstance();
-	}, [erc721Abi, address])
+		if (onMyChain) {
+			let createdInstance = contractCreator(address, erc721Abi)
+			setInstance(createdInstance);
+		}
+	}, [erc721Abi, address, onMyChain])
 
 	const fetchMintingStatus = useCallback(async () => {
-		if (!address || !contractData) {
+		if (!instance || !onMyChain) {
 			return;
 		}
-		let instance = contractCreator(address, erc721Abi);
-		setHasMinterRole(await instance.hasRole(await instance.MINTER(), minterInstance.address));
-	}, [minterInstance, address, contractData])
+		try {
+			setHasMinterRole(await instance.hasRole(await instance.MINTER(), minterInstance.address));
+		} catch (err) {
+			console.error(err);
+			setHasMinterRole(false);
+		}
+	}, [minterInstance, instance, contractData, onMyChain])
 
 	useEffect(() => {
 		fetchMintingStatus()
@@ -224,18 +235,26 @@ const ListOffers = () => {
 
 	const giveMinterRole = async () => {
 		Swal.fire({title: 'Granting Role...', html: 'Please wait', icon: 'info', showConfirmButton: false});
-		await (instance.grantRole(await instance.MINTER(), minterInstance.address)).wait();
+		try {
+			await (await instance.grantRole(await instance.MINTER(), minterInstance.address)).wait();
+		} catch (err) {
+			console.error(err);
+			Swal.fire('Error','An error has ocurred','error');
+			return;
+		}
 		Swal.fire('Success!','You can create offers now!','success');
+		fetchMintingStatus()
 	}
 
 	const createOffers = async () => {
 		Swal.fire('Creating offers...','Please wait','info');
 		//await (minterInstance.addOffer(
 		console.log(
+			offerList,
 			instance.address,
 			collectionIndex,
-			offerList.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
-			offerList.map((item) => item.endingToken),
+			offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+			offerList.map((item) => item.ends),
 			offerList.map((item) => item.price),
 			offerList.map((item) => item.name),
 			'0x3fD4268B03cce553f180E77dfC14fde00271F9B7')
@@ -249,8 +268,8 @@ const ListOffers = () => {
 		console.log(
 			instance.address,
 			collectionIndex,
-			offerList.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
-			offerList.map((item) => item.endingToken),
+			offerList.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].ends) + 1)),
+			offerList.map((item) => item.ends),
 			offerList.map((item) => item.price),
 			offerList.map((item) => item.name),
 			'0x3fD4268B03cce553f180E77dfC14fde00271F9B7')
@@ -258,14 +277,18 @@ const ListOffers = () => {
 		Swal.fire('Success!','You can create offers now!','success');
 	}
 
-	const switchBlockchain = async () => {
-
+	const switchBlockchain = async (chainId) => {
+		web3Switch(chainId)
 	}
 
-	let onMyChain = window.ethereum ?
-		chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
-		:
-		chainData[contractData?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId;
+	useEffect(() => {
+		setOnMyChain(
+			window.ethereum ?
+				chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
+				:
+				chainData[contractData?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId
+			)
+	}, [contractData, programmaticProvider, currentChain])
 
 	return <div className='row px-0 mx-0'>
 		<div className='col-12 my-5'>
@@ -338,13 +361,13 @@ const ListOffers = () => {
 			First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
 		</div>
 		<div className='py-3 my-5' />
-		<FixedBottomNavigation
+		{chainData && <FixedBottomNavigation
 			backwardFunction={() => {
 				history.goBack()
 			}}
-			forwardFunction={!onMyChain ? switchBlockchain : (hasMinterRole ? (offerList[0]?.set ? () => createOffers : appendOffers) : giveMinterRole)}
-			forwardLabel={!onMyChain ? `Switch to ` : (hasMinterRole ? (offerList[0]?.set ? 'Append to Offer' : 'Create Offer') : 'Approve Minter Marketplace')}
-		/>
+			forwardFunction={!onMyChain ? () => switchBlockchain(chainData[contractData?.blockchain]?.chainId) : (hasMinterRole ? (offerList[0]?.set ? () => createOffers : appendOffers) : giveMinterRole)}
+			forwardLabel={!onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.set ? 'Append to Offer' : 'Create Offer') : 'Approve Minter Marketplace')}
+		/>}
 	</div>
 }
 
