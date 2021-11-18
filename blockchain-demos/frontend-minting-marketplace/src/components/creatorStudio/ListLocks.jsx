@@ -24,7 +24,7 @@ const colors = [
 	'#ffffff'
 ];
 
-const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies}) => {
+const OfferRow = ({index, locker, name, starts, ends, price, fixed, array, rerender, maxCopies, lockedNumber}) => {
 
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
@@ -32,49 +32,15 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 	const [startingToken, setStartingToken] = useState(starts);
 	const [endingToken, setEndingToken] = useState(ends);
 	const [individualPrice, setIndividualPrice] = useState(price);
+	const [lockedTokens, setLockedTokens] = useState(lockedNumber);
 
-	//const [randColor, ] = useState(Math.abs(0xE4476D - (0x58ec5c * index)));
 	const randColor = colors[index];
 
-	const updater = (name, setter, value) => {
-		array[index][name] = value;
-		setter(value);
+	const updateLockedNumber = useCallback((value) => {
+		array[index].lockedNumber = Number(value);
+		setLockedTokens(Number(value));
 		rerender();
-	};
-
-	const updateEndingToken = useCallback((value) => {
-		array[index].ends = Number(value);
-		setEndingToken(Number(value));
-		if (array[Number(index) + 1] !== undefined) {
-			array[Number(index) + 1].starts = Number(value) + 1;
-		}
-		rerender();
-	}, [array, index, rerender, ])
-	
-	const updateStartingToken = useCallback((value) => {
-		array[index].starts = Number(value);
-		setStartingToken(value);
-		if (Number(endingToken) < Number(value)) {
-			updateEndingToken(Number(value));
-		}
-		rerender();
-	}, [array, index, rerender, updateEndingToken, endingToken])
-
-	useEffect(() => {
-		updateStartingToken(starts);
-	}, [starts, updateStartingToken])
-
-	useEffect(() => {
-		updateEndingToken(ends);
-	}, [ends, updateEndingToken])
-
-	useEffect(() => {
-		setIndividualPrice(price);
-	}, [price])
-
-	useEffect(() => {
-		setItemName(name);
-	}, [name])
+	}, [array, index, rerender, setLockedTokens])
 
 	return <tr>
 		<th>
@@ -83,20 +49,17 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			</button>
 		</th>
 		<th className='p-1'>
-			<div className='border-stimorol rounded-rair w-100'>
-				<InputField
-					getter={itemName}
-					setter={value => updater('name', setItemName, value)}
-					customClass='form-control rounded-rair'
-					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
-				/>
-			</div>
+			<InputField
+				disabled={true}
+				getter={itemName}
+				customClass='form-control rounded-rair'
+				customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+			/>
 		</th>
 		<th className='p-1'>
 			<InputField
 				disabled={true}
 				getter={startingToken}
-				setter={updateStartingToken}
 				type='number'
 				min='0'
 				customClass='form-control rounded-rair'
@@ -104,23 +67,31 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			/>
 		</th>
 		<th className='p-1'>
-			<div className='border-stimorol rounded-rair w-100'>
-				<InputField
-					getter={endingToken}
-					setter={updateEndingToken}
-					customClass='form-control rounded-rair'
-					type='number'
-					min='0'
-					max={maxCopies}
-					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
-				/>
-			</div>
+			<InputField
+				disabled={true}
+				getter={endingToken}
+				customClass='form-control rounded-rair'
+				type='number'
+				min='0'
+				max={maxCopies}
+				customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+			/>
 		</th>
 		<th className='p-1'>
-			<div className='border-stimorol rounded-rair w-100'>
+			<InputField
+				disabled={true}
+				getter={individualPrice}
+				type='number'
+				min='0'
+				customClass='form-control rounded-rair'
+				customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+			/>
+		</th>
+		<th className='p-1'>
+			<div className='border-stimorol rounded-rair'>
 				<InputField
+					disabled={true}
 					getter={individualPrice}
-					setter={value => updater('price', setIndividualPrice, value)}
 					type='number'
 					min='0'
 					customClass='form-control rounded-rair'
@@ -129,14 +100,16 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			</div>
 		</th>
 		<th>
-			{!fixed && <button onClick={deleter} className='btn btn-danger rounded-rair'>
-				<i className='fas fa-trash' />
-			</button>}
+			<div className='border-stimorol rounded-rair'>
+				<button onClick={locker} className={`btn btn-${primaryColor} rounded-rair`}>
+					<i className='fas fa-lock' />
+				</button>
+			</div>
 		</th>
 	</tr>
 };
 
-const ListOffers = () => {
+const ListLock = () => {
 	const [contractData,setContractData] = useState();
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
@@ -173,11 +146,12 @@ const ListOffers = () => {
 		setContractData(response2.contract);
 		setOfferList(response2?.contract?.product?.offers ? response2?.contract?.product?.offers.map(item => {
 			return {
+				productIndex: item.product,
 				name: item.offerName,
 				starts: item.range[0],
 				ends: item.range[1],
 				price: item.price,
-				fixed: true
+				lockedNumber: 0
 			}
 		}) : [])
 	}, [address, collectionIndex])
@@ -186,26 +160,44 @@ const ListOffers = () => {
 		fetchData();
 	}, [fetchData])
 
-	const addOffer = (data) => {
-		let aux = [...offerList];
-		let startingToken = offerList.length === 0 ? 0 : Number(offerList.at(-1).ends) + 1
-		aux.push({
-			name: '',
-			starts: startingToken,
-			ends: startingToken,
-			price: 0,
-		});
-		setOfferList(aux);
+	const locker = async (data) => {
+		/*{
+	      "inputs": [
+	        {
+	          "internalType": "uint256",
+	          "name": "productIndex",
+	          "type": "uint256"
+	        },
+	        {
+	          "internalType": "uint256",
+	          "name": "_startingToken",
+	          "type": "uint256"
+	        },
+	        {
+	          "internalType": "uint256",
+	          "name": "_endingToken",
+	          "type": "uint256"
+	        },
+	        {
+	          "internalType": "uint256",
+	          "name": "_lockedTokens",
+	          "type": "uint256"
+	        }
+	      ],
+	      "name": "createRangeLock",
+	      "outputs": [],
+	      "stateMutability": "nonpayable",
+	      "type": "function"
+	    },*/
+	    Swal.fire('Locking','Locking range', 'info');
+	    try {
+	    	await instance.createRangeLock(data.productIndex, data.starts, data.ends, data.lockedNumber); 
+	    } catch (err) {
+			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
+	    }
+	    Swal.fire('Success!','The range has been locked', 'success');
 	}
 
-	const deleter = (index) => {
-		let aux = [...offerList];
-		if (aux.length > 1 && index !== aux.length - 1) {
-			aux[1].starts = 0;
-		}
-		aux.splice(index, 1);
-		setOfferList(aux);
-	}
 	const history = useHistory();
 
 	useEffect(() => {
@@ -233,7 +225,7 @@ const ListOffers = () => {
 
 	const steps = [
 		{label: 1, active: true},
-		{label: 2, active: false},
+		{label: 2, active: true},
 		{label: 3, active: false},
 		{label: 4, active: false},
 	 ]
@@ -327,16 +319,6 @@ const ListOffers = () => {
 				<div style={{height: '1.5rem'}} />
 			</div>
 		</div>
-		<div className='col-6 text-end'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Simple
-			</button>
-		</div>
-		<div className='col-6 text-start mb-3'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Advanced
-			</button>
-		</div>
 		{contractData ? <>
 			{offerList?.length !== 0 && <table className='col-12 text-start'>
 				<thead>
@@ -354,6 +336,9 @@ const ListOffers = () => {
 						<th style={{width: '10vw'}}>
 							Price for each
 						</th>
+						<th style={{width: '10vw'}}>
+							Tokens Locked
+						</th>
 						<th />
 					</tr>
 				</thead>
@@ -361,7 +346,7 @@ const ListOffers = () => {
 					{offerList.map((item, index, array) => {
 						return <OfferRow
 							array={array}
-							deleter={e => deleter(index)}
+							locker={e => locker(item)}
 							key={index}
 							index={index}
 							{...item}
@@ -370,16 +355,6 @@ const ListOffers = () => {
 					})}
 				</tbody>
 			</table>}
-			<div className='col-12 mt-3 text-center'>
-				<div className='border-stimorol rounded-rair'>
-					<button onClick={addOffer} disabled={offerList.length >= 12} className={`btn btn-${primaryColor} rounded-rair px-4`}>
-						Add new <i className='fas fa-plus' style={{border: `solid 1px ${textColor}`, borderRadius: '50%', padding: '5px'}} />
-					</button>
-				</div>
-			</div>
-			<div className='col-12 mt-3 p-5 text-center rounded-rair' style={{border: 'dashed 2px var(--charcoal-80)'}}>
-				First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
-			</div>
 			<div className='py-3 my-5' />
 			{chainData && <FixedBottomNavigation
 				backwardFunction={() => {
@@ -402,4 +377,4 @@ const ListOffers = () => {
 	</div>
 }
 
-export default ListOffers;
+export default ListLock;
