@@ -1,3 +1,8 @@
+const {
+  REDIS_HOST,
+  REDIS_PORT
+} = process.env;
+
 module.exports = {
   blockchain: {
     networks: {
@@ -8,5 +13,8 @@ module.exports = {
       '0x89': 'Matic Mainnet',
       '0x13881': 'Matic Mumbai'
     }
+  },
+  redis: {
+    connection: { host: REDIS_HOST, port: REDIS_PORT }
   }
 }

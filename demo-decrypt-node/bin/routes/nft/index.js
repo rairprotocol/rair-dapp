@@ -5,7 +5,7 @@ const log = require('../../utils/logger')(module);
 const fs = require('fs');
 const csv = require('csv-parser');
 const _ = require('lodash');
-const { execPromise } = require('../../utils/helpers');
+const { execPromise, getClients, unsubscribeClose } = require('../../utils/helpers');
 
 const removeTempFile = async (roadToFile) => {
   const command = `rm ${ roadToFile }`;
@@ -211,6 +211,79 @@ module.exports = context => {
       const result = await context.db.MintedToken.find({ ownerAddress });
 
       res.json({ success: true, result });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  // TODO: temporary endpoints for tests, have to be removed after all
+  router.get('/redisT', async (req, res, next) => {
+    try {
+      const ch = 'sync-tokens';
+      let timer;
+      const { publisher, subscriber } = getClients(context);
+
+      subscriber.subscribe('syncOut');
+
+      subscriber.on('message', (channel, message) => {
+        const m = JSON.parse(message);
+
+        if (m.flag === ch) {
+          console.log(message, channel);
+
+          if (timer) {
+            clearTimeout(timer);
+            timer = 0;
+          }
+
+          unsubscribeClose(subscriber, publisher);
+
+          return res.json({ success: false, message: `Message from channel ${ channel } : "${ m.txt }"` });
+        }
+      });
+
+      publisher.publish(ch, JSON.stringify({ txt: 'Get Tokens' }));
+
+      timer = setTimeout(() => {
+        unsubscribeClose(subscriber, publisher);
+        return res.json({ success: false });
+      }, 20000);
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  router.get('/redisC', async (req, res, next) => {
+    try {
+      const ch = 'sync-contracts';
+      let timer;
+      const { publisher, subscriber } = getClients(context);
+
+      subscriber.subscribe('syncOut');
+
+      subscriber.on('message', (channel, message) => {
+        const m = JSON.parse(message);
+
+        if (m.flag === ch) {
+          console.log(message, channel);
+
+          if (timer) {
+            clearTimeout(timer);
+            timer = 0;
+          }
+
+          unsubscribeClose(subscriber, publisher);
+
+          return res.json({ success: false, message: `Message from channel ${ channel } : "${ m.txt }"` });
+        }
+      });
+
+      publisher.publish(ch, JSON.stringify({ txt: 'Get contracts!' }));
+
+      timer = setTimeout(() => {
+        unsubscribeClose(subscriber, publisher);
+        return res.json({ success: false });
+      }, 20000);
     } catch (e) {
       next(e);
     }

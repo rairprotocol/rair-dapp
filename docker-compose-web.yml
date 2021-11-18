@@ -13,8 +13,8 @@ services:
       #Authorization layer, see docker-compose-auth.yml
       #- ./nginx/auth/:/etc/conf.d/
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     environment:
       - ENV=development
       - APPLICATION_URL=${hostname}
@@ -38,9 +38,13 @@ services:
       ADMIN_CONTRACT: ${admin_contract}
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
-      - 3000:3000
-      - 5000:5000
+      - "3000:3000"
+      - "5000:5000"
+    depends_on:
+      - rair-redis
     networks:
       - rair-local
   blockchain-networks:
@@ -66,15 +70,19 @@ services:
       MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
     ports:
-      - 5001:5001
+      - "5001:5001"
+    depends_on:
+      - rair-redis
     networks:
       - rair-local
   rairfront:
     container_name: 'rairfront'
     image: rairtechinc/rairfront:dev_latest
     ports:
-      - 8080:80
+      - "8080:80"
     networks:
       - rair-local
   mongo:
@@ -89,7 +97,19 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${localdbpass}
       MONGO_INITDB_DATABASE: rair-db
     ports:
-      - 27017:27017
+      - "27017:27017"
+    networks:
+      - rair-local
+  rair-redis:
+    container_name: "rair-redis"
+    image: redis
+    command: redis-server --appendonly yes
+    restart: always
+#    volumes:
+#      - ./demo-decrypt-node/dev/redis:/data
+#      - ./demo-decrypt-node/dev/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
     networks:
       - rair-local
   minting-network:
@@ -103,7 +123,7 @@ services:
       REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
       REACT_APP_SENTRY_RELEASE: ${sentry_release}
     ports:
-      - 3001:3001
+      - "3001:3001"
     networks:
       - rair-local
 networks:

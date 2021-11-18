@@ -9,6 +9,8 @@ const log = require('./utils/logger')(module);
 const morgan = require('morgan');
 const _ = require('lodash');
 const { MongoClient } = require('mongodb');
+const redis = require('redis');
+const eventsInit = require('./utils/eventBus');
 require('dotenv').config();
 
 const config = require('./config');
@@ -33,6 +35,7 @@ async function main() {
   mongoose.set('useFindAndModify', false);
 
   const app = express();
+  const redisClient = redis.createClient(config.redis.connection);
 
   const client = await MongoClient.connect(connectionString, { useNewUrlParser: true });
   const _db = client.db(client.s.options.dbName);
@@ -51,8 +54,17 @@ async function main() {
       Task: _mongoose.model('Task', require('./models/task'), 'Task')
     },
     mongo: _db,
-    config
+    config,
+    redis: {
+      client: redisClient
+    }
   };
+
+  // connect redisService
+  context.redis.redisService = require('./services/redis')(context);
+
+  // run events listeners
+  eventsInit(context);
 
   // run scheduled tasks flow
   context.agenda = await require('./tasks')(context);
