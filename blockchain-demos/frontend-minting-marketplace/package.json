@@ -4,6 +4,9 @@
   "private": true,
   "proxy": "http://rairnode:5000",
   "dependencies": {
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/material": "^5.1.0",
     "@sentry/react": "^6.13.2",
     "@sentry/tracing": "^6.13.2",
     "@testing-library/jest-dom": "^5.14.1",

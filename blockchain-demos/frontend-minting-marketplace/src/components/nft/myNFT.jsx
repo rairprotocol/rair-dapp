@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { rFetch, useRfetch } from '../../utils/rFetch.js';
+import { rFetch } from '../../utils/rFetch.js';
 import { Link } from 'react-router-dom';
 
 // React Redux types
@@ -8,9 +8,9 @@ import * as authTypes from './../../ducks/auth/types';
 
 import chainData from '../../utils/blockchainData';
 
-const MyNFTs = (props) => {
+const MyNFTs = () => {
 	const dispatch = useDispatch();
-	const { token } = useSelector(store => store.accessStore)
+	// const { token } = useSelector(store => store.accessStore)
 
 	const [tokens, setTokens] = useState()
 

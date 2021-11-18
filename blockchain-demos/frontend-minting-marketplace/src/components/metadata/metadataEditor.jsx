@@ -131,11 +131,14 @@ const MetadataEditor = (props) => {
 	const [currentOffer, setCurrentOffer] = useState('');
 
 	const [existingMetadataArray, setExistingMetadataArray] = useState([]);
+	const [existingURIArray, setExistingURIArray] = useState([]);
 	
 	const [sendingProductMetadata, setSendingProductMetadata] = useState(false);
 	const [sendingContractMetadata, setSendingContractMetadata] = useState(false);
+	const [sendingOpenSeaMetadata, setSendingOpenSeaMetadata] = useState(false);
 	const [productURI, setProductURI] = useState('');
 	const [contractURI, setContractURI] = useState('');
+	const [openSeaContractURI, setOpenSeaContractURI] = useState('');
 	
 	const params = useParams();
 
@@ -166,10 +169,13 @@ const MetadataEditor = (props) => {
 
 		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
 		let sortedMetadataArray = [];
+		let sortedURIArray = [];
 		for await (let token of aux.result) {
 			sortedMetadataArray[token.token] = token.metadata;
+			sortedURIArray[token.token] = token.metadataURI;
 		}
 		setExistingMetadataArray(sortedMetadataArray);
+		setExistingURIArray(sortedURIArray);
 
 		setTokenNumber(0);
 	}, [params])
@@ -387,7 +393,7 @@ const MetadataEditor = (props) => {
 					Check metadata on the blockchain!
 				</button>
 
-				<MetadataSender {...{contractNetwork, existingMetadataArray, params, tokenNumber, internalFirstToken, endingToken}} />
+				<MetadataSender {...{contractNetwork, existingMetadataArray, params, tokenNumber, internalFirstToken, endingToken, existingURIArray}} />
 
 				<details className='col-12 py-3'>
 					<summary>
@@ -461,9 +467,48 @@ const MetadataEditor = (props) => {
 								return;
 							}
 							setSendingContractMetadata(false);
-							swal.fire('Contract Metadata Set!');
+							swal.fire('Contract-wide Metadata Set!');
 						}} >
 							{contractURI ? 'Update' : 'Delete'} contract Metadata URI
+						</button> 
+				</details>
+				<hr />
+				<details className='col-12 py-3'>
+					<summary>
+						<h5> Contract metadata </h5>
+						<small> Information that OpenSea displays </small>
+					</summary>
+					<InputField
+						label='Contract Metadata URL'
+						getter={openSeaContractURI}
+						setter={setOpenSeaContractURI}
+						customClass='form-control'
+						labelClass='w-100'
+						labelCSS={{textAlign: 'left'}}
+					/>
+					<small> This information is pulled by OpenSea </small>
+					<br />
+						<br />
+						<button disabled={sendingContractMetadata} className='btn btn-royal-ice' onClick={async e => {
+							if (window.ethereum.chainId !== contractNetwork) {
+								swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
+								return;
+							}
+							setSendingOpenSeaMetadata(true);
+							let instance = contractCreator(params.contract, erc721Abi);
+							console.log(instance)
+							try {
+								await instance.setContractURI(openSeaContractURI);
+							} catch (err) {
+								swal.fire('Error', err?.data?.message);
+								console.log(err);
+								setSendingOpenSeaMetadata(false);
+								return;
+							}
+							setSendingOpenSeaMetadata(false);
+							swal.fire('Contract Metadata Set!');
+						}} >
+							{openSeaContractURI ? 'Update' : 'Delete'} Contract Metadata URL
 						</button> 
 				</details>
 

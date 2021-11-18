@@ -116,6 +116,11 @@ li {
   color: white;
 }
 
+.row.w-100.main-content {
+  padding-bottom: 200px !important;
+  overflow: hidden;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -695,6 +700,10 @@ margin-left: -36px;
   height: 600px !important;
 }
 
+/* .col-12.mt-3.row {
+  overflow: hidden;
+} */
+
 .col-12 .rounded .react-player__play-icon {
   position: absolute;
   top: 28px;
@@ -703,6 +712,8 @@ margin-left: -36px;
   border-width: 7px 0px 9px 13px !important;
   z-index: 2;
 }
+
+
 
 .col-12 .rounded .react-player__preview {
   justify-content: flex-start !important;
@@ -735,4 +746,38 @@ margin-left: -36px;
   align-items: center;
   justify-content: center;
   color: #fff;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #000;
+  background: rgba(196, 196, 196, 0.2);
+  padding: 40px 0;
+  margin-top: 108px;
+  width: 100%;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  position: absolute;
+  bottom: 0;
+}
+
+.footer .text-rairtech {
+  font-size: 16px;
+  color: #A7A6A6;
+}
+
+.footer ul {
+  display: flex;
+  margin: 0;
+}
+
+.footer ul li {
+  margin-right: 64px;
+  cursor: pointer;
+  /* color: #fff; */
+}
+
+.footer ul li:last-child {
+  margin-right: 0;
 }

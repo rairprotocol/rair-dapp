@@ -8,6 +8,7 @@ import LockRange from './LockRange.jsx';
 
 import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch.js';
+import CustomPayRate from './customizePayRate.jsx';
 
 const Contract = ({address}) => {
 
@@ -80,9 +81,17 @@ const Contract = ({address}) => {
 											max={product.firstTokenIndex + product.copies}
 											value={product.soldCopies}
 										/>
-										{product.offers && <Link className='btn py-0 btn-stimorol' to={`/metadata/${data.contractAddress}/${product.collectionIndexInContract}`}>
-											Edit Metadata!
-										</Link>}
+										{product.offers && <>
+											<CustomPayRate
+												address={data.contractAddress}
+												blockchain={data.blockchain}
+												catalogIndex={product.offers?.length ? product.offers[0]?.offerPool : undefined}
+												customStyle={{borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRight: 'none', paddingTop: 0, paddingBottom: 0}}
+											/>
+											<Link className='btn py-0 btn-stimorol' style={{borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0}} to={`/metadata/${data.contractAddress}/${product.collectionIndexInContract}`}>
+												Edit Metadata!
+											</Link>
+										</>}
 										<details className='w-100 text-start row px-0 mx-0 pt-0 mb-2'>
 											<summary>
 												{product.offers ? product.offers.length : 'No'} offers

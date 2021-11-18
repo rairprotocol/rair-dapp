@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useParams } from "react-router";
+import React from "react";
 
 export default function OfferItem({
   handleClickToken,
