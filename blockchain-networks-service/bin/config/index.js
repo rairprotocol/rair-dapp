@@ -86,12 +86,7 @@ module.exports = {
     }
   },
   redis: {
-    connection: { host: REDIS_HOST, port: REDIS_PORT },
-    db: {
-      field: {
-        addMetadataToIpfsTime: 'addMetadataToIpfsTime'
-      }
-    }
+    connection: { host: REDIS_HOST, port: REDIS_PORT }
   }
 };
 
