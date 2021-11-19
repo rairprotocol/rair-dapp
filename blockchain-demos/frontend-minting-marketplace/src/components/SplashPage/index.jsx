@@ -6,7 +6,6 @@ import './SplashPage.css';
 /* importing images*/
 import Metamask from './images/metamask_logo.png';
 import logoAuthor from './images/colab.png';
-import logoDigital from './images/digital.png';
 import Nft_1 from './images/exclusive_1.jpeg';
 import Nft_2 from './images/exclusive_2.jpeg';
 import Nft_3 from './images/exclusive_3.jpeg';
