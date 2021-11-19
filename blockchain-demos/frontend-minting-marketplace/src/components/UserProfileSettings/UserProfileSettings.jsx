@@ -5,6 +5,7 @@ import './UserProfileSettings.css';
 // React Redux types
 import * as colorTypes from './../../ducks/colors/types';
 import PopUpSettings from './PopUpSetting';
+import PopUpNotification from './PopUpNotification/PopUpNotification';
 
 const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLoginDone }) => {
     const dispatch = useDispatch();
@@ -15,15 +16,7 @@ const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLo
             <div style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
                 {
                     loginDone && <div style={{ marginRight: "12px" }} className="user-block">
-                        <button style={{
-                            color: primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)",
-                            marginRight: "15px",
-                            border: `solid 1px ${primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)"}`,
-                            backgroundColor: primaryColor === "charcoal" ? "#222021" : "#D3D2D3",
-                            borderRadius: '50%'
-                        }}>
-                            <i className="far fa-bell"></i>
-                        </button>
+                        <PopUpNotification primaryColor={primaryColor} />
                         <PopUpSettings
                             primaryColor={primaryColor}
                             setLoginDone={setLoginDone}
@@ -38,7 +31,10 @@ const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLo
                     color: 'var(--royal-purple)',
                     border: 'solid 1px var(--royal-purple)',
                     backgroundColor: primaryColor === "charcoal" ? "#222021" : "#D3D2D3",
-                    borderRadius: '50%'
+                    borderRadius: '12px',
+                    width: 32,
+                    height: 32,
+                    fontSize: 18
                 }}
                     onClick={e => {
                         dispatch({ type: colorTypes.SET_COLOR_SCHEME, payload: primaryColor === 'rhyno' ? 'charcoal' : 'rhyno' });
