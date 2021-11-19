@@ -25,15 +25,15 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
         dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null })
         localStorage.clear();
         setLoginDone(false);
-        history.push("/all")
+        history.push("/")
     }
 
     const pushToMyItems = () => {
-        history.push('/my-nft');
+        history.push('/my-items');
     }
 
     const pushToFactory = () => {
-        history.push('/factory');
+        history.push('/new-factory');
     }
 
     return (
@@ -62,7 +62,7 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
                         color: primaryColor === 'charcoal' ? "#fff" : "#383637"
                     }}
                     >{currentUserAddress && `${currentUserAddress.substr(0, 6)}...${currentUserAddress.substr(currentUserAddress.length - 4)}   `}</span>
-                    <i className="icon-menu" className="fas fa-bars"></i>
+                    <i className="icon-menu fas fa-bars"></i>
                 </button>
             }}
             position="bottom center"
@@ -73,7 +73,7 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
                     <ul className="list-popup">
                         <li onClick={handleNext}><i className="fas fa-cog"></i>Profile settings</li>
                         <li onClick={pushToMyItems}><i className="fas fa-boxes"></i>My items</li>
-                        {adminAccess && <li onClick={pushToFactory}><i className="fas fa-hammer"></i>Factory</li>}
+                        {<li onClick={pushToFactory}><i className="fas fa-hammer"></i>Factory</li>}
                         <li onClick={logout}><i className="fas fa-sign-out-alt"></i>Logout</li>
                     </ul>
                 </div>

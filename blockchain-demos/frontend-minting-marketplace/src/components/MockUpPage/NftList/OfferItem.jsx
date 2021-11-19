@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+// import { useParams } from "react-router";
 
 export default function OfferItem({
   handleClickToken,
@@ -6,13 +7,14 @@ export default function OfferItem({
   index,
   metadata,
   setSelectedToken,
-  selectedToken,
+  selectedToken
 }) {
-
+  const [selectedItem, setSelectedItem] = useState(selectedToken);
 
   const select = () => {
     setSelectedToken(token)
     handleClickToken(token)
+    setSelectedItem(token)
   }
   return (
     <button
@@ -31,10 +33,10 @@ export default function OfferItem({
         // handleClickToken(token)
         //  setSelected(metadata)}
       }}
-      className={selectedToken === token ? "activeClassToken" : ""}
+      className={selectedToken === selectedItem ? "activeClassToken" : ""}
     >
       {
-        selectedToken === token && <div className="activeClassBg">
+        selectedToken === selectedItem && <div className="activeClassBg">
           Chose
         </div>
       }

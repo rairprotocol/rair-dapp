@@ -120,13 +120,13 @@
       min-width:160px; */
   }
 
-  .olo{
+  .serial-box{
     display: flex;
     justify-content: center;
     align-items: center;
     width: 120px;
     /* height: 32px; */
-    border-radius: 16px;
+    border-radius: 12px;
     margin: 6px;
     padding: 10px 5px;
   }

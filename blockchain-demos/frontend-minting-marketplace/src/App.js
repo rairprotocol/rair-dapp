@@ -27,21 +27,19 @@ import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
 import CreatorMode from './components/creatorMode.jsx';
 import ConsumerMode from './components/consumerMode.jsx';
 
-// import VideoList from './components/video/videoList.jsx';
 import VideoPlayer from './components/video/videoPlayer.jsx';
 import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 
-import MyNFTs from './components/nft/myNFT.jsx';
 import Token from './components/nft/Token.jsx';
 import RairProduct from './components/nft/rairCollection.jsx';
 import MockUpPage from './components/MockUpPage/MockUpPage';
 
-// import MetamaskLogo from './images/metamask-fox.svg';
 import * as Sentry from "@sentry/react";
-import NftDataPage from './components/MockUpPage/NftList/NftData/NftDataPage';
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
+import MyItems from './components/nft/myItems';
+import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
@@ -61,6 +59,8 @@ function App({ sentryHistory }) {
 	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
+	// const [errorAuth, /*setErrorAuth*/] = useState('');
+	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
 	// Redux
 	const dispatch = useDispatch()
@@ -68,7 +68,7 @@ function App({ sentryHistory }) {
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
-	const connectUserData = async () => {
+	const connectUserData = useCallback( async () => {
 		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
@@ -155,7 +155,6 @@ function App({ sentryHistory }) {
 
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				console.log(token, "token");
 				localStorage.setItem('token', token);
 			}
 
@@ -173,11 +172,19 @@ function App({ sentryHistory }) {
 			console.log("Error", err)
 			setStartedLogin(false);
 		}
-	};
+	}, [adminAccess, programmaticProvider, dispatch]);
 
 	const goHome = () => {
 		sentryHistory.push(`/`)
 	}
+
+	const btnCheck = () => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      setRenderBtnConnect(false);
+    } else {
+      setRenderBtnConnect(true);
+    }
+  };
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -195,13 +202,14 @@ function App({ sentryHistory }) {
 	}, [])
 
 	const checkToken = useCallback(() => {
+		btnCheck()
 		const token = localStorage.getItem('token');
 		if (!isTokenValid(token)) {
 			connectUserData()
 			dispatch({ type: authTypes.GET_TOKEN_START });
 			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
-	}, [token])
+	}, [ connectUserData, dispatch ])
 
 
 	useEffect(() => {
@@ -221,7 +229,7 @@ function App({ sentryHistory }) {
 				clearTimeout(timeout);
 			}
 		}
-	}, [token])
+	}, [token, connectUserData])
 
 	useEffect(() => {
 		if (localStorage.token && isTokenValid(localStorage.token)) {
@@ -229,16 +237,47 @@ function App({ sentryHistory }) {
 			dispatch({ type: authTypes.GET_TOKEN_START });
 			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 		}
-	}, [])
+	}, [connectUserData, dispatch, token])
 
 	useEffect(() => {
 		checkToken();
 	}, [checkToken, token])
 
+	useEffect(() => {
+    if (primaryColor === "charcoal") {
+      (function () {
+        let angle = 0;
+        let p = document.querySelector("p");
+        if (p) {
+          let text = p.textContent.split("");
+          var len = text.length;
+          var phaseJump = 360 / len;
+          var spans;
+          p.innerHTML = text
+            .map(function (char) {
+              return "<span>" + char + "</span>";
+            })
+            .join("");
+
+          spans = p.children;
+        } else console.log("kik");
+
+        (function wheee() {
+          for (var i = 0; i < len; i++) {
+            spans[i].style.color =
+              "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+          }
+          angle++;
+          requestAnimationFrame(wheee);
+        })();
+      })();
+    } 
+  } , [primaryColor]);
+
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/admin' />}
+				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />}
 				{/* {!loginDone && <Redirect to="/all" />} */}
 				<div
 					style={{
@@ -266,17 +305,19 @@ function App({ sentryHistory }) {
 							<div className='col-12 pt-2 mb-4' style={{ height: '10vh' }}>
 								<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
 							</div>
-							{!loginDone ? <div className='btn-connect-wallet-wrapper'>
+							{!loginDone ? <div className='btn-connect-wallet-wrapper'> 
 								<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
 									className={`btn btn-${primaryColor} btn-connect-wallet`}
 									onClick={connectUserData}>
 									{startedLogin ? 'Please wait...' : 'Connect Wallet'}
 									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-								</button></div> : [
+								</button> 
+									{renderBtnConnect ? <OnboardingButton /> : <> </>}
+								</div> : [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className='fas fa-search' />, route: '/search' },
 									{ name: <i className='fas fa-user' />, route: '/user' },
-									{ name: <i className="fas fa-key" />, route: '/my-nft' },
+									{ name: <i className="fas fa-key" />, route: '/my-items' },
 									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
 									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
 									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
@@ -320,7 +361,8 @@ function App({ sentryHistory }) {
 										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
-									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+									{loginDone && <SentryRoute exact path='/my-items' ><MyItems goHome={goHome}/>
+										</SentryRoute>}
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 									<SentryRoute path='/tokens/:contract/:product/:tokenId'>
 										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
