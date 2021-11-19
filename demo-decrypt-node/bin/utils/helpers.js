@@ -9,22 +9,6 @@ const execPromise = (command, options = {}) => new Promise((resolve, reject) => 
   });
 });
 
-const getClients = (context) => ({
-  publisher: context.redis.client.duplicate(),
-  subscriber: context.redis.client.duplicate()
-});
-
-const unsubscribeClose = (subscriber, publisher = null) => {
-  if (subscriber) {
-    subscriber.unsubscribe();
-    subscriber.quit();
-  }
-
-  if (publisher) publisher.quit();
-};
-
 module.exports = {
-  execPromise,
-  getClients,
-  unsubscribeClose
+  execPromise
 }
