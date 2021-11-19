@@ -1,5 +1,6 @@
 const Moralis = require('moralis/node');
 const _ = require('lodash');
+const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { erc721Abi } = require('../integrations/ethers/contracts');
 
@@ -98,13 +99,15 @@ module.exports = (context) => {
       if (!_.isEmpty(locksForSave)) {
         try {
           await context.db.LockedTokens.insertMany(locksForSave, { ordered: false });
-        } catch (e) {}
+        } catch (e) {
+        }
       }
 
       if (!_.isEmpty(locksForUpdate)) {
         try {
           await context.db.LockedTokens.bulkWrite(locksForUpdate, { ordered: false });
-        } catch (e) {}
+        } catch (e) {
+        }
       }
 
       if (!_.isEmpty(block_number_locked)) {
@@ -123,6 +126,7 @@ module.exports = (context) => {
 
       return done();
     } catch (e) {
+      log.error(e);
       return done(e);
     }
   });

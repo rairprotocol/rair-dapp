@@ -22,25 +22,9 @@ const getABIData = (abi, type, eventName) => {
   return {abi: resultingAbi, topic};
 };
 
-const getClients = (context) => ({
-  publisher: context.redis.client.duplicate(),
-  subscriber: context.redis.client.duplicate()
-});
-
-const unsubscribeClose = (subscriber, publisher = null) => {
-  if (subscriber) {
-    subscriber.unsubscribe();
-    subscriber.quit();
-  }
-
-  if (publisher) publisher.quit();
-};
-
 module.exports = {
   BigNumber,
   BigNumberFromFunc,
   numberToHexadecimal,
-  getABIData,
-  getClients,
-  unsubscribeClose
+  getABIData
 }

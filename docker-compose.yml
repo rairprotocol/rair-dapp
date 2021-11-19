@@ -10,8 +10,8 @@ services:
       - ./nginx/cache/:/etc/nginx/cache
     #  - /etc/letsencrypt/:/etc/letsencrypt/
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     environment:
       - ENV=development
       - APPLICATION_URL=http://minter-network
@@ -37,13 +37,9 @@ services:
       ADMIN_CONTRACT: ${admin_contract}
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
-      REDIS_HOST: ${redisthhost}
-      REDIS_PORT: ${redisport}
     ports:
-      - "3000:3000"
-      - "5000:5000"
-    depends_on:
-      - rair-redis
+      - 3000:3000
+      - 5000:5000
     networks:
       - rair-local
   blockchain-networks:
@@ -70,19 +66,15 @@ services:
       MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
-      REDIS_HOST: ${redisthhost}
-      REDIS_PORT: ${redisport}
     ports:
-      - "5001:5001"
-    depends_on:
-      - rair-redis
+      - 5001:5001
     networks:
       - rair-local
   rairfront:
     container_name: 'rairfront'
     image: rairtechinc/rairfront:dev_latest
     ports:
-      - "8080:80"
+      - 8080:80
     networks:
       - rair-local
 
@@ -97,20 +89,7 @@ services:
     expose:
       - "80"
     ports:
-      - "3001:3001"
-    networks:
-      - rair-local
-
-  rair-redis:
-    container_name: "rair-redis"
-    image: redis
-    command: redis-server --appendonly yes
-    restart: always
-#    volumes:
-#      - ./demo-decrypt-node/dev/redis:/data
-#      - ./demo-decrypt-node/dev/redis.conf:/usr/local/etc/redis/redis.conf
-    ports:
-      - "6379:6379"
+      - 3001:3001
     networks:
       - rair-local
 networks:

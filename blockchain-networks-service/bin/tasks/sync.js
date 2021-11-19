@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const log = require('../utils/logger')(module);
 const moment = require('moment-timezone');
 
 const { SYNC_CONTRACT_REPEAT_EVERY, SYNC_CONTRACT_TASK_INTERVAL } = process.env;
@@ -27,6 +28,7 @@ module.exports = (context) => {
 
       return done();
     } catch (e) {
+      log.error(e);
       return done(e);
     }
   });
