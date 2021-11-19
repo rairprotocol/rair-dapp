@@ -7,31 +7,17 @@ import {rFetch} from '../../utils/rFetch.js';
 import {erc721Abi} from '../../contracts'
 import Swal from 'sweetalert2';
 import chainData from '../../utils/blockchainData.js'
+import colors from '../../utils/offerLockColors.js'
 import {web3Switch} from '../../utils/switchBlockchain.js';
-
-const colors = [
-	'#E4476D',
-	'gold',
-	'silver',
-	'#b08d57',
-	'#000000',
-	'#393939',
-	'#636363',
-	'#9a9a9a',
-	'#bdbdbd',
-	'#eoeoeo',
-	'#f3f3f3',
-	'#ffffff'
-];
 
 const OfferRow = ({index, locker, name, starts, ends, price, fixed, array, rerender, maxCopies, lockedNumber}) => {
 
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
-	const [itemName, setItemName] = useState(name);
-	const [startingToken, setStartingToken] = useState(starts);
-	const [endingToken, setEndingToken] = useState(ends);
-	const [individualPrice, setIndividualPrice] = useState(price);
+	const [itemName, ] = useState(name);
+	const [startingToken, ] = useState(starts);
+	const [endingToken, ] = useState(ends);
+	const [individualPrice, ] = useState(price);
 	const [lockedTokens, setLockedTokens] = useState(lockedNumber);
 
 	const randColor = colors[index];
@@ -41,6 +27,10 @@ const OfferRow = ({index, locker, name, starts, ends, price, fixed, array, reren
 		setLockedTokens(Number(value));
 		rerender();
 	}, [array, index, rerender, setLockedTokens])
+
+	useEffect(() => {
+		setLockedTokens(lockedNumber);
+	}, [lockedNumber])
 
 	return <tr>
 		<th>
@@ -88,12 +78,13 @@ const OfferRow = ({index, locker, name, starts, ends, price, fixed, array, reren
 			/>
 		</th>
 		<th className='p-1'>
-			<div className='border-stimorol rounded-rair'>
+			<div className='border-stimorol rounded-rair w-100'>
 				<InputField
-					disabled={true}
-					getter={individualPrice}
+					getter={lockedTokens}
+					setter={updateLockedNumber}
 					type='number'
 					min='0'
+					max={endingToken - startingToken}
 					customClass='form-control rounded-rair'
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
@@ -113,12 +104,11 @@ const ListLock = () => {
 	const [contractData,setContractData] = useState();
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
-	const [hasMinterRole, setHasMinterRole] = useState(false);
 	const [instance, setInstance] = useState();
 	const [onMyChain, setOnMyChain] = useState();
 
-	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
-	const {primaryColor, textColor} = useSelector(store => store.colorStore);
+	const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	const { primaryColor } = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
 
 	const fetchData = useCallback(async () => {
@@ -161,39 +151,16 @@ const ListLock = () => {
 	}, [fetchData])
 
 	const locker = async (data) => {
-		/*{
-	      "inputs": [
-	        {
-	          "internalType": "uint256",
-	          "name": "productIndex",
-	          "type": "uint256"
-	        },
-	        {
-	          "internalType": "uint256",
-	          "name": "_startingToken",
-	          "type": "uint256"
-	        },
-	        {
-	          "internalType": "uint256",
-	          "name": "_endingToken",
-	          "type": "uint256"
-	        },
-	        {
-	          "internalType": "uint256",
-	          "name": "_lockedTokens",
-	          "type": "uint256"
-	        }
-	      ],
-	      "name": "createRangeLock",
-	      "outputs": [],
-	      "stateMutability": "nonpayable",
-	      "type": "function"
-	    },*/
-	    Swal.fire('Locking','Locking range', 'info');
+	    Swal.fire(`Locking ${data.ends - data.starts} tokens from ${data.name}`,`${data.lockedNumber} tokens will have to be minted to unlock them again.`, 'info');
 	    try {
-	    	await instance.createRangeLock(data.productIndex, data.starts, data.ends, data.lockedNumber); 
+	    	await instance.createRangeLock(
+	    			data.productIndex,
+	    			data.starts,
+	    			data.ends,
+	    			data.lockedNumber); 
 	    } catch (err) {
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
+			return;
 	    }
 	    Swal.fire('Success!','The range has been locked', 'success');
 	}
@@ -205,23 +172,7 @@ const ListLock = () => {
 			let createdInstance = contractCreator(address, erc721Abi)
 			setInstance(createdInstance);
 		}
-	}, [erc721Abi, address, onMyChain, contractCreator])
-
-	const fetchMintingStatus = useCallback(async () => {
-		if (!instance || !onMyChain) {
-			return;
-		}
-		try {
-			setHasMinterRole(await instance.hasRole(await instance.MINTER(), minterInstance.address));
-		} catch (err) {
-			console.error(err);
-			setHasMinterRole(false);
-		}
-	}, [minterInstance, instance, contractData, onMyChain])
-
-	useEffect(() => {
-		fetchMintingStatus()
-	}, [fetchMintingStatus])
+	}, [address, onMyChain, contractCreator])
 
 	const steps = [
 		{label: 1, active: true},
@@ -230,59 +181,9 @@ const ListLock = () => {
 		{label: 4, active: false},
 	 ]
 
-	const giveMinterRole = async () => {
-		Swal.fire({title: 'Granting Role...', html: 'Please wait', icon: 'info', showConfirmButton: false});
-		try {
-			await (await instance.grantRole(await instance.MINTER(), minterInstance.address)).wait();
-		} catch (err) {
-			console.error(err);
-			Swal.fire('Error','An error has ocurred','error');
-			return;
-		}
-		Swal.fire('Success!','You can create offers now!','success');
-		fetchMintingStatus()
-	}
-
-	const createOffers = async () => {
-		Swal.fire('Creating offers...','Please wait','info');
-		try {
-			await (await minterInstance.addOffer(
-				instance.address,
-				collectionIndex,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name),
-				process.env.REACT_APP_NODE_ADDRESS)
-			).wait();
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
-		}
-		Swal.fire('Success!','The offers have been created!','success');
-	}
-
-	const appendOffers = async () => {
-		Swal.fire('Appending offers...','Please wait','info');
-		try {
-			await (await minterInstance.appendOfferRangeBatch(
-				contractData.product.offers[0].offerPool,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name))
-			).wait();
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
-		}
-		Swal.fire('Success!','The offers have been appended!','success');
-	}
-
-	const switchBlockchain = async (chainId) => {
-		web3Switch(chainId)
+	const next = () => {
+		history.push(`/creator/contract/${address}/collection/${collectionIndex}/metadata/batch`)
+		//history.push(`/metadata/${address}/${collectionIndex}`);
 	}
 
 	useEffect(() => {
@@ -293,6 +194,10 @@ const ListLock = () => {
 				chainData[contractData?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId
 			)
 	}, [contractData, programmaticProvider, currentChain])
+
+	const switchBlockchain = async (chainId) => {
+		web3Switch(chainId)
+	}
 
 	return <div className='row px-0 mx-0'>
 		<div className='col-12 my-5'>
@@ -355,23 +260,18 @@ const ListLock = () => {
 					})}
 				</tbody>
 			</table>}
-			<div className='py-3 my-5' />
 			{chainData && <FixedBottomNavigation
 				backwardFunction={() => {
 					history.goBack()
 				}}
-				forwardFunction={!onMyChain ?
-					() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
-					:
-					(hasMinterRole ? 
-						(offerList[0]?.fixed ?
-							appendOffers
-							:
-							createOffers)
+				forwardFunctions={[{
+					action: !onMyChain ?
+						() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
 						:
-						giveMinterRole)}
-				forwardLabel={!onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? 'Append to Offer' : 'Create Offer') : 'Approve Minter Marketplace')}
-				forwardDisabled={hasMinterRole ? offerList.length === 0 || offerList.filter(item => item.fixed !== true).length === 0  : false}
+						next,
+					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : `Proceed`,
+					disabled: false
+				}]}
 			/>}
 		</> : 'Fetching data...'}
 	</div>

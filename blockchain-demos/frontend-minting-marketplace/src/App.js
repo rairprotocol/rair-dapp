@@ -50,9 +50,11 @@ import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
+import MyNFTs from './components/nft/myNFT.jsx';
 
 import ListOffers from './components/creatorStudio/ListOffers.jsx';
 import ListLocks from './components/creatorStudio/ListLocks.jsx';
+import BatchMetadata from './components/creatorStudio/batchMetadata.jsx';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -371,6 +373,8 @@ function App({ sentryHistory }) {
 								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
 								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/offers' component={ListOffers} />}
 								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/locks' component={ListLocks} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/metadata/batch' component={BatchMetadata} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/metadata/single' component={BatchMetadata} />}
 
 								<SentryRoute path='/all'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
@@ -379,6 +383,7 @@ function App({ sentryHistory }) {
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 								</SentryRoute>
 								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
+								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 								<SentryRoute path='/tokens/:contract/:product/:tokenId'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />

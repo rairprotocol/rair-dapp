@@ -8,21 +8,7 @@ import {erc721Abi} from '../../contracts'
 import Swal from 'sweetalert2';
 import chainData from '../../utils/blockchainData.js'
 import {web3Switch} from '../../utils/switchBlockchain.js';
-
-const colors = [
-	'#E4476D',
-	'gold',
-	'silver',
-	'#b08d57',
-	'#000000',
-	'#393939',
-	'#636363',
-	'#9a9a9a',
-	'#bdbdbd',
-	'#eoeoeo',
-	'#f3f3f3',
-	'#ffffff'
-];
+import colors from '../../utils/offerLockColors.js'
 
 const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies}) => {
 
@@ -398,7 +384,8 @@ const ListOffers = () => {
 				backwardFunction={() => {
 					history.goBack()
 				}}
-				forwardFunction={!onMyChain ?
+				forwardFunctions={[{
+					action: !onMyChain ?
 					() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
 					:
 					(hasMinterRole ? 
@@ -410,9 +397,10 @@ const ListOffers = () => {
 							:
 							createOffers)
 						:
-						giveMinterRole)}
-				forwardLabel={!onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace')}
-				forwardDisabled={hasMinterRole ? offerList.length === 0 : false}
+						giveMinterRole),
+					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
+					disabled: hasMinterRole ? offerList.length === 0 : false
+				}]}
 			/>}
 		</> : 'Fetching data...'}
 	</div>
