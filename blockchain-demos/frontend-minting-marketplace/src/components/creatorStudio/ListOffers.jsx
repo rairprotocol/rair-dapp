@@ -42,31 +42,31 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 		rerender();
 	};
 
-	const updateEndingToken = useCallback((value) => {
+	const updateEndingToken = (value) => {
 		array[index].ends = Number(value);
 		setEndingToken(Number(value));
 		if (array[Number(index) + 1] !== undefined) {
 			array[Number(index) + 1].starts = Number(value) + 1;
 		}
 		rerender();
-	}, [array, index, rerender, ])
+	}
 	
-	const updateStartingToken = useCallback((value) => {
+	const updateStartingToken = (value) => {
 		array[index].starts = Number(value);
 		setStartingToken(value);
 		if (Number(endingToken) < Number(value)) {
 			updateEndingToken(Number(value));
 		}
 		rerender();
-	}, [array, index, rerender, updateEndingToken, endingToken])
+	}
 
 	useEffect(() => {
 		updateStartingToken(starts);
-	}, [starts, updateStartingToken])
+	}, [starts])
 
 	useEffect(() => {
 		updateEndingToken(ends);
-	}, [ends, updateEndingToken])
+	}, [ends])
 
 	useEffect(() => {
 		setIndividualPrice(price);
@@ -76,6 +76,8 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 		setItemName(name);
 	}, [name])
 
+	const disabledClass = fixed ? '' : 'border-stimorol rounded-rair'
+
 	return <tr>
 		<th>
 			<button disabled className='btn btn-charcoal rounded-rair'>
@@ -83,9 +85,10 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			</button>
 		</th>
 		<th className='p-1'>
-			<div className='border-stimorol rounded-rair w-100'>
+			<div className={`${disabledClass} w-100`}>
 				<InputField
 					getter={itemName}
+					disabled={fixed}
 					setter={value => updater('name', setItemName, value)}
 					customClass='form-control rounded-rair'
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
@@ -104,11 +107,12 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			/>
 		</th>
 		<th className='p-1'>
-			<div className='border-stimorol rounded-rair w-100'>
+			<div className={`${disabledClass} w-100`}>
 				<InputField
 					getter={endingToken}
 					setter={updateEndingToken}
 					customClass='form-control rounded-rair'
+					disabled={fixed}
 					type='number'
 					min='0'
 					max={maxCopies}
@@ -117,11 +121,12 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			</div>
 		</th>
 		<th className='p-1'>
-			<div className='border-stimorol rounded-rair w-100'>
+			<div className={`${disabledClass} w-100`}>
 				<InputField
 					getter={individualPrice}
 					setter={value => updater('price', setIndividualPrice, value)}
 					type='number'
+					disabled={fixed}
 					min='0'
 					customClass='form-control rounded-rair'
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
@@ -147,6 +152,10 @@ const ListOffers = () => {
 	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
+
+	const rerender = useCallback(() => {
+		setForceRerender(() => !forceRerender);
+	}, [setForceRerender, forceRerender])
 
 	const fetchData = useCallback(async () => {
 		if (!address) {
@@ -213,7 +222,7 @@ const ListOffers = () => {
 			let createdInstance = contractCreator(address, erc721Abi)
 			setInstance(createdInstance);
 		}
-	}, [erc721Abi, address, onMyChain, contractCreator])
+	}, [address, onMyChain, contractCreator])
 
 	const fetchMintingStatus = useCallback(async () => {
 		if (!instance || !onMyChain) {
@@ -225,7 +234,7 @@ const ListOffers = () => {
 			console.error(err);
 			setHasMinterRole(false);
 		}
-	}, [minterInstance, instance, contractData, onMyChain])
+	}, [minterInstance, instance, onMyChain])
 
 	useEffect(() => {
 		fetchMintingStatus()
@@ -287,6 +296,10 @@ const ListOffers = () => {
 			return;
 		}
 		Swal.fire('Success!','The offers have been appended!','success');
+	}
+
+	const moveToLocks = () => {
+		history.push(`/creator/contract/${address}/collection/${collectionIndex}/locks`);
 	}
 
 	const switchBlockchain = async (chainId) => {
@@ -365,7 +378,7 @@ const ListOffers = () => {
 							key={index}
 							index={index}
 							{...item}
-							rerender={e => setForceRerender(!forceRerender)}
+							rerender={rerender}
 							maxCopies={Number(contractData?.product?.copies) - 1} />
 					})}
 				</tbody>
@@ -390,13 +403,16 @@ const ListOffers = () => {
 					:
 					(hasMinterRole ? 
 						(offerList[0]?.fixed ?
-							appendOffers
+							(offerList.filter(item => item.fixed !== true).length === 0 ? 
+								moveToLocks
+								:
+								appendOffers)
 							:
 							createOffers)
 						:
 						giveMinterRole)}
-				forwardLabel={!onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? 'Append to Offer' : 'Create Offer') : 'Approve Minter Marketplace')}
-				forwardDisabled={hasMinterRole ? offerList.length === 0 || offerList.filter(item => item.fixed !== true).length === 0  : false}
+				forwardLabel={!onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace')}
+				forwardDisabled={hasMinterRole ? offerList.length === 0 : false}
 			/>}
 		</> : 'Fetching data...'}
 	</div>
