@@ -22,7 +22,6 @@ const NftItem = ({
   const history = useHistory();
   const [metaDataProducts, setMetaDataProducts] = useState();
   const [playing, setPlaying] = useState(false);
-  const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -143,6 +142,7 @@ const NftItem = ({
                   borderRadius: "16px",
                   overflow: "hidden",
                 }}
+                autoPlay={false}
                 className="col-12 h-100 w-100"
                 onReady={handlePlaying}
                 playing={playing}
@@ -152,8 +152,8 @@ const NftItem = ({
           ) : (
             <img
               alt="thumbnail"
-              src={pict}
-              style={{ position: "absolute", bottom: 0, borderRadius: "16px" }}
+              src={metaDataProducts?.metadata?.image ? metaDataProducts?.metadata?.image : pict}
+              style={{ position: "absolute", bottom: 0, borderRadius: "16px", objectFit: "contain" }}
               className="col-12 h-100 w-100"
             />
           )}
@@ -161,7 +161,9 @@ const NftItem = ({
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">
-            {collectionName}
+            {/* {collectionName} */}
+            {collectionName.slice(0, 14)}
+            {collectionName.length > 12 ? "..." : ""}
             <br />
           </span>
           <span className="description">

@@ -58,9 +58,9 @@ const ModalBlockchain = ({ isOpenBlockchain, setIsOpenBlockchain }) => {
         setClearAll(true);
     }
 
-    const onClickApply = () => {
+    // const onClickApply = () => {
         
-    }
+    // }
 
     return (
         <Modal

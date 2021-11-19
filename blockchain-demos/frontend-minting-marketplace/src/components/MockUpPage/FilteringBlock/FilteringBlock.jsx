@@ -3,13 +3,12 @@ import "./FilteringBlock.css";
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
-const FilteringBlock = ({ primaryColor, textColor }) => {
+const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilterShow }) => {
     const [filterPopUp, setFilterPopUp] = useState(false);
-    const [filterItem, setFilterItem] = useState('Filters');
+    const [/*filterItem*/, setFilterItem] = useState('Filters');
     const filterRef = useRef();
 
     const [sortPopUp, setSortPopUp] = useState(false);
-    const [sortItem, setSortItem] = useState("up");
     const sortRef = useRef();
 
     const [isOpenCategories, setIsOpenCategories] = useState(false);
@@ -57,7 +56,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
 
     return (
         <>
-            <div ref={filterRef} className="select-filters-wrapper">
+            {!isFilterShow ? <div ref={filterRef} className='emptyFilter'> </div> : <div ref={filterRef} className="select-filters-wrapper">
                 <div
                     style={{
                         backgroundColor: `var(--${primaryColor})`,
@@ -79,7 +78,7 @@ const FilteringBlock = ({ primaryColor, textColor }) => {
                         <div onClick={() => { onChangeFilterItem("Metadata"); setIsOpenCategories(true) }} className="select-filters-item">Categories</div>
                     </div>
                 }
-            </div>
+            </div>}
             <div ref={sortRef} className="select-sort-wrapper">
                 <div
                     onClick={onChangeSortPopUp}

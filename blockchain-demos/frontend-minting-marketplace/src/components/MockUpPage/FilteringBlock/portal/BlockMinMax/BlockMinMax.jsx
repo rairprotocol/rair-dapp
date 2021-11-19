@@ -10,7 +10,7 @@ const BlockMinMax = ({ clearAll }) => {
             minValue.setValue('');
             maxValue.setValue('');
         }
-    }, [clearAll])
+    }, [clearAll, maxValue, minValue])
 
     return (
         <div className="block-min-max">

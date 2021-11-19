@@ -46,7 +46,7 @@ const VideoPlayer = () => {
 			}, 1000);
 		} else {
 			console.error(streamAddress);
-			Swal.fire('Error');
+			Swal.fire('NFT required to view this content');
 		}
 	}, [params.mainManifest, params.videoId, videoName, programmaticProvider])
 
