@@ -49,8 +49,10 @@ spec:
               value: "dev.rair.tech"
             - name: PINATA_SECRET
               value: "92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1"
-            
-          
+            - name: REDIS_HOST
+              value: redis-master
+            - name: REDIS_PORT
+              value: 6379
             - name: matic_testnet_rpc
               value: "https://polygon-mumbai.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
             - name: matic_mainnet_rpc
@@ -63,8 +65,6 @@ spec:
               value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
             - name: binance_mainnet_rpc
               value: "https://bsc-dataseed.binance.org/"
-            
-            
             - name: BINANCE_URL
               value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
             - name: BINANCE_CHAIN_ID
@@ -74,14 +74,13 @@ spec:
             - name: BINANCE_NAME
               value: "Binance Testnet"
             - name: BINANCE_FACTORY_ADDRESS
-              value: "0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4"
+              value: "0x122D66159CBe0F9021aC120923847E79a4dCFC2C"
             - name: BINANCE_MINTER_ADDRESS
-              value: "0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f"
+              value: "0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD"
             - name: BINANCE_CHAINID_HEX
               value: "0x61"
             - name: GOERLI_URL
-              value: "https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_
-goerli_chain_id=5"
+              value: "https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_goerli_chain_id=5"
             - name: GOERLI_CHAIN_ID
               value: "5"
             - name: GOERLI_SYMBOL
@@ -89,9 +88,9 @@ goerli_chain_id=5"
             - name: GOERLI_NAME
               value: "Goerli Testnet"
             - name: GOERLI_FACTORY_ADDRESS
-              value: "0x74278C22BfB1DCcc3d42F8b71280C25691E8C157"
+              value: "0x0C7A7D9641AB33228fD9C202DB4290B304963592"
             - name: GOERLI_MINTER_ADDRESS
-              value: "0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba"
+              value: "0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5"
             - name: GOERLI_CHAINID_HEX
               value: "0x5"
             - name: MATIC_MUMBAI_URL
@@ -103,9 +102,9 @@ goerli_chain_id=5"
             - name: MATIC_MUMBAI_NAME
               value: "Matic Mumbai Testnet"
             - name: MATIC_MUMBAI_FACTORY_ADDRESS
-              value: "0x1A5bf89208Dddd09614919eE31EA6E40D42493CD"
+              value: "0x5535FE9ABdA206F6780cc87b4e1fe4733b98bd9C"
             - name: MATIC_MUMBAI_MINTER_ADDRESS
-              value: "0x63Dd6821D902012B664dD80140C54A98CeE97068"
+              value: "0x4594D508cDa05D016571082d467889f4629e1f56"
             - name: MATIC_MUMBAI_CHAINID_HEX
               value: "0x13881"
             - name: MATIC_MAINNET_URL
@@ -117,13 +116,13 @@ goerli_chain_id=5"
             - name: MATIC_MAINNET_NAME
               value: "Matic Mainnet"
             - name: MATIC_MAINNET_FACTORY_ADDRESS
-              value: "0x556a3Db6d800AAA56f8B09E476793c5100705Db5"
+              value: "0x92FBe344513e108B581170E73CFA352B729E47EA"
             - name: MATIC_MAINNET_MINTER_ADDRESS
-              value: "0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df"
+              value: "0x781F15a23506CF28539EA057e3f33008E6339E49"
             - name: MATIC_MAINNET_CHAINID_HEX
               value: "0x89"
             - name: SYNC_CONTRACT_REPEAT_EVERY
-              value: "3"
+              value: "5"
             - name: SYNC_CONTRACT_TASK_INTERVAL
               value: "1"
           resources: {}
