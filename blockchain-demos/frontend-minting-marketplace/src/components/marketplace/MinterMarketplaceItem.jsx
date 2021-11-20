@@ -47,6 +47,7 @@ const MinterMarketplaceItem = ({item, index, colWidth}) => {
 					rSwal.fire({
 						html: <Provider store={store}>
 							<BuyTokenModalContent
+								minterAddress={item.minterAddress}
 								blockchain={item.blockchain}
 								price={item.price}
 								start={item.range[0]}
