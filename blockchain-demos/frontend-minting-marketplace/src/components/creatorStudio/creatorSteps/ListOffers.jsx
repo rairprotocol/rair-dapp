@@ -1,134 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
-import InputField from '../common/InputField.jsx'
-import FixedBottomNavigation from './FixedBottomNavigation.jsx';
+import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import { useParams, useHistory } from 'react-router-dom';
-import {rFetch} from '../../utils/rFetch.js';
-import {erc721Abi} from '../../contracts'
+import {erc721Abi} from '../../../contracts'
 import Swal from 'sweetalert2';
-import chainData from '../../utils/blockchainData.js'
-import {web3Switch} from '../../utils/switchBlockchain.js';
-import colors from '../../utils/offerLockColors.js'
+import chainData from '../../../utils/blockchainData.js'
+import {web3Switch} from '../../../utils/switchBlockchain.js';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
+import OfferRow from './OfferRow.jsx'
 
-const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies}) => {
-
-	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
-
-	const [itemName, setItemName] = useState(name);
-	const [startingToken, setStartingToken] = useState(starts);
-	const [endingToken, setEndingToken] = useState(ends);
-	const [individualPrice, setIndividualPrice] = useState(price);
-
-	//const [randColor, ] = useState(Math.abs(0xE4476D - (0x58ec5c * index)));
-	const randColor = colors[index];
-
-	const updater = (name, setter, value) => {
-		array[index][name] = value;
-		setter(value);
-		rerender();
-	};
-
-	const updateEndingToken = (value) => {
-		array[index].ends = Number(value);
-		setEndingToken(Number(value));
-		if (array[Number(index) + 1] !== undefined) {
-			array[Number(index) + 1].starts = Number(value) + 1;
-		}
-		rerender();
-	}
-	
-	const updateStartingToken = (value) => {
-		array[index].starts = Number(value);
-		setStartingToken(value);
-		if (Number(endingToken) < Number(value)) {
-			updateEndingToken(Number(value));
-		}
-		rerender();
-	}
-
-	useEffect(() => {
-		updateStartingToken(starts);
-	}, [starts])
-
-	useEffect(() => {
-		updateEndingToken(ends);
-	}, [ends])
-
-	useEffect(() => {
-		setIndividualPrice(price);
-	}, [price])
-
-	useEffect(() => {
-		setItemName(name);
-	}, [name])
-
-	const disabledClass = fixed ? '' : 'border-stimorol rounded-rair'
-
-	return <tr>
-		<th>
-			<button disabled className='btn btn-charcoal rounded-rair'>
-				<i style={{color: `${randColor}`}} className='fas fa-key' />
-			</button>
-		</th>
-		<th className='p-1'>
-			<div className={`${disabledClass} w-100`}>
-				<InputField
-					getter={itemName}
-					disabled={fixed}
-					setter={value => updater('name', setItemName, value)}
-					customClass='form-control rounded-rair'
-					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
-				/>
-			</div>
-		</th>
-		<th className='p-1'>
-			<InputField
-				disabled={true}
-				getter={startingToken}
-				setter={updateStartingToken}
-				type='number'
-				min='0'
-				customClass='form-control rounded-rair'
-				customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
-			/>
-		</th>
-		<th className='p-1'>
-			<div className={`${disabledClass} w-100`}>
-				<InputField
-					getter={endingToken}
-					setter={updateEndingToken}
-					customClass='form-control rounded-rair'
-					disabled={fixed}
-					type='number'
-					min='0'
-					max={maxCopies}
-					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
-				/>
-			</div>
-		</th>
-		<th className='p-1'>
-			<div className={`${disabledClass} w-100`}>
-				<InputField
-					getter={individualPrice}
-					setter={value => updater('price', setIndividualPrice, value)}
-					type='number'
-					disabled={fixed}
-					min='0'
-					customClass='form-control rounded-rair'
-					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
-				/>
-			</div>
-		</th>
-		<th>
-			{!fixed && <button onClick={deleter} className='btn btn-danger rounded-rair'>
-				<i className='fas fa-trash' />
-			</button>}
-		</th>
-	</tr>
-};
-
-const ListOffers = () => {
-	const [contractData,setContractData] = useState();
+const ListOffers = ({contractData, setStepNumber}) => {
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState(false);
@@ -139,34 +20,8 @@ const ListOffers = () => {
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
 
-	const rerender = useCallback(() => {
-		setForceRerender(() => !forceRerender);
-	}, [setForceRerender, forceRerender])
-
-	const fetchData = useCallback(async () => {
-		if (!address) {
-			return;
-		}
-		let response2 = await rFetch(`/api/contracts/${address}`);
-		let response3 = await rFetch(`/api/contracts/${address}/products`);
-		if (response3.success) {
-			response2.contract.products = response3.products
-		}
-		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
-		// Special case where a product exists but it has no offers
-		if (response4.success) {
-			response4.products.forEach(item => {
-				response2.contract.products.forEach(existingItem => {
-					if (item._id.toString() === existingItem._id.toString()) {
-						existingItem.offers = item.offers;
-					}
-				})
-			})
-		}
-		response2.contract.product = (response2.contract.products.filter(i => i.collectionIndexInContract === Number(collectionIndex)))[0];
-		delete response2.contract.products;
-		setContractData(response2.contract);
-		setOfferList(response2?.contract?.product?.offers ? response2?.contract?.product?.offers.map(item => {
+	useEffect(() => {
+		setOfferList(contractData?.product?.offers ? contractData?.product?.offers.map(item => {
 			return {
 				name: item.offerName,
 				starts: item.range[0],
@@ -175,11 +30,15 @@ const ListOffers = () => {
 				fixed: true
 			}
 		}) : [])
-	}, [address, collectionIndex])
+	}, [contractData])
 
 	useEffect(() => {
-		fetchData();
-	}, [fetchData])
+		setStepNumber(1);
+	}, [setStepNumber])
+
+	const rerender = useCallback(() => {
+		setForceRerender(() => !forceRerender);
+	}, [setForceRerender, forceRerender])
 
 	const addOffer = (data) => {
 		let aux = [...offerList];
@@ -225,13 +84,6 @@ const ListOffers = () => {
 	useEffect(() => {
 		fetchMintingStatus()
 	}, [fetchMintingStatus])
-
-	const steps = [
-		{label: 1, active: true},
-		{label: 2, active: false},
-		{label: 3, active: false},
-		{label: 4, active: false},
-	 ]
 
 	const giveMinterRole = async () => {
 		Swal.fire({title: 'Granting Role...', html: 'Please wait', icon: 'info', showConfirmButton: false});
@@ -302,30 +154,6 @@ const ListOffers = () => {
 	}, [contractData, programmaticProvider, currentChain])
 
 	return <div className='row px-0 mx-0'>
-		<div className='col-12 my-5'>
-			<h4>{contractData?.title}</h4>
-			<small>{contractData?.product?.name}</small>
-			<div className='w-75 mx-auto px-0' style={{position: 'relative'}}>
-				<div style={{border: `solid 1px var(--charcoal-60)`, width: '76%', right: '12%', top: '50%', position: 'absolute', zIndex: 0}} />
-				<div className='row px-0 mx-0' style={{width: '100%', position: 'absolute', zIndex: 1}} >
-					{steps.map((item, index, array) => {
-						return <div key={index} className='col'>
-							<div style={{
-								background: `var(--${item.active ? 'stimorol' : primaryColor})`,
-								borderRadius: '50%',
-								height: '1.7rem',
-								width: '1.7rem',
-								margin: 'auto',
-								border: 'solid 1px var(--charcoal-60)'
-							}}>
-								{item.label}
-							</div>
-						</div>
-					})}
-				</div>
-				<div style={{height: '1.5rem'}} />
-			</div>
-		</div>
 		<div className='col-6 text-end'>
 			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
 				Simple
@@ -406,4 +234,12 @@ const ListOffers = () => {
 	</div>
 }
 
-export default ListOffers;
+const ContextWrapper = (props) => {
+	return <WorkflowContext.Consumer> 
+		{(value) => {
+			return <ListOffers {...value} />
+		}}
+	</WorkflowContext.Consumer>
+}
+
+export default ContextWrapper;

@@ -52,9 +52,7 @@ import SplashPage from './components/SplashPage';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 import MyNFTs from './components/nft/myNFT.jsx';
 
-import ListOffers from './components/creatorStudio/ListOffers.jsx';
-import ListLocks from './components/creatorStudio/ListLocks.jsx';
-import BatchMetadata from './components/creatorStudio/batchMetadata.jsx';
+import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -371,10 +369,9 @@ function App({ sentryHistory }) {
 								{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
 								{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
 								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/offers' component={ListOffers} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/locks' component={ListLocks} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/metadata/batch' component={BatchMetadata} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/metadata/single' component={BatchMetadata} />}
+								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/'>
+									<WorkflowSteps {...{sentryHistory}} />
+								</SentryRoute>}
 
 								<SentryRoute path='/all'>
 									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
