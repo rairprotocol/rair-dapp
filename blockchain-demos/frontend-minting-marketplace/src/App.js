@@ -212,24 +212,24 @@ function App({ sentryHistory }) {
 	}, [ connectUserData, dispatch ])
 
 
-	useEffect(() => {
-		let timeout;
-		if (token) {
-			const decoded = jsonwebtoken.decode(token);
+	// useEffect(() => {
+	// 	let timeout;
+	// 	if (token) {
+	// 		const decoded = jsonwebtoken.decode(token);
 
-			if (decoded?.exp) {
+	// 		if (decoded?.exp) {
 
-				timeout = setTimeout(() => {
-					connectUserData()
-				}, decoded.exp * 1000)
-			}
-		}
-		return () => {
-			if (timeout) {
-				clearTimeout(timeout);
-			}
-		}
-	}, [token, connectUserData])
+	// 			timeout = setTimeout(() => {
+	// 				connectUserData()
+	// 			}, decoded.exp * 1000)
+	// 		}
+	// 	}
+	// 	return () => {
+	// 		if (timeout) {
+	// 			clearTimeout(timeout);
+	// 		}
+	// 	}
+	// }, [token, connectUserData])
 
 	useEffect(() => {
 		if (localStorage.token && isTokenValid(localStorage.token)) {
@@ -239,9 +239,9 @@ function App({ sentryHistory }) {
 		}
 	}, [connectUserData, dispatch, token])
 
-	useEffect(() => {
-		checkToken();
-	}, [checkToken, token])
+	// useEffect(() => {
+	// 	checkToken();
+	// }, [checkToken, token])
 
 	useEffect(() => {
     if (primaryColor === "charcoal") {

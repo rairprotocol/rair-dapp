@@ -4,7 +4,7 @@ import { Popup } from 'reactjs-popup';
 import NftImg from './images/image.png';
 
 
-const PopUpNotification = ({ primaryColor }) => {
+const PopUpNotification = ({ primaryColor, isNotification }) => {
     const [openModal, setOpenModal] = useState(false);
     const { headerLogo } = useSelector(store => store.colorStore);
 
@@ -24,7 +24,7 @@ const PopUpNotification = ({ primaryColor }) => {
                     height: 32,
                     fontSize: 18
                 }}>
-                    <div className="ellipse" />
+                    {isNotification && <div className="ellipse" />}
                     <i className="far fa-bell"></i>
                 </button>
             }}

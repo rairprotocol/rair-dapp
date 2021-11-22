@@ -16,7 +16,7 @@ const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLo
             <div style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
                 {
                     loginDone && <div style={{ marginRight: "12px" }} className="user-block">
-                        <PopUpNotification primaryColor={primaryColor} />
+                        <PopUpNotification primaryColor={primaryColor} isNotification={true} />
                         <PopUpSettings
                             primaryColor={primaryColor}
                             setLoginDone={setLoginDone}
