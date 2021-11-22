@@ -60,7 +60,7 @@ const BatchDataItem = ({tokenId, metadataURI, deleter, index, array, endingToken
 	</tr>
 }
 
-const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNumber, setExistingMetadataArray, endingToken, internalFirstToken}) => {
+const MetadataSender = ({contractNetwork, existingURIArray, params, tokenNumber, setExistingMetadataArray, endingToken, internalFirstToken}) => {
 
 	const [sendingMetadata, setSendingMetadata] = useState(false);
 	const [metadataArray, setMetadataArray] = useState([]);
@@ -70,9 +70,10 @@ const MetadataSender = ({contractNetwork, existingMetadataArray, params, tokenNu
 			return;
 		}
 		let aux = [...metadataArray];
+		let index = metadataArray.length > 0 ? Number(metadataArray.at(-1).tokenId) + 1 : 0
 		aux.push({
-			tokenId: metadataArray.length > 0 ? Number(metadataArray.at(-1).tokenId) + 1 : 0,
-			metadataURI: ''
+			tokenId: index,
+			metadataURI: existingURIArray[index] !== undefined ? existingURIArray[index] : ''
 		})
 		setMetadataArray(aux);
 	}
