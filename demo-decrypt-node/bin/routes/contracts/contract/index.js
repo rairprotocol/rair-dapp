@@ -81,19 +81,42 @@ module.exports = context => {
                 }
               }
             ],
-            as: 'offerPools'
+            as: 'offerPool'
           }
         },
-        { $unwind: '$offerPools' },
+        { $unwind: '$offerPool' },
         {
           $lookup: {
             from: 'Offer',
-            localField: 'offerPools.marketplaceCatalogIndex',
-            foreignField: 'offerPool',
+            let: {
+              offerPoolL: '$offerPool.marketplaceCatalogIndex',
+              contractL: '$contract'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contractL'
+                        ]
+                      },
+                      {
+                        $eq: [
+                          '$offerPool',
+                          '$$offerPoolL'
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
             as: 'offers'
           }
-        },
-        { $project: { offerPools: false } }
+        }
       ]);
 
       res.json({ success: true, products });

@@ -1,17 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import InputField from '../common/InputField.jsx';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import BatchRow from './BatchRow.jsx';
+import {minterAbi} from '../../contracts/';
 
-const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName}) => {
+const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName, minterAddress}) => {
 	const [tokenIndex, setTokenIndex] = useState(start);
 	const [rows, setRows] = useState([]);
 
 	const [batchMode, setBatchMode] = useState(false);
+	const [minterInstance, setMinterInstance] = useState();
 
-	const {minterInstance} = useSelector(state => state.contractStore)
+	const {contractCreator} = useSelector(state => state.contractStore)
+
+	console.log()
+
+	useEffect(() => {
+		if (minterAddress) {
+			setMinterInstance(contractCreator(minterAddress, minterAbi));
+		}
+	}, [minterAddress])
 	
+	console.log(minterAddress);
+
 	const batchMint = async (data) => {
 		let addresses = data.map(i => i.address);
 		let tokens = data.map(i => i.token);
@@ -107,7 +119,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 						min={start}
 					/>
 					<div className='col-2' />
-					<button onClick={async e => {
+					<button disabled={!minterInstance} onClick={async e => {
 						try {
 							await minterInstance.buyToken(offerIndex, rangeIndex, tokenIndex, {value: price})
 							Swal.close();
@@ -147,7 +159,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 							label='Or load addresses with CSV file'
 						/>
 					</div>
-					<button onClick={e => batchMint(rows)} disabled={!rows.length} className='col btn btn-stimorol'>
+					<button onClick={e => batchMint(rows)} disabled={!minterInstance || !rows.length} className='col btn btn-stimorol'>
 						Batch Mint {rows.length} tokens!
 					</button>
 				</>

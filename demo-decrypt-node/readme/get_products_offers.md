@@ -43,6 +43,15 @@ Returns found products
       "contract": "contractAddress",
       "copies": 4,
       "creationDate": "2021-08-06T10:53:52.441Z",
+      "offerPool": {
+        "_id": "6196842fbf7dc9001c9cea59",
+        "marketplaceCatalogIndex": 5,
+        "contract": "contractAddress",
+        "product": 0,
+        "rangeNumber": 2,
+        "minterAddress": "minterAddress",
+        "creationDate": "2021-08-06T10:55:00.621Z"
+      },
       "offers": [
         {
           "_id": "610d15043de2f5001dafc42e",
