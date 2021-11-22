@@ -6,9 +6,22 @@ import {NavLink, useParams, useHistory} from 'react-router-dom'
 import {rFetch} from '../../../utils/rFetch.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
+import {useDropzone} from 'react-dropzone'
 
 const BatchMetadataParser = ({contractData, setStepNumber}) => {
 	const {address, collectionIndex} = useParams();
+
+	const onImageDrop = useCallback(acceptedFiles => {
+		console.log(acceptedFiles);
+	}, [])
+	const onCSVDrop = useCallback(acceptedFiles => {
+		console.log(acceptedFiles);
+	}, [])
+	const imageDropzone = useDropzone({onImageDrop})
+	const csvDropzone = useDropzone({onCSVDrop})
+	//getRootProps
+	//getInputProps
+	//isDragActive
 
 	const history = useHistory();
 
@@ -40,23 +53,37 @@ const BatchMetadataParser = ({contractData, setStepNumber}) => {
 		</button>
 		<div className='col-4 text-start mb-3' />
 		<div className='rounded-rair col-6 mb-3'>
-			<div style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}} className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'>
+			<div style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}}
+					className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'
+					{...imageDropzone.getRootProps()}>
+				<input {...imageDropzone.getInputProps()} />
 				<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
 					1
 				</div>
 				<img src={imageIcon} className='my-5'/>
 				<br />
-				Drag and drop or click to upload images
+				{
+					imageDropzone.isDragActive ?
+					<p>Drop the images here ...</p> :
+					<p>Drag and drop or click to upload images</p>
+				}
 			</div>
 		</div>
 		<div className='rounded-rair col-6 mb-3'>
-			<div style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}} className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'>
+			<div style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}}
+				className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'
+				{...csvDropzone.getRootProps()}>
+				<input {...csvDropzone.getInputProps()} />
 				<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
 					2
 				</div>
 				<img src={documentIcon} className='my-5'/>
 				<br />
-				Drag and drop or click to upload CSV
+				{
+					csvDropzone.isDragActive ?
+					<p>Drop the CSV file here ...</p> :
+					<p>Drag and drop or click to upload CSV</p>
+				}
 			</div>
 		</div>
 		<div style={{border: 'solid 1px white', overflowX: 'scroll', width: '80vw'}} className='rounded-rair'>

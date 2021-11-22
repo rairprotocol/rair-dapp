@@ -9,7 +9,8 @@ import {web3Switch} from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
 
-const ListOffers = ({contractData, setStepNumber}) => {
+const ListOffers = ({contractData, setStepNumber, steps}) => {
+	const stepNumber = 1;
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState(false);
@@ -33,7 +34,7 @@ const ListOffers = ({contractData, setStepNumber}) => {
 	}, [contractData])
 
 	useEffect(() => {
-		setStepNumber(1);
+		setStepNumber(stepNumber);
 	}, [setStepNumber])
 
 	const rerender = useCallback(() => {
@@ -136,8 +137,8 @@ const ListOffers = ({contractData, setStepNumber}) => {
 		Swal.fire('Success!','The offers have been appended!','success');
 	}
 
-	const moveToLocks = () => {
-		history.push(`/creator/contract/${address}/collection/${collectionIndex}/locks`);
+	const nextStep = () => {
+		history.push(steps[stepNumber + 1].populatedPath);
 	}
 
 	const switchBlockchain = async (chainId) => {
@@ -219,7 +220,7 @@ const ListOffers = ({contractData, setStepNumber}) => {
 					(hasMinterRole ? 
 						(offerList[0]?.fixed ?
 							(offerList.filter(item => item.fixed !== true).length === 0 ? 
-								moveToLocks
+								nextStep
 								:
 								appendOffers)
 							:

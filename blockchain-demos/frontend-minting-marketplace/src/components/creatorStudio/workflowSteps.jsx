@@ -7,20 +7,51 @@ import WorkflowContext from '../../contexts/CreatorWorkflowContext.js';
 
 import ListOffers from './creatorSteps/ListOffers.jsx';
 import ListLocks from './creatorSteps/ListLocks.jsx';
+import CustomizeFees from './creatorSteps/CustomizeFees.jsx';
 import BatchMetadata from './creatorSteps/batchMetadata.jsx';
 
 const SentryRoute = withSentryRouting(Route);
 
 const WorkflowSteps = ({sentryHistory}) => {
+	const {address, collectionIndex} = useParams();
 	const [steps, setSteps] = useState([
-			{label: 1, active: true},
-			{label: 2, active: false},
-			{label: 3, active: false},
-			{label: 4, active: false},
-			{label: 5, active: false},
+			{
+				label: 1,
+				active: true,
+				path: '/creator/contract/:address/collection/:collectionIndex/offers',
+				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/offers`,
+				component: ListOffers
+			},
+			{
+				label: 2,
+				active: false,
+				path: '/creator/contract/:address/collection/:collectionIndex/locks',
+				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/locks`,
+				component: ListLocks
+			},
+			{
+				label: 3,
+				active: false,
+				path: '/creator/contract/:address/collection/:collectionIndex/customizeFees',
+				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/customizeFees`,
+				component: CustomizeFees
+			},
+			{
+				label: 4,
+				active: false,
+				path: '/creator/contract/:address/collection/:collectionIndex/metadata/batch',
+				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/metadata/batch`,
+				component: BatchMetadata
+			},
+			{
+				label: 5,
+				active: false,
+				path: '/creator/contract/:address/collection/:collectionIndex/metadata/single',
+				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/metadata/single`,
+				component: BatchMetadata
+			},
 		]);
 	const [contractData, setContractData] = useState();
-	const {address, collectionIndex} = useParams();
 	const { primaryColor } = useSelector(store => store.colorStore);
 
 	const fetchData = useCallback(async () => {
@@ -99,10 +130,9 @@ const WorkflowSteps = ({sentryHistory}) => {
 		</WorkflowContext.Consumer>
 		<Router history={sentryHistory}>
 			<Switch>
-				<SentryRoute path='/creator/contract/:address/collection/:collectionIndex/offers' component={ListOffers} />
-				<SentryRoute path='/creator/contract/:address/collection/:collectionIndex/locks' component={ListLocks} />
-				<SentryRoute path='/creator/contract/:address/collection/:collectionIndex/metadata/batch' component={BatchMetadata} />
-				<SentryRoute path='/creator/contract/:address/collection/:collectionIndex/metadata/single' component={BatchMetadata} />
+				{steps.map((item, index) => {
+					return <SentryRoute key={index} path={item.path} component={item.component} />
+				})}
 			</Switch>
 		</Router>
 	</WorkflowContext.Provider>
