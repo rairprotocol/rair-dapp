@@ -102,7 +102,7 @@ const teamGreymanArray = [
     }
 ];
 
-const NipseyTeamComponent = ({primaryColor}) => {
+const NipseyTeamComponent = ({ primaryColor }) => {
     return (
         <>
             {
@@ -120,7 +120,7 @@ const NipseyTeamComponent = ({primaryColor}) => {
     )
 }
 
-const GreyManTeamComponent = ({primaryColor}) => {
+const GreyManTeamComponent = ({ primaryColor }) => {
     return (
         <>
             {
@@ -142,14 +142,19 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
     return (
         <div className="splash-team">
             <div className="title-team">
-                <h3>Meet the <span className="text-gradient">Team</span></h3>
+                {
+                    arraySplash === "nipsey" && <h3>Meet the <span className="text-gradient">Team</span></h3>
+                }
+                {
+                    arraySplash === "greyman" && <h3>About the <span className="text-gradient">Artist</span></h3>
+                }
             </div>
             <div className="meet-team">
                 {
-                   arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />
+                    arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />
                 }
                 {
-                   arraySplash === "nipsey" && <NipseyTeamComponent primaryColor={primaryColor} />
+                    arraySplash === "nipsey" && <NipseyTeamComponent primaryColor={primaryColor} />
                 }
             </div>
         </div>

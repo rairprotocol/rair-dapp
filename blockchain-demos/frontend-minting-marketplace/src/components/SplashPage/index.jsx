@@ -86,6 +86,7 @@ const SplashPage = () => {
                     Nft_3={Nft_3}
                     Nft_4={Nft_4}
                     NftImage={NftImage}
+                    amountTokens={1000}
                 />
                 <UnlockVideos
                     primaryColor={primaryColor}
