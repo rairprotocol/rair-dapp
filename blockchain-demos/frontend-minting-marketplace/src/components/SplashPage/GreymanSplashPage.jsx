@@ -14,6 +14,8 @@ import NftImage from './images/circle_nipsey.png';
 import UnlockableVideo from './images/unlockbleVideo.png';
 import JoinCommunity from './images/join_com.jpeg';
 
+import GreyMan from './images/greyman.png';
+
 
 /* importing Components*/
 import TokenLeft from './TokenLeft/TokenLeft';
@@ -32,8 +34,8 @@ const SplashPage = () => {
                     <div className="block-splash">
                         <div className="text-splash">
                             <div className="title-splash">
-                                <h3>Enter the</h3>
-                                <span>Nipseyverse</span>
+                                <h3>Just another</h3>
+                                <span className="text-gradient">Greyman</span>
                             </div>
                             <div className="text-description">
                                 <p>
@@ -44,10 +46,6 @@ const SplashPage = () => {
                             </div>
                             <div className="btn-buy-metamask">
                                 <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Preorder with ETH</button>
-                            </div>
-                            <div className="logo-author">
-                                {/* <img src={logoDigital} alt="southwest digital" /> */}
-                                <img src={logoAuthor} alt="logo-author" />
                             </div>
                         </div>
                     </div>
@@ -87,16 +85,12 @@ const SplashPage = () => {
                     Nft_4={Nft_4}
                     NftImage={NftImage}
                 />
-                <UnlockVideos
-                    primaryColor={primaryColor}
-                    UnlockableVideo={UnlockableVideo}
-                />
                 <JoinCom
                     Metamask={Metamask}
                     JoinCommunity={JoinCommunity}
                     primaryColor={primaryColor}
                 />
-                <TeamMeet primaryColor={primaryColor} arraySplash={"nipsey"} />
+                <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
             </div>
         </div>
     )

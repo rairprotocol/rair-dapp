@@ -4,6 +4,7 @@ import Teammate_2 from './../images/blacc-sam.png';
 import Teammate_3 from './../images/south-dig.png';
 import Teammate_4 from './../images/rair-block.png';
 import Teammate from './Teammate';
+import GreymanAuthor from './../images/greymanAuthor.png';
 
 const teamArray = [
     {
@@ -65,9 +66,79 @@ const teamArray = [
     }
 ]
 
+const teamGreymanArray = [
+    {
+        nameTeammate: "Dadara",
+        imageUrl: GreymanAuthor,
+        aboutTeammate: [
+            `Dadara began his artistic career in the early nineties designing flyers and 
+            record covers, and doing live-paintings for the then burgeoning electronic dance scene.
+            This early work, as well as projects such as the Dadababy speakers and the Greyman
+            Statue of No Liberty, marked the start of an impressive career as a painter, 
+            installation- and performance artist, designer, and cartoonist. Since the turn 
+            of the century, his focus has shifted towards extravagant interactive performance-installations 
+            in public space. This includes starting his own bank and creating a religion based 
+            on social media. Many of these creations were built at the legendary Burning Man 
+            event in the Nevada desert. His work is a kind of tweaked mirror which reflects our
+            society, blurring the lines between reality and fantasy. Perhaps a black mirror, 
+            but one that has a rainbow at the end of the tunnel.`
+        ]
+    },
+    {
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
 
-const TeamMeet = ({ primaryColor }) => {
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ]
+    }
+];
 
+const NipseyTeamComponent = ({primaryColor}) => {
+    return (
+        <>
+            {
+                teamArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        desc={t.aboutTeammate}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </>
+    )
+}
+
+const GreyManTeamComponent = ({primaryColor}) => {
+    return (
+        <>
+            {
+                teamGreymanArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        desc={t.aboutTeammate}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </>
+    )
+}
+
+const TeamMeet = ({ primaryColor, arraySplash }) => {
     return (
         <div className="splash-team">
             <div className="title-team">
@@ -75,15 +146,10 @@ const TeamMeet = ({ primaryColor }) => {
             </div>
             <div className="meet-team">
                 {
-                    teamArray.map((t, index) => {
-                        return <Teammate
-                            key={index + t.nameTeammate}
-                            name={t.nameTeammate}
-                            desc={t.aboutTeammate}
-                            primaryColor={primaryColor}
-                            url={t.imageUrl}
-                        />
-                    })
+                   arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />
+                }
+                {
+                   arraySplash === "nipsey" && <NipseyTeamComponent primaryColor={primaryColor} />
                 }
             </div>
         </div>
