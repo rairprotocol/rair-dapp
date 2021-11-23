@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import BatchRow from './BatchRow.jsx';
 import {minterAbi} from '../../contracts/';
-import { CSVReader } from 'react-papaparse'
+// import { CSVReader } from 'react-papaparse'
 import csvParser from '../../utils/csvParser.js';
 
 
@@ -60,7 +60,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		aux.splice(index, 1);
 		setRows(aux);
 	}
-	
+
 	return <>
 		<div className='row w-100 px-0 mx-0'>
 			<button
@@ -84,7 +84,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		</div>
 		<hr />
 		<div className='row px-0 mx-0 col-12'>
-			{!batchMode ? 
+			{!batchMode ?
 				<>
 					<InputField
 						label='Token Index'
