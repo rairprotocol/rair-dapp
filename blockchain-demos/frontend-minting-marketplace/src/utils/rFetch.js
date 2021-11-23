@@ -69,16 +69,40 @@ const signIn = async (provider) => {
 const getJWT = async (signer, userData, userAddress) => {
 	const msg = `Sign in for RAIR by nonce: ${userData.nonce}`;
 	let signature = await (signer.signMessage(msg, userAddress));
-	const { token } = await (await fetch('/api/auth/authentication', {
-		method: 'POST',
-		body: JSON.stringify({ publicAddress: userAddress.toLowerCase(), signature, adminRights: true }),
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json'
+	if(userAddress && signature ){
+		const { token, success } = await (await fetch('/api/auth/authentication', {
+			method: 'POST',
+			body: JSON.stringify({ publicAddress: 
+				userAddress.toLowerCase() 
+				// 'fsdsf'
+				, signature, adminRights: true }),
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+		).json();
+		if(!success){
+			return Swal.fire('Error', `${token}`, 'error'); ;
+		} else {
+			if (!token) {
+				return "no token";
+			}
+		
+			// const decoded = jsonwebtoken.decode(token);
+			// if (!decoded) {
+			// 	return Swal.fire('Error', `${token}`, 'error');;
+			// }
+			// if (decoded.exp * 1000 > new Date()) {
+			// 	return token
+			// };
+			// return Swal.fire('Error', `${token}`, 'error');
+			// ;
+			return token;
 		}
-	})
-	).json();
-	return token;
+	}
+	
+	
 }
 
 

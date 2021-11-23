@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
-
 import {
   Accordion,
   AccordionItem,
@@ -133,9 +132,7 @@ const NftDataPageTest = ({
   const buyContract = async () => { 
     try {
       await minterInstance.buyToken(offerData.offerPool, offerData.offerIndex, selectedToken, { value: offerData.price });
-      debugger
       Swal.fire('Success', "Now, you are the owner of this token", 'Success');
-
     } catch (err) {
       Swal.fire('Error', err?.data?.message, 'error');
     }
@@ -160,8 +157,8 @@ const NftDataPageTest = ({
     } else
       return (
         <button
-          // onClick={() => buyContract()}
-          onClick={() => alert("Coming soon")}
+          onClick={() => buyContract()}
+          // onClick={() => alert("Coming soon")}
           style={{
             width: "228px",
             height: "48px",
@@ -375,7 +372,7 @@ const NftDataPageTest = ({
                   }}
                 >
                   {offerPrice &&
-                    `${minPrice} – ${maxPrice} ${data?.product.blockchain || "BNB"
+                    `${minPrice} – ${maxPrice} ${data?.product.blockchain || ""
                     } `}
                 </span>
                 <span
@@ -383,7 +380,7 @@ const NftDataPageTest = ({
                     color: "#E882D5",
                   }}
                 >
-                  ERC
+                  {data?.product.blockchain || ""}
                 </span>
               </div>
             </div>
@@ -442,10 +439,6 @@ const NftDataPageTest = ({
                       // ? selectedData.length &&
                       selectedData?.attributes.length > 0 ? selectedData?.attributes.map((item, index) => {
                         if (item.trait_type === "External URL") {
-                          if(item?.value ){
-                            console.log(item?.value.length);
-                            console.log(selectedData);
-                          }
                           return (
                             <div
                               key={index}
@@ -461,7 +454,7 @@ const NftDataPageTest = ({
                                 style={{ color: textColor }}
                                 href={item?.value}
                               >
-                                {/* {item?.value.substr(item?.value.length-25)} */}
+                                {item?.value.length > 15 ? "..." : ""}
                                 {item?.value.substr(item?.value.indexOf("\n") + 19)}
                               </a>
                             </div>

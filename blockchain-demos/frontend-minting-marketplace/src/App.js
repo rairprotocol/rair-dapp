@@ -41,6 +41,8 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 import MyItems from './components/nft/myItems';
 import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
+import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
+// import AboutPage from './components/AboutPage/AboutPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -56,7 +58,7 @@ const ErrorFallback = () => {
 function App({ sentryHistory }) {
 
 	const [/*userData*/, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(undefined);
+	const [adminAccess, setAdminAccess] = useState(false);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	// const [errorAuth, /*setErrorAuth*/] = useState('');
@@ -68,7 +70,7 @@ function App({ sentryHistory }) {
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
-	const connectUserData = useCallback( async () => {
+	const connectUserData = useCallback(async () => {
 		setStartedLogin(true);
 		let currentUser;
 		if (window.ethereum) {
@@ -115,7 +117,7 @@ function App({ sentryHistory }) {
 			}
 
 			// Admin rights validation
-			//let adminRights = adminAccess;
+			// let adminRights = adminAccess;
 			if (adminAccess === undefined) {
 				const { response } = await (await fetch(`/api/auth/get_challenge/${currentUser}`)).json();
 				let ethResponse;
@@ -140,7 +142,7 @@ function App({ sentryHistory }) {
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
 				setAdminAccess(adminResponse.success);
-				//adminRights = adminResponse.success;
+				// adminRights = adminResponse.success;
 			}
 
 			let signer = programmaticProvider;
@@ -150,9 +152,12 @@ function App({ sentryHistory }) {
 				signer = provider.getSigner();
 			}
 
-			if (!localStorage.token) {
+			if (!localStorage.token ) {
 				let token = await getJWT(signer, user, currentUser);
-
+				if(!success){
+					setLoginDone(false);
+					setStartedLogin(false);
+				}
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				localStorage.setItem('token', token);
@@ -160,6 +165,10 @@ function App({ sentryHistory }) {
 
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
+				if(!success){
+					setLoginDone(false);
+					setStartedLogin(false);
+				}
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
@@ -179,12 +188,12 @@ function App({ sentryHistory }) {
 	}
 
 	const btnCheck = () => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      setRenderBtnConnect(false);
-    } else {
-      setRenderBtnConnect(true);
-    }
-  };
+		if (window.ethereum && window.ethereum.isMetaMask) {
+			setRenderBtnConnect(false);
+		} else {
+			setRenderBtnConnect(true);
+		}
+	};
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -201,15 +210,15 @@ function App({ sentryHistory }) {
 		}
 	}, [])
 
-	const checkToken = useCallback(() => {
-		btnCheck()
-		const token = localStorage.getItem('token');
-		if (!isTokenValid(token)) {
-			connectUserData()
-			dispatch({ type: authTypes.GET_TOKEN_START });
-			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-		}
-	}, [ connectUserData, dispatch ])
+	// const checkToken = useCallback(() => {
+	// 	btnCheck()
+	// 	const token = localStorage.getItem('token');
+	// 	if (!isTokenValid(token)) {
+	// 		connectUserData()
+	// 		dispatch({ type: authTypes.GET_TOKEN_START });
+	// 		dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+	// 	}
+	// }, [ connectUserData, dispatch ])
 
 
 	useEffect(() => {
@@ -239,40 +248,40 @@ function App({ sentryHistory }) {
 		}
 	}, [connectUserData, dispatch, token])
 
-	useEffect(() => {
-		checkToken();
-	}, [checkToken, token])
+	// useEffect(() => {
+	// 	checkToken();
+	// }, [checkToken, token])
 
 	useEffect(() => {
-    if (primaryColor === "charcoal") {
-      (function () {
-        let angle = 0;
-        let p = document.querySelector("p");
-        if (p) {
-          let text = p.textContent.split("");
-          var len = text.length;
-          var phaseJump = 360 / len;
-          var spans;
-          p.innerHTML = text
-            .map(function (char) {
-              return "<span>" + char + "</span>";
-            })
-            .join("");
+		if (primaryColor === "charcoal") {
+			(function () {
+				let angle = 0;
+				let p = document.querySelector("p");
+				if (p) {
+					let text = p.textContent.split("");
+					var len = text.length;
+					var phaseJump = 360 / len;
+					var spans;
+					p.innerHTML = text
+						.map(function (char) {
+							return "<span>" + char + "</span>";
+						})
+						.join("");
 
-          spans = p.children;
-        } else console.log("kik");
+					spans = p.children;
+				} else console.log("kik");
 
-        (function wheee() {
-          for (var i = 0; i < len; i++) {
-            spans[i].style.color =
-              "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-          }
-          angle++;
-          requestAnimationFrame(wheee);
-        })();
-      })();
-    } 
-  } , [primaryColor]);
+				(function wheee() {
+					for (var i = 0; i < len; i++) {
+						spans[i].style.color =
+							"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+					}
+					angle++;
+					requestAnimationFrame(wheee);
+				})();
+			})();
+		}
+	}, [primaryColor]);
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
@@ -305,37 +314,41 @@ function App({ sentryHistory }) {
 							<div className='col-12 pt-2 mb-4' style={{ height: '10vh' }}>
 								<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
 							</div>
-							{!loginDone ? <div className='btn-connect-wallet-wrapper'> 
+							{!loginDone ? <div className='btn-connect-wallet-wrapper'>
 								<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
 									className={`btn btn-${primaryColor} btn-connect-wallet`}
 									onClick={connectUserData}>
 									{startedLogin ? 'Please wait...' : 'Connect Wallet'}
 									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-								</button> 
-									{renderBtnConnect ? <OnboardingButton /> : <> </>}
-								</div> : [
-									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
-									{ name: <i className='fas fa-search' />, route: '/search' },
-									{ name: <i className='fas fa-user' />, route: '/user' },
-									{ name: <i className="fas fa-key" />, route: '/my-items' },
-									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
-									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
-									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
-									{ name: <i className="fas fa-history" />, route: '/latest' },
-									{ name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot' },
-									{ name: <i className="fas fa-hourglass-end" />, route: '/ending' },
-									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
-									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined }
-								].map((item, index) => {
-									if (!item.disabled) {
-										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
-											<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
-												{item.name}
-											</NavLink>
-										</div>
-									}
-									return <div key={index}></div>
-								})}
+								</button>
+								{renderBtnConnect ? <OnboardingButton /> : <> </>}
+							</div> : <div style={{display: `${adminAccess ? "block" : "none"}`}}>
+								{
+									[
+										{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
+										{ name: <i className='fas fa-search' />, route: '/search' },
+										{ name: <i className='fas fa-user' />, route: '/user' },
+										{ name: <i className="fas fa-key" />, route: '/my-items' },
+										{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+										{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+										{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+										{ name: <i className="fas fa-history" />, route: '/latest' },
+										{ name: <i className="fa fa-fire" aria-hidden="true" />, route: '/hot' },
+										{ name: <i className="fas fa-hourglass-end" />, route: '/ending' },
+										{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+										{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined }
+									].map((item, index) => {
+										if (!item.disabled) {
+											return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+												<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
+													{item.name}
+												</NavLink>
+											</div>
+										}
+										return <div key={index}></div>
+									})
+								}
+							</div>}
 						</div>
 						<div className='col'>
 							<div className='col-12' style={{ height: '10vh' }}>
@@ -347,6 +360,7 @@ function App({ sentryHistory }) {
 							<div className='col-12 mt-3 row'>
 								<Switch>
 									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
+									<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
@@ -361,8 +375,8 @@ function App({ sentryHistory }) {
 										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
-									{loginDone && <SentryRoute exact path='/my-items' ><MyItems goHome={goHome}/>
-										</SentryRoute>}
+									{loginDone && <SentryRoute exact path='/my-items' ><MyItems goHome={goHome} />
+									</SentryRoute>}
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 									<SentryRoute path='/tokens/:contract/:product/:tokenId'>
 										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
@@ -383,6 +397,7 @@ function App({ sentryHistory }) {
 										</div>
 										<div className='col-12 mt-3 row' >
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+											{/* <AboutPage /> */}
 										</div>
 									</SentryRoute>
 								</Switch>
@@ -390,13 +405,13 @@ function App({ sentryHistory }) {
 						</div>
 						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 					</div>
-					<footer 
-					className="footer col"
-					style={{
-						background: `${primaryColor === "rhyno" ? "#ccc": ""}`
-					}}
+					<footer
+						className="footer col"
+						style={{
+							background: `${primaryColor === "rhyno" ? "#ccc" : ""}`
+						}}
 					>
-						<div className="text-rairtech" style={{color: `${primaryColor === "rhyno" ? "#000" : ""}`}}>
+						<div className="text-rairtech" style={{ color: `${primaryColor === "rhyno" ? "#000" : ""}` }}>
 							© Rairtech 2021. All rights reserved
 						</div>
 						<ul>
