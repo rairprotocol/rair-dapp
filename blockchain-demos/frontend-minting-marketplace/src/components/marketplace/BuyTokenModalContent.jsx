@@ -4,6 +4,9 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import BatchRow from './BatchRow.jsx';
 import {minterAbi} from '../../contracts/';
+// import { CSVReader } from 'react-papaparse'
+import csvParser from '../../utils/csvParser.js';
+
 
 const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName, minterAddress}) => {
 	const [tokenIndex, setTokenIndex] = useState(start);
@@ -14,19 +17,15 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 
 	const {contractCreator} = useSelector(state => state.contractStore)
 
-	console.log()
-
 	useEffect(() => {
 		if (minterAddress) {
 			setMinterInstance(contractCreator(minterAddress, minterAbi));
 		}
 	}, [minterAddress])
-	
-	console.log(minterAddress);
 
 	const batchMint = async (data) => {
-		let addresses = data.map(i => i.address);
-		let tokens = data.map(i => i.token);
+		let addresses = data.map(i => i['Public Address']);
+		let tokens = data.map(i => i['NFTID']);
 		try {
 			await minterInstance.buyTokenBatch(offerIndex, rangeIndex, tokens, addresses, {value: price * tokens.length});
 			Swal.close();
@@ -40,29 +39,8 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		if (!data) {
 			return;
 		}
-		const reader = new FileReader();
-		reader.onload = function (e) {
-			//Public Address
-			const text = e.target.result.split('\r\n');
-			let headers = text.splice(0, 1)[0].split(',');
-			let addressIndex = headers.indexOf('Public Address') - headers.length;
-			let nftIndex = headers.indexOf('NFTID');
-			let aux = [...rows];
-			text.forEach((textItem, textIndex) => {
-				let split = textItem.split(',');
-				split = split.map(item => {
-					return item.replace(/[\n\t\r]/g,"");	
-				});
-				if (split.at(addressIndex) !== "") {
-					aux.push({
-						address: split.at(addressIndex),
-						token: Number(split[nftIndex])
-					})
-				}
-			})
-			setRows(aux);
-		};
-		reader.readAsText(data);
+		csvParser(data, setRows, ['Public Address', 'NFTID']);
+		// Data to be read, Function to execute after parsing is done, specific columns to return (optional)
 	}
 
 	const addRow = () => {
@@ -82,7 +60,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		aux.splice(index, 1);
 		setRows(aux);
 	}
-	
+
 	return <>
 		<div className='row w-100 px-0 mx-0'>
 			<button
@@ -106,7 +84,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		</div>
 		<hr />
 		<div className='row px-0 mx-0 col-12'>
-			{!batchMode ? 
+			{!batchMode ?
 				<>
 					<InputField
 						label='Token Index'
@@ -149,7 +127,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 						})}
 					</div>
 					<div className='col-12'>
-						<InputField
+      					<InputField
 							customClass='py-0 form-control mb-2'
 							labelClass='mt-2'
 							id='csv_import'
