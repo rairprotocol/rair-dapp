@@ -20,7 +20,6 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
             }
             else {
                 setPersentTokens(Math.ceil(percentLeft));
-                console.log(percentLeft)
             }
         }
         if (leftTokensNumber > wholeTokens) {

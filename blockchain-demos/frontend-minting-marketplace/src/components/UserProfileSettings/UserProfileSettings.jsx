@@ -27,14 +27,15 @@ const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLo
                 }
             </div>
             <div>
-                <button style={{
-                    color: 'var(--royal-purple)',
-                    border: 'solid 1px var(--royal-purple)',
+                <button 
+                className="btn-change-theme"
+                style={{
+                    // border: 'solid 1px var(--royal-purple)',
                     backgroundColor: primaryColor === "charcoal" ? "#222021" : "#D3D2D3",
                     borderRadius: '12px',
                     width: 32,
                     height: 32,
-                    fontSize: 18
+                    fontSize: 18,
                 }}
                     onClick={e => {
                         dispatch({ type: colorTypes.SET_COLOR_SCHEME, payload: primaryColor === 'rhyno' ? 'charcoal' : 'rhyno' });

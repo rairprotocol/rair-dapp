@@ -139,10 +139,17 @@
     position: relative;
     padding: 2px 10px 2px 40px; 
     overflow: hidden;
-    /* border: solid 1px var(--royal-purple); */
-    background-color: inherit;
+    border: solid 1px #9867D9;
     border-radius: 12px;
     transition: .2s ease border;
+}
+
+.button.profile-btn:hover {
+    border: 1px solid #fff;
+}
+
+.button.profile-btn:focus {
+    border: 1px solid #fff;
 }
 
 .profile-btn i {
