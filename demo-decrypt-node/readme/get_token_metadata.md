@@ -2,7 +2,7 @@
 
 Get full data about particular product and get list of tokens for it
 
-**URL** : `/api/:adminToken/:contractName/:productName`
+**URL** : `/api/:networkId/:adminToken/:contractName/:productName`
 
 **Method** : `GET`
 
@@ -10,6 +10,12 @@ Get full data about particular product and get list of tokens for it
 
 ```json
 {
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
   "adminToken": {
     "required": true,
     "content": {

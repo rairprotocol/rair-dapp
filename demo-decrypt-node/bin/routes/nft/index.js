@@ -18,7 +18,7 @@ module.exports = context => {
   // Create bunch of lazy minted tokens from csv file
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
-      const { contract, product, updateMeta = 'false' } = req.body;
+      const { blockchain, contract, product, updateMeta = 'false' } = req.body;
       const { user } = req;
       const prod = Number(product);
       const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'artist'];
@@ -34,7 +34,7 @@ module.exports = context => {
         return res.status(403).send({ success: false, message: 'Not have admin rights.' });
       }
 
-      const foundContract = await context.db.Contract.findOne({ contractAddress: sanitizedContract });
+      const foundContract = await context.db.Contract.findOne({ contractAddress: sanitizedContract, blockchain });
 
       if (_.isEmpty(foundContract)) {
         return res.status(404).send({ success: false, message: 'Contract not found.' });
@@ -164,7 +164,8 @@ module.exports = context => {
                       name: record.name,
                       description: record.description,
                       artist: record.artist,
-                      external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                      external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract.blockchain }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                      // external_url: 'https://coinagenda.rair.market/tokens/0x551213286900193ff3882a3f3d0441aadd32d42d/0/106'
                       image: record.image || '',
                       animation_url: record.animation_url || '',
                       attributes: attributes
@@ -184,7 +185,8 @@ module.exports = context => {
                           name: record.name,
                           description: record.description,
                           artist: record.artist,
-                          external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                          external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract.blockchain }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                          // external_url: 'https://coinagenda.rair.market/tokens/0x551213286900193ff3882a3f3d0441aadd32d42d/0/106'
                           image: record.image || '',
                           animation_url: record.animation_url || '',
                           attributes: attributes

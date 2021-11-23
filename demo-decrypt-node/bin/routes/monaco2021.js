@@ -6,9 +6,9 @@ module.exports = context => {
   const router = express.Router();
 
   // Get metadata of specific NFT token by contract name, product name, offer name and token id
-  router.get('/:adminToken/:contractName/:productName', async (req, res, next) => {
+  router.get('/:networkId/:adminToken/:contractName/:productName', async (req, res, next) => {
     try {
-      const { adminToken, contractName, productName } = req.params;
+      const { networkId, adminToken, contractName, productName } = req.params;
       const adminContract = process.env.ADMIN_CONTRACT.toLowerCase();
       const user = await context.db.User.findOne({ adminNFT: `${ adminContract }:${ adminToken }` }, { publicAddress: 1 });
 
@@ -17,7 +17,7 @@ module.exports = context => {
       }
 
       const [product] = await context.db.Contract.aggregate([
-        { $match: { user: user.publicAddress, title: contractName } },
+        { $match: { blockchain: networkId, user: user.publicAddress, title: contractName } },
         {
           $lookup: {
             from: 'Product',

@@ -66,7 +66,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
                 * [x] /offers - GET - get specific product with all offers, [see details here](readme/get_product_offers.md)
             * [x] /token/:tokenInContract - GET - Get specific token by contract address and unique toke ID in contract, [see details here](readme/get_minted_token_by_contract_index.md)
     * [x] /docs - swagger documentation for the server
-    * [x] /:adminToken/:contractName/:productName - GET - get full data about particular product and get list of tokens for it, [see details here](readme/get_token_metadata.md)
+    * [x] /:networkId/:adminToken/:contractName/:productName - GET - get full data about particular product and get list of tokens for it, [see details here](readme/get_token_metadata.md)
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
 * [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
 
