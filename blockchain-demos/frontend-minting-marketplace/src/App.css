@@ -39,6 +39,29 @@ body {
   font-family: 'Plus Jakarta Text'!important;
 }
 
+.rair-table thead {
+  white-space: nowrap;
+  table-layout: auto;
+  border-bottom: solid 1px var(--charcoal-80);
+}
+
+.rair-table th {
+  white-space: nowrap;
+  table-layout: auto;
+  padding: 0.8rem;
+  border-right: dashed 1px var(--charcoal-80);
+}
+
+.rair-table.table-charcoal thead {
+}
+.rair-table.table-charcoal th {
+}
+
+.rair-table.table-rhyno thead {
+}
+.rair-table.table-rhyno tbody th {
+}
+
 .rounded-rair {
   border-radius: 16px!important;
 }

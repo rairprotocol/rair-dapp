@@ -6,22 +6,30 @@ import {NavLink, useParams, useHistory} from 'react-router-dom'
 import {rFetch} from '../../../utils/rFetch.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import {useDropzone} from 'react-dropzone'
+import csvParser from '../../../utils/csvParser.js';
+import Dropzone from 'react-dropzone'
+
+
 
 const BatchMetadataParser = ({contractData, setStepNumber}) => {
 	const {address, collectionIndex} = useParams();
 
+	const [metadata, setMetadata] = useState();
+	const [headers, setHeaders] = useState();
+
 	const onImageDrop = useCallback(acceptedFiles => {
-		console.log(acceptedFiles);
+		csvParser(acceptedFiles[0], console.log)
 	}, [])
 	const onCSVDrop = useCallback(acceptedFiles => {
-		console.log(acceptedFiles);
+		csvParser(acceptedFiles[0], setMetadata)
 	}, [])
-	const imageDropzone = useDropzone({onImageDrop})
-	const csvDropzone = useDropzone({onCSVDrop})
-	//getRootProps
-	//getInputProps
-	//isDragActive
+
+	useEffect(() => {
+		if (!metadata) {
+			return;
+		}
+		setHeaders(Object.keys(metadata[0]).filter(item => !['Name','NFTID','Description','Image'].includes(item)))
+	}, [metadata, setHeaders])
 
 	const history = useHistory();
 
@@ -32,6 +40,10 @@ const BatchMetadataParser = ({contractData, setStepNumber}) => {
 	useEffect(() => {
 		setStepNumber(4);
 	}, [setStepNumber])
+
+	let missing = <div style={{width: '2rem', height: '2rem', paddingTop: '0.2rem', border: 'solid 1px #F63419', borderRadius: '50%'}}>
+		<i className='fas fa-exclamation text-danger' />
+	</div>
 
 	return <>
 		<div className='col-6 text-end'>
@@ -53,70 +65,104 @@ const BatchMetadataParser = ({contractData, setStepNumber}) => {
 		</button>
 		<div className='col-4 text-start mb-3' />
 		<div className='rounded-rair col-6 mb-3'>
-			<div style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}}
-					className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'
-					{...imageDropzone.getRootProps()}>
-				<input {...imageDropzone.getInputProps()} />
-				<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
-					1
-				</div>
-				<img src={imageIcon} className='my-5'/>
-				<br />
-				{
-					imageDropzone.isDragActive ?
-					<p>Drop the images here ...</p> :
-					<p>Drag and drop or click to upload images</p>
-				}
-			</div>
+			<Dropzone onDrop={onImageDrop}>
+				{({getRootProps, getInputProps, isDragActive}) => (
+					<section>
+						<div {...getRootProps()} style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}} className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'>
+							<input {...getInputProps()} />
+							<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
+								1
+							</div>
+							<img style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={imageIcon} className='my-5'/>
+							<br />
+							{
+								isDragActive ?
+								<>Drop the images here ...</> :
+								<>Drag and drop or click to upload images</>
+							}
+						</div>
+					</section>
+				)}
+			</Dropzone>
 		</div>
 		<div className='rounded-rair col-6 mb-3'>
-			<div style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}}
-				className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'
-				{...csvDropzone.getRootProps()}>
-				<input {...csvDropzone.getInputProps()} />
-				<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
-					2
-				</div>
-				<img src={documentIcon} className='my-5'/>
-				<br />
-				{
-					csvDropzone.isDragActive ?
-					<p>Drop the CSV file here ...</p> :
-					<p>Drag and drop or click to upload CSV</p>
-				}
-			</div>
+			<Dropzone onDrop={onCSVDrop}>
+				{({getRootProps, getInputProps, isDragActive}) => (
+					<section>
+						<div {...getRootProps()} style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}} className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-3'>
+							<input {...getInputProps()} />
+							<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
+								2
+							</div>
+							<img style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={imageIcon} className='my-5'/>
+							<br />
+							{
+								isDragActive ?
+								<>Drop the CSV file here ...</> :
+								<>Drag and drop or click to upload the CSV file</>
+							}
+						</div>
+					</section>
+				)}
+			</Dropzone>
 		</div>
-		<div style={{border: 'solid 1px white', overflowX: 'scroll', width: '80vw'}} className='rounded-rair'>
-			<table >
+		{metadata && headers && <div style={{border: 'solid 1px var(--charcoal-80)', overflow: 'scroll', width: '80vw', maxHeight: '50vh'}} className='rounded-rair px-0'>
+			<table className={`rair-table table-${primaryColor}`}>
 				<thead>
-					<th className='py-3'>
-						URL
-					</th>
-					<th>
-						Title
-					</th>
-					<th>
-						Description
-					</th>
-					<th>
-						Image
-					</th>
-					{[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1].map((item, index) => {
-						return <th key={index}>
-							Attribute {index}
+					<tr>
+						<th className='py-3'>
+							NFT #
 						</th>
-					})}
+						<th>
+							Title
+						</th>
+						<th>
+							Description
+						</th>
+						<th>
+							Image URL
+						</th>
+						{headers.map((item, index) => {
+							return <th key={index}>
+								{item}
+							</th>
+						})}
+					</tr>
 				</thead>
 				<tbody>
-
+					{metadata.map((item, index) => {
+						return <tr>
+							<th>
+								{item.NFTID ? item.NFTID : missing}
+							</th>
+							<th style={{color: `var(--${primaryColor === 'rhyno' ? 'royal-purple' : 'bubblegum'})`}}>
+								{item.Name ? item.Name : missing}
+							</th>
+							<th>
+								{item.Description ? item.Description : missing}
+							</th>
+							<th style={{color: 'var(--bubblegum)'}}>
+								{item['Image Link'] ? item['Image Link'] : missing}
+							</th>
+							{headers.map((header, index) => {
+								return <th key={index}>
+									{item[header] ? item[header] : missing}
+								</th>
+							})}
+						</tr>
+					})}
 				</tbody>
 				<tfoot />
 			</table>
-		</div>
+		</div>}
 		<FixedBottomNavigation
 			backwardFunction={() => {
 				history.goBack()
 			}}
+			forwardFunctions={[{
+				label: metadata ? 'Send' : 'Skip',
+				action: metadata ? console.log : console.log
+			}]}
 		/>
 	</>
 }

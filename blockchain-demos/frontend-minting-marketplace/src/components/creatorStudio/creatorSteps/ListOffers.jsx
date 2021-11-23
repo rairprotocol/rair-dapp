@@ -117,6 +117,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 			return;
 		}
 		Swal.fire('Success!','The offers have been created!','success');
+		nextStep();
 	}
 
 	const appendOffers = async () => {
