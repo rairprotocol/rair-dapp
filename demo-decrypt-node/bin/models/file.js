@@ -6,7 +6,7 @@ const File = new Schema({
   _id: { type: String, required: true },
   author: { type: String, required: true },
   currentOwner: { type: String, required: true },
-  title: { type: String, required: true },
+  title: { type: String, required: true, trim: true },
   description: { type: String },
   encryptionType: { type: String, required: true },
   key: { type: Object, required: true },

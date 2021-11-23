@@ -42,6 +42,7 @@ import MyItems from './components/nft/myItems';
 import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
+// import AboutPage from './components/AboutPage/AboutPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 
@@ -151,9 +152,12 @@ function App({ sentryHistory }) {
 				signer = provider.getSigner();
 			}
 
-			if (!localStorage.token) {
+			if (!localStorage.token ) {
 				let token = await getJWT(signer, user, currentUser);
-
+				if(!success){
+					setLoginDone(false);
+					setStartedLogin(false);
+				}
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				localStorage.setItem('token', token);
@@ -161,6 +165,10 @@ function App({ sentryHistory }) {
 
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
+				if(!success){
+					setLoginDone(false);
+					setStartedLogin(false);
+				}
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
 				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
@@ -202,15 +210,15 @@ function App({ sentryHistory }) {
 		}
 	}, [])
 
-	const checkToken = useCallback(() => {
-		btnCheck()
-		const token = localStorage.getItem('token');
-		if (!isTokenValid(token)) {
-			connectUserData()
-			dispatch({ type: authTypes.GET_TOKEN_START });
-			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-		}
-	}, [connectUserData, dispatch])
+	// const checkToken = useCallback(() => {
+	// 	btnCheck()
+	// 	const token = localStorage.getItem('token');
+	// 	if (!isTokenValid(token)) {
+	// 		connectUserData()
+	// 		dispatch({ type: authTypes.GET_TOKEN_START });
+	// 		dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+	// 	}
+	// }, [ connectUserData, dispatch ])
 
 
 	useEffect(() => {
@@ -389,6 +397,7 @@ function App({ sentryHistory }) {
 										</div>
 										<div className='col-12 mt-3 row' >
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+											{/* <AboutPage /> */}
 										</div>
 									</SentryRoute>
 								</Switch>

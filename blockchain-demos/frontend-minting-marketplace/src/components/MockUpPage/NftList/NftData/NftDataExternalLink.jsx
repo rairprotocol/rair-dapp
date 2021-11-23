@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import Swal from "sweetalert2";
 import NftDataPageTest from "./NftDataPageTest";
 
 const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
@@ -13,8 +14,6 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
   const [selectedContract, setSelectedContract] = useState();
   const [selectedIndexInContract, setSelectedIndexInContract] = useState();
 
-
-
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
@@ -27,17 +26,21 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
           method: "GET",
         })
       ).json();
-
-      setData(response.result);
-      setSelectedContract(response.result.product.products.contract)
-      setSelectedIndexInContract(response.result.product.products.collectionIndexInContract)
-
-      setTokenData(response.result.tokens);
-      setSelectedData(response.result.tokens[token].metadata);
-      setSelectedToken(token);
-      setOfferPrice(
-        response.result.product.products.offers.map((p) => p.price)
-      );
+      if(response.success === true){
+        setData(response.result);
+        setSelectedContract(response.result.product.products.contract)
+        setSelectedIndexInContract(response.result.product.products.collectionIndexInContract)
+  
+        setTokenData(response.result.tokens);
+        setSelectedData(response.result.tokens[token].metadata);
+        setSelectedToken(token);
+        setOfferPrice(
+          response.result.product.products.offers.map((p) => p.price)
+        );
+      } else {
+        Swal.fire('Error', `${response.message}`, 'error');
+      }
+      
     } else return null;
   }, [adminToken, contract, product, token]);
 

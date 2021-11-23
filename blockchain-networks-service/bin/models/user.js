@@ -5,8 +5,8 @@ const { Schema } = mongoose;
 
 const User = new Schema({
   email: { type: String, default: null },
-  firstName: { type: String, default: null },
-  lastName: { type: String, default: null },
+  firstName: { type: String, default: null, trim: true },
+  lastName: { type: String, default: null, trim: true },
   publicAddress: { type: String, lowercase:true, required: true, unique: true },
   adminNFT: { type: String, required: true, unique: true },
   nonce: { type: String, default: () => nanoid() },
