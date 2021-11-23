@@ -3,14 +3,20 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
+import {useHistory} from 'react-router-dom';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
+import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
+import {web3Switch} from '../../../utils/switchBlockchain.js';
+
 const rSwal = withReactContent(Swal);
 
 const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer}) => {
 	const [receiverAddress, setReceiverAddress] = useState(receiver);
 	const [percentageReceived, setPercentageReceived] = useState(percentage);
 
+	const { secondaryColor, primaryColor } = useSelector(store => store.colorStore);
+	
 	useEffect(() => {
 		setReceiverAddress(receiver);
 	}, [receiver]);
@@ -31,38 +37,47 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 		renderer()
 	}
 
-	return <>
-		<div className='col-8 my-2'>
-			<InputField
-				label={index === 0 ? 'Recipient Address' : undefined}
-				labelClass='w-100 text-start'
-				customClass='form-control rounded-rair'
-				getter={receiverAddress}
-				setter={updateReceiver}
-			/>
-		</div>
-		<div className='col-3 my-2'>
-			<InputField
-				label={index === 0 ? 'Percentage' : undefined}
-				labelClass='w-100 text-start'
-				customClass='form-control rounded-rair'
-				min='0'
-				max='100'
-				type='number'
-				getter={percentageReceived}
-				setter={updatePercentage}
-			/>
-		</div>
-		<div className='col-1 my-2'>
-			{index === 0 && <br/>}
-			<button onClick={e => deleter(index)} className='btn btn-royal-ice rounded-rair'>
+	return <tr>
+		<th className='px-2'>
+			<div className='w-100 border-stimorol rounded-rair'>
+				<InputField
+					labelClass='w-100 text-start'
+					customClass='form-control rounded-rair'
+					getter={receiverAddress}
+					setter={updateReceiver}
+					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+				/>
+			</div>
+		</th>
+		<th className='px-2'>
+			<div className='w-100 border-stimorol rounded-rair'>
+				<InputField
+					labelClass='w-100 text-start'
+					customClass='form-control rounded-rair'
+					min='0'
+					max='100'
+					type='number'
+					getter={percentageReceived}
+					setter={updatePercentage}
+					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+				/>
+			</div>
+		</th>
+		<th>
+			<button onClick={e => deleter(index)} className='btn btn-danger rounded-rair'>
 				<i className='fas fa-trash' />
 			</button>
-		</div>
-	</>
+		</th>
+	</tr>
 };
 
-const ModalContent = ({instance, catalogIndex}) => {
+const CustomizeFees = ({contractData, switchBlockchain, correctMinterInstance, minterRole, setStepNumber, steps}) => {
+	const stepNumber = 3;
+
+	const { textColor, primaryColor } = useSelector(store => store.colorStore);
+	const { minterInstance, programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
+
+	const history = useHistory();
 
 	const [customPayments, setCustomPayments] = useState([]);
 	const [rerender, setRerender] = useState(false);
@@ -72,10 +87,13 @@ const ModalContent = ({instance, catalogIndex}) => {
 	const [settingCustomSplits, setSettingCustomSplits] = useState(false);
 
 	const getContractData = useCallback(async () => {
-		setNodeFee(await instance.nodeFee());
-		setTreasuryFee(await instance.treasuryFee());
-		setMinterDecimals(await instance.feeDecimals());
-	}, [instance])
+		if (!correctMinterInstance) {
+			return;
+		}
+		setNodeFee(await correctMinterInstance.nodeFee());
+		setTreasuryFee(await correctMinterInstance.treasuryFee());
+		setMinterDecimals(await correctMinterInstance.feeDecimals());
+	}, [correctMinterInstance])
 
 	useEffect(() => {
 		getContractData()
@@ -95,96 +113,79 @@ const ModalContent = ({instance, catalogIndex}) => {
 		});
 		setCustomPayments(aux);
 	}
+	let onMyChain = window.ethereum ?
+		chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
+		:
+		chainData[contractData?.blockchain]?.chainId === programmaticProvider.provider._network.chainId;
+	
+	useEffect(() => {
+		setStepNumber(stepNumber);
+	}, [setStepNumber])
+
+	const setCustomFees = async e => {
+		Swal.fire('Setting data', '', 'info');
+		setSettingCustomSplits(true);
+		try {
+			await (await correctMinterInstance.setCustomPayment(
+				contractData.product?.offers[0]?.offerPool,
+				customPayments.map(i => i.receiver),
+				customPayments.map(i => i.percentage * Math.pow(10, minterDecimals))
+			)).wait();
+		} catch(e) {
+			console.error(e);
+			Swal.fire('Error', '', 'error');
+		}
+		setSettingCustomSplits(false)
+	}
+	
+	const nextStep = () => {
+		history.push(steps[stepNumber].populatedPath);
+	}
 
 	let total = customPayments.reduce((prev, current) => {return prev + current.percentage}, 0);
 	return <div className='row px-0 mx-0'>
-		<button onClick={addPayment} className='col-1 btn btn-stimorol'>
-			<i className='fas fa-plus' />
-		</button>
-
-		<div className='col-12 row px-0 mx-0 my-3' style={{maxHeight: '60vh', overflowY: 'scroll'}}>
-			{customPayments.map((item, index) => {
-				return <CustomPayRateRow key={index} index={index} array={customPayments} deleter={removePayment} renderer={e => setRerender(!rerender)} {...item}/>
-			})}
-		</div>
+		{contractData && customPayments?.length !== 0 &&
+			<table className='col-12 text-start'>
+				<thead>
+					<tr>
+						<th>
+							Recipient Address
+						</th>
+						<th>
+							Percentage
+						</th>
+						<th />
+					</tr>
+				</thead>
+				<tbody style={{maxHeight: '50vh', overflowY: 'scroll'}}>
+					{customPayments.map((item, index, array) => {
+						return <CustomPayRateRow key={index} index={index} array={customPayments} deleter={removePayment} renderer={e => setRerender(!rerender)} {...item}/>
+					})}
+				</tbody>
+			</table>}
 		<div className='col-12'>Node Fee: {nodeFee / Math.pow(10, minterDecimals)}%, Treasury Fee: {treasuryFee / Math.pow(10, minterDecimals)}%</div>
 		<div className='col-12'>
 			Total: {(total) + (nodeFee / Math.pow(10, minterDecimals)) + (treasuryFee / Math.pow(10, minterDecimals))}%
 		</div>
-		<button
-			disabled={total !== 90 || !treasuryFee || !nodeFee || !minterDecimals || !instance || settingCustomSplits}
-			onClick={async e => {
-				Swal.fire('Setting data', '', 'info');
-				setSettingCustomSplits(true);
-				try {
-					await (await instance.setCustomPayment(
-						catalogIndex,
-						customPayments.map(i => i.receiver),
-						customPayments.map(i => i.percentage * Math.pow(10, minterDecimals))
-					)).wait();
-				} catch(e) {
-					console.error(e);
-					Swal.fire('Error', '', 'error');
-				}
-				setSettingCustomSplits(false)
-			}}
-			className='btn btn-royal-ice'>
-			Set data
-		</button>
+		<div className='col-12 mt-3 text-center'>
+			<div className='border-stimorol rounded-rair'>
+				<button onClick={addPayment} className={`btn btn-${primaryColor} rounded-rair px-4`}>
+					Add new <i className='fas fa-plus' style={{border: `solid 1px ${textColor}`, borderRadius: '50%', padding: '5px'}} />
+				</button>
+			</div>
+		</div>
+		{chainData && <FixedBottomNavigation
+				backwardFunction={() => {
+					history.goBack()
+				}}
+				forwardFunctions={[{
+					label: customPayments.length ? 'Set custom fees' : 'Skip',
+					action: customPayments.length ? setCustomFees : nextStep,
+					disabled: customPayments.length ? total !== 90 : false,
+				}]}
+			/>}
 	</div>
 };
-
-const CustomizeFees = ({address, blockchain, catalogIndex, customStyle}) => {
-	const { textColor, primaryColor } = useSelector(store => store.colorStore);
-	const { minterInstance, programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
-
-	let onMyChain = window.ethereum ? chainData[blockchain]?.chainId === window.ethereum.chainId : chainData[blockchain]?.chainId === programmaticProvider.provider._network.chainId;
-
-	if (!onMyChain) {
-		return <></>
-	}
-
-	return <button
-		style={customStyle}
-		disabled={address === undefined || contractCreator === undefined || !window.ethereum}
-		className={`btn btn-royal-ice`}
-		onClick={async e => {
-			if (!onMyChain) {
-				if (window.ethereum) {
-					await window.ethereum.request({
-						method: 'wallet_switchEthereumChain',
-						params: [{ chainId: chainData[blockchain].chainId }],
-					});
-				} else {
-					// Code for suresh goes here
-				}
-			} else {
-				rSwal.fire({
-					html: <ModalContent
-						blockchain={blockchain}
-						instance={minterInstance}
-						catalogIndex={catalogIndex}
-					/>,
-					showConfirmButton: false,
-					customClass: {
-						popup: `bg-${primaryColor} w-100`,
-						htmlContainer: `text-${textColor}`,
-					}
-				})
-			}
-		}}>
-			{onMyChain ?
-				<>
-					Customize Fees
-				</>
-				:
-				<>
-					Switch to <b>{chainData[blockchain]?.chainId}</b>
-				</>
-			}
-	</button>
-}
-
 
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 

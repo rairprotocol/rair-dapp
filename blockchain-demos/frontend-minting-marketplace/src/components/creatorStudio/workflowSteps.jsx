@@ -4,6 +4,9 @@ import { rFetch } from '../../utils/rFetch.js';
 import { useSelector } from 'react-redux';
 import { useParams, Router, Switch, Route } from 'react-router-dom';
 import WorkflowContext from '../../contexts/CreatorWorkflowContext.js';
+import {web3Switch} from '../../utils/switchBlockchain.js';
+import {minterAbi, erc721Abi} from '../../contracts'
+import chainData from '../../utils/blockchainData.js'
 
 import ListOffers from './creatorSteps/ListOffers.jsx';
 import ListLocks from './creatorSteps/ListLocks.jsx';
@@ -14,6 +17,9 @@ const SentryRoute = withSentryRouting(Route);
 
 const WorkflowSteps = ({sentryHistory}) => {
 	const {address, collectionIndex} = useParams();
+
+	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	
 	const [steps, setSteps] = useState([
 			{
 				label: 1,
@@ -51,8 +57,16 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: BatchMetadata
 			},
 		]);
+
 	const [contractData, setContractData] = useState();
+	const [tokenInstance, setTokenInstance] = useState();
+	const [correctMinterInstance, setCorrectMinterInstance] = useState();
 	const { primaryColor } = useSelector(store => store.colorStore);
+
+	const onMyChain = window.ethereum ?
+				chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
+				:
+				chainData[contractData?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId
 
 	const fetchData = useCallback(async () => {
 		if (!address) {
@@ -78,6 +92,34 @@ const WorkflowSteps = ({sentryHistory}) => {
 		delete response2.contract.products;
 		setContractData(response2.contract);
 	}, [address, collectionIndex]);
+	
+	const fetchMintingStatus = useCallback(async () => {
+		if (!tokenInstance || !onMyChain) {
+			return;
+		}
+		try {
+			return await tokenInstance.hasRole(await tokenInstance.MINTER(), correctMinterInstance.address);
+		} catch (err) {
+			console.error(err);
+			return false;
+		}
+	}, [correctMinterInstance, tokenInstance, onMyChain])
+
+	useEffect(() => {
+		// Fix this
+		if (onMyChain) {
+			let createdInstance = contractCreator(minterInstance.address, minterAbi)
+			setCorrectMinterInstance(createdInstance);
+		}
+	}, [address, onMyChain, contractCreator])
+
+	useEffect(() => {
+		// Fix this
+		if (onMyChain) {
+			let createdInstance = contractCreator(address, erc721Abi)
+			setTokenInstance(createdInstance);
+		}
+	}, [address, onMyChain, contractCreator])
 
 	useEffect(() => {
 		fetchData();
@@ -90,7 +132,14 @@ const WorkflowSteps = ({sentryHistory}) => {
 			let aux = [...steps];
 			aux.forEach(item => item.active = item.label <= index);
 			setSteps(aux);
-		}, [])
+		}, []),
+		switchBlockchain: async (chainId) => {
+			web3Switch(chainId)
+		},
+		minterRole: fetchMintingStatus(),
+		onMyChain,
+		correctMinterInstance,
+		tokenInstance
 	}
 
 	return <WorkflowContext.Provider value={initialValue}>
@@ -103,7 +152,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 						<div className='w-75 mx-auto px-auto text-center'>
 							{steps.map((item, index) => {
 								return <div className='d-inline-block' style={{
-									width: `${100 / steps.length * (index === 0 ? 0.1 : 1)}%`,
+									width: `${100 / steps.length * (index === 0 ? 0.09 : 1)}%`,
 									height: '3px',
 									position: 'relative',
 									backgroundColor: `var(--${item.active ? 'bubblegum' : `charcoal-80`})`

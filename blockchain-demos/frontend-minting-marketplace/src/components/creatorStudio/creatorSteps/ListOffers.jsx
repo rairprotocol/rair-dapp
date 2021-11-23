@@ -138,7 +138,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 	}
 
 	const nextStep = () => {
-		history.push(steps[stepNumber + 1].populatedPath);
+		history.push(steps[stepNumber].populatedPath);
 	}
 
 	const switchBlockchain = async (chainId) => {

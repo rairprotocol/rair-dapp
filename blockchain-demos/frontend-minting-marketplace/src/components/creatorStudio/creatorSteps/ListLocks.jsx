@@ -100,7 +100,8 @@ const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerend
 	</tr>
 };
 
-const ListLocks = ({contractData, setStepNumber}) => {
+const ListLocks = ({contractData, setStepNumber, steps}) => {
+	const stepNumber = 2;
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [instance, setInstance] = useState();
@@ -151,7 +152,7 @@ const ListLocks = ({contractData, setStepNumber}) => {
 	}, [address, onMyChain, contractCreator])
 
 	const next = () => {
-		history.push(`/creator/contract/${address}/collection/${collectionIndex}/metadata/batch`)
+		history.push(steps[stepNumber].populatedPath);
 	}
 
 	useEffect(() => {
