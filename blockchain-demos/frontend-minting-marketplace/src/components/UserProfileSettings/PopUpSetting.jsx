@@ -44,7 +44,8 @@ const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryC
                     setNext(false)
                 };
                 return <button className="button profile-btn" style={{
-                    border: `1px solid ${primaryColor === "charcoal" ? "#fff" : "#383637"}`,
+                    // border: `1px solid ${primaryColor === "charcoal" ? "#fff" : "#383637"}`,
+                    // border: "1px solid var(--royal-purple)",
                     backgroundColor: `${primaryColor === "charcoal" ? "#222021" : "#D3D2D3"}`
                 }}>
                     <img style={{
