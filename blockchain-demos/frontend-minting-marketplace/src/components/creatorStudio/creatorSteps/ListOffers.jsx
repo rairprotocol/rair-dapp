@@ -209,7 +209,6 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 			<div className='col-12 mt-3 p-5 text-center rounded-rair' style={{border: 'dashed 2px var(--charcoal-80)'}}>
 				First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
 			</div>
-			<div className='py-3 my-5' />
 			{chainData && <FixedBottomNavigation
 				backwardFunction={() => {
 					history.goBack()

@@ -8,8 +8,8 @@ const FixedBottomNavigation = ({forwardFunctions, backwardFunction, forwardLabel
 	}
 
 	return <>
-		<div className='py-3 my-5' />
-		<div className={`w-100 bg-${primaryColor} py-4`} style={{position: 'fixed', bottom: 0, left: 0, borderTop: `2px solid var(--charcoal-40)`}}>
+		<div className='py-3' />
+		<div className={`w-100 bg-${primaryColor} py-4`}>
 			<div style={{position: 'relative'}}>
 				<div className='btn' style={{color: `var(--${primaryColor})`}} disabled={true}>
 					{
@@ -46,6 +46,7 @@ const FixedBottomNavigation = ({forwardFunctions, backwardFunction, forwardLabel
 				</div>
 			</div>
 		</div>
+		<div className='py-3 my-5' />
 	</>
 }
 

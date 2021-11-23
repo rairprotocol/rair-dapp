@@ -52,16 +52,6 @@ body {
   border-right: dashed 1px var(--charcoal-80);
 }
 
-.rair-table.table-charcoal thead {
-}
-.rair-table.table-charcoal th {
-}
-
-.rair-table.table-rhyno thead {
-}
-.rair-table.table-rhyno tbody th {
-}
-
 .rounded-rair {
   border-radius: 16px!important;
 }
