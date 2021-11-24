@@ -12,7 +12,7 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
     return (
         <Popup
             trigger={open => {
-                setOpenModal(open);
+                setOpenModal(false);
                 return <button style={{
                     color: primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)",
                     marginRight: "15px",
@@ -31,7 +31,7 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
             position="bottom center"
             closeOnDocumentClick
         >
-            <div className="pop-up-notification">
+            { openModal && <div className="pop-up-notification">
                 <div className="notification-from-rair">
                     <div className="box-notification">
                         <div className="dot-notification" />
@@ -70,7 +70,7 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
         </Popup>
     )
 }
