@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Teammate = ({ url, nameTeammate, desc, primaryColor }) => {
+const Teammate = ({ url, name, desc, primaryColor }) => {
     return (
         <div className="box-teammate">
             <div className="img-teammate">
@@ -8,7 +8,7 @@ const Teammate = ({ url, nameTeammate, desc, primaryColor }) => {
             </div>
             <div className="position-teammate">
                 <div className="temmate-content-up">
-                    <h4>{nameTeammate}</h4>
+                    <h4>{name}</h4>
                     <div className="teammate-description">
                         {
                             desc.map((p, index) => {

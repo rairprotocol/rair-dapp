@@ -6,8 +6,8 @@ const BatchRow = ({index, deleter, array}) => {
 	const [token, setToken] = useState();
 
 	useEffect(() => {
-		setAddress(array[index].address);
-		setToken(array[index].token);
+		setAddress(array[index]['Public Address']);
+		setToken(array[index]['NFTID']);
 	}, [index, array])
 
 	const addressChange = (e) => {
@@ -19,8 +19,6 @@ const BatchRow = ({index, deleter, array}) => {
 		setToken(e.target.value);
 		array[index].token = e.target.value;
 	}
-
-
 
 	return <div className='col-12 row px-0 mx-0'>
 		<div className='col-1 px-0'>

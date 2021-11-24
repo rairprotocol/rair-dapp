@@ -21,6 +21,10 @@
     background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
 }
 
+.wrapper-splash-page.greyman-page {
+    background-image: none;
+}
+
 .home-splash--page {
     max-width: 1300px;
     display: flex;
@@ -50,6 +54,17 @@
     background-position: 95% center;
 }
 
+.information-author.greyman-page-author {
+    background-image: url('./images/greyman.png');
+    background-size: 516px 516px;
+    background-position: 90% center;
+    height: 694px;
+}
+
+.information-author.greyman-page-author .block-splash  {
+    justify-content: flex-end;
+}
+
 .block-splash {
     display: flex;
     flex-direction: column;
@@ -70,6 +85,15 @@
 
 .text-splash .title-splash {
     margin-bottom: 24px;
+}
+
+.information-author.greyman-page-author .text-splash .title-splash.greyman-page h3{
+    color: #222021;
+    font-size: 32px;
+}
+
+.information-author.greyman-page-author .text-splash .title-splash.greyman-page h3.text-gradient{
+    font-size: 40px;
 }
 
 .text-splash .title-splash h3{
@@ -95,6 +119,10 @@
     font: 20px;
     line-height: 36px;
     font-weight: 400;
+}
+
+.information-author.greyman-page-author .text-splash p {
+    line-height: 28px;
 }
 
 .btn-buy-metamask {
@@ -159,6 +187,11 @@
     position: relative;
 }
 
+.left-tokens.greyman-page .block-left-tokens{
+    background: url('./images/greyman.png') center center;
+    background-size: cover;
+}
+
 .block-left-tokens .down-text {
     position: absolute;
     bottom: 16px;
@@ -219,6 +252,14 @@
     display: flex;
 }
 
+.left-tokens.greyman-page .text-progress .text-numbers {
+    flex-direction: column;
+}
+
+.left-tokens.greyman-page .text-left-tokens {
+    font-size: 48px;
+}
+
 .text-left-tokens {
     font-size: 45px;
     margin-right: 6px;
@@ -276,6 +317,10 @@
     width: 650px;
     text-align: left;
     height: 224px;
+}
+
+.left-tokens.greyman-page .tokens-description {
+    height: auto;
 }
 
 .tokens-description p{
@@ -401,6 +446,10 @@
 
     display: flex;
     align-items: flex-end;
+}
+
+.wrapper-splash-page .greyman-page .main-nft {
+    background-size: cover;
 }
 
 .btn-open-store {
