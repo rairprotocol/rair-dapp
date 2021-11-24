@@ -207,6 +207,9 @@ function App({ sentryHistory }) {
 
 	useEffect(() => {
 		setTitle('Welcome');
+		if (process.env.NODE_ENV === 'development') {
+			window.gotoRouteBackdoor = sentryHistory.push
+		}
 	}, [])
 
 	useEffect(() => {
