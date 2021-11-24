@@ -41,9 +41,7 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 import MyItems from './components/nft/myItems';
 import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
-// import AboutPage from './components/AboutPage/AboutPage';
-// import NftList from './components/MockUpPage/NftList/NftList';
-// import NftItem from './components/MockUpPage/NftList/NftItem';
+import AboutPage from './components/AboutPage/AboutPage';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -186,13 +184,18 @@ function App({ sentryHistory }) {
 		sentryHistory.push(`/`)
 	}
 
-	const btnCheck = () => {
+	const btnCheck = useCallback(() => {
     if (window.ethereum && window.ethereum.isMetaMask) {
       setRenderBtnConnect(false);
     } else {
       setRenderBtnConnect(true);
     }
-  };
+  },[setRenderBtnConnect]);
+
+  const openAboutPage = () => {
+	sentryHistory.push(`/rair-about-page`)
+	window.scrollTo(0, 0);
+  }
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -205,6 +208,10 @@ function App({ sentryHistory }) {
 	useEffect(() => {
 		setTitle('Welcome');
 	}, [])
+
+	useEffect(() => {
+		btnCheck()
+	}, [btnCheck])
 
 	// const checkToken = useCallback(() => {
 	// 	btnCheck()
@@ -253,6 +260,7 @@ function App({ sentryHistory }) {
       (function () {
         let angle = 0;
         let p = document.querySelector("p");
+		console.log(p, 'p find');
         if (p) {
           let text = p.textContent.split("");
           var len = text.length;
@@ -283,7 +291,6 @@ function App({ sentryHistory }) {
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />}
-				{/* {!loginDone && <Redirect to="/all" />} */}
 				<div
 					style={{
 						...backgroundImageEffect,
@@ -352,6 +359,9 @@ function App({ sentryHistory }) {
 							<div className='col-12 mt-3 row'>
 								<Switch>
 									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
+									<SentryRoute exact path="/rair-about-page">
+										<AboutPage primaryColor={primaryColor} textColor={textColor}/>
+									</SentryRoute>
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
@@ -388,13 +398,11 @@ function App({ sentryHistory }) {
 										</div>
 										<div className='col-12 mt-3 row' >
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-											{/* <AboutPage /> */}
 										</div>
 									</SentryRoute>
 								</Switch>
 							</div>
 						</div>
-						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 					</div>
 					<footer 
 					className="footer col"
@@ -409,6 +417,7 @@ function App({ sentryHistory }) {
 							<li>newsletter</li>
 							<li>contact</li>
 							<li>inquiries</li>
+							<li onClick={() => openAboutPage()}>about us</li>
 						</ul>
 					</footer>
 				</div>
