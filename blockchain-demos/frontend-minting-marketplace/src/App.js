@@ -445,6 +445,7 @@ function App({ sentryHistory }) {
 						</div>
 						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 					</div>
+					<div className='py-5' />
 					<footer
 						className="footer col"
 						style={{
@@ -455,9 +456,9 @@ function App({ sentryHistory }) {
 							© Rairtech 2021. All rights reserved
 						</div>
 						<ul>
-							<li>newsletter</li>
-							<li>contact</li>
-							<li>inquiries</li>
+							<li>Newsletter</li>
+							<li>Contract</li>
+							<li>Inquiries</li>
 						</ul>
 					</footer>
 				</div>

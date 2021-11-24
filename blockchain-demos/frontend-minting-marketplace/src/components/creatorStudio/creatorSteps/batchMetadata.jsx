@@ -8,19 +8,23 @@ import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import csvParser from '../../../utils/csvParser.js';
 import Dropzone from 'react-dropzone'
+import Swal from 'sweetalert2';
 
 
-
-const BatchMetadataParser = ({contractData, setStepNumber}) => {
+const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
+	const stepNumber = 4;
 	const {address, collectionIndex} = useParams();
 
+	const [csvFile, setCSVFile] = useState();
 	const [metadata, setMetadata] = useState();
 	const [headers, setHeaders] = useState();
+	const [metadataExists, setMetadataExists] = useState(false);
 
 	const onImageDrop = useCallback(acceptedFiles => {
 		csvParser(acceptedFiles[0], console.log)
 	}, [])
 	const onCSVDrop = useCallback(acceptedFiles => {
+		setCSVFile(acceptedFiles[0]);
 		csvParser(acceptedFiles[0], setMetadata)
 	}, [])
 
@@ -29,17 +33,48 @@ const BatchMetadataParser = ({contractData, setStepNumber}) => {
 			return;
 		}
 		setHeaders(Object.keys(metadata[0]).filter(item => !['Name','NFTID','Description','Image'].includes(item)))
-	}, [metadata, setHeaders])
+	}, [metadata, setHeaders]);
+
+	const fetchData = useCallback(async () => {
+		let {success, result} = await rFetch(`/api/nft/${address}/${collectionIndex}/`);
+		if (success) {
+			setMetadataExists(result.filter(item => item.metadata.name !== 'none').length > 0);
+		}
+	}, [address, collectionIndex])
+
+	useEffect(fetchData, [fetchData])
 
 	const history = useHistory();
-
 	const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
-
 	const { primaryColor, textColor } = useSelector(store => store.colorStore);
 	
 	useEffect(() => {
-		setStepNumber(4);
-	}, [setStepNumber])
+		setStepNumber(stepNumber);
+	}, [setStepNumber, stepNumber])
+
+	const nextStep = () => {
+		history.push(steps[stepNumber].populatedPath);
+	}
+
+	const sendMetadata = async (updateMeta) => {
+		let formData = new FormData();
+		formData.append('product', collectionIndex);
+		formData.append('contract', address.toLowerCase());
+		formData.append('updateMeta', updateMeta);
+		formData.append('csv', csvFile, 'metadata.csv');
+		console.log(formData);
+		return;
+		let response = await rFetch('/api/nft', {
+			method: 'POST',
+			body: formData,
+			redirect: 'follow'
+		});
+		if (response?.success) {
+			Swal.fire('Success',`${updateMeta ? 'Updated' : 'Generated'} ${response.result.length} metadata entries!`,'success');
+		} else {
+			Swal.fire('Error',response?.message,'error');
+		}
+	}
 
 	let missing = <div style={{width: '2rem', height: '2rem', paddingTop: '0.2rem', border: 'solid 1px #F63419', borderRadius: '50%'}}>
 		<i className='fas fa-exclamation text-danger' />
@@ -160,8 +195,8 @@ const BatchMetadataParser = ({contractData, setStepNumber}) => {
 				history.goBack()
 			}}
 			forwardFunctions={[{
-				label: metadata ? 'Send' : 'Skip',
-				action: metadata ? console.log : console.log
+				label: metadata ? metadataExists ? 'Update' : 'Send' : 'Skip',
+				action: metadata ? () => sendMetadata(metadataExists) : nextStep
 			}]}
 		/>
 	</>
