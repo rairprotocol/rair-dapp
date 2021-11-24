@@ -5,21 +5,12 @@ import './SplashPage.css';
 
 /* importing images*/
 import Metamask from './images/metamask_logo.png';
-import Nft_1 from './images/exclusive_1.jpeg';
-import Nft_2 from './images/exclusive_2.jpeg';
-import Nft_3 from './images/exclusive_3.jpeg';
-import Nft_4 from './images/image_3.png';
-import NftImage from './images/circle_nipsey.png';
-import JoinCommunity from './images/join_com.jpeg';
 import GreyMan from './images/greyman.png';
 
 
 /* importing Components*/
-import TokenLeft from './TokenLeft/TokenLeft';
 import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
-import UnlockVideos from './UnlockVideos/UnlockVideos';
 import TeamMeet from './TeamMeet/TeamMeetList';
-import JoinCom from './JoinCom/JoinCom';
 import TokenLeftGreyman from './TokenLeft/TokenLeftGreyman';
 
 const SplashPage = () => {
