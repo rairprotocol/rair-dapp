@@ -42,6 +42,7 @@ import MyItems from './components/nft/myItems';
 import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
+import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 // import AboutPage from './components/AboutPage/AboutPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
@@ -360,7 +361,8 @@ function App({ sentryHistory }) {
 							<div className='col-12 mt-3 row'>
 								<Switch>
 									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
-									<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
+									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+									<SentryRoute exact path="/notifications" component={NotificationPage} />
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}

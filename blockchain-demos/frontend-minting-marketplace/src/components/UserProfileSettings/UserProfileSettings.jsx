@@ -30,7 +30,6 @@ const UserProfileSettings = ({ loginDone, currentUserAddress, adminAccess, setLo
                 <button 
                 className="btn-change-theme"
                 style={{
-                    // border: 'solid 1px var(--royal-purple)',
                     backgroundColor: primaryColor === "charcoal" ? "#222021" : "#D3D2D3",
                     borderRadius: '12px',
                     width: 32,

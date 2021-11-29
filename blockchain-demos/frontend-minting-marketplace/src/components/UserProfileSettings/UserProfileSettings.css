@@ -87,11 +87,6 @@
     font-weight: 700;
 }
 
-.pop-up-notification .text-notification .title-notif {
-    font-size: 16px;
-    font-weight: 700;
-}
-
 .pop-up-notification .text-notification .text-notif {
     font-size: 14px;
 }
@@ -240,4 +235,26 @@
     font-size: 12px;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.btn-notification {
+    color: #9867D9;
+    transition: all .3s ease;
+    margin-right: 15px;
+    border: solid 1px #9867D9;
+    border-radius: 12px;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+}
+  
+.btn-notification:hover {
+    background: linear-gradient(305deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    color: #fff;
+}
+  
+.btn-notification:focus {
+    color: #fff;
+    border: solid 1px #fff; 
 }
