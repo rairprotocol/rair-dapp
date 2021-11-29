@@ -12,6 +12,7 @@ import GreyMan from './images/greyman.png';
 import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
 import TeamMeet from './TeamMeet/TeamMeetList';
 import TokenLeftGreyman from './TokenLeft/TokenLeftGreyman';
+import AuthorBlock from './AuthorBlock/AuthorBlock';
 
 const SplashPage = () => {
     const { primaryColor } = useSelector(store => store.colorStore);
@@ -19,7 +20,7 @@ const SplashPage = () => {
     return (
         <div className="wrapper-splash-page greyman-page">
             <div className="home-splash--page">
-                <div className="information-author greyman-page-author">
+                <AuthorBlock mainClass="greyman-page-author">
                     <div className="block-splash">
                         <div className="text-splash">
                             <div className="title-splash greyman-page">
@@ -31,7 +32,6 @@ const SplashPage = () => {
                                     7,907,414,597
                                     not unique NFTs. All metadata is identical only
                                     the serial number is unique. Claim yours for .1 MATIC
-
                                 </p>
                             </div>
                             <div className="btn-buy-metamask">
@@ -39,7 +39,7 @@ const SplashPage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </AuthorBlock>
                 <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} />
                 <ExclusiveNft
                     Nft_1={GreyMan}
