@@ -7,10 +7,10 @@ pipeline {
     DOCKERHUB_CREDENTIALS = credentials('rairtech-dockerhub')
     VERSION = "${env.BUILD_ID}"
     BRANCH = "${env.BRANCH_NAME}"
-    PROJECT_ID = 'rair-314019'
-    CLUSTER = 'staging-1'
-    LOCATION = 'us-central1-c'
-    CREDENTIALS_ID = 'rair-314019'
+    PROJECT_ID = 'rair-market'
+    CLUSTER = 'dev'
+    LOCATION = 'us-east1-b'
+    CREDENTIALS_ID = 'rair-market'
   }
   stages {
     //stage('Build RAIR frontend') {
@@ -82,13 +82,13 @@ pipeline {
         }
       }
     }
-    //stage('Deploy to k8s'){
-    //  when { branch 'dev' }
-    //  steps {
-    //    sh("sed -i.bak 's#dev_latest#${BRANCH}_0.${VERSION}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/dev-manifest/*.yaml")
-    //    step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT_ID, clusterName: env.CLUSTER, zone: env.LOCATION, manifestPattern: 'kubernetes-manifests/manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-    //}
-  //}
+    stage('Deploy to k8s'){
+      when { branch 'dev' }
+      steps {
+        sh("sed -i.bak 's#dev_latest#${BRANCH}_0.${VERSION}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/dev-manifest/*.yaml")
+        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT_ID, clusterName: env.CLUSTER, zone: env.LOCATION, manifestPattern: 'kubernetes-manifests/manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+    }
+  }
 }
   post {
     always {
