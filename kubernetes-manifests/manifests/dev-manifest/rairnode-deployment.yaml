@@ -40,7 +40,7 @@ spec:
             - name: MONGO_URI_LOCAL
               value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
             - name: INFURA_PROJECT_ID
-              value: "5c77a63a0aa74452a7c77a64fe9a90d5"
+              value: "92a88973a28d41318792f77451db4c5b"
             - name: ADMIN_NETWORK
               value: polygon
             - name: ADMIN_CONTRACT
