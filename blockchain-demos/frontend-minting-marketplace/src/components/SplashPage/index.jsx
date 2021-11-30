@@ -21,6 +21,7 @@ import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
 import UnlockVideos from './UnlockVideos/UnlockVideos';
 import TeamMeet from './TeamMeet/TeamMeetList';
 import JoinCom from './JoinCom/JoinCom';
+import AuthorBlock from './AuthorBlock/AuthorBlock';
 
 const SplashPage = () => {
     const { primaryColor } = useSelector(store => store.colorStore);
@@ -28,7 +29,7 @@ const SplashPage = () => {
     return (
         <div className="wrapper-splash-page">
             <div className="home-splash--page">
-                <div className="information-author">
+                <AuthorBlock>
                     <div className="block-splash">
                         <div className="text-splash">
                             <div className="title-splash">
@@ -51,7 +52,7 @@ const SplashPage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </AuthorBlock>
                 <TokenLeft primaryColor={primaryColor} />
                 <div className="special-offer">
                     <div className="offer-desp">
