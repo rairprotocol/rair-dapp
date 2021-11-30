@@ -7,7 +7,7 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-import chainData from "../../../../utils/blockchainData";
+// import chainData from "../../../../utils/blockchainData";
 import Carousel from "react-multi-carousel";
 import ItemRank from "../../SelectBox/ItemRank";
 import SelectBox from "../../SelectBox/SelectBox";
@@ -27,7 +27,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
   }, [_setTokenData])
   const [offerPrice, setOfferPrice] = useState([]);
   const [selectedToken, setSelectedToken] = useState(token);
-  const [allProducts, setAllProducts] = useState([]);
+  // const [allProducts, setAllProducts] = useState([]);
 
   //   const [contractAddress, setContractAddress] = useState();
 
@@ -144,7 +144,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
       // setContractAddress(response.result.product.contractAddress)
       //   return response.result;
     } else return null;
-  }, [adminToken, contract, product]);
+  }, [adminToken, contract, product, setTokenData]);
 
 
 
@@ -162,7 +162,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
     setSelectedToken(0)
     // if (!Object.keys(params).length)
     //   setSelected(responseAllProduct.result[0].metadata);
-  }, [product, contract]);
+  }, [product, contract, setTokenData]);
   console.log(data, 'data');
 
   useEffect(() => {

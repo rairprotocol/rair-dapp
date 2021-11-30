@@ -25,7 +25,9 @@ const VideoItem = ({mediaList, item}) => {
 				className='col-12  h-100 w-100' />
 		</div>
 		<div className='col description-wrapper-video'>
-		<span className='description-title'>{mediaList[item].title}<br/></span>
+		<span className='description-title'>
+			{mediaList[item].title}
+			<br/></span>
 		{/* <span className='description'>{mediaList[item].description.slice(0, 25)}{mediaList[item].description.length > 30 ? '...' : ''}<br></br></span> */}
 		<span className='description'>{mediaList[item].author.slice(0, 7)}{mediaList[item].author.length > 10 ? '...' : ''}</span>
 		</div>

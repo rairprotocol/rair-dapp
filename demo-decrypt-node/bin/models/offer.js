@@ -12,7 +12,7 @@ const Offer = new Schema({
   sold: { type: Boolean, default: false },
   price: { type: Number, required: true },
   range: { type: [Number], required: true },
-  offerName: { type: String, default: 'Default' },
+  offerName: { type: String, default: 'Default', trim: true },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 

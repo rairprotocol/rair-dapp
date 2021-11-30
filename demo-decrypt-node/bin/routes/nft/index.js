@@ -19,7 +19,7 @@ module.exports = context => {
   // Create bunch of lazy minted tokens from csv file
   router.post('/', JWTVerification(context), upload.single('csv'), async (req, res, next) => {
     try {
-      const { contract, product } = req.body;
+      const { contract, product, updateMeta = 'false' } = req.body;
       const { user } = req;
       const prod = Number(product);
       const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'artist'];
@@ -27,6 +27,7 @@ module.exports = context => {
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
       const records = [];
       const forSave = [];
+      const forUpdate = [];
       const tokens = [];
 
       if (!user.adminRights) {
@@ -145,15 +146,18 @@ module.exports = context => {
                     return re;
                   }, [])
                   .value();
-                const isExist = !!_.find(foundTokens, t => t.offer === offerPool.offer.offerIndex && t.token === token);
+                const foundToken = _.find(foundTokens, t => t.offer === offerPool.offer.offerIndex && t.token === token);
+                const mainFields = {
+                  contract,
+                  offerPool: offerPool.marketplaceCatalogIndex,
+                  token
+                }
 
-                if (!isExist) {
+                if (!foundToken) {
                   forSave.push({
-                    token,
+                    ...mainFields,
                     ownerAddress: sanitizedOwnerAddress,
-                    offerPool: offerPool.marketplaceCatalogIndex,
                     offer: offerPool.offer.offerIndex,
-                    contract,
                     uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                     isMinted: false,
                     metadata: {
@@ -164,6 +168,28 @@ module.exports = context => {
                       image: record.image || '',
                       animation_url: record.animation_url || '',
                       attributes: attributes
+                    }
+                  });
+
+                  tokens.push(token);
+                }
+
+                if (updateMeta === 'true' && foundToken && !foundToken.isMinted) {
+                  forUpdate.push({
+                    updateOne: {
+                      filter: mainFields,
+                      update: {
+                        ownerAddress: sanitizedOwnerAddress,
+                        metadata: {
+                          name: record.name,
+                          description: record.description,
+                          artist: record.artist,
+                          external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                          image: record.image || '',
+                          animation_url: record.animation_url || '',
+                          attributes: attributes
+                        }
+                      }
                     }
                   });
 
@@ -182,13 +208,21 @@ module.exports = context => {
 
       await removeTempFile(roadToFile);
 
-      if (_.isEmpty(forSave)) {
-        return res.json({ success: false, message: 'Don\'t have tokens for creation.' });
+      if (_.isEmpty(forSave) && _.isEmpty(forUpdate)) {
+        return res.json({ success: false, message: 'Don\'t have tokens for creation / update.' });
       }
 
-      try {
-        await context.db.MintedToken.insertMany(forSave, { ordered: false });
-      } catch (err) {}
+      if (!_.isEmpty(forSave)) {
+        try {
+          await context.db.MintedToken.insertMany(forSave, { ordered: false });
+        } catch (err) {}
+      }
+
+      if (!_.isEmpty(forUpdate)) {
+        try {
+          await context.db.MintedToken.bulkWrite(forUpdate, { ordered: false });
+        } catch (e) {}
+      }
 
       const result = await context.db.MintedToken.find({
         contract,

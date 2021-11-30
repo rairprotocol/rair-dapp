@@ -22,6 +22,7 @@ const MinterMarketplace = () => {
 							productIndex: contract.products.collectionIndexInContract,
 							productName: contract.products.name,
 							totalCopies: contract.products.copies,
+							minterAddress: contract?.offerPool?.minterAddress,
 							...offer
 						})
 					}

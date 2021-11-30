@@ -1,6 +1,6 @@
 # Creat Bunch of tokens
 
-Adding new lazy minted tokens from csv file
+Adding new or updating existed lazy minted tokens from csv file
 
 **URL** : `/api/nft`
 
@@ -42,6 +42,12 @@ Adding new lazy minted tokens from csv file
     "required": true,
     "content": {
       "type": "number"
+    }
+  },
+  "updateMeta": {
+    "required": false,
+    "content": {
+      "type": "boolean"
     }
   }
 }

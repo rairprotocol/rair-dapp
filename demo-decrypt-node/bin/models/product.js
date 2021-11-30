@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const { DEFAULT_PRODUCT_COVER } = process.env;
 
 const Product = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, trim: true },
   collectionIndexInContract: { type: Number, required: true },
   contract: { type: Schema.ObjectId, required: true },
   copies: { type: Number, required: true },
