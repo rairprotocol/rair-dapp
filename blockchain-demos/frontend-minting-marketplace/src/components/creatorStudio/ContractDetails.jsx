@@ -48,6 +48,7 @@ const ContractDetails = () => {
 		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} >
 			<div className='col-8 p-2'>
 				<InputField
+					disabled={creatingCollection}
 					getter={collectionName}
 					setter={setCollectionName}
 					placeholder='Name your collection'
@@ -59,6 +60,7 @@ const ContractDetails = () => {
 			</div>
 			<div className='col-4 p-2'>
 				<InputField
+					disabled={creatingCollection}
 					getter={collectionLength}
 					setter={setCollectionLength}
 					placeholder='Length'
@@ -91,30 +93,35 @@ const ContractDetails = () => {
 			backwardFunction={() => {
 				history.goBack()
 			}}
-			forwardFunction={collectionLength > 0 && collectionName !== '' ? async () => {
-				if (!onMyChain) {
-					if (window.ethereum) {
-						await window.ethereum.request({
-							method: 'wallet_switchEthereumChain',
-							params: [{ chainId: chainData[data.blockchain].chainId }],
-						});
+			forwardFunctions={[{
+				action: collectionLength > 0 && collectionName !== '' ? async () => {
+					if (!onMyChain) {
+						if (window.ethereum) {
+							await window.ethereum.request({
+								method: 'wallet_switchEthereumChain',
+								params: [{ chainId: chainData[data.blockchain].chainId }],
+							});
+						} else {
+							// Code for suresh goes here
+						}
 					} else {
-						// Code for suresh goes here
+						try {
+							setCreatingCollection(true);
+							let instance = await contractCreator(data.contractAddress, erc721Abi);
+							await (await instance.createProduct(collectionName, collectionLength)).wait();
+							Swal.fire('Success', 'Collection created!', 'success');
+							setCollectionName('');
+							setCollectionLength(0);
+						} catch (err) {
+							console.error(err)
+							Swal.fire('Error', err?.message ? err.message : err.toString(), 'error');
+						}
+						setCreatingCollection(false);
 					}
-				} else {
-					try {
-						setCreatingCollection(true);
-						let instance = await contractCreator(data.contractAddress, erc721Abi);
-						await (await instance.createProduct(collectionName, collectionLength)).wait();
-					} catch (err) {
-						console.error(err)
-						Swal.fire('Error', err?.message ? err.message : err.toString(), 'error');
-					}
-					setCreatingCollection(false);
-				}
-			} : undefined}
-			forwardLabel={(data && !onMyChain) ? `Switch to ${chainData[data?.blockchain].name}` : undefined}
-			forwardDisabled={creatingCollection}
+				} : undefined,
+				label: (data && !onMyChain) ? `Switch to ${chainData[data?.blockchain].name}` : undefined,
+				disabled: creatingCollection || collectionLength === 0 || collectionName === ''
+			}]}
 		/>
 	</div>
 }

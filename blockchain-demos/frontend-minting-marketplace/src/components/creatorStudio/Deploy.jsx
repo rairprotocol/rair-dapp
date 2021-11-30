@@ -14,6 +14,7 @@ const Factory = () => {
 	const [deploymentPrice, setDeploymentPrice] = useState(0);
 	const [userBalance, setUserBalance] = useState(0);
 	const [tokenSymbol, setTokenSymbol] = useState('');
+	const [deploying, setDeploying] = useState(false);
 
 	const { currentUserAddress, programmaticProvider, factoryInstance, erc777Instance } = useSelector(store => store.contractStore);
 	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
@@ -91,16 +92,21 @@ const Factory = () => {
 			</div>
 			<div className='col-12 p-2'>
 				<button
-					disabled={contractName === '' || chainId === 'null' || adminRights === true || deploymentPrice === 0 || userBalance === 0}
+					disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying}
 					className='btn btn-stimorol w-100 rounded-rair'
 					onClick={async e => {
 						try {
-							await erc777Instance.send(
+							setDeploying(true);
+							await (await erc777Instance.send(
 								factoryInstance.address,
 								deploymentPrice,
 								utils.toUtf8Bytes(contractName)
-							)
+							)).wait();
+							setDeploying(false);
+							Swal.fire(`Success`, 'Contract deployed', 'success');
+							setContractName('')
 						} catch (e) {
+							setDeploying(false);
 							console.error(e);
 							Swal.fire('Error', e?.message ? e?.message : e.toString(), 'error');
 						}
