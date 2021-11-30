@@ -3,6 +3,7 @@
     border-radius: 16px;
     padding: 12px;
     margin-top: 12px;
+
 }
 
 .user-block {
@@ -23,11 +24,12 @@
 
 .pop-up-notification {
     width: 520px;
-    background: #383637;
     color: #fff;
     margin-top: 12px;
     margin-left: 20px;
     border-radius: 16px;
+
+    overflow: hidden;
 }
 
 .notification-from-rair, .notification-from-factory {
