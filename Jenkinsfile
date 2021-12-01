@@ -56,21 +56,21 @@ pipeline {
     //}
     stage('Push docker RAIR node') {
       steps {
-        sh 'docker push rairtechinc/rairservernode:${BRANCH}_0.${VERSION}'
+        sh 'docker push rairtechinc/rairservernode:${BRANCH}_1.${VERSION}'
         sh 'docker push rairtechinc/rairservernode:${BRANCH}_latest'
         sh 'docker push rairtechinc/rairservernode:${GIT_COMMIT}'
       }
     }
     stage('Push docker minting-network') {
       steps {
-        sh 'docker push rairtechinc/minting-network:${BRANCH}_0.${VERSION}'
+        sh 'docker push rairtechinc/minting-network:${BRANCH}_1.${VERSION}'
         sh 'docker push rairtechinc/minting-network:${BRANCH}_latest'
         sh 'docker push rairtechinc/minting-network:${GIT_COMMIT}'
       }
     }
     stage('Push docker blockchain-event-listener') {
       steps {
-        sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_0.${VERSION}'
+        sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_1.${VERSION}'
         sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_latest'
         sh 'docker push rairtechinc/blockchain-event-listener:${GIT_COMMIT}'
       }
