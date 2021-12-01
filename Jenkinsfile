@@ -25,21 +25,21 @@ pipeline {
       steps {
         echo 'for branch' + env.BRANCH_NAME
         dir("${env.WORKSPACE}/demo-decrypt-node"){
-          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_0.${VERSION} -t rairtechinc/rairservernode:${BRANCH}_latest .'
+          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_1.${VERSION} -t rairtechinc/rairservernode:${BRANCH}_latest -t rairtechinc/rairservernode:${GIT_COMMIT} .'
         }
       }
     }
     stage('Build minting-network') {
       steps {
         dir("${env.WORKSPACE}/blockchain-demos/frontend-minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_0.${VERSION} -t rairtechinc/minting-network:${BRANCH}_latest .'
+          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_1.${VERSION} -t rairtechinc/minting-network:${BRANCH}_latest -t rairtechinc/minting-network:${GIT_COMMIT} .'
         }
       }
     }
     stage('Build blockchain-event-listener'){
       steps {
         dir("${env.WORKSPACE}/blockchain-networks-service"){
-          sh 'docker build -t rairtechinc/blockchain-event-listener:${BRANCH}_0.${VERSION} -t rairtechinc/blockchain-event-listener:${BRANCH}_latest .'
+          sh 'docker build -t rairtechinc/blockchain-event-listener:${BRANCH}_1.${VERSION} -t rairtechinc/blockchain-event-listener:${BRANCH}_latest -t rairtechinc/blockchain-event-listener:${GIT_COMMIT} .'
         }
       }
     }
@@ -58,18 +58,21 @@ pipeline {
       steps {
         sh 'docker push rairtechinc/rairservernode:${BRANCH}_0.${VERSION}'
         sh 'docker push rairtechinc/rairservernode:${BRANCH}_latest'
+        sh 'docker push rairtechinc/rairservernode:${GIT_COMMIT}'
       }
     }
     stage('Push docker minting-network') {
       steps {
         sh 'docker push rairtechinc/minting-network:${BRANCH}_0.${VERSION}'
         sh 'docker push rairtechinc/minting-network:${BRANCH}_latest'
+        sh 'docker push rairtechinc/minting-network:${GIT_COMMIT}'
       }
     }
     stage('Push docker blockchain-event-listener') {
       steps {
         sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_0.${VERSION}'
         sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_latest'
+        sh 'docker push rairtechinc/blockchain-event-listener:${GIT_COMMIT}'
       }
     }
     stage('Update docker version file') {
