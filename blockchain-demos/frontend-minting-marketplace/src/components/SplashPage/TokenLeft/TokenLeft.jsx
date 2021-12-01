@@ -100,7 +100,7 @@ const TokenLeft = ({ primaryColor }) => {
                     </p>
                 </div>
                 <div className="mailchimp">
-                    <form action="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&amp;id=1f95f6ad8c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                    <form action="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&amp;id=1f95f6ad8c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
                         <div className="signup_scroll">
                             <div className="email-box">
                                 <input type="email" name="EMAIL" className="email" id="mce-EMAIL" placeholder="Join our email list for updates & drops" required />
