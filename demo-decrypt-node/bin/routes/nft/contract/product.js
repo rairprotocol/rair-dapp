@@ -236,7 +236,7 @@ module.exports = context => {
     try {
       const { contract, product } = req;
 
-      const locks = await context.db.LockedTokens.find({ contract, product });
+      const locks = await context.db.LockedTokens.find({ contract: contract._id, product });
 
       res.json({ success: true, locks });
     } catch (err) {

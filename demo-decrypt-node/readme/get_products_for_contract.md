@@ -59,7 +59,7 @@ Returns found products
       "royalty": 0,
       "name": "The Dark Knight",
       "collectionIndexInContract": 1,
-      "contract": "contractAddress",
+      "contract": "contractId",
       "copies": 4,
       "creationDate": "2021-08-06T10:53:52.441Z"
     },

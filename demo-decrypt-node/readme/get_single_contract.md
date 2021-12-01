@@ -55,6 +55,7 @@ Returns found contract
     "_id": "60d0819870a807001c75164d",
     "title": "test contract 1",
     "contractAddress": "contractAddress",
+    "blockchain": "0x61",
     "creationDate": "2021-06-21T12:10:00.623Z"
   }
 }

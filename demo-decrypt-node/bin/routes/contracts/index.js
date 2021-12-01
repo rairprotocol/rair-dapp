@@ -5,18 +5,6 @@ const { JWTVerification, validation } = require('../../middleware');
 module.exports = context => {
   const router = express.Router()
 
-  // Create contract
-  router.post('/', JWTVerification(context), validation('createContract'), async (req, res, next) => {
-    try {
-      const { publicAddress: user } = req.user;
-      const contract = await context.db.Contract.create({ user, ...req.body });
-
-      res.json({ success: true, contract });
-    } catch (e) {
-      next(e);
-    }
-  });
-
   // Get list of contracts for specific user
   router.get('/', JWTVerification(context), async (req, res, next) => {
     try {
@@ -73,7 +61,7 @@ module.exports = context => {
             from: 'Offer',
             let: {
               offerPoolL: '$offerPool.marketplaceCatalogIndex',
-              contractL: '$contractAddress'
+              contractL: '$_id'
             },
             pipeline: [
               {

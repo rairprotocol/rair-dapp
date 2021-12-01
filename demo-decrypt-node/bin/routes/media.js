@@ -7,7 +7,6 @@ const fs = require('fs');
 const readdirp = require('readdirp');
 const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
-const { ObjectId } = require('mongodb');
 const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
 const log = require('../utils/logger')(module);
 const { execPromise } = require('../utils/helpers');

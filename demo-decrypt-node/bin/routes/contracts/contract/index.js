@@ -6,11 +6,6 @@ module.exports = context => {
   // Get specific contract
   router.get('/', async (req, res, next) => {
     try {
-      // // const { adminNFT: user } = req.user;
-      // const { contractAddress, blockchain } = req;
-      //
-      // const contract = await context.db.Contract.findOne({ contractAddress, blockchain });
-
       res.json({ success: true, contract: req.contract });
     } catch (e) {
       next(e);
