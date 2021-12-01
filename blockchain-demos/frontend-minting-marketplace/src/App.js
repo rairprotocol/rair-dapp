@@ -55,6 +55,7 @@ import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
+import AboutPage from './components/AboutPage/AboutPage';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -199,13 +200,18 @@ function App({ sentryHistory }) {
 		sentryHistory.push(`/`)
 	}
 
-	const btnCheck = () => {
-		if (window.ethereum && window.ethereum.isMetaMask) {
-			setRenderBtnConnect(false);
-		} else {
-			setRenderBtnConnect(true);
-		}
-	};
+	const btnCheck = useCallback(() => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      setRenderBtnConnect(false);
+    } else {
+      setRenderBtnConnect(true);
+    }
+  },[setRenderBtnConnect]);
+
+  const openAboutPage = () => {
+	sentryHistory.push(`/rair-about-page`)
+	window.scrollTo(0, 0);
+  }
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -225,6 +231,10 @@ function App({ sentryHistory }) {
 			}
 		}
 	}, [])
+
+	useEffect(() => {
+		btnCheck()
+	}, [btnCheck])
 
 	// const checkToken = useCallback(() => {
 	// 	btnCheck()
@@ -268,41 +278,41 @@ function App({ sentryHistory }) {
 	// }, [checkToken, token])
 
 	useEffect(() => {
-		if (primaryColor === "charcoal") {
-			(function () {
-				let angle = 0;
-				let p = document.querySelector("p");
-				if (p) {
-					let text = p.textContent.split("");
-					var len = text.length;
-					var phaseJump = 360 / len;
-					var spans;
-					p.innerHTML = text
-						.map(function (char) {
-							return "<span>" + char + "</span>";
-						})
-						.join("");
+    if (primaryColor === "charcoal") {
+      (function () {
+        let angle = 0;
+        let p = document.querySelector("p");
+		console.log(p, 'p find');
+        if (p) {
+          let text = p.textContent.split("");
+          var len = text.length;
+          var phaseJump = 360 / len;
+          var spans;
+          p.innerHTML = text
+            .map(function (char) {
+              return "<span>" + char + "</span>";
+            })
+            .join("");
 
-					spans = p.children;
-				} else console.log("kik");
+          spans = p.children;
+        } else console.log("kik");
 
-				(function wheee() {
-					for (var i = 0; i < len; i++) {
-						spans[i].style.color =
-							"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-					}
-					angle++;
-					requestAnimationFrame(wheee);
-				})();
-			})();
-		}
-	}, [primaryColor]);
+        (function wheee() {
+          for (var i = 0; i < len; i++) {
+            spans[i].style.color =
+              "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+          }
+          angle++;
+          requestAnimationFrame(wheee);
+        })();
+      })();
+    } 
+  } , [primaryColor]);
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
 				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />}
-				{/* {!loginDone && <Redirect to="/all" />} */}
 				<div
 					style={{
 						...backgroundImageEffect,
@@ -367,6 +377,9 @@ function App({ sentryHistory }) {
 						<div className='col-12 mt-3 row'>
 							<Switch>
 								<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
+								<SentryRoute exact path="/rair-about-page">
+									<AboutPage primaryColor={primaryColor} textColor={textColor}/>
+								</SentryRoute>
 								<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
 								{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 								{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
@@ -437,13 +450,11 @@ function App({ sentryHistory }) {
 										</div>
 										<div className='col-12 mt-3 row' >
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-											{/* <AboutPage /> */}
 										</div>
 									</SentryRoute>
 								</Switch>
 							</div>
 						</div>
-						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 					</div>
 					<div className='py-5' />
 					<footer
@@ -456,9 +467,16 @@ function App({ sentryHistory }) {
 							© Rairtech 2021. All rights reserved
 						</div>
 						<ul>
+<<<<<<< HEAD
 							<li>Newsletter</li>
 							<li>Contract</li>
 							<li>Inquiries</li>
+=======
+							<li>newsletter</li>
+							<li>contact</li>
+							<li>inquiries</li>
+							<li onClick={() => openAboutPage()}>about us</li>
+>>>>>>> dev
 						</ul>
 					</footer>
 				</div>

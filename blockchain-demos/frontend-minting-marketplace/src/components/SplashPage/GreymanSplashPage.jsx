@@ -5,22 +5,14 @@ import './SplashPage.css';
 
 /* importing images*/
 import Metamask from './images/metamask_logo.png';
-import Nft_1 from './images/exclusive_1.jpeg';
-import Nft_2 from './images/exclusive_2.jpeg';
-import Nft_3 from './images/exclusive_3.jpeg';
-import Nft_4 from './images/image_3.png';
-import NftImage from './images/circle_nipsey.png';
-import JoinCommunity from './images/join_com.jpeg';
 import GreyMan from './images/greyman.png';
 
 
 /* importing Components*/
-import TokenLeft from './TokenLeft/TokenLeft';
 import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
-import UnlockVideos from './UnlockVideos/UnlockVideos';
 import TeamMeet from './TeamMeet/TeamMeetList';
-import JoinCom from './JoinCom/JoinCom';
 import TokenLeftGreyman from './TokenLeft/TokenLeftGreyman';
+import AuthorBlock from './AuthorBlock/AuthorBlock';
 
 const SplashPage = () => {
     const { primaryColor } = useSelector(store => store.colorStore);
@@ -28,7 +20,7 @@ const SplashPage = () => {
     return (
         <div className="wrapper-splash-page greyman-page">
             <div className="home-splash--page">
-                <div className="information-author greyman-page-author">
+                <AuthorBlock mainClass="greyman-page-author">
                     <div className="block-splash">
                         <div className="text-splash">
                             <div className="title-splash greyman-page">
@@ -40,7 +32,6 @@ const SplashPage = () => {
                                     7,907,414,597
                                     not unique NFTs. All metadata is identical only
                                     the serial number is unique. Claim yours for .1 MATIC
-
                                 </p>
                             </div>
                             <div className="btn-buy-metamask">
@@ -48,7 +39,7 @@ const SplashPage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </AuthorBlock>
                 <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} />
                 <ExclusiveNft
                     Nft_1={GreyMan}
