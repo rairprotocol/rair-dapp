@@ -11,6 +11,7 @@ const { JWTVerification, validation, isOwner, formDataHandler } = require('../mi
 const log = require('../utils/logger')(module);
 const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
+const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
 
 const rareify = async (fsRoot, socketInstance) => {
   // Generate a key
@@ -121,7 +122,6 @@ module.exports = context => {
     // lookup in IPFS at CID for a rair.json manifest
     try {
       const meta = await retrieveMediaInfo(mediaId);
-      await context.store.addMedia(mediaId, { key, ...meta });
       await context.db.File.create({ _id: mediaId, key, ...meta });
       await addPin(mediaId, _.get(meta, 'title', 'New_pinned_file'));
       res.sendStatus(200);
@@ -152,7 +152,6 @@ module.exports = context => {
     try {
       const mediaId = req.params.mediaId;
 
-      await context.store.removeMedia(mediaId);
       await context.db.File.deleteOne({ _id: mediaId });
 
       log.info(`File with ID: ${ mediaId }, was removed from DB.`);
@@ -229,18 +228,17 @@ module.exports = context => {
 
     try {
       const [contractAddress, tokenId] = author.split(':');
+      /*
       const ownsTheAdminToken = await checkBalanceSingle(publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
 
       if (!ownsTheAdminToken) {
-        if (req.file) await execPromise(`rm -f ${ req.file.path }`);
-
+        //if (req.file) await execPromise(`rm -f ${ req.file.path }`);
         return res.status(403).send({ success: false, message: 'You don\'t hold the current admin token.' });
       }
+      */
     } catch (e) {
-      if (req.file) await execPromise(`rm -f ${ req.file.path }`);
-
+      //if (req.file) await execPromise(`rm -f ${ req.file.path }`);
       log.error(`Could not verify account: ${ e }`);
-
       return next(new Error('Could not verify account.'));
     }
 
@@ -255,25 +253,18 @@ module.exports = context => {
     };
 
     socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
-
     log.info(`Processing: ${ req.file.originalname }`);
 
     if (req.file) {
-      let command = `pwd && mkdir ${ req.file.destination }stream${ req.file.filename }/`;
-      await execPromise(command);
-
       log.info(`${ req.file.originalname } generating thumbnails`);
-
-      command = `ffmpeg -ss 3 -i ${ req.file.path } -vf "select=gt(scene,0.5)" -vf "scale=144:-1" -vsync vfr -frames:v 1 ${ req.file.destination }Thumbnails/${ req.file.filename }.png && ffmpeg -i ${ req.file.path } -vf  "scale=144:-1" -ss 00:10 -t 00:03 ${ req.file.destination }Thumbnails/${ req.file.filename }.gif`;
-      await execPromise(command);
-
+      
       res.json({ success: true, result: req.file.filename });
 
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } generating thumbnails`,
-        last: false,
-        done: 10
-      });
+      // Adds 'duration' to the req.file object
+      await getMediaData(req.file);
+      // Adds 'thumbnailName' to the req.file object
+      // Generates a static webp thumbnail and an animated gif thumbnail
+      await generateThumbnails(req.file, socketInstance);
 
       log.info(`${ req.file.originalname } converting to stream`);
       socketInstance.emit('uploadProgress', {
@@ -282,10 +273,10 @@ module.exports = context => {
         done: 11
       });
 
-      command = `ffmpeg -i ${ req.file.path } -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ${ req.file.destination }stream${ req.file.filename }/stream.m3u8`;
-      await execPromise(command, { maxBuffer: 1024 * 1024 * 20 });
+      // Converts the file with FFMPEG
+      await convertToHLS(req.file, socketInstance);
 
-      const exportedKey = await rareify(`${ req.file.destination }stream${ req.file.filename }`, socketInstance);
+      const exportedKey = await encryptFolderContents(req.file, ['ts']);
 
       log.info('ffmpeg DONE: converted to stream.');
 
@@ -300,13 +291,8 @@ module.exports = context => {
         rairJson.description = description;
       }
 
-      fs.writeFileSync(`${ req.file.destination }stream${ req.file.filename }/rair.json`, JSON.stringify(rairJson, null, 4));
+      fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
 
-      command = `rm -f ${ req.file.path }`;
-      await execPromise(command);
-
-      log.info(`${ req.file.originalname } raw deleted`);
-      socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } raw deleted`, last: false });
 
       log.info(`${ req.file.originalname } uploading to ipfsService`);
       socketInstance.emit('uploadProgress', {
@@ -314,18 +300,11 @@ module.exports = context => {
         last: false
       });
 
-      command = `rm ${ req.file.destination }stream${ req.file.filename }/.key`;
-      await execPromise(command);
+      const ipfsCid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
 
-      log.info(`${ req.file.destination }stream${ req.file.filename }/.key file was removed.`);
-
-      const ipfsCid = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`, socketInstance);
-
-      command = `rm -r ${ req.file.destination }stream${ req.file.filename }`;
-      await execPromise(command);
-
-      log.info(`Temporary folder ${ req.file.destination }stream${ req.file.filename } with stream chunks was removed.`);
-
+      fs.rm(req.file.destination, {recursive: true}, console.log);
+      log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
+      
       const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
       const gateway = {
         ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
@@ -337,7 +316,7 @@ module.exports = context => {
         author,
         encryptionType: 'aes-128-cbc',
         title,
-        thumbnail: req.file.filename,
+        thumbnail: `${defaultGateway}/${req.file.thumbnailName}`,
         currentOwner: author,
         contract,
         product,
@@ -355,12 +334,6 @@ module.exports = context => {
       socketInstance.emit('uploadProgress', {
         message: `${ req.file.originalname } storing to db.`,
         last: false
-      });
-
-      await context.store.addMedia(ipfsCid, {
-        key: exportedKey,
-        uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
-        ...meta,
       });
 
       await context.db.File.create({
@@ -382,6 +355,7 @@ module.exports = context => {
       });
 
       await addPin(ipfsCid, title, socketInstance);
+      console.log('Done!', req.file, exportedKey);
     }
   });
 

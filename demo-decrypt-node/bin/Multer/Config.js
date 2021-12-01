@@ -6,9 +6,10 @@ const log = require('../utils/logger')(module);
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let uploadPath = '';
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
 
     if (file.fieldname === 'video') {
-      uploadPath = path.join(__dirname, '../Videos/');
+      uploadPath = path.join(__dirname, '../Videos/', uniqueSuffix);
     }
 
     if (file.fieldname === 'csv') {
@@ -24,12 +25,19 @@ const storage = multer.diskStorage({
       })
     }
 
-      cb(null, uploadPath);
+    file.destinationFolder = uniqueSuffix;
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const extension = file.mimetype.slice(file.mimetype.indexOf('/') + 1);
-    cb(null, `${ uniqueSuffix }`);
+    const [type, extension] = file.mimetype.split('/');
+    console.log(file, type, extension);
+    if (extension === 'csv') {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, `${ uniqueSuffix }`);
+    } else if (type === 'video') {
+      console.log('Video upload');
+      cb(null, `rawfile.${extension}`);
+    }
   }
 });
 
