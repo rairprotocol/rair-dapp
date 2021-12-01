@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import './SplashPage.css';
@@ -14,7 +14,7 @@ import NftImage from './images/circle_nipsey.png';
 import UnlockableVideo from './images/unlockbleVideo.png';
 import JoinCommunity from './images/join_com.jpeg';
 
-
+import Swal from 'sweetalert2';
 /* importing Components*/
 import TokenLeft from './TokenLeft/TokenLeft';
 import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
@@ -22,7 +22,41 @@ import UnlockVideos from './UnlockVideos/UnlockVideos';
 import TeamMeet from './TeamMeet/TeamMeetList';
 import JoinCom from './JoinCom/JoinCom';
 
+
+
+import Modal from 'react-modal';
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+};
+
+
+Modal.setAppElement('#root');
+
 const SplashPage = () => {
+    let subtitle;
+    const [modalIsOpen, setIsOpen] = useState(false);
+
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        subtitle.style.color = '#f00';
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
     const { primaryColor } = useSelector(store => store.colorStore);
 
     return (
@@ -43,7 +77,19 @@ const SplashPage = () => {
                                 </p>
                             </div>
                             <div className="btn-buy-metamask">
-                                <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Preorder with ETH</button>
+                                <button onClick={openModal}><img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Preorder with ETH</button>
+                                <Modal
+                                    isOpen={modalIsOpen}
+                                    onAfterOpen={afterOpenModal}
+                                    onRequestClose={closeModal}
+                                    style={customStyles}
+                                    contentLabel="Example Modal"
+                                >
+                                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Terms of Service</h2>
+                                    <button onClick={closeModal}>close</button>
+                                    <div>I am a modal</div>
+                                   
+                                </Modal>
                             </div>
                             <div className="logo-author">
                                 {/* <img src={logoDigital} alt="southwest digital" /> */}
