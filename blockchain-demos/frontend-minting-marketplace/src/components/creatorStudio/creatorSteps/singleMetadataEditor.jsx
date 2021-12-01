@@ -3,7 +3,11 @@ import InputField from '../../common/InputField.jsx';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
 import PropertyRow from './propertyRow.jsx';
 import { useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, NavLink } from 'react-router-dom';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
+import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
+import {web3Switch} from '../../../utils/switchBlockchain.js';
+import chainData from '../../../utils/blockchainData.js'
 
 const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const stepNumber = 4;
@@ -14,10 +18,12 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const [nftDescription, setNFTDescription] = useState('');
 	const [forceRerender, setForceRerender] = useState(false);
 	const [propertiesArray, setPropertiesArray] = useState([]);
+	const [onMyChain, setOnMyChain] = useState();
 
 	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
+	const history = useHistory();
 
 	const addRow = () => {
 		let aux = [...propertiesArray];
@@ -35,11 +41,34 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	};
 
 	useEffect(() => {
-		//setStepNumber(stepNumber);
+		setStepNumber(stepNumber);
 	}, [setStepNumber])
 
-	return <div className='row px-0 mx-o'>
-		<div className='col-6 text-start'>
+	const switchBlockchain = async (chainId) => {
+		web3Switch(chainId)
+	}
+
+	useEffect(() => {
+		setOnMyChain(
+			window.ethereum ?
+				chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
+				:
+				chainData[contractData?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId
+			)
+	}, [contractData, programmaticProvider, currentChain])
+
+	return <div className='row px-0 mx-0'>
+		<div className='col-6 text-end ps-5'>
+			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${address}/collection/${collectionIndex}/metadata/batch`}  className={`btn btn-${primaryColor} rounded-rair col-8`}>
+				Batch
+			</NavLink>
+		</div>
+		<div className='col-6 text-start mb-3 pe-5'>
+			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${address}/collection/${collectionIndex}/metadata/single`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
+				Single
+			</NavLink>
+		</div>
+		<div className='col-6 text-start px-5'>
 			NFT #
 			<br />
 			<div className='border-stimorol rounded-rair mb-3'>
@@ -88,11 +117,11 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 			</div>
 			<br />
 			Properties
-			<div className='col-12' style={{position: 'relative', overflowY: 'scroll', maxHeight: '30vh'}}>
+			<div className='col-12 py-5' style={{position: 'relative', overflowY: 'scroll', maxHeight: '30vh'}}>
 				<button onClick={addRow} className='rounded-rair btn btn-stimorol' style={{position: 'absolute', top: 0, right: 0}}>
 					<i className='fas fa-plus' />
 				</button>
-				<table className='w-100 mt-3'>
+				{propertiesArray && propertiesArray.length > 0 && <table className='w-100'>
 					<thead>
 						<tr>
 							<th>
@@ -116,19 +145,21 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 							/>
 						})}
 					</tbody>
-					<tfoot>
-					</tfoot>
-				</table>
+					<tfoot />
+				</table>}
 			</div>
 		</div>
-		<div className='col-6'>
-			<div style={{minHeight: '70vh', maxHeight: '100vh'}} className='w-100 border-stimorol rounded-rair'>
-				<img
-					className='w-100 rounded-rair'
-					src={nftImage} />
+		<div className='col-6 px-5'>
+			<div style={{minHeight: '70vh', maxHeight: '100vh'}} className='w-100 border-stimorol py-auto rounded-rair'>
+				<div className={`w-100 h-100 bg-${primaryColor} rounded-rair`}>
+					<img
+						className='w-100 rounded-rair my-auto'
+						style={{verticalAlign: 'middle'}}
+						src={nftImage} />
+				</div>
 			</div>
 		</div>
-		<div className='my-5 col-12'>
+		<div className='my-5 col-12 px-5'>
 			<div className='w-100 rounded-rair border-stimorol'>
 				<div className={`w-100 rounded-rair bg-${primaryColor} p-4`}>
 					{JSON.stringify({
@@ -140,7 +171,33 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 				</div>
 			</div>
 		</div>
+		{chainData && <FixedBottomNavigation
+			backwardFunction={() => {
+				history.goBack()
+			}}
+			forwardFunctions={[{
+				action: !onMyChain ?
+				() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
+				:
+				console.log,
+				label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : 'Freeze to IPFS',
+				disabled: true
+			},
+			{
+				action: console.log,
+				label: 'Update Metadata',
+				disabled: true
+			}]}
+		/>}
 	</div>
 }
 
-export default SingleMetadataEditor;
+const ContextWrapper = (props) => {
+	return <WorkflowContext.Consumer> 
+		{(value) => {
+			return <SingleMetadataEditor {...value} />
+		}}
+	</WorkflowContext.Consumer>
+}
+
+export default ContextWrapper;
