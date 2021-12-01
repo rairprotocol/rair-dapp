@@ -7,10 +7,10 @@ pipeline {
     DOCKERHUB_CREDENTIALS = credentials('rairtech-dockerhub')
     VERSION = "${env.BUILD_ID}"
     BRANCH = "${env.BRANCH_NAME}"
-    PROJECT_ID = 'rair-314019'
-    CLUSTER = 'staging-1'
-    LOCATION = 'us-central1-c'
-    CREDENTIALS_ID = 'rair-314019'
+    PROJECT_ID = 'rair-market'
+    CLUSTER = 'dev'
+    LOCATION = 'us-east1-b'
+    CREDENTIALS_ID = 'rair-market'
   }
   stages {
     //stage('Build RAIR frontend') {
