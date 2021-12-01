@@ -88,7 +88,7 @@ pipeline {
     stage('Deploy to k8s'){
       when { branch 'dev' }
       steps {
-        sh("sed -i.bak 's#dev_latest#${BRANCH}_0.${VERSION}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/dev-manifest/*.yaml")
+        sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/dev-manifest/*.yaml")
         step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.PROJECT_ID, clusterName: env.CLUSTER, zone: env.LOCATION, manifestPattern: 'kubernetes-manifests/manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
     }
   }
