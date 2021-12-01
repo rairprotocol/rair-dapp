@@ -338,6 +338,59 @@
     justify-content: center;
 }
 
+.left-tokens-content .mailchimp {
+    display: flex;
+}
+
+.left-tokens-content .mailchimp .email-box {
+    margin-right: 19px;
+}
+
+.left-tokens-content .mailchimp .email-box input{
+    width: 435px;
+    height: 64px;
+    background: #fff;
+    border: 1px solid #211B32;
+    border-radius: 16px;
+    padding-left: 35px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+
+    color: #000;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.left-tokens-content .mailchimp .email-box input:focus {
+    border: 1px solid #9867D9;
+}
+
+.left-tokens-content .mailchimp .signup_scroll {
+    display: flex;
+}
+
+.left-tokens-content .mailchimp .email-box input::placeholder {
+    color: #9013FE;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.left-tokens-content .mailchimp .btn-subscribe input{
+    height: 64px;
+    padding: 0 16px;
+    background: linear-gradient(320.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    border-radius: 16px;
+    border: none;
+    color: #fff;
+    text-transform: uppercase;
+
+    font-size: 20px;
+}
+
+
 /* Special Offer Block */
 
 .special-offer {
