@@ -44,7 +44,6 @@ import SplashPage from './components/SplashPage';
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 import AboutPage from './components/AboutPage/AboutPage';
 
-
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -212,7 +211,7 @@ function App({ sentryHistory }) {
 		if (process.env.NODE_ENV === 'development') {
 			window.gotoRouteBackdoor = sentryHistory.push
 		}
-	}, [])
+	}, [sentryHistory.push])
 
 	useEffect(() => {
 		btnCheck()
@@ -265,7 +264,6 @@ function App({ sentryHistory }) {
       (function () {
         let angle = 0;
         let p = document.querySelector("p");
-		console.log(p, 'p find');
         if (p) {
           let text = p.textContent.split("");
           var len = text.length;
@@ -280,14 +278,24 @@ function App({ sentryHistory }) {
           spans = p.children;
         } else console.log("kik");
 
-        (function wheee() {
-          for (var i = 0; i < len; i++) {
-            spans[i].style.color =
-              "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-          }
-          angle++;
-          requestAnimationFrame(wheee);
-        })();
+        // function wheee() {
+        //   for (var i = 0; i < len; i++) {
+        //     spans[i].style.color =
+        //       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+        //   }
+        //   angle+=5;
+        // //   requestAnimationFrame(wheee);
+        // };
+		// setInterval(wheee, 100);
+
+		(function wheee() {
+			for (var i = 0; i < len; i++) {
+			  spans[i].style.color =
+				"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+			}
+			angle++;
+			requestAnimationFrame(wheee);
+		  })();
       })();
     } 
   } , [primaryColor]);
