@@ -11,7 +11,7 @@ module.exports = (context) => {
     try {
       const { network, name } = task.attrs.data;
       const contractsForSave = [];
-      let block_number = null;
+      let block_number = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
       const version = await context.db.Versioning.findOne({ name: 'sync contracts', network });
@@ -53,7 +53,7 @@ module.exports = (context) => {
           blockchain: networkData.network
         });
 
-        block_number = Number(contract.block_number);
+        block_number.push(Number(contract.block_number));
 
         // Listen to this contract's events
         await Moralis.Cloud.run(networkData.watchFunction, {
@@ -72,7 +72,7 @@ module.exports = (context) => {
         await context.db.Versioning.updateOne({
           name: 'sync contracts',
           network
-        }, { number: block_number }, { upsert: true });
+        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
       }
 
       return done();

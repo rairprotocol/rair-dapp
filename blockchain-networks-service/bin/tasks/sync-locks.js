@@ -12,8 +12,8 @@ module.exports = (context) => {
       const { network, name } = task.attrs.data;
       const locksForSave = [];
       const locksForUpdate = [];
-      let block_number_locked = null;
-      let block_number_unlocked = null;
+      let block_number_locked = [];
+      let block_number_unlocked = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const locked = getABIData(erc721Abi, 'event', 'RangeLocked');
@@ -62,7 +62,7 @@ module.exports = (context) => {
               } = lock.data;
 
               locksForSave.push({
-                lockIndex: lockIndex ? lockIndex : lock.block_number, // using block_number as lockIndex for test networks
+                lockIndex: lockIndex ? lockIndex : lock.block_number, //FIXME: using block_number as lockIndex for test networks, since old version of factory don't have the lockIndex
                 contract: _id,
                 product: productIndex,
                 range: [startingToken, endingToken],
@@ -70,7 +70,7 @@ module.exports = (context) => {
                 isLocked: true
               });
 
-            block_number_locked = Number(lock.block_number);
+            block_number_locked.push(Number(lock.block_number));
             });
         }
 
@@ -80,7 +80,7 @@ module.exports = (context) => {
 
               locksForUpdate.push({
                 updateOne: {
-                  filter: { contract: _id, lockIndex: lockIndex || lock.block_number }, // using block_number as lockIndex for test networks
+                  filter: { contract: _id, lockIndex: lockIndex || lock.block_number }, //FIXME: using block_number as lockIndex for test networks, since old version of factory don't have the lockIndex
                   update: {
                     product: productID,
                     range: [startingToken, endingToken],
@@ -92,7 +92,7 @@ module.exports = (context) => {
                 }
               });
 
-            block_number_unlocked = Number(lock.block_number);
+            block_number_unlocked.push(Number(lock.block_number));
             });
         }
       }));
@@ -115,14 +115,14 @@ module.exports = (context) => {
         await context.db.Versioning.updateOne({
           name: 'sync locks locked',
           network
-        }, { number: block_number_locked }, { upsert: true });
+        }, { number: _.chain(block_number_locked).sortBy().last().value() }, { upsert: true });
       }
 
       if (!_.isEmpty(block_number_unlocked)) {
         await context.db.Versioning.updateOne({
           name: 'sync locks unlocked',
           network
-        }, { number: block_number_unlocked }, { upsert: true });
+        }, { number: _.chain(block_number_unlocked).sortBy().last().value() }, { upsert: true });
       }
 
       return done();

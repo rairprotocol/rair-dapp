@@ -11,7 +11,7 @@ module.exports = (context) => {
     try {
       const { network, name } = task.attrs.data;
       const offerPoolsForSave = [];
-      let block_number = null;
+      let block_number = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AddedOffer');
@@ -39,7 +39,7 @@ module.exports = (context) => {
         } = offerPool.data;
         const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1 });
 
-        block_number.push(Number(offerPool.block_number));
+        if (!contract) return;
 
         offerPoolsForSave.push({
           marketplaceCatalogIndex: catalogIndex,
@@ -49,7 +49,7 @@ module.exports = (context) => {
           minterAddress: networkData.minterAddress,
         });
 
-        block_number = Number(offerPool.block_number);
+        block_number.push(Number(offerPool.block_number));
       }));
 
       if (!_.isEmpty(offerPoolsForSave)) {
@@ -62,7 +62,7 @@ module.exports = (context) => {
         await context.db.Versioning.updateOne({
           name: 'sync offerPools',
           network
-        }, { number: block_number }, { upsert: true });
+        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
       }
 
       return done();
