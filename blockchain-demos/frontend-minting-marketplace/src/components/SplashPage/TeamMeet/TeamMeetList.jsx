@@ -1,8 +1,9 @@
 import React from 'react';
 import Teammate_1 from './../images/mrlee.jpeg';
-import Teammate_2 from './../images/blacc-sam.png';
+import Teammate_2 from './../images/foundation.png';
 import Teammate_3 from './../images/south-dig.png';
 import Teammate_4 from './../images/rair-block.png';
+import Estate_Teammate from './../images/estate_team.png';
 import Teammate from './Teammate';
 import GreymanAuthor from './../images/greymanAuthor.png';
 
@@ -21,24 +22,42 @@ const teamArray = [
         ]
     },
     {
-        nameTeammate: "Samiel Asghedom “Blacc Sam”",
-        imageUrl: Teammate_2,
+        nameTeammate: "Asghedom Estate",
+        imageUrl: Estate_Teammate,
         aboutTeammate: [
             `Samiel Asghedom otherwise known as Blacc Sam is a Los Angeles native,
-        Eritrean man who serves the community and approaches life like a business
-        tycoon. Sam’s ability to hustle serves as an inspiration to his peers
-        and those that are aware of his story. He represents young black men
-        who are able to transcend from their starting point all while managing
-        to stay local and positively impact the community. It is easy to see
-        how Samiel operates as a man when you look at who his younger brother
-        is, Nipsey Hussle. Hussle said that Blacc Sam is one of the most influential
-        hustlers that he ever experienced in life. It’s easy to conclude that
-        those are powerful words when taking into consideration the way Nipsey
-        Hussle approached life and how he applied himself in every aspect.`
+            Eritrean man who serves the community and approaches life like a business
+            tycoon. Sam’s ability to hustle serves as an inspiration to his peers
+            and those that are aware of his story. He represents young black men 
+            who are able to transcend from their starting point all while managing 
+            to stay local and positively impact the community. It is easy to see
+            how Samiel operates as a man when you look at who his younger brother 
+            is, Nipsey Hussle. Hussle said that Blacc Sam is one of the most influential
+            hustlers that he ever experienced in life. It’s easy to conclude that 
+            those are powerful words when taking into consideration the way Nipsey 
+            Hussle approached life and how he applied himself in every aspect.`
         ]
     },
     {
-        nameTeammate: "JP",
+        nameTeammate: "Neighborhood Nip Foundation",
+        imageUrl: Teammate_2,
+        aboutTeammate: [
+            `The Neighborhood Nip Foundation, an initiative that seeks to provide
+            opportunities for young creatives in music. The late rapper, who died 
+            in March 2019 after being shot and killed outside of his Marathon Clothing
+            store in Los Angeles, was known for his philanthropic efforts towards
+            his community and neighbourhood. The new foundation will “be aligned
+            with everything Nip believed in and what helped him”, Sam Asghedom,
+            Hussle’s brother, told the Los Angeles Times. The foundation is mainly 
+            inspired by Hussle’s own time at LA’s Watts Towers, which provided a
+            free music programme to the rapper during his youth. “We used to talk
+            a lot about [what the Watts Towers programme] meant to him,” Asghedom
+            said.“A push, a little help can go a long way, and that’s what this
+            foundation will 100 per cent be about.”`
+        ]
+    },
+    {
+        nameTeammate: "Southwest Digital",
         imageUrl: Teammate_3,
         aboutTeammate: [
             `For content owners, record labels, and distributors,

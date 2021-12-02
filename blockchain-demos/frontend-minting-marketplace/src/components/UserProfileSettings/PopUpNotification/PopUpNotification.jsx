@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Popup } from 'reactjs-popup';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import NotificationPage from '../NotificationPage/NotificationPage';
 import NftImg from './images/image.png';
+
+const MySwal = withReactContent(Swal);
 
 
 const PopUpNotification = ({ primaryColor, isNotification }) => {
     const [openModal, setOpenModal] = useState(false);
     const { headerLogo } = useSelector(store => store.colorStore);
 
-
     return (
         <Popup
             trigger={open => {
                 setOpenModal(false);
-                return <button style={{
-                    color: primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)",
-                    marginRight: "15px",
-                    border: `solid 1px ${primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)"}`,
-                    backgroundColor: primaryColor === "charcoal" ? "#222021" : "#D3D2D3",
-                    borderRadius: '12px',
-                    position: "relative",
-                    width: 32,
-                    height: 32,
-                    fontSize: 18
+                return <button className="btn-notification" style={{
+                    // color: primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)",
+                    backgroundColor: primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
                 }}>
                     {isNotification && <div className="ellipse" />}
                     <i className="far fa-bell"></i>
@@ -31,7 +28,29 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
             position="bottom center"
             closeOnDocumentClick
         >
-            { openModal && <div className="pop-up-notification">
+            {openModal && <div
+                className="pop-up-notification"
+                style={{
+                    backgroundColor: `${primaryColor === "rhyno" ? "#acacac" : "#383637"}`
+                }}
+                onClick={() => {
+                    setOpenModal(false);
+                    MySwal.fire({
+                        html: <NotificationPage NftImg={NftImg} primaryColor={primaryColor} headerLogo={headerLogo} />,
+                        width: '90vw',
+                        customClass: {
+                            popup: `bg-${primaryColor}`
+                        },
+                        onBeforeOpen: () => {
+                            Swal.showLoading()
+                        },
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        // cancelButtonText:
+                        //     '<i class="fa fa-thumbs-down"></i>',
+                        // cancelButtonAriaLabel: 'Thumbs down'
+                    })
+                }}>
                 <div className="notification-from-rair">
                     <div className="box-notification">
                         <div className="dot-notification" />
@@ -46,7 +65,11 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
                                 New announcements coming next Friday
                             </div>
                         </div>
-                        <div className="time-notification">
+                        <div
+                            className="time-notification"
+                            style={{
+                                color: `${primaryColor === "rhyno" && "#000"}`
+                            }}>
                             3 hours ago
                         </div>
                     </div>
@@ -65,7 +88,12 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
                                 Your nft “<span>Pegayo</span>” has been listed
                             </div>
                         </div>
-                        <div className="time-notification">
+                        <div
+                            className="time-notification"
+                            style={{
+                                color: `${primaryColor === "rhyno" && "#000"}`
+                            }}
+                        >
                             5 hours ago
                         </div>
                     </div>
