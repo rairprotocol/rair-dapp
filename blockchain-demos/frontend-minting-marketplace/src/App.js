@@ -61,7 +61,7 @@ const ErrorFallback = () => {
 function App({ sentryHistory }) {
 
 	const [/*userData*/, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(false);
+	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	// const [errorAuth, /*setErrorAuth*/] = useState('');
@@ -293,7 +293,7 @@ function App({ sentryHistory }) {
           requestAnimationFrame(wheee);
         })();
       })();
-    } 
+    }
   } , [primaryColor]);
 
 	return (
