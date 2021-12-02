@@ -467,16 +467,10 @@ function App({ sentryHistory }) {
 							© Rairtech 2021. All rights reserved
 						</div>
 						<ul>
-<<<<<<< HEAD
 							<li>Newsletter</li>
 							<li>Contract</li>
 							<li>Inquiries</li>
-=======
-							<li>newsletter</li>
-							<li>contact</li>
-							<li>inquiries</li>
-							<li onClick={() => openAboutPage()}>about us</li>
->>>>>>> dev
+							<li onClick={() => openAboutPage()}>About Us</li>
 						</ul>
 					</footer>
 				</div>
