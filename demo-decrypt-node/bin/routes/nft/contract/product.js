@@ -230,5 +230,18 @@ module.exports = context => {
     }
   });
 
+  // get locks for specific product
+  router.get('/locks', async (req, res, next) => {
+    try {
+      const { contract, product } = req;
+
+      const locks = await context.db.LockedTokens.find({ contract, product });
+
+      res.json({ success: true, locks });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   return router;
 };

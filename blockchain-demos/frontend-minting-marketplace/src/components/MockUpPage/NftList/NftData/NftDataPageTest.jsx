@@ -358,6 +358,7 @@ const NftDataPageTest = ({
                     }`,
                   display: "flex",
                   alignItems: "center",
+                  justifyContent: 'center',
                 }}
               >
                 <img
