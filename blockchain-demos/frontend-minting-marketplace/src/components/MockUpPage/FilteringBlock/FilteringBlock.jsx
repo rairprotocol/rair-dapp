@@ -59,13 +59,19 @@ const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilt
             {!isFilterShow ? <div ref={filterRef} className='emptyFilter'> </div> : <div ref={filterRef} className="select-filters-wrapper">
                 <div
                     style={{
-                        backgroundColor: `var(--${primaryColor})`,
-                        color: `var(--${textColor})`
+                        backgroundColor: `${filterPopUp ? "#E882D5" : `var(--${primaryColor})`}`,
+                        color: `${filterPopUp ? "#fff" : `var(--${textColor})`}`,
+                        border: `${filterPopUp ? "1px solid #E882D5" : ""}`
                     }}
                     className="select-filters"
                     onClick={onChangeFilterPopUp}
                 >
-                    <div className="select-filters-title"><i className="fas fa-sliders-h"></i>Filters</div>
+                    <div className="select-filters-title"><i
+                        style={{
+                            color: `${filterPopUp ? "#fff" : "#E882D5"}`
+                        }}
+                        className="fas fa-sliders-h"
+                    ></i>Filters</div>
                 </div>
 
                 {
@@ -84,7 +90,8 @@ const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilt
                     onClick={onChangeSortPopUp}
                     style={{
                         backgroundColor: `var(--${primaryColor})`,
-                        color: `var(--${textColor})`
+                        color: `var(--${textColor})`,
+                        border: `${sortPopUp ? "1px solid #E882D5" : ""}`
                     }}
                     className="select-sort"
                 >

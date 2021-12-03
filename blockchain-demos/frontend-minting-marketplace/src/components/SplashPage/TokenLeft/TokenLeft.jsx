@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 const TokenLeft = ({ primaryColor }) => {
     const [percentTokens, setPersentTokens] = useState(0);
 
-    const leftTokensNumber = 990;
+    const leftTokensNumber = 1000;
     const wholeTokens = 1000;
 
     useEffect(() => {
@@ -99,9 +99,31 @@ const TokenLeft = ({ primaryColor }) => {
                         streaming NFT.
                     </p>
                 </div>
-                <div className="btn-buy-metamask">
-                    <button>Stay Connected</button>
+                <div className="mailchimp">
+                    <form action="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&amp;id=1f95f6ad8c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
+                        <div className="signup_scroll">
+                            <div className="email-box">
+                                <input type="email" name="EMAIL" className="email" id="mce-EMAIL" placeholder="Join our email list for updates & drops" required />
+                            </div>
+                            <div style={{
+                                position: "absolute", left: "-5000px"
+                            }} aria-hidden="true">
+                                <input type="text" name="b_4740c76c171ce33ffa0edd3e6_1f95f6ad8c" tabIndex="-1" />
+                            </div>
+                            <div className="btn-subscribe">
+                                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="button" />
+                            </div>
+                        </div>
+                    </form>
                 </div>
+                {/* <div className="mailchimp">
+                    <div className="email-box">
+                        <input type="text" placeholder="Join our email list for updates & drops" />
+                    </div>
+                    <div className="btn-subscribe">
+                        <button>SUBCRIBE</button>
+                    </div>
+                </div> */}
             </div>
         </div>
     )
