@@ -13,78 +13,6 @@ const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
 
-const rareify = async (fsRoot, socketInstance) => {
-  // Generate a key
-  const key = crypto.generateKeySync('aes', { length: 128 });
-
-  fs.writeFileSync(fsRoot + '/.key', key.export());
-
-  const promiseList = [];
-
-  log.info(`Rareifying: ${ fsRoot }`);
-
-  // Encrypting .ts files
-  for await (const entry of readdirp(fsRoot)) {
-    const { fullPath, basename } = entry;
-    if (path.extname(basename) === '.ts') {
-      const promise = new Promise((resolve, reject) => {
-        const encryptedPath = fullPath + '.encrypted';
-
-        try {
-          const iv = intToByteArray(parseInt(basename.match(/([0-9]+).ts/)[1]));
-          const encrypt = crypto.createCipheriv('aes-128-cbc', key, iv);
-          const source = fs.createReadStream(fullPath);
-          const dest = fs.createWriteStream(encryptedPath);
-          source.pipe(encrypt).pipe(dest).on('finish', () => {
-            // overwrite the unencrypted file so we don't have to modify the manifests
-            fs.renameSync(encryptedPath, fullPath);
-            resolve(true);
-            log.info(`finished encrypting: ${ entry.path }`);
-
-            socketInstance.emit('uploadProgress', {
-              message: `finished encrypting ${ entry.path }`,
-              last: false,
-              part: true
-            });
-
-          });
-        } catch (e) {
-          log.error('Could not encrypt', fullPath, e);
-          reject(e);
-        }
-      });
-      promiseList.push(promise);
-    }
-  }
-  log.info(`Done scheduling encryptions, ${ promiseList.length } promises for ${ readdirp(fsRoot).length } files`);
-
-  socketInstance.emit('uploadProgress', {
-    message: `Done scheduling encryptions, ${ promiseList.length } promises for ${ readdirp(fsRoot).length } files`,
-    last: false,
-    done: 15,
-    parts: promiseList.length
-  });
-
-  return await Promise.all(promiseList)
-    .then(_ => {
-      log.info('RAIR-ification successful! The root directory is ready to be uploaded to IPFS.');
-      return key.export();
-    });
-};
-
-/**
- * intToByteArray Convert an integer to a 16 byte Uint8Array (little endian)
- */
-function intToByteArray(num) {
-  var byteArray = new Uint8Array(16);
-  for (var index = 0; index < byteArray.length; index++) {
-    var byte = num & 0xff;
-    byteArray[index] = byte;
-    num = (num - byte) / 256;
-  }
-  return byteArray;
-}
-
 module.exports = context => {
   const router = express.Router();
 
@@ -217,8 +145,12 @@ module.exports = context => {
   });
 
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
+    console.log(req.file);
+    // Get video information from the request's body
     const { title, description, contract, product, offer } = req.body;
+    // Get the user information
     const { adminNFT: author, publicAddress } = req.user;
+    // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
     const reg = new RegExp(/^0x\w{40}:\w+$/);
 
@@ -227,6 +159,7 @@ module.exports = context => {
     }
 
     try {
+      // Validate if user owns an Admin NFT
       const [contractAddress, tokenId] = author.split(':');
       /*
       const ownsTheAdminToken = await checkBalanceSingle(publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
@@ -237,7 +170,9 @@ module.exports = context => {
       }
       */
     } catch (e) {
-      //if (req.file) await execPromise(`rm -f ${ req.file.path }`);
+      if (req.file) {
+        fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
+      }
       log.error(`Could not verify account: ${ e }`);
       return next(new Error('Could not verify account.'));
     }
@@ -262,8 +197,10 @@ module.exports = context => {
 
       // Adds 'duration' to the req.file object
       await getMediaData(req.file);
+      
       // Adds 'thumbnailName' to the req.file object
       // Generates a static webp thumbnail and an animated gif thumbnail
+      // ONLY for videos
       await generateThumbnails(req.file, socketInstance);
 
       log.info(`${ req.file.originalname } converting to stream`);
@@ -276,7 +213,7 @@ module.exports = context => {
       // Converts the file with FFMPEG
       await convertToHLS(req.file, socketInstance);
 
-      const exportedKey = await encryptFolderContents(req.file, ['ts']);
+      const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
 
       log.info('ffmpeg DONE: converted to stream.');
 
@@ -305,6 +242,8 @@ module.exports = context => {
       fs.rm(req.file.destination, {recursive: true}, console.log);
       log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
       
+      console.log(req.file);
+      return;
       const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
       const gateway = {
         ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,

@@ -30,12 +30,12 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const [type, extension] = file.mimetype.split('/');
-    console.log(file, type, extension);
     if (extension === 'csv') {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       cb(null, `${ uniqueSuffix }`);
-    } else if (type === 'video') {
-      console.log('Video upload');
+    } else if (['video','audio'].includes(type)) {
+      file.type = type;
+      file.extension = extension;
       cb(null, `rawfile.${extension}`);
     }
   }
