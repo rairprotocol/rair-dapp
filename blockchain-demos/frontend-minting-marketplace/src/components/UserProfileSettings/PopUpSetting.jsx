@@ -6,7 +6,7 @@ import { Popup } from 'reactjs-popup';
 // React Redux types
 import * as authTypes from './../../ducks/auth/types';
 
-const PopUpSettings = ({ currentUserAddress, adminAccess, setLoginDone, primaryColor }) => {
+const PopUpSettings = ({ currentUserAddress, /*adminAccess,*/ setLoginDone, primaryColor }) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [next, setNext] = useState(false);
