@@ -230,7 +230,6 @@ module.exports = context => {
 
       fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
 
-
       log.info(`${ req.file.originalname } uploading to ipfsService`);
       socketInstance.emit('uploadProgress', {
         message: `${ req.file.originalname } uploading to ipfsService`,
@@ -242,8 +241,6 @@ module.exports = context => {
       fs.rm(req.file.destination, {recursive: true}, console.log);
       log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
       
-      console.log(req.file);
-      return;
       const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
       const gateway = {
         ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
@@ -255,11 +252,14 @@ module.exports = context => {
         author,
         encryptionType: 'aes-128-cbc',
         title,
-        thumbnail: `${defaultGateway}/${req.file.thumbnailName}`,
-        currentOwner: author,
         contract,
         product,
-        offer
+        offer,
+        staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
+        animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
+        type: req.file.type,
+        extension: req.file.extension,
+        duration: req.file.duration
       };
 
       if (description) {
@@ -294,7 +294,6 @@ module.exports = context => {
       });
 
       await addPin(ipfsCid, title, socketInstance);
-      console.log('Done!', req.file, exportedKey);
     }
   });
 

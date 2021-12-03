@@ -93,7 +93,7 @@ const convertToHLS = async (mediaData, socketInstance) => {
 			const resolutionConfigs = standardResolutions.map(({height, videoBitrate, maximumBitrate, bufferSize, audioBitrate}) => {
 				return [
 					...(mediaData.type === 'video' ? ['-vf', `scale=-2:${height}`] : []),
-					'-hls_time', mediaData.type === 'audio' ? '7' : '4',
+					'-hls_time', mediaData.type === 'audio' ? '15' : '4',
 					...genericConversionParams,
 					'-b:v', `${videoBitrate}k`,
 					'-maxrate', `${maximumBitrate}k`,
