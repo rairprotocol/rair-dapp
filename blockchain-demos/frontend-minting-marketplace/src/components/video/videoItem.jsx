@@ -9,18 +9,18 @@ const VideoItem = ({mediaList, item}) => {
 		style={{height: '291px', width:'291px', border: 'none', backgroundColor: 'transparent'}} onClick={e => {
 			history.push(`/watch/${mediaList[item]._id}/${mediaList[item].mainManifest}`);
 		}}
-		onMouseEnter={e => setHovering(true)}
+		onMouseEnter={e => setHovering(mediaList[item].animatedThumbnail !== '')}
 		onMouseLeave={e => setHovering(false)}
 	>
 		<div className='col-12 rounded' style={{top: 0, position: 'relative', height: '96%'}}>
 			<img
 				alt='thumbnail'
-				src={`/thumbnails/${mediaList[item].thumbnail}.png`}
+				src={`${mediaList[item].staticThumbnail}`}
 				style={{position: 'absolute', bottom: 0, borderRadius: '16px', objectFit: 'contain', background: 'black'}}
 				className='col-12 h-100 w-100' />
 			<img
 				alt='Animated thumbnail'
-				src={`/thumbnails/${mediaList[item].thumbnail}.gif`}
+				src={`${mediaList[item].animatedThumbnail}`}
 				style={{position: 'absolute', display: hovering ? 'block' : 'none', bottom: 0, borderRadius: '16px', objectFit: 'contain', background: 'black'}}
 				className='col-12  h-100 w-100' />
 		</div>
