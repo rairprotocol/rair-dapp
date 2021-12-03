@@ -9,7 +9,7 @@ const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
 const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
 const log = require('../utils/logger')(module);
-const { execPromise } = require('../utils/helpers');
+//const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
 
@@ -161,14 +161,14 @@ module.exports = context => {
     try {
       // Validate if user owns an Admin NFT
       const [contractAddress, tokenId] = author.split(':');
-      /*
       const ownsTheAdminToken = await checkBalanceSingle(publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
 
       if (!ownsTheAdminToken) {
-        //if (req.file) await execPromise(`rm -f ${ req.file.path }`);
+        if (req.file) {
+          fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
+        }
         return res.status(403).send({ success: false, message: 'You don\'t hold the current admin token.' });
       }
-      */
     } catch (e) {
       if (req.file) {
         fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
