@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import { useParams, useHistory } from 'react-router-dom';
-import {erc721Abi} from '../../../contracts'
+import { erc721Abi } from '../../../contracts'
 import Swal from 'sweetalert2';
 import chainData from '../../../utils/blockchainData.js'
-import {web3Switch} from '../../../utils/switchBlockchain.js';
+import { web3Switch } from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
 
@@ -180,7 +180,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 						<th style={{width: '10vw'}}>
 							Ends
 						</th>
-						<th style={{width: '10vw'}}>
+						<th style={{width: '20vw'}}>
 							Price for each
 						</th>
 						<th />
@@ -194,6 +194,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 							key={index}
 							index={index}
 							{...item}
+							blockchainSymbol={chainData[contractData?.blockchain]?.symbol}
 							rerender={rerender}
 							maxCopies={Number(contractData?.product?.copies) - 1} />
 					})}
@@ -217,7 +218,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 					action: !onMyChain ?
 					() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
 					:
-					(hasMinterRole ? 
+					(hasMinterRole === true ? 
 						(offerList[0]?.fixed ?
 							(offerList.filter(item => item.fixed !== true).length === 0 ? 
 								nextStep

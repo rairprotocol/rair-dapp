@@ -62,8 +62,6 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 		formData.append('contract', address.toLowerCase());
 		formData.append('updateMeta', updateMeta);
 		formData.append('csv', csvFile, 'metadata.csv');
-		console.log(formData);
-		return;
 		let response = await rFetch('/api/nft', {
 			method: 'POST',
 			body: formData,
@@ -166,7 +164,7 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 				</thead>
 				<tbody>
 					{metadata.map((item, index) => {
-						return <tr>
+						return <tr key={index}>
 							<th>
 								{item.NFTID ? item.NFTID : missing}
 							</th>

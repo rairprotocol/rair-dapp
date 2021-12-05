@@ -7,6 +7,7 @@ const chainData = {
 		image: BinanceDiamond,
 		name: 'Binance Testnet',
 		chainId: '0x61',
+		symbol: 'BNB',
 		addChainData: {
 			chainId: '0x61',
 			chainName: 'Binance Testnet',
@@ -24,6 +25,7 @@ const chainData = {
 		image: MaticLogo,
 		name: 'Matic(Polygon) Testnet',
 		chainId: '0x13881',
+		symbol: 'tMATIC',
 		addChainData: {
 			chainId: '0x13881',
 			chainName: 'Matic Testnet Mumbai',
@@ -41,6 +43,7 @@ const chainData = {
 		image: EthereumLogo,
 		name: 'Ethereum Goerli',
 		chainId: '0x5',
+		symbol: 'ETH',
 		addChainData: {
 			chainId: '0x5',
 			chainName: 'Goerli (Ethereum)'
@@ -50,6 +53,7 @@ const chainData = {
 		image: MaticLogo,
 		name: 'Matic(Polygon) Mainnet',
 		chainId: '0x89',
+		symbol: 'MATIC',
 		addChainData: {
 			chainId: '0x89', // 0x89
 			chainName: 'Matic(Polygon) Mainnet',

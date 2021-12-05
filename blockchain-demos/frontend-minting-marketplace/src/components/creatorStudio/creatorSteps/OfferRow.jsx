@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import {useSelector} from 'react-redux';
 import colors from '../../../utils/offerLockColors.js'
 import InputField from '../../common/InputField.jsx'
+import {utils} from 'ethers';
 
-const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies}) => {
+const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies, blockchainSymbol}) => {
 
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
@@ -57,7 +58,8 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 
 	const disabledClass = fixed ? '' : 'border-stimorol rounded-rair'
 
-	return <tr>
+	return <>
+	 <tr>
 		<th>
 			<button disabled className='btn btn-charcoal rounded-rair'>
 				<i style={{color: `${randColor}`}} className='fas fa-key' />
@@ -118,6 +120,17 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			</button>}
 		</th>
 	</tr>
+	<tr>
+		<th />
+		<th />
+		<th />
+		<th />
+		<th className='text-center pt-0'>
+			<small>{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}</small>
+		</th>
+		<th />
+	</tr>
+	</>
 };
 
 export default OfferRow;

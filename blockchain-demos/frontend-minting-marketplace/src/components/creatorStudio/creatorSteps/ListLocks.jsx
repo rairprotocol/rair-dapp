@@ -9,8 +9,9 @@ import chainData from '../../../utils/blockchainData.js'
 import colors from '../../../utils/offerLockColors.js'
 import {web3Switch} from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
+import {utils} from 'ethers';
 
-const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerender, maxCopies, lockedNumber}) => {
+const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerender, maxCopies, lockedNumber, blockchainSymbol}) => {
 
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
@@ -70,9 +71,7 @@ const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerend
 		<th className='p-1'>
 			<InputField
 				disabled={true}
-				getter={individualPrice}
-				type='number'
-				min='0'
+				getter={`${utils.formatEther(price === '' ? 0 : price).toString()} ${blockchainSymbol}`}
 				customClass='form-control rounded-rair'
 				customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 			/>
@@ -183,7 +182,7 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 						<th style={{width: '10vw'}}>
 							Ends
 						</th>
-						<th style={{width: '10vw'}}>
+						<th style={{width: '20vw'}}>
 							Price for each
 						</th>
 						<th style={{width: '10vw'}}>
@@ -200,6 +199,7 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 							key={index}
 							index={index}
 							{...item}
+							blockchainSymbol={chainData[contractData?.blockchain]?.symbol}
 							rerender={e => setForceRerender(!forceRerender)}
 							maxCopies={Number(contractData?.product?.copies) - 1} />
 					})}

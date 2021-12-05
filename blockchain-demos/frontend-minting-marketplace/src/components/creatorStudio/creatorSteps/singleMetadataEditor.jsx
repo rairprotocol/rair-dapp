@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import InputField from '../../common/InputField.jsx';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
 import PropertyRow from './propertyRow.jsx';
@@ -6,8 +6,9 @@ import { useSelector } from 'react-redux';
 import { useParams, useHistory, NavLink } from 'react-router-dom';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import {web3Switch} from '../../../utils/switchBlockchain.js';
+import { web3Switch } from '../../../utils/switchBlockchain.js';
 import chainData from '../../../utils/blockchainData.js'
+import { rFetch } from '../../../utils/rFetch.js';
 
 const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const stepNumber = 4;
@@ -24,6 +25,11 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
 	const history = useHistory();
+
+	const getNFTData = useCallback(async () => {
+		let aux = await rFetch(`/api/nft/${address.toLowerCase()}/${collectionIndex}`);
+		console.log(aux);
+	}, [address, collectionIndex]);
 
 	const addRow = () => {
 		let aux = [...propertiesArray];
@@ -42,7 +48,11 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 
 	useEffect(() => {
 		setStepNumber(stepNumber);
-	}, [setStepNumber])
+	}, [setStepNumber]);
+
+	useEffect(() => {
+		getNFTData();
+	}, [getNFTData]);
 
 	const switchBlockchain = async (chainId) => {
 		web3Switch(chainId)
