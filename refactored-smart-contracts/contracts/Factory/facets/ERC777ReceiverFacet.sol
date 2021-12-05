@@ -2,12 +2,11 @@
 pragma solidity ^0.8.10; 
 
 import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
-import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
 import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
 import '../AppStorage.sol';
 import '../../tokens/RAIR-ERC721.sol';
 
-contract ERC777ReceiverFacet is IERC777Recipient, AccessControlEnumerable {
+contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumerable {
 	bytes32 constant ERC777 = keccak256("ERC777");
 	
 	event NewContractDeployed(address owner, uint id, address token, string contractName);
@@ -37,5 +36,9 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlEnumerable {
 		tokensFromOwner.push(address(newToken));
 		s.contractToOwner[address(newToken)] = from;
 		emit NewContractDeployed(from, tokensFromOwner.length, address(newToken), string(userData));
+	}
+
+	function zaboomaFoo() onlyRole(ERC777) view public returns (bool) {
+		return true;
 	}
 }

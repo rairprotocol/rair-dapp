@@ -5,7 +5,6 @@ pragma solidity ^0.8.10;
 import "@openzeppelin/contracts/utils/introspection/IERC1820Registry.sol";
 
 // Parent classes
-import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
 
 import './AppStorage.sol';
 import '../diamondStandard/Diamond.sol';
@@ -14,16 +13,23 @@ import '../diamondStandard/Diamond.sol';
 /// @notice Handles the deployment of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the reception of ERC777 tokens!
-contract FactoryDiamond is Diamond, AccessControlEnumerable {
+contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
 	AppStorage internal s;
 
-	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
+	//IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 	
 	bytes32 public constant MAINTAINER = keccak256("MAINTAINER");
 	bytes32 public constant OWNER = keccak256("OWNER");
+	bytes32 public constant ERC777 = keccak256("ERC777");
 
 	constructor(address _diamondCut) Diamond(msg.sender, _diamondCut) {
-		_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
+		AppStorage storage s = LibAppStorage.diamondStorage();
+		s.failsafe = 'This is a test!';
+		_setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+		_setupRole(OWNER, msg.sender);
+		_setRoleAdmin(OWNER, OWNER);
+		_setRoleAdmin(ERC777, OWNER);
+		//_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
 	}
 
 	/*
@@ -35,10 +41,6 @@ contract FactoryDiamond is Diamond, AccessControlEnumerable {
 	/// @param  _pricePerToken    Tokens required for the deployment
 	/// @param  _rairAddress 	  Address of the primary ERC777 contract (RAIR contract)
 	constructor(uint _pricePerToken, address _rairAddress) {
-		_setRoleAdmin(OWNER, OWNER);
-		_setRoleAdmin(ERC777, OWNER);
-		_setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-		_setupRole(OWNER, msg.sender);
 		_setupRole(ERC777, _rairAddress);
 		deploymentCostForERC777[_rairAddress] = _pricePerToken;
 		emit NewTokensAccepted(_rairAddress, _pricePerToken);
