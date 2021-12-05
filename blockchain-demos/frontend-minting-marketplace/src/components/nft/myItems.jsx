@@ -30,6 +30,7 @@ const history = useHistory();
     let response = await rFetch("/api/nft");
 
     if (response.success) {
+      console.log(response);
       let tokenData = [];
       for await (let token of response.result) {
         let contractData = await rFetch(`/api/contracts/${token.contract}`);
@@ -57,7 +58,7 @@ const history = useHistory();
   const filteredData = tokens && tokens.filter(
     item => {
         return (
-            item.title.toLowerCase().includes(titleSearch.toLowerCase())
+            item?.title?.toLowerCase()?.includes(titleSearch?.toLowerCase())
         )
     }
 ).sort((a, b) => {
