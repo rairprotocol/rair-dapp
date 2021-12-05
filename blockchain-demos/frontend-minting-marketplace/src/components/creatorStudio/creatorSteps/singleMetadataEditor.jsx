@@ -11,7 +11,7 @@ import chainData from '../../../utils/blockchainData.js'
 import { rFetch } from '../../../utils/rFetch.js';
 
 const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
-	const stepNumber = 4;
+	const stepNumber = 5;
 
 	const [nftID, setNFTID] = useState('');
 	const [nftTitle, setNFTTitle] = useState('');
@@ -45,6 +45,10 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 		aux.splice(index, 1);
 		setPropertiesArray(aux);
 	};
+
+	const nextStep = () => {
+		history.push(steps[stepNumber].populatedPath);
+	}
 
 	useEffect(() => {
 		setStepNumber(stepNumber);
@@ -197,6 +201,10 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 				action: console.log,
 				label: 'Update Metadata',
 				disabled: true
+			},
+			{
+				action: nextStep,
+				label: 'Skip!'
 			}]}
 		/>}
 	</div>

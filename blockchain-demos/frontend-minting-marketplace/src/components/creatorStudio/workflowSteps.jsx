@@ -13,6 +13,7 @@ import ListLocks from './creatorSteps/ListLocks.jsx';
 import CustomizeFees from './creatorSteps/CustomizeFees.jsx';
 import BatchMetadata from './creatorSteps/batchMetadata.jsx';
 import SingleMetadataEditor from './creatorSteps/singleMetadataEditor.jsx';
+import MediaUpload from './creatorSteps/MediaUpload.jsx';
 
 const SentryRoute = withSentryRouting(Route);
 
@@ -56,6 +57,13 @@ const WorkflowSteps = ({sentryHistory}) => {
 				path: '/creator/contract/:address/collection/:collectionIndex/metadata/single',
 				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/metadata/single`,
 				component: SingleMetadataEditor
+			},
+			{
+				label: 6,
+				active: false,
+				path: '/creator/contract/:address/collection/:collectionIndex/media',
+				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/media`,
+				component: MediaUpload
 			},
 		]);
 
