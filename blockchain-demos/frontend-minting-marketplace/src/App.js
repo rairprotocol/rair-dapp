@@ -43,6 +43,8 @@ import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
+import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
+import { TermsUse } from './components/SplashPage/TermsUse';
 // import AboutPage from './components/AboutPage/AboutPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
@@ -371,6 +373,8 @@ function App({ sentryHistory }) {
 							</div>
 							<div className='col-12 mt-3 row'>
 								<Switch>
+									<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
+									<SentryRoute exact path="/terms-use" component={TermsUse} />
 									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
 									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
 									<SentryRoute exact path="/notifications" component={NotificationPage} />
