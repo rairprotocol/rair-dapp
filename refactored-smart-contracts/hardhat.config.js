@@ -37,4 +37,9 @@ module.exports = {
 	mocha: {
 		timeout: 0
 	},
+	gasReporter: {
+		currency: 'USD',
+		showTimeSpent: true,
+		coinmarketcap: process.env.COINMARKETCAP || undefined
+	}
 };

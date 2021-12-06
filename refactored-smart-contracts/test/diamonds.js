@@ -134,7 +134,7 @@ describe("Diamonds", function () {
 			const receiverFacetItem = {
 				facetAddress: erc777ReceiverFacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(erc777ReceiverFacetInstance).remove(['supportsInterface(bytes4)'])
+				functionSelectors: getSelectors(erc777ReceiverFacetInstance)
 			}
 			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
@@ -143,31 +143,28 @@ describe("Diamonds", function () {
 		});
 
 		it ("Roles should be set up", async function() {
-			expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), owner.address))
+			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), owner.address))
 				.to.equal(true);
-			expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
+			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
 				.to.equal(true);
-			expect(await factoryDiamondInstance.getRoleAdmin(await factoryDiamondInstance.OWNER()))
+			await expect(await factoryDiamondInstance.getRoleAdmin(await factoryDiamondInstance.OWNER()))
 				.to.equal(await factoryDiamondInstance.OWNER());
-			expect(await factoryDiamondInstance.getRoleAdmin(await factoryDiamondInstance.ERC777()))
+			await expect(await factoryDiamondInstance.getRoleAdmin(await factoryDiamondInstance.ERC777()))
 				.to.equal(await factoryDiamondInstance.OWNER());
-			//expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.ERC777(), erc777instance.address)).to.equal(true);
-			//expect(await factoryDiamondInstance.getRoleAdmin(await factoryDiamondInstance.ERC777())).to.equal(await factoryDiamondInstance.OWNER());
 		});
 
 		it ("Should grant ERC777 roles", async () => {
 			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			console.log(receiverFacet.functions);
-			await expect(receiverFacet.zaboomaFoo())
-				.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ERC777()}`);
-			expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
+			// console.log(receiverFacet.functions);
+			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
 				.to.equal(true);
-			console.log(2, owner.address);
-			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.ERC777(), addr1.address));
+			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.ERC777(), addr1.address))
+				.to.emit(factoryDiamondInstance, 'RoleGranted')
+				.withArgs(await factoryDiamondInstance.ERC777(), addr1.address, owner.address);
+			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.ERC777(), addr1.address))
+				.to.equal(true);
 			/*
 			expect(await factoryDiamondInstance.add777Token(erc777ExtraInstance.address, tokenPrice * 2))
-				.to.emit(factoryDiamondInstance, 'RoleGranted')
-				.withArgs()
 				.to.emit(factoryInstance, 'NewTokensAccepted')
 				.withArgs()
 			*/

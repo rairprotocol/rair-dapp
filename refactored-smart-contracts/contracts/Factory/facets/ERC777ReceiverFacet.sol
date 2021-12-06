@@ -21,24 +21,20 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 	/// @param operatorData	bytes sent from the operator
 	function tokensReceived(address operator, address from, address to, uint256 amount, bytes calldata userData, bytes calldata operatorData) external onlyRole(ERC777) override {
 		AppStorage storage s = LibAppStorage.diamondStorage();
-		require(amount >= s.deploymentCostForERC777[msg.sender], 'RAIR Factory: not enough RAIR tokens to deploy a contract');
+		require(amount >= s.deploymentCostForToken[msg.sender], 'RAIR Factory: not enough RAIR tokens to deploy a contract');
 
-		if (amount - (s.deploymentCostForERC777[msg.sender]) > 0) {
-			IERC777(msg.sender).send(from, amount - (s.deploymentCostForERC777[msg.sender]), userData);
+		if (amount - (s.deploymentCostForToken[msg.sender]) > 0) {
+			IERC777(msg.sender).send(from, amount - (s.deploymentCostForToken[msg.sender]), userData);
 		}
-		address[] storage tokensFromOwner = s.ownerToContracts[from];
+		address[] storage deploymentsFromOwner = s.creatorToContracts[from];
 		
-		if (tokensFromOwner.length == 0) {
+		if (deploymentsFromOwner.length == 0) {
 			s.creators.push(from);
 		}
 
 		RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
-		tokensFromOwner.push(address(newToken));
-		s.contractToOwner[address(newToken)] = from;
-		emit NewContractDeployed(from, tokensFromOwner.length, address(newToken), string(userData));
-	}
-
-	function zaboomaFoo() onlyRole(ERC777) view public returns (bool) {
-		return true;
+		deploymentsFromOwner.push(address(newToken));
+		s.contractToCreator[address(newToken)] = from;
+		emit NewContractDeployed(from, deploymentsFromOwner.length, address(newToken), string(userData));
 	}
 }

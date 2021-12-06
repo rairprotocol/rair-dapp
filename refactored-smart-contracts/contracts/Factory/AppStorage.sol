@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.10; 
 
-import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
+import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 struct RoleData {
 	mapping(address => bool) members;
@@ -9,10 +10,10 @@ struct RoleData {
 }
 
 struct AppStorage {
-	mapping(address => address[]) ownerToContracts;
-	mapping(address => address) contractToOwner;
-	mapping(address => uint) deploymentCostForERC777;
 	address[] creators;
+	mapping(address => address[]) creatorToContracts;
+	mapping(address => address) contractToCreator;
+	mapping(address => uint) deploymentCostForToken;
 	// Access Control Enumerable
 	mapping(bytes32 => RoleData) _roles;
 	string failsafe;
@@ -26,70 +27,59 @@ library LibAppStorage {
 	}
 }
 
-import 'hardhat/console.sol';
+contract AccessControlAppStorageEnumerable is Context {
+	AppStorage internal s;
 
-// OpenZeppelin Contracts v4.4.0 (access/AccessControl.sol)
-contract AccessControlAppStorageEnumerable is AccessControlEnumerable {
+	event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);
+	event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);
+    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);
 
-	// The following functions override AccessControlEnumerable functions
-	//		to use Diamond AppStorage
+    modifier onlyRole(bytes32 role) {
+        _checkRole(role, _msgSender());
+        _;
+    }
 
-	/**
-	 * @dev Returns `true` if `account` has been granted `role`.
-	 */
-	function hasRole(bytes32 role, address account) public view override returns (bool) {
-		AppStorage storage s = LibAppStorage.diamondStorage();
-		console.log("Requested has role", s.failsafe);
+    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {
+        _grantRole(role, account);
+    }
+
+    function _checkRole(bytes32 role, address account) internal view {
+        if (!hasRole(role, account)) {
+            revert(
+                string(
+                    abi.encodePacked(
+                        "AccessControl: account ",
+                        Strings.toHexString(uint160(account), 20),
+                        " is missing role ",
+                        Strings.toHexString(uint256(role), 32)
+                    )
+                )
+            );
+        }
+    }
+
+	function hasRole(bytes32 role, address account) public view returns (bool) {
 		return s._roles[role].members[account];
 	}
 
-	/**
-	 * @dev Returns the admin role that controls `role`. See {grantRole} and
-	 * {revokeRole}.
-	 *
-	 * To change a role's admin, use {_setRoleAdmin}.
-	 */
-	function getRoleAdmin(bytes32 role) public view override returns (bytes32) {
-		AppStorage storage s = LibAppStorage.diamondStorage();
-		console.log("Requested role admin", s.failsafe);
+	function getRoleAdmin(bytes32 role) public view returns (bytes32) {
 		return s._roles[role].adminRole;
 	}
 
-	/**
-	 * @dev Sets `adminRole` as ``role``'s admin role.
-	 *
-	 * Emits a {RoleAdminChanged} event.
-	 */
-	function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual override {
-		AppStorage storage s = LibAppStorage.diamondStorage();
-		console.log("Requested role admin", s.failsafe);
+	function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {
 		bytes32 previousAdminRole = getRoleAdmin(role);
 		s._roles[role].adminRole = adminRole;
 		emit RoleAdminChanged(role, previousAdminRole, adminRole);
 	}
 
-	/**
-	 * @dev Grants `role` to `account`.
-	 *
-	 * Internal function without access restriction.
-	 */
-	function _grantRole(bytes32 role, address account) internal virtual override {
-		AppStorage storage s = LibAppStorage.diamondStorage();
-		console.log("Requested role admin", s.failsafe);
+	function _grantRole(bytes32 role, address account) internal {
 		if (!hasRole(role, account)) {
 			s._roles[role].members[account] = true;
 			emit RoleGranted(role, account, _msgSender());
 		}
 	}
 
-	/**
-	 * @dev Revokes `role` from `account`.
-	 *
-	 * Internal function without access restriction.
-	 */
-	function _revokeRole(bytes32 role, address account) internal virtual override {
-		AppStorage storage s = LibAppStorage.diamondStorage();
-		console.log("Requested role admin", s.failsafe);
+	function _revokeRole(bytes32 role, address account) internal {
 		if (hasRole(role, account)) {
 			s._roles[role].members[account] = false;
 			emit RoleRevoked(role, account, _msgSender());
