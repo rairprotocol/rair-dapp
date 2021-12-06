@@ -93,7 +93,7 @@ const convertToHLS = async (mediaData, socketInstance) => {
 			const resolutionConfigs = standardResolutions.map(({height, videoBitrate, maximumBitrate, bufferSize, audioBitrate}) => {
 				return [
 					...(mediaData.type === 'video' ? ['-vf', `scale=-2:${height}`] : []),
-					'-hls_time', mediaData.type === 'audio' ? '15' : '4',
+					'-hls_time', mediaData.type === 'audio' ? '15' : '7',
 					...genericConversionParams,
 					'-b:v', `${videoBitrate}k`,
 					'-maxrate', `${maximumBitrate}k`,
@@ -139,20 +139,24 @@ const getMediaData = async (mediaData) => {
 		let {output, stdout, stderr, status} = await spawnSync(ffmpeg.path, ['-i', `${mediaData.path}`]);
 		let stringifiedData = stderr.toString();
 		console.log(stringifiedData);
-		if (!['audio','document'].includes(mediaData.type)) {
-			let [useless, width, height] = stringifiedData?.split('Video: ')[1]?.split('fps')[0]?.split('x');
-			height = height.split(' [')[0];
-			width = width.split(', ').at(-1);
-			if (width) {
-				mediaData.width = width;
-			}
-			if (height) {
-				mediaData.height = height;
-			}
-		}
 		let duration = stringifiedData.split('Duration: ')[1]?.split(',')[0];
 		if (duration) {
 			mediaData.duration = duration;
+		}
+		if (!['audio','document'].includes(mediaData.type)) {
+			try {
+				let [useless, width, height] = stringifiedData?.split('Video: ')[1]?.split('fps')[0]?.split('x');
+				height = height.split(' [')[0];
+				width = width.split(', ').at(-1);
+				if (width) {
+					mediaData.width = width;
+				}
+				if (height) {
+					mediaData.height = height;
+				}
+			} catch (e) {
+				log.error('Error fetching video dimensions!', e);				
+			}
 		}
 	} catch (e) {
 		console.error(e);
