@@ -17,12 +17,12 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
-  const { adminToken, contract, product, token, offer } = params;
+  const {/*blabla*/ adminToken, contract, product, token, offer } = params;
 
   const getData = useCallback(async () => {
     if (adminToken && contract && product) {
       const response = await (
-        await fetch(`/api/${adminToken}/${contract}/${product}`, {
+        await fetch(`/api/${adminToken}/${contract}/${product}`, { //add blabla before adminToken
           method: "GET",
         })
       ).json();
