@@ -374,7 +374,7 @@ function App({ sentryHistory }) {
 							<div className='col-12 mt-3 row'>
 								<Switch>
 									<SentryRoute exact path="/thankyou" component={ThankYouPage} />
-									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
+									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
 									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
 									<SentryRoute exact path="/notifications" component={NotificationPage} />
 									<SentryRoute exact path="/rair-about-page">

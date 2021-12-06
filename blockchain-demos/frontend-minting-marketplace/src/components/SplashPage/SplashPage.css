@@ -756,26 +756,6 @@
     font-weight: 400;
 }
 
-
-/* Media Pesponsive*/
-
-@media screen and (max-width: 1488px) {
-    .wrapper-splash-page {
-        display: flex;
-        justify-content: center;
-        padding-left: 0px;
-    }
-    .home-splash--page {
-        padding-left: 80px;
-    }
-}
-
-@media screen and (max-width: 1430px) {
-    .block-videos {
-        justify-content: center;
-    }
-}
-
 .ReactModal__Overlay--after-open {
     background-color: rgba(78, 77, 77, 0.8) !important;
 }
@@ -900,4 +880,182 @@
 
 .modal-btn-logo {
     transform: scale(0.6);
+}
+
+/* Media Pesponsive*/
+
+@media screen and (max-width: 1488px) {
+    .wrapper-splash-page {
+        display: flex;
+        justify-content: center;
+        padding-left: 0px;
+    }
+    .home-splash--page {
+        padding-left: 80px;
+    }
+}
+
+@media screen and (max-width: 1430px) {
+    .block-videos {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page {
+        align-items: center;
+    }
+
+    .home-splash--page {
+        padding-left: 0px;
+        align-items: center;
+    }
+
+    .information-author, .left-tokens, .special-offer, .exclusive-nfts, .unlockble-video, .splash-team {
+        width: 1000px;
+    }
+
+    .information-author {
+        background-size: 400px auto;
+        background-position: 95% center;
+    }
+
+    .left-tokens .block-left-tokens {
+        margin-right: 5%;
+        background-size: contain;
+        background-repeat: no-repeat;
+
+        width: 400px;
+        height: 450px;
+    }
+
+    .title-progress-left {
+        top: 10px;
+    }
+
+    .left-tokens-content .tokens-description {
+        width: 600px;
+    }
+
+    .left-tokens-content .mailchimp {
+        margin-top: 40px;
+    }
+
+    .box-progress {
+        margin-left: 58px;
+        margin-top: 172px;
+    }
+
+    .special-offer .text-offer {
+        width: 450px;
+    }
+
+    .nfts-select .main-nft {
+        width: 465px;
+        height: 465px;
+        background-size: cover !important;
+    }
+
+    .nfts-select .block-nfts {
+        margin-left: 40px;
+    }
+
+    .block-nfts .box-nft img {
+        width: 220.49px;
+        height: 220.49px;
+    }
+    
+
+    .join-community {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .join-community .title-join {
+        width: 90%;
+        text-align: left;
+    }
+
+    .community-description {
+        width: 90%;
+    }
+
+    .splash-team {
+        margin-bottom: 0px;
+    }
+} 
+
+@media screen and (max-width: 1100px) {
+
+    .wrapper-splash-page {
+        background-image: none;
+    }
+    .home-splash--page {
+        padding-left: 20px;
+    }
+
+    .information-author, .left-tokens, .special-offer, .exclusive-nfts, .unlockble-video, .join-community {
+        width: 900px;
+    }
+
+    .left-tokens-content .tokens-description {
+        width: 500px;
+    }
+
+    .left-tokens-content .mailchimp .email-box input {
+        width: 350px;
+    }
+
+    .left-tokens-content .mailchimp .email-box input::placeholder {
+        font-size: 16px;
+    }
+
+    .nfts-select .main-nft {
+        width: 425px;
+        height: 425px;
+        background-size: cover !important;
+    }
+
+    .nfts-select .block-nfts {
+        margin-left: 22px;
+    }
+
+    .block-nfts .box-nft img {
+        width: 200.49px;
+        height: 200.49px;
+    }
+
+    .special-offer .text-offer {
+        width: 380px;
+    }
+
+    /* .join-community .title-join {
+        width: 1000px;
+        text-align: left;
+    } */
+
+    .join-community .title-join {
+        width: 900px;
+    }
+
+    .community-description {
+        width: 900px;
+    }
+
+    .community-description .community-text p {
+        font-size: 18px;
+    }
+
+    .splash-team {
+        width: 950px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .position-teammate .teammate-description {
+        width: 400px;
+    }
 }
