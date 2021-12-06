@@ -10,7 +10,7 @@ require('dotenv').config()
  */
 
 module.exports = {
-	/*networks: {
+	networks: {
 		hardhat: {
 			forking: {
 				url: process.env.ALCHEMY_API,
@@ -18,7 +18,7 @@ module.exports = {
 				timeout: 1000000
 			}
 		}
-	},*/
+	},
 	solidity: {
 		compilers: [{
 			version: "0.8.10",

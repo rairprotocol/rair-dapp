@@ -4,6 +4,9 @@ const FacetCutAction_ADD = 0;
 const FacetCutAction_REPLACE = 1;
 const FacetCutAction_REMOVE = 2;
 
+const initialRAIR777Supply = 1000;
+const priceToDeploy = 150;
+
 // get function selectors from ABI
 function getSelectors (contract) {
 	const signatures = Object.keys(contract.interface.functions)
@@ -56,11 +59,16 @@ function get (functionNames) {
 
 describe("Diamonds", function () {
 	let owner, addr1, addr2, addr3, addr4, addrs;
-	let ERC777ReceiverFacetFactory, erc777ReceiverFacetInstance;
-	let DiamondCutFacetFactory, diamondCutFacetInstance;
+
 	let FactoryDiamondFactory, factoryDiamondInstance;
+	
+	let DiamondCutFacetFactory, diamondCutFacetInstance;
 	let OwnershipFacetFactory, ownershipFacetInstance;
 	let DiamondLoupeFacetFactory, diamondLoupeFacetInstance;
+
+	let ERC777ReceiverFacetFactory, erc777ReceiverFacetInstance;
+
+	let ERC777Factory, erc777Instance, extraERC777Instance;
 
 	
 	before(async function() {
@@ -70,9 +78,19 @@ describe("Diamonds", function () {
 		FactoryDiamondFactory = await ethers.getContractFactory("FactoryDiamond");
 		OwnershipFacetFactory = await ethers.getContractFactory("OwnershipFacet");
 		DiamondLoupeFacetFactory = await ethers.getContractFactory("DiamondLoupeFacet");
+		ERC777Factory = await ethers.getContractFactory("RAIR777");
 	})
 
-	describe("Deploying the Diamond Contract", function() {
+	describe("Deploying external contracts", () => {
+		it ("Should deploy two ERC777 contracts", async () => {
+			erc777Instance = await ERC777Factory.deploy(initialRAIR777Supply / 2, [addr1.address]);
+			extraERC777Instance = await ERC777Factory.deploy(initialRAIR777Supply, [addr2.address]);
+			await erc777Instance.deployed();
+			await extraERC777Instance.deployed();
+		})
+	})
+
+	describe("Deploying the Diamond Contract", () => {
 		it ("Should deploy the diamondCut facet", async () => {
 			diamondCutFacetInstance = await DiamondCutFacetFactory.deploy();
 			await diamondCutFacetInstance.deployed();
@@ -163,13 +181,34 @@ describe("Diamonds", function () {
 				.withArgs(await factoryDiamondInstance.ERC777(), addr1.address, owner.address);
 			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.ERC777(), addr1.address))
 				.to.equal(true);
-			/*
-			expect(await factoryDiamondInstance.add777Token(erc777ExtraInstance.address, tokenPrice * 2))
-				.to.emit(factoryInstance, 'NewTokensAccepted')
-				.withArgs()
-			*/
 		});
 
-		it ("Should deploy a contract if it receives ERC777 tokens");
-	})
+		it ("Should properly add an ERC777 token to the Receiver Facet", async () => {
+			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
+			await expect(await receiverFacet.acceptNewToken(erc777Instance.address, priceToDeploy))
+				.to.emit(factoryDiamondInstance, 'RoleGranted')
+				.withArgs(await factoryDiamondInstance.ERC777(), erc777Instance.address, owner.address)
+				.to.emit(receiverFacet, 'NewTokenAccepted')
+				.withArgs(erc777Instance.address, priceToDeploy, owner.address);
+		})
+
+		it ("Should not deploy a contract if it receives ERC777 tokens from an unapproved ERC777 contract", async () => {
+			await expect(extraERC777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('')))
+				.to.be.revertedWith(`AccessControl: account ${extraERC777Instance.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ERC777()}`);
+		})
+
+		/*
+
+		it ("Only approved ERC777s can send tokens", async function() {
+				expect(factoryInstance.tokensReceived(owner.address, owner.address, factoryInstance.address, tokenPrice, ethers.utils.toUtf8Bytes(''),  ethers.utils.toUtf8Bytes('')))
+					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryInstance.ERC777()}`);
+			});
+			it ("Reverts if there aren't enough tokens for at least 1 contract", async function() {
+				expect(erc777instance.send(factoryInstance.address, tokenPrice - 1, ethers.utils.toUtf8Bytes('')))
+					.to.be.revertedWith('RAIR Factory: not enough RAIR tokens to deploy a contract');
+			});
+
+
+		*/
+	});
 })

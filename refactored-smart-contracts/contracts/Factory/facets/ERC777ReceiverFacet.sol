@@ -8,8 +8,18 @@ import '../../tokens/RAIR-ERC721.sol';
 
 contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumerable {
 	bytes32 constant ERC777 = keccak256("ERC777");
+	bytes32 constant OWNER = keccak256("OWNER");
 	
 	event NewContractDeployed(address owner, uint id, address token, string contractName);
+	event NewTokenAccepted(address contractAddress, uint priceToDeploy, address owner);
+
+	/// @notice	Adds an address to the list of allowed minters
+	/// @param	_erc777Address	Address of the new Token
+	function acceptNewToken(address _erc777Address, uint _priceToDeploy) public onlyRole(OWNER) {
+		grantRole(ERC777, _erc777Address);
+		s.deploymentCostForToken[_erc777Address] = _priceToDeploy;
+		emit NewTokenAccepted(_erc777Address, _priceToDeploy, msg.sender);
+	}
 	
 	/// @notice Function called by an ERC777 when they send tokens
 	/// @dev    This is our deployment mechanism for ERC721 contracts!

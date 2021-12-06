@@ -14,7 +14,7 @@ import '../diamondStandard/Diamond.sol';
 /// @author Juan M. Sanchez M.
 /// @dev 	Uses AccessControl for the reception of ERC777 tokens!
 contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
-	//IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
+	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 	
 	bytes32 public constant MAINTAINER = keccak256("MAINTAINER");
 	bytes32 public constant OWNER = keccak256("OWNER");
@@ -22,12 +22,12 @@ contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
 	bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
 	constructor(address _diamondCut) Diamond(msg.sender, _diamondCut) {
+		_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
 		s.failsafe = 'This is a test!';
 		_setRoleAdmin(OWNER, OWNER);
 		_setRoleAdmin(ERC777, OWNER);
 		_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
 		_grantRole(OWNER, msg.sender);
-		//_ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777TokensRecipient"), address(this));
 	}
 
 	/*
