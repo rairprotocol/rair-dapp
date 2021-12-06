@@ -53,6 +53,7 @@ const SplashPage = () => {
 
   let subtitle;
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState({ policy: false, use: false});
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -65,6 +66,7 @@ const SplashPage = () => {
   function closeModal() {
     setIsOpen(false);
   }
+  console.log(Object.values(active).every(el => el));
 
   const { primaryColor } = useSelector((store) => store.colorStore);
 
@@ -118,7 +120,7 @@ const SplashPage = () => {
                       <form>
                         <div className="form-group">
                           <input type="checkbox" id="policy" />
-                          <label htmlFor="policy">I agree to the </label>
+                          <label onClick={() => setActive(prev => ({...prev , policy: !prev.policy}))} htmlFor="policy">I agree to the </label>
                           <span
                             onClick={() =>
                               window.open("/privacy", "_blank")
@@ -135,7 +137,7 @@ const SplashPage = () => {
                         </div>
                         <div className="form-group sec-group ">
                           <input type="checkbox" className="dgdfgd" id="use" />
-                          <label htmlFor="use">I accept the </label>
+                          <label onClick={() => setActive(prev => ({...prev , use:!prev.use}))} htmlFor="use">I accept the </label>
                           <span
                             onClick={() => window.open("/terms-use", "_blank")}
                             style={{
@@ -159,7 +161,7 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button className="modal-btn">
+                        <button disabled={!Object.values(active).every(el => el)} className="modal-btn">
                           <img
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}
