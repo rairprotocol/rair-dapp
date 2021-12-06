@@ -1,152 +1,77 @@
 import React from 'react';
+import UnlockVideoItem from './UnlockVideoItem';
+
+const videoArr = [
+    {
+        typeVideo: "Free Preview",
+        unlockVideoName: "Victory Lap",
+        timeVideo: "00:03:23",
+        locked: true
+    },
+    {
+        typeVideo: "Nipseyverse Exclusive",
+        unlockVideoName: "Dedication (featuring Kendrick Lamar)",
+        timeVideo: "00:05:33",
+        locked: false
+    },
+    {
+        typeVideo: "Nipseyverse Exclusive",
+        unlockVideoName: "Last Time That I Checc'd",
+        timeVideo: "00:04:02",
+        locked: false
+    },
+    {
+        typeVideo: "Nipseyverse Exclusive",
+        unlockVideoName: "Keyz 2 the City 2",
+        timeVideo: "00:05:27",
+        locked: true
+    },
+    {
+        typeVideo: "Nipseyverse Exclusive",
+        unlockVideoName: "Grinding All My Life",
+        timeVideo: "00:03:23",
+        locked: false
+    },
+    {
+        typeVideo: "Nipseyverse Exclusive",
+        unlockVideoName: "Million While You Young",
+        timeVideo: "00:10:33",
+        locked: false
+    },
+    {
+        typeVideo: "Nipseyverse Exclusive",
+        unlockVideoName: "Loaded Bases",
+        timeVideo: "00:04:02",
+        locked: false
+    },
+    {
+        typeVideo: "Nipseyverse Exclusive",
+        unlockVideoName: "Real Big",
+        timeVideo: "00:05:27",
+        locked: false
+    }
+]
 
 const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
     return (
         <div className="unlockble-video">
             <div className="title-gets">
-                <h3>What <span className="text-gradient">you</span> get?</h3>
+                <h3>Members only <span className="text-gradient">streaming</span></h3>
             </div>
             <div className="block-videos">
-                <div className="box-video">
-                    <div
-                        className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}
-                    >
-                        <div style={{ position: "relative" }}>
-                            <div className="video-icon">
-                                <i className="fa fa-lock" aria-hidden="true"></i>
-                                <p>Free Preview</p>
-                            </div>
-                            <img src={UnlockableVideo} alt="unlockble video" />
-                        </div>
-                        <div className="video-description">
-                            <div className="video-title">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Victory Lap </p>
-                            </div>
-                            <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
-                            </div>
-                            <div className="video-key">
-                                <i className="fas fa-key"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="box-video">
-                    <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
-                        <div style={{ position: "relative" }}>
-                            <div className="video-icon">
-                                <i className="fa fa-lock" aria-hidden="true"></i>
-                                <p>Nipseyverse Exclusive</p>
-                            </div>
-                            <img src={UnlockableVideo} alt="unlockble video" />
-                        </div>
-                        <div className="video-description">
-                            <div className="video-title">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Dedication (featuring Kendrick Lamar)</p>
-                            </div>
-                            <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
-                            </div>
-                            <div className="video-key">
-                                <i className="fas fa-key"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="box-video">
-                    <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
-                        <div style={{ position: "relative" }}>
-                            <div className="video-icon">
-                                <i className="fa fa-lock" aria-hidden="true"></i>
-                                <p>Nipseyverse Exclusive</p>
-                            </div>
-                            <img src={UnlockableVideo} alt="unlockble video" />
-                        </div>
-                        <div className="video-description">
-                            <div className="video-title">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Last Time That I Checc'd</p>
-                            </div>
-                            <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
-                            </div>
-                            <div className="video-key">
-                                <i className="fas fa-key"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="box-video">
-                    <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
-                        <div style={{ position: "relative" }}>
-                            <div className="video-icon">
-                                <i className="fa fa-lock" aria-hidden="true"></i>
-                                <p>Nipseyverse Exclusive</p>
-                            </div>
-                            <img src={UnlockableVideo} alt="unlockble video" />
-                        </div>
-                        <div className="video-description">
-                            <div className="video-title">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Keyz 2 the City 2</p>
-                            </div>
-                            <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
-                            </div>
-                            <div className="video-key">
-                                <i className="fas fa-key"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="box-video">
-                    <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
-                        <div style={{ position: "relative" }}>
-                            <div className="video-icon">
-                                <i className="fa fa-lock" aria-hidden="true"></i>
-                                <p>Nipseyverse Exclusive</p>
-                            </div>
-                            <img src={UnlockableVideo} alt="unlockble video" />
-                        </div>
-                        <div className="video-description">
-                            <div className="video-title">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Grinding All My Life</p>
-                            </div>
-                            <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
-                            </div>
-                            <div className="video-key">
-                                <i className="fas fa-key"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="box-video">
-                    <div className="video-locked"
-                        style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}>
-                        <div style={{ position: "relative" }}>
-                            <div className="video-icon">
-                                <i className="fa fa-lock" aria-hidden="true"></i>
-                                <p>Nipseyverse Exclusive</p>
-                            </div>
-                            <img src={UnlockableVideo} alt="unlockble video" />
-                        </div>
-                        <div className="video-description">
-                            <div className="video-title">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>Million While You Young</p>
-                            </div>
-                            <div className="video-timer">
-                                <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:03:23</p>
-                            </div>
-                            <div className="video-key">
-                                <i className="fas fa-key"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {
+                    videoArr.map(((video, index) => {
+                        return <UnlockVideoItem
+                            key={index + video.unlockVideoName}
+                            UnlockableVideo={UnlockableVideo}
+                            typeVideo={video.typeVideo}
+                            nameVideo={video.unlockVideoName}
+                            timeVideo={video.timeVideo}
+                            locked={video.locked}
+                            primaryColor={primaryColor}
+                        />
+                    }))
+                }
             </div>
         </div>
     )
