@@ -13,12 +13,14 @@ const TokenLeft = ({ primaryColor }) => {
     }
 
     const onSubmit = (e) => {
-        if (emailField === "") {
-            alert('Filling the field!')
-        } else {
-            e.preventDefault();
-            history.push('/thankyou');
-        }
+        setTimeout(() => {
+            if (emailField === "") {
+                alert('Filling the field!')
+            } else {
+                e.preventDefault();
+                history.push('/thankyou');
+            }
+        }, 1000)
     }
 
     const leftTokensNumber = 1000;
