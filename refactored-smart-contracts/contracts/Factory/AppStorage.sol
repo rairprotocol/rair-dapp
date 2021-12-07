@@ -43,6 +43,10 @@ contract AccessControlAppStorageEnumerable is Context {
         _grantRole(role, account);
     }
 
+    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {
+        _revokeRole(role, account);
+    }
+
     function _checkRole(bytes32 role, address account) internal view {
         if (!hasRole(role, account)) {
             revert(

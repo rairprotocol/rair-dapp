@@ -26,12 +26,12 @@ function getSelectors (contract) {
 // functionNames argument is an array of function signatures
 function remove (functionNames) {
   const selectors = this.filter((v) => {
-    for (const functionName of functionNames) {
-      if (v === this.contract.interface.getSighash(functionName)) {
-        return false
-      }
-    }
-    return true
+	for (const functionName of functionNames) {
+	  if (v === this.contract.interface.getSighash(functionName)) {
+		return false
+	  }
+	}
+	return true
   })
   selectors.contract = this.contract
   selectors.remove = this.remove
@@ -43,12 +43,12 @@ function remove (functionNames) {
 // functionNames argument is an array of function signatures
 function get (functionNames) {
   const selectors = this.filter((v) => {
-    for (const functionName of functionNames) {
-      if (v === this.contract.interface.getSighash(functionName)) {
-        return true
-      }
-    }
-    return false
+	for (const functionName of functionNames) {
+	  if (v === this.contract.interface.getSighash(functionName)) {
+		return true
+	  }
+	}
+	return false
   })
   selectors.contract = this.contract
   selectors.remove = this.remove
@@ -83,8 +83,8 @@ describe("Diamonds", function () {
 
 	describe("Deploying external contracts", () => {
 		it ("Should deploy two ERC777 contracts", async () => {
-			erc777Instance = await ERC777Factory.deploy(initialRAIR777Supply / 2, [addr1.address]);
-			extraERC777Instance = await ERC777Factory.deploy(initialRAIR777Supply, [addr2.address]);
+			erc777Instance = await ERC777Factory.deploy(initialRAIR777Supply, [addr1.address]);
+			extraERC777Instance = await ERC777Factory.deploy(initialRAIR777Supply / 2, [addr2.address]);
 			await erc777Instance.deployed();
 			await extraERC777Instance.deployed();
 		})
@@ -190,25 +190,40 @@ describe("Diamonds", function () {
 				.withArgs(await factoryDiamondInstance.ERC777(), erc777Instance.address, owner.address)
 				.to.emit(receiverFacet, 'NewTokenAccepted')
 				.withArgs(erc777Instance.address, priceToDeploy, owner.address);
-		})
+		});
 
 		it ("Should not deploy a contract if it receives ERC777 tokens from an unapproved ERC777 contract", async () => {
 			await expect(extraERC777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('')))
 				.to.be.revertedWith(`AccessControl: account ${extraERC777Instance.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ERC777()}`);
-		})
+		});
 
-		/*
+		it ("Should not deploy a contract if it receives less than the required amount", async () => {
+			await expect(erc777Instance.send(factoryDiamondInstance.address, priceToDeploy - 1, ethers.utils.toUtf8Bytes('')))
+				.to.be.revertedWith(`RAIR Factory: not enough RAIR tokens to deploy a contract`);
+		});
 
-		it ("Only approved ERC777s can send tokens", async function() {
-				expect(factoryInstance.tokensReceived(owner.address, owner.address, factoryInstance.address, tokenPrice, ethers.utils.toUtf8Bytes(''),  ethers.utils.toUtf8Bytes('')))
-					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryInstance.ERC777()}`);
-			});
-			it ("Reverts if there aren't enough tokens for at least 1 contract", async function() {
-				expect(erc777instance.send(factoryInstance.address, tokenPrice - 1, ethers.utils.toUtf8Bytes('')))
-					.to.be.revertedWith('RAIR Factory: not enough RAIR tokens to deploy a contract');
-			});
+		/*it ("Should deploy a RAIR contract if it receives ERC777 tokens from an approved address", async() => {
+			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
+			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!')))
+				.to.emit(erc777Instance, "Sent")
+				.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
+				.to.emit(receiverFacet, 'NewContractDeployed')
+				.withArgs(owner.address, 1, '0x33791c463B145298c575b4409d52c2BcF743BF67', 'TestRair!');
+		});*/
 
-
-		*/
+		it ("Should return excess tokens from the deployment", async() => {
+			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
+			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRair!')))
+				//.to.emit(erc777Instance, "Sent")
+				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
+				//.to.emit(erc777Instance, "Sent")
+				//.withArgs(factoryDiamondInstance.address, factoryDiamondInstance.address, owner.address, 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
+				.to.emit(receiverFacet, 'NewContractDeployed')
+				.withArgs(owner.address, 1, '0x33791c463B145298c575b4409d52c2BcF743BF67', 'TestRair!');
+			await expect(await erc777Instance.balanceOf(owner.address))
+				.to.equal(initialRAIR777Supply - (priceToDeploy));
+			await expect(await erc777Instance.balanceOf(factoryDiamondInstance.address))
+				.to.equal(priceToDeploy);
+		});
 	});
 })

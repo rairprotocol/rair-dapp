@@ -31,30 +31,7 @@ contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
 	}
 
 	/*
-	event NewTokensAccepted(address erc777, uint priceForNFT);
-	event TokenNoLongerAccepted(address erc777);
 	event TokensWithdrawn(address recipient, address erc777, uint amount);
-
-	/// @notice Factory Constructor
-	/// @param  _pricePerToken    Tokens required for the deployment
-	/// @param  _rairAddress 	  Address of the primary ERC777 contract (RAIR contract)
-	constructor(uint _pricePerToken, address _rairAddress) {
-		_setupRole(ERC777, _rairAddress);
-		deploymentCostForERC777[_rairAddress] = _pricePerToken;
-		emit NewTokensAccepted(_rairAddress, _pricePerToken);
-	}
-
-	/// @notice Returns the number of addresses that have deployed a contract
-	function getCreatorsCount() public view returns(uint count) {
-		return creators.length;
-	}
-
-	/// @notice Returns the number of contracts deployed by an address
-	/// @dev	Use alongside ownerToContracts for the full list of tokens 
-	/// @param	deployer	Wallet address to query
-	function getContractCountOf(address deployer) public view returns(uint count) {
-		return ownerToContracts[deployer].length;
-	}
 
 	/// @notice Transfers tokens from the factory to any of the OWNER addresses
 	/// @dev 	If the contract has less than the amount, the ERC777 contract will revert
@@ -75,12 +52,6 @@ contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
 		emit NewTokensAccepted(_erc777Address, _pricePerToken);
 	}
 
-	/// @notice	Removes an address from the list of allowed minters
-	/// @param	_erc777Address	Address of the Token
-	function remove777Token(address _erc777Address) public onlyRole(OWNER) {
-		revokeRole(ERC777, _erc777Address);
-		deploymentCostForERC777[_erc777Address] = 0;
-		emit TokenNoLongerAccepted(_erc777Address);
-	}
+	
 	*/
 }

@@ -11,7 +11,8 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 	bytes32 constant OWNER = keccak256("OWNER");
 	
 	event NewContractDeployed(address owner, uint id, address token, string contractName);
-	event NewTokenAccepted(address contractAddress, uint priceToDeploy, address owner);
+	event NewTokenAccepted(address contractAddress, uint priceToDeploy, address responsible);
+	event TokenNoLongerAccepted(address erc777, address responsible);
 
 	/// @notice	Adds an address to the list of allowed minters
 	/// @param	_erc777Address	Address of the new Token
@@ -19,6 +20,14 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 		grantRole(ERC777, _erc777Address);
 		s.deploymentCostForToken[_erc777Address] = _priceToDeploy;
 		emit NewTokenAccepted(_erc777Address, _priceToDeploy, msg.sender);
+	}
+
+	/// @notice	Removes an address from the list of allowed minters
+	/// @param	_erc777Address	Address of the Token
+	function removeToken(address _erc777Address) public onlyRole(OWNER) {
+		revokeRole(ERC777, _erc777Address);
+		s.deploymentCostForToken[_erc777Address] = 0;
+		emit TokenNoLongerAccepted(_erc777Address, msg.sender);
 	}
 	
 	/// @notice Function called by an ERC777 when they send tokens
