@@ -3,26 +3,29 @@ import { useSelector } from 'react-redux';
 import { useParams, useHistory, NavLink } from 'react-router-dom';
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import { rFetch } from '../../../utils/rFetch.js';
+import { utils } from 'ethers';
 import InputSelect from '../../common/InputSelect.jsx';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import chainData from '../../../utils/blockchainData.js'
 import Dropzone from 'react-dropzone'
 import videoIcon from '../../../images/videoIcon.svg';
-import { utils } from 'ethers';
+import MediaUploadRow from './MediaUploadRow.jsx';
 
 const MediaUpload = ({setStepNumber, contractData}) => {
 	const stepNumber = 6;
 
 	const [mediaList, setMediaList] = useState([]);
 	const [offerList, setOfferList] = useState([]);
+	const [forceRerender, setForceRerender] = useState(false);
 
 	const {primaryColor, secondaryColor, textColor} = useSelector(store => store.colorStore);
 
 	useEffect(() => {
+		console.log(contractData);
 		setOfferList(contractData?.product?.offers ? contractData?.product?.offers.map(item => {
 			return {
-				label: `${item.offerName} (${item.range[1] - item.range[0] + 1} tokens for ${utils.formatEther(item.price).toString()} each)`,
+				label: `${item.offerName} (${item.range[1] - item.range[0] + 1} tokens for ${utils.formatEther(item.price).toString()} ${chainData[contractData.blockchain].symbol} each)`,
 				value: item.offerIndex
 			}
 		}) : [])
@@ -30,7 +33,17 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 
 	const onMediaDrop = (media) => {
 		let aux = [...mediaList];
-		aux = aux.concat(media);
+		aux = aux.concat(
+			media.map(item => {
+				return {
+					offer: 'null',
+					category: 'null',
+					title: item.name,
+					file: item,
+					description: ''
+				}
+			})
+		);
 		setMediaList(aux);
 	};
 
@@ -43,8 +56,6 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 	useEffect(() => {
 		setStepNumber(stepNumber);
 	}, [setStepNumber]);
-
-	const cornerStyle = {height: '15vh', borderRadius: '16px 0 0 16px'}
 
 	return <div className='col-12 mb-5'>
 		<div className='rounded-rair col-12 mb-3'>
@@ -65,52 +76,15 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 				)}
 			</Dropzone>
 		</div>
-		{mediaList.map((item, index) => {
-			return <div
+		{mediaList.map((item, index, array) => {
+			return <MediaUploadRow
 				key={index}
-				style={{backgroundColor: `var(--${primaryColor}-80)`, color: textColor}}
-				className='p-0 rounded-rair my-3 col-12 row px-0 mx-0'>
-				<div
-					className='col-12 mx-0 px-0 py-0 col-md-2'
-					style={cornerStyle}>
-					{item.type.split('/')[0] === 'video' &&
-						<video style={cornerStyle} className='h-100 w-100' src={URL.createObjectURL(item)} />
-					}
-					{item.type.split('/')[0] === 'image' &&
-						<img style={cornerStyle} src={URL.createObjectURL(item)} className='h-100 w-100' />
-					}
-					{item.type.split('/')[0] === 'audio' &&
-						<div className='pt-5 w-100 h-100'>
-							Audio File <i style={cornerStyle} className='fas fa-music' />
-						</div>
-					}
-				</div>
-				<div className='col-12 text-start d-flex align-items-center col-md-6'>
-					{item.name}
-					<br />
-					{item.type}
-				</div>
-				<div className='col-12 text-start d-flex align-items-center col-md-3'>
-					<div className='border-stimorol rounded-rair col-12'>
-						<InputSelect
-							options={offerList}
-							customClass='form-control rounded-rair'
-							customCSS={{
-								backgroundColor: `var(--${primaryColor}-80)`,
-								color: textColor
-							}}
-							optionCSS={{
-								color: textColor
-							}}
-						/>
-					</div>
-				</div>
-				<div className='col-12 text-start d-flex align-items-center col-md-1'>
-					<button onClick={() => deleter(index)} className='btn rounded-rair border-danger' style={{color: textColor}}>
-						<i className='fas fa-trash' />
-					</button>
-				</div>
-			</div>
+				item={item}
+				index={index}
+				array={array}
+				deleter={() => deleter(index)}
+				offerList={offerList}
+				rerender={() => setForceRerender(!forceRerender)} />
 		})}
 	</div>
 };
