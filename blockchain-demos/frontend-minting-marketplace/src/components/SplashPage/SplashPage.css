@@ -1082,6 +1082,18 @@
     }
 }
 
+
+@media screen and (max-width: 800px) {
+    .footer {
+        flex-direction: column;
+    }
+
+    .footer ul {
+        margin-top: 20px;
+        padding-left: 0;
+    }
+}
+
 /* Mobile version */
 .home-splash-mobile {
     width: 100vw;
@@ -1089,6 +1101,7 @@
 
 .wrapper-splash-mobile {
     background: #181717;
+    overflow: hidden;
 }
 
 .splash-header-mobile {
@@ -1214,6 +1227,7 @@
     border: none;
     color: #A5A6F6;
     margin-top: 8px;
+    text-decoration: underline;
 }
 
 .members-video-mobile {
@@ -1278,3 +1292,133 @@
     line-height: 28px;
     color: #A5A6F6;
 }
+
+.content-owners-mobile {
+    background: #000;
+    padding: 45px 16px;
+
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+}
+
+.content-owners-mobile .owner-box  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-owners-mobile .owner-box:first-child {
+}
+
+.content-owners-mobile .owner-box .owner-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 280px;
+    height: 135px;
+}
+
+.content-owners-mobile .owner-box:last-child .owner-img img {
+    width: 214px;
+    height: 31px;
+}
+
+.content-owners-mobile .owner-box .owner-title-mobile {
+    margin: 8px 0;
+}
+
+.content-owners-mobile .owner-box .owner-title-mobile h5 {
+    font-size: 22px;
+    line-height: 25.2px;
+    font-weight: 700;
+}
+
+.content-owners-mobile .owner-box .owner-desc {
+    font-size: 11px;
+    line-height: 17px;
+    font-weight: 400;
+    color: #A7A6A6;
+
+    margin-bottom: 8px;
+}
+
+.content-owners-mobile .owner-box .owner-btn-learn button{
+    font-size: 15px;
+    color: #fff;
+    background: none;
+    border: none;
+    text-decoration: underline;
+}
+
+.footer-nipsey-mobile {
+    padding: 26px 16px;
+    background: #000;
+}
+
+.footer-nipsey-mobile img{
+    width: 100px;
+    height: auto;
+}
+
+.footer-nipsey-mobile .nipsey-adress-mobile {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 15px;
+    color: #A5A6F6;
+    margin-top: 16px;
+}
+
+.social-media-nipsey {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.social-media-nipsey div {
+    margin-right: 16px;
+    transition: .2s all ease;
+    cursor: pointer;
+}
+
+.social-media-nipsey div:last-child {
+    margin-right: 0px;
+}
+
+.social-media-nipsey div:hover {
+    background: #fff;
+    color: #000;
+}
+
+
+@media screen and (max-width: 600px) {
+    .content-owners-mobile .owner-box .owner-img {
+        width: 200px;
+    }
+
+    .content-owners-mobile .owner-box .owner-img img, .content-owners-mobile .owner-box:last-child .owner-img img {
+        width: 200px;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .content-owners-mobile {
+        flex-direction: column;
+    }
+
+    .members-video-mobile .video-pic img {
+        width: 300px;
+        height: auto;
+    }
+
+    .footer ul {
+        flex-direction: column;
+
+    }
+    .footer ul li {
+        margin: 0;
+    }
+} 

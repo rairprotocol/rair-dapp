@@ -17,6 +17,7 @@ import DigitalMobile from './images/digital-mobile.png';
 import NftMobile_1 from './images/nft-mobile_1.png';
 import NftMobile_2 from './images/nft-mobile_2.png';
 import VideoPresent from './images/video-present.png';
+import RairTechMobile from './images/rair_tech_mobile.png';
 
 /* importing Components*/
 import TokenLeft from "./TokenLeft/TokenLeft";
@@ -332,6 +333,65 @@ const SplashPage = () => {
               <div className="box-score">
                 <div className="score-num">1</div>
                 <div className="stats">Exclusive Album </div>
+              </div>
+            </div>
+            <div className="content-owners-mobile">
+              <div className="owner-box">
+                <div className="owner-img">
+                  <img src={DigitalMobile} alt="digital" />
+                </div>
+                <div className="owner-title-mobile">
+                  <h5>Southwest Digital</h5>
+                </div>
+                <div className="owner-desc">
+                  For content owners, record labels, and distributors,
+                  Southwest Digital offers a complete ecosystem for
+                  the digital music cycle that optimizes your business
+                  processes.
+                </div>
+                <div className="owner-btn-learn">
+                  <button>Learn More</button>
+                </div>
+              </div>
+              <div className="owner-box">
+                <div className="owner-img">
+                  <img src={RairTechMobile} alt="rair-tech-logo" />
+                </div>
+                <div className="owner-title-mobile">
+                  <h5>RAIR Technologies</h5>
+                </div>
+                <div className="owner-desc">
+                  RAIR, through its decentralized key management
+                  node system, empowers anyone to create unique,
+                  controllable, and transferable digital assets tied to
+                  the actual underlying content.
+                </div>
+                <div className="owner-btn-learn">
+                  <button>Learn More</button>
+                </div>
+              </div>
+            </div>
+            <div className="footer-nipsey-mobile">
+              <img src={DigitalMobile} alt="digital" />
+              <div className="nipsey-adress-mobile">
+                Southwest Digital
+              </div>
+              <div className="nipsey-adress-mobile">
+                Houston, Texax
+              </div>
+              <div className="social-media-nipsey">
+                <div>
+                  <i class="fab fa-instagram"></i>
+                </div>
+                <div>
+                  <i class="fab fa-facebook-f"></i>
+                </div>
+                <div>
+                  <i class="fab fa-twitter"></i>
+                </div>
+                <div>
+                  <i class="fab fa-youtube"></i>
+                </div>
               </div>
             </div>
           </div>
