@@ -382,7 +382,7 @@ const SplashPage = () => {
                 Southwest Digital
               </div>
               <div className="nipsey-adress-mobile">
-                Houston, Texax
+                Houston, Texas
               </div>
               <div className="social-media-nipsey">
                 <div>
