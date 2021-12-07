@@ -53,6 +53,10 @@ import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 import MyNFTs from './components/nft/myNFT.jsx';
+import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
+import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
+import { TermsUse } from './components/SplashPage/TermsUse';
+import AboutPage from './components/AboutPage/AboutPage';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 import AboutPage from './components/AboutPage/AboutPage';
@@ -69,7 +73,7 @@ const ErrorFallback = () => {
 function App({ sentryHistory }) {
 
 	const [/*userData*/, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(false);
+	const [adminAccess, setAdminAccess] = useState(undefined);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	const [errorAuth, /*setErrorAuth*/] = useState('');
@@ -306,7 +310,7 @@ function App({ sentryHistory }) {
           requestAnimationFrame(wheee);
         })();
       })();
-    } 
+    }
   } , [primaryColor]);
 
 	return (
@@ -374,6 +378,7 @@ function App({ sentryHistory }) {
 								<SentryRoute path='/admin' component={BlockChainSwitcher} />
 							</Switch>
 						</div>
+<<<<<<< HEAD
 						<div className='col-12 mt-3 row'>
 							<Switch>
 								<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
@@ -421,6 +426,33 @@ function App({ sentryHistory }) {
 										</p>
 									</div>
 									<div className='col-12 mt-3 row' >
+=======
+						<div className='col'>
+							<div className='col-12' style={{ height: '10vh' }}>
+								{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
+								<Switch>
+									<SentryRoute path='/admin' component={BlockChainSwitcher} />
+								</Switch>
+							</div>
+							<div className='col-12 mt-3 row'>
+								<Switch>
+									<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
+									<SentryRoute exact path="/terms-use" component={TermsUse} />
+									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
+									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+									<SentryRoute exact path="/notifications" component={NotificationPage} />
+									<SentryRoute exact path="/rair-about-page">
+										<AboutPage primaryColor={primaryColor} textColor={textColor}/>
+									</SentryRoute>
+									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
+									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
+									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
+									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
+									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+									<SentryRoute path='/all'>
+>>>>>>> dev
 										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 									</div>
 									</SentryRoute>

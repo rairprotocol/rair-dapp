@@ -15,14 +15,15 @@
     width: 129px; 
     margin: 0 16px;
     cursor: pointer;
+
+    transition: all .2s ease;
 }
-  
-.select-filters-title {
-    
+
+.select-filters:hover {
+    border: 1.3px solid #E882D5;
 }
   
 .select-filters-title i {
-    color: #E882D5;
     margin-right: 8px;
 }
   
@@ -202,8 +203,14 @@ select.select-price option {
     align-items: center;
     width: 244px; 
     cursor: pointer;
+
+    transition: all .2s ease;
 }
   
+.select-sort:hover {
+    border: 1.3px solid #E882D5;
+}
+
 .select-sort-title {
     display: flex;
     justify-content: space-between;
