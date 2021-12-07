@@ -11,7 +11,7 @@ import "./videoUpload.css";
 const FileUpload = ({ address, primaryColor, textColor }) => {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
-	const [author, setAuthor] = useState("");
+	// const [author, setAuthor] = useState("");
 	// const [token, setToken] = useState('')
 	const [video, setVideo] = useState(undefined);
 	const [uploading, setUploading] = useState(false);
@@ -225,7 +225,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						setter={setTitle}
 					/>
 				</div>
-				<div className="col-8 py-1">
+				{/* <div className="col-8 py-1">
 					<InputField
 						customClass="form-control input-select-custom-style"
 						customCSS={reusableStyle}
@@ -235,7 +235,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						getter={author}
 						setter={setAuthor}
 					/>
-				</div>
+				</div> */}
 				<div className="col-8 py-1">
 					<InputField
 						label="Description"
@@ -323,7 +323,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 				</div>
 				<button
 					type="button"
-					disabled={uploading || title === '' || description === '' || author === '' || contract === 'null' || product === 'null' || offer === 'null' || video === undefined}
+					disabled={uploading || title === '' || description === '' ||/* author === '' || */  contract === 'null' || product === 'null' || offer === 'null' || video === undefined}
 					className="btn py-1 col-8 btn-primary btn-submit-custom"
 					onClick={(e) => {
 						if (uploading) {
@@ -352,7 +352,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 								.then((response) => {
 									setUploading(false);
 									setTitle("");
-									setAuthor("");
+									// setAuthor("");
 									setDescription("");
 									setVideo(undefined);
 									setOffersIndex([]);
