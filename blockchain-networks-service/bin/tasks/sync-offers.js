@@ -47,7 +47,7 @@ module.exports = (context) => {
         if (!contract) return;
 
         const marketplaceCatalogIndex = Number(offerIndex);
-        const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract === contract._id && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
+        const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract.equals(contract._id) && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
 
         if (offerPoolIndex < 0) {
           offerPoolsForUpdate.push({

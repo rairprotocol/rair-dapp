@@ -99,8 +99,8 @@ module.exports = (context) => {
           // increasing number of minted tokens for a particular offer
           if (!_.isEmpty(foundOffers)) {
             const offer = _.find(foundOffers, offer => _.inRange(tokenIndex, offer.range[0], (offer.range[1] + 1)));
-            const offerIndex = _.findIndex(offersForUpdate, o => o.contract === offer.contract && o.offerPool === offer.offerPool && o.offerIndex === offer.offerIndex);
-            const productIndex = _.findIndex(productsForUpdate, p => p.contract === product.contract && p.collectionIndexInContract === product.collectionIndexInContract);
+            const offerIndex = _.findIndex(offersForUpdate, o => o.contract.equals(offer.contract) && o.offerPool === offer.offerPool && o.offerIndex === offer.offerIndex);
+            const productIndex = _.findIndex(productsForUpdate, p => p.contract.equals(product.contract) && p.collectionIndexInContract === product.collectionIndexInContract);
 
             if (offerIndex < 0) {
               offer.soldCopies = 1;
