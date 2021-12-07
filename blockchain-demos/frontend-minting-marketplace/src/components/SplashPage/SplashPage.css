@@ -1421,4 +1421,15 @@
     .footer ul li {
         margin: 0;
     }
-} 
+}
+
+@media screen and (max-width: 400px) {
+    .streaming-nft-block .nft-box {
+        flex-direction: column;
+    }
+    
+    .streaming-nft-block .nft-box img {
+        margin-right: 0;
+        margin-bottom: 16px;
+    }
+}
