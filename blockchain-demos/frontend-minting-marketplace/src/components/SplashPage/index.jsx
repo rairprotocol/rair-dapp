@@ -45,26 +45,29 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement("#root");
+// Modal.setAppElement("#root");
 
 const SplashPage = () => {
+  let params = `scrollbars=no,resizable=no,status=no,location=no,
+                toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
+
   let subtitle;
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState({ policy: false, use: false});
 
-  const openModal= useCallback(() => {
+  const openModal = useCallback(() => {
     setIsOpen(true);
-  },[])
+  }, []);
 
   function afterOpenModal() {
-    // references are now sync'd and can be accessed.
     subtitle.style.color = "#9013FE";
   }
 
   function closeModal() {
     setIsOpen(false);
   }
+  console.log(Object.values(active).every(el => el));
 
-  
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   return (
@@ -105,7 +108,7 @@ const SplashPage = () => {
                       fontSize: "60px",
                       fontWeight: "bold",
                       paddingTop: "3rem",
-                      cursor: 'default',
+                      cursor: "default",
                     }}
                     ref={(_subtitle) => (subtitle = _subtitle)}
                   >
@@ -117,33 +120,35 @@ const SplashPage = () => {
                       <form>
                         <div className="form-group">
                           <input type="checkbox" id="policy" />
-                          <label htmlFor="policy">
-                            I agree to the{" "}
-                            <span
-                              style={{
-                                color: "#9013FE",
-                                fontSize: "24px",
-                                paddingRight: "1rem",
-                              }}
-                            >
-                              Privacy Policy
-                            </span>
-                          </label>
+                          <label onClick={() => setActive(prev => ({...prev , policy: !prev.policy}))} htmlFor="policy">I agree to the </label>
+                          <span
+                            onClick={() =>
+                              window.open("/privacy", "_blank")
+                            }
+                            style={{
+                              color: "#9013FE",
+                              fontSize: "24px",
+                              paddingRight: "1rem",
+                              marginLeft: "-2.5rem",
+                            }}
+                          >
+                            Privacy Policy
+                          </span>
                         </div>
-                        <div className="form-group">
+                        <div className="form-group sec-group ">
                           <input type="checkbox" className="dgdfgd" id="use" />
-                          <label htmlFor="use">
-                            I accept the{" "}
-                            <span
-                              style={{
-                                color: "#9013FE",
-                                fontSize: "24px",
-                                paddingRight: "2.3rem",
-                              }}
-                            >
-                              Terms of Use
-                            </span>
-                          </label>
+                          <label onClick={() => setActive(prev => ({...prev , use:!prev.use}))} htmlFor="use">I accept the </label>
+                          <span
+                            onClick={() => window.open("/terms-use", "_blank")}
+                            style={{
+                              color: "#9013FE",
+                              fontSize: "24px",
+                              paddingRight: "2.3rem",
+                              marginLeft: "-2.5rem",
+                            }}
+                          >
+                            Terms of Use
+                          </span>
                         </div>
                       </form>
                     </div>
@@ -156,7 +161,7 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button className="modal-btn">
+                        <button disabled={!Object.values(active).every(el => el)} className="modal-btn">
                           <img
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}

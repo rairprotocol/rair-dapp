@@ -21,7 +21,7 @@ const { MongoClient } = require('mongodb');
     unique: true
   });
 
-  await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true });
+  await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true, unique: true });
   await db.collection('OfferPool').createIndex({ contract: 1, marketplaceCatalogIndex: 1 }, { background: true, unique: true });
 
   await db.collection('Offer').createIndex({ offerPool: 1 }, { background: true });
@@ -47,6 +47,7 @@ const { MongoClient } = require('mongodb');
   );
 
   await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1, token: 1 }, { background: true, unique: true, name: 'MintedTokenUniqueIndex' });
+  await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1 }, { background: true });
 
   await db.collection('LockedTokens').createIndex({ contract: 1, lockIndex: 1 }, { background: true, unique: true });
 
