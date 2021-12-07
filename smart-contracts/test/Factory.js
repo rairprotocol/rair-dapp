@@ -186,6 +186,10 @@ describe("Token Factory", function () {
 				expect(await rair721Instance.getRoleAdmin(await rair721Instance.MINTER())).to.equal(await rair721Instance.CREATOR());
 			});
 
+			it ("Should return factory address", async function() {
+				await expect(await rair721Instance.factory()).to.equal(factoryInstance.address);
+			});
+
 			it ("Correct creator address", async function() {
 				expect(await rair721Instance.getRoleMember(await rair721Instance.CREATOR(), 0)).to.equal(owner.address);
 			});
