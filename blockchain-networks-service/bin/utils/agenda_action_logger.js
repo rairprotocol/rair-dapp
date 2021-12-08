@@ -1,7 +1,7 @@
 const log = require('./logger')(module);
 
-export const logAgendaActionStart = ({
+exports.logAgendaActionStart = ({
   agendaDefinition
 }) => {
-  log.info(`agenda action started execution: {agendaDefinition}`);
-}
+  log.info(`agenda action started execution: ${agendaDefinition}`);
+};
