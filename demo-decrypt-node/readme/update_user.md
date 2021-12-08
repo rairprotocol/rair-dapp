@@ -6,6 +6,19 @@ Updating specific user
 
 **Method** : `PUT`
 
+**Headers:**
+
+```json
+{
+  "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
 **Request parameters:**
 
 ```json
