@@ -10,9 +10,9 @@ const { AgendaTaskEnum } = require('../enums/agenda-task');
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define(AgendaTaskEnum.SyncTokens.enumVal(), { lockLifetime }, async (task, done) => {
+  context.agenda.define(AgendaTaskEnum.SyncTokens, { lockLifetime }, async (task, done) => {
     try {
-      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncTokens.enumVal()});
+      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncTokens});
       const { network, name } = task.attrs.data;
       const tokensForSave = [];
       const offersForUpdate = [];

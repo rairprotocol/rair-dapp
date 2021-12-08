@@ -54,36 +54,36 @@ module.exports = async (context) => {
     let additionalInfo = '';
 
     switch (task.attrs.name) {
-      case AgendaTaskEnum.SyncContracts.enumVal():
-        await agenda.create(AgendaTaskEnum.SyncProducts.enumVal(), data)
+      case AgendaTaskEnum.SyncContracts:
+        await agenda.create(AgendaTaskEnum.SyncProducts, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case AgendaTaskEnum.SyncProducts.enumVal():
-        await agenda.create(AgendaTaskEnum.SyncOfferPools.enumVal(), data)
+      case AgendaTaskEnum.SyncProducts:
+        await agenda.create(AgendaTaskEnum.SyncOfferPools, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case AgendaTaskEnum.SyncOfferPools.enumVal():
-        await agenda.create(AgendaTaskEnum.SyncOffers.enumVal(), data)
+      case AgendaTaskEnum.SyncOfferPools:
+        await agenda.create(AgendaTaskEnum.SyncOffers, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case AgendaTaskEnum.SyncOffers.enumVal():
-        await agenda.create(AgendaTaskEnum.SyncTokens.enumVal(), data)
+      case AgendaTaskEnum.SyncOffers:
+        await agenda.create(AgendaTaskEnum.SyncTokens, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case AgendaTaskEnum.SyncTokens.enumVal():
-        await agenda.create(AgendaTaskEnum.SyncLocks.enumVal(), data)
+      case AgendaTaskEnum.SyncTokens:
+        await agenda.create(AgendaTaskEnum.SyncLocks, data)
           .schedule(moment()
             .utc()
             .toDate())

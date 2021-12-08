@@ -9,9 +9,9 @@ const { AgendaTaskEnum } = require('../enums/agenda-task');
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define(AgendaTaskEnum.SyncOfferPools.enumVal(), { lockLifetime }, async (task, done) => {
+  context.agenda.define(AgendaTaskEnum.SyncOfferPools, { lockLifetime }, async (task, done) => {
     try {
-      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncOfferPools.enumVal()});
+      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncOfferPools});
       const { network, name } = task.attrs.data;
       const offerPoolsForSave = [];
       const block_number = [];
