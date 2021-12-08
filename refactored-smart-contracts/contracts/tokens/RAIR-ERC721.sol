@@ -359,14 +359,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 			|| super.supportsInterface(interfaceId);
 	}
 
-	/// @notice Queries if an operator can act on behalf of an owner on all of their tokens
-	/// @dev Overrides the OpenZeppelin standard by allowing anyone with the TRADER role to transfer tokens
-	/// @param owner 		Owner of the tokens.
-	/// @param operator 	Operator of the tokens.
-	function isApprovedForAll(address owner, address operator) public view virtual override(ERC721, IERC721) returns (bool) {
-        return (hasRole(TRADER, operator) || super.isApprovedForAll(owner, operator));
-    }
-
 	/// @notice Hook being called before every transfer
 	/// @dev	Transfer locking happens here!
 	/// @param	_from		Token's original owner
@@ -382,4 +374,26 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		//require(hasRole(TRADER, _from), 'RAIR ERC721: Transfers cannot be made outside RAIR marketplaces!');
 		super._beforeTokenTransfer(_from, _to, _tokenId);
 	}
+
+	// Find facet for function that is called and execute the
+    // function if a facet is found and return any value.
+    fallback() external {
+        address facet = factoryAddress;
+        assembly {
+            // copy function selector and any arguments
+            calldatacopy(0, 0, calldatasize())
+            // execute function call using the facet
+            let result := delegatecall(gas(), facet, 0, calldatasize(), 0, 0)
+            // get any return value
+            returndatacopy(0, 0, returndatasize())
+            // return any return value or error back to the caller
+            switch result
+                case 0 {
+                    revert(0, returndatasize())
+                }
+                default {
+                    return(0, returndatasize())
+                }
+        }
+    }
 }

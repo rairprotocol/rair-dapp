@@ -29,9 +29,4 @@ contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
 		_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
 		_grantRole(OWNER, msg.sender);
 	}
-
-	/*
-	event TokensWithdrawn(address recipient, address erc777, uint amount);
-
-	*/
 }
