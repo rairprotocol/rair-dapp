@@ -336,7 +336,10 @@ describe("Diamonds", function () {
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
 
-		it ("Shouldn't affect the Factory contract!");
+		it ("Shouldn't affect the Factory contract!", async () => {
+			const proxy721 = await ethers.getContractAt('ERC721Facet', factoryDiamondInstance.address);
+			await expect(await proxy721.isApprovedForAll(addr1.address, owner.address)).to.equal(false);
+		});
 	})
 
 	describe("RAIR Token Instance", () => {
@@ -344,5 +347,12 @@ describe("Diamonds", function () {
 			const proxy721 = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
 			await expect(await proxy721.isApprovedForAll(addr1.address, owner.address)).to.equal(false);
 		});
+	});
+
+	describe("Loupe Facet", () => {
+		it ("Should show all facets", async () => {
+			const loupeFacet = await ethers.getContractAt('DiamondLoupeFacet', factoryDiamondInstance.address);
+			console.log(await loupeFacet.facets());
+		})
 	});
 })

@@ -2,9 +2,9 @@
 pragma solidity ^0.8.10;
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
-import '../../Factory/AppStorage.sol';
+import './AppStorage.sol';
 
-contract ERC721Facet is IERC721, ERC721Enumerable, AccessControlAppStorageEnumerable {
+contract ERC721Facet is IERC721, ERC721Enumerable, AccessControlAppStorageEnumerable721 {
 	bytes32 public constant TRADER = keccak256("TRADER");
 
 	constructor() ERC721("","") {}
@@ -14,6 +14,6 @@ contract ERC721Facet is IERC721, ERC721Enumerable, AccessControlAppStorageEnumer
 	/// @param owner 		Owner of the tokens.
 	/// @param operator 	Operator of the tokens.
 	function isApprovedForAll(address owner, address operator) public view virtual override(ERC721, IERC721) returns (bool) {
-        return (hasRole(TRADER, operator) || super.isApprovedForAll(owner, operator));
+        return (hasRole(TRADER, operator) || s._operatorApprovals[owner][operator]);
     }
 }
