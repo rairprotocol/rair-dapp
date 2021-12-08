@@ -493,6 +493,7 @@
     overflow: hidden;
     display: flex;
     align-items: flex-end;
+    background-size: cover;
 }
 
 .wrapper-splash-page .greyman-page .main-nft {
