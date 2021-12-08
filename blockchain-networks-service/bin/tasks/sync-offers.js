@@ -4,13 +4,14 @@ const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
+const { AgendaTaskEnum } = require('../enums/agenda-task');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define('sync offers', { lockLifetime }, async (task, done) => {
+  context.agenda.define(AgendaTaskEnum.SyncOffers.enumVal(), { lockLifetime }, async (task, done) => {
     try {
-      logAgendaActionStart({agendaDefinition: 'sync offers'});
+      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncOffers.enumVal()});
       const { network, name } = task.attrs.data;
       const offersForSave = [];
       const offerPoolsForUpdate = [];
