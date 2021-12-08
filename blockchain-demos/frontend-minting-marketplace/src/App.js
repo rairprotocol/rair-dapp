@@ -49,6 +49,7 @@ import { TermsUse } from './components/SplashPage/TermsUse';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 import AboutPage from './components/AboutPage/AboutPage';
+import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -389,6 +390,7 @@ function App({ sentryHistory }) {
 									<SentryRoute exact path="/rair-about-page">
 										<AboutPage primaryColor={primaryColor} textColor={textColor}/>
 									</SentryRoute>
+									<SentryRoute exact path="/about-page" component={AboutPageNew} />
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}

@@ -1,0 +1,118 @@
+.home-about--page {
+    
+}
+
+.home-about--page .information-author {
+    position: relative;
+    overflow: hidden;
+    padding: 94px 91px;
+    background-color: #fff;
+    border-radius: 24px;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    /* height: 694px; */
+    background-image: url('./../assets/aboutPage_bg-1.png');
+    background-repeat: no-repeat;
+    background-size: 55% auto;
+    background-position: 100% center;
+}
+
+.home-about--page .information-author .home-about--logo img {
+    height: 150px;
+    width: 150px;
+}
+
+.home-about--page .information-author .home-about--logo {
+    margin-left: 290px;
+    display: flex;
+    align-items: center;
+}
+
+.home-about--page .btn-buy-metamask button {
+    font-size: 20px;
+    color: #fff;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-about-desc {
+    width: 500px;
+    text-align: left;
+}
+
+.home-about-desc h2{
+    color: #4E4D4D;
+    font-weight: 800;
+    line-height: 48px;
+    font-size: 48px;
+}
+
+.home-about-desc .autor-about-text {
+    color: #A7A6A6;
+    font-size: 24px;
+    line-height: 36px;
+    font-weight: 700;
+    margin: 27px 0;
+}
+
+.about-page-platform {
+    margin-top: 108px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.about-page-platform .platform-box .platform-title{
+    width: 251px;
+    height: 55px;
+    color: #fff;
+    background: #5B49AF;
+    font-size: 23px;
+    font-weight: 700;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-page-platform .platform-box:nth-child(2) .platform-title {
+    background: #75CAFA;
+}
+
+.about-page-platform .platform-box:nth-child(3) .platform-title {
+    background: #BD6BAE;
+}
+
+.about-page-platform .platform-box:nth-child(4) .platform-title {
+    background: #1486C5;
+}
+
+.about-page-platform .platform-box .categories-list {
+    border: 1px dashed #4E4D4D;
+    border-radius: 16px;
+    margin-top: 19px;
+    padding: 27px 0 42px 0;
+    width: 251px;
+    height: 282px;
+}
+
+.about-page-platform .platform-box .categories-list ul {
+    padding: 0;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.about-page-platform .platform-box .categories-list ul li {
+    font-size: 20px;
+
+}

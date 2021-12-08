@@ -9,7 +9,6 @@
     font-weight: 700;
 }
 
-
 /* main block */
 
 .wrapper-splash-page {
@@ -36,7 +35,7 @@
 
 /* Author Information Block*/
 
-.information-author {
+.home-splash--page .information-author {
     position: relative;
     overflow: hidden;
     padding: 94px 91px;
