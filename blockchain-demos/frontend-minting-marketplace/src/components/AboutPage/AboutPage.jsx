@@ -16,7 +16,15 @@ import pic13 from "./assets/Matthew.jpg";
 
 function AboutPage({ primaryColor, textColor }) {
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignContent: "center",
+        justifyContent: "center",
+        alignItems: "flex-start",
+      }}
+    >
       <div id={cl.mainPage}>
         <div className={cl.mainPageWrapper}>
           <div className={cl.logoWrapper}>
@@ -57,7 +65,13 @@ function AboutPage({ primaryColor, textColor }) {
                 }}
                 className={cl.secondText}
               >
-                <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}>FAANG Problem: </strong>
+                <strong
+                  style={{
+                    color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                  }}
+                >
+                  FAANG Problem:{" "}
+                </strong>
                 Data monopolies like Amazon, YouTube, Google, Apple, and Netflix
                 charge onerous fees, offer opaque analytics, and can change
                 their terms of service at any time locking out creators and
@@ -71,7 +85,13 @@ function AboutPage({ primaryColor, textColor }) {
                 className={cl.secondText}
               >
                 <br />
-                <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}>DIY Problem: </strong>
+                <strong
+                  style={{
+                    color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                  }}
+                >
+                  DIY Problem:{" "}
+                </strong>
                 DIY distribution meanwhile offers no protection, and cannot help
                 package works into a scarce, valuable, tradeable framework.
               </p>
@@ -83,7 +103,13 @@ function AboutPage({ primaryColor, textColor }) {
                 className={cl.secondText}
               >
                 <br />
-                <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}>RAIR Solution: </strong>
+                <strong
+                  style={{
+                    color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                  }}
+                >
+                  RAIR Solution:{" "}
+                </strong>
                 RAIR, through its decentralized key management node system,
                 empowers anyone to create unique, controllable, and transferable
                 digital assets tied to the actual underlying content.
@@ -105,7 +131,7 @@ function AboutPage({ primaryColor, textColor }) {
             style={{
               // backgroundColor: `var(--${primaryColor})`,
               // color: `var(--${textColor})`,
-              color: 'black',
+              color: "black",
             }}
             className={cl.fourthSection}
           >
@@ -213,10 +239,12 @@ function AboutPage({ primaryColor, textColor }) {
       </div>
 
       <div
-        style={{
-          // backgroundColor: `var(--${primaryColor})`,
-          // color: `var(--${textColor})`,
-        }}
+        style={
+          {
+            // backgroundColor: `var(--${primaryColor})`,
+            // color: `var(--${textColor})`,
+          }
+        }
         className={cl.fifthSectionWrapper}
       >
         <div className={cl.fifthSectionContent}>
@@ -233,7 +261,13 @@ function AboutPage({ primaryColor, textColor }) {
                 to own their content forever, accessed via the RAIR decryption
                 nodes.
               </p>
-              <ol type="1" style={{color: `${primaryColor === "charcoal" ? "black" : ""}`}} className={cl.fifthSectionList}>
+              <ol
+                type="1"
+                style={{
+                  color: `${primaryColor === "charcoal" ? "black" : ""}`,
+                }}
+                className={cl.fifthSectionList}
+              >
                 <li>
                   <p>
                     eBook <strong>purchased</strong> for $10
@@ -275,7 +309,13 @@ function AboutPage({ primaryColor, textColor }) {
                 before have digital assets behaved like physical assets with
                 one-to-one ownership, and an industry first resale model.
               </p>
-              <ol type="1" className={cl.fifthSectionList} style={{color: `${primaryColor === "charcoal" ? "black" : ""}`}}>
+              <ol
+                type="1"
+                className={cl.fifthSectionList}
+                style={{
+                  color: `${primaryColor === "charcoal" ? "black" : ""}`,
+                }}
+              >
                 <li>
                   <p>
                     Buyer <strong>resells</strong> eBook for $8{" "}
@@ -327,7 +367,10 @@ function AboutPage({ primaryColor, textColor }) {
       >
         <div className={cl.seventhSectionContentWrapper}>
           <div className={cl.seventhSectionContent}>
-            <div style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}} className={cl.seventhSectionTitle}>
+            <div
+              style={{ color: `${primaryColor === "charcoal" ? "white" : ""}` }}
+              className={cl.seventhSectionTitle}
+            >
               <h3>
                 <strong>
                   We are in this and created this because we seek to leave a
@@ -367,6 +410,12 @@ function AboutPage({ primaryColor, textColor }) {
                 </div>
                 <div className={cl.seventhSectionCardEmail}>
                   <a
+                    style={{
+                      borderColor: `${
+                        primaryColor === "charcoal" ? "white" : ""
+                      }`,
+                      color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                    }}
                     className={cl.seventhSectionCardEmailA}
                     href="mailto:ed@rair.tech"
                   >
@@ -402,6 +451,12 @@ function AboutPage({ primaryColor, textColor }) {
                 </div>
                 <div className={cl.seventhSectionCardEmail}>
                   <a
+                    style={{
+                      borderColor: `${
+                        primaryColor === "charcoal" ? "white" : ""
+                      }`,
+                      color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                    }}
                     className={cl.seventhSectionCardEmailA}
                     href="mailto:garrett@rair.tech?subject=Inquire%20from%20Website%20RAIR"
                   >
@@ -448,6 +503,12 @@ function AboutPage({ primaryColor, textColor }) {
                 </div>
                 <div className={cl.seventhSectionCardEmail}>
                   <a
+                    style={{
+                      borderColor: `${
+                        primaryColor === "charcoal" ? "white" : ""
+                      }`,
+                      color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                    }}
                     className={cl.seventhSectionCardEmailA}
                     href="mailto:gunther@rair.tech?subject=Inquire%20from%20Website"
                   >
@@ -487,6 +548,12 @@ function AboutPage({ primaryColor, textColor }) {
                 </div>
                 <div className={cl.seventhSectionCardEmail}>
                   <a
+                    style={{
+                      borderColor: `${
+                        primaryColor === "charcoal" ? "white" : ""
+                      }`,
+                      color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                    }}
                     className={cl.seventhSectionCardEmailA}
                     href="mailto:martin@rair.tech?subject=Inquire%20from%20Website%20"
                   >
@@ -703,17 +770,31 @@ function AboutPage({ primaryColor, textColor }) {
                     bankruptcies, and many aspects of starting, running,
                     growing, and buying and selling businesses and assets, with
                     a focus on
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> tech and intellectual property</strong>, among
-                    other areas.Entrepreneurial, he co-founded a music-related
-                    tech start-up. He segued into in-house general counsel
-                    roles, primarily in new and disruptive tech, more than 15
-                    years ago, including in decentralized P2P media distribution
-                    apps and ad tech, a UGC and publisher growth-stage tech
-                    start-up acquired by Intuit, and an ad-tech company with
-                    multiple consumer apps (including P2P) also acquired by a
-                    public company.He is involved in blockchain, NFTs, and
-                    De-Fi.Matt has been <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}>product counsel </strong>for
-                    many apps, SaaS, and web and mobile sites and platforms,
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      tech and intellectual property
+                    </strong>
+                    , among other areas.Entrepreneurial, he co-founded a
+                    music-related tech start-up. He segued into in-house general
+                    counsel roles, primarily in new and disruptive tech, more
+                    than 15 years ago, including in decentralized P2P media
+                    distribution apps and ad tech, a UGC and publisher
+                    growth-stage tech start-up acquired by Intuit, and an
+                    ad-tech company with multiple consumer apps (including P2P)
+                    also acquired by a public company.He is involved in
+                    blockchain, NFTs, and De-Fi.Matt has been{" "}
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      product counsel{" "}
+                    </strong>
+                    for many apps, SaaS, and web and mobile sites and platforms,
                     including compliance with HIPPA, DMCA, CDA 230, and ADA. An
                     Adjunct Professor at USC’s School of Cinematic Arts, he
                     served previously as a Governor at the Televison Academy
@@ -724,18 +805,46 @@ function AboutPage({ primaryColor, textColor }) {
                   </p>
                   <p>
                     Matt managed
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> high-stakes copyright litigation </strong>
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      high-stakes copyright litigation{" "}
+                    </strong>
                     through the U.S. Supreme Court. He taught
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> IP Licensing </strong>
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      IP Licensing{" "}
+                    </strong>
                     law at Pepperdine Law School. He has worked closely and
                     extensively with outside counsel and effectively managed
                     multiple millions of dollars of focused legal spending. He
                     prepares and takes an entity smoothly through financing and
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> M&A </strong>
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      M&A{" "}
+                    </strong>
                     deals with outside and co-counsel. Matt has negotiated,
                     drafted, reviewed, revised, and worked on successfully
                     implementing and fulfilling countless
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> contracts and licenses </strong>
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      contracts and licenses{" "}
+                    </strong>
                     (in and out-bound), MSAs, Terms, Conditions, Privacy
                     Policies, and internal policies, guidelines, and procedures,
                     and as a C-Suite member works closely with other executives,
@@ -747,17 +856,46 @@ function AboutPage({ primaryColor, textColor }) {
                   <p>
                     Matt is strong at win-win outcomes, dispute mitigation,
                     avoidance, and resolution counsel. He produces
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> actionable </strong>, understandable items and
-                    measured advice, and has experience in ambassadorial
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> reputation </strong>
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      actionable{" "}
+                    </strong>
+                    , understandable items and measured advice, and has
+                    experience in ambassadorial
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      reputation{" "}
+                    </strong>
                     management,
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> Board of Directors </strong>
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      Board of Directors{" "}
+                    </strong>
                     work, including meeting preparation, participation,
                     counseling, and Corporate Secretary work. Matt has extensive
                     legal strategy, tactics, and execution experience within
                     fast-growing, disruptive, technology companies, strong
                     business
-                    <strong style={{color: `${primaryColor === "charcoal" ? "white" : ""}`}}> judgment, operational </strong>
+                    <strong
+                      style={{
+                        color: `${primaryColor === "charcoal" ? "white" : ""}`,
+                      }}
+                    >
+                      {" "}
+                      judgment, operational{" "}
+                    </strong>
                     experience, and cultural values, and partners well with all
                     levels of management, business, and technology teams. Matt
                     is driven to contribute to, and motivated by, outstanding
@@ -782,7 +920,7 @@ function AboutPage({ primaryColor, textColor }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

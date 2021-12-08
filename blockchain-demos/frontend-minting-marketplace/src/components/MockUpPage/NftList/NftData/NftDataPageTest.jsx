@@ -111,22 +111,47 @@ const NftDataPageTest = ({
     return max;
   }
 
+  function ch(){
+    if(maxPrice === minPrice){
+     const samePrice = maxPrice;
+      return `${samePrice} 
+      `
+    } return `${minPrice} – ${maxPrice} 
+    `
+  }
+
   function showLink() {
-    if (currentUser === tokenData[selectedToken]?.ownerAddress) {
+    //  checks if you are the owner and shows only to the owner
+
+    // if (currentUser === tokenData[selectedToken]?.ownerAddress) {
+    //   return (
+    //     <div>
+    //       {tokenData[selectedToken]?.authenticityLink !== "none" ? (
+    //         <a href={tokenData[selectedToken]?.authenticityLink}>
+    //           {tokenData[selectedToken]?.authenticityLink}
+    //         </a>
+    //       ) : (
+    //         "Not minted yet"
+    //       )}
+    //     </div>
+    //   );
+    // } else {
+    //   return <span>Not minted yet</span>;
+    // }
+
+  // shows everyone
       return (
         <div>
-          {tokenData[selectedToken]?.authenticityLink !== "none" ? (
+          {tokenData[selectedToken]?.authenticityLink ? (
             <a href={tokenData[selectedToken]?.authenticityLink}>
               {tokenData[selectedToken]?.authenticityLink}
             </a>
-          ) : (
+          ) 
+          : (
             "Not minted yet"
           )}
         </div>
       );
-    } else {
-      return <span>Not minted yet</span>;
-    }
   };
 
   const buyContract = async () => { 
@@ -372,9 +397,10 @@ const NftDataPageTest = ({
                     marginRight: "3rem",
                   }}
                 >
-                  {offerPrice &&
-                    `${minPrice} – ${maxPrice} ${data?.product.blockchain || ""
-                    } `}
+                  {offerPrice && `${ch()}`
+                    // `${minPrice} – ${maxPrice} ${data?.product.blockchain || ""
+                    // } `
+                    }
                 </span>
                 <span
                   style={{
