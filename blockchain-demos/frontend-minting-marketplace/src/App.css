@@ -1054,3 +1054,30 @@ body::-webkit-scrollbar-thumb:hover {
 body::-webkit-scrollbar-thumb:active {
   background: #8C63DA;
 }
+
+.video-btn-back {
+  text-align: left;
+}
+
+
+.video-btn-back button {
+  font-size: 20px;
+  color: #fff;
+  background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+  border: none;
+  padding: 5px 15px;
+  text-transform: uppercase;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+}
+
+.video-btn-back button:hover {
+  background: #AF6FD8;
+}
