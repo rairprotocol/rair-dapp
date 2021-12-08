@@ -1,6 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 
+import { erc721Abi } from '../../contracts/index.js'
+import { rFetch } from '../../utils/rFetch.js';
+import Swal from 'sweetalert2';
+
 import "./SplashPage.css";
 
 /* importing images*/
@@ -50,6 +54,36 @@ const customStyles = {
 const SplashPage = () => {
   let params = `scrollbars=no,resizable=no,status=no,location=no,
                 toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
+
+  const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
+
+  const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
+
+  const buyNipsey = async () => {
+    const {success, products} = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
+    let instance = contractCreator(nipseyAddress, erc721Abi);
+    let nextToken = await instance.getNextSequentialIndex(0, 50, 250);
+    Swal.fire({
+      title: 'Please wait...',
+      html: `Buying token #${nextToken.toString()}`,
+      icon: 'info',
+      showConfirmButton: false
+    });
+    try {
+      await (await minterInstance.buyToken(
+        products[0].offerPool.marketplaceCatalogIndex,
+        products[0].offers[0].offerIndex,
+        nextToken,
+        {
+          value: products[0].offers[0].price
+        }
+      )).wait();
+      Swal.fire('Success',`Bought token #${nextToken}!`,'success');
+    } catch (e) {
+      console.error(e);
+      Swal.fire('Error',e?.message,'error');
+    }
+  }
 
   let subtitle;
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -161,7 +195,7 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button disabled={!Object.values(active).every(el => el)} className="modal-btn">
+                        <button onClick={buyNipsey} disabled={!Object.values(active).every(el => el)} className="modal-btn">
                           <img
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}
