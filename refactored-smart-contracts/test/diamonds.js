@@ -7,6 +7,13 @@ const FacetCutAction_REMOVE = 2;
 const initialRAIR777Supply = 1000;
 const priceToDeploy = 150;
 
+const AccessControlFunctions = [
+	"grantRole(bytes32,address)",
+	"revokeRole(bytes32,address)",
+	"hasRole(bytes32,address)",
+	"getRoleAdmin(bytes32)"
+]
+
 // get function selectors from ABI
 function getSelectors (contract) {
 	const signatures = Object.keys(contract.interface.functions)
@@ -67,6 +74,7 @@ describe("Diamonds", function () {
 	let DiamondLoupeFacetFactory, diamondLoupeFacetInstance;
 
 	let ERC777ReceiverFacetFactory, erc777ReceiverFacetInstance;
+	let CreatorsFacetFactory, creatorsFacetInstance;
 
 	let ERC777Factory, erc777Instance, extraERC777Instance;
 
@@ -79,6 +87,7 @@ describe("Diamonds", function () {
 		OwnershipFacetFactory = await ethers.getContractFactory("OwnershipFacet");
 		DiamondLoupeFacetFactory = await ethers.getContractFactory("DiamondLoupeFacet");
 		ERC777Factory = await ethers.getContractFactory("RAIR777");
+		CreatorsFacetFactory = await ethers.getContractFactory("creatorFacet");
 	})
 
 	describe("Deploying external contracts", () => {
@@ -154,6 +163,7 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(erc777ReceiverFacetInstance)
 			}
+			//console.log(receiverFacetItem.functionSelectors)
 			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -192,6 +202,20 @@ describe("Diamonds", function () {
 				.withArgs(erc777Instance.address, priceToDeploy, owner.address);
 		});
 
+		it ("Should return the deployment cost of an ERC777 contract", async () => {
+			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
+			await expect(await receiverFacet.getDeploymentCost(erc777Instance.address))
+				.to.equal(priceToDeploy);
+			await expect(await receiverFacet.getDeploymentCost(extraERC777Instance.address))
+				.to.equal(0);
+		})
+
+		it ("Shouldn't be able to execute the tokensReceived function from external addresses", async () => {
+			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
+			expect(receiverFacet.tokensReceived(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes(''),  ethers.utils.toUtf8Bytes('')))
+					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ERC777()}`);
+		});
+
 		it ("Should not deploy a contract if it receives ERC777 tokens from an unapproved ERC777 contract", async () => {
 			await expect(extraERC777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('')))
 				.to.be.revertedWith(`AccessControl: account ${extraERC777Instance.address.toLowerCase()} is missing role ${await factoryDiamondInstance.ERC777()}`);
@@ -202,14 +226,14 @@ describe("Diamonds", function () {
 				.to.be.revertedWith(`RAIR Factory: not enough RAIR tokens to deploy a contract`);
 		});
 
-		/*it ("Should deploy a RAIR contract if it receives ERC777 tokens from an approved address", async() => {
+		it ("Should deploy a RAIR contract if it receives ERC777 tokens from an approved address", async() => {
 			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
 			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!')))
-				.to.emit(erc777Instance, "Sent")
-				.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
+				//.to.emit(erc777Instance, "Sent")
+				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
 				.to.emit(receiverFacet, 'NewContractDeployed')
 				.withArgs(owner.address, 1, '0x33791c463B145298c575b4409d52c2BcF743BF67', 'TestRair!');
-		});*/
+		});
 
 		it ("Should return excess tokens from the deployment", async() => {
 			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
@@ -219,11 +243,72 @@ describe("Diamonds", function () {
 				//.to.emit(erc777Instance, "Sent")
 				//.withArgs(factoryDiamondInstance.address, factoryDiamondInstance.address, owner.address, 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
 				.to.emit(receiverFacet, 'NewContractDeployed')
-				.withArgs(owner.address, 1, '0x33791c463B145298c575b4409d52c2BcF743BF67', 'TestRair!');
+				.withArgs(owner.address, 2, '0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa', 'TestRair!');
 			await expect(await erc777Instance.balanceOf(owner.address))
-				.to.equal(initialRAIR777Supply - (priceToDeploy));
+				.to.equal(initialRAIR777Supply - (priceToDeploy * 2));
 			await expect(await erc777Instance.balanceOf(factoryDiamondInstance.address))
-				.to.equal(priceToDeploy);
+				.to.equal(priceToDeploy * 2);
 		});
+	});
+
+	describe("RAIR Creators Facet", () => {
+		it ("Should deploy the Creators Facet", async() => {
+			creatorsFacetInstance = await CreatorsFacetFactory.deploy();
+			await creatorsFacetInstance.deployed();
+		});
+
+		it ("Should add the facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: creatorsFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(creatorsFacetInstance).remove(AccessControlFunctions)
+			}
+			//console.log(receiverFacetItem.functionSelectors)
+			//console.log(erc777ReceiverFacetInstance.functions);
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should return the correct amount of creators", async () => {
+			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			await expect(await creatorFacet.getCreatorsCount()).to.equal(1);
+		});
+
+		it ("Should return the address of the creators", async () => {
+			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			await expect(await creatorFacet.getCreatorAtIndex(0))
+				.to.equal(owner.address);
+		});
+
+		it ("Should return the correct amount of contracts deployed by a creator", async () => {
+			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			await expect(await creatorFacet.getContractCountOf(owner.address)).to.equal(2);
+		})
+
+		it ("Should return the contracts deployed by a creator individually", async () => {
+			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			await expect(await creatorFacet.creatorToContractIndex(owner.address, 0))
+				.to.equal('0x33791c463B145298c575b4409d52c2BcF743BF67');
+			await expect(await creatorFacet.creatorToContractIndex(owner.address, 1))
+				.to.equal('0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa');
+		})
+		
+		it ("Should return the contracts deployed by a creator in a full list", async () => {
+			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			let contracts = await creatorFacet.creatorToContractList(owner.address);
+			await expect(contracts[0]).to.equal('0x33791c463B145298c575b4409d52c2BcF743BF67');
+			await expect(contracts[1]).to.equal('0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa');
+		});
+
+		it ("Should return the creator of a token deployed", async () => {
+			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
+			await expect(await creatorFacet.contractToCreator('0x33791c463B145298c575b4409d52c2BcF743BF67'))
+				.to.equal(owner.address);
+			await expect(await creatorFacet.contractToCreator('0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa'))
+				.to.equal(owner.address);
+
+		})
 	});
 })

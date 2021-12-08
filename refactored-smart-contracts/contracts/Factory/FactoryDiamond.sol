@@ -33,25 +33,5 @@ contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
 	/*
 	event TokensWithdrawn(address recipient, address erc777, uint amount);
 
-	/// @notice Transfers tokens from the factory to any of the OWNER addresses
-	/// @dev 	If the contract has less than the amount, the ERC777 contract will revert
-	/// @dev 	AccessControl makes sure only an OWNER can withdraw
-	/// @param 	erc777	Address of the ERC777 contract
-	/// @param 	amount	Amount of tokens to withdraw
-	function withdrawTokens(address erc777, uint amount) public onlyRole(OWNER) {
-		require(hasRole(ERC777, erc777), "RAIR Factory: Specified contract isn't an approved erc777 contract");
-		IERC777(erc777).send(msg.sender, amount, "Factory Withdraw");
-		emit TokensWithdrawn(msg.sender, erc777, amount);
-	}
-
-	/// @notice	Adds an address to the list of allowed minters
-	/// @param	_erc777Address	Address of the new Token
-	function add777Token(address _erc777Address, uint _pricePerToken) public onlyRole(OWNER) {
-		grantRole(ERC777, _erc777Address);
-		deploymentCostForERC777[_erc777Address] = _pricePerToken;
-		emit NewTokensAccepted(_erc777Address, _pricePerToken);
-	}
-
-	
 	*/
 }

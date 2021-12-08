@@ -9,6 +9,10 @@ contract creatorFacet is AccessControlAppStorageEnumerable {
 		return s.creators.length;
 	}
 
+	function getCreatorAtIndex(uint index) public view returns (address creator) {
+		creator = s.creators[index];
+	}
+
 	/// @notice Returns the number of contracts deployed by an address
 	/// @dev	Use alongside creatorToContracts for the full list of tokens 
 	/// @param	deployer	Wallet address to query
@@ -17,12 +21,16 @@ contract creatorFacet is AccessControlAppStorageEnumerable {
 	}
 
 	/// @notice Necessary view function now that public mappings are not possible
-	function creatorToContractID(address deployer, uint index) public view returns(address deployedContract) {
+	function creatorToContractIndex(address deployer, uint index) public view returns(address deployedContract) {
 		return s.creatorToContracts[deployer][index];
 	}
 
 	/// @notice Returns the whole array of deployed addresses of a creator
 	function creatorToContractList(address deployer) public view returns(address[] memory deployedContracts) {
 		return s.creatorToContracts[deployer];
+	}
+
+	function contractToCreator(address deployedContract) public view returns (address creator) {
+		creator = s.contractToCreator[deployedContract];
 	}
 }

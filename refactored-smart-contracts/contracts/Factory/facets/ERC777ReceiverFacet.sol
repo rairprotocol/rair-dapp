@@ -29,6 +29,10 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 		s.deploymentCostForToken[_erc777Address] = 0;
 		emit TokenNoLongerAccepted(_erc777Address, msg.sender);
 	}
+
+	function getDeploymentCost(address erc777) public view returns (uint price) {
+		price = s.deploymentCostForToken[erc777];
+	}
 	
 	/// @notice Function called by an ERC777 when they send tokens
 	/// @dev    This is our deployment mechanism for ERC721 contracts!
@@ -43,7 +47,7 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 		require(amount >= s.deploymentCostForToken[msg.sender], 'RAIR Factory: not enough RAIR tokens to deploy a contract');
 
 		if (amount - (s.deploymentCostForToken[msg.sender]) > 0) {
-			IERC777(msg.sender).send(from, amount - (s.deploymentCostForToken[msg.sender]), userData);
+			IERC777(msg.sender).send(from, amount - (s.deploymentCostForToken[msg.sender]), bytes("RAIR"));
 		}
 		address[] storage deploymentsFromOwner = s.creatorToContracts[from];
 		
