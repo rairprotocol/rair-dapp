@@ -27,7 +27,7 @@ module.exports = context => {
   router.get('/:publicAddress', validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
-      const user = await context.db.User.findOne({ publicAddress }, { adminNFT: 0, nonce: 0 });
+      const user = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
 
       res.json({ success: true, user });
     } catch (e) {
