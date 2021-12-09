@@ -37,8 +37,8 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 
 	const fetchData = useCallback(async () => {
 		let {success, result} = await rFetch(`/api/nft/${address}/${collectionIndex}/`);
-		if (success) {
-			setMetadataExists(result.filter(item => item.metadata.name !== 'none').length > 0);
+		if (success && result.totalCount > 0) {
+			setMetadataExists(result.tokens.filter(item => item.metadata.name !== 'none').length > 0);
 		}
 	}, [address, collectionIndex])
 

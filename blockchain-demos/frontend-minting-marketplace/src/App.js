@@ -387,7 +387,6 @@ function App({ sentryHistory }) {
 								<SentryRoute path='/admin' component={BlockChainSwitcher} />
 							</Switch>
 						</div>
-<<<<<<< HEAD
 						<div className='col-12 mt-3 row'>
 							<Switch>
 								<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
