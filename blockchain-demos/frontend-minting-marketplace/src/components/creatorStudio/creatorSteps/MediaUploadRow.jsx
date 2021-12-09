@@ -3,7 +3,7 @@ import InputField from '../../common/InputField.jsx';
 import InputSelect from '../../common/InputSelect.jsx';
 import { useSelector } from 'react-redux';
 
-const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, children}) => {
+const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 
 	const {primaryColor, secondaryColor, textColor} = useSelector(store => store.colorStore);
 	
@@ -51,17 +51,17 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, child
 			className='col-12 m-0 p-0 col-md-5'
 			style={{...cornerStyle, height: '100%', overflowY: 'hidden'}}>
 			{item.file.type.split('/')[0] === 'video' &&
-				<video style={cornerStyle} className='h-100 w-100' src={URL.createObjectURL(item.file)} />
+				<video style={cornerStyle} className='h-100 w-100' src={item.preview} />
 			}
 			{item.file.type.split('/')[0] === 'image' &&
-				<img style={cornerStyle} src={URL.createObjectURL(item.file)} className='h-auto w-100' />
+				<img style={cornerStyle} src={item.preview} className='h-auto w-100' />
 			}
 			{item.file.type.split('/')[0] === 'audio' &&
 				<>
 					<div className='w-100 h-100'>
 						<audio
 							controls
-							src={URL.createObjectURL(item.file)}>
+							src={item.preview}>
 							Your browser does not support the
 							<code>audio</code> element.
 						</audio>

@@ -40,7 +40,8 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 					category: 'null',
 					title: item.name,
 					file: item,
-					description: ''
+					description: '',
+					preview: URL.createObjectURL(item)
 				}
 			})
 		);
