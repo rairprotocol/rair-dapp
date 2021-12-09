@@ -77,7 +77,7 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice	Returns the number of tokens inside a product
 	/// @param	productIndex 	Product index
-	function getProductLength(uint productIndex) public view returns (uint length) {
+	function mintedTokensInProduct(uint productIndex) public view returns (uint length) {
 		length = s.tokensByProduct[productIndex].length;
 	}
 	

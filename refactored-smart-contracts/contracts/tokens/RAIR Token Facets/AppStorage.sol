@@ -9,11 +9,21 @@ struct RoleData721 {
 	bytes32 adminRole;
 }
 
+struct range {
+	uint rangeStart;
+	uint rangeEnd;
+	uint tokensAllowed;
+	uint lockedTokens;
+	uint rangePrice;
+	string rangeName;
+}
+
 struct product {
 	uint startingToken;
 	uint endingToken;
 	uint mintableTokens;
 	string name;
+	uint[] rangeList;
 }
 
 struct AppStorage721 {
@@ -22,11 +32,13 @@ struct AppStorage721 {
 	address factoryAddress;
 	uint16 royaltyFee;
 	product[] products;
+	range[] ranges;
 	mapping(uint => uint) tokenToProduct;
 	mapping(uint => string) uniqueTokenURI;
 	mapping(uint => string) productURI;
 	mapping(uint => uint[]) tokensByProduct;
 	string contractMetadataURI;
+	mapping(uint => uint) rangeToProduct;
 	// ERC721
     string _name;
     string _symbol;

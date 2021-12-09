@@ -96,6 +96,7 @@ describe("Diamonds", function () {
 	let ERC721FacetFactory, erc721FacetInstance;
 	let RAIRMetadataFacetFactory, rairMetadataFacetInstance;
 	let RAIRProductFacetFactory, rairProductFacetInstance;
+	let RAIRRangesFacetFactory, rairRangesFacetInstance;
 	
 	before(async function() {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
@@ -115,6 +116,8 @@ describe("Diamonds", function () {
 		ERC721FacetFactory = await ethers.getContractFactory("ERC721Facet");
 		RAIRMetadataFacetFactory = await ethers.getContractFactory("RAIRMetadataFacet");
 		RAIRProductFacetFactory = await ethers.getContractFactory("RAIRProductFacet");
+		RAIRRangesFacetFactory = await ethers.getContractFactory("RAIRRangesFacet");
+
 	})
 
 	describe("Deploying external contracts", () => {
@@ -433,7 +436,90 @@ describe("Diamonds", function () {
 			await expect(await productFacet.createProduct("SecondFirst", 100))
 				.to.emit(productFacet, 'ProductCreated')
 				.withArgs(0, "SecondFirst", 0, 100);
+			await expect(await productFacet.createProduct("SecondSecond", 900))
+				.to.emit(productFacet, 'ProductCreated')
+				.withArgs(1, "SecondSecond", 100, 900);
 		});
+
+		it ("Should show information about the products", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress);
+			await expect(await productFacet.getProductCount())
+				.to.equal(1);
+			await expect(await productFacet.mintedTokensInProduct(0))
+				.to.equal(0)
+
+			productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(await productFacet.getProductCount())
+				.to.equal(2);
+			await expect(await productFacet.mintedTokensInProduct(0))
+				.to.equal(0)
+			await expect(await productFacet.mintedTokensInProduct(1))
+				.to.equal(0)
+		})
+	});
+
+	describe("RAIR Product Facet", () => {
+		it ("Should deploy the RAIR Product Facet", async () => {
+		 	//"RAIRRangesFacet"
+			rairRangesFacetInstance = await RAIRRangesFacetFactory.deploy();
+			await rairRangesFacetInstance.deployed();
+		});
+
+		it ("Should add the RAIR Product facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: rairRangesFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(rairRangesFacetInstance)//.remove(AccessControlFunctions)
+				//.remove(["supportsInterface(bytes4)"])
+			}
+			//console.log(receiverFacetItem.functionSelectors)
+			//console.log(erc777ReceiverFacetInstance.functions);
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should not create offers for invalid products", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
+			// createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name)
+			await expect(rangesFacet.createRange(1, 0, 10, 1000, 950, 50, 'First First First'))
+				.to.be.revertedWith('RAIR ERC721: Product does not exist');
+		});
+
+		it ("Should create offers", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
+			await expect(await rangesFacet.createRange(0, 0, 10, 1000, 950, 50, 'First First First'))
+				.to.emit(rangesFacet, 'CreatedRange')
+				.withArgs(0, 0, 10, 1000, 950, 50, 'First First First', 0);
+		});
+
+		it ("Should create offers in batches", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
+			await expect(await rangesFacet.createRangeBatch(0, [
+			{
+				rangeStart: 0,
+				rangeEnd: 10,
+				price: 2000,
+				tokensAllowed: 9 ,
+				lockedTokens: 1,
+				name: 'Second First First'
+			}, {
+				rangeStart: 11,
+				rangeEnd: 99,
+				price: 3500,
+				tokensAllowed: 50 ,
+				lockedTokens: 10,
+				name: 'Second First Second'
+			},
+			]))
+				.to.emit(rangesFacet, 'CreatedRange')
+				.withArgs(0, 0, 10, 2000, 9, 1, 'Second First First', 0)
+				.to.emit(rangesFacet, 'CreatedRange')
+				.withArgs(0, 11, 99, 3500, 50, 10, 'Second First Second', 1);
+		});
+
+		it ("Should update offers");
 	});
 
 

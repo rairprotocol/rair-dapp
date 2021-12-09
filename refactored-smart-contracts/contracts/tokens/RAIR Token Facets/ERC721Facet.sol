@@ -5,12 +5,12 @@ import './AppStorage.sol';
 contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant TRADER = keccak256("TRADER");
 
-	function name() public view returns (string memory name) {
-		name = s._name;
+	function name() public view returns (string memory) {
+		return s._name;
 	}
 
-	function symbol() public view returns (string memory symbol) {
-		symbol = s._symbol;
+	function symbol() public view returns (string memory) {
+		return s._symbol;
 	}
 
 	/// @notice	Overridden function from the ERC721 contract that returns our
