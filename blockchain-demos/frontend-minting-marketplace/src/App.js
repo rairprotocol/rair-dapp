@@ -43,11 +43,14 @@ import { OnboardingButton } from './components/common/OnboardingButton';
 import SplashPage from './components/SplashPage';
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
+import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
+import { TermsUse } from './components/SplashPage/TermsUse';
 // import AboutPage from './components/AboutPage/AboutPage';
 // import NftList from './components/MockUpPage/NftList/NftList';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 import AboutPage from './components/AboutPage/AboutPage';
-
+import ThankYouPage from './components/ThankYouPage';
+import NotFound from './components/NotFound/NotFound';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -155,9 +158,9 @@ function App({ sentryHistory }) {
 				signer = provider.getSigner();
 			}
 
-			if (!localStorage.token ) {
+			if (!localStorage.token) {
 				let token = await getJWT(signer, user, currentUser);
-				if(!success){
+				if (!success) {
 					setLoginDone(false);
 					setStartedLogin(false);
 				}
@@ -168,7 +171,7 @@ function App({ sentryHistory }) {
 
 			if (!isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser);
-				if(!success){
+				if (!success) {
 					setLoginDone(false);
 					setStartedLogin(false);
 				}
@@ -191,17 +194,17 @@ function App({ sentryHistory }) {
 	}
 
 	const btnCheck = useCallback(() => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      setRenderBtnConnect(false);
-    } else {
-      setRenderBtnConnect(true);
-    }
-  },[setRenderBtnConnect]);
+		if (window.ethereum && window.ethereum.isMetaMask) {
+			setRenderBtnConnect(false);
+		} else {
+			setRenderBtnConnect(true);
+		}
+	}, [setRenderBtnConnect]);
 
-  const openAboutPage = () => {
-	sentryHistory.push(`/rair-about-page`)
-	window.scrollTo(0, 0);
-  }
+	const openAboutPage = () => {
+		sentryHistory.push(`/rair-about-page`)
+		window.scrollTo(0, 0);
+	}
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -216,7 +219,7 @@ function App({ sentryHistory }) {
 		if (process.env.NODE_ENV === 'development') {
 			window.gotoRouteBackdoor = sentryHistory.push
 		}
-	}, [])
+	}, [sentryHistory.push])
 
 	useEffect(() => {
 		btnCheck()
@@ -269,7 +272,6 @@ function App({ sentryHistory }) {
       (function () {
         let angle = 0;
         let p = document.querySelector("p");
-		console.log(p, 'p find');
         if (p) {
           let text = p.textContent.split("");
           var len = text.length;
@@ -284,14 +286,24 @@ function App({ sentryHistory }) {
           spans = p.children;
         } else console.log("kik");
 
-        (function wheee() {
-          for (var i = 0; i < len; i++) {
-            spans[i].style.color =
-              "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-          }
-          angle++;
-          requestAnimationFrame(wheee);
-        })();
+        // function wheee() {
+        //   for (var i = 0; i < len; i++) {
+        //     spans[i].style.color =
+        //       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+        //   }
+        //   angle+=5;
+        // //   requestAnimationFrame(wheee);
+        // };
+		// setInterval(wheee, 100);
+
+		(function wheee() {
+			for (var i = 0; i < len; i++) {
+			  spans[i].style.color =
+				"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+			}
+			angle++;
+			requestAnimationFrame(wheee);
+		  })();
       })();
     }
   } , [primaryColor]);
@@ -334,7 +346,7 @@ function App({ sentryHistory }) {
 									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 								</button>
 								{renderBtnConnect ? <OnboardingButton /> : <> </>}
-							</div> : <div style={{display: `${adminAccess ? "block" : "none"}`}}>
+							</div> : <div style={{ display: `${adminAccess ? "block" : "none"}` }}>
 								{
 									[
 										{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
@@ -371,11 +383,14 @@ function App({ sentryHistory }) {
 							</div>
 							<div className='col-12 mt-3 row'>
 								<Switch>
-									<SentryRoute exact path="/nipsey-splash-page" component={SplashPage} />
+									<SentryRoute exact path="/thankyou" component={ThankYouPage} />
+									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
+									<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
+									<SentryRoute exact path="/terms-use" component={TermsUse} />
 									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
 									<SentryRoute exact path="/notifications" component={NotificationPage} />
 									<SentryRoute exact path="/rair-about-page">
-										<AboutPage primaryColor={primaryColor} textColor={textColor}/>
+										<AboutPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
@@ -415,6 +430,7 @@ function App({ sentryHistory }) {
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</div>
 									</SentryRoute>
+									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>
 						</div>

@@ -1,0 +1,19 @@
+.main{
+    width: 100%;
+    font-size: large;
+    padding: 10px;
+    text-align: start;
+}
+.main strong{
+    font-size: x-large;
+}
+.main div{
+    padding-bottom: 30px;
+}
+.main h1{
+    padding-bottom: 20px;
+}
+.main div h3{
+
+    padding-bottom: 20px;
+}
