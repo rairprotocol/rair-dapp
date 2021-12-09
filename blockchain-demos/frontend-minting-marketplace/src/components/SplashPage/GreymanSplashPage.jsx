@@ -7,7 +7,6 @@ import './SplashPage.css';
 import Metamask from './images/metamask_logo.png';
 import GreyMan from './images/greyman.png';
 
-
 /* importing Components*/
 import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
 import TeamMeet from './TeamMeet/TeamMeetList';
