@@ -1,7 +1,10 @@
 const Joi = require('joi');
 
 module.exports = Joi.object({
-  mimetype: Joi.any()
-    .valid('video/mp4', 'video/quicktime')
+  type: Joi.any()
+    .valid('video','audio')
     .required()
+  //mimetype: Joi.any()
+  //  .valid('video/mp4', 'video/quicktime')
+  //  .required()
 }).unknown();
