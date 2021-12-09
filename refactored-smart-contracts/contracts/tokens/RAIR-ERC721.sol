@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.10;
-
+/*
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "../diamondStandard/interfaces/IDiamondLoupe.sol";
 import "./IERC2981.sol";
 import "./IRAIR-ERC721.sol";
 
@@ -25,14 +26,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		uint productIndex;
 	}
 
-	struct product {
-		uint startingToken;
-		uint endingToken;
-		uint mintableTokens;
-		string name;
-		uint[] locks;
-	}
-
 	mapping(uint => uint[]) public tokensByProduct;
 	mapping(uint => uint) public tokenToProduct;
 	mapping(uint => uint) private tokenToLock;
@@ -44,7 +37,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	string internal contractMetadataURI;
 
 	lockedRange[] private _lockedRange;
-	product[] private _products;
 
 	//Roles
 	bytes32 public constant CREATOR = keccak256("CREATOR");
@@ -72,159 +64,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		_setupRole(TRADER, _creatorAddress);
 	}
 
-	/// @notice	Makes sure the product exists before doing changes to it
-	/// @param	productID	Product to verify
-	modifier productExists(uint productID) {
-		require(_products.length > productID, "RAIR ERC721: Product does not exist");
-		_;
-	}
-
-	function freezeMetadata(uint tokenId) public onlyRole(CREATOR) {
-		emit PermanentURI(tokenURI(tokenId), tokenId);
-	}
-
-	function setContractURI(string calldata newURI) external onlyRole(CREATOR) {
-		contractMetadataURI = newURI;
-		emit ContractURIChanged(newURI);
-	}
-
-	function contractURI() public view returns (string memory) {
-		return contractMetadataURI;
-    }
-	
-	/// @notice	Sets the Base URI for ALL tokens
-	/// @dev	Can be overriden by the specific token URI
-	/// @param	newURI	URI to be used
-	function setBaseURI(string calldata newURI) external onlyRole(CREATOR) {
-		baseURI = newURI;
-		emit BaseURIChanged(newURI);
-	}
-
-	/// @notice	Overridden function from the ERC721 contract that returns our
-	///			variable base URI instead of the hardcoded URI
-	function _baseURI() internal view override(ERC721) returns (string memory) {
-		return baseURI;
-	}
-
-	/// @notice	Updates the unique URI of a token, but in a single transaction
-	/// @dev	Uses the single function so it also emits an event
-	/// @param	tokenIds	Token Indexes that will be given an URI
-	/// @param	newURIs		New URIs to be set
-	function setUniqueURIBatch(uint[] calldata tokenIds, string[] calldata newURIs) external onlyRole(CREATOR) {
-		require(tokenIds.length == newURIs.length, "RAIR ERC721: Token IDs and URIs should have the same length");
-		for (uint i = 0; i < tokenIds.length; i++) {
-			setUniqueURI(tokenIds[i], newURIs[i]);
-		}
-	}
-	
-	/// @notice	Gives an individual token an unique URI
-	/// @dev	Emits an event so there's provenance
-	/// @param	tokenId	Token Index that will be given an URI
-	/// @param	newURI	New URI to be given
-	function setUniqueURI(uint tokenId, string calldata newURI) public onlyRole(CREATOR) {
-		uniqueTokenURI[tokenId] = newURI;
-		emit TokenURIChanged(tokenId, newURI);
-	}
-
-	/// @notice	Gives an individual token an unique URI
-	/// @dev	Emits an event so there's provenance
-	/// @param	productId	Token Index that will be given an URI
-	/// @param	newURI		New URI to be given
-	function setProductURI(uint productId, string calldata newURI) public onlyRole(CREATOR) {
-		productURI[productId] = newURI;
-		emit ProductURIChanged(productId, newURI);
-	}
-
-	/// @notice	Returns a token's URI, could be specific or general
-	/// @dev	IF the specific token URI doesn't exist, the general base URI will be returned
-	/// @param	tokenId		Token Index to look for
-	function tokenURI(uint tokenId) public view override(ERC721) returns (string memory) {
-		string memory URI = uniqueTokenURI[tokenId];
-		if (bytes(URI).length > 0) {
-			return URI;
-		}
-		URI = productURI[tokenToProduct[tokenId]];
-		if (bytes(URI).length > 0) {
-			return string(abi.encodePacked(URI, tokenToProductIndex(tokenId).toString()));
-		}
-		return super.tokenURI(tokenId);
-	}
-
-	/// @notice	Returns the number of tokens inside a product
-	/// @param	productIndex 	Product index
-	function tokenCountByProduct(uint productIndex) public view returns (uint) {
-		return tokensByProduct[productIndex].length;
-	}
-
-	/// @notice	Makes sure a lock can be created
-	/// @dev	Used on the createRangeLock call!
-	/// @param	productIndex 	Product index
-	/// @param	startingToken 	First token to lock
-	/// @param	endingToken 	Last token to lock
-	function canCreateLock(uint productIndex, uint startingToken, uint endingToken) public view returns (bool canCreate) {
-		product storage selectedProduct =  _products[productIndex];
-		if (startingToken > selectedProduct.endingToken - selectedProduct.startingToken ||
-				endingToken > selectedProduct.endingToken - selectedProduct.startingToken) {
-			return false;
-		}
-		for (uint i = 0; i < selectedProduct.locks.length; i++) {
-			if ((_lockedRange[selectedProduct.locks[i]].startingToken <= selectedProduct.startingToken + startingToken &&
-					_lockedRange[selectedProduct.locks[i]].endingToken >= selectedProduct.startingToken + startingToken) ||
-						(_lockedRange[selectedProduct.locks[i]].startingToken <= selectedProduct.startingToken + endingToken &&
-								_lockedRange[selectedProduct.locks[i]].endingToken >= selectedProduct.startingToken + endingToken)) {
-				return false;
-			}
-		}
-		return true;
-	} 
-
-	/// @notice	Locks transfers for tokens within a specific range
-	/// @dev	The minter pays for the locking as well
-	/// @param	productIndex Index of the product on the contract
-	/// @param	_startingToken Initial token locked
-	/// @param	_endingToken Last token locked
-	/// @param	_lockedTokens Number of tokens that have to be minted in order to unlock the full range
-	function createRangeLock(uint productIndex, uint _startingToken, uint _endingToken, uint _lockedTokens) public onlyRole(CREATOR) productExists(productIndex) {
-		product storage selectedProduct =  _products[productIndex];
-
-		require(selectedProduct.startingToken + _endingToken <= selectedProduct.endingToken, 'RAIR ERC721: Invalid ending token');
-		require(_endingToken - _startingToken <= selectedProduct.endingToken - selectedProduct.startingToken, 'RAIR ERC721: Invalid token limits');
-		require((_endingToken - _startingToken + 1) >= _lockedTokens, 'RAIR ERC721: Invalid number of tokens to lock');
-
-		require(canCreateLock(productIndex, _startingToken, _endingToken), "RAIR ERC721: Cannot create lock");
-
-		lockedRange storage newRange = _lockedRange.push();
-		newRange.startingToken = selectedProduct.startingToken + _startingToken;
-		newRange.endingToken = selectedProduct.startingToken + _endingToken;
-		newRange.lockCountdown = _lockedTokens;
-		newRange.productIndex = productIndex;
-		selectedProduct.locks.push(_lockedRange.length - 1);
-		emit RangeLocked(productIndex, selectedProduct.startingToken + _startingToken, selectedProduct.startingToken + _endingToken, _lockedTokens, selectedProduct.name, _lockedRange.length - 1);
-	}
-
-	/// @notice	Creates a product
-	/// @dev	Only a CREATOR can call this function
-	/// @param	_productName Name of the product
-	/// @param	_copies			Amount of tokens inside the product
-	function createProduct(string memory _productName, uint _copies) public onlyRole(CREATOR) {
-		uint lastToken;
-		lastToken = _products.length == 0 ? 0 : _products[_products.length - 1].endingToken + 1;
-		
-		product storage newProduct = _products.push();
-
-		newProduct.startingToken = lastToken;
-		newProduct.endingToken = newProduct.startingToken + _copies - 1;
-		newProduct.name = string(_productName);
-		newProduct.mintableTokens = _copies;
-		
-		emit ProductCreated(_products.length - 1, _productName, lastToken, _copies);
-	}
-
-	/// @notice	Returns the number of products on the contract
-	/// @dev	Use with get product to list all of the products
-	function getProductCount() external view override(IRAIR_ERC721) returns(uint) {
-		return _products.length;
-	}
 
 	/// @notice	Returns information about a product
 	/// @param	index	Index of the product
@@ -237,73 +76,6 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 			selectedProduct.name,
 			selectedProduct.locks
 		);
-	}
-
-	/// @notice	Loops over the user's tokens looking for one that belongs to a product and a specific range
-	/// @dev	Loops are expensive in solidity, so don't use this in a function that requires gas
-	/// @param	userAddress			User to search
-	/// @param	productIndex		Product to search
-	/// @param	startingToken		Product to search
-	/// @param	endingToken			Product to search
-	function hasTokenInProduct(
-				address userAddress,
-				uint productIndex,
-				uint startingToken,
-				uint endingToken) public view returns (bool) {
-		product memory aux = _products[productIndex];
-		if (aux.endingToken != 0) {
-			for (uint i = 0; i < balanceOf(userAddress); i++) {
-				uint token = tokenOfOwnerByIndex(userAddress, i);
-				if (tokenToProduct[token] == productIndex &&
-						token >= aux.startingToken + startingToken &&
-						token <= aux.startingToken + endingToken) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/// @notice	Returns the token index inside the product
-	/// @param	token	Token ID to find
-	function tokenToProductIndex(uint token) public view returns (uint tokenIndex) {
-		return token - _products[tokenToProduct[token]].startingToken;
-	} 
-
-	/// @notice	Loops through a range of tokens inside a product and returns the first token without an owner
-	/// @dev	Uses a loop, do not call this from a non-view function!
-	/// @param	productID	Index of the product to search
-	/// @param	startingIndex	Index of the product to search
-	/// @param	endingIndex		Index of the product to search
-	function getNextSequentialIndex(uint productID, uint startingIndex, uint endingIndex) public view productExists(productID) returns(uint nextIndex) {
-		product memory currentProduct = _products[productID];
-		for (uint i = currentProduct.startingToken + startingIndex; i <= currentProduct.startingToken + endingIndex; i++) {
-			if (!_exists(i)) {
-				return i - currentProduct.startingToken;
-			}
-		}
-		require(false, "RAIR ERC721: There are no available tokens in this range.");
-	}
-
-	/// @notice	View function to get information about a lock
-	/// @dev 	This uses universal numbering so you'll need to get information
-	///			about a product first to know what are the locks associated
-	/// @param	index	Index in the lock array to be returned
-	function getLockedRange(uint index) public view returns (uint startingToken, uint endingToken, uint countToUnlock, uint productIndex) {
-		lockedRange memory currentLock = _lockedRange[index];
-		product memory currentProduct = _products[currentLock.productIndex];
-		return (
-			currentLock.startingToken - currentProduct.startingToken,
-			currentLock.endingToken - currentProduct.startingToken,
-			currentLock.lockCountdown,
-			currentLock.productIndex
-		);
-	}
-
-	/// @notice	View function to verify if a token can be traded
-	/// @param	_tokenId	Index of the token to search
-	function isTokenLocked(uint256 _tokenId) public view returns (bool) {
-		return _lockedRange[tokenToLock[_tokenId]].productIndex == tokenToProduct[_tokenId] && _lockedRange[tokenToLock[_tokenId]].lockCountdown > 0;
 	}
 
 	/// @notice	Mints a specific token within a product
@@ -374,26 +146,4 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		//require(hasRole(TRADER, _from), 'RAIR ERC721: Transfers cannot be made outside RAIR marketplaces!');
 		super._beforeTokenTransfer(_from, _to, _tokenId);
 	}
-
-	// Find facet for function that is called and execute the
-    // function if a facet is found and return any value.
-    fallback() external {
-        address facet = factoryAddress;
-        assembly {
-            // copy function selector and any arguments
-            calldatacopy(0, 0, calldatasize())
-            // execute function call using the facet
-            let result := delegatecall(gas(), facet, 0, calldatasize(), 0, 0)
-            // get any return value
-            returndatacopy(0, 0, returndatasize())
-            // return any return value or error back to the caller
-            switch result
-                case 0 {
-                    revert(0, returndatasize())
-                }
-                default {
-                    return(0, returndatasize())
-                }
-        }
-    }
-}
+}*/

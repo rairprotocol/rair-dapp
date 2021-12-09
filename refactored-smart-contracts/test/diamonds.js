@@ -10,6 +10,8 @@ const priceToDeploy = 150;
 const firstDeploymentAddress = '0x33791c463B145298c575b4409d52c2BcF743BF67';
 const secondDeploymentAddress = '0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa';
 
+let usedSelectors = {};
+
 const AccessControlFunctions = [
 	"grantRole(bytes32,address)",
 	"revokeRole(bytes32,address)",
@@ -22,7 +24,17 @@ function getSelectors (contract) {
 	const signatures = Object.keys(contract.interface.functions)
 	const selectors = signatures.reduce((acc, val) => {
 		if (val !== 'init(bytes)') {
-			acc.push(contract.interface.getSighash(val))
+			let selector = contract.interface.getSighash(val);
+			if (usedSelectors[selector] !== undefined) {
+				console.log('Function', val, 'already exists on', contract.address)	
+				return acc;
+			}
+			usedSelectors[selector] = {
+				address: contract.address,
+				name: val,
+				selector: selector
+			};
+			acc.push(selector)
 		}
 		return acc
 	}, [])
@@ -82,17 +94,27 @@ describe("Diamonds", function () {
 	let ERC777Factory, erc777Instance, extraERC777Instance;
 
 	let ERC721FacetFactory, erc721FacetInstance;
+	let RAIRMetadataFacetFactory, rairMetadataFacetInstance;
+	let RAIRProductFacetFactory, rairProductFacetInstance;
 	
 	before(async function() {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
-		ERC777ReceiverFacetFactory = await ethers.getContractFactory("ERC777ReceiverFacet");
+		// Nick Mudge's facets
 		DiamondCutFacetFactory = await ethers.getContractFactory("DiamondCutFacet");
-		FactoryDiamondFactory = await ethers.getContractFactory("FactoryDiamond");
 		OwnershipFacetFactory = await ethers.getContractFactory("OwnershipFacet");
 		DiamondLoupeFacetFactory = await ethers.getContractFactory("DiamondLoupeFacet");
+		
+		// Factory
+		FactoryDiamondFactory = await ethers.getContractFactory("FactoryDiamond");
+		// Factory's facets
+		ERC777ReceiverFacetFactory = await ethers.getContractFactory("ERC777ReceiverFacet");
 		ERC777Factory = await ethers.getContractFactory("RAIR777");
 		CreatorsFacetFactory = await ethers.getContractFactory("creatorFacet");
+
+		// ERC721's Facets
 		ERC721FacetFactory = await ethers.getContractFactory("ERC721Facet");
+		RAIRMetadataFacetFactory = await ethers.getContractFactory("RAIRMetadataFacet");
+		RAIRProductFacetFactory = await ethers.getContractFactory("RAIRProductFacet");
 	})
 
 	describe("Deploying external contracts", () => {
@@ -233,22 +255,22 @@ describe("Diamonds", function () {
 
 		it ("Should deploy a RAIR contract if it receives ERC777 tokens from an approved address", async() => {
 			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!')))
+			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRairOne!')))
 				//.to.emit(erc777Instance, "Sent")
 				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
 				.to.emit(receiverFacet, 'NewContractDeployed')
-				.withArgs(owner.address, 1, firstDeploymentAddress, 'TestRair!');
+				.withArgs(owner.address, 1, firstDeploymentAddress, 'TestRairOne!');
 		});
 
 		it ("Should return excess tokens from the deployment", async() => {
 			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRair!')))
+			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRairTwo!')))
 				//.to.emit(erc777Instance, "Sent")
 				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
 				//.to.emit(erc777Instance, "Sent")
 				//.withArgs(factoryDiamondInstance.address, factoryDiamondInstance.address, owner.address, 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
 				.to.emit(receiverFacet, 'NewContractDeployed')
-				.withArgs(owner.address, 2, secondDeploymentAddress, 'TestRair!');
+				.withArgs(owner.address, 2, secondDeploymentAddress, 'TestRairTwo!');
 			await expect(await erc777Instance.balanceOf(owner.address))
 				.to.equal(initialRAIR777Supply - (priceToDeploy * 2));
 			await expect(await erc777Instance.balanceOf(factoryDiamondInstance.address))
@@ -267,7 +289,7 @@ describe("Diamonds", function () {
 			const receiverFacetItem = {
 				facetAddress: creatorsFacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(creatorsFacetInstance).remove(AccessControlFunctions)
+				functionSelectors: getSelectors(creatorsFacetInstance)//.remove(AccessControlFunctions)
 			}
 			//console.log(receiverFacetItem.functionSelectors)
 			//console.log(erc777ReceiverFacetInstance.functions);
@@ -316,18 +338,19 @@ describe("Diamonds", function () {
 		});
 	});
 
-	describe("RAIR Token Facets", () => {
-		it ("Should deploy the Facet", async () => {
+	describe("ERC721 Facet", () => {
+		it ("Should deploy the ERC721 Facet", async () => {
 			erc721FacetInstance = await ERC721FacetFactory.deploy();
 			await erc721FacetInstance.deployed();
 		});
 
-		it ("Should add the facet", async () => {
+		it ("Should add the ERC721 facet", async () => {
 			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
 			const receiverFacetItem = {
 				facetAddress: erc721FacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(erc721FacetInstance).remove(AccessControlFunctions).remove(["supportsInterface(bytes4)"])
+				functionSelectors: getSelectors(erc721FacetInstance)//.remove(AccessControlFunctions)
+					//.remove(["supportsInterface(bytes4)"])
 			}
 			//console.log(receiverFacetItem.functionSelectors)
 			//console.log(erc777ReceiverFacetInstance.functions);
@@ -336,18 +359,83 @@ describe("Diamonds", function () {
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
 
-		it ("Shouldn't affect the Factory contract!", async () => {
-			const proxy721 = await ethers.getContractAt('ERC721Facet', factoryDiamondInstance.address);
-			await expect(await proxy721.isApprovedForAll(addr1.address, owner.address)).to.equal(false);
+		it ("Should have the RAIR symbol", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(await erc721Facet.symbol())
+				.to.equal("RAIR");
+			erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.symbol())
+				.to.equal("RAIR");
 		});
-	})
 
-	describe("RAIR Token Instance", () => {
-		it ("Should call functions that are defined on the Proxy", async () => {
-			const proxy721 = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
-			await expect(await proxy721.isApprovedForAll(addr1.address, owner.address)).to.equal(false);
+		it ("Should have the user defined name", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(await erc721Facet.name())
+				.to.equal("TestRairOne!");
+			erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.name())
+				.to.equal("TestRairTwo!");
+		});
+
+		it ("Shouldn't mint tokens without products");
+	});
+
+	describe("RAIR Metadata Facet", () => {
+		it ("Should deploy the RAIR Metadata Facet", async () => {
+			rairMetadataFacetInstance = await RAIRMetadataFacetFactory.deploy();
+			await rairMetadataFacetInstance.deployed();
+		});
+
+		it ("Should add the RAIR Metadata facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: rairMetadataFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(rairMetadataFacetInstance)//.remove(AccessControlFunctions)
+				//.remove(["supportsInterface(bytes4)"])
+			}
+			//console.log(receiverFacetItem.functionSelectors)
+			//console.log(erc777ReceiverFacetInstance.functions);
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
 	});
+
+	describe("RAIR Product Facet", () => {
+		it ("Should deploy the RAIR Product Facet", async () => {
+		 	//"RAIRProductFacet"
+			rairProductFacetInstance = await RAIRProductFacetFactory.deploy();
+			await rairProductFacetInstance.deployed();
+		});
+
+		it ("Should add the RAIR Product facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: rairProductFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(rairProductFacetInstance)//.remove(AccessControlFunctions)
+				//.remove(["supportsInterface(bytes4)"])
+			}
+			//console.log(receiverFacetItem.functionSelectors)
+			//console.log(erc777ReceiverFacetInstance.functions);
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should create a product", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress);
+			await expect(await productFacet.createProduct("FirstFirst", 1000))
+				.to.emit(productFacet, 'ProductCreated')
+				.withArgs(0, "FirstFirst", 0, 1000);
+			productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(await productFacet.createProduct("SecondFirst", 100))
+				.to.emit(productFacet, 'ProductCreated')
+				.withArgs(0, "SecondFirst", 0, 100);
+		});
+	});
+
 
 	describe("Loupe Facet", () => {
 		it ("Should show all facets", async () => {

@@ -4,7 +4,7 @@ pragma solidity ^0.8.10;
 import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
 import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
 import '../AppStorage.sol';
-import '../../tokens/RAIR-ERC721.sol';
+import '../../tokens/RAIR-ERC721-Diamond.sol';
 
 contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumerable {
 	bytes32 constant ERC777 = keccak256("ERC777");
@@ -55,7 +55,7 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 			s.creators.push(from);
 		}
 
-		RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
+		RAIR_ERC721_Diamond newToken = new RAIR_ERC721_Diamond(string(userData), from, 30000);
 		deploymentsFromOwner.push(address(newToken));
 		s.contractToCreator[address(newToken)] = from;
 		emit NewContractDeployed(from, deploymentsFromOwner.length, address(newToken), string(userData));
