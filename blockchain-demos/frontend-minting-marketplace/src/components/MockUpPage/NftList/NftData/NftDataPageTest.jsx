@@ -401,7 +401,7 @@ const NftDataPageTest = ({
             <div>
               <div className="collection-label-name">Serial number</div>
               <div>
-                <SelectNumber
+                { tokenData.length ? <SelectNumber
                   handleClickToken={handleClickToken}
                   selectedToken={selectedToken}
                   items={
@@ -414,7 +414,9 @@ const NftDataPageTest = ({
                       };
                     })
                   }
-                />
+                /> : <></>
+                }
+                
               </div>
             </div>
             <div
@@ -752,7 +754,9 @@ const NftDataPageTest = ({
         </div>
         <div style={{ maxWidth: "1200px", margin: "auto" }}>
           {/* <span style={{}}>More by {tokenData[selectedToken]?.ownerAddress ? tokenData[selectedToken]?.ownerAddress : "User" }</span> */}
-          {tokenData && (
+          {
+          tokenData.length ? 
+           (
             <Carousel
               itemWidth={"300px"}
               showDots={false}
@@ -772,7 +776,10 @@ const NftDataPageTest = ({
                 />
               ))}
             </Carousel>
-          )}
+          ) : <></>
+        
+        }
+          
         </div>
       </div>
     </div>
