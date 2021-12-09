@@ -6,6 +6,19 @@ Updating specific user
 
 **Method** : `PUT`
 
+**Headers:**
+
+```json
+{
+  "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
 **Request parameters:**
 
 ```json
@@ -24,7 +37,37 @@ Updating specific user
 ```json
 {
   "adminNFT": {
-    "required": true,
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "nickName": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "avatar": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "email": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "firstName": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "lastName": {
+    "required": false,
     "content": {
       "type": "string"
     }
@@ -46,14 +89,16 @@ Returns if updated successfully
 {
   "success": true,
   "user": {
-    "creationDate": "2021-05-18T14:20:17.957Z",
-    "adminNFT": "some token",
     "email": null,
+    "avatar": null,
     "firstName": null,
     "lastName": null,
-    "key": "zw5Ne122KxV2CSr_4HYKu",
-    "publicAddress": "some public address",
-    "_id": "60a3cd21abe49f001d168767"
+    "_id": "61af976dc4444d001c98d851",
+    "publicAddress": "publicAddress",
+    "adminNFT": "temp_0xasdfwe",
+    "nonce": "some_string",
+    "creationDate": "2021-12-07T17:18:37.231Z",
+    "nickName": "@Test"
   }
 }
 ```
