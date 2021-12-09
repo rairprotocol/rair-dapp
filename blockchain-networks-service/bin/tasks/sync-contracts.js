@@ -3,12 +3,14 @@ const _ = require('lodash');
 const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { factoryAbi, erc721Abi } = require('../integrations/ethers/contracts');
+const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
   context.agenda.define('sync contracts', { lockLifetime }, async (task, done) => {
     try {
+      logAgendaActionStart({agendaDefinition: 'sync contracts'});
       const { network, name } = task.attrs.data;
       const contractsForSave = [];
       const block_number = [];
