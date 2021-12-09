@@ -32,7 +32,7 @@ const NftList = ({ data, primaryColor, textColor, titleSearch, sortItem }) => {
                 filteredData ? filteredData.map((pict, index) => {
                     if (pict.cover !== 'none') {
                         return (<NftItem onClick={() => console.log('nftList', data)}
-                            key={`${pict.id}-${pict.productId}`}
+                            key={`${pict.id + "-" + pict.productId + index}`}
                             pict={pict.cover ? pict.cover : defaultImg}
                             allData={pict}
                             contractName={pict.contract}
