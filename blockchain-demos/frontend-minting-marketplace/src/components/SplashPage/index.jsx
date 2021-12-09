@@ -57,6 +57,29 @@ const customStyles = {
 // Modal.setAppElement("#root");
 
 const SplashPage = () => {
+  const switchEthereumChain = async (chainData) => {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: chainData.chainId }],
+      });
+    } catch (switchError) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [chainData],
+          });
+        } catch (addError) {
+          console.error(addError);
+        }
+      } else {
+        console.error(switchError);
+      }
+    }
+  }
+
   let params = `scrollbars=no,resizable=no,status=no,location=no,
                 toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
 
@@ -200,7 +223,7 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button onClick={buyNipsey} disabled={!Object.values(active).every(el => el)} className="modal-btn">
+                        <button onClick={window?.ethereum?.chainId === '0x5' ? buyNipsey : () => switchEthereumChain({chainId: '0x5', chainName: 'Goerli (Ethereum)'})} disabled={!Object.values(active).every(el => el)} className="modal-btn">
                           <img
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}
