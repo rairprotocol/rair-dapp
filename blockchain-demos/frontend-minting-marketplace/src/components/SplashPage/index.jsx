@@ -13,6 +13,11 @@ import Nft_4 from "./images/image_3.png";
 import NftImage from "./images/circle_nipsey.png";
 import UnlockableVideo from "./images/unlockbleVideo.png";
 import JoinCommunity from "./images/join_com.jpeg";
+import DigitalMobile from './images/digital-mobile.png';
+import NftMobile_1 from './images/nft-mobile_1.png';
+import NftMobile_2 from './images/nft-mobile_2.png';
+import VideoPresent from './images/video-present.png';
+import RairTechMobile from './images/rair_tech_mobile.png';
 
 /* importing Components*/
 import TokenLeft from "./TokenLeft/TokenLeft";
@@ -246,6 +251,156 @@ const SplashPage = () => {
           primaryColor={primaryColor}
         />
         <TeamMeet primaryColor={primaryColor} arraySplash={"nipsey"} />
+      </div>
+      <div className="home-splash-mobile">
+        <div className="wrapper-splash-mobile">
+          <div className="splash-header-mobile">
+            <img src={DigitalMobile} alt="logo" />
+          </div>
+          <div className="splash-auth-mobile">
+            <div className="auth-mobile-title">
+              <h3>The <span>Nipsey Hussle</span> legacy</h3>
+              <div className="auth-mobile-desc">
+                1000 Unique NFTs unlock exlusive streaming<br /> for the final Nipsey Hussle album.
+              </div>
+            </div>
+          </div>
+          <div className="splash-minted-mobile">
+            <div className="nft-minted-block">
+              <div className="minted-title">
+                <h3>Only <span>1000</span> NFTs will ever be minted</h3>
+
+                <div className="minted-desc">
+                  Nipsey invented Proud to Pay, a movement adopted and expanded by<br />
+                  the NFT community. Your NFT is access and ownership in an eclusive<br />
+                  community of like minded fans, artists, and industry veterans.
+                </div>
+                <div className="minted-btn">
+                  <button>WELCOME TO THE NIPSEYVERSE</button>
+                </div>
+              </div>
+            </div>
+            <div className="streaming-nft-block">
+              <div className="nft-box">
+                <img src={NftMobile_1} alt="nft-logo" />
+                <div className="nft-description">
+                  <h4>Only  <span>1000</span> NFTs will ever be minted</h4>
+                  <div className="nft-text">
+                    Now is your opportunity to own a unique piece of<br />
+                    internet history. Mint today and receive unique<br />
+                    streaming NFT artwork at launch.
+                  </div>
+                  <div className="btn-claim">
+                    <button>CLAIM ONE</button>
+                  </div>
+                </div>
+              </div>
+              <div className="nft-box">
+                <img src={NftMobile_2} alt="nft-logo" />
+                <div className="nft-description">
+                  <h4>Only  <span>1000</span> NFTs will ever be minted</h4>
+                  <div className="nft-text">
+                    Now is your opportunity to own a unique piece of<br />
+                    internet history. Mint today and receive unique<br />
+                    streaming NFT artwork at launch.
+                  </div>
+                  <div className="btn-claim">
+                    <button>CLAIM ONE</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="members-video-mobile">
+              <div className="members-title-mobile">
+                <h3>Members only <span>streaming</span></h3>
+                <div className="members-desc">
+                  Within 24 hours all 1000 were spoken for. With his next<br />
+                  release Mailbox Money, Nipsey upped the ante to $1000<br />
+                  for only 100 copies.
+                </div>
+              </div>
+              <div className="video-pic">
+                <img src={VideoPresent} alt="video-present-img" />
+              </div>
+              <div className="btn-learn-more">
+                <button>Learn More</button>
+              </div>
+            </div>
+            <div className="nft-score-mobile">
+              <div className="box-score">
+                <div className="score-num">1000</div>
+                <div className="stats">Member Only  Nipseyverse</div>
+              </div>
+              <div className="box-score">
+                <div className="score-num">1000</div>
+                <div className="stats">Exclusive Streaming NFT</div>
+              </div>
+              <div className="box-score">
+                <div className="score-num">1</div>
+                <div className="stats">Exclusive Album </div>
+              </div>
+            </div>
+            <div className="content-owners-mobile">
+              <div className="owner-box">
+                <div className="owner-img">
+                  <img src={DigitalMobile} alt="digital" />
+                </div>
+                <div className="owner-title-mobile">
+                  <h5>Southwest Digital</h5>
+                </div>
+                <div className="owner-desc">
+                  For content owners, record labels, and distributors,
+                  Southwest Digital offers a complete ecosystem for
+                  the digital music cycle that optimizes your business
+                  processes.
+                </div>
+                <div className="owner-btn-learn">
+                  <button>Learn More</button>
+                </div>
+              </div>
+              <div className="owner-box">
+                <div className="owner-img">
+                  <img src={RairTechMobile} alt="rair-tech-logo" />
+                </div>
+                <div className="owner-title-mobile">
+                  <h5>RAIR Technologies</h5>
+                </div>
+                <div className="owner-desc">
+                  RAIR, through its decentralized key management
+                  node system, empowers anyone to create unique,
+                  controllable, and transferable digital assets tied to
+                  the actual underlying content.
+                </div>
+                <div className="owner-btn-learn">
+                  <button>Learn More</button>
+                </div>
+              </div>
+            </div>
+            <div className="footer-nipsey-mobile">
+              <img src={DigitalMobile} alt="digital" />
+              <div className="nipsey-adress-mobile">
+                Southwest Digital
+              </div>
+              <div className="nipsey-adress-mobile">
+                Houston, Texas
+              </div>
+              <div className="social-media-nipsey">
+                <div>
+                  <i className="fab fa-instagram"></i>
+                </div>
+                <div>
+                  <i className="fab fa-facebook-f"></i>
+                </div>
+                <div>
+                  <i className="fab fa-twitter"></i>
+                </div>
+                <div>
+                  <i className="fab fa-youtube"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

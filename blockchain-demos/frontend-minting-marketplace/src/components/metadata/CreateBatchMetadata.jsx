@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import {rFetch} from '../../utils/rFetch.js';
 import setDocumentTitle from '../../utils/setTitle';
+import chainData from '../../utils/blockchainData.js';
 
 const CreateBatchMetadata = () => {
 	const [fullContractData, setFullContractData] = useState([]);
@@ -33,15 +34,13 @@ const CreateBatchMetadata = () => {
 			let formData = new FormData();
 			formData.append('product', productId);
 			formData.append('contract', contractAddress.toLowerCase());
+			formData.append('updateMeta', true);
 			formData.append('csv', csvData, 'metadata.csv');
-			let response = await (await fetch('/api/nft', {
+			let response = await rFetch('/api/nft', {
 				method: 'POST',
 				body: formData,
-				redirect: 'follow',
-				headers: {
-					'x-rair-token': localStorage.token
-				}
-			})).json()
+				redirect: 'follow'
+			});
 			setResponseSuccessful(response?.success);
 			if (response?.success) {
 				Swal.fire('Success',`Generated ${response.result.length} metadata entries!`,'success');
@@ -68,7 +67,7 @@ const CreateBatchMetadata = () => {
 		}
 		setFullContractData(finalContractData);
 		setContractOptions(finalContractData.map(item => ({
-			label: `${item.title} on ${item.blockchain} (${item.contractAddress})`, value: item.contractAddress
+			label: `${item.title} on ${chainData[item.blockchain].name} (${item.contractAddress})`, value: item.contractAddress
 		})));
 		if (finalContractData.filter(i => i.contractAddress === params.contract).length) {
 			setContractAddress(params.contract);
