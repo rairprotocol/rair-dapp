@@ -22,20 +22,6 @@ List all the registered media, their URIs and encrypted status
       "type": "number"
     }
   },
-  "sortBy": {
-    "required": false,
-    "content": {
-      "type": "string",
-      "variants": ["creationDate", "title"]
-    }
-  },
-  "sort": {
-    "required": false,
-    "content": {
-      "type": "number",
-      "variants": [1, -1]
-    }
-  },
   "blockchain": {
     "required": false,
     "content": {

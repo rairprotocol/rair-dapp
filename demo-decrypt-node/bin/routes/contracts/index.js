@@ -32,9 +32,8 @@ module.exports = context => {
   // Get list of contracts with all products and offers
   router.get('/full', validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', itemsPerPage = '20', sortBy = 'name', sort = '1', blockchain = '', category = '' } = req.query;
+      const { pageNum = '1', itemsPerPage = '20', blockchain = '', category = '' } = req.query;
       const pageSize = parseInt(itemsPerPage, 10);
-      const sortDirection = parseInt(sort, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
       const lookupProduct = {
@@ -140,14 +139,14 @@ module.exports = context => {
         }
       ];
 
-      const foundBlockchain = await context.db.Blockchain.findOne({ name: blockchain });
+      const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
 
       if (foundBlockchain) {
-        options.unshift({ $match: { blockchain: foundBlockchain.hash } });
+        options.unshift({ $match: { blockchain } });
       }
 
       const contracts = await context.db.Contract.aggregate(options)
-        .sort({ [`products.${sortBy}`]: sortDirection })
+        .sort({ ['products.name']: 1 })
         .skip(skip)
         .limit(pageSize);
 

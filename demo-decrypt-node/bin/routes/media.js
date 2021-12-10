@@ -109,10 +109,9 @@ module.exports = context => {
    */
   router.get('/list', /*JWTVerification(context),*/ validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', itemsPerPage = '20', sortBy = 'title', sort = '1', blockchain = '', category = '' } = req.query;
+      const { pageNum = '1', itemsPerPage = '20', blockchain = '', category = '' } = req.query;
       const searchQuery = {};
       const pageSize = parseInt(itemsPerPage, 10);
-      const sortDirection = parseInt(sort, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
       const foundCategory = await context.db.Category.findOne({ name: category });
@@ -121,15 +120,15 @@ module.exports = context => {
         searchQuery.category = foundCategory._id;
       }
 
-      const foundBlockchain = await context.db.Blockchain.findOne({ name: blockchain });
+      const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
 
       if (foundBlockchain) {
-        const arrayOfContracts = await context.db.Contract.find({ blockchain: foundBlockchain.hash }).distinct('contractAddress');
+        const arrayOfContracts = await context.db.Contract.find({ blockchain }).distinct('contractAddress');
         searchQuery.contract = { $in: arrayOfContracts };
       }
 
       const data = await context.db.File.find(searchQuery, { key: 0 })
-        .sort({ [sortBy]: sortDirection })
+        .sort({ title: 1 })
         .skip(skip)
         .limit(pageSize);
 
