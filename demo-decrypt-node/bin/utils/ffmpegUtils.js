@@ -138,7 +138,6 @@ const getMediaData = async (mediaData) => {
 	try {
 		let {output, stdout, stderr, status} = await spawnSync(ffmpeg.path, ['-i', `${mediaData.path}`]);
 		let stringifiedData = stderr.toString();
-		console.log(stringifiedData);
 		let duration = stringifiedData.split('Duration: ')[1]?.split(',')[0];
 		if (duration) {
 			mediaData.duration = duration;
