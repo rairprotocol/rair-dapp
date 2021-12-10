@@ -18,7 +18,7 @@ const Teammate = ({ url, name, desc, primaryColor }) => {
                     </div>
                 </div>
                 <div className="box-socials">
-                    <span className="text-gradient"><i className="fab fa-twitter"></i></span>
+                    {/* <span className="text-gradient"><i className="fab fa-twitter"></i></span> */}
                     <span className="text-gradient"><i className="fab fa-linkedin-in"></i></span>
                 </div>
             </div>

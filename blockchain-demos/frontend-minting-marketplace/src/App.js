@@ -390,7 +390,9 @@ function App({ sentryHistory }) {
 									<SentryRoute exact path="/rair-about-page">
 										<AboutPage primaryColor={primaryColor} textColor={textColor}/>
 									</SentryRoute>
-									<SentryRoute exact path="/about-page" component={AboutPageNew} />
+									<SentryRoute exact path="/about-page">
+										<AboutPageNew primaryColor={primaryColor}/>
+									</SentryRoute>
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
