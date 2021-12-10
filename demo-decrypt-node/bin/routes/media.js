@@ -107,30 +107,43 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', JWTVerification(context), validation('getFiles', 'query'), async (req, res, next) => {
+  router.get('/list', /*JWTVerification(context),*/ validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', filesPerPage = '10', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
-
-      const searchQuery = searchString ? { $text: { $search: searchString } } : {};
-      const pageSize = parseInt(filesPerPage, 10);
+      const { pageNum = '1', itemsPerPage = '20', sortBy = 'title', sort = '-1', blockchain = '', category = '' } = req.query;
+      const searchQuery = {};
+      const pageSize = parseInt(itemsPerPage, 10);
       const sortDirection = parseInt(sort, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+
+      const foundCategory = await context.db.Category.findOne({ name: category });
+
+      if (foundCategory) {
+        searchQuery.category = foundCategory._id;
+      }
+
+      const foundBlockchain = await context.db.Blockchain.findOne({ name: blockchain });
+
+      if (foundBlockchain) {
+        const arrayOfContracts = await context.db.Contract.find({ blockchain: foundBlockchain.hash }).distinct('contractAddress');
+        searchQuery.contract = { $in: arrayOfContracts };
+      }
+
       const data = await context.db.File.find(searchQuery, { key: 0 })
         .skip(skip)
         .limit(pageSize)
         .sort([[sortBy, sortDirection]]);
 
-      const { adminNFT: author } = req.user;
-      const reg = new RegExp(/^0x\w{40}:\w+$/);
+      // const { adminNFT: author } = req.user;
+      // const reg = new RegExp(/^0x\w{40}:\w+$/);
 
       const list = _.chain(data)
-        .map(file => {
-          const clonedFile = _.assign({}, file.toObject());
-
-          clonedFile.isOwner = !!(author && reg.test(author) && author === clonedFile.author);
-
-          return clonedFile;
-        })
+        // .map(file => {
+        //   const clonedFile = _.assign({}, file.toObject());
+        //
+        //   clonedFile.isOwner = !!(author && reg.test(author) && author === clonedFile.author);
+        //
+        //   return clonedFile;
+        // })
         .reduce((result, value) => {
           result[value._id] = value;
           return result;
@@ -192,12 +205,12 @@ module.exports = context => {
 
     if (req.file) {
       log.info(`${ req.file.originalname } generating thumbnails`);
-      
+
       res.json({ success: true, result: req.file.filename });
 
       // Adds 'duration' to the req.file object
       await getMediaData(req.file);
-      
+
       // Adds 'thumbnailName' to the req.file object
       // Generates a static webp thumbnail and an animated gif thumbnail
       // ONLY for videos
@@ -240,7 +253,7 @@ module.exports = context => {
 
       fs.rm(req.file.destination, {recursive: true}, console.log);
       log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
-      
+
       const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
       const gateway = {
         ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,

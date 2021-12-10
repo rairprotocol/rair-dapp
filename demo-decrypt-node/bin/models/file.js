@@ -25,6 +25,7 @@ const File = new Schema({
   // Format data
   type: { type: String, required: true },
   extension: { type: String, required: true },
+  category: { type: Schema.Types.ObjectId, required: true },
 
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });

@@ -6,19 +6,6 @@ List all the registered media, their URIs and encrypted status
 
 **Method** : `GET`
 
-**Headers:**
-
-```json
-{
-  "x-rair-token": {
-    "required": true,
-    "content": {
-      "type": "string"
-    }
-  }
-}
-```
-
 **Query parameters:**
 
 ```json
@@ -29,7 +16,7 @@ List all the registered media, their URIs and encrypted status
       "type": "number"
     }
   },
-  "filesPerPage": {
+  "itemsPerPage": {
     "required": false,
     "content": {
       "type": "number"
@@ -49,7 +36,13 @@ List all the registered media, their URIs and encrypted status
       "variants": [1, -1]
     }
   },
-  "searchString": {
+  "blockchain": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "category": {
     "required": false,
     "content": {
       "type": "string"

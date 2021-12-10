@@ -9,6 +9,7 @@ services:
     volumes:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+      - ./demo-decrypt-node/bin:/usr/local/src/bin
     environment:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
@@ -30,6 +31,8 @@ services:
     build:
       context: blockchain-networks-service/
       dockerfile: Dockerfile
+    volumes:
+      - ./blockchain-networks-service/bin:/usr/local/src/bin
     environment:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}

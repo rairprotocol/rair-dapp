@@ -6,6 +6,51 @@ Find all contracts with all products and offers on the platform
 
 **Method** : `GET`
 
+**Query parameters:**
+
+```json
+{
+  "pageNum": {
+    "required": false,
+    "content": {
+      "type": "number"
+    }
+  },
+  "itemsPerPage": {
+    "required": false,
+    "content": {
+      "type": "number"
+    }
+  },
+  "sortBy": {
+    "required": false,
+    "content": {
+      "type": "string",
+      "variants": ["creationDate", "title"]
+    }
+  },
+  "sort": {
+    "required": false,
+    "content": {
+      "type": "number",
+      "variants": [1, -1]
+    }
+  },
+  "blockchain": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "category": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
 ## Success Response
 
 Returns found full contracts
