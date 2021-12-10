@@ -17,7 +17,7 @@ const NavigatorFactory = ({children}) => {
 				</div>
 				<div className='col-6 p-2'>
 					<NavLink activeClassName={`btn-stimorol`} to='/creator/contracts' className={`btn btn-${primaryColor} w-100 rounded-rair`}>
-						Factories
+						My Contracts
 					</NavLink>
 				</div>
 			</div>

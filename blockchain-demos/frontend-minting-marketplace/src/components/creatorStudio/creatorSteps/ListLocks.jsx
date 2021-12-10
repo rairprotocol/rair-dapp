@@ -110,18 +110,29 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 	const {address, collectionIndex} = useParams();
 
 	const locker = async (data) => {
-	    Swal.fire(`Locking ${data.ends - data.starts} tokens from ${data.name}`,`${data.lockedNumber} tokens will have to be minted to unlock them again.`, 'info');
 	    try {
-	    	await instance.createRangeLock(
-	    			data.productIndex,
-	    			data.starts,
-	    			data.ends,
-	    			data.lockedNumber); 
+	    	Swal.fire({
+				title: `Locking ${data.ends - data.starts} tokens from ${data.name}`,
+				html: `${data.lockedNumber} tokens will have to be minted to unlock them again.`,
+				icon: 'info',
+				showConfirmButton: false
+			});
+	    	await (await instance.createRangeLock(
+    			data.productIndex,
+    			data.starts,
+    			data.ends,
+    			data.lockedNumber)
+	    	).wait(); 
+	    	Swal.fire({
+				title: `Success!`,
+				html: `The range has been locked`,
+				icon: 'success',
+				showConfirmButton: false
+			});
 	    } catch (err) {
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
 			return;
 	    }
-	    Swal.fire('Success!','The range has been locked', 'success');
 	}
 
 	const history = useHistory();

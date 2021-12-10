@@ -100,8 +100,13 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 	}
 
 	const createOffers = async () => {
-		Swal.fire('Creating offers...','Please wait','info');
 		try {
+			Swal.fire({
+				title: 'Creating offer...',
+				html: 'Please wait...',
+				icon: 'info',
+				showConfirmButton: false
+			});
 			await (await minterInstance.addOffer(
 				instance.address,
 				collectionIndex,
@@ -111,18 +116,28 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 				offerList.map((item) => item.name),
 				process.env.REACT_APP_NODE_ADDRESS)
 			).wait();
+			Swal.fire({
+				title: 'Success!',
+				html: 'The offer has been created!',
+				icon: 'success',
+				showConfirmButton: false
+			});
+			nextStep();
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
 			return;
 		}
-		Swal.fire('Success!','The offers have been created!','success');
-		nextStep();
 	}
 
 	const appendOffers = async () => {
-		Swal.fire('Appending offers...','Please wait','info');
 		try {
+			Swal.fire({
+				title: 'Appending offers...',
+				html: 'Please wait...',
+				icon: 'info',
+				showConfirmButton: false
+			});
 			await (await minterInstance.appendOfferRangeBatch(
 				contractData.product.offers[0].offerPool,
 				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
@@ -130,12 +145,17 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 				offerList.map((item) => item.price),
 				offerList.map((item) => item.name))
 			).wait();
+			Swal.fire({
+				title: 'Success!',
+				html: 'The offers have been appended!',
+				icon: 'success',
+				showConfirmButton: false
+			});
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
 			return;
 		}
-		Swal.fire('Success!','The offers have been appended!','success');
 	}
 
 	const nextStep = () => {

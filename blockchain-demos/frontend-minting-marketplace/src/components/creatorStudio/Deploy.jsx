@@ -97,14 +97,25 @@ const Factory = () => {
 					onClick={async e => {
 						try {
 							setDeploying(true);
+							Swal.fire({
+								title: 'Deploying contract!',
+								html: 'Please wait...',
+								icon: 'info',
+								showConfirmButton: false
+							});
 							await (await erc777Instance.send(
 								factoryInstance.address,
 								deploymentPrice,
 								utils.toUtf8Bytes(contractName)
 							)).wait();
 							setDeploying(false);
-							Swal.fire(`Success`, 'Contract deployed', 'success');
-							setContractName('')
+							Swal.fire({
+								title: 'Success',
+								html: 'Contract deployed',
+								icon: 'success',
+								showConfirmButton: false
+							});
+							setContractName('');
 						} catch (e) {
 							setDeploying(false);
 							console.error(e);

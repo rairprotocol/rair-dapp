@@ -123,14 +123,26 @@ const CustomizeFees = ({contractData, switchBlockchain, correctMinterInstance, m
 	}, [setStepNumber])
 
 	const setCustomFees = async e => {
-		Swal.fire('Setting data', '', 'info');
 		setSettingCustomSplits(true);
 		try {
+			Swal.fire({
+				title: 'Setting custom fees',
+				html: 'Please wait...',
+				icon: 'info',
+				showConfirmButton: false
+			});
 			await (await correctMinterInstance.setCustomPayment(
 				contractData.product?.offers[0]?.offerPool,
 				customPayments.map(i => i.receiver),
 				customPayments.map(i => i.percentage * Math.pow(10, minterDecimals))
 			)).wait();
+			Swal.fire({
+				title: 'Success',
+				html: 'Custom fees set',
+				icon: 'success',
+				showConfirmButton: false
+			});
+			nextStep();
 		} catch(e) {
 			console.error(e);
 			Swal.fire('Error', '', 'error');

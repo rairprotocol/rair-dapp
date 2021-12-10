@@ -106,10 +106,21 @@ const ContractDetails = () => {
 						}
 					} else {
 						try {
+							Swal.fire({
+								title: 'Creating collection!',
+								html: 'Please wait...',
+								icon: 'info',
+								showConfirmButton: false
+							});
 							setCreatingCollection(true);
 							let instance = await contractCreator(data.contractAddress, erc721Abi);
 							await (await instance.createProduct(collectionName, collectionLength)).wait();
-							Swal.fire('Success', 'Collection created!', 'success');
+							Swal.fire({
+								title: 'Success!',
+								html: 'Collection created',
+								icon: 'success',
+								showConfirmButton: false
+							});
 							setCollectionName('');
 							setCollectionLength(0);
 						} catch (err) {
@@ -119,7 +130,7 @@ const ContractDetails = () => {
 						setCreatingCollection(false);
 					}
 				} : undefined,
-				label: (data && !onMyChain) ? `Switch to ${chainData[data?.blockchain].name}` : undefined,
+				label: (data && !onMyChain) ? `Switch to ${chainData[data?.blockchain].name}` : 'Create collection!',
 				disabled: creatingCollection || collectionLength === 0 || collectionName === ''
 			}]}
 		/>
