@@ -175,55 +175,60 @@ module.exports = context => {
     log.info(`Processing: ${ req.file.originalname }`);
 
     if (req.file) {
-      log.info(`${ req.file.originalname } generating thumbnails`);
-      
-      res.json({ success: true, result: req.file.filename });
+      try {
+        log.info(`${ req.file.originalname } generating thumbnails`);
+        
+        res.json({ success: true, result: req.file.filename });
 
-      // Adds 'duration' to the req.file object
-      await getMediaData(req.file);
-      
-      // Adds 'thumbnailName' to the req.file object
-      // Generates a static webp thumbnail and an animated gif thumbnail
-      // ONLY for videos
-      await generateThumbnails(req.file, socketInstance);
+        // Adds 'duration' to the req.file object
+        await getMediaData(req.file);
+        
+        // Adds 'thumbnailName' to the req.file object
+        // Generates a static webp thumbnail and an animated gif thumbnail
+        // ONLY for videos
+        await generateThumbnails(req.file, socketInstance);
 
-      log.info(`${ req.file.originalname } converting to stream`);
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } converting to stream`,
-        last: false,
-        done: 11
-      });
+        log.info(`${ req.file.originalname } converting to stream`);
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } converting to stream`,
+          last: false,
+          done: 11
+        });
 
-      // Converts the file with FFMPEG
-      await convertToHLS(req.file, socketInstance);
+        // Converts the file with FFMPEG
+        await convertToHLS(req.file, socketInstance);
 
-      const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
+        const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
 
-      log.info('ffmpeg DONE: converted to stream.');
+        log.info('ffmpeg DONE: converted to stream.');
 
-      const rairJson = {
-        title,
-        mainManifest: 'stream.m3u8',
-        author,
-        encryptionType: 'aes-128-cbc'
-      };
+        const rairJson = {
+          title,
+          mainManifest: 'stream.m3u8',
+          author,
+          encryptionType: 'aes-128-cbc'
+        };
 
-      if (description) {
-        rairJson.description = description;
+        if (description) {
+          rairJson.description = description;
+        }
+
+        fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
+
+        log.info(`${ req.file.originalname } uploading to ipfsService`);
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } uploading to ipfsService`,
+          last: false
+        });
+
+        const ipfsCid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
+
+        fs.rm(req.file.destination, {recursive: true}, console.log);
+        log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
+      } catch (e) {
+        fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
+        return res.status(403).send({ success: false, message: 'An error has ocurred encoding the file' });
       }
-
-      fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
-
-      log.info(`${ req.file.originalname } uploading to ipfsService`);
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } uploading to ipfsService`,
-        last: false
-      });
-
-      const ipfsCid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
-
-      fs.rm(req.file.destination, {recursive: true}, console.log);
-      log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
       
       const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
       const gateway = {
