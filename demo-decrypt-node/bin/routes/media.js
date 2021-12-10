@@ -149,32 +149,16 @@ module.exports = context => {
     // Get video information from the request's body
     const { title, description, contract, product, offer } = req.body;
     // Get the user information
-    const { adminNFT: author, publicAddress } = req.user;
+    const { adminNFT: author, adminRights } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
     const reg = new RegExp(/^0x\w{40}:\w+$/);
 
-    if (!author || !reg.test(author)) {
-      return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
-    }
-
-    try {
-      // Validate if user owns an Admin NFT
-      const [contractAddress, tokenId] = author.split(':');
-      const ownsTheAdminToken = await checkBalanceSingle(publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-
-      if (!ownsTheAdminToken) {
-        if (req.file) {
-          fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
-        }
-        return res.status(403).send({ success: false, message: 'You don\'t hold the current admin token.' });
-      }
-    } catch (e) {
+    if (!adminRights) {
       if (req.file) {
-        fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
+        fs.rm(req.file.destination, {recursive: true}, () => log.info('You don\'t have permission to upload the files.', e));
+        return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
       }
-      log.error(`Could not verify account: ${ e }`);
-      return next(new Error('Could not verify account.'));
     }
 
     // Get the socket connection from Express app
