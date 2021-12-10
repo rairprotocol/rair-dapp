@@ -149,32 +149,16 @@ module.exports = context => {
     // Get video information from the request's body
     const { title, description, contract, product, offer } = req.body;
     // Get the user information
-    const { adminNFT: author, publicAddress } = req.user;
+    const { adminNFT: author, adminRights } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
     const reg = new RegExp(/^0x\w{40}:\w+$/);
 
-    if (!author || !reg.test(author)) {
-      return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
-    }
-
-    try {
-      // Validate if user owns an Admin NFT
-      const [contractAddress, tokenId] = author.split(':');
-      const ownsTheAdminToken = await checkBalanceSingle(publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-
-      if (!ownsTheAdminToken) {
-        if (req.file) {
-          fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
-        }
-        return res.status(403).send({ success: false, message: 'You don\'t hold the current admin token.' });
-      }
-    } catch (e) {
+    if (!adminRights) {
       if (req.file) {
-        fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
+        fs.rm(req.file.destination, {recursive: true}, () => log.info('You don\'t have permission to upload the files.', e));
       }
-      log.error(`Could not verify account: ${ e }`);
-      return next(new Error('Could not verify account.'));
+      return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
     }
 
     // Get the socket connection from Express app
@@ -191,109 +175,113 @@ module.exports = context => {
     log.info(`Processing: ${ req.file.originalname }`);
 
     if (req.file) {
-      log.info(`${ req.file.originalname } generating thumbnails`);
-      
-      res.json({ success: true, result: req.file.filename });
+      try {
+        log.info(`${ req.file.originalname } generating thumbnails`);
+        
+        res.json({ success: true, result: req.file.filename });
 
-      // Adds 'duration' to the req.file object
-      await getMediaData(req.file);
-      
-      // Adds 'thumbnailName' to the req.file object
-      // Generates a static webp thumbnail and an animated gif thumbnail
-      // ONLY for videos
-      await generateThumbnails(req.file, socketInstance);
+        // Adds 'duration' to the req.file object
+        await getMediaData(req.file);
+        
+        // Adds 'thumbnailName' to the req.file object
+        // Generates a static webp thumbnail and an animated gif thumbnail
+        // ONLY for videos
+        await generateThumbnails(req.file, socketInstance);
 
-      log.info(`${ req.file.originalname } converting to stream`);
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } converting to stream`,
-        last: false,
-        done: 11
-      });
+        log.info(`${ req.file.originalname } converting to stream`);
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } converting to stream`,
+          last: false,
+          done: 11
+        });
 
-      // Converts the file with FFMPEG
-      await convertToHLS(req.file, socketInstance);
+        // Converts the file with FFMPEG
+        await convertToHLS(req.file, socketInstance);
 
-      const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
+        const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
 
-      log.info('ffmpeg DONE: converted to stream.');
+        log.info('ffmpeg DONE: converted to stream.');
 
-      const rairJson = {
-        title,
-        mainManifest: 'stream.m3u8',
-        author,
-        encryptionType: 'aes-128-cbc'
-      };
+        const rairJson = {
+          title,
+          mainManifest: 'stream.m3u8',
+          author,
+          encryptionType: 'aes-128-cbc'
+        };
 
-      if (description) {
-        rairJson.description = description;
+        if (description) {
+          rairJson.description = description;
+        }
+
+        fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
+
+        log.info(`${ req.file.originalname } uploading to ipfsService`);
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } uploading to ipfsService`,
+          last: false
+        });
+
+        const ipfsCid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
+
+        fs.rm(req.file.destination, {recursive: true}, console.log);
+        log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
+        const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
+        const gateway = {
+          ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
+          pinata: `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`
+        };
+
+        const meta = {
+          mainManifest: 'stream.m3u8',
+          author,
+          encryptionType: 'aes-128-cbc',
+          title,
+          contract,
+          product,
+          offer,
+          staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
+          animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
+          type: req.file.type,
+          extension: req.file.extension,
+          duration: req.file.duration
+        };
+
+        if (description) {
+          meta.description = description;
+        }
+
+        log.info(`${ req.file.originalname } uploaded to ipfsService: ${ ipfsCid }`);
+        socketInstance.emit('uploadProgress', { message: `uploaded to ipfsService.`, last: false, done: 90 });
+
+        log.info(`${ req.file.originalname } storing to DB.`);
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } storing to db.`,
+          last: false
+        });
+
+        await context.db.File.create({
+          _id: ipfsCid,
+          key: exportedKey.toJSON(),
+          uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
+          ...meta,
+        });
+
+        log.info(`${ req.file.originalname } stored to DB.`);
+        socketInstance.emit('uploadProgress', { message: 'Stored to DB.', last: false, done: 96 });
+
+        context.hls = StartHLS();
+
+        log.info(`${ req.file.originalname } pinning to ipfsService.`);
+        socketInstance.emit('uploadProgress', {
+          message: `${ req.file.originalname } pinning to ipfsService.`,
+          last: false
+        });
+
+        await addPin(ipfsCid, title, socketInstance);
+      } catch (e) {
+        fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
+        return res.status(403).send({ success: false, message: 'An error has ocurred encoding the file' });
       }
-
-      fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
-
-      log.info(`${ req.file.originalname } uploading to ipfsService`);
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } uploading to ipfsService`,
-        last: false
-      });
-
-      const ipfsCid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
-
-      fs.rm(req.file.destination, {recursive: true}, console.log);
-      log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
-      
-      const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
-      const gateway = {
-        ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
-        pinata: `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`
-      };
-
-      const meta = {
-        mainManifest: 'stream.m3u8',
-        author,
-        encryptionType: 'aes-128-cbc',
-        title,
-        contract,
-        product,
-        offer,
-        staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
-        animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
-        type: req.file.type,
-        extension: req.file.extension,
-        duration: req.file.duration
-      };
-
-      if (description) {
-        meta.description = description;
-      }
-
-      log.info(`${ req.file.originalname } uploaded to ipfsService: ${ ipfsCid }`);
-      socketInstance.emit('uploadProgress', { message: `uploaded to ipfsService.`, last: false, done: 90 });
-
-      log.info(`${ req.file.originalname } storing to DB.`);
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } storing to db.`,
-        last: false
-      });
-
-      await context.db.File.create({
-        _id: ipfsCid,
-        key: exportedKey.toJSON(),
-        uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
-        ...meta,
-      });
-
-      log.info(`${ req.file.originalname } stored to DB.`);
-      socketInstance.emit('uploadProgress', { message: 'Stored to DB.', last: false, done: 96 });
-
-      context.hls = StartHLS();
-
-      log.info(`${ req.file.originalname } pinning to ipfsService.`);
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } pinning to ipfsService.`,
-        last: false
-      });
-
-      await addPin(ipfsCid, title, socketInstance);
     }
   });
 
