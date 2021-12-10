@@ -519,7 +519,65 @@ describe("Diamonds", function () {
 				.withArgs(0, 11, 99, 3500, 50, 10, 'Second First Second', 1);
 		});
 
-		it ("Should update offers");
+		it ("Should return the information about the offers", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
+			const infoZero = await rangesFacet.rangeInfo(0);
+			const infoProductZero = await rangesFacet.productRangeInfo(0,0);
+			await expect(infoZero.rangeStart)
+				.to.equal(infoProductZero.rangeStart)
+				.to.equal(0);
+			await expect(infoZero.rangeEnd)
+				.to.equal(infoProductZero.rangeEnd)
+				.to.equal(10);
+			await expect(infoZero.tokensAllowed)
+				.to.equal(infoProductZero.tokensAllowed)
+				.to.equal(950);
+			await expect(infoZero.lockedTokens)
+				.to.equal(infoProductZero.lockedTokens)
+				.to.equal(50);
+			await expect(infoZero.rangePrice)
+				.to.equal(infoProductZero.rangePrice)
+				.to.equal(1000);
+			await expect(infoZero.rangeName)
+				.to.equal(infoProductZero.rangeName)
+				.to.equal('First First First');
+
+			rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
+			const secondInfoZero = await rangesFacet.rangeInfo(1);
+			const secondInfoProductZero = await rangesFacet.productRangeInfo(0,1);
+			await expect(secondInfoZero.rangeStart)
+				.to.equal(secondInfoProductZero.rangeStart)
+				.to.equal(11);
+			await expect(secondInfoZero.rangeEnd)
+				.to.equal(secondInfoProductZero.rangeEnd)
+				.to.equal(99);
+			await expect(secondInfoZero.tokensAllowed)
+				.to.equal(secondInfoProductZero.tokensAllowed)
+				.to.equal(50);
+			await expect(secondInfoZero.lockedTokens)
+				.to.equal(secondInfoProductZero.lockedTokens)
+				.to.equal(10);
+			await expect(secondInfoZero.rangePrice)
+				.to.equal(secondInfoProductZero.rangePrice)
+				.to.equal(3500);
+			await expect(secondInfoZero.rangeName)
+				.to.equal(secondInfoProductZero.rangeName)
+				.to.equal('Second First Second');
+		});
+
+		it ("Should update offers", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
+			await expect(await rangesFacet.updateRange(0, 3750, 45, 5))
+				.to.emit(rangesFacet, 'UpdatedRange')
+				.withArgs(0, 3750, 45, 5);
+			const {rangeStart, rangeEnd, tokensAllowed, lockedTokens, rangePrice, rangeName} = await rangesFacet.productRangeInfo(0,0);
+			await expect(rangeStart).to.equal(0);
+			await expect(rangeEnd).to.equal(10);
+			await expect(tokensAllowed).to.equal(45);
+			await expect(lockedTokens).to.equal(5);
+			await expect(rangePrice).to.equal(3750);
+			await expect(rangeName).to.equal('Second First First');
+		});
 	});
 
 
