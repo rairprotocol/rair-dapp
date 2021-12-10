@@ -3,8 +3,6 @@ const port = process.env.PORT;
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const low = require('lowdb');
-const FileAsync = require('lowdb/adapters/FileAsync');
 const StartHLS = require('./hls-starter.js');
 const fs = require('fs');
 const cors = require('cors');
@@ -18,8 +16,6 @@ require('dotenv').config();
 const config = require('./config');
 
 async function main() {
-  const adapter = new FileAsync('./db/store.json');
-  const db = await low(adapter);
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
 
   for (const folder of mediaDirectories) {
@@ -28,11 +24,6 @@ async function main() {
       fs.mkdirSync(folder);
     }
   }
-
-  db.defaults({ mediaConfig: {} })
-    .write();
-  db.defaults({ adminNFT: '' })
-    .write();
 
   const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, {
     useNewUrlParser: true,
@@ -62,26 +53,6 @@ async function main() {
 
   const context = {
     hls,
-    store: {
-      setAdminToken: (token) => {
-        return db.set('adminNFT', token).write();
-      },
-      getAdminToken: () => {
-        return db.get('adminNFT').value();
-      },
-      getMediaConfig: mediaId => {
-        return db.get(['mediaConfig', mediaId]).value();
-      },
-      addMedia: (mediaId, config) => {
-        return db.set(['mediaConfig', mediaId], config).write();
-      },
-      removeMedia: mediaId => {
-        return db.unset(['mediaConfig', mediaId]).write();
-      },
-      listMedia: () => {
-        return db.get('mediaConfig').value();
-      }
-    },
     db: {
       Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
       File: _mongoose.model('File', require('./models/file'), 'File'),

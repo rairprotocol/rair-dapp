@@ -9,80 +9,9 @@ const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
 const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
 const log = require('../utils/logger')(module);
-const { execPromise } = require('../utils/helpers');
+//const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
-
-const rareify = async (fsRoot, socketInstance) => {
-  // Generate a key
-  const key = crypto.generateKeySync('aes', { length: 128 });
-
-  fs.writeFileSync(fsRoot + '/.key', key.export());
-
-  const promiseList = [];
-
-  log.info(`Rareifying: ${ fsRoot }`);
-
-  // Encrypting .ts files
-  for await (const entry of readdirp(fsRoot)) {
-    const { fullPath, basename } = entry;
-    if (path.extname(basename) === '.ts') {
-      const promise = new Promise((resolve, reject) => {
-        const encryptedPath = fullPath + '.encrypted';
-
-        try {
-          const iv = intToByteArray(parseInt(basename.match(/([0-9]+).ts/)[1]));
-          const encrypt = crypto.createCipheriv('aes-128-cbc', key, iv);
-          const source = fs.createReadStream(fullPath);
-          const dest = fs.createWriteStream(encryptedPath);
-          source.pipe(encrypt).pipe(dest).on('finish', () => {
-            // overwrite the unencrypted file so we don't have to modify the manifests
-            fs.renameSync(encryptedPath, fullPath);
-            resolve(true);
-            log.info(`finished encrypting: ${ entry.path }`);
-
-            socketInstance.emit('uploadProgress', {
-              message: `finished encrypting ${ entry.path }`,
-              last: false,
-              part: true
-            });
-
-          });
-        } catch (e) {
-          log.error('Could not encrypt', fullPath, e);
-          reject(e);
-        }
-      });
-      promiseList.push(promise);
-    }
-  }
-  log.info(`Done scheduling encryptions, ${ promiseList.length } promises for ${ readdirp(fsRoot).length } files`);
-
-  socketInstance.emit('uploadProgress', {
-    message: `Done scheduling encryptions, ${ promiseList.length } promises for ${ readdirp(fsRoot).length } files`,
-    last: false,
-    done: 15,
-    parts: promiseList.length
-  });
-
-  return await Promise.all(promiseList)
-    .then(_ => {
-      log.info('RAIR-ification successful! The root directory is ready to be uploaded to IPFS.');
-      return key.export();
-    });
-};
-
-/**
- * intToByteArray Convert an integer to a 16 byte Uint8Array (little endian)
- */
-function intToByteArray(num) {
-  var byteArray = new Uint8Array(16);
-  for (var index = 0; index < byteArray.length; index++) {
-    var byte = num & 0xff;
-    byteArray[index] = byte;
-    num = (num - byte) / 256;
-  }
-  return byteArray;
-}
+const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
 
 module.exports = context => {
   const router = express.Router();
@@ -121,7 +50,6 @@ module.exports = context => {
     // lookup in IPFS at CID for a rair.json manifest
     try {
       const meta = await retrieveMediaInfo(mediaId);
-      await context.store.addMedia(mediaId, { key, ...meta });
       await context.db.File.create({ _id: mediaId, key, ...meta });
       await addPin(mediaId, _.get(meta, 'title', 'New_pinned_file'));
       res.sendStatus(200);
@@ -152,7 +80,6 @@ module.exports = context => {
     try {
       const mediaId = req.params.mediaId;
 
-      await context.store.removeMedia(mediaId);
       await context.db.File.deleteOne({ _id: mediaId });
 
       log.info(`File with ID: ${ mediaId }, was removed from DB.`);
@@ -218,14 +145,36 @@ module.exports = context => {
   });
 
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
+    console.log(req.file);
+    // Get video information from the request's body
     const { title, description, contract, product, offer } = req.body;
-    const { adminNFT: author, adminRights } = req.user;
+    // Get the user information
+    const { adminNFT: author, publicAddress } = req.user;
+    // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
+    const reg = new RegExp(/^0x\w{40}:\w+$/);
 
-    if (!adminRights) {
-      if (req.file) await execPromise(`rm -f ${ req.file.path }`);
-
+    if (!author || !reg.test(author)) {
       return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
+    }
+
+    try {
+      // Validate if user owns an Admin NFT
+      const [contractAddress, tokenId] = author.split(':');
+      const ownsTheAdminToken = await checkBalanceSingle(publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
+
+      if (!ownsTheAdminToken) {
+        if (req.file) {
+          fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
+        }
+        return res.status(403).send({ success: false, message: 'You don\'t hold the current admin token.' });
+      }
+    } catch (e) {
+      if (req.file) {
+        fs.rm(req.file.destination, {recursive: true}, () => log.info('Exception handled, the folder has been deleted', e));
+      }
+      log.error(`Could not verify account: ${ e }`);
+      return next(new Error('Could not verify account.'));
     }
 
     // Get the socket connection from Express app
@@ -239,25 +188,20 @@ module.exports = context => {
     };
 
     socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
-
     log.info(`Processing: ${ req.file.originalname }`);
 
     if (req.file) {
-      let command = `pwd && mkdir ${ req.file.destination }stream${ req.file.filename }/`;
-      await execPromise(command);
-
       log.info(`${ req.file.originalname } generating thumbnails`);
-
-      command = `ffmpeg -ss 3 -i ${ req.file.path } -vf "select=gt(scene,0.5)" -vf "scale=144:-1" -vsync vfr -frames:v 1 ${ req.file.destination }Thumbnails/${ req.file.filename }.png && ffmpeg -i ${ req.file.path } -vf  "scale=144:-1" -ss 00:10 -t 00:03 ${ req.file.destination }Thumbnails/${ req.file.filename }.gif`;
-      await execPromise(command);
-
+      
       res.json({ success: true, result: req.file.filename });
 
-      socketInstance.emit('uploadProgress', {
-        message: `${ req.file.originalname } generating thumbnails`,
-        last: false,
-        done: 10
-      });
+      // Adds 'duration' to the req.file object
+      await getMediaData(req.file);
+      
+      // Adds 'thumbnailName' to the req.file object
+      // Generates a static webp thumbnail and an animated gif thumbnail
+      // ONLY for videos
+      await generateThumbnails(req.file, socketInstance);
 
       log.info(`${ req.file.originalname } converting to stream`);
       socketInstance.emit('uploadProgress', {
@@ -266,10 +210,10 @@ module.exports = context => {
         done: 11
       });
 
-      command = `ffmpeg -i ${ req.file.path } -profile:v baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ${ req.file.destination }stream${ req.file.filename }/stream.m3u8`;
-      await execPromise(command, { maxBuffer: 1024 * 1024 * 20 });
+      // Converts the file with FFMPEG
+      await convertToHLS(req.file, socketInstance);
 
-      const exportedKey = await rareify(`${ req.file.destination }stream${ req.file.filename }`, socketInstance);
+      const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
 
       log.info('ffmpeg DONE: converted to stream.');
 
@@ -284,13 +228,7 @@ module.exports = context => {
         rairJson.description = description;
       }
 
-      fs.writeFileSync(`${ req.file.destination }stream${ req.file.filename }/rair.json`, JSON.stringify(rairJson, null, 4));
-
-      command = `rm -f ${ req.file.path }`;
-      await execPromise(command);
-
-      log.info(`${ req.file.originalname } raw deleted`);
-      socketInstance.emit('uploadProgress', { message: `${ req.file.originalname } raw deleted`, last: false });
+      fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
 
       log.info(`${ req.file.originalname } uploading to ipfsService`);
       socketInstance.emit('uploadProgress', {
@@ -298,18 +236,11 @@ module.exports = context => {
         last: false
       });
 
-      command = `rm ${ req.file.destination }stream${ req.file.filename }/.key`;
-      await execPromise(command);
+      const ipfsCid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
 
-      log.info(`${ req.file.destination }stream${ req.file.filename }/.key file was removed.`);
-
-      const ipfsCid = await addFolder(`${ req.file.destination }stream${ req.file.filename }/`, `stream${ req.file.filename }`, socketInstance);
-
-      command = `rm -r ${ req.file.destination }stream${ req.file.filename }`;
-      await execPromise(command);
-
-      log.info(`Temporary folder ${ req.file.destination }stream${ req.file.filename } with stream chunks was removed.`);
-
+      fs.rm(req.file.destination, {recursive: true}, console.log);
+      log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
+      
       const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
       const gateway = {
         ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
@@ -321,11 +252,14 @@ module.exports = context => {
         author,
         encryptionType: 'aes-128-cbc',
         title,
-        thumbnail: req.file.filename,
-        currentOwner: author,
         contract,
         product,
-        offer
+        offer,
+        staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
+        animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
+        type: req.file.type,
+        extension: req.file.extension,
+        duration: req.file.duration
       };
 
       if (description) {
@@ -339,12 +273,6 @@ module.exports = context => {
       socketInstance.emit('uploadProgress', {
         message: `${ req.file.originalname } storing to db.`,
         last: false
-      });
-
-      await context.store.addMedia(ipfsCid, {
-        key: exportedKey,
-        uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
-        ...meta,
       });
 
       await context.db.File.create({
