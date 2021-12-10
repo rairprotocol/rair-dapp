@@ -32,7 +32,7 @@ module.exports = context => {
   // Get list of contracts with all products and offers
   router.get('/full', validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', itemsPerPage = '20', sortBy = 'name', sort = '-1', blockchain = '', category = '' } = req.query;
+      const { pageNum = '1', itemsPerPage = '20', sortBy = 'name', sort = '1', blockchain = '', category = '' } = req.query;
       const pageSize = parseInt(itemsPerPage, 10);
       const sortDirection = parseInt(sort, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
@@ -147,9 +147,9 @@ module.exports = context => {
       }
 
       const contracts = await context.db.Contract.aggregate(options)
+        .sort({ [`products.${sortBy}`]: sortDirection })
         .skip(skip)
-        .limit(pageSize)
-        .sort({ [`products.${sortBy}`]: sortDirection });
+        .limit(pageSize);
 
       res.json({ success: true, contracts });
     } catch (e) {

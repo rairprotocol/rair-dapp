@@ -109,7 +109,7 @@ module.exports = context => {
    */
   router.get('/list', /*JWTVerification(context),*/ validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', itemsPerPage = '20', sortBy = 'title', sort = '-1', blockchain = '', category = '' } = req.query;
+      const { pageNum = '1', itemsPerPage = '20', sortBy = 'title', sort = '1', blockchain = '', category = '' } = req.query;
       const searchQuery = {};
       const pageSize = parseInt(itemsPerPage, 10);
       const sortDirection = parseInt(sort, 10);
@@ -129,9 +129,9 @@ module.exports = context => {
       }
 
       const data = await context.db.File.find(searchQuery, { key: 0 })
+        .sort({ [sortBy]: sortDirection })
         .skip(skip)
-        .limit(pageSize)
-        .sort([[sortBy, sortDirection]]);
+        .limit(pageSize);
 
       // const { adminNFT: author } = req.user;
       // const reg = new RegExp(/^0x\w{40}:\w+$/);
