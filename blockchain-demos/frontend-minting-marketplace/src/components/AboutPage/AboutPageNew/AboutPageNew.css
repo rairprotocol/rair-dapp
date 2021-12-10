@@ -515,3 +515,278 @@
 .about-page--team {
     margin-top: 108px;
 }
+
+.about-roadmap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 108px 0;
+}
+
+.about-roadmap .about-road-title {
+    font-size: 40px;
+    line-height: 60px;
+    color: #F178B6;
+}
+
+.about-roadmap .map-item-progress {
+    margin-top: 50px;
+}
+
+.about-map-item .map-progress .progress-box {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background: #E882D5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 10px;
+    z-index: 1;
+}
+
+.about-map-item:nth-child(2) .map-progress .progress-box:last-child {
+    background: #383637;
+}
+
+.about-map-item:nth-child(3) .map-progress .progress-box:last-child {
+    background: #383637;
+}
+
+.about-map-item:nth-child(4) .map-progress .progress-box:last-child {
+    background: #383637;
+}
+
+.about-map-item .map-progress .line-purple {
+    position: absolute;
+    height: 2px;
+    background: #E882D5;
+    width: 259px;
+    left: 10px;
+    top: 25px;
+    z-index: 0;
+}
+
+.about-map-item .map-progress .line-grey {
+    position: absolute;
+    height: 2px;
+    background: #383637;
+    width: 259px;
+    right: 10px;
+    top: 25px;
+    z-index: 0;
+}
+
+.about-map-item .map-progress .line-public, .about-map-item .map-progress .line-private {
+    position: absolute;
+}
+
+.about-map-item:nth-child(3) .map-progress .progress-box {
+    background: #5D5FEF;
+}
+
+.about-map-item .map-progress .line-public {
+    position: absolute;
+    height: 2px;
+    background: #00AEEF;
+    width: 259px;
+    left: 10px;
+    top: 25px;
+    z-index: 0;
+}
+
+.about-map-item:last-child .map-progress .progress-box {
+    background: #00AEEF;
+}
+
+.about-map-item .map-progress .line-private {
+    position: absolute;
+    height: 2px;
+    background: #5D5FEF;
+    width: 259px;
+    left: 10px;
+    top: 25px;
+    z-index: 0;
+}
+
+.about-roadmap .map-progress {
+    position: relative;
+    width: 530px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.about-map-item .progress-title {
+    width: 212px;
+    height: 48px;
+    background: #E882D5;
+    color: #fff;
+    border-radius: 16px;
+    font-size: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-roadmap .map-item-progress {
+    display: flex;
+    justify-content: space-between;
+}
+
+.about-map-item .map-item-desc {
+    width: 779px;
+    margin-top: 30px;
+    padding: 31px 0;
+    border: 2px dashed #4E4D4D;
+    border-radius: 16px;
+}
+
+.about-map-item .map-item-desc p{
+    font-size: 30px;
+    line-height: 40px;
+}
+
+.about-map-item:nth-child(3) .progress-title {
+    background: #5D5FEF;
+}
+
+.about-map-item:last-child .progress-title {
+    background: #00AEEF;
+}
+
+thead.table-head-compare th{
+    padding: 10px;
+    width: 180px;
+}
+
+thead.table-head-compare th  .th-title {
+    margin-right: 18px;
+    font-size: 24px;
+    font-weight: 700;
+    background: #E882D5;
+    border-radius: 16px;
+}
+
+/* thead.table-head-compare tr, tbody.table-tbody-compare tr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
+
+.about-compare .about-compare-title {
+    font-size: 40px;
+    line-height: 60px;
+    margin-bottom: 48px;
+}
+
+.about-compare .about-compare-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-compare-content table {
+    border-collapse: collapse !important; /* Способ отображения границы */ 
+    width: 100%; /* Ширина таблицы */ 
+    border-spacing: 7px 11px; /* Расстояние между ячейками */ 
+}
+
+thead.table-head-compare th .th-title{
+    width: 187px;
+}
+
+thead.table-head-compare th:first-child .th-title {
+    width: 195px;
+    background: #E882D5;
+    padding: 18px;
+}
+
+thead.table-head-compare th:nth-child(2) .th-title {
+    font-style: italic;
+    background: none;
+}
+
+thead.table-head-compare th:nth-child(3) .th-title {
+    background: #5B49AF;
+}
+
+thead.table-head-compare th:nth-child(4) .th-title {
+    background: #75CAFA;
+}
+
+thead.table-head-compare th:nth-child(5) .th-title {
+    background: #BD6BAE;
+}
+
+thead.table-head-compare  th:nth-child(6) .th-title {
+    background: #5B49AF;
+}
+
+tbody.table-tbody-compare tr:first-child {
+    /* border: 2px dashed #383637; */
+    /* border-radius: 16px; */
+    
+}
+
+tbody.table-tbody-compare tr td:first-child .circle-table{
+    background: #fff;
+    border-radius: 50%;
+    color: #383637;
+    width: 50px;
+    height: 50px;
+    margin: 20px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+tbody.table-tbody-compare tr td:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+tbody.table-tbody-compare tr:first-child td:first-child .circle-table {
+    background: #E882D5;
+    color: #fff;
+    width: 72px;
+    height: 72px;
+    font-size: 32px;
+}
+
+tbody.table-tbody-compare tr td {
+    font-size: 24px;
+}
+
+tbody.table-tbody-compare tr td img {
+    width: 50px;
+    height: auto;
+}
+
+tbody.table-tbody-compare tr td:nth-child(2) .circle-table-img {
+    width: 91px;
+    height: 91px;
+    background: #fff;
+    border-radius: 50%;
+    margin: 10px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img {
+    width: 115px;
+    height: 115px;
+}
+
+
+tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
+    width: 70px;
+}

@@ -14,6 +14,14 @@ import MetamaskTutorial from './../assets/matamaskTutorial.png';
 import Metamask from './../assets/metamask_logo.png';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
 
+// imports image logos 
+import OpenSea from './../assets/openSea-logo.png';
+import Rarible from './../assets/rarible-logo.png';
+import OneOf from './../assets/oneOf-logo.png';
+import Dapper from './../assets/dapper-logo.png';
+import MinTable from './../assets/mintable-logo.png';
+import Curios from './../assets/curios.png';
+
 const AboutPageNew = ({ primaryColor }) => {
     const [percentTokens, setPersentTokens] = useState(0);
 
@@ -468,6 +476,249 @@ const AboutPageNew = ({ primaryColor }) => {
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="about-roadmap">
+                    <div className="about-road-title">2022 Roadmap</div>
+                    <div className="about-map-item">
+                        <div className="map-item-progress">
+                            <div className="map-progress">
+                                <div className="line-purple"></div>
+                                <div className="line-grey"></div>
+                                <div className="progress-box">Q1</div>
+                                <div className="progress-box">Q2</div>
+                                <div className="progress-box">Q3</div>
+                            </div>
+                            <div className="progress-title">
+                                Curation
+                            </div>
+                        </div>
+                        <div className="map-item-desc">
+                            <p>EVM NFT suite for Ethereum, Matic, BSC</p>
+                            <p>Custom minting, royalty splits, aggregation</p>
+                            <p>Encrypted streaming video</p>
+                        </div>
+                    </div>
+                    <div className="about-map-item">
+                        <div className="map-item-progress">
+                            <div className="progress-title">
+                                Private
+                            </div>
+                            <div className="map-progress">
+                                <div className="line-private"></div>
+                                <div className="line-grey"></div>
+                                <div className="progress-box">Q2</div>
+                                <div className="progress-box">Q3</div>
+                                <div className="progress-box">Q4</div>
+                            </div>
+                        </div>
+                        <div className="map-item-desc">
+                            <p>Scale to customer</p>
+                            <p>EVM Aidrops to token holders</p>
+                            <p>Curated marketplace</p>
+                        </div>
+                    </div>
+                    <div className="about-map-item">
+                        <div className="map-item-progress">
+                            <div className="map-progress">
+                                <div className="line-public"></div>
+                                <div className="line-grey"></div>
+                                <div className="progress-box">Q3</div>
+                                <div className="progress-box">Q4</div>
+                                <div className="progress-box">Q5</div>
+                            </div>
+                            <div className="progress-title">
+                                Public
+                            </div>
+                        </div>
+                        <div className="map-item-desc">
+                            <p>Toolset release for all creators</p>
+                            <p>Encrypted data streaming</p>
+                            <p>Marketplaces for NFT stakers</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="about-compare">
+                    <div className="about-compare-title">Compare</div>
+                    <div className="about-compare-content">
+                        <div className="about-compare-steams">
+                            <table className="about-table-compare">
+                                <thead className="table-head-compare">
+                                    <th>
+                                        <div className="th-title">
+                                            Streaming
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div className="th-title">
+                                            Platform
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div className="th-title">
+                                            Whitelabel
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div className="th-title">
+                                            EVM Support
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div className="th-title">
+                                            Royalties
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div className="th-title">
+                                            Metadata
+                                        </div>
+                                    </th>
+                                </thead>
+                                <tbody className="table-tbody-compare">
+                                    <tr>
+                                        <td>
+                                            <div className="circle-table">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="circle-table-img">
+                                                <img src={RairLogo} alt="" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            Metaverse
+                                            as-a-Service
+                                        </td>
+                                        <td>Any EVM</td>
+                                        <td>Universal
+                                            Onchain</td>
+                                        <td>
+                                            Provenance
+                                            & Speed
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div className="circle-table">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="circle-table-img">
+                                                <img src={OpenSea} alt="" />
+                                            </div>
+                                        </td>
+                                        <td>Just another
+                                            Opensea Page</td>
+                                        <td>Limited
+                                            EVMs</td>
+                                        <td>
+                                            2.5%
+                                            Offchain
+                                        </td>
+                                        <td>Lazyminted</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div className="circle-table">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="circle-table-img">
+                                                <img src={Rarible} alt="" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            Just another
+                                            Rarible Page
+                                        </td>
+                                        <td>
+                                            ETH
+                                            Only
+                                        </td>
+                                        <td>2.5%
+                                            Offchain</td>
+                                        <td>Lazyminted</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div className="circle-table">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="circle-table-img">
+                                                <img src={OneOf} alt="" />
+                                            </div>
+                                        </td>
+                                        <td>Not your
+                                            Brand</td>
+                                        <td>Only Tezos </td>
+                                        <td>Stuck on
+                                            Tezos</td>
+                                        <td>Stuck on
+                                            Tezos</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div className="circle-table">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="circle-table-img">
+                                                <img src={Dapper} alt="" />
+                                            </div>
+                                        </td>
+                                        <td>Need
+                                            Flow devs</td>
+                                        <td>Only Flow</td>
+                                        <td>Stuck on
+                                            Flow</td>
+                                        <td>Stuck on
+                                            Flow</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div className="circle-table">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="circle-table-img">
+                                                <img src={MinTable} alt="" />
+                                            </div>
+                                        </td>
+                                        <td>Just another
+                                            Mintable Page</td>
+                                        <td>ETH</td>
+                                        <td>5%</td>
+                                        <td>Lazyminted</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div className="circle-table">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="circle-table-img">
+                                                <img src={Curios} alt="" />
+                                            </div>
+                                        </td>
+                                        <td>Curios
+                                            Backend</td>
+                                        <td>MATIC</td>
+                                        <td>5%
+                                            Offchain</td>
+                                        <td>Lazyminted</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
