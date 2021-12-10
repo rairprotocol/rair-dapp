@@ -4,12 +4,14 @@ const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
 const { addMetadata, addPin } = require('../integrations/ipfsService')();
+const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
   context.agenda.define('sync tokens', { lockLifetime }, async (task, done) => {
     try {
+      logAgendaActionStart({agendaDefinition: 'sync tokens'});
       const { network, name } = task.attrs.data;
       const tokensForSave = [];
       const offersForUpdate = [];
