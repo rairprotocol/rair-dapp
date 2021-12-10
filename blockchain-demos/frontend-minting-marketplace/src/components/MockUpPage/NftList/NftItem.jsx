@@ -83,6 +83,13 @@ const NftItem = ({
     return max;
   }
 
+  function ch(){
+    if(maxPrice === minPrice){
+     const samePrice = maxPrice;
+      return `${samePrice} ${chainDataFront[blockchain]?.name}`
+    } return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`
+  }
+
   const minPrice = arrayMin(price);
   const maxPrice = arrayMax(price);
 
@@ -177,7 +184,7 @@ const NftItem = ({
               src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
-            <span className="description ">{minPrice} ETH </span>
+            <span className="description ">{minPrice} {chainDataFront[blockchain]?.name} </span>
           </div>
           <div onClick={RedirectToMockUp} className="description-big">
             <img
@@ -186,7 +193,9 @@ const NftItem = ({
               alt=""
             />
             <span className="description description-price">
-              {minPrice} - {maxPrice} ETH{" "}
+              {ch()}
+              {/* {minPrice} - {maxPrice} {chainDataFront[blockchain]?.name} */}
+              {/* {minPrice} - {maxPrice} ETH{" "} */}
             </span>
             <span className="description-more">View item</span>
           </div>

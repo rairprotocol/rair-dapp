@@ -17,7 +17,7 @@ Adding new user to the database with required data
     }
   },
   "adminNFT": {
-    "required": true,
+    "required": false,
     "content": {
       "type": "string"
     }
@@ -39,13 +39,16 @@ Returns if created successfully
 {
   "success": true,
   "user": {
-    "creationDate": "2021-05-18T14:20:17.957Z",
-    "adminNFT": "some token",
     "email": null,
+    "avatar": null,
     "firstName": null,
     "lastName": null,
-    "publicAddress": "some public address",
-    "_id": "60a3cd21abe49f001d168767"
+    "_id": "61af976dc4444d001c98d851",
+    "publicAddress": "publicAddress",
+    "adminNFT": "temp_0xasdfwe",
+    "nonce": "some_string",
+    "creationDate": "2021-12-07T17:18:37.231Z",
+    "nickName": "publicAddress_by_default"
   }
 }
 ```

@@ -3,12 +3,14 @@ const _ = require('lodash');
 const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
+const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
   context.agenda.define('sync offers', { lockLifetime }, async (task, done) => {
     try {
+      logAgendaActionStart({agendaDefinition: 'sync offers'});
       const { network, name } = task.attrs.data;
       const offersForSave = [];
       const offerPoolsForUpdate = [];
