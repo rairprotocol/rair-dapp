@@ -286,7 +286,7 @@ const AboutPageNew = ({ primaryColor }) => {
                         Watch our tutorial video on Web2 to learn how to watch encrypted videos on Web3.
                     </div>
                     <div className="box-video">
-                        <iframe width="978" height="549" src="https://www.youtube.com/embed/tgbNymZ7vqY">
+                        <iframe width="978" height="549" src="https://www.youtube.com/embed/fL5UAV5cuIQ">
                         </iframe>
                     </div>
                     <div className="about-video-tutorial-text">

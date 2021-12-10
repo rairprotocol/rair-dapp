@@ -50,6 +50,7 @@ import { TermsUse } from './components/SplashPage/TermsUse';
 // import NftItem from './components/MockUpPage/NftList/NftItem';
 import AboutPage from './components/AboutPage/AboutPage';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
+import Footer from './components/Footer/Footer';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -201,7 +202,7 @@ function App({ sentryHistory }) {
   },[setRenderBtnConnect]);
 
   const openAboutPage = () => {
-	sentryHistory.push(`/rair-about-page`)
+	sentryHistory.push(`/about-page`)
 	window.scrollTo(0, 0);
   }
 
@@ -435,22 +436,7 @@ function App({ sentryHistory }) {
 							</div>
 						</div>
 					</div>
-					<footer
-						className="footer col"
-						style={{
-							background: `${primaryColor === "rhyno" ? "#ccc" : ""}`
-						}}
-					>
-						<div className="text-rairtech" style={{ color: `${primaryColor === "rhyno" ? "#000" : ""}` }}>
-							© Rairtech 2021. All rights reserved
-						</div>
-						<ul>
-							<li>newsletter</li>
-							<li>contact</li>
-							<li>inquiries</li>
-							<li onClick={() => openAboutPage()}>about us</li>
-						</ul>
-					</footer>
+					<Footer primaryColor={primaryColor} openAboutPage={openAboutPage} />
 				</div>
 			</Router>
 		</Sentry.ErrorBoundary>

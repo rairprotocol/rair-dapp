@@ -781,6 +781,11 @@ tbody.table-tbody-compare tr td:nth-child(2) .circle-table-img {
     justify-content: center;
 }
 
+
+tbody.table-tbody-compare tr:first-child td:nth-child(n+3) {
+    font-weight: 700;
+}
+
 tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img {
     width: 115px;
     height: 115px;
@@ -789,4 +794,12 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img {
 
 tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     width: 70px;
+}
+
+@media screen and (max-width: 1460px) {
+    .wrapper-about-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
