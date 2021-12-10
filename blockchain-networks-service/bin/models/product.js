@@ -14,7 +14,7 @@ const Product = new Schema({
   royalty: { type: Number, default: 0 },
   firstTokenIndex: { type: Number, required: true },
   cover: { type: String, default: DEFAULT_PRODUCT_COVER },
-  category: { type: Schema.Types.ObjectId },
+  category: { type: Schema.ObjectId },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
