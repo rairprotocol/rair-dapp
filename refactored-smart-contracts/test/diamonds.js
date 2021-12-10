@@ -78,7 +78,6 @@ function get (functionNames) {
   return selectors
 }
 
-
 describe("Diamonds", function () {
 	let owner, addr1, addr2, addr3, addr4, addrs;
 
@@ -497,26 +496,48 @@ describe("Diamonds", function () {
 		it ("Should create offers in batches", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
 			await expect(await rangesFacet.createRangeBatch(0, [
-			{
-				rangeStart: 0,
-				rangeEnd: 10,
-				price: 2000,
-				tokensAllowed: 9 ,
-				lockedTokens: 1,
-				name: 'Second First First'
-			}, {
-				rangeStart: 11,
-				rangeEnd: 99,
-				price: 3500,
-				tokensAllowed: 50 ,
-				lockedTokens: 10,
-				name: 'Second First Second'
-			},
+				{
+					rangeStart: 0,
+					rangeEnd: 10,
+					price: 2000,
+					tokensAllowed: 9 ,
+					lockedTokens: 1,
+					name: 'Second First First'
+				}, {
+					rangeStart: 11,
+					rangeEnd: 99,
+					price: 3500,
+					tokensAllowed: 50 ,
+					lockedTokens: 10,
+					name: 'Second First Second'
+				}
 			]))
 				.to.emit(rangesFacet, 'CreatedRange')
 				.withArgs(0, 0, 10, 2000, 9, 1, 'Second First First', 0)
 				.to.emit(rangesFacet, 'CreatedRange')
 				.withArgs(0, 11, 99, 3500, 50, 10, 'Second First Second', 1);
+
+			await expect(await rangesFacet.createRangeBatch(1, [
+				{
+					rangeStart: 0,
+					rangeEnd: 100,
+					price: 20000,
+					tokensAllowed: 9 ,
+					lockedTokens: 1,
+					name: 'Second Second First'
+				}, {
+					rangeStart: 101,
+					rangeEnd: 250,
+					price: 35000,
+					tokensAllowed: 50 ,
+					lockedTokens: 10,
+					name: 'Second Second Second'
+				}
+			]))
+				.to.emit(rangesFacet, 'CreatedRange')
+				.withArgs(1, 0, 100, 20000, 9, 1, 'Second Second First', 2)
+				.to.emit(rangesFacet, 'CreatedRange')
+				.withArgs(1, 101, 250, 35000, 50, 10, 'Second Second Second', 3);
 		});
 
 		it ("Should return the information about the offers", async () => {
@@ -580,6 +601,31 @@ describe("Diamonds", function () {
 		});
 	});
 
+	describe ("Creator side minting", () => {
+		it ("Shouldn't let other users mint tokens", async () => {
+			let erc721Facet = (await ethers.getContractAt('ERC721Facet', firstDeploymentAddress)).connect(addr1);
+			await expect(erc721Facet.mintFromRange(addr2.address, 0, 0))
+				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await erc721Facet.MINTER()}`);
+			erc721Facet = (await ethers.getContractAt('ERC721Facet', secondDeploymentAddress)).connect(addr2);
+			await expect(erc721Facet.mintFromRange(addr1.address, 1, 3))
+				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await erc721Facet.MINTER()}`);
+		});
+
+		it ("Shouldn't mint tokens outside of the range's boundaries", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(erc721Facet.mintFromRange(addr3.address, 1, 3))
+				.to.be.revertedWith("RAIR ERC721: Invalid token index");
+		});
+
+		it ("Should let the creator mint tokens from ranges", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 33))
+				.to.emit(erc721Facet, 'Transfer')
+				.withArgs(ethers.constants.AddressZero, addr3.address, 133);
+		});
+
+		it ("Should let the creator mint tokens from offers");
+	});
 
 	describe("Loupe Facet", () => {
 		it ("Should show all facets", async () => {

@@ -6,7 +6,6 @@ import './AppStorage.sol';
 contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	event ProductCreated(uint indexed id, string name, uint startingToken, uint length);
-	event ProductCompleted(uint indexed id, string name);
 
 	/// @notice	Makes sure the product exists before doing changes to it
 	/// @param	productID	Product to verify

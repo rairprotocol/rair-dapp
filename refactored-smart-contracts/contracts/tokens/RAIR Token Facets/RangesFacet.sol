@@ -40,19 +40,18 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 	}
 	
 	function _createRange(uint productId_, uint rangeStart_, uint rangeEnd_, uint price_, uint tokensAllowed_, uint lockedTokens_, string memory name_) internal {
+		product storage selectedProduct = s.products[productId_];
 		range storage newRange = s.ranges.push();
+		uint rangeIndex = s.ranges.length - 1;
 		newRange.rangeStart = rangeStart_;
 		newRange.rangeEnd = rangeEnd_;
 		newRange.tokensAllowed = tokensAllowed_;
 		newRange.lockedTokens = lockedTokens_;
 		newRange.rangePrice = price_;
 		newRange.rangeName = name_;
-		uint rangeIndex = s.ranges.length - 1;
 		s.rangeToProduct[rangeIndex] = productId_;
-		product storage selectedProduct = s.products[productId_];
 		selectedProduct.rangeList.push(rangeIndex);
 		emit CreatedRange(productId_, rangeStart_, rangeEnd_, price_, tokensAllowed_, lockedTokens_, name_, rangeIndex);
-
 	}
 
 	function createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name) external onlyRole(CREATOR) {
