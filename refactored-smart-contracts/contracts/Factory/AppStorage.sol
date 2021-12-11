@@ -3,6 +3,7 @@ pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 struct RoleData {
 	mapping(address => bool) members;
@@ -17,6 +18,7 @@ struct AppStorage {
 	// Access Control Enumerable
 	mapping(bytes32 => RoleData) _roles;
 	string failsafe;
+	mapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;
 }
 
 library LibAppStorage {
@@ -28,6 +30,8 @@ library LibAppStorage {
 }
 
 contract AccessControlAppStorageEnumerable is Context {
+	using EnumerableSet for EnumerableSet.AddressSet;
+	
 	AppStorage internal s;
 
 	event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);
@@ -75,6 +79,14 @@ contract AccessControlAppStorageEnumerable is Context {
 		return s._roles[role].adminRole;
 	}
 
+	function getRoleMember(bytes32 role, uint256 index) public view returns (address) {
+		return s._roleMembers[role].at(index);
+	}
+
+	function getRoleMemberCount(bytes32 role) public view returns (uint256) {
+		return s._roleMembers[role].length();
+	}
+
 	function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {
 		bytes32 previousAdminRole = getRoleAdmin(role);
 		s._roles[role].adminRole = adminRole;
@@ -85,6 +97,7 @@ contract AccessControlAppStorageEnumerable is Context {
 		if (!hasRole(role, account)) {
 			s._roles[role].members[account] = true;
 			emit RoleGranted(role, account, _msgSender());
+			s._roleMembers[role].add(account);
 		}
 	}
 
@@ -92,6 +105,7 @@ contract AccessControlAppStorageEnumerable is Context {
 		if (hasRole(role, account)) {
 			s._roles[role].members[account] = false;
 			emit RoleRevoked(role, account, _msgSender());
+			s._roleMembers[role].remove(account);
 		}
 	}
 }

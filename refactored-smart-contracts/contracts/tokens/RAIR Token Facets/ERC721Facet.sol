@@ -144,6 +144,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/// @param	_to			Token's new owner
 	/// @param	_tokenId	Token's ID
 	function _beforeTokenTransfer(address _from, address _to, uint256 _tokenId) internal {
+		// If it's not minting or burning 
 		if (_from != address(0) && _to != address(0)) {
 			/*
 			if (_lockedRange[tokenToLock[_tokenId]].productIndex == tokenToProduct[_tokenId]) {

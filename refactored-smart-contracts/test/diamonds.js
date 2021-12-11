@@ -173,7 +173,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(ownershipFacetInstance)
 			}
-			//console.log(ownershipFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -186,7 +185,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(diamondLoupeFacetInstance)
 			}
-			//console.log(diamondLoupeFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -199,8 +197,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(creatorsFacetInstance)
 			}
-			//console.log(receiverFacetItem.functionSelectors)
-			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -213,8 +209,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(erc777ReceiverFacetInstance)
 			}
-			//console.log(receiverFacetItem.functionSelectors)
-			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -227,8 +221,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(tokensFacetInstance)
 			}
-			//console.log(receiverFacetItem.functionSelectors)
-			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -241,8 +233,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(erc721FacetInstance)
 			}
-			//console.log(receiverFacetItem.functionSelectors)
-			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -259,7 +249,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_REPLACE,
 				functionSelectors: getSelectors(diamondLoupeFacetInstance)
 			}
-			//console.log(diamondLoupeFacetInstance.functions);
 			await expect(diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.be.revertedWith("LibDiamond: Must be contract owner");
 		});
@@ -279,7 +268,6 @@ describe("Diamonds", function () {
 
 		it ("Should grant ERC777 roles", async () => {
 			const receiverFacet = await ethers.getContractAt('ERC777ReceiverFacet', factoryDiamondInstance.address);
-			// console.log(receiverFacet.functions);
 			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
 				.to.equal(true);
 			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.ERC777(), addr1.address))
@@ -431,7 +419,6 @@ describe("Diamonds", function () {
 		});
 
 		it ("Should let owners grant their role to other addresses", async () => {
-			console.log(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), addr1.address));
 			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.OWNER(), addr1.address))
 				.to.emit(factoryDiamondInstance, 'RoleGranted')
 				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
@@ -450,6 +437,16 @@ describe("Diamonds", function () {
 			await expect(await factoryAsAddress1.renounceRole(await factoryDiamondInstance.ERC777(), addr1.address))
 				.to.emit(factoryDiamondInstance, 'RoleRevoked')
 				.withArgs(await factoryDiamondInstance.ERC777(), addr1.address, addr1.address);
+		});
+
+		it ("Should return the number of owners in the factory", async () => {
+			await expect(await factoryDiamondInstance.getRoleMemberCount(await factoryDiamondInstance.OWNER()))
+				.to.equal(1);
+		});
+
+		it ("Should return the address of each owners in the factory", async () => {
+			await expect(await factoryDiamondInstance.getRoleMember(await factoryDiamondInstance.OWNER(), 0))
+				.to.equal(owner.address);
 		});
 	});
 
@@ -472,10 +469,7 @@ describe("Diamonds", function () {
 				.to.equal("TestRairTwo!");
 		});
 
-		it ("Shouldn't mint tokens without products", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
-			console.log(erc721Facet.functions);
-		});
+		
 		it ("Should approve tokens to third parties");
 		it ("Should approve all tokens to third parties");
 		it ("Should only let Traders trade tokens");
@@ -495,16 +489,12 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(rairMetadataFacetInstance)
 			}
-			//console.log(receiverFacetItem.functionSelectors)
-			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
 
 		it ("Should return the contract's creator address");
-		it ("Should return the contract's name");
-		it ("Should return the contract's symbol");
 		it ("Should let the creator renounce his role");
 		it ("Should return the owner of each token");
 		it ("Should return the next mintable token of an offer");
@@ -547,8 +537,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(rairProductFacetInstance)
 			}
-			//console.log(receiverFacetItem.functionSelectors)
-			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -601,8 +589,6 @@ describe("Diamonds", function () {
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(rairRangesFacetInstance)
 			}
-			//console.log(receiverFacetItem.functionSelectors)
-			//console.log(erc777ReceiverFacetInstance.functions);
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
@@ -753,6 +739,12 @@ describe("Diamonds", function () {
 				.withArgs(ethers.constants.AddressZero, addr3.address, 133);
 		});
 
+		it ("Shouldn't mint tokens from invalid ranges", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(erc721Facet.mintFromRange(addr3.address, 3, 0))
+				.to.be.revertedWith("RAIR ERC721: Range does not exist");
+		});
+
 		it ("Should let the creator mint tokens from products");
 		it ("Should let the creator authorize other addresses");
 		it ("Should show if a lock can be created");
@@ -767,7 +759,6 @@ describe("Diamonds", function () {
 	describe("Loupe Facet", () => {
 		it ("Should show all facets", async () => {
 			const loupeFacet = await ethers.getContractAt('DiamondLoupeFacet', factoryDiamondInstance.address);
-			//console.log(await loupeFacet.facets());
 		})
 	});
 })
