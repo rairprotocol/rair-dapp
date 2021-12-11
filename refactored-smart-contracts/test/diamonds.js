@@ -500,9 +500,6 @@ describe("Diamonds", function () {
 				.to.equal(owner.address);
 		});
 
-		it ("Should translate from standard token index to offer index");
-		it ("Should translate from offer token index to standard index");
-		it ("Should list the tokens owned by an user");
 		it ("Should return the total number of tokens minted");
 		it ("Should return the index of a token's product");
 		it ("Should return the token's owner");
@@ -806,6 +803,29 @@ describe("Diamonds", function () {
 				.to.equal(100);
 		});
 
+		it ("Should show the total number of tokens minted", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.totalSupply())
+				.to.equal(1);
+		})
+
+		it ("Should show how many tokens an address holds", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.balanceOf(addr3.address))
+				.to.equal(1);
+		})
+
+		it ("Should list the tokens owned by an address", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.tokenOfOwnerByIndex(addr3.address, 0))
+				.to.equal(100);
+		});
+
+		it ("Should list the tokens minted", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.tokenByIndex(0))
+				.to.equal(100);
+		});
 
 		it ("Should return information about the ranges");
 		it ("Should say if a range is locked");
