@@ -76,6 +76,11 @@ contract AccessControlAppStorageEnumerable721 is Context {
         _;
     }
 
+    function renounceRole(bytes32 role, address account) public {
+        require(account == _msgSender(), "AccessControl: can only renounce roles for self");
+        _revokeRole(role, account);
+    }
+
     function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {
         _grantRole(role, account);
     }

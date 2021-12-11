@@ -265,7 +265,7 @@ describe("Diamonds", function () {
 		});
 	});
 
-	describe("RAIR Token Receiver", () => {
+	describe("Deployment Workflow", () => {
 		it ("Roles should be set up", async function() {
 			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), owner.address))
 				.to.equal(true);
@@ -347,7 +347,7 @@ describe("Diamonds", function () {
 		});
 	});
 
-	describe("RAIR Creators Facet", () => {
+	describe("Creators Facet", () => {
 		it ("Should return the correct amount of creators", async () => {
 			const creatorFacet = await ethers.getContractAt('creatorFacet', factoryDiamondInstance.address);
 			await expect(await creatorFacet.getCreatorsCount()).to.equal(1);
@@ -388,7 +388,7 @@ describe("Diamonds", function () {
 		});
 	});
 
-	describe("RAIR Creators Facet", () => {
+	describe("Tokens Facet", () => {
 		it ("Should display the balance of each approved token", async () => {
 			let tokenFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
 			await expect(await erc777Instance.balanceOf(tokenFacet.address))
@@ -415,12 +415,45 @@ describe("Diamonds", function () {
 				);*/
 		});
 
-		it ("Shouldn't let other addresses add erc777 tokens");
-		it ("Should remove erc777 tokens");
-		it ("Should let owners renounce their role");
+		it ("Shouldn't let other addresses add erc777 tokens", async () => {
+			const tokensFacet = (await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address)).connect(addr1);
+			await expect(tokensFacet.acceptNewToken(extraERC777Instance.address, priceToDeploy))
+				.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await factoryDiamondInstance.OWNER()}`);
+		});
+
+		it ("Should remove erc777 tokens", async () => {
+			const tokensFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
+			await expect(await tokensFacet.removeToken(erc777Instance.address))
+				.to.emit(factoryDiamondInstance, 'RoleRevoked')
+				.withArgs(await factoryDiamondInstance.ERC777(), erc777Instance.address, owner.address)
+				.to.emit(tokensFacet, 'TokenNoLongerAccepted')
+				.withArgs(erc777Instance.address, owner.address);
+		});
+
+		it ("Should let owners grant their role to other addresses", async () => {
+			console.log(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), addr1.address));
+			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.OWNER(), addr1.address))
+				.to.emit(factoryDiamondInstance, 'RoleGranted')
+				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
+		});
+
+		it ("Shouldn't let other owners renounce an address' role", async () => {
+			await expect(factoryDiamondInstance.renounceRole(await factoryDiamondInstance.OWNER(), addr1.address))
+				.to.be.revertedWith("AccessControl: can only renounce roles for self")
+		});
+
+		it ("Should let owners renounce their role", async () => {
+			let factoryAsAddress1 = await factoryDiamondInstance.connect(addr1);
+			await expect(await factoryAsAddress1.renounceRole(await factoryDiamondInstance.OWNER(), addr1.address))
+				.to.emit(factoryDiamondInstance, 'RoleRevoked')
+				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, addr1.address);
+			await expect(await factoryAsAddress1.renounceRole(await factoryDiamondInstance.ERC777(), addr1.address))
+				.to.emit(factoryDiamondInstance, 'RoleRevoked')
+				.withArgs(await factoryDiamondInstance.ERC777(), addr1.address, addr1.address);
+		});
 	});
 
-	describe("ERC721 Facet", () => {
+	describe("RAIR ERC721", () => {
 		it ("Should have the RAIR symbol", async () => {
 			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
 			await expect(await erc721Facet.symbol())
@@ -439,7 +472,10 @@ describe("Diamonds", function () {
 				.to.equal("TestRairTwo!");
 		});
 
-		it ("Shouldn't mint tokens without products");
+		it ("Shouldn't mint tokens without products", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			console.log(erc721Facet.functions);
+		});
 		it ("Should approve tokens to third parties");
 		it ("Should approve all tokens to third parties");
 		it ("Should only let Traders trade tokens");
