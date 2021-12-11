@@ -35,11 +35,13 @@ struct AppStorage721 {
 	product[] products;
 	range[] ranges;
 	mapping(uint => uint) tokenToProduct;
+	mapping(uint => uint) tokenToRange;
 	mapping(uint => string) uniqueTokenURI;
 	mapping(uint => string) productURI;
 	mapping(uint => uint[]) tokensByProduct;
 	string contractMetadataURI;
 	mapping(uint => uint) rangeToProduct;
+	mapping(uint => bool) _minted;
 	// ERC721
 	string _name;
 	string _symbol;
@@ -66,9 +68,9 @@ library LibAppStorage721 {
 }
 
 contract AccessControlAppStorageEnumerable721 is Context {
-	using EnumerableSet for EnumerableSet.AddressSet;
-
 	AppStorage721 internal s;
+
+	using EnumerableSet for EnumerableSet.AddressSet;
 
 	event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);
 	event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);

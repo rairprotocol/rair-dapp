@@ -52,6 +52,8 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		require(selectedRange.tokensAllowed > 0, "RAIR ERC721: Cannot mint more tokens in this range");
 		require(selectedProduct.mintableTokens > 0, "RAIR ERC721: Cannot mint more tokens in this product");
 		_safeMint(to, selectedProduct.startingToken + indexInRange, '');
+		s.tokenToProduct[selectedProduct.startingToken + indexInRange] = s.rangeToProduct[rangeId];
+		s.tokenToRange[selectedProduct.startingToken + indexInRange] = rangeId;
 	}
 
 	function mintFromProduct(address to, uint productId, uint indexInProduct) external onlyRole(MINTER) {
@@ -170,6 +172,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 		s._balances[to] += 1;
 		s._owners[tokenId] = to;
+		s._minted[tokenId] = true;
 
 		emit Transfer(address(0), to, tokenId);
 	}

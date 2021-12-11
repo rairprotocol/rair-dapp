@@ -500,10 +500,6 @@ describe("Diamonds", function () {
 				.to.equal(owner.address);
 		});
 
-
-		it ("Should return the next mintable token of a product");
-		it ("Should translate from standard token index to product index");
-		it ("Should translate from product token index to standard index");
 		it ("Should translate from standard token index to offer index");
 		it ("Should translate from offer token index to standard index");
 		it ("Should list the tokens owned by an user");
@@ -604,11 +600,22 @@ describe("Diamonds", function () {
 				.to.be.revertedWith('RAIR ERC721: Product does not exist');
 		});
 
+		it ("Shouldn't create ranges with invalid information", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
+			await expect(rangesFacet.createRange(0, 10, 0, 1000, 950, 50, 'First First First'))
+				.to.be.revertedWith('RAIR ERC721: Invalid starting or ending token');
+			await expect(rangesFacet.createRange(0, 0, 10, 1000, 950, 50, 'First First First'))
+				.to.be.revertedWith("RAIR ERC721: Allowed tokens should be less than range's length");
+			await expect(rangesFacet.createRange(0, 0, 10, 1000, 9, 50, 'First First First'))
+				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than range's length");
+		});
+
+
 		it ("Should create offers", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
-			await expect(await rangesFacet.createRange(0, 0, 10, 1000, 950, 50, 'First First First'))
+			await expect(await rangesFacet.createRange(0, 0, 10, 1000, 9, 5, 'First First First'))
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(0, 0, 10, 1000, 950, 50, 'First First First', 0);
+				.withArgs(0, 0, 10, 1000, 9, 5, 'First First First', 0);
 		});
 
 		it ("Should create offers in batches", async () => {
@@ -670,10 +677,10 @@ describe("Diamonds", function () {
 				.to.equal(10);
 			await expect(infoZero.tokensAllowed)
 				.to.equal(infoProductZero.tokensAllowed)
-				.to.equal(950);
+				.to.equal(9);
 			await expect(infoZero.lockedTokens)
 				.to.equal(infoProductZero.lockedTokens)
-				.to.equal(50);
+				.to.equal(5);
 			await expect(infoZero.rangePrice)
 				.to.equal(infoProductZero.rangePrice)
 				.to.equal(1000);
@@ -720,15 +727,15 @@ describe("Diamonds", function () {
 
 		it ("Should show if a range can be created", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
-			await expect(await rangesFacet.canCreateLock(1, 2, 99))
+			await expect(await rangesFacet.canCreateRange(1, 2, 99))
 				.to.equal(false);
-			await expect(await rangesFacet.canCreateLock(1, 101, 249))
+			await expect(await rangesFacet.canCreateRange(1, 101, 249))
 				.to.equal(false);
-			await expect(await rangesFacet.canCreateLock(1, 50, 150))
+			await expect(await rangesFacet.canCreateRange(1, 50, 150))
 				.to.equal(false);
-			await expect(await rangesFacet.canCreateLock(1, 150, 350))
+			await expect(await rangesFacet.canCreateRange(1, 150, 350))
 				.to.equal(false);
-			await expect(await rangesFacet.canCreateLock(1, 251, 350))
+			await expect(await rangesFacet.canCreateRange(1, 251, 350))
 				.to.equal(true);
 		});
 	});
@@ -787,8 +794,19 @@ describe("Diamonds", function () {
 				.withArgs(addr3.address, addr4.address, 100);
 		});
 
-		it ("Should show if a range can be created");
-		it ("Shouldn't lock ranges with invalid information");
+		it ("Should translate from standard token index to product index", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(await productFacet.tokenToProductIndex(100))
+				.to.equal(0);
+		});
+
+		it ("Should translate from product token index to standard index", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(await productFacet.productToToken(1, 0))
+				.to.equal(100);
+		});
+
+
 		it ("Should return information about the ranges");
 		it ("Should say if a range is locked");
 		it ("Shouldn't mint if a collection is complete");

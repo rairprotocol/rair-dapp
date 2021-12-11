@@ -14,6 +14,24 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		_;
 	}
 
+	modifier tokenExists(uint tokenIndex) {
+		require(s._minted[tokenIndex], "RAIR ERC721: Query for nonexistent token");
+		_;
+	}
+
+	function productToToken(uint productIndex_, uint tokenIndex_) public view productExists(productIndex_) returns(uint) {
+		return s.products[productIndex_].startingToken + tokenIndex_;
+	}
+
+	function tokenToProductIndex(uint tokenIndex_) public view tokenExists(tokenIndex_) returns (uint) {
+		return tokenIndex_ - s.products[s.tokenToProduct[tokenIndex_]].startingToken;
+	}
+
+	function tokenToProduct(uint tokenIndex_) public view tokenExists(tokenIndex_) returns (uint productIndex, uint rangeIndex) {
+		productIndex = s.tokenToProduct[tokenIndex_];
+		rangeIndex = s.tokenToRange[tokenIndex_];
+	}
+
 	/// @notice	Returns the number of products on the contract
 	/// @dev	Use with get product to list all of the products
 	function getProductCount() external view returns(uint) {

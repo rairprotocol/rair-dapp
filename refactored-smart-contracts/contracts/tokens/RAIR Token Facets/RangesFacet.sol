@@ -39,7 +39,7 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		emit UpdatedRange(rangeId, price_, tokensAllowed_, lockedTokens_);
 	}
 
-	function canCreateLock(uint productId_, uint rangeStart_, uint rangeEnd_) public view returns (bool) {
+	function canCreateRange(uint productId_, uint rangeStart_, uint rangeEnd_) public view returns (bool) {
 		uint[] memory rangeList = s.products[productId_].rangeList;
 		for (uint i = 0; i < rangeList.length; i++) {
 			if ((s.ranges[rangeList[i]].rangeStart <= rangeStart_ &&
@@ -56,6 +56,10 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		product storage selectedProduct = s.products[productId_];
 		range storage newRange = s.ranges.push();
 		uint rangeIndex = s.ranges.length - 1;
+		require(rangeStart_ <= rangeEnd_, 'RAIR ERC721: Invalid starting or ending token');
+		require(rangeEnd_ - rangeStart_ > tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
+		require(rangeEnd_ - rangeStart_ > lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
+		require(canCreateRange(productId_, rangeStart_, rangeEnd_), "RAIR ERC721: Can't create a lock of this range");
 		newRange.rangeStart = rangeStart_;
 		newRange.rangeEnd = rangeEnd_;
 		newRange.tokensAllowed = tokensAllowed_;
