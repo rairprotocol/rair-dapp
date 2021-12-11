@@ -13,8 +13,6 @@ contract RAIR_ERC721_Diamond is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant TRADER = keccak256("TRADER");
 	bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
-	//using Address for address;
-
 	/**
 	 * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
 	 */

@@ -500,16 +500,6 @@ describe("Diamonds", function () {
 				.to.equal(owner.address);
 		});
 
-		it ("Should return an address' balance");
-		it ("Should enumerate the tokens owned by an user");
-		it ("Should enumerate the tokens of a product");
-		it ("Should return the token's URI");
-		it ("Should set the contract's URI");
-		it ("Should set the token's base URI");
-		it ("Should set the token's product URI");
-		it ("Should set the token's range URI");
-		it ("Should set the token's unique URI");
-		it ("Should set the token's unique URI in batches");
 		it ("Should emit the OpenSea event to freeze the metadata");
 		it ("Shouldn't let any other address set the token's URI");
 		it ("Should fallback to broader URIs");
@@ -851,6 +841,92 @@ describe("Diamonds", function () {
 				.to.equal(false);
 			await expect(await productFacet.ownsTokenInRange(addr3.address, 2))
 				.to.equal(true);
+		});
+
+		it ("Shouldn't let any non-creator address to modify the metadata", async () => {
+			let metadataFacet = (await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress)).connect(addr2);
+			await expect(metadataFacet.setContractURI("DEV.RAIR.TECH"))
+				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
+			await expect(metadataFacet.setBaseURI("devs.rairs.techs/"))
+				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
+			await expect(metadataFacet.setProductURI(1, 'first.rair.tech'))
+				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
+			await expect(metadataFacet.setUniqueURI(100, 'hundreth.rair.tech/ASDF'))
+				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
+		});
+
+		it ("Should set the contract's URI", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.setContractURI("DEV.RAIR.TECH"))
+				.to.emit(metadataFacet, 'ContractURIChanged')
+				.withArgs('DEV.RAIR.TECH');
+			await expect(await metadataFacet.contractURI())
+				.to.equal('DEV.RAIR.TECH');
+		});
+
+		it ("Should set the token's base URI", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.setBaseURI("devs.rairs.techs/"))
+				.to.emit(metadataFacet, 'BaseURIChanged');
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("devs.rairs.techs/100");
+		});
+
+		it ("Should set the token's product URI", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.setProductURI(1, 'first.rair.tech/'))
+				.to.emit(metadataFacet, 'ProductURIChanged')
+				.withArgs(1, 'first.rair.tech/');
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("first.rair.tech/0");
+		});
+
+		it ("Should let the creator mint tokens from ranges in batches", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.mintFromRangeBatch(
+				[addr1.address, addr2.address, addr3.address],
+				2,
+				[1, 2, 3]
+			))
+			.to.emit(erc721Facet, 'Transfer')
+			.withArgs(ethers.constants.AddressZero, addr1.address, 101)
+			.to.emit(erc721Facet, 'Transfer')
+			.withArgs(ethers.constants.AddressZero, addr2.address, 102)
+			.to.emit(erc721Facet, 'Transfer')
+			.withArgs(ethers.constants.AddressZero, addr3.address, 103);
+		});
+
+		it ("Should set the token's unique URI", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.setUniqueURI(100, 'hundreth.rair.tech/ASDF'))
+				.to.emit(metadataFacet, 'TokenURIChanged')
+				.withArgs(100, 'hundreth.rair.tech/ASDF');
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("hundreth.rair.tech/ASDF");
+		});
+
+		it ("Should set the token's unique URI in batches", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.setUniqueURIBatch(
+				[101, 102, 103],
+				[
+					'101.rair.tech/QWERTY',
+					'102.rair.tech/QWERTY',
+					'103.rair.tech/QWERTY'
+				]
+			))
+				.to.emit(metadataFacet, 'TokenURIChanged')
+				.withArgs(101, '101.rair.tech/QWERTY')
+				.to.emit(metadataFacet, 'TokenURIChanged')
+				.withArgs(102, '102.rair.tech/QWERTY')
+				.to.emit(metadataFacet, 'TokenURIChanged')
+				.withArgs(103, '103.rair.tech/QWERTY');
+			await expect(await metadataFacet.tokenURI(101))
+				.to.equal("101.rair.tech/QWERTY");
+			await expect(await metadataFacet.tokenURI(102))
+				.to.equal("102.rair.tech/QWERTY");
+			await expect(await metadataFacet.tokenURI(103))
+				.to.equal("103.rair.tech/QWERTY");
 		});
 
 		it ("Should return information about the ranges");
