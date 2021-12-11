@@ -16,7 +16,6 @@ import '../diamondStandard/Diamond.sol';
 contract FactoryDiamond is Diamond, AccessControlAppStorageEnumerable {
 	IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 	
-	bytes32 public constant MAINTAINER = keccak256("MAINTAINER");
 	bytes32 public constant OWNER = keccak256("OWNER");
 	bytes32 public constant ERC777 = keccak256("ERC777");
 	bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;

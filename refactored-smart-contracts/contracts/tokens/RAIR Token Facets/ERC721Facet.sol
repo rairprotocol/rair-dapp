@@ -36,11 +36,10 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		return (hasRole(TRADER, operator) || s._operatorApprovals[owner][operator]);
 	}
 
-	function mintFromRange(address to, uint rangeId, uint indexInRange) external onlyRole(MINTER) {
+	function mintFromRange(address to, uint rangeId, uint indexInRange) public onlyRole(MINTER) {
 		require(s.ranges.length > rangeId, "RAIR ERC721: Range does not exist");
 		range storage selectedRange = s.ranges[rangeId];
 		product storage selectedProduct = s.products[s.rangeToProduct[rangeId]];
-		console.log(selectedRange.rangeStart, indexInRange, selectedRange.rangeEnd);
 		require(indexInRange >= selectedRange.rangeStart && indexInRange <= selectedRange.rangeEnd, "RAIR ERC721: Invalid token index");
 		require(selectedRange.tokensAllowed > 0, "RAIR ERC721: Cannot mint more tokens in this range");
 		require(selectedProduct.mintableTokens > 0, "RAIR ERC721: Cannot mint more tokens in this product");
@@ -53,6 +52,16 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		require(indexInProduct >= selectedProduct.startingToken && indexInProduct <= selectedProduct.endingToken, "RAIR ERC721: Invalid token index");
 		require(selectedProduct.mintableTokens > 0, "RAIR ERC721: Cannot mint more tokens in this product");
 		_safeMint(to, selectedProduct.startingToken + indexInProduct, '');
+	}
+
+	function mintFromRangeBatch(
+		address[] calldata to,
+		uint rangeId,
+		uint[] calldata indexInRange
+	) external onlyRole(MINTER) {
+		for (uint i = 0; i < to.length; i++) {
+			mintFromRange(to[i], rangeId, indexInRange[i]);
+		}
 	}
 	
 		/*
