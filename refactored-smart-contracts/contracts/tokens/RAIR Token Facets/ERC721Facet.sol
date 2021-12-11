@@ -73,6 +73,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		_safeMint(to, selectedProduct.startingToken + indexInRange, '');
 		s.tokenToProduct[selectedProduct.startingToken + indexInRange] = s.rangeToProduct[rangeId];
 		s.tokenToRange[selectedProduct.startingToken + indexInRange] = rangeId;
+		s.tokensByProduct[s.rangeToProduct[rangeId]].push(selectedProduct.startingToken + indexInRange);
 	}
 
 	function mintFromProduct(address to, uint productId, uint indexInProduct) external onlyRole(MINTER) {
@@ -136,7 +137,6 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 		_safeMint(to, currentProduct.startingToken + indexInProduct);
 
-		s.tokensByProduct[productId].push(currentProduct.startingToken + indexInProduct);
 
 		s.tokenToProduct[currentProduct.startingToken + indexInProduct] = productId;
 		currentProduct.mintableTokens--;

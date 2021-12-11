@@ -14,9 +14,38 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		_;
 	}
 
+	modifier rangeExists(uint rangeID) {
+		require(s.ranges.length > rangeID, "RAIR ERC721: Range does not exist");
+		_;
+	}
+
 	modifier tokenExists(uint tokenIndex) {
 		require(s._minted[tokenIndex], "RAIR ERC721: Query for nonexistent token");
 		_;
+	}
+
+	function ownsTokenInProduct(address find, uint productIndex) public view productExists(productIndex) returns (bool) {
+		product storage selectedProduct = s.products[productIndex];
+		return _ownsTokenInsideRange(find, selectedProduct.startingToken, selectedProduct.endingToken);
+	}
+
+	function ownsTokenInRange(address find, uint rangeIndex) public view rangeExists(rangeIndex) returns (bool) {
+		range storage selectedRange = s.ranges[rangeIndex];
+		uint startOfProduct = s.products[s.rangeToProduct[rangeIndex]].startingToken;
+		return _ownsTokenInsideRange(find, startOfProduct + selectedRange.rangeStart, startOfProduct + selectedRange.rangeEnd);
+	}
+
+	function _ownsTokenInsideRange(address find, uint from, uint to) internal view returns (bool) {
+		for (uint i = from; i < to; i++) {
+			if (s._owners[i] == find) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function tokenByProduct(uint productIndex_, uint tokenIndex_) public view productExists(productIndex_) returns (uint) {
+		return s.tokensByProduct[productIndex_][tokenIndex_];
 	}
 
 	function productToToken(uint productIndex_, uint tokenIndex_) public view productExists(productIndex_) returns(uint) {

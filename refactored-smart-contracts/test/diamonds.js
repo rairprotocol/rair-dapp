@@ -500,10 +500,6 @@ describe("Diamonds", function () {
 				.to.equal(owner.address);
 		});
 
-		it ("Should return the total number of tokens minted");
-		it ("Should return the index of a token's product");
-		it ("Should return the token's owner");
-		it ("Should say if an address owns a token inside a product");
 		it ("Should return an address' balance");
 		it ("Should enumerate the tokens owned by an user");
 		it ("Should enumerate the tokens of a product");
@@ -825,6 +821,36 @@ describe("Diamonds", function () {
 			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
 			await expect(await erc721Facet.tokenByIndex(0))
 				.to.equal(100);
+		});
+
+		it ("Should list the tokens minted in each product", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(await productFacet.tokenByProduct(1, 0))
+				.to.equal(100);
+		});
+
+		it ("Shouldn't list the tokens minted in each product if the product doesn't exist", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(productFacet.tokenByProduct(2, 0))
+				.to.be.revertedWith('RAIR ERC721: Product does not exist');
+		});
+
+		it ("Should say if an address owns a token inside a product", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(await productFacet.ownsTokenInProduct(addr3.address, 0))
+				.to.equal(false);
+			await expect(await productFacet.ownsTokenInProduct(addr3.address, 1))
+				.to.equal(true);
+		});
+
+		it ("Should say if an address owns a token inside a range", async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
+			await expect(await productFacet.ownsTokenInRange(addr3.address, 0))
+				.to.equal(false);
+			await expect(await productFacet.ownsTokenInRange(addr3.address, 1))
+				.to.equal(false);
+			await expect(await productFacet.ownsTokenInRange(addr3.address, 2))
+				.to.equal(true);
 		});
 
 		it ("Should return information about the ranges");
