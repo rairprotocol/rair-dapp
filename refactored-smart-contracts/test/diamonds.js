@@ -717,6 +717,20 @@ describe("Diamonds", function () {
 			await expect(rangePrice).to.equal(3750);
 			await expect(rangeName).to.equal('Second First First');
 		});
+
+		it ("Should show if a range can be created", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
+			await expect(await rangesFacet.canCreateLock(1, 2, 99))
+				.to.equal(false);
+			await expect(await rangesFacet.canCreateLock(1, 101, 249))
+				.to.equal(false);
+			await expect(await rangesFacet.canCreateLock(1, 50, 150))
+				.to.equal(false);
+			await expect(await rangesFacet.canCreateLock(1, 150, 350))
+				.to.equal(false);
+			await expect(await rangesFacet.canCreateLock(1, 251, 350))
+				.to.equal(true);
+		});
 	});
 
 	describe ("Creator side minting", () => {
@@ -766,9 +780,14 @@ describe("Diamonds", function () {
 				.to.equal(1);
 		});
 
-		it ("Should let the creator mint tokens from products");
-		it ("Should let the creator authorize other addresses");
-		it ("Should show if a lock can be created");
+		it ("Should let a token's owner to approve other addresses to spend tokens", async () => {
+			let erc721Facet = (await ethers.getContractAt('ERC721Facet', secondDeploymentAddress)).connect(addr3);
+			await expect(await erc721Facet.approve(addr4.address, 100))
+				.to.emit(erc721Facet, 'Approval')
+				.withArgs(addr3.address, addr4.address, 100);
+		});
+
+		it ("Should show if a range can be created");
 		it ("Shouldn't lock ranges with invalid information");
 		it ("Should return information about the ranges");
 		it ("Should say if a range is locked");

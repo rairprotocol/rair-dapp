@@ -10,7 +10,7 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 	event UpdatedRange(uint rangeIndex, uint price, uint tokensAllowed, uint lockedTokens);
 
 	// Auxiliary struct used to avoid Stack too deep errors
-	struct offerData {
+	struct rangeData {
 		uint rangeStart;
 		uint rangeEnd;
 		uint price;
@@ -38,6 +38,19 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		selectedRange.rangePrice = price_;
 		emit UpdatedRange(rangeId, price_, tokensAllowed_, lockedTokens_);
 	}
+
+	function canCreateLock(uint productId_, uint rangeStart_, uint rangeEnd_) public view returns (bool) {
+		uint[] memory rangeList = s.products[productId_].rangeList;
+		for (uint i = 0; i < rangeList.length; i++) {
+			if ((s.ranges[rangeList[i]].rangeStart <= rangeStart_ &&
+					s.ranges[rangeList[i]].rangeEnd >= rangeStart_) || 
+				(s.ranges[rangeList[i]].rangeStart <= rangeEnd_ &&
+					s.ranges[rangeList[i]].rangeEnd >= rangeEnd_)) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	function _createRange(uint productId_, uint rangeStart_, uint rangeEnd_, uint price_, uint tokensAllowed_, uint lockedTokens_, string memory name_) internal {
 		product storage selectedProduct = s.products[productId_];
@@ -61,7 +74,7 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 
 	function createRangeBatch(
 		uint productId,
-		offerData[] calldata data
+		rangeData[] calldata data
 	) external onlyRole(CREATOR) {
 		require(s.products.length > productId, "RAIR ERC721: Product does not exist");
 		for (uint i = 0; i < data.length; i++) {

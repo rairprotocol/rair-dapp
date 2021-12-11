@@ -14,19 +14,15 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 	event ProductCompleted(uint indexed id, string name);
 	event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-
+	event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+	event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+	
 	function name() public view returns (string memory) {
 		return s._name;
 	}
 
 	function symbol() public view returns (string memory) {
 		return s._symbol;
-	}
-
-	/// @notice	Overridden function from the ERC721 contract that returns our
-	///			variable base URI instead of the hardcoded URI
-	function _baseURI() internal view returns (string memory) {
-		return s.baseURI;
 	}
 	
 	/// @notice Queries if an operator can act on behalf of an owner on all of their tokens
@@ -75,6 +71,34 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 			mintFromRange(to[i], rangeId, indexInRange[i]);
 		}
 	}
+
+	function _isApprovedOrOwner(address spender, uint256 tokenId) internal view returns (bool) {
+        require(_exists(tokenId), "ERC721: operator query for nonexistent token");
+        address owner = ownerOf(tokenId);
+        return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
+    }
+
+    function approve(address to, uint256 tokenId) public {
+        address owner = ownerOf(tokenId);
+        require(to != owner, "ERC721: approval to current owner");
+
+        require(
+            _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
+            "ERC721: approve caller is not owner nor approved for all"
+        );
+
+        _approve(to, tokenId);
+    }
+
+    function _approve(address to, uint256 tokenId) internal virtual {
+        s._tokenApprovals[tokenId] = to;
+        emit Approval(ownerOf(tokenId), to, tokenId);
+    }
+
+    function getApproved(uint256 tokenId) public view returns (address) {
+        require(_exists(tokenId), "ERC721: approved query for nonexistent token");
+        return s._tokenApprovals[tokenId];
+    }
 	
 		/*
 	/// @notice	Mints a specific token within a product
