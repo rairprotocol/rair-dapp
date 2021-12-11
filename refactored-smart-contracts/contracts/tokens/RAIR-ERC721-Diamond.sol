@@ -21,6 +21,7 @@ contract RAIR_ERC721_Diamond is AccessControlAppStorageEnumerable721 {
 	constructor(string memory name_, address creatorAddress_, uint16 creatorRoyalty_) {
 		s._name = name_;
 		s._symbol = "RAIR";
+		
 		s.factoryAddress = msg.sender;
 		s.royaltyFee = creatorRoyalty_;
 		_setRoleAdmin(MINTER, CREATOR);

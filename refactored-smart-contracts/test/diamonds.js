@@ -19,7 +19,7 @@ function getSelectors (contract) {
 		if (val !== 'init(bytes)') {
 			let selector = contract.interface.getSighash(val);
 			if (usedSelectors[selector] !== undefined) {
-				console.log('Function', val, 'already exists on', contract.address)	
+				//console.log('Function', val, 'already exists on', contract.address)	
 				return acc;
 			}
 			usedSelectors[selector] = {
@@ -494,10 +494,13 @@ describe("Diamonds", function () {
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
 
-		it ("Should return the contract's creator address");
-		it ("Should let the creator renounce his role");
-		it ("Should return the owner of each token");
-		it ("Should return the next mintable token of an offer");
+		it ("Should return the contract's creator address", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(await erc721Facet.getRoleMember(await erc721Facet.CREATOR(), 0))
+				.to.equal(owner.address);
+		});
+
+
 		it ("Should return the next mintable token of a product");
 		it ("Should translate from standard token index to product index");
 		it ("Should translate from product token index to standard index");
@@ -734,15 +737,33 @@ describe("Diamonds", function () {
 
 		it ("Should let the creator mint tokens from ranges", async () => {
 			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
-			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 33))
+			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 0))
 				.to.emit(erc721Facet, 'Transfer')
-				.withArgs(ethers.constants.AddressZero, addr3.address, 133);
+				.withArgs(ethers.constants.AddressZero, addr3.address, 100);
 		});
 
 		it ("Shouldn't mint tokens from invalid ranges", async () => {
 			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
 			await expect(erc721Facet.mintFromRange(addr3.address, 3, 0))
 				.to.be.revertedWith("RAIR ERC721: Range does not exist");
+		});
+
+		it ("Should return the owner of each token", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.ownerOf(100))
+				.to.equal(addr3.address);
+		});
+
+		it ("Shouldn't return the owner of a non existant token", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(erc721Facet.ownerOf(101))
+				.to.be.revertedWith("ERC721: owner query for nonexistent token");
+		});
+
+		it ("Should return the next mintable token of an offer", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.nextMintableTokenInRange(2))
+				.to.equal(1);
 		});
 
 		it ("Should let the creator mint tokens from products");

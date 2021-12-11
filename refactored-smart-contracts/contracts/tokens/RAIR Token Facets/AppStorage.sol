@@ -29,7 +29,6 @@ struct product {
 
 struct AppStorage721 {
 	bytes32 secret;
-	address creatorAddress;
 	string baseURI;
 	address factoryAddress;
 	uint16 royaltyFee;

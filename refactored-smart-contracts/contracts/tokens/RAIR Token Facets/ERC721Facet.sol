@@ -10,6 +10,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 	bytes32 public constant TRADER = keccak256("TRADER");
 	bytes32 public constant MINTER = keccak256("MINTER");
+	bytes32 public constant CREATOR = keccak256("CREATOR");
 
 	event ProductCompleted(uint indexed id, string name);
 	event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
@@ -34,6 +35,17 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/// @param operator 	Operator of the tokens.
 	function isApprovedForAll(address owner, address operator) public view virtual returns (bool) {
 		return (hasRole(TRADER, operator) || s._operatorApprovals[owner][operator]);
+	}
+
+	function nextMintableTokenInRange(uint rangeIndex) public view returns (uint) {
+		require(s.ranges.length > rangeIndex, "RAIR ERC721 Ranges: Range does not exist");
+		range memory selectedRange = s.ranges[rangeIndex];
+		product memory selectedProduct = s.products[s.rangeToProduct[rangeIndex]];
+		for (uint i = selectedRange.rangeStart; i < selectedRange.rangeEnd; i++) {
+			if (!_exists(selectedProduct.startingToken + i)) {
+				return i;
+			}
+		}
 	}
 
 	function mintFromRange(address to, uint rangeId, uint indexInRange) public onlyRole(MINTER) {
@@ -137,6 +149,12 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 		emit Transfer(address(0), to, tokenId);
 	}
+
+	function ownerOf(uint256 tokenId) public view returns (address) {
+        address owner = s._owners[tokenId];
+        require(owner != address(0), "ERC721: owner query for nonexistent token");
+        return owner;
+    }
 
 	/// @notice Hook being called before every transfer
 	/// @dev	Transfer locking happens here!
