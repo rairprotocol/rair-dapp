@@ -29,19 +29,6 @@ struct product {
 }
 
 struct AppStorage721 {
-	string baseURI;
-	address factoryAddress;
-	uint16 royaltyFee;
-	product[] products;
-	range[] ranges;
-	mapping(uint => uint) tokenToProduct;
-	mapping(uint => uint) tokenToRange;
-	mapping(uint => string) uniqueTokenURI;
-	mapping(uint => string) productURI;
-	mapping(uint => uint[]) tokensByProduct;
-	string contractMetadataURI;
-	mapping(uint => uint) rangeToProduct;
-	mapping(uint => bool) _minted;
 	// ERC721
 	string _name;
 	string _symbol;
@@ -57,6 +44,21 @@ struct AppStorage721 {
 	// Access Control Enumerable
 	mapping(bytes32 => RoleData721) _roles;
 	mapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;
+	// App
+	string baseURI;
+	address factoryAddress;
+	uint16 royaltyFee;
+	product[] products;
+	range[] ranges;
+	mapping(uint => uint) tokenToProduct;
+	mapping(uint => uint) tokenToRange;
+	mapping(uint => string) uniqueTokenURI;
+	mapping(uint => string) productURI;
+	mapping(uint => uint[]) tokensByProduct;
+	string contractMetadataURI;
+	mapping(uint => uint) rangeToProduct;
+	mapping(uint => bool) _minted;
+	// Always add new variables at the end of the struct
 }
 
 library LibAppStorage721 {

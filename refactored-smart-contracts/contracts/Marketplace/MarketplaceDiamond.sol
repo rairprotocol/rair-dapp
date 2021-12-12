@@ -14,6 +14,9 @@ contract MarketplaceDiamond is Diamond, AccessControlAppStorageEnumerableMarket 
 
 	constructor(address _diamondCut) Diamond(msg.sender, _diamondCut) {
 		s.decimals = 3;
+		s.decimalPow = 10**3;
+		s.nodeFee = 1 * s.decimalPow;
+		s.treasuryFee = 9 * s.decimalPow;
 		_setRoleAdmin(MAINTAINER, MAINTAINER);
 		_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
 		_grantRole(MAINTAINER, msg.sender);

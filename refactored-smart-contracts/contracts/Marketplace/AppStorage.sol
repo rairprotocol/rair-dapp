@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 struct feeSplits {
 	address recipient;
-	uint16 percentage;
+	uint percentage;
 }
 
 struct mintingOffer {
@@ -15,6 +15,7 @@ struct mintingOffer {
 	address nodeAddress;
 	uint rangeIndex;
 	feeSplits[] fees;
+	bool visible;
 }
 
 struct RoleData {
@@ -23,13 +24,18 @@ struct RoleData {
 }
 
 struct AppStorage {
-	uint16 decimals;
-	address treasuryAddress;
-	mintingOffer[] mintingOffers;
-	mapping(address => mapping(uint => uint)) addressToRangeOffer;
 	// Access Control Enumerable
 	mapping(bytes32 => RoleData) _roles;
 	mapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;
+	// App
+	uint16 decimals;
+	uint decimalPow;
+	uint nodeFee;
+	uint treasuryFee;
+	address treasuryAddress;
+	mintingOffer[] mintingOffers;
+	mapping(address => mapping(uint => uint)) addressToRangeOffer;
+	// Always add new fields at the end of the struct, that way the structure can be upgraded
 }
 
 library LibAppStorage {

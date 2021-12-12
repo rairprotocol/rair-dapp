@@ -11,14 +11,16 @@ struct RoleData {
 }
 
 struct AppStorage {
-	address[] creators;
-	mapping(address => address[]) creatorToContracts;
-	mapping(address => address) contractToCreator;
-	mapping(address => uint) deploymentCostForToken;
 	// Access Control Enumerable
 	mapping(bytes32 => RoleData) _roles;
 	string failsafe;
 	mapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;
+	// App
+	address[] creators;
+	mapping(address => address[]) creatorToContracts;
+	mapping(address => address) contractToCreator;
+	mapping(address => uint) deploymentCostForToken;
+	// Always add new variables at the end of the struct!
 }
 
 library LibAppStorage {

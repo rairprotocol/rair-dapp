@@ -94,6 +94,7 @@ describe("Diamonds", function () {
 	let RAIRRangesFacetFactory, rairRangesFacetInstance;
 
 	let MintingOffersFacetFactory, mintingOfferFacetsInstance;
+	let FeesFacetFactory, feesFacetInstance;
 	
 	before(async () => {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
@@ -121,6 +122,7 @@ describe("Diamonds", function () {
 
 		// Marketplace's Facets
 		MintingOffersFacetFactory = await ethers.getContractFactory("MintingOffersFacet");
+		FeesFacetFactory = await ethers.getContractFactory("FeesFacet");
 	});
 
 	describe("Deploying external contracts", () => {
@@ -200,6 +202,11 @@ describe("Diamonds", function () {
 		it ("Should deploy the Market Minting Offers Facet", async () => {
 			mintingOfferFacetsInstance = await MintingOffersFacetFactory.deploy();
 			await mintingOfferFacetsInstance.deployed();
+		});
+
+		it ("Should deploy the Market Minting Offers Facet", async () => {
+			feesFacetInstance = await FeesFacetFactory.deploy();
+			await feesFacetInstance.deployed();
 		});
 	});
 
@@ -330,6 +337,18 @@ describe("Diamonds", function () {
 				facetAddress: mintingOfferFacetsInstance.address,
 				action: FacetCutAction_ADD,
 				functionSelectors: getSelectors(mintingOfferFacetsInstance, usedSelectorsForMarketplace)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should add the Minting Offers facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: feesFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(feesFacetInstance, usedSelectorsForMarketplace)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -1160,20 +1179,55 @@ describe("Diamonds", function () {
 	});
 
 	describe("Minter Marketplace", () => {
-		describe("AccessControl", () => {
+		describe("Fee Setup", () => {
 			it ("Should display decimal information", async () => {
-				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
-				await expect(await mintingOffersFacet.getDecimals())
+				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
+				await expect(await feesFacet.getDecimals())
 					.to.equal(3);
 			});
 
+			it ("Should have no treasury address right after deployment", async () => {
+				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
+				await expect(await feesFacet.getTreasuryAddress())
+					.to.equal(ethers.constants.AddressZero);
+			});
+
+			it ("Should update the treasury address", async () => {
+				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
+				await expect(await feesFacet.updateTreasuryAddress(addr4.address))
+					.to.emit(feesFacet, 'UpdatedTreasuryAddress')
+					.withArgs(addr4.address);
+				await expect(await feesFacet.getTreasuryAddress())
+					.to.equal(addr4.address);
+			});
+
+			it ("Should have the default 1% node fee", async () => {
+				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
+				let response = await feesFacet.getNodeFee()
+				await expect(response.decimals)
+					.to.equal(3);
+				await expect(response.nodeFee)
+					.to.equal(1000);
+			});
+
+			it ("Should have the default 1% node fee", async () => {
+				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
+				let response = await feesFacet.getTreasuryFee()
+				await expect(response.decimals)
+					.to.equal(3);
+				await expect(response.treasuryFee)
+					.to.equal(9000);
+			});
+		});
+		
+		describe("Validation for Minting Offers", () => {
 			it ("Shouldn't add offers without the marketplace as a Minter", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 60000}
-				], true))
-				.to.be.revertedWith("Minter Marketplace: This Marketplace isn't a Minter!");
+				], true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: This Marketplace isn't a Minter!");
 			});
 
 			it ("Should be granted the Minter role from the ERC721 Instance", async () => {
@@ -1188,8 +1242,17 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
 					{recipient: addr1.address, percentage: 30000},
 					{recipient: addr2.address, percentage: 60000}
-				], true))
-				.to.be.revertedWith("Minter Marketplace: Sender isn't the creator of the contract!");
+				], true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: Sender isn't the creator of the contract!");
+			});
+
+			it ("Shouldn't add an offer if the percentages don't add up to a 100%", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
+					{recipient: addr1.address, percentage: 29999},
+					{recipient: addr2.address, percentage: 60000}
+				], true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: Fees don't add up to 100%");
 			});
 		});
 
