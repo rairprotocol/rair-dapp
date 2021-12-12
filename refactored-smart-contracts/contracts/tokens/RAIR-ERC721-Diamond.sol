@@ -29,6 +29,10 @@ contract RAIR_ERC721_Diamond is AccessControlAppStorageEnumerable721 {
 		_grantRole(TRADER, creatorAddress_);
 	}
 
+	function getFactoryAddress() public view returns (address) {
+		return s.factoryAddress;
+	}
+
 	fallback() external {
 		address facet = IDiamondLoupe(s.factoryAddress).facetAddress(msg.sig);
 		assembly {

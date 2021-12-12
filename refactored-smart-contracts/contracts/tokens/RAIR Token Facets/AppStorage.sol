@@ -14,7 +14,7 @@ struct range {
 	uint rangeStart;
 	uint rangeEnd;
 	uint tokensAllowed;
-	uint tokensMinted;
+	uint mintableTokens;
 	uint lockedTokens;
 	uint rangePrice;
 	string rangeName;
@@ -29,7 +29,6 @@ struct product {
 }
 
 struct AppStorage721 {
-	string secret;
 	string baseURI;
 	address factoryAddress;
 	uint16 royaltyFee;

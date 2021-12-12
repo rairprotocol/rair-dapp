@@ -430,12 +430,21 @@ describe("Diamonds", function () {
 				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
 		});
 
+		it ("Should let owners revoke their role to other addresses", async () => {
+			await expect(await factoryDiamondInstance.revokeRole(await factoryDiamondInstance.OWNER(), addr1.address))
+				.to.emit(factoryDiamondInstance, 'RoleRevoked')
+				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
+		});
+
 		it ("Shouldn't let other owners renounce an address' role", async () => {
 			await expect(factoryDiamondInstance.renounceRole(await factoryDiamondInstance.OWNER(), addr1.address))
 				.to.be.revertedWith("AccessControl: can only renounce roles for self")
 		});
 
 		it ("Should let owners renounce their role", async () => {
+			await expect(await factoryDiamondInstance.grantRole(await factoryDiamondInstance.OWNER(), addr1.address))
+				.to.emit(factoryDiamondInstance, 'RoleGranted')
+				.withArgs(await factoryDiamondInstance.OWNER(), addr1.address, owner.address);
 			let factoryAsAddress1 = await factoryDiamondInstance.connect(addr1);
 			await expect(await factoryAsAddress1.renounceRole(await factoryDiamondInstance.OWNER(), addr1.address))
 				.to.emit(factoryDiamondInstance, 'RoleRevoked')
@@ -474,6 +483,15 @@ describe("Diamonds", function () {
 			await expect(await erc721Facet.name())
 				.to.equal("TestRairTwo!");
 		});
+
+		it ("Should return the factory's address", async () => {
+			let erc721Facet = await ethers.getContractAt('RAIR_ERC721_Diamond', firstDeploymentAddress);
+			await expect(await erc721Facet.getFactoryAddress())
+				.to.equal(factoryDiamondInstance.address);
+			erc721Facet = await ethers.getContractAt('RAIR_ERC721_Diamond', secondDeploymentAddress);
+			await expect(await erc721Facet.getFactoryAddress())
+				.to.equal(factoryDiamondInstance.address);
+		})
 	});
 
 	describe("RAIR Metadata Facet", () => {
@@ -500,9 +518,6 @@ describe("Diamonds", function () {
 				.to.equal(owner.address);
 		});
 
-		it ("Should emit the OpenSea event to freeze the metadata");
-		it ("Shouldn't let any other address set the token's URI");
-		it ("Should fallback to broader URIs");
 	});
 
 	describe("RAIR Product Facet", () => {
@@ -557,8 +572,6 @@ describe("Diamonds", function () {
 			await expect(await productFacet.mintedTokensInProduct(1))
 				.to.equal(0)
 		})
-
-		it ("Should show the correct product count");
 	});
 
 	describe("RAIR Ranges Facet", () => {
@@ -606,14 +619,14 @@ describe("Diamonds", function () {
 				.to.emit(rangesFacet, 'TradingLocked')
 				.withArgs(0, 0, 10, 5);
 				//Index, From, To, Tokens to Locked
-			await expect(await rangesFacet.createRange(1, 0, 25, 100000, 25, 0, 'First Second First'))
+			await expect(await rangesFacet.createRange(1, 0, 25, 100000, 26, 0, 'First Second First'))
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(1, 0, 25, 100000, 25, 0, 'First Second First', 1)
+				.withArgs(1, 0, 25, 100000, 26, 0, 'First Second First', 1)
 				.to.emit(rangesFacet, 'TradingUnlocked')
 				.withArgs(1, 0, 25);
-			await expect(await rangesFacet.createRange(1, 26, 49, 200000, 23, 0, 'First Second Second'))
+			await expect(await rangesFacet.createRange(1, 26, 49, 200000, 24, 0, 'First Second Second'))
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(1, 26, 49, 200000, 23, 0, 'First Second Second', 2)
+				.withArgs(1, 26, 49, 200000, 24, 0, 'First Second Second', 2)
 				.to.emit(rangesFacet, 'TradingUnlocked')
 				.withArgs(2, 26, 49);
 		});
@@ -877,7 +890,92 @@ describe("Diamonds", function () {
 			await expect(await productFacet.ownsTokenInRange(addr3.address, 2))
 				.to.equal(true);
 		});
+	});
 
+	describe ("Minting", () => {
+		it ("Should let the creator mint tokens from ranges in batches", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.mintFromRangeBatch(
+				[addr1.address, addr2.address, addr3.address],
+				2,
+				[1, 2, 3]
+			))
+			.to.emit(erc721Facet, 'Transfer')
+			.withArgs(ethers.constants.AddressZero, addr1.address, 101)
+			.to.emit(erc721Facet, 'Transfer')
+			.withArgs(ethers.constants.AddressZero, addr2.address, 102)
+			.to.emit(erc721Facet, 'Transfer')
+			.withArgs(ethers.constants.AddressZero, addr3.address, 103);
+		});
+
+		it ("Should unlock the product for trading if all tokens are minted", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 4))
+				.to.emit(erc721Facet, 'Transfer')
+				.withArgs(ethers.constants.AddressZero, addr3.address, 104)
+				.to.emit(erc721Facet, 'TradingUnlocked')
+				.withArgs(2, 0, 100);
+		});
+
+		it ("Should lock the range again if an update changes the number of locked tokens", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
+			// rangeId, price, tokens allowed, tokens locked
+			await expect(await rangesFacet.updateRange(2, 20000, 0, 5))
+				.to.emit(rangesFacet, 'UpdatedRange')
+				.withArgs(2, 20000, 0, 5)
+				.to.emit(rangesFacet, 'TradingLocked')
+				.withArgs(2, 0, 100, 5);
+		});
+
+		it ("Shouldn't mint more tokens if the allowed number is 0", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(erc721Facet.mintFromRange(addr3.address, 2, 5))
+				.to.be.revertedWith("RAIR ERC721: Not allowed to mint more tokens from this range!");
+		})
+
+		it ("Should emit an event if the entire range is minted", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			const neededTokens = 26;
+			await expect(await erc721Facet.mintFromRangeBatch(
+				Array.from(Array(neededTokens).keys()).map(item => addr2.address),
+				1,
+				Array.from(Array(neededTokens).keys()).map((item, index) => index)
+			))
+				.to.emit(erc721Facet, 'RangeCompleted')
+				// Range ID, Product ID
+				.withArgs(1, 1);
+		});
+
+		it ("Shouldn't mint more tokens if the range is complete", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(erc721Facet.mintFromRange(addr3.address, 1, 7))
+				.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this range!");
+		})
+
+		it ("Should emit an event if the entire product is minted", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			const neededTokens = 24;
+			await expect(await erc721Facet.mintFromRangeBatch(
+				Array.from(Array(neededTokens).keys()).map(item => addr2.address),
+				2,
+				Array.from(Array(neededTokens).keys()).map((item, index) => 26 + index)
+			))
+				.to.emit(erc721Facet, 'RangeCompleted')
+				.withArgs(2, 1)
+				.to.emit(erc721Facet, 'ProductCompleted')
+				.withArgs(1);
+		});
+
+		it ("Shouldn't mint more tokens if the range is complete", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(erc721Facet.mintFromRange(addr3.address, 1, 7))
+				.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this product!");
+			await expect(erc721Facet.mintFromRange(addr3.address, 2, 27))
+				.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this product!");
+		});
+	});
+
+	describe ("Token URI", () => {
 		it ("Shouldn't let any non-creator address to modify the metadata", async () => {
 			let metadataFacet = (await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress)).connect(addr2);
 			await expect(metadataFacet.setContractURI("DEV.RAIR.TECH"))
@@ -902,7 +1000,8 @@ describe("Diamonds", function () {
 		it ("Should set the token's base URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setBaseURI("devs.rairs.techs/"))
-				.to.emit(metadataFacet, 'BaseURIChanged');
+				.to.emit(metadataFacet, 'BaseURIChanged')
+				.withArgs('devs.rairs.techs/');
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("devs.rairs.techs/100");
 		});
@@ -916,19 +1015,10 @@ describe("Diamonds", function () {
 				.to.equal("first.rair.tech/0");
 		});
 
-		it ("Should let the creator mint tokens from ranges in batches", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
-			await expect(await erc721Facet.mintFromRangeBatch(
-				[addr1.address, addr2.address, addr3.address],
-				2,
-				[1, 2, 3]
-			))
-			.to.emit(erc721Facet, 'Transfer')
-			.withArgs(ethers.constants.AddressZero, addr1.address, 101)
-			.to.emit(erc721Facet, 'Transfer')
-			.withArgs(ethers.constants.AddressZero, addr2.address, 102)
-			.to.emit(erc721Facet, 'Transfer')
-			.withArgs(ethers.constants.AddressZero, addr3.address, 103);
+		it ("Should emit the OpenSea event to freeze the metadata", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.freezeMetadata(100))
+				.to.emit(metadataFacet, 'PermanentURI');
 		});
 
 		it ("Should set the token's unique URI", async () => {
@@ -964,49 +1054,67 @@ describe("Diamonds", function () {
 				.to.equal("103.rair.tech/QWERTY");
 		});
 
-		it ("Should unlock the product for trading if all tokens are minted", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
-			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 4))
-				.to.emit(erc721Facet, 'Transfer')
-				.withArgs(ethers.constants.AddressZero, addr3.address, 104)
-				.to.emit(erc721Facet, 'TradingUnlocked')
-				.withArgs(2, 0, 100);
-		});
+		it ("Should delete the URIs", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 
-		it ("Shouldn't mint more tokens if the allowed number is 0", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
-			await expect(erc721Facet.mintFromRange(addr3.address, 2, 5))
-				.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this range!");
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("hundreth.rair.tech/ASDF");
+			await expect(await metadataFacet.setUniqueURI(100, ''))
+				.to.emit(metadataFacet, 'TokenURIChanged')
+				.withArgs(100, '');
+
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("first.rair.tech/0");
+			await expect(await metadataFacet.setProductURI(1, ''))
+				.to.emit(metadataFacet, 'ProductURIChanged')
+				.withArgs(1, '');
+
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("devs.rairs.techs/100");
+			await expect(await metadataFacet.setBaseURI(""))
+				.to.emit(metadataFacet, 'BaseURIChanged')
+				.withArgs('');
+
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("");
 		})
+	});
 
-		it ("Should emit an event if the entire range is minted", async () => {
-			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
-			const neededTokens = 25;
-			await expect(await erc721Facet.mintFromRangeBatch(
-				Array.from(Array(neededTokens).keys()).map(item => addr2.address),
-				1,
-				Array.from(Array(neededTokens).keys()).map((item, index) => index)
-			))
-				.to.emit(erc721Facet, 'RangeCompleted')
-				.withArgs(1, 1);
-			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
-			await expect(await erc721Facet.ownerOf(1001))
-				.to.equal(addr2.address);
+	describe("NFT Trading", () => {
+		it ("Should only let Traders trade tokens", async () => {
+			let erc721Facet = (await ethers.getContractAt('ERC721Facet', firstDeploymentAddress)).connect(addr2);
+			await expect(erc721Facet['safeTransferFrom(address,address,uint256)'](addr2.address, addr3.address, 1004))
+				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await erc721Facet.TRADER()}`);
+			erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			await expect(await erc721Facet['safeTransferFrom(address,address,uint256)'](addr2.address, addr3.address, 1004))
+				.to.emit(erc721Facet, 'Transfer')
+				.withArgs(addr2.address, addr3.address, 1004);
 		});
 
-		it ("Should emit an event if the entire product is minted");
+		it ("Shouldn't trade tokens if the range is locked", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(erc721Facet['safeTransferFrom(address,address,uint256)'](addr3.address, addr2.address, 100))
+				.to.be.revertedWith("RAIR ERC721: Cannot transfer from a locked range!");
+		});
 
-		it ("Should lock the range if an update changes the number of locked tokens");
-
-
-		it ("Should only let Traders trade tokens");
-		it ("Should let Traders trade tokens even if they aren't approved");
-
-		it ("Should return information about the ranges");
-		it ("Should say if a range is locked");
-		it ("Shouldn't mint if a collection is complete");
-		it ("Shouldn't mint if a range is complete");
-		it ("Should let the creator unauthorize a minter");
+		it ("Should say if a range is locked", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
+			await expect(await rangesFacet.isRangeLocked(0))
+				.to.equal(true);
+			await expect(await rangesFacet.isRangeLocked(1))
+				.to.equal(false);
+			await expect(await rangesFacet.isRangeLocked(2))
+				.to.equal(false);
+			rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
+			await expect(await rangesFacet.isRangeLocked(0))
+				.to.equal(true);
+			await expect(await rangesFacet.isRangeLocked(1))
+				.to.equal(true);
+			await expect(await rangesFacet.isRangeLocked(2))
+				.to.equal(true);
+			await expect(await rangesFacet.isRangeLocked(3))
+				.to.equal(true);
+		});
 	});
 
 	describe("Loupe Facet", () => {

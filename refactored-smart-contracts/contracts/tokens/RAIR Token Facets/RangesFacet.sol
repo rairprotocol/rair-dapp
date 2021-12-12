@@ -27,9 +27,14 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		data = s.ranges[rangeId];
 	}
 
+	function isRangeLocked(uint rangeId) public view returns (bool) {
+		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
+		return s.ranges[rangeId].lockedTokens > 0;
+	}
+
 	function productRangeInfo(uint productId, uint rangeIndex) public view returns(range memory data) {
 		require(s.products.length > productId, "RAIR ERC721 Ranges: Product does not exist");
-		require(s.products[productId].rangeList.length > rangeIndex, "RAIR ERC721 Ranges: Product does not exist");
+		require(s.products[productId].rangeList.length > rangeIndex, "RAIR ERC721 Ranges: Invalid range index");
 		data = s.ranges[s.products[productId].rangeList[rangeIndex]];
 	}
 
@@ -63,12 +68,14 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		range storage newRange = s.ranges.push();
 		uint rangeIndex = s.ranges.length - 1;
 		require(rangeStart_ <= rangeEnd_, 'RAIR ERC721: Invalid starting or ending token');
-		require(rangeEnd_ - rangeStart_ >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
-		require(rangeEnd_ - rangeStart_ >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
+		// Add one because the starting token is included!
+		require(rangeEnd_ - rangeStart_ + 1 >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
+		require(rangeEnd_ - rangeStart_ + 1 >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
 		require(canCreateRange(productId_, rangeStart_, rangeEnd_), "RAIR ERC721: Can't create a lock of this range");
 		newRange.rangeStart = rangeStart_;
 		newRange.rangeEnd = rangeEnd_;
 		newRange.tokensAllowed = tokensAllowed_;
+		newRange.mintableTokens = rangeEnd_ - rangeStart_ + 1;
 		newRange.lockedTokens = lockedTokens_;
 		if (lockedTokens_ > 0) {
 			emit TradingLocked(rangeIndex, rangeStart_, rangeEnd_, lockedTokens_);
