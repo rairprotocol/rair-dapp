@@ -91,7 +91,7 @@ describe("Diamonds", function () {
 	let RAIRProductFacetFactory, rairProductFacetInstance;
 	let RAIRRangesFacetFactory, rairRangesFacetInstance;
 	
-	before(async function() {
+	before(async () => {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
 		// Nick Mudge's facets
 		DiamondCutFacetFactory = await ethers.getContractFactory("DiamondCutFacet");
@@ -259,7 +259,7 @@ describe("Diamonds", function () {
 	});
 
 	describe("AccessControl", () => {
-		it ("Roles should be set up", async function() {
+		it ("Roles should be set up", async () => {
 			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), owner.address))
 				.to.equal(true);
 			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.DEFAULT_ADMIN_ROLE(), owner.address))
@@ -1114,6 +1114,44 @@ describe("Diamonds", function () {
 				.to.equal(true);
 			await expect(await rangesFacet.isRangeLocked(3))
 				.to.equal(true);
+		});
+	});
+
+	describe("Minter Marketplace", () => {
+		describe("Minting Permissions", () => {
+			it ("Refuses to add a collection without a Minter role");
+			it ("Grants Marketplace Minter Role");
+		});
+		describe("Adding Products and Minting", () => {
+			it ("Shouldn't set up custom payment rates if the offer doesn't exist (Part 1 - The first offer)");
+			it ("Shouldn't add a number of tokens higher than the mintable limit");
+			it ("Shouldn't add a range with wrong lengths");
+			it ("Should revert if info is asked for non-existant offers");
+			it ("Should add an offer");
+			it ("Shouldn't add an offer for the same product and contract");
+			it ("Should revert if info is asked for a non-existant product offer");
+			it ("Should give info about the offers");
+			it ("Should add another offer for the same contract + A range with a single token");
+			it ("Should append a range to an existing offer");
+			it ("Should append a batch of ranges to an existing offer");
+			it ("Should mint with permissions");
+			it ("Should create a new offer (Used on the custom payment rate)");
+			it ("Shouldn't batch mint with wrong info");
+			it ("Should batch mint");
+			it ("Shouldn't mint without permissions");
+			it ("Shouldn't mint past the allowed number of tokens");
+		});
+
+		describe("Updating Products", () => {
+			it ("Shouldn't let the creator update the collection info limits with wrong info");
+			it ("Should let the creator update the collection info limits");
+			it ("Shouldn't mint out of bounds");
+			it ("Should mint specific tokens");
+			it ("Shouldn't mint if the collection is completely minted");
+			it ("Shouldn't set up custom payment rates if the percentages don't add up to 100%");
+			it ("Shouldn't set up custom payment rates if the offer doesn't exist");
+			it ("Should set up custom payment rates");
+			it ("Should do a custom payment split (Single)");
 		});
 	});
 
