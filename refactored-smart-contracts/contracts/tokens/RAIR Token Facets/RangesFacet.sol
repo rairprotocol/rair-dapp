@@ -22,17 +22,17 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		string name;
 	}
 
-	function rangeInfo(uint rangeId) public view returns(range memory data) {
+	function rangeInfo(uint rangeId) external view returns(range memory data) {
 		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
 		data = s.ranges[rangeId];
 	}
 
-	function isRangeLocked(uint rangeId) public view returns (bool) {
+	function isRangeLocked(uint rangeId) external view returns (bool) {
 		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
 		return s.ranges[rangeId].lockedTokens > 0;
 	}
 
-	function productRangeInfo(uint productId, uint rangeIndex) public view returns(range memory data) {
+	function productRangeInfo(uint productId, uint rangeIndex) external view returns(range memory data) {
 		require(s.products.length > productId, "RAIR ERC721 Ranges: Product does not exist");
 		require(s.products[productId].rangeList.length > rangeIndex, "RAIR ERC721 Ranges: Invalid range index");
 		data = s.ranges[s.products[productId].rangeList[rangeIndex]];

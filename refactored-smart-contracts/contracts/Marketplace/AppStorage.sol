@@ -35,6 +35,7 @@ struct AppStorage {
 	address treasuryAddress;
 	mintingOffer[] mintingOffers;
 	mapping(address => mapping(uint => uint)) addressToRangeOffer;
+	mapping(address => uint[]) addressToOffers;
 	// Always add new fields at the end of the struct, that way the structure can be upgraded
 }
 

@@ -1210,13 +1210,27 @@ describe("Diamonds", function () {
 					.to.equal(1000);
 			});
 
-			it ("Should have the default 1% node fee", async () => {
+			it ("Should have the default 9% treasury fee", async () => {
 				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
 				let response = await feesFacet.getTreasuryFee()
 				await expect(response.decimals)
 					.to.equal(3);
 				await expect(response.treasuryFee)
 					.to.equal(9000);
+			});
+
+			it ("Should update the treasury fee", async () => {
+				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
+				await expect(await feesFacet.updateTreasuryFee(5000))
+					.to.emit(feesFacet, 'UpdatedTreasuryFee')
+					.withArgs(3, 5000);
+			});
+
+			it ("Should update the treasury fee", async () => {
+				let feesFacet = await ethers.getContractAt('FeesFacet', marketDiamondInstance.address);
+				await expect(await feesFacet.updateNodeFee(5000))
+					.to.emit(feesFacet, 'UpdatedNodeFee')
+					.withArgs(3, 5000);
 			});
 		});
 		
@@ -1235,6 +1249,10 @@ describe("Diamonds", function () {
 				await expect(await erc721Facet.grantRole(await erc721Facet.MINTER(), marketDiamondInstance.address))
 					.to.emit(erc721Facet, 'RoleGranted')
 					.withArgs(await erc721Facet.MINTER(), marketDiamondInstance.address, owner.address);
+				erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+				await expect(await erc721Facet.grantRole(await erc721Facet.MINTER(), marketDiamondInstance.address))
+					.to.emit(erc721Facet, 'RoleGranted')
+					.withArgs(await erc721Facet.MINTER(), marketDiamondInstance.address, owner.address);
 			});
 
 			it ("Shouldn't add offers from other addresses", async () => {
@@ -1246,24 +1264,109 @@ describe("Diamonds", function () {
 					.to.be.revertedWith("Minter Marketplace: Sender isn't the creator of the contract!");
 			});
 
-			it ("Shouldn't add an offer if the percentages don't add up to a 100%", async () => {
+			it ("Shouldn't add an offer if the offer is complete", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
 					{recipient: addr1.address, percentage: 29999},
 					{recipient: addr2.address, percentage: 60000}
 				], true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: Offer doesn't have tokens available!");
+			});
+
+			it ("Shouldn't add an offer if the percentages don't add up to a 100%", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 0, [
+					{recipient: addr1.address, percentage: 29999},
+					{recipient: addr2.address, percentage: 60000}
+				], true, addr4.address))
 					.to.be.revertedWith("Minter Marketplace: Fees don't add up to 100%");
+			});
+
+			it ("Shouldn't add an offer if the range doesn't exist", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 4, [
+					{recipient: addr1.address, percentage: 30000},
+					{recipient: addr2.address, percentage: 60000}
+				], true, addr4.address))
+					.to.be.revertedWith("RAIR ERC721 Ranges: Range does not exist");
+			});
+
+		});
+
+		describe("Creating offers", () => {
+			it ("Should add an offer", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(await mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [
+					{recipient: addr1.address, percentage: 30000},
+					{recipient: addr2.address, percentage: 60000}
+				], true, addr4.address))
+					.to.emit(mintingOffersFacet, "AddedMintingOffer")
+					.withArgs(secondDeploymentAddress, 0, 'Second First First', 3750, 2, 0);
+				/*
+					event AddedMintingOffer(
+						address erc721Address,
+						uint rangeIndex,
+						string rangeName,
+						uint price,
+						uint feeSplitsLength,
+						uint offerIndex
+					);
+				*/
+			});
+
+			it ("Shouldn't add an offer for the same range", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [
+					{recipient: addr1.address, percentage: 30000},
+					{recipient: addr2.address, percentage: 60000}
+				], true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: Range already has an offer");
+			});
+
+			it ("Should add an offer for a range in the same contract", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(await mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 1, [
+					{recipient: addr1.address, percentage: 30000},
+					{recipient: addr3.address, percentage: 30000},
+					{recipient: addr2.address, percentage: 30000}
+				], true, addr4.address))
+					.to.emit(mintingOffersFacet, "AddedMintingOffer")
+					.withArgs(secondDeploymentAddress, 1, 'Second First Second', 3500, 3, 1);
+			});
+
+			it ("Should add an offer for a range on a different address", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(await mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 0, [
+					{recipient: addr2.address, percentage: 90000}
+				], true, addr4.address))
+					.to.emit(mintingOffersFacet, "AddedMintingOffer")
+					.withArgs(firstDeploymentAddress, 0, 'First First First', 1000, 1, 2);
+			});
+
+			it ("Should return the number of offers each contract has", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(await mintingOffersFacet.getOffersCountForAddress(firstDeploymentAddress))
+					.to.equal(1);
+				await expect(await mintingOffersFacet.getOffersCountForAddress(secondDeploymentAddress))
+					.to.equal(2);
+			});
+
+			it ("Should give information about each range by their offer index", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				console.log(await mintingOffersFacet.getOfferInfo(0));
+				console.log(await mintingOffersFacet.getOfferInfo(1));
+				console.log(await mintingOffersFacet.getOfferInfo(2));
+			});
+
+			it ("Should give information about each range by their offer index", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				console.log(await mintingOffersFacet.getOfferInfoForAddress(secondDeploymentAddress, 0));
+				console.log(await mintingOffersFacet.getOfferInfoForAddress(secondDeploymentAddress, 1));
+				console.log(await mintingOffersFacet.getOfferInfoForAddress(firstDeploymentAddress, 0));
 			});
 		});
 
 		describe("Adding Products and Minting", () => {
-			it ("Shouldn't set up custom payment rates if the offer doesn't exist (Part 1 - The first offer)");
-			it ("Shouldn't add a number of tokens higher than the mintable limit");
-			it ("Shouldn't add a range with wrong lengths");
-			it ("Should revert if info is asked for non-existant offers");
-			it ("Should add an offer");
-			it ("Shouldn't add an offer for the same product and contract");
-			it ("Should revert if info is asked for a non-existant product offer");
 			it ("Should give info about the offers");
 			it ("Should add another offer for the same contract + A range with a single token");
 			it ("Should append a range to an existing offer");
