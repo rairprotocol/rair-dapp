@@ -149,7 +149,7 @@ module.exports = context => {
     // Get video information from the request's body
     const { title, description, contract, product, offer } = req.body;
     // Get the user information
-    const { adminNFT: author, publicAddress } = req.user;
+    const { adminNFT: author, adminRights } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
 
