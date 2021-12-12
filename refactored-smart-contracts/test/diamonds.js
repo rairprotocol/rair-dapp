@@ -10,10 +10,11 @@ const priceToDeploy = 150;
 const firstDeploymentAddress = '0x33791c463B145298c575b4409d52c2BcF743BF67';
 const secondDeploymentAddress = '0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa';
 
-let usedSelectors = {};
+let usedSelectorsForFactory = {};
+let usedSelectorsForMarketplace = {};
 
 // get function selectors from ABI
-function getSelectors (contract) {
+function getSelectors (contract, usedSelectors) {
 	const signatures = Object.keys(contract.interface.functions)
 	const selectors = signatures.reduce((acc, val) => {
 		if (val !== 'init(bytes)') {
@@ -75,6 +76,7 @@ describe("Diamonds", function () {
 	let owner, addr1, addr2, addr3, addr4, addrs;
 
 	let FactoryDiamondFactory, factoryDiamondInstance;
+	let MarketDiamondFactory, marketDiamondInstance;
 	
 	let DiamondCutFacetFactory, diamondCutFacetInstance;
 	let OwnershipFacetFactory, ownershipFacetInstance;
@@ -90,6 +92,8 @@ describe("Diamonds", function () {
 	let RAIRMetadataFacetFactory, rairMetadataFacetInstance;
 	let RAIRProductFacetFactory, rairProductFacetInstance;
 	let RAIRRangesFacetFactory, rairRangesFacetInstance;
+
+	let MintingOffersFacetFactory, mintingOfferFacetsInstance;
 	
 	before(async () => {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
@@ -100,6 +104,9 @@ describe("Diamonds", function () {
 		
 		// Factory
 		FactoryDiamondFactory = await ethers.getContractFactory("FactoryDiamond");
+		// Marketplace
+		MarketDiamondFactory = await ethers.getContractFactory("MarketplaceDiamond");
+
 		// Factory's facets
 		ERC777ReceiverFacetFactory = await ethers.getContractFactory("ERC777ReceiverFacet");
 		ERC777Factory = await ethers.getContractFactory("RAIR777");
@@ -111,6 +118,9 @@ describe("Diamonds", function () {
 		RAIRMetadataFacetFactory = await ethers.getContractFactory("RAIRMetadataFacet");
 		RAIRProductFacetFactory = await ethers.getContractFactory("RAIRProductFacet");
 		RAIRRangesFacetFactory = await ethers.getContractFactory("RAIRRangesFacet");
+
+		// Marketplace's Facets
+		MintingOffersFacetFactory = await ethers.getContractFactory("MintingOffersFacet");
 	});
 
 	describe("Deploying external contracts", () => {
@@ -131,6 +141,11 @@ describe("Diamonds", function () {
 		it ("Should deploy the base Factory Diamond", async () => {
 			factoryDiamondInstance = await FactoryDiamondFactory.deploy(diamondCutFacetInstance.address);
 			await factoryDiamondInstance.deployed();
+		});
+
+		it ("Should deploy the base Marketplace Diamond", async () => {
+			marketDiamondInstance = await MarketDiamondFactory.deploy(diamondCutFacetInstance.address);
+			await marketDiamondInstance.deployed();
 		});
 
 		it ("Should deploy the Diamond Ownership facet", async () => {
@@ -165,31 +180,62 @@ describe("Diamonds", function () {
 			erc721FacetInstance = await ERC721FacetFactory.deploy();
 			await erc721FacetInstance.deployed();
 		});
+
+		it ("Should deploy the RAIR Ranges Facet", async () => {
+			rairRangesFacetInstance = await RAIRRangesFacetFactory.deploy();
+			await rairRangesFacetInstance.deployed();
+		});
+
+		it ("Should deploy the RAIR Metadata Facet", async () => {
+			rairMetadataFacetInstance = await RAIRMetadataFacetFactory.deploy();
+			await rairMetadataFacetInstance.deployed();
+		});
+
+		it ("Should deploy the RAIR Product Facet", async () => {
+			rairProductFacetInstance = await RAIRProductFacetFactory.deploy();
+			await rairProductFacetInstance.deployed();
+		});
+
+		// Marketplace Custom Facets
+		it ("Should deploy the Market Minting Offers Facet", async () => {
+			mintingOfferFacetsInstance = await MintingOffersFacetFactory.deploy();
+			await mintingOfferFacetsInstance.deployed();
+		});
 	});
 
-	describe("Adding facets to the diamond contract", () => {
+	describe("Adding facets to the Factory Diamond contract", () => {
 		it ("Should add the ownership facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			let diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
 			const ownershipCutItem = {
 				facetAddress: ownershipFacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(ownershipFacetInstance)
+				functionSelectors: getSelectors(ownershipFacetInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+
+			// Also add the facet to the Marketplace Diamond
+			diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+			await expect(await diamondCut.diamondCut([ownershipCutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
 		});
 
 		it ("Should add the Loupe facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			let diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
 			const loupeFacetItem = {
 				facetAddress: diamondLoupeFacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(diamondLoupeFacetInstance)
+				functionSelectors: getSelectors(diamondLoupeFacetInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+
+			// Also add the facet to the Marketplace Diamond
+			diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+			await expect(await diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
 		});
 
 		it ("Should add the Tokens facet", async () => {
@@ -197,7 +243,7 @@ describe("Diamonds", function () {
 			const receiverFacetItem = {
 				facetAddress: creatorsFacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(creatorsFacetInstance)
+				functionSelectors: getSelectors(creatorsFacetInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -209,7 +255,7 @@ describe("Diamonds", function () {
 			const receiverFacetItem = {
 				facetAddress: erc777ReceiverFacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(erc777ReceiverFacetInstance)
+				functionSelectors: getSelectors(erc777ReceiverFacetInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -221,7 +267,7 @@ describe("Diamonds", function () {
 			const receiverFacetItem = {
 				facetAddress: tokensFacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(tokensFacetInstance)
+				functionSelectors: getSelectors(tokensFacetInstance, usedSelectorsForFactory)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -233,7 +279,57 @@ describe("Diamonds", function () {
 			const receiverFacetItem = {
 				facetAddress: erc721FacetInstance.address,
 				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(erc721FacetInstance)
+				functionSelectors: getSelectors(erc721FacetInstance, usedSelectorsForFactory)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should add the RAIR Metadata facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: rairMetadataFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(rairMetadataFacetInstance, usedSelectorsForFactory)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should add the RAIR Product facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: rairProductFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(rairProductFacetInstance, usedSelectorsForFactory)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+
+		it ("Should add the RAIR Ranges facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: rairRangesFacetInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(rairRangesFacetInstance, usedSelectorsForFactory)
+			}
+			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
+				.to.emit(diamondCut, "DiamondCut");
+				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
+		});
+	});
+
+	describe("Adding facets to the Marketplace Diamond contract", () => {
+		it ("Should add the Minting Offers facet", async () => {
+			const diamondCut = await ethers.getContractAt('IDiamondCut', marketDiamondInstance.address);
+			const receiverFacetItem = {
+				facetAddress: mintingOfferFacetsInstance.address,
+				action: FacetCutAction_ADD,
+				functionSelectors: getSelectors(mintingOfferFacetsInstance, usedSelectorsForMarketplace)
 			}
 			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.emit(diamondCut, "DiamondCut");
@@ -242,13 +338,13 @@ describe("Diamonds", function () {
 	});
 
 
-	describe("Modifying facets facets", () => {
+	describe("Modifying facets", () => {
 		it ("Shouldn't let other addresses modify the facets", async () => {
 			const diamondCut = (await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address)).connect(addr1);
 			const loupeFacetItem = {
 				facetAddress: diamondLoupeFacetInstance.address,
 				action: FacetCutAction_REPLACE,
-				functionSelectors: getSelectors(diamondLoupeFacetInstance)
+				functionSelectors: getSelectors(diamondLoupeFacetInstance, usedSelectorsForFactory)
 			}
 			await expect(diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.be.revertedWith("LibDiamond: Must be contract owner");
@@ -495,50 +591,14 @@ describe("Diamonds", function () {
 	});
 
 	describe("RAIR Metadata Facet", () => {
-		it ("Should deploy the RAIR Metadata Facet", async () => {
-			rairMetadataFacetInstance = await RAIRMetadataFacetFactory.deploy();
-			await rairMetadataFacetInstance.deployed();
-		});
-
-		it ("Should add the RAIR Metadata facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: rairMetadataFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(rairMetadataFacetInstance)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
 		it ("Should return the contract's creator address", async () => {
 			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
 			await expect(await erc721Facet.getRoleMember(await erc721Facet.CREATOR(), 0))
 				.to.equal(owner.address);
 		});
-
 	});
 
 	describe("RAIR Product Facet", () => {
-		it ("Should deploy the RAIR Product Facet", async () => {
-		 	//"RAIRProductFacet"
-			rairProductFacetInstance = await RAIRProductFacetFactory.deploy();
-			await rairProductFacetInstance.deployed();
-		});
-
-		it ("Should add the RAIR Product facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: rairProductFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(rairProductFacetInstance)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
 		it ("Should create a product", async () => {
 			let productFacet = await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress);
 			await expect(await productFacet.createProduct("FirstFirst", 1000))
@@ -575,24 +635,6 @@ describe("Diamonds", function () {
 	});
 
 	describe("RAIR Ranges Facet", () => {
-		it ("Should deploy the RAIR Ranges Facet", async () => {
-		 	//"RAIRRangesFacet"
-			rairRangesFacetInstance = await RAIRRangesFacetFactory.deploy();
-			await rairRangesFacetInstance.deployed();
-		});
-
-		it ("Should add the RAIR Ranges facet", async () => {
-			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
-			const receiverFacetItem = {
-				facetAddress: rairRangesFacetInstance.address,
-				action: FacetCutAction_ADD,
-				functionSelectors: getSelectors(rairRangesFacetInstance)
-			}
-			await expect(await diamondCut.diamondCut([receiverFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
-				.to.emit(diamondCut, "DiamondCut");
-				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
-		});
-
 		it ("Should not create offers for invalid products", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
 			// createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name)
@@ -1118,10 +1160,39 @@ describe("Diamonds", function () {
 	});
 
 	describe("Minter Marketplace", () => {
-		describe("Minting Permissions", () => {
-			it ("Refuses to add a collection without a Minter role");
-			it ("Grants Marketplace Minter Role");
+		describe("AccessControl", () => {
+			it ("Should display decimal information", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(await mintingOffersFacet.getDecimals())
+					.to.equal(3);
+			});
+
+			it ("Shouldn't add offers without the marketplace as a Minter", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
+					{recipient: addr1.address, percentage: 30000},
+					{recipient: addr2.address, percentage: 60000}
+				], true))
+				.to.be.revertedWith("Minter Marketplace: This Marketplace isn't a Minter!");
+			});
+
+			it ("Should be granted the Minter role from the ERC721 Instance", async () => {
+				let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+				await expect(await erc721Facet.grantRole(await erc721Facet.MINTER(), marketDiamondInstance.address))
+					.to.emit(erc721Facet, 'RoleGranted')
+					.withArgs(await erc721Facet.MINTER(), marketDiamondInstance.address, owner.address);
+			});
+
+			it ("Shouldn't add offers from other addresses", async () => {
+				let mintingOffersFacet = (await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address)).connect(addr4);
+				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 2, [
+					{recipient: addr1.address, percentage: 30000},
+					{recipient: addr2.address, percentage: 60000}
+				], true))
+				.to.be.revertedWith("Minter Marketplace: Sender isn't the creator of the contract!");
+			});
 		});
+
 		describe("Adding Products and Minting", () => {
 			it ("Shouldn't set up custom payment rates if the offer doesn't exist (Part 1 - The first offer)");
 			it ("Shouldn't add a number of tokens higher than the mintable limit");
