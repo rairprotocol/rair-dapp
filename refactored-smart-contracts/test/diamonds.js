@@ -165,7 +165,9 @@ describe("Diamonds", function () {
 			erc721FacetInstance = await ERC721FacetFactory.deploy();
 			await erc721FacetInstance.deployed();
 		});
+	});
 
+	describe("Adding facets to the diamond contract", () => {
 		it ("Should add the ownership facet", async () => {
 			const diamondCut = await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address);
 			const ownershipCutItem = {
@@ -237,11 +239,10 @@ describe("Diamonds", function () {
 				.to.emit(diamondCut, "DiamondCut");
 				//.withArgs([facetCutItem], ethers.constants.AddressZero, "");
 		});
+	});
 
 
-		it ("Should replace facets");
-		it ("Should remove facets");
-
+	describe("Modifying facets facets", () => {
 		it ("Shouldn't let other addresses modify the facets", async () => {
 			const diamondCut = (await ethers.getContractAt('IDiamondCut', factoryDiamondInstance.address)).connect(addr1);
 			const loupeFacetItem = {
@@ -252,9 +253,12 @@ describe("Diamonds", function () {
 			await expect(diamondCut.diamondCut([loupeFacetItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')))
 				.to.be.revertedWith("LibDiamond: Must be contract owner");
 		});
+
+		it ("Should replace facets");
+		it ("Should remove facets");
 	});
 
-	describe("Deployment Workflow", () => {
+	describe("AccessControl", () => {
 		it ("Roles should be set up", async function() {
 			await expect(await factoryDiamondInstance.hasRole(await factoryDiamondInstance.OWNER(), owner.address))
 				.to.equal(true);
@@ -285,7 +289,9 @@ describe("Diamonds", function () {
 				.to.emit(tokensFacet, 'NewTokenAccepted')
 				.withArgs(erc777Instance.address, priceToDeploy, owner.address);
 		});
+	});
 
+	describe("Deployment using the ERC777 tokensReceived Function", () => {
 		it ("Should return the deployment cost of an ERC777 contract", async () => {
 			const tokensFacet = await ethers.getContractAt('TokensFacet', factoryDiamondInstance.address);
 			await expect(await tokensFacet.getDeploymentCost(erc777Instance.address))
@@ -468,12 +474,6 @@ describe("Diamonds", function () {
 			await expect(await erc721Facet.name())
 				.to.equal("TestRairTwo!");
 		});
-
-		
-		it ("Should approve tokens to third parties");
-		it ("Should approve all tokens to third parties");
-		it ("Should only let Traders trade tokens");
-		it ("Should let Traders trade tokens even if they aren't approved");
 	});
 
 	describe("RAIR Metadata Facet", () => {
@@ -529,6 +529,10 @@ describe("Diamonds", function () {
 			await expect(await productFacet.createProduct("FirstFirst", 1000))
 				.to.emit(productFacet, 'ProductCreated')
 				.withArgs(0, "FirstFirst", 0, 1000);
+			await expect(await productFacet.createProduct("FirstSecond", 50))
+				.to.emit(productFacet, 'ProductCreated')
+				.withArgs(1, "FirstSecond", 1000, 50);
+
 			productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
 			await expect(await productFacet.createProduct("SecondFirst", 100))
 				.to.emit(productFacet, 'ProductCreated')
@@ -541,7 +545,7 @@ describe("Diamonds", function () {
 		it ("Should show information about the products", async () => {
 			let productFacet = await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress);
 			await expect(await productFacet.getProductCount())
-				.to.equal(1);
+				.to.equal(2);
 			await expect(await productFacet.mintedTokensInProduct(0))
 				.to.equal(0)
 
@@ -579,7 +583,7 @@ describe("Diamonds", function () {
 		it ("Should not create offers for invalid products", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
 			// createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name)
-			await expect(rangesFacet.createRange(1, 0, 10, 1000, 950, 50, 'First First First'))
+			await expect(rangesFacet.createRange(2, 0, 10, 1000, 950, 50, 'First First First'))
 				.to.be.revertedWith('RAIR ERC721: Product does not exist');
 		});
 
@@ -594,11 +598,24 @@ describe("Diamonds", function () {
 		});
 
 
-		it ("Should create offers", async () => {
+		it ("Should create ranges", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
 			await expect(await rangesFacet.createRange(0, 0, 10, 1000, 9, 5, 'First First First'))
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(0, 0, 10, 1000, 9, 5, 'First First First', 0);
+				.withArgs(0, 0, 10, 1000, 9, 5, 'First First First', 0)
+				.to.emit(rangesFacet, 'TradingLocked')
+				.withArgs(0, 0, 10, 5);
+				//Index, From, To, Tokens to Locked
+			await expect(await rangesFacet.createRange(1, 0, 25, 100000, 25, 0, 'First Second First'))
+				.to.emit(rangesFacet, 'CreatedRange')
+				.withArgs(1, 0, 25, 100000, 25, 0, 'First Second First', 1)
+				.to.emit(rangesFacet, 'TradingUnlocked')
+				.withArgs(1, 0, 25);
+			await expect(await rangesFacet.createRange(1, 26, 49, 200000, 23, 0, 'First Second Second'))
+				.to.emit(rangesFacet, 'CreatedRange')
+				.withArgs(1, 26, 49, 200000, 23, 0, 'First Second Second', 2)
+				.to.emit(rangesFacet, 'TradingUnlocked')
+				.withArgs(2, 26, 49);
 		});
 
 		it ("Should create offers in batches", async () => {
@@ -623,15 +640,19 @@ describe("Diamonds", function () {
 				.to.emit(rangesFacet, 'CreatedRange')
 				.withArgs(0, 0, 10, 2000, 9, 1, 'Second First First', 0)
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(0, 11, 99, 3500, 50, 10, 'Second First Second', 1);
+				.withArgs(0, 11, 99, 3500, 50, 10, 'Second First Second', 1)
+				.to.emit(rangesFacet, 'TradingLocked')
+				.withArgs(0, 0, 10, 1)
+				.to.emit(rangesFacet, 'TradingLocked')
+				.withArgs(1, 11, 99, 10);
 
 			await expect(await rangesFacet.createRangeBatch(1, [
 				{
 					rangeStart: 0,
 					rangeEnd: 100,
 					price: 20000,
-					tokensAllowed: 9 ,
-					lockedTokens: 1,
+					tokensAllowed: 5,
+					lockedTokens: 5,
 					name: 'Second Second First'
 				}, {
 					rangeStart: 101,
@@ -643,9 +664,13 @@ describe("Diamonds", function () {
 				}
 			]))
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(1, 0, 100, 20000, 9, 1, 'Second Second First', 2)
+				.withArgs(1, 0, 100, 20000, 5, 5, 'Second Second First', 2)
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(1, 101, 250, 35000, 50, 10, 'Second Second Second', 3);
+				.withArgs(1, 101, 250, 35000, 50, 10, 'Second Second Second', 3)
+				.to.emit(rangesFacet, 'TradingLocked')
+				.withArgs(2, 0, 100, 5)
+				.to.emit(rangesFacet, 'TradingLocked')
+				.withArgs(3, 101, 250, 10);
 		});
 
 		it ("Should return the information about the offers", async () => {
@@ -775,6 +800,16 @@ describe("Diamonds", function () {
 			await expect(await erc721Facet.approve(addr4.address, 100))
 				.to.emit(erc721Facet, 'Approval')
 				.withArgs(addr3.address, addr4.address, 100);
+			await expect(await erc721Facet.getApproved(100))
+				.to.equal(addr4.address);
+		});
+
+		it ("Should approve all tokens to third parties", async () => {
+			let erc721Facet = (await ethers.getContractAt('ERC721Facet', secondDeploymentAddress)).connect(addr3);
+			await expect(await erc721Facet.setApprovalForAll(addr1.address, true))
+				.to.emit(erc721Facet, 'ApprovalForAll');
+			await expect(await erc721Facet.isApprovedForAll(addr3.address, addr1.address))
+				.to.equal(true);
 		});
 
 		it ("Should translate from standard token index to product index", async () => {
@@ -928,6 +963,44 @@ describe("Diamonds", function () {
 			await expect(await metadataFacet.tokenURI(103))
 				.to.equal("103.rair.tech/QWERTY");
 		});
+
+		it ("Should unlock the product for trading if all tokens are minted", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(await erc721Facet.mintFromRange(addr3.address, 2, 4))
+				.to.emit(erc721Facet, 'Transfer')
+				.withArgs(ethers.constants.AddressZero, addr3.address, 104)
+				.to.emit(erc721Facet, 'TradingUnlocked')
+				.withArgs(2, 0, 100);
+		});
+
+		it ("Shouldn't mint more tokens if the allowed number is 0", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
+			await expect(erc721Facet.mintFromRange(addr3.address, 2, 5))
+				.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this range!");
+		})
+
+		it ("Should emit an event if the entire range is minted", async () => {
+			let erc721Facet = await ethers.getContractAt('ERC721Facet', firstDeploymentAddress);
+			const neededTokens = 25;
+			await expect(await erc721Facet.mintFromRangeBatch(
+				Array.from(Array(neededTokens).keys()).map(item => addr2.address),
+				1,
+				Array.from(Array(neededTokens).keys()).map((item, index) => index)
+			))
+				.to.emit(erc721Facet, 'RangeCompleted')
+				.withArgs(1, 1);
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
+			await expect(await erc721Facet.ownerOf(1001))
+				.to.equal(addr2.address);
+		});
+
+		it ("Should emit an event if the entire product is minted");
+
+		it ("Should lock the range if an update changes the number of locked tokens");
+
+
+		it ("Should only let Traders trade tokens");
+		it ("Should let Traders trade tokens even if they aren't approved");
 
 		it ("Should return information about the ranges");
 		it ("Should say if a range is locked");

@@ -12,7 +12,11 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant MINTER = keccak256("MINTER");
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 
-	event ProductCompleted(uint indexed id, string name);
+	event ProductCompleted(uint indexed productIndex);
+	event RangeCompleted(uint indexed rangeIndex, uint productIndex);
+	
+	event TradingUnlocked(uint indexed rangeIndex, uint from, uint to);
+
 	event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
 	event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
 	event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
@@ -61,16 +65,36 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 				return i;
 			}
 		}
+		require(false, 'RAIR ERC721: There are no tokens available for minting');
 	}
 
 	function mintFromRange(address to, uint rangeId, uint indexInRange) public onlyRole(MINTER) {
 		require(s.ranges.length > rangeId, "RAIR ERC721: Range does not exist");
 		range storage selectedRange = s.ranges[rangeId];
 		product storage selectedProduct = s.products[s.rangeToProduct[rangeId]];
+		require(selectedProduct.mintableTokens > 0, 'RAIR ERC721: Cannot mint more tokens from this product!');
+		require(selectedRange.tokensAllowed > 0, 'RAIR ERC721: Cannot mint more tokens from this range!');
 		require(indexInRange >= selectedRange.rangeStart && indexInRange <= selectedRange.rangeEnd, "RAIR ERC721: Invalid token index");
-		require(selectedRange.tokensAllowed > 0, "RAIR ERC721: Cannot mint more tokens in this range");
-		require(selectedProduct.mintableTokens > 0, "RAIR ERC721: Cannot mint more tokens in this product");
 		_safeMint(to, selectedProduct.startingToken + indexInRange, '');
+		selectedRange.tokensMinted++;
+		if (selectedRange.tokensAllowed > 0) {
+			selectedRange.tokensAllowed--;
+			if (selectedRange.tokensAllowed == 0) {
+				emit RangeCompleted(rangeId, s.rangeToProduct[rangeId]);
+			}
+		}
+		if (selectedRange.lockedTokens > 0) {
+			selectedRange.lockedTokens--;
+			if (selectedRange.lockedTokens == 0) {
+				emit TradingUnlocked(rangeId, selectedRange.rangeStart, selectedRange.rangeEnd);
+			}
+		}
+		if (selectedProduct.mintableTokens > 0) {
+			selectedProduct.mintableTokens--;
+			if (selectedProduct.mintableTokens == 0) {
+				emit ProductCompleted(s.rangeToProduct[rangeId]);
+			}
+		}
 		s.tokenToProduct[selectedProduct.startingToken + indexInRange] = s.rangeToProduct[rangeId];
 		s.tokenToRange[selectedProduct.startingToken + indexInRange] = rangeId;
 		s.tokensByProduct[s.rangeToProduct[rangeId]].push(selectedProduct.startingToken + indexInRange);
@@ -89,6 +113,8 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		uint rangeId,
 		uint[] calldata indexInRange
 	) external onlyRole(MINTER) {
+		require(to.length > 0, "RAIR ERC721: Empty array");
+		require(to.length == indexInRange.length, "RAIR ERC721: Both arrays should have the same length");
 		for (uint i = 0; i < to.length; i++) {
 			mintFromRange(to[i], rangeId, indexInRange[i]);
 		}
@@ -111,6 +137,20 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 		_approve(to, tokenId);
 	}
+
+	function setApprovalForAll(address operator, bool approved) public {
+        _setApprovalForAll(_msgSender(), operator, approved);
+    }
+
+    function _setApprovalForAll(
+        address owner,
+        address operator,
+        bool approved
+    ) internal virtual {
+        require(owner != operator, "ERC721: approve to caller");
+        s._operatorApprovals[owner][operator] = approved;
+        emit ApprovalForAll(owner, operator, approved);
+    }
 
 	function _approve(address to, uint256 tokenId) internal virtual {
 		s._tokenApprovals[tokenId] = to;

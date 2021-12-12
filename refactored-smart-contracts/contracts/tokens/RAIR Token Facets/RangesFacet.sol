@@ -8,6 +8,9 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 
 	event CreatedRange(uint productIndex, uint start, uint end, uint price, uint tokensAllowed, uint lockedTokens, string name, uint rangeIndex);
 	event UpdatedRange(uint rangeIndex, uint price, uint tokensAllowed, uint lockedTokens);
+	
+	event TradingLocked(uint indexed rangeIndex, uint from, uint to, uint lockedTokens);
+	event TradingUnlocked(uint indexed rangeIndex, uint from, uint to);
 
 	// Auxiliary struct used to avoid Stack too deep errors
 	struct rangeData {
@@ -34,7 +37,10 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
 		range storage selectedRange = s.ranges[rangeId];
 		selectedRange.tokensAllowed = tokensAllowed_;
-		selectedRange.lockedTokens = lockedTokens_;
+		if (lockedTokens_ > 0) {
+			emit TradingLocked(rangeId, selectedRange.rangeStart, selectedRange.rangeEnd, lockedTokens_);
+			selectedRange.lockedTokens = lockedTokens_;
+		}
 		selectedRange.rangePrice = price_;
 		emit UpdatedRange(rangeId, price_, tokensAllowed_, lockedTokens_);
 	}
@@ -57,13 +63,18 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		range storage newRange = s.ranges.push();
 		uint rangeIndex = s.ranges.length - 1;
 		require(rangeStart_ <= rangeEnd_, 'RAIR ERC721: Invalid starting or ending token');
-		require(rangeEnd_ - rangeStart_ > tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
-		require(rangeEnd_ - rangeStart_ > lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
+		require(rangeEnd_ - rangeStart_ >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
+		require(rangeEnd_ - rangeStart_ >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
 		require(canCreateRange(productId_, rangeStart_, rangeEnd_), "RAIR ERC721: Can't create a lock of this range");
 		newRange.rangeStart = rangeStart_;
 		newRange.rangeEnd = rangeEnd_;
 		newRange.tokensAllowed = tokensAllowed_;
 		newRange.lockedTokens = lockedTokens_;
+		if (lockedTokens_ > 0) {
+			emit TradingLocked(rangeIndex, rangeStart_, rangeEnd_, lockedTokens_);
+		} else if (lockedTokens_ == 0) {
+			emit TradingUnlocked(rangeIndex, rangeStart_, rangeEnd_);
+		}
 		newRange.rangePrice = price_;
 		newRange.rangeName = name_;
 		s.rangeToProduct[rangeIndex] = productId_;
@@ -80,6 +91,7 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		uint productId,
 		rangeData[] calldata data
 	) external onlyRole(CREATOR) {
+		require(data.length > 0, "RAIR ERC721: Empty array");
 		require(s.products.length > productId, "RAIR ERC721: Product does not exist");
 		for (uint i = 0; i < data.length; i++) {
 			_createRange(productId, data[i].rangeStart, data[i].rangeEnd, data[i].price, data[i].tokensAllowed, data[i].lockedTokens, data[i].name);
