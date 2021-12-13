@@ -16,7 +16,7 @@ db.File.find().forEach((item) => {
 });
 
 // Cleaning unused fields in File collection
-db.File.updateMany({},{ 
+db.File.updateMany({},{
 	$unset: {
 		currentOwner: "",
 		thumbnail: ""
@@ -30,3 +30,9 @@ db.OfferPool.dropIndex({ contract: 1, product: 1 });
 db.User.find().toArray().forEach(user => {
   db.User.findOneAndUpdate({ _id: user._id }, { $set: { nickName: user.publicAddress, avatar: null } })
 });
+
+// add new field to the Products
+db.Product.updateMany({}, { $set: { category: null } });
+
+// add new field to the Files
+db.File.updateMany({}, { $set: { category: null } });
