@@ -30,7 +30,11 @@ const ContractDetails = () => {
 			return;
 		}
 		let dataRequest = await rFetch(`/api/contracts/${address}`);
+		let productsRequest = await rFetch(`/api/contracts/${address}/products`);
 		if (dataRequest.success) {
+			if (productsRequest.success) {
+				dataRequest.contract.products = productsRequest.products;
+			}
 			setData(dataRequest.contract);
 		}
 	}, [address])
