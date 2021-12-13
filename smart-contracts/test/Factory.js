@@ -22,6 +22,8 @@ describe("Token Factory", function () {
 	const secondDeploymentAddress = '0xED2AB923364a57cDB6d8f23A3180DfD2CF7E209B';
 	// Contract addresses are derived from the user's address and the nonce of the transaction,
 	//		the generated address will always be the same (on this test file)
+	hre.tracer.nameTags[firstDeploymentAddress] = "First Deployment Address";
+	hre.tracer.nameTags[secondDeploymentAddress] = "Second Deployment Address";
 
 	before(async function() {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
@@ -41,6 +43,8 @@ describe("Token Factory", function () {
 			expect(await erc777instance.decimals()).to.equal(18);
 			expect(await erc777instance.granularity()).to.equal(1);
 			expect(await erc777instance.totalSupply()).to.equal(initialSupply);
+			hre.tracer.nameTags[erc777instance.address] = "First 777 Address";
+			hre.tracer.nameTags[erc777ExtraInstance.address] = "Second 777 Address";
 
 			/*
 			*	Events:
@@ -50,12 +54,14 @@ describe("Token Factory", function () {
 			*/
 		});
 
-		it ("RAIR Factory", async function() {
+		it ("Should deploy the Factory", async function() {
 			factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
+			hre.tracer.nameTags[factoryInstance.address] = "Factory";
 		});
 
-		it ("Minter Marketplace", async function() {
+		it ("Should deploy the Minter Marketplace", async function() {
 			minterInstance = await MinterFactory.deploy(erc777instance.address, rairFeePercentage, nodeFeePercentage);
+			hre.tracer.nameTags[minterInstance.address] = "Minter Marketplace";
 		});
 	})
 

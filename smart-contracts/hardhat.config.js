@@ -5,6 +5,7 @@ require('hardhat-deploy');
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-contract-sizer');
+require("hardhat-tracer");
 require('dotenv').config()
 /**
  * @type import('hardhat/config').HardhatUserConfig
