@@ -97,13 +97,14 @@ const SplashPage = () => {
       icon: 'info',
       showConfirmButton: false
     });
+    let [firstPressingOffer] = products[0].offers.filter(item => item.offerName === '1st Pressing');
     try {
       await (await minterInstance.buyToken(
         products[0].offerPool.marketplaceCatalogIndex,
-        products[0].offers[0].offerIndex,
+        firstPressingOffer.offerIndex,
         nextToken,
         {
-          value: products[0].offers[0].price
+          value: firstPressingOffer.price
         }
       )).wait();
       Swal.fire('Success',`Bought token #${nextToken}!`,'success');
