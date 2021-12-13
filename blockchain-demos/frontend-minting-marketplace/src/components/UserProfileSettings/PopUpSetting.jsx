@@ -9,7 +9,7 @@ import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 const PopUpSettings = ({
   currentUserAddress,
-  adminAccess,
+  // adminAccess,
   setLoginDone,
   primaryColor,
 }) => {
