@@ -98,6 +98,10 @@ const SplashPage = () => {
       showConfirmButton: false
     });
     let [firstPressingOffer] = products[0].offers.filter(item => item.offerName === '1st Pressing');
+    if (!firstPressingOffer) {
+      Swal.fire('Error','An error has ocurred','error');
+      return;
+    }
     try {
       await (await minterInstance.buyToken(
         products[0].offerPool.marketplaceCatalogIndex,
