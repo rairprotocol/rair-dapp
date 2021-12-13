@@ -132,6 +132,11 @@ const SplashPage = () => {
 
   function closeModal() {
     setIsOpen(false);
+    setActive(prev => ({
+      ...prev,
+      policy: false,
+      use: false
+    }))
   }
   console.log(Object.values(active).every(el => el));
 
