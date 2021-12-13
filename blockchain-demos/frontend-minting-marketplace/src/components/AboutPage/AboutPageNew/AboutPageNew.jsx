@@ -13,6 +13,8 @@ import Nft_4 from './../assets/greyman.png';
 import MetamaskTutorial from './../assets/matamaskTutorial.png';
 import Metamask from './../assets/metamask_logo.png';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
+import VideoBg_1 from './../assets/video-bg_1.png';
+import VideoBg_2 from './../assets/video-bg_2.png';
 
 // imports image logos 
 import OpenSea from './../assets/openSea-logo.png';
@@ -145,58 +147,63 @@ const AboutPageNew = ({ primaryColor }) => {
                     </div>
                 </div>
                 <div className="about-page-platform">
-                    <div className="platform-box">
-                        <div className="platform-title">
-                            Whitelabel
-                        </div>
-                        <div className="categories-list">
-                            <ul>
-                                <li>Metaverse</li>
-                                <li>Marketplace</li>
-                                <li>Creation Tools</li>
-                                <li>Backend</li>
-                            </ul>
-                        </div>
+                    <div className="about-page-platform-title">
+                        Platform
                     </div>
-                    <div className="platform-box">
-                        <div className="platform-title">
-                            EVM Support
+                    <div className="about-page-platform-content">
+                        <div className="platform-box">
+                            <div className="platform-title">
+                                Whitelabel
+                            </div>
+                            <div className="categories-list">
+                                <ul>
+                                    <li>Metaverse</li>
+                                    <li>Marketplace</li>
+                                    <li>Creation Tools</li>
+                                    <li>Backend</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div className="categories-list">
-                            <ul>
-                                <li>Ethereum</li>
-                                <li>MATIC</li>
-                                <li>Binance Smart Chain</li>
-                                <li>EVM Integrations</li>
-                            </ul>
+                        <div className="platform-box">
+                            <div className="platform-title">
+                                EVM Support
+                            </div>
+                            <div className="categories-list">
+                                <ul>
+                                    <li>Ethereum</li>
+                                    <li>MATIC</li>
+                                    <li>Binance Smart Chain</li>
+                                    <li>EVM Integrations</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div className="platform-box">
-                        <div className="platform-title">
-                            Royalties
+                        <div className="platform-box">
+                            <div className="platform-title">
+                                Royalties
+                            </div>
+                            <div className="categories-list">
+                                <ul>
+                                    <li>On Chain</li>
+                                    <li>EIP2981 Universal</li>
+                                    <li>Custom Splits</li>
+                                    <li>Lock to Contract</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div className="categories-list">
-                            <ul>
-                                <li>On Chain</li>
-                                <li>EIP2981 Universal</li>
-                                <li>Custom Splits</li>
-                                <li>Lock to Contract</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="platform-box">
-                        <div className="platform-title">
-                            Metadata
-                        </div>
-                        <div className="categories-list">
-                            <ul>
-                                <li>Bulk Creation</li>
-                                <li>Scripting</li>
-                                <li>IPFS + Cloud</li>
-                                <li>Aggregate to
-                                    Opensea et al
-                                </li>
-                            </ul>
+                        <div className="platform-box">
+                            <div className="platform-title">
+                                Metadata
+                            </div>
+                            <div className="categories-list">
+                                <ul>
+                                    <li>Bulk Creation</li>
+                                    <li>Scripting</li>
+                                    <li>IPFS + Cloud</li>
+                                    <li>Aggregate to
+                                        Opensea et al
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -319,7 +326,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                                     <i className="fa fa-lock"></i>
                                                     <p>RAIR  Exclusive</p>
                                                 </div>
-                                                <img src={Nft_3} alt="unlockble video" />
+                                                <img src={VideoBg_2} alt="unlockble video" />
                                             </div>
                                             <div className="video-description">
                                                 <div className="video-title">
@@ -341,14 +348,14 @@ const AboutPageNew = ({ primaryColor }) => {
                                                     <i className="fa fa-lock"></i>
                                                     <p>RAIR  Exclusive</p>
                                                 </div>
-                                                <img src={Nft_3} alt="unlockble video" />
+                                                <img src={VideoBg_1} alt="unlockble video" />
                                             </div>
                                             <div className="video-description">
                                                 <div className="video-title">
                                                     <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Expansion Plan</p>
                                                 </div>
                                                 <div className="video-timer">
-                                                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:33</p>
+                                                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:27</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -363,14 +370,14 @@ const AboutPageNew = ({ primaryColor }) => {
                                                     <i className="fa fa-lock"></i>
                                                     <p>RAIR  Exclusive</p>
                                                 </div>
-                                                <img src={Nft_3} alt="unlockble video" />
+                                                <img src={VideoBg_2} alt="unlockble video" />
                                             </div>
                                             <div className="video-description">
                                                 <div className="video-title">
                                                     <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Development Roadmap</p>
                                                 </div>
                                                 <div className="video-timer">
-                                                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:33</p>
+                                                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:09:33</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -385,14 +392,14 @@ const AboutPageNew = ({ primaryColor }) => {
                                                     <i className="fa fa-lock"></i>
                                                     <p>RAIR  Exclusive</p>
                                                 </div>
-                                                <img src={Nft_3} alt="unlockble video" />
+                                                <img src={VideoBg_1} alt="unlockble video" />
                                             </div>
                                             <div className="video-description">
                                                 <div className="video-title">
                                                     <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Fun Projects</p>
                                                 </div>
                                                 <div className="video-timer">
-                                                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:33</p>
+                                                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:27</p>
                                                 </div>
                                             </div>
                                         </div>

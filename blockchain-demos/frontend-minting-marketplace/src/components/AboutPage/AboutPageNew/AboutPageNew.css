@@ -63,6 +63,18 @@
 }
 
 .about-page-platform {
+    /* width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column; */
+}
+
+.about-page-platform-title {
+    font-size: 36px;
+    line-height: 28px;
+}
+
+.about-page-platform-content {
     margin-top: 108px;
     width: 100%;
     display: flex;
@@ -780,7 +792,6 @@ tbody.table-tbody-compare tr td:nth-child(2) .circle-table-img {
     align-items: center;
     justify-content: center;
 }
-
 
 tbody.table-tbody-compare tr:first-child td:nth-child(n+3) {
     font-weight: 700;
