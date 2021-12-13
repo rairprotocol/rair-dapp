@@ -3,7 +3,6 @@ pragma solidity ^0.8.10;
 
 import '@openzeppelin/contracts/access/IAccessControl.sol';
 import '../AppStorage.sol';
-import 'hardhat/console.sol';
 
 interface IRAIR721 {
 	struct range {
@@ -17,11 +16,13 @@ interface IRAIR721 {
 	}
 
 	function rangeInfo(uint rangeId) external view returns(range memory data);
+	function mintFromRange(address to, uint rangeId, uint indexInRange) external;
 }
 
 contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 
 	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, uint offerIndex);
+	event TokenMinted(address erc721Address, uint rangeIndex, uint tokenIndex, address buyer);
 
 	modifier checkCreatorRole(address erc721Address) {
 		require(IAccessControl(erc721Address).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)), "Minter Marketplace: Sender isn't the creator of the contract!");
@@ -56,12 +57,12 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		return s.addressToOffers[erc721Address].length;
 	}
 
-	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (mintingOffer memory, IRAIR721.range memory) {
+	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
 		mintingOffer memory selectedOffer = s.mintingOffers[s.addressToOffers[erc721Address][rangeIndex]];
 		return (selectedOffer, IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex));
 	}
 
-	function getOfferInfo(uint offerIndex) public view returns (mintingOffer memory, IRAIR721.range memory) {
+	function getOfferInfo(uint offerIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
 		mintingOffer memory selectedOffer = s.mintingOffers[offerIndex];
 		return (selectedOffer, IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex));
 	}
@@ -72,7 +73,30 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		feeSplits[] calldata splits,
 		bool visible_,
 		address nodeAddress_
-	) external checkCreatorRole(erc721Address_) checkMinterRole(erc721Address_) offerDoesntExist(erc721Address_, rangeIndex_) {
+	) external {
+		_addMintingOffer(erc721Address_, rangeIndex_, splits, visible_, nodeAddress_);
+	}
+
+	function addMintingOfferBatch(
+		address erc721Address_,
+		uint[] calldata rangeIndexes,
+		feeSplits[] calldata splits,
+		bool[] calldata visibility,
+		address nodeAddress_
+	) external {
+		require(rangeIndexes.length == visibility.length, "Minter Marketplace: Arrays should have the same length");
+		for (uint i = 0; i < rangeIndexes.length; i++) {
+			_addMintingOffer(erc721Address_, rangeIndexes[i], splits, visibility[i], nodeAddress_);
+		}
+	}
+
+	function _addMintingOffer(
+		address erc721Address_,
+		uint rangeIndex_,
+		feeSplits[] memory splits,
+		bool visible_,
+		address nodeAddress_
+	) internal checkCreatorRole(erc721Address_) checkMinterRole(erc721Address_) offerDoesntExist(erc721Address_, rangeIndex_) {
 		mintingOffer storage newOffer = s.mintingOffers.push();
 		IRAIR721.range memory rangeData = IRAIR721(erc721Address_).rangeInfo(rangeIndex_);
 		require(rangeData.mintableTokens > 0, "Minter Marketplace: Offer doesn't have tokens available!");
@@ -91,8 +115,55 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, s.mintingOffers.length - 1);
 	}
 
-	function buyMintingOffer(uint offerIndex_) public mintingOfferExists(offerIndex_) payable {
+	function buyMintingOffer(uint offerIndex_, uint tokenIndex_) public mintingOfferExists(offerIndex_) payable {
 		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
+		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
 		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
+		IRAIR721.range memory rangeData = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
+		require(rangeData.rangePrice <= msg.value, "Minter Marketplace: Insufficient funds!");
+		if (msg.value - rangeData.rangePrice > 0) {
+			payable(msg.sender).transfer(msg.value - rangeData.rangePrice);
+		}
+		uint totalTransferred = rangeData.rangePrice * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);
+		payable(selectedOffer.nodeAddress).transfer(rangeData.rangePrice * s.nodeFee / (100 * s.decimalPow));
+		payable(s.treasuryAddress).transfer(rangeData.rangePrice * s.treasuryFee / (100 * s.decimalPow));
+		uint auxMoneyToBeSent;
+		for (uint i = 0; i < selectedOffer.fees.length; i++) {
+			auxMoneyToBeSent = rangeData.rangePrice * selectedOffer.fees[i].percentage / (100 * s.decimalPow);
+			totalTransferred += auxMoneyToBeSent;
+			payable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);
+		}
+		require(totalTransferred == rangeData.rangePrice, "Minter Marketplace: Error transferring funds!");
+		_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndex_);
+	}
+
+	function buyMintingOfferBatch(uint offerIndex_, uint[] calldata tokenIndexes) external mintingOfferExists(offerIndex_) payable {
+		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
+		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
+		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
+		IRAIR721.range memory rangeData = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
+		require((rangeData.rangePrice * tokenIndexes.length) <= msg.value, "Minter Marketplace: Insufficient funds!");
+		if (msg.value - (rangeData.rangePrice * tokenIndexes.length) > 0) {
+			payable(msg.sender).transfer(msg.value - (rangeData.rangePrice * tokenIndexes.length));
+		}
+		uint totalTransferred = (rangeData.rangePrice * tokenIndexes.length) * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);
+		payable(selectedOffer.nodeAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.nodeFee / (100 * s.decimalPow));
+		payable(s.treasuryAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.treasuryFee / (100 * s.decimalPow));
+		uint auxMoneyToBeSent;
+		uint i;
+		for (i = 0; i < selectedOffer.fees.length; i++) {
+			auxMoneyToBeSent = (rangeData.rangePrice * tokenIndexes.length) * selectedOffer.fees[i].percentage / (100 * s.decimalPow);
+			totalTransferred += auxMoneyToBeSent;
+			payable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);
+		}
+		require(totalTransferred == (rangeData.rangePrice * tokenIndexes.length), "Minter Marketplace: Error transferring funds!");
+		for (i = 0; i < tokenIndexes.length; i++) {
+			_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndexes[i]);
+		}
+	}
+
+	function _buyMintingOffer(address erc721Address, uint rangeIndex, uint tokenIndex) internal {
+		IRAIR721(erc721Address).mintFromRange(msg.sender, rangeIndex, tokenIndex);
+		emit TokenMinted(erc721Address, rangeIndex, tokenIndex, msg.sender);
 	}
 }

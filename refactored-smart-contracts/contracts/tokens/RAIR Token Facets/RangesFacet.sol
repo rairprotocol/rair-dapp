@@ -41,6 +41,8 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 	function updateRange(uint rangeId, uint price_, uint tokensAllowed_, uint lockedTokens_) public onlyRole(CREATOR) {
 		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
 		range storage selectedRange = s.ranges[rangeId];
+		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
+		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
 		selectedRange.tokensAllowed = tokensAllowed_;
 		if (lockedTokens_ > 0) {
 			emit TradingLocked(rangeId, selectedRange.rangeStart, selectedRange.rangeEnd, lockedTokens_);
