@@ -2,7 +2,7 @@
 
 Get all products for specific contract
 
-**URL** : `/api/contracts/:contractAddress/products`
+**URL** : `/api/contracts/network/:networkId/:contractAddress/products`
 
 **Method** : `GET`
 
@@ -11,6 +11,25 @@ Get all products for specific contract
 ```json
 {
   "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
+**Parameters:**
+
+```json
+{
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contractAddress": {
     "required": true,
     "content": {
       "type": "string"
@@ -40,7 +59,7 @@ Returns found products
       "royalty": 0,
       "name": "The Dark Knight",
       "collectionIndexInContract": 1,
-      "contract": "contractAddress",
+      "contract": "contractId",
       "copies": 4,
       "creationDate": "2021-08-06T10:53:52.441Z"
     },

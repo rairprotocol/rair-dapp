@@ -172,6 +172,28 @@ module.exports = context => {
       return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
     }
 
+    const foundContract = await context.db.Contract.findById(contract);
+
+    if (!foundContract) {
+      return res.status(404).send({ success: false, message: `Contract ${ contract } not found.` });
+    }
+
+    const foundProduct = await context.db.Product.findOne({ contract: foundContract._id, collectionIndexInContract: product });
+
+    if (!foundProduct) {
+      return res.status(404).send({ success: false, message: `Product ${ product } not found.` });
+    }
+
+    const foundOfferPool = await context.db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
+
+    const foundOffers = await context.db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
+
+    offer.forEach(item => {
+      if (!_.includes(foundOffers, item)) {
+        return res.status(404).send({ success: false, message: `Offer ${ item } not found.` });
+      }
+    })
+
     // Get the socket connection from Express app
     const io = req.app.get('io');
     const sockets = req.app.get('sockets');
@@ -247,7 +269,7 @@ module.exports = context => {
           author,
           encryptionType: 'aes-128-cbc',
           title,
-          contract,
+          contract: foundContract._id,
           product,
           offer,
           staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,

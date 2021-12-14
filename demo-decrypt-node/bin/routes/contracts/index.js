@@ -5,23 +5,11 @@ const { JWTVerification, validation } = require('../../middleware');
 module.exports = context => {
   const router = express.Router()
 
-  // Create contract
-  router.post('/', JWTVerification(context), validation('createContract'), async (req, res, next) => {
-    try {
-      const { publicAddress: user } = req.user;
-      const contract = await context.db.Contract.create({ user, ...req.body });
-
-      res.json({ success: true, contract });
-    } catch (e) {
-      next(e);
-    }
-  });
-
   // Get list of contracts for specific user
   router.get('/', JWTVerification(context), async (req, res, next) => {
     try {
       const { publicAddress: user } = req.user;
-      const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1, title: 1 });
+      const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1, title: 1, blockchain: 1 });
 
       res.json({ success: true, contracts });
     } catch (e) {
@@ -40,7 +28,7 @@ module.exports = context => {
         $lookup: {
           from: 'Product',
           let: {
-            contr: '$contractAddress'
+            contr: '$_id'
           },
           pipeline: [
             {
@@ -76,7 +64,7 @@ module.exports = context => {
           $lookup: {
             from: 'OfferPool',
             let: {
-              contr: '$contractAddress',
+              contr: '$_id',
               prod: '$products.collectionIndexInContract'
             },
             pipeline: [
@@ -110,7 +98,7 @@ module.exports = context => {
             from: 'Offer',
             let: {
               offerPoolL: '$offerPool.marketplaceCatalogIndex',
-              contractL: '$contractAddress'
+              contractL: '$_id'
             },
             pipeline: [
               {
@@ -156,8 +144,13 @@ module.exports = context => {
     }
   });
 
-  router.use('/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), (req, res, next) => {
-    req.contractAddress = req.params.contractAddress.toLowerCase();
+  router.use('/network/:networkId/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), async (req, res, next) => {
+    const contract = await context.db.Contract.findOne({ contractAddress: req.params.contractAddress.toLowerCase(), blockchain: req.params.networkId });
+
+    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+
+    req.contract = contract;
+
     next();
   }, require('./contract')(context));
 
