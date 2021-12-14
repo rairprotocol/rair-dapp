@@ -15,7 +15,7 @@ module.exports = (context) => {
       const { network, name } = task.attrs.data;
       const offersForSave = [];
       const offerPoolsForUpdate = [];
-      const block_number = [];
+      let block_number = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AppendedRange');
@@ -34,7 +34,7 @@ module.exports = (context) => {
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 
-      _.forEach(events.result, offer => {
+      await Promise.all(_.map(events.result, async offer => {
         const {
           contractAddress,
           productIndex,
@@ -45,15 +45,16 @@ module.exports = (context) => {
           price,
           name
         } = offer.data;
-        const contract = contractAddress.toLowerCase();
-        const marketplaceCatalogIndex = Number(offerIndex);
-        const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract === contract && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
+        const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1 });
 
-        block_number.push(Number(offer.block_number));
+        if (!contract) return;
+
+        const marketplaceCatalogIndex = Number(offerIndex);
+        const offerPoolIndex = _.findIndex(offerPoolsForUpdate, o => o.contract.equals(contract._id) && o.marketplaceCatalogIndex === marketplaceCatalogIndex);
 
         if (offerPoolIndex < 0) {
           offerPoolsForUpdate.push({
-            contract,
+            contract: contract._id,
             marketplaceCatalogIndex,
             rangeNumber: 1
           });
@@ -63,14 +64,16 @@ module.exports = (context) => {
 
         offersForSave.push({
           offerIndex: rangeIndex,
-          contract: contractAddress,
+          contract: contract._id,
           product: productIndex,
           offerPool: offerIndex,
           price,
           range: [startToken, endToken],
           offerName: name
         });
-      });
+
+        block_number.push(Number(offer.block_number));
+      }));
 
       if (!_.isEmpty(offersForSave)) {
         try {

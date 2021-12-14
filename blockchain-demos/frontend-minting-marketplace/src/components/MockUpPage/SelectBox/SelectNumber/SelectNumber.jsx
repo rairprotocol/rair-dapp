@@ -14,11 +14,11 @@ const SelectNumber = ({ items, handleClickToken, selectedToken }) => {
         setIsOpen((prev) => !prev);
     };
 
-    const blockMoreThousand = () => {
-        if (items && items.length > 100) {
-            return
-        }
-    }
+    // const blockMoreThousand = () => {
+    //     if (items && items.length > 100) {
+    //         return
+    //     }
+    // }
 
     const onClickItem = (el) => {
         setSelectedItem(el);

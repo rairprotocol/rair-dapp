@@ -6,6 +6,7 @@ import userStore from './users';
 import videosStore from './videos';
 import contractStore from './contracts';
 import colorStore from './colors';
+import metadataStore from './metadata';
 import {createReduxEnhancer} from "@sentry/react";
 
 const reducers = combineReducers({
@@ -13,7 +14,8 @@ const reducers = combineReducers({
     userStore,
     videosStore,
     contractStore,
-    colorStore
+    colorStore,
+    metadataStore
 });
 
 const sentryReduxEnhancer = createReduxEnhancer({

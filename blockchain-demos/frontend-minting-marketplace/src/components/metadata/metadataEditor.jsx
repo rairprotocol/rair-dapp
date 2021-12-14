@@ -167,12 +167,14 @@ const MetadataEditor = (props) => {
 			}
 		}
 
-		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
+		let nftResponse = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
 		let sortedMetadataArray = [];
 		let sortedURIArray = [];
-		for await (let token of aux.result) {
-			sortedMetadataArray[token.token] = token.metadata;
-			sortedURIArray[token.token] = token.metadataURI;
+		if (nftResponse?.success && nftResponse?.totalCount) {
+			for await (let token of nftResponse?.result?.tokens) {
+				sortedMetadataArray[token.token] = token.metadata;
+				sortedURIArray[token.token] = token.metadataURI;
+			}
 		}
 		setExistingMetadataArray(sortedMetadataArray);
 		setExistingURIArray(sortedURIArray);

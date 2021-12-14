@@ -6,6 +6,8 @@ Upload the media
 
 **Method** : `POST`
 
+**Content-Type** : `multipart/form-data`
+
 **Headers:**
 
 ```json
@@ -23,6 +25,12 @@ Upload the media
 
 ```json
 {
+  "video": {
+    "required": true,
+    "content": {
+      "type": "file"
+    }
+  },
   "title": {
     "required": true,
     "content": {
@@ -39,7 +47,8 @@ Upload the media
     "required": true,
     "content": {
       "type": "string"
-    }
+    },
+    "description": "contract ID"
   },
   "product": {
     "required": true,
