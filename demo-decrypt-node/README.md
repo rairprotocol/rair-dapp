@@ -56,6 +56,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
                 * [x] /products - GET - get all products for specific contract, [see details here](readme/get_products_for_contract.md)
                     * [x] /offers - GET - get all products with all offers for each of them for particular user, [see details here](readme/get_products_offers.md)
         * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts.md)
+        * [x] /singleContract/:contractId - GET- get single contract by ID, [see details here](readme/get_single_contract_by_id.md)
     * [x] /nft - POST - create new or update existed nft tokens, [see details here](readme/bulk_create_NFT_tokens.md)
         * [x] / - GET - get all tokens which belongs to current user, [see details here](readme/get_all_tokens_for_current_user.md)
         * [x] /network/:networkId/:contract

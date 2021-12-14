@@ -17,6 +17,17 @@ module.exports = context => {
     }
   });
 
+  // Get specific contract by ID
+  router.get('/singleContract/:contractId', async (req, res, next) => {
+    try {
+      const contract = await context.db.Contract.findById(req.params.contractId, { _id: 1, contractAddress: 1, title: 1, blockchain: 1 });
+
+      res.json({ success: true, contract });
+    } catch (e) {
+      next(e);
+    }
+  });
+
   // Get list of contracts with all products and offers
   router.get('/full', async (req, res, next) => {
     try {
