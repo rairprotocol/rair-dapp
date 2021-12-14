@@ -8,7 +8,7 @@ import NavigatorContract from './NavigatorContract.jsx';
 
 const ListCollections = () => {
 	const { primaryColor } = useSelector(store => store.colorStore);
-	const { address } = useParams();
+	const { address, blockchain } = useParams();
 
 	const [data, setData] = useState();
 
@@ -18,12 +18,12 @@ const ListCollections = () => {
 		if (!address) {
 			return;
 		}
-		let response2 = await rFetch(`/api/contracts/${address}`);
-		let response3 = await rFetch(`/api/contracts/${address}/products`);
+		let response2 = await rFetch(`/api/contracts/network/${blockchain}/${address}`);
+		let response3 = await rFetch(`/api/contracts/network/${blockchain}/${address}/products`);
 		if (response3.success) {
 			response2.contract.products = response3.products
 		}
-		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
+		let response4 = await rFetch(`/api/contracts/network/${blockchain}/${address}/products/offers`);
 		// Special case where a product exists but it has no offers
 		if (response4.success) {
 			response4.products.forEach(item => {
@@ -42,9 +42,9 @@ const ListCollections = () => {
 	}, [getContractData])
 
 	return <div className='row px-0 mx-0'>
-		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} >
+		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} contractBlockchain={blockchain} >
 			{data.products.map((item, index) => {
-				return <NavLink to={`/creator/contract/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
+				return <NavLink to={`/creator/contract/${blockchain}/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
 					{item.name}
 					<i className='fas fa-arrow-right' style={{position: 'absolute', right: '10px', top: '10px', color: 'var(--bubblegum)'}}/>
 				</NavLink>

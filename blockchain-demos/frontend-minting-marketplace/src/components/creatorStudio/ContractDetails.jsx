@@ -19,7 +19,7 @@ const ContractDetails = () => {
 
 	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
 	const { programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
-	const { address } = useParams();
+	const { address, blockchain } = useParams();
 
 	const [data, setData] = useState();
 
@@ -29,8 +29,8 @@ const ContractDetails = () => {
 		if (!address) {
 			return;
 		}
-		let dataRequest = await rFetch(`/api/contracts/${address}`);
-		let productsRequest = await rFetch(`/api/contracts/${address}/products`);
+		let dataRequest = await rFetch(`/api/contracts/network/${blockchain}/${address}`);
+		let productsRequest = await rFetch(`/api/contracts/network/${blockchain}/${address}/products`);
 		if (dataRequest.success) {
 			if (productsRequest.success) {
 				dataRequest.contract.products = productsRequest.products;
@@ -49,7 +49,7 @@ const ContractDetails = () => {
 		chainData[data?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId;
 
 	return <div className='row px-0 mx-0'>
-		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} >
+		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} contractBlockchain={data.blockchain} >
 			<div className='col-8 p-2'>
 				<InputField
 					disabled={creatingCollection}

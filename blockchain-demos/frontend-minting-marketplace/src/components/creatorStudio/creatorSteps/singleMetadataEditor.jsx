@@ -27,7 +27,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const history = useHistory();
 
 	const getNFTData = useCallback(async () => {
-		let aux = await rFetch(`/api/nft/${address.toLowerCase()}/${collectionIndex}`);
+		let aux = await rFetch(`/api/nft/${contractData.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
 		console.log(aux);
 	}, [address, collectionIndex]);
 
@@ -73,12 +73,12 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 
 	return <div className='row px-0 mx-0'>
 		<div className='col-6 text-end ps-5'>
-			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${address}/collection/${collectionIndex}/metadata/batch`}  className={`btn btn-${primaryColor} rounded-rair col-8`}>
+			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractData.blockchain}/${address}/collection/${collectionIndex}/metadata/batch`}  className={`btn btn-${primaryColor} rounded-rair col-8`}>
 				Batch
 			</NavLink>
 		</div>
 		<div className='col-6 text-start mb-3 pe-5'>
-			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${address}/collection/${collectionIndex}/metadata/single`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
+			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractData.blockchain}/${address}/collection/${collectionIndex}/metadata/single`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
 				Single
 			</NavLink>
 		</div>

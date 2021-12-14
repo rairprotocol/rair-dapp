@@ -36,7 +36,7 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 	}, [metadata, setHeaders]);
 
 	const fetchData = useCallback(async () => {
-		let {success, result} = await rFetch(`/api/nft/${address}/${collectionIndex}/`);
+		let {success, result} = await rFetch(`/api/nft/network/${contractData.blockchain}/${address}/${collectionIndex}/`);
 		if (success && result.totalCount > 0) {
 			setMetadataExists(result.tokens.filter(item => item.metadata.name !== 'none').length > 0);
 		}
@@ -80,12 +80,12 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 
 	return <>
 		<div className='col-6 text-end'>
-			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${address}/collection/${collectionIndex}/metadata/batch`}  className={`btn btn-${primaryColor} rounded-rair col-8`}>
+			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractData.blockchain}/${address}/collection/${collectionIndex}/metadata/batch`}  className={`btn btn-${primaryColor} rounded-rair col-8`}>
 				Batch
 			</NavLink>
 		</div>
 		<div className='col-6 text-start mb-3'>
-			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${address}/collection/${collectionIndex}/metadata/single`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
+			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractData.blockchain}/${address}/collection/${collectionIndex}/metadata/single`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
 				Single
 			</NavLink>
 		</div>
