@@ -20,6 +20,7 @@ const getFilesByNFT = require('./getFilesByNFT');
 const nftContract = require('./nftContract');
 const nftProduct = require('./nftProduct');
 const getTokensByContractProduct = require('./getTokensByContractProduct');
+const search = require('./search');
 
 module.exports = {
   admin,
@@ -43,5 +44,6 @@ module.exports = {
   getFilesByNFT,
   nftContract,
   nftProduct,
-  getTokensByContractProduct
+  getTokensByContractProduct,
+  search
 };
