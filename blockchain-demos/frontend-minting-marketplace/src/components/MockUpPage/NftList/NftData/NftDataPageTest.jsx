@@ -607,7 +607,8 @@ const NftDataPageTest = ({
                             style={{
                               display: "flex",
                               borderRadius: "16px",
-                              width: "592px",
+                              // width: "592px",
+                              minWidth: "400px",
                               backgroundColor: "#4E4D4DCC",
                             }}
                           >

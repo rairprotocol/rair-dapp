@@ -7,11 +7,14 @@ const StatusComponent = ({ onChange, value }) => {
       <label htmlFor={cl.status}>email:</label>
       <input
         className={cl.status}
-        type="text"
+        type="email"
+        // pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
         onChange={onChange}
         maxLength="35"
         value={value}
         placeholder="Email"
+        id="email"
+        name="email"
         required
       />
     </div>

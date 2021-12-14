@@ -12,28 +12,32 @@ const EditComponent = ({
   name,
   setStatus,
   status,
-  setFile
+  setFile,
 }) => {
   
-  const photoUpload = useCallback((e) => {
-    e.preventDefault();
-    const reader = new FileReader();
-    const fileF = e.target.files[0];
-    reader.onloadend = () => {
-      setImagePreviewUrl(reader.result);
-      setFile(fileF);
-    };
-    reader.readAsDataURL(fileF);
-  }, [setImagePreviewUrl, setFile]);
+  const photoUpload = useCallback(
+    (e) => {
+      e.preventDefault();
+      const reader = new FileReader();
+      const fileF = e.target.files[0];
+      reader.onloadend = () => {
+        setImagePreviewUrl(reader.result);
+        setFile(fileF);
+      };
+      reader.readAsDataURL(fileF);
+    },
+    [setImagePreviewUrl, setFile]
+  );
 
   return (
     <div className={cl.card}>
       <form onSubmit={onSubmit}>
         <h1>Profile Card</h1>
-            <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
-            <Name onChange={(e) => setName(e.target.value)} value={name} />
-            <Status onChange={(e) => setStatus(e.target.value)} value={status} />
-        <button type="submit" className={cl.save}>
+        <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
+        <Name onChange={(e) => setName(e.target.value)} value={name} />
+        <Status onChange={(e) => setStatus(e.target.value)} value={status} />
+        <button 
+        type="submit" className={cl.save}>
           Save{" "}
         </button>
       </form>
