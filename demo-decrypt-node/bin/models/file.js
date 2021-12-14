@@ -17,7 +17,7 @@ const File = new Schema({
   animatedThumbnail: { type: String, required: false },
   uri: { type: String, required: true },
   // Blockchain data
-  contract: { type: String, required: true, lowercase: true },
+  contract: { type: Schema.ObjectId, required: true },
   product: { type: Number, required: true },
   offer: { type: [Number], required: true },
   // Extra data
