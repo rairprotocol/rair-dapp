@@ -21,7 +21,7 @@ Remove specific contract of the user
 
 **Parameters:**
 
-```json
+```jsonqwdwqe
 {
   "contractAddress": {
     "required": true,

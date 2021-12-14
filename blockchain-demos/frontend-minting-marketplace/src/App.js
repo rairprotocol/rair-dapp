@@ -402,14 +402,14 @@ function App({ sentryHistory }) {
 									<SentryRoute path='/all'>
 										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
-									<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
+									<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
 										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 									{loginDone && <SentryRoute exact path='/my-items' ><MyItems goHome={goHome} />
 									</SentryRoute>}
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
-									<SentryRoute path='/tokens/:contract/:product/:tokenId'>
+									<SentryRoute exact path='/tokens/:blockchain/:contract/:product/:tokenId'>
 										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 									{adminAccess && <SentryRoute path='/admin'>

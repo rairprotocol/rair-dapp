@@ -29,7 +29,7 @@ const NftItemComponent = ({
   const getProductAsync = useCallback(async () => {
     // if (pict === defaultImg) {
       const responseProductMetadata = await (
-        await fetch(`/api/nft/${contractName}/${collectionIndexInContract}`, {
+        await fetch(`/api/nft/network/${blockchain}/${contractName}/${collectionIndexInContract}`, {
           method: "GET",
         })
       ).json();
@@ -37,7 +37,7 @@ const NftItemComponent = ({
         setMetaDataProducts(responseProductMetadata.result?.tokens[0]);
       }
     // }
-  }, [collectionIndexInContract, contractName]);
+  }, [collectionIndexInContract, contractName, blockchain]);
 
   useEffect(() => {
     getProductAsync();
@@ -57,7 +57,7 @@ const NftItemComponent = ({
   // }, [getData, openModal, setSelected]);
 
   const redirection = () => {
-    history.push(`/tokens/${contractName}/${collectionIndexInContract}/0`);
+    history.push(`/tokens/${blockchain}/${contractName}/${collectionIndexInContract}/0`);
   };
 
   function arrayMin(arr) {
