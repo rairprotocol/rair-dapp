@@ -5,6 +5,7 @@ const log = require('../../utils/logger')(module);
 const fs = require('fs');
 const csv = require('csv-parser');
 const _ = require('lodash');
+const { ObjectId } = require('mongodb');
 const { execPromise } = require('../../utils/helpers');
 
 const removeTempFile = async (roadToFile) => {
@@ -28,13 +29,12 @@ module.exports = context => {
       const forSave = [];
       const forUpdate = [];
       const tokens = [];
-      const sanitizedContract = contract.toLowerCase();
 
       if (!user.adminRights) {
         return res.status(403).send({ success: false, message: 'Not have admin rights.' });
       }
 
-      const foundContract = await context.db.Contract.findOne({ contractAddress: sanitizedContract });
+      const foundContract = await context.db.Contract.findById(contract);
 
       if (_.isEmpty(foundContract)) {
         return res.status(404).send({ success: false, message: 'Contract not found.' });
@@ -44,10 +44,10 @@ module.exports = context => {
         return res.status(403).send({ success: false, message: 'This contract not belong to you.' });
       }
 
-      const [contractAddress, adminToken] = user.adminNFT.split(':');
+      const [, adminToken] = user.adminNFT.split(':');
 
       const offerPools = await context.db.OfferPool.aggregate([
-        { $match: { contract: sanitizedContract, product: prod } },
+        { $match: { contract: ObjectId(contract), product: prod } },
         {
           $lookup: {
             from: 'Offer',
@@ -89,14 +89,14 @@ module.exports = context => {
       }
 
 
-      const foundProduct = await context.db.Product.findOne({ contract: sanitizedContract, collectionIndexInContract: product });
+      const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
 
       if (_.isEmpty(foundProduct)) {
         await removeTempFile(roadToFile);
         return res.status(404).send({ success: false, message: 'Product not found.' });
       }
 
-      const foundTokens = await context.db.MintedToken.find({ contract: sanitizedContract, offerPool: _.head(offerPools).marketplaceCatalogIndex  });
+      const foundTokens = await context.db.MintedToken.find({ contract, offerPool: _.head(offerPools).marketplaceCatalogIndex  });
 
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
         .pipe(csv({
@@ -148,7 +148,7 @@ module.exports = context => {
                   .value();
                 const foundToken = _.find(foundTokens, t => t.offer === offerPool.offer.offerIndex && t.token === token);
                 const mainFields = {
-                  contract: sanitizedContract,
+                  contract,
                   offerPool: offerPool.marketplaceCatalogIndex,
                   token
                 }
@@ -225,7 +225,7 @@ module.exports = context => {
       }
 
       const result = await context.db.MintedToken.find({
-        contract: sanitizedContract,
+        contract,
         offerPool: offerPools[0].marketplaceCatalogIndex,
         token: { $in: tokens },
         isMinted: false
@@ -250,8 +250,13 @@ module.exports = context => {
     }
   });
 
-  router.use('/:contract', validation('nftContract', 'params'), (req, res, next) => {
-    req.contract = req.params.contract.toLowerCase();
+  router.use('/network/:networkId/:contract', validation('nftContract', 'params'), async (req, res, next) => {
+    const contract = await context.db.Contract.findOne({ contractAddress: req.params.contract.toLowerCase(), blockchain: req.params.networkId });
+
+    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+
+    req.contract = contract;
+
     next();
   }, require('./contract')(context));
 

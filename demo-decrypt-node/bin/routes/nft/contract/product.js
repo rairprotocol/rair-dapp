@@ -1,11 +1,11 @@
 const express = require('express');
-const { validation } = require('../../../middleware');
 const _ = require('lodash');
+const { validation } = require('../../../middleware');
 
 module.exports = context => {
   const router = express.Router();
 
-  // Get minted tokens fro a product
+  // Get minted tokens from a product
   router.get('/', validation('getTokensByContractProduct', 'query'), async (req, res, next) => {
     try {
       const { contract, product } = req;
@@ -14,13 +14,13 @@ module.exports = context => {
       const firstToken = Number(fromToken);
       const numberOfTokens = Number(limit);
 
-      const offerPool = await context.db.OfferPool.findOne({ contract, product });
+      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
       const totalCount = await context.db.MintedToken.countDocuments({
-        contract,
+        contract: contract._id,
         offerPool: offerPool.marketplaceCatalogIndex
       });
       const tokens = await context.db.MintedToken.find({
-        contract,
+        contract: contract._id,
         offerPool: offerPool.marketplaceCatalogIndex,
         token: { $gt: (firstToken - 1) }
       })
@@ -40,7 +40,7 @@ module.exports = context => {
       const { token } = req.params;
       const sanitizedToken = Number(token);
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product } },
+        { $match: { contract: contract._id, product } },
         {
           $lookup: {
             from: "MintedToken",
@@ -98,7 +98,7 @@ module.exports = context => {
       const { token } = req.params;
       const { contract, product } = req;
       const sanitizedToken = Number(token);
-      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product });
+      const offerPoolRaw = await context.db.OfferPool.findOne({ contract: contract._id, product });
 
       if (_.isEmpty(offerPoolRaw)) {
         res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
@@ -108,7 +108,7 @@ module.exports = context => {
       const offerPool = offerPoolRaw.toObject();
 
       const files = await context.db.MintedToken.aggregate([
-        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
+        { $match: { contract: contract._id, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
         {
           $lookup: {
             from: 'File',
@@ -164,7 +164,7 @@ module.exports = context => {
       const { contract, product: collectionIndexInContract } = req;
 
       const [product] = await context.db.Product.aggregate([
-        { $match: { contract, collectionIndexInContract } },
+        { $match: { contract: contract._id, collectionIndexInContract } },
         {
           $lookup: {
             from: 'Offer',
@@ -215,7 +215,7 @@ module.exports = context => {
     try {
       const { contract, product } = req;
 
-      const locks = await context.db.LockedTokens.find({ contract, product });
+      const locks = await context.db.LockedTokens.find({ contract: contract._id, product });
 
       res.json({ success: true, locks });
     } catch (err) {

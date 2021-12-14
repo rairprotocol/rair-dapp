@@ -36,7 +36,8 @@ Returns found contracts
     {
       "_id": "60d0819870a807001c75164d",
       "title": "SOme title",
-      "contractAddress": "contractAddress"
+      "contractAddress": "contractAddress",
+      "blockchain": "0x61"
     },
     ...
   ]

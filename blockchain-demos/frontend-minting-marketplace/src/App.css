@@ -35,6 +35,67 @@
   --stimorol-click: linear-gradient(to right, var(--royal-purple-click), var(--bubblegum-click));
 }
 
+body {
+  font-family: 'Plus Jakarta Text'!important;
+}
+
+.rair-table thead {
+  white-space: nowrap;
+  table-layout: auto;
+  border-bottom: solid 1px var(--charcoal-80);
+}
+
+.rair-table th {
+  white-space: nowrap;
+  table-layout: auto;
+  padding: 0.8rem;
+  border-right: dashed 1px var(--charcoal-80);
+}
+
+.rounded-rair {
+  border-radius: 16px!important;
+}
+
+.border-stimorol {
+  background: var(--stimorol);
+  display: inline-block;
+  padding: 1px!important;
+}
+
+input.stimorol-radio[type='radio'] {
+  margin-right: 15px;
+}
+
+input.stimorol-radio[type='radio']:after {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  top: -4px;
+  left: -1px;
+  padding-left: 4px;
+  position: relative;
+  color: var(--rhyno);
+  content: '';
+  display: inline-block;
+  visibility: visible;
+  border: 2px solid;
+}
+
+input.stimorol-radio.bg-rhyno[type='radio']:after {
+  background-color: var(--rhyno);
+  border-color: var(--charcoal-40);
+}
+
+input.stimorol-radio.bg-charcoal[type='radio']:after {
+  background-color: var(--charcoal);
+  border-color: var(--rhyno-40);
+}
+
+input.stimorol-radio[type='radio']:checked:after {
+  background-color: var(--bubblegum);
+  content: '\2713';
+}
+
 .bg-blockchain {
   border-radius: 16px ;
   background-repeat: no-repeat;
@@ -95,7 +156,7 @@ li {
 .btn-rhyno {
   color: black;
   background-color: var(--rhyno);
-  border-color: var(--rhyno)
+  border-color: var(--charcoal-40)
 }
 .btn-rhyno:hover {
   color:black;
@@ -143,7 +204,7 @@ li {
 .btn-charcoal {
   color: white;
   background-color: var(--charcoal);
-  border-color: var(--charcoal)
+  border-color: var(--charcoal-60)
 }
 .btn-charcoal:hover {
   color:white;
@@ -541,6 +602,10 @@ margin-left: -36px;
   border: 1px solid #4E4D4D;
   background-color: transparent;
   border-radius: 16px;
+}
+.custom-offer-pic-link:hover{
+color: rgb(186, 89, 224) !important;
+text-decoration: none;
 }
 .carousel-item-padding-4-px{
   /* width: auto !important; */

@@ -27,7 +27,7 @@ const schemes = {
 
 const InitialState = schemes[localStorage.colorScheme ? localStorage.colorScheme : 'rhyno']; 
 
-export default function userStore(state = InitialState, action) {
+export default function colorStore(state = InitialState, action) {
 	switch (action.type) {
 		case types.SET_COLOR_SCHEME:
 			localStorage.setItem('colorScheme', action.payload);

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo }from 'react';
 import firstPict from '../assets/Graphics-WEB-2021-01.png'
 import secondPict from '../assets/Graphics-WEB-2021-02.png'
 import thirdPict from '../assets/Graphics-WEB-2021-03.png'
 import Skeleton from '@mui/material/Skeleton';
-import NftItem from './NftItem'
+import { NftItem } from './NftItem'
 
-const NftList = ({ data, primaryColor, textColor, titleSearch, sortItem }) => {
+const NftListComponent = ({ data, primaryColor, textColor, titleSearch, sortItem }) => {
     const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
     const filteredData = data && data.filter(
@@ -69,4 +69,5 @@ const NftList = ({ data, primaryColor, textColor, titleSearch, sortItem }) => {
     )
 }
 
-export default NftList
+// export default NftList
+export const NftList = memo(NftListComponent);
