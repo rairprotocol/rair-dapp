@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, memo } from "react";
 import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
@@ -8,14 +8,14 @@ import ReactPlayer from "react-player";
 // import 'react-accessible-accordion/dist/fancy-example.css';
 // import VideoList from "../../video/videoList";
 
-const NftItem = ({
+const NftItemComponent = ({
   blockchain,
   price,
   pict,
   contractName,
   collectionIndexInContract,
-  primaryColor,
-  textColor,
+  // primaryColor,
+  // textColor,
   collectionName,
   ownerCollectionUser,
 }) => {
@@ -26,7 +26,6 @@ const NftItem = ({
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
-
   const getProductAsync = useCallback(async () => {
     // if (pict === defaultImg) {
       const responseProductMetadata = await (
@@ -34,8 +33,8 @@ const NftItem = ({
           method: "GET",
         })
       ).json();
-      if (responseProductMetadata.result.length > 0) {
-        setMetaDataProducts(responseProductMetadata.result[0]);
+      if (responseProductMetadata.result.tokens.length > 0) {
+        setMetaDataProducts(responseProductMetadata.result?.tokens[0]);
       }
     // }
   }, [collectionIndexInContract, contractName]);
@@ -204,4 +203,5 @@ const NftItem = ({
     </>
   );
 };
-export default NftItem;
+// export default NftItem;
+export const NftItem = memo(NftItemComponent);
