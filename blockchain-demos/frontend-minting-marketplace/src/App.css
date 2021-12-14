@@ -603,6 +603,10 @@ margin-left: -36px;
   background-color: transparent;
   border-radius: 16px;
 }
+.custom-offer-pic-link:hover{
+color: rgb(186, 89, 224) !important;
+text-decoration: none;
+}
 .carousel-item-padding-4-px{
   /* width: auto !important; */
   /* background-color: red; */

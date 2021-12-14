@@ -44,11 +44,12 @@ export default function OfferItem({
         style={{
           width: "291px",
           height: "291px",
+          // height: "auto",
           margin: "1rem 1rem",
           pointerEvents: "none",
         }}
         src={metadata.image ? metadata.image : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"}
-        alt={metadata}
+        alt={metadata.name}
       />
     </button>
   );

@@ -6,6 +6,7 @@ import InputField from "../../common/InputField.jsx";
 import InputSelect from "../../common/InputSelect.jsx";
 import io from "socket.io-client";
 import "./videoUpload.css";
+// const UPLOAD_PROGRESS_HOST = process.env.UPLOAD_PROGRESS_HOST;
 
 // Admin view to upload media to the server
 const FileUpload = ({ address, primaryColor, textColor }) => {
@@ -110,7 +111,8 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		await getContract();
 		const sessionId = Math.random().toString(36).substr(2, 9);
 		setThisSessionId(sessionId);
-		const so = io("http://localhost:5000", { transports: ["websocket"] });
+		// const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
+		const so = io(`http://localhost:5000`, { transports: ["websocket"] });
 
 		setSocket(so);
 		// so.on("connect", data => {
