@@ -24,9 +24,10 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
         method: "GET",
       })
     ).json();
-    setTokenData(responseAllProduct.result);
-    if(responseAllProduct.result.length >= Number(tokenId)){
-      setSelectedData(responseAllProduct.result[tokenId].metadata);
+
+    setTokenData(responseAllProduct.result.tokens);
+    if(responseAllProduct.result.tokens.length >= Number(tokenId)){
+      setSelectedData(responseAllProduct.result.tokens[tokenId].metadata);
     } 
     setSelectedToken(tokenId);
   }, [product, contract, tokenId, blockchain]);

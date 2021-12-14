@@ -4,7 +4,7 @@ import cl from "./Status.module.css";
 const StatusComponent = ({ onChange, value }) => {
   return (
     <div className={cl.field}>
-      <label for={cl.status}>email:</label>
+      <label htmlFor={cl.status}>email:</label>
       <input
         className={cl.status}
         type="text"

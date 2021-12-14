@@ -23,7 +23,7 @@ const VideoItem = ({mediaList, item}) => {
 				src={`${mediaList[item].animatedThumbnail}`}
 				style={{position: 'absolute', display: hovering ? 'block' : 'none', bottom: 0, borderRadius: '16px', objectFit: 'contain', background: 'black'}}
 				className='col-12  h-100 w-100' />
-			<div className='rounded-rair' style={{backgroundColor: 'var(--charcoal)', color: 'white', position: 'absolute', top: 0, right: 0}}>
+			<div className='rounded-rair' style={{backgroundColor: 'var(--charcoal)', color: 'white', position: 'absolute', top: 15, right: 15, minWidth: '107px', height: '25px', textAlign: "center", borderRadius: '10px'}}>
 				{mediaList[item].duration}
 			</div>
 		</div>

@@ -335,7 +335,7 @@ function App({ sentryHistory }) {
 					<div className='row w-100 m-0 p-0 main-content'>
 						<div className='col-1 d-none d-xl-inline-block' />
 						<div className='col-1 rounded'>
-							<div className='col-12 pt-2 mb-4' style={{ height: '10vh' }}>
+							<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
 								<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
 							</div>
 							{!loginDone ? <div className='btn-connect-wallet-wrapper'>

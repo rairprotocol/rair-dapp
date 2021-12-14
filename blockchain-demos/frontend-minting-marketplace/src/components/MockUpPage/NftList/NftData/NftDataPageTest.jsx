@@ -162,6 +162,7 @@ const NftDataPageTest = ({
       Swal.fire('Error', err?.data?.message, 'error');
     }
   }
+
   function checkOwner() {
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
       return (
@@ -379,8 +380,11 @@ const NftDataPageTest = ({
                   padding: "10px",
                   width: "288px",
                   height: "48px",
-                  background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"
-                    }`,
+                  border: "1px solid #D37AD6",
+                  // backgroundImage:
+                  // "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
+                  // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"
+                  //   }`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: 'center',
@@ -427,7 +431,22 @@ const NftDataPageTest = ({
             <div>
               <div className="collection-label-name">Serial number</div>
               <div>
-                { tokenData.length ? <SelectNumber
+              { tokenData.length ? <SelectNumber
+                   handleClickToken={handleClickToken}
+                   selectedToken={selectedToken}
+                   items={
+                     tokenData &&
+                     tokenData.map((p) => {
+                       return {
+                         value: p.metadata.name,
+                         id: p._id,
+                         token: p.token,
+                       };
+                     })
+                   }
+                /> : <></>
+                }
+                {/* <SelectNumber
                   handleClickToken={handleClickToken}
                   selectedToken={selectedToken}
                   items={
@@ -440,9 +459,7 @@ const NftDataPageTest = ({
                       };
                     })
                   }
-                /> : <></>
-                }
-                
+                /> */}
               </div>
             </div>
             <div
@@ -473,6 +490,7 @@ const NftDataPageTest = ({
                               key={index}
                               className="col-4 my-2 p-1 custom-desc-to-offer"
                               style={{
+                                cursor:'default',
                                 color: textColor,
                                 textAlign: "center",
                               }}
@@ -480,12 +498,33 @@ const NftDataPageTest = ({
                               <span>{item?.trait_type}:</span>
                               <br />
                               <a
+                              className='custom-offer-pic-link'
                                 style={{ color: textColor }}
                                 href={item?.value}
                               >
                                 {item?.value.length > 15 ? "..." : ""}
                                 {item?.value.substr(item?.value.indexOf("\n") + 19)}
                               </a>
+                            </div>
+                          );
+                        }
+                        if( item.trait_type === "image" ){
+                          return (
+                            <div
+                              key={index}
+                              className="col-4 my-2 p-1 custom-desc-to-offer"
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                color: textColor,
+                                textAlign: "center",
+                              }}
+                            >
+                              <span> <a className='custom-offer-pic-link' style={{
+                                color: textColor,
+                              }} target="_blank" rel="noreferrer"  href={item?.value}>{toUpper(item?.trait_type)}</a>
+                                </span>
                             </div>
                           );
                         }
@@ -617,7 +656,7 @@ const NftDataPageTest = ({
                                   height: "135px",
                                   filter: "blur(3px)",
                                 }}
-                                src={`/thumbnails/${v?.thumbnail}.png`}
+                                src={`${v?.staticThumbnail}`}
                                 // src={selectedData?.image}
                                 alt=""
                               />
@@ -647,7 +686,8 @@ const NftDataPageTest = ({
                                     fontSize: 20,
                                   }}
                                 >
-                                  00:03:23
+                                  {/* 00:03:23 */}
+                                  {v?.duration}
                                 </p>
                               </div>
                             </div>
@@ -780,32 +820,29 @@ const NftDataPageTest = ({
         </div>
         <div style={{ maxWidth: "1200px", margin: "auto" }}>
           {/* <span style={{}}>More by {tokenData[selectedToken]?.ownerAddress ? tokenData[selectedToken]?.ownerAddress : "User" }</span> */}
-          {
-          tokenData.length ? 
+          {tokenData.length ? 
            (
-            <Carousel
-              itemWidth={"300px"}
-              showDots={false}
-              // infinite={true}
-              responsive={responsive}
-              itemClass="carousel-item-padding-4-px"
-            >
-              {tokenData.map((p, index) => (
-                <OfferItem
-                  key={index}
-                  index={index}
-                  metadata={p.metadata}
-                  token={p.token}
-                  handleClickToken={handleClickToken}
-                  setSelectedToken={setSelectedToken}
-                  selectedToken={selectedToken}
-                />
-              ))}
-            </Carousel>
+             <Carousel
+               itemWidth={"300px"}
+               showDots={false}
+               // infinite={true}
+               responsive={responsive}
+               itemClass="carousel-item-padding-4-px"
+             >
+               {tokenData.map((p, index) => (
+                 <OfferItem
+                   key={index}
+                   index={index}
+                   metadata={p.metadata}
+                   token={p.token}
+                   handleClickToken={handleClickToken}
+                   setSelectedToken={setSelectedToken}
+                   selectedToken={selectedToken}
+                 />
+               ))}
+             </Carousel>
           ) : <></>
-        
         }
-          
         </div>
       </div>
     </div>
