@@ -257,7 +257,7 @@ module.exports = context => {
           author,
           encryptionType: 'aes-128-cbc',
           title,
-          contract,
+          contract: foundContract._id,
           product,
           offer,
           staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
