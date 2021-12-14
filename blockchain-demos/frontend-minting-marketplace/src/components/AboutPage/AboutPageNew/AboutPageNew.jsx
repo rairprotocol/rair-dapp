@@ -15,6 +15,7 @@ import Metamask from './../assets/metamask_logo.png';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
 import VideoBg_1 from './../assets/video-bg_1.png';
 import VideoBg_2 from './../assets/video-bg_2.png';
+import ArrowUp from './../assets/arrow-up-about.png';
 
 // imports image logos 
 import OpenSea from './../assets/openSea-logo.png';
@@ -60,7 +61,14 @@ const AboutPageNew = ({ primaryColor }) => {
                             RAIR is a blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
                         </div>
                         <div className="btn-buy-metamask">
-                            <button>Mint a token</button>
+                            <button>
+                                <img
+                                    className="metamask-logo"
+                                    src={Metamask}
+                                    alt="metamask-logo"
+                                />{" "}
+                                Mint a token
+                            </button>
                         </div>
                     </div>
                     <div className="home-about--logo">
@@ -152,8 +160,10 @@ const AboutPageNew = ({ primaryColor }) => {
                     </div>
                     <div className="about-page-platform-content">
                         <div className="platform-box">
-                            <div className="platform-title">
-                                Whitelabel
+                            <div className="platform-title-box">
+                                <div className="platform-title">
+                                    Whitelabel
+                                </div>
                             </div>
                             <div className="categories-list">
                                 <ul>
@@ -165,8 +175,10 @@ const AboutPageNew = ({ primaryColor }) => {
                             </div>
                         </div>
                         <div className="platform-box">
-                            <div className="platform-title">
-                                EVM Support
+                            <div className="platform-title-box">
+                                <div className="platform-title">
+                                    EVM Support
+                                </div>
                             </div>
                             <div className="categories-list">
                                 <ul>
@@ -178,8 +190,10 @@ const AboutPageNew = ({ primaryColor }) => {
                             </div>
                         </div>
                         <div className="platform-box">
-                            <div className="platform-title">
-                                Royalties
+                            <div className="platform-title-box">
+                                <div className="platform-title">
+                                    Royalties
+                                </div>
                             </div>
                             <div className="categories-list">
                                 <ul>
@@ -191,8 +205,10 @@ const AboutPageNew = ({ primaryColor }) => {
                             </div>
                         </div>
                         <div className="platform-box">
-                            <div className="platform-title">
-                                Metadata
+                            <div className="platform-title-box">
+                                <div className="platform-title">
+                                    Metadata
+                                </div>
                             </div>
                             <div className="categories-list">
                                 <ul>
@@ -293,7 +309,7 @@ const AboutPageNew = ({ primaryColor }) => {
                         Watch our tutorial video on Web2 to learn how to watch encrypted videos on Web3.
                     </div>
                     <div className="box-video">
-                        <iframe width="978" height="549" src="https://www.youtube.com/embed/fL5UAV5cuIQ">
+                        <iframe src="https://www.youtube.com/embed/fL5UAV5cuIQ">
                         </iframe>
                     </div>
                     <div className="about-video-tutorial-text">
@@ -301,6 +317,9 @@ const AboutPageNew = ({ primaryColor }) => {
                     </div>
                     <div className="tutorial-with-metamask">
                         <div className="container-content-metamask">
+                            <div className="content-show-arrow">
+                                <img src={ArrowUp} alt="cursor" />
+                            </div>
                             <div className="metamask-box">
                                 <img src={MetamaskTutorial} alt="photo metamask" />
                                 <div className="btn-buy-metamask">

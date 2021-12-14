@@ -339,6 +339,8 @@
 
 .about-streams-video iframe {
     border-radius: 12px;
+    width:978px;
+    height:549px
 }
 
 .about-streams-video .box-video {
@@ -362,6 +364,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+}
+
+.container-content-metamask .content-show-arrow {
+    position: absolute;
+    display: none;
 }
 
 .container-content-metamask .metamask-box img {
@@ -807,10 +815,399 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     width: 70px;
 }
 
+/* Mobile version*/
+
 @media screen and (max-width: 1460px) {
     .wrapper-about-page {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+}
+
+@media screen and (max-width: 1250px) {
+    .home-about--page {
+        width: 1000px;
+    }
+
+    .home-about--page .tokens-description {
+        width: 450px;
+    }
+
+    .about-page-platform .about-page-platform-content{
+        flex-wrap: wrap;
+    }
+
+    .about-page-platform-content .platform-box:last-child{
+        margin-top: 30px;
+    }
+
+    .about-rair-offer .about-offer-content {
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+    }
+
+    .about-rair-offer .about-offer-content .royalty-box {
+        margin-top: 30px;
+    }
+
+    .about-rair-offer .rair-offer-title {
+        text-align: center;
+    }
+
+    .home-about--page .nfts-select .main-nft {
+        width: 465px;
+        height: 465px;
+        background-size: cover !important;
+    }
+
+    .home-about--page .block-nfts .box-nft img {
+        width: 220.49px;
+        height: 220.49px;
+    }
+}
+
+@media screen and (max-width: 1130px) {
+    .about-streams-video iframe {
+        width: 550px;
+        height: 300px;
+    }
+
+    .about-page-platform-content .platform-box{
+        margin-top: 30px;
+    }
+
+    .about-streams-video .about-streams-video-title, .about-streams-video .about-video-tutorial-text {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    .about-page-platform .about-page-platform-content{
+        flex-direction: column;
+        align-content: center;
+    }
+
+    .home-about--page {
+        width: 100%;
+    }
+
+    .container-content-metamask {
+        flex-direction: column-reverse;
+    }
+
+    .container-content-metamask .metamask-box {
+        margin-top: 30px;
+    }
+
+    .about-streams-video {
+        background-image: none;
+    }
+
+    .tokenomics-ecosystem {
+        flex-direction: column-reverse;
+    }
+
+    .ecosystem-airdrops-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items:first-child {
+        margin-right: 20px;
+    }
+
+    .about-tokenomics .about-tokenomics-title {
+        text-align: center;
+    }
+
+    .left-tokens.about-page .block-left-tokens {
+        margin-right: 5% ;
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 400px;
+        height: 450px;
+    }
+
+    .left-tokens.about-page .box-progress {
+        margin-left: 80px;
+        margin-top: 172px;
+    }
+
+    .left-tokens.about-page .title-progress-left {
+        top: 15px;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    .home-about--page .nfts-select .main-nft {
+        width: 350px;
+        height: 350px;
+        background-size: cover !important;
+    }
+
+    .home-about--page .block-nfts .box-nft img {
+        width: 163.49px;
+        height: 163.49px;
+    }
+
+    .home-about--page .nfts-select {
+        justify-content: center;
+    }
+
+    .home-about--page .title-nft h3 {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 935px) {
+    .block-left-tokens {
+        display: none;
+    }
+
+    .left-tokens.about-page {
+        width: 100%;
+        margin-bottom: 200px;
+        justify-content: center;
+    }
+
+    .left-tokens-content .title-tokens h3 {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .home-about--page .information-author  {
+        justify-content: center;
+    }
+
+    .home-about--page .information-author .home-about--logo {
+        display: none;
+    }
+
+    .home-about--page .information-author {
+        background-image: url('./../assets/aboutPage_bg-1.png');
+        background-repeat: no-repeat;
+        background-size: 35% auto;
+        background-position: 99% 5%;
+        border-radius: 0px;
+    }
+
+    .row>* {
+        padding: 0;
+    }
+
+    .row {
+        --bs-gutter-x: 0;
+    }
+} 
+
+@media screen and (max-width: 810px) {
+    .about-page--team .meet-team .box-teammate {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 825px) {
+    .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .home-about--page .nfts-select .main-nft {
+        display: none;
+    }
+
+    .home-about--page .block-nfts .box-nft:last-child {
+        display: none;
+    }
+
+    .home-about--page .block-nfts .box-nft {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .home-about--page .block-nfts .box-nft img {
+        width: 350px;
+        height: 350px;
+    }
+
+    .home-about--page .block-nfts .box-nft img:first-child {
+        margin-bottom: 20px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .about-page-platform .about-page-platform-content {
+        flex-direction: row;
+        padding: 0 20px;
+    }
+    
+    .home-about--page .about-rair-offer .rair-offer-title, .about-rair-offer .change-color-text {
+       font-size: 30px;
+    }
+
+    /* .about-rair-offer .streaming-progress{
+        width: 150px;
+    } */
+
+    .streaming-progress .line-purple, .streaming-progress .line-grey {
+        width: 150px
+    }
+
+    .about-rair-offer .streaming-progress, .about-rair-offer .streaming-percent {
+        width: 350px;
+    }
+
+    .tokenomics-ecosystem {
+        flex-direction: column;
+    }
+
+    .home-about--page .ecosystem-airdrops {
+        margin-top: 60px;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list {
+        width: 100%;
+        padding: 0 23px;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .home-about--page .video-locked {
+        width: 400px;
+        height: 130px;
+    }
+
+    .home-about--page .box-video:first-child, .home-about--page .box-video:nth-child(2) {
+        display: none;
+    }
+
+    .video-locked img {
+        width: 150px;
+    }
+    
+    .container-content-metamask .container-block-video .text-watch-token {
+        display: none;
+    }
+
+    .container-content-metamask .metamask-box img {
+        width: 70%;
+        height: auto;
+        margin-bottom: 40px;
+    }
+
+    .container-content-metamask .btn-buy-metamask {
+        display: none;
+    }
+
+    .about-streams-video {
+        margin-bottom: 30px;
+    }
+
+    .container-content-metamask {
+        flex-direction: column;
+    }
+
+    .container-content-metamask .content-show-arrow {
+        position: absolute;
+        display: block;
+        bottom: 250px;
+        right: 160px;
+    }
+
+    .container-content-metamask .content-show-arrow img{
+        width: 140px;
+        height: auto;
+    }
+} 
+
+@media screen and (max-width: 575px) {
+    .about-page-platform .platform-box .categories-list {
+        border: none;
+        width: 230px;
+    }
+
+    .about-page-platform-content {
+        justify-content: center;
+    }
+
+    .about-page-platform .platform-box:first-child .categories-list ul, .about-page-platform .platform-box:nth-child(3) .categories-list ul {
+        border-right: 1px solid #E5E5E5;
+    }
+
+    .about-page-platform .platform-box .categories-list ul li{
+        font-size: 16px;
+        text-align: right;
+    }
+    
+    .about-page-platform .platform-box .platform-title {
+        width: 200px;
+        height: 40px;
+    }
+
+    .about-page-platform-content .platform-title-box {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .about-streams-video iframe {
+        width: 100%;
+    }
+
+    .ecosystem-airdrops-list {
+        flex-direction: column;
+        align-content: center;
+        padding: 0 23px;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items {
+        width: 100%;
+    }
+
+    .home-about--page .ecosystem-airdrops {
+        border-radius: 16px;
+        background: #383637;
+        margin: 60px 19px 10px 19px;
+        padding-top: 28px;
+    }
+
+    .home-about--page .tokenomics-ecosystem .ecosystem-list {
+        background: #383637;
+        padding: 20px 0;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items .items-title {
+        width: 200px;
+        height: 40px;
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 515px) {
+    .about-page-platform .platform-box .categories-list {
+        border: none;
+        width: 150px;
+    }
+
+    .about-page-platform .platform-box .platform-title {
+        width: 150px;
+        font-size: 20px;
+    }
+
+    .about-page-platform .platform-box:first-child .platform-title, .about-page-platform .platform-box:nth-child(3) .platform-title {
+        margin-right: 10px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .home-about--page .tokens-description {
+        width: 100%;
+        padding: 0 10px;
     }
 }
