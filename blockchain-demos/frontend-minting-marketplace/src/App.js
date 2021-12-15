@@ -268,45 +268,45 @@ function App({ sentryHistory }) {
 	// }, [checkToken, token])
 
 	useEffect(() => {
-    if (primaryColor === "charcoal") {
-      (function () {
-        let angle = 0;
-        let p = document.querySelector("p");
-        if (p) {
-          let text = p.textContent.split("");
-          var len = text.length;
-          var phaseJump = 360 / len;
-          var spans;
-          p.innerHTML = text
-            .map(function (char) {
-              return "<span>" + char + "</span>";
-            })
-            .join("");
+		if (primaryColor === "charcoal") {
+			(function () {
+				let angle = 0;
+				let p = document.querySelector("p");
+				if (p) {
+					let text = p.textContent.split("");
+					var len = text.length;
+					var phaseJump = 360 / len;
+					var spans;
+					p.innerHTML = text
+						.map(function (char) {
+							return "<span>" + char + "</span>";
+						})
+						.join("");
 
-          spans = p.children;
-        } else console.log("kik");
+					spans = p.children;
+				} else console.log("kik");
 
-        // function wheee() {
-        //   for (var i = 0; i < len; i++) {
-        //     spans[i].style.color =
-        //       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-        //   }
-        //   angle+=5;
-        // //   requestAnimationFrame(wheee);
-        // };
-		// setInterval(wheee, 100);
+				// function wheee() {
+				//   for (var i = 0; i < len; i++) {
+				//     spans[i].style.color =
+				//       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+				//   }
+				//   angle+=5;
+				// //   requestAnimationFrame(wheee);
+				// };
+				// setInterval(wheee, 100);
 
-		(function wheee() {
-			for (var i = 0; i < len; i++) {
-			  spans[i].style.color =
-				"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-			}
-			angle++;
-			requestAnimationFrame(wheee);
-		  })();
-      })();
-    }
-  } , [primaryColor]);
+				(function wheee() {
+					for (var i = 0; i < len; i++) {
+						spans[i].style.color =
+							"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+					}
+					angle++;
+					requestAnimationFrame(wheee);
+				})();
+			})();
+		}
+	}, [primaryColor]);
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
@@ -445,9 +445,18 @@ function App({ sentryHistory }) {
 							© Rairtech 2021. All rights reserved
 						</div>
 						<ul>
-							<li>newsletter</li>
-							<li>contact</li>
-							<li>inquiries</li>
+							<li>
+								<a href="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&id=1f95f6ad8c" target="_blank">Newsletter</a>
+							</li>
+							<li>
+								<a target="_blank" href="https://etherscan.io/error.html?404">Contract</a>
+							</li>
+							<li>
+								<a href="https://discord.gg/7KaSHNJ7qS" target="_blank">Inquiries</a>
+							</li>
+							<li>
+								<NavLink to="/terms-use">Terms of Service</NavLink>
+							</li>
 							<li onClick={() => openAboutPage()}>about us</li>
 						</ul>
 					</footer>

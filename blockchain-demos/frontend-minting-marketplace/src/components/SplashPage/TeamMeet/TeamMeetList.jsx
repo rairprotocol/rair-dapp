@@ -12,59 +12,112 @@ const teamArray = [
         nameTeammate: "Mr.Lee",
         imageUrl: Teammate_1,
         aboutTeammate: [
-            `Mr. Lee, is an American record producer and entrepreneur from Houston, 
-        Texas. He has produced several albums, which achieved platinum and gold 
-        status, such as Scarface's My Homies, 2Pac's Still I Rise, Paul Wall's 
-        The Peoples Champ. He was one of the in-house producers of Rap-A-Lot Records,
-         and a founder and CEO of Noddfactor Entertainment.`,
+            `Over the past two decades, Mr. Lee’s soulful and synth heavy sound
+            has not only been emulated, but has allowed him to rack up 9 platinum
+            albums, 6 gold albums and singles on the radio for 13 consecutive years.
+            He has had the opportunity to work with an array of artists including
+            Paul Wall, Slim Thug, Mary J. Blige, and Dwele. Now currently working 
+            with LL Cool J, he hopes his new XMG label will not only help break 
+            on-the-rise stars King Shaun and Adonia, but serve as a hub for new
+            artists to be heard in the future.`,
 
-            `Mr Lee. worked closed with Nipsey on his 2018 album Victory Lap.`
+            `Mr. Lee worked closely with Nipsey on his 2018 album Victory Lap. 
+            His relationship with the late rapper trascended artist/producer 
+            into a deep friendship of mutual respect. Lee retains many personal 
+            messages and recordings between himself and Nipsey which he plans 
+            to make thoughtfully available to the Nipseyverse when the time is
+             right.`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-twitter',
+                link: 'https://twitter.com/mrlee713'
+            },
+            {
+                classIcon: 'fab fa-instagram',
+                link: 'https://www.instagram.com/mrlee713/'
+            }
         ]
     },
     {
-        nameTeammate: "Asghedom Estate",
+        nameTeammate: "John Patillo",
         imageUrl: Estate_Teammate,
         aboutTeammate: [
-            `Samiel Asghedom otherwise known as Blacc Sam is a Los Angeles native,
-            Eritrean man who serves the community and approaches life like a business
-            tycoon. Sam’s ability to hustle serves as an inspiration to his peers
-            and those that are aware of his story. He represents young black men 
-            who are able to transcend from their starting point all while managing 
-            to stay local and positively impact the community. It is easy to see
-            how Samiel operates as a man when you look at who his younger brother 
-            is, Nipsey Hussle. Hussle said that Blacc Sam is one of the most influential
-            hustlers that he ever experienced in life. It’s easy to conclude that 
-            those are powerful words when taking into consideration the way Nipsey 
-            Hussle approached life and how he applied himself in every aspect.`
+            `John Patillo is a 25 year veteran in the business of music. He has participated
+            in the sale of over 50 million records from the likes of Twista, Daz Dillenger, 
+            Snoop Dogg, Zro, Lil Flip Boosie Badazz and several other independent music artists.
+            Mr. Patillo is an advocate of music education and works daily to help artists with 
+            best practices to help monetize their music. Currently John Patillo is the CEO of 
+            Southwest Digital. A music distribution company servicing about 300 music 
+            labels throughout world.`,
+              
+            `As the CEO he works extensively to ensure that the company meets agreed on business
+            objectives. The CEO ensures key systems (CMS, analytics, website, marketing, 
+            etc.) work effectively to meet company goals. In addition, Mr. Patillo finds
+            and collaborates with strategic marketing partners and develops other 
+            strategic partnerships with streaming companies. Mr. Patillo handles Southwest
+            Digital Distribution’s day to day operational and administrative services,
+            which are determined by Robert Guillerman and Mr. Patillo.`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: 'https://www.linkedin.com/in/johnpatillo/'
+            },
+            {
+                classIcon: 'fab fa-instagram',
+                link: 'https://www.instagram.com/mrjfpster/?hl=en'
+            }
         ]
     },
     {
         nameTeammate: "Neighborhood Nip Foundation",
         imageUrl: Teammate_2,
         aboutTeammate: [
-            `The Neighborhood Nip Foundation, an initiative that seeks to provide
-            opportunities for young creatives in music. The late rapper, who died 
-            in March 2019 after being shot and killed outside of his Marathon Clothing
-            store in Los Angeles, was known for his philanthropic efforts towards
-            his community and neighbourhood. The new foundation will “be aligned
-            with everything Nip believed in and what helped him”, Sam Asghedom,
-            Hussle’s brother, told the Los Angeles Times. The foundation is mainly 
-            inspired by Hussle’s own time at LA’s Watts Towers, which provided a
-            free music programme to the rapper during his youth. “We used to talk
-            a lot about [what the Watts Towers programme] meant to him,” Asghedom
-            said.“A push, a little help can go a long way, and that’s what this
-            foundation will 100 per cent be about.”`
+            `The Neighborhood Nip Foundation is an initiative that seeks to provide
+            opportunities for young creatives in music. The late rapper, who died
+            in early March of 2019 after being shot & killed outside of his clothing
+            store in Los Angeles, was known for his philanthropic efforts towards his 
+            community and neighborhood. As Nipsey’s brother, Sam Asghedom, told the Los
+            Angeles Times, the new foundation will “be aligned with everything Nip
+            believed in and what helped him”.`,
+
+            `The foundation is mainly inspired by Nipsey’s own time spent at LA’s 
+            Watts Towers, which provided a free music program to the rapper during his 
+            youth. “We used to talk a lot about [what the Watts Towers program] meant to
+            him,” Asghedom said. “A push, a little help can go a long way, and that’s 
+            what this foundation will 100 percent be about.”`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://www.facebook.com/neighborhoodnipfoundation/',
+                classLink: "arrrow-right"
+            },
         ]
     },
     {
         nameTeammate: "Southwest Digital",
         imageUrl: Teammate_3,
         aboutTeammate: [
-            `For content owners, record labels, and distributors,
-        Southwest Digital offers a complete ecosystem for the digital
-        music cycle that optimizes your business processes. With headquarters
-        in Houston and Los Angeles, we manage thousands of tracks with
-        superb digital supply chain integration and dynamic marketing and promotion.`
+            `Southwest Digital is a music aggregator which delivers music to some
+            of the top streaming services around the world. It offers exclusive 
+            music videos, audio tracks, and live/archived streaming of music events.
+            Southwest Digital is a leading source of multimedia, interviews, reviews,
+            premieres and exclusive content for music artists.`,
+
+            `For content owners, record labels and distributors, Southwest Digital offers
+            a complete ecosystem for the digital music lifecycle that optimizes your business
+            processes. With headquarters in Houston and Los Angeles, we manage thousands 
+            of tracks with superb digital supply chain integration as well as dynamic 
+            marketing and promotion.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://swdd.io',
+                classLink: "arrrow-right"
+            }
         ]
     },
     {
@@ -81,6 +134,13 @@ const teamArray = [
             `RAIR, through its decentralized key management node system, empowers
         anyone to create unique, controllable, and transferable digital assets
         tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
         ]
     }
 ]
@@ -101,6 +161,16 @@ const teamGreymanArray = [
             event in the Nevada desert. His work is a kind of tweaked mirror which reflects our
             society, blurring the lines between reality and fantasy. Perhaps a black mirror, 
             but one that has a rainbow at the end of the tunnel.`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-twitter',
+                link: ''
+            },
+            {
+                classIcon: 'fab fa-twitter',
+                link: ''
+            }
         ]
     },
     {
@@ -117,6 +187,16 @@ const teamGreymanArray = [
             `RAIR, through its decentralized key management node system, empowers
         anyone to create unique, controllable, and transferable digital assets
         tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-twitter',
+                link: ''
+            },
+            {
+                classIcon: 'fab fa-twitter',
+                link: ''
+            }
         ]
     }
 ];
@@ -130,6 +210,7 @@ const NipseyTeamComponent = ({ primaryColor }) => {
                         key={index + t.nameTeammate}
                         name={t.nameTeammate}
                         desc={t.aboutTeammate}
+                        socials={t.socials}
                         primaryColor={primaryColor}
                         url={t.imageUrl}
                     />
