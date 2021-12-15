@@ -1733,6 +1733,11 @@ text-decoration: underline;
     padding: 50px 45px;
 }
 
+.nipsey-img-masks img {
+    width: 300px;
+    height: auto;
+}
+
 /* Media */
 
 @media screen and (max-width: 1150px) {

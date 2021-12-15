@@ -19,6 +19,10 @@ import NftMobile_2 from './images/nft-mobile_2.png';
 import VideoPresent from './images/video-present.png';
 import RairTechMobile from './images/rair_tech_mobile.png';
 import DiscordIcon from './images/discord-icon.png';
+import Bandana from './images/bandana.png';
+import Pods from './images/Pods.png';
+import Cepk from './images/cepk.png'
+import Cepp from './images/cepp.png';
 
 /* importing Components*/
 import TokenLeft from "./TokenLeft/TokenLeft";
@@ -401,6 +405,12 @@ const SplashPage = () => {
           primaryColor={primaryColor}
         /> */}
         <TeamMeet primaryColor={primaryColor} arraySplash={"nipsey"} />
+        <div className="nipsey-img-masks">
+          <img src={Bandana} alt="" />
+          <img src={Pods} alt="" />
+          <img src={Cepk} alt="" />
+          <img src={Bandana} alt="" />
+        </div>
       </div>
       <div className="home-splash-mobile">
         <div className="wrapper-splash-mobile">
