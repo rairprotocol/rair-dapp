@@ -6,6 +6,7 @@ import InputField from "../../common/InputField.jsx";
 import InputSelect from "../../common/InputSelect.jsx";
 import io from "socket.io-client";
 import "./videoUpload.css";
+// const UPLOAD_PROGRESS_HOST = process.env.UPLOAD_PROGRESS_HOST;
 
 // Admin view to upload media to the server
 const FileUpload = ({ address, primaryColor, textColor }) => {
@@ -31,10 +32,12 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	const [selects, setSelects] = useState([]);
 	const [selectsData, setSelectsData] = useState({});
 	const [contract, setContract] = useState('null');
+	const [contractID, setContractID] = useState('null');
 	const [contractOptions, setContractOptions] = useState([]);
 	const [offersData, setOffersData] = useState([]);
 	const [collectionIndex, setCollectionIndex] = useState({});
 	const [offersIndex, setOffersIndex] = useState([]);
+	const [networkId, setNetworkId] = useState('');
 
 	const currentToken = localStorage.getItem("token");
 
@@ -42,6 +45,8 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		const {success, contracts} = await rFetch("/api/contracts");
 		if (success) {
 			const contractData = contracts.map((item) => ({
+				_id: item._id,
+				blockchain: item.blockchain,
 				value: item.contractAddress,
 				label: `${item.title} (...${item.contractAddress.slice(-4)})`,
 			}));
@@ -50,8 +55,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	};
 
 	const getProduct = useCallback(async () => {
-		const {success, products} = await rFetch(`api/contracts/${contract}/products`);
-
+		const {success, products} = await rFetch(`api/contracts/network/${networkId}/${contract}/products`);
 		if (success) {
 			const names = products.map((product) => ({
 				value: product.name,
@@ -74,7 +78,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	}, [contract, getProduct]);
 
 	const getOffers = useCallback(async () => {
-		const responseOffer = await rFetch(`api/contracts/${contract}/products/offers`);
+		const responseOffer = await rFetch(`api/contracts/network/${networkId}/${contract}/products/offers`);
 
 		const offersNames = responseOffer.products[0]?.offers.map((item) => ({
 			value: item.offerName,
@@ -110,7 +114,8 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		await getContract();
 		const sessionId = Math.random().toString(36).substr(2, 9);
 		setThisSessionId(sessionId);
-		const so = io("http://localhost:5000", { transports: ["websocket"] });
+		// const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
+		const so = io(`http://localhost:5000`, { transports: ["websocket"] });
 
 		setSocket(so);
 		// so.on("connect", data => {
@@ -255,6 +260,12 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						label="Contract"
 						getter={contract}
 						setter={e => {
+							contractOptions.forEach((el) => {
+								if(el.value === e){
+									setNetworkId(el.blockchain)
+									setContractID(el._id)
+							}
+						} )
 							setContract(e);
 							setProduct("null");
 							setProductOptions([]);
@@ -336,7 +347,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 							formData.append("video", video);
 							formData.append("title", title);
 							formData.append("description", description);
-							formData.append("contract", contract);
+							formData.append("contract", contractID);
 							formData.append("product", collectionIndex);
 							formData.append("offer", JSON.stringify(offersIndex));
 							setUploading(true);

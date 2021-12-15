@@ -2,7 +2,7 @@
 
 Find product with all offers
 
-**URL** : `/api/nft/:contract/:product/offers`
+**URL** : `/api/nft/network/:networkId/:contract/:product/offers`
 
 **Method** : `GET`
 
@@ -10,6 +10,12 @@ Find product with all offers
 
 ```json
 {
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
   "contract": {
     "required": true,
     "content": {
@@ -19,7 +25,7 @@ Find product with all offers
   "product": {
     "required": true,
     "content": {
-      "type": "string"
+      "type": "number"
     }
   }
 }

@@ -9,7 +9,7 @@ import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 const PopUpSettings = ({
   currentUserAddress,
-  adminAccess,
+  // adminAccess,
   setLoginDone,
   primaryColor,
 }) => {
@@ -30,7 +30,7 @@ const PopUpSettings = ({
 
   const logout = () => {
     dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
-    localStorage.clear();
+    localStorage.removeItem("token");
     setLoginDone(false);
     history.push("/");
   };
@@ -40,8 +40,8 @@ const PopUpSettings = ({
   };
 
   const pushToFactory = () => {
-    history.push("/new-factory");
-  };
+      history.push('/creator/deploy');
+  }
 
   if (openModalPic) {
     return (
