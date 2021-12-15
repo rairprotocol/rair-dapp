@@ -39,20 +39,13 @@ module.exports = (context) => {
 
       await Promise.all(_.map(events.result, async contract => {
         const nameAbi = getABIData(erc721Abi, 'function', 'name')
-        const { token, owner } = contract.data
-        const nameOptions = {
-          chain: networkData.network,
-          address: token,
-          function_name: "name",
-          abi: [nameAbi.abi]
-        };
-        const title = await Moralis.Web3API.native.runContractFunction(nameOptions);
-
+        const { token, owner, contractName } = contract.data
+        
         block_number.push(Number(contract.block_number));
 
         contractsForSave.push({
           user: owner,
-          title,
+          title: contractName,
           contractAddress: token,
           blockchain: networkData.network
         });
