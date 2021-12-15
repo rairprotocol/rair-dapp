@@ -457,7 +457,7 @@ function App({ sentryHistory }) {
 							<li>
 								<NavLink to="/terms-use">Terms of Service</NavLink>
 							</li>
-							<li onClick={() => openAboutPage()}>about us</li>
+							<li onClick={() => openAboutPage()}>About us</li>
 						</ul>
 					</footer>
 				</div>
