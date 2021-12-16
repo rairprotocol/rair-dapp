@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { erc721Abi } from '../../contracts/index.js'
@@ -36,6 +36,8 @@ import TeamMeet from "./TeamMeet/TeamMeetList";
 import JoinCom from "./JoinCom/JoinCom";
 
 import Modal from "react-modal";
+import RoadMap from "./Roadmap/RoadMap.jsx";
+import NipseyRelease from "./NipseyRelease/NipseyRelease.jsx";
 
 const customStyles = {
   overlay: {
@@ -62,6 +64,11 @@ const customStyles = {
 // Modal.setAppElement("#root");
 
 const SplashPage = () => {
+  const [dataNipsey, setDataNipsey] = useState();
+  const [copies, setCopies]  = useState();
+
+
+
   const switchEthereumChain = async (chainData) => {
     try {
       await window.ethereum.request({
@@ -93,7 +100,7 @@ const SplashPage = () => {
   const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
   const buyNipsey = async () => {
-    const {success, products} = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
+    const { success, products } = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
     let instance = contractCreator(nipseyAddress, erc721Abi);
     let nextToken = await instance.getNextSequentialIndex(0, 50, 250);
     Swal.fire({
@@ -104,7 +111,7 @@ const SplashPage = () => {
     });
     let [firstPressingOffer] = products[0].offers.filter(item => item.offerName === '1st Pressing');
     if (!firstPressingOffer) {
-      Swal.fire('Error','An error has ocurred','error');
+      Swal.fire('Error', 'An error has ocurred', 'error');
       return;
     }
     try {
@@ -116,10 +123,10 @@ const SplashPage = () => {
           value: firstPressingOffer.price
         }
       )).wait();
-      Swal.fire('Success',`Bought token #${nextToken}!`,'success');
+      Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
     } catch (e) {
       console.error(e);
-      Swal.fire('Error',e?.message,'error');
+      Swal.fire('Error', e?.message, 'error');
     }
   }
 
@@ -147,6 +154,24 @@ const SplashPage = () => {
 
   const { primaryColor } = useSelector((store) => store.colorStore);
 
+ const getAllProduct = useCallback(async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/nft/network/0x5/0xcb0252eed5056de450df4d8d291b4c5e8af1d9a6/0/offers`, {
+        method: "GET",
+      })
+    ).json();
+
+
+    setCopies(responseAllProduct.product.copies);
+    setDataNipsey(responseAllProduct.product.soldCopies);
+    
+  }, [setDataNipsey]);
+
+
+  useEffect(() => {
+    getAllProduct()
+  }, [])
+
   return (
     <div className="wrapper-splash-page">
       <div className="home-splash--page">
@@ -162,7 +187,7 @@ const SplashPage = () => {
                   1000 unique NFTs unlock exclusive streaming for the
                   final Nipsey Hussle album.
                   Proceeds directly benefit the Airmiess
-                  Asghedom estate <a href="https://etherscan.io/error.html?404" target="_blank">onchain</a>.
+                  Asghedom estate <a href="https://etherscan.io/Oxcontract" target="_blank">onchain</a>.
                 </div>
               </div>
               <div className="btn-buy-metamask">
@@ -239,7 +264,7 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button onClick={window?.ethereum?.chainId === '0x5' ? buyNipsey : () => switchEthereumChain({chainId: '0x5', chainName: 'Goerli (Ethereum)'})} disabled={!Object.values(active).every(el => el)} className="modal-btn">
+                        <button onClick={window?.ethereum?.chainId === '0x5' ? buyNipsey : () => switchEthereumChain({ chainId: '0x5', chainName: 'Goerli (Ethereum)' })} disabled={!Object.values(active).every(el => el)} className="modal-btn">
                           <img
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}
@@ -259,8 +284,8 @@ const SplashPage = () => {
             </div>
           </div>
         </div>
-        <TokenLeft primaryColor={primaryColor} DiscordIcon={DiscordIcon} />
-        <div className="special-offer">
+        <TokenLeft soldCopies={dataNipsey} copies={copies} primaryColor={primaryColor} DiscordIcon={DiscordIcon} />
+        <div className="special-offer"> 
           <div className="offer-desp">
             <div className="offer-title">
               <h3>
@@ -316,156 +341,10 @@ const SplashPage = () => {
           Nft_3={Nft_3}
           Nft_4={Nft_4}
           NftImage={NftImage}
-          amountTokens={1000}
+          amountTokens={Number(copies) - Number(dataNipsey)}
         />
-        <div className="nipsey-release">
-          <div className="release-container">
-            <div className="tabs-box">
-              <div className="tab-title-box">
-                Founders Tier
-              </div>
-              <div className="tab-text-box">
-                <p>:0-49</p>
-                <p>Airdrops</p>
-              </div>
-            </div>
-            <div className="tabs-box">
-              <div className="tab-title-box">
-                Pressing 1
-              </div>
-              <div className="tab-text-box">
-                <p>:49-250</p>
-                <p>1 ETH</p>
-              </div>
-            </div>
-            <div className="tabs-box">
-              <div className="tab-title-box">
-                Pressing 2
-              </div>
-              <div className="tab-text-box">
-                <p>:49-250</p>
-                <p>2 ETH</p>
-              </div>
-            </div>
-            <div className="tabs-box">
-              <div className="tab-title-box">
-                Pressing 3
-              </div>
-              <div className="tab-text-box">
-                <p>:501-999</p>
-                <p>3 ETH</p>
-              </div>
-            </div>
-          </div>
-          <div className="release-container">
-            <div className="release-container-title">Release</div>
-            <div className="release-desc-nipsey">
-              <div className="release-desc-nipsey-box">
-                All royalties are onchain, with resales royalties set at 20%.
-                All 1000 NFTs will receive equal access to the exclusive final Nipsey album.
-                Rarities are distributed at random. Unique attributes are hand-painted & uniquely generated.
-              </div>
-              <div className="release-desc-nipsey-box">
-                Founders tiers is reserved for Nipsey collaborators and production team.
-                Fair use initial distribution. All pricing is pre-programmed into the smart contract.
-                Hold your NFT to receive exclusive future drops.
-              </div>
-            </div>
-            <div className="release-artwork-desc">
-              <div className="release-artwork-desc-title">
-                Want to see the tracklist & artwork before anyone else?
-              </div>
-              <div className="release-artwork-desc-text">
-                Sign up for our newsletter, then join our private Discord
-                group for first access to NFT drops, events, and merchandise
-                before anyone else.
-              </div>
-            </div>
-            <div className="release-join-discord">
-              <div className="input-box-email">
-                <div className="mailchimp">
-                  <form action="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&amp;id=1f95f6ad8c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
-                    <div className="signup_scroll">
-                      <div className="email-box">
-                        <input
-                          // onChange={onChangeEmail}
-                          // value={emailField}
-                          type="email" name="EMAIL"
-                          className="email"
-                          id="mce-EMAIL"
-                          placeholder="Sign up for our newsletter.."
-                          required />
-                        <button required type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe"><i class="fas fa-chevron-right"></i></button>
-                      </div>
-                      <div style={{
-                        position: "absolute", left: "-5000px"
-                      }} aria-hidden="true">
-                        <input type="text" name="b_4740c76c171ce33ffa0edd3e6_1f95f6ad8c" tabIndex="-1" />
-                      </div>
-                      <div className="btn-subscribe">
-                        {/* <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="button" required /> */}
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div className="btn-discord">
-                <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="nipsey-roadmap">
-          <div className="nipsey-roadmap-title">Roadmap</div>
-          <div className="roadmap-container">
-            <div className="roadmap-box">
-              <div className="roadmap-box-desc">
-                Own an original ETH main net NFT on snapshot date & receive the following drops:
-              </div>
-            </div>
-            <div className="roadmap-box">
-              <div className="roadmap-list">
-                <p>Official MATIC drop</p>
-                <p>Official Binance Smart Chain drop</p>
-              </div>
-              <div className="roadmap-list">
-                <p>
-                  Official Avalanche drop
-                </p>
-                <p>
-                  Official Klatyn drop
-                </p>
-                <p>
-                  Official Skale drop
-                </p>
-              </div>
-              <div className="roadmap-list">
-                <p>Priority access for future</p>
-                <p>drops and releases</p>
-              </div>
-            </div>
-            <div className="roadmap-box">
-              <div className="roadmap-progress">
-                <div className="progress-line-pink"></div>
-                <div className="progress-line-grey"></div>
-                <div className="roadmap-progress-circle">Q1</div>
-                <div className="roadmap-progress-circle">Q2</div>
-                <div className="roadmap-progress-circle">Q3</div>
-              </div>
-              <div className="roadmap-progress-text">
-                <div className="progress-li">
-                  Album release
-                </div>
-                <div className="progress-li">
-                  Fresh tracks
-                </div>
-                <div className="progress-li">
-                  Feature documentary
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <NipseyRelease DiscordIcon={DiscordIcon} />
+        <RoadMap />
         {/*<JoinCom
           Metamask={Metamask}
           JoinCommunity={JoinCommunity}

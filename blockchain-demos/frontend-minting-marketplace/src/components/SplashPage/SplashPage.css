@@ -1593,6 +1593,10 @@ text-decoration: underline;
     /* margin-left: -10px; */
 }
 
+.release-join-discord .mailchimp .email-box button:disabled {
+    color: grey;
+}
+
 .release-join-discord .mailchimp .email-box button:hover {
     margin-left: 6px;
     color: #DD7ED6;

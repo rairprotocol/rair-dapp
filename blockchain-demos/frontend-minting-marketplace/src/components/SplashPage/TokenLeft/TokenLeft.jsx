@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useHistory } from 'react-router';
+import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 
-const TokenLeft = ({ primaryColor, DiscordIcon }) => {
+const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
     const [percentTokens, setPersentTokens] = useState(0);
     const history = useHistory();
     const [emailField, setEmailField] = useState('');
@@ -23,8 +24,8 @@ const TokenLeft = ({ primaryColor, DiscordIcon }) => {
         }, 1000)
     }
 
-    const leftTokensNumber = 1000;
-    const wholeTokens = 1000;
+    const leftTokensNumber = Number(copies) - Number(soldCopies);
+    const wholeTokens = Number(copies);
 
     useEffect(() => {
         if (leftTokensNumber <= wholeTokens) {
@@ -44,7 +45,7 @@ const TokenLeft = ({ primaryColor, DiscordIcon }) => {
         if (leftTokensNumber > wholeTokens) {
             setPersentTokens(100)
         }
-    }, [setPersentTokens])
+    }, [setPersentTokens, leftTokensNumber, wholeTokens])
 
     return (
         <div className="left-tokens">
@@ -121,31 +122,7 @@ const TokenLeft = ({ primaryColor, DiscordIcon }) => {
                     </p>
                 </div>
                 <div className="release-join-discord">
-                    <div className="mailchimp">
-                        <form action="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&amp;id=1f95f6ad8c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
-                            <div className="signup_scroll">
-                                <div className="email-box">
-                                    <input
-                                        // onChange={onChangeEmail}
-                                        // value={emailField}
-                                        type="email" name="EMAIL"
-                                        className="email"
-                                        id="mce-EMAIL"
-                                        placeholder="Sign up for our newsletter.."
-                                        required />
-                                    <button required type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe"><i class="fas fa-chevron-right"></i></button>
-                                </div>
-                                <div style={{
-                                    position: "absolute", left: "-5000px"
-                                }} aria-hidden="true">
-                                    <input type="text" name="b_4740c76c171ce33ffa0edd3e6_1f95f6ad8c" tabIndex="-1" />
-                                </div>
-                                <div className="btn-subscribe">
-                                    {/* <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="button" required /> */}
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <MailchimpComponent />
                     <div className="btn-discord">
                         <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
                     </div>
