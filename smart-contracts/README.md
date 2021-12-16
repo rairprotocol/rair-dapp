@@ -35,4 +35,8 @@ Deploy the factory contract to the Binance Testnet, this only has to happen once
 Deploy the minter marketplace contract to the Binance Testnet, this only has to happen once!
 ### `npm run deploy-minter`
 
+Verify a contract on EtherScan/BscScan/PolygonScan
+### `npx hardhat verify --network <network> <contract address> <constructor parameters>`
+Where the constructor parameters are separated by spaces, any strings or addresses should be wrapped on quotes
+
 Ethers can do deployments as well but the deployment only uses Ethers.js code

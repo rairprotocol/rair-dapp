@@ -1,16 +1,17 @@
 const express = require('express');
-const { validation } = require('../middleware');
+const _ = require('lodash');
+const { JWTVerification, validation } = require('../middleware');
 const { nanoid } = require('nanoid');
 
 module.exports = context => {
-  const router = express.Router()
+  const router = express.Router();
 
   router.post('/', validation('createUser'), async (req, res, next) => {
     try {
       let { publicAddress, adminNFT } = req.body;
 
       if (adminNFT === 'temp') {
-        adminNFT = `temp_${nanoid()}`; //FIXME: should be removed right after fix the frontend functionality
+        adminNFT = `temp_${ nanoid() }`; //FIXME: should be removed right after fix the frontend functionality
       }
 
       publicAddress = publicAddress.toLowerCase();
@@ -34,23 +35,35 @@ module.exports = context => {
     }
   });
 
-  router.put('/:publicAddress', validation('updateUser'), validation('singleUser', 'params'),  async (req, res, next) => {
+  router.put('/:publicAddress', JWTVerification(context), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
-      const adminNFT = req.body.adminNFT;
-      const foundUser = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
+      const foundUser = await context.db.User.findOne({ publicAddress });
+      const { user } = req;
 
       if (!foundUser) {
-        res.status(404).send({ success: false, message: 'User not found.' });
+        return res.status(404).send({ success: false, message: 'User not found.' });
       }
 
-      const user = await context.db.User.findOneAndUpdate({ publicAddress }, { adminNFT }, { new: true });
+      if (publicAddress !== user.publicAddress) {
+        return res.status(403).send({
+          success: false,
+          message: `You have no permissions for updating user ${ publicAddress }.`
+        });
+      }
 
-      res.json({ success: true, user });
+      const fieldsForUpdate = _.chain(foundUser)
+        .pick(['adminNFT', 'nickName', 'avatar'])
+        .assign(req.body)
+        .value();
+
+      const updatedUser = await context.db.User.findOneAndUpdate({ publicAddress }, fieldsForUpdate, { new: true });
+
+      return res.json({ success: true, user: updatedUser });
     } catch (e) {
       next(e);
     }
   });
 
-  return router
-}
+  return router;
+};

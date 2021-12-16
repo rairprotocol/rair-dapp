@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
@@ -41,6 +41,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	string internal baseURI;
 	mapping(uint => string) internal uniqueTokenURI;
 	mapping(uint => string) internal productURI;
+	string internal contractMetadataURI;
 
 	lockedRange[] private _lockedRange;
 	product[] private _products;
@@ -50,7 +51,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	bytes32 public constant MINTER = keccak256("MINTER");
 	bytes32 public constant TRADER = keccak256("TRADER");
 
-	address private _factory;
+	address public factory;
 	uint16 private _royaltyFee;
 
 	/// @notice	Token's constructor
@@ -62,7 +63,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		address _creatorAddress,
 		uint16 _creatorRoyalty
 	) ERC721(_contractName, "RAIR") {
-		_factory = msg.sender;
+		factory = msg.sender;
 		_royaltyFee = _creatorRoyalty;
 		_setRoleAdmin(MINTER, CREATOR);
 		_setRoleAdmin(TRADER, CREATOR);
@@ -77,6 +78,19 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		require(_products.length > productID, "RAIR ERC721: Product does not exist");
 		_;
 	}
+
+	function freezeMetadata(uint tokenId) public onlyRole(CREATOR) {
+		emit PermanentURI(tokenURI(tokenId), tokenId);
+	}
+
+	function setContractURI(string calldata newURI) external onlyRole(CREATOR) {
+		contractMetadataURI = newURI;
+		emit ContractURIChanged(newURI);
+	}
+
+	function contractURI() public view returns (string memory) {
+		return contractMetadataURI;
+    }
 	
 	/// @notice	Sets the Base URI for ALL tokens
 	/// @dev	Can be overriden by the specific token URI
@@ -90,6 +104,17 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	///			variable base URI instead of the hardcoded URI
 	function _baseURI() internal view override(ERC721) returns (string memory) {
 		return baseURI;
+	}
+
+	/// @notice	Updates the unique URI of a token, but in a single transaction
+	/// @dev	Uses the single function so it also emits an event
+	/// @param	tokenIds	Token Indexes that will be given an URI
+	/// @param	newURIs		New URIs to be set
+	function setUniqueURIBatch(uint[] calldata tokenIds, string[] calldata newURIs) external onlyRole(CREATOR) {
+		require(tokenIds.length == newURIs.length, "RAIR ERC721: Token IDs and URIs should have the same length");
+		for (uint i = 0; i < tokenIds.length; i++) {
+			setUniqueURI(tokenIds[i], newURIs[i]);
+		}
 	}
 	
 	/// @notice	Gives an individual token an unique URI
@@ -174,7 +199,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		newRange.lockCountdown = _lockedTokens;
 		newRange.productIndex = productIndex;
 		selectedProduct.locks.push(_lockedRange.length - 1);
-		emit RangeLocked(productIndex, selectedProduct.startingToken + _startingToken, selectedProduct.startingToken + _endingToken, _lockedTokens, selectedProduct.name);
+		emit RangeLocked(productIndex, selectedProduct.startingToken + _startingToken, selectedProduct.startingToken + _endingToken, _lockedTokens, selectedProduct.name, _lockedRange.length - 1);
 	}
 
 	/// @notice	Creates a product

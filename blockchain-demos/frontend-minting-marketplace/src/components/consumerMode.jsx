@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
+import setTitle from '../utils/setTitle';
 
 import * as ethers from 'ethers'
 import {erc721Abi} from '../contracts';
@@ -47,8 +48,12 @@ const ConsumerMode = ({ addresses }) => {
 		}
 	}, [minterInstance, fetchData])
 
+	useEffect(() => {
+		setTitle('Old Minter Marketplace')
+	}, [])
+
 	return <div className='col-12' style={{ position: 'relative' }}>
-		<button onClick={fetchData} disabled={refetchingFlag} style={{ position: 'absolute', right: 0 }} className='btn btn-warning'>
+		<button onClick={fetchData} disabled={refetchingFlag} style={{ position: 'absolute', right: 0, color: 'inherit' }} className='btn btn-warning'>
 			{refetchingFlag ? '...' : <i className='fas fa-redo' />}
 		</button>
 

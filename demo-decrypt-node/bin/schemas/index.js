@@ -4,7 +4,7 @@ const authentication = require('./authentication');
 const createContract = require('./createContract');
 const createUser = require('./createUser');
 const getChallenge = require('./getChallenge');
-const getFiles = require('./getFiles');
+const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
 const singleUser = require('./singleUser');
 const newAdmin = require('./newAdmin');
@@ -17,6 +17,9 @@ const updateContract = require('./updateContract');
 const updateUser = require('./updateUser');
 const singleContract = require('./singleContract');
 const getFilesByNFT = require('./getFilesByNFT');
+const nftContract = require('./nftContract');
+const nftProduct = require('./nftProduct');
+const getTokensByContractProduct = require('./getTokensByContractProduct');
 
 module.exports = {
   admin,
@@ -25,7 +28,7 @@ module.exports = {
   createContract,
   createUser,
   getChallenge,
-  getFiles,
+  filterAndSort,
   getToken,
   singleUser,
   newAdmin,
@@ -37,5 +40,8 @@ module.exports = {
   updateContract,
   updateUser,
   singleContract,
-  getFilesByNFT
+  getFilesByNFT,
+  nftContract,
+  nftProduct,
+  getTokensByContractProduct
 };

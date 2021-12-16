@@ -1,17 +1,40 @@
 import {useState} from 'react'
 
+/***
+	InputSelect
+		Creates a Select input for React Apps
+	Props: 
+		- Required
+			- getter: Put the getter of the useState here
+			- setter: Put the setter function of useState here
+			- options: The select's options, use {value: ?, label: String} format!
+		- Optional Styling
+			- label: The label tag won't be rendered if there isn't a label
+			- customCSS and customClass: Give styling to the input
+			- labelCSS and labelClass: Give styling to the Select's label
+			- optionCSS: Style the options (if needed)
+			- requiredColor: Text color in case the input is required (default null)
+		- Optional Input data
+			- required
+			- disabled
+			- placeholder: The label of the default (disabled) option
+			- placeholderValue: The value of the default (disabled) option
+			!--- By default the placeholderValue is 'null' ---!
+			!--- 'null' as a string, not the actual JS null --!
+**/
+
 const InputSelect = ({
 		getter,
 		setter,
+		options,
 		customCSS = {color: 'black'},
 		customClass,
-		optionCSS = {color: 'black'},
+		optionCSS = {color: 'red'},
 		optionClass,
-		options,
 		placeholder,
 		placeholderValue = 'null',
 		label,
-		labelCSS = {color: 'black'},
+		labelCSS = {color: 'inherit'},
 		labelClass,
 		required,
 		disabled,
@@ -27,10 +50,10 @@ const InputSelect = ({
 		disabled={disabled}
 		id={id}
 		onChange={e => setter(e.target.value)}
-		value={getter}
+    	value={getter}
 		style={{...customCSS, width: '100%', color: (required ? requiredColor : customCSS.color)}}
 		className={customClass}>
-		{placeholder && <option value={placeholderValue} className={optionClass} style={{...optionCSS}} disabled>
+		{placeholder && <option value={placeholderValue} className={optionClass} style={{...optionCSS}} disabled >
 			{placeholder + (required ? '*' : '')}
 		</option>}
 		{options && options.map(({label, value}, index) => {

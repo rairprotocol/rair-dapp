@@ -2,7 +2,7 @@
 
 Find specific contract with all data by contract address
 
-**URL** : `/api/contracts/:contractAddress`
+**URL** : `/api/contracts/network/:networkId/:contractAddress`
 
 **Method** : `GET`
 
@@ -23,6 +23,12 @@ Find specific contract with all data by contract address
 
 ```json
 {
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
   "contractAddress": {
     "required": true,
     "content": {
@@ -49,6 +55,7 @@ Returns found contract
     "_id": "60d0819870a807001c75164d",
     "title": "test contract 1",
     "contractAddress": "contractAddress",
+    "blockchain": "0x61",
     "creationDate": "2021-06-21T12:10:00.623Z"
   }
 }

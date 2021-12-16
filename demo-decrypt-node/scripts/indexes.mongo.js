@@ -12,6 +12,7 @@ const { MongoClient } = require('mongodb');
   const db = client.db(client.s.options.dbName);
 
   await db.collection('Contract').createIndex({ user: 1 }, { background: true });
+  await db.collection('Contract').createIndex({ contractAddress: 1, blockchain: 1 }, { background: true, unique: true });
 
   await db.collection('Product').createIndex({ name: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1 }, { background: true });
@@ -20,7 +21,7 @@ const { MongoClient } = require('mongodb');
     unique: true
   });
 
-  await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true });
+  await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true, unique: true });
   await db.collection('OfferPool').createIndex({ contract: 1, marketplaceCatalogIndex: 1 }, { background: true, unique: true });
 
   await db.collection('Offer').createIndex({ offerPool: 1 }, { background: true });
@@ -29,6 +30,7 @@ const { MongoClient } = require('mongodb');
     background: true,
     unique: true
   });
+  await db.collection('Offer').createIndex({ contract: 1, product: 1 }, { background: true});
 
   await db.collection('LockedTokens').createIndex({ contract: 1, product: 1 }, { background: true });
 
@@ -45,6 +47,12 @@ const { MongoClient } = require('mongodb');
   );
 
   await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1, token: 1 }, { background: true, unique: true, name: 'MintedTokenUniqueIndex' });
+  await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1 }, { background: true });
+
+  await db.collection('LockedTokens').createIndex({ contract: 1, lockIndex: 1 }, { background: true, unique: true });
+
+
+  await db.collection('Versioning').createIndex({ name: 1, network: 1 }, { background: true, unique: true });
 
   console.log('Completed Database Indexes');
 

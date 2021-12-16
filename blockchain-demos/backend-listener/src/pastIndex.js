@@ -6,19 +6,31 @@ const MinterAbi = require('./contracts/Minter_Marketplace.json').abi;
 const main = async () => {
 	let providers = [
 		{
-			provider: new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {chainId: 97, symbol: 'BNB', name: 'Binance Testnet'}),
-			factoryAddress: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
-			minterAddress: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f'
+			provider: new ethers.providers.StaticJsonRpcProvider('https://speedy-nodes-nyc.moralis.io/f68255ae9308a6e85032bd6a/bsc/testnet/archive', {
+				chainId: 97,
+				symbol: 'BNB',
+				name: 'Binance Testnet'
+			}),
+			factoryAddress: '0xb173E2F7eD8Bb697e70b02Ed38faaa2319dB3C23',
+			minterAddress: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD'
 		},
 		{
-			provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {chainId: 5, symbol: 'ETH', name: 'Goerli Testnet'}),
-			factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
-			minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba'
+			provider: new ethers.providers.StaticJsonRpcProvider('https://speedy-nodes-nyc.moralis.io/f68255ae9308a6e85032bd6a/eth/goerli/archive', {
+				chainId: 5,
+				symbol: 'ETH',
+				name: 'Goerli Testnet'
+			}),
+			factoryAddress: '0xF9DC1787179c1404910adE194A5087cEbD5c4717',
+			minterAddress: '0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5'
 		},
 		{
-			provider: new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com", {chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet'}),
-			factoryAddress: '0x1A5bf89208Dddd09614919eE31EA6E40D42493CD',
-			minterAddress: '0x63Dd6821D902012B664dD80140C54A98CeE97068'
+			provider: new ethers.providers.StaticJsonRpcProvider("https://speedy-nodes-nyc.moralis.io/f68255ae9308a6e85032bd6a/polygon/mumbai/archive", {
+				chainId: 80001,
+				symbol: 'tMATIC',
+				name: 'Matic Mumbai Testnet'
+			}),
+			factoryAddress: '0xB8083810Fa33e7Ebd777c8cd6eBB453948aFd354',
+			minterAddress: '0x4594D508cDa05D016571082d467889f4629e1f56'
 		}
 	]
 

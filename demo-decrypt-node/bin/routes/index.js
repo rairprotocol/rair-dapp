@@ -1,5 +1,4 @@
 const express = require('express');
-const { JWTVerification } = require('../middleware');
 
 module.exports = context => {
   const router = express.Router();
@@ -7,7 +6,13 @@ module.exports = context => {
   router.use('/docs', require('./swagger'));
   router.use('/media', require('./media')(context));
   router.use('/users', require('./users')(context));
-  router.use('/contracts', JWTVerification(context), require('./contracts')(context));
+  router.use('/contracts', require('./contracts')(context));
   router.use('/nft', require('./nft')(context));
+  router.use('/blockchains', require('./blockchains')(context));
+  router.use('/categories', require('./categories')(context));
+
+  // Custom temporary endpoint for the monaco2021
+  router.use('/', require('./monaco2021')(context));
+
   return router;
 };

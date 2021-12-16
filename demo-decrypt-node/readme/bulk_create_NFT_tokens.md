@@ -1,10 +1,12 @@
 # Creat Bunch of tokens
 
-Adding new lazy minted tokens from csv file
+Adding new or updating existed lazy minted tokens from csv file
 
 **URL** : `/api/nft`
 
 **Method** : `POST`
+
+**Content-Type** : `multipart/form-data`
 
 **Headers:**
 
@@ -33,12 +35,25 @@ Adding new lazy minted tokens from csv file
     "required": true,
     "content": {
       "type": "string"
-    }
+    },
+    "description": "contract ID"
   },
   "product": {
     "required": true,
     "content": {
       "type": "number"
+    }
+  },
+  "updateMeta": {
+    "required": false,
+    "content": {
+      "type": "boolean"
+    }
+  },
+  "blockchain": {
+    "required": true,
+    "content": {
+      "type": "string"
     }
   }
 }
@@ -67,8 +82,8 @@ Returns if added successfully
       "offer": 0,
       "contract": "contract_address",
       "metadata": {
-        "artist": "none",
-        "external_url": "none",
+        "artist": "artist",
+        "external_url": "external_url",
         "name": "CoinAgenda Monaco 2021 #0",
         "description": "unique1",
         "image": "speaker.png",

@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import CustomPayRate from '../whitelabel/customizePayRate.jsx';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
@@ -113,7 +115,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 			<button
 				disabled={locked <= 0}
 				onClick={e => locker(productIndex, rangeInit, endingRange, locked)}
-				className='btn btn-success h-50'>
+				className='btn btn-royal-ice h-50'>
 				<i className='fas fa-lock' />
 			</button>
 		</th>
@@ -127,6 +129,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 	const [ranges, setRanges] = useState([]);
 	const [/*locks*/, setLocks] = useState([]);
 	const [forceSync, setForceSync] = useState(false);
+	const [offerIndex, setOfferIndex] = useState();
 
 	const deleter = index => {
 		let aux = [...ranges];
@@ -152,6 +155,9 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		try {
 			// Marketplace Ranges
 			let offerIndex = (await minterInstance.contractToOfferRange(tokenInstance.address, productIndex)).toString();
+			if (offerIndex) {
+				setOfferIndex(offerIndex);
+			}
 			let offerData = await minterInstance.getOfferInfo(offerIndex);
 			let existingRanges = [];
 			for await (let rangeIndex of [...Array.apply(null, { length: offerData.availableRanges.toString() }).keys()]) {
@@ -207,11 +213,23 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			refresher()
 		}
 	}, [productInfo, tokenInstance, minterInstance, refresher])
-
-	return <details className='w-100 border border-secondary rounded'>
+	return <details style={{position: 'relative'}} className='w-100 border border-secondary rounded'>
+		<Link
+			className='btn btn-warning'
+			id={`metadata_${productIndex + 1}`}
+			style={{position: 'absolute', top: 0, right: 0}}
+			to={`/metadata/${tokenInstance.address}/${productIndex}`}>
+			Edit Metadata!
+		</Link>
 		<summary>
 			Product #{productIndex + 1}: {productInfo.name}
 		</summary>
+		{offerIndex && <CustomPayRate
+			address={tokenInstance.address}
+			blockchain={window.ethereum.chainId}
+			catalogIndex={offerIndex}
+			customStyle={{position: 'absolute', top: 0, left: 0}}
+		/>}
 		<div className='row mx-0 px-0'>
 			<div className='col-12'>
 				<h5> Product Info </h5>
@@ -232,7 +250,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 						});
 						setRanges(aux);
 					}}
-					className='btn btn-success'>
+					className='btn btn-royal-ice'>
 					<i className='fas fa-plus' />
 				</button>
 				<h5> On the Minter Marketplace </h5>
@@ -302,10 +320,10 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								ranges.map((item) => item.endingToken),
 								ranges.map((item) => item.price),
 								ranges.map((item) => item.name),
-								'0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
+								'0x3fD4268B03cce553f180E77dfC14fde00271F9B7');
 						}
 					} catch (err) {
-						console.log(err);
+						console.error(err);
 						Swal.fire('Error', err?.data?.message, 'error');
 					}
 				}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>

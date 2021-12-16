@@ -70,7 +70,7 @@ const ERC721Manager = ({ tokenAddress }) => {
 		</summary>
 		Contract Address: <b>{tokenAddress}</b>
 		<button
-			style={{position: 'absolute', left: 0, top: 0}}
+			style={{position: 'absolute', left: 0, top: 0, color: 'inherit'}}
 			onClick={refreshData}
 			disabled={refetchingFlag}
 			className='btn'>
@@ -95,7 +95,7 @@ const ERC721Manager = ({ tokenAddress }) => {
 				<br />
 				<button disabled={productName === '' || productLength === 0} onClick={() => {
 					erc721Instance.createProduct(productName, productLength);
-				}} className='btn btn-success'>
+				}} className='btn btn-royal-ice'>
 					Create {productLength} tokens under product {productName}
 				</button>
 			</div>

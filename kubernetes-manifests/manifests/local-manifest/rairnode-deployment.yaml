@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode
+  name: rairnode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rairnode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: rairnode
+    spec:
+      containers:
+        - image: rairtechinc/rairservernode
+          name: rairservernode
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+            - containerPort: 5000
+          env:
+            - name: PRODUCTION
+              value: "false"
+            - name: MONGO_URI
+              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/RairDev1?retryWrites=true&w=majority"
+            - name: MONGO_URI_LOCAL
+              value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
+            - name: INFURA_PROJECT_ID
+              value: "5c77a63a0aa74452a7c77a64fe9a90d5"
+            - name: ADMIN_NETWORK
+              value: mumbai
+            - name: ADMIN_CONTRACT
+              value: "0x0758C7d8B14cc586d115e7Bc187AbD31bE2d35FD:0"
+            - name: SERVICE_HOST
+              value: "dev.rair.tech"
+            - name: PINATA_SECRET
+              value: "92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1"
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/src/db
+              name: rairnode-claim0
+            - mountPath: /usr/local/src/bin/Videos
+              name: rairnode-claim1
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+      volumes:
+        - name: rairnode-claim0
+          persistentVolumeClaim:
+            claimName: rairnode-claim0
+        - name: rairnode-claim1
+          persistentVolumeClaim:
+            claimName: rairnode-claim1
+status: {}

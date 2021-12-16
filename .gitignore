@@ -54,3 +54,11 @@ Thumbs.db
 
 # Local video thumbnails
 !/demo-decrypt-node/bin/Videos/
+
+# configuration files
+.env
+
+#nginx configuration files
+nginx/*
+nginx-auth/*
+rair.code-workspace

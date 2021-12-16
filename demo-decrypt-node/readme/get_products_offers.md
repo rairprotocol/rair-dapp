@@ -2,7 +2,7 @@
 
 Find all products with all offers for each of them for particular user
 
-**URL** : `/api/contracts/:contractAddress/products/offers`
+**URL** : `/api/contracts/network/:networkId/:contractAddress/products/offers`
 
 **Method** : `GET`
 
@@ -11,6 +11,25 @@ Find all products with all offers for each of them for particular user
 ```json
 {
   "x-rair-token": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
+**Parameters:**
+
+```json
+{
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contractAddress": {
     "required": true,
     "content": {
       "type": "string"
@@ -40,9 +59,18 @@ Returns found products
       "royalty": 0,
       "name": "The Dark Knight",
       "collectionIndexInContract": 1,
-      "contract": "contractAddress",
+      "contract": "contractId",
       "copies": 4,
       "creationDate": "2021-08-06T10:53:52.441Z",
+      "offerPool": {
+        "_id": "6196842fbf7dc9001c9cea59",
+        "marketplaceCatalogIndex": 5,
+        "contract": "contractId",
+        "product": 0,
+        "rangeNumber": 2,
+        "minterAddress": "minterAddress",
+        "creationDate": "2021-08-06T10:55:00.621Z"
+      },
       "offers": [
         {
           "_id": "610d15043de2f5001dafc42e",
@@ -53,7 +81,7 @@ Returns found products
             1
           ],
           "offerIndex": 0,
-          "contract": "contractAddress",
+          "contract": "contractId",
           "product": 1,
           "offerPool": 21,
           "price": 111,
@@ -70,7 +98,7 @@ Returns found products
             3
           ],
           "offerIndex": 1,
-          "contract": "contractAddress",
+          "contract": "contractId",
           "product": 1,
           "offerPool": 21,
           "price": 55,

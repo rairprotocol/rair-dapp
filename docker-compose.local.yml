@@ -13,19 +13,44 @@ services:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
-      PINATA_SECRET: ${pinata_secret}  
+      PINATA_KEY: ${pinata_key}
+      PINATA_SECRET: ${pinata_secret}
+      ADMIN_NETWORK: ${admin_nft_chain}
+      ADMIN_CONTRACT: ${admin_contract}
+      INFURA_PROJECT_ID: ${infura_project_id}
+      SERVICE_HOST: ${hostname}
+      DEFAULT_PRODUCT_COVER: ${default_product_cover}
     ports:
       - 3000:3000
       - 5000:5000
     networks:
       - rair-local
-  rairfront:
-    container_name: 'rairfront'
+  blockchain-networks:
+    container_name: 'blockchain-networks'
     build:
-      context: rair-front-master/
+      context: blockchain-networks-service/
       dockerfile: Dockerfile
+    environment:
+      PRODUCTION: "false"
+      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      PINATA_KEY: ${pinata_key}
+      PINATA_SECRET: ${pinata_secret}
+      PINATA_GATEWAY: ${pinata_gateway}
+      INFURA_PROJECT_ID: ${infura_project_id}
+      DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      BINANCE_FACTORY_ADDRESS: ${binance_factory_addres}
+      BINANCE_MINTER_ADDRESS: ${binance_minter_address}
+      GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
+      GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
+      MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
+      MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
+      MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
+      MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
+      SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
+      SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
     ports:
-      - 80:80
+      - 5001:5001
     networks:
       - rair-local
   mongo:
@@ -48,8 +73,13 @@ services:
     build:
       context: blockchain-demos/frontend-minting-marketplace
       dockerfile: Dockerfile
+    environment:
+      REACT_APP_SENTRY_ENABLED: ${sentry_enabled}
+      REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
+      REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
+      REACT_APP_SENTRY_RELEASE: ${sentry_release}
     ports:
-      - 3001:3001
+      - 80:3001
     networks:
       - rair-local
 networks:

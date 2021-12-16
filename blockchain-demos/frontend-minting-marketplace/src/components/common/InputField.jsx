@@ -1,11 +1,38 @@
 import React, {useState} from 'react'
 
+/***
+	InputField
+		Creates an input field for React Apps
+	Props: 
+		- Required
+			- getter: Put the getter of the useState here
+			- setter: Put the setter function of useState here
+		- Optional Styling
+			- label: The label tag won't be rendered if there isn't a label
+			- customCSS and customClass: Give styling to the input
+			- labelCSS and labelClass: Give styling to the Select's label
+			- requiredColor: Text color in case the input is required (default null)
+		- Optional Input data
+			- type: By default it's text
+			- required: Required inputs will have an * next to their label!
+			- disabled
+			- placeholder: The label of the default (disabled) option
+			- min: For number inputs
+			- max: For number inputs
+		- Special:
+			- setterField: An array of object labels where the value is (relative to the event.target)
+				For example: An input field will be 'value' , as in, the data is in event.target.value
+			!---	In the case of a File input, the route is event.target.files[0], ---!
+			!---		so pass ['files',0] to that prop!							 ---!
+**/
+
 const InputField = ({
 	getter,
 	setter,
+	setterField = ['value'],
 	customCSS = {color: 'black'},
 	customClass,
-	labelCSS = {color: 'black'},
+	labelCSS = {color: 'inherit'},
 	labelClass,
 	placeholder = '',
 	type,
@@ -13,6 +40,8 @@ const InputField = ({
 	required,
 	disabled,
 	requiredColor,
+	min,
+	max
 }) => {
 	const [id,] = useState(Number(new Date()) + '-' + Math.round(Math.random() * 1000000))
 	
@@ -30,12 +59,14 @@ const InputField = ({
 		<input
 			type={type} 
 			id={id}
-			onChange={e => setter(e.target.value)}
+			onChange={e => setter(setterField.reduce((start, piece) => {return start[piece]}, e.target))}
 			value={getter}
 			disabled={disabled}
 			style={{...customCSS, ':required': {color: requiredColor}}}
 			className={customClass}
 			required={required ? required : false}
+			min={min}
+			max={max}
 			placeholder={placeholder + (required ? '*' : '')} />
 	</>
 }

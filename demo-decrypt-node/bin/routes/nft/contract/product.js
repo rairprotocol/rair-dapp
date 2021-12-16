@@ -1,55 +1,33 @@
 const express = require('express');
-const { validation, JWTVerification } = require('../../../middleware');
 const _ = require('lodash');
+const { validation } = require('../../../middleware');
 
 module.exports = context => {
   const router = express.Router();
 
-  // Get minted tokens fro a product
-  router.get('/', async (req, res, next) => {
+  // Get minted tokens from a product
+  router.get('/', validation('getTokensByContractProduct', 'query'), async (req, res, next) => {
     try {
       const { contract, product } = req;
-      const prod = parseInt(product);
+      const { fromToken = 0, limit = 0 } = req.query;
 
-      const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
-        {
-          $lookup: {
-            from: "MintedToken",
-            let: {
-              contractOP: '$contract',
-              offerPoolIndex: '$marketplaceCatalogIndex'
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          "$contract",
-                          "$$contractOP"
-                        ]
-                      },
-                      {
-                        $eq: [
-                          "$offerPool",
-                          "$$offerPoolIndex"
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            as: "mintedTokens"
-          }
-        },
-        { $unwind: '$mintedTokens' },
-        { $replaceRoot: { newRoot: '$mintedTokens' } },
-      ]);
+      const firstToken = Number(fromToken);
+      const numberOfTokens = Number(limit);
 
-      res.json({ success: true, result });
+      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+      const totalCount = await context.db.MintedToken.countDocuments({
+        contract: contract._id,
+        offerPool: offerPool.marketplaceCatalogIndex
+      });
+      const tokens = await context.db.MintedToken.find({
+        contract: contract._id,
+        offerPool: offerPool.marketplaceCatalogIndex,
+        token: { $gt: (firstToken - 1) }
+      })
+        .sort([['token', 1]])
+        .limit(numberOfTokens);
+
+      res.json({ success: true, result: { totalCount, tokens } });
     } catch (err) {
       next(err);
     }
@@ -60,17 +38,16 @@ module.exports = context => {
     try {
       const { contract, product } = req;
       const { token } = req.params;
-      const prod = parseInt(product);
-
+      const sanitizedToken = Number(token);
       const result = await context.db.OfferPool.aggregate([
-        { $match: { contract, product: prod } },
+        { $match: { contract: contract._id, product } },
         {
           $lookup: {
             from: "MintedToken",
             let: {
               contractOP: '$contract',
               offerPoolIndex: '$marketplaceCatalogIndex',
-              tokenRequested: token
+              tokenRequested: sanitizedToken
             },
             pipeline: [
               {
@@ -120,10 +97,8 @@ module.exports = context => {
     try {
       const { token } = req.params;
       const { contract, product } = req;
-
-      const prod = parseInt(product);
-
-      const offerPoolRaw = await context.db.OfferPool.findOne({ contract, product: prod });
+      const sanitizedToken = Number(token);
+      const offerPoolRaw = await context.db.OfferPool.findOne({ contract: contract._id, product });
 
       if (_.isEmpty(offerPoolRaw)) {
         res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
@@ -133,14 +108,14 @@ module.exports = context => {
       const offerPool = offerPoolRaw.toObject();
 
       const files = await context.db.MintedToken.aggregate([
-        { $match: { contract, offerPool: offerPool.marketplaceCatalogIndex, token } },
+        { $match: { contract: contract._id, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
         {
           $lookup: {
             from: 'File',
             let: {
               contractT: '$contract',
               offerIndex: '$offer',
-              productT: prod
+              productT: product
             },
             pipeline: [
               {
@@ -178,6 +153,71 @@ module.exports = context => {
       ]);
 
       res.json({ success: true, files });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // get single product with all related offers
+  router.get('/offers', async (req, res, next) => {
+    try {
+      const { contract, product: collectionIndexInContract } = req;
+
+      const [product] = await context.db.Product.aggregate([
+        { $match: { contract: contract._id, collectionIndexInContract } },
+        {
+          $lookup: {
+            from: 'Offer',
+            let: {
+              contr: '$contract',
+              prod: '$collectionIndexInContract'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: [
+                          '$contract',
+                          '$$contr'
+                        ]
+                      },
+                      {
+                        $eq: [
+                          '$product',
+                          '$$prod'
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'offers'
+          }
+        }
+      ]);
+
+      if (!product) {
+        res.json({ success: false, message: 'Product not found.' });
+        return;
+      }
+
+      res.json({ success: true, product });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // get locks for specific product
+  router.get('/locks', async (req, res, next) => {
+    try {
+      const { contract, product } = req;
+
+      const locks = await context.db.LockedTokens.find({ contract: contract._id, product });
+
+      res.json({ success: true, locks });
     } catch (err) {
       next(err);
     }
