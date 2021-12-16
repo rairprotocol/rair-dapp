@@ -121,7 +121,7 @@ const teamArray = [
         ]
     },
     {
-        nameTeammate: "Robert Guillerman",
+        nameTeammate: "RAIR Technologies",
         imageUrl: Teammate_4,
         aboutTeammate: [
             ` RAIR is a blockchain-based digital rights management platform that
