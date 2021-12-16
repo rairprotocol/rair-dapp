@@ -1,6 +1,7 @@
 const Agenda = require('agenda');
 const moment = require('moment-timezone');
 const log = require('../utils/logger')(module);
+const { AgendaTaskEnum } = require('../enums/agenda-task');
 
 module.exports = async (context) => {
   const db = context.mongo;
@@ -53,36 +54,36 @@ module.exports = async (context) => {
     let additionalInfo = '';
 
     switch (task.attrs.name) {
-      case 'sync contracts':
-        await agenda.create('sync products', data)
+      case AgendaTaskEnum.SyncContracts:
+        await agenda.create(AgendaTaskEnum.SyncProducts, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case 'sync products':
-        await agenda.create('sync offerPools', data)
+      case AgendaTaskEnum.SyncProducts:
+        await agenda.create(AgendaTaskEnum.SyncOfferPools, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case 'sync offerPools':
-        await agenda.create('sync offers', data)
+      case AgendaTaskEnum.SyncOfferPools:
+        await agenda.create(AgendaTaskEnum.SyncOffers, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case 'sync offers':
-        await agenda.create('sync tokens', data)
+      case AgendaTaskEnum.SyncOffers:
+        await agenda.create(AgendaTaskEnum.SyncTokens, data)
           .schedule(moment()
             .utc()
             .toDate())
           .save();
         break;
-      case 'sync tokens':
-        await agenda.create('sync locks', data)
+      case AgendaTaskEnum.SyncTokens:
+        await agenda.create(AgendaTaskEnum.SyncLocks, data)
           .schedule(moment()
             .utc()
             .toDate())
