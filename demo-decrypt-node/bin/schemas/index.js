@@ -4,7 +4,7 @@ const authentication = require('./authentication');
 const createContract = require('./createContract');
 const createUser = require('./createUser');
 const getChallenge = require('./getChallenge');
-const getFiles = require('./getFiles');
+const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
 const singleUser = require('./singleUser');
 const newAdmin = require('./newAdmin');
@@ -28,7 +28,7 @@ module.exports = {
   createContract,
   createUser,
   getChallenge,
-  getFiles,
+  filterAndSort,
   getToken,
   singleUser,
   newAdmin,

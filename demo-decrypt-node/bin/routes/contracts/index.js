@@ -17,11 +17,59 @@ module.exports = context => {
     }
   });
 
-  // Get list of contracts with all products and offers
-  router.get('/full', async (req, res, next) => {
+  // Get specific contract by ID
+  router.get('/singleContract/:contractId', async (req, res, next) => {
     try {
-      const contracts = await context.db.Contract.aggregate([
-        { $lookup: { from: 'Product', localField: '_id', foreignField: 'contract', as: 'products' } },
+      const contract = await context.db.Contract.findById(req.params.contractId, { _id: 1, contractAddress: 1, title: 1, blockchain: 1 });
+
+      res.json({ success: true, contract });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  // Get list of contracts with all products and offers
+  router.get('/full', validation('filterAndSort', 'query'), async (req, res, next) => {
+    try {
+      const { pageNum = '1', itemsPerPage = '20', blockchain = '', category = '' } = req.query;
+      const pageSize = parseInt(itemsPerPage, 10);
+      const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+
+      const lookupProduct = {
+        $lookup: {
+          from: 'Product',
+          let: {
+            contr: '$_id'
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: [
+                        '$contract',
+                        '$$contr'
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'products'
+        }
+      };
+
+      const foundCategory = await context.db.Category.findOne({ name: category });
+
+      if (foundCategory) {
+        _.set(lookupProduct, '$lookup.let.categoryF', foundCategory._id);
+        _.set(lookupProduct, '$lookup.pipeline[0].$match.$expr.$and[1]', { $eq: ['$category', '$$categoryF'] });
+      }
+
+      const options = [
+        lookupProduct,
         { $unwind: '$products' },
         {
           $lookup: {
@@ -88,7 +136,18 @@ module.exports = context => {
             as: 'products.offers'
           }
         }
-      ]);
+      ];
+
+      const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
+
+      if (foundBlockchain) {
+        options.unshift({ $match: { blockchain } });
+      }
+
+      const contracts = await context.db.Contract.aggregate(options)
+        .sort({ ['products.name']: 1 })
+        .skip(skip)
+        .limit(pageSize);
 
       res.json({ success: true, contracts });
     } catch (e) {

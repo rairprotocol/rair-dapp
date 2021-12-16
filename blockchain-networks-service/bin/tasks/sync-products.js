@@ -4,13 +4,14 @@ const log = require('../utils/logger')(module);
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { getABIData } = require('../utils/helpers');
 const { erc721Abi } = require('../integrations/ethers/contracts');
+const { AgendaTaskEnum } = require('../enums/agenda-task');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define('sync products', { lockLifetime }, async (task, done) => {
+  context.agenda.define(AgendaTaskEnum.SyncProducts, { lockLifetime }, async (task, done) => {
     try {
-      logAgendaActionStart({agendaDefinition: 'sync products'});
+      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncProducts});
       const { network, name } = task.attrs.data;
       const productsForSave = [];
       let block_number = [];

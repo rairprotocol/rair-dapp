@@ -42,11 +42,11 @@ module.exports = context => {
       const { user } = req;
 
       if (!foundUser) {
-        res.status(404).send({ success: false, message: 'User not found.' });
+        return res.status(404).send({ success: false, message: 'User not found.' });
       }
 
       if (publicAddress !== user.publicAddress) {
-        res.status(403).send({
+        return res.status(403).send({
           success: false,
           message: `You have no permissions for updating user ${ publicAddress }.`
         });
@@ -59,7 +59,7 @@ module.exports = context => {
 
       const updatedUser = await context.db.User.findOneAndUpdate({ publicAddress }, fieldsForUpdate, { new: true });
 
-      res.json({ success: true, user: updatedUser });
+      return res.json({ success: true, user: updatedUser });
     } catch (e) {
       next(e);
     }

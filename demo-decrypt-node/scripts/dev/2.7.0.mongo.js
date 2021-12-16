@@ -50,3 +50,9 @@ db.OfferPool.deleteMany({ contract: { $regex: /^0x\w{40}$/ } });
 db.Offer.deleteMany({ contract: { $regex: /^0x\w{40}$/ } });
 db.MintedToken.deleteMany({ contract: { $regex: /^0x\w{40}$/ } });
 db.LockedTokens.deleteMany({ contract: { $regex: /^0x\w{40}$/ } });
+
+// add new field to the Products
+db.Product.updateMany({}, { $set: { category: null } });
+
+// add new field to the Files
+db.File.updateMany({}, { $set: { category: null } });
