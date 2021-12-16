@@ -15,3 +15,8 @@ terraform {
 provider "google" {
   project     = "rair-market"
 }
+
+module "hello_world" {
+  source = "./hello_world"
+  name = "rair-market-hello-world"
+}
