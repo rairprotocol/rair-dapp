@@ -5,13 +5,14 @@ const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
 const { addMetadata, addPin } = require('../integrations/ipfsService')();
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
+const { AgendaTaskEnum } = require('../enums/agenda-task');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define('sync tokens', { lockLifetime }, async (task, done) => {
+  context.agenda.define(AgendaTaskEnum.SyncTokens, { lockLifetime }, async (task, done) => {
     try {
-      logAgendaActionStart({agendaDefinition: 'sync tokens'});
+      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncTokens});
       const { network, name } = task.attrs.data;
       const tokensForSave = [];
       const offersForUpdate = [];
