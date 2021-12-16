@@ -66,7 +66,7 @@ const MyNFTs = () => {
 						<b> No metadata available </b>
 					}
 					<br />
-					<Link to={`/token/${item.contract}/${item.uniqueIndexInContract}`} className='btn btn-stimorol'>
+					<Link to={`/token/${item.contractAddress}/${item.uniqueIndexInContract}`} className='btn btn-stimorol'>
 						View Token
 					</Link>
 				</div>
