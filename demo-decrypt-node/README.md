@@ -35,6 +35,8 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
 # API
 
 * [x] /api
+    * [x] /blockchains - GET - get blockchains list, [see details here](readme/get_blockchains.md)
+    * [x] /categories - GET - get categories list, [see details here](readme/get_categories.md)
     * [x] /auth
         * [x] /get_challenge/:MetaAddress - GET - request an auth challenge for the given ethereum address, [see details here](readme/get_challenge.md)
         * [x] /get_token/:MetaMessage/:MetaSignature/:mediaId - GET - respond to a challenge to receive a JWT, [see details here](readme/get_token.md)
@@ -50,16 +52,16 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
     * [x] /users - POST - create new user, [see details here](readme/create_user.md)
         * [x] /:publicAddress - GET - get single user, [see details here](readme/get_user.md)
         * [x] /:publicAddress - PUT - update specific user, [see details here](readme/update_user.md)
-    * [x] /contracts - POST - create new contract, [see details here](readme/create_Contract.md)
-        * [x] / - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
+    * [x] /contracts - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
+        * [x] /network/:networkId
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
-            * [x] /:contractAddress - DELETE - remove specific contract, [see details here](readme/delete_contract.md)
                 * [x] /products - GET - get all products for specific contract, [see details here](readme/get_products_for_contract.md)
                     * [x] /offers - GET - get all products with all offers for each of them for particular user, [see details here](readme/get_products_offers.md)
         * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts.md)
+        * [x] /singleContract/:contractId - GET- get single contract by ID, [see details here](readme/get_single_contract_by_id.md)
     * [x] /nft - POST - create new or update existed nft tokens, [see details here](readme/bulk_create_NFT_tokens.md)
         * [x] / - GET - get all tokens which belongs to current user, [see details here](readme/get_all_tokens_for_current_user.md)
-        * [x] /:contract
+        * [x] /network/:networkId/:contract
             * [x] /:product - GET - get minted tokens for the product, [see details here](readme/get_all_minted_tokens_from_product.md)
                 * [x] /token/:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index.md)
                 * [x] /files/:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft.md)

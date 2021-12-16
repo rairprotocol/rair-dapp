@@ -8,9 +8,10 @@ const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require('socket.io');
-const log = require('./utils/logger')(module);
 const morgan = require('morgan');
 const _ = require('lodash');
+const log = require('./utils/logger')(module);
+const seedDB = require('./seeds');
 require('dotenv').config();
 
 const config = require('./config');
@@ -62,10 +63,14 @@ async function main() {
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
-      Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning')
+      Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning'),
+      Blockchain: _mongoose.model('Blockchain', require('./models/blockchain'), 'Blockchain'),
+      Category: _mongoose.model('Category', require('./models/category'), 'Category')
     },
     config
   };
+
+  await seedDB(context);
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());

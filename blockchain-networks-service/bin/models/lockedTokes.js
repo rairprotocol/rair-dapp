@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const LockedTokens = new Schema({
   lockIndex: { type: Number, required: true },
-  contract: { type: String, lowercase: true, required: true },
+  contract: { type: Schema.ObjectId, required: true },
   product: { type: Number, required: true },
   range: { type: [Number], required: true },
   lockedTokens: { type: Number, required: true },

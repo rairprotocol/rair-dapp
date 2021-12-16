@@ -166,10 +166,14 @@
 }
 
 .custom-desc-item {
+  cursor: default;
   /* padding: 0.1rem 1rem;
   text-align: center; */
 }
+.custom-offer-percents{
+  cursor: default;
 
+}
 .custom-desc-item span {
   font-size: 14px;
 }

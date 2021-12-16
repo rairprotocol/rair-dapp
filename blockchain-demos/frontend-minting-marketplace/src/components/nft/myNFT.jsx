@@ -12,7 +12,7 @@ const MyNFTs = () => {
 	const dispatch = useDispatch();
 	// const { token } = useSelector(store => store.accessStore)
 
-	const [tokens, setTokens] = useState([])
+	const [tokens, setTokens] = useState()
 
 	const fetchData = useCallback(async () => {
 		let response = await rFetch('/api/nft');
@@ -42,7 +42,7 @@ const MyNFTs = () => {
 	}, [fetchData]);
 
 	return <div className='row px-0 mx-0'>
-		{tokens.length > 0 ? tokens.map((item, index) => {
+		{tokens ? tokens.length > 0 && tokens.map((item, index) => {
 			return <div
 				key={index}
 				className='p-2 my-2 col-4'>
