@@ -20,6 +20,7 @@ const { MongoClient } = require('mongodb');
   );
 
   await db.collection('Contract').createIndex({ user: 1 }, { background: true });
+  await db.collection('Contract').createIndex({ contractAddress: 1, blockchain: 1 }, { background: true, unique: true });
 
   await db.collection('Product').createIndex({ name: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1 }, { background: true });

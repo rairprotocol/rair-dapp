@@ -2,7 +2,7 @@
 
 Get all files which belong particular NFT token
 
-**URL** : `/api/nft/:contract/:product/files/:token`
+**URL** : `/api/nft/network/:networkId/:contract/:product/files/:token`
 
 **Method** : `GET`
 
@@ -10,19 +10,25 @@ Get all files which belong particular NFT token
 
 ```json
 {
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
   "contract": {
     "required": true,
     "content": {
       "type": "string"
     }
   },
-  "token": {
+  "product": {
     "required": true,
     "content": {
-      "type": "string"
+      "type": "number"
     }
   },
-  "product": {
+  "token": {
     "required": true,
     "content": {
       "type": "number"

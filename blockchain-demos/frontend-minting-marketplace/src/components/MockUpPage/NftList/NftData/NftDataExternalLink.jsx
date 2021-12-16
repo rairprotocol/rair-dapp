@@ -17,7 +17,7 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
-  const {/*blabla*/ adminToken, contract, product, token, offer } = params;
+  const { blockchain, adminToken, contract, product, token, offer } = params;
 
   const getData = useCallback(async () => {
     if (adminToken && contract && product) {
@@ -46,12 +46,12 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await (
-      await fetch(`/api/nft/${selectedContract}/${selectedIndexInContract}/files/${token}`, {
+      await fetch(`/api/nft/network/${blockchain}/${selectedContract}/${selectedIndexInContract}/files/${token}`, {
         method: "GET",
       })
     ).json();
     setProductsFromOffer(response.files);
-  }, [selectedContract, selectedIndexInContract, token]);
+  }, [selectedContract, selectedIndexInContract, token, blockchain]);
 
   function onSelect(id) {
     tokenData.forEach((p) => {
@@ -61,7 +61,7 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
     });
   }
   const handleClickToken = async (token) => {
-    history.push(`/${adminToken}/${contract}/${product}/${offer}/${token}`);
+    history.push(`/${adminToken}/${blockchain}/${contract}/${product}/${offer}/${token}`);
     setSelectedData(tokenData[token].metadata);
     setSelectedToken(token);
   };

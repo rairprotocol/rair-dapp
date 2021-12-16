@@ -152,7 +152,7 @@ const BlockChainSwitcher = () => {
 		{window.ethereum && blockchains.map((item, index) => {
 			return <button
 				key={index}
-				className={`btn btn-${item.bootstrapColor}`}
+				className={`btn btn-${item.bootstrapColor} mt-5`}
 				disabled={currentChain === item.chainData.chainId?.toLowerCase()}
 				onClick={async e => {
 					await switchEthereumChain(item.chainData);
