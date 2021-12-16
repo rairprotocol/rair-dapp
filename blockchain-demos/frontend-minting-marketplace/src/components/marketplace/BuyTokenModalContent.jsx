@@ -6,6 +6,7 @@ import BatchRow from './BatchRow.jsx';
 import {minterAbi} from '../../contracts/';
 // import { CSVReader } from 'react-papaparse'
 import csvParser from '../../utils/csvParser.js';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 
 
 const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName, minterAddress}) => {
@@ -26,12 +27,17 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 	const batchMint = async (data) => {
 		let addresses = data.map(i => i['Public Address']);
 		let tokens = data.map(i => i['NFTID']);
-		try {
-			await minterInstance.buyTokenBatch(offerIndex, rangeIndex, tokens, addresses, {value: price * tokens.length});
+		if (
+			await metamaskCall(
+				minterInstance.buyTokenBatch(
+					offerIndex,
+					rangeIndex,
+					tokens,
+					addresses,
+					{value: price * tokens.length})
+			)
+		) {
 			Swal.close();
-		} catch (err) {
-			console.error(err);
-			Swal.fire('Error', err?.data?.message, 'error');
 		}
 	}
 
@@ -49,8 +55,8 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		}
 		let aux = [...rows];
 		aux.push({
-			address: '',
-			token: aux.length ? Number(aux[aux.length - 1].token) + 1 : Number(start)
+			'Public Address': '',
+			'NFTID': aux.length ? Number(aux[aux.length - 1].token) + 1 : Number(start)
 		})
 		setRows(aux);
 	}
@@ -98,12 +104,14 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 					/>
 					<div className='col-2' />
 					<button disabled={!minterInstance} onClick={async e => {
-						try {
-							await minterInstance.buyToken(offerIndex, rangeIndex, tokenIndex, {value: price})
+						if (await metamaskCall(
+							minterInstance.buyToken(
+								offerIndex,
+								rangeIndex,
+								tokenIndex,
+								{value: price}
+							))) {
 							Swal.close();
-						} catch (err) {
-							console.error(err);
-							Swal.fire('Error', err?.data?.message, 'error');
 						}
 					}} className='btn btn-stimorol col-8'>
 						Buy token #{tokenIndex} for {price}
