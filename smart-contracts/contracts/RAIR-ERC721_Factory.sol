@@ -30,7 +30,7 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControlEnumerable {
 
 	event NewTokensAccepted(address erc777, uint priceForNFT);
 	event TokenNoLongerAccepted(address erc777);
-	event NewContractDeployed(address owner, uint id, address token);
+	event NewContractDeployed(address owner, uint id, address token, string contractName);
 	event TokensWithdrawn(address recipient, address erc777, uint amount);
 
 	/// @notice Factory Constructor
@@ -109,6 +109,6 @@ contract RAIR_Token_Factory is IERC777Recipient, AccessControlEnumerable {
 		RAIR_ERC721 newToken = new RAIR_ERC721(string(userData), from, 30000);
 		tokensFromOwner.push(address(newToken));
 		contractToOwner[address(newToken)] = from;
-		emit NewContractDeployed(from, tokensFromOwner.length, address(newToken));
+		emit NewContractDeployed(from, tokensFromOwner.length, address(newToken), string(userData));
 	}
 }

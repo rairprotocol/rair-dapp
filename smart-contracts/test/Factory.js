@@ -18,6 +18,13 @@ describe("Token Factory", function () {
 	const rairFeePercentage = 9000; // 9.000%
 	const nodeFeePercentage = 1000; // 1.000%
 
+	const firstDeploymentAddress = '0xfa7a32340ea54A3FF70942B33090a8a9A1B50214';
+	const secondDeploymentAddress = '0xED2AB923364a57cDB6d8f23A3180DfD2CF7E209B';
+	// Contract addresses are derived from the user's address and the nonce of the transaction,
+	//		the generated address will always be the same (on this test file)
+	hre.tracer.nameTags[firstDeploymentAddress] = "First Deployment Address";
+	hre.tracer.nameTags[secondDeploymentAddress] = "Second Deployment Address";
+
 	before(async function() {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
 		ERC777Factory = await ethers.getContractFactory("RAIR777");
@@ -36,6 +43,8 @@ describe("Token Factory", function () {
 			expect(await erc777instance.decimals()).to.equal(18);
 			expect(await erc777instance.granularity()).to.equal(1);
 			expect(await erc777instance.totalSupply()).to.equal(initialSupply);
+			hre.tracer.nameTags[erc777instance.address] = "First 777 Address";
+			hre.tracer.nameTags[erc777ExtraInstance.address] = "Second 777 Address";
 
 			/*
 			*	Events:
@@ -45,12 +54,14 @@ describe("Token Factory", function () {
 			*/
 		});
 
-		it ("RAIR Factory", async function() {
+		it ("Should deploy the Factory", async function() {
 			factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
+			hre.tracer.nameTags[factoryInstance.address] = "Factory";
 		});
 
-		it ("Minter Marketplace", async function() {
+		it ("Should deploy the Minter Marketplace", async function() {
 			minterInstance = await MinterFactory.deploy(erc777instance.address, rairFeePercentage, nodeFeePercentage);
+			hre.tracer.nameTags[minterInstance.address] = "Minter Marketplace";
 		});
 	})
 
@@ -100,9 +111,12 @@ describe("Token Factory", function () {
 
 			it ("Deploys an ERC721 contract after an ERC777 transfer", async function() {
 				// Should return leftover tokens
-				expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName))).to.emit(erc777instance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
-				expect(await erc777instance.balanceOf(owner.address)).to.equal(initialSupply - tokenPrice);
-				expect(await erc777instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
+				await expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName)))
+					.to.emit(erc777instance, "Sent")
+					.to.emit(factoryInstance, 'NewContractDeployed')
+					.withArgs(owner.address, 1, firstDeploymentAddress, testTokenName);
+				await expect(await erc777instance.balanceOf(owner.address)).to.equal(initialSupply - tokenPrice);
+				await expect(await erc777instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
 			});
 
 			it ("Should track number of token holders", async function() {
@@ -143,20 +157,23 @@ describe("Token Factory", function () {
 		describe('Owner', function() {
 			it ("Only the owner can add ERC777 tokens", async function() {
 				let factoryAsAddress1 = factoryInstance.connect(addr1);
-				expect(factoryAsAddress1.grantRole(await factoryInstance.ERC777(), erc777ExtraInstance.address))
+				await expect(factoryAsAddress1.grantRole(await factoryInstance.ERC777(), erc777ExtraInstance.address))
 					.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await factoryInstance.OWNER()}`);
 			});
 
 			it ("Add a new ERC777 token", async function() {
-				expect(await factoryInstance.add777Token(erc777ExtraInstance.address, tokenPrice * 2)).to.emit(factoryInstance, 'RoleGranted').to.emit(factoryInstance, 'NewTokensAccepted');
+				await expect(await factoryInstance.add777Token(erc777ExtraInstance.address, tokenPrice * 2)).to.emit(factoryInstance, 'RoleGranted').to.emit(factoryInstance, 'NewTokensAccepted');
 			});
 
 			it ("Mint a token after another ERC777 transfer", async function() {
-				expect(await erc777ExtraInstance.send(factoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes(''))).to.emit(erc777ExtraInstance, "Sent").to.emit(factoryInstance, 'NewContractDeployed');
-				expect(await erc777ExtraInstance.balanceOf(owner.address)).to.equal((initialSupply - tokenPrice) * 2);
-				expect(await erc777ExtraInstance.balanceOf(factoryInstance.address)).to.equal(tokenPrice * 2);
-				expect(await factoryInstance.getContractCountOf(owner.address)).to.equal(2);
-				expect(await factoryInstance.contractToOwner(await factoryInstance.ownerToContracts(owner.address, 0))).to.equal(owner.address);
+				await expect(await erc777ExtraInstance.send(factoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes('')))
+					.to.emit(erc777ExtraInstance, "Sent")
+					.to.emit(factoryInstance, 'NewContractDeployed')
+					.withArgs(owner.address, 2, secondDeploymentAddress, '');
+				await expect(await erc777ExtraInstance.balanceOf(owner.address)).to.equal((initialSupply - tokenPrice) * 2);
+				await expect(await erc777ExtraInstance.balanceOf(factoryInstance.address)).to.equal(tokenPrice * 2);
+				await expect(await factoryInstance.getContractCountOf(owner.address)).to.equal(2);
+				await expect(await factoryInstance.contractToOwner(await factoryInstance.ownerToContracts(owner.address, 0))).to.equal(owner.address);
 			});
 
 			it ("Only the owner can remove an ERC777 token", async function() {
@@ -184,6 +201,10 @@ describe("Token Factory", function () {
 				//console.log(rair721Instance.functions);
 				expect(await rair721Instance.hasRole(await rair721Instance.CREATOR(), owner.address)).to.equal(true);
 				expect(await rair721Instance.getRoleAdmin(await rair721Instance.MINTER())).to.equal(await rair721Instance.CREATOR());
+			});
+
+			it ("Should return factory address", async function() {
+				await expect(await rair721Instance.factory()).to.equal(factoryInstance.address);
 			});
 
 			it ("Correct creator address", async function() {
