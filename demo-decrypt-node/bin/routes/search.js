@@ -6,8 +6,8 @@ module.exports = context => {
 
   router.post('/', validation('search'), async (req, res, next) => {
     try {
-      const { searchBy = 'users', blockchain = '', category = '', searchString } = req.body;
-      const searchQuery = { $text: { $search: searchString } };
+      const { searchBy = 'users', blockchain = '', category = '', searchString = '' } = req.body;
+      const searchQuery = { query: searchString };
       let result;
 
       const foundCategory = await context.db.Category.findOne({ name: category });
@@ -19,26 +19,26 @@ module.exports = context => {
       const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
 
       if (foundBlockchain) {
-        const arrayOfContracts = await context.db.Contract.find({ blockchain }).distinct('contractAddress');
+        const arrayOfContracts = await context.db.Contract.find({ blockchain }).distinct('_id');
         searchQuery.contract = { $in: arrayOfContracts };
       }
 
       switch (searchBy) {
         case 'users':
-          result = await context.db.User.find({ $text: { $search: searchString } }).sort({ nickName: 1 });
+          result = await context.db.User.search({ query: searchString });
           break;
         case 'products':
-          result = await context.db.Product.find(searchQuery).sort({ ['products.name']: 1 });
+          result = await context.db.Product.search(searchQuery);
           break;
         case 'files':
-          result = await context.db.File.find(searchQuery, { key: 0 }).sort({ title: 1 });
+          result = await context.db.File.search(searchQuery);
           break;
         default:
-          result = await context.db.User.find({ $text: { $search: searchString } }).sort({ nickName: 1 });
+          result = await context.db.User.search({ query: searchString });
           break;
       }
 
-      res.json({ success: true, result });
+      return res.json({ success: true, result });
     } catch (e) {
       next(e);
     }
