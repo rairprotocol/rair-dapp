@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: rair
+  name: rair-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "staging"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  tls:
+  - hosts: 
+    -  coinagenda.rair.market
+    secretName: staging-ssl
+  rules:
+  - host: coinagenda.rair.market
+    http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:  
+            name: minting-network
+            port:
+              number: 3001

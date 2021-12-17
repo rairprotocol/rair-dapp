@@ -2,13 +2,16 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: rair-ingress
-#  annotations:
-#    kubernetes.io/ingress.global-static-ip-name: "dev-ip"
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "dev-ip"
+    networking.gke.io/managed-certificates: managed-cert
+    kubernetes.io/ingress.class: "gce"
 spec:
 #  tls:
 #  - secretName: dev-ssl
   rules:
-  - http:
+  - host: dev.rair.tech
+    http:
       paths:
       - path: /*
         pathType: ImplementationSpecific
