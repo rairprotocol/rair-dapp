@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { erc721Abi } from '../../contracts/index.js'
@@ -14,14 +14,19 @@ import Nft_1 from "./images/exclusive_1.jpeg";
 import Nft_2 from "./images/exclusive_2.jpeg";
 import Nft_3 from "./images/exclusive_3.jpeg";
 import Nft_4 from "./images/image_3.png";
-import NftImage from "./images/circle_nipsey.png";
-import UnlockableVideo from "./images/unlockbleVideo.png";
+import NftImage from "./images/main-nft-screen.png";
+import UnlockableVideo from "./images/nipsey1.png";
 import JoinCommunity from "./images/join_com.jpeg";
 import DigitalMobile from './images/digital-mobile.png';
 import NftMobile_1 from './images/nft-mobile_1.png';
 import NftMobile_2 from './images/nft-mobile_2.png';
 import VideoPresent from './images/video-present.png';
 import RairTechMobile from './images/rair_tech_mobile.png';
+import DiscordIcon from './images/discord-icon.png';
+import Bandana from './images/bandana.png';
+import Pods from './images/Pods.png';
+import Cepk from './images/cepk.png'
+import Cepp from './images/cepp.png';
 
 /* importing Components*/
 import TokenLeft from "./TokenLeft/TokenLeft";
@@ -31,6 +36,9 @@ import TeamMeet from "./TeamMeet/TeamMeetList";
 import JoinCom from "./JoinCom/JoinCom";
 
 import Modal from "react-modal";
+import RoadMap from "./Roadmap/RoadMap.jsx";
+import NipseyRelease from "./NipseyRelease/NipseyRelease.jsx";
+import { Countdown } from "./Timer/CountDown.jsx";
 
 const customStyles = {
   overlay: {
@@ -57,6 +65,9 @@ const customStyles = {
 // Modal.setAppElement("#root");
 
 const SplashPage = () => {
+  const [dataNipsey, setDataNipsey] = useState();
+  const [copies, setCopies] = useState();
+
   const switchEthereumChain = async (chainData) => {
     try {
       await window.ethereum.request({
@@ -88,7 +99,7 @@ const SplashPage = () => {
   const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
   const buyNipsey = async () => {
-    const {success, products} = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
+    const { success, products } = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
     let instance = contractCreator(nipseyAddress, erc721Abi);
     let nextToken = await instance.getNextSequentialIndex(0, 50, 250);
     Swal.fire({
@@ -99,7 +110,7 @@ const SplashPage = () => {
     });
     let [firstPressingOffer] = products[0].offers.filter(item => item.offerName === '1st Pressing');
     if (!firstPressingOffer) {
-      Swal.fire('Error','An error has ocurred','error');
+      Swal.fire('Error', 'An error has ocurred', 'error');
       return;
     }
     try {
@@ -111,16 +122,16 @@ const SplashPage = () => {
           value: firstPressingOffer.price
         }
       )).wait();
-      Swal.fire('Success',`Bought token #${nextToken}!`,'success');
+      Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
     } catch (e) {
       console.error(e);
-      Swal.fire('Error',e?.message,'error');
+      Swal.fire('Error', e?.message, 'error');
     }
   }
 
   let subtitle;
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState({ policy: false, use: false});
+  const [active, setActive] = useState({ policy: false, use: false });
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -142,32 +153,52 @@ const SplashPage = () => {
 
   const { primaryColor } = useSelector((store) => store.colorStore);
 
+  const getAllProduct = useCallback(async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/nft/network/0x5/0xcb0252eed5056de450df4d8d291b4c5e8af1d9a6/0/offers`, {
+        method: "GET",
+      })
+    ).json();
+
+
+    setCopies(responseAllProduct.product.copies);
+    setDataNipsey(responseAllProduct.product.soldCopies);
+
+  }, [setDataNipsey]);
+
+
+  useEffect(() => {
+    getAllProduct()
+  }, [])
+
   return (
     <div className="wrapper-splash-page">
       <div className="home-splash--page">
         <div className="information-author">
           <div className="block-splash">
             <div className="text-splash">
-              <div className="title-splash">
+              <div className="title-splash nipsey">
                 <h3>Enter the</h3>
                 <span>Nipseyverse</span>
               </div>
               <div className="text-description">
-                <p>
-                  1000 Unique NFTs unlock exlusive streaming for the final
-                  Nipsey Hussle album. Proceeds directly benefit the Airmiess
-                  Asghedom estate on chain.
-                </p>
+                <div>
+                  1000 unique NFTs unlock exclusive streaming for the
+                  final Nipsey Hussle album.
+                  Proceeds directly benefit the Airmiess
+                  Asghedom estate <a href="https://etherscan.io/Oxcontract" target="_blank">onchain</a>.
+                </div>
               </div>
-              <div className="btn-buy-metamask">
-                <button onClick={openModal}>
+              <div className="btn-timer-nipsey">
+                <Countdown />
+                {/* <button onClick={openModal}>
                   <img
                     className="metamask-logo"
                     src={Metamask}
                     alt="metamask-logo"
                   />{" "}
                   Preorder with ETH
-                </button>
+                </button> */}
                 <Modal
                   isOpen={modalIsOpen}
                   onAfterOpen={afterOpenModal}
@@ -192,7 +223,7 @@ const SplashPage = () => {
                       <form>
                         <div className="form-group">
                           <input type="checkbox" id="policy" />
-                          <label onClick={() => setActive(prev => ({...prev , policy: !prev.policy}))} htmlFor="policy">I agree to the </label>
+                          <label onClick={() => setActive(prev => ({ ...prev, policy: !prev.policy }))} htmlFor="policy">I agree to the </label>
                           <span
                             onClick={() =>
                               window.open("/privacy", "_blank")
@@ -209,7 +240,7 @@ const SplashPage = () => {
                         </div>
                         <div className="form-group sec-group ">
                           <input type="checkbox" className="dgdfgd" id="use" />
-                          <label onClick={() => setActive(prev => ({...prev , use:!prev.use}))} htmlFor="use">I accept the </label>
+                          <label onClick={() => setActive(prev => ({ ...prev, use: !prev.use }))} htmlFor="use">I accept the </label>
                           <span
                             onClick={() => window.open("/terms-use", "_blank")}
                             style={{
@@ -233,7 +264,7 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button onClick={window?.ethereum?.chainId === '0x5' ? buyNipsey : () => switchEthereumChain({chainId: '0x5', chainName: 'Goerli (Ethereum)'})} disabled={!Object.values(active).every(el => el)} className="modal-btn">
+                        <button onClick={window?.ethereum?.chainId === '0x5' ? buyNipsey : () => switchEthereumChain({ chainId: '0x5', chainName: 'Goerli (Ethereum)' })} disabled={!Object.values(active).every(el => el)} className="modal-btn">
                           <img
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}
@@ -253,7 +284,7 @@ const SplashPage = () => {
             </div>
           </div>
         </div>
-        <TokenLeft primaryColor={primaryColor} />
+        <TokenLeft soldCopies={dataNipsey} copies={copies} primaryColor={primaryColor} DiscordIcon={DiscordIcon} />
         <div className="special-offer">
           <div className="offer-desp">
             <div className="offer-title">
@@ -290,7 +321,7 @@ const SplashPage = () => {
                   src={Metamask}
                   alt="metamask-logo"
                 />{" "}
-                Preorder with ETH
+                COMMING SOON
               </button>
             </div>
           </div>
@@ -300,24 +331,32 @@ const SplashPage = () => {
             <div className="offer-3"></div>
           </div>
         </div>
+        <UnlockVideos
+          primaryColor={primaryColor}
+          UnlockableVideo={UnlockableVideo}
+        />
         <ExclusiveNft
           Nft_1={Nft_1}
           Nft_2={Nft_2}
           Nft_3={Nft_3}
           Nft_4={Nft_4}
           NftImage={NftImage}
-          amountTokens={1000}
+          amountTokens={Number(copies) - Number(dataNipsey)}
         />
-        <UnlockVideos
-          primaryColor={primaryColor}
-          UnlockableVideo={UnlockableVideo}
-        />
-        <JoinCom
+        <NipseyRelease DiscordIcon={DiscordIcon} />
+        <RoadMap />
+        {/*<JoinCom
           Metamask={Metamask}
           JoinCommunity={JoinCommunity}
           primaryColor={primaryColor}
-        />
+        /> */}
         <TeamMeet primaryColor={primaryColor} arraySplash={"nipsey"} />
+        <div className="nipsey-img-masks">
+          <img src={Bandana} alt="" />
+          <img src={Pods} alt="" />
+          <img src={Cepk} alt="" />
+          <img src={Bandana} alt="" />
+        </div>
       </div>
       <div className="home-splash-mobile">
         <div className="wrapper-splash-mobile">
@@ -334,6 +373,7 @@ const SplashPage = () => {
           </div>
           <div className="splash-minted-mobile">
             <div className="nft-minted-block">
+            <Countdown />
               <div className="minted-title">
                 <h3>Only <span>1000</span> NFTs will ever be minted</h3>
 

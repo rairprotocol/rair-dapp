@@ -116,7 +116,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   }
 
   const handleClickToken = async (tokenId) => {
-    history.push(`/tokens/${contract}/${product}/${tokenId}`);
+    history.push(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
     if(tokenData.length >= Number(tokenId)){
       setSelectedData(tokenData[tokenId].metadata);
     }
