@@ -20,7 +20,7 @@ const MailchimpComponent = () => {
                             id="mce-EMAIL"
                             placeholder="Sign up for our newsletter.."
                             required />
-                        <button disabled={emailField.length > 5 ? false : true} required type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe"><i class="fas fa-chevron-right"></i></button>
+                        <button disabled={emailField.length > 5 ? false : true} required type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe"><i className="fas fa-chevron-right"></i></button>
                     </div>
                     <div style={{
                         position: "absolute", left: "-5000px"

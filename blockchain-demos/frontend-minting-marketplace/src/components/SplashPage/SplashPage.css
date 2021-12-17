@@ -10,6 +10,7 @@
 }
 
 .home-splash-mobile {
+    padding-bottom: 208px;
     display: none;
 }
 
@@ -1861,6 +1862,10 @@ text-decoration: underline;
         width: 100%;
         
     }
+}
+
+.btn-timer-nipsey {
+    color: #000;
 }
 
 @media screen and (max-width: 503px) {

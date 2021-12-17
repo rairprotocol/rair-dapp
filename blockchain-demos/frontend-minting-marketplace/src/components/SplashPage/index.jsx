@@ -38,6 +38,7 @@ import JoinCom from "./JoinCom/JoinCom";
 import Modal from "react-modal";
 import RoadMap from "./Roadmap/RoadMap.jsx";
 import NipseyRelease from "./NipseyRelease/NipseyRelease.jsx";
+import { Countdown } from "./Timer/CountDown.jsx";
 
 const customStyles = {
   overlay: {
@@ -65,9 +66,7 @@ const customStyles = {
 
 const SplashPage = () => {
   const [dataNipsey, setDataNipsey] = useState();
-  const [copies, setCopies]  = useState();
-
-
+  const [copies, setCopies] = useState();
 
   const switchEthereumChain = async (chainData) => {
     try {
@@ -154,7 +153,7 @@ const SplashPage = () => {
 
   const { primaryColor } = useSelector((store) => store.colorStore);
 
- const getAllProduct = useCallback(async () => {
+  const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
       await fetch(`/api/nft/network/0x5/0xcb0252eed5056de450df4d8d291b4c5e8af1d9a6/0/offers`, {
         method: "GET",
@@ -164,7 +163,7 @@ const SplashPage = () => {
 
     setCopies(responseAllProduct.product.copies);
     setDataNipsey(responseAllProduct.product.soldCopies);
-    
+
   }, [setDataNipsey]);
 
 
@@ -190,15 +189,16 @@ const SplashPage = () => {
                   Asghedom estate <a href="https://etherscan.io/Oxcontract" target="_blank">onchain</a>.
                 </div>
               </div>
-              <div className="btn-buy-metamask">
-                <button onClick={openModal}>
+              <div className="btn-timer-nipsey">
+                <Countdown />
+                {/* <button onClick={openModal}>
                   <img
                     className="metamask-logo"
                     src={Metamask}
                     alt="metamask-logo"
                   />{" "}
                   Preorder with ETH
-                </button>
+                </button> */}
                 <Modal
                   isOpen={modalIsOpen}
                   onAfterOpen={afterOpenModal}
@@ -285,7 +285,7 @@ const SplashPage = () => {
           </div>
         </div>
         <TokenLeft soldCopies={dataNipsey} copies={copies} primaryColor={primaryColor} DiscordIcon={DiscordIcon} />
-        <div className="special-offer"> 
+        <div className="special-offer">
           <div className="offer-desp">
             <div className="offer-title">
               <h3>
@@ -373,6 +373,7 @@ const SplashPage = () => {
           </div>
           <div className="splash-minted-mobile">
             <div className="nft-minted-block">
+            <Countdown />
               <div className="minted-title">
                 <h3>Only <span>1000</span> NFTs will ever be minted</h3>
 
