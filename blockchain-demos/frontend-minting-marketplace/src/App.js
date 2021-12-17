@@ -61,6 +61,7 @@ import ThankYouPage from './components/ThankYouPage';
 import NotFound from './components/NotFound/NotFound';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
+import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -448,6 +449,7 @@ function App({ sentryHistory }) {
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</div>
 									</SentryRoute>
+									<SentryRoute path="/comming-soon" component={CommingSoon} />
 									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>

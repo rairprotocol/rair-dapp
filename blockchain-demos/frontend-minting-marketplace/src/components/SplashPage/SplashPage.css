@@ -59,6 +59,19 @@
     background-position: 95% center;
 }
 
+.nipsey-comming-soon .information-author {
+    background-size: 530px auto;
+}
+
+.nipsey-comming-soon .information-author .text-splash .title-splash h4 {
+    font-size: 64px;
+    color: #725BDB
+}
+
+.nipsey-thank-you-page {
+    margin-bottom: 108px;
+}
+
 .information-author.greyman-page-author {
     background-image: url('./images/greyman.png');
     background-size: 516px 516px;
@@ -100,7 +113,7 @@
     font-size: 40px;
 }
 
-.text-splash .title-splash.nipsey h3, .text-splash .title-splash.nipsey span{
+.text-splash .title-splash.nipsey h3, .text-splash .title-splash.nipsey h4, .text-splash .title-splash.nipsey span{
     color: #725BDB;
 }
 
@@ -111,7 +124,7 @@
     margin: 0;
 }
 
-.text-splash .title-splash span {
+.text-splash .title-splash span, .text-splash .title-splash.nipsey h4 {
     font-size: 64px;
     color: #4E4D4D;
     font-weight: 800;
@@ -527,6 +540,11 @@
 
 .btn-open-store span {
     font-size: 24px;
+    transition: .2s all ease;
+}
+
+.btn-open-store span:hover {
+    color: #E882D5;
 }
 
 .btn-open-store i {
@@ -1765,6 +1783,12 @@ text-decoration: underline;
     }
 }
 
+@media screen and (max-width: 1007px) {
+    .nipsey-comming-soon {
+        margin-bottom: 108px;
+    }
+}
+
 @media screen and (max-width: 1000px) {
     .nipsey-roadmap {
         display: flex;
@@ -1777,6 +1801,45 @@ text-decoration: underline;
     }
 }
 
+@media screen and (max-width: 920px) {
+    .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
+        max-width: 800px !important;
+    }
+}
+
+@media screen and (max-width: 820px) {
+    .nipsey-thank-you-page, .nipsey-comming-soon{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
+        width: 100%;
+        background-image: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author .text-splash, .nipsey-comming-soon .information-author .text-splash {
+        text-align: center;
+    }
+
+    .nipsey-thank-you-page .information-author .text-splash .text-description, .nipsey-comming-soon .information-author .text-splash .text-description {
+        text-align: center;
+    }
+
+    .nipsey-thank-you-page .information-author .release-join-discord, .nipsey-comming-soon .information-author .release-join-discord {
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author .nipsey-thank-you-page .information-author, .nipsey-comming-soon  .information-author .nipsey-thank-you-page .information-author {
+        display: flex;
+        justify-content: center;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .content-owners-mobile .owner-box .owner-img {
         width: 200px;
@@ -1785,6 +1848,32 @@ text-decoration: underline;
     .content-owners-mobile .owner-box .owner-img img, .content-owners-mobile .owner-box:last-child .owner-img img {
         width: 200px;
         height: auto;
+    }
+}
+
+@media screen and (max-width: 528px) {
+    .nipsey-comming-soon {
+        margin-bottom: 208px;
+    }
+
+    .nipsey-comming-soon .text-splash .text-description {
+        font-size: 18px;
+        width: 100%;
+        
+    }
+}
+
+@media screen and (max-width: 503px) {
+    .nipsey-thank-you-page {
+        margin-bottom: 208px;
+    }
+
+    .text-splash .title-splash span, .text-splash .title-splash.nipsey h4 {
+        font-size: 40px;
+    }
+
+    .nipsey-thank-you-page .block-splash .logo-author img:first-child {
+        width: 250px;
     }
 }
 

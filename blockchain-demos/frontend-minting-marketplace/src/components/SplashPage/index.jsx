@@ -321,7 +321,7 @@ const SplashPage = () => {
                   src={Metamask}
                   alt="metamask-logo"
                 />{" "}
-                Preorder with ETH
+                COMMING SOON
               </button>
             </div>
           </div>
