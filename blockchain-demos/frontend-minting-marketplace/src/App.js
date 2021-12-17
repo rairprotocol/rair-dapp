@@ -60,6 +60,9 @@ import AboutPage from './components/AboutPage/AboutPage';
 import ThankYouPage from './components/ThankYouPage';
 import NotFound from './components/NotFound/NotFound';
 
+//Google Analytics
+import ReactGA from 'react-ga';
+
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 const SentryRoute = Sentry.withSentryRouting(Route);
@@ -80,6 +83,9 @@ function App({ sentryHistory }) {
 	const [errorAuth, /*setErrorAuth*/] = useState('');
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
+	// Google Analytics
+	const TRACKING_ID = "UA-209450870-1"; // YOUR_OWN_TRACKING_ID
+	ReactGA.initialize(TRACKING_ID);
 	// Redux
 	const dispatch = useDispatch()
 	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
