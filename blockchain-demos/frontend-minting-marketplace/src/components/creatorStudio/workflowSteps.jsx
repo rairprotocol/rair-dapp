@@ -18,7 +18,7 @@ import MediaUpload from './creatorSteps/MediaUpload.jsx';
 const SentryRoute = withSentryRouting(Route);
 
 const WorkflowSteps = ({sentryHistory}) => {
-	const {address, collectionIndex} = useParams();
+	const {address, collectionIndex, blockchain} = useParams();
 
 	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	
@@ -26,43 +26,43 @@ const WorkflowSteps = ({sentryHistory}) => {
 			{
 				label: 1,
 				active: true,
-				path: '/creator/contract/:address/collection/:collectionIndex/offers',
-				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/offers`,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
 				component: ListOffers
 			},
 			{
 				label: 2,
 				active: false,
-				path: '/creator/contract/:address/collection/:collectionIndex/locks',
-				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/locks`,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/locks',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/locks`,
 				component: ListLocks
 			},
 			{
 				label: 3,
 				active: false,
-				path: '/creator/contract/:address/collection/:collectionIndex/customizeFees',
-				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/customizeFees`,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/customizeFees',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/customizeFees`,
 				component: CustomizeFees
 			},
 			{
 				label: 4,
 				active: false,
-				path: '/creator/contract/:address/collection/:collectionIndex/metadata/batch',
-				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/metadata/batch`,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/batch',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/batch`,
 				component: BatchMetadata
 			},
 			{
 				label: 5,
 				active: false,
-				path: '/creator/contract/:address/collection/:collectionIndex/metadata/single',
-				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/metadata/single`,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/single`,
 				component: SingleMetadataEditor
 			},
 			{
 				label: 6,
 				active: false,
-				path: '/creator/contract/:address/collection/:collectionIndex/media',
-				populatedPath: `/creator/contract/${address}/collection/${collectionIndex}/media`,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/media`,
 				component: MediaUpload
 			},
 		]);
@@ -81,12 +81,12 @@ const WorkflowSteps = ({sentryHistory}) => {
 		if (!address) {
 			return;
 		}
-		let response2 = await rFetch(`/api/contracts/${address}`);
-		let response3 = await rFetch(`/api/contracts/${address}/products`);
+		let response2 = await rFetch(`/api/contracts/network/${blockchain}/${address}`);
+		let response3 = await rFetch(`/api/contracts/network/${blockchain}/${address}/products`);
 		if (response3.success) {
 			response2.contract.products = response3.products
 		}
-		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
+		let response4 = await rFetch(`/api/contracts/network/${blockchain}/${address}/products/offers`);
 		// Special case where a product exists but it has no offers
 		if (response4.success) {
 			response4.products.forEach(item => {

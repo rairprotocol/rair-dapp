@@ -21,7 +21,7 @@ const Factory = () => {
 		let response = await rFetch('/api/contracts', undefined, { provider: programmaticProvider });
 
 		if (response.success) {
-			setContractArray(response.contracts.map(item => item.contractAddress));
+			setContractArray(response.contracts);
 		}
 
 		if (response.error && response.message) {
@@ -41,7 +41,7 @@ const Factory = () => {
 		<h1>Your deployed contracts</h1>
 		<DeployContracts />
 		{contractArray && contractArray.map((item, index) =>
-			<Contract address={item} key={index} />
+			<Contract {...item} key={index} />
 		)}
 	</div>
 };
