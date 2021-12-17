@@ -24,8 +24,8 @@ const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
         }, 1000)
     }
 
-    const leftTokensNumber = copies && soldCopies ? Number(copies) - Number(soldCopies) : 0;
-    const wholeTokens = copies ? Number(copies) : 0;
+    const leftTokensNumber = Number(copies) - Number(soldCopies);
+    const wholeTokens = Number(copies);
 
     useEffect(() => {
         if (leftTokensNumber <= wholeTokens) {
