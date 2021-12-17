@@ -96,7 +96,7 @@ pipeline {
     }
       when { branch 'main' }
       steps {
-        sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/dev-manifest/*.yaml")
+        sh("sed -i.bak 's#main_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/manifests/staging-manifest/*.yaml")
         step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.MAIN_PROJECT_ID, clusterName: env.MAIN_CLUSTER, zone: env.MAIN_LOCATION, manifestPattern: 'kubernetes-manifests/manifests/staging-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
     }
   }
