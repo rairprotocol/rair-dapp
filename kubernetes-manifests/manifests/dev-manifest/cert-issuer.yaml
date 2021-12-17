@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-dev-prod
+spec:
+  acme:
+    # Staging API
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: chris@rair.tech
+    privateKeySecretRef:
+      name: account-key-prodkube
+    solvers:
+    - http01:
+       ingress:
+         class: nginx
