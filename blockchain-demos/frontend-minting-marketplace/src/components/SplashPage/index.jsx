@@ -161,7 +161,7 @@ const SplashPage = () => {
     ).json();
 
 
-    if (responseAllProduct.product.copies && responseAllProduct.product.soldCopies) {
+    if (responseAllProduct.product && responseAllProduct.product.copies && responseAllProduct.product.soldCopies) {
       setCopies(responseAllProduct.product.copies);
       setDataNipsey(responseAllProduct.product.soldCopies);
     } else {
