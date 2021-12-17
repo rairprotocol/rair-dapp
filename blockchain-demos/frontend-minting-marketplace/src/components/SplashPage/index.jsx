@@ -161,8 +161,13 @@ const SplashPage = () => {
     ).json();
 
 
-    setCopies(responseAllProduct.product.copies);
-    setDataNipsey(responseAllProduct.product.soldCopies);
+    if (responseAllProduct.product && responseAllProduct.product.copies && responseAllProduct.product.soldCopies) {
+      setCopies(responseAllProduct.product.copies);
+      setDataNipsey(responseAllProduct.product.soldCopies);
+    } else {
+      setCopies(0);
+      setDataNipsey(0);
+    }
 
   }, [setDataNipsey]);
 
@@ -373,7 +378,7 @@ const SplashPage = () => {
           </div>
           <div className="splash-minted-mobile">
             <div className="nft-minted-block">
-            <Countdown />
+              <Countdown />
               <div className="minted-title">
                 <h3>Only <span>1000</span> NFTs will ever be minted</h3>
 
