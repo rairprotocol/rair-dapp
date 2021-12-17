@@ -36,7 +36,7 @@ spec:
             - name: PRODUCTION
               value: "true"
             - name: MONGO_URI
-              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority"
+              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@staging.ll3lf.mongodb.net/rair-db?retryWrites=true&w=majority"
             - name: MONGO_URI_LOCAL
               value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
             - name: INFURA_PROJECT_ID
@@ -46,7 +46,7 @@ spec:
             - name: ADMIN_CONTRACT
               value: "0xe5a9efb29b82517166fcef23722452543b5f380f"
             - name: SERVICE_HOST
-              value: "dev.rair.tech"
+              value: "staging.rair.tech"
             - name: PINATA_SECRET
               value: "92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1"
             
