@@ -88,7 +88,7 @@ const SplashPage = () => {
   const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
   const buyNipsey = async () => {
-    const {success, products} = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
+    const {success, products} = await rFetch(`/api/contracts/network/0x5/${nipseyAddress}/products/offers`);
     let instance = contractCreator(nipseyAddress, erc721Abi);
     let nextToken = await instance.getNextSequentialIndex(0, 50, 250);
     Swal.fire({
@@ -97,7 +97,11 @@ const SplashPage = () => {
       icon: 'info',
       showConfirmButton: false
     });
-    let [firstPressingOffer] = products[0].offers.filter(item => item.offerName === '1st Pressing');
+    if (!success) {
+      Swal.fire('Error','An error has ocurred, please try again later','error');
+      return;
+    }
+    let [firstPressingOffer] = products[0]?.offers?.filter(item => item?.offerName === '1st Pressing');
     if (!firstPressingOffer) {
       Swal.fire('Error','An error has ocurred','error');
       return;
