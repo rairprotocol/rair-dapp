@@ -3,51 +3,51 @@ import UnlockVideoItem from './UnlockVideoItem';
 
 const videoArr = [
     {
-        typeVideo: "Free Preview",
-        unlockVideoName: "Victory Lap",
-        timeVideo: "00:03:23",
+        typeVideo: "Sneak Preview Coming Soon",
+        unlockVideoName: "Intro",
+        timeVideo: "000:TBO:00",
         locked: true
     },
     {
-        typeVideo: "Nipseyverse Exclusive",
-        unlockVideoName: "Dedication (featuring Kendrick Lamar)",
-        timeVideo: "00:05:33",
+        typeVideo: "ipseyverse Exclusive",
+        unlockVideoName: "Track 2",
+        timeVideo: "00:TBO:00",
         locked: false
     },
     {
-        typeVideo: "Nipseyverse Exclusive",
-        unlockVideoName: "Last Time That I Checc'd",
+        typeVideo: "ipseyverse Exclusive",
+        unlockVideoName: "Track 3",
         timeVideo: "00:04:02",
         locked: false
     },
     {
-        typeVideo: "Nipseyverse Exclusive",
-        unlockVideoName: "Keyz 2 the City 2",
-        timeVideo: "00:05:27",
+        typeVideo: "ipseyverse Exclusive",
+        unlockVideoName: "Track 3",
+        timeVideo: "00:TBO:00",
         locked: true
     },
     {
-        typeVideo: "Nipseyverse Exclusive",
-        unlockVideoName: "Grinding All My Life",
-        timeVideo: "00:03:23",
+        typeVideo: "ipseyverse Exclusive",
+        unlockVideoName: "Track 3",
+        timeVideo: "00:TBO:00",
+        locked: false
+    },
+    {
+        typeVideo: "ipseyverse Exclusive",
+        unlockVideoName: "Track 3",
+        timeVideo: "00:TBO:00",
+        locked: false
+    },
+    {
+        typeVideo: "ipseyverse Exclusive",
+        unlockVideoName: "Track 3",
+        timeVideo: "00:TBO:00",
         locked: false
     },
     {
         typeVideo: "Nipseyverse Exclusive",
-        unlockVideoName: "Million While You Young",
-        timeVideo: "00:10:33",
-        locked: false
-    },
-    {
-        typeVideo: "Nipseyverse Exclusive",
-        unlockVideoName: "Loaded Bases",
-        timeVideo: "00:04:02",
-        locked: false
-    },
-    {
-        typeVideo: "Nipseyverse Exclusive",
-        unlockVideoName: "Real Big",
-        timeVideo: "00:05:27",
+        unlockVideoName: "Track 3",
+        timeVideo: "00:TBO:00",
         locked: false
     }
 ]
@@ -56,7 +56,7 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
     return (
         <div className="unlockble-video">
             <div className="title-gets">
-                <h3>Members only <span className="text-gradient">streaming</span></h3>
+                <h3>NFT exclusive <span className="text-gradient">streaming</span></h3>
             </div>
             <div className="block-videos">
                 {
