@@ -15,9 +15,11 @@
     margin: 0;
   }
   .subtitle {
-    max-width: 576px;
-    margin: 36px auto;
+    /* max-width: 576px; */
+    /* margin: 36px auto; */
     letter-spacing: .1em;
+    color: #fff;
+    text-align: center;
     line-height: 1.3em;
   }
   .countdownWrapper {
@@ -66,5 +68,9 @@
 
     .timeSection {
         padding: 0px 2px;
+    }
+
+    .countdownWrapper {
+      margin: 0;
     }
 }

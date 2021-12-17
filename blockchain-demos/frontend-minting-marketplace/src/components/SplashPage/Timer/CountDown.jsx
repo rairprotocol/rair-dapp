@@ -43,8 +43,8 @@ const CountdownComponent = () => {
         <div className={cl.root}>
             {/* <header className={cl.header}>
                 <h1 className={cl.title}>Time left until release</h1>
-            </header>
-            <h3 className={cl.subtitle}>Follow us for updates</h3> */}
+            </header> */}
+            <h3 className={cl.subtitle}>Time left until release</h3>
             <div className={cl.countdownWrapper}>
                 <div className={cl.timeSection}>
                     <div className={cl.time}>{state.days || "0"}</div>
