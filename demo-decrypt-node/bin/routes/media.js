@@ -159,7 +159,7 @@ module.exports = context => {
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
     console.log(req.file);
     // Get video information from the request's body
-    const { title, description, contract, product, offer } = req.body;
+    const { title, description, contract, product, offer, category } = req.body;
     // Get the user information
     const { adminNFT: author, adminRights } = req.user;
     // Get the socket ID from the request's query
@@ -182,6 +182,12 @@ module.exports = context => {
 
     if (!foundProduct) {
       return res.status(404).send({ success: false, message: `Product ${ product } not found.` });
+    }
+
+    const foundCategory = await context.db.Category.findOne({ name: category });
+
+    if (!foundCategory) {
+      return res.status(404).send({ success: false, message: 'Category not found.' });
     }
 
     const foundOfferPool = await context.db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
@@ -272,6 +278,7 @@ module.exports = context => {
           contract: foundContract._id,
           product,
           offer,
+          category: foundCategory._id,
           staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
           animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
           type: req.file.type,
@@ -313,7 +320,7 @@ module.exports = context => {
         await addPin(ipfsCid, title, socketInstance);
       } catch (e) {
         fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
-        return res.status(403).send({ success: false, message: 'An error has ocurred encoding the file' });
+        log.error(e);
       }
     }
   });
