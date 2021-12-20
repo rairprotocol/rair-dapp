@@ -39,6 +39,7 @@ import Modal from "react-modal";
 import RoadMap from "./Roadmap/RoadMap.jsx";
 import NipseyRelease from "./NipseyRelease/NipseyRelease.jsx";
 import { Countdown } from "./Timer/CountDown.jsx";
+import { useHistory } from "react-router-dom";
 
 const customStyles = {
   overlay: {
@@ -67,6 +68,8 @@ const customStyles = {
 const SplashPage = () => {
   const [dataNipsey, setDataNipsey] = useState();
   const [copies, setCopies] = useState();
+
+  const history = useHistory();
 
   const switchEthereumChain = async (chainData) => {
     try {
@@ -364,13 +367,20 @@ const SplashPage = () => {
         </div>
       </div>
       <div className="home-splash-mobile">
-        <div className="wrapper-splash-mobile">
+        <div
+          className="wrapper-splash-mobile"
+          style={{
+            background: `${primaryColor === "rhyno" ? "#dedede" : "#181717"}`
+          }}
+        >
           <div className="splash-header-mobile">
             <img src={DigitalMobile} alt="logo" />
           </div>
           <div className="splash-auth-mobile">
             <div className="auth-mobile-title">
-              <h3>The <span>Nipsey Hussle</span> legacy</h3>
+              <h3 style={{
+                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`
+              }}>The <span>Nipsey Hussle</span> legacy</h3>
               <div className="auth-mobile-desc">
                 1000 Unique NFTs unlock exlusive streaming<br /> for the final Nipsey Hussle album.
               </div>
@@ -382,13 +392,13 @@ const SplashPage = () => {
               <div className="minted-title">
                 <h3>Only <span>1000</span> NFTs will ever be minted</h3>
 
-                <div className="minted-desc">
+                <div className="minted-desc" style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                   Nipsey invented Proud to Pay, a movement adopted and expanded by<br />
                   the NFT community. Your NFT is access and ownership in an eclusive<br />
                   community of like minded fans, artists, and industry veterans.
                 </div>
                 <div className="minted-btn">
-                  <button>WELCOME TO THE NIPSEYVERSE</button>
+                  <button onClick={() => history.push('/comming-soon')}>WELCOME TO THE NIPSEYVERSE</button>
                 </div>
               </div>
             </div>
@@ -396,36 +406,51 @@ const SplashPage = () => {
               <div className="nft-box">
                 <img src={NftMobile_1} alt="nft-logo" />
                 <div className="nft-description">
-                  <h4>Only  <span>1000</span> NFTs will ever be minted</h4>
-                  <div className="nft-text">
+                  <h4>Only  <span style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}>1000</span> NFTs will ever be minted</h4>
+                  <div
+                    className="nft-text"
+                    style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}
+                  >
                     Now is your opportunity to own a unique piece of<br />
                     internet history. Mint today and receive unique<br />
                     streaming NFT artwork at launch.
                   </div>
                   <div className="btn-claim">
-                    <button>CLAIM ONE</button>
+                    <button
+                      onClick={() => history.push('/comming-soon')}
+                      style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}
+                    >CLAIM ONE</button>
                   </div>
                 </div>
               </div>
               <div className="nft-box">
                 <img src={NftMobile_2} alt="nft-logo" />
                 <div className="nft-description">
-                  <h4>Only  <span>1000</span> NFTs will ever be minted</h4>
-                  <div className="nft-text">
+                  <h4>Only  <span style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}>1000</span> NFTs will ever be minted</h4>
+                  <div
+                    className="nft-text"
+                    style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}
+                  >
                     Now is your opportunity to own a unique piece of<br />
                     internet history. Mint today and receive unique<br />
                     streaming NFT artwork at launch.
                   </div>
                   <div className="btn-claim">
-                    <button>CLAIM ONE</button>
+                    <button
+                      onClick={() => history.push('/comming-soon')}
+                      style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}
+                    >CLAIM ONE</button>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="members-video-mobile">
+            <div className="members-video-mobile" style={{ color: `${primaryColor === "rhyno" ? "#383637" : "#000"}` }}>
               <div className="members-title-mobile">
                 <h3>Members only <span>streaming</span></h3>
-                <div className="members-desc">
+                <div
+                  className="members-desc"
+                  style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}
+                >
                   Within 24 hours all 1000 were spoken for. With his next<br />
                   release Mailbox Money, Nipsey upped the ante to $1000<br />
                   for only 100 copies.
@@ -438,20 +463,31 @@ const SplashPage = () => {
                 <button>Learn More</button>
               </div>
             </div>
-            <div className="nft-score-mobile">
+            <div
+              className="nft-score-mobile"
+              style={{ background: `${primaryColor === "rhyno" ? "#383637" : "#060606"}` }}
+            >
               <div className="box-score">
                 <div className="score-num">1000</div>
-                <div className="stats">Member Only  Nipseyverse</div>
+                <div className="stats"
+                  style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}
+                >Member Only  Nipseyverse</div>
               </div>
               <div className="box-score">
                 <div className="score-num">1000</div>
-                <div className="stats">Exclusive Streaming NFT</div>
+                <div className="stats"
+                  style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}
+                >Exclusive Streaming NFT</div>
               </div>
               <div className="box-score">
                 <div className="score-num">1</div>
-                <div className="stats">Exclusive Album </div>
+                <div className="stats"
+                  style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}
+                >Exclusive Album </div>
               </div>
             </div>
+            <NipseyRelease DiscordIcon={DiscordIcon} />
+            <TeamMeet primaryColor={primaryColor} arraySplash={"nipsey"} />
             <div className="content-owners-mobile">
               <div className="owner-box">
                 <div className="owner-img">

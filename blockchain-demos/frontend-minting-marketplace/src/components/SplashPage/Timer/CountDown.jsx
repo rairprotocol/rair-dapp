@@ -4,7 +4,7 @@ import cl from "./Countdown.module.css";
 
 const CountdownComponent = () => {
     const [countdownDate, /*setCountdownDate*/] = useState(
-        new Date("January 6, 2022 19:00:00").getTime()
+        new Date("January 7, 2022 05:00:00").getTime()
     );
     const [state, setState] = useState({
         days: 0,

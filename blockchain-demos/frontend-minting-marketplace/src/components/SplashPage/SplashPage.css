@@ -60,8 +60,14 @@
     background-position: 95% center;
 }
 
-.nipsey-comming-soon .information-author {
+.nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+    background-image: url('./images/nipsey.png');
+    background-repeat: no-repeat;
     background-size: 530px auto;
+    background-position: 95% center;
+    background-color: #fff;
+    padding: 94px 91px;
+    border-radius: 24px;
 }
 
 .nipsey-comming-soon .information-author .text-splash .title-splash h4 {
@@ -71,6 +77,7 @@
 
 .nipsey-thank-you-page {
     margin-bottom: 108px;
+    overflow: hidden;
 }
 
 .information-author.greyman-page-author {
@@ -1211,7 +1218,7 @@ text-decoration: underline;
 }
 
 .wrapper-splash-mobile {
-    background: #181717;
+    /* background: #181717; */
     overflow: hidden;
 }
 
@@ -1343,7 +1350,7 @@ text-decoration: underline;
 
 .members-video-mobile {
     padding: 56px 0;
-    background: #000;
+    /* background: #BDBDBD; */
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -1385,10 +1392,11 @@ text-decoration: underline;
 }
 
 .nft-score-mobile {
-    background: #060606;
+    /* background: #838383; */
     padding: 16px;
     display: flex;
     justify-content: space-around;
+    margin-bottom: 60px;
 }
 
 .nft-score-mobile .score-num {
@@ -1763,6 +1771,19 @@ text-decoration: underline;
 
 /* Media */
 
+@media screen and (max-width: 1300px) {
+    .home-splash--page .information-author {
+        background-size: 400px auto;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .home-splash--page .information-author {
+        background-size: 350px auto;
+        background-position: 95% 60px;
+    }
+}
+
 @media screen and (max-width: 1150px) {
     .nipsey-release .release-container:last-child {
         margin-left: 60px;
@@ -1782,6 +1803,10 @@ text-decoration: underline;
     .nipsey-release .release-join-discord {
         align-items: center;
     }
+
+    .nipsey-comming-soon .information-author {
+        background-size: 350px auto;
+    }
 }
 
 @media screen and (max-width: 1007px) {
@@ -1800,11 +1825,40 @@ text-decoration: underline;
     .roadmap-container {
         width: 90%;
     }
+
+    .nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+        background-size: 300px auto;
+    }
+
+    .footer ul li {
+        font-size: 15px;
+    }
 }
 
 @media screen and (max-width: 920px) {
     .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
         max-width: 800px !important;
+    }
+}
+
+@media screen and (max-width: 900px) {
+
+    .home-splash-mobile .splash-team {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .home-splash-mobile .meet-team .box-teammate {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .home-splash-mobile .position-teammate .teammate-description {
+        width: 90%;
     }
 }
 
@@ -1841,6 +1895,23 @@ text-decoration: underline;
     }
 }
 
+@media screen and (max-width:728px) {
+    .nipsey-release .release-container-title {
+        text-align: center;
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
+
+    .nipsey-release .release-container:last-child {
+        width: 95%;
+    }
+
+    .nipsey-release .release-desc-nipsey .release-desc-nipsey-box {
+        padding: 15px;
+        font-size: 14px;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .content-owners-mobile .owner-box .owner-img {
         width: 200px;
@@ -1849,6 +1920,26 @@ text-decoration: underline;
     .content-owners-mobile .owner-box .owner-img img, .content-owners-mobile .owner-box:last-child .owner-img img {
         width: 200px;
         height: auto;
+    }
+
+    .release-container .tabs-box .tab-title-box {
+        width: 200px;
+    }
+    
+    .nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+        width: 95%;
+    }
+
+    .nipsey-comming-soon, .nipsey-thank-you-page  {
+        padding-bottom: 100px;
+    }
+
+    .footer ul {
+        flex-direction: column;
+    }
+    .footer ul li {
+        margin-right: 0;
+        margin-bottom: 10px;
     }
 }
 
@@ -1883,6 +1974,15 @@ text-decoration: underline;
 }
 
 @media screen and (max-width: 500px) {
+    .home-splash-mobile .img-teammate img {
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
+        margin-left: 0px;
+    }
+     
     .content-owners-mobile {
         flex-direction: column;
     }
@@ -1890,14 +1990,6 @@ text-decoration: underline;
     .members-video-mobile .video-pic img {
         width: 300px;
         height: auto;
-    }
-
-    .footer ul {
-        flex-direction: column;
-
-    }
-    .footer ul li {
-        margin: 0;
     }
 }
 
@@ -1909,5 +2001,24 @@ text-decoration: underline;
     .streaming-nft-block .nft-box img {
         margin-right: 0;
         margin-bottom: 16px;
+    }
+
+    .nipsey-release .release-container:last-child {
+        width: 90%;
+    }
+
+    .release-join-discord .mailchimp .email-box {
+        width: 300px;
+    }
+
+    .release-join-discord .mailchimp input.email {
+        width: 200px;
+    }
+}
+
+
+@media screen and (max-width: 370px) {
+    .block-splash .logo-author img:first-child {
+        width: 290px;
     }
 }
