@@ -1,3 +1,2 @@
 dev/*
 bin/Videos/*
-!bin/Videos/stream.m3u8.template
