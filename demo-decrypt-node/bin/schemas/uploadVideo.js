@@ -13,5 +13,6 @@ module.exports = Joi.object({
   contract: Joi.string()
     .required(),
   product: Joi.number().required(),
+  category: Joi.string().required(),
   offer: Joi.array().min(1).items(Joi.number()).required()
 });
