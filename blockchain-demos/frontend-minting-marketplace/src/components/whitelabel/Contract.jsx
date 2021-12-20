@@ -10,22 +10,22 @@ import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch.js';
 import CustomPayRate from './customizePayRate.jsx';
 
-const Contract = ({address}) => {
+const Contract = ({contractAddress, blockchain, title}) => {
 
 	const [data, setData] = useState();
 
 	const {primaryColor, textColor} = useSelector(state => state.colorStore)
 
 	const fetchData = useCallback(async () => {
-		if (!address) {
+		if (!contractAddress) {
 			return;
 		}
-		let response2 = await rFetch(`/api/contracts/${address}`);
-		let response3 = await rFetch(`/api/contracts/${address}/products`);
+		let response2 = await rFetch(`/api/contracts/network/${blockchain}/${contractAddress}`);
+		let response3 = await rFetch(`/api/contracts/network/${blockchain}/${contractAddress}/products`);
 		if (response3.success) {
 			response2.contract.products = response3.products
 		}
-		let response4 = await rFetch(`/api/contracts/${address}/products/offers`);
+		let response4 = await rFetch(`/api/contracts/network/${blockchain}/${contractAddress}/products/offers`);
 		// Special case where a product exists but it has no offers
 		if (response4.success) {
 			response4.products.forEach(item => {
@@ -37,7 +37,7 @@ const Contract = ({address}) => {
 			})
 		}
 		setData(response2.contract);
-	}, [address])
+	}, [contractAddress, blockchain])
 
 	useEffect(() => {
 		fetchData();

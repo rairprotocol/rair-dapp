@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import Metamask from "./../images/metamask_logo.png";
 
 const UnlockVideoItem = ({typeVideo, nameVideo, timeVideo, UnlockableVideo, locked, primaryColor}) => {
     return (
@@ -7,12 +8,11 @@ const UnlockVideoItem = ({typeVideo, nameVideo, timeVideo, UnlockableVideo, lock
                 className="video-locked"
                 style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}
             >
-                <div style={{ position: "relative" }}>
-                    <div className="video-icon">
-                        {locked ? <i className="fas fa-key" aria-hidden="true"></i> : <i className="fa fa-lock"></i>}
-                        <p>{typeVideo}</p>
+                <div className="block-with-video" style={{ position: "relative" }}>
+                    <div className='video-block-metamask-some'>
+                        <img src={Metamask} alt="metamask logo" />
                     </div>
-                    <img src={UnlockableVideo} alt="unlockble video" />
+                    <img className="block-img-bg" src={UnlockableVideo} alt="unlockble video" />
                 </div>
                 <div className="video-description">
                     <div className="video-title">

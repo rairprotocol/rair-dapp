@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.22.0 (955b78124)
@@ -37,19 +36,41 @@ spec:
             - name: PRODUCTION
               value: "true"
             - name: MONGO_URI
-              value: "mongodb+srv://rairtechstaging:k5e95atCrcpPYuUJ@staging.ll3lf.mongodb.net/sundance?retryWrites=true&w=majority"
+              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority"
             - name: MONGO_URI_LOCAL
               value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
             - name: INFURA_PROJECT_ID
-              value: "5c77a63a0aa74452a7c77a64fe9a90d5"
+              value: "92a88973a28d41318792f77451db4c5b"
             - name: ADMIN_NETWORK
-              value: mumbai
+              value: polygon
             - name: ADMIN_CONTRACT
-              value: "0x0758C7d8B14cc586d115e7Bc187AbD31bE2d35FD:0"
+              value: "0xe5a9efb29b82517166fcef23722452543b5f380f"
             - name: SERVICE_HOST
-              value: "sundance.rair.tech"
+              value: "dev.rair.tech"
             - name: PINATA_SECRET
               value: "92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1"
+            - name: sentry_enabled
+              value: "true"
+            - name: sentry_endpoint
+              value: "https://b1b9b63c8d484d35a7f47235c681201b@o1004167.ingest.sentry.io/5965143"
+            - name: sentry_trace_rate
+              value: "1.0"
+            - name: sentry_release
+              value: "unknown_development_build"
+            - name: default_product_cover
+              value: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
+            - name: matic_testnet_rpc
+              value: "https://polygon-mumbai.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+            - name: matic_mainnet_rpc
+              value: "https://polygon-mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+            - name: ethereum_mainnet_rpc
+              value: "https://mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+            - name: ethereum_testnet_goerli_rpc
+              value: "https://goerli.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+            - name: binance_testnet_rpc
+              value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+            - name: binance_mainnet_rpc
+              value: "https://bsc-dataseed.binance.org/"
           resources: {}
           volumeMounts:
             - mountPath: /usr/local/src/db

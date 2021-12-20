@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import InputField from "../common/InputField.jsx";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 // import 'react-tabs/style/react-tabs.css';
-import NftList from "./NftList/NftList.jsx";
+import {NftList} from "./NftList/NftList.jsx";
 import VideoList from "../video/videoList.jsx";
 import FilteringBlock from "./FilteringBlock/FilteringBlock.jsx";
 
@@ -18,7 +18,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
 
   const getContract = async () => {
     const responseContract = await (
-      await fetch("/api/contracts/full", {
+      await fetch("/api/contracts/full?itemsPerPage=400", {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -67,11 +67,11 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     }
   };
 
-  useEffect(() => {
-    if (localStorage.token) {
-      updateList();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.token) {
+  //     updateList();
+  //   }
+  // }, []);
 
   const handleClick = useCallback(
     (cover) => {
@@ -101,7 +101,8 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             NFT
           </Tab>
 
-          <Tab
+          <Tab 
+          onClick={() => {updateList()}}
             style={{
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
@@ -111,7 +112,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             }`}
             className="category-button-videos category-button"
           >
-            Videos
+            Unlockables
+            {/* {`Unlockables`.toUpperCase()} */}
+
           </Tab>
         </TabList>
         <div style={{ position: "relative", display: "flex" }}>

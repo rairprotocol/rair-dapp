@@ -51,7 +51,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	bytes32 public constant MINTER = keccak256("MINTER");
 	bytes32 public constant TRADER = keccak256("TRADER");
 
-	address private _factory;
+	address public factory;
 	uint16 private _royaltyFee;
 
 	/// @notice	Token's constructor
@@ -63,7 +63,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		address _creatorAddress,
 		uint16 _creatorRoyalty
 	) ERC721(_contractName, "RAIR") {
-		_factory = msg.sender;
+		factory = msg.sender;
 		_royaltyFee = _creatorRoyalty;
 		_setRoleAdmin(MINTER, CREATOR);
 		_setRoleAdmin(TRADER, CREATOR);

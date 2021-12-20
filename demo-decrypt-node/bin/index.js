@@ -3,23 +3,20 @@ const port = process.env.PORT;
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const low = require('lowdb');
-const FileAsync = require('lowdb/adapters/FileAsync');
 const StartHLS = require('./hls-starter.js');
 const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Socket = require('socket.io');
-const log = require('./utils/logger')(module);
 const morgan = require('morgan');
 const _ = require('lodash');
+const log = require('./utils/logger')(module);
+const seedDB = require('./seeds');
 require('dotenv').config();
 
 const config = require('./config');
 
 async function main() {
-  const adapter = new FileAsync('./db/store.json');
-  const db = await low(adapter);
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
 
   for (const folder of mediaDirectories) {
@@ -28,11 +25,6 @@ async function main() {
       fs.mkdirSync(folder);
     }
   }
-
-  db.defaults({ mediaConfig: {} })
-    .write();
-  db.defaults({ adminNFT: '' })
-    .write();
 
   const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, {
     useNewUrlParser: true,
@@ -62,26 +54,6 @@ async function main() {
 
   const context = {
     hls,
-    store: {
-      setAdminToken: (token) => {
-        return db.set('adminNFT', token).write();
-      },
-      getAdminToken: () => {
-        return db.get('adminNFT').value();
-      },
-      getMediaConfig: mediaId => {
-        return db.get(['mediaConfig', mediaId]).value();
-      },
-      addMedia: (mediaId, config) => {
-        return db.set(['mediaConfig', mediaId], config).write();
-      },
-      removeMedia: mediaId => {
-        return db.unset(['mediaConfig', mediaId]).write();
-      },
-      listMedia: () => {
-        return db.get('mediaConfig').value();
-      }
-    },
     db: {
       Contract: _mongoose.model('Contract', require('./models/contract'), 'Contract'),
       File: _mongoose.model('File', require('./models/file'), 'File'),
@@ -91,10 +63,14 @@ async function main() {
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
-      Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning')
+      Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning'),
+      Blockchain: _mongoose.model('Blockchain', require('./models/blockchain'), 'Blockchain'),
+      Category: _mongoose.model('Category', require('./models/category'), 'Category')
     },
     config
   };
+
+  await seedDB(context);
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());

@@ -11,7 +11,16 @@ const { MongoClient } = require('mongodb');
   });
   const db = client.db(client.s.options.dbName);
 
+  await db.collection('User').createIndex(
+    { publicAddress: 'text', nickName: 'text' },
+    {
+      weights: { publicAddress: 1, nickName: 3 },
+      name: 'UserSearchIdx'
+    }
+  );
+
   await db.collection('Contract').createIndex({ user: 1 }, { background: true });
+  await db.collection('Contract').createIndex({ contractAddress: 1, blockchain: 1 }, { background: true, unique: true });
 
   await db.collection('Product').createIndex({ name: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1 }, { background: true });
@@ -19,6 +28,7 @@ const { MongoClient } = require('mongodb');
     background: true,
     unique: true
   });
+  await db.collection('Product').createIndex({ name: 'text'}, { weights: { name: 1 }, name: 'ProductSearchIdx' });
 
   await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true, unique: true });
   await db.collection('OfferPool').createIndex({ contract: 1, marketplaceCatalogIndex: 1 }, { background: true, unique: true });

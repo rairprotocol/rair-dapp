@@ -3,17 +3,20 @@ const _ = require('lodash');
 const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { erc721Abi } = require('../integrations/ethers/contracts');
+const { logAgendaActionStart } = require('../utils/agenda_action_logger');
+const { AgendaTaskEnum } = require('../enums/agenda-task');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define('sync locks', { lockLifetime }, async (task, done) => {
+  context.agenda.define(AgendaTaskEnum.SyncLocks, { lockLifetime }, async (task, done) => {
     try {
+      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncLocks});
       const { network, name } = task.attrs.data;
       const locksForSave = [];
       const locksForUpdate = [];
-      const block_number_locked = [];
-      const block_number_unlocked = [];
+      let block_number_locked = [];
+      let block_number_unlocked = [];
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const locked = getABIData(erc721Abi, 'event', 'RangeLocked');
@@ -31,12 +34,13 @@ module.exports = (context) => {
         from_block: _.get(versionUnlocked, ['number'], 0),
         ...unlocked
       };
-      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }).distinct('contractAddress');
+      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }, { _id: 1, contractAddress: 1 });
 
       // Initialize moralis instances
       Moralis.start({ serverUrl, appId });
 
-      await Promise.all(_.map(arrayOfContracts, async contract => {
+      await Promise.all(_.map(arrayOfContracts, async item => {
+        const { _id, contractAddress: contract } = item;
         const optionsLocked = {
           address: contract,
           ...generalOptionsForLocked
@@ -60,16 +64,16 @@ module.exports = (context) => {
                 productName
               } = lock.data;
 
-            block_number_locked.push(Number(lock.block_number));
-
               locksForSave.push({
-                lockIndex: lockIndex ? lockIndex : lock.block_number, // using block_number as lockIndex for test networks
-                contract,
+                lockIndex: lockIndex ? lockIndex : lock.block_number, //FIXME: using block_number as lockIndex for test networks, since old version of factory don't have the lockIndex
+                contract: _id,
                 product: productIndex,
                 range: [startingToken, endingToken],
                 lockedTokens: tokensLocked,
                 isLocked: true
               });
+
+            block_number_locked.push(Number(lock.block_number));
             });
         }
 
@@ -77,11 +81,9 @@ module.exports = (context) => {
           _.forEach(eventsUnlocked.result, lock => {
               const { lockIndex, productID, startingToken, endingToken } = lock.data;
 
-            block_number_unlocked.push(Number(lock.block_number));
-
               locksForUpdate.push({
                 updateOne: {
-                  filter: { contract, lockIndex: lockIndex ? lockIndex : lock.block_number }, // using block_number as lockIndex for test networks
+                  filter: { contract: _id, lockIndex: lockIndex || lock.block_number }, //FIXME: using block_number as lockIndex for test networks, since old version of factory don't have the lockIndex
                   update: {
                     product: productID,
                     range: [startingToken, endingToken],
@@ -92,6 +94,8 @@ module.exports = (context) => {
                   setDefaultsOnInsert: true
                 }
               });
+
+            block_number_unlocked.push(Number(lock.block_number));
             });
         }
       }));

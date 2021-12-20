@@ -2,9 +2,40 @@
 
 Get specific token by contract, product and internal ID
 
-**URL** : `/api/nft/:contract/:product/token/:token`
+**URL** : `/api/nft/network/:networkId/:contract/:product/token/:token`
 
 **Method** : `GET`
+
+**Parameters:**
+
+```json
+{
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contract": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "product": {
+    "required": true,
+    "content": {
+      "type": "number"
+    }
+  },
+  "token": {
+    "required": true,
+    "content": {
+      "type": "number"
+    }
+  }
+}
+```
 
 ## Success Response
 

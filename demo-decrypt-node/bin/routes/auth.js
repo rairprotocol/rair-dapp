@@ -5,12 +5,13 @@ const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.j
 const _ = require('lodash');
 const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
-const { JWTVerification, validation } = require('../middleware');
+const { ObjectId } = require('mongodb');
 const { nanoid } = require('nanoid');
+const { JWTVerification, validation } = require('../middleware');
 const log = require('../utils/logger')(module);
 
 const getTokensForUser = async (context, ownerAddress, { offer, contract, product }) => context.db.Offer.aggregate([
-  { $match: { offerIndex: { $in: offer }, contract, product } },
+  { $match: { offerIndex: { $in: offer }, contract: ObjectId(contract), product } },
   {
     $lookup: {
       from: 'MintedToken',
@@ -219,7 +220,6 @@ module.exports = context => {
         log.info('New Admin NFT', adminNFT);
 
         if (!nftIdentifier) {
-          context.store.setAdminToken(adminNFT);
           await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
           log.info('There was no NFT identifier, so', adminNFT, 'is the new admin token');
           res.status(200).json({
@@ -240,7 +240,6 @@ module.exports = context => {
             if (!ownsTheToken) {
               res.json({ success: false, message: 'You don\'t hold the current admin token' });
             } else {
-              context.store.setAdminToken(adminNFT);
               await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
               res.json({
                 success: true,
