@@ -123,7 +123,7 @@ module.exports = context => {
       const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
 
       if (foundBlockchain) {
-        const arrayOfContracts = await context.db.Contract.find({ blockchain }).distinct('contractAddress');
+        const arrayOfContracts = await context.db.Contract.find({ blockchain }).distinct('_id');
         searchQuery.contract = { $in: arrayOfContracts };
       }
 
@@ -149,7 +149,7 @@ module.exports = context => {
         }, {})
         .value();
 
-      res.json({ success: true, list });
+      return res.json({ success: true, list });
     } catch (e) {
       log.error(e);
       next(e.message);
