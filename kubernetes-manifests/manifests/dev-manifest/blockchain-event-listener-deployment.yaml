@@ -80,8 +80,7 @@ spec:
             - name: BINANCE_CHAINID_HEX
               value: "0x61"
             - name: GOERLI_URL
-              value: "https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_
-goerli_chain_id=5"
+              value: "https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_goerli_chain_id=5"
             - name: GOERLI_CHAIN_ID
               value: "5"
             - name: GOERLI_SYMBOL

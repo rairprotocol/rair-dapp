@@ -1,6 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import classes from './ThankYouPage.module.css';
+
+import DiscordIcon from './../SplashPage/images/discord-icon.png';
+import logoAuthor from './../SplashPage/images/colab.png';
 
 const ThankYouPage = () => {
     const history = useHistory();
@@ -10,27 +12,33 @@ const ThankYouPage = () => {
     };
 
     return (
-        <div className={classes.mainBox}>
-            <div className={classes.boxContent}>
-                <div>
-                    <h1>RAIR Technologies</h1>
-                </div>
-                <div className={classes.boxThank}>
-                    <div class="h3">Almost finished...</div>
-                    <p>We need to confirm your email address.</p>
-
-                    <p>To complete the subscription process, please click the link in the email we just sent you.</p>
-
-                    <div class="box-adress">
-                        RAIR Technologies, INC
-                        2801 W COAST HWY
-                        Suite 230
-                        Newport Beach, CA 92633
+        <div className="col">
+            <div className="nipsey-thank-you-page">
+                <div className="information-author">
+                    <div className="block-splash">
+                        <div className="text-splash">
+                            <div className="title-splash nipsey">
+                                <h4>Thanks for</h4>
+                                <h4>subscribing</h4>
+                            </div>
+                            <div className="text-description">
+                                <div>
+                                    You’re on the newsletter list!<br />
+                                    and will be the first to know<br />
+                                    While you’re here why not..
+                                </div>
+                            </div>
+                            <div className="release-join-discord">
+                                <div className="btn-discord">
+                                    <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
+                                </div>
+                            </div>
+                            <div className="logo-author">
+                                {/* <img src={logoDigital} alt="southwest digital" /> */}
+                                <img src={logoAuthor} alt="logo-author" />
+                            </div>
+                        </div>
                     </div>
-
-                    <a href="">Add us to your address book</a>
-
-                    <p onClick={goBack}>« return to our website</p>
                 </div>
             </div>
         </div>

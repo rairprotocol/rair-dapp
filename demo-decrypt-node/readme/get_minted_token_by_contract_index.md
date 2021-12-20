@@ -2,9 +2,34 @@
 
 Get specific token by contract address and unique toke ID in contract
 
-**URL** : `/api/nft/:contract/token/:tokenInContract`
+**URL** : `/api/nft/network/:networkId/:contract/token/:tokenInContract`
 
 **Method** : `GET`
+
+**Parameters:**
+
+```json
+{
+  "networkId": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "contract": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
+  },
+  "tokenInContract": {
+    "required": true,
+    "content": {
+      "type": "number"
+    }
+  }
+}
+```
 
 ## Success Response
 

@@ -10,9 +10,13 @@
 }
 
 .home-splash-mobile {
+    padding-bottom: 208px;
     display: none;
 }
 
+.wrapper-splash-page img {
+    pointer-events: none;
+}
 
 /* main block */
 
@@ -56,6 +60,19 @@
     background-position: 95% center;
 }
 
+.nipsey-comming-soon .information-author {
+    background-size: 530px auto;
+}
+
+.nipsey-comming-soon .information-author .text-splash .title-splash h4 {
+    font-size: 64px;
+    color: #725BDB
+}
+
+.nipsey-thank-you-page {
+    margin-bottom: 108px;
+}
+
 .information-author.greyman-page-author {
     background-image: url('./images/greyman.png');
     background-size: 516px 516px;
@@ -97,6 +114,10 @@
     font-size: 40px;
 }
 
+.text-splash .title-splash.nipsey h3, .text-splash .title-splash.nipsey h4, .text-splash .title-splash.nipsey span{
+    color: #725BDB;
+}
+
 .text-splash .title-splash h3 {
     font-size: 24px;
     font-weight: 800;
@@ -104,7 +125,7 @@
     margin: 0;
 }
 
-.text-splash .title-splash span {
+.text-splash .title-splash span, .text-splash .title-splash.nipsey h4 {
     font-size: 64px;
     color: #4E4D4D;
     font-weight: 800;
@@ -115,11 +136,19 @@
     font-size: 20px;
 }
 
-.text-splash p {
+.span-under {
+    text-decoration: underline;
+}
+
+.text-splash .text-description div {
     color: #A7A6A6;
     font: 20px;
     line-height: 36px;
     font-weight: 400;
+}
+
+.text-splash .text-description div a {
+    text-decoration: underline;
 }
 
 .information-author.greyman-page-author .text-splash p {
@@ -304,7 +333,6 @@
 
 .left-tokens-content .title-tokens h3 {
     font-size: 40px;
-    font-weight: 700;
     line-height: 60px;
 }
 
@@ -333,16 +361,16 @@
     display: flex;
     justify-content: center;
 }
-
+/* 
 .left-tokens-content .mailchimp {
     display: flex;
-}
-
+} */
+/* 
 .left-tokens-content .mailchimp .email-box {
     margin-right: 19px;
-}
+} */
 
-.left-tokens-content .mailchimp .email-box input {
+/* .left-tokens-content .mailchimp .email-box input {
     width: 435px;
     height: 64px;
     background: #fff;
@@ -356,17 +384,17 @@
     font-style: italic;
     font-size: 20px;
     font-weight: 400;
-}
+} */
 
-.left-tokens-content .mailchimp .email-box input:focus {
+/* .left-tokens-content .mailchimp .email-box input:focus {
     border: 1px solid #9867D9;
-}
+} */
 
-.left-tokens-content .mailchimp .signup_scroll {
+/* .left-tokens-content .mailchimp .signup_scroll {
     display: flex;
-}
+} */
 
-.left-tokens-content .mailchimp .email-box input::placeholder {
+/* .left-tokens-content .mailchimp .email-box input::placeholder {
     color: #9013FE;
     font-style: italic;
     font-size: 20px;
@@ -388,7 +416,7 @@
 .left-tokens-content .mailchimp .btn-subscribe input:hover {
     transition: all .3s ease-in;
     background: #E882D5;
-}
+} */
 
 
 /* Special Offer Block */
@@ -513,6 +541,11 @@
 
 .btn-open-store span {
     font-size: 24px;
+    transition: .2s all ease;
+}
+
+.btn-open-store span:hover {
+    color: #E882D5;
 }
 
 .btn-open-store i {
@@ -544,11 +577,10 @@
     margin-left: 22px;
 }
 
-
 /* Unlockble Video Block*/
 
 .unlockble-video {
-    margin-bottom: 108px;
+    margin-top: 108px;
 }
 
 .title-gets {
@@ -575,6 +607,11 @@
     width: 592px;
     background-color: #4E4D4DCC;
     overflow: hidden;
+    position: relative;
+}
+
+.video-locked .block-with-video {
+    position: absolute;
 }
 
 .video-icon {
@@ -602,11 +639,39 @@
     font-size: 16px;
 }
 
-.video-locked img {
+.video-locked img.block-img-bg {
     width: 230px;
     opacity: 0.4;
     height: 135px;
     filter: blur(3px);
+    z-index: 1;
+}
+
+/* .video-locked .block-with-video {
+    width: 230px;
+    opacity: 0.4;
+    height: 135px;
+} */
+
+.video-locked .block-with-video {
+
+}
+
+.video-block-metamask-some {
+    position: absolute;
+    top: 30px;
+    left: 75px;
+}
+
+.video-block-metamask-some img {
+    width: 80px;
+    height: auto;
+    position: absolute;
+    /* filter: blur(0px); */
+    /* opacity: 1; */
+    /* top: 30px;
+    left: 100px; */
+    z-index: 2;
 }
 
 .video-description {
@@ -669,6 +734,34 @@
 
 .meet-team .box-teammate {
     margin-bottom: 24px;
+}
+
+.meet-team .box-teammate .teammate-title-socials {
+    display: flex;
+    align-items: center;
+}
+
+
+.meet-team .box-teammate .teammate-title-socials span a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    color: #E882D5;
+    transition: .2s all ease;
+}
+
+.meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
+    margin-left: 10px;
+}
+
+.meet-team .box-teammate .teammate-title-socials span a:hover {
+    color:#d634b8;
+}
+
+.meet-team .box-teammate .teammate-title-socials .box-socials {
+    margin-left: 20px;
 }
 
 .img-teammate img {
@@ -976,7 +1069,7 @@ text-decoration: underline;
     .nfts-select .main-nft {
         width: 465px;
         height: 465px;
-        background-size: cover !important;
+        background-size: contain;
     }
 
     .nfts-select .block-nfts {
@@ -1411,6 +1504,343 @@ text-decoration: underline;
 }
 
 
+/* Release Block*/
+
+.nipsey-release {
+    margin: 108px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.nipsey-release .release-container-title {
+    font-size: 40px;
+    text-align: left;
+    margin-bottom: 42px;
+}
+
+.release-container .tabs-box .tab-title-box {
+    width: 274px;
+    height: 60px;
+    border-radius: 16px;
+    background: #5B49AF;
+    font-size: 24px;
+    font-weight: 700;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.release-container .tabs-box:nth-child(2) .tab-title-box {
+    background: #CD6116;
+}
+
+.release-container .tabs-box:nth-child(3) .tab-title-box {
+    background: #DD7ED6;
+}
+
+.release-container .tabs-box:last-child .tab-title-box {
+    background: #00AEEF;
+}
+
+.release-container .tabs-box .tab-text-box {
+    padding: 24px 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.release-container .tabs-box .tab-text-box p {
+    margin: 0;
+}
+
+.nipsey-release .release-container:last-child {
+    width: 700px;
+    margin-left: 120px;
+}
+
+.nipsey-release .release-desc-nipsey .release-desc-nipsey-box {
+    padding: 25px;
+    border: 2px dashed #4E4D4D;
+    font-size: 18px;
+    line-height: 32px;
+    text-align: left;
+    margin-bottom: 25px;
+    border-radius: 16px;
+}
+
+.nipsey-release .release-artwork-desc {
+    text-align: left;
+}
+
+.nipsey-release .release-artwork-desc-title {
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 28px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+
+.nipsey-release .release-artwork-desc-text {
+    font-size: 18px;
+}
+
+.release-join-discord {
+    margin-top: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.release-join-discord .mailchimp .email-box {
+    width: 351px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #A46BD9;
+    background: none;
+    padding: 0 30px;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+}
+.release-join-discord .mailchimp .email-box button {
+    border: none;
+    background: none;
+    color: #A46BD9;
+    font-size: 24px;
+    transition: .3s all ease;
+    /* margin-left: -10px; */
+}
+
+.release-join-discord .mailchimp .email-box button:disabled {
+    color: grey;
+}
+
+.release-join-discord .mailchimp .email-box button:hover {
+    margin-left: 6px;
+    color: #DD7ED6;
+    outline: none;
+}
+
+.release-join-discord .mailchimp input.email {
+    color: #fff;
+    border: none;
+    background: none;
+    outline: none;
+    -webkit-appearance: none;
+    width: 300px;
+}
+
+.release-join-discord .mailchimp input.email:active {
+    background: none;
+}
+
+.btn-discord {
+    margin-top: 24px;
+}
+
+.btn-discord a {
+    text-decoration: none;
+    /* width: 351px; */
+    padding: 10px 20px;
+    /* height: 50px; */
+    border-radius: 10px;
+    background: #A46BD9;
+    font-size: 24px;
+    border: none;
+    color: #fff;
+    transition: .3s all ease;
+}
+
+.btn-discord a:hover {
+    background: #8542c4;
+}
+
+.btn-discord a img {
+    margin-right: 10px;
+    width: 38px;
+    height: auto;
+}
+
+.nipsey-roadmap {
+    margin: 108px 0;
+}
+
+.nipsey-roadmap-title {
+    font-size: 40px;
+    text-align: left;
+    margin-bottom: 33px;
+}
+
+.roadmap-box .roadmap-box-desc {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.roadmap-box:nth-child(2) {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.roadmap-box:nth-child(2) p {
+    font-size: 18px;
+    margin-bottom: 4px;
+    text-align: left;
+}
+
+.roadmap-box:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress {
+    padding: 30px 0;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress-text {
+    width: 80%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .progress-line-pink, .progress-line-grey {
+    position: absolute;
+    height: 3px;
+    width: 50%;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .progress-line-pink {
+    left: 0;
+    top: 50px;
+    z-index: 1;
+    background: #E882D5;
+}
+
+
+.roadmap-box:nth-child(3) .roadmap-progress .progress-line-grey {
+    right: 0;
+    top: 50px;
+    z-index: 1;
+    background: #383637;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .roadmap-progress-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #E882D5;
+    font-weight: 700;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .roadmap-progress-circle:last-child {
+    background: #383637;
+}
+
+.roadmap-container {
+    width: 100%;
+    border-radius: 16px;
+    border: 2px dashed #4E4D4D;
+    padding: 50px 45px;
+}
+
+.nipsey-img-masks img {
+    width: 300px;
+    height: auto;
+}
+
+/* Media */
+
+@media screen and (max-width: 1150px) {
+    .nipsey-release .release-container:last-child {
+        margin-left: 60px;
+    }
+}
+
+@media screen and (max-width: 1090px) {
+    .nipsey-release .release-container:last-child {
+        margin-left: 0px;
+    }
+
+    .nipsey-release {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nipsey-release .release-join-discord {
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 1007px) {
+    .nipsey-comming-soon {
+        margin-bottom: 108px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .nipsey-roadmap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .roadmap-container {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 920px) {
+    .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
+        max-width: 800px !important;
+    }
+}
+
+@media screen and (max-width: 820px) {
+    .nipsey-thank-you-page, .nipsey-comming-soon{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
+        width: 100%;
+        background-image: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author .text-splash, .nipsey-comming-soon .information-author .text-splash {
+        text-align: center;
+    }
+
+    .nipsey-thank-you-page .information-author .text-splash .text-description, .nipsey-comming-soon .information-author .text-splash .text-description {
+        text-align: center;
+    }
+
+    .nipsey-thank-you-page .information-author .release-join-discord, .nipsey-comming-soon .information-author .release-join-discord {
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author .nipsey-thank-you-page .information-author, .nipsey-comming-soon  .information-author .nipsey-thank-you-page .information-author {
+        display: flex;
+        justify-content: center;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .content-owners-mobile .owner-box .owner-img {
         width: 200px;
@@ -1419,6 +1849,36 @@ text-decoration: underline;
     .content-owners-mobile .owner-box .owner-img img, .content-owners-mobile .owner-box:last-child .owner-img img {
         width: 200px;
         height: auto;
+    }
+}
+
+@media screen and (max-width: 528px) {
+    .nipsey-comming-soon {
+        margin-bottom: 208px;
+    }
+
+    .nipsey-comming-soon .text-splash .text-description {
+        font-size: 18px;
+        width: 100%;
+        
+    }
+}
+
+.btn-timer-nipsey {
+    color: #000;
+}
+
+@media screen and (max-width: 503px) {
+    .nipsey-thank-you-page {
+        margin-bottom: 208px;
+    }
+
+    .text-splash .title-splash span, .text-splash .title-splash.nipsey h4 {
+        font-size: 40px;
+    }
+
+    .nipsey-thank-you-page .block-splash .logo-author img:first-child {
+        width: 250px;
     }
 }
 

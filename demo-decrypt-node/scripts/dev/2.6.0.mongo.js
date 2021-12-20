@@ -20,5 +20,3 @@ db.Offer.find().toArray().forEach(item => {
 db.Product.find().toArray().forEach(item => {
   db.Product.updateOne({ _id: item._id }, { $set: { name: item.name.trim() } });
 });
-
-

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useHistory } from 'react-router';
+import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 
-const TokenLeft = ({ primaryColor }) => {
+const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
     const [percentTokens, setPersentTokens] = useState(0);
     const history = useHistory();
     const [emailField, setEmailField] = useState('');
@@ -23,8 +24,8 @@ const TokenLeft = ({ primaryColor }) => {
         }, 1000)
     }
 
-    const leftTokensNumber = 1000;
-    const wholeTokens = 1000;
+    const leftTokensNumber = Number(copies) - Number(soldCopies);
+    const wholeTokens = Number(copies);
 
     useEffect(() => {
         if (leftTokensNumber <= wholeTokens) {
@@ -44,7 +45,7 @@ const TokenLeft = ({ primaryColor }) => {
         if (leftTokensNumber > wholeTokens) {
             setPersentTokens(100)
         }
-    }, [setPersentTokens])
+    }, [setPersentTokens, leftTokensNumber, wholeTokens])
 
     return (
         <div className="left-tokens">
@@ -96,8 +97,8 @@ const TokenLeft = ({ primaryColor }) => {
                     </div>
                 </div>
                 <div className="down-text">
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum<br />
-                    dolore eu fugiat nulla pariatur.   Excepteur sint occaecat.
+                    Minting on demand secures your NFT on the blockhain.Unique<br />
+                    artwork to follow based on examples shown.
                 </div>
             </div>
             <div className="left-tokens-content">
@@ -106,40 +107,25 @@ const TokenLeft = ({ primaryColor }) => {
                 </div>
                 <div className="tokens-description">
                     <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
-                        October 2013, Nipsey unveils the Crenshaw EP with a groundbreaking
-                        release strategy. Sell 1000 copies for $100 each. Within 24 hours all
-                        1000 were spoken for. With his next release Mailbox Money, Nipsey
-                        upped the ante to $1000 for only 100 copies.
+                        October 2013, Los Angeles, CA. Nipsey unveils the Crenshaw EP with a
+                        groundbreaking release strategy: Sell 1000 copies for $100 each.
                     </p>
+
                     <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
-                        In collaboration with award winning producer Mr. Lee and the
-                        Asghedom estate comes the final album as an exclusive 1000 only
-                        streaming NFT.
+                        Within 24 hours, all 1000 copies are spoken for.
+                    </p>
+
+                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
+                        In collaboration with award-winning producer Mr. Lee, the Asghedom estate,
+                        Southwest Digital Distribution, and RAIR Technologies , the final Nipsey
+                        experience is released as an exclusive 1000 run streaming NFT.
                     </p>
                 </div>
-                <div className="mailchimp">
-                    <form action="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&amp;id=1f95f6ad8c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank" noValidate>
-                        <div className="signup_scroll">
-                            <div className="email-box">
-                                <input
-                                    onChange={onChangeEmail}
-                                    value={emailField}
-                                    type="email" name="EMAIL"
-                                    className="email"
-                                    id="mce-EMAIL"
-                                    placeholder="Join our email list for updates & drops"
-                                    required />
-                            </div>
-                            <div style={{
-                                position: "absolute", left: "-5000px"
-                            }} aria-hidden="true">
-                                <input type="text" name="b_4740c76c171ce33ffa0edd3e6_1f95f6ad8c" tabIndex="-1" />
-                            </div>
-                            <div className="btn-subscribe">
-                                <input onClick={onSubmit} type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" className="button" required />
-                            </div>
-                        </div>
-                    </form>
+                <div className="release-join-discord">
+                    <MailchimpComponent />
+                    <div className="btn-discord">
+                        <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
+                    </div>
                 </div>
             </div>
         </div>

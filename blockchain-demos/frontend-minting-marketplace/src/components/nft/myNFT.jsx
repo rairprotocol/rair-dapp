@@ -12,7 +12,7 @@ const MyNFTs = () => {
 	const dispatch = useDispatch();
 	// const { token } = useSelector(store => store.accessStore)
 
-	const [tokens, setTokens] = useState([])
+	const [tokens, setTokens] = useState()
 
 	const fetchData = useCallback(async () => {
 		let response = await rFetch('/api/nft');
@@ -20,7 +20,7 @@ const MyNFTs = () => {
 		if (response.success) {
 			let tokenData = []
 			for await (let token of response.result) {
-				let contractData = await rFetch(`/api/contracts/${token.contract}`)
+				let contractData = await rFetch(`/api/contracts/singleContract/${token.contract}`)
 				tokenData.push({
 					...token,
 					...contractData.contract
@@ -42,7 +42,7 @@ const MyNFTs = () => {
 	}, [fetchData]);
 
 	return <div className='row px-0 mx-0'>
-		{tokens.length > 0 ? tokens.map((item, index) => {
+		{tokens ? tokens.length > 0 && tokens.map((item, index) => {
 			return <div
 				key={index}
 				className='p-2 my-2 col-4'>
@@ -51,7 +51,7 @@ const MyNFTs = () => {
 					backgroundImage: `url(${chainData[item?.blockchain]?.image})`,
 					backgroundColor: `var(--${primaryColor}-transparent)`,
 				}}>
-					<small style={{ fontSize: '0.7rem' }}>{item.contract}:{item.uniqueIndexInContract}</small>
+					<small style={{ fontSize: '0.7rem' }}>{item.contractAddress}:{item.uniqueIndexInContract}</small>
 					<br />
 					{item.metadata ?
 						<>
@@ -66,7 +66,7 @@ const MyNFTs = () => {
 						<b> No metadata available </b>
 					}
 					<br />
-					<Link to={`/token/${item.contract}/${item.uniqueIndexInContract}`} className='btn btn-stimorol'>
+					<Link to={`/token/${item.contractAddress}/${item.uniqueIndexInContract}`} className='btn btn-stimorol'>
 						View Token
 					</Link>
 				</div>

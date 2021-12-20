@@ -9,6 +9,7 @@
   "scripts": {
     "hardhat:compile": "hardhat compile",
     "hardhat:test": "hardhat test",
+    "hardhat:testEvents": "hardhat test --logs",
     "deploy-binance": "npx hardhat --network binanceSmartchain deploy",
     "deploy-goerli": "npx hardhat --network goerli deploy",
     "deploy-mumbai": "npx hardhat --network mumbai deploy",
@@ -34,6 +35,7 @@
     "@openzeppelin/contracts-upgradeable": "^4.2.0",
     "@openzeppelin/hardhat-upgrades": "^1.9.0",
     "dotenv": "^10.0.0",
-    "hardhat-contract-sizer": "^2.1.1"
+    "hardhat-contract-sizer": "^2.1.1",
+    "hardhat-tracer": "^1.0.0-alpha.6"
   }
 }
