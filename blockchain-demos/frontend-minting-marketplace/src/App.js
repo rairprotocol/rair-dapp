@@ -60,7 +60,11 @@ import AboutPage from './components/AboutPage/AboutPage';
 import ThankYouPage from './components/ThankYouPage';
 import NotFound from './components/NotFound/NotFound';
 
+//Google Analytics
+import ReactGA from 'react-ga';
+
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
+import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -79,6 +83,9 @@ function App({ sentryHistory }) {
 	const [errorAuth, /*setErrorAuth*/] = useState('');
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
+	// Google Analytics
+	const TRACKING_ID = "UA-209450870-1"; // YOUR_OWN_TRACKING_ID
+	ReactGA.initialize(TRACKING_ID);
 	// Redux
 	const dispatch = useDispatch()
 	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
@@ -156,8 +163,8 @@ function App({ sentryHistory }) {
 					console.log("Nahuy")
 					return;
 				}
-				const adminResponse = await (await fetch(`/api/auth/admin/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
-				dispatch({type: userTypes.SET_ADMIN_RIGHTS, payload: adminResponse.success});
+				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
+				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: adminResponse.success });
 				setAdminAccess(adminResponse.success);
 				// adminRights = adminResponse.success;
 			}
@@ -200,7 +207,7 @@ function App({ sentryHistory }) {
 		}
 	}, [adminAccess, programmaticProvider, dispatch]);
 
-	const goHome = () =>{
+	const goHome = () => {
 		sentryHistory.push(`/`)
 	}
 
@@ -231,7 +238,7 @@ function App({ sentryHistory }) {
 			window.gotoRouteBackdoor = sentryHistory.push
 			window.adminAccessBackdoor = (boolean) => {
 				setAdminAccess(boolean);
-				dispatch({type: userTypes.SET_ADMIN_RIGHTS, payload: boolean});
+				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
 			}
 		}
 	}, [sentryHistory.push])
@@ -254,7 +261,7 @@ function App({ sentryHistory }) {
 		let timeout;
 		if (token) {
 			const decoded = jsonwebtoken.decode(token);
-			
+
 			if (decoded?.exp) {
 
 				timeout = setTimeout(() => {
@@ -282,50 +289,50 @@ function App({ sentryHistory }) {
 	// }, [checkToken, token])
 
 	useEffect(() => {
-    if (primaryColor === "charcoal") {
-      (function () {
-        let angle = 0;
-        let p = document.querySelector("p");
-        if (p) {
-          let text = p.textContent.split("");
-          var len = text.length;
-          var phaseJump = 360 / len;
-          var spans;
-          p.innerHTML = text
-            .map(function (char) {
-              return "<span>" + char + "</span>";
-            })
-            .join("");
+		if (primaryColor === "charcoal") {
+			(function () {
+				let angle = 0;
+				let p = document.querySelector("p");
+				if (p) {
+					let text = p.textContent.split("");
+					var len = text.length;
+					var phaseJump = 360 / len;
+					var spans;
+					p.innerHTML = text
+						.map(function (char) {
+							return "<span>" + char + "</span>";
+						})
+						.join("");
 
-          spans = p.children;
-        } else console.log("kik");
+					spans = p.children;
+				} else console.log("kik");
 
-        // function wheee() {
-        //   for (var i = 0; i < len; i++) {
-        //     spans[i].style.color =
-        //       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-        //   }
-        //   angle+=5;
-        // //   requestAnimationFrame(wheee);
-        // };
-		// setInterval(wheee, 100);
+				// function wheee() {
+				//   for (var i = 0; i < len; i++) {
+				//     spans[i].style.color =
+				//       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+				//   }
+				//   angle+=5;
+				// //   requestAnimationFrame(wheee);
+				// };
+				// setInterval(wheee, 100);
 
-		(function wheee() {
-			for (var i = 0; i < len; i++) {
-			  spans[i].style.color =
-				"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-			}
-			angle++;
-			requestAnimationFrame(wheee);
-		  })();
-      })();
-    }
-  } , [primaryColor]);
+				(function wheee() {
+					for (var i = 0; i < len; i++) {
+						spans[i].style.color =
+							"hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+					}
+					angle++;
+					requestAnimationFrame(wheee);
+				})();
+			})();
+		}
+	}, [primaryColor]);
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
 			<Router history={sentryHistory}>
-				{currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />}
+				{/* {currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />} */}
 				<div
 					style={{
 						...backgroundImageEffect,
@@ -357,91 +364,69 @@ function App({ sentryHistory }) {
 								<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
 									className={`btn btn-${primaryColor} btn-connect-wallet`}
 									onClick={connectUserData}>
-								{startedLogin ? 'Please wait...' : 'Connect Wallet'} 
-							{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-						</button>
-							{renderBtnConnect ? <OnboardingButton /> : <> </>}
-						</div> : adminAccess === true && [
-							{name: <i className="fas fa-photo-video"/>, route: '/all', disabled: !loginDone},
-							{name: <i className="fas fa-key"/>, route: '/my-nft'},
-							{name: <i className="fa fa-id-card" aria-hidden="true"/> , route: '/new-factory', disabled: !loginDone},
-							{name: <i className="fa fa-shopping-cart" aria-hidden="true"/>, route: '/on-sale', disabled: !loginDone},
-							{name: <i className="fa fa-user-secret" aria-hidden="true"/>, route: '/admin', disabled: !loginDone},
-							{name: <i className="fas fa-city"/>, route: '/factory', disabled: factoryInstance === undefined},
-							{name: <i className="fas fa-shopping-basket"/>, route: '/minter', disabled: minterInstance === undefined}
-						].map((item, index) => {
-							if (!item.disabled) {
-								return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
-									<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{color: 'inherit', textDecoration: 'none'}}>
-										{item.name}
-									</NavLink>
-								</div>
-							}
-							return <div key={index}></div>
-						})}
-					</div>
-					<div className='col'>
-						<div className='col-12' style={{height: '10vh'}}>
-							{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
-							<Switch>
-								<SentryRoute path='/admin' component={BlockChainSwitcher} />
-							</Switch>
+									{startedLogin ? 'Please wait...' : 'Connect Wallet'}
+									{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+								</button>
+								{renderBtnConnect ? <OnboardingButton /> : <> </>}
+							</div> : adminAccess === true && [
+								{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
+								{ name: <i className="fas fa-key" />, route: '/my-nft' },
+								{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+								{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+								{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+								{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+								{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined }
+							].map((item, index) => {
+								if (!item.disabled) {
+									return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+										<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
+											{item.name}
+										</NavLink>
+									</div>
+								}
+								return <div key={index}></div>
+							})}
 						</div>
-						<div className='col-12 mt-3 row'>
-							<Switch>
-								<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
-								<SentryRoute exact path="/thankyou" component={ThankYouPage} />
-								<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
-								<SentryRoute exact path="/terms-use" component={TermsUse} />
-								<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
-								<SentryRoute exact path="/notifications" component={NotificationPage} />
-								<SentryRoute exact path="/rair-about-page">
-									<AboutPage primaryColor={primaryColor} textColor={textColor}/>
-								</SentryRoute>
-								<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
-								{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
-								{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
-								{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor}/>}
-								{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
-								{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
-								{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
-								{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
-								{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
-								{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
-								{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/'>
-									<WorkflowSteps {...{sentryHistory}} />
-								</SentryRoute>}
-
-								<SentryRoute path='/all'>
-									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-								</SentryRoute>
-								<SentryRoute path='/:adminToken/:contract/:product/:offer/:token'>
-									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-								</SentryRoute>
-								{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
-								{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
-								<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
-								<SentryRoute path='/tokens/:contract/:product/:tokenId'>
-									<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-								</SentryRoute>
-								{adminAccess && <SentryRoute path='/admin' component={FileUpload}/>}
-								<SentryRoute exact path='/'>
-									<div className='col-6 text-left'>
-										<h1 className='w-100' style={{textAlign: 'left'}}>
-											Digital <b className='title'>Ownership</b>
-											<br />
-											Encryption
-										</h1>
-										<p className='w-100' style={{textAlign: 'left'}}>
-											RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
-										</p>
-									</div>
-									<div className='col-12 mt-3 row' >
-										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-									</div>
+						<div className='col'>
+							<div className='col-12' style={{ height: '10vh' }}>
+								{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
+								<Switch>
+									<SentryRoute path='/admin' component={BlockChainSwitcher} />
+								</Switch>
+							</div>
+							<div className='col-12 mt-3 row'>
+								<Switch>
+									<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
+									<SentryRoute exact path="/thankyou" component={ThankYouPage} />
+									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
+									<SentryRoute exact path="/terms-use" component={TermsUse} />
+									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+									<SentryRoute exact path="/notifications" component={NotificationPage} />
+									<SentryRoute exact path="/rair-about-page">
+										<AboutPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
+									<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
+									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
+									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
+									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
+									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
+									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
+									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
+									{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
+									{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
+									{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/'>
+										<WorkflowSteps {...{ sentryHistory }} />
+									</SentryRoute>}
+
+									<SentryRoute path='/all'>
+										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
+									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
+									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
+									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 									<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
 										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
@@ -470,6 +455,7 @@ function App({ sentryHistory }) {
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</div>
 									</SentryRoute>
+									<SentryRoute path="/comming-soon" component={CommingSoon} />
 									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>
@@ -486,10 +472,19 @@ function App({ sentryHistory }) {
 							© Rairtech 2021. All rights reserved
 						</div>
 						<ul>
-							<li>Newsletter</li>
-							<li>Contract</li>
-							<li>Inquiries</li>
-							<li onClick={() => openAboutPage()}>About Us</li>
+							<li>
+								<a href="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&id=1f95f6ad8c" target="_blank">Newsletter</a>
+							</li>
+							<li>
+								<a target="_blank" href="https://etherscan.io/error.html?404">Contract</a>
+							</li>
+							<li>
+								<a href="https://discord.gg/7KaSHNJ7qS" target="_blank">Inquiries</a>
+							</li>
+							<li>
+								<NavLink to="/terms-use">Terms of Service</NavLink>
+							</li>
+							<li onClick={() => openAboutPage()}>About us</li>
 						</ul>
 					</footer>
 				</div>

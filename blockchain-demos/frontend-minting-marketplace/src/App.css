@@ -112,6 +112,15 @@ li {
   list-style: none;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ a:focus, a:hover {
+  color: inherit;
+}
+
 .App-logo {
   height: 20vmin;
   pointer-events: none;
@@ -1092,6 +1101,10 @@ button.metamask-on-boarding:hover{
   }
 } */
 
+
+/* img {
+  pointer-events: none;
+} */
 
 /* width */
 body::-webkit-scrollbar {

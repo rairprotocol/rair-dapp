@@ -19,24 +19,25 @@ const MyNFTs = props => {
 	const [tokenData, setTokenData] = useState([]);
 
 	const getData = useCallback(async () => {
-		let contractData = await rFetch(`/api/contracts/${params.contract}`);
+		let contractData = await rFetch(`/api/contracts/network/${window?.ethereum?.chainId}/${params.contract}`);
 		if (contractData.success) {
 			setCreator(contractData.contract.user);
 			setContractName(contractData.contract.title);
 			setContractNetwork(contractData.contract.blockchain);
 		}
 
-		let productsData = await rFetch(`/api/contracts/${params.contract}/products`);
+		let productsData = await rFetch(`/api/contracts/network/${window?.ethereum?.chainId}/${params.contract}/products`);
 		if (productsData.success) {
 			let product = productsData.products.find(i => i.collectionIndexInContract === Number(params.product));
-			setProductName(product.name);
-			setStartingToken(product.firstTokenIndex);
-			setEndingToken(product.firstTokenIndex + product.copies);
-			setSoldCopies(product.soldCopies);
-			console.log(product);
+			if (product) {
+				setProductName(product.name);
+				setStartingToken(product.firstTokenIndex);
+				setEndingToken(product.firstTokenIndex + product.copies);
+				setSoldCopies(product.soldCopies);
+			}
 		} 
 
-		let tokenData = await rFetch(`/api/nft/${params.contract}/${params.product}`);
+		let tokenData = await rFetch(`/api/nft/network/${window?.ethereum?.chainId}/${params.contract}/${params.product}`);
 		if (tokenData.success) {
 			setTokenData(tokenData.result.map(item => ({
 				tokenIndex: item.uniqueIndexInContract,
