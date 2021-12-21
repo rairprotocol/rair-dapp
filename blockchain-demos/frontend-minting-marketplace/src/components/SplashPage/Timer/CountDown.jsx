@@ -4,9 +4,9 @@ import moment from 'moment-timezone';
 
 
 const CountdownComponent = () => {
-    const dec = moment("2022-01-06 19:00").tz("America/New_York");
+    const dec = moment(new Date("2022-01-06T19:00:00-08:00"));//.tz("America/New_York");
 
-    const [countdownDate, setCountdownDate] = useState(dec);
+    const [countdownDate, /*setCountdownDate*/] = useState(dec);
 
     const [state, setState] = useState({
         days: 0,
@@ -40,7 +40,10 @@ const CountdownComponent = () => {
         }
     }, [countdownDate]);
     useEffect(() => {
-        setInterval(() => setNewTime(), 1000);
+        const interval = setInterval(() => setNewTime(), 1000);
+        return () => {
+            clearInterval(interval);
+        }
     }, [setNewTime]);
     return (
         <div className={"root-time"}>
