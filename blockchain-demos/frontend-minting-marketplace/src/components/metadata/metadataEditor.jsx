@@ -146,13 +146,13 @@ const MetadataEditor = (props) => {
 
 	const fetchContractData = useCallback(async () => {
 		
-		let contractData = await rFetch(`/api/contracts/${params.contract}`)
+		let contractData = await rFetch(`/api/contracts/network/${params.blockchain}/${params.contract}`)
 		if (contractData.success) {
 			setContractName(contractData.contract.title);
 			setContractNetwork(contractData.contract.blockchain);
 		}
 		
-		let productsData = await rFetch(`/api/contracts/${params.contract}/products/offers`)
+		let productsData = await rFetch(`/api/contracts/network/${params.blockchain}/${params.contract}/products/offers`)
 		if (productsData.success) {
 			let [aux] = productsData.products.filter(item => item.collectionIndexInContract === Number(params.product));
 			if (aux) {
@@ -167,7 +167,7 @@ const MetadataEditor = (props) => {
 			}
 		}
 
-		let nftResponse = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
+		let nftResponse = await (await fetch(`/api/nft/network/${params.blockchain}/${params.contract.toLowerCase()}/${params.product}`)).json()
 		let sortedMetadataArray = [];
 		let sortedURIArray = [];
 		if (nftResponse?.success && nftResponse?.totalCount) {
@@ -251,7 +251,7 @@ const MetadataEditor = (props) => {
 			<button disabled className='btn btn-royal-ice col-3'>
 				Single
 			</button>
-			<Link to={`/batch-metadata/${params.contract}/${params.product}`} className='btn btn-royal-ice col-3'>
+			<Link to={`/batch-metadata/${params.blockchain}/${params.contract}/${params.product}`} className='btn btn-royal-ice col-3'>
 				Batch
 			</Link>
 			<div className='col-2' />
@@ -358,7 +358,7 @@ const MetadataEditor = (props) => {
 					labelCSS={{textAlign: 'left'}}
 				/>
 				<hr />
-				<Link className='btn btn-stimorol' to={`/token/${params.contract}/${Number(internalFirstToken) + Number(tokenNumber)}`}>
+				<Link className='btn btn-stimorol' to={`/token/${params.blockchain}/${params.contract}/${Number(internalFirstToken) + Number(tokenNumber)}`}>
 					View token!
 				</Link>
 				<hr />

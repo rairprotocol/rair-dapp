@@ -19,14 +19,14 @@ const MyNFTs = props => {
 	const [tokenData, setTokenData] = useState([]);
 
 	const getData = useCallback(async () => {
-		let contractData = await rFetch(`/api/contracts/network/${window?.ethereum?.chainId}/${params.contract}`);
+		let contractData = await rFetch(`/api/contracts/network/${params.blockchain}/${params.contract}`);
 		if (contractData.success) {
 			setCreator(contractData.contract.user);
 			setContractName(contractData.contract.title);
 			setContractNetwork(contractData.contract.blockchain);
 		}
 
-		let productsData = await rFetch(`/api/contracts/network/${window?.ethereum?.chainId}/${params.contract}/products`);
+		let productsData = await rFetch(`/api/contracts/network/${params.blockchain}/${params.contract}/products`);
 		if (productsData.success) {
 			let product = productsData.products.find(i => i.collectionIndexInContract === Number(params.product));
 			if (product) {
@@ -37,9 +37,10 @@ const MyNFTs = props => {
 			}
 		} 
 
-		let tokenData = await rFetch(`/api/nft/network/${window?.ethereum?.chainId}/${params.contract}/${params.product}`);
+		let tokenData = await rFetch(`/api/nft/network/${params.blockchain}/${params.contract}/${params.product}`);
 		if (tokenData.success) {
-			setTokenData(tokenData.result.map(item => ({
+			console.log(tokenData)
+			setTokenData(tokenData?.result?.tokens?.map(item => ({
 				tokenIndex: item.uniqueIndexInContract,
 				name: item.metadata?.name,
 				image: item.metadata?.image
@@ -81,7 +82,7 @@ const MyNFTs = props => {
 				return <Link
 					key={index}
 					className='col-3 p-1'
-					to={`/token/${params.contract}/${tokenIndex}`}
+					to={`/token/${params.blockchain}/${params.contract}/${tokenIndex}`}
 					style={{height: '20vh', border: 'none', color: 'inherit', textDecoration: 'none'}}>
 					<div className='w-100 h-100 bg-white' style={{borderRadius: '10px', position: 'relative'}}>
 						<div style={{position: 'absolute', top: '2px', left: '2px'}}>

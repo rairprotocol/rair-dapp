@@ -55,9 +55,10 @@ const CreateBatchMetadata = () => {
 		let contractData = await rFetch(`/api/contracts/`)
 		if (contractData.success) {
 			for await (let contract of contractData.contracts) {
-				let contractDetails = await rFetch(`/api/contracts/${contract.contractAddress}`);
+				console.log(contract);
+				let contractDetails = await rFetch(`/api/contracts/network/${params.blockchain}/${contract.contractAddress}`);
 				if (contractDetails.success) {
-					let productsInfo = await rFetch(`/api/contracts/${contract.contractAddress}/products`);
+					let productsInfo = await rFetch(`/api/contracts/network/${params.blockchain}/${contract.contractAddress}/products`);
 					if (productsInfo.success && productsInfo.products.length) {
 						contractDetails.contract.products = productsInfo.products;
 						finalContractData.push(contractDetails.contract);

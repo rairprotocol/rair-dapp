@@ -408,11 +408,11 @@ function App({ sentryHistory }) {
 									<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
-									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
-									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+									{loginDone && <SentryRoute exact path='/metadata/:blockchain/:contract/:product' component={MetadataEditor} />}
+									{loginDone && <SentryRoute path='/batch-metadata/:blockchain/:contract/:product' component={CreateBatchMetadata} />}
 									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
-									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
-									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+									{loginDone && <SentryRoute path='/token/:blockchain/:contract/:identifier' component={Token} />}
+									{loginDone && <SentryRoute path='/rair/:blockchain/:contract/:product' component={RairProduct} />}
 									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
