@@ -2,7 +2,7 @@
   "name": "frontend-minting-marketplace",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://rairnode:5000",
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
@@ -19,6 +19,7 @@
     "ethers": "^5.4.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
+    "moment-timezone": "^0.5.34",
     "react": "^17.0.2",
     "react-accessible-accordion": "^4.0.0",
     "react-dom": "^17.0.2",
