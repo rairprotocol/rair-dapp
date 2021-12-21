@@ -9,6 +9,7 @@ import "./SplashPage.css";
 
 /* importing images*/
 import Metamask from "./images/metamask_logo.png";
+import NipseyBg from './images/nipsey.png';
 import logoAuthor from "./images/colab.png";
 import Nft_1 from "./images/exclusive_1.jpeg";
 import Nft_2 from "./images/exclusive_2.jpeg";
@@ -184,6 +185,7 @@ const SplashPage = () => {
       <div className="home-splash--page">
         <div className="information-author">
           <div className="block-splash">
+            <img className="block-img-mobile" src={NipseyBg} alt="nipsey-hussle" />
             <div className="text-splash">
               <div className="title-splash nipsey">
                 <h3>Enter the</h3>
@@ -334,9 +336,11 @@ const SplashPage = () => {
             </div>
           </div>
           <div className="offer-fans">
-            <div className="offer-1"></div>
-            <div className="offer-2"></div>
-            <div className="offer-3"></div>
+            <div className="offer-fans-container">
+              <div className="offer-1"></div>
+              <div className="offer-2"></div>
+              <div className="offer-3"></div>
+            </div>
           </div>
         </div>
         <UnlockVideos

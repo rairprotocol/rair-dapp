@@ -5,7 +5,7 @@ const ExclusiveNft = ({ Nft_1, Nft_2, Nft_3, Nft_4, NftImage, amountTokens }) =>
     return (
         <div className="exclusive-nfts">
             <div className="title-nft">
-                <h3>Only <span className="text-gradient">{amountTokens}</span> originals will ever be minted</h3>
+                <h3>Only <span className="text-gradient">1000</span> originals will ever be minted</h3>
             </div>
             <div className="nfts-select">
                 <div className="main-nft" style={{

@@ -5,6 +5,10 @@
     margin-top: 20px;
 }
 
+.btn-buy-metamask .time {
+  font-size: 20px;
+}
+
 .header {
     background: #254864;
     color: white;

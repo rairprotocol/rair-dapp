@@ -373,7 +373,7 @@
 .tokens-description p {
     line-height: 28px;
     color: #A7A6A6;
-    font: 20px;
+    font-size: 18px;
     font-weight: 400;
 }
 
@@ -479,8 +479,11 @@
 }
 
 .offer-fans {
-    position: relative;
     z-index: 1;
+}
+
+.offer-fans .offer-fans-container {
+    position: relative;
 }
 
 .offer-fans .offer-1 {
@@ -1021,6 +1024,10 @@ text-decoration: underline;
     transform: scale(0.6);
 }
 
+img.block-img-mobile{
+    display: none;
+}
+
 
 /* Media Pesponsive*/
 
@@ -1200,16 +1207,122 @@ text-decoration: underline;
 }
 
 @media screen and (max-width: 950px) {
-    .home-splash--page {
+    /* .home-splash--page {
         display: none;
     }
 
     .home-splash-mobile {
         display: block;
+    } */
+
+    .home-splash--page {
+        padding-left: 0px;
     }
 
     .wrapper-splash-page {
         overflow-x: auto;
+        max-width: 900px;
+    }
+
+    .home-splash--page {
+        max-width: 100%;
+    }
+
+    .home-splash--page .information-author, .left-tokens, .special-offer, .unlockble-video, .exclusive-nfts {
+        width: 100%;
+    }
+
+    .home-splash--page .exclusive-nfts .nfts-select {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .home-splash--page .nfts-select .block-nfts {
+        margin-left: 0;
+        margin-top: 25px;
+    }
+
+    .home-splash--page .title-nft {
+        text-align: center;
+    }
+
+    .unlockble-video .title-gets {
+        text-align: center;
+    }
+
+    .home-splash--page .special-offer {
+        flex-direction: column-reverse;
+        align-items: center;
+        height: 800px;
+    }
+
+    .home-splash--page .offer-fans {
+        /* position: initial; */
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .offer-fans .offer-fans-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-top: -430px;
+    }
+
+    .home-splash--page .special-offer {
+        position: relative;
+    }
+
+    .offer-fans .offer-2 {
+        left: -190px;
+        top: -50px;
+    }
+
+    .offer-fans .offer-1 {
+        top: -20px;
+    }
+
+    .offer-fans .offer-3 {
+        top: -60px;
+        left: -155px;
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-right: 0px !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-splash--page .special-offer .text-offer {
+        width: 90%;
+    }
+
+    .left-tokens .block-left-tokens {
+        margin-right: 0;
+    }
+
+    .home-splash--page .left-tokens-content {
+        margin-top: 40px;
+    }
+
+    .left-tokens .block-left-tokens {
+        width: 456px;
+        height: 584px;
+    }
+
+    .home-splash--page .left-tokens {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-splash--page .box-progress {
+        margin-left: 108px;
+        margin-top: 172px;
     }
 
     .row {
@@ -1217,6 +1330,67 @@ text-decoration: underline;
     }
 }
 
+@media screen and (max-width: 850px) {
+    .home-splash--page .information-author {
+        background-image: none;
+    }
+
+    .home-splash--page .information-author{
+        max-width: 95%;
+    }
+
+    .home-splash--page .information-author img.block-img-mobile {
+        display: block;
+        width: 400px;
+        height: auto;
+    }
+
+    .home-splash--page .information-author {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .block-splash {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .home-splash--page .block-splash .logo-author {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .video-locked {
+        width: 351px;
+    }
+
+    .video-locked img.block-img-bg {
+        height: 73px;
+        width: 100px;
+    }
+
+    .home-splash--page .video-block-metamask-some {
+        left: 33px;
+        top: 18px;
+    }
+
+    .home-splash--page .video-block-metamask-some img {
+        width: 40px;
+        height: auto;
+    }
+
+    .home-splash--page .video-description .video-timer p {
+        font-size: 16px;
+    }
+
+   .home-splash--page .nipsey-img-masks {
+       display: none;
+   }
+
+   .home-splash--page .meet-team {
+       padding-bottom: 120px;
+   }
+} 
 
 @media screen and (max-width: 800px) {
     .footer {
@@ -1226,6 +1400,127 @@ text-decoration: underline;
     .footer ul {
         margin-top: 20px;
         padding-left: 0;
+    }
+}
+
+
+@media screen and (max-width: 585px){
+    .home-splash--page .offer-fans .offer-fans-container {
+        margin-top: -400px;
+    }
+
+    .home-splash--page .special-offer {
+        position: relative;
+    }
+
+    .offer-fans .offer-2 {
+        left: -150px;
+        top:  -20px;
+        width: 300px;
+        height: 300px;
+    }
+
+    .offer-fans .offer-1 {
+        top: 0px;
+        width: 350px;
+        height: 350px;
+    }
+
+    .offer-fans .offer-3 {
+        top: -30px;
+        left: -115px;
+        width: 230px;
+        height: 230px;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .home-splash--page .information-author img.block-img-mobile {
+        display: block;
+        width: 337px;
+        height: auto;
+    }
+
+    .home-splash--page .text-splash .text-description {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .home-splash--page .left-tokens-content .tokens-description {
+        width: 90%;
+    }
+
+    .home-splash--page .left-tokens-content {
+        align-items: center;
+    }
+
+    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient {
+        font-size: 32px;
+    }
+
+    .home-splash--page .tokens-description p {
+        font-size: 16px;
+    }
+
+    .home-splash--page .title-gets h3, .home-splash--page .title-gets h3 .text-gradient, .title-nft h3, .title-nft h3 .text-gradient, .title-team h3, .title-team h3 .text-gradient {
+        font-size: 32px;
+    }
+
+    .home-splash--page .box-video {
+        margin-right: 0px;
+    }
+
+    .home-splash--page .img-teammate img {
+        width: 116px;
+        height: 116px;
+    }
+
+    .home-splash--page .meet-team .box-teammate .teammate-title-socials {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .home-splash--page .teammate-description p {
+        font-size: 14px;
+    }
+
+    .home-splash--page .meet-team .box-teammate .teammate-title-socials .box-socials {
+        margin-top: 10px;
+    }
+
+    .home-splash--page .position-teammate .teammate-description {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .left-tokens .block-left-tokens {
+        width: 356px;
+        height: 484px;
+    }
+
+    .home-splash--page .box-progress {
+        margin-left: 58px;
+        margin-top: 180px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-bottom: -20px;
+    }
+
+    .offer-fans .offer-1 {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+@media screen and (max-width: 433px) {
+    .left-tokens .release-join-discord {
+        margin-top: 150px;
+    }
+
+    .home-splash--page .offer-fans .offer-fans-container {
+        margin-top: -340px;
     }
 }
 
@@ -1850,6 +2145,10 @@ text-decoration: underline;
     .footer ul li {
         font-size: 15px;
     }
+
+    .home-splash--page .offer-desp {
+        margin-right: 20px;
+    }
 }
 
 @media screen and (max-width: 920px) {
@@ -1860,21 +2159,21 @@ text-decoration: underline;
 
 @media screen and (max-width: 900px) {
 
-    .home-splash-mobile .splash-team {
+    .splash-team {
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    .home-splash-mobile .meet-team .box-teammate {
+    .meet-team .box-teammate {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
     }
 
-    .home-splash-mobile .position-teammate .teammate-description {
+    .position-teammate .teammate-description {
         width: 90%;
     }
 }

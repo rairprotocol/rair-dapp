@@ -964,7 +964,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 }
 
 @media screen and (max-width: 935px) {
-    .block-left-tokens {
+    .left-tokens.about-page .block-left-tokens {
         display: none;
     }
 
