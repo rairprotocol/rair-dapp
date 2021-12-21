@@ -324,16 +324,17 @@ const SplashPage = () => {
                 launch.
               </p>
             </div>
-            <div className="btn-buy-metamask">
-              <button onClick={() => history.push('/comming-soon')}>
+            
+              <Countdown />
+              {/* <button onClick={() => history.push('/comming-soon')}>
                 <img
                   className="metamask-logo"
                   src={Metamask}
                   alt="metamask-logo"
                 />{" "}
                 COMMING SOON
-              </button>
-            </div>
+              </button> */}
+            
           </div>
           <div className="offer-fans">
             <div className="offer-fans-container">

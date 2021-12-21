@@ -38,6 +38,7 @@
     justify-content: center;
     flex-direction: column;
     margin-top: 54px;
+    overflow: hidden;
     /* padding-left: 80px; */
 }
 
@@ -1325,6 +1326,11 @@ img.block-img-mobile{
         margin-top: 172px;
     }
 
+    .special-offer .root-time {
+        margin-bottom: 0;
+        margin-top: 0px;
+    }
+
     .row {
         --bs-gutter-x: 0;
     }
@@ -1491,6 +1497,10 @@ img.block-img-mobile{
     .home-splash--page .position-teammate .teammate-description {
         width: 100%;
     }
+
+    .home-splash--page .information-author .root-time .time {
+        font-size: 26px;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -1514,6 +1524,21 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 450px) {
+    .home-splash--page .nfts-select .block-nfts {
+        display: none;
+    }
+
+    .nfts-select .main-nft {
+        width: 350px;
+        height: 350px;
+    }
+
+    .home-splash--page .exclusive-nfts {
+        margin: 80px 0 30px 0;
+    }
+} 
+
 @media screen and (max-width: 433px) {
     .left-tokens .release-join-discord {
         margin-top: 150px;
@@ -1521,6 +1546,43 @@ img.block-img-mobile{
 
     .home-splash--page .offer-fans .offer-fans-container {
         margin-top: -340px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .home-splash--page .information-author img.block-img-mobile {
+        width: 280px;
+        height: auto;
+    }
+
+    .offer-fans .offer-1 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .offer-fans .offer-2 {
+        width: 270px;
+        height: 270px;
+        left: -135px;
+    }
+
+    .offer-fans .offer-3 {
+        width: 210px;
+        height: 210px;
+        left: -105px;
+    }
+
+    .home-splash--page .video-locked {
+        width: 300px;
+    }
+
+    .nfts-select .main-nft {
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash--page .exclusive-nfts {
+        margin: 80px 0 10px 0;
     }
 }
 

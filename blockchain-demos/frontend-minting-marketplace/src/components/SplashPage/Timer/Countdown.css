@@ -1,24 +1,33 @@
-.root {
+.root-time {
     background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
     border-radius: 16px;
     padding: 10px 0;
     margin-top: 20px;
 }
 
-.btn-buy-metamask .time {
-  font-size: 20px;
+.special-offer .root-time .subtitle {
+  font-size: 24px;
 }
 
-.header {
+.special-offer .root-time {
+  padding: 10px 20px;
+  margin-top: 0px;
+}
+
+.special-offer .root-time   .time {
+  font-size: 32px;
+}
+
+.root-time  .header {
     background: #254864;
     color: white;
     width: 100%;
     padding: 18px 0;
   }
-  .title {
+  .root-time  .title {
     margin: 0;
   }
-  .subtitle {
+  .root-time  .subtitle {
     /* max-width: 576px; */
     /* margin: 36px auto; */
     letter-spacing: .1em;
@@ -26,13 +35,13 @@
     text-align: center;
     line-height: 1.3em;
   }
-  .countdownWrapper {
+  .root-time  .countdownWrapper {
     width: 100%;
     display: flex;
     justify-content: center;
     margin: 0 -8px 0 -8px;
   }
-  .timeSection {
+  .root-time  .timeSection {
     padding: 0px 8px;
     display: flex;
     flex-direction: column;
@@ -40,41 +49,39 @@
     align-items: center;
     color: #fff !important;
   }
-  .time {
+  .root-time   .time {
       margin: 0;
-    font-size: 50px !important;
-    font-weight: 800 !important;
+    font-size: 50px;
+    font-weight: 800 ;
   }
-  .small {
-      font-size: 18px !important;
+  .root-time  .small {
+      font-size: 18px;
   }
 
 @media screen and (max-width: 950px) {
-    .root {
+  .information-author .root-time {
         margin: 30px 0;
     }
 }
 
 @media screen and (max-width: 500px) {
-    .time {
-      font-size: 30px !important;
-    }
+    
 
-    .timeSection {
+    .information-author .root-time  .timeSection {
         padding: 0px 4px;
     }
 }
 
 @media screen and (max-width: 390px) {
-    .time {
+  .root-time  .time {
       font-size: 25px !important;
     }
 
-    .timeSection {
+    .root-time  .timeSection {
         padding: 0px 2px;
     }
 
-    .countdownWrapper {
+    .root-time  .countdownWrapper {
       margin: 0;
     }
 }
