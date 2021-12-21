@@ -1501,6 +1501,14 @@ img.block-img-mobile{
     .home-splash--page .information-author .root-time .time {
         font-size: 26px;
     }
+
+    .home-splash--page .roadmap-container .roadmap-list:first-child, .home-splash--page .roadmap-container .roadmap-list:nth-child(2) {
+        margin-right: 10px;
+    }
+
+    .roadmap-box:nth-child(2) p {
+        font-size: 12px !important;
+    }
 }
 
 @media screen and (max-width: 480px) {
