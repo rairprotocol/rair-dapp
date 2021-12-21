@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import imageIcon from '../../../images/imageIcon.svg';
-import documentIcon from '../../../images/documentIcon.svg';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
 import {rFetch} from '../../../utils/rFetch.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
@@ -45,7 +44,6 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 	useEffect(fetchData, [fetchData])
 
 	const history = useHistory();
-	const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const { primaryColor, textColor } = useSelector(store => store.colorStore);
 	
 	useEffect(() => {
@@ -59,7 +57,7 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 	const sendMetadata = async (updateMeta) => {
 		let formData = new FormData();
 		formData.append('product', collectionIndex);
-		formData.append('contract', address.toLowerCase());
+		formData.append('contract', contractData._id);
 		formData.append('updateMeta', updateMeta);
 		formData.append('csv', csvFile, 'metadata.csv');
 		let response = await rFetch('/api/nft', {

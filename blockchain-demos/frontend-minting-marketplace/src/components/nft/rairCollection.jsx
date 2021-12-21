@@ -46,7 +46,7 @@ const MyNFTs = props => {
 				image: item.metadata?.image
 			})))
 		}
-	}, [params.contract, params.product])
+	}, [params.contract, params.product, params.blockchain])
 
 	useEffect(() => {
 		getData();

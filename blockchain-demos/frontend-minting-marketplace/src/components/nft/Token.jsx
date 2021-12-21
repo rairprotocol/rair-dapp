@@ -44,7 +44,7 @@ const Token = (props) => {
 		} catch (err) {
 			console.error(err);
 		}
-	}, [params.contract, params.identifier]);
+	}, [params.contract, params.identifier, params.blockchain]);
 
 
 	useEffect(() => {
@@ -77,7 +77,7 @@ const Token = (props) => {
 				description: 'No description found'
 			})
 		}
-	}, [params.contract, params.identifier])
+	}, [params.contract, params.identifier, params.blockchain])
 
 	useEffect(() => {
 		getData();

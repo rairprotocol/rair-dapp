@@ -491,7 +491,7 @@ const MetadataEditor = (props) => {
 					<small> This information is pulled by OpenSea </small>
 					<br />
 						<br />
-						<button disabled={sendingContractMetadata} className='btn btn-royal-ice' onClick={async e => {
+						<button disabled={sendingOpenSeaMetadata} className='btn btn-royal-ice' onClick={async e => {
 							if (window.ethereum.chainId !== contractNetwork) {
 								swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
 								return;

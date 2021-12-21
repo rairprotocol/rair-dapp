@@ -21,7 +21,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const [propertiesArray, setPropertiesArray] = useState([]);
 	const [onMyChain, setOnMyChain] = useState();
 
-	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	const { programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
 	const history = useHistory();
@@ -29,7 +29,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const getNFTData = useCallback(async () => {
 		let aux = await rFetch(`/api/nft/${contractData.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
 		console.log(aux);
-	}, [address, collectionIndex]);
+	}, [address, collectionIndex, contractData]);
 
 	const addRow = () => {
 		let aux = [...propertiesArray];
@@ -167,6 +167,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 			<div style={{minHeight: '70vh', maxHeight: '100vh'}} className='w-100 border-stimorol py-auto rounded-rair'>
 				<div className={`w-100 h-100 bg-${primaryColor} rounded-rair`}>
 					<img
+						alt='NFT'
 						className='w-100 rounded-rair my-auto'
 						style={{verticalAlign: 'middle'}}
 						src={nftImage} />

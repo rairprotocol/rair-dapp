@@ -20,7 +20,7 @@ const SentryRoute = withSentryRouting(Route);
 const WorkflowSteps = ({sentryHistory}) => {
 	const {address, collectionIndex, blockchain} = useParams();
 
-	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	const { minterInstance, contractCreator, programmaticProvider } = useSelector(store => store.contractStore);
 	
 	const [steps, setSteps] = useState([
 			{
@@ -100,7 +100,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 		response2.contract.product = (response2.contract.products.filter(i => i.collectionIndexInContract === Number(collectionIndex)))[0];
 		delete response2.contract.products;
 		setContractData(response2.contract);
-	}, [address, collectionIndex]);
+	}, [address, collectionIndex, blockchain]);
 	
 	const fetchMintingStatus = useCallback(async () => {
 		if (!tokenInstance || !onMyChain) {
@@ -120,7 +120,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 			let createdInstance = contractCreator(minterInstance.address, minterAbi)
 			setCorrectMinterInstance(createdInstance);
 		}
-	}, [address, onMyChain, contractCreator])
+	}, [address, onMyChain, contractCreator, minterInstance])
 
 	useEffect(() => {
 		// Fix this
