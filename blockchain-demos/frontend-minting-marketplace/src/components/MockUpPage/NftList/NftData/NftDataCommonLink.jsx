@@ -17,11 +17,11 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
-  const { contract, product, tokenId } = params;
+  const { contract, product, tokenId, blockchain } = params;
 
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
-      await fetch(`/api/nft/${contract}/${product}`, {
+      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}`, {
         method: "GET",
       })
     ).json();
@@ -32,7 +32,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
       setSelectedData(responseAllProduct.result.tokens[tokenId].metadata);
     } 
     setSelectedToken(tokenId);
-  }, [product, contract, tokenId]);
+  }, [product, contract, tokenId, blockchain]);
 
   // ---- return only offers for particular contract with x-token ----
 
@@ -72,7 +72,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
 
   const getParticularOffer = useCallback(async () => {
     let response = await (
-      await fetch(`/api/nft/${contract}/${product}/offers`, {
+      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}/offers`, {
         method: "GET",
       })
     ).json();
@@ -97,20 +97,17 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     } else {
       console.log(response?.message);
     }
-  }, [product, contract, selectedOfferIndex]);
+  }, [product, contract, selectedOfferIndex, blockchain]);
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await (
-      await fetch(`/api/nft/${contract}/${product}/files/${tokenId}`, {
+      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`, {
         method: "GET",
       })
     ).json();
     setProductsFromOffer(response.files);
     setSelectedOfferIndex(tokenData[tokenId]?.offer);
-  }, [product, contract, tokenId]);
-
-  //   console.log(offer, "offer!!!!");
-  //   console.log(params, "@params@");
+  }, [product, contract, tokenId, blockchain]);
 
   function onSelect(id) {
     tokenData.forEach((p) => {
@@ -121,7 +118,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   }
 
   const handleClickToken = async (tokenId) => {
-    history.push(`/tokens/${contract}/${product}/${tokenId}`);
+    history.push(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
     if(tokenData.length >= Number(tokenId)){
       setSelectedData(tokenData[tokenId].metadata);
     }

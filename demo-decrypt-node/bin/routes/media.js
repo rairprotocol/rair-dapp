@@ -107,37 +107,49 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', JWTVerification(context), validation('getFiles', 'query'), async (req, res, next) => {
+  router.get('/list', /*JWTVerification(context),*/ validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', filesPerPage = '10', sortBy = 'creationDate', sort = '-1', searchString } = req.query;
-
-      const searchQuery = searchString ? { $text: { $search: searchString } } : {};
-      const pageSize = parseInt(filesPerPage, 10);
-      const sortDirection = parseInt(sort, 10);
+      const { pageNum = '1', itemsPerPage = '20', blockchain = '', category = '' } = req.query;
+      const searchQuery = {};
+      const pageSize = parseInt(itemsPerPage, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-      const data = await context.db.File.find(searchQuery, { key: 0 })
-        .skip(skip)
-        .limit(pageSize)
-        .sort([[sortBy, sortDirection]]);
 
-      const { adminNFT: author } = req.user;
-      const reg = new RegExp(/^0x\w{40}:\w+$/);
+      const foundCategory = await context.db.Category.findOne({ name: category });
+
+      if (foundCategory) {
+        searchQuery.category = foundCategory._id;
+      }
+
+      const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
+
+      if (foundBlockchain) {
+        const arrayOfContracts = await context.db.Contract.find({ blockchain }).distinct('_id');
+        searchQuery.contract = { $in: arrayOfContracts };
+      }
+
+      const data = await context.db.File.find(searchQuery, { key: 0 })
+        .sort({ title: 1 })
+        .skip(skip)
+        .limit(pageSize);
+
+      // const { adminNFT: author } = req.user;
+      // const reg = new RegExp(/^0x\w{40}:\w+$/);
 
       const list = _.chain(data)
-        .map(file => {
-          const clonedFile = _.assign({}, file.toObject());
-
-          clonedFile.isOwner = !!(author && reg.test(author) && author === clonedFile.author);
-
-          return clonedFile;
-        })
+        // .map(file => {
+        //   const clonedFile = _.assign({}, file.toObject());
+        //
+        //   clonedFile.isOwner = !!(author && reg.test(author) && author === clonedFile.author);
+        //
+        //   return clonedFile;
+        // })
         .reduce((result, value) => {
           result[value._id] = value;
           return result;
         }, {})
         .value();
 
-      res.json({ success: true, list });
+      return res.json({ success: true, list });
     } catch (e) {
       log.error(e);
       next(e.message);
@@ -147,12 +159,11 @@ module.exports = context => {
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
     console.log(req.file);
     // Get video information from the request's body
-    const { title, description, contract, product, offer } = req.body;
+    const { title, description, contract, product, offer, category } = req.body;
     // Get the user information
     const { adminNFT: author, adminRights } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
-    const reg = new RegExp(/^0x\w{40}:\w+$/);
 
     if (!adminRights) {
       if (req.file) {
@@ -160,6 +171,34 @@ module.exports = context => {
       }
       return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
     }
+
+    const foundContract = await context.db.Contract.findById(contract);
+
+    if (!foundContract) {
+      return res.status(404).send({ success: false, message: `Contract ${ contract } not found.` });
+    }
+
+    const foundProduct = await context.db.Product.findOne({ contract: foundContract._id, collectionIndexInContract: product });
+
+    if (!foundProduct) {
+      return res.status(404).send({ success: false, message: `Product ${ product } not found.` });
+    }
+
+    const foundCategory = await context.db.Category.findOne({ name: category });
+
+    if (!foundCategory) {
+      return res.status(404).send({ success: false, message: 'Category not found.' });
+    }
+
+    const foundOfferPool = await context.db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
+
+    const foundOffers = await context.db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
+
+    offer.forEach(item => {
+      if (!_.includes(foundOffers, item)) {
+        return res.status(404).send({ success: false, message: `Offer ${ item } not found.` });
+      }
+    })
 
     // Get the socket connection from Express app
     const io = req.app.get('io');
@@ -177,12 +216,12 @@ module.exports = context => {
     if (req.file) {
       try {
         log.info(`${ req.file.originalname } generating thumbnails`);
-        
+
         res.json({ success: true, result: req.file.filename });
 
         // Adds 'duration' to the req.file object
         await getMediaData(req.file);
-        
+
         // Adds 'thumbnailName' to the req.file object
         // Generates a static webp thumbnail and an animated gif thumbnail
         // ONLY for videos
@@ -236,9 +275,10 @@ module.exports = context => {
           author,
           encryptionType: 'aes-128-cbc',
           title,
-          contract,
+          contract: foundContract._id,
           product,
           offer,
+          category: foundCategory._id,
           staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
           animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
           type: req.file.type,
@@ -280,7 +320,7 @@ module.exports = context => {
         await addPin(ipfsCid, title, socketInstance);
       } catch (e) {
         fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
-        return res.status(403).send({ success: false, message: 'An error has ocurred encoding the file' });
+        log.error(e);
       }
     }
   });

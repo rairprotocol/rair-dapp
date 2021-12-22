@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: rair
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.22.0 (955b78124)

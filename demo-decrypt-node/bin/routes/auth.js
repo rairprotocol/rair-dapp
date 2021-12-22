@@ -5,12 +5,13 @@ const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.j
 const _ = require('lodash');
 const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
-const { JWTVerification, validation } = require('../middleware');
+const { ObjectId } = require('mongodb');
 const { nanoid } = require('nanoid');
+const { JWTVerification, validation } = require('../middleware');
 const log = require('../utils/logger')(module);
 
 const getTokensForUser = async (context, ownerAddress, { offer, contract, product }) => context.db.Offer.aggregate([
-  { $match: { offerIndex: { $in: offer }, contract, product } },
+  { $match: { offerIndex: { $in: offer }, contract: ObjectId(contract), product } },
   {
     $lookup: {
       from: 'MintedToken',
@@ -144,8 +145,8 @@ module.exports = context => {
           }
         }
 
-        if (!ownsTheAdminToken && _.isEmpty(ownsTheAccessTokens)) {
-          res.status(403).send({ success: false, message: 'You don\'t have permission.' });
+        if (!ownsTheAdminToken && _.isEmpty(ownsTheAccessTokens) && !file.demo) {
+          return res.status(403).send({ success: false, message: 'You don\'t have permission.' });
         }
 
         jwt.sign(
