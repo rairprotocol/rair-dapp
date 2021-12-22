@@ -84,7 +84,7 @@ function App({ sentryHistory }) {
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
 	// Google Analytics
-	const TRACKING_ID = "UA-209450870-1"; // YOUR_OWN_TRACKING_ID
+	const TRACKING_ID = "UA-209450870-3"; // YOUR_OWN_TRACKING_ID
 	ReactGA.initialize(TRACKING_ID);
 	// Redux
 	const dispatch = useDispatch()
@@ -415,9 +415,9 @@ function App({ sentryHistory }) {
 									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
 									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
-									{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
-									{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
-									{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/'>
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
 										<WorkflowSteps {...{ sentryHistory }} />
 									</SentryRoute>}
 
