@@ -27,7 +27,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
                                     Notification from Rair.tech
                                 </div>
                                 <div className="text-notif">
-                                    New announcements coming next Friday
+                                    New announcements comming next Friday
                                 </div>
                             </div>
                         </div>
@@ -64,7 +64,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
                                     Notification from Rair.tech
                                 </div>
                                 <div className="text-notif">
-                                    New announcements coming next Friday
+                                    New announcements comming next Friday
                                 </div>
                             </div>
                         </div>

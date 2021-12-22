@@ -3,7 +3,7 @@ import UnlockVideoItem from './UnlockVideoItem';
 
 const videoArr = [
     {
-        typeVideo: "Sneak Preview Coming Soon",
+        typeVideo: "Sneak Preview Comming Soon",
         unlockVideoName: "Intro",
         timeVideo: "000:TBO:00",
         locked: true

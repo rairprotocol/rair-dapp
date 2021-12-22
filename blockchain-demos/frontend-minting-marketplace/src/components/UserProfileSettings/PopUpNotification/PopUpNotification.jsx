@@ -62,7 +62,7 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
                                 Notification from Rair.tech
                             </div>
                             <div className="text-notif">
-                                New announcements coming next Friday
+                                New announcements comming next Friday
                             </div>
                         </div>
                         <div

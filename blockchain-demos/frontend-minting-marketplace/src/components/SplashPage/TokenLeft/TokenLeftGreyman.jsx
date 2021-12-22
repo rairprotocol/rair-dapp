@@ -114,7 +114,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
                     <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
                         Unfortunately, in the parallel world of our real life society Greyman had
                         not disappeared. Instead, it seems that he gathered more and more power each
-                        year, becoming increasingly more efficient in his use of algorithms to prevent
+                        year, becomming increasingly more efficient in his use of algorithms to prevent
                         those with deviant behaviour to stray from the beaten path.
                     </p>
                     <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>

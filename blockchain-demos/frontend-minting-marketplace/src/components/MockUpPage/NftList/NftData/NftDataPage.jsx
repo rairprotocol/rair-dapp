@@ -486,7 +486,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                               width: "max-content",
                             }}
                           >
-                            Coming soon
+                            Comming soon
                           </p>
                         </div>
                         <img

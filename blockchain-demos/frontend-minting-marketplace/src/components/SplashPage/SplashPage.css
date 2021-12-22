@@ -2040,6 +2040,10 @@ img.block-img-mobile{
     border: none;
     color: #fff;
     transition: .3s all ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-discord a:hover {
