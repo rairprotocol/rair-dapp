@@ -129,6 +129,11 @@
     border-radius: 12px;
     margin: 6px;
     padding: 10px 5px;
+
+  }
+
+  .serial-box:hover{
+    background-color: #AF6FD8;
   }
 
 .ntf-header {

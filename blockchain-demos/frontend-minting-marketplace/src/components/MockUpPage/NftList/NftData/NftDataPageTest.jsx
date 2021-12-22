@@ -1,7 +1,7 @@
-import React, { useState, /*useCallback*/ } from "react";
+import React, { useState /*useCallback*/ } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 import {
   Accordion,
@@ -21,21 +21,24 @@ import ReactPlayer from "react-player";
 import "react-multi-carousel/lib/styles.css";
 
 const NftDataPageTest = ({
+  contract,
   currentUser,
-  tokenData,
-  selectedData,
-  primaryColor,
-  textColor,
-  selectedToken,
-  offerPrice,
   data,
   handleClickToken,
-  setSelectedToken,
+  product,
   productsFromOffer,
+  primaryColor,
+  selectedData,
+  selectedToken,
+  setSelectedToken,
+  tokenData,
+  totalCount,
+  textColor,
   offerData,
+  offerPrice,
 }) => {
   const history = useHistory();
-  const { minterInstance } = useSelector(state => state.contractStore);
+  const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -111,13 +114,14 @@ const NftDataPageTest = ({
     return max;
   }
 
-  function ch(){
-    if(maxPrice === minPrice){
-     const samePrice = maxPrice;
+  function ch() {
+    if (maxPrice === minPrice) {
+      const samePrice = maxPrice;
       return `${samePrice} 
-      `
-    } return `${minPrice} – ${maxPrice} 
-    `
+      `;
+    }
+    return `${minPrice} – ${maxPrice} 
+    `;
   }
 
   function showLink() {
@@ -139,29 +143,33 @@ const NftDataPageTest = ({
     //   return <span>Not minted yet</span>;
     // }
 
-  // shows everyone
-      return (
-        <div>
-          {tokenData[selectedToken]?.authenticityLink ? (
-            <a href={tokenData[selectedToken]?.authenticityLink}>
-              {tokenData[selectedToken]?.authenticityLink}
-            </a>
-          ) 
-          : (
-            "Not minted yet"
-          )}
-        </div>
-      );
-  };
-
-  const buyContract = async () => { 
-    try {
-      await minterInstance.buyToken(offerData.offerPool, offerData.offerIndex, selectedToken, { value: offerData.price });
-      Swal.fire('Success', "Now, you are the owner of this token", 'Success');
-    } catch (err) {
-      Swal.fire('Error', err?.data?.message, 'error');
-    }
+    // shows everyone
+    return (
+      <div>
+        {tokenData[selectedToken]?.authenticityLink ? (
+          <a href={tokenData[selectedToken]?.authenticityLink}>
+            {tokenData[selectedToken]?.authenticityLink}
+          </a>
+        ) : (
+          "Not minted yet"
+        )}
+      </div>
+    );
   }
+
+  const buyContract = async () => {
+    try {
+      await minterInstance.buyToken(
+        offerData.offerPool,
+        offerData.offerIndex,
+        selectedToken,
+        { value: offerData.price }
+      );
+      Swal.fire("Success", "Now, you are the owner of this token", "Success");
+    } catch (err) {
+      Swal.fire("Error", err?.data?.message, "error");
+    }
+  };
 
   function checkOwner() {
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
@@ -196,7 +204,7 @@ const NftDataPageTest = ({
           }}
         >
           {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
-          { `Purchase • ${offerData?.price || minPrice} `}
+          {`Purchase • ${offerData?.price || minPrice} `}
         </button>
       );
   }
@@ -295,7 +303,7 @@ const NftDataPageTest = ({
   // }
 
   return (
-    <div id='nft-data-page-wrapper'>
+    <div id="nft-data-page-wrapper">
       <div>
         <div
           style={{
@@ -387,7 +395,7 @@ const NftDataPageTest = ({
                   //   }`,
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: 'center',
+                  justifyContent: "center",
                 }}
               >
                 <img
@@ -401,10 +409,11 @@ const NftDataPageTest = ({
                     marginRight: "3rem",
                   }}
                 >
-                  {offerPrice && `${ch()}`
+                  {
+                    offerPrice && `${ch()}`
                     // `${minPrice} – ${maxPrice} ${data?.product.blockchain || ""
                     // } `
-                    }
+                  }
                 </span>
                 <span
                   style={{
@@ -431,21 +440,29 @@ const NftDataPageTest = ({
             <div>
               <div className="collection-label-name">Serial number</div>
               <div>
-              { tokenData.length ? <SelectNumber
-                   handleClickToken={handleClickToken}
-                   selectedToken={selectedToken}
-                   items={
-                     tokenData &&
-                     tokenData.map((p) => {
-                       return {
-                         value: p.metadata.name,
-                         id: p._id,
-                         token: p.token,
-                       };
-                     })
-                   }
-                /> : <></>
-                }
+                {tokenData.length ? (
+                  <SelectNumber
+                    product={product}
+                    contract={contract}
+                    totalCount={totalCount}
+                    handleClickToken={handleClickToken}
+                    selectedToken={selectedToken}
+                    setSelectedToken={setSelectedToken}
+                    items={
+                      tokenData &&
+                      tokenData.map((p, index) => {
+                        return {
+                          value: p.metadata.name,
+                          id: p._id,
+                          token: p.token,
+                          key: index,
+                        };
+                      })
+                    }
+                  />
+                ) : (
+                  <></>
+                )}
                 {/* <SelectNumber
                   handleClickToken={handleClickToken}
                   selectedToken={selectedToken}
@@ -480,17 +497,18 @@ const NftDataPageTest = ({
               <AccordionItemPanel>
                 <div className="col-12 row mx-0 box--properties">
                   {/* {checkDataOfProperty()} */}
-                  {selectedData
-                    ? Object.keys(selectedData).length &&
-                      // ? selectedData.length &&
-                      selectedData?.attributes.length > 0 ? selectedData?.attributes.map((item, index) => {
-                        if (item.trait_type === "External URL") {
+                  {selectedData ? (
+                    Object.keys(selectedData).length &&
+                    // ? selectedData.length &&
+                    selectedData?.attributes.length > 0 ? (
+                      selectedData?.attributes.map((item, index) => {
+                        if (item.trait_type === "External URL" && "external_url") {
                           return (
                             <div
                               key={index}
                               className="col-4 my-2 p-1 custom-desc-to-offer"
                               style={{
-                                cursor:'default',
+                                cursor: "default",
                                 color: textColor,
                                 textAlign: "center",
                               }}
@@ -498,33 +516,45 @@ const NftDataPageTest = ({
                               <span>{item?.trait_type}:</span>
                               <br />
                               <a
-                              className='custom-offer-pic-link'
+                                className="custom-offer-pic-link"
                                 style={{ color: textColor }}
                                 href={item?.value}
                               >
                                 {item?.value.length > 15 ? "..." : ""}
-                                {item?.value.substr(item?.value.indexOf("\n") + 19)}
+                                {item?.value.substr(
+                                  item?.value.indexOf("\n") + 19
+                                )}
                               </a>
                             </div>
                           );
                         }
-                        if( item.trait_type === "image" ){
+                        if (item.trait_type === "image") {
                           return (
                             <div
                               key={index}
                               className="col-4 my-2 p-1 custom-desc-to-offer"
                               style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
                                 color: textColor,
                                 textAlign: "center",
                               }}
                             >
-                              <span> <a className='custom-offer-pic-link' style={{
-                                color: textColor,
-                              }} target="_blank" rel="noreferrer"  href={item?.value}>{toUpper(item?.trait_type)}</a>
-                                </span>
+                              <span>
+                                {" "}
+                                <a
+                                  className="custom-offer-pic-link"
+                                  style={{
+                                    color: textColor,
+                                  }}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  href={item?.value}
+                                >
+                                  {toUpper(item?.trait_type)}
+                                </a>
+                              </span>
                             </div>
                           );
                         }
@@ -551,10 +581,11 @@ const NftDataPageTest = ({
                             </div>
                           </div>
                         );
-                      }) : <div>
-                      You don't have any properties
-                    </div>
-                    : null}
+                      })
+                    ) : (
+                      <div>You don't have any properties</div>
+                    )
+                  ) : null}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
@@ -696,108 +727,108 @@ const NftDataPageTest = ({
                         </div>
                       );
                     })) || (
+                    <div
+                      style={{
+                        margin: "1rem",
+                        height: "135px",
+                      }}
+                    >
                       <div
+                        onClick={
+                          () => console.log("Cooming soon")
+                          // history.push(
+                          //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
+                          // )
+                        }
                         style={{
-                          margin: "1rem",
-                          height: "135px",
+                          display: "flex",
+                          borderRadius: "16px",
+                          width: "592px",
+                          backgroundColor: "#4E4D4DCC",
                         }}
                       >
                         <div
-                          onClick={
-                            () => console.log("Cooming soon")
-                            // history.push(
-                            //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
-                            // )
-                          }
                           style={{
-                            display: "flex",
-                            borderRadius: "16px",
-                            width: "592px",
-                            backgroundColor: "#4E4D4DCC",
+                            position: "relative",
                           }}
                         >
                           <div
                             style={{
-                              position: "relative",
+                              width: "32px",
+                              height: "32px",
+                              background: "#CCA541",
+                              borderRadius: "50%",
+                              position: "absolute",
+                              top: "35%",
+                              left: "50%",
+                              transform: "translate(-50%, -35%)",
+                              zIndex: "1",
                             }}
                           >
-                            <div
+                            <i
                               style={{
-                                width: "32px",
-                                height: "32px",
-                                background: "#CCA541",
-                                borderRadius: "50%",
-                                position: "absolute",
-                                top: "35%",
-                                left: "50%",
-                                transform: "translate(-50%, -35%)",
-                                zIndex: "1",
+                                paddingLeft: "1px",
+                                paddingTop: "8px",
+                              }}
+                              className="fa fa-lock"
+                              aria-hidden="true"
+                            ></i>
+                            <p
+                              style={{
+                                textAlign: "center",
+                                marginLeft: "-2rem",
+                                marginTop: "9px",
+                                width: "max-content",
                               }}
                             >
-                              <i
-                                style={{
-                                  paddingLeft: "1px",
-                                  paddingTop: "8px",
-                                }}
-                                className="fa fa-lock"
-                                aria-hidden="true"
-                              ></i>
-                              <p
-                                style={{
-                                  textAlign: "center",
-                                  marginLeft: "-2rem",
-                                  marginTop: "9px",
-                                  width: "max-content",
-                                }}
-                              >
-                                Coming soon
-                              </p>
-                            </div>
-                            {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
-                            <img
-                              style={{
-                                width: "230px",
-                                opacity: "0.4",
-                                height: "135px",
-                                filter: "blur(3px)",
-                              }}
-                              // src={`/thumbnails/${v?.thumbnail}.png`}
-                              src={selectedData?.image}
-                              alt=""
-                            />
+                              Coming soon
+                            </p>
                           </div>
-                          <div
+                          {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
+                          <img
                             style={{
-                              borderLeft: "4px solid #CCA541",
-                              display: "flex",
-                              flexDirection: "column",
-                              width: "inher",
-                              justifyContent: "center",
-                              alignItems: "flex-start",
-                              paddingLeft: "24px",
+                              width: "230px",
+                              opacity: "0.4",
+                              height: "135px",
+                              filter: "blur(3px)",
                             }}
-                          >
-                            <div>
-                              {" "}
-                              <p style={{ fontSize: 20 }}>
-                                {/* {v?.title} */}
-                                Video {selectedData?.name}
-                              </p>{" "}
-                            </div>
-                            <div>
-                              <p
-                                style={{
-                                  color: "#A7A6A6",
-                                  fontSize: 20,
-                                }}
-                              >
-                                00:03:23
-                              </p>
-                            </div>
+                            // src={`/thumbnails/${v?.thumbnail}.png`}
+                            src={selectedData?.image}
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          style={{
+                            borderLeft: "4px solid #CCA541",
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "inher",
+                            justifyContent: "center",
+                            alignItems: "flex-start",
+                            paddingLeft: "24px",
+                          }}
+                        >
+                          <div>
+                            {" "}
+                            <p style={{ fontSize: 20 }}>
+                              {/* {v?.title} */}
+                              Video {selectedData?.name}
+                            </p>{" "}
+                          </div>
+                          <div>
+                            <p
+                              style={{
+                                color: "#A7A6A6",
+                                fontSize: 20,
+                              }}
+                            >
+                              00:03:23
+                            </p>
                           </div>
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
@@ -812,38 +843,36 @@ const NftDataPageTest = ({
                 <AccordionItemButton>Authenticity</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
-                <div>
-                  {showLink()}
-                </div>
+                <div>{showLink()}</div>
               </AccordionItemPanel>
             </AccordionItem>
           </Accordion>
         </div>
         <div style={{ maxWidth: "1200px", margin: "auto" }}>
           {/* <span style={{}}>More by {tokenData[selectedToken]?.ownerAddress ? tokenData[selectedToken]?.ownerAddress : "User" }</span> */}
-          {tokenData.length ? 
-           (
-             <Carousel
-               itemWidth={"300px"}
-               showDots={false}
-               // infinite={true}
-               responsive={responsive}
-               itemClass="carousel-item-padding-4-px"
-             >
-               {tokenData.map((p, index) => (
-                 <OfferItem
-                   key={index}
-                   index={index}
-                   metadata={p.metadata}
-                   token={p.token}
-                   handleClickToken={handleClickToken}
-                   setSelectedToken={setSelectedToken}
-                   selectedToken={selectedToken}
-                 />
-               ))}
-             </Carousel>
-          ) : <></>
-        }
+          {tokenData.length ? (
+            <Carousel
+              itemWidth={"300px"}
+              showDots={false}
+              // infinite={true}
+              responsive={responsive}
+              itemClass="carousel-item-padding-4-px"
+            >
+              {tokenData.map((p, index) => (
+                <OfferItem
+                  key={index}
+                  index={index}
+                  metadata={p.metadata}
+                  token={p.token}
+                  handleClickToken={handleClickToken}
+                  setSelectedToken={setSelectedToken}
+                  selectedToken={selectedToken}
+                />
+              ))}
+            </Carousel>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

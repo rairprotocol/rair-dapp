@@ -12,6 +12,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   const [offerPrice, setOfferPrice] = useState([]);
   const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
+  const [totalCount, setTotalCount] = useState();
 
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
@@ -26,6 +27,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     ).json();
 
     setTokenData(responseAllProduct.result.tokens);
+    setTotalCount(responseAllProduct.result.totalCount);
     if(responseAllProduct.result.tokens.length >= Number(tokenId)){
       setSelectedData(responseAllProduct.result.tokens[tokenId].metadata);
     } 
@@ -147,6 +149,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
       selectedToken={selectedToken}
       textColor={textColor}
       tokenData={tokenData}
+      totalCount={totalCount}
       product={product}
     />
   );
