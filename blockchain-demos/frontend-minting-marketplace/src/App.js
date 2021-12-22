@@ -84,7 +84,7 @@ function App({ sentryHistory }) {
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
 	// Google Analytics
-	const TRACKING_ID = "UA-209450870-1"; // YOUR_OWN_TRACKING_ID
+	const TRACKING_ID = "UA-209450870-3"; // YOUR_OWN_TRACKING_ID
 	ReactGA.initialize(TRACKING_ID);
 	// Redux
 	const dispatch = useDispatch()

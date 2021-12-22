@@ -16,6 +16,9 @@ provider "google" {
   project     = "rair-market"
 }
 
+data "google_project" "project" {}
+data "google_client_config" "current" {}
+
 module "hello_world" {
   source = "./hello_world"
   name = "rair-market-hello-world"
