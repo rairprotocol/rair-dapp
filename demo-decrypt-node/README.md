@@ -52,7 +52,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
         * [x] /upload - POST - upload the media, [see details here](readme/upload_media.md)
     * [x] /users - POST - create new user, [see details here](readme/create_user.md)
         * [x] /:publicAddress - GET - get single user, [see details here](readme/get_user.md)
-        * [x] /:publicAddress - PUT - update specific user, [see details here](readme/update_user.md)
+        * [x] /:publicAddress - POST - update specific user, [see details here](readme/update_user.md)
     * [x] /contracts - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
         * [x] /network/:networkId
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
