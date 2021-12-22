@@ -2412,3 +2412,87 @@ img.block-img-mobile{
         width: 290px;
     }
 }
+
+/* Nutcrackers */
+
+.home-splash--page .information-author.nutcrackers {
+    background-image: url('./images/bg-nuts.png');
+    background-size: cover;
+}
+
+.information-author.nutcrackers .nut-block-img {
+    width: 400px;
+    height: auto;
+    margin-left: 50px;
+}
+
+.information-author.nutcrackers .block-splash {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey h3{
+    font-size: 33px;
+    color: #000;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey span{
+    font-size: 42px;
+    color: #A12921;
+}
+
+.information-author.nutcrackers .block-splash .text-splash .text-description {
+    width: 100%;
+}
+
+.information-author.nutcrackers .btn-buy-metamask button{
+    background: #A12921;
+}
+
+.wrapper-splash-page.nutcrackers .left-tokens .block-left-tokens {
+    background: url('./images/nft-token-nuts.png') center center;
+    background-size: cover;
+}
+
+.wrapper-splash-page.nutcrackers {
+    background-image: none;
+}
+
+.wrapper-splash-page.nutcrackers .block-photos-nuts{
+    margin: 108px 0;
+    width: 1200px;
+    height: 577px;
+    background: url('./images/block-nuts-photos.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 16px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text {
+    margin-top: 42px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p{
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p:last-child {
+    margin-bottom: 0;
+}
+
+.wrapper-splash-page.nutcrackers .community-description {
+    background: none !important;
+    padding-left: 0;
+    justify-content: center;
+}
+
+.wrapper-splash-page.nutcrackers .community-description p {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.wrapper-splash-page.nutcrackers .community-description .join-pic img {
+    width: 300px;
+    height: auto;
+}

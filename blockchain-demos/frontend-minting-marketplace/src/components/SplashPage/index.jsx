@@ -358,7 +358,7 @@ const SplashPage = () => {
         />
         <NipseyRelease DiscordIcon={DiscordIcon} />
         <RoadMap />
-        {/*<JoinCom
+        {/* <JoinCom
           Metamask={Metamask}
           JoinCommunity={JoinCommunity}
           primaryColor={primaryColor}
