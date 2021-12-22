@@ -56,3 +56,6 @@ db.Product.updateMany({}, { $set: { category: null } });
 
 // add new field to the Files
 db.File.updateMany({}, { $set: { category: null } });
+
+// add new field to Files
+db.File.updateMany({}, { $set: { demo: false } });

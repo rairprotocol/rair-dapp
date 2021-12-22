@@ -64,6 +64,12 @@ Upload the media
         "type": "number"
       }
     }
+  },
+  "category": {
+    "required": true,
+    "content": {
+      "type": "string"
+    }
   }
 }
 ```

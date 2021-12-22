@@ -419,9 +419,9 @@ function App({ sentryHistory }) {
 									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
 									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
-									{loginDone && <SentryRoute path='/creator/contract/:address/createCollection' component={ContractDetails} />}
-									{loginDone && <SentryRoute path='/creator/contract/:address/listCollections' component={ListCollections} />}
-									{loginDone && <SentryRoute path='/creator/contract/:address/collection/:collectionIndex/'>
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
 										<WorkflowSteps {...{ sentryHistory }} />
 									</SentryRoute>}
 
