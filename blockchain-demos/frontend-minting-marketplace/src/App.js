@@ -66,7 +66,8 @@ import NotFound from './components/NotFound/NotFound';
 import ReactGA from 'react-ga';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
-import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
+import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
+import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -403,6 +404,7 @@ function App({ sentryHistory }) {
 									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
 									<SentryRoute exact path="/terms-use" component={TermsUse} />
 									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+									<SentryRoute exact path="/nutcrackers-splash" component={Nutcrackers} />
 									<SentryRoute exact path="/notifications" component={NotificationPage} />
 									<SentryRoute exact path="/rair-about-page">
 										<AboutPage primaryColor={primaryColor} textColor={textColor} />
@@ -459,7 +461,7 @@ function App({ sentryHistory }) {
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</div>
 									</SentryRoute>
-									<SentryRoute path="/comming-soon" component={CommingSoon} />
+									<SentryRoute path="/coming-soon" component={ComingSoon} />
 									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>

@@ -184,7 +184,7 @@ const NftDataPageTest = ({
       return (
         <button
           onClick={() => buyContract()}
-          // onClick={() => alert("Comming soon")}
+          // onClick={() => alert("Coming soon")}
           style={{
             width: "228px",
             height: "48px",
@@ -645,7 +645,7 @@ const NftDataPageTest = ({
                                     width: "max-content",
                                   }}
                                 >
-                                  Comming soon
+                                  Coming soon
                                 </p>
                               </div>
                               {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
@@ -749,7 +749,7 @@ const NftDataPageTest = ({
                                   width: "max-content",
                                 }}
                               >
-                                Comming soon
+                                Coming soon
                               </p>
                             </div>
                             {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}

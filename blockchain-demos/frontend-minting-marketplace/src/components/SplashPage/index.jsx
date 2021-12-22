@@ -326,13 +326,13 @@ const SplashPage = () => {
             </div>
             
               <Countdown />
-              {/* <button onClick={() => history.push('/comming-soon')}>
+              {/* <button onClick={() => history.push('/coming-soon')}>
                 <img
                   className="metamask-logo"
                   src={Metamask}
                   alt="metamask-logo"
                 />{" "}
-                COMMING SOON
+                COMING SOON
               </button> */}
             
           </div>
@@ -403,7 +403,7 @@ const SplashPage = () => {
                   community of like minded fans, artists, and industry veterans.
                 </div>
                 <div className="minted-btn">
-                  <button onClick={() => history.push('/comming-soon')}>WELCOME TO THE NIPSEYVERSE</button>
+                  <button onClick={() => history.push('/coming-soon')}>WELCOME TO THE NIPSEYVERSE</button>
                 </div>
               </div>
             </div>
@@ -422,7 +422,7 @@ const SplashPage = () => {
                   </div>
                   <div className="btn-claim">
                     <button
-                      onClick={() => history.push('/comming-soon')}
+                      onClick={() => history.push('/coming-soon')}
                       style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}
                     >CLAIM ONE</button>
                   </div>
@@ -442,7 +442,7 @@ const SplashPage = () => {
                   </div>
                   <div className="btn-claim">
                     <button
-                      onClick={() => history.push('/comming-soon')}
+                      onClick={() => history.push('/coming-soon')}
                       style={{ color: `${primaryColor === "rhyno" ? "#5D5FEF" : "#A5A6F6"}` }}
                     >CLAIM ONE</button>
                   </div>
