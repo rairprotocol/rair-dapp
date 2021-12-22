@@ -1,8 +1,15 @@
 import React from 'react';
 import DiscordIcon from './../images/discord-icon.png';
 import logoAuthor from './../images/colab.png';
+import { useHistory } from 'react-router-dom';
 
-const CommingSoon = () => {
+const ComingSoon = () => {
+    const history = useHistory();
+
+    const goBack = () => {
+        history.goBack();
+    }
+
     return (
         <div className="col-12">
             <div className="nipsey-comming-soon">
@@ -10,7 +17,7 @@ const CommingSoon = () => {
                     <div className="block-splash">
                         <div className="text-splash">
                             <div className="title-splash nipsey">
-                                <span>Comming soon</span>
+                                <span>Coming soon</span>
                             </div>
                             <div className="text-description">
                                 <div>
@@ -21,6 +28,9 @@ const CommingSoon = () => {
                                 <div className="btn-discord">
                                     <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
                                 </div>
+                            </div>
+                            <div className="btn-back-comming">
+                                <button onClick={goBack}>Back</button>
                             </div>
                             <div className="logo-author">
                                 {/* <img src={logoDigital} alt="southwest digital" /> */}
@@ -34,4 +44,4 @@ const CommingSoon = () => {
     )
 }
 
-export default CommingSoon
+export default ComingSoon
