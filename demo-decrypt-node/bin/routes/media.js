@@ -184,6 +184,12 @@ module.exports = context => {
       return res.status(404).send({ success: false, message: `Product ${ product } not found.` });
     }
 
+    const foundCategory = await context.db.Category.findOne({ name: category });
+
+    if (!foundCategory) {
+      return res.status(404).send({ success: false, message: 'Category not found.' });
+    }
+
     const foundOfferPool = await context.db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
 
     const foundOffers = await context.db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
@@ -273,6 +279,7 @@ module.exports = context => {
           contract: foundContract._id,
           product,
           offer,
+          category: foundCategory._id,
           staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
           animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
           type: req.file.type,
@@ -317,7 +324,7 @@ module.exports = context => {
         if (req.file.destination) {
           fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
         } else {
-          console.error(e);
+          log.error(e);
         }
         //return res.status(403).send({ success: false, message: 'An error has ocurred encoding the file' });
       }
