@@ -129,7 +129,7 @@ const convertToHLS = async (mediaData, socketInstance) => {
 		last: false
 	});
 	copyFileSync(
-		path.join(mediaData.destination, '..', 'stream.m3u8.template'),
+		path.join(mediaData.destination, '..', '..', 'templates', 'stream.m3u8.template'),
 		path.join(mediaData.destination, 'stream.m3u8')
 	);
 }

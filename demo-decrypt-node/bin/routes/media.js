@@ -264,6 +264,7 @@ module.exports = context => {
 
         fs.rm(req.file.destination, {recursive: true}, console.log);
         log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
+        delete req.file.destination;
         const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
         const gateway = {
           ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
@@ -283,7 +284,8 @@ module.exports = context => {
           animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
           type: req.file.type,
           extension: req.file.extension,
-          duration: req.file.duration
+          duration: req.file.duration,
+          category
         };
 
         if (description) {
@@ -319,8 +321,12 @@ module.exports = context => {
 
         await addPin(ipfsCid, title, socketInstance);
       } catch (e) {
-        fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
-        log.error(e);
+        if (req.file.destination) {
+          fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
+        } else {
+          log.error(e);
+        }
+        //return res.status(403).send({ success: false, message: 'An error has ocurred encoding the file' });
       }
     }
   });
