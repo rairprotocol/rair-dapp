@@ -16,7 +16,7 @@ const Teammate = ({ url, name, desc, primaryColor, socials }) => {
                             {
                                 socials && socials.map((social, index) => {
                                     return <span key={social + index}>
-                                        <a className={social.classLink} target="_blank" href={social.link}>
+                                        <a className={social.classLink} target="_blank" href={social.link} rel="noreferrer">
                                             <i className={social.classIcon}></i>
                                         </a>
                                     </span>

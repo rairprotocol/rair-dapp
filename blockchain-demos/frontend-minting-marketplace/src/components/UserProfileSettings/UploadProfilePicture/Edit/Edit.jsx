@@ -13,6 +13,7 @@ const EditComponent = ({
   setStatus,
   status,
   setFile,
+  setOpenModalPic
 }) => {
   
   const photoUpload = useCallback(
@@ -39,6 +40,9 @@ const EditComponent = ({
         <button 
         type="submit" className={cl.save}>
           Save{" "}
+        </button>
+        <button onClick={() => setOpenModalPic(false)} className={cl.save}>
+          Exit{" "}
         </button>
       </form>
     </div>

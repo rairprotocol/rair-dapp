@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import imageIcon from '../../../images/imageIcon.svg';
-import documentIcon from '../../../images/documentIcon.svg';
+// import documentIcon from '../../../images/documentIcon.svg';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
 import {rFetch} from '../../../utils/rFetch.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
@@ -40,12 +40,12 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 		if (success && result.totalCount > 0) {
 			setMetadataExists(result.tokens.filter(item => item.metadata.name !== 'none').length > 0);
 		}
-	}, [address, collectionIndex])
+	}, [address, collectionIndex, contractData.blockchain])
 
 	useEffect(fetchData, [fetchData])
 
 	const history = useHistory();
-	const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	// const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const { primaryColor, textColor } = useSelector(store => store.colorStore);
 	
 	useEffect(() => {
@@ -106,7 +106,7 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 							<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
 								1
 							</div>
-							<img style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={imageIcon} className='my-5'/>
+							<img alt='' style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={imageIcon} className='my-5'/>
 							<br />
 							{
 								isDragActive ?
@@ -127,7 +127,7 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 							<div style={{position: 'absolute', top: '1rem', left: '1rem', border: `solid 1px ${textColor}`, borderRadius: '50%', width: '1.5rem', height: '1.5rem'}}>
 								2
 							</div>
-							<img style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={imageIcon} className='my-5'/>
+							<img alt='' style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={imageIcon} className='my-5'/>
 							<br />
 							{
 								isDragActive ?

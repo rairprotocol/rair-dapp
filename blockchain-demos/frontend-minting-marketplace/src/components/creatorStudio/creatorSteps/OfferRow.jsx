@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {useSelector} from 'react-redux';
 import colors from '../../../utils/offerLockColors.js'
 import InputField from '../../common/InputField.jsx'
@@ -22,31 +22,31 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 		rerender();
 	};
 
-	const updateEndingToken = (value) => {
+	const updateEndingToken = useCallback( (value) => {
 		array[index].ends = Number(value);
 		setEndingToken(Number(value));
 		if (array[Number(index) + 1] !== undefined) {
 			array[Number(index) + 1].starts = Number(value) + 1;
 		}
 		rerender();
-	}
+	},[array, index, rerender])
 	
-	const updateStartingToken = (value) => {
+	const updateStartingToken = useCallback((value) => {
 		array[index].starts = Number(value);
 		setStartingToken(value);
 		if (Number(endingToken) < Number(value)) {
 			updateEndingToken(Number(value));
 		}
 		rerender();
-	}
+	}, [array, endingToken, index, rerender, updateEndingToken])
 
 	useEffect(() => {
 		updateStartingToken(starts);
-	}, [starts])
+	}, [starts, updateStartingToken])
 
 	useEffect(() => {
 		updateEndingToken(ends);
-	}, [ends])
+	}, [ends, updateEndingToken])
 
 	useEffect(() => {
 		setIndividualPrice(price);

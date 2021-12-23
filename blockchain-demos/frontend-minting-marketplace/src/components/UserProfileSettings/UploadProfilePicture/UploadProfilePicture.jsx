@@ -3,7 +3,7 @@ import { Edit } from "./Edit/Edit";
 import { Profile } from "./Profile/Profile";
 
 const UploadProfilePicture = ({setOpenModalPic, currentUserAddress, setUserName, setUserEmail}) => {
-  const [, /*file*/ setFile] = useState("");
+  const [/*file*/, setFile] = useState("");
   const [imagePreviewUrl, setImagePreviewUrl] = useState(
     "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
   );
@@ -11,7 +11,7 @@ const UploadProfilePicture = ({setOpenModalPic, currentUserAddress, setUserName,
   const [status, setStatus] = useState("");
   const [active, setActive] = useState("edit");
 
-  const [updateUsr, setUpdateUsr] = useState({});
+  const [/*updateUsr*/, setUpdateUsr] = useState({});
 
   // console.log(currentUserAddress);
   // console.log(updateUsr, "updateUsr");
@@ -69,6 +69,7 @@ const UploadProfilePicture = ({setOpenModalPic, currentUserAddress, setUserName,
           setName={setName}
           setFile={setFile}
           onSubmit={handleSubmit}
+          setOpenModalPic={setOpenModalPic}
         />
       ) : (
         <Profile

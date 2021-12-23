@@ -5,6 +5,7 @@ import { ListOfTokens } from "./ListOfTokens/ListOfTokens";
 import "./SelectNumber.css";
 
 const SelectNumber = ({
+  blockchain,
   items,
   handleClickToken,
   selectedToken,
@@ -53,6 +54,7 @@ const SelectNumber = ({
     }
     return (
       <ListOfTokens
+        blockchain={blockchain}
         contract={contract}
         isOpen={isOpen}
         handleIsOpen={handleIsOpen}

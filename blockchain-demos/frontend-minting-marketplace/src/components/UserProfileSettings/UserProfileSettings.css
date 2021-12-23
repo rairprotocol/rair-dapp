@@ -225,6 +225,13 @@
     border-width: 1px;
     border-image-slice: 1; */
 }
+.profile-input-edit{
+    padding: 6px 9px !important;
+}
+.profile-input-edit:hover{
+    background: #410c37;
+    cursor: pointer;
+}
 
 .profile-input {
     text-align: start;

@@ -19,7 +19,7 @@ const CommingSoon = () => {
                             </div>
                             <div className="release-join-discord">
                                 <div className="btn-discord">
-                                    <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
+                                    <a href="https://discord.gg/NFeGnPkbfd" target="_blank" rel="noreferrer"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
                                 </div>
                             </div>
                             <div className="logo-author">

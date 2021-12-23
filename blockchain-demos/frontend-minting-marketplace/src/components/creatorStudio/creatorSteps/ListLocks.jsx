@@ -18,7 +18,7 @@ const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerend
 	const [itemName, ] = useState(name);
 	const [startingToken, ] = useState(starts);
 	const [endingToken, ] = useState(ends);
-	const [individualPrice, ] = useState(price);
+	// const [individualPrice, ] = useState(price);
 	const [lockedTokens, setLockedTokens] = useState(lockedNumber);
 
 	const randColor = colors[index];
@@ -107,7 +107,7 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 	const [onMyChain, setOnMyChain] = useState();
 
 	const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
-	const {address, collectionIndex} = useParams();
+	const {address, /*collectionIndex*/} = useParams();
 
 	const locker = async (data) => {
 	    try {

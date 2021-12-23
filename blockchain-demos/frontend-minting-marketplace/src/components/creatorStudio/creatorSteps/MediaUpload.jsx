@@ -1,12 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState /*useCallback*/ } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams, useHistory, NavLink } from 'react-router-dom';
-import { web3Switch } from '../../../utils/switchBlockchain.js';
-import { rFetch } from '../../../utils/rFetch.js';
+// import { useParams, useHistory, NavLink } from 'react-router-dom';
+// import { web3Switch } from '../../../utils/switchBlockchain.js';
+// import { rFetch } from '../../../utils/rFetch.js';
 import { utils } from 'ethers';
-import InputSelect from '../../common/InputSelect.jsx';
+// import InputSelect from '../../common/InputSelect.jsx';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
+// import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import chainData from '../../../utils/blockchainData.js'
 import Dropzone from 'react-dropzone'
 import videoIcon from '../../../images/videoIcon.svg';
@@ -19,7 +19,7 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 
-	const {primaryColor, secondaryColor, textColor} = useSelector(store => store.colorStore);
+	const {primaryColor, /*secondaryColor, textColor*/} = useSelector(store => store.colorStore);
 
 	useEffect(() => {
 		console.log(contractData);
@@ -65,7 +65,7 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 					<section>
 						<div {...getRootProps()} style={{border: 'dashed 1px var(--charcoal-80)', position: 'relative'}} className='w-100 h-100 rounded-rair col-6 text-center mb-3 p-5'>
 							<input {...getInputProps()} />
-							<img style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={videoIcon} className='mt-5 mb-3'/>
+							<img alt='' style={{filter: primaryColor === 'rhyno' ? 'brightness(40%)' : undefined}} src={videoIcon} className='mt-5 mb-3'/>
 							<br />
 							{
 								isDragActive ?

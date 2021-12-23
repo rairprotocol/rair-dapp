@@ -1,15 +1,15 @@
 import React from 'react';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 
 import DiscordIcon from './../SplashPage/images/discord-icon.png';
 import logoAuthor from './../SplashPage/images/colab.png';
 
 const ThankYouPage = () => {
-    const history = useHistory();
+    // const history = useHistory();
 
-    const goBack = () => {
-        history.goBack()
-    };
+    // const goBack = () => {
+    //     history.goBack()
+    // };
 
     return (
         <div className="col">
@@ -30,7 +30,7 @@ const ThankYouPage = () => {
                             </div>
                             <div className="release-join-discord">
                                 <div className="btn-discord">
-                                    <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
+                                    <a href="https://discord.gg/NFeGnPkbfd" target="_blank" rel="noreferrer"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
                                 </div>
                             </div>
                             <div className="logo-author">

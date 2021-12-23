@@ -4,6 +4,7 @@ import { CurrentTokens } from "../CurrentTokens/CurrentTokens";
 import "../../styles.css";
 
 const ListOfTokensComponent = ({
+  blockchain,
   contract,
   isOpen,
   handleIsOpen,
@@ -21,7 +22,7 @@ const ListOfTokensComponent = ({
   const [elem, setElem] = useState([]);
   const rootRef = useRef();
   const appRef = useRef();
-  const limit = 100;
+  const limit = 90;
   const [isOpens, setIsOpens] = useState(false);
   const [isBack /*setIsBack*/] = useState(true);
 
@@ -39,7 +40,7 @@ const ListOfTokensComponent = ({
       const responseAllProduct = await (
         await fetch(
           //   `/api/nft/${contract}/${product}?fromToken=${indexes[0]}&limit=${indexes[1]}`,
-          `/api/nft/${contract}/${product}?fromToken=${indexes[0]}&limit=${limit}`,
+          `/api/nft/network/${blockchain}//${contract}/${product}?fromToken=${indexes[0]}&limit=${limit}`,
           {
             method: "GET",
           }
@@ -49,7 +50,7 @@ const ListOfTokensComponent = ({
       setTokenData(responseAllProduct.result.tokens);
       setSelectedToken(indexes[0]);
     },
-    [contract, product, setSelectedToken]
+    [blockchain, contract, product, setSelectedToken]
   );
 
   const getPaginationToken = useCallback(
@@ -66,7 +67,7 @@ const ListOfTokensComponent = ({
 
       const buildDivs = (number) => {
         // const root = rootRef.current;
-        const divCount = parseInt(number / 10 + "") + 1;
+        const divCount = parseInt(number / 100 + "") + 1;
 
         // Array(divCount)
         //   .fill(0)

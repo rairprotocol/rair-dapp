@@ -1,15 +1,15 @@
 import {useState, useEffect, useCallback} from 'react';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+// import withReactContent from 'sweetalert2-react-content';
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import {web3Switch} from '../../../utils/switchBlockchain.js';
+// import {web3Switch} from '../../../utils/switchBlockchain.js';
 
-const rSwal = withReactContent(Swal);
+// const rSwal = withReactContent(Swal);
 
 const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer}) => {
 	const [receiverAddress, setReceiverAddress] = useState(receiver);
@@ -71,11 +71,11 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 	</tr>
 };
 
-const CustomizeFees = ({contractData, switchBlockchain, correctMinterInstance, minterRole, setStepNumber, steps}) => {
+const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance, /*minterRole*/ setStepNumber, steps}) => {
 	const stepNumber = 3;
 
 	const { textColor, primaryColor } = useSelector(store => store.colorStore);
-	const { minterInstance, programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
+	// const { minterInstance, programmaticProvider, contractCreator  } = useSelector(store => store.contractStore);
 
 	const history = useHistory();
 
@@ -84,7 +84,7 @@ const CustomizeFees = ({contractData, switchBlockchain, correctMinterInstance, m
 	const [nodeFee, setNodeFee] = useState(0);
 	const [treasuryFee, setTreasuryFee] = useState(0);
 	const [minterDecimals, setMinterDecimals] = useState(0);
-	const [settingCustomSplits, setSettingCustomSplits] = useState(false);
+	const [/*settingCustomSplits,*/ setSettingCustomSplits] = useState(false);
 
 	const getContractData = useCallback(async () => {
 		if (!correctMinterInstance) {
@@ -113,10 +113,10 @@ const CustomizeFees = ({contractData, switchBlockchain, correctMinterInstance, m
 		});
 		setCustomPayments(aux);
 	}
-	let onMyChain = window.ethereum ?
-		chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
-		:
-		chainData[contractData?.blockchain]?.chainId === programmaticProvider.provider._network.chainId;
+	// let onMyChain = window.ethereum ?
+	// 	chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
+	// 	:
+	// 	chainData[contractData?.blockchain]?.chainId === programmaticProvider.provider._network.chainId;
 	
 	useEffect(() => {
 		setStepNumber(stepNumber);

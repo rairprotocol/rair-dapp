@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback} from 'react';
+// import { useState, useEffect, useCallback} from 'react';
 import InputField from '../../common/InputField.jsx';
 import InputSelect from '../../common/InputSelect.jsx';
 import { useSelector } from 'react-redux';
 
 const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 
-	const {primaryColor, secondaryColor, textColor} = useSelector(store => store.colorStore);
+	const {primaryColor, /*secondaryColor,*/ textColor} = useSelector(store => store.colorStore);
 	
 	const cornerStyle = {height: '35vh', borderRadius: '16px 0 0 16px'}
 	const selectCommonInfo = {
@@ -54,7 +54,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 				<video style={cornerStyle} className='h-100 w-100' src={item.preview} />
 			}
 			{item.file.type.split('/')[0] === 'image' &&
-				<img style={cornerStyle} src={item.preview} className='h-auto w-100' />
+				<img alt='' style={cornerStyle} src={item.preview} className='h-auto w-100' />
 			}
 			{item.file.type.split('/')[0] === 'audio' &&
 				<>

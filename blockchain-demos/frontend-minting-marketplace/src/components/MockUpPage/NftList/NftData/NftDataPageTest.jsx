@@ -21,6 +21,7 @@ import ReactPlayer from "react-player";
 import "react-multi-carousel/lib/styles.css";
 
 const NftDataPageTest = ({
+  blockchain,
   contract,
   currentUser,
   data,
@@ -114,7 +115,7 @@ const NftDataPageTest = ({
     return max;
   }
 
-  function ch() {
+  function checkPrice() {
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
       return `${samePrice} 
@@ -157,6 +158,78 @@ const NftDataPageTest = ({
     );
   }
 
+  const switchEthereumChain = async (chainData) => {
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: chainData.chainId }],
+      });
+    } catch (switchError) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [chainData],
+          });
+        } catch (addError) {
+          console.error(addError);
+        }
+      } else {
+        console.error(switchError);
+      }
+    }
+  };
+
+  const CheckEthereumChain = async () => {
+    switch (blockchain) {
+      case "0x61":
+        switchEthereumChain({
+          chainId: "0x61",
+          chainName: "Binance Testnet",
+        });
+        break;
+
+      case "0x3e9":
+        switchEthereumChain({
+          chainId: "0x3e9",
+          chainName: "Klaytn Baobab",
+        });
+        break;
+
+      case "0x13881":
+        switchEthereumChain({
+          chainId: "0x13881",
+          chainName: "Matic Testnet Mumbai",
+        });
+        break;
+
+      case "0x89":
+        switchEthereumChain({
+          chainId: "0x89",
+          chainName: "Matic(Polygon) Mainnet",
+        });
+        break;
+
+      case "0x3":
+        switchEthereumChain({
+          chainId: "0x3",
+          chainName: "Ropsten (Ethereum)",
+        });
+        break;
+
+      case "0x5":
+        switchEthereumChain({
+          chainId: "0x5",
+          chainName: "Goerli (Ethereum)",
+        });
+        break;
+
+      default:
+        Swal.fire('Error', ' This chain has not been added to MetaMask, yet', 'error');
+    }
+  };
+
   const buyContract = async () => {
     try {
       await minterInstance.buyToken(
@@ -191,7 +264,13 @@ const NftDataPageTest = ({
     } else
       return (
         <button
-          onClick={() => buyContract()}
+          className="nftDataPageTest-buy-btn"
+          onClick={
+            window?.ethereum?.chainId === blockchain
+              ? buyContract
+              : () => CheckEthereumChain()
+          }
+          // onClick={() => buyContract()}
           // onClick={() => alert("Coming soon")}
           style={{
             width: "228px",
@@ -328,7 +407,7 @@ const NftDataPageTest = ({
                 marginLeft: "3px",
               }}
             >
-              {selectedData.name}
+              {selectedData?.name}
             </h2>
             <div className="btn-share">
               <button
@@ -410,7 +489,7 @@ const NftDataPageTest = ({
                   }}
                 >
                   {
-                    offerPrice && `${ch()}`
+                    offerPrice && `${checkPrice()}`
                     // `${minPrice} – ${maxPrice} ${data?.product.blockchain || ""
                     // } `
                   }
@@ -442,6 +521,7 @@ const NftDataPageTest = ({
               <div>
                 {tokenData.length ? (
                   <SelectNumber
+                    blockchain={blockchain}
                     product={product}
                     contract={contract}
                     totalCount={totalCount}
@@ -502,7 +582,10 @@ const NftDataPageTest = ({
                     // ? selectedData.length &&
                     selectedData?.attributes.length > 0 ? (
                       selectedData?.attributes.map((item, index) => {
-                        if (item.trait_type === "External URL" && "external_url") {
+                        if (
+                          item.trait_type === "External URL" &&
+                          "external_url"
+                        ) {
                           return (
                             <div
                               key={index}

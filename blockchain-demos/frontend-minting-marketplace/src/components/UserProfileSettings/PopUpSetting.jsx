@@ -19,7 +19,7 @@ const PopUpSettings = ({
   // const [userName, setUserName] = useState(currentUserAddress);
   const [openModal, setOpenModal] = useState(false);
   const [openModalPic, setOpenModalPic] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [/*userData*/, setUserData] = useState({});
   const [userName, setUserName] = useState();
   const [userEmail, setUserEmail] = useState();
 
@@ -194,7 +194,7 @@ const PopUpSettings = ({
             </div>
             <div className="user-edit">
             <div className="profile-input">
-                  <span style={{paddingLeft: '6px'}} onClick={() => setOpenModalPic(true)}>Edit</span>
+                  <span className="profile-input-edit" onClick={() => setOpenModalPic(true)}>Edit</span>
             </div>
             </div>
           </div>

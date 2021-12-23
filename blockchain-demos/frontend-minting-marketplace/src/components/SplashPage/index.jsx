@@ -16,7 +16,7 @@ import Nft_3 from "./images/exclusive_3.jpeg";
 import Nft_4 from "./images/image_3.png";
 import NftImage from "./images/main-nft-screen.png";
 import UnlockableVideo from "./images/nipsey1.png";
-import JoinCommunity from "./images/join_com.jpeg";
+// import JoinCommunity from "./images/join_com.jpeg";
 import DigitalMobile from './images/digital-mobile.png';
 import NftMobile_1 from './images/nft-mobile_1.png';
 import NftMobile_2 from './images/nft-mobile_2.png';
@@ -26,14 +26,14 @@ import DiscordIcon from './images/discord-icon.png';
 import Bandana from './images/bandana.png';
 import Pods from './images/Pods.png';
 import Cepk from './images/cepk.png'
-import Cepp from './images/cepp.png';
+// import Cepp from './images/cepp.png';
 
 /* importing Components*/
 import TokenLeft from "./TokenLeft/TokenLeft";
 import ExclusiveNft from "./ExclusiveNft/ExclusiveNft";
 import UnlockVideos from "./UnlockVideos/UnlockVideos";
 import TeamMeet from "./TeamMeet/TeamMeetList";
-import JoinCom from "./JoinCom/JoinCom";
+// import JoinCom from "./JoinCom/JoinCom";
 
 import Modal from "react-modal";
 import RoadMap from "./Roadmap/RoadMap.jsx";
@@ -91,15 +91,15 @@ const SplashPage = () => {
     }
   }
 
-  let params = `scrollbars=no,resizable=no,status=no,location=no,
-                toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
+  // let params = `scrollbars=no,resizable=no,status=no,location=no,
+  //               toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
 
   const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
 
   const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
   const buyNipsey = async () => {
-    const { success, products } = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
+    const { /*success*/ products } = await rFetch(`/api/contracts/${nipseyAddress}/products/offers`);
     let instance = contractCreator(nipseyAddress, erc721Abi);
     let nextToken = await instance.getNextSequentialIndex(0, 50, 250);
     Swal.fire({
@@ -133,9 +133,9 @@ const SplashPage = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
-  const openModal = useCallback(() => {
-    setIsOpen(true);
-  }, []);
+  // const openModal = useCallback(() => {
+  //   setIsOpen(true);
+  // }, []);
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
@@ -174,7 +174,7 @@ const SplashPage = () => {
 
   useEffect(() => {
     getAllProduct()
-  }, [])
+  }, [getAllProduct])
 
   return (
     <div className="wrapper-splash-page">
@@ -191,7 +191,7 @@ const SplashPage = () => {
                   1000 unique NFTs unlock exclusive streaming for the
                   final Nipsey Hussle album.
                   Proceeds directly benefit the Airmiess
-                  Asghedom estate <a href="https://etherscan.io/Oxcontract" target="_blank">onchain</a>.
+                  Asghedom estate <a href="https://etherscan.io/Oxcontract" target="_blank" rel="noreferrer">onchain</a>.
                 </div>
               </div>
               <div className="btn-timer-nipsey">

@@ -1,70 +1,72 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, Redirect, NavLink } from 'react-router-dom';
+import { Router, Switch, Route, /*Redirect*/ NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import jsonwebtoken from 'jsonwebtoken';
-import setTitle from './utils/setTitle';
+import { getJWT, isTokenValid } from './utils/rFetch.js';
 
 import './App.css';
 import * as ethers from 'ethers'
-import { getJWT, isTokenValid } from './utils/rFetch.js';
-
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
-import * as colorTypes from './ducks/colors/types.js';
+// import * as colorTypes from './ducks/colors/types.js';
 import * as userTypes from './ducks/users/types.js';
 import * as authTypes from './ducks/auth/types.js';
+import * as Sentry from "@sentry/react";
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
+import jsonwebtoken from 'jsonwebtoken';
+
 //import CSVParser from './components/metadata/csvParser.jsx';
-import MetadataEditor from './components/metadata/metadataEditor.jsx';
-import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
-import MyContracts from './components/whitelabel/myContracts.jsx';
-import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
-
-import CreatorMode from './components/creatorMode.jsx';
+import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import ConsumerMode from './components/consumerMode.jsx';
-
-import VideoPlayer from './components/video/videoPlayer.jsx';
-import FileUpload from './components/video/videoUpload/videoUpload.jsx';
-
-import Token from './components/nft/Token.jsx';
-import RairProduct from './components/nft/rairCollection.jsx';
-import MockUpPage from './components/MockUpPage/MockUpPage';
-
-import Deploy from './components/creatorStudio/Deploy.jsx';
 import Contracts from './components/creatorStudio/Contracts.jsx';
 import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
+import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
+import CreatorMode from './components/creatorMode.jsx';
+
+import Deploy from './components/creatorStudio/Deploy.jsx';
+
+import FileUpload from './components/video/videoUpload/videoUpload.jsx';
+
+import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
+
 import ListCollections from './components/creatorStudio/ListCollections.jsx';
 
-// import MetamaskLogo from './images/metamask-fox.svg';
-import * as Sentry from "@sentry/react";
+import MetadataEditor from './components/metadata/metadataEditor.jsx';
+import MyContracts from './components/whitelabel/myContracts.jsx';
+import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
+import MockUpPage from './components/MockUpPage/MockUpPage';
+import MyItems from './components/nft/myItems';
+import MyNFTs from './components/nft/myNFT.jsx';
+
+import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
-import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
-import MyItems from './components/nft/myItems';
-import { OnboardingButton } from './components/common/OnboardingButton';
-import SplashPage from './components/SplashPage';
-import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
-// import AboutPage from './components/AboutPage/AboutPage';
-// import NftList from './components/MockUpPage/NftList/NftList';
-// import NftItem from './components/MockUpPage/NftList/NftItem';
-import MyNFTs from './components/nft/myNFT.jsx';
-import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
-import { TermsUse } from './components/SplashPage/TermsUse';
-import AboutPage from './components/AboutPage/AboutPage';
-import ThankYouPage from './components/ThankYouPage';
 import NotFound from './components/NotFound/NotFound';
 
+import { OnboardingButton } from './components/common/OnboardingButton';
+
+import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
 import ReactGA from 'react-ga';
 
+import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
+
+import SplashPage from './components/SplashPage';
+import setTitle from './utils/setTitle';
+
+import ThankYouPage from './components/ThankYouPage';
+import Token from './components/nft/Token.jsx';
+import { TermsUse } from './components/SplashPage/TermsUse';
+
+import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
+
+import VideoPlayer from './components/video/videoPlayer.jsx';
+
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
-import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -219,10 +221,10 @@ function App({ sentryHistory }) {
 		}
 	}, [setRenderBtnConnect]);
 
-	const openAboutPage = () => {
-		sentryHistory.push(`/rair-about-page`)
-		window.scrollTo(0, 0);
-	}
+	// const openAboutPage = () => {
+	// 	sentryHistory.push(`/rair-about-page`)
+	// 	window.scrollTo(0, 0);
+	// }
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -241,7 +243,7 @@ function App({ sentryHistory }) {
 				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
 			}
 		}
-	}, [sentryHistory.push])
+	}, [dispatch, sentryHistory.push])
 
 	useEffect(() => {
 		btnCheck()
@@ -396,21 +398,32 @@ function App({ sentryHistory }) {
 							</div>
 							<div className='col-12 mt-3 row'>
 								<Switch>
+									<SentryRoute path='/all'>
+										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
+
 									<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
+									<SentryRoute exact path="/terms-use" component={TermsUse} />
+
 									<SentryRoute exact path="/thankyou" component={ThankYouPage} />
 									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
-									<SentryRoute exact path="/terms-use" component={TermsUse} />
 									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+
 									<SentryRoute exact path="/notifications" component={NotificationPage} />
+
+									<SentryRoute path="/comming-soon" component={CommingSoon} />
+
 									<SentryRoute exact path="/rair-about-page">
-										<AboutPage primaryColor={primaryColor} textColor={textColor} />
+										{/* <AboutPage primaryColor={primaryColor} textColor={textColor} /> */}
 									</SentryRoute>
-									<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
+
+									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
+									
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
+									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
 									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
-									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
 									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
@@ -420,23 +433,19 @@ function App({ sentryHistory }) {
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
 										<WorkflowSteps {...{ sentryHistory }} />
 									</SentryRoute>}
-
-									<SentryRoute path='/all'>
-										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-									</SentryRoute>
 									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
-									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
-									<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
-										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-									</SentryRoute>
-									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
-									{loginDone && <SentryRoute exact path='/my-items' ><MyItems goHome={goHome} />
+									{loginDone && <SentryRoute exact path='/my-items' >
+										<MyItems goHome={goHome} />
 									</SentryRoute>}
-									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
+									
 									<SentryRoute exact path='/tokens/:blockchain/:contract/:product/:tokenId'>
 										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
+									<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
+										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
+									
 									{adminAccess && <SentryRoute path='/admin'>
 										<FileUpload primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>}
@@ -455,38 +464,38 @@ function App({ sentryHistory }) {
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</div>
 									</SentryRoute>
-									<SentryRoute path="/comming-soon" component={CommingSoon} />
+
 									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>
 						</div>
 					</div>
 					<div className='py-5' />
-					<footer
-						className="footer col"
-						style={{
-							background: `${primaryColor === "rhyno" ? "#ccc" : ""}`
-						}}
-					>
-						<div className="text-rairtech" style={{ color: `${primaryColor === "rhyno" ? "#000" : ""}` }}>
-							© Rairtech 2021. All rights reserved
-						</div>
-						<ul>
-							<li>
-								<a href="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&id=1f95f6ad8c" target="_blank">Newsletter</a>
-							</li>
-							<li>
-								<a target="_blank" href="https://etherscan.io/error.html?404">Contract</a>
-							</li>
-							<li>
-								<a href="https://discord.gg/7KaSHNJ7qS" target="_blank">Inquiries</a>
-							</li>
-							<li>
-								<NavLink to="/terms-use">Terms of Service</NavLink>
-							</li>
-							<li onClick={() => openAboutPage()}>About us</li>
-						</ul>
-					</footer>
+						<footer
+							className="footer col"
+							style={{
+								background: `${primaryColor === "rhyno" ? "#ccc" : ""}`
+							}}
+						>
+							<div className="text-rairtech" style={{ color: `${primaryColor === "rhyno" ? "#000" : ""}` }}>
+								© Rairtech 2021. All rights reserved
+							</div>
+							<ul>
+								<li>
+									<a href="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&id=1f95f6ad8c" rel="noreferrer" target="_blank">Newsletter</a>
+								</li>
+								<li>
+									<a target="_blank" rel="noreferrer" href="https://etherscan.io/error.html?404">Contract</a>
+								</li>
+								<li>
+									<a href="https://discord.gg/7KaSHNJ7qS" rel="noreferrer" target="_blank">Inquiries</a>
+								</li>
+								<li>
+									<NavLink to="/terms-use">Terms of Service</NavLink>
+								</li>
+								<li /*onClick={() => openAboutPage()}*/>About us</li>
+							</ul>
+						</footer>
 				</div>
 			</Router>
 		</Sentry.ErrorBoundary>
