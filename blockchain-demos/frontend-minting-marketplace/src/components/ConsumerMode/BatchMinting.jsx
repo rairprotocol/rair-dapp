@@ -1,4 +1,6 @@
 import {useState, useEffect} from 'react'
+import { utils, BigNumber } from 'ethers';
+import blockchainData from '../../utils/blockchainData.js';
 
 const BatchRow = ({index, deleter, array}) => {
 
@@ -68,7 +70,7 @@ const BatchMinting = ({name, start, end, price, batchMint}) => {
 			Add <i className='fas fa-plus' />
 		</button>
 		<button onClick={addRow} disabled className='col btn btn-white'>
-			Total: {price * rows.length} wei
+			Total: {utils.formatEther(BigNumber.from(price === '' ? 0 : price).mul(rows.length)).toString()} {blockchainData[window?.ethereum?.chainId]?.symbol}!
 		</button>
 		<div className='col-12' style={{maxHeight: '60vh', overflowY: 'scroll'}}>
 			{rows.map((item, index) => {

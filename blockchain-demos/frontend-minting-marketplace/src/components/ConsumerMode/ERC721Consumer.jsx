@@ -4,6 +4,8 @@ import withReactContent from 'sweetalert2-react-content';
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import BatchMinting from './BatchMinting.jsx';
+import { utils } from 'ethers';
+import blockchainData from '../../utils/blockchainData.js';
 const MySwal = withReactContent(Swal)
 
 const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
@@ -65,7 +67,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 				Swal.fire('Error', err?.data?.message, 'error');
 			}
 		}} className='btn btn-success py-0'>
-			Buy token #{next} for {price} Wei!
+			Buy token #{next} for {utils.formatEther(price === '' ? 0 : price).toString()} {blockchainData[window?.ethereum?.chainId]?.symbol}!
 		</button>
 		<button onClick={e => {
 			MySwal.fire({
@@ -99,7 +101,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 							Swal.fire('Error', err?.data?.message, 'error');
 						}
 					}} className='btn py-0 btn-warning'>
-						Buy token #{specificIndex} for {price} Wei!
+						Buy token #{specificIndex} for {utils.formatEther(price === '' ? 0 : price).toString()} {blockchainData[window?.ethereum?.chainId]?.symbol}!
 					</button>
 				</details>
 			</small>
@@ -109,7 +111,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 	</div>
 }
 
-const ERC721Manager = ({ offerInfo, index, width = 4 }) => {
+const ERC721Manager = ({ offerInfo, index, width = 6 }) => {
 	const [balance, setBalance] = useState();
 	const [productName, setProductName] = useState();
 	const [contractName, setContractName] = useState();
