@@ -15,6 +15,10 @@ import photoNut from './../images/block-nuts-photos.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import PoweredRair from './../images/poweredRair.png';
 
+import { erc721Abi } from '../../../contracts/index.js'
+import { rFetch } from '../../../utils/rFetch.js';
+import { web3Switch } from '../../../utils/switchBlockchain.js';
+import Swal from 'sweetalert2';
 
 const Nutcrackers = () => {
     const { primaryColor } = useSelector((store) => store.colorStore);
@@ -22,6 +26,47 @@ const Nutcrackers = () => {
 
     const leftTokensNumber = 50;
     const wholeTokens = 50;
+    const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
+
+    const nutcrackerAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
+    const mintNutcracker = async () => {
+        if (window.ethereum.chainId !== '0x89') {
+            web3Switch('0x89');
+            return;
+        }
+
+        const { success, products } = await rFetch(`/api/contracts/0x89/${nutcrackerAddress}/products/offers`);
+        if (success) {
+            let instance = contractCreator(nutcrackerAddress, erc721Abi);
+            let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
+            Swal.fire({
+              title: 'Please wait...',
+              html: `Buying Nutcracker #${nextToken.toString()}`,
+              icon: 'info',
+              showConfirmButton: false
+            });
+            return;
+            let [nutsOffer] = products[0].offers.filter(item => item.offerName === 'Nuts');
+            if (!nutsOffer) {
+              Swal.fire('Error', 'An error has ocurred', 'error');
+              return;
+            }
+            try {
+              await (await minterInstance.buyToken(
+                products[0].offerPool.marketplaceCatalogIndex,
+                nutsOffer.offerIndex,
+                nextToken,
+                {
+                  value: nutsOffer.price
+                }
+              )).wait();
+              Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
+            } catch (e) {
+              console.error(e);
+              Swal.fire('Error', e?.message, 'error');
+            }
+        }
+    }
 
     useEffect(() => {
         if (leftTokensNumber <= wholeTokens) {
@@ -61,7 +106,9 @@ const Nutcrackers = () => {
                             </div>
 
                             <div className="btn-buy-metamask">
-                                <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Mint with Matic</button>
+                                <button onClick={mintNutcracker}>
+                                    <img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Mint with Matic
+                                </button>
                             </div>
                         </div>
                     </div>
