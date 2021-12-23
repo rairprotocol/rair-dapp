@@ -25,7 +25,7 @@ const schemes = {
 	}
 }
 
-const InitialState = schemes[localStorage.colorScheme ? localStorage.colorScheme : 'rhyno']; 
+const InitialState = schemes[localStorage.colorScheme ? localStorage.colorScheme : 'charcoal']; 
 
 export default function colorStore(state = InitialState, action) {
 	switch (action.type) {

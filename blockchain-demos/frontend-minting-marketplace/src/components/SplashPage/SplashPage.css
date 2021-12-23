@@ -38,13 +38,14 @@
     justify-content: center;
     flex-direction: column;
     margin-top: 54px;
+    overflow: hidden;
     /* padding-left: 80px; */
 }
 
 
 /* Author Information Block*/
 
-.information-author {
+.home-splash--page .information-author {
     position: relative;
     overflow: hidden;
     padding: 94px 91px;
@@ -60,8 +61,75 @@
     background-position: 95% center;
 }
 
-.nipsey-comming-soon .information-author {
+.nipsey-comming-soon {
+    margin-bottom: 108px;
+}
+
+.nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+    background-image: url('./images/nipsey.png');
+    background-repeat: no-repeat;
     background-size: 530px auto;
+    background-position: 95% center;
+    background-color: #fff;
+    padding: 94px 91px;
+    border-radius: 24px;
+}
+
+.nipsey-comming-soon.nutcrackers .information-author {
+    background-image: url('./images/nuts-main.png');
+}
+
+.nipsey-comming-soon.nutcrackers .img-coming-nuts {
+    display: none;
+}
+
+@media screen and (max-width: 900px) {
+    .nipsey-comming-soon.nutcrackers .information-author {
+        background-image: none;
+    }
+
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts {
+        display: block;
+    }
+
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts img {
+        width: 400px;
+        height: auto;
+    }
+
+    .nipsey-comming-soon.nutcrackers .information-author {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts img {
+        width: 280px;
+        height: auto;
+    }
+} 
+
+.nipsey-comming-soon.nutcrackers .information-author .text-splash .title-splash.nipsey span {
+    color: #A12921;
+}
+
+.information-author .btn-back-coming  {
+    margin-top: 20px;
+}
+
+.information-author .btn-back-coming button {
+    color: #FFF;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    border-radius: 10px;
+    border: none;
+    /* padding: 5px 10px; */
+    height: 40px;
+    width: 287px;
 }
 
 .nipsey-comming-soon .information-author .text-splash .title-splash h4 {
@@ -71,6 +139,7 @@
 
 .nipsey-thank-you-page {
     margin-bottom: 108px;
+    overflow: hidden;
 }
 
 .information-author.greyman-page-author {
@@ -349,7 +418,7 @@
 .tokens-description p {
     line-height: 28px;
     color: #A7A6A6;
-    font: 20px;
+    font-size: 18px;
     font-weight: 400;
 }
 
@@ -455,8 +524,11 @@
 }
 
 .offer-fans {
-    position: relative;
     z-index: 1;
+}
+
+.offer-fans .offer-fans-container {
+    position: relative;
 }
 
 .offer-fans .offer-1 {
@@ -997,6 +1069,10 @@ text-decoration: underline;
     transform: scale(0.6);
 }
 
+img.block-img-mobile{
+    display: none;
+}
+
 
 /* Media Pesponsive*/
 
@@ -1176,16 +1252,128 @@ text-decoration: underline;
 }
 
 @media screen and (max-width: 950px) {
-    .home-splash--page {
+    /* .home-splash--page {
         display: none;
     }
 
     .home-splash-mobile {
         display: block;
+    } */
+
+    .home-splash--page {
+        padding-left: 0px;
     }
 
     .wrapper-splash-page {
         overflow-x: auto;
+        max-width: 900px;
+    }
+
+    .home-splash--page {
+        max-width: 100%;
+    }
+
+    .home-splash--page .information-author, .left-tokens, .special-offer, .unlockble-video, 
+    .exclusive-nfts, .join-community, .join-community .title-join {
+        width: 100%;
+    }
+
+    .home-splash--page .exclusive-nfts .nfts-select {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .home-splash--page .nfts-select .block-nfts {
+        margin-left: 0;
+        margin-top: 25px;
+    }
+
+    .home-splash--page .title-nft {
+        text-align: center;
+    }
+
+    .unlockble-video .title-gets {
+        text-align: center;
+    }
+
+    .home-splash--page .special-offer {
+        flex-direction: column-reverse;
+        align-items: center;
+        height: 800px;
+    }
+
+    .home-splash--page .offer-fans {
+        /* position: initial; */
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .offer-fans .offer-fans-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-top: -430px;
+    }
+
+    .home-splash--page .special-offer {
+        position: relative;
+    }
+
+    .offer-fans .offer-2 {
+        left: -190px;
+        top: -50px;
+    }
+
+    .offer-fans .offer-1 {
+        top: -20px;
+    }
+
+    .offer-fans .offer-3 {
+        top: -60px;
+        left: -155px;
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-right: 0px !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-splash--page .special-offer .text-offer {
+        width: 90%;
+    }
+
+    .left-tokens .block-left-tokens {
+        margin-right: 0;
+    }
+
+    .home-splash--page .left-tokens-content {
+        margin-top: 40px;
+    }
+
+    .left-tokens .block-left-tokens {
+        width: 456px;
+        height: 584px;
+    }
+
+    .home-splash--page .left-tokens {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-splash--page .box-progress {
+        margin-left: 108px;
+        margin-top: 172px;
+    }
+
+    .special-offer .root-time {
+        margin-bottom: 0;
+        margin-top: 0px;
     }
 
     .row {
@@ -1193,6 +1381,67 @@ text-decoration: underline;
     }
 }
 
+@media screen and (max-width: 850px) {
+    .home-splash--page .information-author {
+        background-image: none;
+    }
+
+    .home-splash--page .information-author{
+        max-width: 95%;
+    }
+
+    .home-splash--page .information-author img.block-img-mobile {
+        display: block;
+        width: 400px;
+        height: auto;
+    }
+
+    .home-splash--page .information-author {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .block-splash {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .home-splash--page .block-splash .logo-author {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .video-locked {
+        width: 351px;
+    }
+
+    .video-locked img.block-img-bg {
+        height: 73px;
+        width: 100px;
+    }
+
+    .home-splash--page .video-block-metamask-some {
+        left: 33px;
+        top: 18px;
+    }
+
+    .home-splash--page .video-block-metamask-some img {
+        width: 40px;
+        height: auto;
+    }
+
+    .home-splash--page .video-description .video-timer p {
+        font-size: 16px;
+    }
+
+   .home-splash--page .nipsey-img-masks {
+       display: none;
+   }
+
+   .home-splash--page .meet-team {
+       padding-bottom: 120px;
+   }
+} 
 
 @media screen and (max-width: 800px) {
     .footer {
@@ -1205,13 +1454,198 @@ text-decoration: underline;
     }
 }
 
+
+@media screen and (max-width: 585px){
+    .home-splash--page .offer-fans .offer-fans-container {
+        margin-top: -400px;
+    }
+
+    .home-splash--page .special-offer {
+        position: relative;
+    }
+
+    .offer-fans .offer-2 {
+        left: -150px;
+        top:  -20px;
+        width: 300px;
+        height: 300px;
+    }
+
+    .offer-fans .offer-1 {
+        top: 0px;
+        width: 350px;
+        height: 350px;
+    }
+
+    .offer-fans .offer-3 {
+        top: -30px;
+        left: -115px;
+        width: 230px;
+        height: 230px;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .home-splash--page .information-author img.block-img-mobile {
+        display: block;
+        width: 337px;
+        height: auto;
+    }
+
+    .home-splash--page .text-splash .text-description {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .home-splash--page .left-tokens-content .tokens-description {
+        width: 90%;
+    }
+
+    .home-splash--page .left-tokens-content {
+        align-items: center;
+    }
+
+    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient {
+        font-size: 32px;
+    }
+
+    .home-splash--page .tokens-description p {
+        font-size: 16px;
+    }
+
+    .home-splash--page .title-gets h3, .home-splash--page .title-gets h3 .text-gradient, .title-nft h3, .title-nft h3 .text-gradient, .title-team h3, .title-team h3 .text-gradient {
+        font-size: 32px;
+    }
+
+    .home-splash--page .box-video {
+        margin-right: 0px;
+    }
+
+    .home-splash--page .img-teammate img {
+        width: 116px;
+        height: 116px;
+    }
+
+    .home-splash--page .meet-team .box-teammate .teammate-title-socials {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .home-splash--page .teammate-description p {
+        font-size: 14px;
+    }
+
+    .home-splash--page .meet-team .box-teammate .teammate-title-socials .box-socials {
+        margin-top: 10px;
+    }
+
+    .home-splash--page .position-teammate .teammate-description {
+        width: 100%;
+    }
+
+    .home-splash--page .information-author .root-time .time {
+        font-size: 26px;
+    }
+
+    .home-splash--page .roadmap-container .roadmap-list:first-child, .home-splash--page .roadmap-container .roadmap-list:nth-child(2) {
+        margin-right: 10px;
+    }
+
+    .roadmap-box:nth-child(2) p {
+        font-size: 12px !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .left-tokens .block-left-tokens {
+        width: 356px;
+        height: 484px;
+    }
+
+    .home-splash--page .box-progress {
+        margin-left: 58px;
+        margin-top: 180px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-bottom: -20px;
+    }
+
+    .offer-fans .offer-1 {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .home-splash--page .nfts-select .block-nfts {
+        display: none;
+    }
+
+    .nfts-select .main-nft {
+        width: 350px;
+        height: 350px;
+    }
+
+    .home-splash--page .exclusive-nfts {
+        margin: 80px 0 30px 0;
+    }
+} 
+
+@media screen and (max-width: 433px) {
+    .left-tokens .release-join-discord {
+        margin-top: 150px;
+    }
+
+    .home-splash--page .offer-fans .offer-fans-container {
+        margin-top: -340px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .home-splash--page .information-author img.block-img-mobile {
+        width: 280px;
+        height: auto;
+    }
+
+    .offer-fans .offer-1 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .offer-fans .offer-2 {
+        width: 270px;
+        height: 270px;
+        left: -135px;
+    }
+
+    .offer-fans .offer-3 {
+        width: 210px;
+        height: 210px;
+        left: -105px;
+    }
+
+    .home-splash--page .video-locked {
+        width: 300px;
+    }
+
+    .nfts-select .main-nft {
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash--page .exclusive-nfts {
+        margin: 80px 0 10px 0;
+    }
+}
+
 /* Mobile version */
 .home-splash-mobile {
     width: 100vw;
 }
 
 .wrapper-splash-mobile {
-    background: #181717;
+    /* background: #181717; */
     overflow: hidden;
 }
 
@@ -1343,7 +1777,7 @@ text-decoration: underline;
 
 .members-video-mobile {
     padding: 56px 0;
-    background: #000;
+    /* background: #BDBDBD; */
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -1385,10 +1819,11 @@ text-decoration: underline;
 }
 
 .nft-score-mobile {
-    background: #060606;
+    /* background: #838383; */
     padding: 16px;
     display: flex;
     justify-content: space-around;
+    margin-bottom: 60px;
 }
 
 .nft-score-mobile .score-num {
@@ -1650,6 +2085,10 @@ text-decoration: underline;
     border: none;
     color: #fff;
     transition: .3s all ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-discord a:hover {
@@ -1763,6 +2202,19 @@ text-decoration: underline;
 
 /* Media */
 
+@media screen and (max-width: 1300px) {
+    .home-splash--page .information-author {
+        background-size: 400px auto;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .home-splash--page .information-author {
+        background-size: 350px auto;
+        background-position: 95% 60px;
+    }
+}
+
 @media screen and (max-width: 1150px) {
     .nipsey-release .release-container:last-child {
         margin-left: 60px;
@@ -1782,6 +2234,10 @@ text-decoration: underline;
     .nipsey-release .release-join-discord {
         align-items: center;
     }
+
+    .nipsey-comming-soon .information-author {
+        background-size: 350px auto;
+    }
 }
 
 @media screen and (max-width: 1007px) {
@@ -1800,11 +2256,44 @@ text-decoration: underline;
     .roadmap-container {
         width: 90%;
     }
+
+    .nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+        background-size: 300px auto;
+    }
+
+    .footer ul li {
+        font-size: 15px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-right: 20px;
+    }
 }
 
 @media screen and (max-width: 920px) {
     .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
         max-width: 800px !important;
+    }
+}
+
+@media screen and (max-width: 900px) {
+
+    .splash-team {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .meet-team .box-teammate {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .position-teammate .teammate-description {
+        width: 90%;
     }
 }
 
@@ -1841,6 +2330,23 @@ text-decoration: underline;
     }
 }
 
+@media screen and (max-width:728px) {
+    .nipsey-release .release-container-title {
+        text-align: center;
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
+
+    .nipsey-release .release-container:last-child {
+        width: 95%;
+    }
+
+    .nipsey-release .release-desc-nipsey .release-desc-nipsey-box {
+        padding: 15px;
+        font-size: 14px;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .content-owners-mobile .owner-box .owner-img {
         width: 200px;
@@ -1849,6 +2355,26 @@ text-decoration: underline;
     .content-owners-mobile .owner-box .owner-img img, .content-owners-mobile .owner-box:last-child .owner-img img {
         width: 200px;
         height: auto;
+    }
+
+    .release-container .tabs-box .tab-title-box {
+        width: 200px;
+    }
+    
+    .nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+        width: 95%;
+    }
+
+    .nipsey-comming-soon, .nipsey-thank-you-page  {
+        padding-bottom: 100px;
+    }
+
+    .footer ul {
+        flex-direction: column;
+    }
+    .footer ul li {
+        margin-right: 0;
+        margin-bottom: 10px;
     }
 }
 
@@ -1883,6 +2409,15 @@ text-decoration: underline;
 }
 
 @media screen and (max-width: 500px) {
+    .home-splash-mobile .img-teammate img {
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
+        margin-left: 0px;
+    }
+     
     .content-owners-mobile {
         flex-direction: column;
     }
@@ -1890,14 +2425,6 @@ text-decoration: underline;
     .members-video-mobile .video-pic img {
         width: 300px;
         height: auto;
-    }
-
-    .footer ul {
-        flex-direction: column;
-
-    }
-    .footer ul li {
-        margin: 0;
     }
 }
 
@@ -1909,5 +2436,260 @@ text-decoration: underline;
     .streaming-nft-block .nft-box img {
         margin-right: 0;
         margin-bottom: 16px;
+    }
+
+    .nipsey-release .release-container:last-child {
+        width: 90%;
+    }
+
+    .release-join-discord .mailchimp .email-box {
+        width: 300px;
+    }
+
+    .release-join-discord .mailchimp input.email {
+        width: 200px;
+    }
+}
+
+
+@media screen and (max-width: 370px) {
+    .block-splash .logo-author img:first-child {
+        width: 290px;
+    }
+}
+
+/* Nutcrackers */
+
+.home-splash--page .information-author.nutcrackers {
+    background-image: url('./images/bg-nuts.png');
+    background-size: cover;
+}
+
+.information-author.nutcrackers .nut-block-img {
+    width: 400px;
+    height: auto;
+    margin-left: 50px;
+}
+
+.information-author.nutcrackers .block-splash {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey h3{
+    font-size: 33px;
+    color: #000;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey span{
+    font-size: 42px;
+    color: #A12921;
+}
+
+.information-author.nutcrackers .block-splash .text-splash .text-description {
+    width: 100%;
+}
+
+.information-author.nutcrackers .btn-buy-metamask button{
+    background: #A12921;
+}
+
+.wrapper-splash-page.nutcrackers .left-tokens .block-left-tokens {
+    background: url('./images/nft-token-nuts.png') center center;
+    background-size: cover;
+}
+
+.wrapper-splash-page.nutcrackers {
+    background-image: none;
+}
+
+.wrapper-splash-page.nutcrackers .block-photos-nuts{
+    margin: 108px 0;
+    width: 1200px;
+    height: 577px;
+    background: url('./images/block-nuts-photos.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 16px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text {
+    margin-top: 42px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p{
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p:last-child {
+    margin-bottom: 0;
+}
+
+.wrapper-splash-page.nutcrackers .community-description {
+    background: none !important;
+    padding-left: 0;
+    justify-content: center;
+}
+
+.wrapper-splash-page.nutcrackers .community-description p {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.wrapper-splash-page.nutcrackers .community-description .join-pic img {
+    width: 300px;
+    height: auto;
+}
+
+.wrapper-splash-page.nutcrackers .powered-by-rair {
+    margin: 58px 0 200px 0;
+}
+
+.wrapper-splash-page.nutcrackers .powered-by-rair img {
+    width: 500px;
+    height: auto;
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 180px;
+        padding: 0 20px;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 1000px;
+        height: 500px;
+    }
+} 
+
+@media screen and (max-width: 1100px) {
+    .home-splash--page .information-author.nutcrackers {
+        background-position: 100%;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 900px;
+        height: 450px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 90vw;
+        height: 40vh;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 280px;
+    }
+
+    .wrapper-splash-page .join-community .join-community .title-join h3{
+        text-align: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        margin-top: 30px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .join-pic img {
+        margin-right: 120px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        width: 90vw;
+    }
+}
+
+@media screen and (max-width: 825px) {
+    .home-splash--page .information-author.nutcrackers .block-splash{
+        flex-direction: column;
+    }
+
+    .home-splash--page .information-author.nutcrackers .text-splash {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        margin-left: 0;
+        margin-bottom: 20px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask {
+        margin-top: 30px;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    .wrapper-splash-page.nutcrackers .powered-by-rair {
+        margin: 0px 0 300px 0;
+    }
+    
+    .wrapper-splash-page.nutcrackers .powered-by-rair img {
+        width: 300px;
+        height: auto;
+    }
+} 
+
+@media screen and (max-width: 570px) {
+    .wrapper-splash-page.nutcrackers .crackers-text p, .wrapper-splash-page.nutcrackers .community-description p {
+        font-size: 18px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community .title-join h3, .wrapper-splash-page.nutcrackers .join-community .title-join h3 span {
+        font-size: 33px;
+        text-align: center;
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 400px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .information-author.nutcrackers .text-splash .text-description div{
+        width: 90%;
+        text-align: center;
+    }
+
+    .information-author.nutcrackers .text-splash .text-description {
+        display: flex;
+        justify-content: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        width: 290px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask button {
+        width: 250px;
+        height: 54px;
+    }
+}
+
+@media screen and (max-width: 355px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 500px;
     }
 }

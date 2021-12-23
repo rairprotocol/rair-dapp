@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch.js';
 
 import './App.css';
-import * as ethers from 'ethers'
+
 // React Redux types
 import * as contractTypes from './ducks/contracts/types.js';
-// import * as colorTypes from './ducks/colors/types.js';
 import * as userTypes from './ducks/users/types.js';
 import * as authTypes from './ducks/auth/types.js';
 import * as Sentry from "@sentry/react";
+import * as ethers from 'ethers'
+// import * as colorTypes from './ducks/colors/types.js';
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
@@ -18,9 +19,12 @@ import Swal from 'sweetalert2';
 import jsonwebtoken from 'jsonwebtoken';
 
 //import CSVParser from './components/metadata/csvParser.jsx';
+import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
+
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
-import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
+import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
+import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
 import ConsumerMode from './components/consumerMode.jsx';
 import Contracts from './components/creatorStudio/Contracts.jsx';
 import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
@@ -30,6 +34,7 @@ import CreatorMode from './components/creatorMode.jsx';
 import Deploy from './components/creatorStudio/Deploy.jsx';
 
 import FileUpload from './components/video/videoUpload/videoUpload.jsx';
+// import Footer from './components/Footer/Footer';
 
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 
@@ -46,14 +51,15 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
+import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
+
+import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
 
 import { OnboardingButton } from './components/common/OnboardingButton';
 
 import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
 import ReactGA from 'react-ga';
-
-import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
 
 import SplashPage from './components/SplashPage';
 import setTitle from './utils/setTitle';
@@ -213,6 +219,11 @@ function App({ sentryHistory }) {
 		sentryHistory.push(`/`)
 	}
 
+	const openAboutPage = () => {
+		sentryHistory.push(`/about-page`)
+		window.scrollTo(0, 0);
+	}
+
 	const btnCheck = useCallback(() => {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			setRenderBtnConnect(false);
@@ -220,11 +231,6 @@ function App({ sentryHistory }) {
 			setRenderBtnConnect(true);
 		}
 	}, [setRenderBtnConnect]);
-
-	// const openAboutPage = () => {
-	// 	sentryHistory.push(`/rair-about-page`)
-	// 	window.scrollTo(0, 0);
-	// }
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -398,34 +404,40 @@ function App({ sentryHistory }) {
 							</div>
 							<div className='col-12 mt-3 row'>
 								<Switch>
+									<SentryRoute exact path="/about-page">
+										<AboutPageNew primaryColor={primaryColor}/>
+									</SentryRoute>
 									<SentryRoute path='/all'>
 										<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
-
-									<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
-									<SentryRoute exact path="/terms-use" component={TermsUse} />
-
-									<SentryRoute exact path="/thankyou" component={ThankYouPage} />
-									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
-									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
-
-									<SentryRoute exact path="/notifications" component={NotificationPage} />
-
-									<SentryRoute path="/comming-soon" component={CommingSoon} />
-
-									<SentryRoute exact path="/rair-about-page">
-										{/* <AboutPage primaryColor={primaryColor} textColor={textColor} /> */}
+									<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
+										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
 
+									<SentryRoute path="/coming-soon" component={ComingSoon} />
+									<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
+
+									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+
+									<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
+
+									<SentryRoute exact path="/terms-use" component={TermsUse} />
+									<SentryRoute exact path="/thankyou" component={ThankYouPage} />
+									<SentryRoute exact path='/tokens/:blockchain/:contract/:product/:tokenId'>
+										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>
+
+									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
+									<SentryRoute exact path="/nutcrackers-splash" component={Nutcrackers} />
+									<SentryRoute exact path="/notifications" component={NotificationPage} />
+									
 									<SentryRoute path='/watch/:videoId/:mainManifest' component={VideoPlayer} />
 									
+									{adminAccess && <SentryRoute path='/admin'>
+										<FileUpload primaryColor={primaryColor} textColor={textColor} />
+									</SentryRoute>}
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
-									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
-									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
-									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
 									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
-									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
-									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
 									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
@@ -433,22 +445,17 @@ function App({ sentryHistory }) {
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
 										<WorkflowSteps {...{ sentryHistory }} />
 									</SentryRoute>}
-									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
+									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
+									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
+									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
 									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 									{loginDone && <SentryRoute exact path='/my-items' >
 										<MyItems goHome={goHome} />
 									</SentryRoute>}
+									{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
+									{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
+									{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
 									
-									<SentryRoute exact path='/tokens/:blockchain/:contract/:product/:tokenId'>
-										<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-									</SentryRoute>
-									<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
-										<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-									</SentryRoute>
-									
-									{adminAccess && <SentryRoute path='/admin'>
-										<FileUpload primaryColor={primaryColor} textColor={textColor} />
-									</SentryRoute>}
 									<SentryRoute exact path='/'>
 										<div className='col-6 text-left'>
 											<h1 className='w-100' style={{ textAlign: 'left' }}>
@@ -464,7 +471,6 @@ function App({ sentryHistory }) {
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</div>
 									</SentryRoute>
-
 									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>
@@ -493,7 +499,7 @@ function App({ sentryHistory }) {
 								<li>
 									<NavLink to="/terms-use">Terms of Service</NavLink>
 								</li>
-								<li /*onClick={() => openAboutPage()}*/>About us</li>
+								<li onClick={() => openAboutPage()}>About us</li>
 							</ul>
 						</footer>
 				</div>
