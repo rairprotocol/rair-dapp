@@ -444,7 +444,13 @@ const teamNutArray = [
         anyone to create unique, controllable, and transferable digital assets
         tied to the actual underlying content.`
         ],
-        socials: []
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
     }
 ];
 
@@ -574,7 +580,7 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                     arraySplash === "rair-advisors" && <RairAdvisortComponent primaryColor={primaryColor} />
                 }
 
-{
+                {
                     arraySplash === "nuts" && <NutsTeamComponent primaryColor={primaryColor} />
                 }
             </div>

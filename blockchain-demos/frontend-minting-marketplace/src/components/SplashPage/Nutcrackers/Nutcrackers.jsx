@@ -13,6 +13,7 @@ import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
 import Cracker from './../images/cracker-icon.png';
 import photoNut from './../images/block-nuts-photos.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
+import PoweredRair from './../images/poweredRair.png';
 
 
 const Nutcrackers = () => {
@@ -139,6 +140,7 @@ const Nutcrackers = () => {
                     Nft_4={Nft_4}
                     NftImage={NftImage}
                     amountTokens={50}
+                    linkComing={'/coming-soon-nutcrackers'}
                 />
                 <div className="join-community">
                     <div className="title-join">
@@ -174,6 +176,9 @@ const Nutcrackers = () => {
                     {/* <img src={photoNut} alt="photo" /> */}
                 </div>
                 <TeamMeet primaryColor={primaryColor} arraySplash={"nuts"} />
+                <div className="powered-by-rair">
+                    <img src={PoweredRair} alt="Powered by Rair tech" />
+                </div>
             </div>
         </div>
     )

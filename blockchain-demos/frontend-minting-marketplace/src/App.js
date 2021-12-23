@@ -68,6 +68,7 @@ import ReactGA from 'react-ga';
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
+import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -462,6 +463,7 @@ function App({ sentryHistory }) {
 										</div>
 									</SentryRoute>
 									<SentryRoute path="/coming-soon" component={ComingSoon} />
+									<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>

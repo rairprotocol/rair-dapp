@@ -355,6 +355,7 @@ const SplashPage = () => {
           Nft_4={Nft_4}
           NftImage={NftImage}
           amountTokens={Number(copies) - Number(dataNipsey)}
+          linkComing={'/coming-soon'}
         />
         <NipseyRelease DiscordIcon={DiscordIcon} />
         <RoadMap />
