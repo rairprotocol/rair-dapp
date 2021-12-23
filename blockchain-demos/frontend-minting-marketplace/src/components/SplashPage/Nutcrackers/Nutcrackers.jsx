@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Nuts from './../images/nuts-main.png';
 import Metamask from "./../images/metamask_logo.png";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -18,6 +18,30 @@ import PoweredRair from './../images/poweredRair.png';
 
 const Nutcrackers = () => {
     const { primaryColor } = useSelector((store) => store.colorStore);
+    const [percentTokens, setPersentTokens] = useState(0);
+
+    const leftTokensNumber = 50;
+    const wholeTokens = 50;
+
+    useEffect(() => {
+        if (leftTokensNumber <= wholeTokens) {
+            const percentLeft = (leftTokensNumber * 100) / wholeTokens;
+            if (percentLeft > 1) {
+                setPersentTokens(Math.floor(percentLeft));
+
+            }
+            else if (percentLeft > 990) {
+                setPersentTokens(Math.floor(percentLeft));
+            }
+            else {
+                setPersentTokens(Math.ceil(percentLeft));
+                console.log(percentLeft)
+            }
+        }
+        if (leftTokensNumber > wholeTokens) {
+            setPersentTokens(100)
+        }
+    }, [setPersentTokens, leftTokensNumber, wholeTokens])
 
     return (
         <div className="wrapper-splash-page nutcrackers">
@@ -79,12 +103,12 @@ const Nutcrackers = () => {
                             </Box>
                             <div
                                 className="text-progress"
-                                style={{ fontSize: `${1000 === 1000 && "32px"}` }}
+                                style={{ fontSize: `${leftTokensNumber === 50 && "32px"}` }}
                             >
                                 <div className="progress-info">
                                     <div className="text-numbers">
-                                        <div className="text-left-tokens text-gradient">{50} </div>
-                                        <div className="text-whole-tokens"> / {50}</div>
+                                        <div className="text-left-tokens text-gradient">{leftTokensNumber}</div>
+                                        <div className="text-whole-tokens"> / {wholeTokens}</div>
                                     </div>
                                     <div>left</div>
                                 </div>
