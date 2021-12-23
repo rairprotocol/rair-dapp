@@ -14,6 +14,7 @@ import MICHAEL from '../../AboutPage/assets/MICHAEL.jpg';
 import David from '../../AboutPage/assets/David.jpeg';
 import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
 import Matthew from '../../AboutPage/assets/Matthew.jpg';
+import NutTeam from './../images/nuts-teammate.jpeg';
 
 const teamArray = [
     {
@@ -58,7 +59,7 @@ const teamArray = [
             best practices to help monetize their music. Currently John Patillo is the CEO of 
             Southwest Digital. A music distribution company servicing about 300 music 
             labels throughout world.`,
-              
+
             `As the CEO he works extensively to ensure that the company meets agreed on business
             objectives. The CEO ensures key systems (CMS, analytics, website, marketing, 
             etc.) work effectively to meet company goals. In addition, Mr. Patillo finds
@@ -334,7 +335,7 @@ const rairAdvisorsTeam = [
             (including on IP issues involving open-source software) and with other teams 
             (sales, bus dev., HR, customer satisfaction, etc.) to close business deals, 
             and help the business excel.`,
-            
+
             `Matt is strong at win-win outcomes, dispute mitigation, avoidance, and resolution
             counsel. He produces actionable, understandable items and measured advice, and 
             has experience in ambassadorial reputation management, Board of Directors work,
@@ -410,6 +411,67 @@ const teamGreymanArray = [
         ]
     }
 ];
+
+const teamNutArray = [
+    {
+        nameTeammate: "MC Cranksy",
+        imageUrl: NutTeam,
+        aboutTeammate: [
+            `Nut Cranksy is a pseudonymous Florida-based  artist, graphic designer, 
+            and author whose real name and identity remain the subject of speculation.
+            The jovial nutcracker art combines humor and the playful dress-up of an old
+            wooden holiday classic. Active since the late 2000s, currently, in the NFT
+            space, bringing back to life some older works inspired and applying them 
+            to be minted and expressed. Our work has all been "Work Made for Hire" for
+            various corporate to mom and pop retail to startups. Mc Cranksy work grew
+            out of consistency and grit, and finally, just start putting all the art
+            out there. More projects are coming down the pipeline —stay tuned.`
+        ],
+        socials: []
+    },
+    {
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
+const NutsTeamComponent = ({ primaryColor }) => {
+    return (
+        <>
+            {
+                teamNutArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </>
+    )
+}
 
 const NipseyTeamComponent = ({ primaryColor }) => {
     return (
@@ -500,6 +562,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                 {
                     arraySplash === "rair-advisors" && <h3>About our <span className="text-gradient">Advisors</span></h3>
                 }
+                {
+                    arraySplash === "nuts" && <h3>Meet the <span className="text-gradient">Team</span></h3>
+                }
             </div>
             <div className="meet-team">
                 {
@@ -511,8 +576,12 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                 {
                     arraySplash === "rair" && <RairTeamComponent primaryColor={primaryColor} />
                 }
-                 {
+                {
                     arraySplash === "rair-advisors" && <RairAdvisortComponent primaryColor={primaryColor} />
+                }
+
+                {
+                    arraySplash === "nuts" && <NutsTeamComponent primaryColor={primaryColor} />
                 }
             </div>
         </div>

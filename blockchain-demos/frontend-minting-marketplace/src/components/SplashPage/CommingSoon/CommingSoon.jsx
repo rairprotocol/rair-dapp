@@ -29,7 +29,7 @@ const ComingSoon = () => {
                                     <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
                                 </div>
                             </div>
-                            <div className="btn-back-comming">
+                            <div className="btn-back-coming">
                                 <button onClick={goBack}>Back</button>
                             </div>
                             <div className="logo-author">

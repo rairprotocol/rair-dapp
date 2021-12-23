@@ -61,6 +61,10 @@
     background-position: 95% center;
 }
 
+.nipsey-comming-soon {
+    margin-bottom: 108px;
+}
+
 .nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
     background-image: url('./images/nipsey.png');
     background-repeat: no-repeat;
@@ -71,11 +75,51 @@
     border-radius: 24px;
 }
 
-.nipsey-comming-soon .btn-back-comming, .btn-back-comming  {
+.nipsey-comming-soon.nutcrackers .information-author {
+    background-image: url('./images/nuts-main.png');
+}
+
+.nipsey-comming-soon.nutcrackers .img-coming-nuts {
+    display: none;
+}
+
+@media screen and (max-width: 900px) {
+    .nipsey-comming-soon.nutcrackers .information-author {
+        background-image: none;
+    }
+
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts {
+        display: block;
+    }
+
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts img {
+        width: 400px;
+        height: auto;
+    }
+
+    .nipsey-comming-soon.nutcrackers .information-author {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts img {
+        width: 280px;
+        height: auto;
+    }
+} 
+
+.nipsey-comming-soon.nutcrackers .information-author .text-splash .title-splash.nipsey span {
+    color: #A12921;
+}
+
+.information-author .btn-back-coming  {
     margin-top: 20px;
 }
 
-.nipsey-comming-soon .btn-back-comming button, .btn-back-comming button {
+.information-author .btn-back-coming button {
     color: #FFF;
     font-size: 18px;
     font-weight: 700;
@@ -1229,7 +1273,8 @@ img.block-img-mobile{
         max-width: 100%;
     }
 
-    .home-splash--page .information-author, .left-tokens, .special-offer, .unlockble-video, .exclusive-nfts {
+    .home-splash--page .information-author, .left-tokens, .special-offer, .unlockble-video, 
+    .exclusive-nfts, .join-community, .join-community .title-join {
         width: 100%;
     }
 
@@ -2410,5 +2455,241 @@ img.block-img-mobile{
 @media screen and (max-width: 370px) {
     .block-splash .logo-author img:first-child {
         width: 290px;
+    }
+}
+
+/* Nutcrackers */
+
+.home-splash--page .information-author.nutcrackers {
+    background-image: url('./images/bg-nuts.png');
+    background-size: cover;
+}
+
+.information-author.nutcrackers .nut-block-img {
+    width: 400px;
+    height: auto;
+    margin-left: 50px;
+}
+
+.information-author.nutcrackers .block-splash {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey h3{
+    font-size: 33px;
+    color: #000;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey span{
+    font-size: 42px;
+    color: #A12921;
+}
+
+.information-author.nutcrackers .block-splash .text-splash .text-description {
+    width: 100%;
+}
+
+.information-author.nutcrackers .btn-buy-metamask button{
+    background: #A12921;
+}
+
+.wrapper-splash-page.nutcrackers .left-tokens .block-left-tokens {
+    background: url('./images/nft-token-nuts.png') center center;
+    background-size: cover;
+}
+
+.wrapper-splash-page.nutcrackers {
+    background-image: none;
+}
+
+.wrapper-splash-page.nutcrackers .block-photos-nuts{
+    margin: 108px 0;
+    width: 1200px;
+    height: 577px;
+    background: url('./images/block-nuts-photos.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 16px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text {
+    margin-top: 42px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p{
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p:last-child {
+    margin-bottom: 0;
+}
+
+.wrapper-splash-page.nutcrackers .community-description {
+    background: none !important;
+    padding-left: 0;
+    justify-content: center;
+}
+
+.wrapper-splash-page.nutcrackers .community-description p {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.wrapper-splash-page.nutcrackers .community-description .join-pic img {
+    width: 300px;
+    height: auto;
+}
+
+.wrapper-splash-page.nutcrackers .powered-by-rair {
+    margin: 58px 0 200px 0;
+}
+
+.wrapper-splash-page.nutcrackers .powered-by-rair img {
+    width: 500px;
+    height: auto;
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 180px;
+        padding: 0 20px;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 1000px;
+        height: 500px;
+    }
+} 
+
+@media screen and (max-width: 1100px) {
+    .home-splash--page .information-author.nutcrackers {
+        background-position: 100%;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 900px;
+        height: 450px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 90vw;
+        height: 40vh;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 280px;
+    }
+
+    .wrapper-splash-page .join-community .join-community .title-join h3{
+        text-align: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        margin-top: 30px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .join-pic img {
+        margin-right: 120px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        width: 90vw;
+    }
+}
+
+@media screen and (max-width: 825px) {
+    .home-splash--page .information-author.nutcrackers .block-splash{
+        flex-direction: column;
+    }
+
+    .home-splash--page .information-author.nutcrackers .text-splash {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        margin-left: 0;
+        margin-bottom: 20px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask {
+        margin-top: 30px;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    .wrapper-splash-page.nutcrackers .powered-by-rair {
+        margin: 0px 0 300px 0;
+    }
+    
+    .wrapper-splash-page.nutcrackers .powered-by-rair img {
+        width: 300px;
+        height: auto;
+    }
+} 
+
+@media screen and (max-width: 570px) {
+    .wrapper-splash-page.nutcrackers .crackers-text p, .wrapper-splash-page.nutcrackers .community-description p {
+        font-size: 18px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community .title-join h3, .wrapper-splash-page.nutcrackers .join-community .title-join h3 span {
+        font-size: 33px;
+        text-align: center;
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 400px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .information-author.nutcrackers .text-splash .text-description div{
+        width: 90%;
+        text-align: center;
+    }
+
+    .information-author.nutcrackers .text-splash .text-description {
+        display: flex;
+        justify-content: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        width: 290px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask button {
+        width: 250px;
+        height: 54px;
+    }
+}
+
+@media screen and (max-width: 355px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 500px;
     }
 }

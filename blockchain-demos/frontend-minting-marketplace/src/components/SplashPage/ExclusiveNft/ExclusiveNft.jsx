@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const ExclusiveNft = ({ Nft_1, Nft_2, Nft_3, Nft_4, NftImage, amountTokens }) => {
+const ExclusiveNft = ({ Nft_1, Nft_2, Nft_3, Nft_4, NftImage, amountTokens, linkComing }) => {
     return (
         <div className="exclusive-nfts">
             <div className="title-nft">
@@ -14,7 +14,7 @@ const ExclusiveNft = ({ Nft_1, Nft_2, Nft_3, Nft_4, NftImage, amountTokens }) =>
                     backgroundPosition: "center center"
                 }}>
                     <div className="btn-open-store">
-                        <NavLink to="/coming-soon"> <span>Open in Store</span> <i className="fas fa-arrow-right"></i></NavLink>
+                        <NavLink to={linkComing}> <span>Open in Store</span> <i className="fas fa-arrow-right"></i></NavLink>
                     </div>
                 </div>
                 <div className="block-nfts">
