@@ -12,11 +12,11 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 	const [next, setNext] = useState();
 	const [specificIndex, setSpecificIndex] = useState(0);
 
-	const [name, setName] = useState();
-	const [price, setPrice] = useState();
-	const [start, setStart] = useState();
-	const [end, setEnd] = useState();
-	const [allowed, setAllowed] = useState();
+	const [name, setName] = useState("");
+	const [price, setPrice] = useState("");
+	const [start, setStart] = useState("");
+	const [end, setEnd] = useState("");
+	const [allowed, setAllowed] = useState("");
 
 	const { minterInstance } = useSelector(state => state.contractStore);
 
@@ -27,7 +27,11 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 		setStart(data.tokenStart.toString());
 		setEnd(data.tokenEnd.toString());
 		setAllowed(data.tokensAllowed.toString());
-		setNext((await tokenInstance.getNextSequentialIndex(productIndex, data.tokenStart, data.tokenEnd)).toString());
+		try {
+			setNext((await tokenInstance.getNextSequentialIndex(productIndex, data.tokenStart, data.tokenEnd)).toString());
+		} catch (e) {
+			console.error(e);
+		}
 	}, [minterInstance, offerIndex, rangeIndex, productIndex, tokenInstance])
 
 	useEffect(() => {
@@ -67,7 +71,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 				Swal.fire('Error', err?.data?.message, 'error');
 			}
 		}} className='btn btn-success py-0'>
-			Buy token #{next} for {utils.formatEther(price === '' ? 0 : price).toString()} {blockchainData[window?.ethereum?.chainId]?.symbol}!
+			Buy token #{next} for {utils.formatEther(price === '' ? 0 : price)?.toString()} {blockchainData[window?.ethereum?.chainId]?.symbol}!
 		</button>
 		<button onClick={e => {
 			MySwal.fire({
