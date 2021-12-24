@@ -145,17 +145,51 @@ const NftDataPageTest = ({
     // }
 
     // shows everyone
-    return (
-      <div>
-        {tokenData[selectedToken]?.authenticityLink ? (
-          <a href={tokenData[selectedToken]?.authenticityLink}>
-            {tokenData[selectedToken]?.authenticityLink}
-          </a>
-        ) : (
-          "Not minted yet"
-        )}
-      </div>
-    );
+    // v1
+    // return (
+    //   <div>
+    //     {tokenData[selectedToken]?.authenticityLink ? (
+    //       <a href={tokenData[selectedToken]?.authenticityLink}>
+    //         {tokenData[selectedToken]?.authenticityLink}
+    //       </a>
+    //     ) : (
+    //       "Not minted yet"
+    //     )}
+    //   </div>
+    // );
+
+    // v2
+        // return tokenData.map((el, index) => {
+    //   if (Number(el.token) === Number(selectedToken)) {
+    //     return  (
+    //       <a className="nftDataPageTest-a-hover" key={index} href={el?.authenticityLink}>
+    //         {el?.authenticityLink}
+    //       </a>
+    //     );
+    //   }
+    //   //  else {
+    // return <span style={{cursor:"default"}}>Not minted yet</span>;
+    //   // }
+    // });
+
+    if (tokenData[selectedToken]) {
+      // eslint-disable-next-line array-callback-return
+      return tokenData.map((el, index) => {
+        if (Number(el.token) === Number(selectedToken)) {
+          return (
+            <a
+              className="nftDataPageTest-a-hover"
+              key={index}
+              href={el?.authenticityLink}
+            >
+              {el?.authenticityLink}
+            </a>
+          );
+        }
+      });
+    } else {
+      return <span style={{ cursor: "default" }}>Not minted yet</span>;
+    }
   }
 
   const switchEthereumChain = async (chainData) => {
@@ -226,7 +260,11 @@ const NftDataPageTest = ({
         break;
 
       default:
-        Swal.fire('Error', ' This chain has not been added to MetaMask, yet', 'error');
+        Swal.fire(
+          "Error",
+          " This chain has not been added to MetaMask, yet",
+          "error"
+        );
     }
   };
 
