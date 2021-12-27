@@ -57,6 +57,8 @@ import NotificationPage from './components/UserProfileSettings/NotificationPage/
 import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
 import { TermsUse } from './components/SplashPage/TermsUse';
 import AboutPage from './components/AboutPage/AboutPage';
+import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
+import Footer from './components/Footer/Footer';
 import ThankYouPage from './components/ThankYouPage';
 import NotFound from './components/NotFound/NotFound';
 
@@ -64,7 +66,9 @@ import NotFound from './components/NotFound/NotFound';
 import ReactGA from 'react-ga';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
-import CommingSoon from './components/SplashPage/CommingSoon/CommingSoon';
+import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
+import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
+import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -84,7 +88,7 @@ function App({ sentryHistory }) {
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
 	// Google Analytics
-	const TRACKING_ID = "UA-209450870-1"; // YOUR_OWN_TRACKING_ID
+	const TRACKING_ID = "UA-209450870-3"; // YOUR_OWN_TRACKING_ID
 	ReactGA.initialize(TRACKING_ID);
 	// Redux
 	const dispatch = useDispatch()
@@ -403,11 +407,14 @@ function App({ sentryHistory }) {
 									<SentryRoute exact path="/nipsey-splash" component={SplashPage} />
 									<SentryRoute exact path="/terms-use" component={TermsUse} />
 									<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+									<SentryRoute exact path="/nutcrackers-splash" component={Nutcrackers} />
 									<SentryRoute exact path="/notifications" component={NotificationPage} />
 									<SentryRoute exact path="/rair-about-page">
 										<AboutPage primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>
-									<SentryRoute excat path="/greyman-splash" component={GreymanSplashPage} />
+									<SentryRoute exact path="/about-page">
+										<AboutPageNew primaryColor={primaryColor}/>
+									</SentryRoute>
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
@@ -457,7 +464,8 @@ function App({ sentryHistory }) {
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</div>
 									</SentryRoute>
-									<SentryRoute path="/comming-soon" component={CommingSoon} />
+									<SentryRoute path="/coming-soon" component={ComingSoon} />
+									<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 									<SentryRoute path="" component={NotFound} />
 								</Switch>
 							</div>

@@ -145,8 +145,8 @@ module.exports = context => {
           }
         }
 
-        if (!ownsTheAdminToken && _.isEmpty(ownsTheAccessTokens)) {
-          res.status(403).send({ success: false, message: 'You don\'t have permission.' });
+        if (!ownsTheAdminToken && _.isEmpty(ownsTheAccessTokens) && !file.demo) {
+          return res.status(403).send({ success: false, message: 'You don\'t have permission.' });
         }
 
         jwt.sign(

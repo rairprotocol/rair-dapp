@@ -19,7 +19,7 @@ const NipseyRelease = ({DiscordIcon}) => {
                         Pressing 1
                     </div>
                     <div className="tab-text-box">
-                        <p>:49-250</p>
+                        <p>:50-250</p>
                         <p>1 ETH</p>
                     </div>
                 </div>
@@ -28,7 +28,7 @@ const NipseyRelease = ({DiscordIcon}) => {
                         Pressing 2
                     </div>
                     <div className="tab-text-box">
-                        <p>:49-250</p>
+                        <p>:251-500</p>
                         <p>2 ETH</p>
                     </div>
                 </div>
