@@ -45,8 +45,6 @@ services:
       - rair-local
   blockchain-networks:
     image: raitechinc/blockchain-event-listener:dev_latest
-      context: blockchain-networks-service/
-      dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
