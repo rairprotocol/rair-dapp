@@ -28,14 +28,14 @@ const Nutcrackers = () => {
     const wholeTokens = 50;
     const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
 
-    const nutcrackerAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
+    const nutcrackerAddress = '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
     const mintNutcracker = async () => {
         if (window.ethereum.chainId !== '0x89') {
             web3Switch('0x89');
             return;
         }
 
-        const { success, products } = await rFetch(`/api/contracts/0x89/${nutcrackerAddress}/products/offers`);
+        const { success, products } = await rFetch(`/api/contracts/network/0x89/${nutcrackerAddress}/products/offers`);
         if (success) {
             let instance = contractCreator(nutcrackerAddress, erc721Abi);
             let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
@@ -45,7 +45,6 @@ const Nutcrackers = () => {
               icon: 'info',
               showConfirmButton: false
             });
-            return;
             let [nutsOffer] = products[0].offers.filter(item => item.offerName === 'Nuts');
             if (!nutsOffer) {
               Swal.fire('Error', 'An error has ocurred', 'error');
