@@ -45,8 +45,6 @@ services:
       - rair-local
   blockchain-networks:
     image: raitechinc/blockchain-event-listener:dev_latest
-      context: blockchain-networks-service/
-      dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
@@ -102,6 +100,9 @@ services:
       REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
       REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
       REACT_APP_SENTRY_RELEASE: ${sentry_release}
+      #Google analytics
+      GA_ID: ${GA_ID}
+      GA: ${GA}
     ports:
       - 3001:3001
     networks:
