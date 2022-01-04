@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const { number } = require('joi');
 
 module.exports = Joi.object({
   title: Joi.string()
@@ -13,5 +12,6 @@ module.exports = Joi.object({
   contract: Joi.string().required(),
   product: Joi.number().required(),
   offer: Joi.array().min(1).items(Joi.number()).required(),
-  category: Joi.string().min(1).required()
+  category: Joi.string().min(1).required(),
+  demo: Joi.boolean()
 });
