@@ -4,7 +4,7 @@ services:
   rairnode:
     container_name: 'rairnode'
     build:
-      context: demo-decrypt-node/
+      context: rairnode/
       dockerfile: Dockerfile
     volumes:
       - ./rairnode/db:/usr/local/src/db

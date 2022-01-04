@@ -106,7 +106,7 @@ module.exports = (context) => {
             const productIndex = _.findIndex(productsForUpdate, p => p.contract.equals(product.contract) && p.collectionIndexInContract === product.collectionIndexInContract);
 
             if (offerIndex < 0) {
-              offer.soldCopies = 1;
+              offer.soldCopies = offer.soldCopies === 0 ? offer.soldCopies + 1 : offer.soldCopies;
               offersForUpdate.push(_.pick(offer, ['contract', 'offerPool', 'offerIndex', 'soldCopies', 'copies', 'sold']));
             } else {
               ++offersForUpdate[offerIndex].soldCopies;
@@ -114,7 +114,7 @@ module.exports = (context) => {
 
             // increasing number of minted tokens for a particular product
             if (productIndex < 0) {
-              product.soldCopies = 1;
+              product.soldCopies = product.soldCopies === 0 ? product.soldCopies + 1 : product.soldCopies;
               productsForUpdate.push(_.pick(product, ['collectionIndexInContract', 'contract', 'copies', 'soldCopies', 'sold']));
             } else {
               ++productsForUpdate[productIndex].soldCopies;

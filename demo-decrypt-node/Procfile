@@ -1,2 +1,0 @@
-web: node bin/index.js
-db: node scripts/indexes.mongo.js
