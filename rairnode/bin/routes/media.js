@@ -159,7 +159,7 @@ module.exports = context => {
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
     console.log(req.file);
     // Get video information from the request's body
-    const { title, description, contract, product, offer, category } = req.body;
+    const { title, description, contract, product, offer, category, demo = false } = req.body;
     // Get the user information
     const { adminNFT: author, adminRights } = req.user;
     // Get the socket ID from the request's query
@@ -285,7 +285,7 @@ module.exports = context => {
           type: req.file.type,
           extension: req.file.extension,
           duration: req.file.duration,
-          category
+          demo
         };
 
         if (description) {

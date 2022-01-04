@@ -70,6 +70,12 @@ Upload the media
     "content": {
       "type": "string"
     }
+  },
+  "demo": {
+    "required": false,
+    "content": {
+      "type": "boolean"
+    }
   }
 }
 ```
