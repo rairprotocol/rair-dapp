@@ -4,11 +4,11 @@ services:
   rairnode:
     container_name: 'rairnode'
     build:
-      context: demo-decrypt-node/
+      context: rairnode/
       dockerfile: Dockerfile
     volumes:
-      - ./demo-decrypt-node/db:/usr/local/src/db
-      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+      - ./rairnode/db:/usr/local/src/db
+      - ./rairnode/bin/Videos:/usr/local/src/bin/Videos
     environment:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
@@ -58,8 +58,8 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./demo-decrypt-node/dev/db-data:/data/db
-      - ./demo-decrypt-node/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./rairnode/dev/db-data:/data/db
+      - ./rairnode/dev/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${localdbuser}
       MONGO_INITDB_ROOT_PASSWORD: ${localdbpass}
@@ -69,9 +69,9 @@ services:
     networks:
       - rair-local
   minting-network:
-    container_name: minting-network
+    container_name: minting-network/
     build:
-      context: blockchain-demos/frontend-minting-marketplace
+      context: minting-marketplace
       dockerfile: Dockerfile
     environment:
       REACT_APP_SENTRY_ENABLED: ${sentry_enabled}
