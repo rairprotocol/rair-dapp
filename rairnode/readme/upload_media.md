@@ -57,7 +57,7 @@ Upload the media
     }
   },
   "offer": {
-    "required": true,
+    "required": false,
     "content": {
       "type": "array",
       "items": {
