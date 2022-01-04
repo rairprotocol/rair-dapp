@@ -20,6 +20,9 @@ services:
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      GCP_PROJECT_ID: ${gcp_project_id}
+      GCP_BUCKET_NAME: ${gcp_bucket_name}
+      GCP_CREDENTIALS: ${gcp_credentials}
     ports:
       - 3000:3000
       - 5000:5000

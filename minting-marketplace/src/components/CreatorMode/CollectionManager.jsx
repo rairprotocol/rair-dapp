@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CustomPayRate from '../whitelabel/customizePayRate.jsx';
+import { utils } from 'ethers';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
@@ -40,7 +41,7 @@ import CustomPayRate from '../whitelabel/customizePayRate.jsx';
 // 	</tr>
 // }
 
-const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker, productIndex }) => {
+const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker, productIndex, updater, offerIndex }) => {
 
 	const [endingRange, setEndingRange] = useState(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [rangeName, setRangeName] = useState(array[index].name);
@@ -48,7 +49,6 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 	const syncOutside = useCallback(sync, [sync]);
 	const rangeInit = ((index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
 	const [locked, setLocked] = useState(0);
-	
 
 	useEffect(() => {
 		let aux = array[index].endingToken !== endingRange;
@@ -74,7 +74,10 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 		}
 	}, [rangePrice, array, index, syncOutside])
 
-	return <tr>
+	let prevLastIndex = (index === 0) ? 0 : (Number(array[index - 1].endingToken + 1));
+
+	return <>
+	<tr>
 		<th>
 			{!disabled ? <button
 				onClick={e => deleter(index)}
@@ -86,10 +89,10 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 			#{index + 1}
 		</th>
 		<th>
-			<input className='form-control' disabled={disabled} value={rangeName} onChange={e => setRangeName(e.target.value)} />
+			<input className='form-control' value={rangeName} onChange={e => setRangeName(e.target.value)} />
 		</th>
 		<th>
-			<input className='form-control' type='number' value={(index === 0) ? 0 : (Number(array[index - 1].endingToken + 1))} disabled />
+			<input className='form-control' type='number' value={prevLastIndex} disabled />
 		</th>
 		<th>
 			<input
@@ -106,7 +109,15 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 				onChange={e => setEndingRange(Number(e.target.value))} />
 		</th>
 		<th>
-			<input disabled={disabled} type='number' className='form-control' value={rangePrice} onChange={e => setRangePrice(e.target.value)} />
+			<input type='number' className='form-control' value={rangePrice} onChange={e => setRangePrice(e.target.value)} />
+		</th>
+		<th>
+			<button
+				disabled={!disabled || !rangePrice || !rangeName}
+				onClick={e => updater(offerIndex,index,prevLastIndex,endingRange,rangePrice,rangeName)}
+				className='btn btn-stimorol h-50'>
+				<i className='fas fa-arrow-up' />
+			</button>
 		</th>
 		<th>
 			<input className='form-control' type='number' value={locked} onChange={e => setLocked(e.target.value)} />
@@ -120,6 +131,19 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 			</button>
 		</th>
 	</tr>
+	<tr>
+		<th />
+		<th />
+		<th />
+		<th />
+		<th />
+		<th>
+			<small>{utils.formatEther(rangePrice === '' ? 0 : rangePrice).toString()} {'ETH'}</small>
+		</th>
+		<th />
+		<th />
+	</tr>
+	</>
 }
 
 const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress }) => {
@@ -164,6 +188,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 				let rangeInfo = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
 				if (Number(rangeInfo.collectionIndex.toString()) === productIndex) {
 					existingRanges.push({
+						offerIndex,
 						endingToken: Number(rangeInfo.tokenEnd.toString()),
 						name: rangeInfo.name,
 						price: rangeInfo.price.toString(),
@@ -200,13 +225,28 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		return !item.disabled;
 	}
 
+	const updater = async (offerIndex, rangeIndex, startToken, endToken, price, name) => {
+		if (!offerIndex || !rangeIndex === undefined || startToken === undefined || !endToken || !price || !name) {
+			console.error('Update Rejected');
+			return;
+		}
+		Swal.fire({title: 'Updating', html: 'Please wait', icon: 'info', showConfirmButton: false});
+		try {
+			await minterInstance.updateOfferRange(offerIndex, rangeIndex, startToken, endToken, price, name);
+		} catch (e) {
+			Swal.fire('Error',e?.message?.toString(),'error');
+			return;
+		}
+		Swal.fire({title: 'Success', html: 'Please wait', icon: 'info', showConfirmButton: false});
+	} 
+
 	useEffect(() => {
 		if (minterInstance) {
 			minterInstance.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', function () {
 				refresher()
 			})
 		}
-	})
+	},[]);
 
 	useEffect(() => {
 		if (tokenInstance && minterInstance) {
@@ -272,15 +312,20 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								Price for each
 							</th>
 							<th>
+							</th>
+							<th>
 								Locked Tokens
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						{ranges.map((item, index, array) => {
+							console.log(item);
 							return <RangeManager
 								key={index}
 								disabled={item.disabled}
+								offerIndex={item.offerIndex}
+								updater={updater}
 								index={index}
 								array={array}
 								deleter={deleter}

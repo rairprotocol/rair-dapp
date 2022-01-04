@@ -16,13 +16,17 @@ const storage = multer.diskStorage({
       uploadPath = path.join(__dirname, '../csv/');
     }
 
+    if (file.fieldname === 'file') {
+      uploadPath = path.join(__dirname, '../file/');
+    }
+
     if (!fs.existsSync(uploadPath)) {
       fs.mkdir(uploadPath, (err) => {
         if (err) {
           log.error('Error in folder creation');
           return cb(new Error('Error in folder creation'));
         }
-      })
+      });
     }
 
     file.destinationFolder = uniqueSuffix;
@@ -33,10 +37,13 @@ const storage = multer.diskStorage({
     if (extension === 'csv') {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       cb(null, `${ uniqueSuffix }`);
-    } else if (['video','audio'].includes(type)) {
+    } else if (['image'].includes(type)) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, `${ uniqueSuffix }.${ extension }`);
+    } else if (['video', 'audio'].includes(type)) {
       file.type = type;
       file.extension = extension;
-      cb(null, `rawfile.${extension}`);
+      cb(null, `rawfile.${ extension }`);
     }
   }
 });

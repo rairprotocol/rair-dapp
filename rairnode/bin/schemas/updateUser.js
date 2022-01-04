@@ -8,7 +8,5 @@ module.exports = Joi.object({
   avatar: Joi.string()
     .uri(),
   email: Joi.string()
-    .email(),
-  firstName: Joi.string(),
-  lastName: Joi.string(),
+    .email()
 });

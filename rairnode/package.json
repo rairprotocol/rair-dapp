@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@google-cloud/storage": "^5.16.1",
     "@pinata/sdk": "^1.1.23",
     "@rair/eth-auth": "^0.2.0",
     "@rair/hls-server": "^0.2.1",
