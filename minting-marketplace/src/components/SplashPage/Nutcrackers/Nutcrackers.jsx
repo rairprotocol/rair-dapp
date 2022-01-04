@@ -158,6 +158,7 @@ const Nutcrackers = () => {
                     </p>
                 </div>
                 <ExclusiveNft
+                    amountTokens={50}
                     Nft_1={Nft_1}
                     Nft_2={Nft_2}
                     Nft_3={Nft_3}

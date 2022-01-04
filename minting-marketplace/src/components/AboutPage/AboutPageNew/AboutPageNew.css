@@ -1,3 +1,7 @@
+.wrapper-about-page {
+    overflow: hidden;
+}
+
 .home-about--page {
     width: 1200px;
 }
@@ -401,6 +405,12 @@
     font-size: 24px;
     line-height: 28px;
     margin-top: 45px;
+}
+
+.container-content-metamask .container-block-video .video-locked img {
+    width:  200px;
+    height: 120px;
+    filter: blur(4px);
 }
 
 
@@ -1209,5 +1219,12 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .home-about--page .tokens-description {
         width: 100%;
         padding: 0 10px;
+    }
+}
+
+
+@media screen and (max-width: 480px) {
+    .left-tokens.about-page {
+        margin-bottom: 350px;
     }
 }
