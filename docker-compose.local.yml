@@ -14,6 +14,7 @@ services:
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       PINATA_KEY: ${pinata_key}
+      JWT_SECRET: ${jwt_secret}
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
       ADMIN_CONTRACT: ${admin_contract}
@@ -69,7 +70,7 @@ services:
     networks:
       - rair-local
   minting-network:
-    container_name: minting-network/
+    container_name: minting-network
     build:
       context: minting-marketplace
       dockerfile: Dockerfile
