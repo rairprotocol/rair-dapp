@@ -4,7 +4,7 @@ services:
   rairnode:
     container_name: 'rairnode'
     build:
-      context: demo-decrypt-node/
+      context: rairnode/
       dockerfile: Dockerfile
     volumes:
       - ./rairnode/db:/usr/local/src/db
@@ -13,6 +13,7 @@ services:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
@@ -20,6 +21,9 @@ services:
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      GCP_PROJECT_ID: ${gcp_project_id}
+      GCP_BUCKET_NAME: ${gcp_bucket_name}
+      GCP_CREDENTIALS: ${gcp_credentials}
     ports:
       - 3000:3000
       - 5000:5000
