@@ -4,7 +4,9 @@ Updating specific user
 
 **URL** : `/api/users/:publicAddress`
 
-**Method** : `PUT`
+**Method** : `POST`
+
+**Content-Type** : `multipart/form-data`
 
 **Headers:**
 
@@ -32,10 +34,16 @@ Updating specific user
 }
 ```
 
-**Request body:**
+**form-data:**
 
 ```json
 {
+  "file": {
+    "required": false,
+    "content": {
+      "type": "image file"
+    }
+  },
   "adminNFT": {
     "required": false,
     "content": {
@@ -55,18 +63,6 @@ Updating specific user
     }
   },
   "email": {
-    "required": false,
-    "content": {
-      "type": "string"
-    }
-  },
-  "firstName": {
-    "required": false,
-    "content": {
-      "type": "string"
-    }
-  },
-  "lastName": {
     "required": false,
     "content": {
       "type": "string"
