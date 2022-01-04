@@ -11,7 +11,7 @@ import Nft_3 from '../images/exclusive-nuts_4.jpeg';
 import Nft_4 from '../images/exclusive-nuts_5.jpeg';
 import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
 import Cracker from '../images/cracker-icon.png';
-import photoNut from '../images/block-nuts-photos.png';
+// import photoNut from '../images/block-nuts-photos.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import PoweredRair from '../images/poweredRair.png';
 
@@ -22,7 +22,7 @@ import Swal from 'sweetalert2';
 
 const Nutcrackers = () => {
     const { primaryColor } = useSelector((store) => store.colorStore);
-    const [percentTokens, setPersentTokens] = useState(0);
+    const [/*percentTokens*/, setPresentTokens] = useState(0);
 
     const leftTokensNumber = 50;
     const wholeTokens = 50;
@@ -71,21 +71,21 @@ const Nutcrackers = () => {
         if (leftTokensNumber <= wholeTokens) {
             const percentLeft = (leftTokensNumber * 100) / wholeTokens;
             if (percentLeft > 1) {
-                setPersentTokens(Math.floor(percentLeft));
+                setPresentTokens(Math.floor(percentLeft));
 
             }
             else if (percentLeft > 990) {
-                setPersentTokens(Math.floor(percentLeft));
+                setPresentTokens(Math.floor(percentLeft));
             }
             else {
-                setPersentTokens(Math.ceil(percentLeft));
+                setPresentTokens(Math.ceil(percentLeft));
                 console.log(percentLeft)
             }
         }
         if (leftTokensNumber > wholeTokens) {
-            setPersentTokens(100)
+            setPresentTokens(100)
         }
-    }, [setPersentTokens, leftTokensNumber, wholeTokens])
+    }, [setPresentTokens, leftTokensNumber, wholeTokens])
 
     return (
         <div className="wrapper-splash-page nutcrackers">

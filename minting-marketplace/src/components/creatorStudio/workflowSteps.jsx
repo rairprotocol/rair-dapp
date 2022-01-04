@@ -20,7 +20,7 @@ const SentryRoute = withSentryRouting(Route);
 const WorkflowSteps = ({sentryHistory}) => {
 	const {address, collectionIndex, blockchain} = useParams();
 
-	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	const { minterInstance, contractCreator, programmaticProvider /*currentChain*/ } = useSelector(store => store.contractStore);
 	
 	const [steps, setSteps] = useState([
 			{
@@ -100,7 +100,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 		response2.contract.product = (response2.contract.products.filter(i => i.collectionIndexInContract === Number(collectionIndex)))[0];
 		delete response2.contract.products;
 		setContractData(response2.contract);
-	}, [address, collectionIndex]);
+	}, [address, blockchain, collectionIndex]);
 	
 	const fetchMintingStatus = useCallback(async () => {
 		if (!tokenInstance || !onMyChain) {
@@ -120,7 +120,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 			let createdInstance = contractCreator(minterInstance.address, minterAbi)
 			setCorrectMinterInstance(createdInstance);
 		}
-	}, [address, onMyChain, contractCreator])
+	}, [address, onMyChain, contractCreator, minterInstance.address])
 
 	useEffect(() => {
 		// Fix this
@@ -141,7 +141,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 			let aux = [...steps];
 			aux.forEach(item => item.active = item.label <= index);
 			setSteps(aux);
-		}, []),
+		}, [steps]),
 		switchBlockchain: async (chainId) => {
 			web3Switch(chainId)
 		},
@@ -153,7 +153,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 
 	return <WorkflowContext.Provider value={initialValue}>
 		<WorkflowContext.Consumer>
-			{({contractData, steps, setStepNumber}) => {
+			{({contractData, steps /*, setStepNumber*/}) => {
 				return <div className='row px-0 mx-0'>
 					<div className='col-12 my-5'>
 						<h4>{contractData?.title}</h4>

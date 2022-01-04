@@ -37,7 +37,7 @@ const ContractDetails = () => {
 			}
 			setData(dataRequest.contract);
 		}
-	}, [address])
+	}, [address, blockchain])
 
 	useEffect(() => {
 		getContractData();

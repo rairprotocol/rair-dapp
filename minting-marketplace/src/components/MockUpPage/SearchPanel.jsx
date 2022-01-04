@@ -18,7 +18,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
 
   const getContract = async () => {
     const responseContract = await (
-      await fetch("/api/contracts/full?itemsPerPage=400", {
+      await fetch("/api/contracts/full", {
         method: "GET",
         headers: {
           Accept: "application/json",

@@ -97,3 +97,6 @@
 .select-number-popup::-webkit-scrollbar-thumb:hover {
     background: #A46BD9;
 }
+.backClose-current-tokens:hover{
+color: #D37AD6;
+}
