@@ -51,6 +51,8 @@ services:
       MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
       MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
       MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
+      ETHEREUM_MAINNET_FACTORY_ADDRESS: ${ethereum_mainnet_factory_addres}
+      ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
     ports:
