@@ -139,11 +139,11 @@ const useRfetch = () => {
 
 const rFetch = async (route, options, retryOptions = undefined) => {
 	let request = await fetch(route, {
+		...options,
 		headers: {
 			...options?.headers,
 			'X-rair-token': `${localStorage.getItem('token')}`
 		},
-		...options
 	});
 	try {
 		let parsing = await request.json()

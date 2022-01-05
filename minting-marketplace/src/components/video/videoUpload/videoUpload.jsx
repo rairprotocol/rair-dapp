@@ -32,6 +32,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	const [selects, setSelects] = useState([]);
 	const [selectsData, setSelectsData] = useState({});
 	const [contract, setContract] = useState('null');
+	const [category, setCategory] = useState('null');
 	const [contractID, setContractID] = useState('null');
 	const [contractOptions, setContractOptions] = useState([]);
 	const [offersData, setOffersData] = useState([]);
@@ -316,7 +317,21 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 					</button>
 					{renderSelects()}
 				</div> : 'No offers available'}
-
+				<InputSelect
+					customClass="form-control input-select-custom-style"
+					customCSS={reusableStyle}
+					labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
+					label="Category"
+					getter={category}
+					setter={setCategory}
+					placeholder="Choose a category"
+					options={[
+						{label: 'Music', value: 'Music' },
+						{label: 'Art', value: 'Art' },
+						{label: 'Conference', value: 'Conference' },
+						{label: 'Science', value: 'Science' },
+					]}
+				/>
 				<div className="col-8 py-1">
 					<label htmlFor="media_id">File:</label>
 					<input
@@ -348,6 +363,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 							formData.append("title", title);
 							formData.append("description", description);
 							formData.append("contract", contractID);
+							formData.append("category", category);
 							formData.append("product", collectionIndex);
 							formData.append("offer", JSON.stringify(offersIndex));
 							setUploading(true);

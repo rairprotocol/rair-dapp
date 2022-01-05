@@ -22,26 +22,34 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 	const {primaryColor, /*secondaryColor, textColor*/} = useSelector(store => store.colorStore);
 
 	useEffect(() => {
-		console.log(contractData);
-		setOfferList(contractData?.product?.offers ? contractData?.product?.offers.map(item => {
+
+		const unlocked = [{
+			label: 'Unlocked',
+			value: "-1"
+		}]
+
+		setOfferList(contractData?.product?.offers ? unlocked.concat(contractData?.product?.offers.map(item => {
 			return {
 				label: `${item.offerName} (${item.range[1] - item.range[0] + 1} tokens for ${utils.formatEther(item.price).toString()} ${chainData[contractData.blockchain].symbol} each)`,
 				value: item.offerIndex
 			}
-		}) : [])
+		})) : [])
 	}, [contractData]);
 
 	const onMediaDrop = (media) => {
 		let aux = [...mediaList];
+		console.log(contractData);
 		aux = aux.concat(
 			media.map(item => {
 				return {
 					offer: 'null',
 					category: 'null',
-					title: item.name,
+					title: item.name.slice(0,29),
 					file: item,
 					description: '',
-					preview: URL.createObjectURL(item)
+					preview: URL.createObjectURL(item),
+					contractAddress: contractData._id,
+					productIndex: contractData.product.collectionIndexInContract
 				}
 			})
 		);
