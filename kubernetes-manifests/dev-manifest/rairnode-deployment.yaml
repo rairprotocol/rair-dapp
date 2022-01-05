@@ -71,6 +71,14 @@ spec:
               value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
             - name: binance_mainnet_rpc
               value: "https://bsc-dataseed.binance.org/"
+            - name: JWT_SECRET
+              value: "UGt70v4#mZ0J@vHFK%b"
+            - name: GCP_PROJECT_ID
+              value: "rair-market"
+            - name: GCP_BUCKET_NAME
+              value: "rair_images"
+            - name: GCP_CREDENTIALS
+              value: "~/sa-rair.json"
           resources: {}
           volumeMounts:
             - mountPath: /usr/local/src/db
