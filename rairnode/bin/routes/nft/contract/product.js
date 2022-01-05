@@ -9,9 +9,10 @@ module.exports = context => {
   router.get('/', validation('getTokensByContractProduct', 'query'), async (req, res, next) => {
     try {
       const { contract, product } = req;
-      const { fromToken = 0, limit = 0 } = req.query;
+      const { fromToken = 0, toToken = 0, limit = 0 } = req.query;
 
       const firstToken = Number(fromToken);
+      const lastToken = Number(toToken);
       const numberOfTokens = Number(limit);
 
       const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
@@ -22,12 +23,29 @@ module.exports = context => {
       const tokens = await context.db.MintedToken.find({
         contract: contract._id,
         offerPool: offerPool.marketplaceCatalogIndex,
-        token: { $gt: (firstToken - 1) }
+        token: !!lastToken ? { $gt: (firstToken - 1), $lt: lastToken } : { $gt: (firstToken - 1) }
       })
         .sort([['token', 1]])
         .limit(numberOfTokens);
 
-      res.json({ success: true, result: { totalCount, tokens } });
+      return res.json({ success: true, result: { totalCount, tokens } });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.get('/tokenNumbers', async (req, res, next) => {
+    try {
+      const { contract, product } = req;
+      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+      const tokens = await context.db.MintedToken.find({
+        contract: contract._id,
+        offerPool: offerPool.marketplaceCatalogIndex
+      })
+        .sort([['token', 1]])
+        .distinct('token');
+
+      return res.json({ success: true, tokens });
     } catch (err) {
       next(err);
     }
