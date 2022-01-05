@@ -13,7 +13,8 @@
     "deploy-binance": "npx hardhat --network binanceSmartchain deploy",
     "deploy-goerli": "npx hardhat --network goerli deploy",
     "deploy-mumbai": "npx hardhat --network mumbai deploy",
-    "PAYABLE-deploy-matic": "npx hardhat --network matic deploy"
+    "PAYABLE-deploy-matic": "npx hardhat --network matic deploy",
+    "PAYABLE-deploy-ethereum": "npx hardhat --network ethMainnet deploy"
   },
   "author": "Juan Miguel Sanchez Mola <jmsm412@gmail.com>",
   "homepage": "",

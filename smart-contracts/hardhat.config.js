@@ -19,6 +19,10 @@ module.exports = {
         timeout: 1000000
       }
     },
+    ethMainnet: {
+      url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ROPSTEN_ALCHEMY_URL}`,
+      accounts: [process.env.ADDRESS_PRIVATE_KEY],
+    },
     goerli: {
       url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ROPSTEN_ALCHEMY_URL}`,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
