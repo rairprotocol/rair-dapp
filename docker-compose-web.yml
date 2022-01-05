@@ -38,6 +38,9 @@ services:
       ADMIN_CONTRACT: ${admin_contract}
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
+      GCP_PROJECT_ID: ${gcp_project_id}
+      GCP_BUCKET_NAME: ${gcp_bucket_name}
+      GCP_CREDENTIALS: ${gcp_credentials}
     ports:
       - 3000:3000
       - 5000:5000
@@ -45,8 +48,6 @@ services:
       - rair-local
   blockchain-networks:
     image: raitechinc/blockchain-event-listener:dev_latest
-      context: blockchain-networks-service/
-      dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
@@ -102,6 +103,9 @@ services:
       REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
       REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
       REACT_APP_SENTRY_RELEASE: ${sentry_release}
+      #Google analytics
+      GA_ID: ${GA_ID}
+      GA: ${GA}
     ports:
       - 3001:3001
     networks:
