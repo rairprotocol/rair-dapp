@@ -606,7 +606,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                     <tr>
                                         <td>
                                             <div className="circle-table">
-                                                <i class="fas fa-check"></i>
+                                                <i className="fas fa-check"></i>
                                             </div>
                                         </td>
                                         <td>
@@ -629,7 +629,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                     <tr>
                                         <td>
                                             <div className="circle-table">
-                                                <i class="fas fa-times"></i>
+                                                <i className="fas fa-times"></i>
                                             </div>
                                         </td>
                                         <td>
@@ -650,7 +650,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                     <tr>
                                         <td>
                                             <div className="circle-table">
-                                                <i class="fas fa-times"></i>
+                                                <i className="fas fa-times"></i>
                                             </div>
                                         </td>
                                         <td>
@@ -673,7 +673,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                     <tr>
                                         <td>
                                             <div className="circle-table">
-                                                <i class="fas fa-times"></i>
+                                                <i className="fas fa-times"></i>
                                             </div>
                                         </td>
                                         <td>
@@ -692,7 +692,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                     <tr>
                                         <td>
                                             <div className="circle-table">
-                                                <i class="fas fa-times"></i>
+                                                <i className="fas fa-times"></i>
                                             </div>
                                         </td>
                                         <td>
@@ -711,7 +711,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                     <tr>
                                         <td>
                                             <div className="circle-table">
-                                                <i class="fas fa-times"></i>
+                                                <i className="fas fa-times"></i>
                                             </div>
                                         </td>
                                         <td>
@@ -728,7 +728,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                     <tr>
                                         <td>
                                             <div className="circle-table">
-                                                <i class="fas fa-times"></i>
+                                                <i className="fas fa-times"></i>
                                             </div>
                                         </td>
                                         <td>
