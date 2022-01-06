@@ -1,6 +1,6 @@
 # Get All Product tokens
 
-Get minted tokens for the product
+Get tokens for the product
 
 **URL** : `/api/nft/network/:networkId/:contract/:product`
 
@@ -31,19 +31,17 @@ Get minted tokens for the product
 }
 ```
 
-## Success Response
-
-Returns if found some tokens
-
-**Code** : `200 OK`
-
-**Content-Type**: `application/json;`
-
 **Query parameters:**
 
 ```json
 {
   "fromToken": {
+    "required": false,
+    "content": {
+      "type": "number"
+    }
+  },
+  "toToken": {
     "required": false,
     "content": {
       "type": "number"
@@ -57,6 +55,14 @@ Returns if found some tokens
   }
 }
 ```
+
+## Success Response
+
+Returns if found some tokens
+
+**Code** : `200 OK`
+
+**Content-Type**: `application/json;`
 
 **Content example**
 
