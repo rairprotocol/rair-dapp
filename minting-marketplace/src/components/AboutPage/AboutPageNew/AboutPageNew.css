@@ -1233,12 +1233,23 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         width: 140px;
         height: auto;
     }
-} 
+}
+
+@media screen and (max-width: 650px) {
+    .home-about--page {
+        margin-bottom: 10rem;
+    }
+}
 
 @media screen and (max-width: 575px) {
     .about-page-platform .platform-box .categories-list {
         border: none;
         width: 230px;
+    }
+
+    .home-about--page .left-tokens-content .tokens-description {
+        width: 90%;
+        padding: 10px;
     }
 
     .about-page-platform-content {
@@ -1477,6 +1488,10 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
     .home-about--page .tokenomics-items p {
         font-size: 14px;
+    }
+
+    .left-tokens.about-page {
+        margin-bottom: 450px;
     }
 
     .tokenomics-ecosystem .ecosystem-list-text {

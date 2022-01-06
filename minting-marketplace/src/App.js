@@ -232,11 +232,6 @@ function App({ sentryHistory }) {
 		}
 	}, [setRenderBtnConnect]);
 
-	const openAboutPage = () => {
-		sentryHistory.push(`/about-page`)
-		window.scrollTo(0, 0);
-	}
-
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
