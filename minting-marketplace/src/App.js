@@ -219,11 +219,6 @@ function App({ sentryHistory }) {
 		sentryHistory.push(`/`)
 	}
 
-	const openAboutPage = () => {
-		sentryHistory.push(`/about-page`)
-		window.scrollTo(0, 0);
-	}
-
 	const btnCheck = useCallback(() => {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			setRenderBtnConnect(false);
