@@ -79,6 +79,10 @@
     line-height: 28px;
 }
 
+.about-compare-mobile {
+    display: none;
+}
+
 .about-page-platform-content {
     margin-top: 108px;
     width: 100%;
@@ -873,6 +877,16 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 }
 
+@media screen and (max-width: 920px) {
+    .about-compare {
+        display: none;
+    }
+
+    .about-compare-mobile {
+        display: block;
+    }
+}
+
 @media screen and (max-width: 1250px) {
     .home-about--page {
         width: 1000px;
@@ -1471,5 +1485,157 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
     .tokenomics-ecosystem .btn-buy-metamask button {
         width: 80vw;
+    }
+}
+
+.about-compare-mobile .about-compare-title {
+    font-size: 24px;
+    text-align: center;
+}
+
+.about-compare-mobile .about-compare-title-main-mobile .mobile-title-compare {
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.about-compare-mobile .about-compare-title-main-mobile .mobile-title-compare:first-child {
+    font-style: italic;
+}
+
+.about-compare-mobile .compare-container-mobile .about-compare-title-main-mobile .mobile-title-compare:nth-child(2) {
+    background: #5B49AF;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+}
+
+.about-compare-mobile .compare-container-mobile {
+    margin-top: 40px;
+}
+
+.about-compare-mobile .compare-container-mobile .about-compare-title-main-mobile .mobile-title-compare:last-child {
+    background: #75CAFA;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+    margin-right: 0;
+}
+
+.about-compare-mobile .compare-container-mobile:last-child .about-compare-title-main-mobile .mobile-title-compare:nth-child(2) {
+    background: #BD6BAE;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+}
+
+.about-compare-mobile .compare-container-mobile:last-child .about-compare-title-main-mobile .mobile-title-compare:last-child {
+    background: #5B49AF;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+    margin-right: 0;
+}
+
+
+.about-compare-mobile .about-compare-title-main-mobile {
+    display: flex;
+    justify-content: center;
+}
+
+.compare-content-mobile {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.about-compare-content-mobile-text .block-content-mobile {
+    display: flex;
+    padding: 5px;
+}
+
+.about-compare-content-mobile-text .block-content-mobile:first-child {
+    border: 2px dashed #4E4D4D;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.about-compare-content-mobile-text .block-content-mobile div {
+    text-align: center;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.compare-content-mobile .about-compare-mobile-icons {
+    margin-right: 20px;
+}
+
+.compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile {
+    margin-bottom: 40px;
+}
+
+.compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(5) {
+    margin-bottom: 55px;
+}
+
+.compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(6) {
+    margin-bottom: 70px;
+}
+
+.about-compare-content-mobile-text .block-content-mobile {
+    margin-bottom: 30px;
+}
+
+.about-compare-content-mobile-text .block-content-mobile div:first-child {
+    margin-right: 40px;
+}
+
+.compare-content-mobile .about-compare-mobile-icons .circle-table-img {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.compare-content-mobile .about-compare-mobile-icons .circle-table-img img {
+    width: 50px;
+    height: auto;
+}
+
+@media screen and (max-width: 380px) {
+    .compare-content-mobile .about-compare-mobile-icons .circle-table-img {
+        width: 55px;
+        height: 55px;
+    }
+
+    .compare-content-mobile .about-compare-mobile-icons .circle-table-img img {
+        width: 30px;
+        height: auto;
+    }
+
+    .about-compare-content-mobile-text .block-content-mobile div {
+        font-size: 14px;
+    }
+
+    .about-compare-content-mobile-text .block-content-mobile div:first-child {
+        margin-right: 10px;
+    }
+
+    .compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(5) {
+        margin-bottom: 50px;
+    }
+    
+    .compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(6) {
+        margin-bottom: 50px;
+    }
+
+    .about-compare-content-mobile-text .block-content-mobile {
+        margin-bottom: 25px;
     }
 }

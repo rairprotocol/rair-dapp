@@ -565,6 +565,207 @@ const AboutPageNew = ({ primaryColor }) => {
                         </div>
                     </div>
                 </div>
+                <div className="about-compare-mobile">
+                    <div className="about-compare-title">Compare</div>
+                    <div className="compare-container-mobile">
+                        <div className="about-compare-title-main-mobile">
+                            <div className="mobile-title-compare">Platform</div>
+                            <div className="mobile-title-compare">Whitelabel</div>
+                            <div className="mobile-title-compare">EVM Support</div>
+                        </div>
+                        <div className="compare-content-mobile">
+                            <div className="about-compare-mobile-icons">
+                                <div className="circle-table-img">
+                                    <img src={RairLogo} alt="rair tech" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={OpenSea} alt="OpenSea" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={Rarible} alt="Rarible" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={OneOf} alt="OneOf" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={Dapper} alt="Dapper" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={MinTable} alt="MinTable" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={Curios} alt="Curios" />
+                                </div>
+                            </div>
+                            <div className="about-compare-content-mobile-text">
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Metaverse
+                                        as-a-Service
+                                    </div>
+                                    <div>
+                                        Any EVM
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Just another
+                                        Opensea Page
+                                    </div>
+                                    <div>
+                                        Limited
+                                        EVMs
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Just another
+                                        Rarible Page
+                                    </div>
+                                    <div>
+                                        ETH
+                                        Only
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Not your
+                                        Brand
+                                    </div>
+                                    <div>
+                                        Only Tezos
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Need
+                                        Flow devs
+                                    </div>
+                                    <div>
+                                        Only Flow
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Just another
+                                        Mintable Page
+                                    </div>
+                                    <div>
+                                        ETH
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Curios
+                                        Backend
+                                    </div>
+                                    <div>
+                                        MATIC
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="compare-container-mobile">
+                        <div className="about-compare-title-main-mobile">
+                            <div className="mobile-title-compare">Platform</div>
+                            <div className="mobile-title-compare">Royalties</div>
+                            <div className="mobile-title-compare">Metadata</div>
+                        </div>
+                        <div className="compare-content-mobile">
+                            <div className="about-compare-mobile-icons">
+                                <div className="circle-table-img">
+                                    <img src={RairLogo} alt="rair tech" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={OpenSea} alt="OpenSea" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={Rarible} alt="Rarible" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={OneOf} alt="OneOf" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={Dapper} alt="Dapper" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={MinTable} alt="MinTable" />
+                                </div>
+                                <div className="circle-table-img">
+                                    <img src={Curios} alt="Curios" />
+                                </div>
+                            </div>
+                            <div className="about-compare-content-mobile-text">
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Universal
+                                        Onchain
+                                    </div>
+                                    <div>
+                                        Provenance
+                                        & Speed
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        2.5%
+                                        Offchain
+                                    </div>
+                                    <div>
+                                        Lazyminted
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        2.5%
+                                        Offchain
+                                    </div>
+                                    <div>
+                                        Lazyminted
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Stuck on
+                                        Tezos
+                                    </div>
+                                    <div>
+                                        Stuck on
+                                        Tezos
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        Stuck on
+                                        Flow
+                                    </div>
+                                    <div>
+                                        Stuck on
+                                        Flow
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        5%
+                                    </div>
+                                    <div>
+                                        Lazyminted
+                                    </div>
+                                </div>
+                                <div className="block-content-mobile">
+                                    <div>
+                                        5%
+                                        Offchain
+                                    </div>
+                                    <div>
+                                        Lazyminted
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="about-compare">
                     <div className="about-compare-title">Compare</div>
                     <div className="about-compare-content">
