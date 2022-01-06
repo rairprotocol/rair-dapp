@@ -38,6 +38,12 @@ services:
       ADMIN_CONTRACT: ${admin_contract}
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
+      GCP_PROJECT_ID: ${gcp_project_id}
+      GCP_BUCKET_NAME: ${gcp_bucket_name}
+      GCP_CREDENTIALS: ${gcp_credentials}
+      IPFS_SERVICE: ${ipfs_service}
+      IPFS_GATEWAY: ${ipfs_gateway}
+      PINATA_GATEWAY: ${pinata_gateway}
     ports:
       - 3000:3000
       - 5000:5000

@@ -159,7 +159,7 @@ module.exports = context => {
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
     console.log(req.file);
     // Get video information from the request's body
-    const { title, description, contract, product, offer, category } = req.body;
+    const { title, description, contract, product, offer = [], category, demo = 'false' } = req.body;
     // Get the user information
     const { adminNFT: author, adminRights } = req.user;
     // Get the socket ID from the request's query
@@ -192,13 +192,15 @@ module.exports = context => {
 
     const foundOfferPool = await context.db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
 
-    const foundOffers = await context.db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
+    if (demo === 'false') {
+      const foundOffers = await context.db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
 
-    offer.forEach(item => {
-      if (!_.includes(foundOffers, item)) {
-        return res.status(404).send({ success: false, message: `Offer ${ item } not found.` });
-      }
-    })
+      offer.forEach(item => {
+        if (!_.includes(foundOffers, item)) {
+          return res.status(404).send({ success: false, message: `Offer ${ item } not found.` });
+        }
+      })
+    }
 
     // Get the socket connection from Express app
     const io = req.app.get('io');
@@ -278,14 +280,14 @@ module.exports = context => {
           title,
           contract: foundContract._id,
           product,
-          offer,
+          offer: demo === 'false' ? offer : [],
           category: foundCategory._id,
           staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
           animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
           type: req.file.type,
           extension: req.file.extension,
           duration: req.file.duration,
-          category
+          demo: demo === 'true'
         };
 
         if (description) {

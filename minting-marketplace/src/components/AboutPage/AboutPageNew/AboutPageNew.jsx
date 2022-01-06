@@ -309,7 +309,7 @@ const AboutPageNew = ({ primaryColor }) => {
                         Watch our tutorial video on Web2 to learn how to watch encrypted videos on Web3.
                     </div>
                     <div className="box-video">
-                        <iframe src="https://www.youtube.com/embed/fL5UAV5cuIQ">
+                        <iframe title="unique-box-video" src="https://www.youtube.com/embed/fL5UAV5cuIQ">
                         </iframe>
                     </div>
                     <div className="about-video-tutorial-text">
@@ -321,7 +321,7 @@ const AboutPageNew = ({ primaryColor }) => {
                                 <img src={ArrowUp} alt="cursor" />
                             </div>
                             <div className="metamask-box">
-                                <img src={MetamaskTutorial} alt="photo metamask" />
+                                <img src={MetamaskTutorial} alt="img-metamask" />
                                 <div className="btn-buy-metamask">
                                     <button>
                                         <img

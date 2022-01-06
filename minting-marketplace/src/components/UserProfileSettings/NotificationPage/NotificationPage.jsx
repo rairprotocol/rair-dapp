@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import "./NotificationPage.css";
 import IconRemove from './images/icon-remove.png';
 

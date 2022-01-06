@@ -11,37 +11,81 @@ import Nft_3 from '../images/exclusive-nuts_4.jpeg';
 import Nft_4 from '../images/exclusive-nuts_5.jpeg';
 import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
 import Cracker from '../images/cracker-icon.png';
-import photoNut from '../images/block-nuts-photos.png';
+// import photoNut from '../images/block-nuts-photos.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import PoweredRair from '../images/poweredRair.png';
 
+import { erc721Abi } from '../../../contracts/index.js'
+import { rFetch } from '../../../utils/rFetch.js';
+import { web3Switch } from '../../../utils/switchBlockchain.js';
+import Swal from 'sweetalert2';
 
 const Nutcrackers = () => {
     const { primaryColor } = useSelector((store) => store.colorStore);
-    const [percentTokens, setPersentTokens] = useState(0);
+    const [/*percentTokens*/, setPresentTokens] = useState(0);
 
     const leftTokensNumber = 50;
     const wholeTokens = 50;
+    const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
+
+    const nutcrackerAddress = '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
+    const mintNutcracker = async () => {
+        if (window.ethereum.chainId !== '0x89') {
+            web3Switch('0x89');
+            return;
+        }
+
+        const { success, products } = await rFetch(`/api/contracts/network/0x89/${nutcrackerAddress}/products/offers`);
+        if (success) {
+            let instance = contractCreator(nutcrackerAddress, erc721Abi);
+            let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
+            Swal.fire({
+              title: 'Please wait...',
+              html: `Buying Nutcracker #${nextToken.toString()}`,
+              icon: 'info',
+              showConfirmButton: false
+            });
+            let [nutsOffer] = products[0].offers.filter(item => item.offerName === 'Nuts');
+            if (!nutsOffer) {
+              Swal.fire('Error', 'An error has ocurred', 'error');
+              return;
+            }
+            try {
+              await (await minterInstance.buyToken(
+                products[0].offerPool.marketplaceCatalogIndex,
+                nutsOffer.offerIndex,
+                nextToken,
+                {
+                  value: nutsOffer.price
+                }
+              )).wait();
+              Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
+            } catch (e) {
+              console.error(e);
+              Swal.fire('Error', e?.message, 'error');
+            }
+        }
+    }
 
     useEffect(() => {
         if (leftTokensNumber <= wholeTokens) {
             const percentLeft = (leftTokensNumber * 100) / wholeTokens;
             if (percentLeft > 1) {
-                setPersentTokens(Math.floor(percentLeft));
+                setPresentTokens(Math.floor(percentLeft));
 
             }
             else if (percentLeft > 990) {
-                setPersentTokens(Math.floor(percentLeft));
+                setPresentTokens(Math.floor(percentLeft));
             }
             else {
-                setPersentTokens(Math.ceil(percentLeft));
+                setPresentTokens(Math.ceil(percentLeft));
                 console.log(percentLeft)
             }
         }
         if (leftTokensNumber > wholeTokens) {
-            setPersentTokens(100)
+            setPresentTokens(100)
         }
-    }, [setPersentTokens, leftTokensNumber, wholeTokens])
+    }, [setPresentTokens, leftTokensNumber, wholeTokens])
 
     return (
         <div className="wrapper-splash-page nutcrackers">
@@ -61,7 +105,9 @@ const Nutcrackers = () => {
                             </div>
 
                             <div className="btn-buy-metamask">
-                                <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Mint with Matic</button>
+                                <button onClick={mintNutcracker}>
+                                    <img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Mint with Matic
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -57,7 +57,7 @@ Upload the media
     }
   },
   "offer": {
-    "required": true,
+    "required": false,
     "content": {
       "type": "array",
       "items": {
@@ -69,6 +69,12 @@ Upload the media
     "required": true,
     "content": {
       "type": "string"
+    }
+  },
+  "demo": {
+    "required": false,
+    "content": {
+      "type": "boolean"
     }
   }
 }
