@@ -41,10 +41,16 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 	}, [array, endingToken, index, rerender, updateEndingToken])
 
 	useEffect(() => {
+		if (starts === startingToken) {
+			return;
+		}
 		updateStartingToken(starts);
 	}, [starts, updateStartingToken])
 
 	useEffect(() => {
+		if (ends === endingToken) {
+			return;
+		}
 		updateEndingToken(ends);
 	}, [ends, updateEndingToken])
 
