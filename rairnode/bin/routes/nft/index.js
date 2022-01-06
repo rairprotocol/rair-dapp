@@ -7,6 +7,7 @@ const csv = require('csv-parser');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
 const { execPromise } = require('../../utils/helpers');
+const path = require('path');
 
 const removeTempFile = async (roadToFile) => {
   const command = `rm ${ roadToFile }`;
@@ -245,6 +246,17 @@ module.exports = context => {
       const result = await context.db.MintedToken.find({ ownerAddress });
 
       res.json({ success: true, result });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  // Get CSV sample file
+  router.get('/csv/sample', async (req, res, next) => {
+    try {
+      const file = path.join(__dirname, '../../../assets/sample.csv');
+
+      return res.download(file);
     } catch (e) {
       next(e);
     }
