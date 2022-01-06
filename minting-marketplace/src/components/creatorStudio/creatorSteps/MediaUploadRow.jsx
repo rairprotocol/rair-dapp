@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback} from 'react';
+import { useState, useEffect } from 'react';
 import InputField from '../../common/InputField.jsx';
 import InputSelect from '../../common/InputSelect.jsx';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,6 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 	const [uploading, setUploading] = useState(false);
 	const [uploadSuccess, setUploadSuccess] = useState(false);
 	const [thisSessionId, setThisSessionId] = useState("");
-	const [socket, setSocket] = useState();
 	const [socketMessage, setSocketMessage] = useState();
 
 	useEffect(() => {
@@ -19,7 +18,6 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 		// const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
 		const so = io(`http://localhost:5000`, { transports: ["websocket"] });
 
-		setSocket(so);
 		// so.on("connect", data => {
 		//   console.log('Connected !');
 		// });
@@ -41,7 +39,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 		};
 	}, []);
 
-	const {primaryColor, secondaryColor, textColor} = useSelector(store => store.colorStore);
+	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	
 	const cornerStyle = {height: '35vh', borderRadius: '16px 0 0 16px'}
 	const selectCommonInfo = {
@@ -173,7 +171,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 					formData.append("offer", JSON.stringify(
 						item.offer !== '-1' ? reversedOfferList.map(offerData => {
 							if (Number(offerData.value) < Number(item.offer)) {
-								return;
+								return undefined;
 							}
 							return offerData.value
 						}).filter(item => item !== undefined) : []
