@@ -1,5 +1,10 @@
+.wrapper-about-page {
+   
+}
+
 .home-about--page {
     width: 1200px;
+    margin-bottom: 5rem;
 }
 
 .home-about--page .information-author {
@@ -72,6 +77,10 @@
 .about-page-platform-title {
     font-size: 36px;
     line-height: 28px;
+}
+
+.about-compare-mobile {
+    display: none;
 }
 
 .about-page-platform-content {
@@ -202,6 +211,7 @@
     border: none;
     border-radius: 16px;
     color: #fff;
+    display: block;
 }
 
 .streaming-box .streaming-offer .non-streaming-btn {
@@ -210,6 +220,7 @@
     border-radius: 16px;
     color: #A7A6A6;
     cursor: not-allowed;
+    display: block;
 }
 
 
@@ -401,6 +412,12 @@
     font-size: 24px;
     line-height: 28px;
     margin-top: 45px;
+}
+
+.container-content-metamask .container-block-video .video-locked img {
+    width:  200px;
+    height: 120px;
+    filter: blur(4px);
 }
 
 
@@ -685,7 +702,6 @@ thead.table-head-compare th{
 }
 
 thead.table-head-compare th  .th-title {
-    margin-right: 18px;
     font-size: 24px;
     font-weight: 700;
     background: #E882D5;
@@ -825,6 +841,52 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 }
 
+@media screen and (max-width: 1380px) {
+
+}
+
+@media screen and (max-width: 1280px) {
+    tbody.table-tbody-compare tr td {
+        font-size: 18px;
+    }
+
+    thead.table-head-compare th:first-child .th-title {
+        width: 150px;
+    }
+
+    thead.table-head-compare th, thead.table-head-compare th .th-title {
+        width: 130px;
+    }
+
+    thead.table-head-compare th .th-title {
+        font-size: 18px;
+    }
+
+    tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img {
+        width: 90px;
+        height: 90px;
+    }
+
+    tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
+        width: 50px;
+    }
+    
+    tbody.table-tbody-compare tr td:nth-child(2) .circle-table-img {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media screen and (max-width: 920px) {
+    .about-compare {
+        display: none;
+    }
+
+    .about-compare-mobile {
+        display: block;
+    }
+}
+
 @media screen and (max-width: 1250px) {
     .home-about--page {
         width: 1000px;
@@ -943,6 +1005,10 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 }
 
 @media screen and (max-width: 1050px) {
+    .wrapper-about-page {
+        overflow: hidden;
+    }
+
     .home-about--page .nfts-select .main-nft {
         width: 350px;
         height: 350px;
@@ -1016,6 +1082,26 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
         display: none;
     }
+
+    .about-map-item .map-item-desc {
+        width: 90%;   
+    }
+
+    .about-roadmap .map-item-progress {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .about-map-item .progress-title {
+        margin-top: 20px;
+    }
+
+    .about-map-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 @media screen and (max-width: 750px) {
@@ -1039,6 +1125,20 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
     .home-about--page .block-nfts .box-nft img:first-child {
         margin-bottom: 20px;
+    }
+
+    .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
+        display: block;
+        margin-right: 0;
+        margin-top: 20px;
+        border: none;
+        background: none;
+        cursor: default;
+    }
+
+    .about-rair-offer .streaming-offer {
+        flex-direction: column-reverse;
+        justify-content: center;
     }
 }
 
@@ -1075,6 +1175,14 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .tokenomics-ecosystem .tokenomics-block-list {
         width: 100%;
         padding: 0 23px;
+    }
+
+    .about-map-item .map-item-desc p {
+        font-size: 24px;
+    }
+
+    .about-map-item .map-item-desc {
+        padding: 10px;
     }
 }
 
@@ -1187,6 +1295,15 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         height: 40px;
         font-size: 18px;
     }
+
+    .about-roadmap .map-progress {
+        width: 350px;
+    }
+
+    .about-map-item .map-progress .line-purple, .about-map-item .map-progress .line-private, .about-map-item .map-progress .line-public {
+        width: 150px;
+        z-index: 1;
+    }
 }
 
 @media screen and (max-width: 515px) {
@@ -1209,5 +1326,316 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .home-about--page .tokens-description {
         width: 100%;
         padding: 0 10px;
+    }
+}
+
+
+@media screen and (max-width: 480px) {
+    .left-tokens.about-page {
+        margin-bottom: 350px;
+    }
+
+    .about-page-platform .platform-box .categories-list ul li {
+        text-align: center;
+    }
+
+    .about-streams-video iframe {
+        width: 90vw;
+        height: 240px;
+    }
+
+    .home-about--page .video-locked {
+        width: 300px;
+        height: 90px;
+    }
+
+    .container-content-metamask .container-block-video .video-locked img {
+        height: 90px;
+        width: 100px;
+    }
+    
+    .home-about--page .video-description .video-title, .video-description .video-timer p {
+        font-size: 13px;
+    }
+
+    .home-about--page .video-icon p {
+        font-size: 12px;
+    }
+
+    .home-about--page .video-icon {
+        top: 20%;
+    }
+
+    .container-content-metamask .content-show-arrow {
+        bottom: 180px;
+        right: 110px;
+    }
+
+    .container-content-metamask .content-show-arrow img {
+        width: 120px;
+    }
+
+    .about-tokenomics .about-tokenomics-title {
+        font-size: 24px;
+    }
+    
+    .tokenomics-ecosystem .ecosystem-list-text {
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .ecosystem-airdrops .ecosystem-airdrops-text {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items ul li {
+        font-size: 14px;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items:first-child {
+        margin-right: 0px;
+    }
+
+    .about-roadmap .about-road-title {
+        font-size: 24px;
+    }
+
+    .about-map-item .map-item-desc p {
+        font-size: 14px;
+    }
+
+    .about-roadmap .map-progress {
+        width: 280px;
+    }
+
+    .about-map-item .map-progress .line-purple, .about-map-item .map-progress .line-private, .about-map-item .map-progress .line-public {
+        width: 120px;
+        z-index: 1;
+    }
+
+    .about-roadmap .map-item-progress {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .home-about--page .about-rair-offer .rair-offer-title, .about-rair-offer .change-color-text, .home-about--page .title-nft h3,
+    .about-streams-video .about-streams-video-title, .about-streams-video .about-video-tutorial-text {
+        font-size: 24px;
+    }
+
+    .about-streams-video .about-streams-video-title {
+        text-align: left;
+        padding: 0 10px;
+    }
+
+    .about-streams-video .about-video-tutorial-text {
+        font-size: 16px;
+        text-align: left;
+        padding: 0 10px;
+        margin: 15px 0 40px 0;
+    }
+
+    .about-rair-offer .streaming-progress, .about-rair-offer .streaming-percent {
+        width: 290px;
+    }
+
+    .home-about--page .block-nfts .box-nft img {
+        width: 90%;
+        height: auto;
+    }
+
+    .home-about--page .box-nft img:first-child {
+        margin-right: 0;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list, .ecosystem-airdrops-list {
+        padding: 0 10px;
+    }
+
+    .home-about--page .btn-buy-metamask button {
+        width: 288px;
+        height: 47px;
+    }
+}
+
+@media screen and (max-width: 364px) {
+    .about-page-platform .platform-box .platform-title {
+        width: 100px;
+        font-size: 14px;
+    }
+
+    .about-page-platform .platform-box .categories-list {
+        width: 130px;
+    }
+
+    .about-page-platform .platform-box .categories-list ul li {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .home-about--page .tokenomics-items p {
+        font-size: 14px;
+    }
+
+    .tokenomics-ecosystem .ecosystem-list-text {
+        padding: 0 5px;
+    }
+
+    .tokenomics-ecosystem .btn-buy-metamask button {
+        width: 80vw;
+    }
+}
+
+.about-compare-mobile .about-compare-title {
+    font-size: 24px;
+    text-align: center;
+}
+
+.about-compare-mobile .about-compare-title-main-mobile .mobile-title-compare {
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.about-compare-mobile .about-compare-title-main-mobile .mobile-title-compare:first-child {
+    font-style: italic;
+}
+
+.about-compare-mobile .compare-container-mobile .about-compare-title-main-mobile .mobile-title-compare:nth-child(2) {
+    background: #5B49AF;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+}
+
+.about-compare-mobile .compare-container-mobile {
+    margin-top: 40px;
+}
+
+.about-compare-mobile .compare-container-mobile .about-compare-title-main-mobile .mobile-title-compare:last-child {
+    background: #75CAFA;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+    margin-right: 0;
+}
+
+.about-compare-mobile .compare-container-mobile:last-child .about-compare-title-main-mobile .mobile-title-compare:nth-child(2) {
+    background: #BD6BAE;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+}
+
+.about-compare-mobile .compare-container-mobile:last-child .about-compare-title-main-mobile .mobile-title-compare:last-child {
+    background: #5B49AF;
+    border-radius: 10px;
+    width: 118px;
+    padding: 5px 0;
+    margin-right: 0;
+}
+
+
+.about-compare-mobile .about-compare-title-main-mobile {
+    display: flex;
+    justify-content: center;
+}
+
+.compare-content-mobile {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.about-compare-content-mobile-text .block-content-mobile {
+    display: flex;
+    padding: 5px;
+}
+
+.about-compare-content-mobile-text .block-content-mobile:first-child {
+    border: 2px dashed #4E4D4D;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.about-compare-content-mobile-text .block-content-mobile div {
+    text-align: center;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.compare-content-mobile .about-compare-mobile-icons {
+    margin-right: 20px;
+}
+
+.compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile {
+    margin-bottom: 40px;
+}
+
+.compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(5) {
+    margin-bottom: 55px;
+}
+
+.compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(6) {
+    margin-bottom: 70px;
+}
+
+.about-compare-content-mobile-text .block-content-mobile {
+    margin-bottom: 30px;
+}
+
+.about-compare-content-mobile-text .block-content-mobile div:first-child {
+    margin-right: 40px;
+}
+
+.compare-content-mobile .about-compare-mobile-icons .circle-table-img {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.compare-content-mobile .about-compare-mobile-icons .circle-table-img img {
+    width: 50px;
+    height: auto;
+}
+
+@media screen and (max-width: 380px) {
+    .compare-content-mobile .about-compare-mobile-icons .circle-table-img {
+        width: 55px;
+        height: 55px;
+    }
+
+    .compare-content-mobile .about-compare-mobile-icons .circle-table-img img {
+        width: 30px;
+        height: auto;
+    }
+
+    .about-compare-content-mobile-text .block-content-mobile div {
+        font-size: 14px;
+    }
+
+    .about-compare-content-mobile-text .block-content-mobile div:first-child {
+        margin-right: 10px;
+    }
+
+    .compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(5) {
+        margin-bottom: 50px;
+    }
+    
+    .compare-container-mobile:last-child .about-compare-content-mobile-text .block-content-mobile:nth-child(6) {
+        margin-bottom: 50px;
+    }
+
+    .about-compare-content-mobile-text .block-content-mobile {
+        margin-bottom: 25px;
     }
 }

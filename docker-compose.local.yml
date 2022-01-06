@@ -15,6 +15,7 @@ services:
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
+      JWT_SECRET: ${jwt_secret}
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
       ADMIN_CONTRACT: ${admin_contract}

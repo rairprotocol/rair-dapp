@@ -232,6 +232,11 @@ function App({ sentryHistory }) {
 		}
 	}, [setRenderBtnConnect]);
 
+	const openAboutPage = () => {
+		sentryHistory.push(`/about-page`)
+		window.scrollTo(0, 0);
+	}
+
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
@@ -396,7 +401,7 @@ function App({ sentryHistory }) {
 							})}
 						</div>
 						<div className='col'>
-							<div className='col-12' style={{ height: '10vh' }}>
+							<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
 								{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
 								<Switch>
 									<SentryRoute path='/admin' component={BlockChainSwitcher} />
