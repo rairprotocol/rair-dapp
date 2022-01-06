@@ -1,6 +1,6 @@
 # Get All Product tokens
 
-Get minted tokens for the product
+Get tokens for the product
 
 **URL** : `/api/nft/network/:networkId/:contract/:product`
 
