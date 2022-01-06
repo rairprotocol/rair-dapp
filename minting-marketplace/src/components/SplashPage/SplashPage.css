@@ -1521,25 +1521,25 @@ img.block-img-mobile{
         margin-right: 0px;
     }
 
-    .home-splash--page .img-teammate img {
+    .img-teammate img {
         width: 116px;
         height: 116px;
     }
 
-    .home-splash--page .meet-team .box-teammate .teammate-title-socials {
+    .meet-team .box-teammate .teammate-title-socials {
         justify-content: center;
         flex-direction: column;
     }
 
-    .home-splash--page .teammate-description p {
+    .teammate-description p {
         font-size: 14px;
     }
 
-    .home-splash--page .meet-team .box-teammate .teammate-title-socials .box-socials {
+    .meet-team .box-teammate .teammate-title-socials .box-socials {
         margin-top: 10px;
     }
 
-    .home-splash--page .position-teammate .teammate-description {
+    .position-teammate .teammate-description {
         width: 100%;
     }
 

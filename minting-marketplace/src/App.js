@@ -396,7 +396,7 @@ function App({ sentryHistory }) {
 							})}
 						</div>
 						<div className='col'>
-							<div className='col-12' style={{ height: '10vh' }}>
+							<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
 								{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
 								<Switch>
 									<SentryRoute path='/admin' component={BlockChainSwitcher} />
