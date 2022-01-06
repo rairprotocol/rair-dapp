@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { rFetch } from '../../../utils/rFetch.js';
 import io from "socket.io-client";
 
-const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
+const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categoriesArray}) => {
 
 	const [uploading, setUploading] = useState(false);
 	const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -124,7 +124,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 				<div className='border-stimorol rounded-rair col-12'>
 					<InputSelect
 						disabled={uploadSuccess}
-						options={['Music','Art','Video','Science'].map(item => {return {label: item, value: item}})}
+						options={categoriesArray}
 						placeholder='Select a category'
 						getter={item.category}
 						setter={updateMediaCategory}

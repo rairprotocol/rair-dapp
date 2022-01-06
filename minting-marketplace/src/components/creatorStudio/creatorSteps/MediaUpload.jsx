@@ -1,4 +1,5 @@
-import { useEffect, useState /*useCallback*/ } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { rFetch } from '../../../utils/rFetch.js';
 import { useSelector } from 'react-redux';
 // import { useParams, useHistory, NavLink } from 'react-router-dom';
 // import { web3Switch } from '../../../utils/switchBlockchain.js';
@@ -14,15 +15,24 @@ import MediaUploadRow from './MediaUploadRow.jsx';
 
 const MediaUpload = ({setStepNumber, contractData}) => {
 	const stepNumber = 6;
+	const {primaryColor, /*secondaryColor, textColor*/} = useSelector(store => store.colorStore);
 
 	const [mediaList, setMediaList] = useState([]);
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
-
-	const {primaryColor, /*secondaryColor, textColor*/} = useSelector(store => store.colorStore);
+	const [categoryArray, setCategoryArray] = useState([]);
+	const getCategories = useCallback(async () => {
+		const {success, categories} = await rFetch('/api/categories');
+		if (success) {
+			setCategoryArray(categories.map(item => {return {label: item.name, value: item.name}}));
+		}
+	}, [])
 
 	useEffect(() => {
+		getCategories();
+	}, [getCategories])
 
+	useEffect(() => {
 		const unlocked = [{
 			label: 'Unlocked',
 			value: "-1"
@@ -38,7 +48,6 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 
 	const onMediaDrop = (media) => {
 		let aux = [...mediaList];
-		console.log(contractData);
 		aux = aux.concat(
 			media.map(item => {
 				return {
@@ -91,6 +100,7 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 				item={item}
 				index={index}
 				array={array}
+				categoriesArray={categoryArray}
 				deleter={() => deleter(index)}
 				offerList={offerList}
 				rerender={() => setForceRerender(!forceRerender)} />

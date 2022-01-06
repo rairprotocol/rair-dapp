@@ -42,6 +42,19 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 	const currentToken = localStorage.getItem("token");
 
+	const [categoryArray, setCategoryArray] = useState([]);
+	const getCategories = useCallback(async () => {
+		const {success, categories} = await rFetch('/api/categories');
+		if (success) {
+			setCategoryArray(categories.map(item => {return {label: item.name, value: item.name}}));
+		}
+	}, [])
+
+	useEffect(() => {
+		getCategories();
+	}, [getCategories])
+
+
 	const getContract = async () => {
 		const {success, contracts} = await rFetch("/api/contracts");
 		if (success) {
@@ -258,6 +271,18 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						customClass="form-control input-select-custom-style"
 						customCSS={reusableStyle}
 						labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
+						label="Category"
+						getter={category}
+						setter={setCategory}
+						placeholder="Choose a category"
+						options={categoryArray}
+					/>
+				</div>
+				<div className="col-8 py-1">
+					<InputSelect
+						customClass="form-control input-select-custom-style"
+						customCSS={reusableStyle}
+						labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
 						label="Contract"
 						getter={contract}
 						setter={e => {
@@ -317,21 +342,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 					</button>
 					{renderSelects()}
 				</div> : 'No offers available'}
-				<InputSelect
-					customClass="form-control input-select-custom-style"
-					customCSS={reusableStyle}
-					labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
-					label="Category"
-					getter={category}
-					setter={setCategory}
-					placeholder="Choose a category"
-					options={[
-						{label: 'Music', value: 'Music' },
-						{label: 'Art', value: 'Art' },
-						{label: 'Conference', value: 'Conference' },
-						{label: 'Science', value: 'Science' },
-					]}
-				/>
 				<div className="col-8 py-1">
 					<label htmlFor="media_id">File:</label>
 					<input
