@@ -161,6 +161,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 			</div>
 			<button
 				onClick={async () => {
+					let reversedOfferList = [...offerList].reverse();
 					let formData = new FormData();
 					formData.append("video", item.file);
 					formData.append("title", item.title.slice(0, 29));
@@ -169,10 +170,16 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 					//category, demo = 'false'
 					formData.append("product", item.productIndex);
 					formData.append("category", item.category);
-					formData.append("offer", JSON.stringify([]));
-					formData.append("demo", true);
+					formData.append("offer", JSON.stringify(
+						item.offer !== '-1' ? reversedOfferList.map(offerData => {
+							if (Number(offerData.value) < Number(item.offer)) {
+								return;
+							}
+							return offerData.value
+						}).filter(item => item !== undefined) : []
+					));
+					formData.append("demo", item.offer === '-1');
 					setUploading(true);
-					console.log(item);
 					try {
 						let response = await rFetch(`/api/media/upload?socketSessionId=${thisSessionId}`, {
 							method: "POST",
