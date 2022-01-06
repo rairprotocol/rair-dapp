@@ -148,7 +148,7 @@ const rFetch = async (route, options, retryOptions = undefined) => {
 	try {
 		let parsing = await request.json()
 		if (!parsing.success) {
-			if (['jwt malformed', 'jwt expired'].includes(parsing.message) && (window.ethereum || retryOptions?.provider)) {
+			if (['jwt malformed', 'jwt expired', 'invalid signature'].includes(parsing.message) && (window.ethereum || retryOptions?.provider)) {
 				localStorage.removeItem('token');
 				let retry = await signIn(retryOptions?.provider);
 				if (retry) {

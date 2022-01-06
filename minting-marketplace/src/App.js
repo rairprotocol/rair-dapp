@@ -406,6 +406,13 @@ function App({ sentryHistory }) {
 							</div>
 							<div className='col-12 mt-3 row'>
 								<Switch>
+									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
+									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
+									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
+										<WorkflowSteps {...{ sentryHistory }} />
+									</SentryRoute>}
 									<SentryRoute exact path="/about-page">
 										<AboutPageNew primaryColor={primaryColor}/>
 									</SentryRoute>
@@ -440,13 +447,6 @@ function App({ sentryHistory }) {
 									</SentryRoute>}
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
-									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
-									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
-									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
-									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
-									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
-										<WorkflowSteps {...{ sentryHistory }} />
-									</SentryRoute>}
 									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
 									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}

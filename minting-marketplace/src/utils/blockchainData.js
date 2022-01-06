@@ -49,6 +49,16 @@ const chainData = {
 			chainName: 'Goerli (Ethereum)'
 		}
 	},
+	'0x1': {
+		image: EthereumLogo,
+		name: 'Ethereum Mainnet',
+		chainId: '0x1',
+		symbol: 'ETH',
+		addChainData: {
+			chainId: '0x1',
+			chainName: 'Mainnet (Ethereum)'
+		}
+	},
 	'0x89': {
 		image: MaticLogo,
 		name: 'Matic(Polygon) Mainnet',

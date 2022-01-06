@@ -21,7 +21,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 	const {address, collectionIndex, blockchain} = useParams();
 
 	const { minterInstance, contractCreator, programmaticProvider /*currentChain*/ } = useSelector(store => store.contractStore);
-	
+
 	const [steps, setSteps] = useState([
 			{
 				label: 1,
@@ -138,6 +138,9 @@ const WorkflowSteps = ({sentryHistory}) => {
 		contractData,
 		steps,
 		setStepNumber: useCallback(index => {
+			if (steps[index - 1].active) {
+				return;
+			}
 			let aux = [...steps];
 			aux.forEach(item => item.active = item.label <= index);
 			setSteps(aux);

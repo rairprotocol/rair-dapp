@@ -121,23 +121,10 @@ spec:
               value: "0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df"
             - name: MATIC_MAINNET_CHAINID_HEX
               value: "0x89"
-            - name: ETHEREUM_MAINNET_CHAIN_ID
-              value: "1"
-            - name: ETHERUEM_MAINNET_SYMBOL
-              value: "ETH"
-            - name: ETHEREUM_MAINNET_NAME
-              value: "Ethereum Mainnet"
-            - name: ETHEREUEM_MAINNET_FACTORY_ADDRESS
-              value: "0xC9eF9902fa24923A17326aDdb7da0E67fF46692a"
-            - name: ETHEREUM_MAINNET_MINTER_ADDRESS
-              value: "0x0Ce668D271b8016a785Bf146e58739F432300B12"
-            - name: ETHEREUM_MAINNET_CHAINID_HEX
-              value: "0x1"
             - name: SYNC_CONTRACT_REPEAT_EVERY
               value: "3"
             - name: SYNC_CONTRACT_TASK_INTERVAL
               value: "1"
-
           resources: {}
       imagePullSecrets:
         - name: regcred
