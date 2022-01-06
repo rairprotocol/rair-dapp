@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Popup } from "reactjs-popup";
@@ -16,17 +16,38 @@ const PopUpSettings = ({
   const history = useHistory();
   const dispatch = useDispatch();
   const [next, setNext] = useState(false);
-  const [userName, setUserName] = useState(currentUserAddress);
+  // const [userName, setUserName] = useState(currentUserAddress);
   const [openModal, setOpenModal] = useState(false);
   const [openModalPic, setOpenModalPic] = useState(false);
+  const [/*userData*/, setUserData] = useState({});
+  const [userName, setUserName] = useState();
+  const [userEmail, setUserEmail] = useState();
+
+  const getInfoFromUser = useCallback(async () => {
+    // find user
+    const result = await fetch(`/api/users/${currentUserAddress}`).then(
+      (blob) => blob.json()
+    );
+    setUserName(result.user.nickName);
+    setUserEmail(result.user.email);
+    setUserData(result.user);
+  }, [currentUserAddress]);
+
+  useEffect(() => {
+    getInfoFromUser();
+  }, [getInfoFromUser]);
+
+  useEffect(() => {
+    setOpenModal();
+  }, [setOpenModal]);
 
   const handleNext = () => {
     setNext((prev) => !prev);
   };
 
-  const onChangeName = (e) => {
-    setUserName(e.target.value);
-  };
+  // const onChangeName = (e) => {
+  //   setUserName(e.target.value);
+  // };
 
   const logout = () => {
     dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
@@ -46,7 +67,12 @@ const PopUpSettings = ({
   if (openModalPic) {
     return (
       <>
-        <UploadProfilePicture setOpenModalPic={setOpenModalPic} />
+        <UploadProfilePicture
+          setUserName={setUserName}
+          setUserEmail={setUserEmail}
+          currentUserAddress={currentUserAddress}
+          setOpenModalPic={setOpenModalPic}
+        />
       </>
     );
   } else {
@@ -88,13 +114,15 @@ const PopUpSettings = ({
                 color: primaryColor === "charcoal" ? "#fff" : "#383637",
               }}
             >
-              {currentUserAddress &&
-                `${currentUserAddress.substr(
-                  0,
-                  6
-                )}...${currentUserAddress.substr(
-                  currentUserAddress.length - 4
-                )}   `}
+              {
+                currentUserAddress && userName
+                // `${currentUserAddress.substr(
+                //   0,
+                //   6
+                // )}...${currentUserAddress.substr(
+                //   currentUserAddress.length - 4
+                // )}   `
+              }
             </span>
             <i className="icon-menu fas fa-bars"></i>
           </button>
@@ -139,7 +167,6 @@ const PopUpSettings = ({
           <div className="profile-info">
             <div className="user-avatar">
               <img
-                onClick={() => setOpenModalPic(true)}
                 style={{
                   width: "auto",
                   height: 56,
@@ -153,14 +180,22 @@ const PopUpSettings = ({
               <div>
                 <label>Name</label>
                 <div className="profile-input">
-                  <input value={userName} onChange={onChangeName} type="text" />
+                  {/* <input value={userName} onChange={onChangeName} type="text" /> */}
+                  <span>{userName}</span>
                 </div>
 
                 <label>Email</label>
                 <div className="profile-input">
-                  <input type="text" placeholder="Enter your email" />
+                  {/* <input type="text" placeholder="Enter your email" /> */}
+                  <span>{userEmail}</span>
                 </div>
+                
               </div>
+            </div>
+            <div className="user-edit">
+            <div className="profile-input">
+                  <span className="profile-input-edit" onClick={() => setOpenModalPic(true)}>Edit</span>
+            </div>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import cl from "./Profile.module.css";
 
-const ProfileComponent = ({ onSubmit, src, name, status }) => {
+const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic }) => {
   return (
     <div className={cl.card}>
       <form onSubmit={onSubmit}>
@@ -15,6 +15,9 @@ const ProfileComponent = ({ onSubmit, src, name, status }) => {
         <div className={cl.status}>{status}</div>
         <button type="submit" className={cl.edit}>
           Edit Profile{" "}
+        </button>
+        <button onClick={() => setOpenModalPic(false)} className={cl.edit}>
+          Exit{" "}
         </button>
       </form>
     </div>

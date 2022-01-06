@@ -1105,6 +1105,9 @@ button.metamask-on-boarding:hover{
 /* img {
   pointer-events: none;
 } */
+.nftDataPageTest-a-hover:hover{
+  color: var(--bubblegum);
+}
 
 /* width */
 body::-webkit-scrollbar {

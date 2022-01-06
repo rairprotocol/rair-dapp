@@ -1,6 +1,6 @@
 import React from 'react';
-import DiscordIcon from '../images/discord-icon.png';
-import logoAuthor from '../images/colab.png';
+// import DiscordIcon from './../images/discord-icon.png';
+// import logoAuthor from './../images/colab.png';
 import { useHistory } from 'react-router-dom';
 import Main from '../images/nuts-main.png';
 

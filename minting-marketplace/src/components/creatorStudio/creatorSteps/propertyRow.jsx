@@ -1,11 +1,11 @@
-import {useState, useEffect, useCallback} from 'react';
+// import {useState, useEffect, useCallback} from 'react';
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
 
 const PropertyRow = ({name, value, deleter, rerender, array, index}) => {
 	
-	const [propertyName, setPropertyName] = useState(name);
-	const [propertyValue, setPropertyValue] = useState(value);
+	// const [propertyName, setPropertyName] = useState(name);
+	// const [propertyValue, setPropertyValue] = useState(value);
 
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 

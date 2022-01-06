@@ -13,6 +13,7 @@ services:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
       JWT_SECRET: ${jwt_secret}
       PINATA_SECRET: ${pinata_secret}
@@ -21,6 +22,12 @@ services:
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      GCP_PROJECT_ID: ${gcp_project_id}
+      GCP_BUCKET_NAME: ${gcp_bucket_name}
+      GCP_CREDENTIALS: ${gcp_credentials}
+      IPFS_SERVICE: ${ipfs_service}
+      IPFS_GATEWAY: ${ipfs_gateway}
+      PINATA_GATEWAY: ${pinata_gateway}
     ports:
       - 3000:3000
       - 5000:5000
@@ -48,6 +55,8 @@ services:
       MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
       MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
       MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
+      ETHEREUM_MAINNET_FACTORY_ADDRESS: ${ethereum_mainnet_factory_addres}
+      ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
     ports:

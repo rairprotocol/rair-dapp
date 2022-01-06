@@ -52,7 +52,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
         * [x] /upload - POST - upload the media, [see details here](readme/upload_media.md)
     * [x] /users - POST - create new user, [see details here](readme/create_user.md)
         * [x] /:publicAddress - GET - get single user, [see details here](readme/get_user.md)
-        * [x] /:publicAddress - PUT - update specific user, [see details here](readme/update_user.md)
+        * [x] /:publicAddress - POST - update specific user, [see details here](readme/update_user.md)
     * [x] /contracts - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
         * [x] /network/:networkId
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
@@ -63,7 +63,8 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
     * [x] /nft - POST - create new or update existed nft tokens, [see details here](readme/bulk_create_NFT_tokens.md)
         * [x] / - GET - get all tokens which belongs to current user, [see details here](readme/get_all_tokens_for_current_user.md)
         * [x] /network/:networkId/:contract
-            * [x] /:product - GET - get minted tokens for the product, [see details here](readme/get_all_minted_tokens_from_product.md)
+            * [x] /:product - GET - get tokens for the product, [see details here](readme/get_all_minted_tokens_from_product.md)
+                * [x] /tokenNumbers - GET - Get list of token numbers, [see details here](readme/get_all_minted_token_numbers_from_product.md)
                 * [x] /token/:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index.md)
                 * [x] /files/:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft.md)
                 * [x] /offers - GET - get specific product with all offers, [see details here](readme/get_product_offers.md)

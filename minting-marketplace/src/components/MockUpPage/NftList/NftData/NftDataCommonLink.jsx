@@ -12,6 +12,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   const [offerPrice, setOfferPrice] = useState([]);
   const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
+  const [totalCount, setTotalCount] = useState();
 
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
@@ -26,9 +27,12 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     ).json();
 
     setTokenData(responseAllProduct.result.tokens);
-    if(responseAllProduct.result.tokens.length >= Number(tokenId)){
-      setSelectedData(responseAllProduct.result.tokens[tokenId].metadata);
-    } 
+    setTotalCount(responseAllProduct.result.totalCount);
+
+    if (responseAllProduct.result.tokens.length >= Number(tokenId)) {
+      setSelectedData(responseAllProduct.result?.tokens[tokenId]?.metadata);
+    }
+
     setSelectedToken(tokenId);
   }, [product, contract, tokenId, blockchain]);
 
@@ -70,9 +74,12 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
 
   const getParticularOffer = useCallback(async () => {
     let response = await (
-      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}/offers`, {
-        method: "GET",
-      })
+      await fetch(
+        `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
+        {
+          method: "GET",
+        }
+      )
     ).json();
 
     if (response.success) {
@@ -82,6 +89,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
             neededOfferIndex.offerIndex === selectedOfferIndex
         )
       );
+
       setOfferPrice(
         response?.product.offers.map((p) => {
           return p.price;
@@ -99,13 +107,17 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await (
-      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`, {
-        method: "GET",
-      })
+      await fetch(
+        `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
+        {
+          method: "GET",
+        }
+      )
     ).json();
+
     setProductsFromOffer(response.files);
     setSelectedOfferIndex(tokenData[tokenId]?.offer);
-  }, [product, contract, tokenId, blockchain]);
+  }, [blockchain, contract, product, tokenId, tokenData]);
 
   function onSelect(id) {
     tokenData.forEach((p) => {
@@ -117,9 +129,11 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
 
   const handleClickToken = async (tokenId) => {
     history.push(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
-    if(tokenData.length >= Number(tokenId)){
+
+    if (tokenData.length >= Number(tokenId)) {
       setSelectedData(tokenData[tokenId].metadata);
     }
+
     setSelectedToken(tokenId);
   };
 
@@ -127,10 +141,13 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     getAllProduct();
     getParticularOffer();
     getProductsFromOffer();
-  }, [getAllProduct, getParticularOffer, getProductsFromOffer]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getAllProduct, getParticularOffer]);
 
   return (
     <NftDataPageTest
+      blockchain={blockchain}
       contract={contract}
       currentUser={currentUser}
       handleClickToken={handleClickToken}
@@ -144,6 +161,7 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
       selectedToken={selectedToken}
       textColor={textColor}
       tokenData={tokenData}
+      totalCount={totalCount}
       product={product}
     />
   );

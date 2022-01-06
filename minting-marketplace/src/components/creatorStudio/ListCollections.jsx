@@ -35,7 +35,7 @@ const ListCollections = () => {
 			})
 		}
 		setData(response2.contract);
-	}, [address])
+	}, [address, blockchain])
 
 	useEffect(() => {
 		getContractData();

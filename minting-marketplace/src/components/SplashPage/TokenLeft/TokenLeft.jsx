@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 
 const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
     const [percentTokens, setPersentTokens] = useState(0);
-    const history = useHistory();
-    const [emailField, setEmailField] = useState('');
+    // const history = useHistory();
+    // const [emailField, setEmailField] = useState('');
 
-    const onChangeEmail = (e) => {
-        setEmailField(e.target.value);
-    }
+    // const onChangeEmail = (e) => {
+    //     setEmailField(e.target.value);
+    // }
 
-    const onSubmit = (e) => {
-        setTimeout(() => {
-            if (emailField === "") {
-                alert('Filling the field!')
-            } else {
-                e.preventDefault();
-                history.push('/thankyou');
-            }
-        }, 1000)
-    }
+    // const onSubmit = (e) => {
+    //     setTimeout(() => {
+    //         if (emailField === "") {
+    //             alert('Filling the field!')
+    //         } else {
+    //             e.preventDefault();
+    //             history.push('/thankyou');
+    //         }
+    //     }, 1000)
+    // }
 
     const leftTokensNumber = Number(copies) - Number(soldCopies);
     const wholeTokens = Number(copies);
@@ -124,7 +124,7 @@ const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
                 <div className="release-join-discord">
                     <MailchimpComponent />
                     <div className="btn-discord">
-                        <a href="https://discord.gg/NFeGnPkbfd" target="_blank"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
+                        <a href="https://discord.gg/NFeGnPkbfd" target="_blank" rel="noreferrer"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
                     </div>
                 </div>
             </div>

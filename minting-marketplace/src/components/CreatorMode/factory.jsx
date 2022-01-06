@@ -34,7 +34,6 @@ const FactoryManager = ({ setDeployedTokens }) => {
 			refreshData();
 		}
 	}, [factoryInstance, refreshData, currentUserAddress])
-
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5>Factory</h5>
 		<small>({factoryInstance.address})</small><br />
@@ -62,14 +61,19 @@ const FactoryManager = ({ setDeployedTokens }) => {
 			New contract's name:
 			<input className='form-control w-75 mx-auto' value={erc721Name} onChange={e => setERC721Name(e.target.value)} />
 			<br/>
-			<button disabled={erc721Name === ''} onClick={() => {
-				erc777Instance.send(factoryInstance.address, tokensRequired, ethers.utils.toUtf8Bytes(erc721Name))
+			<button disabled={erc721Name === '' || tokensOwned.lt(tokensRequired)} onClick={() => {
+				try {
+					erc777Instance.send(factoryInstance.address, tokensRequired, ethers.utils.toUtf8Bytes(erc721Name))
+				} catch (e) {
+					console.error(e);
+				}
 			}} className='btn btn-royal-ice'>
 				Buy an ERC721 contract for {tokensRequired.div(
 					ethers.BigNumber.from('10')
 						.pow(tokenDecimals)
 					).toString()} {tokenSymbol} tokens!
 			</button>
+			{tokensOwned.lt(tokensRequired) && <> <br />Insufficient {tokenSymbol} Tokens! </>}
 		</> : 'Fetching info...'}
 	</div>
 }

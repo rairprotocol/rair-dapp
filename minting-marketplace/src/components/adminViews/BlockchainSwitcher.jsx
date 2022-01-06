@@ -60,7 +60,7 @@ const maticMainnetData = {
 const blockchains = [
 	{chainData: binanceTestnetData, bootstrapColor: 'warning'},
 	{chainData: klaytnBaobabData, bootstrapColor: 'light'},
-	{chainData: {chainId: '0x3', chainName: 'Ropsten (Ethereum)'}, bootstrapColor: 'primary'},
+	{chainData: {chainId: '0x1', chainName: 'Ethereum Mainnet'}, bootstrapColor: 'primary'},
 	{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},
 	{chainData: polygonMumbaiData, bootstrapColor: 'danger'},
 	{chainData: maticMainnetData, bootstrapColor: 'stimorol'}
