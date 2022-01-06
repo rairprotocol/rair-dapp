@@ -224,7 +224,7 @@ function App({ sentryHistory }) {
 	}, [setRenderBtnConnect]);
 
 	const openAboutPage = () => {
-		sentryHistory.push(`/rair-about-page`)
+		sentryHistory.push(`/about-page`)
 		window.scrollTo(0, 0);
 	}
 
