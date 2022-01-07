@@ -1162,3 +1162,9 @@ body::-webkit-scrollbar-thumb:active {
 .video-btn-back button:hover {
   background: #AF6FD8;
 }
+
+@media screen and (max-width: 700px) {
+  .blockchain-switcher {
+    height: 3vh !important;
+  }
+}
