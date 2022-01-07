@@ -247,14 +247,6 @@ const MetadataEditor = (props) => {
 			({params.contract}) on {chainData[contractNetwork]?.name}
 		</small>}
 		<div className='col-6'>
-			<div className='col-2' />
-			<button disabled className='btn btn-royal-ice col-3'>
-				Single
-			</button>
-			<Link to={`/batch-metadata/${params.blockchain}/${params.contract}/${params.product}`} className='btn btn-royal-ice col-3'>
-				Batch
-			</Link>
-			<div className='col-2' />
 			<InputField
 				label='Title'
 				getter={title}
@@ -263,14 +255,6 @@ const MetadataEditor = (props) => {
 				labelClass='w-100 text-left'
 				labelCSS={{textAlign: 'left'}}
 			/>
-			{/*false && <InputField
-				label='Edition Symbol'
-				getter={symbol}
-				setter={setSymbol}
-				customClass='form-control'
-				labelClass='w-100'
-				labelCSS={{textAlign: 'left'}}
-			/>*/}
 			<InputField
 				label='Description'
 				getter={description}
