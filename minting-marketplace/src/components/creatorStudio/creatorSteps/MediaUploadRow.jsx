@@ -1,11 +1,45 @@
-// import { useState, useEffect, useCallback} from 'react';
+import { useState, useEffect } from 'react';
 import InputField from '../../common/InputField.jsx';
 import InputSelect from '../../common/InputSelect.jsx';
 import { useSelector } from 'react-redux';
+import { rFetch } from '../../../utils/rFetch.js';
+import io from "socket.io-client";
 
-const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
+const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categoriesArray}) => {
 
-	const {primaryColor, /*secondaryColor,*/ textColor} = useSelector(store => store.colorStore);
+	const [uploading, setUploading] = useState(false);
+	const [uploadSuccess, setUploadSuccess] = useState(false);
+	const [thisSessionId, setThisSessionId] = useState("");
+	const [socketMessage, setSocketMessage] = useState();
+
+	useEffect(() => {
+		const sessionId = Math.random().toString(36).substr(2, 9);
+		setThisSessionId(sessionId);
+		// const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
+		const so = io(`http://localhost:5000`, { transports: ["websocket"] });
+
+		// so.on("connect", data => {
+		//   console.log('Connected !');
+		// });
+
+		so.emit("init", sessionId);
+
+		so.on('uploadProgress', (data) => {
+			const {last, message} = data;
+			setSocketMessage(message);
+			if (last) {
+				setUploading(false);
+				setUploadSuccess(true);
+			}
+		});
+
+		return () => {
+			so.removeListener("uploadProgress");
+			so.emit("end", sessionId);
+		};
+	}, []);
+
+	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	
 	const cornerStyle = {height: '35vh', borderRadius: '16px 0 0 16px'}
 	const selectCommonInfo = {
@@ -73,7 +107,9 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 			<div className='my-1'>
 				Title
 				<div className='border-stimorol rounded-rair col-12 mb-0'>
-					<InputField 
+					<InputField
+						disabled={uploadSuccess}
+						maxlength='30'
 						getter={item.title}
 						setter={updateMediaTitle}
 						customClass='mb-0 form-control rounded-rair'
@@ -85,7 +121,8 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 				Category
 				<div className='border-stimorol rounded-rair col-12'>
 					<InputSelect
-						options={['Music Video','Art','Abstract','Interview','Course','18+'].map(item => {return {label: item, value: item}})}
+						disabled={uploadSuccess}
+						options={categoriesArray}
 						placeholder='Select a category'
 						getter={item.category}
 						setter={updateMediaCategory}
@@ -100,6 +137,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 				Offer
 				<div className='border-stimorol rounded-rair col-12'>
 					<InputSelect
+						disabled={uploadSuccess}
 						options={offerList}
 						getter={item.offer}
 						setter={updateMediaOffer}
@@ -112,12 +150,55 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array}) => {
 				Description
 				<div className='border-stimorol rounded-rair col-12'>
 					<textarea
+						disabled={uploadSuccess}
 						style={selectCommonInfo.customCSS}
 						value={item.description}
 						onChange={e => updateMediaDescription(e.target.value)}
 						className='rounded-rair form-control' />
 				</div>
 			</div>
+			<button
+				onClick={async () => {
+					let reversedOfferList = [...offerList].reverse();
+					let formData = new FormData();
+					formData.append("video", item.file);
+					formData.append("title", item.title.slice(0, 29));
+					formData.append("description", item.description);
+					formData.append("contract", item.contractAddress);
+					//category, demo = 'false'
+					formData.append("product", item.productIndex);
+					formData.append("category", item.category);
+					formData.append("offer", JSON.stringify(
+						item.offer !== '-1' ? reversedOfferList.map(offerData => {
+							if (Number(offerData.value) < Number(item.offer)) {
+								return undefined;
+							}
+							return offerData.value
+						}).filter(item => item !== undefined) : []
+					));
+					formData.append("demo", item.offer === '-1');
+					setUploading(true);
+					try {
+						let response = await rFetch(`/api/media/upload?socketSessionId=${thisSessionId}`, {
+							method: "POST",
+							headers: {
+								Accept: "application/json",
+							},
+							body: formData
+						});
+						if (!response.success) {
+							setUploading(false);
+						}
+					} catch (e) {
+						console.error(e);
+						setUploading(false);
+					}
+				}}
+				disabled={uploadSuccess || uploading || item.category === "null" || item.description === '' || item.offer === "null"}
+				className='btn btn-primary rounded-rair'
+				>
+				{(uploading && socketMessage) ? socketMessage : uploadSuccess ? <><i className='fas fa-check' /> Upload Complete! </> : <><i className='fas fa-upload' /> Upload</>}
+			</button>
 		</div>
 	</div>
 }
