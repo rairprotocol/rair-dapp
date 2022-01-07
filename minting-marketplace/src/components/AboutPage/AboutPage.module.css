@@ -1,0 +1,1008 @@
+/* #mainPage{
+    background-image: url("./assets/RAIR1.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment:initial;
+    height: 92vh;
+    width: 1860px;
+    padding: 0;
+    margin: 0 0.5%;
+    color: white;
+    margin-top: -5rem;
+    border-radius: 16px;
+}
+.mainPageWrapper{
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.mainPageWrapper h1{
+    margin: .67em 0;
+}
+.logoWrapper{
+    display: flex;
+    padding-top: 45px;
+    margin-bottom: 15%;
+}
+.logo{
+    max-width: 187px;
+
+}
+.btnDesc a{
+    border-width: 2px;
+    border-style: solid;
+    background-color: transparent;
+    transition: 0.1s background-color linear, 0.1s color linear;
+    border-radius: 16px;
+    border-color: white;
+    color: white;
+    text-decoration: none;
+    padding: 13px 26px;
+    font-family: proxima-nova;
+    font-size: 20px;
+    font-weight: 400;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+.descriptionWrapper{
+    display: flex;
+    flex-direction: column;
+    width: 603px;
+    font-family: proxima-nova;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: .015em;
+    line-height: 1.5em;
+    text-transform: none;
+    text-align: start;
+    padding-bottom: 34px;
+}
+
+.second{
+    max-width: 1600px;
+    height: 100vh;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+   
+}
+.secondWrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 100px 200px;
+}
+.secondImg{
+    width: 630px;
+    min-height: 480px;
+    border-radius: 16px;
+}
+.secondTextAllWrapper{
+min-width: 530px;
+}
+.secondText{
+    text-align: start;
+    padding-left: 34px;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: .015em;
+    line-height: 1.5em;
+    text-transform: none;
+    color: #737373;
+}
+.secondText strong{
+    font-family: proxima-nova;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: .015em;
+    line-height: 1.5em;
+    text-transform: none;
+    color: #252525;
+    font-weight: bold;
+}
+
+.thirdSectionWrapper{
+    min-height: 100vh;
+    padding: 0;
+    margin: 0 0.5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    color: white;
+    background-image: url('./assets/RAIR3.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 16px;
+    width: 1860px;
+}
+.thirdSectionTitle{
+    font-family: futura-pt;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 50px;
+    letter-spacing: .015em;
+    line-height: 1em;
+    text-transform: uppercase;
+}
+
+.fourthSectionWrapper{
+    padding: 0;
+    margin: 0 0.5%;
+}
+.fourthSectionContent{
+    width: 1895px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.fourthSection{
+    padding: 150px 200px;
+    background: white;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    width: 1860px;
+}
+.fourthSectionTitleWrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;  
+    padding-bottom: 97px;
+}
+.fourthSectionTitle{
+    padding-bottom: 17px;
+}
+.fourthSectionTitle h1{
+    font-family: futura-pt;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 50px;
+    letter-spacing: .015em;
+    line-height: 1em;
+    text-transform: uppercase;
+}
+.fourthSectionPictIpfs{
+    background-image: url('./assets/RAIR4.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 800px;
+}
+.hr{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+    height: 53px;
+}
+.fourthSectionIpfsBox{
+    display: flex;
+    justify-content: center;
+}
+.fourthSectionIpfsBoxPictWrapper{
+    padding: 17px;
+}
+.fourthSectionIpfsBoxPict{
+    width: 180px;
+    height: 180px;
+
+}
+.fourthSectionIpfsBoxContentWrapper{
+    width: 604px;
+    padding: 17px;
+    text-align: start;
+    padding-bottom: 60px;
+}
+.fourthSectionIpfsBoxContentWrapper p {
+    margin: 18px 0;
+}
+.fourthSectionIpfsBoxContentWrapper h2 {
+    font-family: futura-pt;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 24px;
+    letter-spacing: .01em;
+    line-height: 1.4em;
+    text-transform: none;
+}
+
+.fifthSectionWrapper{
+    background: white;
+    padding: 0;
+    margin: 0 0.5%;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+.fifthSectionContent{
+ width: 1860px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.fifthSectionTitleWrapper{
+
+}
+.fifthSectionTitle{
+    font-family: futura-pt;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 50px;
+    letter-spacing: .015em;
+    line-height: 1em;
+    text-transform: uppercase;
+    padding-bottom: 104px;
+}
+.fifthSectionTextWrapper{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: flex-start;
+}
+.fifthSectionText{
+width: 530px;
+height: 450px;
+text-align: start;
+}
+.fifthSectionList li{
+    list-style: decimal;
+}
+.fifthSectionTextTitle{
+    color: #333;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 24px;
+    letter-spacing: .01em;
+    line-height: 1.4em;
+    text-transform: none;
+}
+.fifthSectionTextTitleP{
+    margin: 18px 0;
+    font-family: proxima-nova;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: .015em;
+    line-height: 1.5em;
+    text-transform: none;
+    color: #737373;
+}
+.fifthSectionPictWrapper{
+
+}
+.fifthSectionPict{
+    width: 600px;
+    height: 600px;
+    border-bottom-right-radius: 16px;
+}
+.ss{
+    padding-top:100px;
+}
+
+.sixthSectionWrapper{
+    background-image: url("./assets/RAIR9.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment:initial;
+    height: 100vh;
+    padding: 0;
+    margin: 0 0.5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    color: white;
+    border-radius: 16px;
+    width: 1860px;
+
+}
+.sixthSectionTitle h1{
+    font-family: futura-pt;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 50px;
+    letter-spacing: .015em;
+    line-height: 1em;
+    text-transform: uppercase;
+}
+
+.seventhSectionWrapper{
+    background: white;
+    padding: 0;
+    margin: 0 0.5%;
+    border-radius: 16px;
+    margin-bottom: -5rem;
+    width: 1860px;
+}
+.seventhSectionContentWrapper{
+
+}
+.seventhSectionContent{
+
+}
+.seventhSectionTitle{
+    display: flex;
+    flex-direction: column;
+    width: 1040px;
+    height: 450px;
+    align-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 120px;
+    padding-bottom: 85px;
+    font-family: proxima-nova;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 27px;
+    letter-spacing: .02em;
+    line-height: 1.2em;
+    text-transform: none;
+    color: #333;
+}
+.seventhSectionCardWrapper{
+    display: flex;
+    justify-content: center;
+}
+.seventhSectionCardPict img{
+    width: 195px;
+    height: 230px;
+    margin-right: 34px;
+    border-radius: 16px;
+
+}
+.seventhSectionCardText{
+    width: 815px;
+    height: auto;
+    padding-bottom: 34px;
+    text-align: start;
+}
+.seventhSectionCardText h2{
+    font-family: futura-pt;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 24px;
+    letter-spacing: .01em;
+    line-height: 1.4em;
+    text-transform: none;
+    margin-bottom: 18px;
+}
+.seventhSectionCardText p{
+    text-align: start;
+    font-family: proxima-nova;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: .015em;
+    line-height: 1.5em;
+    text-transform: none;
+    color: #737373;
+}
+.seventhSectionCardText p strong{
+    font-weight: bold;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: .015em;
+    line-height: 1.5em;
+    text-transform: none;
+    color: #3a3a3a;
+}
+.seventhSectionCardEmail{
+    font-family: proxima-nova;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 18px;
+    letter-spacing: .015em;
+    line-height: 1.5em;
+    text-transform: none;
+    color: #737373;
+    float: right;
+    height: 69px;
+}
+.seventhSectionCardEmailA{
+    cursor: pointer;
+    text-decoration: none;
+    color: #272727;
+    padding: 21px 34px;
+    border-radius: 300px;
+    border-width: 2px;
+    border-style: solid;
+    background-color: transparent;
+    transition: 0.1s background-color linear, 0.1s color linear;
+    font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    border-color: #272727;
+
+}
+.bb{
+    height: 138px;
+    padding: 17px;
+}
+.seventhSectionAdv{
+    height: 50px;
+    display: flex;
+    justify-content: start;
+    width: 1100px;
+    align-content: center;
+    align-items: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+.seventhSectionAdv h1{
+    font-family: futura-pt;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 50px;
+    letter-spacing: .015em;
+    line-height: 1em;
+    text-transform: uppercase;
+
+}
+
+
+@media screen and (max-width: 500px) and (min-width: 300px) {
+    #mainPage{
+        width: 108%;
+        height: 120vh;
+    }
+    .descriptionWrapper{
+        width: auto;
+    }
+    .btnDesc a{
+        display: inline-block;
+    }
+    .second{
+        width: 75%;
+        margin: 35rem 0;
+    }
+    .secondWrapper{
+        flex-wrap: wrap;
+    }
+    .secondImg{
+        width: 50%;
+        margin-left: 6rem;
+    }
+    .secondTextAllWrapper{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    }
+    .secondText{
+        padding-top: 2rem;
+        width: 300px;
+        padding-left: 6rem;
+    }
+    .thirdSectionWrapper{
+        width: 108%;
+    }
+    .fourthSection{
+        width: 108%;
+        padding: 20px 20px;
+    }
+    .fourthSectionWrapper{
+        width: inherit;
+    }
+    .fourthSectionContent{
+        width: auto;
+    }
+    .fourthSectionIpfsBox{
+flex-wrap: wrap;
+    }
+    .fourthSectionTitleWrapper{
+        align-items: flex-start;
+    }
+    .thirdSectionTitle{
+        font-size: 34px;
+    }
+    .hr{
+        width: 100%;  
+    }
+    .fifthSectionWrapper{
+        width: 108%;
+    }
+    .fifthSectionTextWrapper{
+        flex-direction: column;
+    }
+    .fifthSectionTitle{
+font-size: 40px;
+    }
+    
+    .fifthSectionContent{
+        width: 100%;
+    }
+    .fifthSectionText{
+        width: 100%;
+        padding: 20px;
+    }
+    .fifthSectionPict{
+        width: 100%;
+    }
+    .sixthSectionWrapper{
+        width: 108%;
+    }
+    .seventhSectionWrapper{
+        width: 108%;
+    }
+    .seventhSectionTitle{
+        width: 100%;
+    }
+    .seventhSectionCardWrapper{
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .seventhSectionCardText{
+        width: 100%;
+        padding-top: 20px;
+    }
+    
+}
+
+@media screen and (max-width: 900px) and (min-width: 501px) {
+#mainPage{
+    width: 103%;
+    height: 60vh;
+}
+.descriptionWrapper{
+    width: auto;
+}
+.btnDesc a{
+    display: inline-block;
+}
+.second{
+    width: 90%;
+    margin: 15rem 0;
+}
+.secondWrapper{
+    flex-wrap: wrap;
+}
+.secondImg{
+    width: 62%;
+    margin-left: 6rem;
+}
+.secondTextAllWrapper{
+width: 100%;
+}
+.secondText{
+    padding-top: 2rem;
+    width: 450px;
+    padding-left: 10rem;
+}
+.thirdSectionWrapper{
+    width: 103%;
+}
+.fourthSection{
+    width: 103%;
+    padding: 20px 20px;
+}
+.fourthSectionWrapper{
+    width: inherit;
+}
+.fourthSectionContent{
+    width: auto;
+}
+.fourthSectionTitleWrapper{
+    align-items: flex-start;
+}
+.hr{
+    width: 100%;  
+}
+.fifthSectionWrapper{
+    width: 103%;
+}
+.fifthSectionTextWrapper{
+    flex-direction: column;
+}
+
+.fifthSectionContent{
+    width: 100%;
+}
+.fifthSectionText{
+    width: 100%;
+    padding: 20px;
+}
+.fifthSectionPict{
+    width: 100%;
+}
+.sixthSectionWrapper{
+    width: 103%;
+}
+.seventhSectionWrapper{
+    width: 103%;
+}
+.seventhSectionTitle{
+    width: 100%;
+}
+.seventhSectionCardWrapper{
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.seventhSectionCardText{
+    width: 100%;
+    padding-top: 20px;
+}
+
+}
+  @media screen and (max-width: 1000px) and (min-width: 901px) {
+    #mainPage{
+        width: 103%;
+        height: 85vh;
+    }
+    .descriptionWrapper{
+        width: auto;
+    }
+    .secondWrapper{
+flex-direction: column;
+    }
+    .second{
+        width: 100%;
+        margin: 10rem 0;
+    }
+    .secondImg{
+        width: 90%;
+    }
+    .secondText{
+        padding-top: 2rem;
+    }
+    .thirdSectionWrapper{
+        width: 103%;
+    }
+    .fourthSection{
+        width: 103%;
+        padding: 20px 20px;
+    }
+    .fourthSectionWrapper{
+        width: inherit;
+    }
+    .fourthSectionContent{
+        width: auto;
+    }
+    .hr{
+        width: 100%;  
+    }
+    .fifthSectionWrapper{
+        width: 102.8%;
+    }
+    
+    .fifthSectionContent{
+        width: 100%;
+    }
+    .fifthSectionText{
+        width: 100%;
+        padding: 20px;
+    }
+    .fifthSectionPict{
+        width: 100%;
+    }
+    .sixthSectionWrapper{
+        width: 102.8%;
+    }
+    .seventhSectionWrapper{
+        width: 100%;
+    }
+    .seventhSectionTitle{
+        width: 100%;
+    }
+    .seventhSectionCardWrapper{
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .seventhSectionCardText{
+        width: 100%;
+        padding-top: 20px;
+    }
+    
+}
+
+@media screen and (max-width: 1200px) and (min-width: 1001px) {
+    #mainPage{
+        width: 102%;
+        height: 75vh;
+        margin-bottom: 10rem;
+    }
+    .descriptionWrapper{
+        width: auto;
+    }
+    .second{
+        width: 100%;
+        margin: 10rem 0;
+    }
+    .secondWrapper{
+        flex-wrap: wrap;
+        padding: 100px;
+    }
+    .secondImg{
+        width: 90%;
+    }
+    .secondText{
+        padding-top: 2rem;
+    }
+    .thirdSectionWrapper{
+        width: 102%;
+    }
+    .fourthSection{
+        width: 102%;
+        padding: 20px 20px;
+    }
+    .fourthSectionWrapper{
+        width: inherit;
+    }
+    .fourthSectionContent{
+        width: auto;
+    }
+    .hr{
+        width: 100%;  
+    }
+    .fifthSectionWrapper{
+        width: 102.3%;
+    }
+    
+    .fifthSectionContent{
+        width: 100%;
+    }
+    .fifthSectionText{
+        width: 100%;
+        padding: 20px;
+    }
+    .fifthSectionPict{
+        width: 100%;
+    }
+    .sixthSectionWrapper{
+        width: 102.5%;
+    }
+    .seventhSectionWrapper{
+        width: 100%;
+    }
+    .seventhSectionTitle{
+        width: 100%;
+    }
+    .seventhSectionCardWrapper{
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .seventhSectionCardText{
+        width: 100%;
+        padding-top: 20px;
+    }
+}
+
+@media screen and (max-width: 1500px) and (min-width: 1201px) {
+    #mainPage{
+        width: 102%;
+        height: 85vh;
+        margin-bottom: 10rem;
+    }
+    .descriptionWrapper{
+        width: auto;
+    }
+    .second{
+        width: 100%;
+        margin-bottom: 3rem;
+    }
+    .secondWrapper{
+        padding: 1px;
+    }
+    .secondImg{
+        width: 90%;
+    }
+    .secondText{
+        padding-top: 2rem;
+    }
+    .thirdSectionWrapper{
+        width: 101%;
+    }
+    .fourthSection{
+        width: 101%;
+    }
+    .fourthSectionWrapper{
+        width: inherit;
+    }
+    .fourthSectionContent{
+        width: auto;
+    }
+    .hr{
+        width: 100%;  
+    }
+    .fifthSectionWrapper{
+        width: 101.8%;
+    }
+    
+    .fifthSectionContent{
+        width: 100%;
+    }
+    .fifthSectionText{
+        width: 100%;
+        padding: 100px;
+    }
+    .fifthSectionPict{
+        width: 100%;
+    }
+    .sixthSectionWrapper{
+        width: 101.8%;
+    }
+    .seventhSectionWrapper{
+        width: 100%;
+    }
+    .seventhSectionTitle{
+        width: 100%;
+        padding: 40px;
+    }
+    .seventhSectionCardWrapper{
+        justify-content: center;
+        padding: 40px;
+    }
+    .seventhSectionCardText{
+        width: 100%;
+        padding-top: 20px;
+    }
+}
+
+@media screen and (max-width: 1700px) and (min-width: 1501px) {
+    #mainPage{
+        width: 101%;
+        height: 86vh;
+        margin-bottom: 10rem;
+    }
+    .descriptionWrapper{
+        width: auto;
+    }
+    .second{
+        width: 100%;
+        margin-bottom: 3rem;
+    }
+    .secondWrapper{
+        padding: 1px;
+    }
+    .secondImg{
+        width: 90%;
+    }
+    .secondText{
+        padding-top: 2rem;
+    }
+    .thirdSectionWrapper{
+        width: 101%;
+    }
+    .fourthSection{
+        width: 101%;
+    }
+    .fourthSectionWrapper{
+        width: inherit;
+    }
+    .fourthSectionContent{
+        width: auto;
+    }
+    .hr{
+        width: 100%;  
+    }
+    .fifthSectionWrapper{
+        width: 101%;
+    }
+    
+    .fifthSectionContent{
+        width: 100%;
+    }
+    .fifthSectionText{
+        width: 100%;
+        padding: 100px;
+    }
+    .fifthSectionPict{
+        width: 100%;
+    }
+    .sixthSectionWrapper{
+        width: 101%;
+    }
+    .seventhSectionWrapper{
+        width: 100%;
+    }
+    .seventhSectionTitle{
+        width: 100%;
+        padding: 40px;
+    }
+    .seventhSectionCardWrapper{
+        justify-content: center;
+        padding: 40px;
+
+    }
+    .seventhSectionCardText{
+        width: 100%;
+        padding-top: 20px;
+    }
+}
+
+@media screen and (max-width: 1900px) and (min-width: 1701px) {
+    #mainPage{
+        width: 101%;
+        height: 86vh;
+        margin-bottom: 10rem;
+    }
+    .descriptionWrapper{
+        width: auto;
+    }
+    .second{
+        width: 100%;
+        margin-bottom: 3rem;
+    }
+    .secondWrapper{
+
+        padding: 1px;
+    }
+    .secondImg{
+        width: 90%;
+    }
+    .secondText{
+        padding-top: 2rem;
+    }
+    .thirdSectionWrapper{
+        width: 101%;
+    }
+    .fourthSection{
+        width: 101%;
+
+    }
+    .fourthSectionWrapper{
+        width: inherit;
+    }
+    .fourthSectionContent{
+        width: auto;
+    }
+    .hr{
+        width: 100%;  
+    }
+    .fifthSectionWrapper{
+        width: 101%;
+    }
+    
+    .fifthSectionContent{
+        width: 100%;
+    }
+    .fifthSectionText{
+        width: 100%;
+        padding: 100px;
+    }
+    .fifthSectionPict{
+        width: 100%;
+    }
+    .sixthSectionWrapper{
+        width: 101%;
+    }
+    .seventhSectionWrapper{
+        width: 100%;
+    }
+    .seventhSectionTitle{
+        width: 100%;
+        padding: 40px;
+    }
+    .seventhSectionCardWrapper{
+        justify-content: center;
+        padding: 40px;
+
+    }
+    .seventhSectionCardText{
+        width: 100%;
+        padding-top: 20px;
+    }
+}
+
+@media screen and (max-width: 2200px) and (min-width: 1901px) {
+
+  } */

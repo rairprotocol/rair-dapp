@@ -1,0 +1,2695 @@
+/* Repeating properties*/
+
+.text-gradient {
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 45px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.home-splash-mobile {
+    padding-bottom: 208px;
+    display: none;
+}
+
+.wrapper-splash-page img {
+    pointer-events: none;
+}
+
+/* main block */
+
+.wrapper-splash-page {
+    overflow: hidden;
+    background-image: url('./images/victory_lap.png'), url('./images/maraphon.png'), url('./images/or.png'), url('./images/humble.png');
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
+    background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
+}
+
+.wrapper-splash-page.greyman-page {
+    background-image: none;
+}
+
+.home-splash--page {
+    max-width: 1300px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 54px;
+    overflow: hidden;
+    /* padding-left: 80px; */
+}
+
+
+/* Author Information Block*/
+
+.home-splash--page .information-author {
+    position: relative;
+    overflow: hidden;
+    padding: 94px 91px;
+    background-color: #fff;
+    border-radius: 24px;
+    display: flex;
+    justify-content: flex-start;
+    max-width: 1200px;
+    /* height: 694px; */
+    background-image: url('./images/nipsey.png');
+    background-repeat: no-repeat;
+    background-size: 530px auto;
+    background-position: 95% center;
+}
+
+.nipsey-comming-soon {
+    margin-bottom: 108px;
+}
+
+.nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+    background-image: url('./images/nipsey.png');
+    background-repeat: no-repeat;
+    background-size: 530px auto;
+    background-position: 95% center;
+    background-color: #fff;
+    padding: 94px 91px;
+    border-radius: 24px;
+}
+
+.nipsey-comming-soon.nutcrackers .information-author {
+    background-image: url('./images/nuts-main.png');
+}
+
+.nipsey-comming-soon.nutcrackers .img-coming-nuts {
+    display: none;
+}
+
+@media screen and (max-width: 900px) {
+    .nipsey-comming-soon.nutcrackers .information-author {
+        background-image: none;
+    }
+
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts {
+        display: block;
+    }
+
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts img {
+        width: 400px;
+        height: auto;
+    }
+
+    .nipsey-comming-soon.nutcrackers .information-author {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .nipsey-comming-soon.nutcrackers .img-coming-nuts img {
+        width: 280px;
+        height: auto;
+    }
+} 
+
+.nipsey-comming-soon.nutcrackers .information-author .text-splash .title-splash.nipsey span {
+    color: #A12921;
+}
+
+.information-author .btn-back-coming  {
+    margin-top: 20px;
+}
+
+.information-author .btn-back-coming button {
+    color: #FFF;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    border-radius: 10px;
+    border: none;
+    /* padding: 5px 10px; */
+    height: 40px;
+    width: 287px;
+}
+
+.nipsey-comming-soon .information-author .text-splash .title-splash h4 {
+    font-size: 64px;
+    color: #725BDB
+}
+
+.nipsey-thank-you-page {
+    margin-bottom: 108px;
+    overflow: hidden;
+}
+
+.information-author.greyman-page-author {
+    background-image: url('./images/greyman.png');
+    background-size: 516px 516px;
+    background-position: 90% center;
+    height: 694px;
+}
+
+.information-author.greyman-page-author .block-splash {
+    justify-content: flex-end;
+}
+
+.block-splash {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.block-splash .logo-author {
+    margin-top: 88px;
+}
+
+.block-splash .logo-author img:first-child {
+    width: 313px;
+    height: auto;
+}
+
+.text-splash .title-splash {
+    margin-bottom: 24px;
+}
+
+.information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
+    color: #222021;
+    font-size: 32px;
+}
+
+.information-author.greyman-page-author .text-splash .title-splash.greyman-page h3.text-gradient {
+    font-size: 40px;
+}
+
+.text-splash .title-splash.nipsey h3, .text-splash .title-splash.nipsey h4, .text-splash .title-splash.nipsey span{
+    color: #725BDB;
+}
+
+.text-splash .title-splash h3 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #A7A6A6;
+    margin: 0;
+}
+
+.text-splash .title-splash span, .text-splash .title-splash.nipsey h4 {
+    font-size: 64px;
+    color: #4E4D4D;
+    font-weight: 800;
+}
+
+.text-splash .text-description {
+    width: 500px;
+    font-size: 20px;
+}
+
+.span-under {
+    text-decoration: underline;
+}
+
+.text-splash .text-description div {
+    color: #A7A6A6;
+    font: 20px;
+    line-height: 36px;
+    font-weight: 400;
+}
+
+.text-splash .text-description div a {
+    text-decoration: underline;
+}
+
+.information-author.greyman-page-author .text-splash p {
+    line-height: 28px;
+}
+
+.btn-buy-metamask {
+    margin-top: 56px;
+}
+
+.btn-buy-metamask button {
+    font-size: 20px;
+    color: #fff;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-buy-metamask button:hover {
+    background: linear-gradient(320.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    /* background: red; */
+}
+
+.btn-buy-metamask button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.block-splash-img {
+    position: absolute;
+    top: 79px;
+    right: -60px;
+}
+
+.block-splash-img img {
+    width: 667px;
+    height: 494px;
+}
+
+
+/* Left Tokens Block*/
+
+.left-tokens {
+    display: flex;
+    margin-top: 108px;
+    justify-content: space-between;
+    max-width: 1200px;
+}
+
+.left-tokens .block-left-tokens {
+    border-radius: 24px;
+    width: 456px;
+    height: 584px;
+    margin-right: 91px;
+    overflow: hidden;
+    background: url('./images/left-tokens.jpeg') center center;
+    background-size: cover;
+    position: relative;
+}
+
+.left-tokens.greyman-page .block-left-tokens {
+    background: url('./images/greyman.png') center center;
+    background-size: cover;
+}
+
+.block-left-tokens .down-text {
+    position: absolute;
+    bottom: 16px;
+    left: 32px;
+    font-size: 12px;
+    list-style: 21px;
+    text-align: left;
+    color: #fff;
+}
+
+.progress-tokens {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+
+/* .progress-tokens span {
+    margin-top: 200px;
+    margin-right: 200px;
+} */
+
+.box-progress {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 108px;
+    margin-top: 172px;
+}
+
+.text-progress {
+    color: #fff;
+    position: absolute;
+    line-height: 50px;
+    font-size: 40px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-progress .progress-info {
+    display: flex;
+    align-items: center;
+    /* padding-bottom: 40px; */
+    width: 240px;
+    height: 240px;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.text-progress .text-numbers {
+    display: flex;
+}
+
+.left-tokens.greyman-page .text-progress .text-numbers {
+    flex-direction: column;
+}
+
+.left-tokens.greyman-page .text-left-tokens {
+    font-size: 48px;
+}
+
+.text-left-tokens {
+    font-size: 45px;
+    margin-right: 6px;
+}
+
+.text-whole-tokens {
+    font-size: 20px;
+}
+
+.progress-main svg {
+    width: 240px;
+    color: #AF6FD8;
+}
+
+.progress-grey svg {
+    width: 230px;
+    margin-top: 6px;
+}
+
+.left-tokens-content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    justify-content: center;
+}
+
+.title-progress-left {
+    position: absolute;
+    font-size: 36px;
+    top: 72px;
+    font-weight: 700;
+    line-height: 60px;
+    color: #fff;
+}
+
+.left-tokens-content .title-tokens {
+    margin-bottom: 24px;
+}
+
+.left-tokens-content .btn-buy-metamask {
+    margin-top: 0;
+    display: flex;
+    justify-content: flex-start !important;
+}
+
+.left-tokens-content .title-tokens h3 {
+    font-size: 40px;
+    line-height: 60px;
+}
+
+.tokens-description {
+    width: 650px;
+    text-align: left;
+    height: 224px;
+}
+
+.left-tokens.greyman-page .tokens-description {
+    height: auto;
+}
+
+.tokens-description p {
+    line-height: 28px;
+    color: #A7A6A6;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.tokens-description p:first-child {
+    margin-bottom: 30px;
+}
+
+.left-tokens-content .btn-buy-metamask {
+    display: flex;
+    justify-content: center;
+}
+/* 
+.left-tokens-content .mailchimp {
+    display: flex;
+} */
+/* 
+.left-tokens-content .mailchimp .email-box {
+    margin-right: 19px;
+} */
+
+/* .left-tokens-content .mailchimp .email-box input {
+    width: 435px;
+    height: 64px;
+    background: #fff;
+    border: 1px solid #211B32;
+    border-radius: 16px;
+    padding-left: 35px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    color: #000;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 400;
+} */
+
+/* .left-tokens-content .mailchimp .email-box input:focus {
+    border: 1px solid #9867D9;
+} */
+
+/* .left-tokens-content .mailchimp .signup_scroll {
+    display: flex;
+} */
+
+/* .left-tokens-content .mailchimp .email-box input::placeholder {
+    color: #9013FE;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.left-tokens-content .mailchimp .btn-subscribe input {
+    height: 64px;
+    padding: 0 16px;
+    background: linear-gradient(320.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    border-radius: 16px;
+    border: none;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 20px;
+    transition: all .2s ease-in;
+}
+
+.left-tokens-content .mailchimp .btn-subscribe input:hover {
+    transition: all .3s ease-in;
+    background: #E882D5;
+} */
+
+
+/* Special Offer Block */
+
+.special-offer {
+    position: relative;
+    display: flex;
+    margin-bottom: 30px;
+    margin-top: 120px;
+}
+
+.offer-desp {
+    text-align: left;
+    margin-right: 51px;
+}
+
+.offer-desp .btn-buy-metamask {
+    display: flex;
+    justify-content: center;
+}
+
+.offer-desp p {
+    color: #A7A6A6;
+    font: 20px;
+    line-height: 28px;
+    font-weight: 400;
+}
+
+.text-offer {
+    width: 661px;
+    margin-top: 24px;
+}
+
+.special-offer h3 {
+    font-size: 40px;
+}
+
+.offer-fans {
+    z-index: 1;
+}
+
+.offer-fans .offer-fans-container {
+    position: relative;
+}
+
+.offer-fans .offer-1 {
+    z-index: 10;
+    position: absolute;
+    top: -50px;
+    width: 424px;
+    height: 424px;
+    border-radius: 16px;
+    background: url('./images/image_1.png') no-repeat;
+    background-size: cover;
+}
+
+.offer-fans .offer-2 {
+    z-index: 2;
+    position: absolute;
+    top: -24px;
+    right: -460px;
+    width: 376px;
+    height: 376px;
+    border-radius: 16px;
+    background: url('./images/image_2.png') no-repeat;
+    background-size: cover;
+    background-position: center top;
+}
+
+.offer-fans .offer-3 {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: -490px;
+    width: 328px;
+    height: 328px;
+    border-radius: 16px;
+    background: url('./images/image_3.png') no-repeat;
+    background-size: cover;
+    background-position: center top;
+}
+
+
+/* Exclusive NFTs Block*/
+
+.exclusive-nfts {
+    display: flex;
+    flex-direction: column;
+    margin: 108px 0;
+}
+
+.title-nft {
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.title-nft h3 {
+    font-size: 40px;
+}
+
+.nfts-select .main-nft {
+    width: 589px;
+    height: 589px;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    background-size: cover;
+}
+
+.wrapper-splash-page .greyman-page .main-nft {
+    background-size: cover;
+}
+
+.btn-open-store {
+    background: rgba(34, 32, 33, 0.8);
+    /* filter: blur(8px); */
+    width: 100%;
+    height: 94px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.btn-open-store span {
+    font-size: 24px;
+    transition: .2s all ease;
+}
+
+.btn-open-store span:hover {
+    color: #E882D5;
+}
+
+.btn-open-store i {
+    margin-left: 13px;
+    color: #E882D5;
+}
+
+.nfts-select {
+    display: flex;
+}
+
+.block-nfts .box-nft img {
+    width: 283.49px;
+    height: 283.49px;
+    object-fit: cover;
+    object-position: 0 0;
+    border-radius: 16px;
+}
+
+.box-nft img:first-child {
+    margin-right: 22px;
+}
+
+.box-nft:first-child {
+    margin-bottom: 22px;
+}
+
+.block-nfts {
+    margin-left: 22px;
+}
+
+/* Unlockble Video Block*/
+
+.unlockble-video {
+    margin-top: 108px;
+}
+
+.title-gets {
+    text-align: left;
+}
+
+.title-gets h3 {
+    font-size: 40px;
+}
+
+.block-videos {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.box-video {
+    margin-top: 24px;
+    margin-right: 16px;
+}
+
+.video-locked {
+    display: flex;
+    border-radius: 16px;
+    width: 592px;
+    background-color: #4E4D4DCC;
+    overflow: hidden;
+    position: relative;
+}
+
+.video-locked .block-with-video {
+    position: absolute;
+}
+
+.video-icon {
+    width: 32px;
+    height: 32px;
+    background: #E4476D;
+    border-radius: 50%;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.video-icon i {
+    padding: 8px 1px 0 0;
+}
+
+.video-icon p {
+    margin-top: 10px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.video-locked img.block-img-bg {
+    width: 230px;
+    opacity: 0.4;
+    height: 135px;
+    filter: blur(3px);
+    z-index: 1;
+}
+
+/* .video-locked .block-with-video {
+    width: 230px;
+    opacity: 0.4;
+    height: 135px;
+} */
+
+.video-locked .block-with-video {
+
+}
+
+.video-block-metamask-some {
+    position: absolute;
+    top: 30px;
+    left: 75px;
+}
+
+.video-block-metamask-some img {
+    width: 80px;
+    height: auto;
+    position: absolute;
+    /* filter: blur(0px); */
+    /* opacity: 1; */
+    /* top: 30px;
+    left: 100px; */
+    z-index: 2;
+}
+
+.video-description {
+    border-left: 4px solid #E4476D;
+    display: flex;
+    flex-direction: column;
+    width: inher;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 24px;
+    position: relative;
+    width: 100%;
+}
+
+.video-description .video-title {
+    color: #fff;
+    font-size: 18px;
+}
+
+.video-description .video-title p {
+    margin-bottom: 0;
+}
+
+.video-description .video-timer p {
+    color: #fff;
+    font-size: 20px;
+}
+
+.video-key {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.video-key i {
+    color: #E4476D;
+    font-size: 20px;
+    margin-right: 16px;
+}
+
+
+/* Splash Team Block*/
+
+.splash-team {
+    margin-bottom: 108px;
+}
+
+.title-team h3 {
+    font-size: 40px;
+    text-align: left;
+}
+
+.meet-team {
+    margin-top: 24px;
+}
+
+.meet-team .box-teammate {
+    display: flex;
+}
+
+.meet-team .box-teammate {
+    margin-bottom: 24px;
+}
+
+.meet-team .box-teammate .teammate-title-socials {
+    display: flex;
+    align-items: center;
+}
+
+
+.meet-team .box-teammate .teammate-title-socials span a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    color: #E882D5;
+    transition: .2s all ease;
+}
+
+.meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
+    margin-left: 10px;
+}
+
+.meet-team .box-teammate .teammate-title-socials span a:hover {
+    color:#d634b8;
+}
+
+.meet-team .box-teammate .teammate-title-socials .box-socials {
+    margin-left: 20px;
+}
+
+.img-teammate img {
+    border-radius: 16px;
+    width: 384px;
+    height: 384px;
+    object-fit: cover;
+}
+
+.position-teammate {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px;
+}
+
+.position-teammate .teammate-description {
+    max-width: 770px;
+    margin-top: 16px;
+    text-align: left;
+}
+
+.teammate-description p {
+    color: #A7A6A6;
+    font: 20px;
+    line-height: 28px;
+    font-weight: 400;
+}
+
+.position-teammate h4 {
+    text-align: left;
+    font-size: 24px;
+}
+
+.box-socials {
+    display: flex;
+}
+
+.box-socials i {
+    font-size: 30px;
+}
+
+.box-socials i:first-child {
+    margin-right: 28px;
+}
+
+
+/* Join Community Block*/
+
+.join-community {
+    margin-bottom: 85px;
+}
+
+.join-community .title-join {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.join-community .title-join h3 {
+    font-size: 40px;
+}
+
+.community-description {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1204px;
+    background-color: #383637;
+    padding-left: 40px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.community-description .join-pic img {
+    object-fit: cover;
+    width: 415px;
+    height: 329.50px;
+    border-radius: 16px;
+}
+
+.community-description .community-text {
+    width: 694px;
+    text-align: left;
+}
+
+.community-description .community-text p {
+    color: #A7A6A6;
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: 400;
+}
+
+.ReactModal__Overlay--after-open {
+    background-color: rgba(78, 77, 77, 0.8) !important;
+}
+
+.modal-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 700px;
+    height: 610px;
+}
+
+.form-group {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.form-group input {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+
+.form-group label {
+    position: relative;
+    cursor: default;
+    font-size: 24px;
+    color: #A7A6A6;
+}
+.form-group span{
+    cursor: pointer;
+}
+.form-group span:hover{
+text-decoration: underline;
+}
+.form-group label::after {
+    content: '';
+    -webkit-appearance: none;
+    background-color: transparent;
+    /* border: 2px solid #0079bf; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 5px;
+    background: #C4C4C4;
+    width: 40px;
+    height: 40px;
+    left: 12rem;
+}
+.sec-group label::after{
+    left: 13rem;
+}
+
+.form-group input:checked+label::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 2px;
+    right: 18px;
+    width: 11px;
+    height: 28px;
+    border: solid rgb(255, 0, 0);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    z-index: 1;
+    left: 23.1rem;
+}
+
+#use:checked+label::before{
+    left: 23.1rem;
+}
+
+.modal-content-np {
+    width: 587px;
+    height: 226px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.modal-text-wrapper {
+    padding-bottom: 4rem;
+}
+
+.modal-text {
+    font-family: Plus Jakarta Sans;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0px;
+    text-align: justify;
+    color: #A7A6A6;
+    cursor: default;
+}
+
+.modal-btn {
+    font-size: 20px;
+    color: #fff;
+    background: linear-gradient( 96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.modal-btn:disabled {
+    color: rgb(34, 34, 37);
+    background: #C4C4C4;
+}
+.modal-btn:disabled:hover {
+    background: #C4C4C4;
+
+}
+.modal-btn:hover {
+    background: linear-gradient( 320.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)
+}
+
+.modal-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.modal-btn-logo {
+    transform: scale(0.6);
+}
+
+img.block-img-mobile{
+    display: none;
+}
+
+
+/* Media Pesponsive*/
+
+@media screen and (max-width: 1488px) {
+    .wrapper-splash-page {
+        display: flex;
+        justify-content: center;
+        padding-left: 0px;
+    }
+    .home-splash--page {
+        padding-left: 80px;
+    }
+}
+
+@media screen and (max-width: 1430px) {
+    .block-videos {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page {
+        align-items: center;
+    }
+
+    .home-splash--page {
+        padding-left: 0px;
+        align-items: center;
+    }
+
+    .information-author, .left-tokens, .special-offer, .exclusive-nfts, .unlockble-video, .splash-team {
+        width: 1000px;
+    }
+
+    .information-author {
+        background-size: 400px auto;
+        background-position: 95% center;
+    }
+
+    .left-tokens .block-left-tokens {
+        margin-right: 5%;
+        background-size: contain;
+        background-repeat: no-repeat;
+
+        width: 400px;
+        height: 450px;
+    }
+
+    .title-progress-left {
+        top: 10px;
+    }
+
+    .left-tokens-content .tokens-description {
+        width: 600px;
+    }
+
+    .left-tokens-content .mailchimp {
+        margin-top: 40px;
+    }
+
+    .box-progress {
+        margin-left: 58px;
+        margin-top: 172px;
+    }
+
+    .special-offer .text-offer {
+        width: 450px;
+    }
+
+    .nfts-select .main-nft {
+        width: 465px;
+        height: 465px;
+        background-size: contain;
+    }
+
+    .nfts-select .block-nfts {
+        margin-left: 40px;
+    }
+
+    .block-nfts .box-nft img {
+        width: 220.49px;
+        height: 220.49px;
+    }
+    
+
+    .join-community {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .join-community .title-join {
+        width: 90%;
+        text-align: left;
+    }
+
+    .community-description {
+        width: 90%;
+    }
+
+    .splash-team {
+        margin-bottom: 0px;
+    }
+} 
+
+@media screen and (max-width: 1100px) {
+    .wrapper-splash-page {
+        background-image: none;
+    }
+    .home-splash--page {
+        padding-left: 20px;
+    }
+
+    .information-author, .left-tokens, .special-offer, .exclusive-nfts, .unlockble-video, .join-community {
+        width: 900px;
+    }
+
+    .left-tokens-content .tokens-description {
+        width: 500px;
+    }
+
+    .left-tokens-content .mailchimp .email-box input {
+        width: 350px;
+    }
+
+    .left-tokens-content .mailchimp .email-box input::placeholder {
+        font-size: 16px;
+    }
+
+    .nfts-select .main-nft {
+        width: 425px;
+        height: 425px;
+        background-size: cover !important;
+    }
+
+    .nfts-select .block-nfts {
+        margin-left: 22px;
+    }
+
+    .block-nfts .box-nft img {
+        width: 200.49px;
+        height: 200.49px;
+    }
+
+    .special-offer .text-offer {
+        width: 380px;
+    }
+
+    /* .join-community .title-join {
+        width: 1000px;
+        text-align: left;
+    } */
+
+    .join-community .title-join {
+        width: 900px;
+    }
+
+    .community-description {
+        width: 900px;
+    }
+
+    .community-description .community-text p {
+        font-size: 18px;
+    }
+
+    .splash-team {
+        width: 950px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .position-teammate .teammate-description {
+        width: 400px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    /* .home-splash--page {
+        display: none;
+    }
+
+    .home-splash-mobile {
+        display: block;
+    } */
+
+    .home-splash--page {
+        padding-left: 0px;
+    }
+
+    .wrapper-splash-page {
+        overflow-x: auto;
+        max-width: 900px;
+    }
+
+    .home-splash--page {
+        max-width: 100%;
+    }
+
+    .home-splash--page .information-author, .left-tokens, .special-offer, .unlockble-video, 
+    .exclusive-nfts, .join-community, .join-community .title-join {
+        width: 100%;
+    }
+
+    .home-splash--page .exclusive-nfts .nfts-select {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .home-splash--page .nfts-select .block-nfts {
+        margin-left: 0;
+        margin-top: 25px;
+    }
+
+    .home-splash--page .title-nft {
+        text-align: center;
+    }
+
+    .unlockble-video .title-gets {
+        text-align: center;
+    }
+
+    .home-splash--page .special-offer {
+        flex-direction: column-reverse;
+        align-items: center;
+        height: 800px;
+    }
+
+    .home-splash--page .offer-fans {
+        /* position: initial; */
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .offer-fans .offer-fans-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-top: -430px;
+    }
+
+    .home-splash--page .special-offer {
+        position: relative;
+    }
+
+    .offer-fans .offer-2 {
+        left: -190px;
+        top: -50px;
+    }
+
+    .offer-fans .offer-1 {
+        top: -20px;
+    }
+
+    .offer-fans .offer-3 {
+        top: -60px;
+        left: -155px;
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-right: 0px !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-splash--page .special-offer .text-offer {
+        width: 90%;
+    }
+
+    .left-tokens .block-left-tokens {
+        margin-right: 0;
+    }
+
+    .home-splash--page .left-tokens-content {
+        margin-top: 40px;
+    }
+
+    .left-tokens .block-left-tokens {
+        width: 456px;
+        height: 584px;
+    }
+
+    .home-splash--page .left-tokens {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-splash--page .box-progress {
+        margin-left: 108px;
+        margin-top: 172px;
+    }
+
+    .special-offer .root-time {
+        margin-bottom: 0;
+        margin-top: 0px;
+    }
+
+    .row {
+        --bs-gutter-x: 0;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .home-splash--page .information-author {
+        background-image: none;
+    }
+
+    .home-splash--page .information-author{
+        max-width: 95%;
+    }
+
+    .home-splash--page .information-author img.block-img-mobile {
+        display: block;
+        width: 400px;
+        height: auto;
+    }
+
+    .home-splash--page .information-author {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .block-splash {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .home-splash--page .block-splash .logo-author {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash--page .video-locked {
+        width: 351px;
+    }
+
+    .video-locked img.block-img-bg {
+        height: 73px;
+        width: 100px;
+    }
+
+    .home-splash--page .video-block-metamask-some {
+        left: 33px;
+        top: 18px;
+    }
+
+    .home-splash--page .video-block-metamask-some img {
+        width: 40px;
+        height: auto;
+    }
+
+    .home-splash--page .video-description .video-timer p {
+        font-size: 16px;
+    }
+
+   .home-splash--page .nipsey-img-masks {
+       display: none;
+   }
+
+   .home-splash--page .meet-team {
+       padding-bottom: 120px;
+   }
+} 
+
+@media screen and (max-width: 800px) {
+    .footer {
+        flex-direction: column;
+    }
+
+    .footer ul {
+        margin-top: 20px;
+        padding-left: 0;
+    }
+}
+
+
+@media screen and (max-width: 585px){
+    .home-splash--page .offer-fans .offer-fans-container {
+        margin-top: -400px;
+    }
+
+    .home-splash--page .special-offer {
+        position: relative;
+    }
+
+    .offer-fans .offer-2 {
+        left: -150px;
+        top:  -20px;
+        width: 300px;
+        height: 300px;
+    }
+
+    .offer-fans .offer-1 {
+        top: 0px;
+        width: 350px;
+        height: 350px;
+    }
+
+    .offer-fans .offer-3 {
+        top: -30px;
+        left: -115px;
+        width: 230px;
+        height: 230px;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .home-splash--page .information-author img.block-img-mobile {
+        display: block;
+        width: 337px;
+        height: auto;
+    }
+
+    .home-splash--page .text-splash .text-description {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .home-splash--page .left-tokens-content .tokens-description {
+        width: 90%;
+    }
+
+    .home-splash--page .left-tokens-content {
+        align-items: center;
+    }
+
+    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient {
+        font-size: 32px;
+    }
+
+    .home-splash--page .tokens-description p {
+        font-size: 16px;
+    }
+
+    .home-splash--page .title-gets h3, .home-splash--page .title-gets h3 .text-gradient, .title-nft h3, .title-nft h3 .text-gradient, .title-team h3, .title-team h3 .text-gradient {
+        font-size: 32px;
+    }
+
+    .home-splash--page .box-video {
+        margin-right: 0px;
+    }
+
+    .img-teammate img {
+        width: 116px;
+        height: 116px;
+    }
+
+    .meet-team .box-teammate .teammate-title-socials {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .teammate-description p {
+        font-size: 14px;
+    }
+
+    .meet-team .box-teammate .teammate-title-socials .box-socials {
+        margin-top: 10px;
+    }
+
+    .position-teammate .teammate-description {
+        width: 100%;
+    }
+
+    .home-splash--page .information-author .root-time .time {
+        font-size: 26px;
+    }
+
+    .home-splash--page .roadmap-container .roadmap-list:first-child, .home-splash--page .roadmap-container .roadmap-list:nth-child(2) {
+        margin-right: 10px;
+    }
+
+    .roadmap-box:nth-child(2) p {
+        font-size: 12px !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .left-tokens .block-left-tokens {
+        width: 356px;
+        height: 484px;
+    }
+
+    .home-splash--page .box-progress {
+        margin-left: 58px;
+        margin-top: 180px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-bottom: -20px;
+    }
+
+    .offer-fans .offer-1 {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .home-splash--page .nfts-select .block-nfts {
+        display: none;
+    }
+
+    .nfts-select .main-nft {
+        width: 350px;
+        height: 350px;
+    }
+
+    .home-splash--page .exclusive-nfts {
+        margin: 80px 0 30px 0;
+    }
+} 
+
+@media screen and (max-width: 433px) {
+    .left-tokens .release-join-discord {
+        margin-top: 150px;
+    }
+
+    .home-splash--page .offer-fans .offer-fans-container {
+        margin-top: -340px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .home-splash--page .information-author img.block-img-mobile {
+        width: 280px;
+        height: auto;
+    }
+
+    .offer-fans .offer-1 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .offer-fans .offer-2 {
+        width: 270px;
+        height: 270px;
+        left: -135px;
+    }
+
+    .offer-fans .offer-3 {
+        width: 210px;
+        height: 210px;
+        left: -105px;
+    }
+
+    .home-splash--page .video-locked {
+        width: 300px;
+    }
+
+    .nfts-select .main-nft {
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash--page .exclusive-nfts {
+        margin: 80px 0 10px 0;
+    }
+}
+
+/* Mobile version */
+.home-splash-mobile {
+    width: 100vw;
+}
+
+.wrapper-splash-mobile {
+    /* background: #181717; */
+    overflow: hidden;
+}
+
+.splash-header-mobile {
+    width: 100%;
+    background: #000;
+}
+
+.splash-auth-mobile {
+    background-image: url('./images/nipsey-bg-mobile.jpeg');
+    background-repeat: no-repeat;
+    height: 600px;
+    background-size: cover;
+    position: relative;
+}
+
+.splash-auth-mobile:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 1;
+  }
+
+.splash-auth-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.splash-auth-mobile .auth-mobile-title {
+    z-index: 2;
+}
+
+.splash-auth-mobile .auth-mobile-title h3{
+    font-size: 40px;
+    line-height: 60px;
+    font-weight: 700;
+}
+
+.splash-auth-mobile .auth-mobile-title h3 span {
+    color: #A5A6F6;
+    font-size: 50px;
+}
+
+.splash-auth-mobile .auth-mobile-desc {
+    font-size: 22px;
+    line-height: 32px;
+    color: #A7A6A6;
+}
+
+.splash-minted-mobile .nft-minted-block {
+    padding: 32px;
+}
+
+.splash-minted-mobile .minted-title h3{
+    color: #fff;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.splash-minted-mobile .minted-title h3 span {
+    color: #5D5FEF;
+}
+
+.splash-minted-mobile .minted-title .minted-desc {
+    font-size: 16px;
+    color: #A7A6A6;
+    line-height: 28px;
+    margin-top: 20px;
+}
+
+.splash-minted-mobile .minted-title .minted-btn {
+    margin: 40px 0;
+}
+
+.splash-minted-mobile .minted-title .minted-btn button {
+    padding: 14px 22px;
+    background: #5D5FEF;
+    color: #fff;
+    border-radius: 60px;
+    font-size: 16px;
+    line-height: 28px;
+    font-weight: 400;
+    border: none;
+}
+
+.streaming-nft-block .nft-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+.streaming-nft-block .nft-box img {
+    width: 200px;
+    height: 200px;
+    margin-right: 32px;
+}
+
+
+.nft-box .nft-description h4{
+    font-size: 17px;
+    line-height: 20px;
+    color: #fff;
+}
+
+.nft-box .nft-description h4 span {
+    color: #A5A6F6;
+}
+
+.nft-box .nft-description .nft-text {
+    color: #A7A6A6;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+}
+
+.nft-box .nft-description .btn-claim button{
+    background: none;
+    border: none;
+    color: #A5A6F6;
+    margin-top: 8px;
+    text-decoration: underline;
+}
+
+.members-video-mobile {
+    padding: 56px 0;
+    /* background: #BDBDBD; */
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.members-video-mobile .video-pic img {
+    width: 454px;
+    height: 426px;
+}
+
+.members-title-mobile h3 {
+    font-size: 26px;
+    line-height: 30px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.members-title-mobile h3 span {
+    color: #5D5FEF;
+}
+
+.members-title-mobile .members-desc {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #A7A6A6;
+    margin: 20px 0;
+}
+
+.members-video-mobile  .btn-learn-more button{
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 20px;
+}
+
+.nft-score-mobile {
+    /* background: #838383; */
+    padding: 16px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 60px;
+}
+
+.nft-score-mobile .score-num {
+    font-size: 28px;
+    line-height: 34px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.nft-score-mobile .stats {
+    font-size: 13px;
+    line-height: 28px;
+    color: #A5A6F6;
+}
+
+.content-owners-mobile {
+    background: #000;
+    padding: 45px 16px;
+
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+}
+
+.content-owners-mobile .owner-box  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-owners-mobile .owner-box:first-child {
+}
+
+.content-owners-mobile .owner-box .owner-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 280px;
+    height: 135px;
+}
+
+.content-owners-mobile .owner-box:last-child .owner-img img {
+    width: 214px;
+    height: 31px;
+}
+
+.content-owners-mobile .owner-box .owner-title-mobile {
+    margin: 8px 0;
+}
+
+.content-owners-mobile .owner-box .owner-title-mobile h5 {
+    font-size: 22px;
+    line-height: 25.2px;
+    font-weight: 700;
+}
+
+.content-owners-mobile .owner-box .owner-desc {
+    font-size: 11px;
+    line-height: 17px;
+    font-weight: 400;
+    color: #A7A6A6;
+
+    margin-bottom: 8px;
+}
+
+.content-owners-mobile .owner-box .owner-btn-learn button{
+    font-size: 15px;
+    color: #fff;
+    background: none;
+    border: none;
+    text-decoration: underline;
+}
+
+.footer-nipsey-mobile {
+    padding: 26px 16px;
+    background: #000;
+}
+
+.footer-nipsey-mobile img{
+    width: 100px;
+    height: auto;
+}
+
+.footer-nipsey-mobile .nipsey-adress-mobile {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 15px;
+    color: #A5A6F6;
+    margin-top: 16px;
+}
+
+.social-media-nipsey {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.social-media-nipsey div {
+    margin-right: 16px;
+    transition: .2s all ease;
+    cursor: pointer;
+}
+
+.social-media-nipsey div:last-child {
+    margin-right: 0px;
+}
+
+.social-media-nipsey div:hover {
+    background: #fff;
+    color: #000;
+}
+
+
+/* Release Block*/
+
+.nipsey-release {
+    margin: 108px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.nipsey-release .release-container-title {
+    font-size: 40px;
+    text-align: left;
+    margin-bottom: 42px;
+}
+
+.release-container .tabs-box .tab-title-box {
+    width: 274px;
+    height: 60px;
+    border-radius: 16px;
+    background: #5B49AF;
+    font-size: 24px;
+    font-weight: 700;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.release-container .tabs-box:nth-child(2) .tab-title-box {
+    background: #CD6116;
+}
+
+.release-container .tabs-box:nth-child(3) .tab-title-box {
+    background: #DD7ED6;
+}
+
+.release-container .tabs-box:last-child .tab-title-box {
+    background: #00AEEF;
+}
+
+.release-container .tabs-box .tab-text-box {
+    padding: 24px 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.release-container .tabs-box .tab-text-box p {
+    margin: 0;
+}
+
+.nipsey-release .release-container:last-child {
+    width: 700px;
+    margin-left: 120px;
+}
+
+.nipsey-release .release-desc-nipsey .release-desc-nipsey-box {
+    padding: 25px;
+    border: 2px dashed #4E4D4D;
+    font-size: 18px;
+    line-height: 32px;
+    text-align: left;
+    margin-bottom: 25px;
+    border-radius: 16px;
+}
+
+.nipsey-release .release-artwork-desc {
+    text-align: left;
+}
+
+.nipsey-release .release-artwork-desc-title {
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 28px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+
+.nipsey-release .release-artwork-desc-text {
+    font-size: 18px;
+}
+
+.release-join-discord {
+    margin-top: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.release-join-discord .mailchimp .email-box {
+    width: 351px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #A46BD9;
+    background: none;
+    padding: 0 30px;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+}
+.release-join-discord .mailchimp .email-box button {
+    border: none;
+    background: none;
+    color: #A46BD9;
+    font-size: 24px;
+    transition: .3s all ease;
+    /* margin-left: -10px; */
+}
+
+.release-join-discord .mailchimp .email-box button:disabled {
+    color: grey;
+}
+
+.release-join-discord .mailchimp .email-box button:hover {
+    margin-left: 6px;
+    color: #DD7ED6;
+    outline: none;
+}
+
+.release-join-discord .mailchimp input.email {
+    color: #fff;
+    border: none;
+    background: none;
+    outline: none;
+    -webkit-appearance: none;
+    width: 300px;
+}
+
+.release-join-discord .mailchimp input.email:active {
+    background: none;
+}
+
+.btn-discord {
+    margin-top: 24px;
+}
+
+.btn-discord a {
+    text-decoration: none;
+    /* width: 351px; */
+    padding: 10px 20px;
+    /* height: 50px; */
+    border-radius: 10px;
+    background: #A46BD9;
+    font-size: 24px;
+    border: none;
+    color: #fff;
+    transition: .3s all ease;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-discord a:hover {
+    background: #8542c4;
+}
+
+.btn-discord a img {
+    margin-right: 10px;
+    width: 38px;
+    height: auto;
+}
+
+.nipsey-roadmap {
+    margin: 108px 0;
+}
+
+.nipsey-roadmap-title {
+    font-size: 40px;
+    text-align: left;
+    margin-bottom: 33px;
+}
+
+.roadmap-box .roadmap-box-desc {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.roadmap-box:nth-child(2) {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.roadmap-box:nth-child(2) p {
+    font-size: 18px;
+    margin-bottom: 4px;
+    text-align: left;
+}
+
+.roadmap-box:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress {
+    padding: 30px 0;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress-text {
+    width: 80%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .progress-line-pink, .progress-line-grey {
+    position: absolute;
+    height: 3px;
+    width: 50%;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .progress-line-pink {
+    left: 0;
+    top: 50px;
+    z-index: 1;
+    background: #E882D5;
+}
+
+
+.roadmap-box:nth-child(3) .roadmap-progress .progress-line-grey {
+    right: 0;
+    top: 50px;
+    z-index: 1;
+    background: #383637;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .roadmap-progress-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #E882D5;
+    font-weight: 700;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.roadmap-box:nth-child(3) .roadmap-progress .roadmap-progress-circle:last-child {
+    background: #383637;
+}
+
+.roadmap-container {
+    width: 100%;
+    border-radius: 16px;
+    border: 2px dashed #4E4D4D;
+    padding: 50px 45px;
+}
+
+.nipsey-img-masks img {
+    width: 300px;
+    height: auto;
+}
+
+/* Media */
+
+@media screen and (max-width: 1300px) {
+    .home-splash--page .information-author {
+        background-size: 400px auto;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .home-splash--page .information-author {
+        background-size: 350px auto;
+        background-position: 95% 60px;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .nipsey-release .release-container:last-child {
+        margin-left: 60px;
+    }
+}
+
+@media screen and (max-width: 1090px) {
+    .nipsey-release .release-container:last-child {
+        margin-left: 0px;
+    }
+
+    .nipsey-release {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nipsey-release .release-join-discord {
+        align-items: center;
+    }
+
+    .nipsey-comming-soon .information-author {
+        background-size: 350px auto;
+    }
+}
+
+@media screen and (max-width: 1007px) {
+    .nipsey-comming-soon {
+        margin-bottom: 108px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .nipsey-roadmap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .roadmap-container {
+        width: 90%;
+    }
+
+    .nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+        background-size: 300px auto;
+    }
+
+    .footer ul li {
+        font-size: 15px;
+    }
+
+    .home-splash--page .offer-desp {
+        margin-right: 20px;
+    }
+}
+
+@media screen and (max-width: 920px) {
+    .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
+        max-width: 800px !important;
+    }
+}
+
+@media screen and (max-width: 900px) {
+
+    .splash-team {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .meet-team .box-teammate {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .position-teammate .teammate-description {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 820px) {
+    .nipsey-thank-you-page, .nipsey-comming-soon{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
+        width: 100%;
+        background-image: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author .text-splash, .nipsey-comming-soon .information-author .text-splash {
+        text-align: center;
+    }
+
+    .nipsey-thank-you-page .information-author .text-splash .text-description, .nipsey-comming-soon .information-author .text-splash .text-description {
+        text-align: center;
+    }
+
+    .nipsey-thank-you-page .information-author .release-join-discord, .nipsey-comming-soon .information-author .release-join-discord {
+        align-items: center;
+    }
+
+    .nipsey-thank-you-page .information-author .nipsey-thank-you-page .information-author, .nipsey-comming-soon  .information-author .nipsey-thank-you-page .information-author {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width:728px) {
+    .nipsey-release .release-container-title {
+        text-align: center;
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
+
+    .nipsey-release .release-container:last-child {
+        width: 95%;
+    }
+
+    .nipsey-release .release-desc-nipsey .release-desc-nipsey-box {
+        padding: 15px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .content-owners-mobile .owner-box .owner-img {
+        width: 200px;
+    }
+
+    .content-owners-mobile .owner-box .owner-img img, .content-owners-mobile .owner-box:last-child .owner-img img {
+        width: 200px;
+        height: auto;
+    }
+
+    .release-container .tabs-box .tab-title-box {
+        width: 200px;
+    }
+    
+    .nipsey-comming-soon .information-author, .nipsey-thank-you-page .information-author {
+        width: 95%;
+    }
+
+    .nipsey-comming-soon, .nipsey-thank-you-page  {
+        padding-bottom: 100px;
+    }
+
+    .footer ul {
+        flex-direction: column;
+    }
+    .footer ul li {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 528px) {
+    .nipsey-comming-soon {
+        margin-bottom: 208px;
+    }
+
+    .nipsey-comming-soon .text-splash .text-description {
+        font-size: 18px;
+        width: 100%;
+        
+    }
+}
+
+.btn-timer-nipsey {
+    color: #000;
+}
+
+@media screen and (max-width: 503px) {
+    .nipsey-thank-you-page {
+        margin-bottom: 208px;
+    }
+
+    .text-splash .title-splash span, .text-splash .title-splash.nipsey h4 {
+        font-size: 40px;
+    }
+
+    .nipsey-thank-you-page .block-splash .logo-author img:first-child {
+        width: 250px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .home-splash-mobile .img-teammate img {
+        width: 300px;
+        height: 300px;
+    }
+
+    .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
+        margin-left: 0px;
+    }
+     
+    .content-owners-mobile {
+        flex-direction: column;
+    }
+
+    .members-video-mobile .video-pic img {
+        width: 300px;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .streaming-nft-block .nft-box {
+        flex-direction: column;
+    }
+    
+    .streaming-nft-block .nft-box img {
+        margin-right: 0;
+        margin-bottom: 16px;
+    }
+
+    .nipsey-release .release-container:last-child {
+        width: 90%;
+    }
+
+    .release-join-discord .mailchimp .email-box {
+        width: 300px;
+    }
+
+    .release-join-discord .mailchimp input.email {
+        width: 200px;
+    }
+}
+
+
+@media screen and (max-width: 370px) {
+    .block-splash .logo-author img:first-child {
+        width: 290px;
+    }
+}
+
+/* Nutcrackers */
+
+.home-splash--page .information-author.nutcrackers {
+    background-image: url('./images/bg-nuts.png');
+    background-size: cover;
+}
+
+.information-author.nutcrackers .nut-block-img {
+    width: 400px;
+    height: auto;
+    margin-left: 50px;
+}
+
+.information-author.nutcrackers .block-splash {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey h3{
+    font-size: 33px;
+    color: #000;
+}
+
+.information-author.nutcrackers .block-splash .title-splash.nipsey span{
+    font-size: 42px;
+    color: #A12921;
+}
+
+.information-author.nutcrackers .block-splash .text-splash .text-description {
+    width: 100%;
+}
+
+.information-author.nutcrackers .btn-buy-metamask button{
+    background: #A12921;
+}
+
+.wrapper-splash-page.nutcrackers .left-tokens .block-left-tokens {
+    background: url('./images/nft-token-nuts.png') center center;
+    background-size: cover;
+}
+
+.wrapper-splash-page.nutcrackers {
+    background-image: none;
+}
+
+.wrapper-splash-page.nutcrackers .block-photos-nuts{
+    margin: 108px 0;
+    width: 1200px;
+    height: 577px;
+    background: url('./images/block-nuts-photos.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 16px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text {
+    margin-top: 42px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p{
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.wrapper-splash-page.nutcrackers .crackers-text p:last-child {
+    margin-bottom: 0;
+}
+
+.wrapper-splash-page.nutcrackers .community-description {
+    background: none !important;
+    padding-left: 0;
+    justify-content: center;
+}
+
+.wrapper-splash-page.nutcrackers .community-description p {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.wrapper-splash-page.nutcrackers .community-description .join-pic img {
+    width: 300px;
+    height: auto;
+}
+
+.wrapper-splash-page.nutcrackers .powered-by-rair {
+    margin: 58px 0 200px 0;
+}
+
+.wrapper-splash-page.nutcrackers .powered-by-rair img {
+    width: 500px;
+    height: auto;
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 180px;
+        padding: 0 20px;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 1000px;
+        height: 500px;
+    }
+} 
+
+@media screen and (max-width: 1100px) {
+    .home-splash--page .information-author.nutcrackers {
+        background-position: 100%;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 900px;
+        height: 450px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 90vw;
+        height: 40vh;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 280px;
+    }
+
+    .wrapper-splash-page .join-community .join-community .title-join h3{
+        text-align: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        margin-top: 30px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .join-pic img {
+        margin-right: 120px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        width: 90vw;
+    }
+}
+
+@media screen and (max-width: 825px) {
+    .home-splash--page .information-author.nutcrackers .block-splash{
+        flex-direction: column;
+    }
+
+    .home-splash--page .information-author.nutcrackers .text-splash {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        margin-left: 0;
+        margin-bottom: 20px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask {
+        margin-top: 30px;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    .wrapper-splash-page.nutcrackers .powered-by-rair {
+        margin: 0px 0 300px 0;
+    }
+    
+    .wrapper-splash-page.nutcrackers .powered-by-rair img {
+        width: 300px;
+        height: auto;
+    }
+} 
+
+@media screen and (max-width: 570px) {
+    .wrapper-splash-page.nutcrackers .crackers-text p, .wrapper-splash-page.nutcrackers .community-description p {
+        font-size: 18px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community .title-join h3, .wrapper-splash-page.nutcrackers .join-community .title-join h3 span {
+        font-size: 33px;
+        text-align: center;
+    }
+}
+
+
+@media screen and (max-width: 450px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 400px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .information-author.nutcrackers .text-splash .text-description div{
+        width: 90%;
+        text-align: center;
+    }
+
+    .information-author.nutcrackers .text-splash .text-description {
+        display: flex;
+        justify-content: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        width: 290px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask button {
+        width: 250px;
+        height: 54px;
+    }
+}
+
+@media screen and (max-width: 355px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 500px;
+    }
+}
