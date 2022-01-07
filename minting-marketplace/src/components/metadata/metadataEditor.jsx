@@ -135,7 +135,7 @@ const MetadataEditor = (props) => {
 	
 	const [sendingProductMetadata, setSendingProductMetadata] = useState(false);
 	const [sendingContractMetadata, setSendingContractMetadata] = useState(false);
-	const [/*sendingOpenSeaMetadata*/, setSendingOpenSeaMetadata] = useState(false);
+	const [sendingOpenSeaMetadata, setSendingOpenSeaMetadata] = useState(false);
 	const [productURI, setProductURI] = useState('');
 	const [contractURI, setContractURI] = useState('');
 	const [openSeaContractURI, setOpenSeaContractURI] = useState('');
@@ -498,7 +498,6 @@ const MetadataEditor = (props) => {
 							}
 							setSendingOpenSeaMetadata(true);
 							let instance = contractCreator(params.contract, erc721Abi);
-							console.log(instance)
 							try {
 								await instance.setContractURI(openSeaContractURI);
 							} catch (err) {

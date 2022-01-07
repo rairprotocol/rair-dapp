@@ -444,10 +444,10 @@ function App({ sentryHistory }) {
 										<FileUpload primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>}
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
-									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
+									{loginDone && <SentryRoute path='/batch-metadata/:blockchain/:contract/:product' component={CreateBatchMetadata} />}
 									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
-									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+									{loginDone && <SentryRoute exact path='/metadata/:blockchain/:contract/:product' component={MetadataEditor} />}
 									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 									{loginDone && <SentryRoute exact path='/my-items' >
 										<MyItems goHome={goHome} />
