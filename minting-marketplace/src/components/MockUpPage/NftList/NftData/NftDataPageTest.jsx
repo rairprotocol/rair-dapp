@@ -159,37 +159,41 @@ const NftDataPageTest = ({
     // );
 
     // v2
-        // return tokenData.map((el, index) => {
-    //   if (Number(el.token) === Number(selectedToken)) {
-    //     return  (
-    //       <a className="nftDataPageTest-a-hover" key={index} href={el?.authenticityLink}>
-    //         {el?.authenticityLink}
-    //       </a>
-    //     );
-    //   }
-    //   //  else {
-    // return <span style={{cursor:"default"}}>Not minted yet</span>;
-    //   // }
-    // });
+    return tokenData.map((el, index) => {
+      if (Number(el.token) === Number(selectedToken)) {
+        return (
+          <a
+            className="nftDataPageTest-a-hover"
+            key={index}
+            href={el?.authenticityLink}
+          >
+            {el?.authenticityLink}
+          </a>
+        );
+      }
+      //   //  else {
+      // return <span style={{cursor:"default"}}>Not minted yet</span>;
+      //   // }
+    });
 
-    if (tokenData[selectedToken]) {
-      // eslint-disable-next-line array-callback-return
-      return tokenData.map((el, index) => {
-        if (Number(el.token) === Number(selectedToken)) {
-          return (
-            <a
-              className="nftDataPageTest-a-hover"
-              key={index}
-              href={el?.authenticityLink}
-            >
-              {el?.authenticityLink}
-            </a>
-          );
-        }
-      });
-    } else {
-      return <span style={{ cursor: "default" }}>Not minted yet</span>;
-    }
+    // if (tokenData[selectedToken]) {
+    // eslint-disable-next-line array-callback-return
+    //     return tokenData.map((el, index) => {
+    //       if (Number(el.token) === Number(selectedToken)) {
+    //         return (
+    //           <a
+    //             className="nftDataPageTest-a-hover"
+    //             key={index}
+    //             href={el?.authenticityLink}
+    //           >
+    //             {el?.authenticityLink}
+    //           </a>
+    //         );
+    //       }
+    //     });
+    //   } else {
+    //     return <span style={{ cursor: "default" }}>Not minted yet</span>;
+    //   }
   }
 
   const switchEthereumChain = async (chainData) => {
