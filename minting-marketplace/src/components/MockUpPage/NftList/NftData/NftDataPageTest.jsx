@@ -2,7 +2,7 @@ import React, { useState /*useCallback*/ } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-
+import { utils } from 'ethers';
 import {
   Accordion,
   AccordionItem,
@@ -10,6 +10,7 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
+import { metamaskCall } from '../../../../utils/metamaskUtils.js';
 
 import Carousel from "react-multi-carousel";
 import chainDataFront from "../../utils/blockchainDataFront";
@@ -17,6 +18,7 @@ import ItemRank from "../../SelectBox/ItemRank";
 import OfferItem from "../OfferItem";
 import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
 import ReactPlayer from "react-player";
+import chainData from '../../../../utils/blockchainData.js';
 
 import "react-multi-carousel/lib/styles.css";
 
@@ -269,20 +271,21 @@ const NftDataPageTest = ({
   };
 
   const buyContract = async () => {
-    try {
-      await minterInstance.buyToken(
+    Swal.fire({title: 'Buying token', html: 'Awaiting transaction completion', icon: 'info', showConfirmButton: false});
+    if (
+      await metamaskCall(minterInstance.buyToken(
         offerData.offerPool,
         offerData.offerIndex,
         selectedToken,
         { value: offerData.price }
-      );
-      Swal.fire("Success", "Now, you are the owner of this token", "Success");
-    } catch (err) {
-      Swal.fire("Error", err?.data?.message, "error");
+      ))
+    ) {
+      Swal.fire('Success', 'Now, you are the owner of this token', 'success');
     }
   };
 
   function checkOwner() {
+    let price = offerData?.price || minPrice;
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
       return (
         <button
@@ -302,7 +305,8 @@ const NftDataPageTest = ({
     } else
       return (
         <button
-          className="nftDataPageTest-buy-btn"
+          className="btn rounded-rair btn-stimorol"
+          disabled={!offerData?.offerPool}
           onClick={
             window?.ethereum?.chainId === blockchain
               ? buyContract
@@ -321,7 +325,7 @@ const NftDataPageTest = ({
           }}
         >
           {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
-          {`Purchase • ${offerData?.price || minPrice} `}
+          Purchase • {utils.formatEther(price !== Infinity && price !== undefined ? price : 0).toString()} {chainData[blockchain]?.symbol}
         </button>
       );
   }
