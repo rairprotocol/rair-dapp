@@ -59,7 +59,7 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 	const sendMetadata = async (updateMeta) => {
 		let formData = new FormData();
 		formData.append('product', collectionIndex);
-		formData.append('contract', address._id);
+		formData.append('contract', contractData._id);
 		formData.append('updateMeta', updateMeta);
 		formData.append('csv', csvFile, 'metadata.csv');
 		let response = await rFetch('/api/nft', {
