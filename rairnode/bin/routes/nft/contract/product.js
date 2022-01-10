@@ -23,7 +23,7 @@ module.exports = context => {
       const tokens = await context.db.MintedToken.find({
         contract: contract._id,
         offerPool: offerPool.marketplaceCatalogIndex,
-        token: !!lastToken ? { $gt: (firstToken - 1), $lt: lastToken } : { $gt: (firstToken - 1) }
+        token: !!lastToken ? { $gt: (firstToken - 1), $lt: (lastToken + 1) } : { $gt: (firstToken - 1) }
       })
         .sort([['token', 1]])
         .limit(numberOfTokens);

@@ -41,7 +41,8 @@ const InputField = ({
 	disabled,
 	requiredColor,
 	min,
-	max
+	max,
+	maxlength
 }) => {
 	const [id,] = useState(Number(new Date()) + '-' + Math.round(Math.random() * 1000000))
 	
@@ -67,6 +68,7 @@ const InputField = ({
 			required={required ? required : false}
 			min={min}
 			max={max}
+			maxlength={maxlength}
 			placeholder={placeholder + (required ? '*' : '')} />
 	</>
 }
