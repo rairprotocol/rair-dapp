@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import { erc721Abi } from '../../contracts/index.js'
 import { rFetch } from '../../utils/rFetch.js';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 import Swal from 'sweetalert2';
 
 import "./SplashPage.css";
@@ -117,19 +118,15 @@ const SplashPage = () => {
       Swal.fire('Error', 'An error has ocurred', 'error');
       return;
     }
-    try {
-      await (await minterInstance.buyToken(
+    if (await metamaskCall(minterInstance.buyToken(
         products[0].offerPool.marketplaceCatalogIndex,
         firstPressingOffer.offerIndex,
         nextToken,
         {
           value: firstPressingOffer.price
         }
-      )).wait();
-      Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
-    } catch (e) {
-      console.error(e);
-      Swal.fire('Error', e?.message, 'error');
+      ))) {
+      Swal.fire('Success',`Bought token #${nextToken}!`,'success');
     }
   }
 

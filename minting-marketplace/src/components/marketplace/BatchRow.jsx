@@ -12,12 +12,12 @@ const BatchRow = ({index, deleter, array}) => {
 
 	const addressChange = (e) => {
 		setAddress(e.target.value);
-		array[index].address = e.target.value;
+		array[index]['Public Address'] = e.target.value;
 	}
 
 	const tokenChange = (e) => {
 		setToken(e.target.value);
-		array[index].token = e.target.value;
+		array[index]['NFTID'] = e.target.value;
 	}
 
 	return <div className='col-12 row px-0 mx-0'>

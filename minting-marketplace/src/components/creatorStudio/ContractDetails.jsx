@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import chainData from '../../utils/blockchainData.js'
 import InputField from '../common/InputField.jsx';
 import { rFetch } from '../../utils/rFetch.js';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 import Swal from 'sweetalert2';
 import { useParams, useHistory } from 'react-router-dom';
 import {erc721Abi} from '../../contracts';
@@ -109,16 +110,16 @@ const ContractDetails = () => {
 							// Code for suresh goes here
 						}
 					} else {
-						try {
-							Swal.fire({
-								title: 'Creating collection!',
-								html: 'Please wait...',
-								icon: 'info',
-								showConfirmButton: false
-							});
-							setCreatingCollection(true);
-							let instance = await contractCreator(data.contractAddress, erc721Abi);
-							await (await instance.createProduct(collectionName, collectionLength)).wait();
+						Swal.fire({
+							title: 'Creating collection!',
+							html: 'Please wait...',
+							icon: 'info',
+							showConfirmButton: false
+						});
+						setCreatingCollection(true);
+						let instance = await contractCreator(data.contractAddress, erc721Abi);
+						let success = await metamaskCall(instance.createProduct(collectionName, collectionLength));
+						if (success) {
 							Swal.fire({
 								title: 'Success!',
 								html: 'Collection created',
@@ -127,9 +128,6 @@ const ContractDetails = () => {
 							});
 							setCollectionName('');
 							setCollectionLength(0);
-						} catch (err) {
-							console.error(err)
-							Swal.fire('Error', err?.message ? err.message : err.toString(), 'error');
 						}
 						setCreatingCollection(false);
 					}

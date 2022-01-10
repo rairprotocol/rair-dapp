@@ -69,7 +69,7 @@ const Contract = ({contractAddress, blockchain, title}) => {
 										<div style={{position: 'absolute', top: 0, left: 0}}>
 											{product.firstTokenIndex}...
 										</div>
-										<Link to={`/rair/${data.contractAddress}/${product.collectionIndexInContract}`}>
+										<Link to={`/rair/${blockchain}/${data.contractAddress}/${product.collectionIndexInContract}`}>
 											{product.name}
 										</Link>
 										<br />
@@ -88,7 +88,7 @@ const Contract = ({contractAddress, blockchain, title}) => {
 												catalogIndex={product.offers?.length ? product.offers[0]?.offerPool : undefined}
 												customStyle={{borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRight: 'none', paddingTop: 0, paddingBottom: 0}}
 											/>
-											<Link className='btn py-0 btn-stimorol' style={{borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0}} to={`/metadata/${data.contractAddress}/${product.collectionIndexInContract}`}>
+											<Link className='btn py-0 btn-stimorol' style={{borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0}} to={`/metadata/${blockchain}/${data.contractAddress}/${product.collectionIndexInContract}`}>
 												Edit Metadata!
 											</Link>
 										</>}
