@@ -3,9 +3,8 @@ import './Countdown.css';
 import moment from 'moment-timezone';
 
 
-const CountdownComponent = () => {
+const CountdownComponent = ({ setTimerLeft }) => {
     const dec = moment(new Date("2022-01-06T19:00:00-08:00"));//.tz("America/New_York");
-
     const [countdownDate, /*setCountdownDate*/] = useState(dec);
 
     const [state, setState] = useState({
@@ -16,9 +15,10 @@ const CountdownComponent = () => {
     });
 
     const setNewTime = useCallback(() => {
+        let currentTime = new Date().getTime();
+        let distanceToDate = countdownDate - currentTime;
+
         if (countdownDate) {
-            const currentTime = new Date().getTime();
-            const distanceToDate = countdownDate - currentTime;
             let days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
             let hours = Math.floor(
                 (distanceToDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -38,6 +38,10 @@ const CountdownComponent = () => {
             }
             setState({ days: days, hours: hours, minutes, seconds });
         }
+        if (distanceToDate <= 0 && setTimerLeft) {
+            setTimerLeft(0);
+        }
+
     }, [countdownDate]);
     useEffect(() => {
         const interval = setInterval(() => setNewTime(), 1000);
