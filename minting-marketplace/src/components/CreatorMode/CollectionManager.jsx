@@ -258,7 +258,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			className='btn btn-warning'
 			id={`metadata_${productIndex + 1}`}
 			style={{position: 'absolute', top: 0, right: 0}}
-			to={`/metadata/${tokenInstance.address}/${productIndex}`}>
+			to={`/metadata/${window.ethereum.chainId}/${tokenInstance.address}/${productIndex}`}>
 			Edit Metadata!
 		</Link>
 		<summary>

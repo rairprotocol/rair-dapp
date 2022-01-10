@@ -21,7 +21,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		if (minterAddress) {
 			setMinterInstance(contractCreator(minterAddress, minterAbi));
 		}
-	}, [minterAddress])
+	}, [minterAddress, contractCreator])
 
 	const batchMint = async (data) => {
 		let addresses = data.map(i => i['Public Address']);
