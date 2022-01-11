@@ -1,6 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
-const { validation } = require('../../../middleware');
+const { validation } = require('../../../../middleware');
 
 module.exports = context => {
   const router = express.Router();
@@ -46,65 +46,6 @@ module.exports = context => {
         .distinct('token');
 
       return res.json({ success: true, tokens });
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  // Get specific token by internal token ID
-  router.get('/token/:token', async (req, res, next) => {
-    try {
-      const { contract, product } = req;
-      const { token } = req.params;
-      const sanitizedToken = Number(token);
-      const result = await context.db.OfferPool.aggregate([
-        { $match: { contract: contract._id, product } },
-        {
-          $lookup: {
-            from: "MintedToken",
-            let: {
-              contractOP: '$contract',
-              offerPoolIndex: '$marketplaceCatalogIndex',
-              tokenRequested: sanitizedToken
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          "$contract",
-                          "$$contractOP"
-                        ]
-                      },
-                      {
-                        $eq: [
-                          "$offerPool",
-                          "$$offerPoolIndex"
-                        ]
-                      },
-                      {
-                        $eq: [
-                          "$token",
-                          "$$tokenRequested"
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            as: "mintedTokens"
-          }
-        },
-        { $unwind: '$mintedTokens' },
-        { $replaceRoot: { newRoot: '$mintedTokens' } },
-      ]);
-
-      const re = _.head(result)
-
-      res.json({ success: true, result: re ? re : null });
     } catch (err) {
       next(err);
     }
@@ -240,6 +181,24 @@ module.exports = context => {
       next(err);
     }
   });
+
+  // Token endpoints
+  router.use('/token/:token', async (req, res, next) => {
+    try {
+      const { contract, product } = req;
+      req.token = Number(req.params.token);
+
+      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product })
+
+      if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPool not found.' });
+
+      req.offerPool = offerPool;
+
+      return next();
+    } catch (e) {
+      return next(e);
+    }
+  }, require('./token')(context));
 
   return router;
 };

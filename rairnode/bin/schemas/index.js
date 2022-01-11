@@ -21,6 +21,7 @@ const nftContract = require('./nftContract');
 const nftProduct = require('./nftProduct');
 const getTokensByContractProduct = require('./getTokensByContractProduct');
 const search = require('./search');
+const updateTokenMetadata = require('./updateTokenMetadata');
 
 module.exports = {
   admin,
@@ -45,5 +46,6 @@ module.exports = {
   nftContract,
   nftProduct,
   getTokensByContractProduct,
-  search
+  search,
+  updateTokenMetadata
 };
