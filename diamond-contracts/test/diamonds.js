@@ -1147,6 +1147,26 @@ describe("Diamonds", function () {
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("");
 		})
+
+		it ("Should set the baseURI without the token index", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.setBaseURI("rair.cryptograyman.com/", false))
+				.to.emit(metadataFacet, 'BaseURIChanged')
+				.withArgs("rair.cryptograyman.com/", false);
+
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("rair.cryptograyman.com/");
+		});
+
+		it ("Should set the productURI without the token index", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(await metadataFacet.setProductURI(1, "rair.cryptograyman.com/product", false))
+				.to.emit(metadataFacet, 'ProductURIChanged')
+				.withArgs(1, "rair.cryptograyman.com/product", false);
+				
+			await expect(await metadataFacet.tokenURI(100))
+				.to.equal("rair.cryptograyman.com/product");
+		});
 	});
 
 	describe("NFT Trading", () => {
