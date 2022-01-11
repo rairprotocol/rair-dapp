@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const { JWTVerification, validation } = require('../../../../../middleware');
-const { addMetadata, addPin } = require('../../../../../integrations/ipfsService')();
+const { addMetadata, addPin, removePin } = require('../../../../../integrations/ipfsService')();
 
 module.exports = context => {
   const router = express.Router();
@@ -60,6 +60,7 @@ module.exports = context => {
     try {
       const { contract, offerPool, token } = req;
       const { user } = req;
+      const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
       let metadataURI = 'none';
 
       if (user.publicAddress !== contract.user) {
@@ -85,6 +86,14 @@ module.exports = context => {
         const CID = await addMetadata(foundToken.metadata, _.get(foundToken.metadata, 'name', 'none'));
         await addPin(CID, `metadata_${ _.get(foundToken.metadata, 'name', 'none') }`);
         metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
+      }
+
+      if (reg.test(foundToken.metadataURI)) {
+        const CID = _.chain(foundToken.metadataURI)
+          .split('/')
+          .last()
+          .value();
+        await removePin(CID);
       }
 
       await foundToken.updateOne({ metadataURI });
