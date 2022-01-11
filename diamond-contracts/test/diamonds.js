@@ -1049,9 +1049,9 @@ describe("Diamonds", function () {
 			let metadataFacet = (await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress)).connect(addr2);
 			await expect(metadataFacet.setContractURI("DEV.RAIR.TECH"))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
-			await expect(metadataFacet.setBaseURI("devs.rairs.techs/"))
+			await expect(metadataFacet.setBaseURI("devs.rairs.techs/", true))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
-			await expect(metadataFacet.setProductURI(1, 'first.rair.tech'))
+			await expect(metadataFacet.setProductURI(1, 'first.rair.tech', true))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
 			await expect(metadataFacet.setUniqueURI(100, 'hundreth.rair.tech/ASDF'))
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
@@ -1068,18 +1068,18 @@ describe("Diamonds", function () {
 
 		it ("Should set the token's base URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
-			await expect(await metadataFacet.setBaseURI("devs.rairs.techs/"))
+			await expect(await metadataFacet.setBaseURI("devs.rairs.techs/", true))
 				.to.emit(metadataFacet, 'BaseURIChanged')
-				.withArgs('devs.rairs.techs/');
+				.withArgs('devs.rairs.techs/', true);
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("devs.rairs.techs/100");
 		});
 
 		it ("Should set the token's product URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
-			await expect(await metadataFacet.setProductURI(1, 'first.rair.tech/'))
+			await expect(await metadataFacet.setProductURI(1, 'first.rair.tech/', true))
 				.to.emit(metadataFacet, 'ProductURIChanged')
-				.withArgs(1, 'first.rair.tech/');
+				.withArgs(1, 'first.rair.tech/', true);
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("first.rair.tech/0");
 		});
@@ -1134,15 +1134,15 @@ describe("Diamonds", function () {
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("first.rair.tech/0");
-			await expect(await metadataFacet.setProductURI(1, ''))
+			await expect(await metadataFacet.setProductURI(1, '', true))
 				.to.emit(metadataFacet, 'ProductURIChanged')
-				.withArgs(1, '');
+				.withArgs(1, '', true);
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("devs.rairs.techs/100");
-			await expect(await metadataFacet.setBaseURI(""))
+			await expect(await metadataFacet.setBaseURI("", false))
 				.to.emit(metadataFacet, 'BaseURIChanged')
-				.withArgs('');
+				.withArgs('', false);
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("");

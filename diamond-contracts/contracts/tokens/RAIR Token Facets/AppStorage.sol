@@ -54,6 +54,8 @@ struct AppStorage721 {
 	mapping(uint => uint) tokenToRange;
 	mapping(uint => string) uniqueTokenURI;
 	mapping(uint => string) productURI;
+	mapping(uint => bool) appendTokenIndexToProductURI;
+	bool appendTokenIndexToBaseURI;
 	mapping(uint => uint[]) tokensByProduct;
 	string contractMetadataURI;
 	mapping(uint => uint) rangeToProduct;

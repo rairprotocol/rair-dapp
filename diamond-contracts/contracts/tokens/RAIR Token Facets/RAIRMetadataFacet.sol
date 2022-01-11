@@ -8,9 +8,9 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	using Strings for uint256;
 
-	event BaseURIChanged(string newURI);
+	event BaseURIChanged(string newURI, bool appendTokenIndex);
 	event TokenURIChanged(uint tokenId, string newURI);
-	event ProductURIChanged(uint productId, string newURI);
+	event ProductURIChanged(uint productId, string newURI, bool appendTokenIndex);
 	event ContractURIChanged(string newURI);
 
 	// For OpenSea's Freezing
@@ -50,9 +50,10 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @dev	Emits an event so there's provenance
 	/// @param	productId	Token Index that will be given an URI
 	/// @param	newURI		New URI to be given
-	function setProductURI(uint productId, string calldata newURI) public onlyRole(CREATOR) {
+	function setProductURI(uint productId, string calldata newURI, bool appendTokenIndexToProductURI) public onlyRole(CREATOR) {
 		s.productURI[productId] = newURI;
-		emit ProductURIChanged(productId, newURI);
+		s.appendTokenIndexToProductURI[productId] = appendTokenIndexToProductURI;
+		emit ProductURIChanged(productId, newURI, appendTokenIndexToProductURI);
 	}
 
 	function freezeMetadata(uint tokenId) public onlyRole(CREATOR) {
@@ -71,9 +72,10 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @notice	Sets the Base URI for ALL tokens
 	/// @dev	Can be overriden by the specific token URI
 	/// @param	newURI	URI to be used
-	function setBaseURI(string calldata newURI) external onlyRole(CREATOR) {
+	function setBaseURI(string calldata newURI, bool appendTokenIndexToBaseURI) external onlyRole(CREATOR) {
 		s.baseURI = newURI;
-		emit BaseURIChanged(newURI);
+		s.appendTokenIndexToBaseURI = appendTokenIndexToBaseURI;
+		emit BaseURIChanged(newURI, appendTokenIndexToBaseURI);
 	}
 
 	/// @notice	Returns a token's URI, could be specific or general
@@ -81,16 +83,24 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @param	tokenId		Token Index to look for
 	function tokenURI(uint tokenId) public view returns (string memory) {
 		require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-		
 		string memory URI = s.uniqueTokenURI[tokenId];
 		if (bytes(URI).length > 0) {
 			return URI;
 		}
 		URI = s.productURI[s.tokenToProduct[tokenId]];
 		if (bytes(URI).length > 0) {
-			return string(abi.encodePacked(URI, tokenToProductIndex(tokenId).toString()));
+			if (s.appendTokenIndexToProductURI[s.tokenToProduct[tokenId]]) {
+				return string(abi.encodePacked(URI, tokenToProductIndex(tokenId).toString()));
+			}
+			return URI; 
 		}
 		URI = s.baseURI;
-        return bytes(URI).length > 0 ? string(abi.encodePacked(URI, tokenId.toString())) : "";
+		if (bytes(URI).length > 0) {
+	        if (s.appendTokenIndexToBaseURI) {
+				return string(abi.encodePacked(URI, tokenId.toString()));
+			}
+			return URI;
+		}
+        return "";
 	}
 }
