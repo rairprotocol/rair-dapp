@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.10; 
+pragma solidity ^0.8.11; 
 
 import '../AppStorage.sol';
 import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
@@ -39,6 +39,7 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 		emit TokenNoLongerAccepted(_erc777Address, msg.sender);
 	}
 
+	/// @notice	Returns the number of required tokens, given an erc777 address
 	function getDeploymentCost(address erc777) public view returns (uint price) {
 		price = s.deploymentCostForToken[erc777];
 	}

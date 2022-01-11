@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.10; 
+pragma solidity ^0.8.11; 
 
 import '../AppStorage.sol';
 
@@ -9,6 +9,7 @@ contract creatorFacet is AccessControlAppStorageEnumerable {
 		return s.creators.length;
 	}
 
+	/// @notice Returns a single address inside the creators array
 	function getCreatorAtIndex(uint index) public view returns (address creator) {
 		creator = s.creators[index];
 	}
@@ -30,6 +31,7 @@ contract creatorFacet is AccessControlAppStorageEnumerable {
 		return s.creatorToContracts[deployer];
 	}
 
+	/// @notice Returns the address of the creator given a deployed contract's address
 	function contractToCreator(address deployedContract) public view returns (address creator) {
 		creator = s.contractToCreator[deployedContract];
 	}

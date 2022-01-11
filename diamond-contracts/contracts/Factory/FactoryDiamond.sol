@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.10; 
+pragma solidity ^0.8.11; 
 
 // Interfaces
 import "@openzeppelin/contracts/utils/introspection/IERC1820Registry.sol";
