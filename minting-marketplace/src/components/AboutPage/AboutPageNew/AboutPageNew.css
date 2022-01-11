@@ -10,8 +10,7 @@
 .home-about--page .information-author {
     position: relative;
     overflow: hidden;
-    padding: 94px 91px;
-    background-color: #fff;
+    padding: 94px 0;
     border-radius: 24px;
     display: flex;
     justify-content: flex-start;
@@ -20,7 +19,7 @@
     background-image: url('./../assets/aboutPage_bg-1.png');
     background-repeat: no-repeat;
     background-size: 55% auto;
-    background-position: 100% center;
+    background-position: 120% center;
 }
 
 .home-about--page .information-author .home-about--logo img {
@@ -48,12 +47,12 @@
 }
 
 .home-about-desc {
-    width: 500px;
+    /* width: 500px; */
     text-align: left;
 }
 
 .home-about-desc h2{
-    color: #4E4D4D;
+    color: #fff;
     font-weight: 800;
     line-height: 48px;
     font-size: 48px;
@@ -61,7 +60,7 @@
 
 .home-about-desc .autor-about-text {
     color: #A7A6A6;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 36px;
     font-weight: 700;
     margin: 27px 0;
@@ -161,10 +160,11 @@
     margin-bottom: 35px;
 }
 
-.about-rair-offer .about-offer-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.about-rair-offer .rair-offer-text {
+    text-align: left;
+    margin-top: 32px;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 .about-rair-offer .royalty-list ul {
@@ -198,6 +198,13 @@
     margin-top: 20px;
 }
 
+.streaming-box .streaming-offer {
+    background: #383637;
+    padding: 48px 44px;
+    border-radius: 16px;
+    width: 1200px; 
+}
+
 .streaming-box .streaming-offer button {
     width: 212px;
     height: 48px;
@@ -218,14 +225,17 @@
     background: none;
     border: 2.5px solid #4E4D4D;
     border-radius: 16px;
-    color: #A7A6A6;
+    color: #fff;
     cursor: not-allowed;
     display: block;
 }
 
 
 .streaming-offer.non-streaming {
-    margin-top: 55px;
+    margin-top: 24px;
+    background: none;
+    border-radius: 16px;
+    border: 2.5px dashed #4E4D4D;
 }
 
 .streaming-progress {
@@ -240,7 +250,7 @@
     position: absolute;
     height: 2px;
     background: #E882D5;
-    width: 259px;
+    width: 400px;
     left: 10px;
     top: 25px;
     z-index: 0;
@@ -249,8 +259,8 @@
 .streaming-progress .line-grey {
     position: absolute;
     height: 2px;
-    background: #383637;
-    width: 259px;
+    background: #222021;
+    width: 400px;
     right: 10px;
     top: 25px;
     z-index: 0;
@@ -260,7 +270,7 @@
     position: absolute;
     height: 2px;
     background: #383637;
-    width: 259px;
+    width: 400px;
     left: 10px;
     top: 25px;
     z-index: 0;
@@ -270,7 +280,7 @@
     position: absolute;
     height: 2px;
     background: #383637;
-    width: 259px;
+    width: 400px;
     right: 10px;
     top: 25px;
     z-index: 0;
@@ -286,7 +296,7 @@
 }
 
 .streaming-offer .progress-box:last-child {
-    background: #383637;
+    background: #222021;
 }
 
 .streaming-progress .progress-box {
@@ -303,7 +313,7 @@
 }
 
 .about-rair-offer .streaming-progress {
-    width: 530px;
+    width: 850px;
     display: flex;
     justify-content: space-between;
 }
@@ -311,11 +321,11 @@
 .about-rair-offer .streaming-percent {
     display: flex;
     justify-content: space-between;
-    width: 550px;
+    width: 850px;
 }
 
 .about-rair-offer .streaming-percent .percent {
-    font-size: 23px;
+    font-size: 20px;
     font-weight: 700;
 }
 
@@ -335,17 +345,22 @@
 }
 
 .left-tokens.about-page .block-left-tokens {
-    background: url('./../assets/rair-nfts-tokens.png') center center;
-    background-size: cover;
+    background-color: #fff;
+    background-image: url('./../assets/rair-prod.png');
+    background-size: 277px 347px;
+    background-repeat: no-repeat;
+    width: 476px;
+    height: 476px;
+
 }
 
 .about-streams-video {
     margin-bottom: 74px;
     padding-bottom: 100px;
-    background-image: url("./../assets/arrow-up-about.png");
+    /* background-image: url("./../assets/arrow-up-about.png");
     background-repeat: no-repeat;
     background-position: bottom center;
-    background-size: 250px auto;
+    background-size: 250px auto; */
 }
 
 .about-streams-video iframe {
@@ -362,6 +377,28 @@
     font-size: 40px;
     text-align: left;
     margin-bottom: 33px;
+}
+
+.about-streams-video .join-community .community-description .community-text{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.about-streams-video .join-community .community-description .community-text p span {
+    text-decoration: underline;
+    color: #E882D5;
+}
+
+.about-streams-video .join-community .community-description .community-text .btn-buy-metamask {
+    margin-top: 0;
+    margin-left: 90px;
+}
+
+.about-streams-video .join-community .community-description {
+    padding: 40px 84px 40px 40px;
 }
 
 .about-streams-video .about-video-tutorial-text {
@@ -395,7 +432,8 @@
 }
 
 .container-content-metamask .block-videos {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .container-content-metamask .box-video {
@@ -433,8 +471,7 @@
 }
 
 .tokenomics-ecosystem {
-    display: flex;
-    justify-content: space-between;
+    
     margin-top: 50px;
 }
 
@@ -442,28 +479,41 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
 }
 
 .tokenomics-ecosystem .ecosystem-list-text {
     font-size: 24px;
     line-height: 32px;
     margin-bottom: 50px;
+    text-align: left;
+}
+
+.tokenomics-ecosystem .ecosystem-list-text span {
+    color: #E882D5;
+    font-weight: 700;
 }
 
 .tokenomics-ecosystem .tokenomics-block-list {
-    width: 584px;
+    display: flex;
+    justify-content: space-between;
+    /* width: 300px; */
 }
 
 .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items {
     margin-bottom: 18px;
+    width: 350px;
+    margin-right: 16px;
+}
+
+.tokenomics-ecosystem .tokenomics-block-list .tokenomics-items:last-child {
+    margin-right: 0;
 }
 
 .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items .items-title {
-    width: 345px;
-    height: 52px;
-    color: #fff;
-    background: #BD6BAE;
+    width: 300px;
+    height: 40px;
+    color: #000;
+    background: #fff;
     border-radius: 10px;
     font-size: 22px;
 
@@ -473,11 +523,11 @@
 }
 
 .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items:nth-child(2) .items-title {
-    background: #5B49AF;
+    background: #fff;
 }
 
 .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items:last-child .items-title {
-    background: #1486C5;
+    background: #fff;
 }
 
 .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items p {
@@ -501,31 +551,61 @@
     font-weight: 400;
     font-size: 24px;
     line-height: 28px;
+    margin-top: 48px;
     margin-bottom: 50px;
+    text-align: left;
 }
 
 .ecosystem-airdrops .ecosystem-airdrops-text span {
     font-weight: 700;
 }
 
-.ecosystem-airdrops-list .airdrops-items {
+.ecosystem-airdrops-list {
     border: 2px dashed #4E4D4D;
-    width: 340px;
     border-radius: 16px;
-    margin-bottom: 18px;
-    padding: 26px 0;
+    padding: 25px;
 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.ecosystem-airdrops-list .airdrops-items {
+    /* border: 2px dashed #4E4D4D; */
+    /* width: 340px; */
+    border-radius: 16px;
+    /* padding: 26px 0; */
+    background: #fff;
+    padding: 0 32px;
+    width: 49%;
+    height: 48px;
+
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
+.block-view-eth-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.ecosystem-airdrops-list .airdrops-items ul li img {
+    width: auto;
+    height: 32px;
+    margin-right: 40px;
+}
+
+.ecosystem-airdrops-list .airdrops-items ul li:last-child img {
+    margin-right: 0;
+}
+
 .ecosystem-airdrops-list .airdrops-items .items-title {
-    height: 39px;
-    width: 238px;
+    /* height: 39px; */
+    /* width: 238px; */
     border-radius: 10px;
-    background: #F178B6;
+    /* background: #F178B6; */
+    color: #000;
 
     font-size: 22px;
     font-weight: 700;
@@ -538,6 +618,7 @@
 .ecosystem-airdrops-list .airdrops-items ul {
     padding: 0;
     margin-top: 18px;
+    display: flex;
 }
 
 .ecosystem-airdrops-list .airdrops-items ul li {
@@ -572,6 +653,13 @@
     margin-top: 50px;
 }
 
+.about-map-item {
+    border: 2px dashed #4E4D4D;
+    border-radius: 16px;
+    width: 474px;
+    height: 414px;
+}
+
 .about-map-item .map-progress .progress-box {
     width: 33px;
     height: 33px;
@@ -602,7 +690,7 @@
     position: absolute;
     height: 2px;
     background: #E882D5;
-    width: 259px;
+    width: 200px;
     left: 10px;
     top: 25px;
     z-index: 0;
@@ -612,7 +700,7 @@
     position: absolute;
     height: 2px;
     background: #383637;
-    width: 259px;
+    width: 200px;
     right: 10px;
     top: 25px;
     z-index: 0;
@@ -630,7 +718,7 @@
     position: absolute;
     height: 2px;
     background: #00AEEF;
-    width: 259px;
+    width: 200px;
     left: 10px;
     top: 25px;
     z-index: 0;
@@ -644,7 +732,7 @@
     position: absolute;
     height: 2px;
     background: #5D5FEF;
-    width: 259px;
+    width: 200px;
     left: 10px;
     top: 25px;
     z-index: 0;
@@ -652,7 +740,7 @@
 
 .about-roadmap .map-progress {
     position: relative;
-    width: 530px;
+    width: 90%;
     display: flex;
     justify-content: space-between;
 }
@@ -660,40 +748,71 @@
 .about-map-item .progress-title {
     width: 212px;
     height: 48px;
-    background: #E882D5;
+    /* background: #E882D5; */
     color: #fff;
     border-radius: 16px;
     font-size: 20px;
 
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.about-map-item .progress-title span {
+    width: 68px;
+    height: 8px;
+    background: #E882D5;
+    margin-top: 12px;
+}
+
+.about-roadmap .roadmap-container {
+    display: flex;
+    flex-direction: row;
+    border: none;
+}
+
+.about-roadmap .container-private-beta {
+    height: 800px;
+    display: flex;
     align-items: center;
+}
+
+.about-roadmap .block-devide-box {
+    height: 800px;
+    width: 20px;
+    background: red;
+    margin: 0 34px;
+}
+
+.about-roadmap .roadmap-container  .container-curation-public {
+    display: flex;
+    flex-direction: column;
 }
 
 .about-roadmap .map-item-progress {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column-reverse;
 }
 
 .about-map-item .map-item-desc {
-    width: 779px;
     margin-top: 30px;
     padding: 31px 0;
-    border: 2px dashed #4E4D4D;
+    /* border: 2px dashed #4E4D4D; */
     border-radius: 16px;
 }
 
 .about-map-item .map-item-desc p{
-    font-size: 30px;
+    font-size: 20px;
     line-height: 40px;
 }
 
 .about-map-item:nth-child(3) .progress-title {
-    background: #5D5FEF;
+    /* background: #5D5FEF; */
 }
 
 .about-map-item:last-child .progress-title {
-    background: #00AEEF;
+    /* background: #00AEEF; */
 }
 
 thead.table-head-compare th{
@@ -1392,7 +1511,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     
     .tokenomics-ecosystem .ecosystem-list-text {
         font-size: 14px;
-        text-align: left;
+        /* text-align: left; */
     }
 
     .ecosystem-airdrops .ecosystem-airdrops-text {

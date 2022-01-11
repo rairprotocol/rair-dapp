@@ -1,9 +1,9 @@
 import React from 'react';
-import NftImage from './../../assets/greymanNew.png';
-import Nft_1 from './../../assets/exclusive_1.jpeg';
-import Nft_2 from './../../assets/exclusive_2.jpeg';
-import Nft_3 from './../../assets/exclusive_3.jpeg';
-import Nft_4 from './../../assets/greyman.png';
+import NftImage from './../../assets/grayman-matrix.png';
+import Nft_1 from './../../assets/monster.jpeg';
+import Nft_2 from './../../assets/coin-agenda_2.png';
+import Nft_3 from './../../assets/nutcracher-nft-photo.png';
+import Nft_4 from './../../assets/coin-agenda_1.jpeg';
 
 const ExclusiveNfts = () => {
     return (
@@ -14,7 +14,7 @@ const ExclusiveNfts = () => {
             <div className="nfts-select">
                 <div className="main-nft" style={{
                     background: `url(${NftImage}) no-repeat`,
-                    backgroundSize: "contain",
+                    backgroundSize: "cover",
                     backgroundPosition: "center center"
                 }}>
                     <div className="btn-open-store">

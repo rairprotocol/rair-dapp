@@ -1,4 +1,11 @@
-import React from 'react'
+import React from 'react';
+import Eth_icon from './../../assets/eth-icon.png';
+import Space_icon from './../../assets/space-icon.png';
+import Triple_icon from './../../assets/triple-icon.png';
+import Matic_icon from './../../assets/matic-icon.png';
+import Binance_icon from './../../assets/binance-icon.png';
+import Arb_icon from './../../assets/arb-icon.png';
+import Kit_icon from './../../assets/kat-icon.png';
 
 const Tokenomics = ({ Metamask }) => {
     return (
@@ -9,8 +16,8 @@ const Tokenomics = ({ Metamask }) => {
             <div className="tokenomics-ecosystem">
                 <div className="ecosystem-list">
                     <div className="ecosystem-list-text">
-                        RAIR is the fuel that powers the RAIR ecosystem<br />
-                        Only 10,000,000 will ever be minted
+                        RAIR is the fuel that powers the RAIR ecosystem
+                        <span> Only 10,000,000</span> will ever be minted
                     </div>
                     <div className="tokenomics-block-list">
                         <div className="tokenomics-items">
@@ -35,42 +42,52 @@ const Tokenomics = ({ Metamask }) => {
                             </p>
                         </div>
                     </div>
-                    <div className="btn-buy-metamask">
-                        <button>
-                            <img
-                                className="metamask-logo"
-                                src={Metamask}
-                                alt="metamask-logo"
-                            />{" "}
-                            Buy RAIR
-                        </button>
-                    </div>
                 </div>
                 <div className="ecosystem-airdrops">
                     <div className="ecosystem-airdrops-text">
-                        RAIR Token holders will <br />
-                        receive <span>airdrops</span> for every<br />
-                        EVM compatible chain we <br />
-                        integrate with.<br />
+                        RAIR Token holders will
+                        receive <span>airdrops</span> for every
+                        EVM compatible chain we integrate with.
                     </div>
                     <div className="ecosystem-airdrops-list">
                         <div className="airdrops-items">
                             <div className="items-title">Q1  2022</div>
                             <ul>
-                                <li>MATIC</li>
-                                <li>Binance Smart Chain</li>
-                                <li>Klatyn</li>
+                                <li>
+                                    <img src={Matic_icon} alt="matic" />
+                                </li>
+                                <li>
+                                    <img src={Binance_icon} alt="binance" />
+                                </li>
+                                <li>
+                                    <img src={Kit_icon} alt="Kit" />
+                                </li>
                             </ul>
                         </div>
                         <div className="airdrops-items">
                             <div className="items-title">Q2  2022</div>
                             <ul>
-                                <li>Ethereum Classic</li>
-                                <li>IoTex</li>
-                                <li>Avalanche</li>
-                                <li>Arbitreaum</li>
+                                <li>
+                                    <img src={Eth_icon} alt="Ethrerium" />
+                                </li>
+                                <li>
+                                    <img src={Arb_icon} alt="Arb" />
+                                </li>
+                                <li>
+                                    <img src={Triple_icon} alt="Triple" />
+                                </li>
+                                <li>
+                                    <img src={Space_icon} alt="Space" />
+                                </li>
                             </ul>
                         </div>
+                    </div>
+                </div>
+                <div className="block-view-eth-btn">
+                    <div className="btn-buy-metamask">
+                        <button>
+                            VIEW ON ETHERSCAN
+                        </button>
                     </div>
                 </div>
             </div>

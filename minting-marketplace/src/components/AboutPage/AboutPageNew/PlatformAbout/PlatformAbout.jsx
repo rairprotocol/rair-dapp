@@ -33,7 +33,7 @@ const PlatformAbout = () => {
                             <li>Ethereum</li>
                             <li>MATIC</li>
                             <li>Binance Smart Chain</li>
-                            <li>EVM Integrations</li>
+                            <li>EIP2535 Diamonds</li>
                         </ul>
                     </div>
                 </div>
@@ -46,9 +46,9 @@ const PlatformAbout = () => {
                     <div className="categories-list">
                         <ul>
                             <li>On Chain</li>
-                            <li>EIP2981 Universal</li>
-                            <li>Custom Splits</li>
                             <li>Lock to Contract</li>
+                            <li>Custom Splits</li>
+                            <li>EIP2981 Universal</li>
                         </ul>
                     </div>
                 </div>
@@ -61,7 +61,7 @@ const PlatformAbout = () => {
                     <div className="categories-list">
                         <ul>
                             <li>Bulk Creation</li>
-                            <li>Scripting</li>
+                            <li>Generative Art</li>
                             <li>IPFS + Cloud</li>
                             <li>Aggregate to
                                 Opensea et al

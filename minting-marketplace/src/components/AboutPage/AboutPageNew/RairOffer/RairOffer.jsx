@@ -4,7 +4,7 @@ const RairOffer = () => {
     return (
         <div className="about-rair-offer">
             <div className="rair-offer-title">
-                Only RAIR Offers <span className="change-color-text">encrypted streaming</span>
+                Onchain <span className="change-color-text">royalties</span>
             </div>
             <div className="about-offer-content">
                 <div className="streaming-box">
@@ -43,7 +43,10 @@ const RairOffer = () => {
                         </div>
                     </div>
                 </div>
-                <div className="royalty-box">
+                <div className="rair-offer-text">
+                    <p>*Tier 1: Personal • Tier 2: SMB • Tier 3: Enterprise</p>
+                </div>
+                {/* <div className="royalty-box">
                     <h5>Royalty Schedule</h5>
                     <div className="royalty-list">
                         <ul>
@@ -53,7 +56,7 @@ const RairOffer = () => {
                         </ul>
                     </div>
                     <h5>Annual Sales</h5>
-                </div>
+                </div> */}
             </div>
         </div>
     )

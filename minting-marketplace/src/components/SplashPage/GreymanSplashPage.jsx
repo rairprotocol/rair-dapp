@@ -40,14 +40,14 @@ const SplashPage = () => {
                     </div>
                 </AuthorBlock>
                 <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} />
-                <ExclusiveNft
+                {/* <ExclusiveNft
                     Nft_1={GreyMan}
                     Nft_2={GreyMan}
                     Nft_3={GreyMan}
                     Nft_4={GreyMan}
                     NftImage={GreyMan}
                     amountTokens={"7,907,414,597"}
-                />
+                /> */}
                 <div className="join-community">
                     <div className="title-join">
                         <h3><span className="text-gradient">Community</span> rewards</h3>
