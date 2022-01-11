@@ -8,13 +8,13 @@ terraform {
   }
 }
 
-variable "gcp_auth_file" {
+variable "gcp_tf_admin_service_account_json" {
   type        = string
   description = "GCP tf-admin authentication file"
 }
 
 provider "google" {
-  credentials = file(var.gcp_auth_file)
+  credentials = file(var.gcp_tf_admin_service_account_json)
   project     = "rair-market-staging"
 }
 
