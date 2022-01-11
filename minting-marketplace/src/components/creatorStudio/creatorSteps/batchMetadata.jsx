@@ -175,7 +175,7 @@ const BatchMetadataParser = ({contractData, setStepNumber, steps}) => {
 								{item.Description ? item.Description : missing}
 							</th>
 							<th style={{color: 'var(--bubblegum)'}}>
-								{item['Image Link'] ? item['Image Link'] : missing}
+								{item['Image'] ? item['Image'] : missing}
 							</th>
 							{headers.map((header, index) => {
 								return <th key={index}>
