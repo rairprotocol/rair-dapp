@@ -4,11 +4,7 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-
-struct RoleData {
-	mapping(address => bool) members;
-	bytes32 adminRole;
-}
+import "../common/AccessControl.sol";
 
 struct AppStorage {
 	// Access Control Enumerable
@@ -31,71 +27,34 @@ library LibAppStorage {
 	}
 }
 
-contract AccessControlAppStorageEnumerable is Context {
+contract AccessControlAppStorageEnumerable is Context, AccessControlEnumerable {
 	using EnumerableSet for EnumerableSet.AddressSet;
 	
 	AppStorage internal s;
 
-	event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);
-	event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);
-    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);
-
-    modifier onlyRole(bytes32 role) {
-        _checkRole(role, _msgSender());
-        _;
-    }
-
-    function renounceRole(bytes32 role, address account) public {
-        require(account == _msgSender(), "AccessControl: can only renounce roles for self");
-        _revokeRole(role, account);
-    }
-
-    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {
-        _grantRole(role, account);
-    }
-
-    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {
-        _revokeRole(role, account);
-    }
-
-    function _checkRole(bytes32 role, address account) internal view {
-        if (!hasRole(role, account)) {
-            revert(
-                string(
-                    abi.encodePacked(
-                        "AccessControl: account ",
-                        Strings.toHexString(uint160(account), 20),
-                        " is missing role ",
-                        Strings.toHexString(uint256(role), 32)
-                    )
-                )
-            );
-        }
-    }
-
-	function hasRole(bytes32 role, address account) public view returns (bool) {
+	function hasRole(bytes32 role, address account) public view override returns (bool) {
 		return s._roles[role].members[account];
 	}
 
-	function getRoleAdmin(bytes32 role) public view returns (bytes32) {
+	function getRoleAdmin(bytes32 role) public view override returns (bytes32) {
 		return s._roles[role].adminRole;
 	}
 
-	function getRoleMember(bytes32 role, uint256 index) public view returns (address) {
+	function getRoleMember(bytes32 role, uint256 index) public view override returns (address) {
 		return s._roleMembers[role].at(index);
 	}
 
-	function getRoleMemberCount(bytes32 role) public view returns (uint256) {
+	function getRoleMemberCount(bytes32 role) public view override returns (uint256) {
 		return s._roleMembers[role].length();
 	}
 
-	function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {
+	function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal override {
 		bytes32 previousAdminRole = getRoleAdmin(role);
 		s._roles[role].adminRole = adminRole;
 		emit RoleAdminChanged(role, previousAdminRole, adminRole);
 	}
 
-	function _grantRole(bytes32 role, address account) internal {
+	function _grantRole(bytes32 role, address account) internal override {
 		if (!hasRole(role, account)) {
 			s._roles[role].members[account] = true;
 			emit RoleGranted(role, account, _msgSender());
@@ -103,7 +62,7 @@ contract AccessControlAppStorageEnumerable is Context {
 		}
 	}
 
-	function _revokeRole(bytes32 role, address account) internal {
+	function _revokeRole(bytes32 role, address account) internal override {
 		if (hasRole(role, account)) {
 			s._roles[role].members[account] = false;
 			emit RoleRevoked(role, account, _msgSender());

@@ -1,14 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.11; 
 
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-
-struct RoleData721 {
-	mapping(address => bool) members;
-	bytes32 adminRole;
-}
+import '../../common/AccessControl.sol';
 
 struct range {
 	uint rangeStart;
@@ -42,7 +35,7 @@ struct AppStorage721 {
 	uint256[] _allTokens;
 	mapping(uint256 => uint256) _allTokensIndex;
 	// Access Control Enumerable
-	mapping(bytes32 => RoleData721) _roles;
+	mapping(bytes32 => RoleData) _roles;
 	mapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;
 	// App
 	string baseURI;

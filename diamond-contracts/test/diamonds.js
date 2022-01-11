@@ -1534,7 +1534,7 @@ describe("Diamonds", function () {
 					]);
 			});
 
-			it ("Shouldn't more tokens if the range is complete", async () => {
+			it ("Shouldn't mint more tokens if the range is complete", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
 				await expect(mintingOffersFacet.buyMintingOffer(0, 0, {value: 4500}))
