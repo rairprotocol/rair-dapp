@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 const FactoryManager = ({ setDeployedTokens }) => {
 
 	const [erc721Name, setERC721Name] = useState('');
+	const [clientTokens, setClientTokens] = useState();
 	const [tokensOwned, setTokensOwned] = useState();
 	const [tokensRequired, setTokensRequired] = useState();
 	const [tokenSymbol, setTokenSymbol] = useState();
@@ -21,6 +22,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 		for (let i = 0; i < tokenCount; i++) {
 			tokens.push(await factoryInstance.ownerToContracts(currentUserAddress, i));
 		}
+		setClientTokens(await erc777Instance.balanceOf(currentUserAddress));
 		setTokensOwned(tokenCount);
 		setDeployedTokens(tokens);
 		setTokensRequired(await factoryInstance.deploymentCostForERC777(erc777Instance.address));
@@ -61,7 +63,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 			New contract's name:
 			<input className='form-control w-75 mx-auto' value={erc721Name} onChange={e => setERC721Name(e.target.value)} />
 			<br/>
-			<button disabled={erc721Name === '' || tokensOwned.lt(tokensRequired)} onClick={() => {
+			<button disabled={erc721Name === '' || clientTokens.lt(tokensRequired)} onClick={() => {
 				try {
 					erc777Instance.send(factoryInstance.address, tokensRequired, ethers.utils.toUtf8Bytes(erc721Name))
 				} catch (e) {
@@ -73,7 +75,7 @@ const FactoryManager = ({ setDeployedTokens }) => {
 						.pow(tokenDecimals)
 					).toString()} {tokenSymbol} tokens!
 			</button>
-			{tokensOwned.lt(tokensRequired) && <> <br />Insufficient {tokenSymbol} Tokens! </>}
+			{clientTokens.lt(tokensRequired) && <> <br />Insufficient {tokenSymbol} Tokens! </>}
 		</> : 'Fetching info...'}
 	</div>
 }
