@@ -29,7 +29,8 @@ const ListOfTokensComponent = ({
   const getNumberFromStr = (str) => {
     const newStr = str.replace(" -", "");
     const first = newStr.slice(0, newStr.indexOf(" "));
-    const second = Number(newStr.slice(newStr.indexOf(" ") + 1)) + 1;
+    const second = newStr.slice(newStr.indexOf(" ") + 1);
+    // const second = Number(newStr.slice(newStr.indexOf(" ") + 1)) + 1;
     return [first, second];
   };
 

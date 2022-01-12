@@ -572,12 +572,11 @@ const NftDataPageTest = ({
                     setSelectedToken={setSelectedToken}
                     items={
                       tokenData &&
-                      tokenData.map((p, index) => {
+                      tokenData.map((p) => {
                         return {
                           value: p.metadata.name,
                           id: p._id,
                           token: p.token,
-                          key: index,
                         };
                       })
                     }

@@ -6,7 +6,7 @@ import InputField from "../../common/InputField.jsx";
 import InputSelect from "../../common/InputSelect.jsx";
 import io from "socket.io-client";
 import "./videoUpload.css";
-// const UPLOAD_PROGRESS_HOST = process.env.UPLOAD_PROGRESS_HOST;
+// const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 // Admin view to upload media to the server
 const FileUpload = ({ address, primaryColor, textColor }) => {

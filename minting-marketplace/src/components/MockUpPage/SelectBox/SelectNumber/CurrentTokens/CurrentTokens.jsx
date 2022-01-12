@@ -70,7 +70,7 @@ const CurrentTokensComponent = ({
           ) : null}
         </div>
         {items &&
-          items.map((el, index) => {
+          items.map((el) => {
             return (
               <div
                 className={`select-number-box ${
@@ -82,7 +82,7 @@ const CurrentTokensComponent = ({
                   }`,
                   color: `${primaryColor === "rhyno" ? "#fff" : "A7A6A6"}`,
                 }}
-                key={el.id}
+                key={el._id}
                 onClick={() => onClickItem(el.token)}
               >
                 {el.token}
