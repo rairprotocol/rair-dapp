@@ -9,16 +9,17 @@
     "ethers": "^5.5.2",
     "hardhat": "^2.7.0",
     "hardhat-contract-sizer": "^2.1.1",
-    "hardhat-deploy": "^0.9.14",
+    "hardhat-deploy": "^0.9.24",
     "hardhat-gas-reporter": "^1.0.6"
   },
-  "name": "refactored-smart-contracts",
+  "name": "diamond-smart-contracts",
   "version": "1.0.0",
   "description": "RAIR Smart Contracts v2",
   "main": "index.js",
   "scripts": {
     "compile": "npx hardhat compile",
-    "test": "npx hardhat test"
+    "test": "npx hardhat test",
+    "deploy-goerli": "npx hardhat --network goerli deploy"
   },
   "author": "Juan Miguel Sanchez Mola",
   "license": "ISC"

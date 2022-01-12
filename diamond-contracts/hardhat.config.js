@@ -17,7 +17,11 @@ module.exports = {
 				blockNumber: 13000000,
 				timeout: 1000000
 			}
-		}
+		},
+		goerli: {
+			url: process.env.GOERLI_SPEEDY_NODE,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+		},
 	},
 	solidity: {
 		compilers: [{
