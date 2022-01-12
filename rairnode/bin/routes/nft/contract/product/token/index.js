@@ -80,6 +80,10 @@ module.exports = context => {
         return res.status(400).send({ success: false, message: 'Token not found.' });
       }
 
+      if (!foundToken.isMinted) {
+        return res.status(400).send({ success: false, message: 'Token not minted.' });
+      }
+
       metadataURI = foundToken.metadataURI;
 
       if (!_.isEmpty(foundToken.metadata)) {
