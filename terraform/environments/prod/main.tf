@@ -15,7 +15,7 @@ variable "gcp_tf_admin_service_account_json" {
 
 provider "google" {
   credentials = var.gcp_tf_admin_service_account_json
-  project     = "rair-market-staging"
+  project     = "rair-market-production"
 }
 
 module "foundation" {
