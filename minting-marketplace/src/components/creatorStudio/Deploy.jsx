@@ -5,6 +5,7 @@ import InputField from '../common/InputField.jsx';
 import InputSelect from '../common/InputSelect.jsx';
 import Swal from 'sweetalert2';
 import { utils } from 'ethers';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 
 import NavigatorFactory from './NavigatorFactory.jsx';
 
@@ -95,20 +96,20 @@ const Factory = () => {
 					disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying}
 					className='btn btn-stimorol w-100 rounded-rair'
 					onClick={async e => {
-						try {
-							setDeploying(true);
-							Swal.fire({
-								title: 'Deploying contract!',
-								html: 'Please wait...',
-								icon: 'info',
-								showConfirmButton: false
-							});
-							await (await erc777Instance.send(
-								factoryInstance.address,
-								deploymentPrice,
-								utils.toUtf8Bytes(contractName)
-							)).wait();
-							setDeploying(false);
+						setDeploying(true);
+						Swal.fire({
+							title: 'Deploying contract!',
+							html: 'Please wait...',
+							icon: 'info',
+							showConfirmButton: false
+						});
+						let success = await metamaskCall(erc777Instance.send(
+							factoryInstance.address,
+							deploymentPrice,
+							utils.toUtf8Bytes(contractName)
+						));
+						setDeploying(false);
+						if (success) {
 							Swal.fire({
 								title: 'Success',
 								html: 'Contract deployed',
@@ -116,10 +117,6 @@ const Factory = () => {
 								showConfirmButton: false
 							});
 							setContractName('');
-						} catch (e) {
-							setDeploying(false);
-							console.error(e);
-							Swal.fire('Error', e?.message ? e?.message : e.toString(), 'error');
 						}
 					}}
 					>

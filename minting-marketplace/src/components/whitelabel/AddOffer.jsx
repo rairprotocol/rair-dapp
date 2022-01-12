@@ -5,6 +5,7 @@ import InputField from '../common/InputField.jsx';
 import {useSelector, Provider, useStore} from 'react-redux';
 import {erc721Abi} from '../../contracts';
 import chainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 
 const rSwal = withReactContent(Swal.mixin({
 	showConfirmButton: false
@@ -134,8 +135,9 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 				disabled={instance === undefined}
 				className='btn btn-warning'
 				onClick={async e => {
-					await instance.grantRole(await instance.MINTER(), minterInstance.address);
-					rSwal.close();
+					if (await metamaskCall(instance.grantRole(await instance.MINTER(), minterInstance.address))) {
+						rSwal.close();
+					}
 				}}>
 				Approve the marketplace as a Minter!
 			</button>
@@ -195,9 +197,9 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 			</table>
 			<br /> 
 			<button onClick={async e => {
-				try {
-					if (ranges.length > 0 && ranges[0].disabled) {
-						await minterInstance.appendOfferRangeBatch(
+				if (ranges.length > 0 && ranges[0].disabled) {
+					await metamaskCall(
+						minterInstance.appendOfferRangeBatch(
 							await minterInstance.contractToOfferRange(instance.address, productIndex),
 							ranges.filter(notDisabled).map((item, index, array) => {
 								if (index === 0) {
@@ -214,21 +216,21 @@ const ModalContent = ({instance, blockchain, productIndex, tokenLimit, existingO
 							ranges.filter(notDisabled).map((item) => item.price),
 							ranges.filter(notDisabled).map((item) => item.name)
 						)
-					} else {
-						await minterInstance.addOffer(
+					);
+				} else {
+					console.log(process.env.REACT_APP_NODE_ADDRESS);
+					await metamaskCall(
+						minterInstance.addOffer(
 							instance.address,
 							productIndex,
 							ranges.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
 							ranges.map((item) => item.endingToken),
 							ranges.map((item) => item.price),
 							ranges.map((item) => item.name),
-							'0xe98028a02832A87409f21fcf4e3a361b5D2391E7');
-					}
-					rSwal.close();
-				} catch (err) {
-					console.error(err);
-					Swal.fire('Error', err?.data?.message, 'error');
+							process.env.REACT_APP_NODE_ADDRESS)
+					)
 				}
+				rSwal.close();
 			}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>
 				{ranges.length > 0 && ranges[0].disabled ? `Append ${ranges.filter(item => !item.disabled).length} ranges to the marketplace` : `Create offer with ${ranges.length} ranges on the marketplace`}
 			</button>

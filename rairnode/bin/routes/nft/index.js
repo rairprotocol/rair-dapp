@@ -263,13 +263,20 @@ module.exports = context => {
   });
 
   router.use('/network/:networkId/:contract', validation('nftContract', 'params'), async (req, res, next) => {
-    const contract = await context.db.Contract.findOne({ contractAddress: req.params.contract.toLowerCase(), blockchain: req.params.networkId });
+    try {
+      const contract = await context.db.Contract.findOne({
+        contractAddress: req.params.contract.toLowerCase(),
+        blockchain: req.params.networkId
+      });
 
-    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+      if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
 
-    req.contract = contract;
+      req.contract = contract;
 
-    next();
+      return next();
+    } catch (e) {
+      return next(e);
+    }
   }, require('./contract')(context));
 
   return router;
