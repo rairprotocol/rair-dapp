@@ -1542,7 +1542,7 @@ describe("Diamonds", function () {
 			});
 		});
 
-		describe("Security", () => {
+		describe("ERC721 Security", () => {
 			it ("Shouldn't run the DiamondCut function", async () => {
 				let diamondCut = await ethers.getContractAt('IDiamondCut', firstDeploymentAddress);
 				const ownershipCutItem = {
@@ -1584,90 +1584,38 @@ describe("Diamonds", function () {
 			it ("Shouldn't grant ERC777 roles from the Master Factory", async () => {
 				let tokenReceiverFacet = await ethers.getContractAt('TokensFacet', firstDeploymentAddress);
 				await expect(tokenReceiverFacet.acceptNewToken(addr1.address, priceToDeploy * 2)).to.be.reverted;
-			})
+				await expect(tokenReceiverFacet.removeToken(erc777Instance.address)).to.be.reverted;
+			});
 
+			it ("Shouldn't withdraw tokens from the Master Factory", async () => {
+				let tokenReceiverFacet = await ethers.getContractAt('TokensFacet', firstDeploymentAddress);
+				await expect(tokenReceiverFacet.withdrawTokens(erc777Instance.address, 1)).to.be.reverted;
+			});
+		});
 
-				/*
-  'tokensReceived(address,address,address,uint256,bytes,bytes)',
-  'acceptNewToken(address,uint256)',
-  'getDeploymentCost(address)',
-  'removeToken(address)',
-  'withdrawTokens(address,uint256)',
-  'contractToCreator(address)',
-  'creatorToContractIndex(address,uint256)',
-  'creatorToContractList(address)',
-  'getContractCountOf(address)',
-  'getCreatorAtIndex(uint256)',
-  'getCreatorsCount()',
-  'CREATOR()',
-  'balanceOf(address)',
-  'createProduct(string,uint256)',
-  'getNextSequentialIndex(uint256,uint256,uint256)',
-  'getProductCount()',
-  'hasTokenInProduct(address,uint256,uint256,uint256)',
-  'mintedTokensInProduct(uint256)',
-  'ownsTokenInProduct(address,uint256)',
-  'ownsTokenInRange(address,uint256)',
-  'productToToken(uint256,uint256)',
-  'tokenByProduct(uint256,uint256)',
-  'tokenOfOwnerByIndex(address,uint256)',
-  'tokenToProduct(uint256)',
-  'tokenToProductIndex(uint256)',
-  'canCreateRange(uint256,uint256,uint256)',
-  'createRange(uint256,uint256,uint256,uint256,uint256,uint256,string)',
-  'createRangeBatch(uint256,(uint256,uint256,uint256,uint256,uint256,string)[])',
-  'isRangeLocked(uint256)',
-  'productRangeInfo(uint256,uint256)',
-  'rangeInfo(uint256)',
-  'updateRange(uint256,uint256,uint256,uint256)',
-  'MAINTAINER()',
-  'getDecimals()',
-  'getNodeFee()',
-  'getTreasuryAddress()',
-  'getTreasuryFee()',
-  'updateDecimals(uint16)',
-  'updateNodeFee(uint256)',
-  'updateTreasuryAddress(address)',
-  'updateTreasuryFee(uint256)',
-  'addMintingOffer(address,uint256,(address,uint256)[],bool,address)',
-  'addMintingOfferBatch(address,uint256[],(address,uint256)[],bool[],address)',
-  'buyMintingOffer(uint256,uint256)',
-  'buyMintingOfferBatch(uint256,uint256[])',
-  'getOfferInfo(uint256)',
-  'getOfferInfoForAddress(address,uint256)',
-  'getOffersCountForAddress(address)',
-  'MINTER()',
-  'TRADER()',
-  'approve(address,uint256)',
-  'getApproved(uint256)',
-  'isApprovedForAll(address,address)',
-  'mintFromRange(address,uint256,uint256)',
-  'mintFromRangeBatch(address[],uint256,uint256[])',
-  'name()',
-  'nextMintableTokenInRange(uint256)',
-  'ownerOf(uint256)',
-  'safeTransferFrom(address,address,uint256)',
-  'safeTransferFrom(address,address,uint256,bytes)',
-  'setApprovalForAll(address,bool)',
-  'symbol()',
-  'tokenByIndex(uint256)',
-  'totalSupply()',
-  'transferFrom(address,address,uint256)',
-  'facetAddress(bytes4)',
-  'facetAddresses()',
-  'facetFunctionSelectors(address)',
-  'facets()',
-  'supportsInterface(bytes4)',
-  'contractURI()',
-  'freezeMetadata(uint256)',
-  'setBaseURI(string,bool)',
-  'setContractURI(string)',
-  'setProductURI(uint256,string,bool)',
-  'setUniqueURI(uint256,string)',
-  'setUniqueURIBatch(uint256[],string[])',
-  'tokenURI(uint256)'
+		describe("Factory Security", () => {
+			it ("Shouldn't create products", async () => {
+				let productFacet = await ethers.getContractAt('RAIRProductFacet', factoryDiamondInstance.address);
+				await expect(productFacet.createProduct("FirstFirst", 1000)).to.be.reverted;
+			});
 
-				*/
+			it ("Shouldn't create ranges", async () => {
+				let rangesFacet = await ethers.getContractAt('RAIRProductFacet', factoryDiamondInstance.address);
+				await expect(rangesFacet.createRange(0, 0, 10, 1000, 9, 5, 'First First First')).to.be.reverted;
+			});
+
+			it ("Shouldn't call view functions", async () => {
+				let productFacet = await ethers.getContractAt('RAIRProductFacet', factoryDiamondInstance.address);
+				await expect(productFacet.hasTokenInProduct(owner.address, 0, 0, 100)).to.be.reverted;
+				await expect(productFacet.ownsTokenInProduct(owner.address, 0)).to.be.reverted;
+				await expect(productFacet.ownsTokenInRange(owner.address, 0)).to.be.reverted;
+				await expect(productFacet.productToToken(0, 0)).to.be.reverted;
+				await expect(productFacet.tokenByProduct(0, 0)).to.be.reverted;
+				await expect(productFacet.tokenOfOwnerByIndex(owner.address, 0)).to.be.reverted;
+				await expect(productFacet.tokenToProduct(0)).to.be.reverted;
+				await expect(productFacet.tokenToProductIndex(0)).to.be.reverted;
+			});
+		});
 
 			/*it ("Shouldn't execute code from the parent", async () => {
 				let interfaces = [
@@ -1693,7 +1641,6 @@ describe("Diamonds", function () {
 				});
 				console.log(names);
 			});*/
-		})
 	});
 
 	describe("Loupe Facet", () => {
