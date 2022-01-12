@@ -650,7 +650,7 @@
 }
 
 .about-roadmap .map-item-progress {
-    margin-top: 50px;
+    /* margin-top: 50px; */
 }
 
 .about-map-item {
@@ -658,6 +658,7 @@
     border-radius: 16px;
     width: 474px;
     height: 414px;
+    padding: 32px 24px;
 }
 
 .about-map-item .map-progress .progress-box {
@@ -691,7 +692,7 @@
     height: 2px;
     background: #E882D5;
     width: 200px;
-    left: 10px;
+    left: 1px;
     top: 25px;
     z-index: 0;
 }
@@ -701,7 +702,7 @@
     height: 2px;
     background: #383637;
     width: 200px;
-    right: 10px;
+    right: 6px;
     top: 25px;
     z-index: 0;
 }
@@ -724,6 +725,18 @@
     z-index: 0;
 }
 
+.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-box {
+    background: #5D5FEF;
+}
+
+.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-box:last-child {
+    background: #383637;
+}
+
+.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .line-public {
+    background: #5D5FEF;
+}
+
 .about-map-item:last-child .map-progress .progress-box {
     background: #00AEEF;
 }
@@ -743,6 +756,7 @@
     width: 90%;
     display: flex;
     justify-content: space-between;
+    margin-top: 23px;
 }
 
 .about-map-item .progress-title {
@@ -778,16 +792,37 @@
     align-items: center;
 }
 
+.about-roadmap .container-private-beta {
+    margin-left: 25px;
+}
+
 .about-roadmap .block-devide-box {
-    height: 800px;
-    width: 20px;
-    background: red;
+    height: 850px;
+    width: 2px;
+    background: #fff;
     margin: 0 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.about-roadmap .block-devide-box .squere {
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border-radius: 8px;
+    margin-left: -15px;
 }
 
 .about-roadmap .roadmap-container  .container-curation-public {
     display: flex;
     flex-direction: column;
+}
+
+.about-roadmap .roadmap-container  .container-curation-public .about-map-item:first-child {
+    margin-bottom: 200px;
+    margin-top: 40px;
+    margin-right: 20px;
 }
 
 .about-roadmap .map-item-progress {
@@ -800,15 +835,24 @@
     padding: 31px 0;
     /* border: 2px dashed #4E4D4D; */
     border-radius: 16px;
+    text-align: left;
 }
 
 .about-map-item .map-item-desc p{
     font-size: 20px;
-    line-height: 40px;
+    line-height: 30px;
 }
 
-.about-map-item:nth-child(3) .progress-title {
-    /* background: #5D5FEF; */
+.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-title span {
+    background: #725BDB;
+}
+
+.about-roadmap .roadmap-container .container-private-beta .about-map-item .progress-title span {
+    background: #19A7F6;
+}
+
+.about-roadmap .roadmap-container .container-private-beta .about-map-item .line-private {
+    background: #19A7F6;
 }
 
 .about-map-item:last-child .progress-title {
@@ -1006,6 +1050,19 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 }
 
+@media screen and (max-width: 1300px) {
+    .home-about--page .left-tokens .block-left-tokens {
+        width: 400px;
+        height: 400px;
+    }
+}
+
+@media screen and (max-width: 1260px) {
+    .home-about--page .streaming-box .streaming-offer {
+        width: 900px;
+    }
+}
+
 @media screen and (max-width: 1250px) {
     .home-about--page {
         width: 1000px;
@@ -1107,10 +1164,10 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
     .left-tokens.about-page .block-left-tokens {
         margin-right: 5% ;
-        background-size: contain;
+        background-size: none;
         background-repeat: no-repeat;
         width: 400px;
-        height: 450px;
+        height: 400px;
     }
 
     .left-tokens.about-page .box-progress {
@@ -1149,8 +1206,24 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 }
 
 @media screen and (max-width: 935px) {
+    .left-tokens.about-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .left-tokens.about-page .block-left-tokens {
-        display: none;
+        margin-right: 0;
+        margin-bottom: 46px;
+    }
+
+    .left-tokens.about-page .left-tokens-content .tokens-description {
+        width: 100%;
+        padding: 0 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: left;
     }
 
     .left-tokens.about-page {
@@ -1167,18 +1240,28 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 @media screen and (max-width: 900px) {
     .home-about--page .information-author  {
         justify-content: center;
+        padding: 0;
     }
 
     .home-about--page .information-author .home-about--logo {
         display: none;
     }
 
+    .home-about-desc .autor-about-text {
+        margin-top: 300px;
+    }
+
     .home-about--page .information-author {
         background-image: url('./../assets/aboutPage_bg-1.png');
         background-repeat: no-repeat;
-        background-size: 35% auto;
-        background-position: 99% 5%;
+        background-size: 500px auto;
+        background-position: center 115px;
         border-radius: 0px;
+    }
+
+    .home-about--page .btn-buy-metamask {
+        display: flex;
+        justify-content: center;
     }
 
     .row>* {
@@ -1275,6 +1358,10 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         width: 150px;
     } */
 
+    .home-about--page .information-author {
+        padding: 0 24px;
+    }
+
     .streaming-progress .line-purple, .streaming-progress .line-grey {
         width: 150px
     }
@@ -1364,6 +1451,10 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .about-page-platform .platform-box .categories-list {
         border: none;
         width: 230px;
+    }
+
+    .home-about--page .left-tokens-content .title-tokens {
+        text-align: left !important;
     }
 
     .home-about--page .left-tokens-content .tokens-description {
@@ -1459,10 +1550,30 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 }
 
+@media screen and (max-width: 494px) {
+    .home-about--page .information-author .home-about-desc h2 {
+        margin-bottom: 100px;
+    }
+
+    .home-about--page .information-author {
+        background-position: center 160px;
+        background-size: 400px auto;
+    }
+
+    .home-about-desc .autor-about-text {
+        margin-top: 250px;
+    }
+}
 
 @media screen and (max-width: 480px) {
     .left-tokens.about-page {
         margin-bottom: 350px;
+    }
+
+    .left-tokens.about-page .block-left-tokens {
+        width: 100vw;
+        border-radius: 0;
+        background-size: 200px auto;
     }
 
     .about-page-platform .platform-box .categories-list ul li {

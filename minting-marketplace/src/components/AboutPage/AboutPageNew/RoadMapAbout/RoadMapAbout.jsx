@@ -48,7 +48,9 @@ const RoadMap = () => {
                     </div>
                 </div>
                 <div className="block-devide-box">
-                    12
+                    <div className="squere"></div>
+                    <div className="squere"></div>
+                    <div className="squere"></div>
                 </div>
                 <div className="container-private-beta">
                     <div className="about-map-item">
