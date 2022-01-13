@@ -180,7 +180,7 @@ module.exports = context => {
 
         user = user.toObject();
 
-        const nftIdentifier = _.get(user, 'adminNFT');
+        const nftIdentifier = _.get(user, 'adminNFT', '');
 
         log.info('Verifying user account has the admin token');
 
