@@ -161,13 +161,13 @@ module.exports = context => {
     // Get video information from the request's body
     const { title, description, contract, product, offer = [], category, demo = 'false' } = req.body;
     // Get the user information
-    const { adminNFT: author, adminRights } = req.user;
+    const { adminNFT: author, adminRights, publicAddress } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
 
     if (!adminRights) {
       if (req.file) {
-        fs.rm(req.file.destination, {recursive: true}, () => log.info('You don\'t have permission to upload the files.', e));
+        fs.rm(req.file.destination, {recursive: true}, () => log.info(`User ${publicAddress} don\'t have permission to upload the files.`));
       }
       return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
     }
