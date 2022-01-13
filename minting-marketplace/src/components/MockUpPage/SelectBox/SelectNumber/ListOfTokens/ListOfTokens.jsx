@@ -1,4 +1,4 @@
-import React, { useRef, memo, useCallback, useState } from "react";
+import React, { useRef, memo, useCallback, useState, useMemo } from "react";
 import { useEffect } from "react";
 import { CurrentTokens } from "../CurrentTokens/CurrentTokens";
 import "../../styles.css";
@@ -19,7 +19,7 @@ const ListOfTokensComponent = ({
   totalCount,
 }) => {
   const [tokenData, setTokenData] = useState([]);
-  const [elem, setElem] = useState([]);
+  const [productTokenNumbers, setProductTokenNumbers] = useState([]);
   const rootRef = useRef();
   const appRef = useRef();
   const limit = 100;
@@ -30,17 +30,16 @@ const ListOfTokensComponent = ({
     const newStr = str.replace(" -", "");
     const first = newStr.slice(0, newStr.indexOf(" "));
     const second = newStr.slice(newStr.indexOf(" ") + 1);
+    // const second = Number(newStr.slice(newStr.indexOf(" ") + 1)) + 1;
     return [first, second];
   };
 
   const getPaginationData = useCallback(
     async (target) => {
-      console.log(target.innerText);
       const indexes = getNumberFromStr(target.innerText);
       const responseAllProduct = await (
         await fetch(
-          //   `/api/nft/${contract}/${product}?fromToken=${indexes[0]}&limit=${indexes[1]}`,
-          `/api/nft/network/${blockchain}//${contract}/${product}?fromToken=${indexes[0]}&limit=${limit}`,
+          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`,
           {
             method: "GET",
           }
@@ -53,6 +52,27 @@ const ListOfTokensComponent = ({
     [blockchain, contract, product, setSelectedToken]
   );
 
+  const getProductTokenNumbers = useCallback(async () => {
+    const response = await (
+      await fetch(
+        `/api/nft/network/${blockchain}/${contract}/${product}/tokenNumbers`,
+        {
+          method: "GET",
+        }
+      )
+    ).json();
+
+    setProductTokenNumbers(response.tokens);
+  }, [blockchain, product, contract]);
+
+  const availableRanges = useMemo(() => productTokenNumbers.reduce( (acc, tokenNumber) => {
+    const tokenRange = Math.floor(tokenNumber / 100) * 100
+    return {
+      ...acc,
+      [tokenRange]: true
+    }
+  }, {}), [productTokenNumbers])
+
   const getPaginationToken = useCallback(
     (e) => {
       getPaginationData(e.target);
@@ -61,31 +81,18 @@ const ListOfTokensComponent = ({
     [getPaginationData, setIsOpens]
   );
 
-  useEffect(() => {
+    useEffect(()=>{
+      getProductTokenNumbers()
+    },[getProductTokenNumbers])
+
+  const ranges = useMemo(() => {
     if (totalCount) {
-      const number = totalCount;
-
-      const buildDivs = (number) => {
-        // const root = rootRef.current;
-        const divCount = parseInt(number / 100 + "") + 1;
-
-        // Array(divCount)
-        //   .fill(0)
-        //   .forEach((_, i) => {
-        //     const div = document.createElement("div");
-        //     div.classList.add("serial-box");
-        //     div.classList.add("serial-numb");
-        //     div.addEventListener("click", getPaginationToken, false);
-        //     div.innerText = `${i++ * 10 } - ${(i++) * 10 - 1}`;
-        //     root.appendChild(div);
-        //   });
-        const ddd = Array(divCount).fill(0);
-        setElem(ddd);
-      };
-
-      buildDivs(number);
+      const number = 999;
+      const rangesCount = Math.floor(number / 100) + 1;
+      return Array(rangesCount).fill(0).map((_, idx) => idx * 100)
     }
-  }, [setElem, totalCount, getPaginationToken]);
+    return [];
+  }, [totalCount]);
 
   return !isOpens ? (
     <div ref={numberRef} className="select-box--box">
@@ -115,19 +122,22 @@ const ListOfTokensComponent = ({
           className={"select-box--items"}
           ref={rootRef}
         >
-          {elem.map((_, i) => {
+          {ranges.map((i) => {
             return (
-              <div
-                key={i + _}
+              <button
+               disabled={availableRanges[i] ? false : true}
+                key={i}
                 onClick={(e) => getPaginationToken(e)}
                 className="serial-box serial-numb llll"
                 style={{
                   // border: "1px solid #D37AD6",
-                  background: "grey",
+                  background: "#a7a6a6",
+                  color: '#rgb(0 0 0)'
+                  // background: availableRanges[i] ? "grey" : "red",
                 }}
               >
-                {`${i++ * 100} - ${i++ * 100 - 1}`}
-              </div>
+                {`${i} - ${i + 99}`}
+              </button>
             );
           })}
         </div>
