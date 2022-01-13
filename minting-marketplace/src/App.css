@@ -505,6 +505,7 @@ a {
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: flex-start;
+  margin-bottom: 3rem;
 }
 .input-search-wrapper{
   max-width: 86%;
@@ -1036,7 +1037,9 @@ button.metamask-on-boarding:hover{
 .footer ul li:last-child {
   margin-right: 0;
 }
-
+#nft-data-page-wrapper{
+  margin-bottom: 3rem;
+}
 @media screen and (max-width: 900px) and (min-width: 500px) {
   #nft-data-page-wrapper{
     max-width: 50rem;

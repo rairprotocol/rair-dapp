@@ -5,6 +5,10 @@ terraform {
   }
 }
 
+provider "google" {
+  project     = "rair-market-dev"
+}
+
 module "foundation" {
   source = "../../modules/foundation"
 

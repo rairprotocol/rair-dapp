@@ -8,7 +8,9 @@
     justify-content: center;
     /* box-shadow: 15px 10px 25px 0px #3fa1a9; */
     box-shadow: 15px 10px 25px 0px #af6fd89e;
-    background: #fff;
+    /* background: #fff; */
+    background: #383637;
+
     /* --- */
     /* background-image: url('../assets/leaf2.png'), url('../assets/leaf2.png');
     background-repeat: no-repeat, no-repeat; */
@@ -82,15 +84,17 @@
 }
 
 .imgWrap img {
-    width: auto;
+    width: 100%;
     height: 100%;
+    object-fit: cover;
 }
 
 .name {
     text-align: center;
     text-transform: uppercase;
     font-weight: 700;
-    color: #676767;
+    color: white;
+    /* color: #676767; */
     max-width: 220px;
     overflow-wrap: break-word;
 }
@@ -99,7 +103,8 @@
     text-align: center;
     max-width: 220px;
     overflow-wrap: break-word;
-    color: black;
+    color: white;
+    /* color: black; */
 }
 
 .edit {
