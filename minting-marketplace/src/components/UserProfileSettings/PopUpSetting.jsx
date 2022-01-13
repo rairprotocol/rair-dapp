@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Popup } from "reactjs-popup";
@@ -13,15 +13,20 @@ const PopUpSettings = ({
   setLoginDone,
   primaryColor,
 }) => {
+  const ref = useRef();
   const history = useHistory();
   const dispatch = useDispatch();
   const [next, setNext] = useState(false);
   // const [userName, setUserName] = useState(currentUserAddress);
   const [openModal, setOpenModal] = useState(false);
   const [openModalPic, setOpenModalPic] = useState(false);
-  const [/*userData*/, setUserData] = useState({});
+  const [, /*userData*/ setUserData] = useState({});
   const [userName, setUserName] = useState();
   const [userEmail, setUserEmail] = useState();
+
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(
+    "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+  );
 
   const getInfoFromUser = useCallback(async () => {
     // find user
@@ -31,6 +36,7 @@ const PopUpSettings = ({
     setUserName(result.user.nickName);
     setUserEmail(result.user.email);
     setUserData(result.user);
+    setImagePreviewUrl(result.user?.avatar);
   }, [currentUserAddress]);
 
   useEffect(() => {
@@ -61,8 +67,8 @@ const PopUpSettings = ({
   };
 
   const pushToFactory = () => {
-      history.push('/creator/deploy');
-  }
+    history.push("/creator/deploy");
+  };
 
   if (openModalPic) {
     return (
@@ -72,15 +78,17 @@ const PopUpSettings = ({
           setUserEmail={setUserEmail}
           currentUserAddress={currentUserAddress}
           setOpenModalPic={setOpenModalPic}
+          setImagePreviewUrl={setImagePreviewUrl}
+          imagePreviewUrl={imagePreviewUrl}
         />
       </>
     );
   } else {
     <Popup />;
   }
-
   return (
     <Popup
+      ref={ref}
       trigger={(open) => {
         setOpenModal(open);
         if (!open) {
@@ -90,6 +98,11 @@ const PopUpSettings = ({
           <button
             className="button profile-btn"
             style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-around",
+              alignContent: "center",
+              flexDirection: "row",
               // border: `1px solid ${primaryColor === "charcoal" ? "#fff" : "#383637"}`,
               // border: "1px solid var(--royal-purple)",
               backgroundColor: `${
@@ -100,12 +113,17 @@ const PopUpSettings = ({
             <img
               style={{
                 position: "absolute",
-                width: "auto",
-                height: 30,
-                left: -10,
+                width: "30px",
+                height: "100%",
+                objectFit: "cover",
+                left: 0,
                 top: 0,
               }}
-              src="https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+              src={
+                imagePreviewUrl === null
+                  ? "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+                  : imagePreviewUrl
+              }
               alt="avatart-user"
             />
             <span
@@ -114,8 +132,18 @@ const PopUpSettings = ({
                 color: primaryColor === "charcoal" ? "#fff" : "#383637",
               }}
             >
+              {userName
+                ? userName.slice(0, 12)
+                : currentUserAddress.slice(0, 7)}
+              {currentUserAddress.length || userName.length > 13
+                ? userName
+                  ? ""
+                  : "..."
+                : currentUserAddress.length > 13
+                ? "..."
+                : ""}
               {
-                currentUserAddress && userName
+                // currentUserAddress && userName
                 // `${currentUserAddress.substr(
                 //   0,
                 //   6
@@ -169,10 +197,14 @@ const PopUpSettings = ({
               <img
                 style={{
                   width: "auto",
-                  height: 56,
+                  height: 100,
                   borderRadius: 16,
                 }}
-                src="https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+                src={
+                  imagePreviewUrl === null
+                    ? "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+                    : imagePreviewUrl
+                }
                 alt="avatart"
               />
             </div>
@@ -181,21 +213,37 @@ const PopUpSettings = ({
                 <label>Name</label>
                 <div className="profile-input">
                   {/* <input value={userName} onChange={onChangeName} type="text" /> */}
-                  <span>{userName}</span>
+                  {/* <span>{userName}</span> */}
+                  <span>
+                    {userName
+                      ? userName.slice(0, 24)
+                      : currentUserAddress.slice(0, 24)}
+                    {currentUserAddress.length || userName.length > 24
+                      ? userName
+                        ? "..."
+                        : ""
+                      : currentUserAddress.length > 13
+                      ? "..."
+                      : ""}
+                  </span>
                 </div>
 
                 <label>Email</label>
                 <div className="profile-input">
                   {/* <input type="text" placeholder="Enter your email" /> */}
-                  <span>{userEmail}</span>
+                  <span>{userEmail ? userEmail : "email@example.com"}</span>
                 </div>
-                
               </div>
             </div>
             <div className="user-edit">
-            <div className="profile-input">
-                  <span className="profile-input-edit" onClick={() => setOpenModalPic(true)}>Edit</span>
-            </div>
+              <div className="profile-input">
+                <span
+                  className="profile-input-edit"
+                  onClick={() => setOpenModalPic(true)}
+                >
+                  Edit
+                </span>
+              </div>
             </div>
           </div>
         </div>

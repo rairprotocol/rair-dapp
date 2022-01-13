@@ -161,37 +161,42 @@ const NftDataPageTest = ({
     // );
 
     // v2
-        // return tokenData.map((el, index) => {
-    //   if (Number(el.token) === Number(selectedToken)) {
-    //     return  (
-    //       <a className="nftDataPageTest-a-hover" key={index} href={el?.authenticityLink}>
-    //         {el?.authenticityLink}
-    //       </a>
-    //     );
-    //   }
-    //   //  else {
-    // return <span style={{cursor:"default"}}>Not minted yet</span>;
-    //   // }
-    // });
+    // eslint-disable-next-line array-callback-return
+    return tokenData.map((el, index) => {
+      if (Number(el.token) === Number(selectedToken)) {
+        return (
+          <a
+            className="nftDataPageTest-a-hover"
+            key={index}
+            href={el?.authenticityLink}
+          >
+            {el?.authenticityLink}
+          </a>
+        );
+      }
+      //   //  else {
+      // return <span style={{cursor:"default"}}>Not minted yet</span>;
+      //   // }
+    });
 
-    if (tokenData[selectedToken]) {
-      // eslint-disable-next-line array-callback-return
-      return tokenData.map((el, index) => {
-        if (Number(el.token) === Number(selectedToken)) {
-          return (
-            <a
-              className="nftDataPageTest-a-hover"
-              key={index}
-              href={el?.authenticityLink}
-            >
-              {el?.authenticityLink}
-            </a>
-          );
-        }
-      });
-    } else {
-      return <span style={{ cursor: "default" }}>Not minted yet</span>;
-    }
+    // if (tokenData[selectedToken]) {
+    // eslint-disable-next-line array-callback-return
+    //     return tokenData.map((el, index) => {
+    //       if (Number(el.token) === Number(selectedToken)) {
+    //         return (
+    //           <a
+    //             className="nftDataPageTest-a-hover"
+    //             key={index}
+    //             href={el?.authenticityLink}
+    //           >
+    //             {el?.authenticityLink}
+    //           </a>
+    //         );
+    //       }
+    //     });
+    //   } else {
+    //     return <span style={{ cursor: "default" }}>Not minted yet</span>;
+    //   }
   }
 
   const switchEthereumChain = async (chainData) => {
@@ -572,12 +577,11 @@ const NftDataPageTest = ({
                     setSelectedToken={setSelectedToken}
                     items={
                       tokenData &&
-                      tokenData.map((p, index) => {
+                      tokenData.map((p) => {
                         return {
                           value: p.metadata.name,
                           id: p._id,
                           token: p.token,
-                          key: index,
                         };
                       })
                     }

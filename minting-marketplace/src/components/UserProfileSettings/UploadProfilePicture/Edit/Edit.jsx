@@ -33,7 +33,7 @@ const EditComponent = ({
   return (
     <div className={cl.card}>
       <form onSubmit={onSubmit}>
-        <h1>Profile Card</h1>
+        <h1> </h1>
         <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
         <Name onChange={(e) => setName(e.target.value)} value={name} />
         <Status onChange={(e) => setStatus(e.target.value)} value={status} />

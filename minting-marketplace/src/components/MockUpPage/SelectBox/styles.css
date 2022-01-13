@@ -136,6 +136,17 @@
     background-color: #AF6FD8;
   }
 
+  .llll:hover{
+    /* background-color: #AF6FD8 !important; */
+    color: #fff;
+    background-color: #D37AD6 !important;
+  }
+
+  .llll:disabled{
+    color: black;
+    background:#4e4d4d !important;
+  }
+
 .ntf-header {
   display: flex;
   justify-content: space-between;

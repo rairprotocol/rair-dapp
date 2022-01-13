@@ -3,7 +3,7 @@ terraform {
     hostname = "app.terraform.io"
     organization = "rairtech"
     workspaces {
-      name = "rair-staging"
+      name = "rair-qa"
     }
   }
 }
@@ -15,11 +15,11 @@ variable "gcp_tf_admin_service_account_json" {
 
 provider "google" {
   credentials = var.gcp_tf_admin_service_account_json
-  project     = "rair-market-staging"
+  project     = "rair-market-qa"
 }
 
 module "foundation" {
   source = "../../modules/foundation"
 
-  env_name = "staging"
+  env_name = "qa"
 }
