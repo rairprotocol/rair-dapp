@@ -31,6 +31,7 @@ resource "google_compute_instance" "bastion" {
     automatic_restart   = true
     on_host_maintenance = "MIGRATE"
   }
+}
   data "google_compute_image" "bastion" {
   family  = "debian-9"
   project = "debian-cloud"
