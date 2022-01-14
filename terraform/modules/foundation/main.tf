@@ -31,4 +31,28 @@ resource "google_compute_instance" "bastion" {
     automatic_restart   = true
     on_host_maintenance = "MIGRATE"
   }
+  data "google_compute_image" "bastion" {
+  family  = "debian-9"
+  project = "debian-cloud"
+}
+
+resource "google_compute_disk" "foobar" {
+  name  = "existing-disk"
+  image = data.google_compute_image.bastion.self_link
+  size  = 10
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+}
+
+resource "google_compute_resource_policy" "daily_backup" {
+  name   = "every-day-4am"
+  region = "us-central1"
+  snapshot_schedule_policy {
+    schedule {
+      daily_schedule {
+        days_in_cycle = 1
+        start_time    = "04:00"
+      }
+    }
+  }
 }
