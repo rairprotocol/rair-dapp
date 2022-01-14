@@ -15,6 +15,11 @@ import TeamMeet from "./TeamMeet/TeamMeetList";
 import TokenLeftGreyman from "./TokenLeft/TokenLeftGreyman";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 
+import { erc721Abi } from '../../contracts/index.js'
+import { rFetch } from '../../utils/rFetch.js';
+import { web3Switch } from '../../utils/switchBlockchain.js';
+import Swal from 'sweetalert2';
+
 const customStyles = {
     overlay: {
       zIndex: "1",
@@ -39,10 +44,12 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 const SplashPage = () => {
+  const GraymanSplashPageTESTNET = '0x1bf2b3aB0014d2B2363dd999889d407792A28C06';
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [active, setActive] = useState({ policy: false, use: false });
   const [modalIsOpen, setIsOpen] = useState(false);
 //   const history = useHistory();
+  const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -60,6 +67,44 @@ const SplashPage = () => {
       use: false
     }))
   }
+
+  const buyGrayman = async () => {
+    if (window.ethereum.chainId !== '0x13881') {
+        web3Switch('0x13881');
+        return;
+    }
+
+    const { success, products } = await rFetch(`/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`);
+    if (success) {
+        let instance = contractCreator(GraymanSplashPageTESTNET, erc721Abi);
+        let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
+        Swal.fire({
+          title: 'Please wait...',
+          html: `Buying Grayman #${nextToken.toString()}`,
+          icon: 'info',
+          showConfirmButton: false
+        });
+        let [greyworldOffer] = products[0].offers.filter(item => item.offerName === 'greyworld');
+        if (!greyworldOffer) {
+          Swal.fire('Error', 'An error has ocurred', 'error');
+          return;
+        }
+        try {
+          await (await minterInstance.buyToken(
+            products[0].offerPool.marketplaceCatalogIndex,
+            greyworldOffer.offerIndex,
+            nextToken,
+            {
+              value: greyworldOffer.price
+            }
+          )).wait();
+          Swal.fire('Success', `Bought Grayman #${nextToken}!`, 'success');
+        } catch (e) {
+          console.error(e);
+          Swal.fire('Error', e?.message, 'error');
+        }
+    }
+  };
   
   let subtitle;
 
@@ -158,7 +203,7 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button onClick={() => console.log('sdfsdfsdfsdd')} 
+                        <button onClick={buyGrayman} 
                         disabled={!Object.values(active).every(el => el)} 
                         className="modal-btn">
                           <img
