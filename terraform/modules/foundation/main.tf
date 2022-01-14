@@ -11,7 +11,7 @@ resource "google_compute_network" "vpc_network" {
   }
 
 resource "google_compute_instance" "bastion" {
-  name = local.hostname
+  name = bastion_test
   machine_type = "g1-small"
   # zone = var.zone
   # project = var.project
