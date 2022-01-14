@@ -119,6 +119,23 @@ const App = () => {
 				})}
 		</div>
 		<div className='row'>
+			<button onClick={async () => {
+				let usedFunctions = [];
+				let combinedABI = [FactoryDiamond, DiamondCutFacet, DiamondLoupeFacet, ERC777ReceiverFacet, OwnershipFacet, creatorFacet, TokensFacet]
+				.reduce((finalList, contract) => {
+					let cleanAbi = contract.abi.filter(item => {
+						if (!usedFunctions.includes(item.name)) {
+							usedFunctions.push(item.name);
+							return true;
+						}
+						return false;
+					});
+					return finalList.concat(cleanAbi);
+				}, [])
+				console.log(combinedABI);
+			}} className='btn btn-primary'>
+				Combine ABI
+			</button>
 		</div>
 	</div>
 }
