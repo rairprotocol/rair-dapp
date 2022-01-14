@@ -13,7 +13,7 @@ resource "google_compute_network" "vpc_network" {
 resource "google_compute_instance" "bastion" {
   name          = "bastion_test"
   machine_type = "g1-small"
-  # zone = var.zone
+  zone = us-west1-a
   # project = var.project
   tags = ["bastion"]
   
