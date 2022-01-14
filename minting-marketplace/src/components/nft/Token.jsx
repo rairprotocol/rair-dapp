@@ -23,8 +23,8 @@ const Token = (props) => {
 
 	const fetchData = useCallback(async () => {
 		try {
-			let {success, products} = await rFetch(`/api/contracts/${params.contract}/products/offers`);
-			let contractData = await rFetch(`/api/contracts/${params.contract}/`);
+			let {success, products} = await rFetch(`/api/contracts/${params.blockchain}/${params.contract}/products/offers`);
+			let contractData = await rFetch(`/api/contracts/${params.blockchain}/${params.contract}/`);
 			if (success && contractData.success) {
 				let [product] = products.filter(i => i.firstTokenIndex <= params.identifier && (i.firstTokenIndex + i.copies) >= params.identifier);
 				setProductIndex(product.collectionIndexInContract);
@@ -44,7 +44,7 @@ const Token = (props) => {
 		} catch (err) {
 			console.error(err);
 		}
-	}, [params.contract, params.identifier]);
+	}, [params.contract, params.identifier, params.blockchain]);
 
 
 	useEffect(() => {
@@ -52,7 +52,7 @@ const Token = (props) => {
 	}, [fetchData])
 
 	const getData = useCallback(async () => {
-		let aux = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/token/${params.identifier}`)).json()
+		let aux = await (await fetch(`/api/nft/${params.blockchain}/${params.contract.toLowerCase()}/token/${params.identifier}`)).json()
 		if (aux?.result) {
 			setMetadata(aux.result.metadata);
 			return;
@@ -77,7 +77,7 @@ const Token = (props) => {
 				description: 'No description found'
 			})
 		}
-	}, [params.contract, params.identifier])
+	}, [params.contract, params.identifier, params.blockchain])
 
 	useEffect(() => {
 		getData();
@@ -187,7 +187,7 @@ const Token = (props) => {
 				<h1>
 					Associated Files
 				</h1>
-				{productIndex !== undefined && <VideoList responseLabel='files' endpoint={`/api/nft/${params.contract}/${productIndex}/files/${params.identifier}`} />}
+				{productIndex !== undefined && <VideoList responseLabel='files' endpoint={`/api/nft/${params.blockchain}/${params.contract}/${productIndex}/files/${params.identifier}`} />}
 			</div>
 			<hr />
 			<h1>
