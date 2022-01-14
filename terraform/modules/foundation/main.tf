@@ -5,3 +5,8 @@ resource "google_storage_bucket" "hello_world" {
 
   uniform_bucket_level_access = true
 }
+
+resource "google_compute_network" "vpc_network" {
+  name          = "${var.env_name}terraform-network"
+  }
+  
