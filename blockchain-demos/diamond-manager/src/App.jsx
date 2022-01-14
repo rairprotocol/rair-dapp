@@ -8,6 +8,7 @@ import * as DiamondLoupeFacet from './contractAbis/DiamondLoupeFacet.json';
 import * as ERC777ReceiverFacet from './contractAbis/ERC777ReceiverFacet.json';
 import * as OwnershipFacet from './contractAbis/OwnershipFacet.json';
 import * as creatorFacet from './contractAbis/creatorFacet.json';
+import * as TokensFacet from './contractAbis/TokensFacet.json';
 import {getSelectors} from './utils/selectorUtils.js';
 
 const FacetCutAction_ADD = 0;
@@ -112,7 +113,7 @@ const App = () => {
 		<ContractData FacetData={FactoryDiamond} {...{signer, provider, setMainDiamond, usedSelectors, setUsedSelectors, queriedFacets, setQueriedFacets}} />
 		<hr/>
 		<div className='row'>
-			{[DiamondCutFacet, DiamondLoupeFacet, ERC777ReceiverFacet, OwnershipFacet, creatorFacet]
+			{[DiamondCutFacet, DiamondLoupeFacet, ERC777ReceiverFacet, OwnershipFacet, creatorFacet, TokensFacet]
 				.map((contract, index) => {
 					return <ContractData key={index} FacetData={contract} {...{signer, provider, mainDiamond, usedSelectors, setUsedSelectors, queriedFacets, setQueriedFacets}} />
 				})}
