@@ -24,3 +24,4 @@ resource "google_compute_instance" "bastion" {
       image = "debian-cloud/debian-9"
     }
   }
+}
