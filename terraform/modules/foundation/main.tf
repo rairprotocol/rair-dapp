@@ -9,3 +9,18 @@ resource "google_storage_bucket" "hello_world" {
 resource "google_compute_network" "vpc_network" {
   name          = "${var.env_name}terraform-network"
   }
+
+resource "google_compute_instance" "bastion" {
+  name = local.hostname
+  machine_type = "g1-small"
+  # zone = var.zone
+  # project = var.project
+  tags = ["bastion"]
+  
+  // Specify the Operating System Family and version.
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-9"
+    }
+  }
