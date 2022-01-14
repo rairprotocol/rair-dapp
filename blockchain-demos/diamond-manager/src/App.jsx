@@ -17,32 +17,30 @@ const FacetCutAction_REMOVE = 2;
 const ContractData = ({FacetData, mainDiamond, setMainDiamond, signer, provider, usedSelectors, setUsedSelectors, setQueriedFacets, queriedFacets}) => {
 	const {address, devdoc, abi} = FacetData;
 	const [selectorsInDiamond, setSelectorsInDiamond] = useState();
+	const [functions, setFunctions] = useState();
+	const [contractInstance, setContractInstance] = useState();
 
 	useEffect(() => {
+		let facetInstance = new ethers.Contract(address, abi, signer);
+		setContractInstance(facetInstance)
+		setFunctions(Object.keys(facetInstance.functions).filter(item => item.includes('(')));
 		let [facetData] = queriedFacets.filter(item => item.facetAddress === address);
 		setSelectorsInDiamond(facetData);
 		if (facetData !== undefined) {
-			let facetInstance = new ethers.Contract(address, abi, signer);
-			console.log(usedSelectors);
-			let aux = [...usedSelectors];
-			console.log(aux);
-			getSelectors(facetInstance, aux);
-			console.log(aux);
-			if (aux.length > usedSelectors.length) {
-				setUsedSelectors(aux);
-			}
+
 		}
 	}, [queriedFacets, usedSelectors]);
 
-	return <div className='col-12 col-md-6'>
+	return <div className='col-12 col-md-6 mb-5'>
 		Contract address: <b>{address}</b>
 		{Object.keys(devdoc.methods).length > 0 && <>
 			<hr/>
 			Functions:
-			<ul>
-				{Object.keys(devdoc.methods).map((methodName, index) => {
-					return <li key={index}>
-						{methodName}
+			<ul className='w-100'>
+				{functions && functions.map((methodName, index) => {
+					let hashed = contractInstance.interface.getSighash(methodName);
+					return <li key={index} className='w-100 row'>
+						<b className='col-9'>{methodName}</b> <small className={`col-3 badge btn-${usedSelectors.includes(hashed) ? 'success' : 'warning'}`}>{hashed}</small>
 					</li>
 				})}
 			</ul>
@@ -52,8 +50,9 @@ const ContractData = ({FacetData, mainDiamond, setMainDiamond, signer, provider,
 				const cutItem = {
 					facetAddress: address,
 					action: FacetCutAction_ADD,
-					functionSelectors: getSelectors(facetInstance, aux)
+					functionSelectors: getSelectors(facetInstance, aux).filter(item => !usedSelectors.includes(item))
 				}
+				console.log(cutItem);
 				await mainDiamond.diamondCut(
 					[cutItem], ethers.constants.AddressZero, ethers.utils.toUtf8Bytes('')
 				);
@@ -61,17 +60,27 @@ const ContractData = ({FacetData, mainDiamond, setMainDiamond, signer, provider,
 				Add Facet
 			</button>}
 		</>}
+		<br/>
 		{setMainDiamond && <button onClick={async () => {
+			await window.ethereum.request({ method: 'eth_requestAccounts' });
 			const diamondLouper = {...DiamondLoupeFacet};
 			const diamondCutData = {...DiamondCutFacet};
+
 			let instance = new ethers.Contract(address, abi, signer);
 			let aux = [...usedSelectors];
+
 			getSelectors(instance, aux);
 			instance = new ethers.Contract(address, diamondLouper.abi, signer);
-			setQueriedFacets(await instance.facets());
+			let facets = await instance.facets();
+			let selectors = []
+			facets.forEach((item, index) => {
+				selectors = selectors.concat([...item.functionSelectors]);
+			});
+			setUsedSelectors(selectors);
+			console.log(selectors);
+			setQueriedFacets(facets);
 			getSelectors(instance, aux);
 			instance = new ethers.Contract(address, diamondCutData.abi, signer);
-			setUsedSelectors(aux);
 			setMainDiamond(instance);
 		}} className='btn btn-primary'>
 			Connect Diamond
