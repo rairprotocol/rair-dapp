@@ -2,13 +2,22 @@ import {useState, useEffect, useCallback} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import * as ethers from 'ethers';
+// Standard Diamond Facets
 import * as DiamondCutFacet from './contractAbis/DiamondCutFacet.json'; 
-import * as FactoryDiamond from './contractAbis/FactoryDiamond.json';
 import * as DiamondLoupeFacet from './contractAbis/DiamondLoupeFacet.json';
-import * as ERC777ReceiverFacet from './contractAbis/ERC777ReceiverFacet.json';
 import * as OwnershipFacet from './contractAbis/OwnershipFacet.json';
+// Main Diamond
+import * as FactoryDiamond from './contractAbis/FactoryDiamond.json';
+// Factory
+import * as ERC777ReceiverFacet from './contractAbis/ERC777ReceiverFacet.json';
 import * as creatorFacet from './contractAbis/creatorFacet.json';
 import * as TokensFacet from './contractAbis/TokensFacet.json';
+// Token Facets
+import * as ERC721Facet from './contractAbis/ERC721Facet.json';
+import * as RAIRMetadataFacet from './contractAbis/RAIRMetadataFacet.json';
+import * as RAIRProductFacet from './contractAbis/RAIRProductFacet.json';
+import * as RAIRRangesFacet from './contractAbis/RAIRRangesFacet.json';
+
 import {getSelectors} from './utils/selectorUtils.js';
 
 const FacetCutAction_ADD = 0;
@@ -104,6 +113,19 @@ const App = () => {
 		}
 	}, []);
 
+	const facetArray = [
+		DiamondCutFacet,
+		DiamondLoupeFacet,
+		ERC777ReceiverFacet,
+		OwnershipFacet,
+		creatorFacet,
+		TokensFacet,
+		ERC721Facet,
+		RAIRMetadataFacet,
+		RAIRProductFacet,
+		RAIRRangesFacet,
+	]
+
 	return <div className='container-fluid p-5'>
 		<div className='row h1'>
 			Rair Diamond Manager
@@ -113,7 +135,7 @@ const App = () => {
 		<ContractData FacetData={FactoryDiamond} {...{signer, provider, setMainDiamond, usedSelectors, setUsedSelectors, queriedFacets, setQueriedFacets}} />
 		<hr/>
 		<div className='row'>
-			{[DiamondCutFacet, DiamondLoupeFacet, ERC777ReceiverFacet, OwnershipFacet, creatorFacet, TokensFacet]
+			{facetArray
 				.map((contract, index) => {
 					return <ContractData key={index} FacetData={contract} {...{signer, provider, mainDiamond, usedSelectors, setUsedSelectors, queriedFacets, setQueriedFacets}} />
 				})}
@@ -121,17 +143,17 @@ const App = () => {
 		<div className='row'>
 			<button onClick={async () => {
 				let usedFunctions = [];
-				let combinedABI = [FactoryDiamond, DiamondCutFacet, DiamondLoupeFacet, ERC777ReceiverFacet, OwnershipFacet, creatorFacet, TokensFacet]
-				.reduce((finalList, contract) => {
-					let cleanAbi = contract.abi.filter(item => {
-						if (!usedFunctions.includes(item.name)) {
-							usedFunctions.push(item.name);
-							return true;
-						}
-						return false;
-					});
-					return finalList.concat(cleanAbi);
-				}, [])
+				let combinedABI = facetArray
+					.reduce((finalList, contract) => {
+						let cleanAbi = contract.abi.filter(item => {
+							if (!usedFunctions.includes(item.name)) {
+								usedFunctions.push(item.name);
+								return true;
+							}
+							return false;
+						});
+						return finalList.concat(cleanAbi);
+					}, [])
 				console.log(combinedABI);
 			}} className='btn btn-primary'>
 				Combine ABI

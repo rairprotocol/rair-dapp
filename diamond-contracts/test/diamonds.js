@@ -103,6 +103,8 @@ describe("Diamonds", function () {
 		OwnershipFacetFactory = await ethers.getContractFactory("OwnershipFacet");
 		DiamondLoupeFacetFactory = await ethers.getContractFactory("DiamondLoupeFacet");
 		
+		// ERC777 Deployment (RAIR Token)
+		ERC777Factory = await ethers.getContractFactory("RAIR777");
 		// Factory
 		FactoryDiamondFactory = await ethers.getContractFactory("FactoryDiamond");
 		// Marketplace
@@ -110,7 +112,6 @@ describe("Diamonds", function () {
 
 		// Factory's facets
 		ERC777ReceiverFacetFactory = await ethers.getContractFactory("ERC777ReceiverFacet");
-		ERC777Factory = await ethers.getContractFactory("RAIR777");
 		CreatorsFacetFactory = await ethers.getContractFactory("creatorFacet");
 		TokensFacetFactory = await ethers.getContractFactory("TokensFacet");
 
