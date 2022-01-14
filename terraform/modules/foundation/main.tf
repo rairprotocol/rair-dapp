@@ -24,4 +24,11 @@ resource "google_compute_instance" "bastion" {
       image = "debian-cloud/debian-9"
     }
   }
+  network_interface {
+    network = "default"
+  }
+  scheduling {
+    automatic_restart   = true
+    on_host_maintenance = "MIGRATE"
+  }
 }
