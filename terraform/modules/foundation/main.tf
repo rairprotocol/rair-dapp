@@ -37,8 +37,8 @@ resource "google_compute_instance" "bastion" {
   project = "debian-cloud"
 }
 
-resource "google_compute_disk" "bastion-disk" {
-  name  = "existing-disk"
+resource "google_compute_disk" "bastion-image" {
+  name  = "bastion-disk"
   image = data.google_compute_image.bastion-disk.self_link
   size  = 10
   type  = "pd-ssd"
