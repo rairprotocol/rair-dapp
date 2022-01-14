@@ -168,6 +168,7 @@ module.exports = context => {
   // Verify with a Metamask challenge if the user holds the current Administrator token
   router.get('/admin/:MetaMessage/:MetaSignature/', validation('admin', 'params'), metaAuth, async (req, res, next) => {
     const ethAddres = req.metaAuth.recovered;
+    const reg = new RegExp(/^0x\w{40}:\w+$/);
 
     try {
       if (ethAddres) {
@@ -179,12 +180,12 @@ module.exports = context => {
 
         user = user.toObject();
 
-        const nftIdentifier = _.get(user, 'adminNFT');
+        const nftIdentifier = _.get(user, 'adminNFT', '');
 
-        if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
+        log.info('Verifying user account has the admin token');
+
+        if (typeof nftIdentifier === 'string' && reg.test(nftIdentifier)) { // verify the account holds the required NFT!
           const [contractAddress, tokenId] = nftIdentifier.split(':');
-
-          log.info('Verifying user account has the admin token');
 
           try {
             const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
@@ -198,6 +199,8 @@ module.exports = context => {
             log.error(e);
             next(new Error('Could not verify account.', ));
           }
+        } else {
+          return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
         }
       } else {
         return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
