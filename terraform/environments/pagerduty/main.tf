@@ -6,13 +6,23 @@ terraform {
       name = "pagerduty"
     }
   }
+  required_providers {
+    pagerduty = {
+      source = "PagerDuty/pagerduty"
+      version = "2.2.1"
+    }
+  }
 }
 
 variable "pagerduty_api_key" {
   type = string
 }
 
-local {
+provider "pagerduty" {
+    token = var.pagerduty_api_key
+}
+
+locals {
   tf_admin_postfix = "(TF Administered)"
 }
 
