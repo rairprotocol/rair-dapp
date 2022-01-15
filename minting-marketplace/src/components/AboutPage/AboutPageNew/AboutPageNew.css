@@ -93,7 +93,7 @@
     width: 251px;
     height: 55px;
     color: #fff;
-    background: #5B49AF;
+    background: #383637;
     font-size: 23px;
     font-weight: 700;
     border-radius: 16px;
@@ -102,7 +102,7 @@
     justify-content: center;
 }
 
-.about-page-platform .platform-box:nth-child(2) .platform-title {
+/* .about-page-platform .platform-box:nth-child(2) .platform-title {
     background: #75CAFA;
 }
 
@@ -112,7 +112,7 @@
 
 .about-page-platform .platform-box:nth-child(4) .platform-title {
     background: #1486C5;
-}
+} */
 
 .about-page-platform .platform-box .categories-list {
     border: 2px dashed #4E4D4D;
@@ -299,6 +299,10 @@
     background: #222021;
 }
 
+.streaming-offer.non-streaming .progress-box:last-child {
+    background: #383637;
+}
+
 .streaming-progress .progress-box {
     width: 33px;
     height: 33px;
@@ -365,12 +369,15 @@
 
 .about-streams-video iframe {
     border-radius: 12px;
-    width:978px;
-    height:549px
+    width: 702px;
+    height: 400px;
 }
 
-.about-streams-video .box-video {
-    margin: 0 0 74px 0;
+.about-streams-video .box-video-player {
+    margin-bottom: 108px;
+    border-radius: 16px;
+    background: #383637;
+    padding: 24px 0;
 }
 
 .about-streams-video .about-streams-video-title {
@@ -1061,6 +1068,18 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .home-about--page .streaming-box .streaming-offer {
         width: 900px;
     }
+
+    .streaming-progress .line-purple, .streaming-progress .line-grey {
+        width: 250px;
+    }
+
+    .streaming-progress .line-grey {
+        right: 15px;
+    }
+
+    .about-rair-offer .streaming-percent, .about-rair-offer .streaming-progress {
+        width: 500px;
+    }
 }
 
 @media screen and (max-width: 1250px) {
@@ -1206,6 +1225,25 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 }
 
 @media screen and (max-width: 935px) {
+    .home-about--page .streaming-box .streaming-offer {
+        width: 750px;
+    }
+
+    .home-about--page .streaming-box .streaming-offer {
+        justify-content: space-between;
+    }
+
+    .about-rair-offer .about-offer-content .streaming-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .about-rair-offer .rair-offer-text {
+        text-align: center;
+    }
+
     .left-tokens.about-page {
         display: flex;
         flex-direction: column;
@@ -1234,6 +1272,18 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
     .left-tokens-content .title-tokens h3 {
         text-align: center;
+    }
+
+    .streaming-progress .line-purple, .streaming-progress .line-grey, .streaming-offer.non-streaming .line-grey-second, .streaming-offer.non-streaming .line-grey {
+        width: 200px;
+    }
+
+    .streaming-progress .line-grey {
+        right: 0px;
+    }
+
+    .about-rair-offer .streaming-percent, .about-rair-offer .streaming-progress {
+        width: 400px;
     }
 }
 
@@ -1282,7 +1332,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
 @media screen and (max-width: 825px) {
     .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
-        display: none;
+        /* display: none; */
     }
 
     .about-map-item .map-item-desc {
@@ -1303,6 +1353,17 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .home-about--page .streaming-box .streaming-offer {
+        flex-direction: column;
+    }
+
+    .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
+        margin-right: 0px;
+        margin-bottom: 20px;
     }
 }
 
@@ -1329,7 +1390,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         margin-bottom: 20px;
     }
 
-    .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
+    /* .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
         display: block;
         margin-right: 0;
         margin-top: 20px;
@@ -1341,7 +1402,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .about-rair-offer .streaming-offer {
         flex-direction: column-reverse;
         justify-content: center;
-    }
+    } */
 }
 
 @media screen and (max-width: 700px) {
