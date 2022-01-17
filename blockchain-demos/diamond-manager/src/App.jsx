@@ -104,6 +104,7 @@ const App = () => {
 	const [queriedFacets, setQueriedFacets] = useState([]);
 	const [provider, setProvider] = useState();
 	const [signer, setSigner] = useState();
+	const [combinedAbiData, setCombinedAbiData] = useState();
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -154,10 +155,14 @@ const App = () => {
 						});
 						return finalList.concat(cleanAbi);
 					}, [])
-				console.log(combinedABI);
+				let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({abi: combinedABI}));
+				setCombinedAbiData(dataStr);
 			}} className='btn btn-primary'>
 				Combine ABI
 			</button>
+			{combinedAbiData && <a className='btn btn-success' href={combinedAbiData} download='combinedAbi.json'>
+				Download
+			</a>}
 		</div>
 	</div>
 }
