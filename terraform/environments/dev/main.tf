@@ -17,6 +17,6 @@ module "foundation" {
   source = "../../modules/foundation"
 
   env_name = "dev"
-  region = "us-central-1"
+  region = "us-west1"
   vpc_cidr_block = module.config.env_config.dev.vpc_cidr_block
 }

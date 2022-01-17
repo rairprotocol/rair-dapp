@@ -17,7 +17,7 @@ resource "google_compute_subnetwork" "public" {
   network = google_compute_network.primary.self_link
 
   private_ip_google_access = true
-  ip_cidr_range            = cidrsubnet(var.cidr_block, 8, 0)
+  ip_cidr_range = cidrsubnet(var.vpc_cidr_block, 8, 0)
 }
 
 #######################
@@ -31,5 +31,5 @@ resource "google_compute_subnetwork" "private" {
   network = google_compute_network.primary.self_link
 
   private_ip_google_access = true
-  ip_cidr_range            = cidrsubnet(var.cidr_block, 8, 1)
+  ip_cidr_range = cidrsubnet(var.vpc_cidr_block, 8, 1)
 }
