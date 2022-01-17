@@ -1,3 +1,11 @@
+locals {
+  avaliablity_zones = {
+    a = "${var.region}-a",
+    b = "${var.region}-b",
+    c = "${var.region}-c"
+  }
+}
+
 resource "google_storage_bucket" "hello_world" {
   name          = "${var.env_name}-hello-world-bucket"
   force_destroy = true
