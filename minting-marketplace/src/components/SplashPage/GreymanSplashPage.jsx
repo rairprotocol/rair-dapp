@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
@@ -6,7 +6,8 @@ import "./SplashPage.css";
 import Modal from "react-modal";
 
 /* importing images*/
-import Metamask from "./images/metamask_logo.png";
+// import Metamask from "./images/metamask_logo.png";
+import Metamask from "../../images/metamask-fox.svg";
 import GreyMan from "./images/greyman1.png";
 
 /* importing Components*/
@@ -14,35 +15,36 @@ import GreyMan from "./images/greyman1.png";
 import TeamMeet from "./TeamMeet/TeamMeetList";
 import TokenLeftGreyman from "./TokenLeft/TokenLeftGreyman";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
+import { Timeline } from "./Timeline/Timeline";
 
 const customStyles = {
-    overlay: {
-      zIndex: "1",
-    },
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      display: "flex",
-      flexDirection: "column",
-      alignContent: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      flexWrap: "wrap",
-      fontFamily: "Plus Jakarta Text",
-      borderRadius: "16px",
-    },
-  };
+  overlay: {
+    zIndex: "1",
+  },
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+    flexDirection: "column",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    fontFamily: "Plus Jakarta Text",
+    borderRadius: "16px",
+  },
+};
 Modal.setAppElement("#root");
 
 const SplashPage = () => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [active, setActive] = useState({ policy: false, use: false });
   const [modalIsOpen, setIsOpen] = useState(false);
-//   const history = useHistory();
+  //   const history = useHistory();
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -54,13 +56,13 @@ const SplashPage = () => {
 
   function closeModal() {
     setIsOpen(false);
-    setActive(prev => ({
+    setActive((prev) => ({
       ...prev,
       policy: false,
-      use: false
-    }))
+      use: false,
+    }));
   }
-  
+
   let subtitle;
 
   return (
@@ -74,7 +76,16 @@ const SplashPage = () => {
                   "All greymen are grey, but some are more grey than others." -
                   Dadara
                 </h3>
-                <h3 style={{fontSize: '56px', paddingBottom: '17px'}} className="text-gradient-grey">#Cryptogreyman</h3>
+                <h3
+                  style={{
+                    fontSize: "56px",
+                    paddingBottom: "17px",
+                    marginTop: "7rem",
+                  }}
+                  className="text-gradient-grey"
+                >
+                  #Cryptogreyman
+                </h3>
               </div>
               <div className="text-description">
                 <p>
@@ -117,11 +128,19 @@ const SplashPage = () => {
                       <form>
                         <div className="form-group">
                           <input type="checkbox" id="policy" />
-                          <label onClick={() => setActive(prev => ({ ...prev, policy: !prev.policy }))} htmlFor="policy">I agree to the </label>
-                          <span
+                          <label
                             onClick={() =>
-                              window.open("/privacy", "_blank")
+                              setActive((prev) => ({
+                                ...prev,
+                                policy: !prev.policy,
+                              }))
                             }
+                            htmlFor="policy"
+                          >
+                            I agree to the{" "}
+                          </label>
+                          <span
+                            onClick={() => window.open("/privacy", "_blank")}
                             style={{
                               color: "#9013FE",
                               fontSize: "24px",
@@ -134,7 +153,14 @@ const SplashPage = () => {
                         </div>
                         <div className="form-group sec-group ">
                           <input type="checkbox" className="dgdfgd" id="use" />
-                          <label onClick={() => setActive(prev => ({ ...prev, use: !prev.use }))} htmlFor="use">I accept the </label>
+                          <label
+                            onClick={() =>
+                              setActive((prev) => ({ ...prev, use: !prev.use }))
+                            }
+                            htmlFor="use"
+                          >
+                            I accept the{" "}
+                          </label>
                           <span
                             onClick={() => window.open("/terms-use", "_blank")}
                             style={{
@@ -158,10 +184,13 @@ const SplashPage = () => {
                         </span>
                       </div>
                       <div className="modal-btn-wrapper">
-                        <button onClick={() => console.log('sdfsdfsdfsdd')} 
-                        disabled={!Object.values(active).every(el => el)} 
-                        className="modal-btn">
+                        <button
+                          onClick={() => console.log("sdfsdfsdfsdd")}
+                          disabled={!Object.values(active).every((el) => el)}
+                          className="modal-btn"
+                        >
                           <img
+                          style={{width: '100px', marginLeft: '-1rem'}}
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}
                             alt="metamask-logo"
@@ -293,6 +322,32 @@ const SplashPage = () => {
                 Metadata is then rendered by any free browser
               </p>
             </div>
+            <div className="property-wrapper">
+              <div className="property-first-wrapper">
+                <div className="property-first">
+                  <div className="property">
+                    <span className="property-desc">Background Color</span>
+                    <span className="property-name-color">Grey</span>
+                    <span className="property-color">100%</span>
+                  </div>
+                </div>
+                <div className="property-second">
+                  <div className="property second">
+                    <span className="property-desc">Pant Color</span>
+                    <span className="property-name-color">Grey</span>
+                    <span className="property-color">100%</span>
+                  </div>
+                </div>
+              </div>
+              <div className="property-btn-wrapper">
+                <button
+                  onClick={() => console.log("soon")}
+                  className="property-btn"
+                >
+                  <span className="property-btn-ipfs">View on IPFS</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -384,25 +439,43 @@ const SplashPage = () => {
             </div>
           </div> */}
         </div>
-        <div className="wrapper">
+        <div className="video-grey-man-wrapper">
           <p
+            className="video-grey-man-title"
             style={{
-              color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
+              color: `${primaryColor === "rhyno" ? "#000" : "#FFFFFF"}`,
             }}
           >
             For Greymen Only
           </p>
-          <div className="fgtm">
-            <img src={GreyMan} alt="community-img" />
-            <div className="dfds">
+          <div className="video-grey-man">
             <img
-                    className="metamask-logo"
-                    src={Metamask}
-                    alt="metamask-logo"
-                  />
+              className="video-grey-man-pic"
+              src={GreyMan}
+              alt="community-img"
+            />
+            <div className="video-grey-man-metamask-logo-wrapper">
+              <img
+                className="video-grey-man-metamask-logo metamask-logo"
+                src={Metamask}
+                alt="metamask-logo"
+              />
             </div>
           </div>
+          <div className="video-grey-man-desc-wrapper">
+            <span className="video-grey-man-desc">
+              NFT owners can learn more about the project by signing with
+              metamask to unlock an encrypted stream{" "}
+            </span>
+          </div>
         </div>
+
+        <div className="greyman-timeline-wrapper">
+          <h1 style={{ color: "#6C6C6C" }} className="greyman-timeline-title">
+            Greyman <span style={{ color: "white" }}>Timeline</span>
+          </h1>
+        </div>
+<Timeline />
         <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
       </div>
     </div>
