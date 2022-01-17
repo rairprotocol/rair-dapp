@@ -14,6 +14,8 @@ const SelectNumber = ({
   contract,
   setSelectedToken,
 }) => {
+  // console.log(items);
+  
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   const [selectedItem, setSelectedItem] = useState(selectedToken);

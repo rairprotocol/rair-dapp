@@ -135,7 +135,7 @@ const MetadataEditor = (props) => {
 	
 	const [sendingProductMetadata, setSendingProductMetadata] = useState(false);
 	const [sendingContractMetadata, setSendingContractMetadata] = useState(false);
-	const [/*sendingOpenSeaMetadata*/, setSendingOpenSeaMetadata] = useState(false);
+	const [sendingOpenSeaMetadata, setSendingOpenSeaMetadata] = useState(false);
 	const [productURI, setProductURI] = useState('');
 	const [contractURI, setContractURI] = useState('');
 	const [openSeaContractURI, setOpenSeaContractURI] = useState('');
@@ -146,13 +146,13 @@ const MetadataEditor = (props) => {
 
 	const fetchContractData = useCallback(async () => {
 		
-		let contractData = await rFetch(`/api/contracts/${params.contract}`)
+		let contractData = await rFetch(`/api/contracts/network/${params.blockchain}/${params.contract}`)
 		if (contractData.success) {
 			setContractName(contractData.contract.title);
 			setContractNetwork(contractData.contract.blockchain);
 		}
 		
-		let productsData = await rFetch(`/api/contracts/${params.contract}/products/offers`)
+		let productsData = await rFetch(`/api/contracts/network/${params.blockchain}/${params.contract}/products/offers`)
 		if (productsData.success) {
 			let [aux] = productsData.products.filter(item => item.collectionIndexInContract === Number(params.product));
 			if (aux) {
@@ -167,7 +167,7 @@ const MetadataEditor = (props) => {
 			}
 		}
 
-		let nftResponse = await (await fetch(`/api/nft/${params.contract.toLowerCase()}/${params.product}`)).json()
+		let nftResponse = await (await fetch(`/api/nft/network/${params.blockchain}/${params.contract.toLowerCase()}/${params.product}`)).json()
 		let sortedMetadataArray = [];
 		let sortedURIArray = [];
 		if (nftResponse?.success && nftResponse?.totalCount) {
@@ -247,14 +247,6 @@ const MetadataEditor = (props) => {
 			({params.contract}) on {chainData[contractNetwork]?.name}
 		</small>}
 		<div className='col-6'>
-			<div className='col-2' />
-			<button disabled className='btn btn-royal-ice col-3'>
-				Single
-			</button>
-			<Link to={`/batch-metadata/${params.contract}/${params.product}`} className='btn btn-royal-ice col-3'>
-				Batch
-			</Link>
-			<div className='col-2' />
 			<InputField
 				label='Title'
 				getter={title}
@@ -263,14 +255,6 @@ const MetadataEditor = (props) => {
 				labelClass='w-100 text-left'
 				labelCSS={{textAlign: 'left'}}
 			/>
-			{/*false && <InputField
-				label='Edition Symbol'
-				getter={symbol}
-				setter={setSymbol}
-				customClass='form-control'
-				labelClass='w-100'
-				labelCSS={{textAlign: 'left'}}
-			/>*/}
 			<InputField
 				label='Description'
 				getter={description}
@@ -358,7 +342,7 @@ const MetadataEditor = (props) => {
 					labelCSS={{textAlign: 'left'}}
 				/>
 				<hr />
-				<Link className='btn btn-stimorol' to={`/token/${params.contract}/${Number(internalFirstToken) + Number(tokenNumber)}`}>
+				<Link className='btn btn-stimorol' to={`/token/${params.blockchain}/${params.contract}/${Number(internalFirstToken) + Number(tokenNumber)}`}>
 					View token!
 				</Link>
 				<hr />
@@ -491,14 +475,13 @@ const MetadataEditor = (props) => {
 					<small> This information is pulled by OpenSea </small>
 					<br />
 						<br />
-						<button disabled={sendingContractMetadata} className='btn btn-royal-ice' onClick={async e => {
+						<button disabled={sendingOpenSeaMetadata} className='btn btn-royal-ice' onClick={async e => {
 							if (window.ethereum.chainId !== contractNetwork) {
 								swal.fire(`Switch to ${chainData[contractNetwork]?.name}!`);
 								return;
 							}
 							setSendingOpenSeaMetadata(true);
 							let instance = contractCreator(params.contract, erc721Abi);
-							console.log(instance)
 							try {
 								await instance.setContractURI(openSeaContractURI);
 							} catch (err) {

@@ -109,7 +109,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 				<div className='border-stimorol rounded-rair col-12 mb-0'>
 					<InputField
 						disabled={uploadSuccess}
-						maxlength='30'
+						maxLength='30'
 						getter={item.title}
 						setter={updateMediaTitle}
 						customClass='mb-0 form-control rounded-rair'

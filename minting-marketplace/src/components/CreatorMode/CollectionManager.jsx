@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CustomPayRate from '../whitelabel/customizePayRate.jsx';
 import { utils } from 'ethers';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
@@ -168,10 +169,9 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 	}*/
 
 	const locker = async (productIndex, startingToken, endingToken, lockedTokens) => {
-		try {
-			await tokenInstance.createRangeLock(productIndex, startingToken, endingToken, lockedTokens);
-		} catch (err) {
-			Swal.fire('Error', err?.data?.message, 'error');
+		Swal.fire({title: 'Locking tokens', html: 'Please wait', icon: 'info', showConfirmButton: false});
+		if (await metamaskCall(tokenInstance.createRangeLock(productIndex, startingToken, endingToken, lockedTokens))) {
+			Swal.fire('Success', 'Tokens locked', 'success');
 		}
 	}
 
@@ -231,13 +231,9 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			return;
 		}
 		Swal.fire({title: 'Updating', html: 'Please wait', icon: 'info', showConfirmButton: false});
-		try {
-			await minterInstance.updateOfferRange(offerIndex, rangeIndex, startToken, endToken, price, name);
-		} catch (e) {
-			Swal.fire('Error',e?.message?.toString(),'error');
-			return;
+		if (await metamaskCall(minterInstance.updateOfferRange(offerIndex, rangeIndex, startToken, endToken, price, name))) {
+			Swal.fire('Success', 'Offer updated', 'success');
 		}
-		Swal.fire({title: 'Success', html: 'Please wait', icon: 'info', showConfirmButton: false});
 	} 
 
 	useEffect(() => {
@@ -258,7 +254,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			className='btn btn-warning'
 			id={`metadata_${productIndex + 1}`}
 			style={{position: 'absolute', top: 0, right: 0}}
-			to={`/metadata/${tokenInstance.address}/${productIndex}`}>
+			to={`/metadata/${window.ethereum.chainId}/${tokenInstance.address}/${productIndex}`}>
 			Edit Metadata!
 		</Link>
 		<summary>
@@ -320,7 +316,6 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 					</thead>
 					<tbody>
 						{ranges.map((item, index, array) => {
-							console.log(item);
 							return <RangeManager
 								key={index}
 								disabled={item.disabled}
@@ -340,7 +335,8 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 				<button onClick={async e => {
 					try {
 						if (ranges.length > 0 && ranges[0].disabled) {
-							await minterInstance.appendOfferRangeBatch(
+							Swal.fire({title: 'Appending offers', html: 'Please wait', icon: 'info', showConfirmButton: false});
+							if (await metamaskCall(minterInstance.appendOfferRangeBatch(
 								await minterInstance.contractToOfferRange(tokenInstance.address, productIndex),
 								ranges.filter(notDisabled).map((item, index, array) => {
 									if (index === 0) {
@@ -356,16 +352,21 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								ranges.filter(notDisabled).map((item) => item.endingToken),
 								ranges.filter(notDisabled).map((item) => item.price),
 								ranges.filter(notDisabled).map((item) => item.name)
-							)
+							))) {
+								Swal.fire('Success', 'Offers appended', 'success');
+							}
 						} else {
-							await minterInstance.addOffer(
+							Swal.fire({title: 'Creating offer', html: 'Please wait', icon: 'info', showConfirmButton: false});
+							if (await minterInstance.addOffer(
 								tokenAddress,
 								productIndex,
 								ranges.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
 								ranges.map((item) => item.endingToken),
 								ranges.map((item) => item.price),
 								ranges.map((item) => item.name),
-								'0x3fD4268B03cce553f180E77dfC14fde00271F9B7');
+								'0x3fD4268B03cce553f180E77dfC14fde00271F9B7')) {
+								Swal.fire('Success', 'Offer created', 'success');
+							}
 						}
 					} catch (err) {
 						console.error(err);
