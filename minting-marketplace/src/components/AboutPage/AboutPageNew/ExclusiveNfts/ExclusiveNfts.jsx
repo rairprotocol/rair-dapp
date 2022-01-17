@@ -4,6 +4,7 @@ import Nft_1 from './../../assets/monster.jpeg';
 import Nft_2 from './../../assets/coin-agenda_2.png';
 import Nft_3 from './../../assets/nutcracher-nft-photo.png';
 import Nft_4 from './../../assets/coin-agenda_1.jpeg';
+import MobileCarouselNfts from './MobileCarouselNfts';
 
 const ExclusiveNfts = () => {
     return (
@@ -32,6 +33,13 @@ const ExclusiveNfts = () => {
                     </div>
                 </div>
             </div>
+            <MobileCarouselNfts>
+                <img src={NftImage} alt="img" />
+                <img src={Nft_4} alt="img" />
+                <img src={Nft_2} alt="img" />
+                <img src={Nft_3} alt="img" />
+                <img src={Nft_1} alt="img" />
+            </MobileCarouselNfts>
         </div>
     )
 }

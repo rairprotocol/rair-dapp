@@ -1,4 +1,5 @@
 import React from 'react'
+import TeammateDesc from './TeammateDesc';
 
 const Teammate = ({ url, name, desc, primaryColor, socials }) => {
     return (
@@ -25,13 +26,7 @@ const Teammate = ({ url, name, desc, primaryColor, socials }) => {
 
                         </div>
                     </div>
-                    <div className="teammate-description">
-                        {
-                            desc.map((p, index) => {
-                                return <p key={index} style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>{p}</p>
-                            })
-                        }
-                    </div>
+                    <TeammateDesc desc={desc} primaryColor={primaryColor} />
                 </div>
             </div>
         </div>

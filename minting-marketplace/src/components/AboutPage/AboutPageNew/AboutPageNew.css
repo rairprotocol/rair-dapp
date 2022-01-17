@@ -1,5 +1,6 @@
 .wrapper-about-page {
-   
+   /* display: flex;
+   justify-content: center; */
 }
 
 .home-about--page {
@@ -25,6 +26,10 @@
 .home-about--page .information-author .home-about--logo img {
     height: 150px;
     width: 150px;
+}
+
+.home-about--page .nfts-select-mobile, .home-about--page .react-multi-carousel-list {
+    display: none;
 }
 
 .home-about--page .information-author .home-about--logo {
@@ -71,6 +76,10 @@
     display: flex;
     justify-content: center;
     flex-direction: column; */
+}
+
+.about-platform-content-mobile {
+    display: none;
 }
 
 .about-page-platform-title {
@@ -517,7 +526,7 @@
 }
 
 .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items .items-title {
-    width: 300px;
+    width: 85%;
     height: 40px;
     color: #000;
     background: #fff;
@@ -730,6 +739,10 @@
     left: 10px;
     top: 25px;
     z-index: 0;
+}
+
+.roadmap-container-mobile {
+    display: none;
 }
 
 .about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-box {
@@ -1133,6 +1146,12 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     width: 70px;
 }
 
+button.btn-show-more {
+    border: none;
+    background: none;
+    color: #E882D5;
+}
+
 /* Mobile version*/
 
 @media screen and (max-width: 1460px) {
@@ -1177,6 +1196,25 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         width: 70px;
         height: 70px;
     }
+
+    .home-about--page .roadmap-container {
+        width: 90vw;
+        padding: 50px 0;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    .about-map-item {
+        width: 380px;
+    }
+
+    .about-roadmap .roadmap-container {
+        justify-content: center;
+    }
+
+    .about-map-item .map-progress .line-grey {
+        width: 150px;
+    }
 }
 
 @media screen and (max-width: 920px) {
@@ -1193,6 +1231,10 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .home-about--page .left-tokens .block-left-tokens {
         width: 400px;
         height: 400px;
+    }
+
+    .home-about--page .join-community .title-join, .home-about--page .community-description {
+        width: 100%;
     }
 }
 
@@ -1217,6 +1259,10 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 @media screen and (max-width: 1250px) {
     .home-about--page {
         width: 1000px;
+    }
+
+    .container-content-metamask .block-videos {
+        justify-content: center;
     }
 
     .home-about--page .tokens-description {
@@ -1356,6 +1402,28 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 }
 
+@media screen and (max-width: 950px) {
+    .home-about--page .tokenomics-ecosystem {
+        padding: 0 15px;
+    }
+
+    .tokenomics-ecosystem .ecosystem-list-text, .ecosystem-airdrops .ecosystem-airdrops-text {
+        font-size: 20px;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items .items-title, .ecosystem-airdrops-list .airdrops-items .items-title {
+        font-size: 18px;
+    }
+
+    .home-about--page .join-community {
+        padding: 0 15px;
+    }
+
+    .about-streams-video .join-community .community-description {
+        padding: 40px;
+    }
+}
+
 @media screen and (max-width: 935px) {
     .home-about--page .streaming-box .streaming-offer {
         width: 750px;
@@ -1453,6 +1521,14 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .row {
         --bs-gutter-x: 0;
     }
+
+    .about-roadmap .roadmap-container {
+        display: none;
+    }
+
+    .roadmap-container-mobile {
+        display: flex;
+    }
 } 
 
 @media screen and (max-width: 810px) {
@@ -1488,6 +1564,27 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 }
 
+@media screen and (max-width: 800px) {
+    .tokenomics-ecosystem .tokenomics-block-list, .ecosystem-airdrops-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items:first-child {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items {
+        margin-right: 0;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items {
+        width: 90%;
+    }
+    
+}
+
 @media screen and (max-width: 760px) {
     .home-about--page .streaming-box .streaming-offer {
         flex-direction: column;
@@ -1496,6 +1593,11 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
         margin-right: 0px;
         margin-bottom: 20px;
+    }
+
+    .home-about--page .streaming-box .streaming-offer.non-streaming {
+        border: none;
+        margin-top: 0;
     }
 }
 
@@ -1522,19 +1624,57 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         margin-bottom: 20px;
     }
 
-    /* .streaming-box .streaming-offer .streaming-btn, .streaming-box .streaming-offer .non-streaming-btn {
-        display: block;
-        margin-right: 0;
-        margin-top: 20px;
-        border: none;
-        background: none;
-        cursor: default;
+    .about-streams-video .join-community .community-description .community-text {
+        font-size: 20px;
+        flex-direction: column;
     }
 
-    .about-rair-offer .streaming-offer {
-        flex-direction: column-reverse;
-        justify-content: center;
-    } */
+    .about-streams-video .join-community .community-description .community-text .btn-buy-metamask {
+        margin-left: 0px;
+        margin-top: 10px;
+    }
+
+    .home-about--page .nfts-select {
+        display: none;
+    }
+
+    .home-about--page .nfts-select-mobile {
+        display: block;
+    }
+
+    .home-about--page .react-multi-carousel-list {
+        display: flex;
+    }
+
+    .nft-select-mobile img {
+        width: auto;
+        height: 350px;
+        pointer-events: none;
+        border-radius: 16px;
+    }
+
+    .nft-select-mobile .react-multi-carousel-dot button {
+        border: none;
+        background: #383637;
+    }
+
+    .nft-select-mobile .react-multi-carousel-dot--active button {
+        background: #E882D5;
+        border: none;
+    }
+
+    .nft-select-mobile .react-multi-carousel-item {
+        overflow: visible;
+    }
+
+    .nft-select-mobile .react-multi-carousel-dot-list {
+        bottom: 0px;
+    }
+
+    .nft-select-mobile .react-multi-carousel-track {
+        padding: 20px 0 50px 0;
+    }
+
 }
 
 @media screen and (max-width: 700px) {
@@ -1587,16 +1727,24 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
 @media screen and (max-width: 650px) {
     .home-about--page .video-locked {
-        width: 400px;
-        height: 130px;
-    }
-
-    .home-about--page .box-video:first-child, .home-about--page .box-video:nth-child(2) {
-        display: none;
+        width: 90vw;
+        height: 100px;
     }
 
     .video-locked img {
         width: 150px;
+    }
+
+    .container-content-metamask .container-block-video .video-locked img {
+        width: 130px;
+    }
+
+    .home-about--page .video-icon {
+        top: 45px;
+    }
+
+    .home-about--page .video-icon p {
+        display: none;
     }
     
     .container-content-metamask .container-block-video .text-watch-token {
@@ -1642,12 +1790,82 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 
 @media screen and (max-width: 575px) {
     .about-page-platform .platform-box .categories-list {
+        display: none;
+    }
+
+    .about-platform-content-mobile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 70px;
+    }
+
+    .streaming-box .streaming-offer .streaming-btn {
+        width: 100%;
+        height: 56px;
+    }
+
+    .streaming-box .streaming-offer .non-streaming-btn {
+        height: 56px;
         border: none;
-        width: 230px;
+    }
+
+    .about-platform-content-mobile .categories-list {
+        border: 2px dashed #4E4D4D;
+        border-radius: 16px;
+        margin-top: 19px;
+        padding: 27px 0 42px 0;
+        width: 251px;
+        height: 282px;
+        color: #fff;
+    }
+
+    .about-platform-content-mobile .categories-list ul{
+        padding: 0;
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .about-platform-content-mobile .categories-list ul li {
+        font-size: 20px;
+    }
+
+    .css-15v22id-MuiAccordionDetails-root {
+        display: flex;
+        justify-content: center;
+    }
+
+    .about-platform-content-mobile p {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .css-1fjvggn-MuiPaper-root-MuiAccordion-root {
+        background-color: #222021 !important;
+    }
+
+    .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiAccordion-root.css-1fjvggn-MuiPaper-root-MuiAccordion-root {
+        width: 327px;
+        /* height: 60px; */
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .css-1fjvggn-MuiPaper-root-MuiAccordion-root {
+        border: none !important;
     }
 
     .home-about--page .left-tokens-content .title-tokens {
         text-align: left !important;
+    }
+
+    .about-page-platform-content {
+        margin-top: 80px;
+        display: none;
     }
 
     .home-about--page .left-tokens-content .tokens-description {
@@ -1655,22 +1873,27 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         padding: 10px;
     }
 
-    .about-page-platform-content {
+    .about-page-platform .about-page-platform-content{
+        flex-direction: column;
         justify-content: center;
     }
 
     .about-page-platform .platform-box:first-child .categories-list ul, .about-page-platform .platform-box:nth-child(3) .categories-list ul {
-        border-right: 1px solid #E5E5E5;
+        /* border-right: 1px solid #E5E5E5; */
     }
 
     .about-page-platform .platform-box .categories-list ul li{
-        font-size: 16px;
-        text-align: right;
+        /* font-size: 16px;
+        text-align: right; */
     }
     
     .about-page-platform .platform-box .platform-title {
-        width: 200px;
-        height: 40px;
+        /* width: 200px;
+        height: 40px; */
+    }
+
+    .about-page-platform-content {
+        
     }
 
     .about-page-platform-content .platform-title-box {
@@ -1685,27 +1908,19 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .ecosystem-airdrops-list {
         flex-direction: column;
         align-content: center;
-        padding: 0 23px;
+        padding: 23px;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items {
+        width: 90%;
     }
 
     .ecosystem-airdrops-list .airdrops-items {
         width: 100%;
     }
 
-    .home-about--page .ecosystem-airdrops {
-        border-radius: 16px;
-        background: #383637;
-        margin: 60px 19px 10px 19px;
-        padding-top: 28px;
-    }
-
-    .home-about--page .tokenomics-ecosystem .ecosystem-list {
-        background: #383637;
-        padding: 20px 0;
-    }
-
     .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items .items-title {
-        width: 200px;
+        width: 90%;
         height: 40px;
         font-size: 18px;
     }
@@ -1740,6 +1955,38 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .home-about--page .tokens-description {
         width: 100%;
         padding: 0 10px;
+    }
+
+    .about-rair-offer .rair-offer-text {
+        font-size: 14px;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items ul li img {
+        height: 25px;
+        margin-right: 25px;
+    }
+
+    .ecosystem-airdrops-list .airdrops-items {
+        padding: 0 15px;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list, .ecosystem-airdrops-list {
+        padding: 0;
+    }
+
+    .ecosystem-airdrops-list {
+        border: none;
+    }
+
+    .block-view-eth-btn .btn-buy-metamask {
+        margin-top: 10px;
+    }
+
+    .nft-select-mobile img {
+        width: auto;
+        height: 250px;
+        pointer-events: none;
+        border-radius: 16px;
     }
 }
 
@@ -1779,7 +2026,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 
     .home-about--page .video-locked {
-        width: 300px;
+        width: 90vw;
         height: 90px;
     }
 
@@ -1797,7 +2044,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 
     .home-about--page .video-icon {
-        top: 20%;
+        top: 38px;
     }
 
     .container-content-metamask .content-show-arrow {
@@ -1810,7 +2057,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 
     .about-tokenomics .about-tokenomics-title {
-        font-size: 24px;
+        font-size: 32px;
     }
     
     .tokenomics-ecosystem .ecosystem-list-text {
@@ -1832,7 +2079,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     }
 
     .about-roadmap .about-road-title {
-        font-size: 24px;
+        font-size: 32px;
     }
 
     .about-map-item .map-item-desc p {
@@ -1856,7 +2103,7 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
 @media screen and (max-width: 400px) {
     .home-about--page .about-rair-offer .rair-offer-title, .about-rair-offer .change-color-text, .home-about--page .title-nft h3,
     .about-streams-video .about-streams-video-title, .about-streams-video .about-video-tutorial-text {
-        font-size: 24px;
+        font-size: 32px;
     }
 
     .about-streams-video .about-streams-video-title {
@@ -1884,13 +2131,30 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
         margin-right: 0;
     }
 
-    .tokenomics-ecosystem .tokenomics-block-list, .ecosystem-airdrops-list {
-        padding: 0 10px;
-    }
-
     .home-about--page .btn-buy-metamask button {
         width: 288px;
         height: 47px;
+    }
+
+    .tokenomics-ecosystem .tokenomics-block-list .tokenomics-items {
+        width: 99%;
+    }
+
+    .home-about--page .information-author .home-about-desc h2 {
+        font-size: 40px;
+    }
+
+    .home-about-desc .autor-about-text {
+        font-size: 16px;
+        line-height: 28px;
+    }
+
+    .about-page-platform-title {
+        font-size: 32px;
+    }
+
+    .home-about--page .join-community .title-join h3, .home-about--page .join-community .title-join h3 .text-gradient {
+        font-size: 32px;
     }
 }
 
@@ -1924,10 +2188,14 @@ tbody.table-tbody-compare tr:first-child td:nth-child(2) .circle-table-img img {
     .tokenomics-ecosystem .btn-buy-metamask button {
         width: 80vw;
     }
+
+    .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiAccordion-root.css-1fjvggn-MuiPaper-root-MuiAccordion-root {
+        width: 300px;
+    }
 }
 
 .about-compare-mobile .about-compare-title {
-    font-size: 24px;
+    font-size: 32px;
     text-align: center;
 }
 
