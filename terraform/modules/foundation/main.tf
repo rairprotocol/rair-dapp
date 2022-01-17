@@ -32,17 +32,17 @@ resource "google_compute_instance" "bastion" {
     on_host_maintenance = "MIGRATE"
   }
 }
-  data "google_compute_image" "bastion" {
+  data "google_compute_image" "bastion-image" {
   family  = "debian-9"
   project = "debian-cloud"
 }
 
-resource "google_compute_disk" "foobar" {
-  name  = "existing-disk"
-  image = data.google_compute_image.bastion.self_link
+resource "google_compute_disk" "bastion-disk" {
+  name  = "bastion-disk"
+  image = data.google_compute_image.bastion-image.self_link
   size  = 10
   type  = "pd-ssd"
-  zone  = "us-central1-a"
+  zone  = "us-west1-a"
 }
 
 resource "google_compute_resource_policy" "daily_backup" {
