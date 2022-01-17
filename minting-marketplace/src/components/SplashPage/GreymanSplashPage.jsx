@@ -19,6 +19,7 @@ import { erc721Abi } from '../../contracts/index.js'
 import { rFetch } from '../../utils/rFetch.js';
 import { web3Switch } from '../../utils/switchBlockchain.js';
 import Swal from 'sweetalert2';
+import NotCommercial from "./NotCommercial/NotCommercial";
 
 const customStyles = {
     overlay: {
@@ -449,6 +450,7 @@ const SplashPage = () => {
           </div>
         </div>
         <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
+        <NotCommercial />
       </div>
     </div>
   );
