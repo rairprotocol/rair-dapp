@@ -43,7 +43,7 @@ const ContractData = ({FacetData, mainDiamond, setMainDiamond, signer, provider,
 
 	return <div className='col-12 col-md-6 mb-5'>
 		Contract address: <b>{address}</b>
-		{Object.keys(devdoc.methods).length > 0 && <>
+		{functions && Object.keys(functions).length > 0 && <>
 			<hr/>
 			Functions:
 			<ul className='w-100'>
@@ -144,7 +144,7 @@ const App = () => {
 		<div className='row'>
 			<button onClick={async () => {
 				let usedFunctions = [];
-				let combinedABI = facetArray
+				let combinedABI = [...facetArray, FactoryDiamond]
 					.reduce((finalList, contract) => {
 						let cleanAbi = contract.abi.filter(item => {
 							if (!usedFunctions.includes(item.name)) {

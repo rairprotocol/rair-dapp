@@ -637,6 +637,22 @@ describe("Diamonds", function () {
 				.withArgs(1, "SecondSecond", 100, 900);
 		});
 
+		it ('Should return full information about the products', async () => {
+			let productFacet = await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress);
+
+			let product1Data = await productFacet.getProductInfo(0);
+			await expect(product1Data.startingToken).to.equal(0);
+			await expect(product1Data.endingToken).to.equal(999);
+			await expect(product1Data.mintableTokens).to.equal(1000);
+			await expect(product1Data.name).to.equal('FirstFirst');
+
+			let product2Data = await productFacet.getProductInfo(1);
+			await expect(product2Data.startingToken).to.equal(1000);
+			await expect(product2Data.endingToken).to.equal(1049);
+			await expect(product2Data.mintableTokens).to.equal(50);
+			await expect(product2Data.name).to.equal('FirstSecond');
+		});
+
 		it ("Should show information about the products", async () => {
 			let productFacet = await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress);
 			await expect(await productFacet.getProductCount())
@@ -1601,7 +1617,7 @@ describe("Diamonds", function () {
 			});
 
 			it ("Shouldn't create ranges", async () => {
-				let rangesFacet = await ethers.getContractAt('RAIRProductFacet', factoryDiamondInstance.address);
+				let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', factoryDiamondInstance.address);
 				await expect(rangesFacet.createRange(0, 0, 10, 1000, 9, 5, 'First First First')).to.be.reverted;
 			});
 

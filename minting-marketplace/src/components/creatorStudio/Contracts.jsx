@@ -4,6 +4,7 @@ import chainData from '../../utils/blockchainData.js'
 import { rFetch } from '../../utils/rFetch.js';
 import { NavLink } from 'react-router-dom';
 import NavigatorFactory from './NavigatorFactory.jsx';
+import { diamondFactoryAbi } from '../../contracts';
 
 // React Redux types
 import * as authTypes from '../../ducks/auth/types'
@@ -13,11 +14,23 @@ const Contracts = () => {
 	const dispatch = useDispatch();
 
 	const [contractArray, setContractArray] = useState();
-	const { programmaticProvider } = useSelector(store => store.contractStore);
+	const [diamondContractArray, setDiamondContractArray] = useState();
+	const { contractCreator, programmaticProvider, diamondFactoryInstance, currentUserAddress } = useSelector(store => store.contractStore);
 	const { primaryColor } = useSelector(store => store.colorStore);
 
 	const fetchContracts = useCallback(async () => {
 		let response = await rFetch('/api/contracts', undefined, { provider: programmaticProvider });
+		let diamondDeployments = await diamondFactoryInstance.creatorToContractList(currentUserAddress);
+		const diamondData = [];
+		for await (let deployment of diamondDeployments) {
+			let instance = contractCreator(deployment, diamondFactoryAbi);
+			diamondData.push({
+				address: deployment,
+				name: await instance.name(),
+				blockchain: window.ethereum.chainId
+			})
+		}
+		setDiamondContractArray(diamondData);
 
 		if (response.success) {
 			setContractArray(response.contracts.map(item => ({address: item.contractAddress, name: item.title, blockchain: item.blockchain})));
@@ -58,6 +71,13 @@ const Contracts = () => {
 		:
 		'Fetching data...'
 	}
+	<hr />
+	{diamondContractArray ? (diamondContractArray.length ? diamondContractArray.map((item, index) => {
+		return <NavLink to={`/creator/contract/diamond/${item.blockchain}/${item.address}/`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
+			<i className='fas fa-gem' /> {item.name}
+			<i className='fas fa-arrow-right' style={{position: 'absolute', right: '10px', top: '10px', color: 'var(--bubblegum)'}}/>
+		</NavLink>
+	}) : 'No deployments in the diamond contract') : 'Fetching Diamond Data'}
 	</NavigatorFactory>
 }
 

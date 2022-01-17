@@ -67,6 +67,10 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		return s.products.length;
 	}
 
+	function getProductInfo(uint productIndex_) external view productExists(productIndex_) returns (product memory) {
+		return s.products[productIndex_];
+	}
+
 	function tokenOfOwnerByIndex(address owner, uint256 index) public view returns (uint256) {
 		require(index < RAIRProductFacet.balanceOf(owner), "ERC721Enumerable: owner index out of bounds");
 		return s._ownedTokens[owner][index];

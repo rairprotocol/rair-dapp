@@ -71,6 +71,8 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 
 import VideoPlayer from './components/video/videoPlayer.jsx';
 
+import DiamondDeploymentUI from './components/Diamonds/diamondDeploymentUI.jsx';
+
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -95,7 +97,7 @@ function App({ sentryHistory }) {
 	ReactGA.initialize(TRACKING_ID);
 	// Redux
 	const dispatch = useDispatch()
-	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
+	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider, diamondFactoryInstance } = useSelector(store => store.contractStore);
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
@@ -382,7 +384,8 @@ function App({ sentryHistory }) {
 								{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
 								{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
 								{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
-								{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined }
+								{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+								{ name: <i className="fas fa-gem" />, route: '/diamondTest', disabled: diamondFactoryInstance === undefined }
 							].map((item, index) => {
 								if (!item.disabled) {
 									return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -405,6 +408,7 @@ function App({ sentryHistory }) {
 								<Switch>
 									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
+									{loginDone && <SentryRoute path='/creator/contract/diamond/:blockchain/:address/' component={DiamondDeploymentUI} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>

@@ -13,11 +13,12 @@ const Factory = () => {
 	const [contractName, setContractName] = useState('');
 	const [chainId, setChainId] = useState('null');
 	const [deploymentPrice, setDeploymentPrice] = useState(0);
+	const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState(0);
 	const [userBalance, setUserBalance] = useState(0);
 	const [tokenSymbol, setTokenSymbol] = useState('');
 	const [deploying, setDeploying] = useState(false);
 
-	const { currentUserAddress, programmaticProvider, factoryInstance, erc777Instance } = useSelector(store => store.contractStore);
+	const { currentUserAddress, programmaticProvider, factoryInstance, erc777Instance, diamondFactoryInstance } = useSelector(store => store.contractStore);
 	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
 	const { adminRights } = useSelector(store => store.userStore);
 
@@ -31,6 +32,9 @@ const Factory = () => {
 			setDeploymentPrice(await factoryInstance.deploymentCostForERC777(erc777Instance.address));
 			setUserBalance(await erc777Instance.balanceOf(currentUserAddress));
 			setTokenSymbol(await erc777Instance.symbol());
+		}
+		if (diamondFactoryInstance && erc777Instance) {
+			setDeploymentPriceDiamond(await diamondFactoryInstance.getDeploymentCost(erc777Instance.address));
 		}
 	}, [currentUserAddress, factoryInstance, erc777Instance, programmaticProvider]);
 
@@ -94,7 +98,7 @@ const Factory = () => {
 			<div className='col-12 p-2'>
 				<button
 					disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying}
-					className='btn btn-stimorol w-100 rounded-rair'
+					className='btn btn-stimorol col-12 rounded-rair'
 					onClick={async e => {
 						setDeploying(true);
 						Swal.fire({
@@ -122,6 +126,40 @@ const Factory = () => {
 					>
 					Deploy using {utils.formatEther(deploymentPrice).toString()} {tokenSymbol} Tokens
 				</button>
+				<div className='col-12'>
+					or
+				</div>
+				<button
+					disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying || diamondFactoryInstance === undefined}
+					className='btn btn-stimorol col-12 rounded-rair'
+					onClick={async e => {
+						setDeploying(true);
+						Swal.fire({
+							title: 'Deploying contract (with Diamonds)!',
+							html: 'Please wait...',
+							icon: 'info',
+							showConfirmButton: false
+						});
+						let success = await metamaskCall(erc777Instance.send(
+							diamondFactoryInstance.address,
+							deploymentPriceDiamond,
+							utils.toUtf8Bytes(contractName)
+						));
+						setDeploying(false);
+						if (success) {
+							Swal.fire({
+								title: 'Success',
+								html: 'Contract deployed with Diamonds!',
+								icon: 'success',
+								showConfirmButton: false
+							});
+							setContractName('');
+						}
+					}}
+					>
+					<i className='fas fa-gem' /> Spend {utils.formatEther(deploymentPriceDiamond).toString()} {tokenSymbol} tokens to deploy with <b>Diamonds</b> <i className='fas fa-gem' />
+				</button>
+				<hr />
 				Your balance: {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens
 			</div>
 			<div className='col-12 p-3 mt-5 rounded-rair' style={{border: '1.3px dashed var(--charcoal-80)'}}>

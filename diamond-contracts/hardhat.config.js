@@ -18,7 +18,7 @@ module.exports = {
 				timeout: 1000000
 			}
 		},
-		goerli: {
+		"0x5": {
 			url: process.env.GOERLI_SPEEDY_NODE,
 			accounts: [process.env.ADDRESS_PRIVATE_KEY],
 		},
