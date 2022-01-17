@@ -40,6 +40,7 @@
 
 .wrapper-splash-page.greyman-page {
     background-image: none;
+    text-align: -webkit-center;
 }
 
 .home-splash--page {
@@ -2396,6 +2397,10 @@ img.block-img-mobile{
     border-radius: 16px;
     border: 2px dashed #4E4D4D;
     padding: 50px 45px;
+}
+
+.splash-team-greyman {
+    margin-bottom: 600px;
 }
 
 .nipsey-img-masks img {

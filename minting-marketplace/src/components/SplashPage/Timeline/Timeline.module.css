@@ -2,7 +2,7 @@
   .timeline:before {
     content: '';
     position:absolute;
-    height:100%;
+    height:92.5%;
     left:50%;
     width:2px;
     top:-20px;
@@ -21,6 +21,10 @@
     float: left;
     text-align: start;
     margin-left: 2rem;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 28px;
   }
   
   .right_content_margin{
@@ -72,10 +76,10 @@
     left: 33rem;
     top: -3rem;
     font-style: normal;
-font-weight: normal;
-font-size: 20px;
-line-height: 28px;
-text-align: center;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: end;
 }
   
   .timeline ul li{
@@ -128,7 +132,7 @@ text-align: center;
    background:rgba(59,112,239,1);
     border-radius:50%;
     box-shadow: 0 0 0 3px rgba(58,112,239,0.2);
-    left:-6px;
+    left:-4px;
     top:24px;
   }
   

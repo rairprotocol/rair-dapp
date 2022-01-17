@@ -157,7 +157,8 @@ const TimelineComponent = () => {
                 className={cl.p_content}
               >
                 <strong>4 November 2021</strong> <br />
-                Birth of the handpainted Cryptogreyman (NFT sold on Rarible for
+                Birth of the handpainted Cryptogreyman (NFT sold on{" "}
+                <span style={{ textDecoration: "underline" }}>Rarible</span> for
                 2.429 ETH, painting sold for 3208 Euro at auction)
               </p>
             </div>
@@ -169,7 +170,10 @@ const TimelineComponent = () => {
           >
             <p className={cl.right_content_p_november}>
               <strong> 30 November 2021</strong> <br />
-              Birth of the pure digital Cryptogreyman (NFT sold on Foundation
+              Birth of the pure digital Cryptogreyman (NFT sold on{" "}
+              <span style={{ textDecoration: "underline" }}>
+                Foundation
+              </span>{" "}
               for 0.7 ETH)
             </p>
             <img
@@ -184,7 +188,7 @@ const TimelineComponent = () => {
             />
           </div>
 
-          <li>
+          <li style={{ marginTop: "3rem" }}>
             <div
               style={{ boxShadow: "none", left: "-428px" }}
               className={cl.left_content}
@@ -194,15 +198,6 @@ const TimelineComponent = () => {
                 src={pic7}
                 alt=""
               />
-              {/* <h2>Sample Text</h2>
-              <p>
-                A paragraph is defined as “a group of sentences or a single
-                sentence that forms a unit” (Lunsford and Connors 116). Length
-                and appearance do not determine whether a section in a paper is
-                a paragraph. For instance, in some styles of writing,
-                particularly journalistic styles, a paragraph can be just one
-                sentence long.
-              </p> */}
             </div>
             <div className={cl.right_content}>
               <h3
@@ -211,6 +206,8 @@ const TimelineComponent = () => {
                   padding: "8px 16px",
                   borderRadius: "18px",
                   width: "min-content",
+                  marginTop: "-2rem",
+                  marginLeft: "2rem",
                 }}
               >
                 Beyond
@@ -221,7 +218,7 @@ const TimelineComponent = () => {
           <>
             <div style={{ paddingTop: "6rem" }} className={cl.right_content}>
               <p
-                style={{ marginTop: "5rem", marginLeft: "3rem" }}
+                style={{ marginTop: "5rem", marginLeft: "-36rem" }}
                 className={cl.p_content_last}
               >
                 <strong>2022</strong> <br />
