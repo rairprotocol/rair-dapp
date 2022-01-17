@@ -49,7 +49,7 @@ const PlatformAbout = () => {
                 <div className="platform-box">
                     <div className="platform-title-box">
                         <div className="platform-title">
-                            Whitelabel
+                            Deployment
                         </div>
                     </div>
                     <div className="categories-list">
@@ -112,7 +112,7 @@ const PlatformAbout = () => {
             <div className="about-platform-content-mobile">
                 <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                     <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                        <p>Whitelabel</p>
+                        <p>Deployment</p>
                     </AccordionSummary>
                     <AccordionDetails>
                         <div className="categories-list">
