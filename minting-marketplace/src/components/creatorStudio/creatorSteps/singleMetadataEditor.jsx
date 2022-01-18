@@ -28,7 +28,6 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 
 	const getNFTData = useCallback(async () => {
 		let aux = await rFetch(`/api/nft/${contractData.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
-		console.log(aux);
 	}, [address, collectionIndex, contractData.blockchain]);
 
 	const addRow = () => {

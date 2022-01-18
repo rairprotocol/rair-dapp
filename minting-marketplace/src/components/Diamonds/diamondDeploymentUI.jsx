@@ -5,6 +5,56 @@ import { diamondFactoryAbi } from '../../contracts';
 import { metamaskCall } from '../../utils/metamaskUtils.js';
 import InputField from '../common/InputField.jsx';
 
+const RangeManager = () => {
+	return <>
+		<div className='col-3'>
+			<InputField
+				label='Product ID'
+				customClass='form-control'
+			/>
+		</div>
+		<div className='col-md-3 col-12'>
+			<InputField
+				label='Range Start'
+				customClass='form-control'
+			/>
+		</div>
+		<div className='col-md-3 col-12'>
+			<InputField
+				label='Range End'
+				customClass='form-control'
+			/>
+		</div>
+		<div className='col-md-3 col-12'>
+			<InputField
+				label='Price'
+				customClass='form-control'
+			/>
+		</div>
+		<div className='col-md-3 col-12'>
+			<InputField
+				label='Tokens Allowed to be Minted'
+				customClass='form-control'
+			/>
+		</div>
+		<div className='col-md-3 col-12'>
+			<InputField
+				label='Tokens Locked'
+				customClass='form-control'
+			/>
+		</div>
+		<div className='col-md-3 col-12'>
+			<InputField
+				label='Range name'
+				customClass='form-control'
+			/>
+		</div>
+		<button className='btn col-md-3 col-12 btn-stimorol mt-3'>
+			Create Range
+		</button>
+	</>
+};
+
 const DiamondDeploymentInterface = () => {
 	const { contractCreator, diamondFactoryInstance } = useSelector(store => store.contractStore);
 	const { blockchain, address } = useParams();
@@ -49,17 +99,20 @@ const DiamondDeploymentInterface = () => {
 		{productCount && productCount.toString()} products
 		<hr />
 		{productsData.map((item, index) => {
-			return <div className='col-12' key={index}>
-				Name: {item.name}<br />
-				Starting Token: {item.startingToken}<br />
-				Ending Token: {item.endingToken}<br />
-				Mintable Tokens Left: {item.mintableTokens}<br />
+			return <div className='col-12 row' key={index}>
+				<div className='col-12 col-md-6'>
+					Name: {item.name}<br />
+					Starting Token: {item.startingToken}<br />
+					Ending Token: {item.endingToken}<br />
+					Mintable Tokens Left: {item.mintableTokens}<br />
+				</div>
+				<RangeManager />
 			</div>
 		})}
 		<hr />
 		Create Product:
 		<div className='w-100 row p-0 m-0'>
-			<div className='col-6'>
+			<div className='col-md-4 col-12'>
 				<InputField
 					label='Product Name'
 					customClass='form-control'
@@ -67,7 +120,7 @@ const DiamondDeploymentInterface = () => {
 					setter={setNewProductName}
 				/>
 			</div>
-			<div className='col-6'>
+			<div className='col-md-4 col-12'>
 				<InputField
 					label='Product Length'
 					customClass='form-control'
@@ -80,65 +133,13 @@ const DiamondDeploymentInterface = () => {
 					setNewProductLength(0);
 					setNewProductName('')
 				}
-			}} className='btn btn-stimorol mt-3'>
+			}} className='btn col-md-4 col-12 btn-stimorol mt-3'>
 				Create Product
 			</button>
 		</div>
+		<hr />
 		<hr />
 		{/*
-		<div className='w-100 row p-0 m-0'>
-			<div className='col-6'>
-				<InputField
-					label='Product ID'
-					customClass='form-control'
-				/>
-			</div>
-			<div className='col-6'>
-				<InputField
-					label='Range Start'
-					customClass='form-control'
-				/>
-			</div>
-			<div className='col-6'>
-				<InputField
-					label='Range End'
-					customClass='form-control'
-				/>
-			</div>
-			<div className='col-6'>
-				<InputField
-					label='Price'
-					customClass='form-control'
-				/>
-			</div>
-			<div className='col-6'>
-				<InputField
-					label='Tokens Allowed to be Minted'
-					customClass='form-control'
-				/>
-			</div>
-			<div className='col-6'>
-				<InputField
-					label='Tokens Locked'
-					customClass='form-control'
-				/>
-			</div>
-			<div className='col-12'>
-				<InputField
-					label='Range name'
-					customClass='form-control'
-				/>
-			</div>
-			<button disabled={newProductName === '' || newProductLength === 0} onClick={async () => {
-				if (await metamaskCall(contractInstance.createProduct(newProductName, newProductLength))) {
-					setNewProductLength(0);
-					setNewProductName('')
-				}
-			}} className='btn btn-stimorol mt-3'>
-				Create Product
-			</button>
-		</div>
-		<hr />
 		{contractInstance && Object.keys(contractInstance.functions).map(item => {
 			return <div> {item} </div>;
 		})}

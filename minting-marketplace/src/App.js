@@ -385,7 +385,6 @@ function App({ sentryHistory }) {
 								{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
 								{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
 								{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
-								{ name: <i className="fas fa-gem" />, route: '/diamondTest', disabled: diamondFactoryInstance === undefined }
 							].map((item, index) => {
 								if (!item.disabled) {
 									return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>

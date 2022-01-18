@@ -9,6 +9,7 @@ import { minterAbi, erc721Abi, diamondFactoryAbi } from '../../contracts'
 import chainData from '../../utils/blockchainData.js'
 
 import ListOffers from './creatorSteps/ListOffers.jsx';
+import ListOffersDiamond from './creatorSteps/ListOffersDiamond.jsx';
 import ListLocks from './creatorSteps/ListLocks.jsx';
 import CustomizeFees from './creatorSteps/CustomizeFees.jsx';
 import BatchMetadata from './creatorSteps/batchMetadata.jsx';
@@ -28,7 +29,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				active: true,
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
 				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
-				component: ListOffers
+				component: ListOffers,
+				componentDiamond: ListOffersDiamond
 			},
 			{
 				label: 2,
@@ -112,11 +114,11 @@ const WorkflowSteps = ({sentryHistory}) => {
 				blockchain: window.ethereum.chainId,
 				diamond: true,
 				product: {
-					collectionIndexInContract: collectionIndex.toString(),
+					collectionIndexInContract: collectionIndex,
 					name: productData.name,
-					firstTokenIndex: productData.startingToken.toString(),
+					firstTokenIndex: Number(productData.startingToken.toString()),
 					soldCopies: Number(productData.mintableTokens.toString()) - Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()),
-					copies: productData.mintableTokens,
+					copies: Number(productData.mintableTokens.toString()),
 				}
 			});
 		}
@@ -179,6 +181,9 @@ const WorkflowSteps = ({sentryHistory}) => {
 			{({contractData, steps /*, setStepNumber*/}) => {
 				return <div className='row px-0 mx-0'>
 					<div className='col-12 my-5'>
+						{contractData && contractData.diamond && <div className='col-12 text-center h1'>
+							<i className='fas fa-gem' />
+						</div>}
 						<h4>{contractData?.title}</h4>
 						<small>{contractData?.product?.name}</small>
 						<div className='w-75 mx-auto px-auto text-center'>
@@ -212,7 +217,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 		<Router history={sentryHistory}>
 			<Switch>
 				{steps.map((item, index) => {
-					return <SentryRoute key={index} path={item.path} component={item.component} />
+					return <SentryRoute key={index} path={item.path} component={(contractData && contractData.diamond === true) ? item.componentDiamond : item.component} />
 				})}
 			</Switch>
 		</Router>
