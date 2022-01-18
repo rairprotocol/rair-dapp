@@ -3,20 +3,20 @@ import logo from './logo.svg';
 import './App.css';
 import * as ethers from 'ethers';
 // Standard Diamond Facets
-import * as DiamondCutFacet from './contractAbis/DiamondCutFacet.json'; 
-import * as DiamondLoupeFacet from './contractAbis/DiamondLoupeFacet.json';
-import * as OwnershipFacet from './contractAbis/OwnershipFacet.json';
+import * as DiamondCutFacet from './contractAbis/0x5/DiamondCutFacet.json'; 
+import * as DiamondLoupeFacet from './contractAbis/0x5/DiamondLoupeFacet.json';
+import * as OwnershipFacet from './contractAbis/0x5/OwnershipFacet.json';
 // Main Diamond
-import * as FactoryDiamond from './contractAbis/FactoryDiamond.json';
+import * as FactoryDiamond from './contractAbis/0x5/FactoryDiamond.json';
 // Factory
-import * as ERC777ReceiverFacet from './contractAbis/ERC777ReceiverFacet.json';
-import * as creatorFacet from './contractAbis/creatorFacet.json';
-import * as TokensFacet from './contractAbis/TokensFacet.json';
+import * as ERC777ReceiverFacet from './contractAbis/0x5/ERC777ReceiverFacet.json';
+import * as creatorFacet from './contractAbis/0x5/creatorFacet.json';
+import * as TokensFacet from './contractAbis/0x5/TokensFacet.json';
 // Token Facets
-import * as ERC721Facet from './contractAbis/ERC721Facet.json';
-import * as RAIRMetadataFacet from './contractAbis/RAIRMetadataFacet.json';
-import * as RAIRProductFacet from './contractAbis/RAIRProductFacet.json';
-import * as RAIRRangesFacet from './contractAbis/RAIRRangesFacet.json';
+import * as ERC721Facet from './contractAbis/0x5/ERC721Facet.json';
+import * as RAIRMetadataFacet from './contractAbis/0x5/RAIRMetadataFacet.json';
+import * as RAIRProductFacet from './contractAbis/0x5/RAIRProductFacet.json';
+import * as RAIRRangesFacet from './contractAbis/0x5/RAIRRangesFacet.json';
 
 import {getSelectors} from './utils/selectorUtils.js';
 

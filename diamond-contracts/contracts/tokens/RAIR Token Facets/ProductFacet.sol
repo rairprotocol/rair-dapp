@@ -7,34 +7,49 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	event ProductCreated(uint indexed id, string name, uint startingToken, uint length);
 
-	/// @notice	Makes sure the product exists before doing changes to it
+	/// @notice Verifies that the product exists
 	/// @param	productID	Product to verify
 	modifier productExists(uint productID) {
 		require(s.products.length > productID, "RAIR ERC721: Product does not exist");
 		_;
 	}
 
+	/// @notice Verifies that the range exists
+	/// @param	rangeID	Range to verify
 	modifier rangeExists(uint rangeID) {
 		require(s.ranges.length > rangeID, "RAIR ERC721: Range does not exist");
 		_;
 	}
 
+	/// @notice Verifies that the token exists
+	/// @param	tokenIndex	Range to verify
 	modifier tokenExists(uint tokenIndex) {
 		require(s._minted[tokenIndex], "RAIR ERC721: Query for nonexistent token");
 		_;
 	}
 
+	/// @notice Wrapper for the validator, searching for the entire product
+	/// @param	find			Address to search
+	/// @param	productIndex	Product to verify
 	function ownsTokenInProduct(address find, uint productIndex) public view productExists(productIndex) returns (bool) {
 		product storage selectedProduct = s.products[productIndex];
 		return _ownsTokenInsideRange(find, selectedProduct.startingToken, selectedProduct.endingToken);
 	}
 
+	/// @notice Wrapper for the validator, searching for the entire range
+	/// @param	find			Address to search
+	/// @param	rangeIndex	Range to verify
 	function ownsTokenInRange(address find, uint rangeIndex) public view rangeExists(rangeIndex) returns (bool) {
 		range storage selectedRange = s.ranges[rangeIndex];
 		uint startOfProduct = s.products[s.rangeToProduct[rangeIndex]].startingToken;
 		return _ownsTokenInsideRange(find, startOfProduct + selectedRange.rangeStart, startOfProduct + selectedRange.rangeEnd);
 	}
 
+	/// @notice Validates that an address owns at least one token inside a specified range
+	/// @dev Loops through the range, don't use on non-view functions
+	/// @param	find	Address to validate
+	/// @param	from	Range start
+	/// @param	to		Range end
 	function _ownsTokenInsideRange(address find, uint from, uint to) internal view returns (bool) {
 		for (uint i = from; i < to; i++) {
 			if (s._owners[i] == find) {
