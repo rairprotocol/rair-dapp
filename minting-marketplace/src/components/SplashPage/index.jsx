@@ -70,6 +70,7 @@ const customStyles = {
 const SplashPage = () => {
   const [dataNipsey, setDataNipsey] = useState();
   const [copies, setCopies] = useState();
+  const [timerLeft, setTimerLeft] = useState();
 
   const history = useHistory();
 
@@ -134,9 +135,9 @@ const SplashPage = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
-  // const openModal = useCallback(() => {
-  //   setIsOpen(true);
-  // }, []);
+  const openModal = useCallback(() => {
+    setIsOpen(true);
+  }, []);
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
@@ -197,15 +198,16 @@ const SplashPage = () => {
                 </div>
               </div>
               <div className="btn-timer-nipsey">
-                <Countdown />
-                {/* <button onClick={openModal}>
-                  <img
-                    className="metamask-logo"
-                    src={Metamask}
-                    alt="metamask-logo"
-                  />{" "}
-                  Preorder with ETH
-                </button> */}
+                {
+                  timerLeft === 0 ? <button onClick={openModal}>
+                    <img
+                      className="metamask-logo"
+                      src={Metamask}
+                      alt="metamask-logo"
+                    />{" "}
+                    Preorder with ETH
+                  </button> : <Countdown setTimerLeft={setTimerLeft} timerLeft={timerLeft} />
+                }
                 <Modal
                   isOpen={modalIsOpen}
                   onAfterOpen={afterOpenModal}
@@ -321,9 +323,9 @@ const SplashPage = () => {
                 launch.
               </p>
             </div>
-            
-              <Countdown />
-              {/* <button onClick={() => history.push('/coming-soon')}>
+
+            <Countdown />
+            {/* <button onClick={() => history.push('/coming-soon')}>
                 <img
                   className="metamask-logo"
                   src={Metamask}
@@ -331,7 +333,7 @@ const SplashPage = () => {
                 />{" "}
                 COMING SOON
               </button> */}
-            
+
           </div>
           <div className="offer-fans">
             <div className="offer-fans-container">

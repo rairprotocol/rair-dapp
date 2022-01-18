@@ -363,7 +363,7 @@ function App({ sentryHistory }) {
 						loginDone={loginDone}
 						setLoginDone={setLoginDone}
 					/>
-					<div className='row w-100 m-0 p-0'>
+					<div className='row w-100 m-0 p-0' style={{position: "relative"}}>
 						<div className='col-1 d-none d-xl-inline-block' />
 						<div className='col-1 rounded'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>

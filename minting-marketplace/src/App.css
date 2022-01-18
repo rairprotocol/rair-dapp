@@ -1170,4 +1170,24 @@ body::-webkit-scrollbar-thumb:active {
   .blockchain-switcher {
     height: 3vh !important;
   }
+
+  .btn-connect-wallet-wrapper button.metamask-on-boarding {
+    top: 50px;
+    right: 0;
+  }
 }
+
+@media screen and (max-width: 450px) {
+  .btn-connect-wallet-wrapper button.metamask-on-boarding {
+    top: 50px;
+    right: -55px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .btn-connect-wallet-wrapper button.metamask-on-boarding {
+    top: 100px;
+    right: -55px;
+  }
+}
+
