@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 const metamaskCall = async (transaction) => {
 	try {
 		let paramsValidation = await transaction;
-		//await (paramsValidation).wait();
+		await (paramsValidation).wait();
 		return true;
 	} catch (e) {
 		console.error(e);

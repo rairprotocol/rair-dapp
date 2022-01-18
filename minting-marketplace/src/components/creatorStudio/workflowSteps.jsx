@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useParams, Router, Switch, Route } from 'react-router-dom';
 import WorkflowContext from '../../contexts/CreatorWorkflowContext.js';
 import {web3Switch} from '../../utils/switchBlockchain.js';
-import {minterAbi, erc721Abi} from '../../contracts'
+import { minterAbi, erc721Abi, diamondFactoryAbi } from '../../contracts'
 import chainData from '../../utils/blockchainData.js'
 
 import ListOffers from './creatorSteps/ListOffers.jsx';
@@ -97,9 +97,29 @@ const WorkflowSteps = ({sentryHistory}) => {
 				})
 			})
 		}
-		response2.contract.product = (response2.contract.products.filter(i => i.collectionIndexInContract === Number(collectionIndex)))[0];
-		delete response2.contract.products;
-		setContractData(response2.contract);
+		if (response2.contract) {
+			response2.contract.product = (response2?.contract?.products?.filter(i => i?.collectionIndexInContract === Number(collectionIndex)))[0];
+			delete response2.contract.products;
+			setContractData(response2.contract);
+		} else {
+			// Try diamonds
+			let instance = contractCreator(address, diamondFactoryAbi);
+			let productCount = Number((await instance.getProductCount()).toString());
+			let productData = await instance.getProductInfo(collectionIndex)
+			setContractData({
+				title: await instance.name(),
+				contractAddress: address,
+				blockchain: window.ethereum.chainId,
+				diamond: true,
+				product: {
+					collectionIndexInContract: collectionIndex.toString(),
+					name: productData.name,
+					firstTokenIndex: productData.startingToken.toString(),
+					soldCopies: Number(productData.mintableTokens.toString()) - Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()),
+					copies: productData.mintableTokens,
+				}
+			});
+		}
 	}, [address, blockchain, collectionIndex]);
 	
 	const fetchMintingStatus = useCallback(async () => {

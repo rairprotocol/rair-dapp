@@ -2,15 +2,19 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { rFetch } from '../../utils/rFetch.js';
 import { useParams, useHistory, NavLink } from 'react-router-dom';
+import { diamondFactoryAbi } from '../../contracts';
 
 import FixedBottomNavigation from './FixedBottomNavigation.jsx';
 import NavigatorContract from './NavigatorContract.jsx';
 
 const ListCollections = () => {
 	const { primaryColor } = useSelector(store => store.colorStore);
+	const { contractCreator } = useSelector(store => store.contractStore);
 	const { address, blockchain } = useParams();
 
+	const [isDiamond, setIsDiamond] = useState(false);
 	const [data, setData] = useState();
+
 
 	const history = useHistory();
 
@@ -33,8 +37,29 @@ const ListCollections = () => {
 					}
 				})
 			})
+		} 
+		if (response2.contract) {
+			setData(response2.contract);
+		} else {
+			// Try diamonds
+			let instance = contractCreator(address, diamondFactoryAbi);
+			let productCount = Number((await instance.getProductCount()).toString());
+			setIsDiamond(true);
+			let productData = [];
+			for (let i = 0; i < productCount; i++) {
+				productData.push({
+					collectionIndexInContract: i,
+					name: (await instance.getProductInfo(i)).name,
+					diamond: true
+				});
+			}
+			setData({
+				title: await instance.name(),
+				contractAddress: address,
+				blockchain: window.ethereum.chainId,
+				products: productData
+			});
 		}
-		setData(response2.contract);
 	}, [address, blockchain])
 
 	useEffect(() => {
@@ -45,7 +70,7 @@ const ListCollections = () => {
 		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} contractBlockchain={blockchain} >
 			{data.products.map((item, index) => {
 				return <NavLink to={`/creator/contract/${blockchain}/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
-					{item.name}
+					{item.diamond && <i className='fas fa-gem' />} {item.name}
 					<i className='fas fa-arrow-right' style={{position: 'absolute', right: '10px', top: '10px', color: 'var(--bubblegum)'}}/>
 				</NavLink>
 			})}
