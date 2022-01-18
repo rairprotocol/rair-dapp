@@ -18,8 +18,14 @@ provider "google" {
   project     = "rair-market-production"
 }
 
+module "config" {
+  source = "../shared/env_config"
+}
+
 module "foundation" {
   source = "../../modules/foundation"
 
   env_name = "prod"
+  region = "us-west1"
+  vpc_cidr_block = module.config.env_config.prod.vpc_cidr_block
 }
