@@ -1004,6 +1004,15 @@ tbody.table-tbody-compare tr{
     /* padding-left: 1px; */
     padding-top: 2px;
 }
+
+.about-compare-mobile .fa-check:before, .about-compare-mobile .fa-minus:before{
+    transform: none;
+}
+
+.about-compare-mobile .fa-minus:before{
+    padding-top: 8px;
+}
+
 .fa-minus:before {
     transform: scale(0.5);
     /* padding-bottom: 1px; */
@@ -1020,6 +1029,12 @@ tbody.table-tbody-compare tr{
     align-content: center;
     justify-content: center;
     align-items: center;
+}
+
+.about-compare-mobile .fas_custom_main, .about-compare-mobile .fas_custom {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
 .fas_custom{
@@ -1315,6 +1330,20 @@ button.btn-show-more {
 
     .about-streams-video .about-streams-video-title, .about-streams-video .about-video-tutorial-text {
         text-align: center;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .about-compare-content table {
+        width: 90%;
+    }
+
+    .about-compare .about-compare-title {
+        text-align: center;
+    }
+
+    .table-compare-container {
+        width: 90% !important;
     }
 }
 
@@ -2098,6 +2127,14 @@ button.btn-show-more {
     .about-roadmap .map-item-progress {
         margin-top: 20px;
     }
+
+    .about-compare-mobile .css-1869usk-MuiFormControl-root, .compare-mobile-deployment {
+        width: 300px !important;
+    }
+
+    .about-compare-mobile .compare-select-mobile-container .block-logos-mobile .block-logo div {
+        margin: 20px 10px !important;
+    }
 }
 
 @media screen and (max-width: 400px) {
@@ -2198,6 +2235,83 @@ button.btn-show-more {
     font-size: 32px;
     text-align: center;
 }
+
+.about-compare-mobile .compare-select-mobile-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.compare-mobile-deployment {
+    width: 400px;
+    border: 1px dashed #4E4D4D;
+    border-radius: 16px;
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile {
+    border-bottom: 1px dashed #4E4D4D;
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile:last-child {
+    border-bottom: none;
+}
+
+.about-compare-mobile .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+    border-radius: 16px;
+}
+
+.about-compare-mobile .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root, .about-compare-mobile .css-1kty9di-MuiFormLabel-root-MuiInputLabel-root {
+    color: #fff;
+}
+
+.about-compare-mobile .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+    font-size: 2.5rem;
+    color: #F178B6;
+}
+
+.about-compare-mobile .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+    border-color: #F178B6;
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile .block-logo {
+    width: 20%;
+    border-right: 1px dashed #4E4D4D;
+    /* border-bottom: 1px dashed #4E4D4D; */
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile:last-child .block-logo {
+    border-bottom: none;
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile .block-logo div {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile .select-mobile-text {
+    width: 80%;
+    margin: 20px;
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile .block-logo img {
+    height: auto;
+    width: 24px;
+}
+
+.about-compare-mobile .compare-select-mobile-container .block-logos-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
 
 .about-compare-mobile .about-compare-title-main-mobile .mobile-title-compare {
     font-size: 16px;

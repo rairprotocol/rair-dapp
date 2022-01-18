@@ -167,7 +167,6 @@ function App({ sentryHistory }) {
 						parsedResponse.message);
 				} else {
 					Swal.fire('Error', "Can't sign messages", 'error');
-					console.log("Nahuy")
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
