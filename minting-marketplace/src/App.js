@@ -72,6 +72,7 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 import VideoPlayer from './components/video/videoPlayer.jsx';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
+
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -84,7 +85,7 @@ const ErrorFallback = () => {
 function App({ sentryHistory }) {
 
 	const [/*userData*/, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(undefined);
+	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	const [errorAuth, /*setErrorAuth*/] = useState('');
@@ -93,6 +94,7 @@ function App({ sentryHistory }) {
 	// Google Analytics
 	const TRACKING_ID = "UA-209450870-3"; // YOUR_OWN_TRACKING_ID
 	ReactGA.initialize(TRACKING_ID);
+
 	// Redux
 	const dispatch = useDispatch()
 	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
@@ -146,8 +148,8 @@ function App({ sentryHistory }) {
 			}
 
 			// Admin rights validation
-			// let adminRights = adminAccess;
-			if (adminAccess === undefined) {
+			let adminRights = adminAccess;
+			if (adminAccess === null) {
 				const { response } = await (await fetch(`/api/auth/get_challenge/${currentUser}`)).json();
 				let ethResponse;
 				let ethRequest = {
@@ -167,13 +169,12 @@ function App({ sentryHistory }) {
 						parsedResponse.message);
 				} else {
 					Swal.fire('Error', "Can't sign messages", 'error');
-					console.log("Nahuy")
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
 				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: adminResponse.success });
 				setAdminAccess(adminResponse.success);
-				// adminRights = adminResponse.success;
+				adminRights = adminResponse.success;
 			}
 
 			let signer = programmaticProvider;
@@ -184,7 +185,7 @@ function App({ sentryHistory }) {
 			}
 
 			if (!localStorage.token) {
-				let token = await getJWT(signer, user, currentUser);
+				let token = await getJWT(signer, user, currentUser, adminRights);
 				if (!success) {
 					setLoginDone(false);
 					setStartedLogin(false);
@@ -195,7 +196,7 @@ function App({ sentryHistory }) {
 			}
 
 			if (!isTokenValid(localStorage.token)) {
-				let token = await getJWT(signer, user, currentUser);
+				let token = await getJWT(signer, user, currentUser, adminRights);
 				if (!success) {
 					setLoginDone(false);
 					setStartedLogin(false);
@@ -248,7 +249,7 @@ function App({ sentryHistory }) {
 				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
 			}
 		}
-	}, [dispatch, sentryHistory.push])
+	}, [dispatch, sentryHistory.push,setAdminAccess])
 
 	useEffect(() => {
 		btnCheck()
@@ -361,8 +362,8 @@ function App({ sentryHistory }) {
 						loginDone={loginDone}
 						setLoginDone={setLoginDone}
 					/>
-					<div className='row w-100 m-0 p-0' style={{position: "relative"}}>
-						<div className='col-1 d-none d-xl-inline-block' />
+					<div className='row w-100 m-0 p-0'>
+						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 						<div className='col-1 rounded'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
 								<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
