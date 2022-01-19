@@ -9,12 +9,14 @@ import { minterAbi, erc721Abi, diamondFactoryAbi } from '../../contracts'
 import chainData from '../../utils/blockchainData.js'
 
 import ListOffers from './creatorSteps/ListOffers.jsx';
-import ListOffersDiamond from './creatorSteps/ListOffersDiamond.jsx';
 import ListLocks from './creatorSteps/ListLocks.jsx';
 import CustomizeFees from './creatorSteps/CustomizeFees.jsx';
 import BatchMetadata from './creatorSteps/batchMetadata.jsx';
 import SingleMetadataEditor from './creatorSteps/singleMetadataEditor.jsx';
 import MediaUpload from './creatorSteps/MediaUpload.jsx';
+
+import ListOffersDiamond from './creatorSteps/ListOffersDiamond.jsx';
+import DiamondMinterMarketplace from './creatorSteps/DiamondMinterMarketplace.jsx';
 
 const SentryRoute = withSentryRouting(Route);
 
@@ -22,6 +24,11 @@ const WorkflowSteps = ({sentryHistory}) => {
 	const {address, collectionIndex, blockchain} = useParams();
 
 	const { minterInstance, contractCreator, programmaticProvider /*currentChain*/ } = useSelector(store => store.contractStore);
+	const [contractData, setContractData] = useState();
+	const [tokenInstance, setTokenInstance] = useState();
+	const [correctMinterInstance, setCorrectMinterInstance] = useState();
+	const [currentStep, setCurrentStep] = useState(0);
+	const { primaryColor } = useSelector(store => store.colorStore);
 
 	const [steps, setSteps] = useState([
 			{
@@ -29,8 +36,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 				active: true,
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
 				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
-				component: ListOffers,
-				componentDiamond: ListOffersDiamond
+				component: ListOffers
 			},
 			{
 				label: 2,
@@ -69,10 +75,48 @@ const WorkflowSteps = ({sentryHistory}) => {
 			},
 		]);
 
-	const [contractData, setContractData] = useState();
-	const [tokenInstance, setTokenInstance] = useState();
-	const [correctMinterInstance, setCorrectMinterInstance] = useState();
-	const { primaryColor } = useSelector(store => store.colorStore);
+	useEffect(() => {
+		let diamondSteps = [
+			{
+				label: 1,
+				active: true,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
+				component: ListOffersDiamond
+			},
+			{
+				label: 2,
+				active: false,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/minterMarketplace',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/minterMarketplace`,
+				component: DiamondMinterMarketplace
+			},
+			{
+				label: 3,
+				active: false,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/batch',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/batch`,
+				component: BatchMetadata
+			},
+			{
+				label: 4,
+				active: false,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/single`,
+				component: SingleMetadataEditor
+			},
+			{
+				label: 5,
+				active: false,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/media`,
+				component: MediaUpload
+			},
+		]
+		if (contractData?.diamond && steps.length !== diamondSteps.length) {
+			setSteps(diamondSteps);
+		}
+	}, [contractData])
 
 	const onMyChain = window.ethereum ?
 				chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
@@ -108,17 +152,29 @@ const WorkflowSteps = ({sentryHistory}) => {
 			let instance = contractCreator(address, diamondFactoryAbi);
 			let productCount = Number((await instance.getProductCount()).toString());
 			let productData = await instance.getProductInfo(collectionIndex)
+			let rangesData = [];
+			for await (let rangeIndex of productData.rangeList) {
+				let rangeData = await instance.rangeInfo(rangeIndex);
+				rangesData.push({
+					offerName: rangeData.rangeName,
+					range: [Number(rangeData.rangeStart.toString()), Number(rangeData.rangeEnd.toString())],
+					price: rangeData.rangePrice.toString(),
+					lockedTokens: Number(rangeData.lockedTokens.toString()),
+					tokensAllowed: Number(rangeData.tokensAllowed.toString()),
+				})
+			};
 			setContractData({
 				title: await instance.name(),
 				contractAddress: address,
 				blockchain: window.ethereum.chainId,
-				diamond: true,
+				diamond: instance,
 				product: {
 					collectionIndexInContract: collectionIndex,
 					name: productData.name,
 					firstTokenIndex: Number(productData.startingToken.toString()),
 					soldCopies: Number(productData.mintableTokens.toString()) - Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()),
 					copies: Number(productData.mintableTokens.toString()),
+					offers: rangesData
 				}
 			});
 		}
@@ -164,8 +220,16 @@ const WorkflowSteps = ({sentryHistory}) => {
 				return;
 			}
 			let aux = [...steps];
-			aux.forEach(item => item.active = item.label <= index);
-			setSteps(aux);
+			let didSomething = false;
+			aux.forEach(item => {
+				if (item.active !== item.label <= index) {
+					item.active = item.label <= index
+					didSomething = true;
+				}
+			});
+			if (didSomething) {
+				setSteps(aux);
+			}
 		}, [steps]),
 		switchBlockchain: async (chainId) => {
 			web3Switch(chainId)
@@ -217,7 +281,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 		<Router history={sentryHistory}>
 			<Switch>
 				{steps.map((item, index) => {
-					return <SentryRoute key={index} path={item.path} component={(contractData && contractData.diamond === true) ? item.componentDiamond : item.component} />
+					return <SentryRoute key={index} path={item.path} component={item.component} />
 				})}
 			</Switch>
 		</Router>

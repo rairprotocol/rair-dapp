@@ -10,6 +10,7 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import colors from '../../../utils/offerLockColors.js'
 import InputField from '../../common/InputField.jsx'
 import { utils } from 'ethers';
+import { metamaskCall } from '../../../utils/metamaskUtils.js';
 
 const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies, blockchainSymbol, allowedTokens, lockedTokens}) => {
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
@@ -71,15 +72,13 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 
 	const disabledClass = fixed ? '' : 'border-stimorol rounded-rair'
 
-	return <>
-	 <tr>
-		<th>
-			<button disabled className='btn btn-charcoal rounded-rair'>
-				<i style={{color: `${randColor}`}} className='fas fa-key' />
-			</button>
-		</th>
-		<th className='p-1'>
-			<div className={`${disabledClass} w-100`}>
+	return <div className='col-12 row'>
+		<button disabled className='col-12 col-md-1 btn btn-charcoal rounded-rair'>
+			<i style={{color: `${randColor}`}} className='fas fa-key h1' />
+		</button>
+		<div className={`col-12 col-md-10 px-2`}>
+			Range name:
+			<div className={`${disabledClass} w-100 mb-2`}>
 				<InputField
 					getter={itemName}
 					disabled={fixed}
@@ -88,19 +87,31 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
-		</th>
-		<th className='p-1'>
-			<InputField
-				disabled={true}
-				getter={startingToken}
-				setter={updateStartingToken}
-				type='number'
-				min='0'
-				customClass='form-control rounded-rair'
-				customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
-			/>
-		</th>
-		<th className='p-1'>
+		</div>
+		<div className={`col-12 col-md-1`}>
+			{!fixed && <button onClick={deleter} className='btn w-100 btn-danger rounded-rair'>
+				<i className='fas fa-trash' />
+			</button>}
+		</div>
+		<div className={`col-12 col-md-4`}>
+			Starting token:
+			<div className={`${disabledClass} w-100`}>
+				<InputField
+					disabled={true}
+					getter={startingToken}
+					setter={updateStartingToken}
+					type='number'
+					min='0'
+					customClass='form-control rounded-rair'
+					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
+				/>
+			</div>
+		</div>
+		<div className={`col-12 col-md-4`}>
+			Ending token:
+			{!fixed && <button onClick={() => updateEndingToken(maxCopies)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+				Max
+			</button>}
 			<div className={`${disabledClass} w-100`}>
 				<InputField
 					getter={endingToken}
@@ -113,8 +124,9 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
-		</th>
-		<th className='p-1'>
+		</div>
+		<div className={`col-12 col-md-4`}>
+			Range price:
 			<div className={`${disabledClass} w-100`}>
 				<InputField
 					getter={individualPrice}
@@ -126,8 +138,13 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
-		</th>
-		<th className='p-1'>
+			<small>{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}</small>
+		</div>
+		<div className={`col-12 col-md-6`}>
+			Tokens allowed to mint:
+			{!fixed && <button onClick={() => updater('allowedTokens', setAllowedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+				Max
+			</button>}
 			<div className={`${disabledClass} w-100`}>
 				<InputField
 					getter={allowedTokenCount}
@@ -135,12 +152,17 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					type='number'
 					disabled={fixed}
 					min='0'
+					max={endingToken - startingToken + 1}
 					customClass='form-control rounded-rair'
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
-		</th>
-		<th className='p-1'>
+		</div>
+		<div className={`col-12 col-md-6`}>
+			Minted tokens needed before trades are unlocked:
+			{!fixed && <button onClick={() => updater('lockedTokens', setLockedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+				Max
+			</button>}
 			<div className={`${disabledClass} w-100`}>
 				<InputField
 					getter={lockedTokenCount}
@@ -152,24 +174,9 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
-		</th>
-		<th>
-			{!fixed && <button onClick={deleter} className='btn btn-danger rounded-rair'>
-				<i className='fas fa-trash' />
-			</button>}
-		</th>
-	</tr>
-	<tr>
-		<th />
-		<th />
-		<th />
-		<th />
-		<th className='text-center pt-0'>
-			<small>{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}</small>
-		</th>
-		<th />
-	</tr>
-	</>
+		</div>
+		<hr className='my-4' />
+	</div>
 };
 
 const ListOffers = ({contractData, setStepNumber, steps}) => {
@@ -185,13 +192,14 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 	const {address, collectionIndex} = useParams();
 
 	useEffect(() => {
-		//function createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name) external onlyRole(CREATOR) {
 		setOfferList(contractData?.product?.offers ? contractData?.product?.offers.map(item => {
 			return {
 				name: item.offerName,
 				starts: item.range[0],
 				ends: item.range[1],
 				price: item.price,
+				allowedTokens: item.tokensAllowed,
+				lockedTokens: item.lockedTokens,
 				fixed: true
 			}
 		}) : [])
@@ -273,22 +281,29 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.addOffer(
-				instance.address,
-				collectionIndex,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name),
-				process.env.REACT_APP_NODE_ADDRESS)
-			).wait();
-			Swal.fire({
-				title: 'Success!',
-				html: 'The offer has been created!',
-				icon: 'success',
-				showConfirmButton: false
-			});
-			nextStep();
+			if (await metamaskCall(
+				contractData.diamond.createRangeBatch(
+					collectionIndex,
+					offerList.filter(item => item.fixed !== true).map(item => {
+						return {
+							rangeStart: item.starts,
+							rangeEnd: item.ends,
+							tokensAllowed: item.allowedTokens,
+							lockedTokens: item.lockedTokens,
+							price: item.price,
+							name: item.name
+						}
+					})
+				)
+			)) {
+				Swal.fire({
+					title: 'Success!',
+					html: 'The offer has been created!',
+					icon: 'success',
+					showConfirmButton: false
+				});
+				nextStep();
+			}
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
@@ -304,7 +319,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.appendOfferRangeBatch(
+			await (await contractData.diamond.appendOfferRangeBatch(
 				contractData.product.offers[0].offerPool,
 				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
 				offerList.map((item) => item.ends),
@@ -353,26 +368,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 			</button>
 		</div>
 		{contractData ? <>
-			{offerList?.length !== 0 && <table className='col-12 text-start'>
-				<thead>
-					<tr>
-						<th className='px-1' style={{width: '5vw'}} />
-						<th>
-							Item name
-						</th>
-						<th style={{width: '10vw'}}>
-							Starts
-						</th>
-						<th style={{width: '10vw'}}>
-							Ends
-						</th>
-						<th style={{width: '20vw'}}>
-							Price for each
-						</th>
-						<th />
-					</tr>
-				</thead>
-				<tbody style={{maxHeight: '50vh', overflowY: 'scroll'}}>
+			{offerList?.length !== 0 && <div className='row w-100 text-start px-0 mx-0'>
 					{offerList.map((item, index, array) => {
 						return <OfferRow
 							array={array}
@@ -384,11 +380,10 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 							rerender={rerender}
 							maxCopies={Number(contractData?.product?.copies) - 1} />
 					})}
-				</tbody>
-			</table>}
+			</div>}
 			<div className='col-12 mt-3 text-center'>
 				<div className='border-stimorol rounded-rair'>
-					<button onClick={addOffer} disabled={offerList.length >= 12} className={`btn btn-${primaryColor} rounded-rair px-4`}>
+					<button onClick={addOffer} disabled={contractData === undefined || offerList.length >= 12 || offerList?.at(-1)?.ends >= (Number(contractData?.product?.copies) - 1)} className={`btn btn-${primaryColor} rounded-rair px-4`}>
 						Add new <i className='fas fa-plus' style={{border: `solid 1px ${textColor}`, borderRadius: '50%', padding: '5px'}} />
 					</button>
 				</div>
@@ -404,18 +399,15 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 					action: !onMyChain ?
 					() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
 					:
-					(hasMinterRole === true ? 
-						(offerList[0]?.fixed ?
-							(offerList.filter(item => item.fixed !== true).length === 0 ? 
-								nextStep
-								:
-								appendOffers)
+					(offerList[0]?.fixed ?
+						(offerList.filter(item => item.fixed !== true).length === 0 ? 
+							nextStep
 							:
-							createOffers)
+							appendOffers)
 						:
-						giveMinterRole),
-					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
-					disabled: hasMinterRole ? (offerList.length === 0 || offerList.at(-1).ends > Number(contractData.product.copies) - 1) : false
+						createOffers),
+					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : ((offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append Ranges') : 'Create Ranges')),
+					disabled: (offerList.length === 0 || offerList.at(-1).ends > Number(contractData.product.copies) - 1)
 				}]}
 			/>}
 		</> : 'Fetching data...'}
