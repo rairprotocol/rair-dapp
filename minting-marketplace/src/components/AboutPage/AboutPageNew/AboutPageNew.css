@@ -2324,15 +2324,16 @@ button.btn-show-more {
 
 .about-compare-mobile .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root, .about-compare-mobile .css-1kty9di-MuiFormLabel-root-MuiInputLabel-root {
     color: #fff;
+    border: 1px solid #F178B6;
 }
 
-.about-compare-mobile .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+.about-compare-mobile .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon, .about-compare-mobile .css-bpeome-MuiSvgIcon-root-MuiSelect-icon {
     font-size: 2.5rem;
     color: #F178B6;
 }
 
 .about-compare-mobile .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-    border-color: #F178B6;
+    border: none;
 }
 
 .about-compare-mobile .compare-select-mobile-container .block-logos-mobile .block-logo {
