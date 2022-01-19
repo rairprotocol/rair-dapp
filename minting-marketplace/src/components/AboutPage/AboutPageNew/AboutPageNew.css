@@ -691,7 +691,9 @@
     z-index: 1;
 }
 
-.about-map-item:nth-child(2) .map-progress .progress-box:last-child {
+.roadmap-container-mobile .about-map-item:nth-child(2) .map-progress .progress-box:last-child,
+.roadmap-container-mobile .about-map-item:nth-child(3) .map-progress .progress-box:last-child,
+.roadmap-container-mobile .about-map-item:nth-child(1) .map-progress .progress-box:last-child  {
     background: #383637;
 }
 
@@ -731,10 +733,10 @@
     background: #5D5FEF;
 }
 
-.about-map-item .map-progress .line-public {
+.roadmap-container .about-map-item .map-progress .line-public, .roadmap-container-mobile .about-map-item .map-progress .line-public  {
     position: absolute;
     height: 2px;
-    background: #00AEEF;
+    background: #725BDB;
     width: 200px;
     left: 10px;
     top: 25px;
@@ -745,26 +747,45 @@
     display: none;
 }
 
-.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-box {
+.roadmap-container .about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-box
+{
     background: #5D5FEF;
 }
 
-.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-box:last-child {
+.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-box:last-child,
+.roadmap-container .container-private-beta .about-map-item .map-progress .progress-box:last-child,
+.roadmap-container .container-curation-public .about-map-item .map-progress .progress-box:last-child
+{
     background: #383637;
 }
 
-.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .line-public {
+.roadmap-container .container-curation-public .about-map-item:last-child .map-progress .progress-box,
+.roadmap-container-mobile .about-map-item:last-child .map-progress .progress-box
+ {
     background: #5D5FEF;
 }
-
-.about-map-item:last-child .map-progress .progress-box {
+ 
+ 
+.roadmap-container .container-private-beta .about-map-item .map-progress .progress-box,
+.roadmap-container.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .line-public,
+.roadmap-container-mobile .about-map-item:nth-child(2) .progress-box  {
     background: #00AEEF;
 }
 
-.about-map-item .map-progress .line-private {
+.roadmap-container .about-map-item .map-progress .line-private {
     position: absolute;
     height: 2px;
     background: #5D5FEF;
+    width: 200px;
+    left: 10px;
+    top: 25px;
+    z-index: 0;
+}
+
+.roadmap-container-mobile .about-map-item .map-progress .line-private {
+    position: absolute;
+    height: 2px;
+    background: #00AEEF;
     width: 200px;
     left: 10px;
     top: 25px;
@@ -863,11 +884,13 @@
     line-height: 30px;
 }
 
-.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-title span {
+.about-roadmap .roadmap-container .container-curation-public .about-map-item:last-child .progress-title span,
+.about-roadmap .roadmap-container-mobile .about-map-item:last-child .progress-title span{
     background: #725BDB;
 }
 
-.about-roadmap .roadmap-container .container-private-beta .about-map-item .progress-title span {
+.about-roadmap .roadmap-container .container-private-beta .about-map-item .progress-title span,
+.about-roadmap .roadmap-container-mobile .about-map-item:nth-child(2) .progress-title span  {
     background: #19A7F6;
 }
 
@@ -1219,15 +1242,15 @@ button.btn-show-more {
 }
 
 @media screen and (max-width: 1180px) {
-    .about-map-item {
+    .roadmap-container .about-map-item {
         width: 380px;
     }
 
-    .about-roadmap .roadmap-container {
+    .roadmap-container .about-roadmap .roadmap-container {
         justify-content: center;
     }
 
-    .about-map-item .map-progress .line-grey {
+    .roadmap-container .about-map-item .map-progress .line-grey {
         width: 150px;
     }
 }
@@ -1557,6 +1580,21 @@ button.btn-show-more {
 
     .roadmap-container-mobile {
         display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .roadmap-container-mobile .about-map-item {
+        margin-bottom: 128px;
+    }
+
+    .roadmap-container-mobile .about-map-item:first-child {
+        margin-top: 25px;
+    }
+
+    .roadmap-container-mobile .about-map-item:last-child {
+        margin-bottom: 0;
     }
 } 
 
@@ -1572,21 +1610,21 @@ button.btn-show-more {
         /* display: none; */
     }
 
-    .about-map-item .map-item-desc {
+    .roadmap-container .about-map-item .map-item-desc {
         width: 90%;   
     }
 
-    .about-roadmap .map-item-progress {
+    .roadmap-container .about-roadmap .map-item-progress .roadmap-container {
         flex-direction: column;
         justify-content: center;
         align-items: center;
     }
 
-    .about-map-item .progress-title {
+    .roadmap-container .about-map-item .progress-title {
         margin-top: 20px;
     }
 
-    .about-map-item {
+    .roadmap-container .about-map-item {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -1745,11 +1783,11 @@ button.btn-show-more {
         padding: 0 23px;
     }
 
-    .about-map-item .map-item-desc p {
+    .roadmap-container .about-map-item .map-item-desc p {
         font-size: 24px;
     }
 
-    .about-map-item .map-item-desc {
+    .roadmap-container .about-map-item .map-item-desc {
         padding: 10px;
     }
 }
@@ -1958,7 +1996,9 @@ button.btn-show-more {
         width: 350px;
     }
 
-    .about-map-item .map-progress .line-purple, .about-map-item .map-progress .line-private, .about-map-item .map-progress .line-public {
+    .roadmap-container .about-map-item .map-progress .line-purple, 
+    .roadmap-container .about-map-item .map-progress .line-private,
+    .roadmap-container .about-map-item .map-progress .line-public {
         width: 150px;
         z-index: 1;
     }
@@ -2016,6 +2056,10 @@ button.btn-show-more {
         height: 250px;
         pointer-events: none;
         border-radius: 16px;
+    }
+
+    .roadmap-container-mobile .about-map-item {
+        width: 100%;
     }
 }
 
@@ -2192,6 +2236,24 @@ button.btn-show-more {
 
     .home-about--page .join-community .title-join h3, .home-about--page .join-community .title-join h3 .text-gradient {
         font-size: 32px;
+    }
+
+    .roadmap-container-mobile .about-map-item {
+        width: 90%;
+    }
+
+    .about-roadmap .map-progress {
+        width: 250px;
+    }
+
+    .about-roadmap .map-item-progress {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .about-map-item .map-item-desc p {
+        line-height: 20px;
     }
 }
 
