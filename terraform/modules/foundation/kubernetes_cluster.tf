@@ -26,7 +26,7 @@ resource "google_container_cluster" "primary" {
   private_cluster_config {
     enable_private_nodes = true
     enable_private_endpoint = true
-    master_ipv4_cidr_block = module.subnets.network_cidr_blocks.kubernetes_control_plane_range
+    master_ipv4_cidr_block = module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
   }
 
   master_auth {

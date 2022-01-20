@@ -6,7 +6,7 @@ resource "google_compute_network" "primary" {
   delete_default_routes_on_create = true
 }
 
-module "subnets" {
+module "vpc_cidr_ranges" {
   source = "hashicorp/subnets/cidr"
 
   base_cidr_block = var.vpc_cidr_block
@@ -46,16 +46,16 @@ resource "google_compute_subnetwork" "kubernetes_primary_cluster" {
   network = google_compute_network.primary.self_link
 
   private_ip_google_access = true
-  ip_cidr_range = module.subnets.network_cidr_blocks.kubernetes_primary_cluster
+  ip_cidr_range = module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_primary_cluster
 
   secondary_ip_range {
     range_name = local.kubernetes_primary_cluster_services_secondary_range_name
-    ip_cidr_range = module.subnets.network_cidr_blocks.kubernetes_services_secondary_range
+    ip_cidr_range = module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_services_secondary_range
   }
 
   secondary_ip_range {
     range_name = local.kubernetes_primary_cluster_pod_cluster_secondary_range_name
-    ip_cidr_range = module.subnets.network_cidr_blocks.kubernetes_pod_cluster_secondary_range
+    ip_cidr_range = module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_pod_cluster_secondary_range
   }
 }
 
@@ -70,5 +70,5 @@ resource "google_compute_subnetwork" "private" {
   network = google_compute_network.primary.self_link
 
   private_ip_google_access = true
-  ip_cidr_range = module.subnets.network_cidr_blocks.private
+  ip_cidr_range = module.vpc_cidr_ranges.network_cidr_blocks.private
 }
