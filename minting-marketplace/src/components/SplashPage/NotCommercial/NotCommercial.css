@@ -1,11 +1,11 @@
 .container-commercial {
-    /* position: absolute; */
+    position: absolute;
     width: 100%;
     z-index: 20;
     background: #626262;
     margin: 108px 0 10px 0;
     padding: 32px 100px;
-    bottom: 0;
+    bottom: 5.7rem;
     left: 0;
     display: flex;
     flex-direction: column;
