@@ -287,7 +287,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						label="Storage"
 						getter={storage}
 						setter={setStorage}
-						placeholder="Choose a category"
+						placeholder="Select a storage method"
 						options={[
 							{label: 'Google Cloud', value: 'gcp'},
 							{label: 'IPFS', value: 'ipfs'}
