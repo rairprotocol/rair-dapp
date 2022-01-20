@@ -679,7 +679,7 @@ text-decoration: none;
  line-height: 1.1;
 }
 .pic-description-wrapper:hover .description-more{
-  margin-top: 60px;
+  margin-top: 45px;
 }
 .pic-description-wrapper:hover .blockchain-img{
   transform: scale(2);

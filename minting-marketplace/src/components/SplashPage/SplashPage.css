@@ -1298,6 +1298,45 @@ img.block-img-mobile{
 }
 
 @media screen and (max-width: 1300px) {
+    .about-metadata-wrapper{
+        width: 900px;
+    }
+    .main-greyman-pic-wrapper{
+        margin-left: 4rem;
+        /* width: 900px; */
+        /* display: -webkit-inline-box; */
+    }
+    .video-grey-man{
+        width: 900px;
+    }
+    .video-grey-man-metamask-logo {
+        left: 374px;
+        top: -380px;
+    }
+    .box-progress {
+        margin-left: 83px !important;
+    }
+    .block-left-tokens{
+        margin-right: 1rem !important;
+    }
+    .btn-buy-metamask{
+        margin-right: 4rem;
+    }
+    .text-gradient-grey{
+        margin-top: 3rem !important;
+        font-size: 40px !important;
+    }
+    .text-splash{
+        width: 22rem;
+    }
+    .text-description{
+        width: 400px !important;
+    }
+    .home-splash--page .information-author {
+        background-size: 350px auto;
+        background-position: 88% 9rem;
+        /* background-position: 95% 60px; */
+    }
     .wrapper-splash-page {
         align-items: center;
     }
@@ -1571,10 +1610,24 @@ img.block-img-mobile{
     }
 
     .home-splash--page .box-progress {
-        margin-left: 108px;
+        margin-left: 108px !important;
         margin-top: 172px;
     }
-
+    .text-progress .progress-info{
+        display: block;
+    }
+    .about-metadata {
+        width: 100% !important;
+    }
+    .about-metadata-wrapper {
+        width: 800px !important;
+    }
+    .about-metadata-second-block-wrapper {
+        margin-top: 5.2rem;
+        text-align: start ;
+        margin-left: 15px;
+        width: 44% !important;
+    }
     .special-offer .root-time {
         margin-bottom: 0;
         margin-top: 0px;
@@ -2417,9 +2470,43 @@ img.block-img-mobile{
 }
 
 @media screen and (max-width: 1100px) {
+    .about-metadata-wrapper{
+        width: 900px;
+    }
+    .main-greyman-pic-wrapper{
+        width: 900px;
+        display: -webkit-inline-box;
+    }
+    .video-grey-man{
+        width: 900px;
+    }
+    .video-grey-man-metamask-logo {
+        left: 374px;
+        top: -380px;
+    }
+    .box-progress {
+        margin-left: 83px !important;
+    }
+    .block-left-tokens{
+        margin-right: 1rem !important;
+    }
+    .btn-buy-metamask{
+        margin-right: 4rem;
+    }
+    .text-gradient-grey{
+        margin-top: 3rem !important;
+        font-size: 40px !important;
+    }
+    .text-splash{
+        width: 22rem;
+    }
+    .text-description{
+        width: 400px !important;
+    }
     .home-splash--page .information-author {
         background-size: 350px auto;
-        background-position: 95% 60px;
+        background-position: 95% 9rem;
+        /* background-position: 95% 60px; */
     }
 }
 

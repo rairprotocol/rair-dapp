@@ -25,7 +25,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
   }, [setPersentTokens]);
 
   return (
-    <div className="left-tokens greyman-page">
+    <div className="left-tokens greyman-page left-tokens-response ">
       <div className="block-left-content-greyman">
         <div className="block-left-tokens">
           <div
