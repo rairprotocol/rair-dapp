@@ -1,7 +1,17 @@
 /* Repeating properties*/
 
 .text-gradient {
+    /* background: grey; */
     background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 45px;
+    font-size: 40px;
+    font-weight: 700;
+}
+.text-gradient-grey{
+    background: grey;
+    /* background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%); */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 45px;
@@ -30,6 +40,7 @@
 
 .wrapper-splash-page.greyman-page {
     background-image: none;
+    text-align: -webkit-center;
 }
 
 .home-splash--page {
@@ -143,14 +154,15 @@
 }
 
 .information-author.greyman-page-author {
-    background-image: url('./images/greyman.png');
+    background-image: url('./images/greyman1.png');
     background-size: 516px 516px;
     background-position: 90% center;
     height: 694px;
 }
 
 .information-author.greyman-page-author .block-splash {
-    justify-content: flex-end;
+    justify-content: start;
+    width: 50%;
 }
 
 .block-splash {
@@ -176,11 +188,14 @@
 
 .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
     color: #222021;
-    font-size: 32px;
+    font-size: 26px;
+    margin-top: 2rem;
 }
 
 .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3.text-gradient {
-    font-size: 40px;
+    font-size: 56px;
+    margin-top: 7rem;
+    padding-bottom: 17px;
 }
 
 .text-splash .title-splash.nipsey h3, .text-splash .title-splash.nipsey h4, .text-splash .title-splash.nipsey span{
@@ -225,7 +240,7 @@
 }
 
 .btn-buy-metamask {
-    margin-top: 56px;
+    margin-top: 90px;
 }
 
 .btn-buy-metamask button {
@@ -275,8 +290,8 @@
 
 .left-tokens .block-left-tokens {
     border-radius: 24px;
-    width: 456px;
-    height: 584px;
+    width: 472px;
+    height: 472px;
     margin-right: 91px;
     overflow: hidden;
     background: url('./images/left-tokens.jpeg') center center;
@@ -285,16 +300,16 @@
 }
 
 .left-tokens.greyman-page .block-left-tokens {
-    background: url('./images/greyman.png') center center;
+    background: url('./images/greyman1.png') center center;
     background-size: cover;
 }
 
 .block-left-tokens .down-text {
     position: absolute;
-    bottom: 16px;
-    left: 32px;
+    bottom: 32px;
+    left: 71px;
     font-size: 12px;
-    list-style: 21px;
+    /* list-style: 21px; */
     text-align: left;
     color: #fff;
 }
@@ -314,6 +329,7 @@
 } */
 
 .box-progress {
+    bottom: -2rem;
     width: 100%;
     height: 100%;
     display: flex;
@@ -323,6 +339,7 @@
 }
 
 .text-progress {
+    bottom: 5rem;
     color: #fff;
     position: absolute;
     line-height: 50px;
@@ -384,7 +401,7 @@
 .title-progress-left {
     position: absolute;
     font-size: 36px;
-    top: 72px;
+    top: 19px;
     font-weight: 700;
     line-height: 60px;
     color: #fff;
@@ -429,6 +446,192 @@
 .left-tokens-content .btn-buy-metamask {
     display: flex;
     justify-content: center;
+}
+
+.about-metadata-wrapper{
+    margin-top: 85px;
+width: 1200px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: flex-start;
+}
+.about-metadata{
+    width: 70%;
+    text-align: justify;
+}
+.about-metadata h1{
+    padding-bottom: 30px;
+    text-align: center;
+}
+.about-metadata-second-block-wrapper{
+    margin-top: 5.2rem;
+    text-align: start;
+    margin-left: 68px;
+}
+.join-pic-main{
+    margin-right: 1rem;
+}
+.list-of-greymans-pic{
+    display: flex;
+    flex-direction: row;
+    width: 620px;
+    flex-wrap: wrap;
+    align-content: space-between;
+    justify-content: space-around;
+    align-items: baseline;
+}
+.about-metadata-second-block{
+    /* width: 80%; */
+    width: 100%;
+    line-height: 34px;
+}
+.main-greyman-pic-wrapper{
+    display: flex;
+    width: 1200px;
+}
+.join-pic-main-img{
+    width: 589px;
+    height: 589px;
+}
+.join-pic-img{
+    width: 283.5px;
+    height: 283.5px;
+}
+.show-more-wrap{
+    position: absolute;
+}
+.show-more{
+    font-weight: 500;
+font-size: 24px;
+line-height: 30px;
+    padding-top: 24px;
+    position: relative;
+    bottom: -496px;
+    width: 589px;
+    height: 94px;
+    display: inline-block;
+    background: rgba(34, 32, 33, 0.5);
+    backdrop-filter: blur(8px);
+    border-radius: 0px 0px 20px 22px;
+}
+.show-more-arrow{
+    margin-left: 15px;
+    display: inline-block;
+    color: rgb(231, 130, 213);
+    transform: scale(1.5);
+}
+.property-wrapper{
+    width: 98%;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+}
+.property-first-wrapper{
+    display: flex;
+    /* justify-content: space-between; */
+    justify-content: space-around;
+}
+.property{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    border: 1.3px solid #4E4D4D;
+    box-sizing: border-box;
+    border-radius: 16px;
+    width: 211px;
+    height: 86px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.property-desc{
+   color: #FFFFFF; 
+}
+.property-name-color{
+    color: #656971;
+}
+.property-color{
+    color: #95F619;
+}
+.property-btn-wrapper{
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+.property-btn{
+    padding: 18px 91px 18px 92px;
+    width: 303px;
+    height: 64px;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    border-radius: 16px;
+    text-align: center;
+}
+.property-btn-ipfs{
+    width: 120px;
+    height: 28px;
+    font-family: Plus Jakarta Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    color: #FFFFFF;
+}
+.video-grey-man-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.video-grey-man-title{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 40px;
+    line-height: 60px;
+    color: #FFFFFF;
+}
+.video-grey-man-metamask-logo{
+    width: 190px;
+    height: 190px;
+}
+.video-grey-man-metamask-logo-wrapper{
+    position: absolute;
+}
+.video-grey-man{
+    width: 995px;
+    height: 559px;
+    overflow: hidden;
+    border-radius: 16px;
+}
+.video-grey-man-metamask-logo{
+    position: relative;
+    left: 400px;
+    top: -400px;
+}
+.video-grey-man-pic{
+    width: 995px;
+    height: 559px;
+    transform: scale(1.4);
+}
+.video-grey-man-desc-wrapper{
+    padding-top: 35px;
+}
+.video-grey-man-desc{
+    display: inline-block;
+    width: 637px;
+    height: 76px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 28px;
+    color: #FFFFFF;
+}
+
+.greyman-timeline-wrapper{
+    margin-top: 111px;
+    margin-bottom: 94px;
 }
 /* 
 .left-tokens-content .mailchimp {
@@ -884,6 +1087,7 @@
 /* Join Community Block*/
 
 .join-community {
+    margin-top: 85px;
     margin-bottom: 85px;
 }
 
@@ -2193,6 +2397,10 @@ img.block-img-mobile{
     border-radius: 16px;
     border: 2px dashed #4E4D4D;
     padding: 50px 45px;
+}
+
+.splash-team-greyman {
+    margin-bottom: 600px;
 }
 
 .nipsey-img-masks img {

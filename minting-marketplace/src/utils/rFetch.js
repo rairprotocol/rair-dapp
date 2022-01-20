@@ -66,7 +66,7 @@ const signIn = async (provider) => {
 	return false;
 }
 
-const getJWT = async (signer, userData, userAddress) => {
+const getJWT = async (signer, userData, userAddress, adminRights) => {
 	const msg = `Sign in for RAIR by nonce: ${userData.nonce}`;
 	let signature = await (signer.signMessage(msg, userAddress));
 	if(userAddress && signature ){
@@ -74,8 +74,7 @@ const getJWT = async (signer, userData, userAddress) => {
 			method: 'POST',
 			body: JSON.stringify({ publicAddress: 
 				userAddress.toLowerCase() 
-				// 'fsdsf'
-				, signature, adminRights: true }),
+				, signature, adminRights: adminRights }),
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json'
