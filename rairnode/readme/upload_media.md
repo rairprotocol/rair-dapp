@@ -76,6 +76,13 @@ Upload the media
     "content": {
       "type": "boolean"
     }
+  },
+  "storage": {
+    "required": false,
+    "content": {
+      "type": "string",
+      "variants": ["ipfs", "gcp"]
+    }
   }
 }
 ```
