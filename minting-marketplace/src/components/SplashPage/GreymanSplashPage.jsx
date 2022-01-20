@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
+import "./GreymanSplashPageMobile.css";
 import Modal from "react-modal";
 
 /* importing images*/

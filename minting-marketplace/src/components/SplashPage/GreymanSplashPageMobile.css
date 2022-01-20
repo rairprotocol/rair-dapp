@@ -1,0 +1,186 @@
+@media screen and (max-width: 1300px) {
+    .home-splash--page .information-author {
+        background-size: 300px auto;
+    }
+}
+
+@media screen and (max-width: 1260px) { 
+    .about-metadata-wrapper  {
+        max-width: 1000px;
+    }
+
+    .join-pic-main-img {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .join-pic-img {
+        width: 195px;
+        height: 195px;
+    }
+
+    .show-more {
+
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .information-author.greyman-page-author {
+        height: 100%;
+    }
+
+    .home-splash--page .information-author {
+        justify-content: center;
+    }
+
+    .information-author.greyman-page-author .block-splash {
+        width: 100%;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 400px;
+    }
+
+    .home-splash--page .information-author {
+        background-position: center 220px;
+        background-size: 350px auto;
+    }
+
+    .about-metadata-wrapper {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 20px;
+    }
+    
+
+    .about-metadata {
+        width: 100%;
+    }
+
+    .about-metadata-second-block {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .about-metadata-second-block-wrapper {
+        margin-left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+} 
+
+@media screen and (max-width: 845px) {
+    .home-splash--page .information-author.greyman-page-author {
+    background-image: url('./images/greyman1.png');
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
+        font-size: 20px;
+        width: 100%;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3.text-gradient-grey {
+        font-size: 40px !important;
+        text-align: center;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 450px;
+    }
+
+    .home-splash--page .information-author {
+        background-position: center 130px;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask {
+        justify-content: center;
+        display: flex;
+        margin-top: 40px;
+    }
+
+    .home-splash--page .information-author.greyman-page-author {
+        padding: 20px 20px;
+    }
+
+    .property-wrapper {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .property-wrapper .property {
+        width: 150px;
+        justify-content: space-around;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .home-splash--page .information-author {
+        background-position: center 150px;
+        background-size: 300px auto;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
+        font-size: 18px;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3.text-gradient-grey {
+        font-size: 32px !important;
+    }
+
+    .property-wrapper .property {
+        width: 130px;
+        height: 70px;
+        font-size: 12px;
+        justify-content: space-around;
+    }
+
+     .property-btn {
+        width: 250px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+
+    /* .property-btn-ipfs {
+        font-size: 16px;
+        width: 100%;
+        height: 100%;
+        line-height: 20px;
+    } */
+}
+
+@media screen and (max-width: 370px) {
+    .home-splash--page .information-author {
+        background-position: center 150px;
+        background-size: 250px auto;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3.text-gradient-grey {
+        font-size: 30px !important;
+    }
+
+    .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 350px;
+    }
+
+    .home-splash--page .text-splash .text-description {
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask {
+        width: 250px;
+    }
+}

@@ -39,8 +39,8 @@
 }
 
 .wrapper-splash-page.greyman-page {
-    background-image: none;
-    text-align: -webkit-center;
+    /* background-image: none; */
+    /* text-align: -webkit-center; */
 }
 
 .home-splash--page {
@@ -1587,7 +1587,7 @@ img.block-img-mobile{
 
 @media screen and (max-width: 850px) {
     .home-splash--page .information-author {
-        background-image: none;
+        /* background-image: none; */
     }
 
     .home-splash--page .information-author{
