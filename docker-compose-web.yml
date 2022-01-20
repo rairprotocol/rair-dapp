@@ -39,7 +39,9 @@ services:
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
       GCP_PROJECT_ID: ${gcp_project_id}
-      GCP_BUCKET_NAME: ${gcp_bucket_name}
+      GCP_IMAGE_BUCKET_NAME: ${gcp_image_bucket_name}
+      GCP_VIDEO_BUCKET_NAME: ${gcp_video_bucket_name}
+      GCP_GATEWAY: ${gcp_gateway}
       GCP_CREDENTIALS: ${gcp_credentials}
       IPFS_SERVICE: ${ipfs_service}
       IPFS_GATEWAY: ${ipfs_gateway}
