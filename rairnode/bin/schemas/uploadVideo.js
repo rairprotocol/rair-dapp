@@ -13,5 +13,7 @@ module.exports = Joi.object({
   product: Joi.number().required(),
   offer: Joi.array().items(Joi.number()),
   category: Joi.string().min(1).required(),
-  demo: Joi.boolean()
+  demo: Joi.boolean(),
+  storage: Joi.any()
+    .valid('ipfs', 'gcp'),
 });
