@@ -20,6 +20,7 @@ import { rFetch } from "../../utils/rFetch.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
+import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 
 const customStyles = {
   overlay: {
@@ -405,6 +406,28 @@ const SplashPage = () => {
               {/* <span className="text-gradient">Community</span> rewards */}
             </h3>
           </div>
+          <MobileCarouselNfts>
+            <img
+              className="join-pic-img"
+              src={GreyMan}
+              alt="community-img"
+            />
+            <img
+              className="join-pic-img"
+              src={GreyMan}
+              alt="community-img"
+            />
+            <img
+              className="join-pic-img"
+              src={GreyMan}
+              alt="community-img"
+            />
+            <img
+              className="join-pic-img"
+              src={GreyMan}
+              alt="community-img"
+            />
+          </MobileCarouselNfts>
           <div className="main-greyman-pic-wrapper">
             <div className="main-greyman-pic">
               <div className="join-pic-main">
