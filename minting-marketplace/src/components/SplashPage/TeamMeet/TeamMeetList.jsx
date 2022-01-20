@@ -376,11 +376,7 @@ const teamGreymanArray = [
         socials: [
             {
                 classIcon: 'fab fa-twitter',
-                link: ''
-            },
-            {
-                classIcon: 'fab fa-twitter',
-                link: ''
+                link: '#'
             }
         ]
     },
@@ -401,12 +397,9 @@ const teamGreymanArray = [
         ],
         socials: [
             {
-                classIcon: 'fab fa-twitter',
-                link: ''
-            },
-            {
-                classIcon: 'fab fa-twitter',
-                link: ''
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
             }
         ]
     }
@@ -494,19 +487,20 @@ const NipseyTeamComponent = ({ primaryColor }) => {
 
 const GreyManTeamComponent = ({ primaryColor }) => {
     return (
-        <>
+        <div className="splash-team-greyman">
             {
                 teamGreymanArray.map((t, index) => {
                     return <Teammate
                         key={index + t.nameTeammate}
                         name={t.nameTeammate}
                         desc={t.aboutTeammate}
+                        socials={t.socials}
                         primaryColor={primaryColor}
                         url={t.imageUrl}
                     />
                 })
             }
-        </>
+        </div>
     )
 }
 

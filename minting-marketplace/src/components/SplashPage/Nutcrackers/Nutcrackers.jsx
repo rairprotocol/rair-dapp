@@ -210,7 +210,6 @@ const Nutcrackers = () => {
                     Nft_3={Nft_3}
                     Nft_4={Nft_4}
                     NftImage={NftImage}
-                    amountTokens={50}
                     linkComing={'/coming-soon-nutcrackers'}
                 />
                 <div className="join-community">

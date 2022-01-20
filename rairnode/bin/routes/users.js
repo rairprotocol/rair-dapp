@@ -48,7 +48,7 @@ module.exports = context => {
       const foundUser = await context.db.User.findOne({ publicAddress });
       const { user } = req;
       let fieldsForUpdate = _.assign({}, req.body);
-      let avatar = '';
+      let avatarFile = '';
 
       if (!foundUser) {
         return res.status(404).send({ success: false, message: 'User not found.' });
@@ -62,15 +62,15 @@ module.exports = context => {
       }
 
       if (req.file) {
-        avatar = await context.gcp.uploadFile(context, req.file);
+        avatarFile = await context.gcp.uploadFile(context.config.gcp.imageBucketName, req.file);
         await removeTempFile(`${ req.file.destination }${ req.file.filename }`);
 
-        if(!!avatar) {
-          _.assign(fieldsForUpdate, { avatar });
+        if (!!avatarFile) {
+          _.assign(fieldsForUpdate, { avatar: `${ context.config.gcp.gateway }/${ context.config.gcp.imageBucketName }/${ avatarFile }` });
         }
       }
 
-      fieldsForUpdate = _.pick(fieldsForUpdate,['adminNFT', 'nickName', 'avatar', 'email']);
+      fieldsForUpdate = _.pick(fieldsForUpdate, ['adminNFT', 'nickName', 'avatar', 'email']);
 
       if (_.isEmpty(fieldsForUpdate)) {
         return res.status(400).send({ success: false, message: 'Nothing to update.' });

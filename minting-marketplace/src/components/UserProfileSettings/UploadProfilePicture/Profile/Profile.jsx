@@ -5,7 +5,7 @@ const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic }) => {
   return (
     <div className={cl.card}>
       <form onSubmit={onSubmit}>
-        <h1>Profile Card</h1>
+        <h1> </h1>
         <label className={`${cl.customFileUpload} ${"fas"}`}>
           <div className={cl.imgWrap}>
             <img alt="" htmlFor={cl.photoUpload} src={src} />
