@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import BatchMinting from './BatchMinting.jsx';
 import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData.js';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 const MySwal = withReactContent(Swal)
 
 const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
@@ -46,12 +47,9 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 	const batchMint = async (data) => {
 		let addresses = data.map(i => i.address);
 		let tokens = data.map(i => i.token);
-		try {
-			await minterInstance.buyTokenBatch(offerIndex, rangeIndex, tokens, addresses, {value: price * tokens.length});
-			Swal.close();
-		} catch (err) {
-			console.error(err);
-			Swal.fire('Error', err?.data?.message, 'error');
+		Swal.fire({title: 'Preparing transaction', html: 'Please wait', icon: 'info', showConfirmButton: false});
+		if (await metamaskCall(minterInstance.buyTokenBatch(offerIndex, rangeIndex, tokens, addresses, {value: price * tokens.length}))) {
+			Swal.fire('Success', 'Minted all tokens', 'success');
 		}
 	}
 
@@ -65,10 +63,9 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 			...{end}
 		</div>
 		<button onClick={async e => {
-			try {
-				await minterInstance.buyToken(offerIndex, rangeIndex, next, { value: price });
-			} catch (err) {
-				Swal.fire('Error', err?.data?.message, 'error');
+			Swal.fire({title: 'Preparing transaction', html: 'Please wait', icon: 'info', showConfirmButton: false});
+			if (await metamaskCall(minterInstance.buyToken(offerIndex, rangeIndex, next, { value: price }))) {
+				Swal.fire('Success', 'Token Minted!', 'success');
 			}
 		}} className='btn btn-success py-0'>
 			Buy token #{next} for {utils.formatEther(price === '' ? 0 : price)?.toString()} {blockchainData[window?.ethereum?.chainId]?.symbol}!

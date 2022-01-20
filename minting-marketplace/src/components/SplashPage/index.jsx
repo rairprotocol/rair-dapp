@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import { erc721Abi } from '../../contracts/index.js'
 import { rFetch } from '../../utils/rFetch.js';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 import Swal from 'sweetalert2';
 
 import "./SplashPage.css";
@@ -69,6 +70,7 @@ const customStyles = {
 const SplashPage = () => {
   const [dataNipsey, setDataNipsey] = useState();
   const [copies, setCopies] = useState();
+  const [timerLeft, setTimerLeft] = useState();
 
   const history = useHistory();
 
@@ -117,19 +119,15 @@ const SplashPage = () => {
       Swal.fire('Error', 'An error has ocurred', 'error');
       return;
     }
-    try {
-      await (await minterInstance.buyToken(
+    if (await metamaskCall(minterInstance.buyToken(
         products[0].offerPool.marketplaceCatalogIndex,
         firstPressingOffer.offerIndex,
         nextToken,
         {
           value: firstPressingOffer.price
         }
-      )).wait();
-      Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
-    } catch (e) {
-      console.error(e);
-      Swal.fire('Error', e?.message, 'error');
+      ))) {
+      Swal.fire('Success',`Bought token #${nextToken}!`,'success');
     }
   }
 
@@ -137,9 +135,9 @@ const SplashPage = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
-  // const openModal = useCallback(() => {
-  //   setIsOpen(true);
-  // }, []);
+  const openModal = useCallback(() => {
+    setIsOpen(true);
+  }, []);
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
@@ -200,15 +198,16 @@ const SplashPage = () => {
                 </div>
               </div>
               <div className="btn-timer-nipsey">
-                <Countdown />
-                {/* <button onClick={openModal}>
-                  <img
-                    className="metamask-logo"
-                    src={Metamask}
-                    alt="metamask-logo"
-                  />{" "}
-                  Preorder with ETH
-                </button> */}
+                {
+                  timerLeft === 0 ? <button onClick={openModal}>
+                    <img
+                      className="metamask-logo"
+                      src={Metamask}
+                      alt="metamask-logo"
+                    />{" "}
+                    Preorder with ETH
+                  </button> : <Countdown setTimerLeft={setTimerLeft} timerLeft={timerLeft} />
+                }
                 <Modal
                   isOpen={modalIsOpen}
                   onAfterOpen={afterOpenModal}
@@ -324,9 +323,9 @@ const SplashPage = () => {
                 launch.
               </p>
             </div>
-            
-              <Countdown />
-              {/* <button onClick={() => history.push('/coming-soon')}>
+
+            <Countdown />
+            {/* <button onClick={() => history.push('/coming-soon')}>
                 <img
                   className="metamask-logo"
                   src={Metamask}
@@ -334,7 +333,7 @@ const SplashPage = () => {
                 />{" "}
                 COMING SOON
               </button> */}
-            
+
           </div>
           <div className="offer-fans">
             <div className="offer-fans-container">

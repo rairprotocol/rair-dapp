@@ -505,6 +505,7 @@ a {
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: flex-start;
+  margin-bottom: 3rem;
 }
 .input-search-wrapper{
   max-width: 86%;
@@ -1036,7 +1037,9 @@ button.metamask-on-boarding:hover{
 .footer ul li:last-child {
   margin-right: 0;
 }
-
+#nft-data-page-wrapper{
+  margin-bottom: 3rem;
+}
 @media screen and (max-width: 900px) and (min-width: 500px) {
   #nft-data-page-wrapper{
     max-width: 50rem;
@@ -1162,3 +1165,29 @@ body::-webkit-scrollbar-thumb:active {
 .video-btn-back button:hover {
   background: #AF6FD8;
 }
+
+@media screen and (max-width: 700px) {
+  .blockchain-switcher {
+    height: 3vh !important;
+  }
+
+  .btn-connect-wallet-wrapper button.metamask-on-boarding {
+    top: 50px;
+    right: 0;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .btn-connect-wallet-wrapper button.metamask-on-boarding {
+    top: 50px;
+    right: -55px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .btn-connect-wallet-wrapper button.metamask-on-boarding {
+    top: 100px;
+    right: -55px;
+  }
+}
+

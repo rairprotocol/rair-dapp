@@ -157,43 +157,50 @@ module.exports = context => {
   });
 
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
-    console.log(req.file);
     // Get video information from the request's body
-    const { title, description, contract, product, offer = [], category, demo = 'false' } = req.body;
+    const { title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs' } = req.body;
     // Get the user information
-    const { adminNFT: author, adminRights } = req.user;
+    const { adminNFT: author, adminRights, publicAddress } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
+    const { db, config } = context;
+    let cid = '';
+    let defaultGateway = '';
+    let storageLink = '';
 
     if (!adminRights) {
       if (req.file) {
-        fs.rm(req.file.destination, {recursive: true}, () => log.info('You don\'t have permission to upload the files.', e));
+        fs.rm(req.file.destination, {recursive: true}, (err) => {
+          log.info(`User ${publicAddress} don\'t have permission to upload the files.`)
+
+          if (err) log.error(err);
+        });
       }
       return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
     }
 
-    const foundContract = await context.db.Contract.findById(contract);
+    const foundContract = await db.Contract.findById(contract);
 
     if (!foundContract) {
       return res.status(404).send({ success: false, message: `Contract ${ contract } not found.` });
     }
 
-    const foundProduct = await context.db.Product.findOne({ contract: foundContract._id, collectionIndexInContract: product });
+    const foundProduct = await db.Product.findOne({ contract: foundContract._id, collectionIndexInContract: product });
 
     if (!foundProduct) {
       return res.status(404).send({ success: false, message: `Product ${ product } not found.` });
     }
 
-    const foundCategory = await context.db.Category.findOne({ name: category });
+    const foundCategory = await db.Category.findOne({ name: category });
 
     if (!foundCategory) {
       return res.status(404).send({ success: false, message: 'Category not found.' });
     }
 
-    const foundOfferPool = await context.db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
+    const foundOfferPool = await db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
 
     if (demo === 'false') {
-      const foundOffers = await context.db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
+      const foundOffers = await db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
 
       offer.forEach(item => {
         if (!_.includes(foundOffers, item)) {
@@ -212,11 +219,10 @@ module.exports = context => {
       }
     };
 
-    socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
-    log.info(`Processing: ${ req.file.originalname }`);
-
     if (req.file) {
       try {
+        socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
+        log.info(`Processing: ${ req.file.originalname }`);
         log.info(`${ req.file.originalname } generating thumbnails`);
 
         res.json({ success: true, result: req.file.filename });
@@ -262,16 +268,28 @@ module.exports = context => {
           last: false
         });
 
-        const ipfsCid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
+        switch (storage) {
+          case 'ipfs':
+            cid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
+            defaultGateway = `${ config.pinata.gateway }/${ cid }`;
+            const gateway = {
+              ipfs: `${ config.ipfs.gateway }/${ cid }`,
+              pinata: `${ config.pinata.gateway }/${ cid }`
+            };
+            storageLink = _.get(gateway, config.ipfsService, defaultGateway);
+            break;
+          case 'gcp':
+            cid = await context.gcp.uploadFolder(config.gcp.videoBucketName, req.file.destination, socketInstance);
+            defaultGateway = `${ config.gcp.gateway }/${ config.gcp.videoBucketName }/${ cid }`;
+            storageLink = defaultGateway;
+            break;
+        }
 
-        fs.rm(req.file.destination, {recursive: true}, console.log);
+        fs.rm(req.file.destination, {recursive: true}, (err) => {
+          if (err) log.error(err);
+        });
         log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
         delete req.file.destination;
-        const defaultGateway = `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`;
-        const gateway = {
-          ipfs: `${ process.env.IPFS_GATEWAY }/${ ipfsCid }`,
-          pinata: `${ process.env.PINATA_GATEWAY }/${ ipfsCid }`
-        };
 
         const meta = {
           mainManifest: 'stream.m3u8',
@@ -294,7 +312,7 @@ module.exports = context => {
           meta.description = description;
         }
 
-        log.info(`${ req.file.originalname } uploaded to ipfsService: ${ ipfsCid }`);
+        log.info(`${ req.file.originalname } uploaded to ipfsService: ${ cid }`);
         socketInstance.emit('uploadProgress', { message: `uploaded to ipfsService.`, last: false, done: 90 });
 
         log.info(`${ req.file.originalname } storing to DB.`);
@@ -303,10 +321,10 @@ module.exports = context => {
           last: false
         });
 
-        await context.db.File.create({
-          _id: ipfsCid,
+        await db.File.create({
+          _id: cid,
           key: exportedKey.toJSON(),
-          uri: _.get(gateway, process.env.IPFS_SERVICE, defaultGateway),
+          uri: storageLink,
           ...meta,
         });
 
@@ -321,15 +339,20 @@ module.exports = context => {
           last: false
         });
 
-        await addPin(ipfsCid, title, socketInstance);
+        if (storage === 'ipfs') await addPin(cid, title, socketInstance);
       } catch (e) {
         if (req.file.destination) {
-          fs.rm(req.file.destination, {recursive: true}, () => log.info('An error has ocurred encoding the file', e));
+          fs.rm(req.file.destination, {recursive: true}, (err) => {
+            log.error('An error has occurred encoding the file', e);
+
+            if (err) log.error(err);
+          });
         } else {
           log.error(e);
         }
-        //return res.status(403).send({ success: false, message: 'An error has ocurred encoding the file' });
       }
+    } else {
+      return res.status(400).send({ success: false, message: 'File not provided.' });
     }
   });
 

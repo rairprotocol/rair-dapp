@@ -204,12 +204,12 @@ const Nutcrackers = () => {
                     </p>
                 </div>
                 <ExclusiveNft
+                    amountTokens={50}
                     Nft_1={Nft_1}
                     Nft_2={Nft_2}
                     Nft_3={Nft_3}
                     Nft_4={Nft_4}
                     NftImage={NftImage}
-                    amountTokens={50}
                     linkComing={'/coming-soon-nutcrackers'}
                 />
                 <div className="join-community">

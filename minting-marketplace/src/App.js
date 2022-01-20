@@ -28,7 +28,6 @@ import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
 import ConsumerMode from './components/consumerMode.jsx';
 import Contracts from './components/creatorStudio/Contracts.jsx';
 import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
-import CreateBatchMetadata from './components/metadata/CreateBatchMetadata.jsx';
 import CreatorMode from './components/creatorMode.jsx';
 
 import Deploy from './components/creatorStudio/Deploy.jsx';
@@ -73,6 +72,7 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 import VideoPlayer from './components/video/videoPlayer.jsx';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
+
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -85,7 +85,7 @@ const ErrorFallback = () => {
 function App({ sentryHistory }) {
 
 	const [/*userData*/, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(undefined);
+	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	const [errorAuth, /*setErrorAuth*/] = useState('');
@@ -94,6 +94,7 @@ function App({ sentryHistory }) {
 	// Google Analytics
 	const TRACKING_ID = "UA-209450870-3"; // YOUR_OWN_TRACKING_ID
 	ReactGA.initialize(TRACKING_ID);
+
 	// Redux
 	const dispatch = useDispatch()
 	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
@@ -147,8 +148,8 @@ function App({ sentryHistory }) {
 			}
 
 			// Admin rights validation
-			// let adminRights = adminAccess;
-			if (adminAccess === undefined) {
+			let adminRights = adminAccess;
+			if (adminAccess === null) {
 				const { response } = await (await fetch(`/api/auth/get_challenge/${currentUser}`)).json();
 				let ethResponse;
 				let ethRequest = {
@@ -168,14 +169,13 @@ function App({ sentryHistory }) {
 						parsedResponse.message);
 				} else {
 					Swal.fire('Error', "Can't sign messages", 'error');
-					console.log("Nahuy")
 					return;
 				}
 				const adminResponse = await (await fetch(`/api/auth/admin/${JSON.parse(response).message.challenge}/${ethResponse}/`)).json();
 				console.log(adminResponse);
 				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: adminResponse.success });
 				setAdminAccess(adminResponse.success);
-				// adminRights = adminResponse.success;
+				adminRights = adminResponse.success;
 			}
 
 			let signer = programmaticProvider;
@@ -186,7 +186,7 @@ function App({ sentryHistory }) {
 			}
 
 			if (!localStorage.token) {
-				let token = await getJWT(signer, user, currentUser);
+				let token = await getJWT(signer, user, currentUser, adminRights);
 				if (!success) {
 					setLoginDone(false);
 					setStartedLogin(false);
@@ -197,7 +197,7 @@ function App({ sentryHistory }) {
 			}
 
 			if (!isTokenValid(localStorage.token)) {
-				let token = await getJWT(signer, user, currentUser);
+				let token = await getJWT(signer, user, currentUser, adminRights);
 				if (!success) {
 					setLoginDone(false);
 					setStartedLogin(false);
@@ -250,7 +250,7 @@ function App({ sentryHistory }) {
 				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
 			}
 		}
-	}, [dispatch, sentryHistory.push])
+	}, [dispatch, sentryHistory.push,setAdminAccess])
 
 	useEffect(() => {
 		btnCheck()
@@ -364,7 +364,7 @@ function App({ sentryHistory }) {
 						setLoginDone={setLoginDone}
 					/>
 					<div className='row w-100 m-0 p-0'>
-						<div className='col-1 d-none d-xl-inline-block' />
+						{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 						<div className='col-1 rounded'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
 								<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
@@ -398,7 +398,7 @@ function App({ sentryHistory }) {
 							})}
 						</div>
 						<div className='col'>
-							<div className='col-12' style={{ height: '10vh' }}>
+							<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
 								{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
 								<Switch>
 									<SentryRoute path='/admin' component={BlockChainSwitcher} />
@@ -446,10 +446,9 @@ function App({ sentryHistory }) {
 										<FileUpload primaryColor={primaryColor} textColor={textColor} />
 									</SentryRoute>}
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
-									{loginDone && <SentryRoute path='/batch-metadata/:contract/:product' component={CreateBatchMetadata} />}
 									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
-									{loginDone && <SentryRoute exact path='/metadata/:contract/:product' component={MetadataEditor} />}
+									{loginDone && <SentryRoute exact path='/metadata/:blockchain/:contract/:product' component={MetadataEditor} />}
 									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 									{loginDone && <SentryRoute exact path='/my-items' >
 										<MyItems goHome={goHome} />

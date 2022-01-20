@@ -7,6 +7,7 @@ const csv = require('csv-parser');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
 const { execPromise } = require('../../utils/helpers');
+const path = require('path');
 
 const removeTempFile = async (roadToFile) => {
   const command = `rm ${ roadToFile }`;
@@ -250,14 +251,32 @@ module.exports = context => {
     }
   });
 
+  // Get CSV sample file
+  router.get('/csv/sample', async (req, res, next) => {
+    try {
+      const file = path.join(__dirname, '../../../assets/sample.csv');
+
+      return res.download(file);
+    } catch (e) {
+      next(e);
+    }
+  });
+
   router.use('/network/:networkId/:contract', validation('nftContract', 'params'), async (req, res, next) => {
-    const contract = await context.db.Contract.findOne({ contractAddress: req.params.contract.toLowerCase(), blockchain: req.params.networkId });
+    try {
+      const contract = await context.db.Contract.findOne({
+        contractAddress: req.params.contract.toLowerCase(),
+        blockchain: req.params.networkId
+      });
 
-    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+      if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
 
-    req.contract = contract;
+      req.contract = contract;
 
-    next();
+      return next();
+    } catch (e) {
+      return next(e);
+    }
   }, require('./contract')(context));
 
   return router;
