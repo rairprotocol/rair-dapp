@@ -1425,12 +1425,12 @@ describe("Diamonds", function () {
 				await expect(await mintingOffersFacet.addMintingOfferBatch(
 					secondDeploymentAddress,
 					[2, 3],
-					[
+					[1,2].map(item => [
 						{recipient: addr1.address, percentage: 10000},
 						{recipient: addr3.address, percentage: 10000},
 						{recipient: owner.address, percentage: 10000},
 						{recipient: addr2.address, percentage: 60000}
-					],
+					]),
 					[false, false],
 					addr4.address
 				))

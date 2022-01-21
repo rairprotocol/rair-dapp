@@ -80,13 +80,13 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 	function addMintingOfferBatch(
 		address erc721Address_,
 		uint[] calldata rangeIndexes,
-		feeSplits[] calldata splits,
+		feeSplits[][] calldata splits,
 		bool[] calldata visibility,
 		address nodeAddress_
 	) external {
 		require(rangeIndexes.length == visibility.length, "Minter Marketplace: Arrays should have the same length");
 		for (uint i = 0; i < rangeIndexes.length; i++) {
-			_addMintingOffer(erc721Address_, rangeIndexes[i], splits, visibility[i], nodeAddress_);
+			_addMintingOffer(erc721Address_, rangeIndexes[i], splits[i], visibility[i], nodeAddress_);
 		}
 	}
 
