@@ -19,17 +19,18 @@ const Contracts = () => {
 
 	const fetchContracts = useCallback(async () => {
 		let response = await rFetch('/api/contracts', undefined, { provider: programmaticProvider });
-		
-		let diamondDeployments = await diamondFactoryInstance.creatorToContractList(currentUserAddress);
 		const diamondData = [];
-		for await (let deployment of diamondDeployments) {
-			let instance = contractCreator(deployment, diamondFactoryAbi);
-			diamondData.push({
-				address: deployment,
-				name: await instance.name(),
-				blockchain: window.ethereum.chainId,
-				diamond: true
-			})
+		if (diamondFactoryInstance) {
+			let diamondDeployments = await diamondFactoryInstance.creatorToContractList(currentUserAddress);
+			for await (let deployment of diamondDeployments) {
+				let instance = contractCreator(deployment, diamondFactoryAbi);
+				diamondData.push({
+					address: deployment,
+					name: await instance.name(),
+					blockchain: window.ethereum.chainId,
+					diamond: true
+				})
+			}
 		}
 
 		if (response.success) {

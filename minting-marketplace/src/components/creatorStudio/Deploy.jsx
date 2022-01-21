@@ -126,39 +126,41 @@ const Factory = () => {
 					>
 					Deploy using {utils.formatEther(deploymentPrice).toString()} {tokenSymbol} Tokens
 				</button>
-				<div className='col-12'>
-					or
-				</div>
-				<button
-					disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying || diamondFactoryInstance === undefined}
-					className='btn btn-stimorol col-12 rounded-rair'
-					onClick={async e => {
-						setDeploying(true);
-						Swal.fire({
-							title: 'Deploying contract (with Diamonds)!',
-							html: 'Please wait...',
-							icon: 'info',
-							showConfirmButton: false
-						});
-						let success = await metamaskCall(erc777Instance.send(
-							diamondFactoryInstance.address,
-							deploymentPriceDiamond,
-							utils.toUtf8Bytes(contractName)
-						));
-						setDeploying(false);
-						if (success) {
+				{diamondFactoryInstance && <>
+					<div className='col-12'>
+						or
+					</div>
+					<button
+						disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying || diamondFactoryInstance === undefined}
+						className='btn btn-stimorol col-12 rounded-rair'
+						onClick={async e => {
+							setDeploying(true);
 							Swal.fire({
-								title: 'Success',
-								html: 'Contract deployed with Diamonds!',
-								icon: 'success',
+								title: 'Deploying contract (with Diamonds)!',
+								html: 'Please wait...',
+								icon: 'info',
 								showConfirmButton: false
 							});
-							setContractName('');
-						}
-					}}
-					>
-					<i className='fas fa-gem' /> Spend {utils.formatEther(deploymentPriceDiamond).toString()} {tokenSymbol} tokens to deploy with <b>Diamonds</b> <i className='fas fa-gem' />
-				</button>
+							let success = await metamaskCall(erc777Instance.send(
+								diamondFactoryInstance.address,
+								deploymentPriceDiamond,
+								utils.toUtf8Bytes(contractName)
+							));
+							setDeploying(false);
+							if (success) {
+								Swal.fire({
+									title: 'Success',
+									html: 'Contract deployed with Diamonds!',
+									icon: 'success',
+									showConfirmButton: false
+								});
+								setContractName('');
+							}
+						}}
+						>
+						<i className='fas fa-gem' /> Spend {utils.formatEther(deploymentPriceDiamond).toString()} {tokenSymbol} tokens to deploy with <b>Diamonds</b> <i className='fas fa-gem' />
+					</button>
+				</>}
 				<hr />
 				Your balance: {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens
 			</div>
