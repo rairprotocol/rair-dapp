@@ -1,6 +1,85 @@
+.wrapper-splash-page.greyman-page {
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper-splash-page.greyman-page .block-left-content-greyman .btn-buy-metamask {
+    margin-left: 4rem;
+}
+
+.wrapper-splash-page.greyman-page .join-community .exclusive-nfts {
+    display: none;
+}
+
 @media screen and (max-width: 1300px) {
     .home-splash--page .information-author {
         background-size: 300px auto;
+    }
+}
+
+@media screen and (max-width: 1320px) {
+    .list-of-greymans-pic {
+        width: 450px;
+        justify-content: space-between;
+        align-content: center;
+    }
+
+    .main-greyman-pic-wrapper {
+        max-height: 1000px;
+        margin-top: 20px;
+        margin-left: 2rem;
+    }
+
+    .show-more-wrap .show-more {
+        bottom: -365px;
+        width: 452px;
+    }
+
+    .join-pic-img {
+        width: 220px;
+        height: 220px;
+    }
+
+    .join-pic-main-img {
+        width: 452px;
+        height: 452px;
+    }
+
+    .list-of-greymans-pic .join-pic:first-child {
+        margin-bottom: 10px;
+    }
+
+    .list-of-greymans-pic .join-pic:nth-child(2) {
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .join-pic-img {
+        width: 190px;
+        height: 190px;
+    }
+
+    .list-of-greymans-pic {
+        width: 390px;
+    }
+
+    .join-pic-main-img {
+        width: 395px;
+        height: 395px;
+    }
+
+    .show-more-wrap .show-more {
+        bottom: -310px;
+        width: 395px;
+    }
+
+    .main-greyman-pic-wrapper {
+        padding: 0 20px;
+    }
+
+    .wrapper-splash-page.greyman-page .join-community .title-join {
+        padding: 0 20px;
     }
 }
 
@@ -9,7 +88,7 @@
         max-width: 1000px;
     }
 
-    .join-pic-main-img {
+    /* .join-pic-main-img {
         width: 400px;
         height: 400px;
     }
@@ -21,7 +100,7 @@
 
     .show-more {
 
-    }
+    } */
 }
 
 @media screen and (max-width: 1100px) {
@@ -54,7 +133,7 @@
     
 
     .about-metadata {
-        width: 100%;
+        width: 100% !important;
     }
 
     .about-metadata-second-block {
@@ -68,13 +147,54 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 100%;
+        width: 100% !important;
+    }
+
+    .non-commercial-content {
+        background-position: 100% 10% !important;
     }
 } 
 
+@media screen and (max-width: 900px) {
+    .non-commercial-content {
+        background-image: none !important;
+    }
+
+    .container-commercial {
+        bottom: 8rem !important;
+    }
+}
+
 @media screen and (max-width: 845px) {
     .home-splash--page .information-author.greyman-page-author {
-    background-image: url('./images/greyman1.png');
+        background-image: url('./images/greyman1.png');
+    }
+
+    .main-greyman-pic-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .show-more-wrap .show-more {
+        bottom: -305px;
+        left: 0px;
+        width: 400px;
+    }
+
+    .join-pic-main {
+        margin-right: 0rem;
+        margin-bottom: 2rem;
+    }
+}
+
+@media screen and (max-width: 610px) {
+    .container-commercial {
+        bottom: 16rem !important;
+    }
+
+    .wrapper-splash-page.greyman-page .splash-team {
+        margin-bottom: 208px;
     }
 }
 
@@ -116,6 +236,47 @@
         width: 150px;
         justify-content: space-around;
     }
+
+    .wrapper-splash-page.greyman-page .join-community .exclusive-nfts {
+        display: block;
+        margin: 50px 0;
+    }
+
+    .main-greyman-pic-wrapper {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 530px) {
+    .container-commercial {
+        bottom: 17rem !important;
+    }
+
+    .wrapper-splash-page.greyman-page .splash-team {
+        margin-bottom: 250px;
+    }
+
+    .container-commercial {
+        padding: 20px 20px !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .wrapper-splash-page.greyman-page .home-splash--page .box-progress {
+        margin-top: 90px;
+        margin-left: 60px !important;
+    }
+
+    .block-left-tokens {
+        margin-right: 0rem !important;
+    }
+
+    .wrapper-splash-page.greyman-page .block-left-content-greyman .btn-buy-metamask {
+        margin-left: 0rem;
+        display: flex;
+        justify-content: center;
+    }
+    
 }
 
 @media screen and (max-width: 420px) {
@@ -155,6 +316,34 @@
     } */
 }
 
+@media screen and (max-width: 385px) {
+    .left-tokens .block-left-tokens {
+        width: 300px;
+    }
+
+    .left-tokens .block-left-tokens .progress-main svg, .left-tokens .block-left-tokens .progress-grey svg {
+        width: 200px;
+    }
+
+    .left-tokens .block-left-tokens .progress-grey svg {
+        margin-top: 0px;
+        margin-left: 0px;
+    }
+
+    .left-tokens.greyman-page .text-progress .text-numbers {
+        margin-top: 25px;
+        margin-left: 20px;
+    }
+
+    .title-progress-left {
+        font-size: 30px;
+    }
+
+    .block-left-tokens .down-text {
+        left: 20px;
+    }
+}
+
 @media screen and (max-width: 370px) {
     .home-splash--page .information-author {
         background-position: center 150px;
@@ -182,5 +371,9 @@
 
     .information-author.greyman-page-author .btn-buy-metamask {
         width: 250px;
+    }
+
+    .wrapper-splash-page.greyman-page .splash-team {
+        margin-bottom: 350px;
     }
 }

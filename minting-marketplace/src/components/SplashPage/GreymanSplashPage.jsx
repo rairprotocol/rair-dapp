@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 import "./SplashPage.css";
 import "./GreymanSplashPageMobile.css";
+import "./../AboutPage/AboutPageNew/AboutPageNew.css"
 import Modal from "react-modal";
 
 /* importing images*/
@@ -396,7 +397,6 @@ const SplashPage = () => {
             </div>
           </div>
         </div>
-
         <div className="join-community">
           <div className="title-join">
             <h3>
@@ -407,28 +407,6 @@ const SplashPage = () => {
               {/* <span className="text-gradient">Community</span> rewards */}
             </h3>
           </div>
-          <MobileCarouselNfts>
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
-          </MobileCarouselNfts>
           <div className="main-greyman-pic-wrapper">
             <div className="main-greyman-pic">
               <div className="join-pic-main">
@@ -474,6 +452,30 @@ const SplashPage = () => {
                 />
               </div>
             </div>
+          </div>
+          <div className="exclusive-nfts">
+            <MobileCarouselNfts>
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+            </MobileCarouselNfts>
           </div>
           {/* <div
             className="community-description"
