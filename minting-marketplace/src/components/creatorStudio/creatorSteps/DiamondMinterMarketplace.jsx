@@ -4,23 +4,33 @@ import Swal from 'sweetalert2';
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
 import {useHistory} from 'react-router-dom';
+import { metamaskCall } from '../../../utils/metamaskUtils'; 
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import { utils } from 'ethers';
-// import {web3Switch} from '../../../utils/switchBlockchain.js';
 
-// const rSwal = withReactContent(Swal);
+const RangeConfig = ({array, index, nodeFee, minterDecimals, treasuryFee, currentUserAddress, treasuryAddress}) => {
+	let item = array[index];
 
-const RangeConfig = ({item}) => {
-	const [tokensToSell, setTokensToSell] = useState(0);
-	const [onBatch, setOnBatch] = useState(true);
-	const [customPayments, setCustomPayments] = useState([{
-		receiver: process.env.REACT_APP_NODE_ADDRESS,
-		percentage: 9,
-		editable: false
-	}]);
 	const [rerender, setRerender] = useState(false);
+	
+	const [customPayments, setCustomPayments] = useState([{
+		message: 'Node address',
+		recipient: process.env.REACT_APP_NODE_ADDRESS,
+		percentage: nodeFee,
+		editable: false
+	},{
+		message: 'Treasury address',
+		recipient: treasuryAddress,
+		percentage: treasuryFee,
+		editable: false
+	},{
+		message: 'Creator address (You)',
+		recipient: currentUserAddress,
+		percentage: 90 * Math.pow(10, minterDecimals),
+		editable: true
+	}]);
 
 	const removePayment = (index) => {
 		let aux = [...customPayments];
@@ -31,41 +41,48 @@ const RangeConfig = ({item}) => {
 	const addPayment = () => {
 		let aux = [...customPayments];
 		aux.push({
-			receiver: '',
-			percentage: 0
+			recipient: '',
+			percentage: 0,
+			editable: true
 		});
 		setCustomPayments(aux);
 	}
 
-	return <div className='rounded-rair row col-12'>
-		<div className='col-5 rounded-rair text-start'>
-			<b>{item.offerName}</b>
-			<br />
-			{item.tokensAllowed} tokens available for {utils.formatEther(item.price)} {chainData[window.ethereum.chainId].symbol}
+	useEffect(() => {
+		array[index].customSplits = customPayments;
+	}, [customPayments, rerender, array, index]);
+
+	let total = customPayments.reduce((prev, current) => {return Number(prev) + Number(current.percentage)}, 0);
+
+	return <div className='rounded-rair row col-12 col-md-6'>
+		<div className='col-10 rounded-rair text-start'>
+			<h3>{item.offerName}</h3>
+			<h5 style={{display: 'inline'}}>
+				{item.tokensAllowed}
+			</h5> tokens available for <h5 style={{display: 'inline'}}>
+				{utils.formatEther(item.price)} {chainData[window.ethereum.chainId].symbol}
+			</h5>
 		</div>
-		<div className='col-6 text-start'>
-			Tokens to sell
-			<div className='border-stimorol w-100 rounded-rair'>
-				<InputField
-					getter={tokensToSell}
-					setter={setTokensToSell}
-					type='number'
-					customClass='form-control rounded-rair my-0'
-				/>
-			</div>
-		</div>
-		<div className='col-1 rounded-rair'>
-			<button onClick={() => setOnBatch(!onBatch)} className={`btn btn-${onBatch ? 'royal-ice' : 'danger'} rounded-rair`}>
-				<i className={`fas fa-${onBatch ? 'check' : 'times'}`} />
+		<div className='col-2 rounded-rair'>
+			<button onClick={() => {
+				array[index].selected = !array[index].selected;
+				setRerender(!rerender);
+			}} className={`btn btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
+				<i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
+			</button>
+			<button disabled={!array[index].selected} onClick={() => {
+				array[index].visible = !array[index].visible;
+				setRerender(!rerender);
+			}} className={`btn btn-${array[index].visible ? 'royal-ice' : 'danger'} rounded-rair`}>
+				<abbr title={array[index].visible ? 'Public offer' : 'Hidden offer'}>
+					<i className={`fas fa-${array[index].visible ? 'eye' : 'eye-slash'}`} />
+				</abbr>
 			</button>
 		</div>
-		<details className='text-start col-12' style={{position: 'relative'}}>
-			<summary className='mb-4'>
-				<small>Royalty Splits</small>
+		{item.selected && <details className='text-start col-12' style={{position: 'relative'}}>
+			<summary className='mb-1'>
+				<small>Royalty splits</small>
 			</summary>
-			<button onClick={addPayment} style={{position: 'absolute', top: 0, right: 0}} className='rounded-rair btn btn-stimorol'>
-				<i className='fas fa-plus'/> Add
-			</button>
 			{customPayments?.length !== 0 &&
 				<table className='col-12 text-start'>
 					<thead>
@@ -81,29 +98,45 @@ const RangeConfig = ({item}) => {
 					</thead>
 					<tbody>
 						{customPayments.map((item, index, array) => {
-							return <CustomPayRateRow key={index} index={index} array={customPayments} deleter={removePayment} renderer={e => setRerender(!rerender)} {...item}/>
+							return <CustomPayRateRow
+										key={index}
+										index={index}
+										array={customPayments}
+										deleter={removePayment}
+										renderer={e => setRerender(!rerender)}
+										minterDecimals={minterDecimals}
+										{...item}
+									/>
 						})}
 					</tbody>
 				</table>}
-			<div className='col-12 rounded-rair text-end'>
+			<div className='row w-100'>
+				<div className='col-12 col-md-10 py-2 text-center'>
+					Total: {(total) / Math.pow(10, minterDecimals)}%
+				</div>
+				<button disabled={total >= 100 * Math.pow(10, minterDecimals)} onClick={addPayment} className='col-12 col-md-2 rounded-rair btn btn-stimorol'>
+					<i className='fas fa-plus'/> Add
+				</button>
+			</div>
+			{item.onMarketplace && <div className='col-12 rounded-rair text-end'>
 				<button className='btn btn-royal-ice rounded-rair'>
 					Update with custom splits!
 				</button>
-			</div>
-		</details>
+			</div>}
+		</details>}
 		<hr />
 	</div>
 }
 
-const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer, editable}) => {
-	const [receiverAddress, setReceiverAddress] = useState(receiver);
+const CustomPayRateRow = ({index, array, recipient, deleter, percentage, renderer, editable, message, minterDecimals}) => {
+	const [recipientAddress, setRecipientAddress] = useState(recipient);
 	const [percentageReceived, setPercentageReceived] = useState(percentage);
 
 	const { secondaryColor, primaryColor } = useSelector(store => store.colorStore);
 	
 	useEffect(() => {
-		setReceiverAddress(receiver);
-	}, [receiver]);
+		setRecipientAddress(recipient);
+	}, [recipient]);
 
 	useEffect(() => {
 		setPercentageReceived(percentage);
@@ -115,9 +148,9 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 		renderer()
 	}
 
-	const updateReceiver = (value) => {
-		setReceiverAddress(value);
-		array[index].receiver = value;
+	const updateRecipient = (value) => {
+		setRecipientAddress(value);
+		array[index].recipient = value;
 		renderer()
 	}
 
@@ -128,11 +161,12 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 					disabled={!editable}
 					labelClass='w-100 text-start'
 					customClass='form-control rounded-rair'
-					getter={receiverAddress}
-					setter={updateReceiver}
+					getter={recipientAddress}
+					setter={updateRecipient}
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
+			<small>{message}</small>
 		</th>
 		<th className='px-2'>
 			<div className='w-100 border-stimorol rounded-rair'>
@@ -141,15 +175,16 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 					labelClass='w-100 text-start'
 					customClass='form-control rounded-rair'
 					min='0'
-					max='100'
+					max={100 * Math.pow(10, minterDecimals)}
 					type='number'
 					getter={percentageReceived}
 					setter={updatePercentage}
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
+			<small>{percentageReceived / (10 ** minterDecimals)}%</small>
 		</th>
-		<th>
+		<th style={{width: '5vw'}}>
 			{editable && <button onClick={e => deleter(index)} className='btn btn-danger rounded-rair'>
 				<i className='fas fa-trash' />
 			</button>}
@@ -157,49 +192,66 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 	</tr>
 };
 
-const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance, /*minterRole*/ setStepNumber, steps}) => {
+const CustomizeFees = ({contractData, setStepNumber, steps}) => {
 	const stepNumber = 3;
 
 	const { textColor, primaryColor } = useSelector(store => store.colorStore);
-	// const { minterInstance, programmaticProvider, contractCreator  } = useSelector(store => store.contractStore);
+	const { currentUserAddress, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 
 	const history = useHistory();
 
-	const [customPayments, setCustomPayments] = useState([]);
+	const [offerData, setOfferData] = useState([]);
 	const [rerender, setRerender] = useState(false);
 	const [nodeFee, setNodeFee] = useState(0);
 	const [treasuryFee, setTreasuryFee] = useState(0);
+	const [treasuryAddress, setTreasuryAddress] = useState(undefined);
 	const [minterDecimals, setMinterDecimals] = useState(0);
-	const [/*settingCustomSplits,*/ setSettingCustomSplits] = useState(false);
+	const [sendingData, setSendingData] = useState(false);
+	const [hasMinterRole, setHasMinterRole] = useState();
 
-	const getContractData = useCallback(async () => {
-		if (!correctMinterInstance) {
+	const getOfferData = useCallback(async () => {
+		if (!contractData.product.offers) {
 			return;
 		}
-		setNodeFee(await correctMinterInstance.nodeFee());
-		setTreasuryFee(await correctMinterInstance.treasuryFee());
-		setMinterDecimals(await correctMinterInstance.feeDecimals());
-	}, [correctMinterInstance])
+		setOfferData(contractData.product.offers.map(item => {
+			return {
+				selected: true,
+				tokensToSell: 0,
+				customSplits: [],
+				visible: true,
+				...item
+			}
+		}))
+	}, [contractData])
 
 	useEffect(() => {
-		console.log(contractData);
+		getOfferData()
+	}, [getOfferData])
+
+
+	const getContractData = useCallback(async () => {
+		if (!diamondMarketplaceInstance) {
+			return;
+		}
+		console.log(diamondMarketplaceInstance.functions);
+		let nodeFeeData = await diamondMarketplaceInstance.getNodeFee()
+		setNodeFee(Number(nodeFeeData.nodeFee.toString()));
+		setMinterDecimals(nodeFeeData.decimals);
+		let treasuryFeeData = await diamondMarketplaceInstance.getTreasuryFee();
+		setTreasuryFee(Number(treasuryFeeData.treasuryFee.toString()));
+		setTreasuryAddress(await diamondMarketplaceInstance.getTreasuryAddress());
+		setHasMinterRole(
+			await contractData.instance.hasRole(
+				await contractData.instance.MINTER(),
+				diamondMarketplaceInstance.address
+			)
+		)
+	}, [diamondMarketplaceInstance])
+
+	useEffect(() => {
 		getContractData()
 	}, [getContractData])
 
-	const removePayment = (index) => {
-		let aux = [...customPayments];
-		aux.splice(index, 1);
-		setCustomPayments(aux);
-	}
-
-	const addPayment = () => {
-		let aux = [...customPayments];
-		aux.push({
-			receiver: '',
-			percentage: 0
-		});
-		setCustomPayments(aux);
-	}
 	// let onMyChain = window.ethereum ?
 	// 	chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
 	// 	:
@@ -210,80 +262,77 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 	}, [setStepNumber])
 
 	const setCustomFees = async e => {
-		setSettingCustomSplits(true);
-		try {
-			Swal.fire({
-				title: 'Setting custom fees',
-				html: 'Please wait...',
-				icon: 'info',
-				showConfirmButton: false
-			});
-			await (await correctMinterInstance.setCustomPayment(
-				contractData.product?.offers[0]?.offerPool,
-				customPayments.map(i => i.receiver),
-				customPayments.map(i => i.percentage * Math.pow(10, minterDecimals))
-			)).wait();
+		setSendingData(true);
+		Swal.fire({
+			title: 'Setting custom fees',
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		let filteredOffers = offerData.filter(item => item.selected);
+		if (await metamaskCall(
+			diamondMarketplaceInstance.addMintingOfferBatch(
+			//console.log(
+				contractData.contractAddress,
+				filteredOffers.map(item => item.rangeIndex),
+				filteredOffers.map(item => item.customSplits.filter(split => split.editable)),
+				filteredOffers.map(item => item.visible),
+				process.env.REACT_APP_NODE_ADDRESS
+			)
+		)) {
 			Swal.fire({
 				title: 'Success',
-				html: 'Custom fees set',
+				html: 'Offer(s) added to the marketplace',
 				icon: 'success',
 				showConfirmButton: false
 			});
-			nextStep();
-		} catch(e) {
-			console.error(e);
-			Swal.fire('Error', '', 'error');
 		}
-		setSettingCustomSplits(false)
+		setSendingData(false)
 	}
 	
 	const nextStep = () => {
 		history.push(steps[stepNumber].populatedPath);
 	}
 
-	let total = customPayments.reduce((prev, current) => {return prev + current.percentage}, 0);
+	const giveMinterRole = async () => {
+		setSendingData(true);
+		Swal.fire({
+			title: 'Granting minter role',
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		if (await metamaskCall(contractData.instance.grantRole(
+			await contractData.instance.MINTER(),
+			diamondMarketplaceInstance.address
+		))) {
+			Swal.fire({
+				title: 'Success',
+				html: 'Custom fees set',
+				icon: 'success',
+				showConfirmButton: false
+			});
+			getContractData();
+		}
+		setSendingData(false);
+	}
+
 	return <div className='row px-0 mx-0'>
-		{contractData?.product?.offers?.map(item => {
-			return <RangeConfig {...{item}} />
+		{treasuryAddress !== undefined && offerData && offerData.map((item, index, array) => {
+			return <RangeConfig key={index} {...{array, index, nodeFee, minterDecimals, treasuryFee, currentUserAddress, treasuryAddress}} />
 		})}
-		{contractData && customPayments?.length !== 0 &&
-			<table className='col-12 text-start'>
-				<thead>
-					<tr>
-						<th>
-							Recipient Address
-						</th>
-						<th>
-							Percentage
-						</th>
-						<th />
-					</tr>
-				</thead>
-				<tbody style={{maxHeight: '50vh', overflowY: 'scroll'}}>
-					{customPayments.map((item, index, array) => {
-						return <CustomPayRateRow key={index} index={index} array={customPayments} deleter={removePayment} renderer={e => setRerender(!rerender)} {...item}/>
-					})}
-				</tbody>
-			</table>}
-		<div className='col-12'>Node Fee: {nodeFee / Math.pow(10, minterDecimals)}%, Treasury Fee: {treasuryFee / Math.pow(10, minterDecimals)}%</div>
-		<div className='col-12'>
-			Total: {(total) + (nodeFee / Math.pow(10, minterDecimals)) + (treasuryFee / Math.pow(10, minterDecimals))}%
-		</div>
-		<div className='col-12 mt-3 text-center'>
-			<div className='border-stimorol rounded-rair'>
-				<button onClick={addPayment} className={`btn btn-${primaryColor} rounded-rair px-4`}>
-					Add new <i className='fas fa-plus' style={{border: `solid 1px ${textColor}`, borderRadius: '50%', padding: '5px'}} />
-				</button>
-			</div>
-		</div>
-		{chainData && <FixedBottomNavigation
+		{chainData && treasuryAddress && <FixedBottomNavigation
 				backwardFunction={() => {
 					history.goBack()
 				}}
 				forwardFunctions={[{
-					label: customPayments.length ? 'Set custom fees' : 'Skip',
-					action: customPayments.length ? setCustomFees : nextStep,
-					disabled: customPayments.length ? total !== 90 : false,
+					label: hasMinterRole ? 'Put selected ranges up for sale!' : 'Approve the marketplace as a Minter!',
+					action: hasMinterRole ? setCustomFees : giveMinterRole,
+					disabled: sendingData || hasMinterRole === undefined,
+				},{
+					label: 'Continue',
+					action: nextStep,
+					disabled: sendingData,
 				}]}
 			/>}
 	</div>

@@ -156,11 +156,14 @@ const WorkflowSteps = ({sentryHistory}) => {
 			for await (let rangeIndex of productData.rangeList) {
 				let rangeData = await instance.rangeInfo(rangeIndex);
 				rangesData.push({
+					onMarketplace: false,
+					rangeIndex: Number(rangeIndex.toString()),
 					offerName: rangeData.rangeName,
 					range: [Number(rangeData.rangeStart.toString()), Number(rangeData.rangeEnd.toString())],
 					price: rangeData.rangePrice.toString(),
 					lockedTokens: Number(rangeData.lockedTokens.toString()),
 					tokensAllowed: Number(rangeData.tokensAllowed.toString()),
+					mintableTokens: Number(rangeData.mintableTokens.toString())
 				})
 			};
 			setContractData({
@@ -175,7 +178,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 					soldCopies: Number(productData.mintableTokens.toString()) - Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()),
 					copies: Number(productData.mintableTokens.toString()),
 					offers: rangesData
-				}
+				},
+				instance
 			});
 		}
 	}, [address, blockchain, collectionIndex]);
