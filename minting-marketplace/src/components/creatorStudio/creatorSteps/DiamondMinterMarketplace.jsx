@@ -10,7 +10,16 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import { utils } from 'ethers';
 
-const RangeConfig = ({array, index, nodeFee, minterDecimals, treasuryFee, currentUserAddress, treasuryAddress}) => {
+const RangeConfig = ({
+	array,
+	index,
+	nodeFee,
+	minterDecimals,
+	treasuryFee,
+	currentUserAddress,
+	treasuryAddress,
+	simpleMode
+}) => {
 	let item = array[index];
 
 	const [rerender, setRerender] = useState(false);
@@ -70,16 +79,16 @@ const RangeConfig = ({array, index, nodeFee, minterDecimals, treasuryFee, curren
 			}} className={`btn btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
 				<i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
 			</button>
-			<button disabled={!array[index].selected} onClick={() => {
+			{!simpleMode && <button disabled={!array[index].selected} onClick={() => {
 				array[index].visible = !array[index].visible;
 				setRerender(!rerender);
 			}} className={`btn btn-${array[index].visible ? 'royal-ice' : 'danger'} rounded-rair`}>
 				<abbr title={array[index].visible ? 'Public offer' : 'Hidden offer'}>
 					<i className={`fas fa-${array[index].visible ? 'eye' : 'eye-slash'}`} />
 				</abbr>
-			</button>
+			</button>}
 		</div>
-		{item.selected && <details className='text-start col-12' style={{position: 'relative'}}>
+		{!simpleMode && item.selected && <details className='text-start col-12' style={{position: 'relative'}}>
 			<summary className='mb-1'>
 				<small>Royalty splits</small>
 			</summary>
@@ -192,7 +201,7 @@ const CustomPayRateRow = ({index, array, recipient, deleter, percentage, rendere
 	</tr>
 };
 
-const CustomizeFees = ({contractData, setStepNumber, steps}) => {
+const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode}) => {
 	const stepNumber = 3;
 
 	const { textColor, primaryColor } = useSelector(store => store.colorStore);
@@ -319,7 +328,17 @@ const CustomizeFees = ({contractData, setStepNumber, steps}) => {
 
 	return <div className='row px-0 mx-0'>
 		{treasuryAddress !== undefined && offerData && offerData.map((item, index, array) => {
-			return <RangeConfig key={index} {...{array, index, nodeFee, minterDecimals, treasuryFee, currentUserAddress, treasuryAddress}} />
+			return <RangeConfig key={index} {
+				...{
+					array,
+					index,
+					nodeFee,
+					minterDecimals,
+					treasuryFee,
+					currentUserAddress,
+					treasuryAddress,
+					simpleMode
+				}} />
 		})}
 		{chainData && treasuryAddress && <FixedBottomNavigation
 				backwardFunction={() => {

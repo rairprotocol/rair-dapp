@@ -12,7 +12,22 @@ import InputField from '../../common/InputField.jsx'
 import { utils } from 'ethers';
 import { metamaskCall } from '../../../utils/metamaskUtils.js';
 
-const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies, blockchainSymbol, allowedTokens, lockedTokens}) => {
+const OfferRow = ({
+	index,
+	deleter,
+	name,
+	starts,
+	ends,
+	price,
+	fixed,
+	array,
+	rerender,
+	maxCopies,
+	blockchainSymbol,
+	allowedTokens,
+	lockedTokens,
+	simpleMode
+}) => {
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	const [itemName, setItemName] = useState(name);
@@ -140,7 +155,7 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			</div>
 			<small>{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}</small>
 		</div>
-		<div className={`col-12 col-md-6`}>
+		{!simpleMode && <div className={`col-12 col-md-6`}>
 			Tokens allowed to mint:
 			{!fixed && <button onClick={() => updater('allowedTokens', setAllowedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
 				Max
@@ -157,8 +172,8 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
-		</div>
-		<div className={`col-12 col-md-6`}>
+		</div>}
+		{!simpleMode && <div className={`col-12 col-md-6`}>
 			Minted tokens needed before trades are unlocked:
 			{!fixed && <button onClick={() => updater('lockedTokens', setLockedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
 				Max
@@ -174,12 +189,12 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
 			</div>
-		</div>
+		</div>}
 		<hr className='my-4' />
 	</div>
 };
 
-const ListOffers = ({contractData, setStepNumber, steps}) => {
+const ListOffers = ({contractData, setStepNumber, steps, simpleMode}) => {
 	const stepNumber = 1;
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
@@ -357,16 +372,6 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 	}, [contractData, programmaticProvider, currentChain])
 
 	return <div className='row px-0 mx-0'>
-		<div className='col-6 text-end'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Simple
-			</button>
-		</div>
-		<div className='col-6 text-start mb-3'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Advanced
-			</button>
-		</div>
 		{contractData ? <>
 			{offerList?.length !== 0 && <div className='row w-100 text-start px-0 mx-0'>
 					{offerList.map((item, index, array) => {
@@ -378,6 +383,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 							{...item}
 							blockchainSymbol={chainData[contractData?.blockchain]?.symbol}
 							rerender={rerender}
+							simpleMode={simpleMode}
 							maxCopies={Number(contractData?.product?.copies) - 1} />
 					})}
 			</div>}

@@ -28,6 +28,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 	const [tokenInstance, setTokenInstance] = useState();
 	const [correctMinterInstance, setCorrectMinterInstance] = useState();
 	const [currentStep, setCurrentStep] = useState(0);
+	const [simpleMode, setSimpleMode] = useState(true);
 	const { primaryColor } = useSelector(store => store.colorStore);
 
 	const [steps, setSteps] = useState([
@@ -241,7 +242,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 		minterRole: fetchMintingStatus(),
 		onMyChain,
 		correctMinterInstance,
-		tokenInstance
+		tokenInstance,
+		simpleMode
 	}
 
 	return <WorkflowContext.Provider value={initialValue}>
@@ -249,7 +251,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 			{({contractData, steps /*, setStepNumber*/}) => {
 				return <div className='row px-0 mx-0'>
 					<div className='col-12 my-5'>
-						{contractData && contractData.diamond && <div className='col-12 text-center h1'>
+						{contractData && contractData.diamond && <div className='w-100 text-center h1'>
 							<i className='fas fa-gem' />
 						</div>}
 						<h4>{contractData?.title}</h4>
@@ -277,6 +279,22 @@ const WorkflowSteps = ({sentryHistory}) => {
 									</div>
 								</div>
 							})}
+						</div>
+						<div className='row mt-3 w-100'>
+							<div className='col-12 col-md-6 text-end'>
+								<button
+									onClick={() => setSimpleMode(true)}
+									className={`btn btn-${simpleMode ? 'stimorol' : primaryColor} rounded-rair col-12 col-md-6`}>
+									Simple
+								</button>
+							</div>
+							<div className='col-12 col-md-6 text-start mb-3'>
+								<button
+									onClick={() => setSimpleMode(false)}
+									className={`btn btn-${simpleMode ? primaryColor : 'stimorol' } rounded-rair col-12 col-md-6`}>
+									Advanced
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
