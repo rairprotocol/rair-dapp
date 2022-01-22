@@ -71,8 +71,6 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 
 import VideoPlayer from './components/video/videoPlayer.jsx';
 
-import DiamondDeploymentUI from './components/Diamonds/diamondDeploymentUI.jsx';
-
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
@@ -410,7 +408,6 @@ function App({ sentryHistory }) {
 								<Switch>
 									{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
 									{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
-									{loginDone && <SentryRoute path='/creator/contract/diamond/:blockchain/:address/' component={DiamondDeploymentUI} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
 									{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>

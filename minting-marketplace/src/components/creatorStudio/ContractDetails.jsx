@@ -50,7 +50,7 @@ const ContractDetails = () => {
 				products: Array(productCount)
 			});
 		}
-	}, [address, blockchain])
+	}, [address, blockchain, contractCreator])
 
 	useEffect(() => {
 		getContractData();

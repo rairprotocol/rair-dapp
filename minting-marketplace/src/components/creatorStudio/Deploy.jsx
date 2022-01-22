@@ -36,7 +36,7 @@ const Factory = () => {
 		if (diamondFactoryInstance && erc777Instance) {
 			setDeploymentPriceDiamond(await diamondFactoryInstance.getDeploymentCost(erc777Instance.address));
 		}
-	}, [currentUserAddress, factoryInstance, erc777Instance, programmaticProvider]);
+	}, [currentUserAddress, factoryInstance, erc777Instance, programmaticProvider, diamondFactoryInstance]);
 
 	useEffect(() => {
 		getPrice()

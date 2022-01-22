@@ -45,14 +45,14 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			return;
 		}
 		updateStartingToken(starts);
-	}, [starts, updateStartingToken])
+	}, [starts, updateStartingToken, startingToken])
 
 	useEffect(() => {
 		if (ends === endingToken) {
 			return;
 		}
 		updateEndingToken(ends);
-	}, [ends, updateEndingToken])
+	}, [ends, updateEndingToken, endingToken])
 
 	useEffect(() => {
 		setIndividualPrice(price);

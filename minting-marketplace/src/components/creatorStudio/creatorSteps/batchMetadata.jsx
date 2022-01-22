@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import imageIcon from '../../../images/imageIcon.svg';
 // import documentIcon from '../../../images/documentIcon.svg';
-import { NavLink, useParams, useHistory } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import { rFetch } from '../../../utils/rFetch.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
@@ -11,8 +11,7 @@ import Dropzone from 'react-dropzone'
 import Swal from 'sweetalert2';
 
 
-const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
-	const stepNumber = 4;
+const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
 	const { address, collectionIndex } = useParams();
 
 	const [csvFile, setCSVFile] = useState();
@@ -44,17 +43,11 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
 
 	useEffect(fetchData, [fetchData])
 
-	const history = useHistory();
-	// const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const { primaryColor, textColor } = useSelector(store => store.colorStore);
 
 	useEffect(() => {
 		setStepNumber(stepNumber);
 	}, [setStepNumber, stepNumber])
-
-	const nextStep = () => {
-		history.push(steps[stepNumber].populatedPath);
-	}
 
 	const sendMetadata = async (updateMeta) => {
 		let formData = new FormData();
@@ -215,12 +208,10 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
 			</table>
 		</div>}
 		<FixedBottomNavigation
-			backwardFunction={() => {
-				history.goBack()
-			}}
+			backwardFunction={goBack}
 			forwardFunctions={[{
-				label: metadata ? metadataExists ? 'Update' : 'Send' : 'Skip',
-				action: metadata ? () => sendMetadata(metadataExists) : nextStep
+				label: metadata ? metadataExists ? 'Update' : 'Send' : 'Continue',
+				action: metadata ? () => sendMetadata(metadataExists) : gotoNextStep
 			}]}
 		/>
 	</>
@@ -229,7 +220,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer>
 		{(value) => {
-			return <BatchMetadataParser {...value} />
+			return <BatchMetadataParser {...value} {...props} />
 		}}
 	</WorkflowContext.Consumer>
 }

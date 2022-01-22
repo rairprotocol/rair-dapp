@@ -39,7 +39,7 @@ const Contracts = () => {
 		if (response.error && response.message) {
 			dispatch({ type: authTypes.GET_TOKEN_ERROR, error: response.error })
 		}
-	}, [programmaticProvider, dispatch])
+	}, [programmaticProvider, dispatch, contractCreator, currentUserAddress, diamondFactoryInstance])
 
 	useEffect(() => {
 		fetchContracts()

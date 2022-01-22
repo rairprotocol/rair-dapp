@@ -1,0 +1,135 @@
+import {useState, useEffect } from 'react';
+import chainData from '../../../utils/blockchainData';
+import { utils } from 'ethers';
+import DiamondCustomPaymentRow from './diamondCustomPaymentRow.jsx'
+
+const DiamondOfferConfig = ({
+	array,
+	index,
+	nodeFee,
+	minterDecimals,
+	treasuryFee,
+	currentUserAddress,
+	treasuryAddress,
+	simpleMode
+}) => {
+	let item = array[index];
+
+	const [rerender, setRerender] = useState(false);
+	
+	const [customPayments, setCustomPayments] = useState([{
+		message: 'Node address',
+		recipient: process.env.REACT_APP_NODE_ADDRESS,
+		percentage: nodeFee,
+		editable: false
+	},{
+		message: 'Treasury address',
+		recipient: treasuryAddress,
+		percentage: treasuryFee,
+		editable: false
+	},{
+		message: 'Creator address (You)',
+		recipient: currentUserAddress,
+		percentage: 90 * Math.pow(10, minterDecimals),
+		editable: true
+	}]);
+
+	const removePayment = (index) => {
+		let aux = [...customPayments];
+		aux.splice(index, 1);
+		setCustomPayments(aux);
+	}
+
+	const addPayment = () => {
+		let aux = [...customPayments];
+		aux.push({
+			recipient: '',
+			percentage: 0,
+			editable: true
+		});
+		setCustomPayments(aux);
+	}
+
+	useEffect(() => {
+		array[index].customSplits = customPayments;
+	}, [customPayments, rerender, array, index]);
+
+	let total = customPayments.reduce((prev, current) => {return Number(prev) + Number(current.percentage)}, 0);
+
+	return <div className={`rounded-rair col-12 col-md-12 ${!item.selected && 'text-secondary'}`}>
+		<div className='row w-100 p-3'>
+			<div className='col-11 rounded-rair text-start'>
+				<h3>{item.offerName}</h3>
+				<h5 style={{display: 'inline'}}>
+					{item.tokensAllowed}
+				</h5> tokens available for <h5 style={{display: 'inline'}}>
+					{utils.formatEther(item.price)} {chainData[window.ethereum.chainId].symbol}
+				</h5>
+			</div>
+			<div className='col-1 rounded-rair text-end'>
+				<button onClick={() => {
+					array[index].selected = !array[index].selected;
+					setRerender(!rerender);
+				}} className={`btn btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
+					<i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
+				</button>
+				{!simpleMode && <button disabled={!array[index].selected} onClick={() => {
+					array[index].visible = !array[index].visible;
+					setRerender(!rerender);
+				}} className={`btn btn-${array[index].visible ? 'royal-ice' : 'danger'} rounded-rair`}>
+					<abbr title={array[index].visible ? 'Public offer' : 'Hidden offer'}>
+						<i className={`fas fa-${array[index].visible ? 'eye' : 'eye-slash'}`} />
+					</abbr>
+				</button>}
+			</div>
+			{!simpleMode && item.selected && <details className='text-start col-12' style={{position: 'relative'}}>
+				<summary className='mb-1'>
+					<small>Royalty splits</small>
+				</summary>
+				{customPayments?.length !== 0 &&
+					<table className='col-12 text-start'>
+						<thead>
+							<tr>
+								<th>
+									Recipient Address
+								</th>
+								<th>
+									Percentage
+								</th>
+								<th />
+							</tr>
+						</thead>
+						<tbody>
+							{customPayments.map((item, index, array) => {
+								return <DiamondCustomPaymentRow
+											key={index}
+											index={index}
+											array={customPayments}
+											deleter={removePayment}
+											renderer={e => setRerender(!rerender)}
+											minterDecimals={minterDecimals}
+											{...item}
+										/>
+							})}
+						</tbody>
+					</table>}
+				<div className='row w-100'>
+					<div className='col-12 col-md-10 py-2 text-center'>
+						Total: {(total) / Math.pow(10, minterDecimals)}%
+					</div>
+					<button disabled={total >= 100 * Math.pow(10, minterDecimals)} onClick={addPayment} className='col-12 col-md-2 rounded-rair btn btn-stimorol'>
+						<i className='fas fa-plus'/> Add
+					</button>
+				</div>
+				{item.onMarketplace && <div className='col-12 rounded-rair text-end'>
+					<button className='btn btn-royal-ice rounded-rair'>
+						Update with custom splits!
+					</button>
+				</div>}
+			</details>}
+			<hr />
+		</div>
+	</div>
+}
+
+export default DiamondOfferConfig;

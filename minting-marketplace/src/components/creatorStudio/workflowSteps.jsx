@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { withSentryRouting } from "@sentry/react";
 import { rFetch } from '../../utils/rFetch.js';
 import { useSelector } from 'react-redux';
-import { useParams, Router, Switch, Route } from 'react-router-dom';
+import { useParams, Router, Switch, Route, useHistory } from 'react-router-dom';
 import WorkflowContext from '../../contexts/CreatorWorkflowContext.js';
 import {web3Switch} from '../../utils/switchBlockchain.js';
 import { minterAbi, erc721Abi, diamondFactoryAbi } from '../../contracts'
@@ -15,8 +15,8 @@ import BatchMetadata from './creatorSteps/batchMetadata.jsx';
 import SingleMetadataEditor from './creatorSteps/singleMetadataEditor.jsx';
 import MediaUpload from './creatorSteps/MediaUpload.jsx';
 
-import ListOffersDiamond from './creatorSteps/ListOffersDiamond.jsx';
-import DiamondMinterMarketplace from './creatorSteps/DiamondMinterMarketplace.jsx';
+import ListOffersDiamond from './diamondCreatorSteps/ListOffersDiamond.jsx';
+import DiamondMinterMarketplace from './diamondCreatorSteps/DiamondMinterMarketplace.jsx';
 
 const SentryRoute = withSentryRouting(Route);
 
@@ -30,94 +30,82 @@ const WorkflowSteps = ({sentryHistory}) => {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [simpleMode, setSimpleMode] = useState(true);
 	const { primaryColor } = useSelector(store => store.colorStore);
-
-	const [steps, setSteps] = useState([
-			{
-				label: 1,
-				active: true,
-				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
-				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
-				component: ListOffers
-			},
-			{
-				label: 2,
-				active: false,
-				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/locks',
-				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/locks`,
-				component: ListLocks
-			},
-			{
-				label: 3,
-				active: false,
-				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/customizeFees',
-				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/customizeFees`,
-				component: CustomizeFees
-			},
-			{
-				label: 4,
-				active: false,
-				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/batch',
-				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/batch`,
-				component: BatchMetadata
-			},
-			{
-				label: 5,
-				active: false,
-				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
-				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/single`,
-				component: SingleMetadataEditor
-			},
-			{
-				label: 6,
-				active: false,
-				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',
-				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/media`,
-				component: MediaUpload
-			},
-		]);
+	const [steps, setSteps] = useState([]);
+	const history = useHistory();
 
 	useEffect(() => {
-		let diamondSteps = [
+		if (!contractData) {
+			return;
+		}
+		let filteredSteps = [
 			{
-				label: 1,
-				active: true,
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
 				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
-				component: ListOffersDiamond
+				component: contractData.diamond ? ListOffersDiamond : ListOffers,
+				simple: true,
+				classic: true,
+				diamond: true
 			},
 			{
-				label: 2,
-				active: false,
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/locks',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/locks`,
+				component: ListLocks,
+				simple: false,
+				classic: true,
+				diamond: false
+			},
+			{
+				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/customizeFees',
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/customizeFees`,
+				component: CustomizeFees,
+				simple: false,
+				classic: true,
+				diamond: false
+			},
+			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/minterMarketplace',
 				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/minterMarketplace`,
-				component: DiamondMinterMarketplace
+				component: DiamondMinterMarketplace,
+				simple: true,
+				classic: false,
+				diamond: true
 			},
 			{
-				label: 3,
-				active: false,
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/batch',
 				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/batch`,
-				component: BatchMetadata
+				component: BatchMetadata,
+				simple: true,
+				classic: true,
+				diamond: true
 			},
 			{
-				label: 4,
-				active: false,
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
 				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/single`,
-				component: SingleMetadataEditor
+				component: SingleMetadataEditor,
+				simple: true,
+				classic: true,
+				diamond: true
 			},
 			{
-				label: 5,
-				active: false,
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',
 				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/media`,
-				component: MediaUpload
-			},
+				component: MediaUpload,
+				simple: true,
+				classic: true,
+				diamond: true
+			}
 		]
-		if (contractData?.diamond && steps.length !== diamondSteps.length) {
-			setSteps(diamondSteps);
+		if (simpleMode) {
+			filteredSteps = filteredSteps.filter(step => step.simple);
 		}
-	}, [contractData])
+		if (contractData.diamond) {
+			filteredSteps = filteredSteps.filter(step => step.diamond === true);
+		} else {
+			filteredSteps = filteredSteps.filter(step => step.classic === true);
+		}
+		console.log('Step rerender');
+		setSteps(filteredSteps);
+	}, [contractData, address, collectionIndex, steps.length, simpleMode, blockchain])
 
 	const onMyChain = window.ethereum ?
 				chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
@@ -151,7 +139,6 @@ const WorkflowSteps = ({sentryHistory}) => {
 		} else {
 			// Try diamonds
 			let instance = contractCreator(address, diamondFactoryAbi);
-			let productCount = Number((await instance.getProductCount()).toString());
 			let productData = await instance.getProductInfo(collectionIndex)
 			let rangesData = [];
 			for await (let rangeIndex of productData.rangeList) {
@@ -183,7 +170,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 				instance
 			});
 		}
-	}, [address, blockchain, collectionIndex]);
+	}, [address, blockchain, collectionIndex, contractCreator]);
 	
 	const fetchMintingStatus = useCallback(async () => {
 		if (!tokenInstance || !onMyChain) {
@@ -217,28 +204,19 @@ const WorkflowSteps = ({sentryHistory}) => {
 		fetchData();
 	}, [fetchData]);
 
+	const goBack = useCallback(() => {
+		history.push(steps[currentStep - 1].populatedPath)
+	}, [steps, currentStep, history]);
+
 	const initialValue = {
 		contractData,
 		steps,
-		setStepNumber: useCallback(index => {
-			if (steps[index - 1].active) {
-				return;
-			}
-			let aux = [...steps];
-			let didSomething = false;
-			aux.forEach(item => {
-				if (item.active !== item.label <= index) {
-					item.active = item.label <= index
-					didSomething = true;
-				}
-			});
-			if (didSomething) {
-				setSteps(aux);
-			}
-		}, [steps]),
-		switchBlockchain: async (chainId) => {
-			web3Switch(chainId)
+		setStepNumber: setCurrentStep,
+		gotoNextStep: () => {
+			history.push(steps[currentStep + 1].populatedPath);
 		},
+		switchBlockchain: async () => web3Switch(chainData[contractData?.blockchain]?.chainId),
+		goBack,
 		minterRole: fetchMintingStatus(),
 		onMyChain,
 		correctMinterInstance,
@@ -250,7 +228,20 @@ const WorkflowSteps = ({sentryHistory}) => {
 		<WorkflowContext.Consumer>
 			{({contractData, steps /*, setStepNumber*/}) => {
 				return <div className='row px-0 mx-0'>
-					<div className='col-12 my-5'>
+					<div className='col-12 my-5' style={{position: 'relative'}}>
+						{steps.length > 0 &&
+							currentStep !== 0 &&
+							<div
+								style={{position: 'absolute', left: 0}}
+								className='border-stimorol btn rounded-rair p-0'>
+								<button
+									onClick={goBack}
+									style={{border: 'none'}}
+									className={`btn rounded-rair w-100 btn-${primaryColor}`}
+									>
+									<i className='fas fa-arrow-left'/> Back
+								</button>
+							</div>}
 						{contractData && contractData.diamond && <div className='w-100 text-center h1'>
 							<i className='fas fa-gem' />
 						</div>}
@@ -262,20 +253,20 @@ const WorkflowSteps = ({sentryHistory}) => {
 									width: `${100 / steps.length * (index === 0 ? 0.09 : 1)}%`,
 									height: '3px',
 									position: 'relative',
-									backgroundColor: `var(--${item.active ? 'bubblegum' : `charcoal-80`})`
+									backgroundColor: `var(--${currentStep >= index ? 'bubblegum' : `charcoal-80`})`
 								}}>
 									<div style={{
 										position: 'absolute',
 										right: 0,
 										top: '-10px',
 										borderRadius: '50%',
-										background: `var(--${item.active ? 'bubblegum' : primaryColor})`,
+										background: `var(--${currentStep >= index ? 'bubblegum' : primaryColor})`,
 										height: '1.7rem',
 										width: '1.7rem',
 										margin: 'auto',
 										border: 'solid 1px var(--charcoal-60)'
 									}}>
-										{item.label}
+										{index + 1}
 									</div>
 								</div>
 							})}
@@ -303,7 +294,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 		<Router history={sentryHistory}>
 			<Switch>
 				{steps.map((item, index) => {
-					return <SentryRoute key={index} path={item.path} component={item.component} />
+					return <SentryRoute key={index} path={item.path} render={() => <item.component stepNumber={index} />} />
 				})}
 			</Switch>
 		</Router>

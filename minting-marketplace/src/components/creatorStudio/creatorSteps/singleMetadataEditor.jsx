@@ -10,9 +10,7 @@ import { web3Switch } from '../../../utils/switchBlockchain.js';
 import chainData from '../../../utils/blockchainData.js'
 import { rFetch } from '../../../utils/rFetch.js';
 
-const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
-	const stepNumber = 5;
-
+const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep}) => {
 	const [nftID, setNFTID] = useState('');
 	const [nftTitle, setNFTTitle] = useState('');
 	const [nftImage, setNFTImage] = useState(BinanceDiamond);
@@ -26,8 +24,10 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const {address, collectionIndex} = useParams();
 	const history = useHistory();
 
+
 	const getNFTData = useCallback(async () => {
 		let aux = await rFetch(`/api/nft/${contractData.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
+		console.log(aux);
 	}, [address, collectionIndex, contractData.blockchain]);
 
 	const addRow = () => {
@@ -45,13 +45,9 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 		setPropertiesArray(aux);
 	};
 
-	const nextStep = () => {
-		history.push(steps[stepNumber].populatedPath);
-	}
-
 	useEffect(() => {
 		setStepNumber(stepNumber);
-	}, [setStepNumber]);
+	}, [setStepNumber, stepNumber]);
 
 	useEffect(() => {
 		getNFTData();
@@ -202,8 +198,8 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 				disabled: true
 			},
 			{
-				action: nextStep,
-				label: 'Skip!'
+				action: gotoNextStep,
+				label: 'Continue'
 			}]}
 		/>}
 	</div>
@@ -212,7 +208,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <SingleMetadataEditor {...value} />
+			return <SingleMetadataEditor {...value} {...props}/>
 		}}
 	</WorkflowContext.Consumer>
 }

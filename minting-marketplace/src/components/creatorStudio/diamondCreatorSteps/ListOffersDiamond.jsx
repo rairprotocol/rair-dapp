@@ -1,24 +1,21 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import { useParams } from 'react-router-dom';
-import { erc721Abi } from '../../../contracts'
+import { useParams, useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import chainData from '../../../utils/blockchainData.js'
-import { web3Switch } from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import OfferRow from './OfferRow.jsx'
+import { metamaskCall } from '../../../utils/metamaskUtils.js';
+import DiamondOfferRow from './diamondOfferRow.jsx';
 
-const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
+const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber, switchBlockchain, gotoNextStep}) => {
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
-	const [hasMinterRole, setHasMinterRole] = useState(false);
-	const [instance, setInstance] = useState();
 	const [onMyChain, setOnMyChain] = useState();
 
-	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	const { programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
-	const {address, collectionIndex} = useParams();
+	const { collectionIndex } = useParams();
 
 	useEffect(() => {
 		setOfferList(contractData?.product?.offers ? contractData?.product?.offers.map(item => {
@@ -27,6 +24,8 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				starts: item.range[0],
 				ends: item.range[1],
 				price: item.price,
+				allowedTokens: item.tokensAllowed,
+				lockedTokens: item.lockedTokens,
 				fixed: true
 			}
 		}) : [])
@@ -48,6 +47,8 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 			starts: startingToken,
 			ends: startingToken,
 			price: 0,
+			allowedTokens: 0,
+			lockedTokens: 0,
 		});
 		setOfferList(aux);
 	}
@@ -60,42 +61,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 		aux.splice(index, 1);
 		setOfferList(aux);
 	}
-
-	useEffect(() => {
-		if (onMyChain) {
-			let createdInstance = contractCreator(address, erc721Abi)
-			setInstance(createdInstance);
-		}
-	}, [address, onMyChain, contractCreator])
-
-	const fetchMintingStatus = useCallback(async () => {
-		if (!instance || !onMyChain) {
-			return;
-		}
-		try {
-			setHasMinterRole(await instance.hasRole(await instance.MINTER(), minterInstance.address));
-		} catch (err) {
-			console.error(err);
-			setHasMinterRole(false);
-		}
-	}, [minterInstance, instance, onMyChain])
-
-	useEffect(() => {
-		fetchMintingStatus()
-	}, [fetchMintingStatus])
-
-	const giveMinterRole = async () => {
-		Swal.fire({title: 'Granting Role...', html: 'Please wait', icon: 'info', showConfirmButton: false});
-		try {
-			await (await instance.grantRole(await instance.MINTER(), minterInstance.address)).wait();
-		} catch (err) {
-			console.error(err);
-			Swal.fire('Error','An error has ocurred','error');
-			return;
-		}
-		Swal.fire('Success!','You can create offers now!','success');
-		fetchMintingStatus()
-	}
+	const history = useHistory();
 
 	const createOffers = async () => {
 		try {
@@ -105,22 +71,29 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.addOffer(
-				instance.address,
-				collectionIndex,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name),
-				process.env.REACT_APP_NODE_ADDRESS)
-			).wait();
-			Swal.fire({
-				title: 'Success!',
-				html: 'The offer has been created!',
-				icon: 'success',
-				showConfirmButton: false
-			});
-			gotoNextStep();
+			if (await metamaskCall(
+				contractData.diamond.createRangeBatch(
+					collectionIndex,
+					offerList.filter(item => item.fixed !== true).map(item => {
+						return {
+							rangeStart: item.starts,
+							rangeEnd: item.ends,
+							tokensAllowed: item.allowedTokens,
+							lockedTokens: item.lockedTokens,
+							price: item.price,
+							name: item.name
+						}
+					})
+				)
+			)) {
+				Swal.fire({
+					title: 'Success!',
+					html: 'The offer(s) have been created!',
+					icon: 'success',
+					showConfirmButton: false
+				});
+				gotoNextStep();
+			}
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
@@ -136,7 +109,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.appendOfferRangeBatch(
+			await (await contractData.diamond.appendOfferRangeBatch(
 				contractData.product.offers[0].offerPool,
 				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
 				offerList.map((item) => item.ends),
@@ -156,10 +129,6 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 		}
 	}
 
-	const switchBlockchain = async (chainId) => {
-		web3Switch(chainId)
-	}
-
 	useEffect(() => {
 		setOnMyChain(
 			window.ethereum ?
@@ -171,28 +140,9 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 
 	return <div className='row px-0 mx-0'>
 		{contractData ? <>
-			{offerList?.length !== 0 && <table className='col-12 text-start'>
-				<thead>
-					<tr>
-						<th className='px-1' style={{width: '5vw'}} />
-						<th>
-							Item name
-						</th>
-						<th style={{width: '10vw'}}>
-							Starts
-						</th>
-						<th style={{width: '10vw'}}>
-							Ends
-						</th>
-						<th style={{width: '20vw'}}>
-							Price for each
-						</th>
-						<th />
-					</tr>
-				</thead>
-				<tbody style={{maxHeight: '50vh', overflowY: 'scroll'}}>
+			{offerList?.length !== 0 && <div className='row w-100 text-start px-0 mx-0'>
 					{offerList.map((item, index, array) => {
-						return <OfferRow
+						return <DiamondOfferRow
 							array={array}
 							deleter={e => deleter(index)}
 							key={index}
@@ -200,13 +150,13 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 							{...item}
 							blockchainSymbol={chainData[contractData?.blockchain]?.symbol}
 							rerender={rerender}
+							simpleMode={simpleMode}
 							maxCopies={Number(contractData?.product?.copies) - 1} />
 					})}
-				</tbody>
-			</table>}
+			</div>}
 			<div className='col-12 mt-3 text-center'>
 				<div className='border-stimorol rounded-rair'>
-					<button onClick={addOffer} disabled={offerList.length >= 12} className={`btn btn-${primaryColor} rounded-rair px-4`}>
+					<button onClick={addOffer} disabled={contractData === undefined || offerList.length >= 12 || offerList?.at(-1)?.ends >= (Number(contractData?.product?.copies) - 1)} className={`btn btn-${primaryColor} rounded-rair px-4`}>
 						Add new <i className='fas fa-plus' style={{border: `solid 1px ${textColor}`, borderRadius: '50%', padding: '5px'}} />
 					</button>
 				</div>
@@ -215,23 +165,31 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies - 1}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
 			</div>
 			{chainData && <FixedBottomNavigation
-				backwardFunction={goBack}
+				backwardFunction={() => {
+					history.goBack()
+				}}
 				forwardFunctions={[{
 					action: !onMyChain ?
-					() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
-					:
-					(hasMinterRole === true ? 
+						switchBlockchain
+						:
 						(offerList[0]?.fixed ?
 							(offerList.filter(item => item.fixed !== true).length === 0 ? 
 								gotoNextStep
 								:
 								appendOffers)
 							:
-							createOffers)
+							createOffers),
+					label: !onMyChain ?
+						`Switch to ${chainData[contractData?.blockchain]?.name}`
 						:
-						giveMinterRole),
-					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Continue' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
-					disabled: hasMinterRole ? (offerList.length === 0 || offerList.at(-1).ends > Number(contractData.product.copies) - 1) : false
+						(offerList[0]?.fixed ?
+							(offerList.filter(item => item.fixed !== true).length === 0 ?
+								'Continue'
+								:
+								'Append Ranges')
+							:
+							'Create Ranges'),
+					disabled: (offerList.length === 0 || offerList.at(-1).ends > Number(contractData.product.copies) - 1)
 				}]}
 			/>}
 		</> : 'Fetching data...'}

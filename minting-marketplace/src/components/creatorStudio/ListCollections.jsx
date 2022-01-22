@@ -12,9 +12,7 @@ const ListCollections = () => {
 	const { contractCreator } = useSelector(store => store.contractStore);
 	const { address, blockchain } = useParams();
 
-	const [isDiamond, setIsDiamond] = useState(false);
 	const [data, setData] = useState();
-
 
 	const history = useHistory();
 
@@ -44,7 +42,6 @@ const ListCollections = () => {
 			// Try diamonds
 			let instance = contractCreator(address, diamondFactoryAbi);
 			let productCount = Number((await instance.getProductCount()).toString());
-			setIsDiamond(true);
 			let productData = [];
 			for (let i = 0; i < productCount; i++) {
 				productData.push({
@@ -60,7 +57,7 @@ const ListCollections = () => {
 				products: productData
 			});
 		}
-	}, [address, blockchain])
+	}, [address, blockchain, contractCreator])
 
 	useEffect(() => {
 		getContractData();

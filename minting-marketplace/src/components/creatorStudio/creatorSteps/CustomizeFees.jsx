@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
-import {useHistory} from 'react-router-dom';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
@@ -71,13 +70,8 @@ const CustomPayRateRow = ({index, array, receiver, deleter, percentage, renderer
 	</tr>
 };
 
-const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance, /*minterRole*/ setStepNumber, steps}) => {
-	const stepNumber = 3;
-
+const CustomizeFees = ({contractData, correctMinterInstance, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
 	const { textColor, primaryColor } = useSelector(store => store.colorStore);
-	// const { minterInstance, programmaticProvider, contractCreator  } = useSelector(store => store.contractStore);
-
-	const history = useHistory();
 
 	const [customPayments, setCustomPayments] = useState([]);
 	const [rerender, setRerender] = useState(false);
@@ -120,7 +114,7 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 	
 	useEffect(() => {
 		setStepNumber(stepNumber);
-	}, [setStepNumber])
+	}, [setStepNumber, stepNumber])
 
 	const setCustomFees = async e => {
 		setSettingCustomSplits(true);
@@ -142,7 +136,7 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 				icon: 'success',
 				showConfirmButton: false
 			});
-			nextStep();
+			gotoNextStep();
 		} catch(e) {
 			console.error(e);
 			Swal.fire('Error', '', 'error');
@@ -150,10 +144,6 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 		setSettingCustomSplits(false)
 	}
 	
-	const nextStep = () => {
-		history.push(steps[stepNumber].populatedPath);
-	}
-
 	let total = customPayments.reduce((prev, current) => {return prev + current.percentage}, 0);
 	return <div className='row px-0 mx-0'>
 		{contractData && customPayments?.length !== 0 &&
@@ -187,12 +177,10 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 			</div>
 		</div>
 		{chainData && <FixedBottomNavigation
-				backwardFunction={() => {
-					history.goBack()
-				}}
+				backwardFunction={goBack}
 				forwardFunctions={[{
-					label: customPayments.length ? 'Set custom fees' : 'Skip',
-					action: customPayments.length ? setCustomFees : nextStep,
+					label: customPayments.length ? 'Set custom fees' : 'Continue',
+					action: customPayments.length ? setCustomFees : gotoNextStep,
 					disabled: customPayments.length ? total !== 90 : false,
 				}]}
 			/>}
@@ -202,7 +190,7 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <CustomizeFees {...value} />
+			return <CustomizeFees {...value} {...props}/>
 		}}
 	</WorkflowContext.Consumer>
 }

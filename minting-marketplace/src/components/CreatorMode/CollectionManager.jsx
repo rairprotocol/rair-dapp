@@ -242,7 +242,10 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 				refresher()
 			})
 		}
-	},[]);
+		return () => {
+			minterInstance.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', null);
+		}
+	},[minterInstance, refresher]);
 
 	useEffect(() => {
 		if (tokenInstance && minterInstance) {
