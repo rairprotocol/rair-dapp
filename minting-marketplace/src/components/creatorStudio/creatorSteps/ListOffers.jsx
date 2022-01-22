@@ -8,6 +8,7 @@ import chainData from '../../../utils/blockchainData.js'
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
+import { validateInteger } from '../../../utils/metamaskUtils';
 
 const ListOffers = ({contractData, setStepNumber, steps}) => {
 	const stepNumber = 1;
@@ -249,7 +250,14 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 						:
 						giveMinterRole),
 					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
-					disabled: hasMinterRole ? (offerList.length === 0 || offerList.at(-1).ends > Number(contractData.product.copies) - 1) : false
+					disabled: hasMinterRole ?
+						(offerList.length === 0 ||
+							offerList.reduce((previous, current) => {
+								return previous || !validateInteger(current.price) || current.price <= 0 
+							}, false) ||
+							offerList.at(-1).ends > Number(contractData.product.copies) - 1)
+							:
+						false
 				}]}
 			/>}
 		</> : 'Fetching data...'}
