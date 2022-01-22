@@ -23,7 +23,7 @@ const SentryRoute = withSentryRouting(Route);
 const WorkflowSteps = ({sentryHistory}) => {
 	const {address, collectionIndex, blockchain} = useParams();
 
-	const { minterInstance, contractCreator, programmaticProvider /*currentChain*/ } = useSelector(store => store.contractStore);
+	const { minterInstance, contractCreator, programmaticProvider, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 	const [contractData, setContractData] = useState();
 	const [tokenInstance, setTokenInstance] = useState();
 	const [correctMinterInstance, setCorrectMinterInstance] = useState();
@@ -143,8 +143,15 @@ const WorkflowSteps = ({sentryHistory}) => {
 			let rangesData = [];
 			for await (let rangeIndex of productData.rangeList) {
 				let rangeData = await instance.rangeInfo(rangeIndex);
+				let marketplaceOfferIndex = undefined;
+				if (diamondMarketplaceInstance) {
+					marketplaceOfferIndex = await diamondMarketplaceInstance.getOfferInfoForAddress(
+						instance.address,
+						rangeIndex
+					);
+				}
 				rangesData.push({
-					onMarketplace: false,
+					marketplaceOfferIndex,
 					rangeIndex: Number(rangeIndex.toString()),
 					offerName: rangeData.rangeName,
 					range: [Number(rangeData.rangeStart.toString()), Number(rangeData.rangeEnd.toString())],

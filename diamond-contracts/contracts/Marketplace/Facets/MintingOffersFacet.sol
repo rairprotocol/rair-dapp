@@ -57,9 +57,9 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		return s.addressToOffers[erc721Address].length;
 	}
 
-	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
+	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (uint offerIndex, mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
 		mintingOffer memory selectedOffer = s.mintingOffers[s.addressToOffers[erc721Address][rangeIndex]];
-		return (selectedOffer, IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex));
+		return (s.addressToOffers[erc721Address][rangeIndex], selectedOffer, IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex));
 	}
 
 	function getOfferInfo(uint offerIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
