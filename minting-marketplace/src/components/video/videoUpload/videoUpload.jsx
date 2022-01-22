@@ -33,6 +33,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	const [selectsData, setSelectsData] = useState({});
 	const [contract, setContract] = useState('null');
 	const [category, setCategory] = useState('null');
+	const [storage, setStorage] = useState('null');
 	const [contractID, setContractID] = useState('null');
 	const [contractOptions, setContractOptions] = useState([]);
 	const [offersData, setOffersData] = useState([]);
@@ -283,6 +284,21 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						customClass="form-control input-select-custom-style"
 						customCSS={reusableStyle}
 						labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
+						label="Storage"
+						getter={storage}
+						setter={setStorage}
+						placeholder="Select a storage method"
+						options={[
+							{label: 'Google Cloud', value: 'gcp'},
+							{label: 'IPFS', value: 'ipfs'}
+						]}
+					/>
+				</div>
+				<div className="col-8 py-1">
+					<InputSelect
+						customClass="form-control input-select-custom-style"
+						customCSS={reusableStyle}
+						labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
 						label="Contract"
 						getter={contract}
 						setter={e => {
@@ -359,7 +375,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 				</div>
 				<button
 					type="button"
-					disabled={uploading || title === '' || description === '' ||/* author === '' || */  contract === 'null' || product === 'null' || offer === 'null' || video === undefined}
+					disabled={uploading || storage === 'null' || title === '' || description === '' ||/* author === '' || */  contract === 'null' || product === 'null' || offer === 'null' || video === undefined}
 					className="btn py-1 col-8 btn-primary btn-submit-custom"
 					onClick={(e) => {
 						if (uploading) {
@@ -374,6 +390,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 							formData.append("description", description);
 							formData.append("contract", contractID);
 							formData.append("category", category);
+							formData.append("storage", storage);
 							formData.append("product", collectionIndex);
 							formData.append("offer", JSON.stringify(offersIndex));
 							setUploading(true);
