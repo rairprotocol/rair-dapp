@@ -57,6 +57,10 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		return s.addressToOffers[erc721Address].length;
 	}
 
+	function getTotalOfferCount() public view returns (uint) {
+		return s.mintingOffers.length;
+	}
+
 	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (uint offerIndex, mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
 		mintingOffer memory selectedOffer = s.mintingOffers[s.addressToOffers[erc721Address][rangeIndex]];
 		return (s.addressToOffers[erc721Address][rangeIndex], selectedOffer, IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex));
@@ -84,7 +88,8 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		bool[] calldata visibility,
 		address nodeAddress_
 	) external {
-		require(rangeIndexes.length == visibility.length, "Minter Marketplace: Arrays should have the same length");
+		require(rangeIndexes.length > 0, "Minter Marketplace: No offers sent!");
+		require(rangeIndexes.length == visibility.length && splits.length == visibility.length, "Minter Marketplace: Arrays should have the same length");
 		for (uint i = 0; i < rangeIndexes.length; i++) {
 			_addMintingOffer(erc721Address_, rangeIndexes[i], splits[i], visibility[i], nodeAddress_);
 		}
@@ -138,6 +143,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 	}
 
 	function buyMintingOfferBatch(uint offerIndex_, uint[] calldata tokenIndexes) external mintingOfferExists(offerIndex_) payable {
+		require(tokenIndexes.length > 0, "Minter Marketplace: No tokens sent!");
 		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
 		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");

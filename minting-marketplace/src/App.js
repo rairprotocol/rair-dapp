@@ -72,6 +72,7 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 import VideoPlayer from './components/video/videoPlayer.jsx';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
+import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace.jsx';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -97,7 +98,7 @@ function App({ sentryHistory }) {
 
 	// Redux
 	const dispatch = useDispatch()
-	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider, diamondFactoryInstance } = useSelector(store => store.contractStore);
+	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
@@ -386,6 +387,7 @@ function App({ sentryHistory }) {
 								{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
 								{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
 								{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+								{ name: <><i className="fas fa-gem" /><i className="fas fa-shopping-cart" /></>, route: '/diamond-marketplace', disabled: diamondMarketplaceInstance === undefined },
 							].map((item, index) => {
 								if (!item.disabled) {
 									return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -448,6 +450,7 @@ function App({ sentryHistory }) {
 									{factoryInstance && <SentryRoute exact path='/factory' component={CreatorMode} />}
 									{loginDone && <SentryRoute path='/token/:contract/:identifier' component={Token} />}
 									{minterInstance && <SentryRoute exact path='/minter' component={ConsumerMode} />}
+									{diamondMarketplaceInstance && <SentryRoute exact path='/diamond-marketplace' component={DiamondMarketplace} />}
 									{loginDone && <SentryRoute exact path='/metadata/:blockchain/:contract/:product' component={MetadataEditor} />}
 									{loginDone && <SentryRoute exact path='/my-nft' component={MyNFTs} />}
 									{loginDone && <SentryRoute exact path='/my-items' >

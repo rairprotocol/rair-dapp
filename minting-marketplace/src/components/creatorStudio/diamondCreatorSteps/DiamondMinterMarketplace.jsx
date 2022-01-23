@@ -9,7 +9,7 @@ import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import DiamondOfferConfig from './diamondOfferConfig.jsx';
 
 const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumber, gotoNextStep}) => {
-	const { currentUserAddress, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
+	const { diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 	const history = useHistory();
 
 	const [offerData, setOfferData] = useState([]);

@@ -1421,8 +1421,21 @@ describe("Diamonds", function () {
 				await expect(result['rangeData']['rangePrice']).to.equal(4500);
 			});
 
+			it ("Shouldn't call the batch function without any offers", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOfferBatch(
+					secondDeploymentAddress,
+					[],
+					[],
+					[],
+					addr4.address
+				)).to.be.revertedWith("Minter Marketplace: No offers sent!");
+			})
+
 			it ("Should add offers in batches", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				let currentOffers = await mintingOffersFacet.getTotalOfferCount();
+				await expect(currentOffers).to.equal(3);
 				await expect(await mintingOffersFacet.addMintingOfferBatch(
 					secondDeploymentAddress,
 					[2, 3],
@@ -1439,6 +1452,7 @@ describe("Diamonds", function () {
 					.withArgs(secondDeploymentAddress, 2, 'Second Second First', 20000, 4, 3)
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
 					.withArgs(secondDeploymentAddress, 3, 'Second Second Second', 35000, 4, 4);
+				await expect(await mintingOffersFacet.getTotalOfferCount()).to.equal(currentOffers.add(2));
 			});
 		});
 
@@ -1512,6 +1526,12 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.buyMintingOfferBatch(0, tokensList, {value: 4500 * tokensList.length - 1}))
 					.to.be.revertedWith("Minter Marketplace: Insufficient funds!");
 			});
+
+			it ("Shouldn't call the batch mint function without any tokens", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.buyMintingOfferBatch(0, []))
+					.to.be.revertedWith("Minter Marketplace: No tokens sent!");
+			})
 
 			it ("Should batch mint", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);

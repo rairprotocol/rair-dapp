@@ -57,7 +57,7 @@ const DiamondOfferConfig = ({
 				editable: false,
 				message: 'Data from the marketplace'
 			}))))
-	}, [array, index])
+	}, [array, index, nodeFee, treasuryAddress, treasuryFee])
 
 	const removePayment = (index) => {
 		let aux = [...customPayments];

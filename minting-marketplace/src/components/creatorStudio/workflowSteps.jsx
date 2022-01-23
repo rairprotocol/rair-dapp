@@ -177,7 +177,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 				instance
 			});
 		}
-	}, [address, blockchain, collectionIndex, contractCreator]);
+	}, [address, blockchain, collectionIndex, contractCreator, diamondMarketplaceInstance]);
 	
 	const fetchMintingStatus = useCallback(async () => {
 		if (!tokenInstance || !onMyChain) {
