@@ -671,7 +671,7 @@ describe("Diamonds", function () {
 	});
 
 	describe("RAIR Ranges Facet", () => {
-		it ("Should not create offers for invalid products", async () => {
+		it ("Shouldn't create offers for invalid products", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
 			// createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name)
 			await expect(rangesFacet.createRange(2, 0, 10, 1000, 950, 50, 'First First First'))
@@ -709,7 +709,7 @@ describe("Diamonds", function () {
 				.withArgs(2, 26, 49);
 		});
 
-		it ("Should create offers in batches", async () => {
+		it ("Should create ranges in batches", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
 			await expect(await rangesFacet.createRangeBatch(0, [
 				{
@@ -768,46 +768,50 @@ describe("Diamonds", function () {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
 			const infoZero = await rangesFacet.rangeInfo(0);
 			const infoProductZero = await rangesFacet.productRangeInfo(0,0);
-			await expect(infoZero.rangeStart)
+			await expect(infoZero['data'].rangeStart)
 				.to.equal(infoProductZero.rangeStart)
 				.to.equal(0);
-			await expect(infoZero.rangeEnd)
+			await expect(infoZero['data'].rangeEnd)
 				.to.equal(infoProductZero.rangeEnd)
 				.to.equal(10);
-			await expect(infoZero.tokensAllowed)
+			await expect(infoZero['data'].tokensAllowed)
 				.to.equal(infoProductZero.tokensAllowed)
 				.to.equal(9);
-			await expect(infoZero.lockedTokens)
+			await expect(infoZero['data'].lockedTokens)
 				.to.equal(infoProductZero.lockedTokens)
 				.to.equal(5);
-			await expect(infoZero.rangePrice)
+			await expect(infoZero['data'].rangePrice)
 				.to.equal(infoProductZero.rangePrice)
 				.to.equal(1000);
-			await expect(infoZero.rangeName)
+			await expect(infoZero['data'].rangeName)
 				.to.equal(infoProductZero.rangeName)
 				.to.equal('First First First');
+			await expect(infoZero['productIndex'])
+				.to.equal(0);
 
 			rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
 			const secondInfoZero = await rangesFacet.rangeInfo(1);
 			const secondInfoProductZero = await rangesFacet.productRangeInfo(0,1);
-			await expect(secondInfoZero.rangeStart)
+			await expect(secondInfoZero['data'].rangeStart)
 				.to.equal(secondInfoProductZero.rangeStart)
 				.to.equal(11);
-			await expect(secondInfoZero.rangeEnd)
+			await expect(secondInfoZero['data'].rangeEnd)
 				.to.equal(secondInfoProductZero.rangeEnd)
 				.to.equal(99);
-			await expect(secondInfoZero.tokensAllowed)
+			await expect(secondInfoZero['data'].tokensAllowed)
 				.to.equal(secondInfoProductZero.tokensAllowed)
 				.to.equal(50);
-			await expect(secondInfoZero.lockedTokens)
+			await expect(secondInfoZero['data'].lockedTokens)
 				.to.equal(secondInfoProductZero.lockedTokens)
 				.to.equal(10);
-			await expect(secondInfoZero.rangePrice)
+			await expect(secondInfoZero['data'].rangePrice)
 				.to.equal(secondInfoProductZero.rangePrice)
 				.to.equal(3500);
-			await expect(secondInfoZero.rangeName)
+			await expect(secondInfoZero['data'].rangeName)
 				.to.equal(secondInfoProductZero.rangeName)
 				.to.equal('Second First Second');
+			await expect(secondInfoZero['productIndex'])
+				.to.equal(0);
 		});
 
 		it ("Shouldn't update offers with bad information", async () => {
@@ -844,6 +848,14 @@ describe("Diamonds", function () {
 				.to.equal(false);
 			await expect(await rangesFacet.canCreateRange(1, 251, 350))
 				.to.equal(true);
+		});
+
+		it ("Should point to the range's product", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
+			await expect(await rangesFacet.rangeToProduct(0)).to.equal(0);
+			await expect(await rangesFacet.rangeToProduct(1)).to.equal(0);
+			await expect(await rangesFacet.rangeToProduct(2)).to.equal(1);
+			await expect(await rangesFacet.rangeToProduct(3)).to.equal(1);
 		});
 	});
 
@@ -1399,6 +1411,7 @@ describe("Diamonds", function () {
 			it ("Should give information about each range by their offer index", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				let result = await mintingOffersFacet.getOfferInfo(0);
+				console.log(result);
 				await expect(result['mintOffer']['erc721Address']).to.equal(secondDeploymentAddress);
 				await expect(result['mintOffer']['nodeAddress']).to.equal(addr4.address);
 				await expect(result['mintOffer']['rangeIndex']).to.equal(0);
@@ -1406,6 +1419,7 @@ describe("Diamonds", function () {
 				await expect(result['mintOffer']['fees'][0].percentage).to.equal(30000);
 				await expect(result['mintOffer']['fees'][1].percentage).to.equal(60000);
 				await expect(result['rangeData']['rangePrice']).to.equal(4500);
+				await expect(result['productIndex']).to.equal(0);
 			});
 
 			it ("Should give information about each range by their offer index", async () => {
@@ -1419,6 +1433,7 @@ describe("Diamonds", function () {
 				await expect(result['mintOffer']['fees'][0].percentage).to.equal(30000);
 				await expect(result['mintOffer']['fees'][1].percentage).to.equal(60000);
 				await expect(result['rangeData']['rangePrice']).to.equal(4500);
+				await expect(result['productIndex']).to.equal(0);
 			});
 
 			it ("Shouldn't call the batch function without any offers", async () => {

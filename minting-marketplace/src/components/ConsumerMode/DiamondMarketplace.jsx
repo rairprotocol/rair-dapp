@@ -3,9 +3,12 @@ import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../utils/metamaskUtils.js';
 import { diamondFactoryAbi } from '../../contracts'
+import { utils } from 'ethers';
+import blockchainData from '../../utils/blockchainData';
 
 const DiamondMarketplace = (props) => {
 	const [offersArray, setOffersArray] = useState([]);
+	const [transactionInProgress, setTransactionInProgress] = useState(false);
 
 	const { diamondMarketplaceInstance, contractCreator } = useSelector(store => store.contractStore);
 
@@ -26,9 +29,11 @@ const DiamondMarketplace = (props) => {
 				startingToken: singleOfferData.rangeData.rangeStart.toString(),
 				endingToken: singleOfferData.rangeData.rangeEnd.toString(),
 				name: singleOfferData.rangeData.rangeName,
+				price: singleOfferData.rangeData.rangePrice,
 				tokensAllowed: singleOfferData.rangeData.tokensAllowed.toString(),
 				mintableTokens: singleOfferData.rangeData.mintableTokens.toString(),
-				lockedTokens: singleOfferData.rangeData.lockedTokens.toString()
+				lockedTokens: singleOfferData.rangeData.lockedTokens.toString(),
+				productIndex: singleOfferData.productIndex.toString()
 			})
 		}
 		setOffersArray(offerData);
@@ -52,27 +57,55 @@ const DiamondMarketplace = (props) => {
 				<div style={{position: 'absolute', top: 0, left: 0}}>
 					#{index + 1}
 				</div>
-				<small> @{offer.contractAddress} </small>
+				<small> @{offer.contractAddress}:{offer.productIndex} </small>
 				<br />
 				Range #{offer.rangeIndex}
 				<h3>{offer.name}</h3>
 				<h5 style={{display: 'inline'}}>
 					{offer.tokensAllowed}
-				</h5> tokens available
+				</h5> tokens available for <h5 style={{display: 'inline'}}>
+					{utils.formatEther(offer.price)} {blockchainData[window.ethereum.chainId].symbol}
+				</h5>
 				<br/>
-				<button onClick={async () => {
+				<h5 className='w-100 text-center px-5'>
+					<div className='float-start'>
+						{offer.startingToken}...
+					</div>
+					<progress
+						max={offer.endingToken - offer.startingToken}
+						value={offer.tokensAllowed}
+					/>
+					<div className='float-end'>
+						...{offer.endingToken}
+					</div>
+				</h5>
+				<button
+					disabled={transactionInProgress || !offer.visible}
+					onClick={async () => {
+					setTransactionInProgress(true);
 					let instance = contractCreator(offer.contractAddress, diamondFactoryAbi);
-					let nextToken = await instance.getNextSequentialIndex(offer.rangeIndex, offer.startingToken, offer.endingToken);
-					console.log(nextToken);
-					return;
+					let nextToken = await instance.getNextSequentialIndex(offer.productIndex, offer.startingToken, offer.endingToken);
+					Swal.fire({
+						title: `Buying token #${nextToken}!`,
+						html: 'Please wait...',
+						icon: 'info',
+						showConfirmButton: false
+					});
 					if (await metamaskCall(diamondMarketplaceInstance.buyMintingOffer(
 						offer.offerIndex,
+						nextToken,
+						{value: offer.price}
 					))) {
-
+						Swal.fire({
+							title: 'Success',
+							html: 'Token bought',
+							icon: 'success',
+							showConfirmButton: true
+						});
 					}
-					console.log(diamondMarketplaceInstance.functions);
-				}} className='btn my-2 py-0 btn-stimorol'>
-					Buy a token
+					setTransactionInProgress(false);
+				}} className={`btn my-2 py-0 btn-${offer.visible ? 'stimorol' : 'danger'}`}>
+					{offer.visible ? 'Buy a token' : "Not for sale!"}
 				</button>
 			</div>
 		})}

@@ -15,7 +15,7 @@ interface IRAIR721 {
 		string rangeName;
 	}
 
-	function rangeInfo(uint rangeId) external view returns(range memory data);
+	function rangeInfo(uint rangeId) external view returns(range memory data, uint productIndex);
 	function mintFromRange(address to, uint rangeId, uint indexInRange) external;
 }
 
@@ -61,14 +61,17 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		return s.mintingOffers.length;
 	}
 
-	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (uint offerIndex, mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
+	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (uint offerIndex, mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {
 		mintingOffer memory selectedOffer = s.mintingOffers[s.addressToOffers[erc721Address][rangeIndex]];
-		return (s.addressToOffers[erc721Address][rangeIndex], selectedOffer, IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex));
+		(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
+		offerIndex = s.addressToOffers[erc721Address][rangeIndex];
+		mintOffer = selectedOffer;
 	}
 
-	function getOfferInfo(uint offerIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData) {
+	function getOfferInfo(uint offerIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {
 		mintingOffer memory selectedOffer = s.mintingOffers[offerIndex];
-		return (selectedOffer, IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex));
+		mintOffer = selectedOffer;
+		(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
 	}
 
 	function addMintingOffer(
@@ -103,7 +106,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		address nodeAddress_
 	) internal checkCreatorRole(erc721Address_) checkMinterRole(erc721Address_) offerDoesntExist(erc721Address_, rangeIndex_) {
 		mintingOffer storage newOffer = s.mintingOffers.push();
-		IRAIR721.range memory rangeData = IRAIR721(erc721Address_).rangeInfo(rangeIndex_);
+		(IRAIR721.range memory rangeData,) = IRAIR721(erc721Address_).rangeInfo(rangeIndex_);
 		require(rangeData.mintableTokens > 0, "Minter Marketplace: Offer doesn't have tokens available!");
 		newOffer.erc721Address = erc721Address_;
 		newOffer.nodeAddress = nodeAddress_;
@@ -124,7 +127,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
 		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
-		IRAIR721.range memory rangeData = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
+		(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
 		require(rangeData.rangePrice <= msg.value, "Minter Marketplace: Insufficient funds!");
 		if (msg.value - rangeData.rangePrice > 0) {
 			payable(msg.sender).transfer(msg.value - rangeData.rangePrice);
@@ -147,7 +150,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
 		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
-		IRAIR721.range memory rangeData = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
+		(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
 		require((rangeData.rangePrice * tokenIndexes.length) <= msg.value, "Minter Marketplace: Insufficient funds!");
 		if (msg.value - (rangeData.rangePrice * tokenIndexes.length) > 0) {
 			payable(msg.sender).transfer(msg.value - (rangeData.rangePrice * tokenIndexes.length));

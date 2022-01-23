@@ -22,13 +22,23 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		string name;
 	}
 
-	function rangeInfo(uint rangeId) external view returns(range memory data) {
-		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
-		data = s.ranges[rangeId];
+	/// @notice Verifies that the range exists
+	/// @param	rangeID	Range to verify
+	modifier rangeExists(uint rangeID) {
+		require(s.ranges.length > rangeID, "RAIR ERC721 Ranges: Range does not exist");
+		_;
 	}
 
-	function isRangeLocked(uint rangeId) external view returns (bool) {
-		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
+	function rangeToProduct(uint rangeIndex_) public view rangeExists(rangeIndex_) returns (uint) {
+		return s.rangeToProduct[rangeIndex_];
+	}
+
+	function rangeInfo(uint rangeId) external view rangeExists(rangeId) returns(range memory data, uint productIndex) {
+		data = s.ranges[rangeId];
+		productIndex = s.rangeToProduct[rangeId];
+	}
+
+	function isRangeLocked(uint rangeId) external view rangeExists(rangeId) returns (bool) {
 		return s.ranges[rangeId].lockedTokens > 0;
 	}
 
@@ -38,8 +48,7 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		data = s.ranges[s.products[productId].rangeList[rangeIndex]];
 	}
 
-	function updateRange(uint rangeId, uint price_, uint tokensAllowed_, uint lockedTokens_) public onlyRole(CREATOR) {
-		require(s.ranges.length > rangeId, "RAIR ERC721 Ranges: Range does not exist");
+	function updateRange(uint rangeId, uint price_, uint tokensAllowed_, uint lockedTokens_) public rangeExists(rangeId) onlyRole(CREATOR) {
 		range storage selectedRange = s.ranges[rangeId];
 		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
 		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
