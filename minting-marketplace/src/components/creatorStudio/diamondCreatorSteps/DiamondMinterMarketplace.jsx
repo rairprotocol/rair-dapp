@@ -133,7 +133,6 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 					nodeFee,
 					minterDecimals,
 					treasuryFee,
-					currentUserAddress,
 					treasuryAddress,
 					simpleMode
 				}} />
@@ -145,7 +144,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 				forwardFunctions={[{
 					label: hasMinterRole ? 'Put selected ranges up for sale!' : 'Approve the marketplace as a Minter!',
 					action: hasMinterRole ? setCustomFees : giveMinterRole,
-					disabled: sendingData || hasMinterRole === undefined,
+					disabled: sendingData || hasMinterRole === undefined
 				},{
 					label: 'Continue',
 					action: gotoNextStep,

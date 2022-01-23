@@ -1,6 +1,7 @@
 import {useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
 import { utils } from 'ethers';
+import { useSelector } from 'react-redux';
 import DiamondCustomPaymentRow from './diamondCustomPaymentRow.jsx'
 
 const DiamondOfferConfig = ({
@@ -9,11 +10,11 @@ const DiamondOfferConfig = ({
 	nodeFee,
 	minterDecimals,
 	treasuryFee,
-	currentUserAddress,
 	treasuryAddress,
 	simpleMode
 }) => {
 	let item = array[index];
+	const { currentUserAddress, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 
 	const [rerender, setRerender] = useState(false);
 	
@@ -33,6 +34,30 @@ const DiamondOfferConfig = ({
 		percentage: 90 * Math.pow(10, minterDecimals),
 		editable: true
 	}]);
+
+	useEffect(() => {
+		if (!array[index].marketplaceOfferIndex) {
+			return;
+		}
+		setCustomPayments([{
+			message: 'Node address',
+			recipient: process.env.REACT_APP_NODE_ADDRESS,
+			percentage: nodeFee,
+			editable: false
+		},{
+			message: 'Treasury address',
+			recipient: treasuryAddress,
+			percentage: treasuryFee,
+			editable: false
+		}]
+		.concat(array[index].marketplaceOfferIndex.mintOffer.fees
+			.map(fee => ({
+				recipient: fee.recipient,
+				percentage: fee.percentage.toString(),
+				editable: false,
+				message: 'Data from the marketplace'
+			}))))
+	}, [array, index])
 
 	const removePayment = (index) => {
 		let aux = [...customPayments];
@@ -121,11 +146,15 @@ const DiamondOfferConfig = ({
 						<i className='fas fa-plus'/> Add
 					</button>
 				</div>
-				{item.onMarketplace && <div className='col-12 rounded-rair text-end'>
-					<button className='btn btn-royal-ice rounded-rair'>
-						Update with custom splits!
-					</button>
-				</div>}
+				{false && item.marketplaceOfferIndex &&
+					<div className='col-12 rounded-rair text-center'>
+						<button onClick={() => {
+							console.log(customPayments);
+							console.log(diamondMarketplaceInstance.functions);
+						}} className='btn btn-stimorol rounded-rair'>
+							Update custom splits
+						</button>
+					</div>}
 			</details>}
 			<hr />
 		</div>
