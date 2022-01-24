@@ -29,7 +29,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 				selected: true,
 				tokensToSell: 0,
 				customSplits: [],
-				visible: true,
+				visible: item.marketplaceOfferIndex ? item.marketplaceOfferIndex.mintOffer.visible : true,
 				...item
 			}
 		}))
@@ -44,7 +44,6 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 		if (!diamondMarketplaceInstance) {
 			return;
 		}
-		console.log(diamondMarketplaceInstance.functions);
 		let nodeFeeData = await diamondMarketplaceInstance.getNodeFee()
 		setNodeFee(Number(nodeFeeData.nodeFee.toString()));
 		setMinterDecimals(nodeFeeData.decimals);

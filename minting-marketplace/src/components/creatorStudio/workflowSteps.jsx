@@ -150,16 +150,18 @@ const WorkflowSteps = ({sentryHistory}) => {
 						rangeIndex
 					);
 				}
-				rangesData.push({
-					marketplaceOfferIndex,
-					rangeIndex: Number(rangeIndex.toString()),
-					offerName: rangeData.rangeName,
-					range: [Number(rangeData.rangeStart.toString()), Number(rangeData.rangeEnd.toString())],
-					price: rangeData.rangePrice.toString(),
-					lockedTokens: Number(rangeData.lockedTokens.toString()),
-					tokensAllowed: Number(rangeData.tokensAllowed.toString()),
-					mintableTokens: Number(rangeData.mintableTokens.toString())
-				})
+				if (rangeData) {
+					rangesData.push({
+						marketplaceOfferIndex,
+						rangeIndex: Number(rangeIndex.toString()),
+						offerName: rangeData.data.rangeName,
+						range: [Number(rangeData.data.rangeStart.toString()), Number(rangeData.data.rangeEnd.toString())],
+						price: rangeData.data.rangePrice.toString(),
+						lockedTokens: Number(rangeData.data.lockedTokens.toString()),
+						tokensAllowed: Number(rangeData.data.tokensAllowed.toString()),
+						mintableTokens: Number(rangeData.data.mintableTokens.toString())
+					})
+				}
 			};
 			setContractData({
 				title: await instance.name(),
@@ -171,7 +173,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 					name: productData.name,
 					firstTokenIndex: Number(productData.startingToken.toString()),
 					soldCopies: Number(productData.mintableTokens.toString()) - Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()),
-					copies: Number(productData.mintableTokens.toString()),
+					copies: Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) + 1,
 					offers: rangesData
 				},
 				instance
