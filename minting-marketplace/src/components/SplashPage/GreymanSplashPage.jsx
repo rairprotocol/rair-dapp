@@ -17,6 +17,7 @@ import { Timeline } from "./Timeline/Timeline";
 
 import { erc721Abi } from "../../contracts/index.js";
 import { rFetch } from "../../utils/rFetch.js";
+import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
@@ -50,9 +51,7 @@ const SplashPage = () => {
   const [active, setActive] = useState({ policy: false, use: false });
   const [modalIsOpen, setIsOpen] = useState(false);
   //   const history = useHistory();
-  const { minterInstance, contractCreator } = useSelector(
-    (store) => store.contractStore
-  );
+  const { minterInstance, contractCreator, currentUserAddress } = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -96,21 +95,17 @@ const SplashPage = () => {
         icon: "info",
         showConfirmButton: false,
       });
-      try {
-        await (
-          await minterInstance.buyToken(
-            products[0].offerPool.marketplaceCatalogIndex,
-            greyworldOffer.offerIndex,
-            nextToken,
-            {
-              value: greyworldOffer.price,
-            }
-          )
-        ).wait();
+      if (await metamaskCall(
+        minterInstance.buyToken(
+          products[0].offerPool.marketplaceCatalogIndex,
+          greyworldOffer.offerIndex,
+          nextToken,
+          {
+            value: greyworldOffer.price,
+          }
+        )
+      )) {
         Swal.fire("Success", `Bought Grayman #${nextToken}!`, "success");
-      } catch (e) {
-        console.error(e);
-        Swal.fire("Error", e?.message, "error");
       }
     }
   };
@@ -238,7 +233,7 @@ const SplashPage = () => {
                       <div className="modal-btn-wrapper">
                         <button
                           onClick={buyGrayman}
-                          disabled={!Object.values(active).every((el) => el)}
+                          disabled={currentUserAddress === undefined || !Object.values(active).every((el) => el)}
                           className="modal-btn"
                         >
                           <img
@@ -247,7 +242,7 @@ const SplashPage = () => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          PURCHASE
+                          {currentUserAddress ? 'PURCHASE' : 'Connect your wallet!'}
                         </button>
                       </div>
                     </div>
