@@ -82,13 +82,6 @@ const SplashPage = () => {
     );
     if (success) {
       let instance = contractCreator(GraymanSplashPageTESTNET, erc721Abi);
-      let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
-      Swal.fire({
-        title: "Please wait...",
-        html: `Buying Grayman #${nextToken.toString()}`,
-        icon: "info",
-        showConfirmButton: false,
-      });
       let [greyworldOffer] = products[0].offers.filter(
         (item) => item.offerName === "greyworld"
       );
@@ -96,6 +89,13 @@ const SplashPage = () => {
         Swal.fire("Error", "An error has ocurred", "error");
         return;
       }
+      let nextToken = await instance.getNextSequentialIndex(0, greyworldOffer.range[0], greyworldOffer.range[1]);
+      Swal.fire({
+        title: "Please wait...",
+        html: `Buying Grayman #${nextToken.toString()}`,
+        icon: "info",
+        showConfirmButton: false,
+      });
       try {
         await (
           await minterInstance.buyToken(
