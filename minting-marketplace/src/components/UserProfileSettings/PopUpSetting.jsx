@@ -5,6 +5,7 @@ import { Popup } from "reactjs-popup";
 
 // React Redux types
 import * as authTypes from "../../ducks/auth/types";
+import * as contractTypes from "../../ducks/contracts/types";
 import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 const PopUpSettings = ({
@@ -57,6 +58,7 @@ const PopUpSettings = ({
 
   const logout = () => {
     dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
+    dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: undefined });
     localStorage.removeItem("token");
     setLoginDone(false);
     history.push("/");
