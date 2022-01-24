@@ -11,6 +11,10 @@
     display: none;
 }
 
+.wrapper-splash-page.greyman-page {
+    background-image: none;
+}
+
 @media screen and (max-width: 1300px) {
     .home-splash--page .information-author {
         background-size: 300px auto;

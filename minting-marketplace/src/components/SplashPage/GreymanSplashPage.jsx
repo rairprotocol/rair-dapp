@@ -327,7 +327,7 @@ const SplashPage = () => {
                   style={{
                     fontWeight: "bolder",
                     fontSize: "18px",
-                    color: "#c1c1c1",
+                    color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
                   }}
                 >
                   MATIC blockchain
@@ -337,11 +337,11 @@ const SplashPage = () => {
                   style={{
                     fontWeight: "bolder",
                     fontSize: "18px",
-                    color: "#c1c1c1",
+                    color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
                   }}
                 >
                   {" "}
-                  a metadata
+                  a metadata {" "}
                 </span>
                 JSON file with properties
               </p>
@@ -372,14 +372,20 @@ const SplashPage = () => {
             <div className="property-wrapper">
               <div className="property-first-wrapper">
                 <div className="property-first">
-                  <div className="property">
+                  <div
+                    className="property"
+                    style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                  >
                     <span className="property-desc">Background Color</span>
                     <span className="property-name-color">Grey</span>
                     <span className="property-color">100%</span>
                   </div>
                 </div>
                 <div className="property-second">
-                  <div className="property second">
+                  <div
+                    className="property second"
+                    style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                  >
                     <span className="property-desc">Pant Color</span>
                     <span className="property-name-color">Grey</span>
                     <span className="property-color">100%</span>
@@ -411,8 +417,8 @@ const SplashPage = () => {
             <div className="main-greyman-pic">
               <div className="join-pic-main">
                 <div className="show-more-wrap">
-                  <span className="show-more">
-                    Open in Store <span className="show-more-arrow">→</span>{" "}
+                  <span className="show-more" style={{color: "#fff"}}>
+                    Open in Store <i class="fas fa-arrow-right"></i>{" "}
                   </span>
                 </div>
                 <img
@@ -533,7 +539,9 @@ const SplashPage = () => {
             </div>
           </div>
           <div className="video-grey-man-desc-wrapper">
-            <span className="video-grey-man-desc">
+            <span style={{
+              color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
+            }} className="video-grey-man-desc">
               NFT owners can learn more about the project by signing with
               metamask to unlock an encrypted stream{" "}
             </span>
@@ -547,7 +555,7 @@ const SplashPage = () => {
         </div>
         <Timeline />
         <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
-        <NotCommercial />
+        <NotCommercial primaryColor={primaryColor} />
       </div>
     </div>
   );

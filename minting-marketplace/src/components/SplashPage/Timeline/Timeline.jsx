@@ -218,7 +218,7 @@ const TimelineComponent = () => {
           <>
             <div style={{ paddingTop: "6rem" }} className={cl.right_content}>
               <p
-                style={{ marginTop: "5rem", marginLeft: "-36rem" }}
+                style={{ marginTop: "5rem" }}
                 className={cl.p_content_last}
               >
                 <strong>2022</strong> <br />

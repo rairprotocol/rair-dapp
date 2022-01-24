@@ -516,6 +516,11 @@ line-height: 30px;
     backdrop-filter: blur(8px);
     border-radius: 0px 0px 20px 22px;
 }
+
+.show-more-wrap i {
+    color: rgb(231, 130, 213);
+    margin-left: 10px;
+}
 .show-more-arrow{
     margin-left: 15px;
     display: inline-block;
@@ -584,6 +589,7 @@ line-height: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 .video-grey-man-title{
     font-style: normal;
@@ -604,6 +610,7 @@ line-height: 30px;
     height: 559px;
     overflow: hidden;
     border-radius: 16px;
+    position: relative;
 }
 .video-grey-man-metamask-logo{
     position: relative;
@@ -613,8 +620,11 @@ line-height: 30px;
 .video-grey-man-pic{
     width: 995px;
     height: 559px;
-    transform: scale(1.4);
+    transform: scale(1.0);
+    object-fit: cover;
 }
+
+
 .video-grey-man-desc-wrapper{
     padding-top: 35px;
 }
@@ -1494,15 +1504,8 @@ img.block-img-mobile{
     }
 }
 
+
 @media screen and (max-width: 950px) {
-    /* .home-splash--page {
-        display: none;
-    }
-
-    .home-splash-mobile {
-        display: block;
-    } */
-
     .home-splash--page {
         padding-left: 0px;
     }
@@ -2478,7 +2481,7 @@ img.block-img-mobile{
         display: -webkit-inline-box;
     }
     .video-grey-man{
-        width: 900px;
+        max-width: 900px;
     }
     .video-grey-man-metamask-logo {
         left: 374px;
@@ -2565,6 +2568,26 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 980px) {
+    .video-grey-man-pic {
+        width: 100%;
+        height: 100%;
+    }
+
+    .video-grey-man {
+        width: 100%;
+    }
+
+    .video-grey-man-metamask-logo-wrapper {
+        
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 228px;
+        top: -376px;
+    }
+}
+
 @media screen and (max-width: 920px) {
     .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
         max-width: 800px !important;
@@ -2642,6 +2665,22 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 670px) {
+    .video-grey-man {
+        width: 90%;
+    }
+
+    .video-grey-man-desc {
+        width: 90%;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 190%;
+        width: 120px;
+        height: 120px;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .content-owners-mobile .owner-box .owner-img {
         width: 200px;
@@ -2662,6 +2701,10 @@ img.block-img-mobile{
 
     .nipsey-comming-soon, .nipsey-thank-you-page  {
         padding-bottom: 100px;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 150%;
     }
 
     .footer ul {
@@ -2706,12 +2749,17 @@ img.block-img-mobile{
     .nipsey-thank-you-page .block-splash .logo-author img:first-child {
         width: 250px;
     }
+
 }
 
 @media screen and (max-width: 500px) {
     .home-splash-mobile .img-teammate img {
         width: 300px;
         height: 300px;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 130%;
     }
 
     .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
@@ -2725,6 +2773,12 @@ img.block-img-mobile{
     .members-video-mobile .video-pic img {
         width: 300px;
         height: auto;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .video-grey-man-metamask-logo {
+        left: 110%;
     }
 }
 
@@ -2755,6 +2809,10 @@ img.block-img-mobile{
 @media screen and (max-width: 370px) {
     .block-splash .logo-author img:first-child {
         width: 290px;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 80%;
     }
 }
 
