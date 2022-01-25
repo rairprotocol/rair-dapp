@@ -22,14 +22,18 @@ const AboutPageNew = ({ primaryColor }) => {
     return (
         <div className="wrapper-about-page">
             <div className="home-about--page">
-                <MainBlock RairLogo={RairLogo} Metamask={Metamask} />
+                <MainBlock
+                    RairLogo={RairLogo}
+                    primaryColor={primaryColor}
+                    Metamask={Metamask}
+                />
                 <LeftTokenAbout primaryColor={primaryColor} />
                 <PlatformAbout />
-                <RairOffer />
+                <RairOffer primaryColor={primaryColor} />
                 <ExclusiveNfts />
                 <StreamsAbout Metamask={Metamask} primaryColor={primaryColor} />
                 <Tokenomics Metamask={Metamask} />
-                <RoadMap RairLogo={RairLogo} />
+                <RoadMap primaryColor={primaryColor} RairLogo={RairLogo} />
                 <CompareAbout />
                 <div className="about-page--team">
                     <TeamMeet primaryColor={primaryColor} arraySplash={"rair"} />

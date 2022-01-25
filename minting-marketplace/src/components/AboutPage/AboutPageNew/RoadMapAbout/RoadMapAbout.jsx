@@ -1,6 +1,6 @@
 import React from 'react'
 
-const RoadMap = () => {
+const RoadMap = ({ primaryColor }) => {
     return (
         <div className="about-roadmap">
             <div className="about-road-title">2022 Roadmap</div>
@@ -10,9 +10,15 @@ const RoadMap = () => {
                         <div className="map-progress">
                             <div className="line-purple"></div>
                             <div className="line-grey"></div>
-                            <div className="progress-box">Q1</div>
-                            <div className="progress-box">Q2</div>
-                            <div className="progress-box">Q3</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q1</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q2</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q3</div>
                         </div>
                         <div className="progress-title">
                             Curation Alpha
@@ -30,9 +36,15 @@ const RoadMap = () => {
                         <div className="map-progress">
                             <div className="line-private"></div>
                             <div className="line-grey"></div>
-                            <div className="progress-box">Q2</div>
-                            <div className="progress-box">Q3</div>
-                            <div className="progress-box">Q4</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q2</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q3</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q4</div>
                         </div>
                         <div className="progress-title">
                             Private Beta
@@ -50,9 +62,15 @@ const RoadMap = () => {
                         <div className="map-progress">
                             <div className="line-public"></div>
                             <div className="line-grey"></div>
-                            <div className="progress-box">Q3</div>
-                            <div className="progress-box">Q4</div>
-                            <div className="progress-box">Q5</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q3</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q4</div>
+                            <div style={{
+                                color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                            }} className="progress-box">Q5</div>
                         </div>
                         <div className="progress-title">
                             Public Release
@@ -73,9 +91,15 @@ const RoadMap = () => {
                             <div className="map-progress">
                                 <div className="line-purple"></div>
                                 <div className="line-grey"></div>
-                                <div className="progress-box">Q1</div>
-                                <div className="progress-box">Q2</div>
-                                <div className="progress-box">Q3</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q1</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q2</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q3</div>
                             </div>
                             <div className="progress-title">
                                 Curation Alpha
@@ -93,9 +117,15 @@ const RoadMap = () => {
                             <div className="map-progress">
                                 <div className="line-public"></div>
                                 <div className="line-grey"></div>
-                                <div className="progress-box">Q3</div>
-                                <div className="progress-box">Q4</div>
-                                <div className="progress-box">Q5</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q3</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q4</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q5</div>
                             </div>
                             <div className="progress-title">
                                 Public Release
@@ -120,9 +150,15 @@ const RoadMap = () => {
                             <div className="map-progress">
                                 <div className="line-private"></div>
                                 <div className="line-grey"></div>
-                                <div className="progress-box">Q2</div>
-                                <div className="progress-box">Q3</div>
-                                <div className="progress-box">Q4</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q2</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q3</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">Q4</div>
                             </div>
                             <div className="progress-title">
                                 Private Beta
