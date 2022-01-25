@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { withSentryRouting } from "@sentry/react";
 import { rFetch } from '../../utils/rFetch.js';
 import { useSelector } from 'react-redux';
-import { useParams, Router, Switch, Route, useHistory } from 'react-router-dom';
+import { useParams, Router, Switch, Route, useHistory, NavLink } from 'react-router-dom';
 import WorkflowContext from '../../contexts/CreatorWorkflowContext.js';
 import {web3Switch} from '../../utils/switchBlockchain.js';
 import { minterAbi, erc721Abi, diamondFactoryAbi } from '../../contracts'
@@ -44,7 +44,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: contractData.diamond ? ListOffersDiamond : ListOffers,
 				simple: true,
 				classic: true,
-				diamond: true
+				diamond: true,
+				shortName: 'Ranges'
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/locks',
@@ -52,7 +53,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: ListLocks,
 				simple: false,
 				classic: true,
-				diamond: false
+				diamond: false,
+				shortName: 'Locks'
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/customizeFees',
@@ -60,7 +62,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: CustomizeFees,
 				simple: false,
 				classic: true,
-				diamond: false
+				diamond: false,
+				shortName: 'Custom Fees'
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/minterMarketplace',
@@ -68,7 +71,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: DiamondMinterMarketplace,
 				simple: true,
 				classic: false,
-				diamond: true
+				diamond: true,
+				shortName: 'Offers'
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/batch',
@@ -76,7 +80,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: BatchMetadata,
 				simple: true,
 				classic: true,
-				diamond: true
+				diamond: true,
+				shortName: 'Batch Metadata'
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
@@ -84,7 +89,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: SingleMetadataEditor,
 				simple: true,
 				classic: true,
-				diamond: true
+				diamond: true,
+				shortName: 'Single Metadata'
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',
@@ -92,7 +98,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				component: MediaUpload,
 				simple: true,
 				classic: true,
-				diamond: true
+				diamond: true,
+				shortName: 'Media Files'
 			}
 		]
 		if (simpleMode) {
@@ -103,7 +110,6 @@ const WorkflowSteps = ({sentryHistory}) => {
 		} else {
 			filteredSteps = filteredSteps.filter(step => step.classic === true);
 		}
-		console.log('Step rerender');
 		setSteps(filteredSteps);
 	}, [contractData, address, collectionIndex, steps.length, simpleMode, blockchain])
 
@@ -256,12 +262,13 @@ const WorkflowSteps = ({sentryHistory}) => {
 						</div>}
 						<h4>{contractData?.title}</h4>
 						<small>{contractData?.product?.name}</small>
-						<div className='w-75 mx-auto px-auto text-center'>
+						<div className='w-75 mx-auto px-auto text-center mb-5'>
 							{steps.map((item, index) => {
-								return <div key={index} className='d-inline-block' style={{
+								return <NavLink to={currentStep < index ? window.location : item.populatedPath} key={index} className='d-inline-block' style={{
 									width: `${100 / steps.length * (index === 0 ? 0.09 : 1)}%`,
 									height: '3px',
 									position: 'relative',
+									textAlign: 'right',
 									backgroundColor: `var(--${currentStep >= index ? 'bubblegum' : `charcoal-80`})`
 								}}>
 									<div style={{
@@ -273,11 +280,15 @@ const WorkflowSteps = ({sentryHistory}) => {
 										height: '1.7rem',
 										width: '1.7rem',
 										margin: 'auto',
-										border: 'solid 1px var(--charcoal-60)'
+										border: 'solid 1px var(--charcoal-60)',
+										textAlign: 'center',
+										color: currentStep >= index ? undefined : 'gray'
 									}}>
-										{index + 1}
+										<div className='rair-abbr' itemName={item.shortName}>
+											{index + 1}
+										</div>
 									</div>
-								</div>
+								</NavLink>
 							})}
 						</div>
 						<div className='row mt-3 w-100'>
@@ -296,6 +307,9 @@ const WorkflowSteps = ({sentryHistory}) => {
 								</button>
 							</div>
 						</div>
+					<h5>
+						{steps?.at(currentStep)?.shortName}
+					</h5>
 					</div>
 				</div>
 			}}

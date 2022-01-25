@@ -39,6 +39,22 @@ body {
   font-family: 'Plus Jakarta Text'!important;
 }
 
+.rair-abbr {
+    position: relative;
+}
+
+.rair-abbr:hover::after {
+    position: absolute;
+    width: 15vw;
+    bottom: 100%;
+    display: block;
+    padding: 1em;
+    color: var(--rhyno);
+    background-color: var(--charcoal-80);
+    border-radius: 16px!important;
+    content: attr(itemName);
+}
+
 .rair-table thead {
   white-space: nowrap;
   table-layout: auto;
