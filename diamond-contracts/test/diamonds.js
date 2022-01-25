@@ -1411,7 +1411,6 @@ describe("Diamonds", function () {
 			it ("Should give information about each range by their offer index", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				let result = await mintingOffersFacet.getOfferInfo(0);
-				console.log(result);
 				await expect(result['mintOffer']['erc721Address']).to.equal(secondDeploymentAddress);
 				await expect(result['mintOffer']['nodeAddress']).to.equal(addr4.address);
 				await expect(result['mintOffer']['rangeIndex']).to.equal(0);
