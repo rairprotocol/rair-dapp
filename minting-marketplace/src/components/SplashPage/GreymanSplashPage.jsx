@@ -19,6 +19,7 @@ import { Timeline } from "./Timeline/Timeline";
 
 import { erc721Abi } from "../../contracts/index.js";
 import { rFetch } from "../../utils/rFetch.js";
+import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
@@ -53,9 +54,7 @@ const SplashPage = () => {
   const [active, setActive] = useState({ policy: false, use: false });
   const [modalIsOpen, setIsOpen] = useState(false);
   //   const history = useHistory();
-  const { minterInstance, contractCreator } = useSelector(
-    (store) => store.contractStore
-  );
+  const { minterInstance, contractCreator, currentUserAddress } = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -85,13 +84,6 @@ const SplashPage = () => {
     );
     if (success) {
       let instance = contractCreator(GraymanSplashPageTESTNET, erc721Abi);
-      let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
-      Swal.fire({
-        title: "Please wait...",
-        html: `Buying Grayman #${nextToken.toString()}`,
-        icon: "info",
-        showConfirmButton: false,
-      });
       let [greyworldOffer] = products[0].offers.filter(
         (item) => item.offerName === "greyworld"
       );
@@ -99,21 +91,24 @@ const SplashPage = () => {
         Swal.fire("Error", "An error has ocurred", "error");
         return;
       }
-      try {
-        await (
-          await minterInstance.buyToken(
-            products[0].offerPool.marketplaceCatalogIndex,
-            greyworldOffer.offerIndex,
-            nextToken,
-            {
-              value: greyworldOffer.price,
-            }
-          )
-        ).wait();
+      let nextToken = await instance.getNextSequentialIndex(0, greyworldOffer.range[0], greyworldOffer.range[1]);
+      Swal.fire({
+        title: "Please wait...",
+        html: `Buying Grayman #${nextToken.toString()}`,
+        icon: "info",
+        showConfirmButton: false,
+      });
+      if (await metamaskCall(
+        minterInstance.buyToken(
+          products[0].offerPool.marketplaceCatalogIndex,
+          greyworldOffer.offerIndex,
+          nextToken,
+          {
+            value: greyworldOffer.price,
+          }
+        )
+      )) {
         Swal.fire("Success", `Bought Grayman #${nextToken}!`, "success");
-      } catch (e) {
-        console.error(e);
-        Swal.fire("Error", e?.message, "error");
       }
     }
   };
@@ -241,7 +236,7 @@ const SplashPage = () => {
                       <div className="modal-btn-wrapper">
                         <button
                           onClick={buyGrayman}
-                          disabled={!Object.values(active).every((el) => el)}
+                          disabled={currentUserAddress === undefined || !Object.values(active).every((el) => el)}
                           className="modal-btn"
                         >
                           <img
@@ -250,7 +245,7 @@ const SplashPage = () => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          PURCHASE
+                          {currentUserAddress ? 'PURCHASE' : 'Connect your wallet!'}
                         </button>
                       </div>
                     </div>

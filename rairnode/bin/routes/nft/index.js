@@ -141,7 +141,7 @@ module.exports = context => {
                 const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
                   .assign({})
-                  .omit(defaultFields)
+                  .omit(_.concat(defaultFields, optionalFields))
                   .reduce((re, v, k) => {
                     re.push({ trait_type: k, value: v });
                     return re;
@@ -168,7 +168,7 @@ module.exports = context => {
                       external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                       image: record.image || '',
                       animation_url: record.animation_url || '',
-                      attributes: attributes
+                      attributes
                     }
                   });
 
