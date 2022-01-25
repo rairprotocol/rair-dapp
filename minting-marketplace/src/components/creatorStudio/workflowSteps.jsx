@@ -264,7 +264,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 						<small>{contractData?.product?.name}</small>
 						<div className='w-75 mx-auto px-auto text-center mb-5'>
 							{steps.map((item, index) => {
-								return <NavLink to={currentStep < index ? window.location : item.populatedPath} key={index} className='d-inline-block' style={{
+								return <NavLink to={item.populatedPath} key={index} className='d-inline-block' style={{
 									width: `${100 / steps.length * (index === 0 ? 0.09 : 1)}%`,
 									height: '3px',
 									position: 'relative',
