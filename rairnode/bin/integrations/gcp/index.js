@@ -56,7 +56,7 @@ module.exports = config => {
         );
 
         if (socketInstance) socketInstance.emit('uploadProgress', {
-          message: `added files to Google bucket`,
+          message: `Added files to Google bucket`,
           last: false,
           part: false
         });

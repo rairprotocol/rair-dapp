@@ -221,6 +221,10 @@ module.exports = context => {
 
     if (req.file) {
       try {
+        let storageName = {
+          'ipfs': 'IPFS',
+          'gcp': 'Google Cloud'
+        }[storage];
         socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
         log.info(`Processing: ${ req.file.originalname }`);
         log.info(`${ req.file.originalname } generating thumbnails`);
@@ -262,9 +266,9 @@ module.exports = context => {
 
         fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
 
-        log.info(`${ req.file.originalname } uploading to ipfsService`);
+        log.info(`${ req.file.originalname } uploading to ${storageName}`);
         socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } uploading to ipfsService`,
+          message: `${ req.file.originalname } uploading to ${storageName}`,
           last: false
         });
 
@@ -312,12 +316,12 @@ module.exports = context => {
           meta.description = description;
         }
 
-        log.info(`${ req.file.originalname } uploaded to ipfsService: ${ cid }`);
-        socketInstance.emit('uploadProgress', { message: `uploaded to ipfsService.`, last: false, done: 90 });
+        log.info(`${ req.file.originalname } uploaded to ${storageName}: ${ cid }`);
+        socketInstance.emit('uploadProgress', { message: `uploaded to ${storageName}.`, last: false, done: 90 });
 
         log.info(`${ req.file.originalname } storing to DB.`);
         socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } storing to db.`,
+          message: `${ req.file.originalname } storing to database.`,
           last: false
         });
 
@@ -329,13 +333,13 @@ module.exports = context => {
         });
 
         log.info(`${ req.file.originalname } stored to DB.`);
-        socketInstance.emit('uploadProgress', { message: 'Stored to DB.', last: false, done: 96 });
+        socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: ['gcp'].includes(storage) ? true : false, done: ['gcp'].includes(storage) ? 100 : 96 });
 
         context.hls = StartHLS();
 
-        log.info(`${ req.file.originalname } pinning to ipfsService.`);
+        log.info(`${ req.file.originalname } pinning to ${storageName}.`);
         socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } pinning to ipfsService.`,
+          message: `${ req.file.originalname } pinning to ${storageName}.`,
           last: false
         });
 
