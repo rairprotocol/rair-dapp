@@ -1298,6 +1298,11 @@ img.block-img-mobile{
 
 
 /* Media Pesponsive*/
+@media (min-width: 1100px) and (max-width: 2230px) {
+    .video-js.vjs-16-9 {
+        padding-top: 30.25%;
+    }
+}
 
 @media screen and (max-width: 1488px) {
     .wrapper-splash-page {
@@ -1313,11 +1318,6 @@ img.block-img-mobile{
 @media screen and (max-width: 1430px) {
     .block-videos {
         justify-content: center;
-    }
-}
-@media screen and (min-width: 2880px) {
-    .video-js.vjs-16-9 {
-        padding-top: 30.25% !important;
     }
 }
 
