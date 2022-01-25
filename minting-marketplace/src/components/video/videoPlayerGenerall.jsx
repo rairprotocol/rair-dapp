@@ -8,7 +8,7 @@ import setDocumentTitle from "../../utils/setTitle";
 const VideoPlayer = () => {
   // const params = useParams();
   // const history = useHistory();
-  const videoId = ""; //"QmT5suRLf5fq3ersqBmrcUHjqzj7J9y2kkq6fXfN6aLBUc";
+  const videoId = "QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8"; //"QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8";
   const mainManifest = "stream.m3u8";
   const { programmaticProvider } = useSelector((state) => state.contractStore);
   const [videoName] = useState(Math.round(Math.random() * 10000));
@@ -100,7 +100,7 @@ const VideoPlayer = () => {
           data-setup="{}"
         >
           <source
-            autostart="false"
+            // autostart="false"
             src={mediaAddress}
             type="application/x-mpegURL"
           />
