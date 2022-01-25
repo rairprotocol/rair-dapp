@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {useSelector} from 'react-redux';
 import colors from '../../../utils/offerLockColors.js'
+import { validateInteger } from '../../../utils/metamaskUtils.js'
 import InputField from '../../common/InputField.jsx'
 import {utils} from 'ethers';
 
@@ -63,7 +64,6 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 	}, [name])
 
 	const disabledClass = fixed ? '' : 'border-stimorol rounded-rair'
-
 	return <>
 	 <tr>
 		<th>
@@ -132,7 +132,11 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 		<th />
 		<th />
 		<th className='text-center pt-0'>
-			<small>{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}</small>
+			<small>
+				{
+					utils.formatEther(individualPrice === '' || !validateInteger(individualPrice) ? 0 : individualPrice).toString()
+				} {blockchainSymbol}
+			</small>
 		</th>
 		<th />
 	</tr>

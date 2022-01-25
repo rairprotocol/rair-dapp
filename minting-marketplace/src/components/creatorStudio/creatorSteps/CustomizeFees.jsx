@@ -78,7 +78,7 @@ const CustomizeFees = ({contractData, correctMinterInstance, setStepNumber, step
 	const [nodeFee, setNodeFee] = useState(0);
 	const [treasuryFee, setTreasuryFee] = useState(0);
 	const [minterDecimals, setMinterDecimals] = useState(0);
-	const [/*settingCustomSplits,*/ setSettingCustomSplits] = useState(false);
+	const [sendingData, setSendingData] = useState(false);
 
 	const getContractData = useCallback(async () => {
 		if (!correctMinterInstance) {
@@ -117,7 +117,7 @@ const CustomizeFees = ({contractData, correctMinterInstance, setStepNumber, step
 	}, [setStepNumber, stepNumber])
 
 	const setCustomFees = async e => {
-		setSettingCustomSplits(true);
+		setSendingData(true);
 		try {
 			Swal.fire({
 				title: 'Setting custom fees',
@@ -141,7 +141,7 @@ const CustomizeFees = ({contractData, correctMinterInstance, setStepNumber, step
 			console.error(e);
 			Swal.fire('Error', '', 'error');
 		}
-		setSettingCustomSplits(false)
+		setSendingData(false)
 	}
 	
 	let total = customPayments.reduce((prev, current) => {return prev + current.percentage}, 0);
@@ -181,7 +181,7 @@ const CustomizeFees = ({contractData, correctMinterInstance, setStepNumber, step
 				forwardFunctions={[{
 					label: customPayments.length ? 'Set custom fees' : 'Continue',
 					action: customPayments.length ? setCustomFees : gotoNextStep,
-					disabled: customPayments.length ? total !== 90 : false,
+					disabled: sendingData || (customPayments.length ? total !== 90 : false),
 				}]}
 			/>}
 	</div>

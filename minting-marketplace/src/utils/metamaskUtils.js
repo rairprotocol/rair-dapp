@@ -26,4 +26,11 @@ const metamaskCall = async (transaction) => {
 	return true;
 }
 
-export { metamaskCall };
+const validateInteger = (number) => {
+	let stringified = number.toString();
+	return ['e',',','.'].reduce((previous, current) => {
+		return previous && !stringified.includes(current);
+	}, true);
+}
+
+export { metamaskCall, validateInteger };

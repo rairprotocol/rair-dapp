@@ -8,6 +8,7 @@ import chainData from '../../../utils/blockchainData.js'
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
+import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
 const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
 	const [offerList, setOfferList] = useState([]);
@@ -105,22 +106,25 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.addOffer(
-				instance.address,
-				collectionIndex,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name),
-				process.env.REACT_APP_NODE_ADDRESS)
-			).wait();
-			Swal.fire({
-				title: 'Success!',
-				html: 'The offer has been created!',
-				icon: 'success',
-				showConfirmButton: false
-			});
-			gotoNextStep();
+			if (await metamaskCall(
+				minterInstance.addOffer(
+					instance.address,
+					collectionIndex,
+					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+					offerList.map((item) => item.ends),
+					offerList.map((item) => item.price),
+					offerList.map((item) => item.name),
+					process.env.REACT_APP_NODE_ADDRESS
+				)
+			)) {
+				Swal.fire({
+					title: 'Success!',
+					html: 'The offer has been created!',
+					icon: 'success',
+					showConfirmButton: true
+				});
+				gotoNextStep();
+			}
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
@@ -136,19 +140,23 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.appendOfferRangeBatch(
-				contractData.product.offers[0].offerPool,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name))
-			).wait();
-			Swal.fire({
-				title: 'Success!',
-				html: 'The offers have been appended!',
-				icon: 'success',
-				showConfirmButton: false
-			});
+			if (await metamaskCall(
+				minterInstance.appendOfferRangeBatch(
+					contractData.product.offers[0].offerPool,
+					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+					offerList.map((item) => item.ends),
+					offerList.map((item) => item.price),
+					offerList.map((item) => item.name)
+				)
+			)) {
+				Swal.fire({
+					title: 'Success!',
+					html: 'The offers have been appended!',
+					icon: 'success',
+					showConfirmButton: true
+				});
+				nextStep();
+			}
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
@@ -230,8 +238,20 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 							createOffers)
 						:
 						giveMinterRole),
+<<<<<<< HEAD
 					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Continue' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
 					disabled: hasMinterRole ? (offerList.length === 0 || offerList.at(-1).ends > Number(contractData.product.copies) - 1) : false
+=======
+					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
+					disabled: hasMinterRole ?
+						(offerList.length === 0 ||
+							offerList.reduce((previous, current) => {
+								return previous || !validateInteger(current.price) || current.price <= 0 
+							}, false) ||
+							offerList.at(-1).ends > Number(contractData.product.copies) - 1)
+							:
+						false
+>>>>>>> dev
 				}]}
 			/>}
 		</> : 'Fetching data...'}
