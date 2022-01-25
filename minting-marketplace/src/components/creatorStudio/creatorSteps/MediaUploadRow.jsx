@@ -12,6 +12,11 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 	const [thisSessionId, setThisSessionId] = useState("");
 	const [socketMessage, setSocketMessage] = useState();
 
+	const storageOptions = [
+		{label: 'Google Cloud', value: 'gcp'},
+		{label: 'IPFS', value: 'ipfs'},
+	]
+
 	useEffect(() => {
 		const sessionId = Math.random().toString(36).substr(2, 9);
 		setThisSessionId(sessionId);
@@ -70,6 +75,11 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 
 	const updateMediaOffer = (value) => {
 		array[index].offer = value;
+		rerender();
+	}
+
+	const updateStorage = (value) => {
+		array[index].storage = value;
 		rerender();
 	}
 
@@ -147,6 +157,19 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 				</div>
 			</div>
 			<div className='my-1'>
+				Storage
+				<div className='border-stimorol rounded-rair col-12'>
+					<InputSelect
+						disabled={uploadSuccess}
+						options={storageOptions}
+						getter={item.storage}
+						setter={updateStorage}
+						placeholder='Storage type'
+						{...selectCommonInfo}
+					/>
+				</div>
+			</div>
+			<div className='my-1'>
 				Description
 				<div className='border-stimorol rounded-rair col-12'>
 					<textarea
@@ -168,6 +191,7 @@ const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categ
 					//category, demo = 'false'
 					formData.append("product", item.productIndex);
 					formData.append("category", item.category);
+					formData.append("storage", item.storage);
 					formData.append("offer", JSON.stringify(
 						item.offer !== '-1' ? reversedOfferList.map(offerData => {
 							if (Number(offerData.value) < Number(item.offer)) {

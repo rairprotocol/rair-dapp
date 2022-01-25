@@ -58,7 +58,8 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 					description: '',
 					preview: URL.createObjectURL(item),
 					contractAddress: contractData._id,
-					productIndex: contractData.product.collectionIndexInContract
+					productIndex: contractData.product.collectionIndexInContract,
+					storage: 'null'
 				}
 			})
 		);

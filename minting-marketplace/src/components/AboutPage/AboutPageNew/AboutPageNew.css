@@ -1,6 +1,7 @@
 .wrapper-about-page {
-   /* display: flex;
-   justify-content: center; */
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .home-about--page {

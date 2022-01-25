@@ -48,8 +48,8 @@
 }
 
 .wrapper-splash-page.greyman-page {
-    background-image: none;
-    text-align: -webkit-center;
+    /* background-image: none; */
+    /* text-align: -webkit-center; */
 }
 
 .home-splash--page {
@@ -525,6 +525,11 @@ line-height: 30px;
     backdrop-filter: blur(8px);
     border-radius: 0px 0px 20px 22px;
 }
+
+.show-more-wrap i {
+    color: rgb(231, 130, 213);
+    margin-left: 10px;
+}
 .show-more-arrow{
     margin-left: 15px;
     display: inline-block;
@@ -593,6 +598,7 @@ line-height: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 .video-grey-man-title{
     font-style: normal;
@@ -613,6 +619,7 @@ line-height: 30px;
     height: 559px;
     overflow: hidden;
     border-radius: 16px;
+    position: relative;
 }
 .video-grey-man-metamask-logo{
     position: relative;
@@ -622,8 +629,11 @@ line-height: 30px;
 .video-grey-man-pic{
     width: 995px;
     height: 559px;
-    transform: scale(1.4);
+    transform: scale(1.0);
+    object-fit: cover;
 }
+
+
 .video-grey-man-desc-wrapper{
     padding-top: 35px;
 }
@@ -1334,17 +1344,17 @@ img.block-img-mobile{
         margin-right: 1rem !important;
     }
     .btn-buy-metamask{
-        margin-right: 4rem;
+        /* margin-right: 4rem; */
     }
     .text-gradient-grey{
         margin-top: 3rem !important;
         font-size: 40px !important;
     }
     .text-splash{
-        width: 22rem;
+        /* width: 22rem; */
     }
     .text-description{
-        width: 400px !important;
+        /* width: 400px !important; */
     }
     .home-splash--page .information-author {
         background-size: 350px auto;
@@ -1508,15 +1518,8 @@ img.block-img-mobile{
     }
 }
 
+
 @media screen and (max-width: 950px) {
-    /* .home-splash--page {
-        display: none;
-    }
-
-    .home-splash-mobile {
-        display: block;
-    } */
-
     .home-splash--page {
         padding-left: 0px;
     }
@@ -1631,10 +1634,10 @@ img.block-img-mobile{
         display: block;
     }
     .about-metadata {
-        width: 100% !important;
+        width: 100% ;
     }
     .about-metadata-wrapper {
-        width: 800px !important;
+        width: 800px;
     }
     .about-metadata-second-block-wrapper {
         margin-top: 5.2rem;
@@ -1654,7 +1657,7 @@ img.block-img-mobile{
 
 @media screen and (max-width: 850px) {
     .home-splash--page .information-author {
-        background-image: none;
+        /* background-image: none; */
     }
 
     .home-splash--page .information-author{
@@ -2483,6 +2486,18 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 180px;
+        padding: 0 20px;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 1000px;
+        height: 500px;
+    }
+} 
+
 @media screen and (max-width: 1100px) {
     .about-metadata-wrapper{
         width: 900px;
@@ -2492,7 +2507,7 @@ img.block-img-mobile{
         display: -webkit-inline-box;
     }
     .video-grey-man{
-        width: 900px;
+        max-width: 900px;
     }
     .video-grey-man-metamask-logo {
         left: 374px;
@@ -2505,22 +2520,31 @@ img.block-img-mobile{
         margin-right: 1rem !important;
     }
     .btn-buy-metamask{
-        margin-right: 4rem;
+        /* margin-right: 4rem; */
     }
     .text-gradient-grey{
         margin-top: 3rem !important;
         font-size: 40px !important;
     }
     .text-splash{
-        width: 22rem;
+        /* width: 22rem; */
     }
     .text-description{
-        width: 400px !important;
+        /* width: 400px !important; */
     }
     .home-splash--page .information-author {
         background-size: 350px auto;
         background-position: 95% 9rem;
         /* background-position: 95% 60px; */
+    }
+
+    .home-splash--page .information-author.nutcrackers {
+        background-position: 100%;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 900px;
+        height: 450px;
     }
 }
 
@@ -2579,11 +2603,68 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 980px) {
+    .video-grey-man-pic {
+        width: 100%;
+        height: 100%;
+    }
+
+    .video-grey-man {
+        width: 100%;
+    }
+
+    .video-grey-man-metamask-logo-wrapper {
+        
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 228px;
+        top: -376px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 90vw;
+        height: 40vh;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 280px;
+    }
+
+    .wrapper-splash-page .join-community .join-community .title-join h3{
+        text-align: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        margin-top: 30px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .join-pic img {
+        margin-right: 120px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        width: 90vw;
+    }
+}
+
 @media screen and (max-width: 920px) {
     .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
         max-width: 800px !important;
     }
 }
+
 
 @media screen and (max-width: 900px) {
 
@@ -2603,6 +2684,29 @@ img.block-img-mobile{
 
     .position-teammate .teammate-description {
         width: 90%;
+    }
+}
+
+@media screen and (max-width: 825px) {
+    .home-splash--page .information-author.nutcrackers .block-splash{
+        flex-direction: column;
+    }
+
+    .home-splash--page .information-author.nutcrackers .text-splash {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        margin-left: 0;
+        margin-bottom: 20px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask {
+        margin-top: 30px;
     }
 }
 
@@ -2639,6 +2743,9 @@ img.block-img-mobile{
     }
 }
 
+
+
+
 @media screen and (max-width:728px) {
     .nipsey-release .release-container-title {
         text-align: center;
@@ -2656,7 +2763,32 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 670px) {
+    .video-grey-man {
+        width: 90%;
+    }
+
+    .video-grey-man-desc {
+        width: 90%;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 190%;
+        width: 120px;
+        height: 120px;
+    }
+}
+
 @media screen and (max-width: 600px) {
+    .wrapper-splash-page.nutcrackers .powered-by-rair {
+        margin: 0px 0 300px 0;
+    }
+    
+    .wrapper-splash-page.nutcrackers .powered-by-rair img {
+        width: 300px;
+        height: auto;
+    }
+
     .content-owners-mobile .owner-box .owner-img {
         width: 200px;
     }
@@ -2678,12 +2810,31 @@ img.block-img-mobile{
         padding-bottom: 100px;
     }
 
+    .video-grey-man-metamask-logo {
+        left: 150%;
+    }
+
     .footer ul {
         flex-direction: column;
     }
     .footer ul li {
         margin-right: 0;
         margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .wrapper-splash-page.nutcrackers .crackers-text p, .wrapper-splash-page.nutcrackers .community-description p {
+        font-size: 18px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community .title-join h3, .wrapper-splash-page.nutcrackers .join-community .title-join h3 span {
+        font-size: 33px;
+        text-align: center;
+    }
+
+    .wrapper-splash-page.greyman-page .join-community .title-join h3, .wrapper-splash-page.greyman-page .join-community .title-join .text-gradient {
+        font-size: 30px;
     }
 }
 
@@ -2708,6 +2859,8 @@ img.block-img-mobile{
     margin-top: 20px;
 }
 
+
+
 @media screen and (max-width: 503px) {
     .nipsey-thank-you-page {
         margin-bottom: 208px;
@@ -2720,12 +2873,17 @@ img.block-img-mobile{
     .nipsey-thank-you-page .block-splash .logo-author img:first-child {
         width: 250px;
     }
+
 }
 
 @media screen and (max-width: 500px) {
     .home-splash-mobile .img-teammate img {
         width: 300px;
         height: 300px;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 130%;
     }
 
     .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
@@ -2739,6 +2897,41 @@ img.block-img-mobile{
     .members-video-mobile .video-pic img {
         width: 300px;
         height: auto;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .video-grey-man-metamask-logo {
+        left: 110%;
+    }
+
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 400px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .information-author.nutcrackers .text-splash .text-description div{
+        width: 90%;
+        text-align: center;
+    }
+
+    .information-author.nutcrackers .text-splash .text-description {
+        display: flex;
+        justify-content: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        width: 290px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask button {
+        width: 250px;
+        height: 54px;
     }
 }
 
@@ -2766,9 +2959,20 @@ img.block-img-mobile{
 }
 
 
+
 @media screen and (max-width: 370px) {
     .block-splash .logo-author img:first-child {
         width: 290px;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 80%;
+    }
+}
+
+@media screen and (max-width: 355px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 500px;
     }
 }
 
@@ -2863,147 +3067,4 @@ img.block-img-mobile{
 .wrapper-splash-page.nutcrackers .powered-by-rair img {
     width: 500px;
     height: auto;
-}
-
-@media screen and (max-width: 1300px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 180px;
-        padding: 0 20px;
-    }
-
-    .wrapper-splash-page.nutcrackers .block-photos-nuts {
-        width: 1000px;
-        height: 500px;
-    }
-} 
-
-@media screen and (max-width: 1100px) {
-    .home-splash--page .information-author.nutcrackers {
-        background-position: 100%;
-    }
-
-    .wrapper-splash-page.nutcrackers .block-photos-nuts {
-        width: 900px;
-        height: 450px;
-    }
-}
-
-@media screen and (max-width: 990px) {
-    .wrapper-splash-page.nutcrackers .block-photos-nuts {
-        width: 90vw;
-        height: 40vh;
-    }
-}
-
-@media screen and (max-width: 950px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 280px;
-    }
-
-    .wrapper-splash-page .join-community .join-community .title-join h3{
-        text-align: center;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description {
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description .community-text {
-        margin-top: 30px;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description .join-pic img {
-        margin-right: 120px;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description .community-text {
-        width: 90vw;
-    }
-}
-
-@media screen and (max-width: 825px) {
-    .home-splash--page .information-author.nutcrackers .block-splash{
-        flex-direction: column;
-    }
-
-    .home-splash--page .information-author.nutcrackers .text-splash {
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .information-author.nutcrackers .nut-block-img {
-        margin-left: 0;
-        margin-bottom: 20px;
-    }
-
-    .information-author.nutcrackers .btn-buy-metamask {
-        margin-top: 30px;
-    }
-}
-
-
-@media screen and (max-width: 600px) {
-    .wrapper-splash-page.nutcrackers .powered-by-rair {
-        margin: 0px 0 300px 0;
-    }
-    
-    .wrapper-splash-page.nutcrackers .powered-by-rair img {
-        width: 300px;
-        height: auto;
-    }
-} 
-
-@media screen and (max-width: 570px) {
-    .wrapper-splash-page.nutcrackers .crackers-text p, .wrapper-splash-page.nutcrackers .community-description p {
-        font-size: 18px;
-    }
-
-    .wrapper-splash-page.nutcrackers .join-community .title-join h3, .wrapper-splash-page.nutcrackers .join-community .title-join h3 span {
-        font-size: 33px;
-        text-align: center;
-    }
-}
-
-
-@media screen and (max-width: 450px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 400px;
-    }
-
-    .wrapper-splash-page.nutcrackers .join-community {
-        margin-top: 100px;
-    }
-}
-
-@media screen and (max-width: 420px) {
-    .information-author.nutcrackers .text-splash .text-description div{
-        width: 90%;
-        text-align: center;
-    }
-
-    .information-author.nutcrackers .text-splash .text-description {
-        display: flex;
-        justify-content: center;
-    }
-
-    .information-author.nutcrackers .nut-block-img {
-        width: 290px;
-    }
-
-    .information-author.nutcrackers .btn-buy-metamask button {
-        width: 250px;
-        height: 54px;
-    }
-}
-
-@media screen and (max-width: 355px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 500px;
-    }
 }

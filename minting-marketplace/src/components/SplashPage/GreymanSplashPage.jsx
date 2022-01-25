@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
+import "./GreymanSplashPageMobile.css";
+import "./../AboutPage/AboutPageNew/AboutPageNew.css"
 import Modal from "react-modal";
 
 /* importing images*/
@@ -18,6 +20,7 @@ import { Timeline } from "./Timeline/Timeline";
 
 import { erc721Abi } from "../../contracts/index.js";
 import { rFetch } from "../../utils/rFetch.js";
+import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
@@ -77,11 +80,8 @@ const SplashPage = ({ loginDone }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
-  const { minterInstance, contractCreator } = useSelector(
-    (store) => store.contractStore
-  );
-  
   //   const history = useHistory();
+  const { minterInstance, contractCreator, currentUserAddress } = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -116,13 +116,6 @@ const SplashPage = ({ loginDone }) => {
     );
     if (success) {
       let instance = contractCreator(GraymanSplashPageTESTNET, erc721Abi);
-      let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
-      Swal.fire({
-        title: "Please wait...",
-        html: `Buying Grayman #${nextToken.toString()}`,
-        icon: "info",
-        showConfirmButton: false,
-      });
       let [greyworldOffer] = products[0].offers.filter(
         (item) => item.offerName === "greyworld"
       );
@@ -130,21 +123,24 @@ const SplashPage = ({ loginDone }) => {
         Swal.fire("Error", "An error has ocurred", "error");
         return;
       }
-      try {
-        await (
-          await minterInstance.buyToken(
-            products[0].offerPool.marketplaceCatalogIndex,
-            greyworldOffer.offerIndex,
-            nextToken,
-            {
-              value: greyworldOffer.price,
-            }
-          )
-        ).wait();
+      let nextToken = await instance.getNextSequentialIndex(0, greyworldOffer.range[0], greyworldOffer.range[1]);
+      Swal.fire({
+        title: "Please wait...",
+        html: `Buying Grayman #${nextToken.toString()}`,
+        icon: "info",
+        showConfirmButton: false,
+      });
+      if (await metamaskCall(
+        minterInstance.buyToken(
+          products[0].offerPool.marketplaceCatalogIndex,
+          greyworldOffer.offerIndex,
+          nextToken,
+          {
+            value: greyworldOffer.price,
+          }
+        )
+      )) {
         Swal.fire("Success", `Bought Grayman #${nextToken}!`, "success");
-      } catch (e) {
-        console.error(e);
-        Swal.fire("Error", e?.message, "error");
       }
     }
   };
@@ -332,7 +328,7 @@ const SplashPage = ({ loginDone }) => {
                       <div className="modal-btn-wrapper">
                         <button
                           onClick={buyGrayman}
-                          disabled={!Object.values(active).every((el) => el)}
+                          disabled={currentUserAddress === undefined || !Object.values(active).every((el) => el)}
                           className="modal-btn"
                         >
                           <img
@@ -341,7 +337,7 @@ const SplashPage = ({ loginDone }) => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          PURCHASE
+                          {currentUserAddress ? 'PURCHASE' : 'Connect your wallet!'}
                         </button>
                       </div>
                     </div>
@@ -418,7 +414,7 @@ const SplashPage = ({ loginDone }) => {
                   style={{
                     fontWeight: "bolder",
                     fontSize: "18px",
-                    color: "#c1c1c1",
+                    color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
                   }}
                 >
                   MATIC blockchain
@@ -428,11 +424,11 @@ const SplashPage = ({ loginDone }) => {
                   style={{
                     fontWeight: "bolder",
                     fontSize: "18px",
-                    color: "#c1c1c1",
+                    color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
                   }}
                 >
                   {" "}
-                  a metadata
+                  a metadata {" "}
                 </span>
                 JSON file with properties
               </p>
@@ -463,14 +459,20 @@ const SplashPage = ({ loginDone }) => {
             <div className="property-wrapper">
               <div className="property-first-wrapper">
                 <div className="property-first">
-                  <div className="property">
+                  <div
+                    className="property"
+                    style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                  >
                     <span className="property-desc">Background Color</span>
                     <span className="property-name-color">Grey</span>
                     <span className="property-color">100%</span>
                   </div>
                 </div>
                 <div className="property-second">
-                  <div className="property second">
+                  <div
+                    className="property second"
+                    style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                  >
                     <span className="property-desc">Pant Color</span>
                     <span className="property-name-color">Grey</span>
                     <span className="property-color">100%</span>
@@ -488,7 +490,6 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </div>
-
         <div className="join-community">
           <div className="title-join">
             <h3>
@@ -499,18 +500,12 @@ const SplashPage = ({ loginDone }) => {
               {/* <span className="text-gradient">Community</span> rewards */}
             </h3>
           </div>
-          <MobileCarouselNfts>
-            <img className="join-pic-img" src={GreyMan} alt="community-img" />
-            <img className="join-pic-img" src={GreyMan} alt="community-img" />
-            <img className="join-pic-img" src={GreyMan} alt="community-img" />
-            <img className="join-pic-img" src={GreyMan} alt="community-img" />
-          </MobileCarouselNfts>
           <div className="main-greyman-pic-wrapper">
             <div className="main-greyman-pic">
               <div className="join-pic-main">
                 <div className="show-more-wrap">
-                  <span className="show-more">
-                    Open in Store <span className="show-more-arrow">→</span>{" "}
+                  <span className="show-more" style={{color: "#fff"}}>
+                    Open in Store <i class="fas fa-arrow-right"></i>{" "}
                   </span>
                 </div>
                 <img
@@ -550,6 +545,30 @@ const SplashPage = ({ loginDone }) => {
                 />
               </div>
             </div>
+          </div>
+          <div className="exclusive-nfts">
+            <MobileCarouselNfts>
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+            </MobileCarouselNfts>
           </div>
           {/* <div
             className="community-description"
@@ -596,7 +615,9 @@ const SplashPage = ({ loginDone }) => {
             {showVideoToLogginedUsers()}
           </div>
           <div className="video-grey-man-desc-wrapper">
-            <span className="video-grey-man-desc">
+            <span style={{
+              color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
+            }} className="video-grey-man-desc">
               NFT owners can learn more about the project by signing with
               metamask to unlock an encrypted stream{" "}
             </span>
@@ -610,7 +631,7 @@ const SplashPage = ({ loginDone }) => {
         </div>
         <Timeline />
         <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
-        <NotCommercial />
+        <NotCommercial primaryColor={primaryColor} />
       </div>
     </div>
   );
