@@ -28,8 +28,6 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 			return {
 				selected: true,
 				tokensToSell: 0,
-				customSplits: [],
-				visible: item.marketplaceOfferIndex ? item.marketplaceOfferIndex.mintOffer.visible : true,
 				...item
 			}
 		}))

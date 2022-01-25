@@ -18,17 +18,7 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 	const { collectionIndex } = useParams();
 
 	useEffect(() => {
-		setOfferList(contractData?.product?.offers ? contractData?.product?.offers.map(item => {
-			return {
-				name: item.offerName,
-				starts: item.range[0],
-				ends: item.range[1],
-				price: item.price,
-				allowedTokens: item.tokensAllowed,
-				lockedTokens: item.lockedTokens,
-				fixed: true
-			}
-		}) : [])
+		setOfferList(contractData?.product?.offers ? contractData?.product?.offers : []);
 	}, [contractData])
 
 	useEffect(() => {
@@ -142,6 +132,7 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 		{contractData ? <>
 			{offerList?.length !== 0 && <div className='row w-100 text-start px-0 mx-0'>
 					{offerList.map((item, index, array) => {
+						console.log(item);
 						return <DiamondOfferRow
 							array={array}
 							deleter={e => deleter(index)}

@@ -50,7 +50,7 @@ const DiamondOfferConfig = ({
 			percentage: treasuryFee,
 			editable: false
 		}]
-		.concat(array[index].marketplaceOfferIndex.mintOffer.fees
+		.concat(array[index].marketData.fees
 			.map(fee => ({
 				recipient: fee.recipient,
 				percentage: fee.percentage.toString(),
@@ -99,11 +99,11 @@ const DiamondOfferConfig = ({
 					<i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
 				</button>
 				{!simpleMode && <button disabled={!array[index].selected} onClick={() => {
-					array[index].visible = !array[index].visible;
+					array[index].marketData.visible = !array[index].marketData.visible;
 					setRerender(!rerender);
-				}} className={`btn btn-${array[index].visible ? 'royal-ice' : 'danger'} rounded-rair`}>
+				}} className={`btn btn-${array[index].marketData.visible ? 'royal-ice' : 'danger'} rounded-rair`}>
 					<abbr title={array[index].visible ? 'Public offer' : 'Hidden offer'}>
-						<i className={`fas fa-${array[index].visible ? 'eye' : 'eye-slash'}`} />
+						<i className={`fas fa-${array[index].marketData.visible ? 'eye' : 'eye-slash'}`} />
 					</abbr>
 				</button>}
 			</div>

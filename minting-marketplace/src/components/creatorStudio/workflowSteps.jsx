@@ -149,16 +149,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 			let rangesData = [];
 			for await (let rangeIndex of productData.rangeList) {
 				let rangeData = await instance.rangeInfo(rangeIndex);
-				let marketplaceOfferIndex = undefined;
-				if (diamondMarketplaceInstance) {
-					marketplaceOfferIndex = await diamondMarketplaceInstance.getOfferInfoForAddress(
-						instance.address,
-						rangeIndex
-					);
-				}
 				if (rangeData) {
 					rangesData.push({
-						marketplaceOfferIndex,
 						rangeIndex: Number(rangeIndex.toString()),
 						offerName: rangeData.data.rangeName,
 						range: [Number(rangeData.data.rangeStart.toString()), Number(rangeData.data.rangeEnd.toString())],
@@ -169,6 +161,21 @@ const WorkflowSteps = ({sentryHistory}) => {
 					})
 				}
 			};
+			let marketplaceOffers = [];
+			if (diamondMarketplaceInstance) {
+				let offersCount = await diamondMarketplaceInstance.getOffersCountForAddress(instance.address);
+				for (let i = 0; i < offersCount.toString(); i++) {
+					let marketData = await diamondMarketplaceInstance.getOfferInfoForAddress(
+						instance.address,
+						i
+					);
+					let [selectedOffer] = rangesData.filter(item => item.offerName === marketData.rangeData.rangeName);
+					selectedOffer.marketData = {
+						visible: marketData.mintOffer.visible,
+						fees: marketData.mintOffer.fees
+					}
+				}
+			}
 			setContractData({
 				title: await instance.name(),
 				contractAddress: address,
