@@ -36,7 +36,7 @@ const DiamondOfferConfig = ({
 	}]);
 
 	useEffect(() => {
-		if (!array[index].marketplaceOfferIndex) {
+		if (!array[index].marketData) {
 			return;
 		}
 		setCustomPayments([{
