@@ -257,6 +257,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 						(
 							offerList.length === 0 ||
 							offerList.at(-1).ends > Number(contractData.product.copies) - 1 ||
+							offerList.at(-1).starts > Number(contractData.product.copies) - 1 ||
 							offerList
 								.reduce((previous, current) => {
 								return previous || !validateInteger(current.price) || current.price <= 0 
