@@ -16,7 +16,7 @@ const addPin = async (CID, name, socketInstance) => {
 
     log.info(`Pinned to IPFS: ${ JSON.stringify(response.data) }`);
 
-    if (!_.isUndefined(socketInstance)) socketInstance.emit('uploadProgress', { message: 'Pined to IPFS.', last: true, done: 100 });
+    if (!_.isUndefined(socketInstance)) socketInstance.emit('uploadProgress', { message: 'Pinned to IPFS.', last: true, done: 100 });
   } catch (err) {
     log.error(`Pinning to IPFS: ${ err.message }`);
   }
