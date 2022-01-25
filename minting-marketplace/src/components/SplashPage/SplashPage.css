@@ -1,4 +1,13 @@
 /* Repeating properties*/
+.vjs-big-play-button{
+    top: 50% !important;
+    left: 48% !important;
+}
+.video-grey-man-video-title{
+    padding-bottom: 2rem;
+    padding-top: 2rem;
+    color: white !important;
+}
 
 .text-gradient {
     /* background: grey; */
@@ -1294,6 +1303,11 @@ img.block-img-mobile{
 @media screen and (max-width: 1430px) {
     .block-videos {
         justify-content: center;
+    }
+}
+@media screen and (min-width: 2880px) {
+    .video-js.vjs-16-9 {
+        padding-top: 30.25% !important;
     }
 }
 

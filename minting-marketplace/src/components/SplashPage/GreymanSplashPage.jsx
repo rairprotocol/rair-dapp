@@ -8,6 +8,7 @@ import Modal from "react-modal";
 /* importing images*/
 import Metamask from "../../images/metamask-fox.svg";
 import GreyMan from "./images/greyman1.png";
+import playImages from "./images/playImg.png";
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -21,6 +22,7 @@ import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
+import VideoPlayer from "../video/videoPlayerGenerall";
 
 const customStyles = {
   overlay: {
@@ -43,20 +45,50 @@ const customStyles = {
     borderRadius: "16px",
   },
 };
+const customStylesForVideo = {
+  overlay: {
+    zIndex: "5",
+  },
+  content: {
+    width: "90vw",
+    height: "70vh",
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    fontFamily: "Plus Jakarta Text",
+    borderRadius: "16px",
+    background: "#4e4d4d",
+  },
+};
 Modal.setAppElement("#root");
 
-const SplashPage = () => {
+const SplashPage = ({ loginDone }) => {
+  const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const [active, setActive] = useState({ policy: false, use: false });
   const [modalIsOpen, setIsOpen] = useState(false);
-  //   const history = useHistory();
+  const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
   const { minterInstance, contractCreator } = useSelector(
     (store) => store.contractStore
   );
+  
+  //   const history = useHistory();
 
   const openModal = useCallback(() => {
     setIsOpen(true);
+  }, []);
+
+  const openModalForVideo = useCallback(() => {
+    setVideoIsOpen(true);
   }, []);
 
   function afterOpenModal() {
@@ -65,6 +97,7 @@ const SplashPage = () => {
 
   function closeModal() {
     setIsOpen(false);
+    setVideoIsOpen(false);
     setActive((prev) => ({
       ...prev,
       policy: false,
@@ -116,6 +149,66 @@ const SplashPage = () => {
     }
   };
 
+  const openVideo = () => {
+    openModalForVideo()
+  };
+
+  const showVideoToLogginedUsers = () => {
+    if (loginDone) {
+      return (
+        <>
+          <img
+            className="video-grey-man-pic"
+            src={GreyMan}
+            alt="community-img"
+          />
+          <div className="video-grey-man-metamask-logo-wrapper">
+            <button
+              style={{ border: "none", background: "none" }}
+              className="video-grey-man-metamask-logo metamask-logo"
+              onClick={() => openVideo()}
+            >
+              <img src={playImages} alt="Play" />
+            </button>
+          </div>
+          <Modal
+            isOpen={modalVideoIsOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStylesForVideo}
+            contentLabel="Example Modal"
+          >
+            <h2
+              className="video-grey-man-video-title"
+              ref={(_subtitle) => (subtitle = _subtitle)}
+            >
+              Interview with artist Dadara.
+            </h2>
+            {/* <button onClick={closeModal}>close</button> */}
+            <VideoPlayer />
+          </Modal>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <img
+            className="video-grey-man-pic"
+            src={GreyMan}
+            alt="community-img"
+          />
+          <div className="video-grey-man-metamask-logo-wrapper">
+            <img
+              className="video-grey-man-metamask-logo metamask-logo"
+              src={Metamask}
+              alt="metamask-logo"
+            />
+          </div>
+        </>
+      );
+    }
+  };
+
   let subtitle;
 
   return (
@@ -147,7 +240,7 @@ const SplashPage = () => {
                 </p>
               </div>
               <div className="btn-buy-metamask">
-                <button onClick={openModal}>
+                <button onClick={() => openModal()}>
                   <img
                     className="metamask-logo"
                     src={Metamask}
@@ -407,26 +500,10 @@ const SplashPage = () => {
             </h3>
           </div>
           <MobileCarouselNfts>
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <img
-              className="join-pic-img"
-              src={GreyMan}
-              alt="community-img"
-            />
+            <img className="join-pic-img" src={GreyMan} alt="community-img" />
+            <img className="join-pic-img" src={GreyMan} alt="community-img" />
+            <img className="join-pic-img" src={GreyMan} alt="community-img" />
+            <img className="join-pic-img" src={GreyMan} alt="community-img" />
           </MobileCarouselNfts>
           <div className="main-greyman-pic-wrapper">
             <div className="main-greyman-pic">
@@ -516,18 +593,7 @@ const SplashPage = () => {
             For Greymen Only
           </p>
           <div className="video-grey-man">
-            <img
-              className="video-grey-man-pic"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <div className="video-grey-man-metamask-logo-wrapper">
-              <img
-                className="video-grey-man-metamask-logo metamask-logo"
-                src={Metamask}
-                alt="metamask-logo"
-              />
-            </div>
+            {showVideoToLogginedUsers()}
           </div>
           <div className="video-grey-man-desc-wrapper">
             <span className="video-grey-man-desc">
