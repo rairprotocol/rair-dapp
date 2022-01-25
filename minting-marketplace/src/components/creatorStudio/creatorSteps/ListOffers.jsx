@@ -8,8 +8,9 @@ import chainData from '../../../utils/blockchainData.js'
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
+import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
-const ListOffers = ({contractData, setStepNumber, steps}) => {
+const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 	const stepNumber = 1;
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
@@ -107,22 +108,25 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.addOffer(
-				instance.address,
-				collectionIndex,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name),
-				process.env.REACT_APP_NODE_ADDRESS)
-			).wait();
-			Swal.fire({
-				title: 'Success!',
-				html: 'The offer has been created!',
-				icon: 'success',
-				showConfirmButton: false
-			});
-			nextStep();
+			if (await metamaskCall(
+				minterInstance.addOffer(
+					instance.address,
+					collectionIndex,
+					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+					offerList.map((item) => item.ends),
+					offerList.map((item) => item.price),
+					offerList.map((item) => item.name),
+					process.env.REACT_APP_NODE_ADDRESS
+				)
+			)) {
+				Swal.fire({
+					title: 'Success!',
+					html: 'The offer has been created!',
+					icon: 'success',
+					showConfirmButton: true
+				});
+				gotoNextStep();
+			}
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
@@ -138,28 +142,28 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 				icon: 'info',
 				showConfirmButton: false
 			});
-			await (await minterInstance.appendOfferRangeBatch(
-				contractData.product.offers[0].offerPool,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.name))
-			).wait();
-			Swal.fire({
-				title: 'Success!',
-				html: 'The offers have been appended!',
-				icon: 'success',
-				showConfirmButton: false
-			});
+			if (await metamaskCall(
+				minterInstance.appendOfferRangeBatch(
+					contractData.product.offers[0].offerPool,
+					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+					offerList.map((item) => item.ends),
+					offerList.map((item) => item.price),
+					offerList.map((item) => item.name)
+				)
+			)) {
+				Swal.fire({
+					title: 'Success!',
+					html: 'The offers have been appended!',
+					icon: 'success',
+					showConfirmButton: true
+				});
+				gotoNextStep();
+			}
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
 			return;
 		}
-	}
-
-	const nextStep = () => {
-		history.push(steps[stepNumber].populatedPath);
 	}
 
 	const switchBlockchain = async (chainId) => {
@@ -241,7 +245,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 					(hasMinterRole === true ? 
 						(offerList[0]?.fixed ?
 							(offerList.filter(item => item.fixed !== true).length === 0 ? 
-								nextStep
+								gotoNextStep
 								:
 								appendOffers)
 							:
@@ -253,7 +257,12 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 						(
 							offerList.length === 0 ||
 							offerList.at(-1).ends > Number(contractData.product.copies) - 1 ||
-							offerList.filter(item => item.fixed !== true)
+							offerList
+								.reduce((previous, current) => {
+								return previous || !validateInteger(current.price) || current.price <= 0 
+							}, false) || 
+							offerList
+								.filter(item => item.fixed !== true)
 								.reduce((previous, current) => {
 									return previous || current.name === ''
 								}, false)

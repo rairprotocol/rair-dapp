@@ -84,7 +84,7 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 	const [nodeFee, setNodeFee] = useState(0);
 	const [treasuryFee, setTreasuryFee] = useState(0);
 	const [minterDecimals, setMinterDecimals] = useState(0);
-	const [/*settingCustomSplits,*/ setSettingCustomSplits] = useState(false);
+	const [sendingData, setSendingData] = useState(false);
 
 	const getContractData = useCallback(async () => {
 		if (!correctMinterInstance) {
@@ -123,7 +123,7 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 	}, [setStepNumber])
 
 	const setCustomFees = async e => {
-		setSettingCustomSplits(true);
+		setSendingData(true);
 		try {
 			Swal.fire({
 				title: 'Setting custom fees',
@@ -147,7 +147,7 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 			console.error(e);
 			Swal.fire('Error', '', 'error');
 		}
-		setSettingCustomSplits(false)
+		setSendingData(false)
 	}
 	
 	const nextStep = () => {
@@ -193,7 +193,7 @@ const CustomizeFees = ({contractData,/*switchBlockchain*/ correctMinterInstance,
 				forwardFunctions={[{
 					label: customPayments.length ? 'Set custom fees' : 'Skip',
 					action: customPayments.length ? setCustomFees : nextStep,
-					disabled: customPayments.length ? total !== 90 : false,
+					disabled: sendingData || (customPayments.length ? total !== 90 : false),
 				}]}
 			/>}
 	</div>
