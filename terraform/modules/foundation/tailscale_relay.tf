@@ -12,13 +12,14 @@ data "google_compute_image" "tailscale_relay" {
 data "template_file" "tailscale_relay_starup_script" {
   template = file("${path.module}/tailscale_relay_startup_script.sh")
   vars = {
-    tags = "private-subnet-relay"
-    advertised_routes = ""
-    tailscale_auth_key_secret_name = google_secret_manager_secret.tailscale_auth_key.name
+    tags = "tag:private-subnet-relay-${var.env_name}"
+    advertised_routes = join(",", [
+      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
+    ])
+    # If this works, figure out how to reference of use a local
+    tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
   }
 }
-# add this range to the advertised subnets in relay
-# kubernetes_control_plane_range
 
 resource "google_compute_instance_template" "tailsacle_relay" {
   name_prefix = "${local.tailscale_relay_resource_namespace}-"
@@ -38,6 +39,8 @@ resource "google_compute_instance_template" "tailsacle_relay" {
     network = google_compute_network.primary.id
     subnetwork = google_compute_subnetwork.private.id
     stack_type = "IPV4_ONLY"
+    access_config {
+    }
   }
 
   service_account {
@@ -71,10 +74,14 @@ resource "google_compute_instance_group_manager" "tailscale_relay" {
   target_size  = 1
 }
 
+locals {
+  tailscale_relay_secret_id = "tailscale-auth-key"
+}
+
 # Used to store the tailscale auth key secret
 resource "google_secret_manager_secret" "tailscale_auth_key" {
   depends_on = [google_project_service.secret_manager]
-  secret_id = "tailscale-auth-key"
+  secret_id = local.tailscale_relay_secret_id
 
   replication {
     automatic = true
@@ -83,8 +90,6 @@ resource "google_secret_manager_secret" "tailscale_auth_key" {
 
 ################################################
 # IAM for tailscale relay machine
-# TODO: add the user for relay node here
-# it will need to access this secret
 data "google_iam_policy" "tailscale_secret_accessor" {
   binding {
     role = "roles/secretmanager.secretAccessor"
@@ -100,3 +105,26 @@ resource "google_secret_manager_secret_iam_policy" "tailscale_secret_accessor" {
   secret_id = google_secret_manager_secret.tailscale_auth_key.secret_id
   policy_data = data.google_iam_policy.tailscale_secret_accessor.policy_data
 }
+
+# resource "google_compute_firewall" "tailscale_egress" {
+#   name        = "tailscale-ingress-deny"
+#   network = google_compute_network.primary.id
+#   description = "Deny all ingress Tailsclae traffic"
+
+#   deny {
+#     protocol  = "tcp"
+#   }
+
+#   direction = "INGRESS"
+  
+#   # source_ranges = [
+#   #   module.vpc_cidr_ranges.network_cidr_blocks.private
+#   # ]
+
+#   # source_service_accounts = [
+#   #   google_service_account.tailscale_relay.id
+#   # ]
+
+#   # source_tags = ["foo"]
+#   # target_tags = ["web"]
+# }
