@@ -8,6 +8,7 @@ locals {
 resource "google_container_cluster" "primary" {
   depends_on = [
     google_project_service.container,
+    google_project_service.cloud_resource_manager,
     google_compute_route.default_public_route
   ]
 
