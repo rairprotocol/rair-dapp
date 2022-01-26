@@ -10,6 +10,7 @@ import colors from '../../../utils/offerLockColors.js'
 import {web3Switch} from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import {utils} from 'ethers';
+import { validateInteger } from '../../../utils/metamaskUtils';
 
 const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerender, maxCopies, lockedNumber, blockchainSymbol}) => {
 
@@ -71,7 +72,7 @@ const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerend
 		<th className='p-1'>
 			<InputField
 				disabled={true}
-				getter={`${utils.formatEther(price === '' ? 0 : price).toString()} ${blockchainSymbol}`}
+				getter={`${utils.formatEther(price === '' || !validateInteger(price) ? 0 : price).toString()} ${blockchainSymbol}`}
 				customClass='form-control rounded-rair'
 				customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 			/>

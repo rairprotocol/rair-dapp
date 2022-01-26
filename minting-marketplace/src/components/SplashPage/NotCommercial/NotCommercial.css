@@ -1,5 +1,5 @@
 .container-commercial {
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
     z-index: 20;
     background: #626262;

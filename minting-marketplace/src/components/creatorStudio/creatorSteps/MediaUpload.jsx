@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { rFetch } from '../../../utils/rFetch.js';
 import { useSelector } from 'react-redux';
 // import { useParams, useHistory, NavLink } from 'react-router-dom';
-// import { web3Switch } from '../../../utils/switchBlockchain.js';
+import { validateInteger } from '../../../utils/metamaskUtils.js';
 // import { rFetch } from '../../../utils/rFetch.js';
 import { utils } from 'ethers';
 // import InputSelect from '../../common/InputSelect.jsx';
@@ -40,7 +40,7 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 
 		setOfferList(contractData?.product?.offers ? unlocked.concat(contractData?.product?.offers.map(item => {
 			return {
-				label: `${item.offerName} (${item.range[1] - item.range[0] + 1} tokens for ${utils.formatEther(item.price).toString()} ${chainData[contractData.blockchain].symbol} each)`,
+				label: `${item.offerName} (${item.range[1] - item.range[0] + 1} tokens for ${utils.formatEther(validateInteger(item.price) ? item.price : 0).toString()} ${chainData[contractData.blockchain].symbol} each)`,
 				value: item.offerIndex
 			}
 		})) : [])
@@ -58,7 +58,8 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 					description: '',
 					preview: URL.createObjectURL(item),
 					contractAddress: contractData._id,
-					productIndex: contractData.product.collectionIndexInContract
+					productIndex: contractData.product.collectionIndexInContract,
+					storage: 'null'
 				}
 			})
 		);
