@@ -12,7 +12,9 @@ data "google_compute_image" "tailscale_relay" {
 data "template_file" "tailscale_relay_starup_script" {
   template = file("${path.module}/tailscale_relay_startup_script.sh")
   vars = {
-    test = "Vars are passing from template file successfully"
+    tags = "private-subnet-relay"
+    advertised_routes = ""
+    tailscale_auth_key_secret_name = google_secret_manager_secret.tailscale_auth_key.name
   }
 }
 
@@ -51,4 +53,14 @@ resource "google_compute_instance_group_manager" "tailscale_relay" {
   }
 
   target_size  = 1
+}
+
+# Used to store the tailscale auth key secret
+resource "google_secret_manager_secret" "tailscale_auth_key" {
+  depends_on = [google_project_service.secret_manager]
+  secret_id = "tailscale-auth-key"
+
+  replication {
+    automatic = true
+  }
 }
