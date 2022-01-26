@@ -136,7 +136,7 @@ const ContractDetails = () => {
 								title: 'Success!',
 								html: 'Collection created',
 								icon: 'success',
-								showConfirmButton: false
+								showConfirmButton: true
 							});
 							setCollectionName('');
 							setCollectionLength(0);

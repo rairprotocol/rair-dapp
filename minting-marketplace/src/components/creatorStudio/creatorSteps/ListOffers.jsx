@@ -240,13 +240,20 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 						giveMinterRole),
 					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Continue' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
 					disabled: hasMinterRole ?
-						(offerList.length === 0 ||
-							offerList.reduce((previous, current) => {
+						(
+							offerList.length === 0 ||
+							offerList.at(-1).ends > Number(contractData.product.copies) - 1 ||
+							offerList.at(-1).starts > Number(contractData.product.copies) - 1 ||
+							offerList
+								.reduce((previous, current) => {
 								return previous || !validateInteger(current.price) || current.price <= 0 
-							}, false) ||
-							offerList.at(-1).ends > Number(contractData.product.copies) - 1)
-							:
-						false
+							}, false) || 
+							offerList
+								.filter(item => item.fixed !== true)
+								.reduce((previous, current) => {
+									return previous || current.name === ''
+								}, false)
+						) : false
 				}]}
 			/>}
 		</> : 'Fetching data...'}
