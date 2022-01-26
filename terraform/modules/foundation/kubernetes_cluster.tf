@@ -7,7 +7,7 @@ locals {
 # https://www.terraform.io/docs/providers/google/r/container_cluster.html
 resource "google_container_cluster" "primary" {
   depends_on = [
-    google_project_services.container,
+    google_project_service.container,
     google_project_service.cloud_resource_manager,
     google_compute_route.default_public_route
   ]
