@@ -13,10 +13,9 @@ const VideoPlayer = () => {
   const { programmaticProvider } = useSelector((state) => state.contractStore);
   const [videoName] = useState(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState(
-    `https://rair.mypinata.cloud/ipfs/${videoId}`
+    `https://storage.googleapis.com/rair-videos/${videoId}`
   );
   // const [mediaAddress, setMediaAddress] = useState("https://rair.mypinata.cloud/ipfs/QmT5suRLf5fq3ersqBmrcUHjqzj7J9y2kkq6fXfN6aLBUc");
-
   // const btnGoBack = () => {
   // 	history.goBack();
   // }
