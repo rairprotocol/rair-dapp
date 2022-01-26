@@ -4,10 +4,11 @@ const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID
 
 // Left are names that can be modified, right are the names of the endpoints on Infura
 const endpoints = {
-	'mumbai': 'polygon-mumbai',
-	'polygon': 'polygon-mainnet',
-	'ethereum': 'mainnet',
-	'goerli': 'goerli'
+	'0x13881': 'polygon-mumbai',
+	'0x89': 'polygon-mainnet',
+	'0x61': 'binance-testnet',
+	'0x1': 'mainnet',
+	'0x5': 'goerli'
 }
 
 /**
