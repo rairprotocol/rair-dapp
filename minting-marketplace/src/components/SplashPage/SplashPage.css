@@ -45,6 +45,10 @@
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
     background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .wrapper-splash-page.greyman-page {
@@ -1036,7 +1040,7 @@ line-height: 30px;
 }
 
 
-.meet-team .box-teammate .teammate-title-socials span a {
+.meet-team .box-teammate .position-teammate  span a {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1046,15 +1050,15 @@ line-height: 30px;
     transition: .2s all ease;
 }
 
-.meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
+.meet-team .box-teammate .position-teammate span a.arrrow-right:hover {
     margin-left: 10px;
 }
 
-.meet-team .box-teammate .teammate-title-socials span a:hover {
+.meet-team .box-teammate .position-teammate span a:hover {
     color:#d634b8;
 }
 
-.meet-team .box-teammate .teammate-title-socials .box-socials {
+.meet-team .box-teammate .position-teammate .box-socials {
     margin-left: 20px;
 }
 
