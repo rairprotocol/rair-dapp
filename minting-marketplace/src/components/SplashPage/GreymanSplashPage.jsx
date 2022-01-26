@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
@@ -26,6 +26,7 @@ import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import VideoPlayer from "../video/videoPlayerGenerall";
+import setDocumentTitle from './../../utils/setTitle';
 
 const customStyles = {
   overlay: {
@@ -206,6 +207,10 @@ const SplashPage = ({ loginDone }) => {
   };
 
   let subtitle;
+
+  useEffect(() => {
+    setDocumentTitle(`Cryptogreyman`)
+  }, []);
 
   return (
     <div className="wrapper-splash-page greyman-page">

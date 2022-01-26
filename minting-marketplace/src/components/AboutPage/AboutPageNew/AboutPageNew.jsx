@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './AboutPageNew.css';
 
-// imports images
+// import images
 import RairLogo from '../assets/rairLogo_blue.png';
 import Metamask from '../assets/metamask_logo.png';
 
-// imports component 
+//import utils
+import setDocumentTitle from './../../../utils/setTitle';
+
+// import component
 import MainBlock from './MainBlock/MainBlock';
 import LeftTokenAbout from './LeftTokenAbout/LeftTokenAbout';
 import PlatformAbout from './PlatformAbout/PlatformAbout';
@@ -18,6 +21,9 @@ import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
 
 const AboutPageNew = ({ primaryColor }) => {
+    useEffect(() => {
+        setDocumentTitle(`About Page`)
+    }, []);
 
     return (
         <div className="wrapper-about-page">
