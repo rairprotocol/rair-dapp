@@ -10,7 +10,7 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
-const ListOffers = ({contractData, setStepNumber, steps}) => {
+const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 	const stepNumber = 1;
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
@@ -125,7 +125,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 					icon: 'success',
 					showConfirmButton: true
 				});
-				nextStep();
+				gotoNextStep();
 			}
 		} catch (err) {
 			console.error(err)
@@ -157,17 +157,13 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 					icon: 'success',
 					showConfirmButton: true
 				});
-				nextStep();
+				gotoNextStep();
 			}
 		} catch (err) {
 			console.error(err)
 			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
 			return;
 		}
-	}
-
-	const nextStep = () => {
-		history.push(steps[stepNumber].populatedPath);
 	}
 
 	const switchBlockchain = async (chainId) => {
@@ -249,7 +245,7 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 					(hasMinterRole === true ? 
 						(offerList[0]?.fixed ?
 							(offerList.filter(item => item.fixed !== true).length === 0 ? 
-								nextStep
+								gotoNextStep
 								:
 								appendOffers)
 							:
@@ -258,13 +254,20 @@ const ListOffers = ({contractData, setStepNumber, steps}) => {
 						giveMinterRole),
 					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
 					disabled: hasMinterRole ?
-						(offerList.length === 0 ||
-							offerList.reduce((previous, current) => {
+						(
+							offerList.length === 0 ||
+							offerList.at(-1).ends > Number(contractData.product.copies) - 1 ||
+							offerList.at(-1).starts > Number(contractData.product.copies) - 1 ||
+							offerList
+								.reduce((previous, current) => {
 								return previous || !validateInteger(current.price) || current.price <= 0 
-							}, false) ||
-							offerList.at(-1).ends > Number(contractData.product.copies) - 1)
-							:
-						false
+							}, false) || 
+							offerList
+								.filter(item => item.fixed !== true)
+								.reduce((previous, current) => {
+									return previous || current.name === ''
+								}, false)
+						) : false
 				}]}
 			/>}
 		</> : 'Fetching data...'}
