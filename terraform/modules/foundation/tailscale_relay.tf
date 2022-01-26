@@ -16,8 +16,8 @@ data "template_file" "tailscale_relay_starup_script" {
     advertised_routes = join(",", [
       module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
     ])
-    # If this works, figure out how to reference of use a local
     tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
+    hostname = "tailscale-relay-${var.env_name}"
   }
 }
 
@@ -37,7 +37,7 @@ resource "google_compute_instance_template" "tailsacle_relay" {
 
   network_interface {
     network = google_compute_network.primary.id
-    subnetwork = google_compute_subnetwork.private.id
+    subnetwork = google_compute_subnetwork.public.id
     stack_type = "IPV4_ONLY"
     access_config {
     }
@@ -128,3 +128,22 @@ resource "google_secret_manager_secret_iam_policy" "tailscale_secret_accessor" {
 #   # source_tags = ["foo"]
 #   # target_tags = ["web"]
 # }
+
+resource "google_compute_router" "public_router" {
+  name    = "public-router"
+  region  = var.region
+  network = google_compute_network.primary.id
+}
+
+resource "google_compute_router_nat" "nat" {
+  name                               = "public-router-nat"
+  router                             = google_compute_router.public_router.name
+  region                             = google_compute_router.public_router.region
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+
+  subnetwork {
+    name = google_compute_subnetwork.public.name
+    source_ip_ranges_to_nat = ["PRIMARY_IP_RANGE"]
+  }
+}

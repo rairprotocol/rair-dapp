@@ -12,11 +12,10 @@ curl -fsSL https://pkgs.tailscale.com/stable/debian/stretch.list | sudo tee /etc
 apt-get -y update
 apt-get -y install tailscale
 
-TAILSCALE_AUTH_SECRET_NAME=${tailscale_auth_key_secret_name}
+TAILSCALE_AUTH_KEY=$(gcloud secrets versions access latest --secret=${tailscale_auth_key_secret_name})
 
-TAILSCALE_AUTH_KEY=$(gcloud secrets versions access latest --secret=$TAILSCALE_AUTH_SECRET_NAME)
-
-sudo tailscale up \
+tailscale up \
+  --hostname=${hostname} \
   --advertise-tags=${tags} \
   --advertise-routes=${advertised_routes} \
   --authkey=$TAILSCALE_AUTH_KEY
