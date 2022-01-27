@@ -1,13 +1,16 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
+import "./GreymanSplashPageMobile.css";
+import "./../AboutPage/AboutPageNew/AboutPageNew.css"
 import Modal from "react-modal";
 
 /* importing images*/
 import Metamask from "../../images/metamask-fox.svg";
 import GreyMan from "./images/greyman1.png";
+import playImages from "./images/playImg.png";
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -21,6 +24,9 @@ import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
+import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
+import VideoPlayer from "../video/videoPlayerGenerall";
+import setDocumentTitle from './../../utils/setTitle';
 
 const customStyles = {
   overlay: {
@@ -43,18 +49,47 @@ const customStyles = {
     borderRadius: "16px",
   },
 };
+const customStylesForVideo = {
+  overlay: {
+    zIndex: "5",
+  },
+  content: {
+    width: "90vw",
+    height: "70vh",
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    fontFamily: "Plus Jakarta Text",
+    borderRadius: "16px",
+    background: "#4e4d4d",
+  },
+};
 Modal.setAppElement("#root");
 
-const SplashPage = () => {
+const SplashPage = ({ loginDone }) => {
+  const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const [active, setActive] = useState({ policy: false, use: false });
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
   //   const history = useHistory();
   const { minterInstance, contractCreator, currentUserAddress } = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
+  }, []);
+
+  const openModalForVideo = useCallback(() => {
+    setVideoIsOpen(true);
   }, []);
 
   function afterOpenModal() {
@@ -63,6 +98,7 @@ const SplashPage = () => {
 
   function closeModal() {
     setIsOpen(false);
+    setVideoIsOpen(false);
     setActive((prev) => ({
       ...prev,
       policy: false,
@@ -110,7 +146,71 @@ const SplashPage = () => {
     }
   };
 
+  const openVideo = () => {
+    openModalForVideo()
+  };
+
+  const showVideoToLogginedUsers = () => {
+    if (loginDone) {
+      return (
+        <>
+          <img
+            className="video-grey-man-pic"
+            src={GreyMan}
+            alt="community-img"
+          />
+          <div className="video-grey-man-metamask-logo-wrapper">
+            <button
+              style={{ border: "none", background: "none" }}
+              className="video-grey-man-metamask-logo metamask-logo"
+              onClick={() => openVideo()}
+            >
+              <img src={playImages} alt="Play" />
+            </button>
+          </div>
+          <Modal
+            isOpen={modalVideoIsOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStylesForVideo}
+            contentLabel="Example Modal"
+          >
+            <h2
+              className="video-grey-man-video-title"
+              ref={(_subtitle) => (subtitle = _subtitle)}
+            >
+              Interview with artist Dadara.
+            </h2>
+            {/* <button onClick={closeModal}>close</button> */}
+            <VideoPlayer />
+          </Modal>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <img
+            className="video-grey-man-pic"
+            src={GreyMan}
+            alt="community-img"
+          />
+          <div className="video-grey-man-metamask-logo-wrapper">
+            <img
+              className="video-grey-man-metamask-logo metamask-logo"
+              src={Metamask}
+              alt="metamask-logo"
+            />
+          </div>
+        </>
+      );
+    }
+  };
+
   let subtitle;
+
+  useEffect(() => {
+    setDocumentTitle(`Cryptogreyman`)
+  }, []);
 
   return (
     <div className="wrapper-splash-page greyman-page">
@@ -141,7 +241,7 @@ const SplashPage = () => {
                 </p>
               </div>
               <div className="btn-buy-metamask">
-                <button onClick={openModal}>
+                <button onClick={() => openModal()}>
                   <img
                     className="metamask-logo"
                     src={Metamask}
@@ -319,7 +419,7 @@ const SplashPage = () => {
                   style={{
                     fontWeight: "bolder",
                     fontSize: "18px",
-                    color: "#c1c1c1",
+                    color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
                   }}
                 >
                   MATIC blockchain
@@ -329,11 +429,11 @@ const SplashPage = () => {
                   style={{
                     fontWeight: "bolder",
                     fontSize: "18px",
-                    color: "#c1c1c1",
+                    color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
                   }}
                 >
                   {" "}
-                  a metadata
+                  a metadata {" "}
                 </span>
                 JSON file with properties
               </p>
@@ -364,14 +464,20 @@ const SplashPage = () => {
             <div className="property-wrapper">
               <div className="property-first-wrapper">
                 <div className="property-first">
-                  <div className="property">
+                  <div
+                    className="property"
+                    style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                  >
                     <span className="property-desc">Background Color</span>
                     <span className="property-name-color">Grey</span>
                     <span className="property-color">100%</span>
                   </div>
                 </div>
                 <div className="property-second">
-                  <div className="property second">
+                  <div
+                    className="property second"
+                    style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                  >
                     <span className="property-desc">Pant Color</span>
                     <span className="property-name-color">Grey</span>
                     <span className="property-color">100%</span>
@@ -389,7 +495,6 @@ const SplashPage = () => {
             </div>
           </div>
         </div>
-
         <div className="join-community">
           <div className="title-join">
             <h3>
@@ -404,8 +509,8 @@ const SplashPage = () => {
             <div className="main-greyman-pic">
               <div className="join-pic-main">
                 <div className="show-more-wrap">
-                  <span className="show-more">
-                    Open in Store <span className="show-more-arrow">→</span>{" "}
+                  <span className="show-more" style={{color: "#fff"}}>
+                    Open in Store <i class="fas fa-arrow-right"></i>{" "}
                   </span>
                 </div>
                 <img
@@ -445,6 +550,30 @@ const SplashPage = () => {
                 />
               </div>
             </div>
+          </div>
+          <div className="exclusive-nfts">
+            <MobileCarouselNfts>
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+              <img
+                className="join-pic-img"
+                src={GreyMan}
+                alt="community-img"
+              />
+            </MobileCarouselNfts>
           </div>
           {/* <div
             className="community-description"
@@ -488,21 +617,12 @@ const SplashPage = () => {
             For Greymen Only
           </p>
           <div className="video-grey-man">
-            <img
-              className="video-grey-man-pic"
-              src={GreyMan}
-              alt="community-img"
-            />
-            <div className="video-grey-man-metamask-logo-wrapper">
-              <img
-                className="video-grey-man-metamask-logo metamask-logo"
-                src={Metamask}
-                alt="metamask-logo"
-              />
-            </div>
+            {showVideoToLogginedUsers()}
           </div>
           <div className="video-grey-man-desc-wrapper">
-            <span className="video-grey-man-desc">
+            <span style={{
+              color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
+            }} className="video-grey-man-desc">
               NFT owners can learn more about the project by signing with
               metamask to unlock an encrypted stream{" "}
             </span>
@@ -516,7 +636,7 @@ const SplashPage = () => {
         </div>
         <Timeline />
         <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
-        <NotCommercial />
+        <NotCommercial primaryColor={primaryColor} />
       </div>
     </div>
   );
