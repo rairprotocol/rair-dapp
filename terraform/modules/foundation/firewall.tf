@@ -123,3 +123,9 @@ resource "google_compute_firewall" "ping_egress_from_tailscale_to_gke" {
     module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
   ]
 }
+
+# TODO: figure out if UDP packet egress from tailscale is working now
+# if it's not, try adding it
+
+# TODO: remove public IP from tailscale relay
+# should be able to delete the acces_config block from the template
