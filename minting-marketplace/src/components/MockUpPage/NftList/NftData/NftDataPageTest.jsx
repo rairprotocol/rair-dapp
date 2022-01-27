@@ -320,7 +320,8 @@ const NftDataPageTest = ({
           // onClick={() => buyContract()}
           // onClick={() => alert("Coming soon")}
           style={{
-            width: "228px",
+            width: "291px",
+            fontSize: '13px',
             height: "48px",
             border: "none",
             borderRadius: "16px",

@@ -166,6 +166,13 @@ const teamAboutRair = [
             consumer and investor protection laws, KYC/AML guidelines, and the
             fintech transaction landscape. Serial entrepreneur with strong
             operational acumen.`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: '',
+                classLink: "arrrow-right"
+            }
         ]
     },
     {
@@ -181,6 +188,13 @@ const teamAboutRair = [
             tokens. Instead of using Kindle Direct Publishing and giving the 
             majority of proceeds to a predatory intermediary, RAIR was born.
             `
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: '',
+                classLink: "arrrow-right"
+            }
         ]
     },
     {
@@ -512,6 +526,7 @@ const RairTeamComponent = ({ primaryColor }) => {
                     return <Teammate
                         key={index + t.nameTeammate}
                         name={t.nameTeammate}
+                        socials={t.socials}
                         desc={t.aboutTeammate}
                         primaryColor={primaryColor}
                         url={t.imageUrl}

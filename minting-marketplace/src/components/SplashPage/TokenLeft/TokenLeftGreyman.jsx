@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 
 const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
   const [percentTokens, setPersentTokens] = useState(0);
+  const [showMore, setShowMore] = useState(false);
 
   const leftTokensNumber = 7.9;
   const wholeTokens = 7.9;
@@ -25,17 +26,16 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
   }, [setPersentTokens]);
 
   return (
-    <div className="left-tokens greyman-page">
+    <div className="left-tokens greyman-page left-tokens-response ">
       <div className="block-left-content-greyman">
         <div className="block-left-tokens">
           <div
             className="progress-tokens"
             style={{
-              background: `${
-                primaryColor === "rhyno"
-                  ? "rgba(34, 32, 33, 0.4)"
-                  : "rgba(34, 32, 33, 0.6)"
-              }`,
+              background: `${primaryColor === "rhyno"
+                ? "rgba(34, 32, 33, 0.4)"
+                : "rgba(34, 32, 33, 0.6)"
+                }`,
             }}
           >
             <div className="title-progress-left">NFTs remaining</div>
@@ -46,7 +46,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
                 sx={{
                   color: (theme) =>
                     theme.palette.grey[
-                      theme.palette.mode === "light" ? 200 : 800
+                    theme.palette.mode === "light" ? 200 : 800
                     ],
                 }}
                 size={40}
@@ -87,7 +87,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
             * Minting on demand secures your NFT on the blockhain.
           </div>
         </div>
-        <div className="btn-buy-metamask" style={{ marginLeft: "4rem" }}>
+        <div className="btn-buy-metamask">
           <button>
             <img className="metamask-logo" src={Metamask} alt="metamask-logo" />{" "}
             Mint with Matic
@@ -129,30 +129,43 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
             correct it. Two different worlds which co-exist and in my opinion
             could enhance each other in amazing ways.
           </p>
-          <p
-            style={{
-              color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
-            }}
-          >
-            Playing a vinyl record feels like a ritual experience, one which
-            takes effort and needs attention. We have to take the record out of
-            the sleeve (and in the meantime probably can’t resist reading some
-            of the liner notes on the sleeve and admire the artwork). We gently
-            put the needle on the record and then create a listening experience,
-            a ritual. Each crack in the record, each imperfection added with
-            each listening session gives us a sense of history, of our
-            relationship with the record. But when I’m in my studio, I just
-            press ‘play’ on Spotify. And while I’m painting, the music becomes a
-            soundtrack for me to create. I don’t need to focus on the act of
-            having music in my studio, it’s just there. Also, I don’t get
-            disturbed by the cracks and hisses when the record ends, meaning I’d
-            have to get up, rinse my brushes, and disrupt my creative process in
-            order to change the record. Also, whenever I go to another building,
-            city or country by foot, plane, car or bicycle, I always have my
-            music with me.
-          </p>
+          {
+            showMore ? <p
+              style={{
+                color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
+              }}
+            >
+              Playing a vinyl record feels like a ritual experience, one which
+              takes effort and needs attention. We have to take the record out of
+              the sleeve (and in the meantime probably can’t resist reading some
+              of the liner notes on the sleeve and admire the artwork). We gently
+              put the needle on the record and then create a listening experience,
+              a ritual. Each crack in the record, each imperfection added with
+              each listening session gives us a sense of history, of our
+              relationship with the record. But when I’m in my studio, I just
+              press ‘play’ on Spotify. And while I’m painting, the music becomes a
+              soundtrack for me to create. I don’t need to focus on the act of
+              having music in my studio, it’s just there. Also, I don’t get
+              disturbed by the cracks and hisses when the record ends, meaning I’d
+              have to get up, rinse my brushes, and disrupt my creative process in
+              order to change the record. Also, whenever I go to another building,
+              city or country by foot, plane, car or bicycle, I always have my
+              music with me.
+              <button
+              className="btn-show-more"
+              onClick={() => { setShowMore(!showMore) }}
+            >
+              {showMore ? "Read less" : "Read more..."}
+            </button>
+            </p> : <button
+              className="btn-show-more"
+              onClick={() => { setShowMore(!showMore) }}
+            >
+              {showMore ? "Read less" : "Read more..."}
+            </button>
+          }
         </div>
-        
+
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const RairOffer = () => {
+const RairOffer = ({ primaryColor }) => {
     return (
         <div className="about-rair-offer">
             <div className="rair-offer-title">
@@ -8,7 +8,12 @@ const RairOffer = () => {
             </div>
             <div className="about-offer-content">
                 <div className="streaming-box">
-                    <div className="streaming-offer">
+                    <div
+                        className="streaming-offer"
+                        style={{
+                            background: `${primaryColor === "rhyno" ? "#989898" : "#383637"}`,
+                        }}
+                    >
                         <button className="streaming-btn">Streaming</button>
                         <div className="container-progress">
                             <div className="streaming-percent">
@@ -19,14 +24,24 @@ const RairOffer = () => {
                             <div className="streaming-progress">
                                 <div className="line-purple"></div>
                                 <div className="line-grey"></div>
-                                <div className="progress-box">1</div>
-                                <div className="progress-box">2</div>
-                                <div className="progress-box">3</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }}
+                                    className="progress-box"
+                                >1</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">2</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">3</div>
                             </div>
                         </div>
                     </div>
                     <div className="streaming-offer non-streaming">
-                        <button className="non-streaming-btn">Non-Streaming</button>
+                        <button 
+                        style={{color: `${primaryColor === "rhyno" ? "#000" : "#fff"}`}}
+                        className="non-streaming-btn">Non-Streaming</button>
                         <div className="container-progress">
                             <div className="streaming-percent non-streaming">
                                 <div className="percent">5%</div>
@@ -36,9 +51,15 @@ const RairOffer = () => {
                             <div className="streaming-progress non-streaming">
                                 <div className="line-grey"></div>
                                 <div className="line-grey-second"></div>
-                                <div className="progress-box">1</div>
-                                <div className="progress-box">2</div>
-                                <div className="progress-box">3</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">1</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">2</div>
+                                <div style={{
+                                    color: `${primaryColor === "rhyno" ? "#fff" : "#fff"}`,
+                                }} className="progress-box">3</div>
                             </div>
                         </div>
                     </div>
