@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# set -e
-
 echo "TAILSCALE RELAY STARTUP SCRIPT STARTED"
 
 # Official tailscale install directions here:

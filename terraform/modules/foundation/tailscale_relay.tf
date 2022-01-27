@@ -14,7 +14,8 @@ data "template_file" "tailscale_relay_starup_script" {
   vars = {
     tags = "tag:private-subnet-relay-${var.env_name}"
     advertised_routes = join(",", [
-      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
+      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range,
+      "10.0.64.0/18"
     ])
     tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
     hostname = "tailscale-relay-${var.env_name}"
@@ -27,6 +28,10 @@ resource "google_compute_instance_template" "tailsacle_relay" {
 
   instance_description = "Tailscale relay"
   machine_type         = "f1-micro"
+
+  tags = [
+    local.tailscale_relay_vm_instance_tag
+  ]
 
   // Create a new boot disk from an image
   disk {
@@ -105,29 +110,6 @@ resource "google_secret_manager_secret_iam_policy" "tailscale_secret_accessor" {
   secret_id = google_secret_manager_secret.tailscale_auth_key.secret_id
   policy_data = data.google_iam_policy.tailscale_secret_accessor.policy_data
 }
-
-# resource "google_compute_firewall" "tailscale_egress" {
-#   name        = "tailscale-ingress-deny"
-#   network = google_compute_network.primary.id
-#   description = "Deny all ingress Tailsclae traffic"
-
-#   deny {
-#     protocol  = "tcp"
-#   }
-
-#   direction = "INGRESS"
-  
-#   # source_ranges = [
-#   #   module.vpc_cidr_ranges.network_cidr_blocks.private
-#   # ]
-
-#   # source_service_accounts = [
-#   #   google_service_account.tailscale_relay.id
-#   # ]
-
-#   # source_tags = ["foo"]
-#   # target_tags = ["web"]
-# }
 
 resource "google_compute_router" "public_router" {
   name    = "public-router"
