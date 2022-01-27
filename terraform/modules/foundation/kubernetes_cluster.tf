@@ -38,8 +38,8 @@ resource "google_container_cluster" "primary" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      display_name = "Access from VPC internal network"
-      cidr_block = var.vpc_cidr_block
+      display_name = "Ingress traffic from Public subnet (allows tailscale bastion access)"
+      cidr_block = module.vpc_cidr_ranges.network_cidr_blocks.public
     }
   }
 
