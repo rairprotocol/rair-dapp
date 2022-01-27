@@ -157,7 +157,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 						price: rangeData.data.rangePrice.toString(),
 						lockedTokens: Number(rangeData.data.lockedTokens.toString()),
 						tokensAllowed: Number(rangeData.data.tokensAllowed.toString()),
-						mintableTokens: Number(rangeData.data.mintableTokens.toString())
+						mintableTokens: Number(rangeData.data.mintableTokens.toString()),
+						fixed: true
 					})
 				}
 			};

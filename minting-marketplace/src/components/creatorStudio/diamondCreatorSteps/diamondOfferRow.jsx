@@ -7,32 +7,31 @@ import { utils } from 'ethers';
 const DiamondOfferRow = ({
 	index,
 	deleter,
-	name,
-	starts,
-	ends,
+	offerName,
+	range,
 	price,
 	fixed,
 	array,
 	rerender,
 	maxCopies,
 	blockchainSymbol,
-	allowedTokens,
+	tokensAllowed,
 	lockedTokens,
 	simpleMode
 }) => {
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
-	const [itemName, setItemName] = useState(name);
-	const [startingToken, setStartingToken] = useState(starts);
-	const [endingToken, setEndingToken] = useState(ends);
+	const [itemName, setItemName] = useState(offerName);
+	const [startingToken, setStartingToken] = useState(range[0]);
+	const [endingToken, setEndingToken] = useState(range[1]);
 	const [individualPrice, setIndividualPrice] = useState(price);
-	const [allowedTokenCount, setAllowedTokenCount] = useState(allowedTokens);
+	const [allowedTokenCount, setAllowedTokenCount] = useState(tokensAllowed);
 	const [lockedTokenCount, setLockedTokenCount] = useState(lockedTokens);
 
 	const randColor = colors[index];
 
-	const updater = (name, setter, value) => {
-		array[index][name] = value;
+	const updater = (offerName, setter, value) => {
+		array[index][offerName] = value;
 		setter(value);
 		rerender();
 	};
@@ -41,13 +40,13 @@ const DiamondOfferRow = ({
 		array[index].ends = Number(value);
 		setEndingToken(Number(value));
 		if (array[Number(index) + 1] !== undefined) {
-			array[Number(index) + 1].starts = Number(value) + 1;
+			array[Number(index) + 1].range[1] = Number(value) + 1;
 		}
 		rerender();
 	},[array, index, rerender])
 	
 	const updateStartingToken = useCallback((value) => {
-		array[index].starts = Number(value);
+		array[index].range[0] = Number(value);
 		setStartingToken(value);
 		if (Number(endingToken) < Number(value)) {
 			updateEndingToken(Number(value));
@@ -56,26 +55,26 @@ const DiamondOfferRow = ({
 	}, [array, endingToken, index, rerender, updateEndingToken])
 
 	useEffect(() => {
-		if (starts === startingToken) {
+		if (range[0] === startingToken) {
 			return;
 		}
-		updateStartingToken(starts);
-	}, [starts, updateStartingToken, startingToken])
+		updateStartingToken(range[0]);
+	}, [range, updateStartingToken, startingToken])
 
 	useEffect(() => {
-		if (ends === endingToken) {
+		if (range[1] === endingToken) {
 			return;
 		}
-		updateEndingToken(ends);
-	}, [ends, updateEndingToken, endingToken])
+		updateEndingToken(range[1]);
+	}, [range, updateEndingToken, endingToken])
 
 	useEffect(() => {
 		setIndividualPrice(price);
 	}, [price])
 
 	useEffect(() => {
-		setItemName(name);
-	}, [name])
+		setItemName(offerName);
+	}, [offerName])
 
 	const disabledClass = fixed ? '' : 'border-stimorol rounded-rair'
 
@@ -85,12 +84,12 @@ const DiamondOfferRow = ({
 		</button>
 		<div className='col-12 col-md-11 row'>
 			<div className={`col-12 col-md-11 px-2`}>
-				Range name:
+				Range offerName:
 				<div className={`${disabledClass} w-100 mb-2`}>
 					<InputField
 						getter={itemName}
 						disabled={fixed}
-						setter={value => updater('name', setItemName, value)}
+						setter={value => updater('offerName', setItemName, value)}
 						customClass='form-control rounded-rair'
 						customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 					/>
@@ -150,13 +149,13 @@ const DiamondOfferRow = ({
 			</div>
 			{!simpleMode && <div className={`col-12 col-md-6`}>
 				Tokens allowed to mint:
-				{!fixed && <button onClick={() => updater('allowedTokens', setAllowedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+				{!fixed && <button onClick={() => updater('tokensAllowed', setAllowedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
 					Max
 				</button>}
 				<div className={`${disabledClass} w-100`}>
 					<InputField
 						getter={allowedTokenCount}
-						setter={value => updater('allowedTokens', setAllowedTokenCount, value)}
+						setter={value => updater('tokensAllowed', setAllowedTokenCount, value)}
 						type='number'
 						disabled={fixed}
 						min='0'
