@@ -16,8 +16,10 @@ resource "google_compute_firewall" "tailscale_relay_ssh" {
     local.tailscale_relay_vm_instance_tag
   ]
 
+  # This will allow SSH port 22 access in from the entire internet
+  # This rule will be disabled after Tailscale is properly working
   source_ranges = [
-   "0.0.0.0/0"
+    "0.0.0.0/0"
   ]
 }
 
@@ -92,8 +94,7 @@ resource "google_compute_firewall" "ping_ingress_from_tailscale_to_gke" {
   direction = "INGRESS"
 
   target_tags = [
-    # We might need to get this with a data query, we're not specifying it anywhere, it's emergent
-    "gke-primary-99c1bc47-node"
+    local.public_node_pool_network_tag
   ]
 
   source_ranges = [
