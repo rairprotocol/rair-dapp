@@ -28,7 +28,7 @@ module.exports = context => {
     try {
       const { contract, offerPool, token } = req;
       const { user } = req;
-      let fieldsForUpdate = _.pick(req.body, ['name', 'description', 'artist', 'external_url', 'attributes']);
+      let fieldsForUpdate = _.pick(req.body, ['name', 'description', 'artist', 'external_url', 'image', 'animation_url', 'attributes']);
 
       if (user.publicAddress !== contract.user) {
         return res.status(403).send({
