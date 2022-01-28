@@ -2,31 +2,42 @@ import React, { useState, useEffect, useCallback } from "react";
 import InputField from "../common/InputField.jsx";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 // import 'react-tabs/style/react-tabs.css';
-import {NftList} from "./NftList/NftList.jsx";
+import { NftList } from "./NftList/NftList.jsx";
 import VideoList from "../video/videoList.jsx";
 import FilteringBlock from "./FilteringBlock/FilteringBlock.jsx";
+import axios from "axios";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
   const [titleSearch, setTitleSearch] = useState("");
   const [sortItem, setSortItem] = useState("");
   const [mediaList, setMediaList] = useState();
   const [data, setData] = useState();
-
+  const [totalPage, setTotalPages] = useState([10]);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+  let pagesArray = [];
+  for (let i = 0; i < totalPage; i++) {
+    pagesArray.push(i + 1);
+  }
+  // console.log(pagesArray, "pagesArray");
   useEffect(() => {
     getContract();
-  }, []);
+  }, [currentPage]);
 
   const getContract = async () => {
-    const responseContract = await (
-      await fetch("/api/contracts/full", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "X-rair-token": localStorage.token,
-        },
-      })
-    ).json();
-    const covers = responseContract.contracts.map((item) => ({
+    const responseContract = await await axios.get("/api/contracts/full", {
+      // method: "GET",
+      headers: {
+        Accept: "application/json",
+        "X-rair-token": localStorage.token,
+      },
+      params: {
+        itemsPerPage: itemsPerPage,
+        pageNum: currentPage,
+      },
+    });
+    // console.log(responseContract, "responseContract");
+    const covers = responseContract.data.contracts.map((item) => ({
       id: item._id,
       productId: item.products?._id ?? "wut",
       blockchain: item.blockchain,
@@ -45,6 +56,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       })),
     }));
     setData(covers);
+    // setTotalPages( респонс с кол продуктов )
+  };
+  // const getPagesCount = (totalPage) => {
+  //   return Math.ceil(totalPage / itemsPerPage);
+  // };
+  const changePage = (currentPage) => {
+    setCurrentPage(currentPage);
   };
 
   const updateList = async () => {
@@ -101,8 +119,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             NFT
           </Tab>
 
-          <Tab 
-          onClick={() => {updateList()}}
+          <Tab
+            onClick={() => {
+              updateList();
+            }}
             style={{
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
@@ -113,8 +133,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             className="category-button-videos category-button"
           >
             Unlockables
-            {/* {`Unlockables`.toUpperCase()} */}
-
           </Tab>
         </TabList>
         <div style={{ position: "relative", display: "flex" }}>
@@ -126,7 +144,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
               borderTopLeftRadius: "0",
-              width: "100%",
+              width: "54.5%",
             }}
             customClass="form-control input-styled"
           />
@@ -148,6 +166,21 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             handleClick={handleClick}
             data={data}
           />
+          <div className="pagination__wrapper">
+            {pagesArray.map((p) => (
+              <span
+                key={p}
+                onClick={() => changePage(p)}
+                className={
+                  currentPage === p
+                    ? "pagination__page pagination__page__current"
+                    : "pagination__page"
+                }
+              >
+                {p}
+              </span>
+            ))}
+          </div>
         </TabPanel>
         <TabPanel>
           <VideoList mediaList={mediaList} titleSearch={titleSearch} />
