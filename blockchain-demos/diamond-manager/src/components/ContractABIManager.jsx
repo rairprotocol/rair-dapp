@@ -72,16 +72,19 @@ const ContractABIManager = ({
 			Functions:
 			<ul className='w-100'>
 				{functions.map((method, index) => {
-					return <li key={index} className='w-100 row'>
-						<b className='col-8'>
-							{method.name}
-						</b> <small
-							className={`col-3 badge btn-${method.signatureInDiamond ? (method.functionVersionInDiamond ? 'primary' : 'success') : 'danger'}`}>
-							<abbr title={method.signatureInDiamond ? (method.functionVersionInDiamond ? 'This version is connected to the diamond ' : 'This function exists within the diamond') : 'Not in diamond!'}>
-								{method.hashed}
-							</abbr>
-						</small>
+					return <li key={index} className={`w-100 row px-0 mx-0 ${method.selected ? undefined : 'text-secondary'}`}>
+						<label className='col-11 px-0 mx-0 row' htmlFor={method.hashed+address}>
+							<b className='col-9'>
+								{method.name}
+							</b> <small
+								className={`col-3 float-end badge btn-${method.signatureInDiamond ? (method.functionVersionInDiamond ? 'primary' : 'success') : 'danger'}`}>
+								<abbr title={method.signatureInDiamond ? (method.functionVersionInDiamond ? 'This version is connected to the diamond ' : 'This function exists within the diamond') : 'Not in diamond!'}>
+									{method.hashed}
+								</abbr>
+							</small>
+						</label>
 						<input
+							id={method.hashed+address}
 							type='checkbox'
 							checked={method.selected}
 							onChange={() => updateSelected(index)}

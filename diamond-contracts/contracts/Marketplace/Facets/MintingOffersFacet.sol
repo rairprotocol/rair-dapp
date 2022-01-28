@@ -142,11 +142,16 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 			payable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);
 		}
 		require(totalTransferred == rangeData.rangePrice, "Minter Marketplace: Error transferring funds!");
-		_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndex_);
+		_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndex_, msg.sender);
 	}
 
-	function buyMintingOfferBatch(uint offerIndex_, uint[] calldata tokenIndexes) external mintingOfferExists(offerIndex_) payable {
+	function buyMintingOfferBatch(
+		uint offerIndex_,
+		uint[] calldata tokenIndexes,
+		address[] calldata recipients		
+	) external mintingOfferExists(offerIndex_) payable {
 		require(tokenIndexes.length > 0, "Minter Marketplace: No tokens sent!");
+		require(tokenIndexes.length == recipients.length, "Minter Marketplace: Tokens and Addresses should have the same length");
 		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
 		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
@@ -167,12 +172,12 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		}
 		require(totalTransferred == (rangeData.rangePrice * tokenIndexes.length), "Minter Marketplace: Error transferring funds!");
 		for (i = 0; i < tokenIndexes.length; i++) {
-			_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndexes[i]);
+			_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndexes[i], recipients[i]);
 		}
 	}
 
-	function _buyMintingOffer(address erc721Address, uint rangeIndex, uint tokenIndex) internal {
-		IRAIR721(erc721Address).mintFromRange(msg.sender, rangeIndex, tokenIndex);
-		emit TokenMinted(erc721Address, rangeIndex, tokenIndex, msg.sender);
+	function _buyMintingOffer(address erc721Address, uint rangeIndex, uint tokenIndex, address recipient) internal {
+		IRAIR721(erc721Address).mintFromRange(recipient, rangeIndex, tokenIndex);
+		emit TokenMinted(erc721Address, rangeIndex, tokenIndex, recipient);
 	}
 }

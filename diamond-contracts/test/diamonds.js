@@ -1535,42 +1535,61 @@ describe("Diamonds", function () {
 			it ("Shouldn't batch mint with wrong information", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				let tokensList = [7, 8, 9, 10, 11];
-				await expect(mintingOffersFacet.buyMintingOfferBatch(0, tokensList, {value: 4500 * tokensList.length}))
+				let addressList = [7, 8, 9, 10, 11].map(i => addr1.address);
+				await expect(mintingOffersFacet.buyMintingOfferBatch(0, tokensList, addressList, {value: 4500 * tokensList.length}))
 					.to.be.revertedWith("RAIR ERC721: Invalid token index");
-				await expect(mintingOffersFacet.buyMintingOfferBatch(0, tokensList, {value: 4500 * tokensList.length - 1}))
+				await expect(mintingOffersFacet.buyMintingOfferBatch(0, tokensList, addressList, {value: 4500 * tokensList.length - 1}))
 					.to.be.revertedWith("Minter Marketplace: Insufficient funds!");
 			});
 
 			it ("Shouldn't call the batch mint function without any tokens", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
-				await expect(mintingOffersFacet.buyMintingOfferBatch(0, []))
+				await expect(mintingOffersFacet.buyMintingOfferBatch(0, [], [owner.address]))
 					.to.be.revertedWith("Minter Marketplace: No tokens sent!");
+			});
+
+			it ("Shouldn't call the batch mint function with arrays of different sizes", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.buyMintingOfferBatch(0, [7, 8, 9], [addr1.address]))
+					.to.be.revertedWith("Minter Marketplace: Tokens and Addresses should have the same length");
 			})
 
 			it ("Should batch mint", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				let tokensList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-				await expect(await mintingOffersFacet.buyMintingOfferBatch(0, tokensList, {value: 4500 * tokensList.length}))
+				let addressList = [
+						owner.address,
+						addr1.address,
+						addr2.address,
+						addr3.address,
+						owner.address,
+						addr1.address,
+						addr2.address,
+						addr3.address,
+						owner.address,
+						addr1.address,
+					];
+				await expect(await mintingOffersFacet.buyMintingOfferBatch(0, tokensList, addressList, {value: 4500 * tokensList.length}))
 					.to.emit(mintingOffersFacet, 'TokenMinted')
 					.withArgs(secondDeploymentAddress, 0, 1, owner.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
-					.withArgs(secondDeploymentAddress, 0, 2, owner.address)
+					.withArgs(secondDeploymentAddress, 0, 2, addr1.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
-					.withArgs(secondDeploymentAddress, 0, 3, owner.address)
+					.withArgs(secondDeploymentAddress, 0, 3, addr2.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
-					.withArgs(secondDeploymentAddress, 0, 4, owner.address)
+					.withArgs(secondDeploymentAddress, 0, 4, addr3.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
 					.withArgs(secondDeploymentAddress, 0, 5, owner.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
-					.withArgs(secondDeploymentAddress, 0, 6, owner.address)
+					.withArgs(secondDeploymentAddress, 0, 6, addr1.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
-					.withArgs(secondDeploymentAddress, 0, 7, owner.address)
+					.withArgs(secondDeploymentAddress, 0, 7, addr2.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
-					.withArgs(secondDeploymentAddress, 0, 8, owner.address)
+					.withArgs(secondDeploymentAddress, 0, 8, addr3.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
 					.withArgs(secondDeploymentAddress, 0, 9, owner.address)
 					.to.emit(mintingOffersFacet, 'TokenMinted')
-					.withArgs(secondDeploymentAddress, 0, 10, owner.address)
+					.withArgs(secondDeploymentAddress, 0, 10, addr1.address)
 					.to.changeEtherBalances([
 						owner,
 						mintingOffersFacet,
