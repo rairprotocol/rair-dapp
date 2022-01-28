@@ -5,6 +5,34 @@ import { metamaskCall } from '../../utils/metamaskUtils.js';
 import { diamondFactoryAbi } from '../../contracts'
 import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
+import InputField from '../common/InputField.jsx';
+
+const TokenSelector = ({buyCall}) => {
+	const [tokenId, setTokenId] = useState(0);
+
+	return <details>
+		<summary>
+			<small>
+				Buy specific token
+			</small>
+		</summary>
+		<InputField
+			customClass='form-control'
+			getter={tokenId}
+			setter={setTokenId}
+			placeholder='Token Identifier'
+			type='number'
+			min={0}
+			label='Token #'
+		/>
+		<br />
+		<button onClick={() => {
+			buyCall(tokenId)
+		}} className='btn btn-royal-ice'>
+			Buy token #{tokenId}
+		</button>
+	</details>
+}
 
 const DiamondMarketplace = (props) => {
 	const [offersArray, setOffersArray] = useState([]);
@@ -37,9 +65,33 @@ const DiamondMarketplace = (props) => {
 			})
 		}
 		setOffersArray(offerData);
+		console.log(diamondMarketplaceInstance.functions);
 	}, [diamondMarketplaceInstance])
 
 	useEffect(fetchDiamondData, [fetchDiamondData])
+
+	const mintTokenCall = async (offerIndex, nextToken, price) => {
+		setTransactionInProgress(true);
+		Swal.fire({
+			title: `Buying token #${nextToken}!`,
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		if (await metamaskCall(diamondMarketplaceInstance.buyMintingOffer(
+			offerIndex,
+			nextToken,
+			{value: price}
+		))) {
+			Swal.fire({
+				title: 'Success',
+				html: 'Token bought',
+				icon: 'success',
+				showConfirmButton: true
+			});
+		}
+		setTransactionInProgress(false);
+	}
 
 	return <div className='row w-100'>
 		<div className='col-12 text-center'>
@@ -82,31 +134,23 @@ const DiamondMarketplace = (props) => {
 				<button
 					disabled={transactionInProgress || !offer.visible}
 					onClick={async () => {
-					setTransactionInProgress(true);
 					let instance = contractCreator(offer.contractAddress, diamondFactoryAbi);
 					let nextToken = await instance.getNextSequentialIndex(offer.productIndex, offer.startingToken, offer.endingToken);
-					Swal.fire({
-						title: `Buying token #${nextToken}!`,
-						html: 'Please wait...',
-						icon: 'info',
-						showConfirmButton: false
-					});
-					if (await metamaskCall(diamondMarketplaceInstance.buyMintingOffer(
+					await mintTokenCall(
 						offer.offerIndex,
 						nextToken,
-						{value: offer.price}
-					))) {
-						Swal.fire({
-							title: 'Success',
-							html: 'Token bought',
-							icon: 'success',
-							showConfirmButton: true
-						});
-					}
-					setTransactionInProgress(false);
+						offer.price
+					);
 				}} className={`btn my-2 py-0 btn-${offer.visible ? 'stimorol' : 'danger'}`}>
 					{offer.visible ? 'Buy a token' : "Not for sale!"}
 				</button>
+				<TokenSelector buyCall={async (tokenIndex) => {
+					await mintTokenCall(
+						offer.offerIndex,
+						tokenIndex,
+						offer.price
+					);
+				}}/>
 			</div>
 		})}
 	</div>

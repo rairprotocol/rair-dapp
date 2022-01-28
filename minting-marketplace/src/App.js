@@ -73,6 +73,7 @@ import VideoPlayer from './components/video/videoPlayer.jsx';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 import Footer from './components/Footer/Footer.jsx';
+import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace.jsx';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -98,7 +99,7 @@ function App({ sentryHistory }) {
 
 	// Redux
 	const dispatch = useDispatch()
-	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
+	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
@@ -387,7 +388,8 @@ function App({ sentryHistory }) {
 									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
 									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
 									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
-									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined }
+									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined }
 								].map((item, index) => {
 									if (!item.disabled) {
 										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -461,6 +463,7 @@ function App({ sentryHistory }) {
 										{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 										{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 										{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+										{diamondMarketplaceInstance && <SentryRoute path='/diamondMinter' component={DiamondMarketplace} />}
 
 										<SentryRoute exact path='/'>
 											<div className='col-6 text-left'>
