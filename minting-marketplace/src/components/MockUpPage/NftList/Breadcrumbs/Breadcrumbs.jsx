@@ -25,8 +25,7 @@ const BreadcrumbsComponent = () => {
   switch (params.tokens) {
     case "collection":
       breadcrumbs = [
-        <NavLink to="/">
-          <Link underline="hover" key="1" color="white" href="/">
+        <NavLink key="1" to="/">
             <HomeIcon
               style={{
                 borderRadius: "8px",
@@ -36,7 +35,6 @@ const BreadcrumbsComponent = () => {
               }}
               sx={{ fontSize: "x-large" }}
             />
-          </Link>
 
         </NavLink>,
         <Typography key="3" color="white">
@@ -46,8 +44,7 @@ const BreadcrumbsComponent = () => {
       break;
     case "tokens":
       breadcrumbs = [
-        <NavLink to="/">
-          <Link underline="hover" key="1" color="white" href="/">
+        <NavLink key="1" to="/">
             <HomeIcon
               style={{
                 borderRadius: "8px",
@@ -57,7 +54,6 @@ const BreadcrumbsComponent = () => {
               }}
               sx={{ fontSize: "x-large" }}
             />
-          </Link>
         </NavLink>,
 
         <Link
@@ -78,7 +74,8 @@ const BreadcrumbsComponent = () => {
   }
 
   return (
-    <Stack style={{ marginBottom: "2rem", paddingLeft: "0.5rem" }} spacing={2}>
+    <Stack  
+    style={{ marginBottom: "2rem", paddingLeft: "0.5rem" }} spacing={2}>
       <Breadcrumbs
         color="white"
         separator={<NavigateNextIcon fontSize="small" />}

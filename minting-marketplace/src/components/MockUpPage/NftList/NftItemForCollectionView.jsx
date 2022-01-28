@@ -21,7 +21,7 @@ const NftItemForCollectionViewComponent = ({
   selectedToken,
   contract,
   ownerAddress,
-  key,
+  // key,
 }) => {
   const params = useParams();
   const history = useHistory();
@@ -77,7 +77,9 @@ const NftItemForCollectionViewComponent = ({
   }
 
   return (
-    <>
+    <div 
+
+    >
       <div
         className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
         style={{
@@ -200,7 +202,7 @@ const NftItemForCollectionViewComponent = ({
           </div>
         </div>
       </div>
-    </>
+    </ div>
   );
 };
 
