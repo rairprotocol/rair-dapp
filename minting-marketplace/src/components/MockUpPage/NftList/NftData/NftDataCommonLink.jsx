@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageTest from "./NftDataPageTest";
 
 const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
@@ -17,7 +18,8 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
-  const { contract, product, tokenId, blockchain } = params;
+
+  const {  contract, product, tokenId, blockchain } = params;
 
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
@@ -145,6 +147,28 @@ const NftDataCommonLink = ({ currentUser, primaryColor, textColor }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getAllProduct, getParticularOffer]);
 
+  if (params.tokens === "collection") {
+    return (
+      <NftCollectionPage
+        blockchain={blockchain}
+        contract={contract}
+        currentUser={currentUser}
+        handleClickToken={handleClickToken}
+        onSelect={onSelect}
+        offerData={offerData}
+        offerPrice={offerPrice}
+        primaryColor={primaryColor}
+        productsFromOffer={productsFromOffer}
+        setSelectedToken={setSelectedToken}
+        selectedData={selectedData}
+        selectedToken={selectedToken}
+        textColor={textColor}
+        tokenData={tokenData}
+        totalCount={totalCount}
+        product={product}
+      />
+    );
+  }
   return (
     <NftDataPageTest
       blockchain={blockchain}

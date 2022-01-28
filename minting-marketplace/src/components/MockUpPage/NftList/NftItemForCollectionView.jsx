@@ -1,64 +1,50 @@
 import React, { useState, useCallback, useEffect, memo } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
 import ReactPlayer from "react-player";
 
-// import Swal from 'sweetalert2';
-// import 'react-accessible-accordion/dist/fancy-example.css';
-// import VideoList from "../../video/videoList";
-
-const NftItemComponent = ({
+const NftItemForCollectionViewComponent = ({
   blockchain,
   price,
   pict,
   contractName,
   collectionIndexInContract,
-  // primaryColor,
-  // textColor,
   collectionName,
   ownerCollectionUser,
+  offerPrice,
+  handleClickToken,
+  token,
+  index,
+  metadata,
+  setSelectedToken,
+  selectedToken,
+  contract,
+  ownerAddress,
+  key,
 }) => {
+  const params = useParams();
   const history = useHistory();
   const [metaDataProducts, setMetaDataProducts] = useState();
   const [playing, setPlaying] = useState(false);
-
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
-  const getProductAsync = useCallback(async () => {
-    // if (pict === defaultImg) {
-      const responseProductMetadata = await (
-        await fetch(`/api/nft/network/${blockchain}/${contractName}/${collectionIndexInContract}`, {
-          method: "GET",
-        })
-      ).json();
-      if (responseProductMetadata.result.tokens.length > 0) {
-        setMetaDataProducts(responseProductMetadata.result?.tokens[0]);
-      }
-    // }
-  }, [collectionIndexInContract, contractName, blockchain]);
-
-  useEffect(() => {
-    getProductAsync();
-  }, [getProductAsync]);
 
   function RedirectToMockUp() {
     redirection();
   }
 
-  // const waitResponse = useCallback(async () => {
-  // const data = await getData();
-  // if (data && data.metadata) {
-  // setSelected(data.metadata);
-  // setSelectedToken(data.token);
-  // openModal();
-  // }
-  // }, [getData, openModal, setSelected]);
-
   const redirection = () => {
-    history.push(`/collection/${blockchain}/${contractName}/${collectionIndexInContract}/0`);
+    history.push(
+      `/tokens/${blockchain}/${params.contract}/${params.product}/${index}`
+    );
   };
+
+  if (offerPrice) {
+    var minPrice = arrayMin(offerPrice);
+    var maxPrice = arrayMax(offerPrice);
+  }
 
   function arrayMin(arr) {
     let len = arr.length,
@@ -82,15 +68,13 @@ const NftItemComponent = ({
     return max;
   }
 
-  function ch(){
-    if(maxPrice === minPrice){
-     const samePrice = maxPrice;
-      return `${samePrice} ${chainDataFront[blockchain]?.name}`
-    } return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`
+  function checkPrice() {
+    if (maxPrice === minPrice) {
+      const samePrice = maxPrice;
+      return `${samePrice} ${chainDataFront[blockchain]?.name}`;
+    }
+    return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
   }
-
-  const minPrice = arrayMin(price);
-  const maxPrice = arrayMax(price);
 
   return (
     <>
@@ -105,13 +89,15 @@ const NftItemComponent = ({
         }}
       >
         <div
-          onClick={() => { if (!metaDataProducts?.metadata?.animation_url) RedirectToMockUp() }}
+          onClick={() => {
+            if (!metaDataProducts?.metadata?.animation_url) RedirectToMockUp();
+          }}
           className="col-12 rounded"
           style={{
             top: 0,
             position: "relative",
             height: "96%",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
         >
           {metaDataProducts?.metadata?.animation_url && (
@@ -158,8 +144,19 @@ const NftItemComponent = ({
           ) : (
             <img
               alt="thumbnail"
-              src={metaDataProducts?.metadata?.image ? metaDataProducts?.metadata?.image : pict}
-              style={{ position: "absolute", bottom: 0, borderRadius: "16px", objectFit: "contain" }}
+              src={
+                // metaDataProducts?.metadata?.image
+                metadata?.image
+                  ? // ? metaDataProducts?.metadata?.image
+                    metadata?.image
+                  : pict
+              }
+              style={{
+                position: "absolute",
+                bottom: 0,
+                borderRadius: "16px",
+                objectFit: "contain",
+              }}
               className="col-12 h-100 w-100"
             />
           )}
@@ -167,14 +164,15 @@ const NftItemComponent = ({
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">
-            {/* {collectionName} */}
-            {collectionName.slice(0, 14)}
-            {collectionName.length > 12 ? "..." : ""}
+            {/* {contract} */}
+            {contract.slice(0, 14)}
+            {contract.length > 12 ? "..." : ""}
             <br />
           </span>
           <span className="description">
-            {ownerCollectionUser.slice(0, 7)}
-            {ownerCollectionUser.length > 10 ? "..." : ""}
+            {/* {ownerAddress} */}
+            {ownerAddress.slice(0, 7)}
+            {ownerAddress.length > 10 ? "..." : ""}
             <br></br>
           </span>
           <div className="description-small" style={{ paddingRight: "16px" }}>
@@ -183,7 +181,9 @@ const NftItemComponent = ({
               src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
-            <span className="description ">{minPrice} {chainDataFront[blockchain]?.name} </span>
+            <span className="description ">
+              {minPrice} {chainDataFront[blockchain]?.name}{" "}
+            </span>
           </div>
           <div onClick={RedirectToMockUp} className="description-big">
             <img
@@ -192,7 +192,7 @@ const NftItemComponent = ({
               alt=""
             />
             <span className="description description-price">
-              {ch()}
+              {checkPrice()}
               {/* {minPrice} - {maxPrice} {chainDataFront[blockchain]?.name} */}
               {/* {minPrice} - {maxPrice} ETH{" "} */}
             </span>
@@ -203,5 +203,5 @@ const NftItemComponent = ({
     </>
   );
 };
-// export default NftItem;
-export const NftItem = memo(NftItemComponent);
+
+export const NftItemForCollectionView = memo(NftItemForCollectionViewComponent);

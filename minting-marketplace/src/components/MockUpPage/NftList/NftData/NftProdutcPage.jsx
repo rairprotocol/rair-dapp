@@ -21,7 +21,6 @@ import ReactPlayer from "react-player";
 import chainData from '../../../../utils/blockchainData.js';
 
 import "react-multi-carousel/lib/styles.css";
-import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs.jsx";
 
 const NftDataPageTest = ({
   blockchain,
@@ -432,7 +431,6 @@ const NftDataPageTest = ({
 
   return (
     <div id="nft-data-page-wrapper">
-      <BreadcrumbsView />
       <div>
         <div
           style={{

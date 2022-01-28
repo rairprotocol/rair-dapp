@@ -421,9 +421,9 @@ function App({ sentryHistory }) {
 										<SentryRoute path='/all'>
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
-										<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
+										{/* <SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
 											<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute>
+										</SentryRoute> */}
 
 										<SentryRoute path="/coming-soon" component={ComingSoon} />
 										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
@@ -437,7 +437,12 @@ function App({ sentryHistory }) {
 
 										<SentryRoute exact path="/terms-use" component={TermsUse} />
 										<SentryRoute exact path="/thankyou" component={ThankYouPage} />
-										<SentryRoute exact path='/tokens/:blockchain/:contract/:product/:tokenId'>
+
+										<SentryRoute exact path='/:tokens/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+										</SentryRoute>
+
+										<SentryRoute exact path='/:collection/:blockchain/:contract/:product/:tokenId'>
 											<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
