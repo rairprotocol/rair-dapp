@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import colors from '../../../utils/offerLockColors.js'
 import InputField from '../../common/InputField.jsx'
 import { utils } from 'ethers';
+import { validateInteger } from '../../../utils/metamaskUtils.js';
 
 const DiamondOfferRow = ({
 	index,
@@ -22,22 +23,27 @@ const DiamondOfferRow = ({
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	const [itemName, setItemName] = useState(offerName);
-	const [startingToken, setStartingToken] = useState(range[0]);
-	const [endingToken, setEndingToken] = useState(range[1]);
+	const [startingToken, setStartingToken] = useState(range?.at(0));
+	const [endingToken, setEndingToken] = useState(range?.at(1));
 	const [individualPrice, setIndividualPrice] = useState(price);
 	const [allowedTokenCount, setAllowedTokenCount] = useState(tokensAllowed);
 	const [lockedTokenCount, setLockedTokenCount] = useState(lockedTokens);
 
 	const randColor = colors[index];
 
-	const updater = (offerName, setter, value) => {
+	const updater = (offerName, setter, value, doRerender = true) => {
 		array[index][offerName] = value;
 		setter(value);
-		rerender();
+		if (doRerender) {
+			rerender();
+		}
 	};
 
 	const updateEndingToken = useCallback( (value) => {
-		array[index].ends = Number(value);
+		if (!array) {
+			return;
+		}
+		array[index].range[1] = Number(value);
 		setEndingToken(Number(value));
 		if (array[Number(index) + 1] !== undefined) {
 			array[Number(index) + 1].range[1] = Number(value) + 1;
@@ -46,6 +52,9 @@ const DiamondOfferRow = ({
 	},[array, index, rerender])
 	
 	const updateStartingToken = useCallback((value) => {
+		if (!array) {
+			return;
+		}
 		array[index].range[0] = Number(value);
 		setStartingToken(value);
 		if (Number(endingToken) < Number(value)) {
@@ -55,17 +64,21 @@ const DiamondOfferRow = ({
 	}, [array, endingToken, index, rerender, updateEndingToken])
 
 	useEffect(() => {
-		if (range[0] === startingToken) {
+		if (range?.at(0) === startingToken) {
 			return;
 		}
-		updateStartingToken(range[0]);
+		updateStartingToken(range?.at(0));
 	}, [range, updateStartingToken, startingToken])
 
 	useEffect(() => {
-		if (range[1] === endingToken) {
+		if (simpleMode && endingToken !== allowedTokenCount) {
+			updater('tokensAllowed', setAllowedTokenCount, endingToken - startingToken + 1, false);
+			updater('lockedTokens', setLockedTokenCount, endingToken - startingToken + 1, false);
+		}
+		if (range?.at(1) === endingToken) {
 			return;
 		}
-		updateEndingToken(range[1]);
+		updateEndingToken(range?.at(1));
 	}, [range, updateEndingToken, endingToken])
 
 	useEffect(() => {
@@ -84,7 +97,7 @@ const DiamondOfferRow = ({
 		</button>
 		<div className='col-12 col-md-11 row'>
 			<div className={`col-12 col-md-11 px-2`}>
-				Range offerName:
+				Range name:
 				<div className={`${disabledClass} w-100 mb-2`}>
 					<InputField
 						getter={itemName}
@@ -145,7 +158,10 @@ const DiamondOfferRow = ({
 						customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 					/>
 				</div>
-				<small>{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}</small>
+				{validateInteger(individualPrice) && 
+					<small>
+						{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}
+					</small>}
 			</div>
 			{!simpleMode && <div className={`col-12 col-md-6`}>
 				Tokens allowed to mint:

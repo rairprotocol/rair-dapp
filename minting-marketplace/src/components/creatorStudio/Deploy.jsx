@@ -118,7 +118,7 @@ const Factory = () => {
 								title: 'Success',
 								html: 'Contract deployed',
 								icon: 'success',
-								showConfirmButton: false
+								showConfirmButton: true
 							});
 							setContractName('');
 						}
@@ -152,7 +152,7 @@ const Factory = () => {
 									title: 'Success',
 									html: 'Contract deployed with Diamonds!',
 									icon: 'success',
-									showConfirmButton: false
+									showConfirmButton: true
 								});
 								setContractName('');
 							}

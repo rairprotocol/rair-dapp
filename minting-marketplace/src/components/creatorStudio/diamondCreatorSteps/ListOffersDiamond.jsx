@@ -31,13 +31,12 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 
 	const addOffer = (data) => {
 		let aux = [...offerList];
-		let startingToken = offerList.length === 0 ? 0 : Number(offerList.at(-1).ends) + 1
+		let startingToken = offerList.length === 0 ? 0 : Number(offerList.at(-1)?.range?.at(1)) + 1
 		aux.push({
-			name: '',
-			starts: startingToken,
-			ends: startingToken,
+			offerName: '',
+			range: [startingToken, startingToken],
 			price: 0,
-			allowedTokens: 0,
+			tokensAllowed: 0,
 			lockedTokens: 0,
 		});
 		setOfferList(aux);
@@ -66,12 +65,12 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 					collectionIndex,
 					offerList.filter(item => item.fixed !== true).map(item => {
 						return {
-							rangeStart: item.starts,
-							rangeEnd: item.ends,
-							tokensAllowed: item.allowedTokens,
+							rangeStart: item.range[0],
+							rangeEnd: item.range[1],
+							tokensAllowed: item.tokensAllowed,
 							lockedTokens: item.lockedTokens,
 							price: item.price,
-							name: item.name
+							name: item.offerName
 						}
 					})
 				)
@@ -80,7 +79,7 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 					title: 'Success!',
 					html: 'The offer(s) have been created!',
 					icon: 'success',
-					showConfirmButton: false
+					showConfirmButton: true
 				});
 				gotoNextStep();
 			}
@@ -101,16 +100,16 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 			});
 			await (await contractData.diamond.appendOfferRangeBatch(
 				contractData.product.offers[0].offerPool,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-				offerList.map((item) => item.ends),
+				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].range[0]),
+				offerList.map((item) => item.range[1]),
 				offerList.map((item) => item.price),
-				offerList.map((item) => item.name))
+				offerList.map((item) => item.offerName))
 			).wait();
 			Swal.fire({
 				title: 'Success!',
 				html: 'The offers have been appended!',
 				icon: 'success',
-				showConfirmButton: false
+				showConfirmButton: true
 			});
 		} catch (err) {
 			console.error(err)
@@ -132,7 +131,6 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 		{contractData ? <>
 			{offerList?.length !== 0 && <div className='row w-100 text-start px-0 mx-0'>
 					{offerList.map((item, index, array) => {
-						console.log(item);
 						return <DiamondOfferRow
 							array={array}
 							deleter={e => deleter(index)}
@@ -147,7 +145,7 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 			</div>}
 			<div className='col-12 mt-3 text-center'>
 				<div className='border-stimorol rounded-rair'>
-					<button onClick={addOffer} disabled={contractData === undefined || offerList.length >= 12 || offerList?.at(-1)?.ends >= (Number(contractData?.product?.copies) - 1)} className={`btn btn-${primaryColor} rounded-rair px-4`}>
+					<button onClick={addOffer} disabled={contractData === undefined || offerList.length >= 12 || offerList?.at(-1)?.range[1] >= (Number(contractData?.product?.copies) - 1)} className={`btn btn-${primaryColor} rounded-rair px-4`}>
 						Add new <i className='fas fa-plus' style={{border: `solid 1px ${textColor}`, borderRadius: '50%', padding: '5px'}} />
 					</button>
 				</div>
@@ -167,7 +165,7 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 							(offerList.filter(item => item.fixed !== true).length === 0 ? 
 								gotoNextStep
 								:
-								appendOffers)
+								createOffers)
 							:
 							createOffers),
 					label: !onMyChain ?
@@ -180,7 +178,13 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 								'Append Ranges')
 							:
 							'Create Ranges'),
-					disabled: (offerList.length === 0 || offerList.at(-1).ends > Number(contractData.product.copies) - 1)
+					disabled: (
+						offerList.length === 0 ||
+						offerList.at(-1).range[1] > Number(contractData.product.copies) - 1 ||
+						offerList.reduce((current, item) => {
+							return current || item.offerName === ''
+						}, false)
+					)
 				}]}
 			/>}
 		</> : 'Fetching data...'}

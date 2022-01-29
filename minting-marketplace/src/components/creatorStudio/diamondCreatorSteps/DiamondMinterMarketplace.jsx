@@ -6,7 +6,7 @@ import { metamaskCall } from '../../../utils/metamaskUtils';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import DiamondOfferConfig from './diamondOfferConfig.jsx';
+import MarketplaceOfferConfig from './MarketplaceOfferConfig.jsx';
 
 const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumber, gotoNextStep}) => {
 	const { diamondMarketplaceInstance } = useSelector(store => store.contractStore);
@@ -72,7 +72,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 	const setCustomFees = async e => {
 		setSendingData(true);
 		Swal.fire({
-			title: 'Setting custom fees',
+			title: 'Publishing offers on the marketplace',
 			html: 'Please wait...',
 			icon: 'info',
 			showConfirmButton: false
@@ -84,7 +84,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 				contractData.contractAddress,
 				filteredOffers.map(item => item.rangeIndex),
 				filteredOffers.map(item => item.customSplits.filter(split => split.editable)),
-				filteredOffers.map(item => item.visible),
+				filteredOffers.map(item => item.marketData.visible),
 				process.env.REACT_APP_NODE_ADDRESS
 			)
 		)) {
@@ -92,7 +92,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 				title: 'Success',
 				html: 'Offer(s) added to the marketplace',
 				icon: 'success',
-				showConfirmButton: false
+				showConfirmButton: true
 			});
 		}
 		setSendingData(false)
@@ -123,7 +123,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 
 	return <div className='row px-0 mx-0'>
 		{treasuryAddress !== undefined && offerData && offerData.map((item, index, array) => {
-			return <DiamondOfferConfig key={index} {
+			return <MarketplaceOfferConfig key={index} {
 				...{
 					array,
 					index,

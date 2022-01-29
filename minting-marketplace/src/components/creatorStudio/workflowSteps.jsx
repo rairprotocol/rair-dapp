@@ -173,10 +173,20 @@ const WorkflowSteps = ({sentryHistory}) => {
 					let [selectedOffer] = rangesData.filter(item => item.offerName === marketData.rangeData.rangeName);
 					selectedOffer.marketData = {
 						visible: marketData.mintOffer.visible,
-						fees: marketData.mintOffer.fees
+						fees: marketData.mintOffer.fees,
+						fromMarket: true
 					}
 				}
 			}
+			rangesData.forEach(item => {
+				if (!item.marketData) {
+					item.marketData = {
+						visible: true,
+						fees: undefined,
+						fromMarket: false
+					}
+				}
+			})
 			setContractData({
 				title: await instance.name(),
 				contractAddress: address,

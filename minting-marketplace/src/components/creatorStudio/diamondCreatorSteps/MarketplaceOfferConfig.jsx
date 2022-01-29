@@ -4,7 +4,7 @@ import { utils } from 'ethers';
 import { useSelector } from 'react-redux';
 import DiamondCustomPaymentRow from './diamondCustomPaymentRow.jsx'
 
-const DiamondOfferConfig = ({
+const MarketplaceOfferConfig = ({
 	array,
 	index,
 	nodeFee,
@@ -36,7 +36,7 @@ const DiamondOfferConfig = ({
 	}]);
 
 	useEffect(() => {
-		if (!array[index].marketData) {
+		if (!array[index].marketData || array[index].marketData.fromMarket === false) {
 			return;
 		}
 		setCustomPayments([{
@@ -101,9 +101,9 @@ const DiamondOfferConfig = ({
 				{!simpleMode && <button disabled={!array[index].selected} onClick={() => {
 					array[index].marketData.visible = !array[index].marketData.visible;
 					setRerender(!rerender);
-				}} className={`btn btn-${array[index].marketData.visible ? 'royal-ice' : 'danger'} rounded-rair`}>
-					<abbr title={array[index].visible ? 'Public offer' : 'Hidden offer'}>
-						<i className={`fas fa-${array[index].marketData.visible ? 'eye' : 'eye-slash'}`} />
+				}} className={`btn btn-${array[index]?.marketData?.visible ? 'royal-ice' : 'danger'} rounded-rair`}>
+					<abbr title={array[index]?.marketData?.visible ? 'Public offer' : 'Hidden offer'}>
+						<i className={`fas fa-${array[index]?.marketData?.visible ? 'eye' : 'eye-slash'}`} />
 					</abbr>
 				</button>}
 			</div>
@@ -161,4 +161,4 @@ const DiamondOfferConfig = ({
 	</div>
 }
 
-export default DiamondOfferConfig;
+export default MarketplaceOfferConfig;

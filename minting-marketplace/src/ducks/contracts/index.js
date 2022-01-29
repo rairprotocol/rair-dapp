@@ -16,8 +16,8 @@ const contractAddresses = {
 		factory: '0xF9DC1787179c1404910adE194A5087cEbD5c4717',
 		erc777: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
 		minterMarketplace: '0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5',
-		diamondFactory: '0x144D4143da5B1dBd318Cc3376D556ba86efae995',
-		diamondMarketplace: '0x24FF14e14aa875061473cEede9bC53dEA48FeEd2'
+		diamondFactory: '0xEF85370b8F136E2F28eA904bF0dA5acac3D1d74f',
+		diamondMarketplace: '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64'
 	},
 	'0x13881': { // Matic Mumbai
 		factory: '0xB8083810Fa33e7Ebd777c8cd6eBB453948aFd354',
