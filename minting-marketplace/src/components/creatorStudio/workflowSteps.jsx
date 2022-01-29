@@ -171,10 +171,12 @@ const WorkflowSteps = ({sentryHistory}) => {
 						i
 					);
 					let [selectedOffer] = rangesData.filter(item => item.offerName === marketData.rangeData.rangeName);
-					selectedOffer.marketData = {
-						visible: marketData.mintOffer.visible,
-						fees: marketData.mintOffer.fees,
-						fromMarket: true
+					if (selectedOffer) {
+						selectedOffer.marketData = {
+							visible: marketData.mintOffer.visible,
+							fees: marketData.mintOffer.fees,
+							fromMarket: true
+						}
 					}
 				}
 			}
