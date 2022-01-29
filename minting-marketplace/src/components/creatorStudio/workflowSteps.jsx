@@ -206,6 +206,18 @@ const WorkflowSteps = ({sentryHistory}) => {
 			});
 		}
 	}, [address, blockchain, collectionIndex, contractCreator, diamondMarketplaceInstance]);
+
+	useEffect(() => {
+		if (diamondMarketplaceInstance) {
+			diamondMarketplaceInstance.on("AddedMintingOffer", fetchData);
+		}
+	}, [diamondMarketplaceInstance])
+
+	useEffect(() => {
+		if (contractData?.instance) {
+			contractData.instance.on('CreatedRange', fetchData);
+		}
+	}, [contractData])
 	
 	const fetchMintingStatus = useCallback(async () => {
 		if (!tokenInstance || !onMyChain) {

@@ -92,13 +92,16 @@ const MarketplaceOfferConfig = ({
 				</h5>
 			</div>
 			<div className='col-1 rounded-rair text-end'>
-				<button onClick={() => {
+				{item.marketData.fromMarket && <abbr title='On the marketplace!'>
+					<i className={`fas btn btn-success fa-check`} />
+				</abbr>}
+				{!item.marketData.fromMarket && <button onClick={() => {
 					array[index].selected = !array[index].selected;
 					setRerender(!rerender);
 				}} className={`btn btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
 					<i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
-				</button>
-				{!simpleMode && <button disabled={!array[index].selected} onClick={() => {
+				</button>}
+				{!simpleMode && !item.marketData.fromMarket && <button disabled={!array[index].selected} onClick={() => {
 					array[index].marketData.visible = !array[index].marketData.visible;
 					setRerender(!rerender);
 				}} className={`btn btn-${array[index]?.marketData?.visible ? 'royal-ice' : 'danger'} rounded-rair`}>
