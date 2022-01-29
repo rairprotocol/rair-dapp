@@ -198,7 +198,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 					collectionIndexInContract: collectionIndex,
 					name: productData.name,
 					firstTokenIndex: Number(productData.startingToken.toString()),
-					soldCopies: Number(productData.mintableTokens.toString()) - Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()),
+					soldCopies: Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) + 1 - Number(productData.mintableTokens.toString()),
 					copies: Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) + 1,
 					offers: rangesData
 				},

@@ -203,7 +203,7 @@ const DiamondMarketplace = (props) => {
 				Range #{offer.rangeIndex}
 				<h3>{offer.name}</h3>
 				<h5 style={{display: 'inline'}}>
-					{offer.tokensAllowed}
+					<abbr title={`From a total of ${offer.mintableTokens} tokens still available`}>{offer.tokensAllowed}</abbr>
 				</h5> tokens available for <h5 style={{display: 'inline'}}>
 					{utils.formatEther(offer.price)} {blockchainData[window.ethereum.chainId].symbol}
 				</h5>
@@ -213,7 +213,7 @@ const DiamondMarketplace = (props) => {
 						{offer.startingToken}...
 					</div>
 					<progress
-						max={offer.endingToken - offer.startingToken}
+						max={offer.endingToken - offer.startingToken + 1}
 						value={offer.tokensAllowed}
 					/>
 					<div className='float-end'>

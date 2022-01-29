@@ -151,7 +151,7 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 				</div>
 			</div>
 			<div className='col-12 mt-3 p-5 text-center rounded-rair' style={{border: 'dashed 2px var(--charcoal-80)'}}>
-				First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies - 1}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
+				First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies - 1}, Mintable Tokens Left: <abbr title={`${contractData.product.soldCopies} tokens have been minted!`}>{contractData?.product?.copies - contractData?.product?.soldCopies}</abbr>
 			</div>
 			{chainData && <FixedBottomNavigation
 				backwardFunction={() => {
