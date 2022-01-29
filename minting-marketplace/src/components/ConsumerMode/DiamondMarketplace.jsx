@@ -7,6 +7,71 @@ import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import InputField from '../common/InputField.jsx';
 
+const BatchTokenSelector = ({batchMint}) => {
+	const [batchArray, setBatchArray] = useState([]);
+	const [rerender, setRerender] = useState(false);
+
+	const addRecipient = () => {
+		let aux = [...batchArray]
+		aux.push({
+			recipient: '',
+			tokenIndex: 0
+		})
+		setBatchArray(aux);
+	}
+
+	const remove = (index) => {
+		let aux = [...batchArray];
+		aux.splice(index, 1);
+		setBatchArray(aux);
+	}
+
+	return <details>
+		<summary>
+			Batch Minting
+		</summary>
+		{batchArray.map((item, index) => {
+			return <div className='col-12 row px-0 mx-0'>
+				<div className='col-12 col-md-3'>
+					<InputField
+						customClass='form-control'
+						getter={batchArray[index].tokenIndex}
+						setter={(value) => {
+							batchArray[index].tokenIndex = value;
+							setRerender(!rerender);
+						}}
+						placeholder='Token'
+					/>
+				</div>
+				<div className='col-12 col-md-8'>
+					<InputField
+						customClass='form-control'
+						getter={batchArray[index].recipient}
+						setter={(value) => {
+							batchArray[index].recipient = value;
+							setRerender(!rerender);
+						}}
+						placeholder='Recipient'
+					/>
+				</div>
+				<button onClick={() => remove(index)} className='col-12 btn btn-danger col-md-1'>
+					<i className='fas fa-trash' />
+				</button>
+			</div>
+		})}
+		<button className='btn btn-royal-ice' onClick={addRecipient}>
+			Add
+		</button>
+		<button className='btn btn-stimorol' onClick={
+			() => batchMint(
+				batchArray.map(item => item.tokenIndex),
+				batchArray.map(item => item.recipient)
+			)}>
+			Batch Mint
+		</button>
+	</details>
+}
+
 const TokenSelector = ({buyCall}) => {
 	const [tokenId, setTokenId] = useState(0);
 
@@ -93,6 +158,30 @@ const DiamondMarketplace = (props) => {
 		setTransactionInProgress(false);
 	}
 
+	const batchMint = async (offerIndex, tokens, addresses, price) => {
+		setTransactionInProgress(true);
+		Swal.fire({
+			title: `Buying ${tokens.length} tokens!`,
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		if (await metamaskCall(diamondMarketplaceInstance.buyMintingOfferBatch(
+			offerIndex,
+			tokens,
+			addresses,
+			{value: price * tokens.length}
+		))) {
+			Swal.fire({
+				title: 'Success',
+				html: `${addresses.length} tokens bought`,
+				icon: 'success',
+				showConfirmButton: true
+			});
+		}
+		setTransactionInProgress(false);	
+	}
+
 	return <div className='row w-100'>
 		<div className='col-12 text-center'>
 			<h1> 
@@ -151,6 +240,7 @@ const DiamondMarketplace = (props) => {
 						offer.price
 					);
 				}}/>
+				<BatchTokenSelector batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />
 			</div>
 		})}
 	</div>
