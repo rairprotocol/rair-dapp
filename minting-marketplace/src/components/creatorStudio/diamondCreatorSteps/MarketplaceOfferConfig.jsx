@@ -11,12 +11,12 @@ const MarketplaceOfferConfig = ({
 	minterDecimals,
 	treasuryFee,
 	treasuryAddress,
-	simpleMode
+	simpleMode,
+	rerender
 }) => {
 	let item = array[index];
 	const { currentUserAddress, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 
-	const [rerender, setRerender] = useState(false);
 	
 	const [customPayments, setCustomPayments] = useState([{
 		message: 'Node address',
@@ -97,20 +97,20 @@ const MarketplaceOfferConfig = ({
 				</abbr>}
 				{!item.marketData.fromMarket && <button onClick={() => {
 					array[index].selected = !array[index].selected;
-					setRerender(!rerender);
+					rerender()
 				}} className={`btn btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
 					<i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
 				</button>}
 				{!simpleMode && !item.marketData.fromMarket && <button disabled={!array[index].selected} onClick={() => {
 					array[index].marketData.visible = !array[index].marketData.visible;
-					setRerender(!rerender);
+					rerender()
 				}} className={`btn btn-${array[index]?.marketData?.visible ? 'royal-ice' : 'danger'} rounded-rair`}>
 					<abbr title={array[index]?.marketData?.visible ? 'Public offer' : 'Hidden offer'}>
 						<i className={`fas fa-${array[index]?.marketData?.visible ? 'eye' : 'eye-slash'}`} />
 					</abbr>
 				</button>}
 			</div>
-			{!simpleMode && item.selected && <details className='text-start col-12' style={{position: 'relative'}}>
+			{!simpleMode && <details className='text-start col-12' style={{position: 'relative'}}>
 				<summary className='mb-1'>
 					<small>Royalty splits</small>
 				</summary>
@@ -128,15 +128,16 @@ const MarketplaceOfferConfig = ({
 							</tr>
 						</thead>
 						<tbody>
-							{customPayments.map((item, index, array) => {
+							{customPayments.map((customPaymentItem, index, array) => {
 								return <DiamondCustomPaymentRow
 											key={index}
 											index={index}
 											array={customPayments}
 											deleter={removePayment}
-											renderer={e => setRerender(!rerender)}
+											renderer={rerender}
 											minterDecimals={minterDecimals}
-											{...item}
+											disabled={!item.selected}
+											{...customPaymentItem}
 										/>
 							})}
 						</tbody>

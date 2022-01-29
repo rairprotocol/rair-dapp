@@ -8,7 +8,7 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import MarketplaceOfferConfig from './MarketplaceOfferConfig.jsx';
 
-const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumber, gotoNextStep}) => {
+const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMode, stepNumber, gotoNextStep}) => {
 	const { diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 	const history = useHistory();
 
@@ -19,6 +19,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 	const [minterDecimals, setMinterDecimals] = useState(0);
 	const [sendingData, setSendingData] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState();
+	const [rerender, setRerender] = useState(false);
 
 	const getOfferData = useCallback(async () => {
 		if (!contractData.product.offers) {
@@ -26,8 +27,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 		}
 		setOfferData(contractData.product.offers.map(item => {
 			return {
-				selected: true,
-				tokensToSell: 0,
+				selected: !item.marketData.fromMarket,
 				...item
 			}
 		}))
@@ -36,7 +36,6 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 	useEffect(() => {
 		getOfferData()
 	}, [getOfferData])
-
 
 	const getContractData = useCallback(async () => {
 		if (!diamondMarketplaceInstance) {
@@ -131,7 +130,8 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 					minterDecimals,
 					treasuryFee,
 					treasuryAddress,
-					simpleMode
+					simpleMode,
+					rerender: () => setRerender(!rerender)
 				}} />
 		})}
 		{chainData && treasuryAddress && <FixedBottomNavigation
@@ -141,7 +141,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 				forwardFunctions={[{
 					label: hasMinterRole ? 'Put selected ranges up for sale!' : 'Approve the marketplace as a Minter!',
 					action: hasMinterRole ? setCustomFees : giveMinterRole,
-					disabled: sendingData || hasMinterRole === undefined
+					disabled: sendingData || hasMinterRole === undefined || offerData.filter(item => item.selected === true).length === 0
 				},{
 					label: 'Continue',
 					action: gotoNextStep,
@@ -154,7 +154,7 @@ const CustomizeFees = ({contractData, setStepNumber, steps, simpleMode, stepNumb
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <CustomizeFees {...value} {...props} />
+			return <DiamondMinterMarketplace {...value} {...props} />
 		}}
 	</WorkflowContext.Consumer>
 }

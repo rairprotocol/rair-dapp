@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
 
-const DiamondCustomPaymentRow = ({index, array, recipient, deleter, percentage, renderer, editable, message, minterDecimals}) => {
+const DiamondCustomPaymentRow = ({index, array, recipient, deleter, percentage, renderer, editable, message, minterDecimals, disabled}) => {
 	const [recipientAddress, setRecipientAddress] = useState(recipient);
 	const [percentageReceived, setPercentageReceived] = useState(percentage);
 
@@ -32,7 +32,7 @@ const DiamondCustomPaymentRow = ({index, array, recipient, deleter, percentage, 
 		<th className='px-2'>
 			<div className='w-100 border-stimorol rounded-rair'>
 				<InputField
-					disabled={!editable}
+					disabled={!editable || disabled}
 					labelClass='w-100 text-start'
 					customClass='form-control rounded-rair'
 					getter={recipientAddress}
@@ -45,7 +45,7 @@ const DiamondCustomPaymentRow = ({index, array, recipient, deleter, percentage, 
 		<th className='px-2'>
 			<div className='w-100 border-stimorol rounded-rair'>
 				<InputField
-					disabled={!editable}
+					disabled={!editable || disabled}
 					labelClass='w-100 text-start'
 					customClass='form-control rounded-rair'
 					min='0'
