@@ -71,9 +71,16 @@ const DiamondOfferRow = ({
 	}, [range, updateStartingToken, startingToken])
 
 	useEffect(() => {
-		if (simpleMode && endingToken !== allowedTokenCount) {
-			updater('tokensAllowed', setAllowedTokenCount, endingToken - startingToken + 1, false);
-			updater('lockedTokens', setLockedTokenCount, endingToken - startingToken + 1, false);
+		let correctCount = endingToken - startingToken + 1;
+		if (simpleMode && correctCount !== allowedTokenCount) {
+			updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
+			updater('lockedTokens', setLockedTokenCount, correctCount, false);
+		}
+		if (correctCount < allowedTokenCount) {
+			updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
+		}
+		if (correctCount < lockedTokenCount) {
+			updater('lockedTokens', setLockedTokenCount, correctCount, false);
 		}
 		if (range?.at(1) === endingToken) {
 			return;
@@ -139,7 +146,7 @@ const DiamondOfferRow = ({
 						customClass='form-control rounded-rair'
 						disabled={fixed}
 						type='number'
-						min='0'
+						min={startingToken}
 						max={maxCopies}
 						customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 					/>
@@ -193,6 +200,7 @@ const DiamondOfferRow = ({
 						type='number'
 						disabled={fixed}
 						min='0'
+						max={endingToken - startingToken + 1}
 						customClass='form-control rounded-rair'
 						customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 					/>
