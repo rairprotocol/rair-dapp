@@ -45,7 +45,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				simple: true,
 				classic: true,
 				diamond: true,
-				shortName: 'Ranges'
+				shortName: 'Ranges',
+				hasAdvancedFeatures: true
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/locks',
@@ -54,7 +55,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				simple: false,
 				classic: true,
 				diamond: false,
-				shortName: 'Locks'
+				shortName: 'Locks',
+				hasAdvancedFeatures: true
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/customizeFees',
@@ -63,7 +65,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				simple: false,
 				classic: true,
 				diamond: false,
-				shortName: 'Custom Fees'
+				shortName: 'Custom Fees',
+				hasAdvancedFeatures: true
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/minterMarketplace',
@@ -72,7 +75,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				simple: true,
 				classic: false,
 				diamond: true,
-				shortName: 'Offers'
+				shortName: 'Offers',
+				hasAdvancedFeatures: true
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/batch',
@@ -81,7 +85,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				simple: true,
 				classic: true,
 				diamond: true,
-				shortName: 'Batch Metadata'
+				shortName: 'Batch Metadata',
+				hasAdvancedFeatures: false
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
@@ -90,7 +95,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				simple: true,
 				classic: true,
 				diamond: true,
-				shortName: 'Single Metadata'
+				shortName: 'Single Metadata',
+				hasAdvancedFeatures: false
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',
@@ -99,7 +105,8 @@ const WorkflowSteps = ({sentryHistory}) => {
 				simple: true,
 				classic: true,
 				diamond: true,
-				shortName: 'Media Files'
+				shortName: 'Media Files',
+				hasAdvancedFeatures: false
 			}
 		]
 		if (simpleMode) {
@@ -323,7 +330,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 								</NavLink>
 							})}
 						</div>
-						<div className='row mt-3 w-100'>
+						{steps?.at(currentStep)?.hasAdvancedFeatures && <div className='row mt-3 w-100'>
 							<div className='col-12 col-md-6 text-end'>
 								<button
 									onClick={() => setSimpleMode(true)}
@@ -338,7 +345,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 									Advanced
 								</button>
 							</div>
-						</div>
+						</div>}
 					<h5>
 						{steps?.at(currentStep)?.shortName}
 					</h5>
