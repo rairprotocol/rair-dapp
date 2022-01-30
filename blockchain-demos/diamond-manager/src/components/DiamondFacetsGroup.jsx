@@ -71,6 +71,9 @@ const DiamondFacetsGroup = ({signer, provider, facets, standardFacetsArray}) => 
 					});
 					return finalList.concat(cleanAbi);
 				}, [])
+				console.log('Events', combinedABI.filter(item => item.type === 'event').map(item => {
+					return `${item.name}(${item.inputs.map(input => input.internalType).join(',')})`
+				}));
 			let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({abi: combinedABI}));
 			setCombinedAbiData(dataStr);
 		}} className='btn btn-primary'>
