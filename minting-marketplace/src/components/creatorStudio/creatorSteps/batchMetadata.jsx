@@ -9,15 +9,18 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import csvParser from '../../../utils/csvParser.js';
 import Dropzone from 'react-dropzone'
 import Swal from 'sweetalert2';
+import InputField from '../../common/InputField.jsx';
+import { metamaskCall } from '../../../utils/metamaskUtils.js';
 
-
-const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
+const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack, simpleMode}) => {
 	const { address, collectionIndex } = useParams();
 
 	const [csvFile, setCSVFile] = useState();
 	const [metadata, setMetadata] = useState();
 	const [headers, setHeaders] = useState();
 	const [metadataExists, setMetadataExists] = useState(false);
+	const [metadataURI, setMetadataURI] = useState('');
+	const [includeNumber, setIncludeNumber] = useState(true);
 
 	const onImageDrop = useCallback(acceptedFiles => {
 		csvParser(acceptedFiles[0], console.log)
@@ -207,6 +210,77 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 				<tfoot />
 			</table>
 		</div>}
+		{!simpleMode && contractData.diamond && contractData.instance && <>
+			<hr />
+			<div className='col-12 col-md-9'>
+				<InputField
+					customClass='form-control'
+					getter={metadataURI}
+					setter={setMetadataURI}
+					label='Metadata URI'
+				/>
+			</div>
+			<div className='col-12 col-md-3 pt-4'>
+				<button onClick={() => setIncludeNumber(!includeNumber)} className={`btn btn-${includeNumber ? 'royal-ice' : 'warning'}`}>
+					{!includeNumber && "Don't " }Include token ID
+				</button>
+			</div>
+			<hr />
+			<div className='col-12 text-right'>
+				<button onClick={async () => {
+					Swal.fire({
+						title: 'Sending metadata URI...',
+						html: 'Please wait...',
+						icon: 'info',
+						showConfirmButton: false
+					});
+					if (await metamaskCall(
+						contractData.instance.setProductURI(
+							contractData.product.collectionIndexInContract,
+							metadataURI,
+							includeNumber
+						)
+					)) {
+						Swal.fire({
+							title: 'Success!',
+							html: `Metadata URI has been set for all tokens in product #${contractData.product.collectionIndexInContract}`,
+							icon: 'success',
+							showConfirmButton: true
+						});
+					}
+				}} className='btn btn-stimorol'>
+					Set Metadata URI for all tokens in product #{contractData.product.collectionIndexInContract}
+				</button>
+			</div>
+			<div className='col-12 pt-4'>
+				...or...
+			</div>
+			<div className='col-12 text-left'>
+				<button onClick={async () => {
+					Swal.fire({
+						title: 'Sending metadata URI...',
+						html: 'Please wait...',
+						icon: 'info',
+						showConfirmButton: false
+					});
+					if (await metamaskCall(
+						contractData.instance.setBaseURI(
+							metadataURI,
+							includeNumber
+						)
+					)) {
+						Swal.fire({
+							title: 'Success!',
+							html: 'Metadata URI has been set for the entire contract',
+							icon: 'success',
+							showConfirmButton: true
+						});
+					}
+				}} className='btn btn-stimorol'>
+					Set Metadata URI for all tokens in the contract
+				</button>
+			</div>
+		</>}
 		<FixedBottomNavigation
 			backwardFunction={goBack}
 			forwardFunctions={[{

@@ -53,40 +53,34 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 	const history = useHistory();
 
 	const createOffers = async () => {
-		try {
+		Swal.fire({
+			title: 'Creating offer...',
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		if (await metamaskCall(
+			contractData.diamond.createRangeBatch(
+				collectionIndex,
+				offerList.filter(item => item.fixed !== true).map(item => {
+					return {
+						rangeStart: item.range[0],
+						rangeEnd: item.range[1],
+						tokensAllowed: item.tokensAllowed,
+						lockedTokens: item.lockedTokens,
+						price: item.price,
+						name: item.offerName
+					}
+				})
+			)
+		)) {
 			Swal.fire({
-				title: 'Creating offer...',
-				html: 'Please wait...',
-				icon: 'info',
-				showConfirmButton: false
+				title: 'Success!',
+				html: 'The offer(s) have been created!',
+				icon: 'success',
+				showConfirmButton: true
 			});
-			if (await metamaskCall(
-				contractData.diamond.createRangeBatch(
-					collectionIndex,
-					offerList.filter(item => item.fixed !== true).map(item => {
-						return {
-							rangeStart: item.range[0],
-							rangeEnd: item.range[1],
-							tokensAllowed: item.tokensAllowed,
-							lockedTokens: item.lockedTokens,
-							price: item.price,
-							name: item.offerName
-						}
-					})
-				)
-			)) {
-				Swal.fire({
-					title: 'Success!',
-					html: 'The offer(s) have been created!',
-					icon: 'success',
-					showConfirmButton: true
-				});
-				gotoNextStep();
-			}
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
+			gotoNextStep();
 		}
 	}
 

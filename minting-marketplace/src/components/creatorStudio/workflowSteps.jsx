@@ -86,7 +86,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 				classic: true,
 				diamond: true,
 				shortName: 'Batch Metadata',
-				hasAdvancedFeatures: false
+				hasAdvancedFeatures: true
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
@@ -96,7 +96,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 				classic: true,
 				diamond: true,
 				shortName: 'Single Metadata',
-				hasAdvancedFeatures: false
+				hasAdvancedFeatures: true
 			},
 			{
 				path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',

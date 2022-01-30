@@ -9,8 +9,10 @@ import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import chainData from '../../../utils/blockchainData.js'
 import { rFetch } from '../../../utils/rFetch.js';
+import { metamaskCall } from '../../../utils/metamaskUtils.js';
+import Swal from 'sweetalert2';
 
-const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep}) => {
+const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, simpleMode}) => {
 	const [nftID, setNFTID] = useState('');
 	const [nftTitle, setNFTTitle] = useState('');
 	const [nftImage, setNFTImage] = useState(BinanceDiamond);
@@ -24,6 +26,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 	const {address, collectionIndex} = useParams();
 	const history = useHistory();
 
+	const [metadataURI, setMetadataURI] = useState('');
 
 	const getNFTData = useCallback(async () => {
 		let aux = await rFetch(`/api/nft/${contractData.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
@@ -202,6 +205,57 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 				label: 'Continue'
 			}]}
 		/>}
+		{!simpleMode && contractData.diamond && contractData.instance && <>
+			<div className='col-12'>
+				<button onClick={async () => {
+					let URI = await contractData.instance.tokenURI(contractData.product.firstTokenIndex + Number(nftID))
+					if (URI) {
+						let data = (await (await fetch(URI)).json());
+						setNFTImage(data.image);
+						setNFTTitle(data.name);
+						setNFTDescription(data.description);
+						setPropertiesArray(data.attributes);
+						setMetadataURI(URI);
+					}
+				}} className='btn btn-primary'>
+					Read URI Data from the Blockchain
+				</button>
+			</div>
+			<hr />
+			<div className='col-12 col-md-9 px-0'>
+				<InputField
+					customClass='form-control'
+					getter={metadataURI}
+					setter={setMetadataURI}
+					label='Metadata URI'
+				/>
+			</div>
+			<div className='col-12 col-md-3 pt-4'>
+				<button onClick={async () => {
+					Swal.fire({
+						title: 'Sending metadata URI...',
+						html: 'Please wait...',
+						icon: 'info',
+						showConfirmButton: false
+					});
+					if (await metamaskCall(
+						contractData.instance.setUniqueURI(
+							Number(contractData.product.firstTokenIndex) + Number(nftID),
+							metadataURI
+						)
+					)) {
+						Swal.fire({
+							title: 'Success!',
+							html: 'Metadata URI has been set for that specific token',
+							icon: 'success',
+							showConfirmButton: true
+						});
+					}
+				}} className='btn btn-stimorol'>
+					Set Metadata for token #{nftID}
+				</button>
+			</div>
+		</>}
 	</div>
 }
 
