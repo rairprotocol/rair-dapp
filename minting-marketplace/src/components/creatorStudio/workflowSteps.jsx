@@ -169,7 +169,6 @@ const WorkflowSteps = ({sentryHistory}) => {
 					})
 				}
 			};
-			let marketplaceOffers = [];
 			if (diamondMarketplaceInstance) {
 				let offersCount = await diamondMarketplaceInstance.getOffersCountForAddress(instance.address);
 				for (let i = 0; i < offersCount.toString(); i++) {
@@ -217,14 +216,16 @@ const WorkflowSteps = ({sentryHistory}) => {
 	useEffect(() => {
 		if (diamondMarketplaceInstance) {
 			diamondMarketplaceInstance.on("AddedMintingOffer", fetchData);
+			return diamondMarketplaceInstance.on("AddedMintingOffer", null);
 		}
-	}, [diamondMarketplaceInstance])
+	}, [diamondMarketplaceInstance, fetchData])
 
 	useEffect(() => {
 		if (contractData?.instance) {
 			contractData.instance.on('CreatedRange', fetchData);
+			return contractData.instance.on('CreatedRange', null);
 		}
-	}, [contractData])
+	}, [contractData, fetchData])
 	
 	const fetchMintingStatus = useCallback(async () => {
 		if (!tokenInstance || !onMyChain) {

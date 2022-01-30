@@ -31,13 +31,13 @@ const DiamondOfferRow = ({
 
 	const randColor = colors[index];
 
-	const updater = (offerName, setter, value, doRerender = true) => {
-		array[index][offerName] = value;
+	const updater = useCallback((fieldName, setter, value, doRerender = true) => {
+		array[index][fieldName] = value;
 		setter(value);
 		if (doRerender) {
 			rerender();
 		}
-	};
+	}, [array, index, rerender]);
 
 	const updateEndingToken = useCallback( (value) => {
 		if (!array) {
@@ -86,7 +86,18 @@ const DiamondOfferRow = ({
 			return;
 		}
 		updateEndingToken(range?.at(1));
-	}, [range, updateEndingToken, endingToken])
+	}, [
+		range,
+		updateEndingToken,
+		endingToken,
+		updater,
+		setAllowedTokenCount,
+		setLockedTokenCount,
+		startingToken,
+		allowedTokenCount,
+		lockedTokenCount,
+		simpleMode
+	])
 
 	useEffect(() => {
 		setIndividualPrice(price);

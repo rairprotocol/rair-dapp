@@ -90,34 +90,6 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 		}
 	}
 
-	const appendOffers = async () => {
-		try {
-			Swal.fire({
-				title: 'Appending offers...',
-				html: 'Please wait...',
-				icon: 'info',
-				showConfirmButton: false
-			});
-			await (await contractData.diamond.appendOfferRangeBatch(
-				contractData.product.offers[0].offerPool,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].range[0]),
-				offerList.map((item) => item.range[1]),
-				offerList.map((item) => item.price),
-				offerList.map((item) => item.offerName))
-			).wait();
-			Swal.fire({
-				title: 'Success!',
-				html: 'The offers have been appended!',
-				icon: 'success',
-				showConfirmButton: true
-			});
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
-		}
-	}
-
 	useEffect(() => {
 		setOnMyChain(
 			window.ethereum ?
