@@ -45,5 +45,42 @@ module.exports = {
 		currency: 'USD',
 		showTimeSpent: true,
 		coinmarketcap: process.env.COINMARKETCAP || undefined
+	},
+	etherscan: {
+		apiKey: process.env.ETHERSCAN_API_KEY /*{
+			mainnet: ,
+			ropsten: process.env.ETHERSCAN_API_KEY,
+			rinkeby: process.env.ETHERSCAN_API_KEY,
+			goerli: process.env.ETHERSCAN_API_KEY,
+			kovan: process.env.ETHERSCAN_API_KEY,
+			// binance smart chain
+			bsc: "YOUR_BSCSCAN_API_KEY",
+			bscTestnet: "YOUR_BSCSCAN_API_KEY",
+			// huobi eco chain
+			heco: "YOUR_HECOINFO_API_KEY",
+			hecoTestnet: "YOUR_HECOINFO_API_KEY",
+			// fantom mainnet
+			opera: "YOUR_FTMSCAN_API_KEY",
+			ftmTestnet: "YOUR_FTMSCAN_API_KEY",
+			// optimistim
+			optimisticEthereum: "YOUR_OPTIMISTIC_ETHERSCAN_API_KEY",
+			optimisticKovan: "YOUR_OPTIMISTIC_ETHERSCAN_API_KEY",
+			// polygon
+			polygon: "YOUR_POLYGONSCAN_API_KEY",
+			polygonMumbai: "YOUR_POLYGONSCAN_API_KEY",
+			// arbitrum
+			arbitrumOne: "YOUR_ARBISCAN_API_KEY",
+			arbitrumTestnet: "YOUR_ARBISCAN_API_KEY",
+			// avalanche
+			avalanche: "YOUR_SNOWTRACE_API_KEY",
+			avalancheFujiTestnet: "YOUR_SNOWTRACE_API_KEY",
+			// moonriver
+			moonriver: "YOUR_MOONRIVER_MOONSCAN_API_KEY",
+			moonbaseAlpha: "YOUR_MOONRIVER_MOONSCAN_API_KEY",
+			// xdai and sokol don't need an API key, but you still need
+			// to specify one; any string placeholder will work
+			xdai: "api-key",
+			sokol: "api-key",
+		}*/
 	}
 };
