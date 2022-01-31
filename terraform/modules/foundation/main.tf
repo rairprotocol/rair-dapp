@@ -4,11 +4,6 @@ locals {
     b = "${var.region}-b",
     c = "${var.region}-c"
   }
-  users = {
-    brian_fogg = {
-      email: "brian@rair.tech"
-    }
-  }
 }
 
 resource "google_compute_resource_policy" "daily_backup" {

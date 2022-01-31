@@ -14,8 +14,7 @@ data "template_file" "tailscale_relay_starup_script" {
   vars = {
     tags = "tag:private-subnet-relay-${var.env_name}"
     advertised_routes = join(",", [
-      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range,
-      "10.0.64.0/18"
+      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
     ])
     tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
     hostname = "tailscale-relay-${var.env_name}"
