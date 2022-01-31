@@ -43,8 +43,6 @@ resource "google_compute_instance_template" "tailsacle_relay" {
     network = google_compute_network.primary.id
     subnetwork = google_compute_subnetwork.public.id
     stack_type = "IPV4_ONLY"
-    access_config {
-    }
   }
 
   service_account {
