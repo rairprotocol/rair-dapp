@@ -190,7 +190,7 @@
 
 @media screen and (max-width: 610px) {
     .wrapper-splash-page.greyman-page .splash-team {
-        margin-bottom: 208px;
+        margin-bottom: 100px;
     }
 }
 
@@ -244,10 +244,6 @@
 }
 
 @media screen and (max-width: 530px) {
-    .wrapper-splash-page.greyman-page .splash-team {
-        margin-bottom: 250px;
-    }
-
     .container-commercial {
         padding: 20px 20px !important;
     }
@@ -366,6 +362,6 @@
     }
 
     .wrapper-splash-page.greyman-page .splash-team {
-        margin-bottom: 350px;
+        margin-bottom: 100px;
     }
 }
