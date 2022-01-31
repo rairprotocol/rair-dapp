@@ -88,10 +88,10 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
           </div>
         </div>
         <div className="btn-buy-metamask">
-          <button>
+          {/* <button>
             <img className="metamask-logo" src={Metamask} alt="metamask-logo" />{" "}
             Mint with Matic
-          </button>
+          </button> */}
         </div>
       </div>
       <div className="left-tokens-content">

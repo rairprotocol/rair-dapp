@@ -15,6 +15,23 @@
     background-image: none;
 }
 
+.modal-mint-matic {
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: "Plus Jakarta Text";
+    border-radius: 16px;
+}
+
 @media screen and (max-width: 1300px) {
     .home-splash--page .information-author {
         background-size: 300px auto;
@@ -185,6 +202,13 @@
     .join-pic-main {
         margin-right: 0rem;
         margin-bottom: 2rem;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .ReactModal__Content.ReactModal__Content--after-open {
+        /* width: 80%; */
+        overflow: hidden;
     }
 }
 
