@@ -12,7 +12,7 @@ module "vpc_cidr_ranges" {
   base_cidr_block = var.vpc_cidr_block
   networks = [
     {
-      name     = "private"
+      name     = "public"
       new_bits = 8
     },
     {
@@ -60,15 +60,15 @@ resource "google_compute_subnetwork" "kubernetes_primary_cluster" {
 }
 
 #######################
-# Private Subnet
+# Public Subnet
 #######################
 
-resource "google_compute_subnetwork" "private" {
-  name = "private"
+resource "google_compute_subnetwork" "public" {
+  name = "public"
 
   region  = var.region
   network = google_compute_network.primary.self_link
 
   private_ip_google_access = true
-  ip_cidr_range = module.vpc_cidr_ranges.network_cidr_blocks.private
+  ip_cidr_range = module.vpc_cidr_ranges.network_cidr_blocks.public
 }

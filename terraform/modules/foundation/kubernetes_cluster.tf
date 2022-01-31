@@ -37,9 +37,11 @@ resource "google_container_cluster" "primary" {
   }
 
   master_authorized_networks_config {
+    # This cidr block sets up a firewall rule on the VPC we're pairing with
+    # these firewall rules will not show up in our firewall rule list
     cidr_blocks {
-      display_name = "Access from VPC internal network"
-      cidr_block = var.vpc_cidr_block
+      display_name = "Ingress traffic from public subnet (allows tailscale relay access)"
+      cidr_block = module.vpc_cidr_ranges.network_cidr_blocks.public
     }
   }
 
