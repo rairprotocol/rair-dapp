@@ -2,7 +2,7 @@ import React from 'react';
 
 const AuthenticityBlock = ({ tokenData, selectedToken }) => {
     return <div className="block-authenticity">
-        <div className="authenticity-title">Authenticity</div>
+        {/* <div className="authenticity-title">Authenticity</div> */}
         <div className="table-authenticity">
             <div className="table-authenticity-title">Action</div>
             <div className="authenticity-box">

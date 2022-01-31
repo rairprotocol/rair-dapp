@@ -47,7 +47,7 @@ import MyItems from './components/nft/myItems';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import {NftDataCommonLink} from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
@@ -421,9 +421,9 @@ function App({ sentryHistory }) {
 										<SentryRoute path='/all'>
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
-										{/* <SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
+										<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
 											<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute> */}
+										</SentryRoute>
 
 										<SentryRoute path="/coming-soon" component={ComingSoon} />
 										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
@@ -443,6 +443,10 @@ function App({ sentryHistory }) {
 										</SentryRoute>
 
 										<SentryRoute exact path='/:collection/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+										</SentryRoute>
+
+										<SentryRoute exact path='/:unlockables/:blockchain/:contract/:product/:tokenId'>
 											<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
