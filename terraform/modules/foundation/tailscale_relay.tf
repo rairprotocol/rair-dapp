@@ -98,8 +98,6 @@ data "google_iam_policy" "tailscale_secret_accessor" {
   binding {
     role = "roles/secretmanager.secretAccessor"
     members = [
-      # TODO: take brian user account out after it's working
-      "user:${local.users.brian_fogg.email}",
       "serviceAccount:${google_service_account.tailscale_relay.email}"
     ]
   }
