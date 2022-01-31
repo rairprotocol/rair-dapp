@@ -2820,6 +2820,7 @@ img.block-img-mobile{
 
     .footer ul {
         flex-direction: column;
+        text-align: center;
     }
     .footer ul li {
         margin-right: 0;
