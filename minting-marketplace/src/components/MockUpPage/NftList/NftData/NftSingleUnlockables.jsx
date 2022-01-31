@@ -30,13 +30,14 @@ const NftSingleUnlockables = ({
               }}
             >
               <div
-                onClick={() =>
-                  // history.push(`/watch/${v._id}/${v.mainManifest}`)
-                  history.push(
-                    `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
-                  )
+                onClick={
+                  () => history.push(`/watch/${v._id}/${v.mainManifest}`)
+                  // history.push(
+                  // `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
+                  // )
                 }
                 style={{
+                  cursor: "pointer",
                   display: "flex",
                   borderRadius: "16px",
                   minWidth: "400px",

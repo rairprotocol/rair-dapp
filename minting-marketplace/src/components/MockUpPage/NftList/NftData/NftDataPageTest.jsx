@@ -24,6 +24,7 @@ import "react-multi-carousel/lib/styles.css";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs.jsx";
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock.jsx";
 import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
+import CustomButton from "../../utils/button/CustomButton.jsx";
 
 const NftDataPageTest = ({
   blockchain,
@@ -43,6 +44,7 @@ const NftDataPageTest = ({
   offerData,
   offerPrice,
 }) => {
+  
   const history = useHistory();
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
@@ -690,7 +692,10 @@ const NftDataPageTest = ({
                             </div>
                           );
                         }
-                        if (item.trait_type === "image") {
+                        if (
+                          item.trait_type === "image" ||
+                          item.trait_type === "animation_url"
+                        ) {
                           return (
                             <div
                               key={index}
@@ -783,6 +788,18 @@ const NftDataPageTest = ({
                   productsFromOffer={productsFromOffer}
                   selectedData={selectedData}
                   selectedToken={selectedToken}
+                />
+                <CustomButton
+                  onClick={() =>
+                    history.push(
+                      `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
+                    )
+                  }
+                  text="More Unlockables"
+                  width="288px"
+                  height="48px"
+                  textColor={textColor}
+                  primaryColor={primaryColor}
                 />
               </AccordionItemPanel>
             </AccordionItem>

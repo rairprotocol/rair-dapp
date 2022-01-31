@@ -1112,6 +1112,34 @@ button.metamask-on-boarding:hover {
     margin-bottom: 3rem;
 }
 
+/* .nft-data-page_show__more_wrapper{
+    width: 288px;
+    height: 48px;
+    box-sizing: content-box;
+    letter-spacing: 1px;
+    margin: 0 auto;
+    padding: 1px;
+    border-radius: 16px;
+    background-image: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+.nft-data-page_show__more_wrapper:hover{
+    background: #8C63DA;
+}
+.nft-data-page_show__more:hover{
+    background: #8d18916e;
+}
+.nft-data-page_show__more{
+    width: 288px;
+    height: 48px;
+    background: #434343;
+    border-radius: 16px;
+    padding-top: auto;
+}
+.nft-data-page_show__more__text{
+    text-align: center;
+    display: inline-block;
+    padding: 12.5px;
+} */
 @media screen and (max-width: 900px) and (min-width: 500px) {
     #nft-data-page-wrapper {
         max-width: 50rem;
