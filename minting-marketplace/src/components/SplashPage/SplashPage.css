@@ -1783,8 +1783,12 @@ img.block-img-mobile{
         align-items: center;
     }
 
-    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient {
+    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient{
         font-size: 32px;
+    }
+
+    .left-tokens-content .title-tokens h3 span {
+        font-size: 32px !important;
     }
 
     .home-splash--page .tokens-description p {
@@ -2712,6 +2716,10 @@ img.block-img-mobile{
     .information-author.nutcrackers .btn-buy-metamask {
         margin-top: 30px;
     }
+
+    .greyman-timeline-wrapper {
+        margin-bottom: 30px;
+    }
 }
 
 @media screen and (max-width: 820px) {
@@ -2764,6 +2772,10 @@ img.block-img-mobile{
     .nipsey-release .release-desc-nipsey .release-desc-nipsey-box {
         padding: 15px;
         font-size: 14px;
+    }
+
+    .wrapper-splash-page.greyman-page .home-splash--page {
+        margin-top: 0;
     }
 }
 
