@@ -510,7 +510,7 @@ const SplashPage = ({ loginDone }) => {
               <div className="join-pic-main">
                 <div className="show-more-wrap">
                   <span className="show-more" style={{color: "#fff"}}>
-                    Open in Store <i class="fas fa-arrow-right"></i>{" "}
+                    Open in Store <i className="fas fa-arrow-right"></i>{" "}
                   </span>
                 </div>
                 <img

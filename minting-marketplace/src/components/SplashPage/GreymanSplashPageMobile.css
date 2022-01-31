@@ -163,10 +163,6 @@
     .non-commercial-content {
         background-image: none !important;
     }
-
-    .container-commercial {
-        bottom: 8rem !important;
-    }
 }
 
 @media screen and (max-width: 845px) {
@@ -193,10 +189,6 @@
 }
 
 @media screen and (max-width: 610px) {
-    .container-commercial {
-        bottom: 16rem !important;
-    }
-
     .wrapper-splash-page.greyman-page .splash-team {
         margin-bottom: 208px;
     }
@@ -252,10 +244,6 @@
 }
 
 @media screen and (max-width: 530px) {
-    .container-commercial {
-        bottom: 17rem !important;
-    }
-
     .wrapper-splash-page.greyman-page .splash-team {
         margin-bottom: 250px;
     }
