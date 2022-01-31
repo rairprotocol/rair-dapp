@@ -19,6 +19,10 @@ interface IRAIR721 {
 	function mintFromRange(address to, uint rangeId, uint indexInRange) external;
 }
 
+
+/// @title  RAIR Diamond - Minting offers facet
+/// @notice Facet in charge of the minting offers in the RAIR Marketplace
+/// @author Juan M. Sanchez M.
 contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 
 	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, uint offerIndex);
@@ -34,8 +38,8 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_;
 	}
 
-	modifier mintingOfferExists(uint rangeIndex_) {
-		require(s.mintingOffers.length > rangeIndex_, "Minting Marketplace: Minting Offer doesn't exist");
+	modifier mintingOfferExists(uint offerIndex_) {
+		require(s.mintingOffers.length > offerIndex_, "Minting Marketplace: Minting Offer doesn't exist");
 		_;
 	}
 
@@ -49,10 +53,14 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_;
 	}
 
+	/// @notice Utility function to verify if the Marketplace has a MINTER role
+	/// @param  erc721Address 	Address of the ERC721 token with AccessControl
 	function hasMinterRole(address erc721Address) internal view returns (bool) {
 		return IAccessControl(erc721Address).hasRole(bytes32(keccak256("MINTER")), address(this));
 	}
 
+	/// @notice Returns the number of offers for a specific ERC721 address
+	/// @param  erc721Address 	Address of the ERC721 token
 	function getOffersCountForAddress(address erc721Address) public view returns (uint) {
 		return s.addressToOffers[erc721Address].length;
 	}
@@ -121,6 +129,38 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		s.addressToOffers[erc721Address_].push(s.mintingOffers.length - 1);
 		s.addressToRangeOffer[erc721Address_][rangeIndex_] = s.mintingOffers.length - 1;
 		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, s.mintingOffers.length - 1);
+	}
+
+	function updateMintingOffer (
+		uint mintingOfferId_,
+		feeSplits[] memory splits_,
+		bool visible_
+	) external mintingOfferExists(mintingOfferId_) {
+		_updateMintingOffer(mintingOfferId_, splits_, visible_);
+	}
+
+	function _updateMintingOffer (
+		uint mintingOfferId_,
+		feeSplits[] memory splits_,
+		bool visible_
+	) internal {
+		mintingOffer storage selectedOffer = s.mintingOffers[mintingOfferId_];
+		require(
+			IAccessControl(selectedOffer.erc721Address).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)),
+			"Minter Marketplace: Sender isn't the creator of the contract!"
+		);
+		require(
+			hasMinterRole(selectedOffer.erc721Address),
+			"Minter Marketplace: This Marketplace isn't a Minter!"
+		);
+		uint totalPercentage = s.nodeFee + s.treasuryFee;
+		delete selectedOffer.fees;
+		for (uint i = 0; i < splits_.length; i++) {
+			totalPercentage += splits_[i].percentage;
+			selectedOffer.fees.push(splits_[i]);
+		}
+		require(totalPercentage == (100 * s.decimalPow), "Minter Marketplace: Fees don't add up to 100%");
+		selectedOffer.visible = visible_;
 	}
 
 	function buyMintingOffer(uint offerIndex_, uint tokenIndex_) public mintingOfferExists(offerIndex_) payable {

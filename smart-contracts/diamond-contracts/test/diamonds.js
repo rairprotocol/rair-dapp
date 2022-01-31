@@ -1603,6 +1603,38 @@ describe("Diamonds", function () {
 						((4500 * tokensList.length) / 100) * 60,
 						((4500 * tokensList.length) / 100) * 10, // Address 4 is the treasury and the node
 					]);
+
+					/*
+					console.log(await mintingOffersFacet.getOfferInfo(1));
+					mintOffer: [
+					  '0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa',
+					  '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65',
+					  BigNumber { value: "1" },
+					  [ [Array], [Array], [Array] ],
+					  true,
+					  erc721Address: '0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa',
+					  nodeAddress: '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65',
+					  rangeIndex: BigNumber { value: "1" },
+					  fees: [ [Array], [Array], [Array] ],
+					  visible: true
+					],
+					rangeData: [
+					  BigNumber { value: "11" },
+					  BigNumber { value: "99" },
+					  BigNumber { value: "50" },
+					  BigNumber { value: "89" },
+					  BigNumber { value: "10" },
+					  BigNumber { value: "3500" },
+					  'Second First Second',
+					  rangeStart: BigNumber { value: "11" },
+					  rangeEnd: BigNumber { value: "99" },
+					  tokensAllowed: BigNumber { value: "50" },
+					  mintableTokens: BigNumber { value: "89" },
+					  lockedTokens: BigNumber { value: "10" },
+					  rangePrice: BigNumber { value: "3500" },
+					  rangeName: 'Second First Second'
+					],
+					productIndex: BigNumber { value: "0" }*/
 			});
 
 			it ("Shouldn't mint more tokens if the range is complete", async () => {
