@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
+import axios from 'axios';
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -215,6 +216,16 @@ const SplashPage = ({ loginDone }) => {
     setDocumentTitle(`Cryptogreyman`)
   }, []);
 
+  // useEffect( async () => {
+  //     const responseAllProduct = await (
+  //       await fetch(`https://dev.rair.tech/api/contracts/network/0x13881/0x1bf2b3aB0014d2B2363dd999889d407792A28C06/products/offers`, {
+  //         method: "GET",
+  //       })
+  //     ).json();
+
+  //     console.log(responseAllProduct, 'response')
+  // }, [])
+
   return (
     <div className="wrapper-splash-page greyman-page">
       <div className="home-splash--page">
@@ -242,7 +253,7 @@ const SplashPage = ({ loginDone }) => {
                 the serial number changes. Claim yours for 2 MATIC
               </div>
               {timerLeft !== 0 && <div className="greyman-">
-                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-02T22:22:00-00:00'} />
+                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-01T12:10:00-00:00'} />
               </div>}
               <div className="btn-buy-metamask">
                 {timerLeft === 0 && <button onClick={() => openModal()}>
