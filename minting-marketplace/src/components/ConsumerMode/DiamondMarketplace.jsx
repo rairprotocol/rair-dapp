@@ -113,7 +113,6 @@ const DiamondMarketplace = (props) => {
 		let offerData = [];
 		for (let i = 0; i < offerCount; i++) {
 			let singleOfferData = await diamondMarketplaceInstance.getOfferInfo(i);
-			console.log(singleOfferData);
 			offerData.push({
 				offerIndex: i,
 				contractAddress: singleOfferData.mintOffer.erc721Address,
@@ -130,8 +129,12 @@ const DiamondMarketplace = (props) => {
 			})
 		}
 		setOffersArray(offerData);
-		console.log(diamondMarketplaceInstance.functions);
-	}, [diamondMarketplaceInstance])
+	}, [diamondMarketplaceInstance]);
+
+	useEffect(() => {
+		diamondMarketplaceInstance.on('TokenMinted', fetchDiamondData);
+		return () => diamondMarketplaceInstance.off('TokenMinted', fetchDiamondData);
+	}, [diamondMarketplaceInstance, fetchDiamondData])
 
 	useEffect(fetchDiamondData, [fetchDiamondData])
 
