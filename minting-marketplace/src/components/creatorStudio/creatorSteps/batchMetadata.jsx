@@ -225,8 +225,8 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 					{!includeNumber && "Don't " }Include token ID
 				</button>
 			</div>
-			<hr />
-			<div className='col-12 text-right'>
+			<br />
+			<div className='col-5'>
 				<button onClick={async () => {
 					Swal.fire({
 						title: 'Sending metadata URI...',
@@ -249,13 +249,13 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 						});
 					}
 				}} className='btn btn-stimorol'>
-					Set Metadata URI for all tokens in product #{contractData.product.collectionIndexInContract}
+					{metadataURI === '' ? 'Uns' : 'S'}et Metadata URI for all tokens in {contractData.product.name}
 				</button>
 			</div>
-			<div className='col-12 pt-4'>
+			<div className='col-2 pt-3'>
 				...or...
 			</div>
-			<div className='col-12 text-left'>
+			<div className='col-5'>
 				<button onClick={async () => {
 					Swal.fire({
 						title: 'Sending metadata URI...',
@@ -277,7 +277,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 						});
 					}
 				}} className='btn btn-stimorol'>
-					Set Metadata URI for all tokens in the contract
+					{metadataURI === '' ? 'Uns' : 'S'}et Metadata URI for all tokens in the contract
 				</button>
 			</div>
 		</>}

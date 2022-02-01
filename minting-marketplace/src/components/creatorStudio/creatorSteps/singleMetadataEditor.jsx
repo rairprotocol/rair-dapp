@@ -13,7 +13,7 @@ import { metamaskCall } from '../../../utils/metamaskUtils.js';
 import Swal from 'sweetalert2';
 
 const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, simpleMode}) => {
-	const [nftID, setNFTID] = useState('');
+	const [nftID, setNFTID] = useState(0);
 	const [nftTitle, setNFTTitle] = useState('');
 	const [nftImage, setNFTImage] = useState(BinanceDiamond);
 	const [nftDescription, setNFTDescription] = useState('');
@@ -252,7 +252,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 						});
 					}
 				}} className='btn btn-stimorol'>
-					Set Metadata for token #{nftID}
+					{metadataURI === '' ? 'Uns' : 'S'}et Metadata for token #{nftID}
 				</button>
 			</div>
 		</>}
