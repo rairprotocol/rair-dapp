@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-// import axios from 'axios';
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -79,6 +78,8 @@ Modal.setAppElement("#root");
 
 const SplashPage = ({ loginDone }) => {
   const [timerLeft, setTimerLeft] = useState();
+  const [copies, setCopies] = useState();
+  const [soldCopies, setSoldCopies] = useState();
 
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
@@ -216,15 +217,27 @@ const SplashPage = ({ loginDone }) => {
     setDocumentTitle(`Cryptogreyman`)
   }, []);
 
-  // useEffect( async () => {
-  //     const responseAllProduct = await (
-  //       await fetch(`/api/contracts/network/0x13881/0x1bf2b3aB0014d2B2363dd999889d407792A28C06/products/offers`, {
-  //         method: "GET",
-  //       })
-  //     ).json();
+  const getAllProduct = useCallback(async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`, {
+        method: "GET",
+      })
+    ).json();
 
-  //     console.log(responseAllProduct, 'response')
-  // }, [])
+
+    if (responseAllProduct.product && responseAllProduct.product.copies && responseAllProduct.product.soldCopies) {
+      setCopies(responseAllProduct.product.copies);
+      setSoldCopies(responseAllProduct.product.soldCopies);
+    } else {
+      setCopies(7);
+      setSoldCopies(0);
+    }
+
+  }, [setSoldCopies]);
+
+  useEffect(() => {
+    getAllProduct()
+  }, [getAllProduct])
 
   return (
     <div className="wrapper-splash-page greyman-page">
@@ -368,7 +381,7 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} />
+        <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} soldCopies={soldCopies} copies={copies} />
         <div className="about-metadata-wrapper">
           <div className="about-metadata">
             <h1

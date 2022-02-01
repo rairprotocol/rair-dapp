@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
-const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
+const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
   const [percentTokens, setPersentTokens] = useState(0);
   const [showMore, setShowMore] = useState(false);
 
-  const leftTokensNumber = 7.9;
-  const wholeTokens = 7.9;
+  const wholeTokens = Number(copies) - Number(soldCopies);
+  const leftTokensNumber = Number(soldCopies);
 
   useEffect(() => {
     if (leftTokensNumber <= wholeTokens) {
@@ -23,7 +23,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
     if (leftTokensNumber > wholeTokens) {
       setPersentTokens(100);
     }
-  }, [setPersentTokens]);
+  }, [setPersentTokens, wholeTokens, leftTokensNumber]);
 
   return (
     <div className="left-tokens greyman-page left-tokens-response ">
@@ -76,9 +76,9 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
               <div className="progress-info">
                 <div className="text-numbers">
                   <div style={{ color: "white" }} className="">
-                    {leftTokensNumber}b{" "}
+                    {leftTokensNumber} {" "}
                   </div>
-                  <div className="text-whole-tokens"> / {wholeTokens}b</div>
+                  <div className="text-whole-tokens"> / {`${wholeTokens.toString().substr(0,1)}b`}</div>
                 </div>
               </div>
             </div>
@@ -152,11 +152,11 @@ const TokenLeftGreyman = ({ primaryColor, Metamask }) => {
               city or country by foot, plane, car or bicycle, I always have my
               music with me.
               <button
-              className="btn-show-more"
-              onClick={() => { setShowMore(!showMore) }}
-            >
-              {showMore ? "Read less" : "Read more..."}
-            </button>
+                className="btn-show-more"
+                onClick={() => { setShowMore(!showMore) }}
+              >
+                {showMore ? "Read less" : "Read more..."}
+              </button>
             </p> : <button
               className="btn-show-more"
               onClick={() => { setShowMore(!showMore) }}
