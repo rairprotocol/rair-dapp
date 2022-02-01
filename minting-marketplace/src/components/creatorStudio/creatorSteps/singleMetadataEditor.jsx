@@ -75,15 +75,15 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 				Batch
 			</NavLink>
 		</div>
-		<div className='col-6 text-start mb-3 pe-5'>
+		<div className='col-12 col-md-6 text-start mb-3 pe-5'>
 			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractData.blockchain}/${address}/collection/${collectionIndex}/metadata/single`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
 				Single
 			</NavLink>
 		</div>
-		<div className='col-6 text-start px-5'>
+		<div className='col-12 col-md-6 text-start px-5'>
 			NFT #
 			<br />
-			<div className='border-stimorol rounded-rair mb-3'>
+			<div className='border-stimorol col-12 col-md-3 rounded-rair mb-3'>
 				<InputField
 					getter={nftID}
 					setter={setNFTID}
@@ -91,6 +91,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 					customCSS={{color: textColor}}
 					type='number'
 					min='0'
+					max={contractData.product.copies - 1}
 				/>
 			</div>
 			<br />
@@ -208,7 +209,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 		{!simpleMode && contractData.diamond && contractData.instance && <>
 			<div className='col-12'>
 				<button onClick={async () => {
-					let URI = await contractData.instance.tokenURI(contractData.product.firstTokenIndex + Number(nftID))
+					let URI = await metamaskCall(contractData.instance.tokenURI(contractData.product.firstTokenIndex + Number(nftID)))
 					if (URI) {
 						let data = (await (await fetch(URI)).json());
 						setNFTImage(data.image);
