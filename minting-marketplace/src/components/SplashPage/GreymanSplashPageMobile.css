@@ -265,6 +265,14 @@
     .main-greyman-pic-wrapper {
         display: none;
     }
+
+    .wrapper-splash-page.greyman-page .home-splash--page .information-author .root-time .time {
+        font-size: 26px;
+    }
+
+    .wrapper-splash-page.greyman-page .information-author .root-time {
+        padding: 10px 15px;
+    }
 }
 
 @media screen and (max-width: 530px) {
@@ -387,5 +395,30 @@
 
     .wrapper-splash-page.greyman-page .splash-team {
         margin-bottom: 100px;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask button {
+        width: 250px;
+        height: 48px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .wrapper-splash-page.greyman-page .information-author .root-time {
+        padding: 5px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .information-author.greyman-page-author .btn-buy-metamask {
+        width: 100%;
     }
 }

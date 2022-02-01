@@ -27,6 +27,7 @@ import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import VideoPlayer from "../video/videoPlayerGenerall";
 import setDocumentTitle from './../../utils/setTitle';
+import { Countdown } from "./Timer/CountDown";
 
 const customStyles = {
   overlay: {
@@ -76,6 +77,8 @@ const customStylesForVideo = {
 Modal.setAppElement("#root");
 
 const SplashPage = ({ loginDone }) => {
+  const [timerLeft, setTimerLeft] = useState();
+
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -234,21 +237,22 @@ const SplashPage = ({ loginDone }) => {
                   #Cryptogreyman
                 </h3>
               </div>
-              <div className="text-description">
-                <p>
-                  7.907.414.597 non-unique NFTs. All metadata is identical only
-                  the serial number changes. Claim yours for 2 MATIC
-                </p>
+              <div className="text-description" style={{ color: "#A7A6A6" }}>
+                7.907.414.597 non-unique NFTs. All metadata is identical only
+                the serial number changes. Claim yours for 2 MATIC
+              </div>
+              <div className="greyman-">
+                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-02T22:22:00-08:00'} />
               </div>
               <div className="btn-buy-metamask">
-                <button onClick={() => openModal()}>
+                {/* <button onClick={() => openModal()}>
                   <img
                     className="metamask-logo"
                     src={Metamask}
                     alt="metamask-logo"
                   />{" "}
                   Mint with Matic
-                </button>
+                </button> */}
               </div>
               <div className="btn-timer-nipsey">
                 <Modal
@@ -509,7 +513,7 @@ const SplashPage = ({ loginDone }) => {
             <div className="main-greyman-pic">
               <div className="join-pic-main">
                 <div className="show-more-wrap">
-                  <span className="show-more" style={{color: "#fff"}}>
+                  <span className="show-more" style={{ color: "#fff" }}>
                     Open in Store <i className="fas fa-arrow-right"></i>{" "}
                   </span>
                 </div>
