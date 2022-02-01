@@ -233,14 +233,14 @@ const DiamondMarketplace = (props) => {
 				}} className={`btn my-2 py-0 btn-${offer.visible ? 'stimorol' : 'danger'}`}>
 					{offer.visible ? 'Buy a token' : "Not for sale!"}
 				</button>
-				<TokenSelector buyCall={async (tokenIndex) => {
+				{offer.visible && <TokenSelector buyCall={async (tokenIndex) => {
 					await mintTokenCall(
 						offer.offerIndex,
 						tokenIndex,
 						offer.price
 					);
-				}}/>
-				<BatchTokenSelector batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />
+				}}/>}
+				{offer.visible && <BatchTokenSelector batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />}
 			</div>
 		})}
 	</div>
