@@ -17,13 +17,16 @@ const metamaskCall = async (transaction) => {
 		handleError(errorMessage)
 		return false;
 	}
-	try {
-		await (paramsValidation).wait();
-	} catch (errorMessage) {
-		handleError(errorMessage)
-		return false;
+	if (paramsValidation.wait) {
+		try {
+			await (paramsValidation).wait();
+		} catch (errorMessage) {
+			handleError(errorMessage)
+			return false;
+		}
+		return true;
 	}
-	return true;
+	return paramsValidation;
 }
 
 const validateInteger = (number) => {
