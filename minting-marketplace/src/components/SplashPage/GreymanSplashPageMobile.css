@@ -15,6 +15,23 @@
     background-image: none;
 }
 
+.modal-mint-matic {
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: "Plus Jakarta Text";
+    border-radius: 16px;
+}
+
 @media screen and (max-width: 1300px) {
     .home-splash--page .information-author {
         background-size: 300px auto;
@@ -112,6 +129,10 @@
         height: 100%;
     }
 
+    .home-splash--page .information-author.greyman-page-author {
+        padding: 90px 80px 20px 80px;
+    }
+
     .home-splash--page .information-author {
         justify-content: center;
     }
@@ -163,10 +184,6 @@
     .non-commercial-content {
         background-image: none !important;
     }
-
-    .container-commercial {
-        bottom: 8rem !important;
-    }
 }
 
 @media screen and (max-width: 845px) {
@@ -192,13 +209,16 @@
     }
 }
 
-@media screen and (max-width: 610px) {
-    .container-commercial {
-        bottom: 16rem !important;
+@media screen and (max-width: 800px) {
+    .ReactModal__Content.ReactModal__Content--after-open {
+        /* width: 80%; */
+        overflow: hidden;
     }
+}
 
+@media screen and (max-width: 610px) {
     .wrapper-splash-page.greyman-page .splash-team {
-        margin-bottom: 208px;
+        margin-bottom: 100px;
     }
 }
 
@@ -249,17 +269,17 @@
     .main-greyman-pic-wrapper {
         display: none;
     }
+
+    .wrapper-splash-page.greyman-page .home-splash--page .information-author .root-time .time {
+        font-size: 26px;
+    }
+
+    .wrapper-splash-page.greyman-page .information-author .root-time {
+        padding: 10px 15px;
+    }
 }
 
 @media screen and (max-width: 530px) {
-    .container-commercial {
-        bottom: 17rem !important;
-    }
-
-    .wrapper-splash-page.greyman-page .splash-team {
-        margin-bottom: 250px;
-    }
-
     .container-commercial {
         padding: 20px 20px !important;
     }
@@ -378,6 +398,31 @@
     }
 
     .wrapper-splash-page.greyman-page .splash-team {
-        margin-bottom: 350px;
+        margin-bottom: 100px;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask button {
+        width: 250px;
+        height: 48px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .wrapper-splash-page.greyman-page .information-author .root-time {
+        padding: 5px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .information-author.greyman-page-author .btn-buy-metamask {
+        width: 100%;
     }
 }

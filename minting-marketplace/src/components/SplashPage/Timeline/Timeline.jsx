@@ -23,7 +23,7 @@ const TimelineComponent = () => {
                   height: "355px",
                 }}
                 src={pic1}
-                alt=""
+                alt="TimeLine"
               />
             </div>
             <div className={cl.left_content}>
@@ -56,7 +56,7 @@ const TimelineComponent = () => {
                   zIndex: "1",
                 }}
                 src={pic2}
-                alt=""
+                alt="TimeLine"
               />
               <p className={cl.p_content}>
                 <strong>1996-98</strong> <br />
@@ -87,7 +87,7 @@ const TimelineComponent = () => {
                   height: "441px",
                 }}
                 src={pic3}
-                alt=""
+                alt="TimeLine"
               />
               <p
                 style={{ paddingLeft: "5rem", wight: "353px" }}
@@ -117,7 +117,7 @@ const TimelineComponent = () => {
                 height: "373px",
               }}
               src={pic5}
-              alt=""
+              alt="TimeLine"
             />
           </div>
 
@@ -143,7 +143,7 @@ const TimelineComponent = () => {
                   height: "355px",
                 }}
                 src={pic4}
-                alt=""
+                alt="TimeLine"
               />
             </div>
             <div className={cl.left_content}>
@@ -184,7 +184,7 @@ const TimelineComponent = () => {
                 height: "356px",
               }}
               src={pic6}
-              alt=""
+              alt="TimeLine"
             />
           </div>
 
@@ -196,7 +196,7 @@ const TimelineComponent = () => {
               <img
                 style={{ display: "block", width: "358px", height: "464px" }}
                 src={pic7}
-                alt=""
+                alt="TimeLine"
               />
             </div>
             <div className={cl.right_content}>
@@ -229,6 +229,92 @@ const TimelineComponent = () => {
           </>
           <div style={{ clear: "both" }}></div>
         </ul>
+      </div>
+      <div className={cl.timelineMobile}>
+        <div className={cl.mobileTitleBlock}>Physical Era</div>
+        <div className={cl.timeLineContentMobile}>
+          <img src={pic1} alt="TimeLine" />
+
+          <div className={cl.mobileDesc}>
+            <span>1994</span><br />
+            Cryptogreyman is born. A modern superhero in his combat against
+            fun, humor, initiative, and creativity. Acrylic on linen.
+            90 x 90 cm. Part of Dadara’s No Fun exhibition in Amsterdam.
+          </div>
+        </div>
+        <div className={cl.timeLineContentMobile}>
+          <img src={pic2} alt="TimeLine" />
+
+          <div className={cl.mobileDesc}>
+            <span>1996-98</span><br />
+            Greyman became a series based on the same character with various traits and characteristics,
+            such as the Grey Punk, Grey Angel, Tattooed Greyman etc. Sounds
+            familiar nowadays in this age of 10K collectibles and PFPs,
+            doesn’t it?
+          </div>
+        </div>
+        <div className={cl.timeLineContentMobile}>
+          <img src={pic3} alt="TimeLine" />
+
+          <div className={cl.mobileDesc}>
+            <span>1998</span> <br />
+            Nine metres high Greyman Statue of No Liberty made
+            out of concrete and bronze in front of Rijksmuseum
+            in Amsterdam.
+          </div>
+        </div>
+        <div className={cl.timeLineContentMobile}>
+          <img src={pic5} alt="TimeLine" />
+
+          <div className={cl.mobileDesc}>
+            <span>2002</span> <br />
+            140 paper maché Greymen traveled to the Nevada desert to
+            the Burning Man festival where they surrounded an altar.
+            People could customize them and make them less grey during
+            the week after which they could burn them in a private
+            ritual at the end, thus burning and freeing their Inner
+            Greyman.
+          </div>
+        </div>
+        <div className={cl.mobileTitleBlock}>Web2 Era</div>
+        <div className={cl.timeLineContentMobile}>
+          <div className={cl.mobileDesc}>
+            <span>2002-2020</span><br />
+            Greyman lies dormant and patiently waits
+            for Web2 to develop into Web3
+          </div>
+        </div>
+        <div className={cl.mobileTitleBlock}>Web3 Era</div>
+        <div className={cl.timeLineContentMobile}>
+          <img src={pic4} alt="TimeLine" />
+
+          <div className={cl.mobileDesc}>
+            <span>4 November 2021 </span> <br />
+            Birth of the handpainted Cryptogreyman
+            (NFT sold on Rarible for 2.429 ETH, painting
+            sold for 3208 Euro at auction)
+          </div>
+        </div>
+        <div className={cl.timeLineContentMobile}>
+          <img src={pic6} alt="TimeLine" />
+
+          <div className={cl.mobileDesc}>
+            <span>30 November 2021</span> <br />
+            Birth of the pure digital Cryptogreyman
+            (NFT sold on Foundation for 0.7 ETH)
+          </div>
+        </div>
+        <div className={cl.mobileTitleBlock}>Beyond</div>
+        <div className={cl.timeLineContentMobile}>
+          <img src={pic7} alt="TimeLine" />
+
+          <div className={cl.mobileDesc}>
+            <span>2022</span> <br />
+            Birth of 7.907.414.597 Greymen mintable
+            on MATIC ready to turn the Metaverse
+            into a Greyverse.
+          </div>
+        </div>
       </div>
     </div>
   );
