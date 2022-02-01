@@ -216,14 +216,14 @@ const WorkflowSteps = ({sentryHistory}) => {
 	useEffect(() => {
 		if (diamondMarketplaceInstance) {
 			diamondMarketplaceInstance.on("AddedMintingOffer", fetchData);
-			return diamondMarketplaceInstance.on("AddedMintingOffer", null);
+			return diamondMarketplaceInstance.off("AddedMintingOffer", fetchData);
 		}
 	}, [diamondMarketplaceInstance, fetchData])
 
 	useEffect(() => {
 		if (contractData?.instance) {
 			contractData.instance.on('CreatedRange', fetchData);
-			return contractData.instance.on('CreatedRange', null);
+			return contractData.instance.off('CreatedRange', fetchData);
 		}
 	}, [contractData, fetchData])
 	
