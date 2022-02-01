@@ -25,6 +25,7 @@ import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs.jsx";
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock.jsx";
 import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
 import CustomButton from "../../utils/button/CustomButton.jsx";
+import CollectionInfo from "./CollectionInfo/CollectionInfo.jsx";
 
 const NftDataPageTest = ({
   blockchain,
@@ -850,6 +851,7 @@ const NftDataPageTest = ({
             <></>
           )} */}
         </div>
+        <CollectionInfo />
       </div>
     </div>
   );
