@@ -129,6 +129,10 @@
         height: 100%;
     }
 
+    .home-splash--page .information-author.greyman-page-author {
+        padding: 90px 80px 20px 80px;
+    }
+
     .home-splash--page .information-author {
         justify-content: center;
     }
