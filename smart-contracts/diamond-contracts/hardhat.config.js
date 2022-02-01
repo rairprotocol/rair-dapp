@@ -22,6 +22,10 @@ module.exports = {
 			url: process.env.GOERLI_SPEEDY_NODE,
 			accounts: [process.env.ADDRESS_PRIVATE_KEY],
 		},
+		"0x13881": {
+			url: process.env.MUMBAI_SPEEDY_NODE,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+		}
 	},
 	solidity: {
 		compilers: [{
@@ -47,8 +51,8 @@ module.exports = {
 		coinmarketcap: process.env.COINMARKETCAP || undefined
 	},
 	etherscan: {
-		apiKey: process.env.ETHERSCAN_API_KEY /*{
-			mainnet: ,
+		apiKey: process.env.POLYGONSCAN_API_KEY /*{
+			mainnet: process.env.ETHERSCAN_API_KEY,
 			ropsten: process.env.ETHERSCAN_API_KEY,
 			rinkeby: process.env.ETHERSCAN_API_KEY,
 			goerli: process.env.ETHERSCAN_API_KEY,
@@ -66,8 +70,8 @@ module.exports = {
 			optimisticEthereum: "YOUR_OPTIMISTIC_ETHERSCAN_API_KEY",
 			optimisticKovan: "YOUR_OPTIMISTIC_ETHERSCAN_API_KEY",
 			// polygon
-			polygon: "YOUR_POLYGONSCAN_API_KEY",
-			polygonMumbai: "YOUR_POLYGONSCAN_API_KEY",
+			polygon: process.env.POLYGONSCAN_API_KEY,
+			polygonMumbai: process.env.POLYGONSCAN_API_KEY,
 			// arbitrum
 			arbitrumOne: "YOUR_ARBISCAN_API_KEY",
 			arbitrumTestnet: "YOUR_ARBISCAN_API_KEY",

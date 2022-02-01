@@ -21,15 +21,3 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
 };
 
 module.exports.tags = ['FactoryFacets'];
-
-/*
-
-
-
-
-FeesFacet
-MarketplaceDiamond
-MintingOffersFacet
-
-RAIR777
-*/

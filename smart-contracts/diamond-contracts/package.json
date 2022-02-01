@@ -19,7 +19,8 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
-    "deploy-goerli": "npx hardhat --network 0x5 deploy"
+    "deploy-goerli": "npx hardhat --network 0x5 deploy",
+    "deploy-mumbai": "npx hardhat --network 0x13881 deploy"
   },
   "author": "Juan Miguel Sanchez Mola",
   "license": "ISC"

@@ -23,8 +23,8 @@ const contractAddresses = {
 		factory: '0xB8083810Fa33e7Ebd777c8cd6eBB453948aFd354',
 		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
 		minterMarketplace: '0x4594D508cDa05D016571082d467889f4629e1f56',
-		diamondFactory: undefined,
-		diamondMarketplace: undefined
+		diamondFactory: '0xbB236Ce48dDCb58adB8665E220FE976bA5d080a5',
+		diamondMarketplace: '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0'
 	},
 	'0x89': {
 		factory: '0x9bB24e68d952Ab872b0421297E0cda8D89B2390B',

@@ -15,17 +15,3 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
 };
 
 module.exports.tags = ['DiamondTokenFactory'];
-
-/*
-creatorFacet
-	DiamondCutFacet
-DiamondLoupeFacet
-ERC721Facet
-ERC777ReceiverFacet
-FactoryDiamond
-FeesFacet
-MarketplaceDiamond
-MintingOffersFacet
-OwnershipFacet
-RAIR777
-*/
