@@ -379,7 +379,7 @@ function App({ sentryHistory }) {
 										{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 									</button>
 									{renderBtnConnect ? <OnboardingButton /> : <> </>}
-									{console.log(adminAccess)}
+									{/* {console.log(adminAccess)} */}
 								</div> : adminAccess === true && [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className="fas fa-key" />, route: '/my-nft' },

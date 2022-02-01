@@ -37,7 +37,7 @@ const NftSingleUnlockables = ({
                   // )
                 }
                 style={{
-                  cursor: "pointer",
+                  // cursor: "pointer",
                   display: "flex",
                   borderRadius: "16px",
                   minWidth: "400px",

@@ -8,11 +8,8 @@ function CustomButton({
   height,
   onClick,
   textColor,
-  primaryColor,
+//   primaryColor,
 }) {
-  console.log(primaryColor, "primaryColor");
-
-  console.log(textColor, "textColor");
   return (
     <div
       style={{

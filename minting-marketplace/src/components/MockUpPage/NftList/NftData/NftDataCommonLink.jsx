@@ -14,7 +14,6 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
   const [productsFromOffer, setProductsFromOffer] = useState([]);
   const [totalCount, setTotalCount] = useState();
 
-  // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
 
@@ -120,6 +119,8 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
     setSelectedOfferIndex(tokenData[tokenId]?.offer);
   }, [blockchain, contract, product, tokenId, tokenData]);
 
+  //TODO:useCallback
+  
   function onSelect(id) {
     tokenData.forEach((p) => {
       if (p._id === id) {

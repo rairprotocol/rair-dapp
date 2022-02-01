@@ -15,8 +15,8 @@ const CurrentTokensComponent = ({
 }) => {
   return (
     <>
-    <div key={selectedToken} ref={numberRef} className="select-number-container">
-      <div key={numberRef}
+    <div ref={numberRef} className="select-number-container">
+      <div 
         onClick={handleIsOpen}
         className="select-field"
         style={{
@@ -83,7 +83,7 @@ const CurrentTokensComponent = ({
                   }`,
                   color: `${primaryColor === "rhyno" ? "#fff" : "A7A6A6"}`,
                 }}
-                key={el._id}
+                key={el.id}
                 onClick={() => onClickItem(el.token)}
               >
                 {el.token}

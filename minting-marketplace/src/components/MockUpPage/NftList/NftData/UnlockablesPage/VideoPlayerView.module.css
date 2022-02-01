@@ -1,0 +1,41 @@
+.VideoPlayerViewWrapper{
+    width: 1200px;
+    height: 446px;
+    background: #383637;
+    margin: auto;
+    border-radius: 16px;
+}
+.ListOfVideosWrapper{
+
+}
+.previewWrapper{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.ListOfVideosOneVideo{
+    width: 320px;
+    height: 180px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid palevioletred;
+
+
+}
+.play{
+    display: flex;
+    height: 20px ;
+}
+
+.SingleVideoWrapper{
+
+}
+
+.description{
+    display: flex;
+    flex-direction: column;
+}

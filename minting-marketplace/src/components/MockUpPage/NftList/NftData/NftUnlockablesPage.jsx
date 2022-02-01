@@ -2,6 +2,7 @@ import React, { useState /*useCallback*/ } from "react";
 import CustomButton from "../../utils/button/CustomButton";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import NftSingleUnlockables from "./NftSingleUnlockables";
+import VideoPlayerView from "./UnlockablesPage/VideoPlayerView";
 
 const NftUnlockablesPage = ({
   blockchain,
@@ -24,7 +25,7 @@ const NftUnlockablesPage = ({
   return (
     <div>
       <BreadcrumbsView />
-
+      <VideoPlayerView />
       <NftSingleUnlockables
         blockchain={blockchain}
         contract={contract}
