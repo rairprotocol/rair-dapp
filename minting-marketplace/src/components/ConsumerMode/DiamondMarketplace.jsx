@@ -7,12 +7,15 @@ import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import InputField from '../common/InputField.jsx';
 
-const BatchTokenSelector = ({batchMint}) => {
+const BatchTokenSelector = ({batchMint, max}) => {
 	const [batchArray, setBatchArray] = useState([]);
 	const [rerender, setRerender] = useState(false);
 
 	const addRecipient = () => {
-		let aux = [...batchArray]
+		if (batchArray.length >= max) {
+			return;
+		}
+		let aux = [...batchArray];
 		aux.push({
 			recipient: '',
 			tokenIndex: 0
@@ -59,7 +62,7 @@ const BatchTokenSelector = ({batchMint}) => {
 				</button>
 			</div>
 		})}
-		<button className='btn btn-royal-ice' onClick={addRecipient}>
+		<button className='btn btn-royal-ice' disabled={batchArray.length >= max} onClick={addRecipient}>
 			Add
 		</button>
 		<button className='btn btn-stimorol' onClick={
@@ -72,8 +75,8 @@ const BatchTokenSelector = ({batchMint}) => {
 	</details>
 }
 
-const TokenSelector = ({buyCall}) => {
-	const [tokenId, setTokenId] = useState(0);
+const TokenSelector = ({buyCall, max, min}) => {
+	const [tokenId, setTokenId] = useState(min);
 
 	return <details>
 		<summary>
@@ -87,7 +90,8 @@ const TokenSelector = ({buyCall}) => {
 			setter={setTokenId}
 			placeholder='Token Identifier'
 			type='number'
-			min={0}
+			min={min}
+			max={max}
 			label='Token #'
 		/>
 		<br />
@@ -236,14 +240,14 @@ const DiamondMarketplace = (props) => {
 				}} className={`btn my-2 py-0 btn-${offer.visible ? 'stimorol' : 'danger'}`}>
 					{offer.visible ? 'Buy a token' : "Not for sale!"}
 				</button>
-				{offer.visible && <TokenSelector buyCall={async (tokenIndex) => {
+				{offer.visible && <TokenSelector min={offer.startingToken} max={offer.endingToken} buyCall={async (tokenIndex) => {
 					await mintTokenCall(
 						offer.offerIndex,
 						tokenIndex,
 						offer.price
 					);
 				}}/>}
-				{offer.visible && <BatchTokenSelector batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />}
+				{offer.visible && <BatchTokenSelector max={offer.tokensAllowed} batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />}
 			</div>
 		})}
 	</div>
