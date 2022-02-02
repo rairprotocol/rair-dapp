@@ -26,6 +26,7 @@ import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock.jsx";
 import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
 import CustomButton from "../../utils/button/CustomButton.jsx";
 import CollectionInfo from "./CollectionInfo/CollectionInfo.jsx";
+import TitleCollection from "./TitleCollection/TitleCollection.jsx";
 
 const NftDataPageTest = ({
   blockchain,
@@ -45,7 +46,7 @@ const NftDataPageTest = ({
   offerData,
   offerPrice,
 }) => {
-  
+
   const history = useHistory();
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
@@ -450,6 +451,7 @@ const NftDataPageTest = ({
     <div id="nft-data-page-wrapper">
       <BreadcrumbsView />
       <div>
+        <TitleCollection title={selectedData?.name} userName={tokenData[0].ownerAddress} />
         <div
           style={{
             maxWidth: "1200px",
@@ -458,33 +460,6 @@ const NftDataPageTest = ({
             padding: "24px 0",
           }}
         >
-          <div className="ntf-header">
-            <h2
-              style={{
-                fontFamily: "Plus Jakarta Sans",
-                fontSize: "40px",
-                fontStyle: "normal",
-                fontWeight: "700",
-                lineHeight: "28px",
-                letterSpacing: "0px",
-                textAlign: "left",
-                marginBottom: "3rem",
-                marginTop: "1rem",
-                marginLeft: "3px",
-              }}
-            >
-              {selectedData?.name}
-            </h2>
-            <div className="btn-share">
-              <button
-                style={{
-                  color: `var(--${textColor})`,
-                }}
-              >
-                Share
-              </button>
-            </div>
-          </div>
           <div
             className="nft-collection"
             style={{
@@ -661,8 +636,8 @@ const NftDataPageTest = ({
                   {/* {checkDataOfProperty()} */}
                   {selectedData ? (
                     Object.keys(selectedData).length &&
-                    // ? selectedData.length &&
-                    selectedData?.attributes.length > 0 ? (
+                      // ? selectedData.length &&
+                      selectedData?.attributes.length > 0 ? (
                       selectedData?.attributes.map((item, index) => {
                         if (
                           item.trait_type === "External URL" &&

@@ -3,8 +3,6 @@ import "./TitleCollection.css";
 import defaultUser from "./../../../assets/defultUser.png";
 
 const TitleCollection = ({ title, userName }) => {
-
-
     return <div className="container-title-collection">
         <div className="block-title-share">
             <h2>{title}</h2>
