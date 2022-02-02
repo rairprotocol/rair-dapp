@@ -206,7 +206,7 @@ const SplashPage = () => {
                       alt="metamask-logo"
                     />{" "}
                     Preorder with ETH
-                  </button> : <Countdown setTimerLeft={setTimerLeft} timerLeft={timerLeft} />
+                  </button> : <Countdown setTimerLeft={setTimerLeft} timerLeft={timerLeft} time={"2022-01-06T19:00:00-08:00"} />
                 }
                 <Modal
                   isOpen={modalIsOpen}

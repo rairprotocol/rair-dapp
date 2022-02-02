@@ -1783,8 +1783,12 @@ img.block-img-mobile{
         align-items: center;
     }
 
-    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient {
+    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient{
         font-size: 32px;
+    }
+
+    .left-tokens-content .title-tokens h3 span {
+        font-size: 32px !important;
     }
 
     .home-splash--page .tokens-description p {
@@ -2712,6 +2716,10 @@ img.block-img-mobile{
     .information-author.nutcrackers .btn-buy-metamask {
         margin-top: 30px;
     }
+
+    .greyman-timeline-wrapper {
+        margin-bottom: 30px;
+    }
 }
 
 @media screen and (max-width: 820px) {
@@ -2745,6 +2753,10 @@ img.block-img-mobile{
         display: flex;
         justify-content: center;
     }
+
+    .modal-content-wrapper {
+        width: 80%;
+    }
 }
 
 
@@ -2765,6 +2777,10 @@ img.block-img-mobile{
         padding: 15px;
         font-size: 14px;
     }
+
+    .wrapper-splash-page.greyman-page .home-splash--page {
+        margin-top: 0;
+    }
 }
 
 @media screen and (max-width: 670px) {
@@ -2780,6 +2796,50 @@ img.block-img-mobile{
         left: 190%;
         width: 120px;
         height: 120px;
+    }
+
+    .modal-content-wrapper {
+        width: 400px;
+
+    }
+
+    .modal-content-wrapper .modal-text {
+        font-size: 20px;
+    }
+
+    .modal-content-np {
+        width: 400px;
+    }
+
+    .modal-content-wrapper .form-group label, .form-group span {
+        font-size: 20px;
+    }
+
+    .modal-content-wrapper span {
+        font-size: 20px !important;
+        /* padding-right: 0 !important; */
+        margin-left: -10px !important;
+    }
+
+    .form-group input:checked+label::before {
+        top: 3px;
+        right: 0;
+        left: 338px;
+        width: 9px;
+        height: 25px;
+    }
+
+    #use:checked+label::before {
+        left: 340px;
+    }
+
+    .ReactModalPortal h2 {
+        font-size: 32px !important;
+    }
+
+    .form-group label::after {
+        width: 30px;
+        height: 30px;
     }
 }
 
@@ -2820,6 +2880,7 @@ img.block-img-mobile{
 
     .footer ul {
         flex-direction: column;
+        text-align: center;
     }
     .footer ul li {
         margin-right: 0;
@@ -2878,6 +2939,9 @@ img.block-img-mobile{
         width: 250px;
     }
 
+    .video-grey-man-title {
+        font-size: 32px;
+    }
 }
 
 @media screen and (max-width: 500px) {
@@ -2901,6 +2965,50 @@ img.block-img-mobile{
     .members-video-mobile .video-pic img {
         width: 300px;
         height: auto;
+    }
+
+    .modal-content-wrapper {
+        width: 300px;
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .modal-content-np {
+        width: 90%;
+    }
+
+    .modal-btn {
+        width: 250px;
+    }
+
+    .modal-content-wrapper .form-group label, .form-group span {
+        font-size: 14px;
+    }
+
+    .modal-content-wrapper span {
+        font-size: 14px !important;
+        /* padding-right: 0 !important; */
+        margin-left: -10px !important;
+    }
+
+    /* .sec-group label::after {
+        left: 9rem;
+    } */
+
+    .form-group label::after {
+        left: 8.5rem;
+    }
+
+    .form-group input:checked+label::before {
+        top: 0px;
+        /* right: 0; */
+        left: 240px;
+        width: 9px;
+        height: 25px;
+    }
+
+    #use:checked+label::before {
+        left: 232px;
     }
 }
 
@@ -2972,12 +3080,39 @@ img.block-img-mobile{
     .video-grey-man-metamask-logo {
         left: 80%;
     }
+
+    .modal-content-wrapper {
+        width: 280px;
+        height: 300px;
+        overflow: hidden;
+    }
+
+    .modal-btn {
+        width: 200px;
+        height: 48px;
+        font-size: 16px;
+    }
+
+    .modal-btn .metamask-logo.modal-btn-logo {
+        width: 50px !important;
+    }
+
+    .modal-text-wrapper {
+        padding-bottom: 15px;
+    }
 }
 
 @media screen and (max-width: 355px) {
     .wrapper-splash-page.nutcrackers .crackers-text {
         margin-top: 500px;
     }
+}
+
+@media screen and (max-width: 319px) {
+    .modal-content-wrapper {
+        width: 270px;
+    }
+
 }
 
 /* Nutcrackers */
