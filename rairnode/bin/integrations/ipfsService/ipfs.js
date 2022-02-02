@@ -66,6 +66,8 @@ const addMetadata = async (data, name) => {
   return ipfs.add(data);
 };
 
+// TODO: Do we need to support native IPFS
+
 module.exports = {
   retrieveMediaInfo,
   addPin,

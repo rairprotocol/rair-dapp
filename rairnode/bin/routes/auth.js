@@ -220,7 +220,7 @@ module.exports = context => {
             }
           } catch (e) {
             log.error(e);
-            next(new Error('Could not verify account.', ));
+            next(new Error('Could not verify account.'));
           }
         } else {
           return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
