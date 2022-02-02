@@ -111,9 +111,9 @@ const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMod
 		))) {
 			Swal.fire({
 				title: 'Success',
-				html: 'Custom fees set',
+				html: 'Now you can add offers into the marketplace',
 				icon: 'success',
-				showConfirmButton: false
+				showConfirmButton: true
 			});
 			getContractData();
 		}
