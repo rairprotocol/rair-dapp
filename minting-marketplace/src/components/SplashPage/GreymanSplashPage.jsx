@@ -27,6 +27,7 @@ import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import VideoPlayer from "../video/videoPlayerGenerall";
 import setDocumentTitle from './../../utils/setTitle';
+import { Countdown } from "./Timer/CountDown";
 
 const customStyles = {
   overlay: {
@@ -76,6 +77,10 @@ const customStylesForVideo = {
 Modal.setAppElement("#root");
 
 const SplashPage = ({ loginDone }) => {
+  const [timerLeft, setTimerLeft] = useState();
+  const [copies, setCopies] = useState();
+  const [soldCopies, setSoldCopies] = useState();
+
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -212,6 +217,28 @@ const SplashPage = ({ loginDone }) => {
     setDocumentTitle(`Cryptogreyman`)
   }, []);
 
+  const getAllProduct = useCallback(async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`, {
+        method: "GET",
+      })
+    ).json();
+
+
+    if (responseAllProduct.product && responseAllProduct.product.copies && responseAllProduct.product.soldCopies) {
+      setCopies(responseAllProduct.product.copies);
+      setSoldCopies(responseAllProduct.product.soldCopies);
+    } else {
+      setCopies(7);
+      setSoldCopies(0);
+    }
+
+  }, [setSoldCopies]);
+
+  useEffect(() => {
+    getAllProduct()
+  }, [getAllProduct])
+
   return (
     <div className="wrapper-splash-page greyman-page">
       <div className="home-splash--page">
@@ -234,14 +261,15 @@ const SplashPage = ({ loginDone }) => {
                   #Cryptogreyman
                 </h3>
               </div>
-              <div className="text-description">
-                <p>
-                  7.907.414.597 non-unique NFTs. All metadata is identical only
-                  the serial number changes. Claim yours for 2 MATIC
-                </p>
+              <div className="text-description" style={{ color: "#A7A6A6" }}>
+                7.907.414.597 non-unique NFTs. All metadata is identical only
+                the serial number changes. Claim yours for 2 MATIC
               </div>
+              {timerLeft !== 0 && <div className="greyman-">
+                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-02T22:22:00-00:00'} />
+              </div>}
               <div className="btn-buy-metamask">
-                <button onClick={() => openModal()}>
+                {timerLeft === 0 && <button onClick={() => openModal()}>
                   <img
                     className="metamask-logo"
                     src={Metamask}
@@ -249,6 +277,7 @@ const SplashPage = ({ loginDone }) => {
                   />{" "}
                   Mint with Matic
                 </button>
+                }
               </div>
               <div className="btn-timer-nipsey">
                 <Modal
@@ -352,7 +381,7 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} />
+        <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} soldCopies={soldCopies} copies={copies} />
         <div className="about-metadata-wrapper">
           <div className="about-metadata">
             <h1
@@ -509,7 +538,7 @@ const SplashPage = ({ loginDone }) => {
             <div className="main-greyman-pic">
               <div className="join-pic-main">
                 <div className="show-more-wrap">
-                  <span className="show-more" style={{color: "#fff"}}>
+                  <span className="show-more" style={{ color: "#fff" }}>
                     Open in Store <i className="fas fa-arrow-right"></i>{" "}
                   </span>
                 </div>
