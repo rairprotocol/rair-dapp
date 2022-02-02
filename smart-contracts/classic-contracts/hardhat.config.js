@@ -14,25 +14,25 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: process.env.ALCHEMY_API,
+        url: process.env.GOERLI_SPEEDY_NODE,
         blockNumber: 13000000,
         timeout: 1000000
       }
     },
     ethMainnet: {
-      url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ROPSTEN_ALCHEMY_URL}`,
+      url: process.env.GOERLI_SPEEDY_NODE,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     goerli: {
-      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ROPSTEN_ALCHEMY_URL}`,
+      url: process.env.GOERLI_SPEEDY_NODE,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     mumbai: {
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_ALCHEMY_URL}`,
+      url: process.env.MUMBAI_SPEEDY_NODE,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     matic: {
-      url: process.env.MATIC_MAINNET_ENDPOINT,
+      url: process.env.GOERLI_SPEEDY_NODE,
       accounts: [process.env.ADDRESS_PRIVATE_KEY]
     },
     binanceSmartchain: {
@@ -66,6 +66,6 @@ module.exports = {
     timeout: 0
   },
   etherscan: {
-    apiKey: process.env.ETHERSCANKEY
+    apiKey: process.env.POLYGONSCAN_API_KEY
   }
 };
