@@ -2,6 +2,7 @@ import React, { useState /*useCallback*/ } from "react";
 import CustomButton from "../../utils/button/CustomButton";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import NftSingleUnlockables from "./NftSingleUnlockables";
+import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 import VideoPlayerView from "./UnlockablesPage/VideoPlayerView";
 
 const NftUnlockablesPage = ({
@@ -25,21 +26,24 @@ const NftUnlockablesPage = ({
   return (
     <div>
       <BreadcrumbsView />
-      <VideoPlayerView />
-      <NftSingleUnlockables
-        blockchain={blockchain}
-        contract={contract}
-        product={product}
-        productsFromOffer={productsFromOffer}
-        selectedData={selectedData}
-        selectedToken={selectedToken}
-      />
+      <VideoPlayerView productsFromOffer={productsFromOffer} />
+      <NftDifferentRarity />
+      <div style={{ maxWidth: "1240px", margin: "auto" }} className="">
+        <NftSingleUnlockables
+          blockchain={blockchain}
+          contract={contract}
+          product={product}
+          productsFromOffer={productsFromOffer}
+          selectedData={selectedData}
+          selectedToken={selectedToken}
+        />
+      </div>
 
-      <CustomButton 
-        text='Show More' 
-        width="288px"
-        height="48px"
-      />
+      {productsFromOffer?.length > 2 ? (
+        <CustomButton text="Show More" width="288px" height="48px" />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

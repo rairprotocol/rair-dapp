@@ -3,7 +3,7 @@ import React from 'react';
 const CollectionInfo = () => {
     return <div className="contianer-collection-info">
         <div className="collection-info-title">
-            123
+            {/* 123 */}
         </div>
     </div>;
 };

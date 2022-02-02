@@ -1,0 +1,20 @@
+.mainWrapper{
+margin: auto;
+width: 1200px;
+margin-top: 56px;
+}
+.main{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+}
+.iconKey{
+    background: white;
+    padding: 6px;
+    border-radius: 10px;
+}
+.rarity{
+    padding-left: 15px;
+}

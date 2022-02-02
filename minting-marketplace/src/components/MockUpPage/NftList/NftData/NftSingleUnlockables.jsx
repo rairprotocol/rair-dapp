@@ -15,8 +15,9 @@ const NftSingleUnlockables = ({
     <div
       style={{
         display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
+        flexWrap: "nowrap",
+        flexDirection: 'row',
+        justifyContent: "space-between",
       }}
     >
       {(productsFromOffer?.length &&
@@ -40,7 +41,7 @@ const NftSingleUnlockables = ({
                   // cursor: "pointer",
                   display: "flex",
                   borderRadius: "16px",
-                  minWidth: "400px",
+                  minWidth: "592px",
                   backgroundColor: "#4E4D4DCC",
                 }}
               >
