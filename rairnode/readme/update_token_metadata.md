@@ -60,6 +60,8 @@ Update specific token metadata by internal token ID
   "description": "Tratata",
   "artist": "KorN",
   "external_url": "http://some.link",
+  "image": "http://some.link",
+  "animation_url": "http://some.link",
   "attributes": [
     {
       "trait_type": "ping",
