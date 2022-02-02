@@ -261,10 +261,11 @@ const SplashPage = ({ loginDone }) => {
                   #Cryptogreyman
                 </h3>
               </div>
-              <div className="text-description" style={{ color: "#A7A6A6" }}>
+              {timerLeft === 0 && <div className="text-description" style={{ color: "#A7A6A6" }}>
                 7.907.414.597 non-unique NFTs. All metadata is identical only
                 the serial number changes. Claim yours for 2 MATIC
               </div>
+              }
               {timerLeft !== 0 && <div className="greyman-">
                 <Countdown setTimerLeft={setTimerLeft} time={'2022-02-22T22:22:00-00:00'} />
               </div>}

@@ -1,7 +1,11 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import cl from "./TermsUse.module.css";
 
 const TermsUseComponent = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className={cl.main}>
       <div className="header">
