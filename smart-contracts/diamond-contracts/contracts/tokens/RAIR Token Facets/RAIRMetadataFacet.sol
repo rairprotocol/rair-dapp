@@ -17,8 +17,8 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	event PermanentURI(string _value, uint256 indexed _id);
 
 	function _exists(uint256 tokenId) internal view virtual returns (bool) {
-        return s._owners[tokenId] != address(0);
-    }
+		return s._owners[tokenId] != address(0);
+	}
 
 	/// @notice	Returns the token index inside the product
 	/// @param	token	Token ID to find
@@ -67,7 +67,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 
 	function contractURI() public view returns (string memory) {
 		return s.contractMetadataURI;
-    }
+	}
 	
 	/// @notice	Sets the Base URI for ALL tokens
 	/// @dev	Can be overriden by the specific token URI
@@ -96,11 +96,11 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 		}
 		URI = s.baseURI;
 		if (bytes(URI).length > 0) {
-	        if (s.appendTokenIndexToBaseURI) {
+			if (s.appendTokenIndexToBaseURI) {
 				return string(abi.encodePacked(URI, tokenId.toString()));
 			}
 			return URI;
 		}
-        return "";
+		return "";
 	}
 }
