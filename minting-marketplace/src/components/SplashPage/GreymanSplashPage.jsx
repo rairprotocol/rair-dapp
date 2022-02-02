@@ -514,12 +514,13 @@ const SplashPage = ({ loginDone }) => {
                 </div>
               </div>
               <div className="property-btn-wrapper">
-                <button
-                  onClick={() => console.log("soon")}
-                  className="property-btn"
-                >
-                  <span className="property-btn-ipfs">View on IPFS</span>
-                </button>
+                <a href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt" target="_blank">
+                  <button
+                    className="property-btn"
+                  >
+                    <span className="property-btn-ipfs">View on IPFS</span>
+                  </button>
+                </a>
               </div>
             </div>
           </div>
