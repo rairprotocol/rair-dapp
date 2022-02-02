@@ -5,6 +5,7 @@ import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
 import { useHistory } from "react-router-dom";
+import TitleCollection from "./TitleCollection/TitleCollection";
 
 const NftCollectionPageComponent = ({
   blockchain,
@@ -71,6 +72,7 @@ const NftCollectionPageComponent = ({
     >
       <BreadcrumbsView />
       {/* <div className="df"><h1>title</h1></div> */}
+      <TitleCollection title={tokenData[0].contract} userName={tokenData[0].ownerAddress} />
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
           ? tokenData.map((token, index) => {
@@ -117,8 +119,8 @@ const NftCollectionPageComponent = ({
             );
           })}
       </div>
-      <div>
-        <h1>Show More</h1>
+      <div className="collection-btn-more">
+        <button>Show more</button>
       </div>
     </div>
   );
