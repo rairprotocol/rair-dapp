@@ -1,7 +1,7 @@
 import React, { memo } from "react";
-import firstPict from "../assets/Graphics-WEB-2021-01.png";
-import secondPict from "../assets/Graphics-WEB-2021-02.png";
-import thirdPict from "../assets/Graphics-WEB-2021-03.png";
+// import firstPict from "../assets/Graphics-WEB-2021-01.png";
+// import secondPict from "../assets/Graphics-WEB-2021-02.png";
+// import thirdPict from "../assets/Graphics-WEB-2021-03.png";
 import Skeleton from "@mui/material/Skeleton";
 import { NftItem } from "./NftItem";
 
@@ -82,7 +82,7 @@ const NftListComponent = ({
         //     <CircularProgress size="70px" />
         // </div>
       }
-      <img
+      {/* <img
         className={
           "col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start pictures-wrapper"
         }
@@ -108,7 +108,7 @@ const NftListComponent = ({
         height="291"
         src={thirdPict}
         alt="first"
-      />
+      /> */}
     </div>
   );
 };

@@ -22,7 +22,7 @@ const NftDifferentRarity = ({
       <div className={cl.main}>
         <i style={{ color: `red` }} className={`fas fa-key ${cl.iconKey}`} />
         <span className={cl.rarity}>{rarity.ultra}</span>
-      {/* <CustomButton style={{margin: 'inherit'}} text={rarity.ultra} width={"224px"} height={"48px"} /> */}
+      <CustomButton style={{margin: 'inherit'}} text={rarity.ultra} width={"224px"} height={"48px"} />
 
       </div>
     </div>

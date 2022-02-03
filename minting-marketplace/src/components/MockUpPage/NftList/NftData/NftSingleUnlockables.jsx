@@ -15,7 +15,8 @@ const NftSingleUnlockables = ({
     <div
       style={{
         display: "flex",
-        flexWrap: "nowrap",
+        flexWrap: "wrap",
+        overflow: 'hidden',
         flexDirection: 'row',
         justifyContent: "space-between",
       }}

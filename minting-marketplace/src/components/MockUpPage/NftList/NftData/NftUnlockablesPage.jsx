@@ -28,7 +28,7 @@ const NftUnlockablesPage = ({
       <BreadcrumbsView />
       <VideoPlayerView productsFromOffer={productsFromOffer} />
       <NftDifferentRarity />
-      <div style={{ maxWidth: "1240px", margin: "auto" }} className="">
+      <div style={{ maxWidth: "1250px", margin: "auto" }} className="">
         <NftSingleUnlockables
           blockchain={blockchain}
           contract={contract}
