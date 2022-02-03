@@ -8,6 +8,7 @@ function CustomButton({
   height,
   onClick,
   textColor,
+  margin,
 //   primaryColor,
 }) {
   return (
@@ -16,6 +17,7 @@ function CustomButton({
         width: width,
         height: height,
         color: textColor,
+        margin: margin,
       }}
       className={cl.nftDataPageShowMoreWrapper}
     >

@@ -90,6 +90,8 @@ const NftSingleUnlockables = ({
                       opacity: "0.4",
                       height: "135px",
                       filter: "blur(3px)",
+                      borderTopLeftRadius: "16px",
+                      borderBottomLeftRadius: "16px",
                     }}
                     src={`${v?.staticThumbnail}`}
                     // src={selectedData?.image}
