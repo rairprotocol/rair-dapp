@@ -482,7 +482,7 @@ function App({ sentryHistory }) {
 								</div>
 							</div>
 						</div>
-						<div className='py-5' />
+						{/* <div className='py-5' /> */}
 					</div>
 					<Footer openAboutPage={openAboutPage} primaryColor={primaryColor} />
 				</>
