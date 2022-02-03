@@ -42,7 +42,7 @@ spec:
             - name: INFURA_PROJECT_ID
               value: "92a88973a28d41318792f77451db4c5b"
             - name: ADMIN_NETWORK
-              value: polygon
+              value: "matic"
             - name: ADMIN_CONTRACT
               value: "0xe5a9efb29b82517166fcef23722452543b5f380f"
             - name: SERVICE_HOST
@@ -60,13 +60,13 @@ spec:
             - name: default_product_cover
               value: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
             - name: matic_testnet_rpc
-              value: "https://polygon-mumbai.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+              value: "https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b"
             - name: matic_mainnet_rpc
-              value: "https://polygon-mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+              value: "https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
             - name: ethereum_mainnet_rpc
-              value: "https://mainnet.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+              value: "https://mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
             - name: ethereum_testnet_goerli_rpc
-              value: "https://goerli.infura.io/v3/2dc4938a58624f9aa422053e6d2e90f8"
+              value: "https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b"
             - name: binance_testnet_rpc
               value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
             - name: binance_mainnet_rpc
