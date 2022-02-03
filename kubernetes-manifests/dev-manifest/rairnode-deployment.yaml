@@ -42,7 +42,7 @@ spec:
             - name: INFURA_PROJECT_ID
               value: "92a88973a28d41318792f77451db4c5b"
             - name: ADMIN_NETWORK
-              value: matic
+              value: "matic"
             - name: ADMIN_CONTRACT
               value: "0xe5a9efb29b82517166fcef23722452543b5f380f"
             - name: SERVICE_HOST
