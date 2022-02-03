@@ -1,8 +1,8 @@
-import React, { useState /*useCallback*/ } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Swal from "sweetalert2";
 import { utils } from "ethers";
+import Swal from "sweetalert2";
 import {
   Accordion,
   AccordionItem,
@@ -13,14 +13,16 @@ import {
 import { metamaskCall } from "../../../../utils/metamaskUtils.js";
 
 // import Carousel from "react-multi-carousel";
+// import "react-multi-carousel/lib/styles.css";
+
 import chainDataFront from "../../utils/blockchainDataFront";
 import ItemRank from "../../SelectBox/ItemRank";
-// import OfferItem from "../OfferItem";
 import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
 import ReactPlayer from "react-player";
 import chainData from "../../../../utils/blockchainData.js";
+import { useDispatch } from "react-redux";
+import setDocumentTitle from "../../../../utils/setTitle";
 
-import "react-multi-carousel/lib/styles.css";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs.jsx";
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock.jsx";
 import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
@@ -52,27 +54,14 @@ const NftDataPageTest = ({
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
-
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 1500 },
-      items: 4,
-    },
-    desktop: {
-      breakpoint: { max: 1500, min: 1024 },
-      // paddingLeft: "2rem",
-      items: 3,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setDocumentTitle("Single Token");
+    dispatch({
+      type: "SHOW_SIDEBAR_TRUE",
+    });
+  }, [dispatch]);
+  
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
@@ -516,10 +505,6 @@ const NftDataPageTest = ({
                   width: "288px",
                   height: "48px",
                   border: "1px solid #D37AD6",
-                  // backgroundImage:
-                  // "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
-                  // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"
-                  //   }`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -538,8 +523,6 @@ const NftDataPageTest = ({
                 >
                   {
                     offerPrice && `${checkPrice()}`
-                    // `${minPrice} – ${maxPrice} ${data?.product.blockchain || ""
-                    // } `
                   }
                 </span>
                 <span
@@ -602,20 +585,6 @@ const NftDataPageTest = ({
                 ) : (
                   <></>
                 )}
-                {/* <SelectNumber
-                  handleClickToken={handleClickToken}
-                  selectedToken={selectedToken}
-                  items={
-                    tokenData &&
-                    tokenData.map((p) => {
-                      return {
-                        value: p.metadata.name,
-                        id: p._id,
-                        token: p.token,
-                      };
-                    })
-                  }
-                /> */}
               </div>
             </div>
             <div
@@ -778,6 +747,7 @@ const NftDataPageTest = ({
                   height="48px"
                   textColor={textColor}
                   primaryColor={primaryColor}
+                  margin={'0 auto'}
                 />
               </AccordionItemPanel>
             </AccordionItem>

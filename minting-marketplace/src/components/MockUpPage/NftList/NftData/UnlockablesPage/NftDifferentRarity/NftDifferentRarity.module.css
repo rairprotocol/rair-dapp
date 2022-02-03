@@ -2,13 +2,14 @@
 margin: auto;
 width: 1200px;
 margin-top: 56px;
+display: flex;
+flex-direction: row;
+align-content: center;
+justify-content: space-between;
+align-items: center;
 }
 .main{
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    justify-content: flex-start;
-    align-items: center;
+   
 }
 .iconKey{
     background: white;

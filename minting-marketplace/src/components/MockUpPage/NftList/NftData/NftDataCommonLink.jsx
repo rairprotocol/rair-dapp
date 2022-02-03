@@ -117,17 +117,19 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
 
     setProductsFromOffer(response.files);
     setSelectedOfferIndex(tokenData[tokenId]?.offer);
-  }, [blockchain, contract, product, tokenId, tokenData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blockchain, contract, product, tokenId]);
 
-  //TODO:useCallback
-  
-  function onSelect(id) {
-    tokenData.forEach((p) => {
-      if (p._id === id) {
-        setSelectedData(p.metadata);
-      }
-    });
-  }
+  const onSelect = useCallback(
+    (id) => {
+      tokenData.forEach((p) => {
+        if (p._id === id) {
+          setSelectedData(p.metadata);
+        }
+      });
+    },
+    [tokenData]
+  );
 
   const handleClickToken = async (tokenId) => {
     history.push(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
@@ -143,9 +145,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
     getAllProduct();
     getParticularOffer();
     getProductsFromOffer();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getAllProduct, getParticularOffer]);
+  }, [getAllProduct, getParticularOffer, getProductsFromOffer]);
 
   if (params.tokens === "collection") {
     return (
@@ -168,27 +168,27 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
         product={product}
       />
     );
-  } else if( params.tokens === "unlockables" ){
+  } else if (params.tokens === "unlockables") {
     return (
-    <NftUnlockablesPage
-      blockchain={blockchain}
-      contract={contract}
-      currentUser={currentUser}
-      handleClickToken={handleClickToken}
-      onSelect={onSelect}
-      offerData={offerData}
-      offerPrice={offerPrice}
-      primaryColor={primaryColor}
-      productsFromOffer={productsFromOffer}
-      setSelectedToken={setSelectedToken}
-      selectedData={selectedData}
-      selectedToken={selectedToken}
-      textColor={textColor}
-      tokenData={tokenData}
-      totalCount={totalCount}
-      product={product}
-    />
-    )
+      <NftUnlockablesPage
+        blockchain={blockchain}
+        contract={contract}
+        currentUser={currentUser}
+        handleClickToken={handleClickToken}
+        onSelect={onSelect}
+        offerData={offerData}
+        offerPrice={offerPrice}
+        primaryColor={primaryColor}
+        productsFromOffer={productsFromOffer}
+        setSelectedToken={setSelectedToken}
+        selectedData={selectedData}
+        selectedToken={selectedToken}
+        textColor={textColor}
+        tokenData={tokenData}
+        totalCount={totalCount}
+        product={product}
+      />
+    );
   } else {
     return (
       <NftDataPageTest
@@ -211,7 +211,6 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
       />
     );
   }
-  
 };
 
 export const NftDataCommonLink = memo(NftDataCommonLinkComponent);
