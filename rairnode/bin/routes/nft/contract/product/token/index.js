@@ -35,7 +35,10 @@ module.exports = context => {
 
             if (user.publicAddress !== contract.user) {
                 if (req.files.length) {
-                    await Promise.all(_.map(req.files, file => fs.rm(`${ file.destination }/${ file.filename }`)));
+                    await Promise.all(_.map(req.files, async file => {
+                        await fs.rm(`${ file.destination }/${ file.filename }`);
+                        log.info(`File ${ file.filename } has removed.`);
+                    }));
                 }
 
                 return res.status(403).send({
@@ -46,7 +49,10 @@ module.exports = context => {
 
             if (_.isEmpty(fieldsForUpdate)) {
                 if (req.files.length) {
-                    await Promise.all(_.map(req.files, file => fs.rm(`${ file.destination }/${ file.filename }`)));
+                    await Promise.all(_.map(req.files, async file => {
+                        await fs.rm(`${ file.destination }/${ file.filename }`);
+                        log.info(`File ${ file.filename } has removed.`);
+                    }));
                 }
 
                 return res.status(400).send({ success: false, message: 'Nothing to update.' });
@@ -60,12 +66,7 @@ module.exports = context => {
 
                         log.info(`File ${ file.filename } has added to ipfs.`);
 
-                        await fs.rm(`${ file.destination }/${ file.filename }`);
-
-                        log.info(`File ${ file.filename } has removed.`);
-
                         file.link = `${ context.config.pinata.gateway }/${ cid }/${ file.filename }`;
-
                         return file;
                     } catch (err) {
                         log.error(err);
@@ -94,10 +95,20 @@ module.exports = context => {
                 token
             }, fieldsForUpdate, { new: true });
 
+            if (req.files.length) {
+                await Promise.all(_.map(req.files, async file => {
+                    await fs.rm(`${ file.destination }/${ file.filename }`);
+                    log.info(`File ${ file.filename } has removed.`);
+                }));
+            }
+
             return res.json({ success: true, token: updatedToken });
         } catch (err) {
             if (req.files.length) {
-                await Promise.all(_.map(req.files, file => fs.rm(`${ file.destination }/${ file.filename }`)));
+                await Promise.all(_.map(req.files, async file => {
+                    await fs.rm(`${ file.destination }/${ file.filename }`);
+                    log.info(`File ${ file.filename } has removed.`);
+                }));
             }
 
             return next(err);

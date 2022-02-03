@@ -26,6 +26,7 @@ module.exports = context => {
       const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'artist'];
       const optionalFields = ['image', 'animation_url'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
+      const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
       const records = [];
       const forSave = [];
       const forUpdate = [];
@@ -188,6 +189,7 @@ module.exports = context => {
                           external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                           image: record.image || '',
                           animation_url: record.animation_url || '',
+                          isMetadataPined: reg.test(token.metadataURI || ''),
                           attributes: attributes
                         }
                       }
