@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import "./TitleCollection.css";
 import defaultUser from "./../../../assets/defultUser.png";
 
-const TitleCollection = ({ title, userName }) => {
+const TitleCollection = ({ title, userName, currentUser }) => {
+    console.log(currentUser.userData, 'currentUser');
     return <div className="container-title-collection">
         <div className="block-title-share">
             <h2>{title}</h2>

@@ -42,8 +42,6 @@ const NftCollectionPageComponent = ({
       )
     ).json();
 
-    console.log(response)
-
     if (response.success) {
       setOfferDataCol(response.product.offers);
     }
@@ -106,7 +104,7 @@ const NftCollectionPageComponent = ({
     >
       <BreadcrumbsView />
       {/* <div className="df"><h1>title</h1></div> */}
-      <TitleCollection title={collectionName} userName={tokenData[0].ownerAddress} />
+      <TitleCollection title={collectionName} userName={tokenData[0].ownerAddress} currentUser={currentUser} />
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
           ? tokenData.map((token, index) => {
