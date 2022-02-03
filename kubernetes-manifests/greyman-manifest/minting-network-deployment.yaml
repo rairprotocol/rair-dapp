@@ -26,7 +26,7 @@ spec:
         app: minting-network
     spec:
       containers:
-        - image: rairtechinc/minting-network:greyman-teaser_latest
+        - image: rairtechinc/minting-network:greyman-teaser_1.2
           name: minting-network
           imagePullPolicy: Always
           ports:
