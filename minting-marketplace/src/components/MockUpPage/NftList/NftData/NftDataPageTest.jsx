@@ -1,4 +1,4 @@
-import React, { useState /*useCallback*/ } from "react";
+import React, { useState /*useCallback*/, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -445,6 +445,10 @@ const NftDataPageTest = ({
   //     }
   //   }
   // }
+
+  useEffect(() => {
+    window.scroll(0, 0)
+  }, [])
 
   return (
     <div id="nft-data-page-wrapper">

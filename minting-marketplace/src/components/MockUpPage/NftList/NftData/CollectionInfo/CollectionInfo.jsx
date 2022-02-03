@@ -2,18 +2,15 @@ import React, { useEffect } from 'react';
 import "./CollectionInfo.css";
 import chainDataFront from "./../../../utils/blockchainDataFront";
 
-const CollectionInfo = ({ defaultImg, blockchain, offerData }) => {
-
-    console.log(offerData, "offerData");
-
+const CollectionInfo = ({ defaultImg, blockchain, offerData, openTitle }) => {
     return <div className="wrapper-collection-info">
-        {/* <div className="collection-info-head">
-            Collection info
-        </div> */}
+        {
+            openTitle && <div className="collection-info-head">Collection Info</div>
+        }
         <div className="contianer-collection-info">
             <div className="collection-info-title">
                 <div className="collection-part-text">
-                    Item rank
+                    Item name
                 </div>
                 <div className="collection-part-text">
                     Rank
@@ -27,7 +24,11 @@ const CollectionInfo = ({ defaultImg, blockchain, offerData }) => {
             </div>
             <div className="collection-info-body">
                 {
-                   offerData && offerData?.map((token, index) => {
+                    offerData && offerData?.sort((a, b) => {
+                        if (b.offerIndex > a.offerIndex) {
+                            return -1
+                        }
+                    }).map((token, index) => {
                         return <div key={index + token.price} className="block-item-collection">
                             <div className="item-name">
                                 <img src={defaultImg} alt="rair-tech" />
