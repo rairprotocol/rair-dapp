@@ -46,7 +46,6 @@ const NftDataPageTest = ({
   offerData,
   offerPrice,
 }) => {
-
   const history = useHistory();
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
@@ -451,7 +450,10 @@ const NftDataPageTest = ({
     <div id="nft-data-page-wrapper">
       <BreadcrumbsView />
       <div>
-        <TitleCollection title={selectedData?.name} userName={tokenData[0].ownerAddress} />
+        <TitleCollection
+          title={selectedData?.name}
+          userName={tokenData[0]?.ownerAddress}
+        />
         <div
           style={{
             maxWidth: "1200px",
@@ -636,8 +638,8 @@ const NftDataPageTest = ({
                   {/* {checkDataOfProperty()} */}
                   {selectedData ? (
                     Object.keys(selectedData).length &&
-                      // ? selectedData.length &&
-                      selectedData?.attributes.length > 0 ? (
+                    // ? selectedData.length &&
+                    selectedData?.attributes.length > 0 ? (
                       selectedData?.attributes.map((item, index) => {
                         if (
                           item.trait_type === "External URL" &&
@@ -780,12 +782,14 @@ const NftDataPageTest = ({
               </AccordionItemPanel>
             </AccordionItem>
 
-            {/* <AccordionItem>
+            <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>Collection info</AccordionItemButton>
               </AccordionItemHeading>
-              <AccordionItemPanel>VIDEO</AccordionItemPanel>
-            </AccordionItem> */}
+              <AccordionItemPanel>
+                <CollectionInfo />
+              </AccordionItemPanel>
+            </AccordionItem>
             <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>Authenticity</AccordionItemButton>
@@ -826,7 +830,6 @@ const NftDataPageTest = ({
             <></>
           )} */}
         </div>
-        <CollectionInfo />
       </div>
     </div>
   );

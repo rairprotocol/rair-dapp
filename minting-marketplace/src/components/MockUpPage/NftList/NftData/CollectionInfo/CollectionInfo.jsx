@@ -4,9 +4,9 @@ import chainDataFront from "./../../../utils/blockchainDataFront";
 
 const CollectionInfo = ({ defaultImg, blockchain }) => {
     return <div className="wrapper-collection-info">
-        <div className="collection-info-head">
+        {/* <div className="collection-info-head">
             Collection info
-        </div>
+        </div> */}
         <div className="contianer-collection-info">
             <div className="collection-info-title">
                 <div className="collection-part-text">
@@ -37,7 +37,7 @@ const CollectionInfo = ({ defaultImg, blockchain }) => {
                         <p>1 /1 </p>
                     </div>
                     <div className="item-price">
-                        <img src={chainDataFront[blockchain].image} alt="blockchain" />
+                        <img src={chainDataFront[blockchain]?.image} alt="blockchain" />
                     </div>
                 </div>
             </div>
