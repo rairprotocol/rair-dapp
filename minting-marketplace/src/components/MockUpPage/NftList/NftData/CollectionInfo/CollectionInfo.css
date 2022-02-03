@@ -1,0 +1,82 @@
+.wrapper-collection-info{
+    margin: 48px 0;
+}
+
+.contianer-collection-info {
+    width: 100%;
+    background: #383637;
+    border-radius: 16px;
+}
+
+.contianer-collection-info .collection-info-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.collection-info-title .collection-part-text {
+    font-size: 20px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.collection-info-title .collection-part-text:first-child {
+    width: 307px;
+    padding-left: 24px;
+}
+
+.collection-info-title .collection-part-text:nth-child(2) {
+    width: 245px; 
+}
+
+.collection-info-title .collection-part-text:nth-child(3) {
+    width: 260px; 
+}
+
+.collection-info-title .collection-part-text:last-child {
+    width: 290px; 
+}
+
+.collection-info-body .item-name img{
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+}
+
+.collection-info-body .item-price img {
+    width: auto;
+    height: 24px;
+}
+
+.collection-info-head {
+    font-size: 20px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.collection-info-body {
+    width: 100%;
+}
+
+.collection-info-body .block-item-collection {
+    width: 100%;
+    display: flex;
+}
+
+.collection-info-body .block-item-collection .item-name {
+    width: 307px;
+    display: flex;
+}
+
+.collection-info-body .block-item-collection .item-rank {
+    width: 245px;
+}
+
+.collection-info-body .block-item-collection .item-availa {
+    width: 260px;
+}
+
+.collection-info-body .block-item-collection .item-price {
+    width: 290px;
+}
