@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
 import { useHistory } from "react-router-dom";
 import TitleCollection from "./TitleCollection/TitleCollection";
+import CollectionInfo from "./CollectionInfo/CollectionInfo";
 
 const NftCollectionPageComponent = ({
   blockchain,
@@ -122,6 +123,7 @@ const NftCollectionPageComponent = ({
       <div className="collection-btn-more">
         <button>Show more</button>
       </div>
+      <CollectionInfo defaultImg={defaultImg} blockchain={blockchain} />
     </div>
   );
 };
