@@ -435,11 +435,16 @@ const NftDataPageTest = ({
   //   }
   // }
 
+  useEffect(() => {
+    window.scroll(0, 0)
+  }, [])
+
   return (
     <div id="nft-data-page-wrapper">
       <BreadcrumbsView />
       <div>
         <TitleCollection
+          currentUser={currentUser}
           title={selectedData?.name}
           userName={tokenData[0]?.ownerAddress}
         />

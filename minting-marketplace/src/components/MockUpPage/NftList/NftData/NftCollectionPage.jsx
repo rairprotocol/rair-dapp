@@ -103,7 +103,6 @@ const NftCollectionPageComponent = ({
       }}
     >
       <BreadcrumbsView />
-      {/* <div className="df"><h1>title</h1></div> */}
       <TitleCollection title={collectionName} userName={tokenData[0].ownerAddress} currentUser={currentUser} />
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
@@ -154,7 +153,7 @@ const NftCollectionPageComponent = ({
       <div className="collection-btn-more">
         <button>Show more</button>
       </div>
-      <CollectionInfo offerData={offerDataCol} defaultImg={defaultImg} blockchain={blockchain} />
+      <CollectionInfo offerData={offerDataCol} defaultImg={defaultImg} blockchain={blockchain} openTitle={true} />
     </div>
   );
 };
