@@ -6,6 +6,7 @@
     width: 100%;
     background: #383637;
     border-radius: 16px;
+    overflow: hidden;
 }
 
 .contianer-collection-info .collection-info-title {
@@ -42,11 +43,14 @@
     width: 48px;
     height: 48px;
     border-radius: 16px;
+
+    margin-right: 16px;
 }
 
 .collection-info-body .item-price img {
     width: auto;
     height: 24px;
+    margin-right: 5px;
 }
 
 .collection-info-head {
@@ -62,21 +66,39 @@
 .collection-info-body .block-item-collection {
     width: 100%;
     display: flex;
+    align-items: center;
+    padding: 13px 0;
+
+    font-size: 19px;
+}
+
+.collection-info-body .block-item-collection:nth-child(odd) {
+    background: #2D2B2C;
 }
 
 .collection-info-body .block-item-collection .item-name {
     width: 307px;
     display: flex;
+    align-items: center;
+
+    padding-left: 24px;
 }
 
 .collection-info-body .block-item-collection .item-rank {
     width: 245px;
+    text-align: left;
 }
 
 .collection-info-body .block-item-collection .item-availa {
     width: 260px;
+    text-align: left;
+}
+
+.collection-info-body .block-item-collection .item-availa p {
+    margin: 0;
 }
 
 .collection-info-body .block-item-collection .item-price {
     width: 290px;
+    text-align: left;
 }

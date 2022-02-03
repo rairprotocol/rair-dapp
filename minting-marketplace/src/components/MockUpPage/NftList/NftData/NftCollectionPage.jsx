@@ -1,12 +1,13 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useCallback } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import { NftItemForCollectionView } from "../NftItemForCollectionView";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import CollectionInfo from "./CollectionInfo/CollectionInfo";
+import { useState } from "react";
 
 const NftCollectionPageComponent = ({
   blockchain,
@@ -28,6 +29,35 @@ const NftCollectionPageComponent = ({
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [offerDataCol, setOfferDataCol] = useState();
+  const [collectionName, setCollectionName] = useState();
+
+  const getParticularOffer = useCallback(async () => {
+    let response = await (
+      await fetch(
+        `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
+        {
+          method: "GET",
+        }
+      )
+    ).json();
+
+    console.log(response)
+
+    if (response.success) {
+      setOfferDataCol(response.product.offers);
+    }
+
+    if (response.success) {
+      setCollectionName(response.product.name);
+    }
+
+  }, [product, contract, blockchain]);
+
+  useEffect(() => {
+    getParticularOffer()
+  }, [getParticularOffer])
+
   useEffect(() => {
     setDocumentTitle("Collection");
     dispatch({
@@ -41,7 +71,7 @@ const NftCollectionPageComponent = ({
 
   const goBack = () => {
     history.goBack();
-  };
+  }
 
   const defaultImg =
     "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
@@ -75,10 +105,8 @@ const NftCollectionPageComponent = ({
       }}
     >
       <BreadcrumbsView />
-      <TitleCollection
-        title={tokenData[0].contract}
-        userName={tokenData[0].ownerAddress}
-      />
+      {/* <div className="df"><h1>title</h1></div> */}
+      <TitleCollection title={collectionName} userName={tokenData[0].ownerAddress} />
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
           ? tokenData.map((token, index) => {
@@ -128,7 +156,7 @@ const NftCollectionPageComponent = ({
       <div className="collection-btn-more">
         <button>Show more</button>
       </div>
-      <CollectionInfo defaultImg={defaultImg} blockchain={blockchain} />
+      <CollectionInfo offerData={offerDataCol} defaultImg={defaultImg} blockchain={blockchain} />
     </div>
   );
 };
