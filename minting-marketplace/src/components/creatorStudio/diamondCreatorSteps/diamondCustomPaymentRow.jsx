@@ -2,7 +2,20 @@ import { useState, useEffect } from 'react';
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
 
-const DiamondCustomPaymentRow = ({index, array, recipient, deleter, percentage, renderer, editable, message, minterDecimals, disabled}) => {
+const DiamondCustomPaymentRow = ({
+	index,
+	array,
+	recipient,
+	deleter,
+	percentage,
+	rerender,
+	editable,
+	message,
+	minterDecimals,
+	disabled,
+	marketValuesChanged,
+	setMarketValuesChanged
+}) => {
 	const [recipientAddress, setRecipientAddress] = useState(recipient);
 	const [percentageReceived, setPercentageReceived] = useState(percentage);
 
@@ -19,16 +32,22 @@ const DiamondCustomPaymentRow = ({index, array, recipient, deleter, percentage, 
 	const updatePercentage = (value) => {
 		setPercentageReceived(value);
 		array[index].percentage = Number(value);
-		renderer()
+		rerender();
+		if (!marketValuesChanged) {
+			setMarketValuesChanged(true);
+		}
 	}
 
 	const updateRecipient = (value) => {
 		setRecipientAddress(value);
 		array[index].recipient = value;
-		renderer()
+		rerender();
+		if (!marketValuesChanged) {
+			setMarketValuesChanged(true);
+		}
 	}
 
-	return <tr>
+	return <tr className={`${!editable && 'text-secondary'}`}>
 		<th className='px-2'>
 			<div className='w-100 border-stimorol rounded-rair'>
 				<InputField

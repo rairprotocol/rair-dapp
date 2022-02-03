@@ -179,6 +179,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 					let [selectedOffer] = rangesData.filter(item => item.offerName === marketData.rangeData.rangeName);
 					if (selectedOffer) {
 						selectedOffer.marketData = {
+							mintingOfferIndex: marketData.offerIndex.toString(),
 							visible: marketData.mintOffer.visible,
 							fees: marketData.mintOffer.fees,
 							fromMarket: true
@@ -189,6 +190,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 			rangesData.forEach(item => {
 				if (!item.marketData) {
 					item.marketData = {
+						mintingOfferIndex: undefined,
 						visible: true,
 						fees: undefined,
 						fromMarket: false
@@ -216,14 +218,22 @@ const WorkflowSteps = ({sentryHistory}) => {
 	useEffect(() => {
 		if (diamondMarketplaceInstance) {
 			diamondMarketplaceInstance.on("AddedMintingOffer", fetchData);
-			return diamondMarketplaceInstance.off("AddedMintingOffer", fetchData);
+			diamondMarketplaceInstance.on("UpdatedMintingOffer", fetchData);
+			return () => {
+				diamondMarketplaceInstance.off("AddedMintingOffer", fetchData);
+				diamondMarketplaceInstance.on("UpdatedMintingOffer", fetchData);
+			}
 		}
 	}, [diamondMarketplaceInstance, fetchData])
 
 	useEffect(() => {
 		if (contractData?.instance) {
 			contractData.instance.on('CreatedRange', fetchData);
-			return contractData.instance.off('CreatedRange', fetchData);
+			contractData.instance.on('RoleGranted', fetchData);
+			return () => {
+				contractData.instance.off('CreatedRange', fetchData);
+				contractData.instance.off('RoleGranted', fetchData);
+			}
 		}
 	}, [contractData, fetchData])
 	

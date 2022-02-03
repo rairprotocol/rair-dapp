@@ -822,7 +822,7 @@ describe("Diamonds", function () {
 				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than range's length");
 		});
 
-		it ("Should update offers", async () => {
+		it ("Should update ranges", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
 			await expect(await rangesFacet.updateRange(0, 4500, 11, 11))
 				.to.emit(rangesFacet, 'UpdatedRange')
@@ -1643,6 +1643,14 @@ describe("Diamonds", function () {
 				await expect(mintingOffersFacet.buyMintingOffer(0, 0, {value: 4500}))
 					.to.be.revertedWith("RAIR ERC721: Cannot mint more tokens from this range!")
 			});
+
+			it ("Should update marketplace offers", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(await mintingOffersFacet.updateMintingOffer(1, [
+					{recipient: addr1.address, percentage: 45000},
+					{recipient: addr2.address, percentage: 45000}
+				], false)).to.emit(mintingOffersFacet, "UpdatedMintingOffer").withArgs(secondDeploymentAddress, 1, 2, false, 1);
+			})
 		});
 
 		describe("ERC721 Security", () => {

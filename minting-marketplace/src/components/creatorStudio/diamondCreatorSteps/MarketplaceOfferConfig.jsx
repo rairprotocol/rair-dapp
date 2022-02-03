@@ -3,6 +3,8 @@ import chainData from '../../../utils/blockchainData';
 import { utils } from 'ethers';
 import { useSelector } from 'react-redux';
 import DiamondCustomPaymentRow from './diamondCustomPaymentRow.jsx'
+import Swal from 'sweetalert2';
+import { metamaskCall } from '../../../utils/metamaskUtils.js';
 
 const MarketplaceOfferConfig = ({
 	array,
@@ -17,7 +19,7 @@ const MarketplaceOfferConfig = ({
 	let item = array[index];
 	const { currentUserAddress, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 
-	
+	const [marketValuesChanged, setMarketValuesChanged] = useState(false);
 	const [customPayments, setCustomPayments] = useState([{
 		message: 'Node address',
 		recipient: process.env.REACT_APP_NODE_ADDRESS,
@@ -54,7 +56,7 @@ const MarketplaceOfferConfig = ({
 			.map(fee => ({
 				recipient: fee.recipient,
 				percentage: fee.percentage.toString(),
-				editable: false,
+				editable: true,
 				message: 'Data from the marketplace'
 			}))))
 	}, [array, index, nodeFee, treasuryAddress, treasuryFee])
@@ -80,10 +82,11 @@ const MarketplaceOfferConfig = ({
 	}, [customPayments, rerender, array, index]);
 
 	let total = customPayments.reduce((prev, current) => {return Number(prev) + Number(current.percentage)}, 0);
+	let updateAvailable = simpleMode || !marketValuesChanged;
 
-	return <div className={`rounded-rair col-12 col-md-12 ${!item.selected && 'text-secondary'}`}>
+	return <div className={`rounded-rair col-12 col-md-12 ${!item.selected && !item.marketData.fromMarket && 'text-secondary'}`}>
 		<div className='row w-100 p-3'>
-			<div className='col-11 rounded-rair text-start'>
+			<div className='col-10 rounded-rair text-start'>
 				<h3>{item.offerName}</h3>
 				<h5 style={{display: 'inline'}}>
 					{item.tokensAllowed}
@@ -91,22 +94,53 @@ const MarketplaceOfferConfig = ({
 					{utils.formatEther(item.price)} {chainData[window.ethereum.chainId].symbol}
 				</h5>
 			</div>
-			<div className='col-1 rounded-rair text-end'>
-				{item.marketData.fromMarket && <abbr title='On the marketplace!'>
-					<i className={`fas btn btn-success fa-check`} />
-				</abbr>}
+			<div className='col-2 rounded-rair text-end'>
+				{item.marketData.fromMarket &&
+				<button 
+					disabled={updateAvailable}
+					className={`btn col-12 btn-${(updateAvailable) ? 'success' : 'stimorol'}`}
+					onClick={async () => {
+						Swal.fire({
+							title: 'Updating offer',
+							html: 'Please wait...',
+							icon: 'info',
+							showConfirmButton: false
+						});
+						if (await metamaskCall(
+							diamondMarketplaceInstance.updateMintingOffer(
+								item.marketData.mintingOfferIndex,
+								customPayments.filter(item => item.editable),
+								array[index].marketData.visible
+							)
+						)) {
+							Swal.fire({
+								title: 'Success',
+								html: 'The offer has been updated',
+								icon: 'success',
+								showConfirmButton: true
+							});
+						}
+					}}
+					>
+					<small>
+						{updateAvailable ? 'On the marketplace!' : 'Update offer'}
+					</small>
+				</button>}
 				{!item.marketData.fromMarket && <button onClick={() => {
 					array[index].selected = !array[index].selected;
 					rerender()
-				}} className={`btn btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
-					<i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
+				}} className={`btn col-12 btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
+					{!array[index]?.selected && 'Not'} Selected <i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
 				</button>}
-				{!simpleMode && !item.marketData.fromMarket && <button disabled={!array[index].selected} onClick={() => {
+				{!simpleMode && <button disabled={!array[index].selected && !item.marketData.fromMarket} onClick={() => {
 					array[index].marketData.visible = !array[index].marketData.visible;
-					rerender()
-				}} className={`btn btn-${array[index]?.marketData?.visible ? 'royal-ice' : 'danger'} rounded-rair`}>
-					<abbr title={array[index]?.marketData?.visible ? 'Public offer' : 'Hidden offer'}>
-						<i className={`fas fa-${array[index]?.marketData?.visible ? 'eye' : 'eye-slash'}`} />
+					rerender();
+					if (!marketValuesChanged) {
+						setMarketValuesChanged(true);
+					}
+				}} className={`btn col-12 btn-${array[index]?.marketData?.visible ? 'royal-ice' : 'danger'} rounded-rair`}>
+					<abbr title={array[index]?.marketData?.visible ? 'Tokens can be sold' : "Tokens won't be sold"}>
+						{!array[index]?.marketData?.visible && 'Not'} Visible <i className={`fas fa-${array[index]?.marketData?.visible ? 'eye' : 'eye-slash'}`} />
 					</abbr>
 				</button>}
 			</div>
@@ -134,9 +168,12 @@ const MarketplaceOfferConfig = ({
 											index={index}
 											array={customPayments}
 											deleter={removePayment}
-											renderer={rerender}
-											minterDecimals={minterDecimals}
-											disabled={!item.selected}
+											{...{
+												rerender,
+												minterDecimals,
+												marketValuesChanged,
+												setMarketValuesChanged
+											}}
 											{...customPaymentItem}
 										/>
 							})}
@@ -150,15 +187,6 @@ const MarketplaceOfferConfig = ({
 						<i className='fas fa-plus'/> Add
 					</button>
 				</div>
-				{false && item.marketplaceOfferIndex &&
-					<div className='col-12 rounded-rair text-center'>
-						<button onClick={() => {
-							console.log(customPayments);
-							console.log(diamondMarketplaceInstance.functions);
-						}} className='btn btn-stimorol rounded-rair'>
-							Update custom splits
-						</button>
-					</div>}
 			</details>}
 			<hr />
 		</div>

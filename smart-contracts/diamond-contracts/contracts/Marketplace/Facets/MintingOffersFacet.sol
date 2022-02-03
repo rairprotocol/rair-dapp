@@ -26,6 +26,8 @@ interface IRAIR721 {
 contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 
 	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, uint offerIndex);
+	event UpdatedMintingOffer(address erc721Address, uint rangeIndex, uint feeSplitsLength, bool visible, uint offerIndex);
+	
 	event TokenMinted(address erc721Address, uint rangeIndex, uint tokenIndex, address buyer);
 
 	modifier checkCreatorRole(address erc721Address) {
@@ -161,6 +163,13 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		}
 		require(totalPercentage == (100 * s.decimalPow), "Minter Marketplace: Fees don't add up to 100%");
 		selectedOffer.visible = visible_;
+		emit UpdatedMintingOffer(
+			selectedOffer.erc721Address,
+			selectedOffer.rangeIndex,
+			selectedOffer.fees.length,
+			selectedOffer.visible,
+			mintingOfferId_
+		);
 	}
 
 	function buyMintingOffer(uint offerIndex_, uint tokenIndex_) public mintingOfferExists(offerIndex_) payable {
