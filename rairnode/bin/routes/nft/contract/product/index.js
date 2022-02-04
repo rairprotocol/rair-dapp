@@ -117,6 +117,19 @@ module.exports = context => {
     }
   });
 
+  // Get list of files for specific product
+  router.get('/files/', async (req, res, next) => {
+    try {
+      const { contract, product } = req;
+
+      const files = await context.db.File.find({ contract: contract._id, product });
+
+      res.json({ success: true, files });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   // get single product with all related offers
   router.get('/offers', async (req, res, next) => {
     try {
@@ -188,7 +201,7 @@ module.exports = context => {
       const { contract, product } = req;
       req.token = Number(req.params.token);
 
-      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product })
+      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
 
       if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPool not found.' });
 
