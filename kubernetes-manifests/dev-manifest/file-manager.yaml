@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: file-manager
+  annotations:
+    kubernetes.io/service-account.name: rair_files
+type: kubernetes.io/service-account-token
