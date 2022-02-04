@@ -189,7 +189,7 @@ module.exports = context => {
                           external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
                           image: record.image || '',
                           animation_url: record.animation_url || '',
-                          isMetadataPined: reg.test(token.metadataURI || ''),
+                          isMetadataPinned: reg.test(token.metadataURI || ''),
                           attributes: attributes
                         }
                       }

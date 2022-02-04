@@ -28,7 +28,7 @@ const MintedToken = new Schema({
   metadataURI: { type: String, default: 'none' },
   authenticityLink: { type: String, default: 'none' },
   isMinted: { type: Boolean, required: true },
-  isMetadataPined: { type: Boolean },
+  isMetadataPinned: { type: Boolean },
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
@@ -37,7 +37,7 @@ MintedToken.pre('save', function (next) {
   const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
 
   if (token.isNew) {
-    token.isMetadataPined = reg.test(token.metadataURI || '');
+    token.isMetadataPinned = reg.test(token.metadataURI || '');
   } else if (token.metadata) {
     MintedToken.findOne({
       contract: token.contract,
@@ -47,7 +47,7 @@ MintedToken.pre('save', function (next) {
       if (err) {
         next(err);
       } else {
-        token.isMetadataPined = reg.test(token.metadataURI || '') && token.metadataURI !== result.metadataURI;
+        token.isMetadataPinned = reg.test(token.metadataURI || '') && token.metadataURI !== result.metadataURI;
       }
     });
   }
@@ -63,7 +63,7 @@ MintedToken.pre(['update', 'updateOne', 'findOneAndUpdate'], async function (nex
 
     for (const key in newFields) {
       if (key.includes('metadata')) {
-        this.getUpdate().isMetadataPined = reg.test(newFields.metadataURI || '') && newFields.metadataURI !== docToUpdate.metadataURI;
+        this.getUpdate().isMetadataPinned = reg.test(newFields.metadataURI || '') && newFields.metadataURI !== docToUpdate.metadataURI;
         break;
       }
     }
@@ -79,7 +79,7 @@ MintedToken.pre('insertMany', async function (next, tokens) {
 
   if (Array.isArray(tokens) && tokens.length) {
     tokens.map(token => {
-      token.isMetadataPined = reg.test(token.metadataURI || '');
+      token.isMetadataPinned = reg.test(token.metadataURI || '');
       return token;
     });
   }

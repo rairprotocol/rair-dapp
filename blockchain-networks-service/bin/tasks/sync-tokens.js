@@ -135,14 +135,14 @@ module.exports = (context) => {
               uniqueIndexInContract,
               authenticityLink,
               isMinted: true,
-              isMetadataPined: false,
+              isMetadataPinned: false,
             };
 
             if (!_.isEmpty(foundToken) && !_.isEmpty(foundToken.metadata) && foundToken.metadata.name !== 'none' && foundToken.metadataURI === 'none') {
               const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
               await addPin(CID, `metadata_${ foundToken.metadata.name }`);
               update.metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
-              update.isMetadataPined = true;
+              update.isMetadataPinned = true;
             }
 
             tokensForSave.push({
