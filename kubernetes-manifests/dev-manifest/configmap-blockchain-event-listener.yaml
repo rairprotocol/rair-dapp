@@ -5,10 +5,9 @@ metadata:
 data:
   PRODUCTION: "true"
   PINATA_KEY: ${pinata_key}
-  PINATA_SECRET: ${pinata_secret}
-  PINATA_GATEWAY: ${pinata_gateway}
-  INFURA_PROJECT_ID: ${infura_project_id}
-  DEFAULT_PRODUCT_COVER: ${default_product_cover}
+  PINATA_GATEWAY: https://rair.mypinata.cloud/ipfs
+  INFURA_PROJECT_ID: 92a88973a28d41318792f77451db4c5b
+  DEFAULT_PRODUCT_COVER: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
   BINANCE_FACTORY_ADDRESS: "0xb173E2F7eD8Bb697e70b02Ed38faaa2319dB3C23"
   BINANCE_MINTER_ADDRESS: "0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD"
   GOERLI_FACTORY_ADDRESS: "0xF9DC1787179c1404910adE194A5087cEbD5c4717"
