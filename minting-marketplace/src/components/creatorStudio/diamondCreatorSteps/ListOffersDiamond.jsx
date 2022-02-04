@@ -97,7 +97,6 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 		{contractData ? <>
 			{offerList?.length !== 0 && <div className='row w-100 text-start px-0 mx-0'>
 					{offerList.map((item, index, array) => {
-						console.log(item);
 						return <DiamondOfferRow
 							array={array}
 							deleter={e => deleter(index)}

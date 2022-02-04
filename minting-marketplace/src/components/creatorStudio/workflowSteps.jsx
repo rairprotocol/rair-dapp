@@ -334,7 +334,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 										textAlign: 'center',
 										color: currentStep >= index ? undefined : 'gray'
 									}}>
-										<div className='rair-abbr' itemName={item.shortName}>
+										<div className='rair-abbr' stepLabel={item.shortName}>
 											{index + 1}
 										</div>
 									</div>
