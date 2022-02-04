@@ -85,7 +85,7 @@ const ErrorFallback = () => {
 
 function App({ sentryHistory }) {
 
-	const [/*userData*/, setUserData] = useState();
+	const [userData, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
@@ -439,15 +439,15 @@ function App({ sentryHistory }) {
 										<SentryRoute exact path="/thankyou" component={ThankYouPage} />
 
 										<SentryRoute exact path='/:tokens/:blockchain/:contract/:product/:tokenId'>
-											<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+											<NftDataCommonLink userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
 										<SentryRoute exact path='/:collection/:blockchain/:contract/:product/:tokenId'>
-											<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
 										<SentryRoute exact path='/:unlockables/:blockchain/:contract/:product/:tokenId'>
-											<NftDataCommonLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
 										<SentryRoute exact path="/nipsey-splash" component={SplashPage} />

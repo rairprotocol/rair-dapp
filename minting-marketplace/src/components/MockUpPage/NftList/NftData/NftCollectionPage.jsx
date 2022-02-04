@@ -103,7 +103,7 @@ const NftCollectionPageComponent = ({
       }}
     >
       <BreadcrumbsView />
-      <TitleCollection title={collectionName} userName={tokenData[0].ownerAddress} />
+      <TitleCollection title={collectionName} userName={tokenData[0].ownerAddress} currentUser={currentUser} />
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
           ? tokenData.map((token, index) => {

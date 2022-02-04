@@ -4,7 +4,7 @@ import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageTest from "./NftDataPageTest";
 import NftUnlockablesPage from "./NftUnlockablesPage";
 
-const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
+const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userData) => {
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedOfferIndex, setSelectedOfferIndex] = useState();
@@ -150,6 +150,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
   if (params.tokens === "collection") {
     return (
       <NftCollectionPage
+        userData={userData}
         blockchain={blockchain}
         contract={contract}
         currentUser={currentUser}
@@ -171,6 +172,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
   } else if (params.tokens === "unlockables") {
     return (
       <NftUnlockablesPage
+        userData={userData}
         blockchain={blockchain}
         contract={contract}
         currentUser={currentUser}
@@ -192,6 +194,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor) => {
   } else {
     return (
       <NftDataPageTest
+        userData={userData}
         blockchain={blockchain}
         contract={contract}
         currentUser={currentUser}
