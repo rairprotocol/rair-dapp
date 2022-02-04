@@ -95,6 +95,8 @@ describe("Diamonds", function () {
 
 	let MintingOffersFacetFactory, mintingOfferFacetsInstance;
 	let FeesFacetFactory, feesFacetInstance;
+
+	let ReceiveEthAttackerFactory, receiveEthAttackerInstance;
 	
 	before(async () => {
 		[owner, addr1, addr2, addr3, addr4, ...addrs] = await ethers.getSigners();	
@@ -124,6 +126,9 @@ describe("Diamonds", function () {
 		// Marketplace's Facets
 		MintingOffersFacetFactory = await ethers.getContractFactory("MintingOffersFacet");
 		FeesFacetFactory = await ethers.getContractFactory("FeesFacet");
+
+		// Malicious contracts for testing
+		ReceiveEthAttackerFactory = await ethers.getContractFactory("ReceiveEthAttacker");
 	});
 
 	describe("Deploying external contracts", () => {
@@ -1347,10 +1352,32 @@ describe("Diamonds", function () {
 				], true, addr4.address))
 					.to.be.revertedWith("RAIR ERC721 Ranges: Range does not exist");
 			});
-
 		});
 
 		describe("Creating offers", () => {
+			it ("Shouldn't add an offer with splits so low that the resulting ETH is 0", async () => {
+				receiveEthAttackerInstance = await ReceiveEthAttackerFactory.deploy();
+				await receiveEthAttackerInstance.deployed();
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [
+					{recipient: addr1.address, percentage: 89999},
+					{recipient: addr2.address, percentage: 1}
+				]
+				, true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: A percentage on the array will result in an empty transfer");
+			});
+
+			it ("Shouldn't add an offer if one of the custom splits points to a contract", async () => {
+				receiveEthAttackerInstance = await ReceiveEthAttackerFactory.deploy();
+				await receiveEthAttackerInstance.deployed();
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [
+					{recipient: addr1.address, percentage: 30000},
+					{recipient: receiveEthAttackerInstance.address, percentage: 60000}
+				], true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: Contracts can't be recipients of the splits");
+			});
+
 			it ("Should add an offer", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				await expect(await mintingOffersFacet.addMintingOffer(secondDeploymentAddress, 0, [

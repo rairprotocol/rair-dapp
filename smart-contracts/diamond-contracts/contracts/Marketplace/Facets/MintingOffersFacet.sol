@@ -55,6 +55,16 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_;
 	}
 
+	/// @notice Utility function to verify that the recipient of a custom splits ISN'T a contract
+	/// @dev 	This isn't a foolproof function, a contract running code in it's constructor has a code size of 0
+	/// @param addr 	Address to verify
+	/// @return If the address has a code size bigger than 0 (Wallets don't have code so their code size is 0)
+	function isContract(address addr) internal view returns (bool) {
+		uint size;
+		assembly { size := extcodesize(addr) }
+		return size > 0;
+	}
+
 	/// @notice Utility function to verify if the Marketplace has a MINTER role
 	/// @param  erc721Address 	Address of the ERC721 token with AccessControl
 	function hasMinterRole(address erc721Address) internal view returns (bool) {
@@ -124,6 +134,11 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		newOffer.visible = visible_;
 		uint totalPercentage = s.nodeFee + s.treasuryFee;
 		for (uint i = 0; i < splits.length; i++) {
+			require(!isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
+			require(
+				rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow) > 0,
+				"Minter Marketplace: A percentage on the array will result in an empty transfer"
+			);
 			totalPercentage += splits[i].percentage;
 			newOffer.fees.push(splits[i]);
 		}
@@ -155,9 +170,15 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 			hasMinterRole(selectedOffer.erc721Address),
 			"Minter Marketplace: This Marketplace isn't a Minter!"
 		);
+		(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
 		uint totalPercentage = s.nodeFee + s.treasuryFee;
 		delete selectedOffer.fees;
 		for (uint i = 0; i < splits_.length; i++) {
+			require(!isContract(splits_[i].recipient), "Minter Marketplace: Contracts can't be recipients of fees");
+			require(
+				rangeData.rangePrice * splits_[i].percentage / (100 * s.decimalPow) > 0,
+				"Minter Marketplace: A percentage on the array will result in an empty transfer"
+			);
 			totalPercentage += splits_[i].percentage;
 			selectedOffer.fees.push(splits_[i]);
 		}
