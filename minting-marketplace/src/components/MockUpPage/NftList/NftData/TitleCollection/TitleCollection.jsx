@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import "./TitleCollection.css";
 import defaultUser from "./../../../assets/defultUser.png";
+import SharePopUp from './SharePopUp/SharePopUp';
 
-const TitleCollection = ({ title, userName, currentUser }) => {
-    console.log(currentUser.userData, 'currentUser');
+const TitleCollection = ({ title, userName }) => {
+    const [sharePopUp, setSharePopUp] = useState(false);
+    const shareRef = useRef();
+
+    const toggleShare = () => {
+        setSharePopUp(prev => !prev);
+    }
+
     return <div className="container-title-collection">
         <div className="block-title-share">
             <h2>{title}</h2>
-            <button>Share</button>
+            <button className="block-btn-share" onClick={toggleShare}>Share</button>
+            {sharePopUp && <SharePopUp setSharePopUp={setSharePopUp} shareRef={shareRef} />}
         </div>
         <div className="block-user-creator">
             <span>by:</span>
