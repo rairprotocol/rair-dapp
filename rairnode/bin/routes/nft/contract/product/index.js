@@ -176,7 +176,7 @@ module.exports = context => {
         return;
       }
 
-      res.json({ success: true, product });
+      res.json({ success: true, product: { ...product, owner: contract.user } });
     } catch (err) {
       next(err);
     }
