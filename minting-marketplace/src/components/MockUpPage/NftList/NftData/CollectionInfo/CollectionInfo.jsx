@@ -3,6 +3,9 @@ import "./CollectionInfo.css";
 import chainDataFront from "./../../../utils/blockchainDataFront";
 
 const CollectionInfo = ({ defaultImg, blockchain, offerData, openTitle }) => {
+    const defaultPhoto =
+        "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
+
     return <div className="wrapper-collection-info">
         {
             openTitle && <div className="collection-info-head">Collection Info</div>
@@ -31,7 +34,7 @@ const CollectionInfo = ({ defaultImg, blockchain, offerData, openTitle }) => {
                     }).map((token, index) => {
                         return <div key={index + token.price} className="block-item-collection">
                             <div className="item-name">
-                                <img src={defaultImg} alt="rair-tech" />
+                                <img src={defaultImg ? defaultImg : defaultPhoto} alt="rair-tech" />
                                 <div className="item-name-text">
                                     {token.offerName}
                                 </div>

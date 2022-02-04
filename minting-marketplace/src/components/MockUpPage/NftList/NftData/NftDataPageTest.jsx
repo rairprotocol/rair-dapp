@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { utils } from "ethers";
@@ -49,6 +49,8 @@ const NftDataPageTest = ({
   offerPrice,
 }) => {
   const history = useHistory();
+  const [offerDataInfo, setOfferDataInfo] = useState();
+
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
   const handlePlaying = () => {
@@ -61,11 +63,33 @@ const NftDataPageTest = ({
       type: "SHOW_SIDEBAR_TRUE",
     });
   }, [dispatch]);
-  
+
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
+
+  const getParticularOffer = useCallback(async () => {
+    let response = await (
+      await fetch(
+        `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
+        {
+          method: "GET",
+        }
+      )
+    ).json();
+
+    console.log(response, "response");
+
+    if (response.success) {
+      setOfferDataInfo(response.product.offers);
+    }
+
+  }, [product, contract, blockchain]);
+
+  useEffect(() => {
+    getParticularOffer()
+  }, [getParticularOffer])
 
   function percentToRGB(percent) {
     if (percent) {
@@ -611,8 +635,8 @@ const NftDataPageTest = ({
                   {/* {checkDataOfProperty()} */}
                   {selectedData ? (
                     Object.keys(selectedData).length &&
-                    // ? selectedData.length &&
-                    selectedData?.attributes.length > 0 ? (
+                      // ? selectedData.length &&
+                      selectedData?.attributes.length > 0 ? (
                       selectedData?.attributes.map((item, index) => {
                         if (
                           item.trait_type === "External URL" &&
@@ -761,7 +785,9 @@ const NftDataPageTest = ({
                 <AccordionItemButton>Collection info</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
-                <CollectionInfo />
+
+                <CollectionInfo offerData={offerDataInfo} blockchain={blockchain} />
+
               </AccordionItemPanel>
             </AccordionItem>
             <AccordionItem>
