@@ -7,8 +7,6 @@ resource "mongodbatlas_project" "primary" {
   org_id = var.mongo_atlas_org_id
 }
 
-# Container example provided but not always required, 
-# see network_container documentation for details. 
 resource "mongodbatlas_network_container" "primary" {
   project_id       = mongodbatlas_project.primary.id
   atlas_cidr_block = module.vpc_cidr_ranges.network_cidr_blocks.mongo_primary_cluster_range
