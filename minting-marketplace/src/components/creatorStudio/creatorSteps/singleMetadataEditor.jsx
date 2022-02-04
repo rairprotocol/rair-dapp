@@ -13,14 +13,13 @@ import { rFetch } from '../../../utils/rFetch.js';
 const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const stepNumber = 5;
 
-	const [nftID, setNFTID] = useState('');
+	const [nftArtist, setNftArtist] = useState('');
 	const [nftTitle, setNFTTitle] = useState('');
 	const [nftImage, setNFTImage] = useState(BinanceDiamond);
 	const [nftDescription, setNFTDescription] = useState('');
 	const [forceRerender, setForceRerender] = useState(false);
 	const [propertiesArray, setPropertiesArray] = useState([]);
 	const [onMyChain, setOnMyChain] = useState();
-
 	const { /*minterInstance, contractCreator,*/ programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
@@ -34,7 +33,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 	const addRow = () => {
 		let aux = [...propertiesArray];
 		aux.push({
-			name: '',
+			trait_type: '',
 			value: ''
 		});
 		setPropertiesArray(aux);
@@ -83,16 +82,16 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 			</NavLink>
 		</div>
 		<div className='col-6 text-start px-5'>
-			NFT #
+			Artist
 			<br />
-			<div className='border-stimorol rounded-rair mb-3'>
+			<div className='border-stimorol rounded-rair mb-3 w-100'>
 				<InputField
-					getter={nftID}
-					setter={setNFTID}
+					getter={nftArtist}
+					setter={setNftArtist}
 					customClass={`bg-${primaryColor} rounded-rair w-100 form-control`}
 					customCSS={{color: textColor}}
-					type='number'
-					min='0'
+					// type='number'
+					// min='0'
 				/>
 			</div>
 			<br />
@@ -177,6 +176,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
 			<div className='w-100 rounded-rair border-stimorol'>
 				<div className={`w-100 rounded-rair bg-${primaryColor} p-4`}>
 					{JSON.stringify({
+						artist: nftArtist,
 						title: nftTitle,
 						image: nftImage,
 						description: nftDescription,
