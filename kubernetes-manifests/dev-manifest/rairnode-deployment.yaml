@@ -78,8 +78,12 @@ spec:
               value: "UGt70v4#mZ0J@vHFK%b"
             - name: GCP_PROJECT_ID
               value: "rair-market"
-            - name: GCP_BUCKET_NAME
+            - name: GCP_IMAGE_BUCKET_NAME
               value: "rair_images"
+            - name: GCP_VIDEO_BUCKET_NAME
+              value: "rair-videos"
+            - name: GCP_GATEWAY
+              value: "https://storage.googleapis.com"
             - name: GCP_CREDENTIALS
               valueFrom:
                 secretKeyRef:
