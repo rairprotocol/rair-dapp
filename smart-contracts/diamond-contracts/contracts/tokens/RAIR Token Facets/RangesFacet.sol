@@ -7,7 +7,7 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 
 	event CreatedRange(uint productIndex, uint start, uint end, uint price, uint tokensAllowed, uint lockedTokens, string name, uint rangeIndex);
-	event UpdatedRange(uint rangeIndex, uint price, uint tokensAllowed, uint lockedTokens);
+	event UpdatedRange(uint rangeIndex, string name, uint price, uint tokensAllowed, uint lockedTokens);
 	
 	event TradingLocked(uint indexed rangeIndex, uint from, uint to, uint lockedTokens);
 	event TradingUnlocked(uint indexed rangeIndex, uint from, uint to);
@@ -48,7 +48,7 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		data = s.ranges[s.products[productId].rangeList[rangeIndex]];
 	}
 
-	function updateRange(uint rangeId, uint price_, uint tokensAllowed_, uint lockedTokens_) public rangeExists(rangeId) onlyRole(CREATOR) {
+	function updateRange(uint rangeId, string memory name, uint price_, uint tokensAllowed_, uint lockedTokens_) public rangeExists(rangeId) onlyRole(CREATOR) {
 		range storage selectedRange = s.ranges[rangeId];
 		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
 		require(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
@@ -57,8 +57,9 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 			emit TradingLocked(rangeId, selectedRange.rangeStart, selectedRange.rangeEnd, lockedTokens_);
 			selectedRange.lockedTokens = lockedTokens_;
 		}
+		selectedRange.rangeName = name;
 		selectedRange.rangePrice = price_;
-		emit UpdatedRange(rangeId, price_, tokensAllowed_, lockedTokens_);
+		emit UpdatedRange(rangeId, name, price_, tokensAllowed_, lockedTokens_);
 	}
 
 	function canCreateRange(uint productId_, uint rangeStart_, uint rangeEnd_) public view returns (bool) {

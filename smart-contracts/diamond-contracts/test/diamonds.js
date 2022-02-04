@@ -821,24 +821,24 @@ describe("Diamonds", function () {
 
 		it ("Shouldn't update offers with bad information", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
-			await expect(rangesFacet.updateRange(0, 4500, 45, 5))
+			await expect(rangesFacet.updateRange(0, "ASDF", 4500, 45, 5))
 				.to.be.revertedWith("RAIR ERC721: Allowed tokens should be less than range's length");
-			await expect(rangesFacet.updateRange(0, 4500, 8, 12))
+			await expect(rangesFacet.updateRange(0, "ASDF", 4500, 8, 12))
 				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than range's length");
 		});
 
 		it ("Should update ranges", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
-			await expect(await rangesFacet.updateRange(0, 4500, 11, 11))
+			await expect(await rangesFacet.updateRange(0, "Second First First 2", 4500, 11, 11))
 				.to.emit(rangesFacet, 'UpdatedRange')
-				.withArgs(0, 4500, 11, 11);
+				.withArgs(0, "Second First First 2", 4500, 11, 11);
 			const {rangeStart, rangeEnd, tokensAllowed, lockedTokens, rangePrice, rangeName} = await rangesFacet.productRangeInfo(0,0);
 			await expect(rangeStart).to.equal(0);
 			await expect(rangeEnd).to.equal(10);
 			await expect(tokensAllowed).to.equal(11);
 			await expect(lockedTokens).to.equal(11);
 			await expect(rangePrice).to.equal(4500);
-			await expect(rangeName).to.equal('Second First First');
+			await expect(rangeName).to.equal('Second First First 2');
 		});
 
 		it ("Should show if a range can be created", async () => {
@@ -1023,9 +1023,9 @@ describe("Diamonds", function () {
 		it ("Should lock the range again if an update changes the number of locked tokens", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
 			// rangeId, price, tokens allowed, tokens locked
-			await expect(await rangesFacet.updateRange(2, 20000, 0, 5))
+			await expect(await rangesFacet.updateRange(2, "Second Second First", 20000, 0, 5))
 				.to.emit(rangesFacet, 'UpdatedRange')
-				.withArgs(2, 20000, 0, 5)
+				.withArgs(2, "Second Second First", 20000, 0, 5)
 				.to.emit(rangesFacet, 'TradingLocked')
 				.withArgs(2, 0, 100, 5);
 		});
@@ -1385,7 +1385,7 @@ describe("Diamonds", function () {
 					{recipient: addr2.address, percentage: 60000}
 				], true, addr4.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
-					.withArgs(secondDeploymentAddress, 0, 'Second First First', 4500, 2, 0);
+					.withArgs(secondDeploymentAddress, 0, 'Second First First 2', 4500, 2, 0);
 				/*
 					event AddedMintingOffer(
 						address erc721Address,
