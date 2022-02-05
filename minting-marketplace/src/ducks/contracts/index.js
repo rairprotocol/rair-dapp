@@ -54,35 +54,18 @@ const InitialState = {
 	contractCreator: undefined
 };
 
-class LoggingProvider extends ethers.providers.Web3Provider {
-	loggingDateStart;
-	counter;
-
-	perform (method, parameters) {
-		if (process.env.REACT_APP_LOG_WEB3 === 'true') {
-			if (this.loggingDateStart === undefined) {
-				this.loggingDateStart = new Date();
-				console.log('Started logging at', this.loggingDateStart);
-				this.counter = 0;
-			}
-			console.log(this.counter++, "Requesting", method, parameters);
-		}
-		return super.perform(method, parameters).then((result) => {
-			if (process.env.REACT_APP_LOG_WEB3 === 'true') {
-				console.log(this.counter++, "Receiving response", method, parameters, result);
-			}
-			return result;
-		});
-	}
-}
-
 export default function userStore(state = InitialState, action) {
 	switch (action.type) {
 		case types.SET_CHAIN_ID:
 			if (contractAddresses[action.payload] !== undefined) {
 				let signer;
 				if (window.ethereum) {
-					let provider = new LoggingProvider(window.ethereum);
+					let provider = new ethers.providers.Web3Provider(window.ethereum);
+					provider.on('debug', ({action, request, response, provider}) => {
+						if (process.env.REACT_APP_LOG_WEB3 === 'true') {
+							console.log(response ? 'Receiving response to' : 'Sending request', request.method);
+						}
+					})
 					signer = provider.getSigner(0);
 				} else if (state.programmaticProvider) {
 					signer = state.programmaticProvider;
