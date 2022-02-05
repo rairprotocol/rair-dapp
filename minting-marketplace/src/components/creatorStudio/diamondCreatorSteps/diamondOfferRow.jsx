@@ -214,7 +214,7 @@ const DiamondOfferRow = ({
 						getter={individualPrice}
 						setter={value => updater('price', setIndividualPrice, value)}
 						type='number'
-						min='0'
+						min='100'
 						customClass='form-control rounded-rair'
 						customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 					/>

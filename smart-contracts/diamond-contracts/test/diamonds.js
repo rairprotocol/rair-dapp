@@ -693,12 +693,21 @@ describe("Diamonds", function () {
 				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than range's length");
 		});
 
+		it ("Shouldn't create ranges worth less than 100wei", async () => {
+			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
+			await expect(rangesFacet.createRange(0, 0, 10, 0, 9, 5, 'First First First'))
+				.to.be.revertedWith("RAIR ERC721: Minimum price allowed is 100 wei");
+			await expect(rangesFacet.createRange(0, 0, 10, 1, 9, 5, 'First First First'))
+				.to.be.revertedWith("RAIR ERC721: Minimum price allowed is 100 wei");
+			await expect(rangesFacet.createRange(0, 0, 10, 99, 9, 5, 'First First First'))
+				.to.be.revertedWith("RAIR ERC721: Minimum price allowed is 100 wei");
+		});
 
 		it ("Should create ranges", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
-			await expect(await rangesFacet.createRange(0, 0, 10, 1000, 9, 5, 'First First First'))
+			await expect(await rangesFacet.createRange(0, 0, 10, 100, 9, 5, 'First First First'))
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(0, 0, 10, 1000, 9, 5, 'First First First', 0)
+				.withArgs(0, 0, 10, 100, 9, 5, 'First First First', 0)
 				.to.emit(rangesFacet, 'TradingLocked')
 				.withArgs(0, 0, 10, 5);
 				//Index, From, To, Tokens to Locked
@@ -787,7 +796,7 @@ describe("Diamonds", function () {
 				.to.equal(5);
 			await expect(infoZero['data'].rangePrice)
 				.to.equal(infoProductZero.rangePrice)
-				.to.equal(1000);
+				.to.equal(100);
 			await expect(infoZero['data'].rangeName)
 				.to.equal(infoProductZero.rangeName)
 				.to.equal('First First First');
@@ -1424,7 +1433,7 @@ describe("Diamonds", function () {
 					{recipient: addr2.address, percentage: 90000}
 				], true, addr4.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
-					.withArgs(firstDeploymentAddress, 0, 'First First First', 1000, 1, 2);
+					.withArgs(firstDeploymentAddress, 0, 'First First First', 100, 1, 2);
 			});
 
 			it ("Should return the number of offers each contract has", async () => {

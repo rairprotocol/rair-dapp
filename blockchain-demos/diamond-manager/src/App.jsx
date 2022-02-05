@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import * as ethers from 'ethers';
 import DiamondFacetsGroup from './components/DiamondFacetsGroup.jsx';
@@ -35,6 +35,14 @@ const App = () => {
 	const [marketplaceFacetsArray, setMarketplaceFacetsArray] = useState([]);
 	const [standardFacetsArray, setStandardFacetsArray] = useState([]);
 
+	const connectProvider = useCallback(() => {
+		if (window.ethereum) {
+			let provider = new ethers.providers.Web3Provider(window.ethereum)
+			setProvider(provider);
+			setSigner(provider.getSigner(0));
+		}
+	}, [setProvider, setSigner]);
+
 	useEffect(() => {
 		const queryFacetABIData = async (chainId) => {
 			let data = [];
@@ -68,21 +76,19 @@ const App = () => {
 		window.ethereum.on('chainChanged', (chainId) => {
 			console.log('ChainID changed!');
 			queryFacetABIData(chainId);
+			connectProvider();
 		});
 
 		window.ethereum.on('connect', async (connectionInfo) => {
 			console.log('Metamask connected!');
 			queryFacetABIData(connectionInfo.chainId);
+			connectProvider();
 		});
-	}, []);
+	}, [connectProvider]);
 
 	useEffect(() => {
-		if (window.ethereum) {
-			let provider = new ethers.providers.Web3Provider(window.ethereum)
-			setProvider(provider);
-			setSigner(provider.getSigner(0));
-		}
-	}, []);
+		connectProvider();
+	}, [connectProvider]);
 
 	return <div className='container-fluid row bg-dark text-white p-5'>
 		<div className='h1'>

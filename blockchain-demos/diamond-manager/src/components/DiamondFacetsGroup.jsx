@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import * as ethers from 'ethers';
 import ContractABIManager from './ContractABIManager.jsx';
 import {getSelectors} from '../utils/selectorUtils.js';
@@ -10,7 +10,10 @@ const DiamondFacetsGroup = ({signer, provider, facets, standardFacetsArray}) => 
 	const [combinedAbiData, setCombinedAbiData] = useState();
 	const [queryingFacets, setQueryingFacets] = useState(false);
 	
-	const connectMainDiamondFactory = async (address, abi) => {
+	const connectMainDiamondFactory = useCallback(async (address, abi) => {
+		setUsedSelectors([]);
+		setQueriedFacets([]);
+		setMainDiamond();
 		setQueryingFacets(true);
 		await window.ethereum.request({ method: 'eth_requestAccounts' });
 		const diamondCutData = {...standardFacetsArray[0]};
@@ -37,7 +40,7 @@ const DiamondFacetsGroup = ({signer, provider, facets, standardFacetsArray}) => 
 		instance = new ethers.Contract(address, diamondCutData.abi, signer);
 		setMainDiamond(instance);
 		setQueryingFacets(false);
-	}
+	}, [signer, provider, setMainDiamond, standardFacetsArray, usedSelectors]);
 
 	return <div className='col-12 col-md-6'>
 		{facets.length > 0 && facets

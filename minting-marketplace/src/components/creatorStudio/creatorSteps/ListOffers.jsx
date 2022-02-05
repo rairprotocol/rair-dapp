@@ -48,7 +48,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 			name: '',
 			starts: startingToken,
 			ends: startingToken,
-			price: 0,
+			price: 100,
 		});
 		setOfferList(aux);
 	}
