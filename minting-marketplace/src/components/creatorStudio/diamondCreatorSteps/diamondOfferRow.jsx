@@ -45,7 +45,7 @@ const DiamondOfferRow = ({
 			}
 			rerender();
 		}
-	}, [array, index, rerender]);
+	}, [array, index, rerender, fixed, valuesChanged]);
 
 	const updateEndingToken = useCallback( (value) => {
 		if (!array) {
