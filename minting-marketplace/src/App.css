@@ -1063,7 +1063,8 @@ button.metamask-on-boarding:hover{
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 55px;
+    width: inherit;
+    float: left;
   }
   .col-12.pt-2.mb-4{
     margin-right: 150px;

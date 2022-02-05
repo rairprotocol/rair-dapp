@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rairnode-env
+data:
+  PRODUCTION: "true"
+  PINATA_KEY: aaa581a498f99ed85279
+  ADMIN_NETWORK: matic
+  ADMIN_CONTRACT: "0xe5a9efb29b82517166fcef23722452543b5f380f"
+  INFURA_PROJECT_ID: 92a88973a28d41318792f77451db4c5b
+  SERVICE_HOST: dev.rair.tech
+  DEFAULT_PRODUCT_COVER: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
+  GCP_PROJECT_ID: rair-market
+  GCP_IMAGE_BUCKET_NAME: rair_images
+  GCP_VIDEO_BUCKET_NAME: rair-videos
+  GCP_GATEWAY: https://storage.googleapis.com
+  IPFS_SERVICE: pinata
+  IPFS_GATEWAY: http://rairipfs:8080/ipfs
+  PINATA_GATEWAY: https://rair.mypinata.cloud/ipfs

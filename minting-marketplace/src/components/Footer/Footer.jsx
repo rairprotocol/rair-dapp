@@ -13,7 +13,7 @@ const Footer = ({ primaryColor, openAboutPage }) => {
                 © Rairtech 2021. All rights reserved
             </div>
             <ul>
-                <li>
+                {/* <li>
                     <a
                         style={{
                             color: `${primaryColor === "rhyno" ? "inherit" : "#fff"}`
@@ -36,13 +36,13 @@ const Footer = ({ primaryColor, openAboutPage }) => {
                     >
                         Contract
                     </a>
-                </li>
+                </li> */}
                 <li>
                     <a
                         style={{
                             color: `${primaryColor === "rhyno" ? "inherit" : "#fff"}`
                         }}
-                        href="https://discord.gg/7KaSHNJ7qS"
+                        href="mailto:inquiries@rair.tech"
                         rel="noreferrer"
                         target="_blank"
                     >
@@ -58,14 +58,6 @@ const Footer = ({ primaryColor, openAboutPage }) => {
                     >
                         Terms of Service
                     </NavLink>
-                </li>
-                <li
-                    style={{
-                        color: `${primaryColor === "rhyno" ? "inherit" : "#fff"}`
-                    }}
-                    onClick={() => openAboutPage()}
-                >
-                    About us
                 </li>
             </ul>
         </footer>

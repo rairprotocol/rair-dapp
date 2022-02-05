@@ -390,7 +390,7 @@ const teamGreymanArray = [
         socials: [
             {
                 classIcon: 'fab fa-twitter',
-                link: '#'
+                link: 'https://twitter.com/Dadaratopia'
             }
         ]
     },
