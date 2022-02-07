@@ -267,7 +267,7 @@ const SplashPage = ({ loginDone }) => {
               </div>
               }
               {timerLeft !== 0 && <div className="greyman-">
-                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-22T22:22:00-00:00'} />
+                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-02T22:22:00-00:00'} />
               </div>}
               <div className="btn-buy-metamask">
                 {timerLeft === 0 && <button onClick={() => openModal()}>
