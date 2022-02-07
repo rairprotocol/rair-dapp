@@ -10,7 +10,7 @@
     transition: all .3s ease;
 }
 
-.share-pop-up button.share-copy-link {
+.share-pop-up button.share-copy-link, .share-pop-up div.share-copy-link {
     padding: 15px 0;
     background: rgb(56, 54, 55);
     border: none;
@@ -18,7 +18,7 @@
     width: 100%;
 }
 
-.share-pop-up button.share-copy-link {
+.share-pop-up button.share-copy-link, .share-pop-up div.share-copy-link {
     border-bottom: 1px solid grey;
     display: flex;
     justify-content: center;
@@ -28,11 +28,11 @@
     transition: all .2s ease;
 }
 
-.share-pop-up button.share-copy-link:last-child {
+.share-pop-up button.share-copy-link:last-child, .share-pop-up div.share-copy-link:last-child {
     border-bottom: 0;
 }
 
-.share-pop-up button.share-copy-link:hover {
+.share-pop-up button.share-copy-link:hover, .share-pop-up div.share-copy-link:hover  {
     background: grey;
 }
 

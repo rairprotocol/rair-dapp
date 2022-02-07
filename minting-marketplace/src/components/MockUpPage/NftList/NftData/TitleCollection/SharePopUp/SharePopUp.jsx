@@ -37,23 +37,24 @@ const SharePopUp = ({ setSharePopUp, shareRef }) => {
                 </> : copySuccess
             }
         </button>
-        <button className="share-copy-link">
+        <div className="share-copy-link">
             <FacebookShareButton
-                className="network__share-button"
+                className="share-copy-link network__share-button"
                 url={currentUrl}
                 quote={"Rair tech"}
             >
                 <i className="fab fa-facebook"></i>
             </FacebookShareButton>
-        </button>
-        <button className="share-copy-link">
+        </div>
+        <div className="share-copy-link">
             <TwitterShareButton
+                className="share-copy-link"
                 url={currentUrl}
                 quote={"Rair tech"}
             >
                 <i className="fab fa-twitter"></i>
             </TwitterShareButton>
-        </button>
+        </div>
     </div>
 };
 

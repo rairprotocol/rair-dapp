@@ -2,6 +2,7 @@
     margin-bottom: 48px;
     max-width: 1600px;
     position: relative;
+    z-index: 10;
 }
 
 .container-title-collection .block-title-share{
