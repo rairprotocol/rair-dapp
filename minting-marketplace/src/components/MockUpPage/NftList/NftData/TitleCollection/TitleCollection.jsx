@@ -2,8 +2,10 @@ import React, { useState, useRef } from 'react';
 import "./TitleCollection.css";
 import defaultUser from "./../../../assets/defultUser.png";
 import SharePopUp from './SharePopUp/SharePopUp';
+import { useParams } from 'react-router-dom';
 
 const TitleCollection = ({ title, userName }) => {
+    const { tokenId } = useParams();
     const [sharePopUp, setSharePopUp] = useState(false);
     const shareRef = useRef();
 
@@ -13,7 +15,7 @@ const TitleCollection = ({ title, userName }) => {
 
     return <div className="container-title-collection">
         <div className="block-title-share">
-            <h2>{title}</h2>
+            <h2>{title === "none" ? `#${tokenId}` : title}</h2>
             <button className="block-btn-share" onClick={toggleShare}>Share</button>
             {sharePopUp && <SharePopUp setSharePopUp={setSharePopUp} shareRef={shareRef} />}
         </div>
