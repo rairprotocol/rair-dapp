@@ -27,7 +27,9 @@ module "foundation" {
 
   env_name = "prod"
   region = "us-west1"
+  gcp_project_id = "rair-market-production"
   vpc_cidr_block = module.config.env_config.prod.vpc_cidr_block
+  mongo_atlas_org_id = module.config.mongo_atlas_org_id
 }
 
 output "vpc_cidr_range_output" {

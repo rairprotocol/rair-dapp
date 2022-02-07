@@ -1,5 +1,5 @@
 const setTitle = (title) => {
-	document.title = `RAIR Marketplace - ${title}`
+	document.title = `${title}`
 }
 
 export default setTitle;
