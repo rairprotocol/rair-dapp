@@ -474,7 +474,7 @@ const NftDataPageTest = ({
         />
         <div
           style={{
-            maxWidth: "1200px",
+            maxWidth: "1600px",
             margin: "auto",
             borderRadius: "16px",
             padding: "24px 0",

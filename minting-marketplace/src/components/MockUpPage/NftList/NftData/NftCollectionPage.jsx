@@ -8,6 +8,7 @@ import { useHistory, useParams } from "react-router-dom";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import { useState } from "react";
+import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
 
 const NftCollectionPageComponent = ({
   blockchain,
@@ -154,6 +155,7 @@ const NftCollectionPageComponent = ({
         <button>Show more</button>
       </div>
       <CollectionInfo offerData={offerDataCol} defaultImg={defaultImg} blockchain={blockchain} openTitle={true} />
+      <AuthenticityBlock title={true} />
     </div>
   );
 };
