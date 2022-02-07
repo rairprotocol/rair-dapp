@@ -59,12 +59,23 @@ const addMetadata = async (data, name) => {
   });
 
   return _.get(response, 'IpfsHash');
-}
+};
+
+const addFile = async (pathTo, name) => {
+  const response = await pinata.pinFromFS(pathTo, {
+    pinataMetadata: {
+      name
+    }
+  });
+
+  return _.get(response, 'IpfsHash');
+};
 
 module.exports = {
   retrieveMediaInfo,
   removePin,
   addPin,
   addFolder,
-  addMetadata
+  addMetadata,
+  addFile
 };
