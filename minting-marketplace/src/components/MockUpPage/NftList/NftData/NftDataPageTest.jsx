@@ -514,7 +514,7 @@ const NftDataPageTest = ({
               <div
                 style={{
                   margin: "auto",
-                  backgroundImage: `url(${selectedData?.image})`,
+                  backgroundImage: `url(${selectedData?.image ? selectedData.image : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"})`,
                   width: "604px",
                   height: "45rem",
                   backgroundPosition: "center",
@@ -625,8 +625,28 @@ const NftDataPageTest = ({
             </div>
           </div>
           <Accordion
-            allowZeroExpanded /* allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/
+            allowMultipleExpanded /* allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/
           >
+            <AccordionItem>
+              <AccordionItemHeading>
+                <AccordionItemButton>Description</AccordionItemButton>
+              </AccordionItemHeading>
+              <AccordionItemPanel>
+                <div className=" custom-desc-to-offer-wrapper">
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    {toUpper(selectedData?.artist)}
+                  </div>
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    {selectedData?.description}
+                  </div>
+                  <div className="my-2 px-4 custom-desc-to-offer">
+                    <a href={selectedData?.external_url}>
+                      {selectedData?.external_url}
+                    </a>
+                  </div>
+                </div>
+              </AccordionItemPanel>
+            </AccordionItem>
             <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>Properties</AccordionItemButton>
@@ -729,26 +749,6 @@ const NftDataPageTest = ({
                       <div>You don't have any properties</div>
                     )
                   ) : null}
-                </div>
-              </AccordionItemPanel>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionItemHeading>
-                <AccordionItemButton>Description</AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                <div className=" custom-desc-to-offer-wrapper">
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    {toUpper(selectedData?.artist)}
-                  </div>
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    {selectedData?.description}
-                  </div>
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    <a href={selectedData?.external_url}>
-                      {selectedData?.external_url}
-                    </a>
-                  </div>
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
