@@ -2,12 +2,12 @@
     margin: 48px 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     width: 100%;
 }
 
 .contianer-collection-info {
-    max-width: 1200px;
+    max-width: 1600px;
     background: #383637;
     border-radius: 16px;
     overflow: hidden;
@@ -62,6 +62,7 @@
     font-weight: 700;
     text-align: left;
     margin-bottom: 24px;
+    width: 100%;
 }
 
 .collection-info-body {
@@ -73,6 +74,8 @@
     display: flex;
     align-items: center;
     padding: 13px 0;
+    display: flex;
+    justify-content: space-between;
 
     font-size: 19px;
 }

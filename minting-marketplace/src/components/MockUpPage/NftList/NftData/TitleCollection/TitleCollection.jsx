@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import "./TitleCollection.css";
 import defaultUser from "./../../../assets/defultUser.png";
+import { useParams } from 'react-router-dom';
 
 const TitleCollection = ({ title, userName, currentUser }) => {
     console.log(currentUser.userData, 'currentUser');
+    const params = useParams();
+
     return <div className="container-title-collection">
         <div className="block-title-share">
-            <h2>{title}</h2>
+            <h2>{title === "none" ? `#${params.tokenId}` : title}</h2>
             <button>Share</button>
         </div>
         <div className="block-user-creator">
