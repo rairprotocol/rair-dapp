@@ -12,7 +12,7 @@ const lockLifetime = 1000 * 60 * 5;
 module.exports = (context) => {
   context.agenda.define(AgendaTaskEnum.SyncTokens, { lockLifetime }, async (task, done) => {
     try {
-      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncTokens});
+      logAgendaActionStart({ agendaDefinition: AgendaTaskEnum.SyncTokens });
       const { network, name } = task.attrs.data;
       const tokensForSave = [];
       const offersForUpdate = [];
@@ -48,7 +48,10 @@ module.exports = (context) => {
         // const contract = contractAddress.toLowerCase();
         const OfferP = Number(catalogIndex);
         const network = networkData.network;
-        const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1, contractAddress: 1 });
+        const contract = await context.db.Contract.findOne({
+          contractAddress: contractAddress.toLowerCase(),
+          blockchain: network
+        }, { _id: 1, contractAddress: 1 });
 
         if (!contract) return;
 
@@ -131,13 +134,15 @@ module.exports = (context) => {
               offer: rangeIndex,
               uniqueIndexInContract,
               authenticityLink,
-              isMinted: true
-            }
+              isMinted: true,
+              isMetadataPinned: false,
+            };
 
             if (!_.isEmpty(foundToken) && !_.isEmpty(foundToken.metadata) && foundToken.metadata.name !== 'none' && foundToken.metadataURI === 'none') {
               const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
               await addPin(CID, `metadata_${ foundToken.metadata.name }`);
               update.metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
+              update.isMetadataPinned = true;
             }
 
             tokensForSave.push({

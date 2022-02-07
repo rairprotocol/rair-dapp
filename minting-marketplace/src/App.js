@@ -93,7 +93,7 @@ function App({ sentryHistory }) {
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
 	// Google Analytics
-	const TRACKING_ID = "UA-209450870-3"; // YOUR_OWN_TRACKING_ID
+	const TRACKING_ID = "UA-209450870-5"; // YOUR_OWN_TRACKING_ID
 	ReactGA.initialize(TRACKING_ID);
 
 	// Redux
@@ -243,7 +243,7 @@ function App({ sentryHistory }) {
 	}, [dispatch])
 
 	useEffect(() => {
-		setTitle('Welcome');
+		setTitle('#Cryptogreyman');
 		if (process.env.NODE_ENV === 'development') {
 			window.gotoRouteBackdoor = sentryHistory.push
 			window.adminAccessBackdoor = (boolean) => {
@@ -428,11 +428,11 @@ function App({ sentryHistory }) {
 										<SentryRoute path="/coming-soon" component={ComingSoon} />
 										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 
-										<SentryRoute exact path="/greyman-splash">
+										<SentryRoute exact path="/">
 											<GreymanSplashPage loginDone={loginDone} />
 										</SentryRoute>
 										{/* <SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} /> */}
-
+										
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
 										<SentryRoute exact path="/terms-use" component={TermsUse} />
@@ -482,7 +482,7 @@ function App({ sentryHistory }) {
 								</div>
 							</div>
 						</div>
-						<div className='py-5' />
+						{/* <div className='py-5' /> */}
 					</div>
 					<Footer openAboutPage={openAboutPage} primaryColor={primaryColor} />
 				</>

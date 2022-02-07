@@ -33,52 +33,29 @@ spec:
             - containerPort: 3000
             - containerPort: 5000
           env:
-            - name: PRODUCTION
-              value: "true"
             - name: MONGO_URI
-              value: "mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority"
-            - name: MONGO_URI_LOCAL
-              value: "mongodb://admin:admin@mongo:27017/rair-db?authSource=admin"
-            - name: INFURA_PROJECT_ID
-              value: "92a88973a28d41318792f77451db4c5b"
-            - name: ADMIN_NETWORK
-              value: "matic"
-            - name: ADMIN_CONTRACT
-              value: "0xe5a9efb29b82517166fcef23722452543b5f380f"
-            - name: SERVICE_HOST
-              value: "dev.rair.tech"
-            - name: PINATA_SECRET
-              value: "92a0712843d62a70a2cad282bb7369b42be4ddd288543cc861a792d91d3c10a1"
-            - name: sentry_enabled
-              value: "true"
-            - name: sentry_endpoint
-              value: "https://b1b9b63c8d484d35a7f47235c681201b@o1004167.ingest.sentry.io/5965143"
-            - name: sentry_trace_rate
-              value: "1.0"
-            - name: sentry_release
-              value: "unknown_development_build"
-            - name: default_product_cover
-              value: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
-            - name: matic_testnet_rpc
-              value: "https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b"
-            - name: matic_mainnet_rpc
-              value: "https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
-            - name: ethereum_mainnet_rpc
-              value: "https://mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b"
-            - name: ethereum_testnet_goerli_rpc
-              value: "https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b"
-            - name: binance_testnet_rpc
-              value: "https://data-seed-prebsc-1-s1.binance.org:8545/"
-            - name: binance_mainnet_rpc
-              value: "https://bsc-dataseed.binance.org/"
-            - name: JWT_SECRET
-              value: "UGt70v4#mZ0J@vHFK%b"
-            - name: GCP_PROJECT_ID
-              value: "rair-market"
-            - name: GCP_BUCKET_NAME
-              value: "rair_images"
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
             - name: GCP_CREDENTIALS
-              value: "{\n  \"type\": \"service_account\",\n  \"project_id\": \"rair-market\",\n  \"private_key_id\": \"5b19c5669e7ab7b1060ca7d51bcee328a8bac1e3\",\n  \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2ymZeTOJ+/YwU\\n7n1bFtByyIo4Jv4Zwsz/V2sEafHW38PEfaLoz2Wk+bNl/4fRvBiNBmbgjgi7OlQu\\npZBbvJXVT7FjJmZPFNPJKSBfutoWMSknscnR/34HWaH8tBHLe91UQa+YS6NmpSSW\\nSnj04XlyVfLSo6YWEZ9OyOXiG0LqcDZHIbyh9yXIUn0NmqJzWRcVWN97IYTtOF68\\n9Vj+iUmS8f0YansFUME4g1M4GsYGRRSLryYbvbtuBCctQM39hVj5EpM1+czIiN/H\\nMvoWf2Q5wUrpYmbeVLrV62wfaLdsVaB/h6dM7b45I0O7iHe5j3tZBn9NzXmX2NTo\\ntC9BwNtTAgMBAAECggEAF3Qm6GijEzpDNBhZu0tVGbVDjurp5bJKDWVRFPLnFfQG\\nMXsRYR/jYeSsMSU1byLcX5P3tU5kLmnQjV+vAyZSb1lXYGp37CO2/POq9L2L6BcM\\nucwlIi3PJPBKSZttQRe2kW4QMtFZuPztkd8iYAFiTNpcWsymreQ69afvXzCySFQ/\\nlnFp5oeiPkOjEVEKpgZmQnnmn1oltklwgeJcsjtRzfjij1NUMh8W8AbvcEsXm0jb\\nyiH1DIAdACrr8leQ/C3lrd7AhO93XrhaCWlVRN6w2bDcn6yEL6ewQj5LNE/sRqi8\\naDcYBYQXv4ShPsAyAaMSqdjVHc2KJWN7cPM+GKwT6QKBgQD2cwQeOp2kW+zT3RTc\\ntPAxua0zQujO7BM5szAZV96exo3U02RpONmUQC+OLcvsQKnri8vp5aJIpvLvjmjp\\ntyO381MH7xiPSD8TsDQ2X799/HvzN4Y3ZtrKu5MDsVGKT+lEH20jUia6Kq7iK2en\\nWrn9c93/ehKWLZCxmPPLmpJXvwKBgQC939YgddreAWRAGYjJk+DtH/8N/yWXJuP4\\npD7C/zn+kfq+1k3HWbcLYyCMptz23U62zlVNPu5Q0xB7ry0ITCOHRjbukBjZ8emC\\n+LkWwfwIsJmSAiKybgMeiAwSf/UAKJmwdkgc4QySRS4/DxCA6vaa8NVb6i1rKkz7\\n0CRF8VZBbQKBgBmRPxkfvaEChGRKaFKpVs3h1G0gAOUOqsPuqgvHCOpx8N7me2FL\\nK49sxUI70A8XeklcfHAsiZR99XAS1yGABW2dCb0l+edLeHfDbPdDIauhWP6XgQ4Y\\nVpR3tz3H1IzD05Bkrj7e0/O2X+RI2n0LNYZs0dgiQvFfksZJ9ujlhU8jAoGARvVb\\n5I2m2cjTWlEwmYS2TmfivaxYtABIuidHfUA8wDJ17tPQBWw1x/+nrmi9s1RJkm/R\\n2Shnj7URN+fjgHJT5L4M0WLwpqKNjfC92w9rzSOSgMpjhSMv7z0QpelD+mcx6IyL\\nrp88P32zJsXOeR9WQdk3Iz6E8sPAOWsz4x+qCJECgYEAvxuJz6xtp1VtEvNf30wS\\nPofNZl51uv96Nzq7lSLk9qJkspDLuBGQtHCNdsArZ97wqRWS0vmMzO7bapK/MuBz\\nunydEHCdwCigGxu2pA6uELVmzpNpLa53CxrCPp7hJOifzCUHamLM5PAkQHZKk1dp\\nWitrYiiSvQP0arH/BAAMp5Q=\\n-----END PRIVATE KEY-----\\n\",\n  \"client_email\": \"rair-files@rair-market.iam.gserviceaccount.com\",\n  \"client_id\": \"111933348778354053416\",\n  \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n  \"token_uri\": \"https://oauth2.googleapis.com/token\",\n  \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n  \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/rair-files%40rair-market.iam.gserviceaccount.com\"\n}\n"
+              valueFrom:
+                secretKeyRef:
+                  name: rair-manager-key
+                  key: key.json
+            - name: PINATA_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pinata-secret
+                  key: PINATA_SECRET
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET
+          envFrom:
+          - configMapRef:
+              name: rairnode-env
           resources: {}
           volumeMounts:
             - mountPath: /usr/local/src/db
