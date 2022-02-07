@@ -103,6 +103,7 @@ const NftCollectionPageComponent = ({
         alignContent: "flex-start",
         justifyContent: "center",
         alignItems: "flex-start",
+        marginBottom: "66px"
       }}
     >
       <BreadcrumbsView />
@@ -157,7 +158,7 @@ const NftCollectionPageComponent = ({
         <button>Show more</button>
       </div>
       <CollectionInfo offerData={offerDataCol} defaultImg={defaultImg} blockchain={blockchain} openTitle={true} />
-      <AuthenticityBlock title={true} />
+      <AuthenticityBlock collectionToken={tokenData[0]?.authenticityLink} title={true} />
     </div>
   );
 };
