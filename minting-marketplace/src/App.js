@@ -429,9 +429,9 @@ function App({ sentryHistory }) {
 										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 
 										<SentryRoute exact path="/">
-											<GreymanSplashPage loginDone={loginDone} />
+											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
-										{/* <SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} /> */}
+										<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
 										
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
