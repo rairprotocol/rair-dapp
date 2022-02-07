@@ -53,6 +53,7 @@ Returns found product with offers
     "collectionIndexInContract": 1,
     "contract": "contractAddress",
     "copies": 4,
+    "owner": "userAddress",
     "creationDate": "2021-08-06T10:53:52.441Z",
     "offers": [
       {
