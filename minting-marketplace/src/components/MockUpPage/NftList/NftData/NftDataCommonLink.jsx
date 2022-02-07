@@ -108,7 +108,8 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
   const getProductsFromOffer = useCallback(async () => {
     const response = await (
       await fetch(
-        `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
+        // `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
+        `/api/nft/network/${blockchain}/${contract}/${product}/files`,
         {
           method: "GET",
         }

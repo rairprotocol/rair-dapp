@@ -31,6 +31,7 @@ const NftCollectionPageComponent = ({
   const history = useHistory();
   const dispatch = useDispatch();
   const [offerDataCol, setOfferDataCol] = useState();
+  const [offerAllData, setOfferAllData] = useState();
   const [collectionName, setCollectionName] = useState();
 
   const getParticularOffer = useCallback(async () => {
@@ -44,6 +45,7 @@ const NftCollectionPageComponent = ({
     ).json();
 
     if (response.success) {
+      setOfferAllData(response.product);
       setOfferDataCol(response.product.offers);
     }
 
@@ -104,7 +106,7 @@ const NftCollectionPageComponent = ({
       }}
     >
       <BreadcrumbsView />
-      <TitleCollection title={collectionName} userName={tokenData[0].ownerAddress} currentUser={currentUser} />
+      <TitleCollection title={collectionName} userName={offerAllData?.owner} currentUser={currentUser} />
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
           ? tokenData.map((token, index) => {

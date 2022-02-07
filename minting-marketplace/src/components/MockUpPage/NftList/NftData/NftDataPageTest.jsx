@@ -79,7 +79,7 @@ const NftDataPageTest = ({
       )
     ).json();
 
-    console.log(response, "response");
+    // console.log(response, "response");
 
     if (response.success) {
       setOfferDataInfo(response.product.offers);

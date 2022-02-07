@@ -9,8 +9,8 @@ function VideoPlayerView({ productsFromOffer }) {
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
   const history = useHistory();
 
-  console.log(productsFromOffer, "productsFromOffer");
-  console.log(selectVideo, "selectVideo");
+  // console.log(productsFromOffer, "productsFromOffer");
+  // console.log(selectVideo, "selectVideo");
   return (
     <div className={cl.VideoPlayerViewWrapper}>
       <div className={cl.ListOfVideosWrapper}>

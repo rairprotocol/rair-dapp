@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftSingleUnlockables = ({
   blockchain,
@@ -10,19 +11,23 @@ const NftSingleUnlockables = ({
   selectedToken,
 }) => {
   const history = useHistory();
+  // console.log(productsFromOffer, "productsFromOffer");
+  // console.log(productsFromOffer.map(of => of.offer[0]), "MAP");
 
   return (
     <div
       style={{
         display: "flex",
         flexWrap: "wrap",
-        overflow: 'hidden',
-        flexDirection: 'row',
+        overflow: "hidden",
+        flexDirection: "row",
         justifyContent: "space-between",
       }}
     >
+      {/* <NftDifferentRarity productsFromOffer={productsFromOffer} /> */}
       {(productsFromOffer?.length &&
         productsFromOffer.map((v) => {
+          // console.log(v.offer[0], "rarity");
           return (
             <div
               key={v._id}
@@ -31,6 +36,8 @@ const NftSingleUnlockables = ({
                 height: "135px",
               }}
             >
+              <NftDifferentRarity productsFromOffer={v.offer[0]} />
+
               <div
                 onClick={
                   () => history.push(`/watch/${v._id}/${v.mainManifest}`)
@@ -80,7 +87,7 @@ const NftSingleUnlockables = ({
                         width: "max-content",
                       }}
                     >
-                      Coming soon
+                      {v.description}
                     </p>
                   </div>
                   {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
