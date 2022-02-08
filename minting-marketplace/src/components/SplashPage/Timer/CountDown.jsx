@@ -2,9 +2,8 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import './Countdown.css';
 import moment from 'moment-timezone';
 
-
-const CountdownComponent = ({ setTimerLeft }) => {
-    const dec = moment(new Date("2022-01-06T19:00:00-08:00"));//.tz("America/New_York");
+const CountdownComponent = ({ setTimerLeft, time }) => {
+    const dec = moment(new Date(time));//.tz("America/New_York");
     const [countdownDate, /*setCountdownDate*/] = useState(dec);
 
     const [state, setState] = useState({

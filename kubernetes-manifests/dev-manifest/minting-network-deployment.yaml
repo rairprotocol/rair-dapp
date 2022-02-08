@@ -32,6 +32,9 @@ spec:
           ports:
           - name: http-server 
             containerPort: 3001
+          envFrom:
+          - configMapRef:
+              name: minting-network-env
           resources: {}
       imagePullSecrets:
         - name: regcred

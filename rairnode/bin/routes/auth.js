@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
-const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
+const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation.js');
 const _ = require('lodash');
 const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
@@ -122,12 +122,35 @@ module.exports = context => {
     const { mediaId } = req.params;
     try {
       let ownsTheAdminToken;
-      let ownsTheAccessTokens;
+      let ownsTheAccessTokens = [];
       const file = await context.db.File.findOne({ _id: mediaId });
-
+      const offers = await context.db.Offer.find({
+        offerIndex: {
+          $in: file.offer
+        },
+        contract: file.contract
+      });
+      const contract = await context.db.Contract.findOne(file.contract);
       if (ethAddres) {
         // verify the user have needed tokens
-        ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
+
+        // Replace with full blockchain authentication
+        //ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
+        //async function checkBalanceProduct (accountAddress, blockchain, contractAddress, productId, offerRangeStart, offerRangeEnd) {
+        for await (let offer of offers) {
+          ownsTheAccessTokens.push(await checkBalanceProduct(
+            ethAddres,
+            contract.blockchain,
+            contract.contractAddress,
+            offer.product,
+            offer.range[0],
+            offer.range[1]
+          ));
+          if (ownsTheAccessTokens.includes(true)) {
+            break;
+          }
+        }
+
 
         // TODO: have to be the call functionality of tokens sync
         // if (_.isEmpty(ownsTheAccessTokens)) {
@@ -135,7 +158,7 @@ module.exports = context => {
         // }
 
         // verify the account holds the required NFT
-        if (typeof file.author === 'string' && file.author.length > 0 && _.isEmpty(ownsTheAccessTokens)) {
+        if (typeof file.author === 'string' && file.author.length > 0 && !ownsTheAccessTokens.includes(true)) {
           const [contractAddress, tokenId] = file.author.split(':');
           log.info('Verifying account has token');
           try {
@@ -145,7 +168,7 @@ module.exports = context => {
           }
         }
 
-        if (!ownsTheAdminToken && _.isEmpty(ownsTheAccessTokens) && !file.demo) {
+        if (!ownsTheAdminToken && !ownsTheAccessTokens.includes(true) && !file.demo) {
           return res.status(403).send({ success: false, message: 'You don\'t have permission.' });
         }
 
@@ -197,7 +220,7 @@ module.exports = context => {
             }
           } catch (e) {
             log.error(e);
-            next(new Error('Could not verify account.', ));
+            next(new Error('Could not verify account.'));
           }
         } else {
           return res.status(400).send({ success: false, message: 'Incorrect credentials.' });

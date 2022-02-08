@@ -1,4 +1,13 @@
 /* Repeating properties*/
+.vjs-big-play-button{
+    top: 50% !important;
+    left: 48% !important;
+}
+.video-grey-man-video-title{
+    padding-bottom: 2rem;
+    padding-top: 2rem;
+    color: white !important;
+}
 
 .text-gradient {
     /* background: grey; */
@@ -36,11 +45,15 @@
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
     background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .wrapper-splash-page.greyman-page {
-    background-image: none;
-    text-align: -webkit-center;
+    /* background-image: none; */
+    /* text-align: -webkit-center; */
 }
 
 .home-splash--page {
@@ -516,6 +529,11 @@ line-height: 30px;
     backdrop-filter: blur(8px);
     border-radius: 0px 0px 20px 22px;
 }
+
+.show-more-wrap i {
+    color: rgb(231, 130, 213);
+    margin-left: 10px;
+}
 .show-more-arrow{
     margin-left: 15px;
     display: inline-block;
@@ -584,6 +602,7 @@ line-height: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 .video-grey-man-title{
     font-style: normal;
@@ -604,6 +623,7 @@ line-height: 30px;
     height: 559px;
     overflow: hidden;
     border-radius: 16px;
+    position: relative;
 }
 .video-grey-man-metamask-logo{
     position: relative;
@@ -613,8 +633,11 @@ line-height: 30px;
 .video-grey-man-pic{
     width: 995px;
     height: 559px;
-    transform: scale(1.4);
+    transform: scale(1.0);
+    object-fit: cover;
 }
+
+
 .video-grey-man-desc-wrapper{
     padding-top: 35px;
 }
@@ -1017,7 +1040,7 @@ line-height: 30px;
 }
 
 
-.meet-team .box-teammate .teammate-title-socials span a {
+.meet-team .box-teammate .position-teammate  span a {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1027,15 +1050,15 @@ line-height: 30px;
     transition: .2s all ease;
 }
 
-.meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
+.meet-team .box-teammate .position-teammate span a.arrrow-right:hover {
     margin-left: 10px;
 }
 
-.meet-team .box-teammate .teammate-title-socials span a:hover {
+.meet-team .box-teammate .position-teammate span a:hover {
     color:#d634b8;
 }
 
-.meet-team .box-teammate .teammate-title-socials .box-socials {
+.meet-team .box-teammate .position-teammate .box-socials {
     margin-left: 20px;
 }
 
@@ -1279,6 +1302,11 @@ img.block-img-mobile{
 
 
 /* Media Pesponsive*/
+@media (min-width: 1100px) and (max-width: 2230px) {
+    .video-js.vjs-16-9 {
+        padding-top: 30.25%;
+    }
+}
 
 @media screen and (max-width: 1488px) {
     .wrapper-splash-page {
@@ -1298,6 +1326,45 @@ img.block-img-mobile{
 }
 
 @media screen and (max-width: 1300px) {
+    .about-metadata-wrapper{
+        width: 900px;
+    }
+    .main-greyman-pic-wrapper{
+        margin-left: 4rem;
+        /* width: 900px; */
+        /* display: -webkit-inline-box; */
+    }
+    .video-grey-man{
+        width: 900px;
+    }
+    .video-grey-man-metamask-logo {
+        left: 374px;
+        top: -380px;
+    }
+    .box-progress {
+        margin-left: 83px !important;
+    }
+    .block-left-tokens{
+        margin-right: 1rem !important;
+    }
+    .btn-buy-metamask{
+        /* margin-right: 4rem; */
+    }
+    .text-gradient-grey{
+        margin-top: 3rem !important;
+        font-size: 40px !important;
+    }
+    .text-splash{
+        /* width: 22rem; */
+    }
+    .text-description{
+        /* width: 400px !important; */
+    }
+    .home-splash--page .information-author {
+        background-size: 350px auto;
+        background-position: 88% 9rem;
+        /* background-position: 95% 60px; */
+    }
     .wrapper-splash-page {
         align-items: center;
     }
@@ -1455,15 +1522,8 @@ img.block-img-mobile{
     }
 }
 
+
 @media screen and (max-width: 950px) {
-    /* .home-splash--page {
-        display: none;
-    }
-
-    .home-splash-mobile {
-        display: block;
-    } */
-
     .home-splash--page {
         padding-left: 0px;
     }
@@ -1571,10 +1631,24 @@ img.block-img-mobile{
     }
 
     .home-splash--page .box-progress {
-        margin-left: 108px;
+        margin-left: 108px !important;
         margin-top: 172px;
     }
-
+    .text-progress .progress-info{
+        display: block;
+    }
+    .about-metadata {
+        width: 100% ;
+    }
+    .about-metadata-wrapper {
+        width: 800px;
+    }
+    .about-metadata-second-block-wrapper {
+        margin-top: 5.2rem;
+        text-align: start ;
+        margin-left: 15px;
+        width: 44% !important;
+    }
     .special-offer .root-time {
         margin-bottom: 0;
         margin-top: 0px;
@@ -1587,7 +1661,7 @@ img.block-img-mobile{
 
 @media screen and (max-width: 850px) {
     .home-splash--page .information-author {
-        background-image: none;
+        /* background-image: none; */
     }
 
     .home-splash--page .information-author{
@@ -1709,8 +1783,12 @@ img.block-img-mobile{
         align-items: center;
     }
 
-    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient {
+    .left-tokens-content .title-tokens h3, .left-tokens-content .title-tokens h3 .text-gradient{
         font-size: 32px;
+    }
+
+    .left-tokens-content .title-tokens h3 span {
+        font-size: 32px !important;
     }
 
     .home-splash--page .tokens-description p {
@@ -2416,10 +2494,65 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 180px;
+        padding: 0 20px;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 1000px;
+        height: 500px;
+    }
+} 
+
 @media screen and (max-width: 1100px) {
+    .about-metadata-wrapper{
+        width: 900px;
+    }
+    .main-greyman-pic-wrapper{
+        width: 900px;
+        display: -webkit-inline-box;
+    }
+    .video-grey-man{
+        max-width: 900px;
+    }
+    .video-grey-man-metamask-logo {
+        left: 374px;
+        top: -380px;
+    }
+    .box-progress {
+        margin-left: 83px !important;
+    }
+    .block-left-tokens{
+        margin-right: 1rem !important;
+    }
+    .btn-buy-metamask{
+        /* margin-right: 4rem; */
+    }
+    .text-gradient-grey{
+        margin-top: 3rem !important;
+        font-size: 40px !important;
+    }
+    .text-splash{
+        /* width: 22rem; */
+    }
+    .text-description{
+        /* width: 400px !important; */
+    }
     .home-splash--page .information-author {
         background-size: 350px auto;
-        background-position: 95% 60px;
+        background-position: 95% 9rem;
+        /* background-position: 95% 60px; */
+    }
+
+    .home-splash--page .information-author.nutcrackers {
+        background-position: 100%;
+    }
+
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 900px;
+        height: 450px;
     }
 }
 
@@ -2478,11 +2611,68 @@ img.block-img-mobile{
     }
 }
 
+@media screen and (max-width: 980px) {
+    .video-grey-man-pic {
+        width: 100%;
+        height: 100%;
+    }
+
+    .video-grey-man {
+        width: 100%;
+    }
+
+    .video-grey-man-metamask-logo-wrapper {
+        
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 228px;
+        top: -376px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    .wrapper-splash-page.nutcrackers .block-photos-nuts {
+        width: 90vw;
+        height: 40vh;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 280px;
+    }
+
+    .wrapper-splash-page .join-community .join-community .title-join h3{
+        text-align: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        margin-top: 30px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .join-pic img {
+        margin-right: 120px;
+    }
+
+    .wrapper-splash-page.nutcrackers .community-description .community-text {
+        width: 90vw;
+    }
+}
+
 @media screen and (max-width: 920px) {
     .nipsey-thank-you-page .information-author, .nipsey-comming-soon .information-author {
         max-width: 800px !important;
     }
 }
+
 
 @media screen and (max-width: 900px) {
 
@@ -2502,6 +2692,33 @@ img.block-img-mobile{
 
     .position-teammate .teammate-description {
         width: 90%;
+    }
+}
+
+@media screen and (max-width: 825px) {
+    .home-splash--page .information-author.nutcrackers .block-splash{
+        flex-direction: column;
+    }
+
+    .home-splash--page .information-author.nutcrackers .text-splash {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        margin-left: 0;
+        margin-bottom: 20px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask {
+        margin-top: 30px;
+    }
+
+    .greyman-timeline-wrapper {
+        margin-bottom: 30px;
     }
 }
 
@@ -2536,7 +2753,14 @@ img.block-img-mobile{
         display: flex;
         justify-content: center;
     }
+
+    .modal-content-wrapper {
+        width: 80%;
+    }
 }
+
+
+
 
 @media screen and (max-width:728px) {
     .nipsey-release .release-container-title {
@@ -2553,9 +2777,82 @@ img.block-img-mobile{
         padding: 15px;
         font-size: 14px;
     }
+
+    .wrapper-splash-page.greyman-page .home-splash--page {
+        margin-top: 0;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .video-grey-man {
+        width: 90%;
+    }
+
+    .video-grey-man-desc {
+        width: 90%;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 190%;
+        width: 120px;
+        height: 120px;
+    }
+
+    .modal-content-wrapper {
+        width: 400px;
+
+    }
+
+    .modal-content-wrapper .modal-text {
+        font-size: 20px;
+    }
+
+    .modal-content-np {
+        width: 400px;
+    }
+
+    .modal-content-wrapper .form-group label, .form-group span {
+        font-size: 20px;
+    }
+
+    .modal-content-wrapper span {
+        font-size: 20px !important;
+        /* padding-right: 0 !important; */
+        margin-left: -10px !important;
+    }
+
+    .form-group input:checked+label::before {
+        top: 3px;
+        right: 0;
+        left: 338px;
+        width: 9px;
+        height: 25px;
+    }
+
+    #use:checked+label::before {
+        left: 340px;
+    }
+
+    .ReactModalPortal h2 {
+        font-size: 32px !important;
+    }
+
+    .form-group label::after {
+        width: 30px;
+        height: 30px;
+    }
 }
 
 @media screen and (max-width: 600px) {
+    .wrapper-splash-page.nutcrackers .powered-by-rair {
+        margin: 0px 0 300px 0;
+    }
+    
+    .wrapper-splash-page.nutcrackers .powered-by-rair img {
+        width: 300px;
+        height: auto;
+    }
+
     .content-owners-mobile .owner-box .owner-img {
         width: 200px;
     }
@@ -2577,12 +2874,32 @@ img.block-img-mobile{
         padding-bottom: 100px;
     }
 
+    .video-grey-man-metamask-logo {
+        left: 150%;
+    }
+
     .footer ul {
         flex-direction: column;
+        text-align: center;
     }
     .footer ul li {
         margin-right: 0;
         margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .wrapper-splash-page.nutcrackers .crackers-text p, .wrapper-splash-page.nutcrackers .community-description p {
+        font-size: 18px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community .title-join h3, .wrapper-splash-page.nutcrackers .join-community .title-join h3 span {
+        font-size: 33px;
+        text-align: center;
+    }
+
+    .wrapper-splash-page.greyman-page .join-community .title-join h3, .wrapper-splash-page.greyman-page .join-community .title-join .text-gradient {
+        font-size: 30px;
     }
 }
 
@@ -2607,6 +2924,8 @@ img.block-img-mobile{
     margin-top: 20px;
 }
 
+
+
 @media screen and (max-width: 503px) {
     .nipsey-thank-you-page {
         margin-bottom: 208px;
@@ -2619,12 +2938,20 @@ img.block-img-mobile{
     .nipsey-thank-you-page .block-splash .logo-author img:first-child {
         width: 250px;
     }
+
+    .video-grey-man-title {
+        font-size: 32px;
+    }
 }
 
 @media screen and (max-width: 500px) {
     .home-splash-mobile .img-teammate img {
         width: 300px;
         height: 300px;
+    }
+
+    .video-grey-man-metamask-logo {
+        left: 130%;
     }
 
     .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
@@ -2638,6 +2965,85 @@ img.block-img-mobile{
     .members-video-mobile .video-pic img {
         width: 300px;
         height: auto;
+    }
+
+    .modal-content-wrapper {
+        width: 300px;
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .modal-content-np {
+        width: 90%;
+    }
+
+    .modal-btn {
+        width: 250px;
+    }
+
+    .modal-content-wrapper .form-group label, .form-group span {
+        font-size: 14px;
+    }
+
+    .modal-content-wrapper span {
+        font-size: 14px !important;
+        /* padding-right: 0 !important; */
+        margin-left: -10px !important;
+    }
+
+    /* .sec-group label::after {
+        left: 9rem;
+    } */
+
+    .form-group label::after {
+        left: 8.5rem;
+    }
+
+    .form-group input:checked+label::before {
+        top: 0px;
+        /* right: 0; */
+        left: 240px;
+        width: 9px;
+        height: 25px;
+    }
+
+    #use:checked+label::before {
+        left: 232px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .video-grey-man-metamask-logo {
+        left: 110%;
+    }
+
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 400px;
+    }
+
+    .wrapper-splash-page.nutcrackers .join-community {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .information-author.nutcrackers .text-splash .text-description div{
+        width: 90%;
+        text-align: center;
+    }
+
+    .information-author.nutcrackers .text-splash .text-description {
+        display: flex;
+        justify-content: center;
+    }
+
+    .information-author.nutcrackers .nut-block-img {
+        width: 290px;
+    }
+
+    .information-author.nutcrackers .btn-buy-metamask button {
+        width: 250px;
+        height: 54px;
     }
 }
 
@@ -2665,10 +3071,48 @@ img.block-img-mobile{
 }
 
 
+
 @media screen and (max-width: 370px) {
     .block-splash .logo-author img:first-child {
         width: 290px;
     }
+
+    .video-grey-man-metamask-logo {
+        left: 80%;
+    }
+
+    .modal-content-wrapper {
+        width: 280px;
+        height: 300px;
+        overflow: hidden;
+    }
+
+    .modal-btn {
+        width: 200px;
+        height: 48px;
+        font-size: 16px;
+    }
+
+    .modal-btn .metamask-logo.modal-btn-logo {
+        width: 50px !important;
+    }
+
+    .modal-text-wrapper {
+        padding-bottom: 15px;
+    }
+}
+
+@media screen and (max-width: 355px) {
+    .wrapper-splash-page.nutcrackers .crackers-text {
+        margin-top: 500px;
+    }
+}
+
+@media screen and (max-width: 319px) {
+    .modal-content-wrapper {
+        width: 270px;
+    }
+
 }
 
 /* Nutcrackers */
@@ -2762,147 +3206,4 @@ img.block-img-mobile{
 .wrapper-splash-page.nutcrackers .powered-by-rair img {
     width: 500px;
     height: auto;
-}
-
-@media screen and (max-width: 1300px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 180px;
-        padding: 0 20px;
-    }
-
-    .wrapper-splash-page.nutcrackers .block-photos-nuts {
-        width: 1000px;
-        height: 500px;
-    }
-} 
-
-@media screen and (max-width: 1100px) {
-    .home-splash--page .information-author.nutcrackers {
-        background-position: 100%;
-    }
-
-    .wrapper-splash-page.nutcrackers .block-photos-nuts {
-        width: 900px;
-        height: 450px;
-    }
-}
-
-@media screen and (max-width: 990px) {
-    .wrapper-splash-page.nutcrackers .block-photos-nuts {
-        width: 90vw;
-        height: 40vh;
-    }
-}
-
-@media screen and (max-width: 950px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 280px;
-    }
-
-    .wrapper-splash-page .join-community .join-community .title-join h3{
-        text-align: center;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description {
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description .community-text {
-        margin-top: 30px;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description .join-pic img {
-        margin-right: 120px;
-    }
-
-    .wrapper-splash-page.nutcrackers .community-description .community-text {
-        width: 90vw;
-    }
-}
-
-@media screen and (max-width: 825px) {
-    .home-splash--page .information-author.nutcrackers .block-splash{
-        flex-direction: column;
-    }
-
-    .home-splash--page .information-author.nutcrackers .text-splash {
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .information-author.nutcrackers .nut-block-img {
-        margin-left: 0;
-        margin-bottom: 20px;
-    }
-
-    .information-author.nutcrackers .btn-buy-metamask {
-        margin-top: 30px;
-    }
-}
-
-
-@media screen and (max-width: 600px) {
-    .wrapper-splash-page.nutcrackers .powered-by-rair {
-        margin: 0px 0 300px 0;
-    }
-    
-    .wrapper-splash-page.nutcrackers .powered-by-rair img {
-        width: 300px;
-        height: auto;
-    }
-} 
-
-@media screen and (max-width: 570px) {
-    .wrapper-splash-page.nutcrackers .crackers-text p, .wrapper-splash-page.nutcrackers .community-description p {
-        font-size: 18px;
-    }
-
-    .wrapper-splash-page.nutcrackers .join-community .title-join h3, .wrapper-splash-page.nutcrackers .join-community .title-join h3 span {
-        font-size: 33px;
-        text-align: center;
-    }
-}
-
-
-@media screen and (max-width: 450px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 400px;
-    }
-
-    .wrapper-splash-page.nutcrackers .join-community {
-        margin-top: 100px;
-    }
-}
-
-@media screen and (max-width: 420px) {
-    .information-author.nutcrackers .text-splash .text-description div{
-        width: 90%;
-        text-align: center;
-    }
-
-    .information-author.nutcrackers .text-splash .text-description {
-        display: flex;
-        justify-content: center;
-    }
-
-    .information-author.nutcrackers .nut-block-img {
-        width: 290px;
-    }
-
-    .information-author.nutcrackers .btn-buy-metamask button {
-        width: 250px;
-        height: 54px;
-    }
-}
-
-@media screen and (max-width: 355px) {
-    .wrapper-splash-page.nutcrackers .crackers-text {
-        margin-top: 500px;
-    }
 }

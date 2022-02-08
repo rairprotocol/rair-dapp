@@ -10,13 +10,20 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
-const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
+const ListOffers = ({contractData, setStepNumber, steps}) => {
 	const stepNumber = 1;
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState(false);
 	const [instance, setInstance] = useState();
 	const [onMyChain, setOnMyChain] = useState();
+
+	const gotoNextStep = () => {
+		// This will be replaced with the refactored steps from the Diamonds branch
+		history.push(
+			steps[stepNumber].populatedPath
+		)
+	}
 
 	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
@@ -277,7 +284,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <ListOffers {...value} />
+			return <ListOffers {...value} {...props}/>
 		}}
 	</WorkflowContext.Consumer>
 }

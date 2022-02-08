@@ -1,9 +1,7 @@
 .container-commercial {
-    /* position: absolute; */
+    position: absolute;
     width: 100%;
-    z-index: 20;
-    background: #626262;
-    margin: 108px 0 10px 0;
+    z-index: 2;
     padding: 32px 100px;
     bottom: 0;
     left: 0;

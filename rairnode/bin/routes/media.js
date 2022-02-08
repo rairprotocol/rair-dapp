@@ -335,7 +335,7 @@ module.exports = context => {
         log.info(`${ req.file.originalname } stored to DB.`);
         socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: ['gcp'].includes(storage) ? true : false, done: ['gcp'].includes(storage) ? 100 : 96 });
 
-        context.hls = StartHLS();
+        // context.hls = StartHLS();
 
         log.info(`${ req.file.originalname } pinning to ${storageName}.`);
         socketInstance.emit('uploadProgress', {

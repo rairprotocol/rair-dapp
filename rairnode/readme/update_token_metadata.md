@@ -4,9 +4,9 @@ Update specific token metadata by internal token ID
 
 **URL** : `/api/nft/network/:networkId/:contract/:product/token/:token`
 
-**Method** : `PUT`
+**Method** : `POST`
 
-**Content-Type** : `application/json`
+**Content-Type** : `multipart/form-data`
 
 **Headers:**
 
@@ -56,16 +56,69 @@ Update specific token metadata by internal token ID
 
 ```json
 {
-  "name": "New name",
-  "description": "Tratata",
-  "artist": "KorN",
-  "external_url": "http://some.link",
-  "attributes": [
-    {
-      "trait_type": "ping",
-      "value": "pong"
+  "files": {
+    "required": false,
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "file"
+      }
     }
-  ]
+  },
+  "name": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "description": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  },
+  "artist": {
+    "required": false,
+    "content": {
+      "type": "string"
+    },
+    "description": "contract ID"
+  },
+  "external_url": {
+    "required": false,
+    "content": {
+      "type": "URI"
+    }
+  },
+  "image": {
+    "required": false,
+    "content": {
+      "type": "full name of file"
+    }
+  },
+  "animation_url": {
+    "required": false,
+    "content": {
+      "type": "full name of file"
+    }
+  },
+  "attributes": {
+    "required": false,
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "fields": {
+          "trait_type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
 }
 ```
 

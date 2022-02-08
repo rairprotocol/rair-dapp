@@ -1,7 +1,10 @@
 const express = require('express');
 const _ = require('lodash');
+const fs = require('fs').promises;
 const { JWTVerification, validation } = require('../../../../../middleware');
-const { addMetadata, addPin, removePin } = require('../../../../../integrations/ipfsService')();
+const { addMetadata, addPin, removePin, addFile } = require('../../../../../integrations/ipfsService')();
+const upload = require('../../../../../Multer/Config.js');
+const log = require('../../../../../utils/logger')(module);
 
 module.exports = context => {
   const router = express.Router();
@@ -24,13 +27,20 @@ module.exports = context => {
   });
 
   // Update specific token metadata by internal token ID
-  router.put('/', JWTVerification(context), validation('updateTokenMetadata'), async (req, res, next) => {
+  router.post('/', JWTVerification(context), upload.array('files', 2), validation('updateTokenMetadata'), async (req, res, next) => {
     try {
       const { contract, offerPool, token } = req;
       const { user } = req;
-      let fieldsForUpdate = _.pick(req.body, ['name', 'description', 'artist', 'external_url', 'attributes']);
+      let fieldsForUpdate = _.pick(req.body, ['name', 'description', 'artist', 'external_url', 'image', 'animation_url', 'attributes']);
 
       if (user.publicAddress !== contract.user) {
+        if (req.files.length) {
+          await Promise.all(_.map(req.files, async file => {
+            await fs.rm(`${ file.destination }/${ file.filename }`);
+            log.info(`File ${ file.filename } has removed.`);
+          }));
+        }
+
         return res.status(403).send({
           success: false,
           message: `You have no permissions for updating token ${ token }.`
@@ -38,10 +48,46 @@ module.exports = context => {
       }
 
       if (_.isEmpty(fieldsForUpdate)) {
+        if (req.files.length) {
+          await Promise.all(_.map(req.files, async file => {
+            await fs.rm(`${ file.destination }/${ file.filename }`);
+            log.info(`File ${ file.filename } has removed.`);
+          }));
+        }
+
         return res.status(400).send({ success: false, message: 'Nothing to update.' });
       }
 
-      fieldsForUpdate = _.mapKeys(fieldsForUpdate, (v, k) =>  `metadata.${k}` );
+      if (req.files.length) {
+        const files = await Promise.all(_.map(req.files, async file => {
+          try {
+            const cid = await addFile(file.destination, file.filename);
+            await addPin(cid, file.filename);
+
+            log.info(`File ${ file.filename } has added to ipfs.`);
+
+            file.link = `${ context.config.pinata.gateway }/${ cid }/${ file.filename }`;
+            return file;
+          } catch (err) {
+            log.error(err);
+          }
+        }));
+
+        _.chain(fieldsForUpdate)
+          .pick(['image', 'animation_url'])
+          .forEach((value, key) => {
+            const v = _.chain(files)
+              .find(f => f.originalname === value)
+              .get('link')
+              .value();
+
+            if (v) fieldsForUpdate[key] = v;
+            else delete fieldsForUpdate[key];
+          })
+          .value();
+      }
+
+      fieldsForUpdate = _.mapKeys(fieldsForUpdate, (v, k) => `metadata.${ k }`);
 
       const updatedToken = await context.db.MintedToken.findOneAndUpdate({
         contract: contract._id,
@@ -49,8 +95,22 @@ module.exports = context => {
         token
       }, fieldsForUpdate, { new: true });
 
+      if (req.files.length) {
+        await Promise.all(_.map(req.files, async file => {
+          await fs.rm(`${ file.destination }/${ file.filename }`);
+          log.info(`File ${ file.filename } has removed.`);
+        }));
+      }
+
       return res.json({ success: true, token: updatedToken });
     } catch (err) {
+      if (req.files.length) {
+        await Promise.all(_.map(req.files, async file => {
+          await fs.rm(`${ file.destination }/${ file.filename }`);
+          log.info(`File ${ file.filename } has removed.`);
+        }));
+      }
+
       return next(err);
     }
   });
