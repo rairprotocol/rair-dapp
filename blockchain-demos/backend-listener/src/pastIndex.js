@@ -4,24 +4,6 @@ const TokenAbi = require('./contracts/RAIR_ERC721.json').abi;
 const MinterAbi = require('./contracts/Minter_Marketplace.json').abi;
 const { diamondFactoryAbi } = require('./contracts');
 
-class LoggingProvider extends ethers.providers.StaticJsonRpcProvider {
-	loggingDateStart;
-	counter;
-
-	perform (method, parameters) {
-		if (this.loggingDateStart === undefined) {
-			this.loggingDateStart = new Date();
-			console.log('Started logging at', this.loggingDateStart);
-			this.counter = 0;
-		}
-		console.log(this.counter++, "Requesting", method, parameters);
-		return super.perform(method, parameters).then((result) => {
-			console.log(this.counter++, "Receiving response", method, parameters, result);
-			return result;
-		});
-	}
-}
-
 const main = async () => {
 	let providers = [
 		{
@@ -34,7 +16,7 @@ const main = async () => {
 			minterAddress: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD'
 		},
 		{
-			provider: new LoggingProvider('https://speedy-nodes-nyc.moralis.io/f68255ae9308a6e85032bd6a/eth/goerli/archive', {
+			provider: new ethers.providers.StaticJsonRpcProvider('https://speedy-nodes-nyc.moralis.io/f68255ae9308a6e85032bd6a/eth/goerli/archive', {
 				chainId: 5,
 				symbol: 'ETH',
 				name: 'Goerli Testnet'
@@ -53,21 +35,10 @@ const main = async () => {
 		}
 	]
 
-	let diamondFactoryInstance = await new ethers.Contract(
-		'0xEF85370b8F136E2F28eA904bF0dA5acac3D1d74f',
-		diamondFactoryAbi,
-		providers[1].provider
-	);
-
-	for await (let pastEvent of await diamondFactoryInstance.queryFilter(await diamondFactoryInstance.filters.NewContractDeployed())) {
-		console.log(pastEvent);
-		let {contractAddress, productIndex, rangesCreated, catalogIndex} = pastEvent.args;
-		console.log(`[PAST] Minter Marketplace: Created a new offer #${catalogIndex} (from ${contractAddress}, product #${productIndex}) with ${rangesCreated} ranges`);
-	}
-	console.log('Done!');
-	return;
-
 	for await (let providerData of providers) {
+		providerData.provider.on('debug', ({action, request, response, provider}) => {
+			console.log(providerData.provider._network.name, response ? 'Receiving response to' : 'Sending request', request.method);
+		});
 		console.log('Connected to', providerData.provider._network.name);
 		// These connections don't have an address associated, so they can read but can't write to the blockchain
 		let factoryInstance = await new ethers.Contract(providerData.factoryAddress, FactoryAbi, providerData.provider);
