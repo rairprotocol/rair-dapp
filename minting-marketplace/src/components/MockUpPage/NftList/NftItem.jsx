@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
 import ReactPlayer from "react-player";
+import { utils } from "ethers";
 
 // import Swal from 'sweetalert2';
 // import 'react-accessible-accordion/dist/fancy-example.css';
@@ -184,6 +185,9 @@ const NftItemComponent = ({
               alt=""
             />
             <span className="description ">{minPrice} {chainDataFront[blockchain]?.name} </span>
+            {/* <span className="description ">{utils
+            .formatEther(minPrice !== Infinity && minPrice !== undefined ? minPrice : 0)
+            .toString()} {chainDataFront[blockchain]?.name} </span> */}
           </div>
           <div onClick={RedirectToMockUp} className="description-big">
             <img

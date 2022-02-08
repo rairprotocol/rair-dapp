@@ -33,7 +33,7 @@ const SharePopUp = ({ setSharePopUp, shareRef }) => {
             {
                 copySuccess === "Copy link" ? <>
                     <img src={headerLogo} alt="rair tech" />
-                    {copySuccess}
+                    {/* {copySuccess} */}
                 </> : copySuccess
             }
         </button>

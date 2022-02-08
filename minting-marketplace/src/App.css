@@ -736,6 +736,11 @@ i.fas-custom {
     text-align: center;
     line-height: 1.1;
 }
+.pic-description-wrapper:hover .description-price-unlockables-page{
+    font-size: 17px;
+    text-align: center;
+    line-height: 1.1;
+}
 
 .pic-description-wrapper:hover .description-more {
     margin-top: 45px;

@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useEffect, memo } from "react";
+import React, { useState, memo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
 import ReactPlayer from "react-player";
+import { utils } from "ethers";
 
 const NftItemForCollectionViewComponent = ({
   blockchain,
@@ -25,7 +26,7 @@ const NftItemForCollectionViewComponent = ({
 }) => {
   const params = useParams();
   const history = useHistory();
-  const [metaDataProducts, setMetaDataProducts] = useState();
+  const [metaDataProducts, /*setMetaDataProducts*/] = useState();
   const [playing, setPlaying] = useState(false);
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -69,11 +70,27 @@ const NftItemForCollectionViewComponent = ({
   }
 
   function checkPrice() {
+    let maxPriceF = maxPrice;
+    let minPriceF = minPrice;
+
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
-      return `${samePrice} ${chainDataFront[blockchain]?.name}`;
+      // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
+      return `${utils
+        .formatEther(
+          samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
+        )
+        .toString()} ${chainDataFront[blockchain]?.name}`;
     }
-    return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
+    return `${utils
+      .formatEther(
+        minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
+      )
+      .toString()} – ${utils
+      .formatEther(
+        maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
+      )
+      .toString()} ${chainDataFront[blockchain]?.name}`;
   }
 
   return (
@@ -182,7 +199,13 @@ const NftItemForCollectionViewComponent = ({
               alt=""
             />
             <span className="description ">
-              {minPrice} {chainDataFront[blockchain]?.name}{" "}
+              {/* {minPrice} {chainDataFront[blockchain]?.name}{" "} */}
+              {utils
+                .formatEther(
+                  minPrice !== Infinity && minPrice !== undefined ? minPrice : 0
+                )
+                .toString()}{" "}
+              {chainDataFront[blockchain]?.name}
             </span>
           </div>
           <div onClick={RedirectToMockUp} className="description-big">
@@ -191,7 +214,7 @@ const NftItemForCollectionViewComponent = ({
               src={`${chainDataFront[blockchain]?.image}`}
               alt=""
             />
-            <span className="description description-price">
+            <span className="description description-price description-price-unlockables-page">
               {checkPrice()}
               {/* {minPrice} - {maxPrice} {chainDataFront[blockchain]?.name} */}
               {/* {minPrice} - {maxPrice} ETH{" "} */}

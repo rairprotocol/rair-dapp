@@ -51,6 +51,7 @@ const NftDataPageTest = ({
 }) => {
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
+  const [ownerInfo, setOwnerInfo] = useState();
 
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
@@ -83,6 +84,7 @@ const NftDataPageTest = ({
     // console.log(response, "response");
 
     if (response.success) {
+      setOwnerInfo(response.product)
       setOfferDataInfo(response.product.offers);
     }
 
@@ -140,8 +142,11 @@ const NftDataPageTest = ({
   function checkPrice() {
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
-      return `${samePrice} 
-      `;
+      // return `${samePrice} `;
+      return `${utils
+        .formatEther(
+          samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
+        ).toString()} ${chainDataFront[blockchain]?.name}`;
     }
     return `${minPrice} – ${maxPrice} 
     `;
@@ -348,7 +353,7 @@ const NftDataPageTest = ({
           // onClick={() => alert("Coming soon")}
           style={{
             width: "291px",
-            fontSize: "13px",
+            fontSize: "12px",
             height: "48px",
             border: "none",
             borderRadius: "16px",
@@ -471,7 +476,7 @@ const NftDataPageTest = ({
         <TitleCollection
           currentUser={currentUser}
           title={selectedData?.name}
-          userName={tokenData[0]?.ownerAddress}
+          userName={ownerInfo?.owner}
         />
         <div
           style={{
@@ -549,6 +554,7 @@ const NftDataPageTest = ({
                   style={{
                     paddingLeft: "9px",
                     marginRight: "3rem",
+                    fontSize: "13px",
                   }}
                 >
                   {
