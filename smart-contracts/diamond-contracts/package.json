@@ -1,16 +1,16 @@
 {
   "dependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.2",
-    "@nomiclabs/hardhat-etherscan": "^2.1.8",
-    "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@openzeppelin/contracts": "^4.4.0",
-    "chai": "^4.3.4",
+    "@nomiclabs/hardhat-ethers": "^2.0.4",
+    "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "@openzeppelin/contracts": "^4.4.2",
+    "chai": "^4.3.6",
     "dotenv": "^10.0.0",
     "ethers": "^5.5.2",
-    "hardhat": "^2.7.0",
+    "hardhat": "^2.8.3",
     "hardhat-contract-sizer": "^2.1.1",
-    "hardhat-deploy": "^0.9.24",
-    "hardhat-gas-reporter": "^1.0.6"
+    "hardhat-deploy": "^0.10.5",
+    "hardhat-gas-reporter": "^1.0.7"
   },
   "name": "diamond-smart-contracts",
   "version": "1.0.0",

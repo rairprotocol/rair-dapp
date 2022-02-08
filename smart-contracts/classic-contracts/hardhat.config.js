@@ -1,6 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
-require('@openzeppelin/hardhat-upgrades');
 require('hardhat-deploy');
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
@@ -14,13 +13,13 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: process.env.GOERLI_SPEEDY_NODE,
+        url: process.env.ETHEREUM_ARCHIVE_SPEEDY_NODE,
         blockNumber: 13000000,
         timeout: 1000000
       }
     },
     ethMainnet: {
-      url: process.env.GOERLI_SPEEDY_NODE,
+      url: process.env.ETHEREUM_ARCHIVE_SPEEDY_NODE,
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     goerli: {
@@ -32,7 +31,7 @@ module.exports = {
       accounts: [process.env.ADDRESS_PRIVATE_KEY],
     },
     matic: {
-      url: process.env.GOERLI_SPEEDY_NODE,
+      url: process.env.MATIC_MAINNET_SPEEDY_NODE,
       accounts: [process.env.ADDRESS_PRIVATE_KEY]
     },
     binanceSmartchain: {

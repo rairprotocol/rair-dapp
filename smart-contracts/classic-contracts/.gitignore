@@ -4,3 +4,4 @@ build/
 artifacts/
 .env*
 .openzeppelin/
+package-lock.json

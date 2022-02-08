@@ -38,7 +38,7 @@ describe("Token Factory", function () {
 			erc777instance = await ERC777Factory.deploy(initialSupply, [addr1.address]);
 			erc777ExtraInstance = await ERC777Factory.deploy(initialSupply * 2, [addr2.address]);
 
-			expect(await erc777instance.name()).to.equal("RAIR Token");
+			expect(await erc777instance.name()).to.equal("RAIR");
 			expect(await erc777instance.symbol()).to.equal("RAIR");
 			expect(await erc777instance.decimals()).to.equal(18);
 			expect(await erc777instance.granularity()).to.equal(1);
