@@ -1,8 +1,8 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
+// import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
-const NftSingleUnlockables = ({
+const NftListUnlockablesVideos = ({
   blockchain,
   contract,
   product,
@@ -12,12 +12,7 @@ const NftSingleUnlockables = ({
 }) => {
   const history = useHistory();
   // console.log(productsFromOffer, "productsFromOffer");
-  // console.log(productsFromOffer.filter(of => of.offer[0] === 0), "filter");
   // console.log(productsFromOffer.map(of => of.offer[0]), "MAP");
-  //   let all = productsFromOffer.map(of => of.offer[0]);
-  //   const unicSet = new Set(all);
-  //   const backToArray = [...unicSet]
-  // console.log(backToArray, "backToArray");
 
   return (
     <div
@@ -29,7 +24,7 @@ const NftSingleUnlockables = ({
         justifyContent: "space-between",
       }}
     >
-      {/* <NftDifferentRarity productsFromOffer={1} /> */}
+      {/* <NftDifferentRarity productsFromOffer={productsFromOffer} /> */}
       {(productsFromOffer?.length &&
         productsFromOffer.map((v) => {
           // console.log(v.offer[0], "rarity");
@@ -38,11 +33,11 @@ const NftSingleUnlockables = ({
               key={v._id}
               style={{
                 margin: "1rem",
-                // height: "135px",
+                height: "135px",
               }}
             >
-              {/* {v.offer[0] === 0 ?  <NftDifferentRarity productsFromOffer={4} /> :  <NftDifferentRarity productsFromOffer={v.offer[0]} />} */}
-              <NftDifferentRarity productsFromOffer={v.offer[0]} />
+              {/* <NftDifferentRarity productsFromOffer={v.offer[0]} /> */}
+
               <div
                 onClick={
                   () => history.push(`/watch/${v._id}/${v.mainManifest}`)
@@ -54,7 +49,7 @@ const NftSingleUnlockables = ({
                   // cursor: "pointer",
                   display: "flex",
                   borderRadius: "16px",
-                  minWidth: "592px",
+                  minWidth: "540px",
                   backgroundColor: "#4E4D4DCC",
                 }}
               >
@@ -250,4 +245,4 @@ const NftSingleUnlockables = ({
   );
 };
 
-export default NftSingleUnlockables;
+export default NftListUnlockablesVideos;

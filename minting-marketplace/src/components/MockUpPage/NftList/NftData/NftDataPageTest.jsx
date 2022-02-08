@@ -29,6 +29,7 @@ import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
 import CustomButton from "../../utils/button/CustomButton.jsx";
 import CollectionInfo from "./CollectionInfo/CollectionInfo.jsx";
 import TitleCollection from "./TitleCollection/TitleCollection.jsx";
+import NftListUnlockablesVideos from "./NftListUnlockablesVideos.jsx";
 
 const NftDataPageTest = ({
   blockchain,
@@ -757,7 +758,7 @@ const NftDataPageTest = ({
                 <AccordionItemButton>This NFT unlocks</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
-                <NftSingleUnlockables
+                <NftListUnlockablesVideos
                   blockchain={blockchain}
                   contract={contract}
                   product={product}
