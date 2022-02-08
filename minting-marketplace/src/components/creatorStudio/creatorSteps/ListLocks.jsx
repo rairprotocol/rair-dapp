@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
 import InputField from '../../common/InputField.jsx'
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {erc721Abi} from '../../../contracts'
 import Swal from 'sweetalert2';
 import chainData from '../../../utils/blockchainData.js'
@@ -13,7 +13,6 @@ import {utils} from 'ethers';
 import { validateInteger } from '../../../utils/metamaskUtils';
 
 const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerender, maxCopies, lockedNumber, blockchainSymbol}) => {
-
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
 	const [itemName, ] = useState(name);
@@ -100,8 +99,7 @@ const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerend
 	</tr>
 };
 
-const ListLocks = ({contractData, setStepNumber, steps}) => {
-	const stepNumber = 2;
+const ListLocks = ({contractData, setStepNumber, steps, gotoNextStep, stepNumber, goBack}) => {
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [instance, setInstance] = useState();
@@ -136,8 +134,6 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 	    }
 	}
 
-	const history = useHistory();
-
 	useEffect(() => {
 		setOfferList(contractData?.product?.offers ? contractData?.product?.offers.map(item => {
 			return {
@@ -152,8 +148,8 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 	}, [contractData])
 
 	useEffect(() => {
-		setStepNumber(2)
-	}, [setStepNumber]);
+		setStepNumber(stepNumber)
+	}, [setStepNumber, stepNumber]);
 
 	useEffect(() => {
 		if (onMyChain) {
@@ -161,10 +157,6 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 			setInstance(createdInstance);
 		}
 	}, [address, onMyChain, contractCreator])
-
-	const next = () => {
-		history.push(steps[stepNumber].populatedPath);
-	}
 
 	useEffect(() => {
 		setOnMyChain(
@@ -218,14 +210,12 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 				</tbody>
 			</table>}
 			{chainData && <FixedBottomNavigation
-				backwardFunction={() => {
-					history.goBack()
-				}}
+				backwardFunction={goBack}
 				forwardFunctions={[{
 					action: !onMyChain ?
 						() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
 						:
-						next,
+						gotoNextStep,
 					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : `Proceed`,
 					disabled: false
 				}]}
@@ -237,7 +227,7 @@ const ListLocks = ({contractData, setStepNumber, steps}) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <ListLocks {...value} />
+			return <ListLocks {...value} {...props}/>
 		}}
 	</WorkflowContext.Consumer>
 }
