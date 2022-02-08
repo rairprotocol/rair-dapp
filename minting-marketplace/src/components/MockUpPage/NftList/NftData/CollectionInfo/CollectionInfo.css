@@ -110,3 +110,13 @@
     width: 290px;
     text-align: left;
 }
+
+@media screen and (max-width: 800px) {
+    .collection-info-body .block-item-collection {
+        font-size: 16px;
+    }
+
+    .collection-info-title .collection-part-text {
+        font-size: 16px;
+    }
+}

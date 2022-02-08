@@ -82,15 +82,16 @@ const NftItemForCollectionViewComponent = ({
         )
         .toString()} ${chainDataFront[blockchain]?.name}`;
     }
-    return `${utils
-      .formatEther(
-        minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
-      )
-      .toString()} – ${utils
-      .formatEther(
-        maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
-      )
-      .toString()} ${chainDataFront[blockchain]?.name}`;
+    return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
+    // return `${utils
+    //   .formatEther(
+    //     minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
+    //   )
+    //   .toString()} – ${utils
+    //   .formatEther(
+    //     maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
+    //   )
+    //   .toString()} ${chainDataFront[blockchain]?.name}`;
   }
 
   return (
@@ -165,7 +166,7 @@ const NftItemForCollectionViewComponent = ({
                 // metaDataProducts?.metadata?.image
                 metadata?.image
                   ? // ? metaDataProducts?.metadata?.image
-                    metadata?.image
+                  metadata?.image
                   : pict
               }
               style={{
