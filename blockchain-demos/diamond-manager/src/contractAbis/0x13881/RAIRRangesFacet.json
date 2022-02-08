@@ -1,0 +1,1290 @@
+{
+  "address": "0x16e086a8A1f6782D59967563bFfcA331f2680Ca8",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "start",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "end",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokensAllowed",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lockedTokens",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "CreatedRange",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "from",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "to",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lockedTokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "TradingLocked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "from",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "to",
+          "type": "uint256"
+        }
+      ],
+      "name": "TradingUnlocked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokensAllowed",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lockedTokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "UpdatedRange",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "CREATOR",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeStart_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeEnd_",
+          "type": "uint256"
+        }
+      ],
+      "name": "canCreateRange",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeStart",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeEnd",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokensAllowed",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lockedTokens",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "createRange",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productId",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "rangeStart",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangeEnd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokensAllowed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lockedTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct RAIRRangesFacet.rangeData[]",
+          "name": "data",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "createRangeBatch",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoleMember",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleMemberCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "rangeId",
+          "type": "uint256"
+        }
+      ],
+      "name": "isRangeLocked",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "productId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rangeIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "productRangeInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "rangeStart",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangeEnd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokensAllowed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "mintableTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lockedTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangePrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "rangeName",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct range",
+          "name": "data",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "rangeId",
+          "type": "uint256"
+        }
+      ],
+      "name": "rangeInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "rangeStart",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangeEnd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokensAllowed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "mintableTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lockedTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rangePrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "rangeName",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct range",
+          "name": "data",
+          "type": "tuple"
+        },
+        {
+          "internalType": "uint256",
+          "name": "productIndex",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "rangeIndex_",
+          "type": "uint256"
+        }
+      ],
+      "name": "rangeToProduct",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "rangeId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokensAllowed_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lockedTokens_",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateRange",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x6ddfb266664c037499675556c1b7677a02bcf506e0ba585438a936f24938b9ce",
+  "receipt": {
+    "to": null,
+    "from": "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+    "contractAddress": "0x16e086a8A1f6782D59967563bFfcA331f2680Ca8",
+    "transactionIndex": 4,
+    "gasUsed": "1757892",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000800000000000000000000100000000004000000000000000000000000000000000000000000000000080000000000000000000080000000000000000000000000000000000000080000000000000000000200000000000000000000000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100040000000000000000000000000000080000000000000000000000000000000000000100800",
+    "blockHash": "0xf7f42d5d05146e88d7c40c696f0bd752124f51e6f3acac2435c4935c028728c1",
+    "transactionHash": "0x6ddfb266664c037499675556c1b7677a02bcf506e0ba585438a936f24938b9ce",
+    "logs": [
+      {
+        "transactionIndex": 4,
+        "blockNumber": 24627250,
+        "transactionHash": "0x6ddfb266664c037499675556c1b7677a02bcf506e0ba585438a936f24938b9ce",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x000000000000000000000000ec30759d0a3f3ce0a730920dc29d74e441f492c3",
+          "0x000000000000000000000000be188d6641e8b680743a4815dfa0f6208038960f"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000c7d963f96b9e00000000000000000000000000000000000000000000000002784409a43c71a4a0000000000000000000000000000000000000000000006430515be78c2ecf2f90000000000000000000000000000000000000000000000002777c3040430606a00000000000000000000000000000000000000000000064305223c0f0283acd9",
+        "logIndex": 8,
+        "blockHash": "0xf7f42d5d05146e88d7c40c696f0bd752124f51e6f3acac2435c4935c028728c1"
+      }
+    ],
+    "blockNumber": 24627250,
+    "cumulativeGasUsed": "5791190",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 3,
+  "solcInputHash": "7784fd296cdc3227e2c5cf2c7c5983b6",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"start\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"end\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"}],\"name\":\"CreatedRange\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"from\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"to\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"}],\"name\":\"TradingLocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"from\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"to\",\"type\":\"uint256\"}],\"name\":\"TradingUnlocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"}],\"name\":\"UpdatedRange\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"CREATOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productId_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeStart_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeEnd_\",\"type\":\"uint256\"}],\"name\":\"canCreateRange\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"createRange\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rangeStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"internalType\":\"struct RAIRRangesFacet.rangeData[]\",\"name\":\"data\",\"type\":\"tuple[]\"}],\"name\":\"createRangeBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rangeId\",\"type\":\"uint256\"}],\"name\":\"isRangeLocked\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"productId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeIndex\",\"type\":\"uint256\"}],\"name\":\"productRangeInfo\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rangeStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"mintableTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangePrice\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"rangeName\",\"type\":\"string\"}],\"internalType\":\"struct range\",\"name\":\"data\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rangeId\",\"type\":\"uint256\"}],\"name\":\"rangeInfo\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rangeStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangeEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensAllowed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"mintableTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rangePrice\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"rangeName\",\"type\":\"string\"}],\"internalType\":\"struct range\",\"name\":\"data\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"productIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rangeIndex_\",\"type\":\"uint256\"}],\"name\":\"rangeToProduct\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"rangeId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensAllowed_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedTokens_\",\"type\":\"uint256\"}],\"name\":\"updateRange\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/tokens/RAIR Token Facets/RangesFacet.sol\":\"RAIRRangesFacet\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Strings.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Strings.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev String operations.\\n */\\nlibrary Strings {\\n    bytes16 private constant _HEX_SYMBOLS = \\\"0123456789abcdef\\\";\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` decimal representation.\\n     */\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        // Inspired by OraclizeAPI's implementation - MIT licence\\n        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol\\n\\n        if (value == 0) {\\n            return \\\"0\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 digits;\\n        while (temp != 0) {\\n            digits++;\\n            temp /= 10;\\n        }\\n        bytes memory buffer = new bytes(digits);\\n        while (value != 0) {\\n            digits -= 1;\\n            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));\\n            value /= 10;\\n        }\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return \\\"0x00\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 length = 0;\\n        while (temp != 0) {\\n            length++;\\n            temp >>= 8;\\n        }\\n        return toHexString(value, length);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.\\n     */\\n    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = \\\"0\\\";\\n        buffer[1] = \\\"x\\\";\\n        for (uint256 i = 2 * length + 1; i > 1; --i) {\\n            buffer[i] = _HEX_SYMBOLS[value & 0xf];\\n            value >>= 4;\\n        }\\n        require(value == 0, \\\"Strings: hex length insufficient\\\");\\n        return string(buffer);\\n    }\\n}\\n\",\"keccak256\":\"0x32c202bd28995dd20c4347b7c6467a6d3241c74c8ad3edcbb610cd9205916c45\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/structs/EnumerableSet.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Library for managing\\n * https://en.wikipedia.org/wiki/Set_(abstract_data_type)[sets] of primitive\\n * types.\\n *\\n * Sets have the following properties:\\n *\\n * - Elements are added, removed, and checked for existence in constant time\\n * (O(1)).\\n * - Elements are enumerated in O(n). No guarantees are made on the ordering.\\n *\\n * ```\\n * contract Example {\\n *     // Add the library methods\\n *     using EnumerableSet for EnumerableSet.AddressSet;\\n *\\n *     // Declare a set state variable\\n *     EnumerableSet.AddressSet private mySet;\\n * }\\n * ```\\n *\\n * As of v3.3.0, sets of type `bytes32` (`Bytes32Set`), `address` (`AddressSet`)\\n * and `uint256` (`UintSet`) are supported.\\n */\\nlibrary EnumerableSet {\\n    // To implement this library for multiple types with as little code\\n    // repetition as possible, we write it in terms of a generic Set type with\\n    // bytes32 values.\\n    // The Set implementation uses private functions, and user-facing\\n    // implementations (such as AddressSet) are just wrappers around the\\n    // underlying Set.\\n    // This means that we can only create new EnumerableSets for types that fit\\n    // in bytes32.\\n\\n    struct Set {\\n        // Storage of set values\\n        bytes32[] _values;\\n        // Position of the value in the `values` array, plus 1 because index 0\\n        // means a value is not in the set.\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function _add(Set storage set, bytes32 value) private returns (bool) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            // The value is stored at length-1, but we add 1 to all indexes\\n            // and use 0 as a sentinel value\\n            set._indexes[value] = set._values.length;\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function _remove(Set storage set, bytes32 value) private returns (bool) {\\n        // We read and store the value's index to prevent multiple reads from the same storage slot\\n        uint256 valueIndex = set._indexes[value];\\n\\n        if (valueIndex != 0) {\\n            // Equivalent to contains(set, value)\\n            // To delete an element from the _values array in O(1), we swap the element to delete with the last one in\\n            // the array, and then remove the last element (sometimes called as 'swap and pop').\\n            // This modifies the order of the array, as noted in {at}.\\n\\n            uint256 toDeleteIndex = valueIndex - 1;\\n            uint256 lastIndex = set._values.length - 1;\\n\\n            if (lastIndex != toDeleteIndex) {\\n                bytes32 lastvalue = set._values[lastIndex];\\n\\n                // Move the last value to the index where the value to delete is\\n                set._values[toDeleteIndex] = lastvalue;\\n                // Update the index for the moved value\\n                set._indexes[lastvalue] = valueIndex; // Replace lastvalue's index to valueIndex\\n            }\\n\\n            // Delete the slot where the moved value was stored\\n            set._values.pop();\\n\\n            // Delete the index for the deleted slot\\n            delete set._indexes[value];\\n\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function _contains(Set storage set, bytes32 value) private view returns (bool) {\\n        return set._indexes[value] != 0;\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function _at(Set storage set, uint256 index) private view returns (bytes32) {\\n        return set._values[index];\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function _values(Set storage set) private view returns (bytes32[] memory) {\\n        return set._values;\\n    }\\n\\n    // Bytes32Set\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(Bytes32Set storage set, bytes32 value) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(Bytes32Set storage set, uint256 index) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(Bytes32Set storage set) internal view returns (bytes32[] memory) {\\n        return _values(set._inner);\\n    }\\n\\n    // AddressSet\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(AddressSet storage set, address value) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(AddressSet storage set, address value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(AddressSet storage set, address value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(AddressSet storage set, uint256 index) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(AddressSet storage set) internal view returns (address[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        address[] memory result;\\n\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n\\n    // UintSet\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(UintSet storage set, uint256 value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(UintSet storage set, uint256 index) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(UintSet storage set) internal view returns (uint256[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        uint256[] memory result;\\n\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n}\\n\",\"keccak256\":\"0x9772845c886f87a3aab315f8d6b68aa599027c20f441b131cd4afaf65b588900\",\"license\":\"MIT\"},\"contracts/common/AccessControl.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport \\\"@openzeppelin/contracts/utils/Context.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/Strings.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\n\\nstruct RoleData {\\n\\tmapping(address => bool) members;\\n\\tbytes32 adminRole;\\n}\\n\\nabstract contract AccessControlEnumerable is Context {\\t\\n\\tevent RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\tevent RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role, _msgSender());\\n        _;\\n    }\\n\\n    function renounceRole(bytes32 role, address account) public {\\n        require(account == _msgSender(), \\\"AccessControl: can only renounce roles for self\\\");\\n        _revokeRole(role, account);\\n    }\\n\\n    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _grantRole(role, account);\\n    }\\n\\n    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _revokeRole(role, account);\\n    }\\n\\n    function _checkRole(bytes32 role, address account) internal view {\\n        if (!hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        \\\"AccessControl: account \\\",\\n                        Strings.toHexString(uint160(account), 20),\\n                        \\\" is missing role \\\",\\n                        Strings.toHexString(uint256(role), 32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n\\tfunction hasRole(bytes32 role, address account) public view virtual returns (bool);\\n\\n\\tfunction getRoleAdmin(bytes32 role) public view virtual returns (bytes32);\\n\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view virtual returns (address);\\n\\n\\tfunction getRoleMemberCount(bytes32 role) public view virtual returns (uint256);\\n\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual;\\n\\n\\tfunction _grantRole(bytes32 role, address account) internal virtual;\\n\\n\\tfunction _revokeRole(bytes32 role, address account) internal virtual;\\n}\",\"keccak256\":\"0xe479262c4dd61696ceb630e3b066b5832e90189fa44d414020a1290bdeab548f\",\"license\":\"GPL-3.0\"},\"contracts/tokens/RAIR Token Facets/AppStorage.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport '../../common/AccessControl.sol';\\n\\nstruct range {\\n\\tuint rangeStart;\\n\\tuint rangeEnd;\\n\\tuint tokensAllowed;\\n\\tuint mintableTokens;\\n\\tuint lockedTokens;\\n\\tuint rangePrice;\\n\\tstring rangeName;\\n}\\n\\nstruct product {\\n\\tuint startingToken;\\n\\tuint endingToken;\\n\\tuint mintableTokens;\\n\\tstring name;\\n\\tuint[] rangeList;\\n}\\n\\nstruct AppStorage721 {\\n\\t// ERC721\\n\\tstring _name;\\n\\tstring _symbol;\\n\\tmapping(uint256 => address) _owners;\\n\\tmapping(address => uint256) _balances;\\n\\tmapping(uint256 => address) _tokenApprovals;\\n\\tmapping(address => mapping(address => bool)) _operatorApprovals;\\n\\t// ERC721 Enumerable\\n\\tmapping(address => mapping(uint256 => uint256)) _ownedTokens;\\n\\tmapping(uint256 => uint256) _ownedTokensIndex;\\n\\tuint256[] _allTokens;\\n\\tmapping(uint256 => uint256) _allTokensIndex;\\n\\t// Access Control Enumerable\\n\\tmapping(bytes32 => RoleData) _roles;\\n\\tmapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;\\n\\t// App\\n\\tstring baseURI;\\n\\taddress factoryAddress;\\n\\tuint16 royaltyFee;\\n\\tproduct[] products;\\n\\trange[] ranges;\\n\\tmapping(uint => uint) tokenToProduct;\\n\\tmapping(uint => uint) tokenToRange;\\n\\tmapping(uint => string) uniqueTokenURI;\\n\\tmapping(uint => string) productURI;\\n\\tmapping(uint => bool) appendTokenIndexToProductURI;\\n\\tbool appendTokenIndexToBaseURI;\\n\\tmapping(uint => uint[]) tokensByProduct;\\n\\tstring contractMetadataURI;\\n\\tmapping(uint => uint) rangeToProduct;\\n\\tmapping(uint => bool) _minted;\\n\\t// Always add new variables at the end of the struct\\n}\\n\\nlibrary LibAppStorage721 {\\n\\tfunction diamondStorage() internal pure\\treturns (AppStorage721 storage ds) {\\n\\t\\tassembly {\\n\\t\\t\\tds.slot := 0\\n\\t\\t}\\n\\t}\\n}\\n\\ncontract AccessControlAppStorageEnumerable721 is Context {\\n\\tAppStorage721 internal s;\\n\\n\\tusing EnumerableSet for EnumerableSet.AddressSet;\\n\\n\\tevent RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\tevent RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n\\tevent RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n\\tmodifier onlyRole(bytes32 role) {\\n\\t\\t_checkRole(role, _msgSender());\\n\\t\\t_;\\n\\t}\\n\\n\\tfunction renounceRole(bytes32 role, address account) public {\\n\\t\\trequire(account == _msgSender(), \\\"AccessControl: can only renounce roles for self\\\");\\n\\t\\t_revokeRole(role, account);\\n\\t}\\n\\n\\tfunction grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n\\t\\t_grantRole(role, account);\\n\\t}\\n\\n\\tfunction revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n\\t\\t_revokeRole(role, account);\\n\\t}\\n\\n\\tfunction _checkRole(bytes32 role, address account) internal view {\\n\\t\\tif (!hasRole(role, account)) {\\n\\t\\t\\trevert(\\n\\t\\t\\t\\tstring(\\n\\t\\t\\t\\t\\tabi.encodePacked(\\n\\t\\t\\t\\t\\t\\t\\\"AccessControl: account \\\",\\n\\t\\t\\t\\t\\t\\tStrings.toHexString(uint160(account), 20),\\n\\t\\t\\t\\t\\t\\t\\\" is missing role \\\",\\n\\t\\t\\t\\t\\t\\tStrings.toHexString(uint256(role), 32)\\n\\t\\t\\t\\t\\t)\\n\\t\\t\\t\\t)\\n\\t\\t\\t);\\n\\t\\t}\\n\\t}\\n\\n\\tfunction hasRole(bytes32 role, address account) public view returns (bool) {\\n\\t\\treturn s._roles[role].members[account];\\n\\t}\\n\\n\\tfunction getRoleAdmin(bytes32 role) public view returns (bytes32) {\\n\\t\\treturn s._roles[role].adminRole;\\n\\t}\\n\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view returns (address) {\\n\\t\\treturn s._roleMembers[role].at(index);\\n\\t}\\n\\n\\tfunction getRoleMemberCount(bytes32 role) public view returns (uint256) {\\n\\t\\treturn s._roleMembers[role].length();\\n\\t}\\n\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal {\\n\\t\\tbytes32 previousAdminRole = getRoleAdmin(role);\\n\\t\\ts._roles[role].adminRole = adminRole;\\n\\t\\temit RoleAdminChanged(role, previousAdminRole, adminRole);\\n\\t}\\n\\n\\tfunction _grantRole(bytes32 role, address account) internal {\\n\\t\\tif (!hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = true;\\n\\t\\t\\temit RoleGranted(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].add(account);\\n\\t\\t}\\n\\t}\\n\\n\\tfunction _revokeRole(bytes32 role, address account) internal {\\n\\t\\tif (hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = false;\\n\\t\\t\\temit RoleRevoked(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].remove(account);\\n\\t\\t}\\n\\t}\\n}\",\"keccak256\":\"0x3d6907bd4c21e2ee4fd01dcd307f8a96b787da23db692d654ca6a813ce29bd64\",\"license\":\"GPL-3.0\"},\"contracts/tokens/RAIR Token Facets/RangesFacet.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11;\\n\\nimport './AppStorage.sol';\\n\\ncontract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {\\n\\tbytes32 public constant CREATOR = keccak256(\\\"CREATOR\\\");\\n\\n\\tevent CreatedRange(uint productIndex, uint start, uint end, uint price, uint tokensAllowed, uint lockedTokens, string name, uint rangeIndex);\\n\\tevent UpdatedRange(uint rangeIndex, string name, uint price, uint tokensAllowed, uint lockedTokens);\\n\\t\\n\\tevent TradingLocked(uint indexed rangeIndex, uint from, uint to, uint lockedTokens);\\n\\tevent TradingUnlocked(uint indexed rangeIndex, uint from, uint to);\\n\\n\\t// Auxiliary struct used to avoid Stack too deep errors\\n\\tstruct rangeData {\\n\\t\\tuint rangeStart;\\n\\t\\tuint rangeEnd;\\n\\t\\tuint price;\\n\\t\\tuint tokensAllowed;\\n\\t\\tuint lockedTokens;\\n\\t\\tstring name;\\n\\t}\\n\\n\\t/// @notice Verifies that the range exists\\n\\t/// @param\\trangeID\\tRange to verify\\n\\tmodifier rangeExists(uint rangeID) {\\n\\t\\trequire(s.ranges.length > rangeID, \\\"RAIR ERC721 Ranges: Range does not exist\\\");\\n\\t\\t_;\\n\\t}\\n\\n\\tfunction rangeToProduct(uint rangeIndex_) public view rangeExists(rangeIndex_) returns (uint) {\\n\\t\\treturn s.rangeToProduct[rangeIndex_];\\n\\t}\\n\\n\\tfunction rangeInfo(uint rangeId) external view rangeExists(rangeId) returns(range memory data, uint productIndex) {\\n\\t\\tdata = s.ranges[rangeId];\\n\\t\\tproductIndex = s.rangeToProduct[rangeId];\\n\\t}\\n\\n\\tfunction isRangeLocked(uint rangeId) external view rangeExists(rangeId) returns (bool) {\\n\\t\\treturn s.ranges[rangeId].lockedTokens > 0;\\n\\t}\\n\\n\\tfunction productRangeInfo(uint productId, uint rangeIndex) external view returns(range memory data) {\\n\\t\\trequire(s.products.length > productId, \\\"RAIR ERC721 Ranges: Product does not exist\\\");\\n\\t\\trequire(s.products[productId].rangeList.length > rangeIndex, \\\"RAIR ERC721 Ranges: Invalid range index\\\");\\n\\t\\tdata = s.ranges[s.products[productId].rangeList[rangeIndex]];\\n\\t}\\n\\n\\tfunction updateRange(uint rangeId, string memory name, uint price_, uint tokensAllowed_, uint lockedTokens_) public rangeExists(rangeId) onlyRole(CREATOR) {\\n\\t\\trequire(price_ >= 100, \\\"RAIR ERC721: Minimum price allowed is 100 wei\\\");\\n\\t\\trange storage selectedRange = s.ranges[rangeId];\\n\\t\\trequire(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= tokensAllowed_, \\\"RAIR ERC721: Allowed tokens should be less than range's length\\\");\\n\\t\\trequire(selectedRange.rangeEnd - selectedRange.rangeStart + 1 >= lockedTokens_, \\\"RAIR ERC721: Locked tokens should be less than range's length\\\");\\n\\t\\tselectedRange.tokensAllowed = tokensAllowed_;\\n\\t\\tif (lockedTokens_ > 0) {\\n\\t\\t\\temit TradingLocked(rangeId, selectedRange.rangeStart, selectedRange.rangeEnd, lockedTokens_);\\n\\t\\t\\tselectedRange.lockedTokens = lockedTokens_;\\n\\t\\t}\\n\\t\\tselectedRange.rangeName = name;\\n\\t\\tselectedRange.rangePrice = price_;\\n\\t\\temit UpdatedRange(rangeId, name, price_, tokensAllowed_, lockedTokens_);\\n\\t}\\n\\n\\tfunction canCreateRange(uint productId_, uint rangeStart_, uint rangeEnd_) public view returns (bool) {\\n\\t\\tuint[] memory rangeList = s.products[productId_].rangeList;\\n\\t\\tfor (uint i = 0; i < rangeList.length; i++) {\\n\\t\\t\\tif ((s.ranges[rangeList[i]].rangeStart <= rangeStart_ &&\\n\\t\\t\\t\\t\\ts.ranges[rangeList[i]].rangeEnd >= rangeStart_) || \\n\\t\\t\\t\\t(s.ranges[rangeList[i]].rangeStart <= rangeEnd_ &&\\n\\t\\t\\t\\t\\ts.ranges[rangeList[i]].rangeEnd >= rangeEnd_)) {\\n\\t\\t\\t\\treturn false;\\n\\t\\t\\t}\\n\\t\\t}\\n\\t\\treturn true;\\n\\t}\\n\\t\\n\\tfunction _createRange(uint productId_, uint rangeStart_, uint rangeEnd_, uint price_, uint tokensAllowed_, uint lockedTokens_, string memory name_) internal {\\n\\t\\trequire(price_ >= 100, \\\"RAIR ERC721: Minimum price allowed is 100 wei\\\");\\n\\t\\trequire(rangeStart_ <= rangeEnd_, 'RAIR ERC721: Invalid starting or ending token');\\n\\t\\t// Add one because the starting token is included!\\n\\t\\trequire(rangeEnd_ - rangeStart_ + 1 >= tokensAllowed_, \\\"RAIR ERC721: Allowed tokens should be less than range's length\\\");\\n\\t\\trequire(rangeEnd_ - rangeStart_ + 1 >= lockedTokens_, \\\"RAIR ERC721: Locked tokens should be less than range's length\\\");\\n\\t\\tproduct storage selectedProduct = s.products[productId_];\\n\\t\\trange storage newRange = s.ranges.push();\\n\\t\\tuint rangeIndex = s.ranges.length - 1;\\n\\t\\trequire(canCreateRange(productId_, rangeStart_, rangeEnd_), \\\"RAIR ERC721: Can't create a lock of this range\\\");\\n\\t\\tnewRange.rangeStart = rangeStart_;\\n\\t\\tnewRange.rangeEnd = rangeEnd_;\\n\\t\\tnewRange.tokensAllowed = tokensAllowed_;\\n\\t\\tnewRange.mintableTokens = rangeEnd_ - rangeStart_ + 1;\\n\\t\\tnewRange.lockedTokens = lockedTokens_;\\n\\t\\tif (lockedTokens_ > 0) {\\n\\t\\t\\temit TradingLocked(rangeIndex, rangeStart_, rangeEnd_, lockedTokens_);\\n\\t\\t} else if (lockedTokens_ == 0) {\\n\\t\\t\\temit TradingUnlocked(rangeIndex, rangeStart_, rangeEnd_);\\n\\t\\t}\\n\\t\\tnewRange.rangePrice = price_;\\n\\t\\tnewRange.rangeName = name_;\\n\\t\\ts.rangeToProduct[rangeIndex] = productId_;\\n\\t\\tselectedProduct.rangeList.push(rangeIndex);\\n\\t\\temit CreatedRange(productId_, rangeStart_, rangeEnd_, price_, tokensAllowed_, lockedTokens_, name_, rangeIndex);\\n\\t}\\n\\n\\tfunction createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name) external onlyRole(CREATOR) {\\n\\t\\trequire(s.products.length > productId, \\\"RAIR ERC721: Product does not exist\\\");\\n\\t\\t_createRange(productId, rangeStart, rangeEnd, price, tokensAllowed, lockedTokens, name);\\n\\t}\\n\\n\\tfunction createRangeBatch(\\n\\t\\tuint productId,\\n\\t\\trangeData[] calldata data\\n\\t) external onlyRole(CREATOR) {\\n\\t\\trequire(data.length > 0, \\\"RAIR ERC721: Empty array\\\");\\n\\t\\trequire(s.products.length > productId, \\\"RAIR ERC721: Product does not exist\\\");\\n\\t\\tfor (uint i = 0; i < data.length; i++) {\\n\\t\\t\\t_createRange(productId, data[i].rangeStart, data[i].rangeEnd, data[i].price, data[i].tokensAllowed, data[i].lockedTokens, data[i].name);\\n\\t\\t}\\n\\t}\\n}\",\"keccak256\":\"0x8801a41e3dfb33daff7e10d1bfba0e61cc0c583b744240b7ed96c83926d80e6f\",\"license\":\"GPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50611ed8806100206000396000f3fe608060405234801561001057600080fd5b50600436106101005760003560e01c80636ebdacdf11610097578063ca15c87311610066578063ca15c87314610251578063d547741f14610264578063e054431114610277578063e4fbb6091461028a57600080fd5b80636ebdacdf146101df5780639010d07c146101f257806391d148541461021d578063c99931be1461023057600080fd5b80633cd97a55116100d35780633cd97a55146101865780635c5c0518146101a6578063673636b7146101b95780636e30b3d3146101cc57600080fd5b8063248a9ca3146101055780632f2ff15d1461013b57806336568abe14610150578063381f5ebb14610163575b600080fd5b6101286101133660046116db565b6000908152600a602052604090206001015490565b6040519081526020015b60405180910390f35b61014e6101493660046116f4565b61029f565b005b61014e61015e3660046116f4565b6102ca565b6101766101713660046116db565b61034d565b6040519015158152602001610132565b610199610194366004611730565b6103a6565b6040516101329190611807565b61014e6101b436600461181a565b610617565b61014e6101c73660046118af565b6107f7565b6101766101da366004611985565b6109ba565b61014e6101ed3660046119b1565b610b97565b610205610200366004611730565b610c21565b6040516001600160a01b039091168152602001610132565b61017661022b3660046116f4565b610c42565b61024361023e3660046116db565b610c6d565b604051610132929190611a5d565b61012861025f3660046116db565b610de7565b61014e6102723660046116f4565b610dfe565b6101286102853660046116db565b610e24565b610128600080516020611e8383398151915281565b6000828152600a60205260409020600101546102bb8133610e5e565b6102c58383610ec2565b505050565b6001600160a01b038116331461033f5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b60648201526084015b60405180910390fd5b6103498282610f5c565b5050565b600f54600090829081106103735760405162461bcd60e51b815260040161033690611a7f565b600080600f01848154811061038a5761038a611ac7565b9060005260206000209060070201600401541191505b50919050565b6103e66040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b600e54831061044a5760405162461bcd60e51b815260206004820152602a60248201527f52414952204552433732312052616e6765733a2050726f6475637420646f6573604482015269081b9bdd08195e1a5cdd60b21b6064820152608401610336565b816000600e01848154811061046157610461611ac7565b906000526020600020906005020160040180549050116104d35760405162461bcd60e51b815260206004820152602760248201527f52414952204552433732312052616e6765733a20496e76616c69642072616e676044820152660ca40d2dcc8caf60cb1b6064820152608401610336565b600e8054600f9190859081106104eb576104eb611ac7565b9060005260206000209060050201600401838154811061050d5761050d611ac7565b90600052602060002001548154811061052857610528611ac7565b90600052602060002090600702016040518060e001604052908160008201548152602001600182015481526020016002820154815260200160038201548152602001600482015481526020016005820154815260200160068201805461058d90611add565b80601f01602080910402602001604051908101604052809291908181526020018280546105b990611add565b80156106065780601f106105db57610100808354040283529160200191610606565b820191906000526020600020905b8154815290600101906020018083116105e957829003601f168201915b505050505081525050905092915050565b600080516020611e838339815191526106308133610e5e565b8161067d5760405162461bcd60e51b815260206004820152601860248201527f52414952204552433732313a20456d70747920617272617900000000000000006044820152606401610336565b600e54841061069e5760405162461bcd60e51b815260040161033690611b12565b60005b828110156107f0576107de858585848181106106bf576106bf611ac7565b90506020028101906106d19190611b55565b358686858181106106e4576106e4611ac7565b90506020028101906106f69190611b55565b6020013587878681811061070c5761070c611ac7565b905060200281019061071e9190611b55565b6040013588888781811061073457610734611ac7565b90506020028101906107469190611b55565b6060013589898881811061075c5761075c611ac7565b905060200281019061076e9190611b55565b608001358a8a8981811061078457610784611ac7565b90506020028101906107969190611b55565b6107a49060a0810190611b75565b8080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250610fd792505050565b806107e881611bd9565b9150506106a1565b5050505050565b600f548590811061081a5760405162461bcd60e51b815260040161033690611a7f565b600080516020611e838339815191526108338133610e5e565b60648510156108545760405162461bcd60e51b815260040161033690611bf4565b600080600f01888154811061086b5761086b611ac7565b9060005260206000209060070201905084816000015482600101546108909190611c41565b61089b906001611c58565b10156108b95760405162461bcd60e51b815260040161033690611c70565b8054600182015485916108cb91611c41565b6108d6906001611c58565b10156108f45760405162461bcd60e51b815260040161033690611ccd565b6002810185905583156109535780546001820154604080519283526020830191909152810185905288907fd2deaeacc8e325d59c09833f4f8df9c144784d547a7725c7085fae3b644c93e49060600160405180910390a2600481018490555b865161096890600683019060208a0190611642565b50600581018690556040517f675fe88181b85cb3612f534abc69fa999ba2e4744dc830488c9de8b25ec6cfd1906109a8908a908a908a908a908a90611d2a565b60405180910390a15050505050505050565b6000806000600e0185815481106109d3576109d3611ac7565b9060005260206000209060050201600401805480602002602001604051908101604052809291908181526020018280548015610a2e57602002820191906000526020600020905b815481526020019060010190808311610a1a575b5050505050905060005b8151811015610b8957846000600f01838381518110610a5957610a59611ac7565b602002602001015181548110610a7157610a71611ac7565b90600052602060002090600702016000015411158015610ad15750846000600f01838381518110610aa457610aa4611ac7565b602002602001015181548110610abc57610abc611ac7565b90600052602060002090600702016001015410155b80610b675750836000600f01838381518110610aef57610aef611ac7565b602002602001015181548110610b0757610b07611ac7565b90600052602060002090600702016000015411158015610b675750836000600f01838381518110610b3a57610b3a611ac7565b602002602001015181548110610b5257610b52611ac7565b90600052602060002090600702016001015410155b15610b7757600092505050610b90565b80610b8181611bd9565b915050610a38565b5060019150505b9392505050565b600080516020611e83833981519152610bb08133610e5e565b600e548910610bd15760405162461bcd60e51b815260040161033690611b12565b610c1689898989898989898080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250610fd792505050565b505050505050505050565b6000828152600b60205260408120610c3990836112fa565b90505b92915050565b6000918252600a602090815260408084206001600160a01b0393909316845291905290205460ff1690565b610cad6040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b600f5460009083908110610cd35760405162461bcd60e51b815260040161033690611a7f565b600f805485908110610ce757610ce7611ac7565b90600052602060002090600702016040518060e0016040529081600082015481526020016001820154815260200160028201548152602001600382015481526020016004820154815260200160058201548152602001600682018054610d4c90611add565b80601f0160208091040260200160405190810160405280929190818152602001828054610d7890611add565b8015610dc55780601f10610d9a57610100808354040283529160200191610dc5565b820191906000526020600020905b815481529060010190602001808311610da857829003601f168201915b5050509190925250505060009485526018602052604090942054939492505050565b6000818152600b60205260408120610c3c90611306565b6000828152600a6020526040902060010154610e1a8133610e5e565b6102c58383610f5c565b600f5460009082908110610e4a5760405162461bcd60e51b815260040161033690611a7f565b505060009081526018602052604090205490565b610e688282610c42565b61034957610e80816001600160a01b03166014611310565b610e8b836020611310565b604051602001610e9c929190611d60565b60408051601f198184030181529082905262461bcd60e51b825261033691600401611dd5565b610ecc8282610c42565b610349576000828152600a602090815260408083206001600160a01b03851684529091529020805460ff19166001179055610f043390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a46000828152600b602052604090206102c590826114ac565b610f668282610c42565b15610349576000828152600a602090815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a46000828152600b602052604090206102c590826114c1565b6064841015610ff85760405162461bcd60e51b815260040161033690611bf4565b8486111561105e5760405162461bcd60e51b815260206004820152602d60248201527f52414952204552433732313a20496e76616c6964207374617274696e67206f7260448201526c1032b73234b733903a37b5b2b760991b6064820152608401610336565b826110698787611c41565b611074906001611c58565b10156110925760405162461bcd60e51b815260040161033690611c70565b8161109d8787611c41565b6110a8906001611c58565b10156110c65760405162461bcd60e51b815260040161033690611ccd565b600080600e0188815481106110dd576110dd611ac7565b600091825260208220600f805460018181018084559286526005909402909201945060079091027f8d1108e10bcb7c27dddfc02ed9d693a074039d026cf4ea4240b40f7d581ac80201929161113191611c41565b905061113e8a8a8a6109ba565b6111a15760405162461bcd60e51b815260206004820152602e60248201527f52414952204552433732313a2043616e2774206372656174652061206c6f636b60448201526d206f6620746869732072616e676560901b6064820152608401610336565b88825560018201889055600282018690556111bc8989611c41565b6111c7906001611c58565b600383015560048201859055841561122157604080518a8152602081018a905290810186905281907fd2deaeacc8e325d59c09833f4f8df9c144784d547a7725c7085fae3b644c93e49060600160405180910390a2611262565b8461126257604080518a8152602081018a905282917f83d23f069f5730ce94e107a9258bae3b7a0f97184978fd7daa41c8df8ac6c29e910160405180910390a25b60058201879055835161127e9060068401906020870190611642565b5060008181526018602090815260408083208d90556004860180546001810182559084529190922001829055517fc4e232d19c750404428930450f0a050bf4c166f32910679d1b9e52f17bad8347906112e6908c908c908c908c908c908c908c908a90611de8565b60405180910390a150505050505050505050565b6000610c3983836114d6565b6000610c3c825490565b6060600061131f836002611e36565b61132a906002611c58565b67ffffffffffffffff81111561134257611342611899565b6040519080825280601f01601f19166020018201604052801561136c576020820181803683370190505b509050600360fc1b8160008151811061138757611387611ac7565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106113b6576113b6611ac7565b60200101906001600160f81b031916908160001a90535060006113da846002611e36565b6113e5906001611c58565b90505b600181111561145d576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061141957611419611ac7565b1a60f81b82828151811061142f5761142f611ac7565b60200101906001600160f81b031916908160001a90535060049490941c9361145681611e55565b90506113e8565b508315610c395760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610336565b6000610c39836001600160a01b038416611500565b6000610c39836001600160a01b03841661154f565b60008260000182815481106114ed576114ed611ac7565b9060005260206000200154905092915050565b600081815260018301602052604081205461154757508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155610c3c565b506000610c3c565b60008181526001830160205260408120548015611638576000611573600183611c41565b855490915060009061158790600190611c41565b90508181146115ec5760008660000182815481106115a7576115a7611ac7565b90600052602060002001549050808760000184815481106115ca576115ca611ac7565b6000918252602080832090910192909255918252600188019052604090208390555b85548690806115fd576115fd611e6c565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050610c3c565b6000915050610c3c565b82805461164e90611add565b90600052602060002090601f01602090048101928261167057600085556116b6565b82601f1061168957805160ff19168380011785556116b6565b828001600101855582156116b6579182015b828111156116b657825182559160200191906001019061169b565b506116c29291506116c6565b5090565b5b808211156116c257600081556001016116c7565b6000602082840312156116ed57600080fd5b5035919050565b6000806040838503121561170757600080fd5b8235915060208301356001600160a01b038116811461172557600080fd5b809150509250929050565b6000806040838503121561174357600080fd5b50508035926020909101359150565b60005b8381101561176d578181015183820152602001611755565b8381111561177c576000848401525b50505050565b6000815180845261179a816020860160208601611752565b601f01601f19169290920160200192915050565b805182526020810151602083015260408101516040830152606081015160608301526080810151608083015260a081015160a0830152600060c082015160e060c08501526117ff60e0850182611782565b949350505050565b602081526000610c3960208301846117ae565b60008060006040848603121561182f57600080fd5b83359250602084013567ffffffffffffffff8082111561184e57600080fd5b818601915086601f83011261186257600080fd5b81358181111561187157600080fd5b8760208260051b850101111561188657600080fd5b6020830194508093505050509250925092565b634e487b7160e01b600052604160045260246000fd5b600080600080600060a086880312156118c757600080fd5b85359450602086013567ffffffffffffffff808211156118e657600080fd5b818801915088601f8301126118fa57600080fd5b81358181111561190c5761190c611899565b604051601f8201601f19908116603f0116810190838211818310171561193457611934611899565b816040528281528b602084870101111561194d57600080fd5b826020860160208301376000928101602001929092525096999698505050506040850135946060810135946080909101359350915050565b60008060006060848603121561199a57600080fd5b505081359360208301359350604090920135919050565b60008060008060008060008060e0898b0312156119cd57600080fd5b883597506020890135965060408901359550606089013594506080890135935060a0890135925060c089013567ffffffffffffffff80821115611a0f57600080fd5b818b0191508b601f830112611a2357600080fd5b813581811115611a3257600080fd5b8c6020828501011115611a4457600080fd5b6020830194508093505050509295985092959890939650565b604081526000611a7060408301856117ae565b90508260208301529392505050565b60208082526028908201527f52414952204552433732312052616e6765733a2052616e676520646f6573206e6040820152671bdd08195e1a5cdd60c21b606082015260800190565b634e487b7160e01b600052603260045260246000fd5b600181811c90821680611af157607f821691505b602082108114156103a057634e487b7160e01b600052602260045260246000fd5b60208082526023908201527f52414952204552433732313a2050726f6475637420646f6573206e6f742065786040820152621a5cdd60ea1b606082015260800190565b6000823560be19833603018112611b6b57600080fd5b9190910192915050565b6000808335601e19843603018112611b8c57600080fd5b83018035915067ffffffffffffffff821115611ba757600080fd5b602001915036819003821315611bbc57600080fd5b9250929050565b634e487b7160e01b600052601160045260246000fd5b6000600019821415611bed57611bed611bc3565b5060010190565b6020808252602d908201527f52414952204552433732313a204d696e696d756d20707269636520616c6c6f7760408201526c6564206973203130302077656960981b606082015260800190565b600082821015611c5357611c53611bc3565b500390565b60008219821115611c6b57611c6b611bc3565b500190565b6020808252603e908201527f52414952204552433732313a20416c6c6f77656420746f6b656e732073686f7560408201527f6c64206265206c657373207468616e2072616e67652773206c656e6774680000606082015260800190565b6020808252603d908201527f52414952204552433732313a204c6f636b656420746f6b656e732073686f756c60408201527f64206265206c657373207468616e2072616e67652773206c656e677468000000606082015260800190565b85815260a060208201526000611d4360a0830187611782565b604083019590955250606081019290925260809091015292915050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351611d98816017850160208801611752565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351611dc9816028840160208801611752565b01602801949350505050565b602081526000610c396020830184611782565b60006101008a83528960208401528860408401528760608401528660808401528560a08401528060c0840152611e2081840186611782565b9150508260e08301529998505050505050505050565b6000816000190483118215151615611e5057611e50611bc3565b500290565b600081611e6457611e64611bc3565b506000190190565b634e487b7160e01b600052603160045260246000fdfe3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db6a26469706673582212204445cd05f8ca39cefc9d1cf032a5661641356f1fc36cfcd4fb168633bdfeca9764736f6c634300080b0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101005760003560e01c80636ebdacdf11610097578063ca15c87311610066578063ca15c87314610251578063d547741f14610264578063e054431114610277578063e4fbb6091461028a57600080fd5b80636ebdacdf146101df5780639010d07c146101f257806391d148541461021d578063c99931be1461023057600080fd5b80633cd97a55116100d35780633cd97a55146101865780635c5c0518146101a6578063673636b7146101b95780636e30b3d3146101cc57600080fd5b8063248a9ca3146101055780632f2ff15d1461013b57806336568abe14610150578063381f5ebb14610163575b600080fd5b6101286101133660046116db565b6000908152600a602052604090206001015490565b6040519081526020015b60405180910390f35b61014e6101493660046116f4565b61029f565b005b61014e61015e3660046116f4565b6102ca565b6101766101713660046116db565b61034d565b6040519015158152602001610132565b610199610194366004611730565b6103a6565b6040516101329190611807565b61014e6101b436600461181a565b610617565b61014e6101c73660046118af565b6107f7565b6101766101da366004611985565b6109ba565b61014e6101ed3660046119b1565b610b97565b610205610200366004611730565b610c21565b6040516001600160a01b039091168152602001610132565b61017661022b3660046116f4565b610c42565b61024361023e3660046116db565b610c6d565b604051610132929190611a5d565b61012861025f3660046116db565b610de7565b61014e6102723660046116f4565b610dfe565b6101286102853660046116db565b610e24565b610128600080516020611e8383398151915281565b6000828152600a60205260409020600101546102bb8133610e5e565b6102c58383610ec2565b505050565b6001600160a01b038116331461033f5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b60648201526084015b60405180910390fd5b6103498282610f5c565b5050565b600f54600090829081106103735760405162461bcd60e51b815260040161033690611a7f565b600080600f01848154811061038a5761038a611ac7565b9060005260206000209060070201600401541191505b50919050565b6103e66040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b600e54831061044a5760405162461bcd60e51b815260206004820152602a60248201527f52414952204552433732312052616e6765733a2050726f6475637420646f6573604482015269081b9bdd08195e1a5cdd60b21b6064820152608401610336565b816000600e01848154811061046157610461611ac7565b906000526020600020906005020160040180549050116104d35760405162461bcd60e51b815260206004820152602760248201527f52414952204552433732312052616e6765733a20496e76616c69642072616e676044820152660ca40d2dcc8caf60cb1b6064820152608401610336565b600e8054600f9190859081106104eb576104eb611ac7565b9060005260206000209060050201600401838154811061050d5761050d611ac7565b90600052602060002001548154811061052857610528611ac7565b90600052602060002090600702016040518060e001604052908160008201548152602001600182015481526020016002820154815260200160038201548152602001600482015481526020016005820154815260200160068201805461058d90611add565b80601f01602080910402602001604051908101604052809291908181526020018280546105b990611add565b80156106065780601f106105db57610100808354040283529160200191610606565b820191906000526020600020905b8154815290600101906020018083116105e957829003601f168201915b505050505081525050905092915050565b600080516020611e838339815191526106308133610e5e565b8161067d5760405162461bcd60e51b815260206004820152601860248201527f52414952204552433732313a20456d70747920617272617900000000000000006044820152606401610336565b600e54841061069e5760405162461bcd60e51b815260040161033690611b12565b60005b828110156107f0576107de858585848181106106bf576106bf611ac7565b90506020028101906106d19190611b55565b358686858181106106e4576106e4611ac7565b90506020028101906106f69190611b55565b6020013587878681811061070c5761070c611ac7565b905060200281019061071e9190611b55565b6040013588888781811061073457610734611ac7565b90506020028101906107469190611b55565b6060013589898881811061075c5761075c611ac7565b905060200281019061076e9190611b55565b608001358a8a8981811061078457610784611ac7565b90506020028101906107969190611b55565b6107a49060a0810190611b75565b8080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250610fd792505050565b806107e881611bd9565b9150506106a1565b5050505050565b600f548590811061081a5760405162461bcd60e51b815260040161033690611a7f565b600080516020611e838339815191526108338133610e5e565b60648510156108545760405162461bcd60e51b815260040161033690611bf4565b600080600f01888154811061086b5761086b611ac7565b9060005260206000209060070201905084816000015482600101546108909190611c41565b61089b906001611c58565b10156108b95760405162461bcd60e51b815260040161033690611c70565b8054600182015485916108cb91611c41565b6108d6906001611c58565b10156108f45760405162461bcd60e51b815260040161033690611ccd565b6002810185905583156109535780546001820154604080519283526020830191909152810185905288907fd2deaeacc8e325d59c09833f4f8df9c144784d547a7725c7085fae3b644c93e49060600160405180910390a2600481018490555b865161096890600683019060208a0190611642565b50600581018690556040517f675fe88181b85cb3612f534abc69fa999ba2e4744dc830488c9de8b25ec6cfd1906109a8908a908a908a908a908a90611d2a565b60405180910390a15050505050505050565b6000806000600e0185815481106109d3576109d3611ac7565b9060005260206000209060050201600401805480602002602001604051908101604052809291908181526020018280548015610a2e57602002820191906000526020600020905b815481526020019060010190808311610a1a575b5050505050905060005b8151811015610b8957846000600f01838381518110610a5957610a59611ac7565b602002602001015181548110610a7157610a71611ac7565b90600052602060002090600702016000015411158015610ad15750846000600f01838381518110610aa457610aa4611ac7565b602002602001015181548110610abc57610abc611ac7565b90600052602060002090600702016001015410155b80610b675750836000600f01838381518110610aef57610aef611ac7565b602002602001015181548110610b0757610b07611ac7565b90600052602060002090600702016000015411158015610b675750836000600f01838381518110610b3a57610b3a611ac7565b602002602001015181548110610b5257610b52611ac7565b90600052602060002090600702016001015410155b15610b7757600092505050610b90565b80610b8181611bd9565b915050610a38565b5060019150505b9392505050565b600080516020611e83833981519152610bb08133610e5e565b600e548910610bd15760405162461bcd60e51b815260040161033690611b12565b610c1689898989898989898080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250610fd792505050565b505050505050505050565b6000828152600b60205260408120610c3990836112fa565b90505b92915050565b6000918252600a602090815260408084206001600160a01b0393909316845291905290205460ff1690565b610cad6040518060e00160405280600081526020016000815260200160008152602001600081526020016000815260200160008152602001606081525090565b600f5460009083908110610cd35760405162461bcd60e51b815260040161033690611a7f565b600f805485908110610ce757610ce7611ac7565b90600052602060002090600702016040518060e0016040529081600082015481526020016001820154815260200160028201548152602001600382015481526020016004820154815260200160058201548152602001600682018054610d4c90611add565b80601f0160208091040260200160405190810160405280929190818152602001828054610d7890611add565b8015610dc55780601f10610d9a57610100808354040283529160200191610dc5565b820191906000526020600020905b815481529060010190602001808311610da857829003601f168201915b5050509190925250505060009485526018602052604090942054939492505050565b6000818152600b60205260408120610c3c90611306565b6000828152600a6020526040902060010154610e1a8133610e5e565b6102c58383610f5c565b600f5460009082908110610e4a5760405162461bcd60e51b815260040161033690611a7f565b505060009081526018602052604090205490565b610e688282610c42565b61034957610e80816001600160a01b03166014611310565b610e8b836020611310565b604051602001610e9c929190611d60565b60408051601f198184030181529082905262461bcd60e51b825261033691600401611dd5565b610ecc8282610c42565b610349576000828152600a602090815260408083206001600160a01b03851684529091529020805460ff19166001179055610f043390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a46000828152600b602052604090206102c590826114ac565b610f668282610c42565b15610349576000828152600a602090815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a46000828152600b602052604090206102c590826114c1565b6064841015610ff85760405162461bcd60e51b815260040161033690611bf4565b8486111561105e5760405162461bcd60e51b815260206004820152602d60248201527f52414952204552433732313a20496e76616c6964207374617274696e67206f7260448201526c1032b73234b733903a37b5b2b760991b6064820152608401610336565b826110698787611c41565b611074906001611c58565b10156110925760405162461bcd60e51b815260040161033690611c70565b8161109d8787611c41565b6110a8906001611c58565b10156110c65760405162461bcd60e51b815260040161033690611ccd565b600080600e0188815481106110dd576110dd611ac7565b600091825260208220600f805460018181018084559286526005909402909201945060079091027f8d1108e10bcb7c27dddfc02ed9d693a074039d026cf4ea4240b40f7d581ac80201929161113191611c41565b905061113e8a8a8a6109ba565b6111a15760405162461bcd60e51b815260206004820152602e60248201527f52414952204552433732313a2043616e2774206372656174652061206c6f636b60448201526d206f6620746869732072616e676560901b6064820152608401610336565b88825560018201889055600282018690556111bc8989611c41565b6111c7906001611c58565b600383015560048201859055841561122157604080518a8152602081018a905290810186905281907fd2deaeacc8e325d59c09833f4f8df9c144784d547a7725c7085fae3b644c93e49060600160405180910390a2611262565b8461126257604080518a8152602081018a905282917f83d23f069f5730ce94e107a9258bae3b7a0f97184978fd7daa41c8df8ac6c29e910160405180910390a25b60058201879055835161127e9060068401906020870190611642565b5060008181526018602090815260408083208d90556004860180546001810182559084529190922001829055517fc4e232d19c750404428930450f0a050bf4c166f32910679d1b9e52f17bad8347906112e6908c908c908c908c908c908c908c908a90611de8565b60405180910390a150505050505050505050565b6000610c3983836114d6565b6000610c3c825490565b6060600061131f836002611e36565b61132a906002611c58565b67ffffffffffffffff81111561134257611342611899565b6040519080825280601f01601f19166020018201604052801561136c576020820181803683370190505b509050600360fc1b8160008151811061138757611387611ac7565b60200101906001600160f81b031916908160001a905350600f60fb1b816001815181106113b6576113b6611ac7565b60200101906001600160f81b031916908160001a90535060006113da846002611e36565b6113e5906001611c58565b90505b600181111561145d576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061141957611419611ac7565b1a60f81b82828151811061142f5761142f611ac7565b60200101906001600160f81b031916908160001a90535060049490941c9361145681611e55565b90506113e8565b508315610c395760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610336565b6000610c39836001600160a01b038416611500565b6000610c39836001600160a01b03841661154f565b60008260000182815481106114ed576114ed611ac7565b9060005260206000200154905092915050565b600081815260018301602052604081205461154757508154600181810184556000848152602080822090930184905584548482528286019093526040902091909155610c3c565b506000610c3c565b60008181526001830160205260408120548015611638576000611573600183611c41565b855490915060009061158790600190611c41565b90508181146115ec5760008660000182815481106115a7576115a7611ac7565b90600052602060002001549050808760000184815481106115ca576115ca611ac7565b6000918252602080832090910192909255918252600188019052604090208390555b85548690806115fd576115fd611e6c565b600190038181906000526020600020016000905590558560010160008681526020019081526020016000206000905560019350505050610c3c565b6000915050610c3c565b82805461164e90611add565b90600052602060002090601f01602090048101928261167057600085556116b6565b82601f1061168957805160ff19168380011785556116b6565b828001600101855582156116b6579182015b828111156116b657825182559160200191906001019061169b565b506116c29291506116c6565b5090565b5b808211156116c257600081556001016116c7565b6000602082840312156116ed57600080fd5b5035919050565b6000806040838503121561170757600080fd5b8235915060208301356001600160a01b038116811461172557600080fd5b809150509250929050565b6000806040838503121561174357600080fd5b50508035926020909101359150565b60005b8381101561176d578181015183820152602001611755565b8381111561177c576000848401525b50505050565b6000815180845261179a816020860160208601611752565b601f01601f19169290920160200192915050565b805182526020810151602083015260408101516040830152606081015160608301526080810151608083015260a081015160a0830152600060c082015160e060c08501526117ff60e0850182611782565b949350505050565b602081526000610c3960208301846117ae565b60008060006040848603121561182f57600080fd5b83359250602084013567ffffffffffffffff8082111561184e57600080fd5b818601915086601f83011261186257600080fd5b81358181111561187157600080fd5b8760208260051b850101111561188657600080fd5b6020830194508093505050509250925092565b634e487b7160e01b600052604160045260246000fd5b600080600080600060a086880312156118c757600080fd5b85359450602086013567ffffffffffffffff808211156118e657600080fd5b818801915088601f8301126118fa57600080fd5b81358181111561190c5761190c611899565b604051601f8201601f19908116603f0116810190838211818310171561193457611934611899565b816040528281528b602084870101111561194d57600080fd5b826020860160208301376000928101602001929092525096999698505050506040850135946060810135946080909101359350915050565b60008060006060848603121561199a57600080fd5b505081359360208301359350604090920135919050565b60008060008060008060008060e0898b0312156119cd57600080fd5b883597506020890135965060408901359550606089013594506080890135935060a0890135925060c089013567ffffffffffffffff80821115611a0f57600080fd5b818b0191508b601f830112611a2357600080fd5b813581811115611a3257600080fd5b8c6020828501011115611a4457600080fd5b6020830194508093505050509295985092959890939650565b604081526000611a7060408301856117ae565b90508260208301529392505050565b60208082526028908201527f52414952204552433732312052616e6765733a2052616e676520646f6573206e6040820152671bdd08195e1a5cdd60c21b606082015260800190565b634e487b7160e01b600052603260045260246000fd5b600181811c90821680611af157607f821691505b602082108114156103a057634e487b7160e01b600052602260045260246000fd5b60208082526023908201527f52414952204552433732313a2050726f6475637420646f6573206e6f742065786040820152621a5cdd60ea1b606082015260800190565b6000823560be19833603018112611b6b57600080fd5b9190910192915050565b6000808335601e19843603018112611b8c57600080fd5b83018035915067ffffffffffffffff821115611ba757600080fd5b602001915036819003821315611bbc57600080fd5b9250929050565b634e487b7160e01b600052601160045260246000fd5b6000600019821415611bed57611bed611bc3565b5060010190565b6020808252602d908201527f52414952204552433732313a204d696e696d756d20707269636520616c6c6f7760408201526c6564206973203130302077656960981b606082015260800190565b600082821015611c5357611c53611bc3565b500390565b60008219821115611c6b57611c6b611bc3565b500190565b6020808252603e908201527f52414952204552433732313a20416c6c6f77656420746f6b656e732073686f7560408201527f6c64206265206c657373207468616e2072616e67652773206c656e6774680000606082015260800190565b6020808252603d908201527f52414952204552433732313a204c6f636b656420746f6b656e732073686f756c60408201527f64206265206c657373207468616e2072616e67652773206c656e677468000000606082015260800190565b85815260a060208201526000611d4360a0830187611782565b604083019590955250606081019290925260809091015292915050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351611d98816017850160208801611752565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351611dc9816028840160208801611752565b01602801949350505050565b602081526000610c396020830184611782565b60006101008a83528960208401528860408401528760608401528660808401528560a08401528060c0840152611e2081840186611782565b9150508260e08301529998505050505050505050565b6000816000190483118215151615611e5057611e50611bc3565b500290565b600081611e6457611e64611bc3565b506000190190565b634e487b7160e01b600052603160045260246000fdfe3c2519c4487d47714872f92cf90a50c25f5deaec2789dc2a497b1272df611db6a26469706673582212204445cd05f8ca39cefc9d1cf032a5661641356f1fc36cfcd4fb168633bdfeca9764736f6c634300080b0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 7943,
+        "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+        "label": "s",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_struct(AppStorage721)7929_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_bytes32)dyn_storage": {
+        "base": "t_bytes32",
+        "encoding": "dynamic_array",
+        "label": "bytes32[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_struct(product)7828_storage)dyn_storage": {
+        "base": "t_struct(product)7828_storage",
+        "encoding": "dynamic_array",
+        "label": "struct product[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_struct(range)7816_storage)dyn_storage": {
+        "base": "t_struct(range)7816_storage",
+        "encoding": "dynamic_array",
+        "label": "struct range[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_uint256)dyn_storage": {
+        "base": "t_uint256",
+        "encoding": "dynamic_array",
+        "label": "uint256[]",
+        "numberOfBytes": "32"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(address => bool))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_address,t_bool)"
+      },
+      "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(uint256 => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_uint256,t_uint256)"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_bytes32,t_struct(AddressSet)2638_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct EnumerableSet.AddressSet)",
+        "numberOfBytes": "32",
+        "value": "t_struct(AddressSet)2638_storage"
+      },
+      "t_mapping(t_bytes32,t_struct(RoleData)5689_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct RoleData)",
+        "numberOfBytes": "32",
+        "value": "t_struct(RoleData)5689_storage"
+      },
+      "t_mapping(t_bytes32,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_uint256,t_address)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      },
+      "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256[])",
+        "numberOfBytes": "32",
+        "value": "t_array(t_uint256)dyn_storage"
+      },
+      "t_mapping(t_uint256,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_uint256,t_string_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => string)",
+        "numberOfBytes": "32",
+        "value": "t_string_storage"
+      },
+      "t_mapping(t_uint256,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_struct(AddressSet)2638_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.AddressSet",
+        "members": [
+          {
+            "astId": 2637,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_inner",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_struct(Set)2337_storage"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(AppStorage721)7929_storage": {
+        "encoding": "inplace",
+        "label": "struct AppStorage721",
+        "members": [
+          {
+            "astId": 7830,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 7832,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 7836,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_owners",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_address)"
+          },
+          {
+            "astId": 7840,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)"
+          },
+          {
+            "astId": 7844,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)"
+          },
+          {
+            "astId": 7850,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))"
+          },
+          {
+            "astId": 7856,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))"
+          },
+          {
+            "astId": 7860,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)"
+          },
+          {
+            "astId": 7863,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage"
+          },
+          {
+            "astId": 7867,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)"
+          },
+          {
+            "astId": 7872,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_roles",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)5689_storage)"
+          },
+          {
+            "astId": 7877,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_roleMembers",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_mapping(t_bytes32,t_struct(AddressSet)2638_storage)"
+          },
+          {
+            "astId": 7879,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "baseURI",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 7881,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "factoryAddress",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address"
+          },
+          {
+            "astId": 7883,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "royaltyFee",
+            "offset": 20,
+            "slot": "13",
+            "type": "t_uint16"
+          },
+          {
+            "astId": 7887,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "products",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_array(t_struct(product)7828_storage)dyn_storage"
+          },
+          {
+            "astId": 7891,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "ranges",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_array(t_struct(range)7816_storage)dyn_storage"
+          },
+          {
+            "astId": 7895,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "tokenToProduct",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_uint256,t_uint256)"
+          },
+          {
+            "astId": 7899,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "tokenToRange",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_uint256)"
+          },
+          {
+            "astId": 7903,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "uniqueTokenURI",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_uint256,t_string_storage)"
+          },
+          {
+            "astId": 7907,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "productURI",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_string_storage)"
+          },
+          {
+            "astId": 7911,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "appendTokenIndexToProductURI",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_bool)"
+          },
+          {
+            "astId": 7913,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "appendTokenIndexToBaseURI",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_bool"
+          },
+          {
+            "astId": 7918,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "tokensByProduct",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)"
+          },
+          {
+            "astId": 7920,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "contractMetadataURI",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 7924,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "rangeToProduct",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_mapping(t_uint256,t_uint256)"
+          },
+          {
+            "astId": 7928,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_minted",
+            "offset": 0,
+            "slot": "25",
+            "type": "t_mapping(t_uint256,t_bool)"
+          }
+        ],
+        "numberOfBytes": "832"
+      },
+      "t_struct(RoleData)5689_storage": {
+        "encoding": "inplace",
+        "label": "struct RoleData",
+        "members": [
+          {
+            "astId": 5686,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "members",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_bool)"
+          },
+          {
+            "astId": 5688,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "adminRole",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(Set)2337_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.Set",
+        "members": [
+          {
+            "astId": 2332,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_values",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_array(t_bytes32)dyn_storage"
+          },
+          {
+            "astId": 2336,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "_indexes",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes32,t_uint256)"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(product)7828_storage": {
+        "encoding": "inplace",
+        "label": "struct product",
+        "members": [
+          {
+            "astId": 7818,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "startingToken",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7820,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "endingToken",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7822,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "mintableTokens",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7824,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "name",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 7827,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "rangeList",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_uint256)dyn_storage"
+          }
+        ],
+        "numberOfBytes": "160"
+      },
+      "t_struct(range)7816_storage": {
+        "encoding": "inplace",
+        "label": "struct range",
+        "members": [
+          {
+            "astId": 7803,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "rangeStart",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7805,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "rangeEnd",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7807,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "tokensAllowed",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7809,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "mintableTokens",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7811,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "lockedTokens",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7813,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "rangePrice",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 7815,
+            "contract": "contracts/tokens/RAIR Token Facets/RangesFacet.sol:RAIRRangesFacet",
+            "label": "rangeName",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_string_storage"
+          }
+        ],
+        "numberOfBytes": "224"
+      },
+      "t_uint16": {
+        "encoding": "inplace",
+        "label": "uint16",
+        "numberOfBytes": "2"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

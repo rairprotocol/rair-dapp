@@ -46,14 +46,14 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 			return;
 		}
 		updateStartingToken(starts);
-	}, [starts, updateStartingToken])
+	}, [starts, updateStartingToken, startingToken])
 
 	useEffect(() => {
 		if (ends === endingToken) {
 			return;
 		}
 		updateEndingToken(ends);
-	}, [ends, updateEndingToken])
+	}, [ends, updateEndingToken, endingToken])
 
 	useEffect(() => {
 		setIndividualPrice(price);
@@ -114,7 +114,7 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 					setter={value => updater('price', setIndividualPrice, value)}
 					type='number'
 					disabled={fixed}
-					min='0'
+					min='100'
 					customClass='form-control rounded-rair'
 					customCSS={{backgroundColor: `var(--${primaryColor})`, color: 'inherit', borderColor: `var(--${secondaryColor}-40)`}}
 				/>
