@@ -3,7 +3,6 @@ import { NftItemForCollectionView } from "../NftItemForCollectionView";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import { useDispatch } from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
-import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
 import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import setDocumentTitle from "../../../../utils/setTitle";
 import { useHistory } from "react-router-dom";
