@@ -5,7 +5,7 @@ resource "pagerduty_escalation_policy" "engineering" {
   rule {
     escalation_delay_in_minutes = 10
     target {
-      type = "user"
+      type = "user_reference"
       id   = data.pagerduty_user.chris_rose.id
     }
   }

@@ -18,7 +18,7 @@
     "analytics": "^0.7.19",
     "antd": "^4.16.13",
     "axios": "^0.25.0",
-    "ethers": "^5.4.0",
+    "ethers": "^5.5.3",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "moment-timezone": "^0.5.34",

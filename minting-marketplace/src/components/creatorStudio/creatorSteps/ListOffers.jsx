@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { erc721Abi } from '../../../contracts'
 import Swal from 'sweetalert2';
 import chainData from '../../../utils/blockchainData.js'
@@ -10,8 +10,7 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
-const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
-	const stepNumber = 1;
+const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState(false);
@@ -36,7 +35,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 
 	useEffect(() => {
 		setStepNumber(stepNumber);
-	}, [setStepNumber])
+	}, [setStepNumber, stepNumber])
 
 	const rerender = useCallback(() => {
 		setForceRerender(() => !forceRerender);
@@ -49,7 +48,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 			name: '',
 			starts: startingToken,
 			ends: startingToken,
-			price: 0,
+			price: 100,
 		});
 		setOfferList(aux);
 	}
@@ -62,7 +61,6 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 		aux.splice(index, 1);
 		setOfferList(aux);
 	}
-	const history = useHistory();
 
 	useEffect(() => {
 		if (onMyChain) {
@@ -180,16 +178,6 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 	}, [contractData, programmaticProvider, currentChain])
 
 	return <div className='row px-0 mx-0'>
-		<div className='col-6 text-end'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Simple
-			</button>
-		</div>
-		<div className='col-6 text-start mb-3'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Advanced
-			</button>
-		</div>
 		{contractData ? <>
 			{offerList?.length !== 0 && <table className='col-12 text-start'>
 				<thead>
@@ -235,9 +223,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 				First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies - 1}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
 			</div>
 			{chainData && <FixedBottomNavigation
-				backwardFunction={() => {
-					history.goBack()
-				}}
+				backwardFunction={goBack}
 				forwardFunctions={[{
 					action: !onMyChain ?
 					() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
@@ -252,7 +238,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 							createOffers)
 						:
 						giveMinterRole),
-					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
+					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Continue' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
 					disabled: hasMinterRole ?
 						(
 							offerList.length === 0 ||
@@ -277,7 +263,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <ListOffers {...value} />
+			return <ListOffers {...value} {...props} />
 		}}
 	</WorkflowContext.Consumer>
 }

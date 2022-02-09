@@ -6,7 +6,7 @@ import { rFetch } from '../../utils/rFetch.js';
 import { metamaskCall } from '../../utils/metamaskUtils.js';
 import Swal from 'sweetalert2';
 import { useParams, useHistory } from 'react-router-dom';
-import {erc721Abi} from '../../contracts';
+import { erc721Abi, diamondFactoryAbi } from '../../contracts';
 
 import FixedBottomNavigation from './FixedBottomNavigation.jsx';
 import NavigatorContract from './NavigatorContract.jsx';
@@ -14,6 +14,7 @@ import NavigatorContract from './NavigatorContract.jsx';
 const ContractDetails = () => {
 
 	const [collectionName, setCollectionName] = useState('');
+	const [isDiamond, setIsDiamond] = useState(false);
 	const [collectionLength, setCollectionLength] = useState(0);
 
 	const [creatingCollection, setCreatingCollection] = useState(false);
@@ -28,7 +29,7 @@ const ContractDetails = () => {
 
 	const getContractData = useCallback(async () => {
 		if (!address) {
-			return;
+			return
 		}
 		let dataRequest = await rFetch(`/api/contracts/network/${blockchain}/${address}`);
 		let productsRequest = await rFetch(`/api/contracts/network/${blockchain}/${address}/products`);
@@ -37,8 +38,19 @@ const ContractDetails = () => {
 				dataRequest.contract.products = productsRequest.products;
 			}
 			setData(dataRequest.contract);
+		} else {
+			// Try diamonds
+			let instance = contractCreator(address, diamondFactoryAbi);
+			let productCount = Number((await instance.getProductCount()).toString());
+			setIsDiamond(true);
+			setData({
+				title: await instance.name(),
+				contractAddress: address,
+				blockchain: window.ethereum.chainId,
+				products: Array(productCount)
+			});
 		}
-	}, [address, blockchain])
+	}, [address, blockchain, contractCreator])
 
 	useEffect(() => {
 		getContractData();
@@ -117,7 +129,7 @@ const ContractDetails = () => {
 							showConfirmButton: false
 						});
 						setCreatingCollection(true);
-						let instance = await contractCreator(data.contractAddress, erc721Abi);
+						let instance = await contractCreator(data.contractAddress, isDiamond ? diamondFactoryAbi : erc721Abi);
 						let success = await metamaskCall(instance.createProduct(collectionName, collectionLength));
 						if (success) {
 							Swal.fire({

@@ -5,8 +5,8 @@ module.exports = Joi.object({
     description: Joi.string(),
     artist: Joi.string(),
     external_url: Joi.string().uri(),
-    image: Joi.string().uri(),
-    animation_url: Joi.string().uri(),
+    image: Joi.string(),
+    animation_url: Joi.string(),
     attributes: Joi.array().items(
         Joi.object().keys({
             trait_type: Joi.string().required(),

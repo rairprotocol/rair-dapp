@@ -1,9 +1,9 @@
 import React, { useState, memo } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import { utils } from "ethers";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
 import ReactPlayer from "react-player";
-import { utils } from "ethers";
 
 const NftItemForCollectionViewComponent = ({
   blockchain,
@@ -22,11 +22,11 @@ const NftItemForCollectionViewComponent = ({
   selectedToken,
   contract,
   ownerAddress,
-  // key,
+  offer,
 }) => {
   const params = useParams();
   const history = useHistory();
-  const [metaDataProducts, /*setMetaDataProducts*/] = useState();
+  const [metaDataProducts /*setMetaDataProducts*/] = useState();
   const [playing, setPlaying] = useState(false);
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -166,7 +166,7 @@ const NftItemForCollectionViewComponent = ({
                 // metaDataProducts?.metadata?.image
                 metadata?.image
                   ? // ? metaDataProducts?.metadata?.image
-                  metadata?.image
+                    metadata?.image
                   : pict
               }
               style={{
@@ -179,6 +179,13 @@ const NftItemForCollectionViewComponent = ({
             />
           )}
           {<SvgKey />}
+          {offer === 0 ? (
+            <SvgKey color={"#E4476D"} />
+          ) : offer === 1 ? (
+            <SvgKey color={"#CCA541"} />
+          ) : (
+            <SvgKey color={"silver"} />
+          )}
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">

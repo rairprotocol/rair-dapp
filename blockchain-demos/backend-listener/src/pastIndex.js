@@ -2,6 +2,7 @@ const ethers = require('ethers');
 const FactoryAbi = require('./contracts/RAIR_Token_Factory.json').abi;
 const TokenAbi = require('./contracts/RAIR_ERC721.json').abi;
 const MinterAbi = require('./contracts/Minter_Marketplace.json').abi;
+const { diamondFactoryAbi } = require('./contracts');
 
 const main = async () => {
 	let providers = [
@@ -35,6 +36,9 @@ const main = async () => {
 	]
 
 	for await (let providerData of providers) {
+		providerData.provider.on('debug', ({action, request, response, provider}) => {
+			console.log(providerData.provider._network.name, response ? 'Receiving response to' : 'Sending request', request.method);
+		});
 		console.log('Connected to', providerData.provider._network.name);
 		// These connections don't have an address associated, so they can read but can't write to the blockchain
 		let factoryInstance = await new ethers.Contract(providerData.factoryAddress, FactoryAbi, providerData.provider);

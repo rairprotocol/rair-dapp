@@ -81,7 +81,7 @@ const SplashPage = ({ loginDone }) => {
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
 
-  const [active, setActive] = useState({ policy: false, use: false });
+  const [active, setActive] = useState({ policy: true, use: true });
   const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -200,12 +200,30 @@ const SplashPage = ({ loginDone }) => {
             alt="community-img"
           />
           <div className="video-grey-man-metamask-logo-wrapper">
-            <img
+            <button
+              style={{ border: "none", background: "none" }}
               className="video-grey-man-metamask-logo metamask-logo"
-              src={Metamask}
-              alt="metamask-logo"
-            />
+              onClick={() => openVideo()}
+            >
+              <img src={playImages} alt="Play" />
+            </button>
           </div>
+          <Modal
+            isOpen={modalVideoIsOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStylesForVideo}
+            contentLabel="Example Modal"
+          >
+            <h2
+              className="video-grey-man-video-title"
+              ref={(_subtitle) => (subtitle = _subtitle)}
+            >
+              Interview with artist Dadara.
+            </h2>
+            {/* <button onClick={closeModal}>close</button> */}
+            <VideoPlayer />
+          </Modal>
         </>
       );
     }
@@ -267,7 +285,7 @@ const SplashPage = ({ loginDone }) => {
               </div>
               }
               {timerLeft !== 0 && <div className="greyman-">
-                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-22T22:22:00-00:00'} />
+                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-02T22:22:00-00:00'} />
               </div>}
               <div className="btn-buy-metamask">
                 {timerLeft === 0 && <button onClick={() => openModal()}>

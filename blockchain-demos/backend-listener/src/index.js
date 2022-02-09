@@ -6,31 +6,43 @@ const MinterAbi = require('./contracts/Minter_Marketplace.json').abi;
 const main = async () => {
 	let providers = [
 		{
-			provider: new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/', {chainId: 97, symbol: 'BNB', name: 'Binance Testnet'}),
+			provider: new ethers.providers.StaticJsonRpcProvider('https://speedy-nodes-nyc.moralis.io/f68255ae9308a6e85032bd6a/bsc/testnet/archive', {
+				chainId: 97,
+				symbol: 'BNB',
+				name: 'Binance Testnet'
+			}),
 			factoryAddress: '0x91429c87b1D85B0bDea7df6F71C854aBeaD99EE4',
 			minterAddress: '0x3a61f5bF7D205AdBd9c0beE91709482AcBEE089f'
 		},
 		{
-			provider: new ethers.providers.JsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {chainId: 5, symbol: 'ETH', name: 'Goerli Testnet'}),
+			provider: new ethers.providers.StaticJsonRpcProvider('https://eth-goerli.alchemyapi.io/v2/U0H4tRHPsDH69OKr4Hp1TOrDi-j7PKN_', {chainId: 5, symbol: 'ETH', name: 'Goerli Testnet'}),
 			factoryAddress: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
 			minterAddress: '0xE5c44102C354B97cbcfcA56F53Ea9Ede572a39Ba'
 		},
 		{
-			provider: new ethers.providers.JsonRpcProvider("https://rpc-mumbai.maticvigil.com", {chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet'}),
+			provider: new ethers.providers.StaticJsonRpcProvider("https://rpc-mumbai.maticvigil.com", {chainId: 80001, symbol: 'tMATIC', name: 'Matic Mumbai Testnet'}),
 			factoryAddress: '0x1A5bf89208Dddd09614919eE31EA6E40D42493CD',
 			minterAddress: '0x63Dd6821D902012B664dD80140C54A98CeE97068'
 		}
 	]
 
 	providers.forEach(async providerData => {
+		let i = 0;
 		console.log('Connected to', providerData.provider._network.name);
+		providerData.provider.on('debug', ({action, request, response, provider}) => {
+			console.log(i, providerData.provider._network.name, response ? 'Receiving response to' : 'Sending request', request.method);
+			if (!response) {
+				i++;
+			}
+		});
+
 		// These connections don't have an address associated, so they can read but can't write to the blockchain
 		let factoryInstance = await new ethers.Contract(providerData.factoryAddress, FactoryAbi, providerData.provider);
 		let minterInstance = await new ethers.Contract(providerData.minterAddress, MinterAbi, providerData.provider);
 
 		minterInstance.on('AddedOffer(address,uint256,uint256,uint256)', (contractAddress, productIndex, rangesCreated, catalogIndex) => {
 			console.log(`${minterInstance.provider._network.symbol} Minter Marketplace: Created a new offer #${catalogIndex} (from ${contractAddress}, product #${productIndex}) with ${rangesCreated} ranges`);
-		});
+		});return;
 		minterInstance.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', (contractAddress, productIndex, offerIndex, rangeIndex, startingToken, endingToken, priceOfToken, nameOfRange) => {
 			console.log(`${minterInstance.provider._network.symbol} Minter Marketplace: New range created for contract ${contractAddress} on product ${productIndex} (offer #${offerIndex} on the marketplace) as range #${rangeIndex}: ${nameOfRange}, starting from ${startingToken} to ${endingToken} at ${priceOfToken} each`);
 		})
@@ -58,9 +70,9 @@ const main = async () => {
 		factoryInstance.on('TokensWithdrawn(address,address,uint256)', (recipient, contract, amount) => {
 			console.log(`${factoryInstance.provider._network.symbol} Factory: ${amount} ERC777 tokens from ${contract} were withdrawn by ${recipient}`);
 		})
-		factoryInstance.on('NewContractDeployed(address,uint256,address)', (owner, newContractCount, newContractAddress) => {
+		/*factoryInstance.on('NewContractDeployed(address,uint256,address)', (owner, newContractCount, newContractAddress) => {
 			console.log(`${factoryInstance.provider._network.symbol} Factory: A new ERC721 contract has been deployed by ${owner}, that makes ${newContractCount} contracts deployed, the new contract is at ${newContractAddress} (We are NOT listening for events in that contract, relaunch the app to listen to the new events!)`);
-		})
+		})*/
 		factoryInstance.on('NewTokensAccepted(address,uint256)', (tokenAddress, amountNeeded) => {
 			console.log(`${factoryInstance.provider._network.symbol} Factory: New Tokens accepted for deplyment! Now you can pay ${amountNeeded} tokens from ${tokenAddress} to deploy a contract`)
 		})
