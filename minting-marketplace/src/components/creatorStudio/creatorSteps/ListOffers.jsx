@@ -74,7 +74,16 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 			return;
 		}
 		try {
-			setHasMinterRole(await instance.hasRole(await instance.MINTER(), minterInstance.address));
+			setHasMinterRole(
+				await metamaskCall(
+					instance.hasRole(
+						await metamaskCall(
+							instance.MINTER(),
+						),
+						minterInstance.address
+					)
+				)
+			);
 		} catch (err) {
 			console.error(err);
 			setHasMinterRole(false);
@@ -99,68 +108,58 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 	}
 
 	const createOffers = async () => {
-		try {
+		Swal.fire({
+			title: 'Creating offer...',
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		if (await metamaskCall(
+			minterInstance.addOffer(
+				instance.address,
+				collectionIndex,
+				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+				offerList.map((item) => item.ends),
+				offerList.map((item) => item.price),
+				offerList.map((item) => item.name),
+				process.env.REACT_APP_NODE_ADDRESS
+			)
+		)) {
 			Swal.fire({
-				title: 'Creating offer...',
-				html: 'Please wait...',
-				icon: 'info',
-				showConfirmButton: false
+				title: 'Success!',
+				html: 'The offer has been created!',
+				icon: 'success',
+				showConfirmButton: true
 			});
-			if (await metamaskCall(
-				minterInstance.addOffer(
-					instance.address,
-					collectionIndex,
-					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-					offerList.map((item) => item.ends),
-					offerList.map((item) => item.price),
-					offerList.map((item) => item.name),
-					process.env.REACT_APP_NODE_ADDRESS
-				)
-			)) {
-				Swal.fire({
-					title: 'Success!',
-					html: 'The offer has been created!',
-					icon: 'success',
-					showConfirmButton: true
-				});
-				gotoNextStep();
-			}
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
+			gotoNextStep();
 		}
 	}
 
 	const appendOffers = async () => {
-		try {
-			Swal.fire({
-				title: 'Appending offers...',
-				html: 'Please wait...',
-				icon: 'info',
-				showConfirmButton: false
-			});
-			if (await metamaskCall(
-				minterInstance.appendOfferRangeBatch(
+		Swal.fire({
+			title: 'Appending offers...',
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		let filteredList = offerList.filter(item => !item.fixed);
+		if (await metamaskCall(
+			minterInstance.appendOfferRangeBatch(
 					contractData.product.offers[0].offerPool,
-					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-					offerList.map((item) => item.ends),
-					offerList.map((item) => item.price),
-					offerList.map((item) => item.name)
+					filteredList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+					filteredList.map((item) => item.ends),
+					filteredList.map((item) => item.price),
+					filteredList.map((item) => item.name)
 				)
-			)) {
-				Swal.fire({
-					title: 'Success!',
-					html: 'The offers have been appended!',
-					icon: 'success',
-					showConfirmButton: true
-				});
-				gotoNextStep();
-			}
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
+			)
+		) {
+			Swal.fire({
+				title: 'Success!',
+				html: 'The offers have been appended!',
+				icon: 'success',
+				showConfirmButton: true
+			});
+			gotoNextStep();
 		}
 	}
 
