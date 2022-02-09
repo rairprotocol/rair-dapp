@@ -1,17 +1,18 @@
-import React, { memo, useEffect, useCallback } from "react";
+import React, { memo, useEffect, useCallback, useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import { NftItemForCollectionView } from "../NftItemForCollectionView";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import CollectionInfo from "./CollectionInfo/CollectionInfo";
-import { useState } from "react";
+import CircularProgress from '@mui/material/CircularProgress'
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
 
 // import styles
 import "./../../GeneralCollectionStyles.css";
+import CustomButton from "../../utils/button/CustomButton";
 
 const NftCollectionPageComponent = ({
   blockchain,
@@ -29,6 +30,10 @@ const NftCollectionPageComponent = ({
   textColor,
   offerData,
   offerPrice,
+  getAllProduct,
+  showToken,
+  setShowToken,
+  isLoading,
   data,
 }) => {
   const history = useHistory();
@@ -36,6 +41,11 @@ const NftCollectionPageComponent = ({
   const [offerDataCol, setOfferDataCol] = useState();
   const [offerAllData, setOfferAllData] = useState();
   const [collectionName, setCollectionName] = useState();
+
+  const loadToken = () => {
+    getAllProduct(0, showToken);
+    setShowToken(showToken * 2)
+  }
 
   const getParticularOffer = useCallback(async () => {
     let response = await (
@@ -159,10 +169,35 @@ const NftCollectionPageComponent = ({
           })}
       </div>
       <div className="collection-btn-more">
-        <button>Show more</button>
+        {isLoading && <div className="progress-token">
+          <CircularProgress style={
+            {
+              width: "50px",
+              height: "50px"
+            }
+          }
+          />
+        </div>}
+
+        {showToken <= totalCount && <CustomButton
+          onClick={loadToken}
+          width="232px"
+          height="48px"
+          margin="20px 0 0 0"
+          text="Show more"
+        />
+        }
       </div>
-      <CollectionInfo offerData={offerDataCol} defaultImg={defaultImg} blockchain={blockchain} openTitle={true} />
-      <AuthenticityBlock collectionToken={tokenData[0]?.authenticityLink} title={true} />
+      <CollectionInfo
+        offerData={offerDataCol}
+        defaultImg={defaultImg}
+        blockchain={blockchain}
+        openTitle={true}
+      />
+      <AuthenticityBlock
+        collectionToken={tokenData[0]?.authenticityLink}
+        title={true}
+      />
     </div>
   );
 };

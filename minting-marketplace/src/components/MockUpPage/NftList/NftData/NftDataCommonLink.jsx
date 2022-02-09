@@ -13,18 +13,24 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
   const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
   const [totalCount, setTotalCount] = useState();
+  const [showToken, setShowToken] = useState(16);
+  const [isLoading, setIsLoading] = useState(false);
 
   const history = useHistory();
   const params = useParams();
 
   const { contract, product, tokenId, blockchain } = params;
 
-  const getAllProduct = useCallback(async () => {
+  const getAllProduct = useCallback(async (fromToken, toToken) => {
+    setIsLoading(true)
+
     const responseAllProduct = await (
-      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}`, {
+      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`, {
         method: "GET",
       })
     ).json();
+
+    setIsLoading(false);
 
     setTokenData(responseAllProduct.result.tokens);
     setTotalCount(responseAllProduct.result.totalCount);
@@ -143,10 +149,10 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
   };
 
   useEffect(() => {
-    getAllProduct();
+    getAllProduct(0, showToken);
     getParticularOffer();
     getProductsFromOffer();
-  }, [getAllProduct, getParticularOffer, getProductsFromOffer]);
+  }, [getAllProduct, getParticularOffer, getProductsFromOffer, showToken]);
 
   if (params.tokens === "collection") {
     return (
@@ -168,6 +174,10 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         tokenData={tokenData}
         totalCount={totalCount}
         product={product}
+        getAllProduct={getAllProduct}
+        setShowToken={setShowToken}
+        showToken={showToken}
+        isLoading={isLoading}
       />
     );
   } else if (params.tokens === "unlockables") {
