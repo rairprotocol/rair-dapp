@@ -164,7 +164,7 @@ const NftItemComponent = ({
               className="col-12 h-100 w-100"
             />
           )}
-          {<SvgKey />}
+          {<SvgKey color={'white'} />}
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">

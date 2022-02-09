@@ -243,7 +243,7 @@ function App({ sentryHistory }) {
 	}, [dispatch])
 
 	useEffect(() => {
-		setTitle('#Cryptogreyman');
+		setTitle('Welcome');
 		if (process.env.NODE_ENV === 'development') {
 			window.gotoRouteBackdoor = sentryHistory.push
 			window.adminAccessBackdoor = (boolean) => {

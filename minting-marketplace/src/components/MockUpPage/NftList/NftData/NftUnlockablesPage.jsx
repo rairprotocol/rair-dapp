@@ -35,7 +35,7 @@ const NftUnlockablesPage = ({
     <div>
       <BreadcrumbsView />
       <VideoPlayerView productsFromOffer={productsFromOffer} />
-      {/* <NftDifferentRarity productsFromOffer={productsFromOffer} /> */}
+
       <div style={{ maxWidth: "1250px", margin: "auto" }} className="">
         <NftSingleUnlockables
           blockchain={blockchain}
@@ -48,7 +48,12 @@ const NftUnlockablesPage = ({
       </div>
 
       {productsFromOffer?.length > 2 ? (
-        <CustomButton text="Show More" width="288px" height="48px" margin={'0 auto'} />
+        <CustomButton
+          text="Show More"
+          width="288px"
+          height="48px"
+          margin={"0 auto"}
+        />
       ) : (
         <></>
       )}

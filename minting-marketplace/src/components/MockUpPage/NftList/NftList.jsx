@@ -57,9 +57,7 @@ const NftListComponent = ({
                     blockchain={contractData.blockchain}
                     collectionName={contractData.name}
                     ownerCollectionUser={contractData.user}
-                    collectionIndexInContract={
-                        contractData.collectionIndexInContract
-                    }
+                    collectionIndexInContract={contractData.collectionIndexInContract}
                   />
                 );
               } else {

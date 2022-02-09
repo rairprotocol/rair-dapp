@@ -1,14 +1,13 @@
-import React, { memo, useEffect, useCallback } from "react";
-import Skeleton from "@mui/material/Skeleton";
+import React, { memo, useState, useEffect, useCallback } from "react";
 import { NftItemForCollectionView } from "../NftItemForCollectionView";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import { useDispatch } from "react-redux";
-import setDocumentTitle from "../../../../utils/setTitle";
-import { useHistory, useParams } from "react-router-dom";
-import TitleCollection from "./TitleCollection/TitleCollection";
-import CollectionInfo from "./CollectionInfo/CollectionInfo";
-import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import Skeleton from "@mui/material/Skeleton";
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
+import CollectionInfo from "./CollectionInfo/CollectionInfo";
+import setDocumentTitle from "../../../../utils/setTitle";
+import TitleCollection from "./TitleCollection/TitleCollection";
 
 // import styles
 import "./../../GeneralCollectionStyles.css";
@@ -55,12 +54,11 @@ const NftCollectionPageComponent = ({
     if (response.success) {
       setCollectionName(response.product.name);
     }
-
   }, [product, contract, blockchain]);
 
   useEffect(() => {
-    getParticularOffer()
-  }, [getParticularOffer])
+    getParticularOffer();
+  }, [getParticularOffer]);
 
   useEffect(() => {
     setDocumentTitle("Collection");
@@ -75,7 +73,7 @@ const NftCollectionPageComponent = ({
 
   const goBack = () => {
     history.goBack();
-  }
+  };
 
   const defaultImg =
     "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
@@ -107,62 +105,75 @@ const NftCollectionPageComponent = ({
         alignContent: "flex-start",
         justifyContent: "center",
         alignItems: "flex-start",
-        marginBottom: "66px"
+        marginBottom: "66px",
       }}
     >
       <BreadcrumbsView />
-      <TitleCollection title={collectionName} userName={offerAllData?.owner} currentUser={currentUser} />
+      <TitleCollection
+        title={collectionName}
+        userName={offerAllData?.owner}
+        currentUser={currentUser}
+      />
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
           ? tokenData.map((token, index) => {
-            if (token.cover !== "none") {
+              if (token.cover !== "none") {
+                return (
+                  <NftItemForCollectionView
+                    key={`${token.id + "-" + token.productId + index}`}
+                    pict={token.cover ? token.cover : defaultImg}
+                    metadata={token.metadata}
+                    contract={token.contract}
+                    token={token.token}
+                    handleClickToken={handleClickToken}
+                    setSelectedToken={setSelectedToken}
+                    selectedToken={selectedToken}
+                    offerPrice={offerPrice}
+                    ownerAddress={token.ownerAddress}
+                    blockchain={blockchain}
+                    currentUser={currentUser}
+                    offerData={offerData}
+                    primaryColor={primaryColor}
+                    productsFromOffer={productsFromOffer}
+                    selectedData={selectedData}
+                    textColor={textColor}
+                    tokenData={tokenData}
+                    totalCount={totalCount}
+                    product={product}
+                    index={index}
+                    offer={token.offer}
+                  />
+                );
+              } else {
+                return null;
+              }
+            })
+          : Array.from(new Array(10)).map((item, index) => {
               return (
-                <NftItemForCollectionView
-                  key={`${token.id + "-" + token.productId + index}`}
-                  pict={token.cover ? token.cover : defaultImg}
-                  metadata={token.metadata}
-                  contract={token.contract}
-                  token={token.token}
-                  handleClickToken={handleClickToken}
-                  setSelectedToken={setSelectedToken}
-                  selectedToken={selectedToken}
-                  offerPrice={offerPrice}
-                  ownerAddress={token.ownerAddress}
-                  blockchain={blockchain}
-                  currentUser={currentUser}
-                  offerData={offerData}
-                  primaryColor={primaryColor}
-                  productsFromOffer={productsFromOffer}
-                  selectedData={selectedData}
-                  textColor={textColor}
-                  tokenData={tokenData}
-                  totalCount={totalCount}
-                  product={product}
-                  index={index}
+                <Skeleton
+                  key={index}
+                  className={"skeloton-product"}
+                  variant="rectangular"
+                  width={283}
+                  height={280}
+                  style={{ borderRadius: 20 }}
                 />
               );
-            } else {
-              return null;
-            }
-          })
-          : Array.from(new Array(10)).map((item, index) => {
-            return (
-              <Skeleton
-                key={index}
-                className={"skeloton-product"}
-                variant="rectangular"
-                width={283}
-                height={280}
-                style={{ borderRadius: 20 }}
-              />
-            );
-          })}
+            })}
       </div>
       <div className="collection-btn-more">
         <button>Show more</button>
       </div>
-      <CollectionInfo offerData={offerDataCol} defaultImg={defaultImg} blockchain={blockchain} openTitle={true} />
-      <AuthenticityBlock collectionToken={tokenData[0]?.authenticityLink} title={true} />
+      <CollectionInfo
+        offerData={offerDataCol}
+        defaultImg={defaultImg}
+        blockchain={blockchain}
+        openTitle={true}
+      />
+      <AuthenticityBlock
+        collectionToken={tokenData[0]?.authenticityLink}
+        title={true}
+      />
     </div>
   );
 };
