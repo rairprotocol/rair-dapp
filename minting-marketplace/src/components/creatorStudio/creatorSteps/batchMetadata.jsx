@@ -2,23 +2,25 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import imageIcon from '../../../images/imageIcon.svg';
 // import documentIcon from '../../../images/documentIcon.svg';
-import { NavLink, useParams, useHistory } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import { rFetch } from '../../../utils/rFetch.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import csvParser from '../../../utils/csvParser.js';
 import Dropzone from 'react-dropzone'
 import Swal from 'sweetalert2';
+import InputField from '../../common/InputField.jsx';
+import { metamaskCall } from '../../../utils/metamaskUtils.js';
 
-
-const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
-	const stepNumber = 4;
+const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack, simpleMode}) => {
 	const { address, collectionIndex } = useParams();
 
 	const [csvFile, setCSVFile] = useState();
 	const [metadata, setMetadata] = useState();
 	const [headers, setHeaders] = useState();
 	const [metadataExists, setMetadataExists] = useState(false);
+	const [metadataURI, setMetadataURI] = useState('');
+	const [includeNumber, setIncludeNumber] = useState(true);
 
 	const onImageDrop = useCallback(acceptedFiles => {
 		csvParser(acceptedFiles[0], console.log)
@@ -44,17 +46,11 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
 
 	useEffect(fetchData, [fetchData])
 
-	const history = useHistory();
-	// const { contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const { primaryColor, textColor } = useSelector(store => store.colorStore);
 
 	useEffect(() => {
 		setStepNumber(stepNumber);
 	}, [setStepNumber, stepNumber])
-
-	const nextStep = () => {
-		history.push(steps[stepNumber].populatedPath);
-	}
 
 	const sendMetadata = async (updateMeta) => {
 		let formData = new FormData();
@@ -214,13 +210,82 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
 				<tfoot />
 			</table>
 		</div>}
+		{!simpleMode && contractData.diamond && contractData.instance && <>
+			<hr />
+			<div className='col-12 col-md-9'>
+				<InputField
+					customClass='form-control'
+					getter={metadataURI}
+					setter={setMetadataURI}
+					label='Metadata URI'
+				/>
+			</div>
+			<div className='col-12 col-md-3 pt-4'>
+				<button onClick={() => setIncludeNumber(!includeNumber)} className={`btn btn-${includeNumber ? 'royal-ice' : 'warning'}`}>
+					{!includeNumber && "Don't " }Include token ID
+				</button>
+			</div>
+			<br />
+			<div className='col-5'>
+				<button onClick={async () => {
+					Swal.fire({
+						title: 'Sending metadata URI...',
+						html: 'Please wait...',
+						icon: 'info',
+						showConfirmButton: false
+					});
+					if (await metamaskCall(
+						contractData.instance.setProductURI(
+							contractData.product.collectionIndexInContract,
+							metadataURI,
+							includeNumber
+						)
+					)) {
+						Swal.fire({
+							title: 'Success!',
+							html: `Metadata URI has been set for all tokens in product #${contractData.product.collectionIndexInContract}`,
+							icon: 'success',
+							showConfirmButton: true
+						});
+					}
+				}} className='btn btn-stimorol'>
+					{metadataURI === '' ? 'Uns' : 'S'}et Metadata URI for all tokens in {contractData.product.name}
+				</button>
+			</div>
+			<div className='col-2 pt-3'>
+				...or...
+			</div>
+			<div className='col-5'>
+				<button onClick={async () => {
+					Swal.fire({
+						title: 'Sending metadata URI...',
+						html: 'Please wait...',
+						icon: 'info',
+						showConfirmButton: false
+					});
+					if (await metamaskCall(
+						contractData.instance.setBaseURI(
+							metadataURI,
+							includeNumber
+						)
+					)) {
+						Swal.fire({
+							title: 'Success!',
+							html: 'Metadata URI has been set for the entire contract',
+							icon: 'success',
+							showConfirmButton: true
+						});
+					}
+				}} className='btn btn-stimorol'>
+					{metadataURI === '' ? 'Uns' : 'S'}et Metadata URI for all tokens in the contract
+				</button>
+			</div>
+		</>}
 		<FixedBottomNavigation
-			backwardFunction={() => {
-				history.goBack()
-			}}
+			backwardFunction={goBack}
 			forwardFunctions={[{
-				label: metadata ? metadataExists ? 'Update' : 'Send' : 'Skip',
-				action: metadata ? () => sendMetadata(metadataExists) : nextStep
+				label: metadata ? metadataExists ? 'Update' : 'Send' : 'Continue',
+				action: metadata ? () => sendMetadata(metadataExists) : gotoNextStep
 			}]}
 		/>
 	</>
@@ -229,7 +294,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps }) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer>
 		{(value) => {
-			return <BatchMetadataParser {...value} />
+			return <BatchMetadataParser {...value} {...props} />
 		}}
 	</WorkflowContext.Consumer>
 }

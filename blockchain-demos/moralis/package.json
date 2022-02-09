@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "diamonds": "node diamonds.js",
     "setup": "node cloudSetup.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
-    "ethers": "^5.4.7",
-    "moralis": "^0.0.96"
+    "ethers": "^5.5.4",
+    "moralis": "^1.2.6"
   }
 }
