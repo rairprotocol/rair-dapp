@@ -146,7 +146,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 		if (await metamaskCall(
 			minterInstance.appendOfferRangeBatch(
 					contractData.product.offers[0].offerPool,
-					filteredList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+					filteredList.map((item) => item.starts),
 					filteredList.map((item) => item.ends),
 					filteredList.map((item) => item.price),
 					filteredList.map((item) => item.name)

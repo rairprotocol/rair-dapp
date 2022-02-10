@@ -1,6 +1,7 @@
 import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
 import { useSelector } from 'react-redux';
+import { metamaskCall } from '../../utils/metamaskUtils.js';
 
 import Swal from 'sweetalert2';
 
@@ -50,11 +51,11 @@ const ERC777Manager = () => {
 			Amount to Transfer: <input className='form-control w-75 mx-auto' value={targetValue} type='number' onChange={e => setTargetValue(e.target.value)} />
 			<br/>
 			{targetValue !== '' && targetAddress && <button disabled={targetValue <= 0 || targetAddress === ''} onClick={async () => {
-				try {
-					await erc777Instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''));
-				} catch (err) {
-					console.error('Error sending ERC777 tokens', err)
-					Swal.fire('Error', err, 'error');
+				Swal.fire('Sending tokens', 'Please wait', 'info');
+				if (await metamaskCall(
+					erc777Instance.send(targetAddress, targetValue, ethers.utils.toUtf8Bytes(''))
+				)) {
+					Swal.fire('Success', 'Tokens sent', 'success');
 				}
 			}} className='btn btn-royal-ice'>
 				Transfer {ethers.BigNumber.from(targetValue).div(ethers.BigNumber.from(10).pow(erc777Data.decimals)).toString()} {erc777Data.symbol} to {targetAddress}!
