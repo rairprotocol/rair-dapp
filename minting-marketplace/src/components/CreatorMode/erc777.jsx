@@ -43,7 +43,7 @@ const ERC777Manager = () => {
 		<br />
 		{erc777Data ? <>
 			<br/>
-			Your balance on the '{erc777Data.name}' Token: {ethers.BigNumber.from(erc777Data.balance).div(ethers.BigNumber.from(10).pow(erc777Data.decimals)).toString()} {erc777Data.symbol} <br/>
+			Your balance on the '{erc777Data.name}' Token: {ethers.utils.formatEther(erc777Data.balance)} {erc777Data.symbol} <br/>
 			<hr className='w-100' />
 			Transfer Tokens<br/>
 			Transfer to Address: <input className='form-control w-75 mx-auto' value={targetAddress} onChange={e => setTargetAddress(e.target.value)} />
@@ -57,7 +57,9 @@ const ERC777Manager = () => {
 					Swal.fire('Error', err, 'error');
 				}
 			}} className='btn btn-royal-ice'>
-				Transfer {ethers.BigNumber.from(targetValue).div(ethers.BigNumber.from(10).pow(erc777Data.decimals)).toString()} {erc777Data.symbol} to {targetAddress}!
+				Transfer {
+					ethers.utils.formatEther(targetValue).toString()
+				} {erc777Data.symbol} to {targetAddress}!
 			</button>}
 			<hr className='w-100'/>
 			{window.ethereum && <button className='btn btn-light' onClick={e => {
