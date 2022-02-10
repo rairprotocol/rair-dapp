@@ -1,26 +1,22 @@
-# Verification of user signature
+# Verification of user
 
-Verification of user signature, updating secret kye and generating of JWT token
+Verification of user Metamask challenge, check admin rights and generating of JWT token
 
 **URL** : `/api/auth/authentication`
 
-**Method** : `POST`
+**Method** : `GET`
 
-**Request body:**
+**Parameters:**
 
 ```json
 {
-  "publicAddress": {
-    "required": true,
-    "content": {
-      "type": "string"
-    }
+  "MetaMessage": {
+    "type": "string",
+    "required": true
   },
-  "signature": {
-    "required": true,
-    "content": {
-      "type": "string"
-    }
+  "MetaSignature": {
+    "type": "string",
+    "required": true
   }
 }
 ```
