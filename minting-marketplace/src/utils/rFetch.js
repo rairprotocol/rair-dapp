@@ -69,72 +69,65 @@ const signIn = async (provider) => {
 const getJWT = async (signer, userData, userAddress, adminRights) => {
 	const msg = `Sign in for RAIR by nonce: ${userData.nonce}`;
 	let signature = await (signer.signMessage(msg, userAddress));
-	if(userAddress && signature ){
+	if (userAddress && signature) {
 		const { token, success } = await (await fetch('/api/auth/authentication', {
 			method: 'POST',
-			body: JSON.stringify({ publicAddress: 
-				userAddress.toLowerCase() 
-				, signature, adminRights: adminRights }),
+			body: JSON.stringify({
+				publicAddress:
+					userAddress.toLowerCase()
+				, signature, adminRights: adminRights
+			}),
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json'
 			}
 		})
 		).json();
-		if(!success){
-			return Swal.fire('Error', `${token}`, 'error'); ;
+		if (!success) {
+			return Swal.fire('Error', `${token}`, 'error');;
 		} else {
 			if (!token) {
 				return "no token";
 			}
-		
-			// const decoded = jsonwebtoken.decode(token);
-			// if (!decoded) {
-			// 	return Swal.fire('Error', `${token}`, 'error');;
-			// }
-			// if (decoded.exp * 1000 > new Date()) {
-			// 	return token
-			// };
-			// return Swal.fire('Error', `${token}`, 'error');
-			// ;
+			
 			return token;
 		}
 	}
-	
-	
+
+
 }
 
 
 // Custom hook for taking jwt token from redux
-const useRfetch = () => {
-	const { token } = useSelector(store => store.accessStore);
-	return async (route, options, retryOptions = undefined) => {
-		const request = await fetch(route, {
-			headers: {
-				...options?.headers,
-				'X-rair-token': token
-			},
-			...options
-		});
-		try {
-			let parsing = await request.json()
-			if (!parsing.success) {
-				if (['jwt malformed', 'jwt expired'].includes(parsing.message) && (window.ethereum || retryOptions?.provider)) {
-					localStorage.removeItem('token');
-					let retry = await signIn(retryOptions?.provider);
-					if (retry) {
-						return rFetch(route, options);
-					}
-				}
-				Swal.fire('Error', parsing?.message, 'error');
-			}
-			return parsing;
-		} catch (err) {
-			console.error(request, err);
-		}
-		return request;
-	}
-}
+// const useRfetch = () => {
+// 	const { token } = useSelector(store => store.accessStore);
+// 	return async (route, options, retryOptions = undefined) => {
+// 		const request = await fetch(route, {
+// 			headers: {
+// 				...options?.headers,
+// 				'X-rair-token': token
+// 			},
+// 			...options
+// 		});
+// 		try {
+// 			let parsing = await request.json()
+// 			if (!parsing.success) {
+// 				if (['jwt malformed', 'jwt expired'].includes(parsing.message) && (window.ethereum || retryOptions?.provider)) {
+// 					localStorage.removeItem('token');
+// 					let retry = await signIn(retryOptions?.provider);
+// 					if (retry) {
+// 						return rFetch(route, options);
+// 					}
+// 				}
+// 				Swal.fire('Error', parsing?.message, 'error');
+// 			}
+// 			return parsing;
+// 		} catch (err) {
+// 			console.error(request, err);
+// 		}
+// 		return request;
+// 	}
+// }
 
 const rFetch = async (route, options, retryOptions = undefined) => {
 	let request = await fetch(route, {
@@ -178,4 +171,4 @@ const isTokenValid = (token) => {
 	return false;
 }
 
-export { rFetch, signIn, getJWT, isTokenValid, useRfetch };
+export { rFetch, signIn, getJWT, isTokenValid, /* useRfetch */ };

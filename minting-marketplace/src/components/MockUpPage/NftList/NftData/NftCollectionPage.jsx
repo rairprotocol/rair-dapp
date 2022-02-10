@@ -128,49 +128,49 @@ const NftCollectionPageComponent = ({
       <div className={"list-button-wrapper"}>
         {tokenData.length > 0
           ? tokenData.map((token, index) => {
-              if (token.cover !== "none") {
-                return (
-                  <NftItemForCollectionView
-                    key={`${token.id + "-" + token.productId + index}`}
-                    pict={token.cover ? token.cover : defaultImg}
-                    metadata={token.metadata}
-                    contract={token.contract}
-                    token={token.token}
-                    handleClickToken={handleClickToken}
-                    setSelectedToken={setSelectedToken}
-                    selectedToken={selectedToken}
-                    offerPrice={offerPrice}
-                    ownerAddress={token.ownerAddress}
-                    blockchain={blockchain}
-                    currentUser={currentUser}
-                    offerData={offerData}
-                    primaryColor={primaryColor}
-                    productsFromOffer={productsFromOffer}
-                    selectedData={selectedData}
-                    textColor={textColor}
-                    tokenData={tokenData}
-                    totalCount={totalCount}
-                    product={product}
-                    index={index}
-                    offer={token.offer}
-                  />
-                );
-              } else {
-                return null;
-              }
-            })
-          : Array.from(new Array(10)).map((item, index) => {
+            if (token.cover !== "none") {
               return (
-                <Skeleton
-                  key={index}
-                  className={"skeloton-product"}
-                  variant="rectangular"
-                  width={283}
-                  height={280}
-                  style={{ borderRadius: 20 }}
+                <NftItemForCollectionView
+                  key={`${token.id + "-" + token.productId + index}`}
+                  pict={token.cover ? token.cover : defaultImg}
+                  metadata={token.metadata}
+                  contract={token.contract}
+                  token={token.token}
+                  handleClickToken={handleClickToken}
+                  setSelectedToken={setSelectedToken}
+                  selectedToken={selectedToken}
+                  offerPrice={offerPrice}
+                  ownerAddress={token.ownerAddress}
+                  blockchain={blockchain}
+                  currentUser={currentUser}
+                  offerData={offerData}
+                  primaryColor={primaryColor}
+                  productsFromOffer={productsFromOffer}
+                  selectedData={selectedData}
+                  textColor={textColor}
+                  tokenData={tokenData}
+                  totalCount={totalCount}
+                  product={product}
+                  index={index}
+                  offer={token.offer}
                 />
               );
-            })}
+            } else {
+              return null;
+            }
+          })
+          : Array.from(new Array(10)).map((item, index) => {
+            return (
+              <Skeleton
+                key={index}
+                className={"skeloton-product"}
+                variant="rectangular"
+                width={283}
+                height={280}
+                style={{ borderRadius: 20 }}
+              />
+            );
+          })}
       </div>
       <div className="collection-btn-more">
         {isLoading && <div className="progress-token">
@@ -181,15 +181,17 @@ const NftCollectionPageComponent = ({
             }
           }
           />
-        </div>}
+        </div>
+        }
 
-        {showToken <= totalCount && <CustomButton
-          onClick={loadToken}
-          width="232px"
-          height="48px"
-          margin="20px 0 0 0"
-          text="Show more"
-        />
+        {
+          showToken <= totalCount && <CustomButton
+            onClick={loadToken}
+            width="232px"
+            height="48px"
+            margin="20px 0 0 0"
+            text="Show more"
+          />
         }
       </div>
       <CollectionInfo

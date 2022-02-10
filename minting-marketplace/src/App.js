@@ -187,7 +187,7 @@ function App({ sentryHistory }) {
 				signer = provider.getSigner();
 			}
 
-			if (!localStorage.token) {
+			if (!localStorage.token || !isTokenValid(localStorage.token)) {
 				let token = await getJWT(signer, user, currentUser, adminRights);
 				if (!success) {
 					setLoginDone(false);
@@ -195,18 +195,6 @@ function App({ sentryHistory }) {
 				}
 				dispatch({ type: authTypes.GET_TOKEN_START });
 				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				localStorage.setItem('token', token);
-			}
-
-			if (!isTokenValid(localStorage.token)) {
-				let token = await getJWT(signer, user, currentUser, adminRights);
-				if (!success) {
-					setLoginDone(false);
-					setStartedLogin(false);
-				}
-				dispatch({ type: authTypes.GET_TOKEN_START });
-				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-				// dispatch({ type: authTypes.GET_TOKEN_ERROR, payload: null })
 				localStorage.setItem('token', token);
 			}
 

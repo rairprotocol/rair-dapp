@@ -13,7 +13,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
   const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
   const [totalCount, setTotalCount] = useState();
-  const [showToken, setShowToken] = useState(16);
+  const [showToken, setShowToken] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
 
   const history = useHistory();
