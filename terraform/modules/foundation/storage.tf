@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "rair-files" {
-  name          = "rair-files"
+  name          = "${var.gcp_project_id}-rair-files"
   location      = var.region
   force_destroy = true
   project       = var.gcp_project_id
