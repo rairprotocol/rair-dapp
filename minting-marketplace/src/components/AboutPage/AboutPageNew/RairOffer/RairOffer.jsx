@@ -4,7 +4,7 @@ const RairOffer = ({ primaryColor }) => {
     return (
         <div className="about-rair-offer">
             <div className="rair-offer-title">
-                Onchain <span className="change-color-text">royalties</span>
+            RAIR <span className="change-color-text">Royalties</span>
             </div>
             <div className="about-offer-content">
                 <div className="streaming-box">
