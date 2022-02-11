@@ -12,20 +12,18 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [sortItem, setSortItem] = useState("");
   const [mediaList, setMediaList] = useState();
   const [data, setData] = useState();
-  const [totalPage, setTotalPages] = useState([10]);
-  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [totalPage /*setTotalPages*/] = useState([10]);
+  const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
+
   let pagesArray = [];
   for (let i = 0; i < totalPage; i++) {
     pagesArray.push(i + 1);
   }
   // console.log(pagesArray, "pagesArray");
-  useEffect(() => {
-    getContract();
-  }, [currentPage]);
 
-  const getContract = async () => {
-    const responseContract = await await axios.get("/api/contracts/full", {
+  const getContract = useCallback(async () => {
+    const responseContract = await axios.get("/api/contracts/full", {
       // method: "GET",
       headers: {
         Accept: "application/json",
@@ -56,11 +54,14 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       })),
     }));
     setData(covers);
+
     // setTotalPages( респонс с кол продуктов )
-  };
+  }, [currentPage, itemsPerPage]);
+
   // const getPagesCount = (totalPage) => {
   //   return Math.ceil(totalPage / itemsPerPage);
   // };
+
   const changePage = (currentPage) => {
     setCurrentPage(currentPage);
   };
@@ -84,6 +85,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       console.log(response?.message);
     }
   };
+  
+  useEffect(() => {
+    getContract();
+  }, [currentPage, getContract]);
 
   // useEffect(() => {
   //   if (localStorage.token) {

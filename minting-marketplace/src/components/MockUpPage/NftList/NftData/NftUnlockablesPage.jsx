@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import CustomButton from "../../utils/button/CustomButton";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import NftSingleUnlockables from "./NftSingleUnlockables";
-import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 import VideoPlayerView from "./UnlockablesPage/VideoPlayerView";
 import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
@@ -23,6 +22,7 @@ const NftUnlockablesPage = ({
   textColor,
   offerData,
   offerPrice,
+  setTokenDataFiltered,
 }) => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -44,10 +44,12 @@ const NftUnlockablesPage = ({
           productsFromOffer={productsFromOffer}
           selectedData={selectedData}
           selectedToken={selectedToken}
+          tokenData={tokenData}
+          setTokenDataFiltered={setTokenDataFiltered}
         />
       </div>
 
-      {productsFromOffer?.length > 2 ? (
+      {productsFromOffer?.length < 2 ? (
         <CustomButton
           text="Show More"
           width="288px"

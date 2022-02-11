@@ -6,6 +6,7 @@ import NftUnlockablesPage from "./NftUnlockablesPage";
 
 const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userData) => {
   const [tokenData, setTokenData] = useState([]);
+  const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedOfferIndex, setSelectedOfferIndex] = useState();
   const [selectedToken, setSelectedToken] = useState();
@@ -13,7 +14,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
   const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
   const [totalCount, setTotalCount] = useState();
-  const [showToken, setShowToken] = useState(16);
+  const [showToken, setShowToken] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
 
   const history = useHistory();
@@ -172,6 +173,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         selectedToken={selectedToken}
         textColor={textColor}
         tokenData={tokenData}
+        tokenDataFiltered={tokenDataFiltered}
         totalCount={totalCount}
         product={product}
         getAllProduct={getAllProduct}
@@ -200,6 +202,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         tokenData={tokenData}
         totalCount={totalCount}
         product={product}
+        setTokenDataFiltered={setTokenDataFiltered}
       />
     );
   } else {

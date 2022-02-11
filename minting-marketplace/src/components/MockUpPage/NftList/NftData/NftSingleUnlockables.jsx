@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferentRarity';
+import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
-
-const NftSingleUnlockables = ({ productsFromOffer }) => {
+const NftSingleUnlockables = ({
+  productsFromOffer,
+  // tokenData,
+  setTokenDataFiltered,
+}) => {
   const history = useHistory();
-  const [sections, setSections] = useState(null)
-
+  const [sections, setSections] = useState(null);
   const rarity = ["Ultra Rair", "Rair", "Common"];
 
   useEffect(() => {
@@ -17,16 +19,15 @@ const NftSingleUnlockables = ({ productsFromOffer }) => {
       if (value) {
         acc[key] = [...value, item];
       } else {
-        acc[key] = [item]
+        acc[key] = [item];
       }
-      return acc
-    }, {})
+      return acc;
+    }, {});
     setSections(result);
-  }, [productsFromOffer])
+  }, [productsFromOffer]);
 
   return (
     <div
-      className="olololo"
       style={{
         display: "flex",
         flexWrap: "wrap",
@@ -35,12 +36,15 @@ const NftSingleUnlockables = ({ productsFromOffer }) => {
         justifyContent: "space-between",
       }}
     >
-      {
-        sections && Object.entries(sections).map(([key, item]) => {
-          return <div>
-            <NftDifferentRarity title={rarity[key]} />
-            {
-              item.map((v) => {
+      {sections &&
+        Object.entries(sections).map(([key, item]) => {
+          return (
+            <div key={key}>
+              <NftDifferentRarity
+                setTokenDataFiltered={setTokenDataFiltered}
+                title={rarity[key]}
+              />
+              {item.map((v) => {
                 return (
                   <div
                     key={v._id}
@@ -49,12 +53,12 @@ const NftSingleUnlockables = ({ productsFromOffer }) => {
                     }}
                   >
                     <div
-                      onClick={
-                        () => history.push(`/watch/${v._id}/${v.mainManifest}`)
+                      // onClick={
+                        // () => history.push(`/watch/${v._id}/${v.mainManifest}`)
                         // history.push(
                         // `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
                         // )
-                      }
+                      // }
                       style={{
                         display: "flex",
                         borderRadius: "16px",
@@ -145,11 +149,10 @@ const NftSingleUnlockables = ({ productsFromOffer }) => {
                     </div>
                   </div>
                 );
-              })
-            }
-          </div>
-        })
-      }
+              })}
+            </div>
+          );
+        })}
       {/* || (
           <div
             style={{
@@ -252,7 +255,7 @@ const NftSingleUnlockables = ({ productsFromOffer }) => {
             </div>
           </div>
         ) */}
-    </div >
+    </div>
   );
 };
 

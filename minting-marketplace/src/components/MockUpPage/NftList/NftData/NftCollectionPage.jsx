@@ -7,7 +7,7 @@ import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import setDocumentTitle from "../../../../utils/setTitle";
 import { useHistory } from "react-router-dom";
 import TitleCollection from "./TitleCollection/TitleCollection";
-import CircularProgress from '@mui/material/CircularProgress'
+import CircularProgress from "@mui/material/CircularProgress";
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
 
 // import styles
@@ -34,18 +34,19 @@ const NftCollectionPageComponent = ({
   showToken,
   setShowToken,
   isLoading,
-  data,
+  // data,
+  tokenDataFiltered,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [offerDataCol, setOfferDataCol] = useState();
   const [offerAllData, setOfferAllData] = useState();
   const [collectionName, setCollectionName] = useState();
-
+  
   const loadToken = () => {
     getAllProduct(0, showToken);
-    setShowToken(showToken * 2)
-  }
+    setShowToken(showToken * 2);
+  };
 
   const getParticularOffer = useCallback(async () => {
     let response = await (
@@ -126,7 +127,41 @@ const NftCollectionPageComponent = ({
         currentUser={currentUser}
       />
       <div className={"list-button-wrapper"}>
-        {tokenData.length > 0
+        {tokenDataFiltered.length > 0
+          ? tokenDataFiltered.map((token, index) => {
+              if (token.cover !== "none") {
+                // console.log(index, 'ddd');
+                return (
+                  <NftItemForCollectionView
+                    key={`${token.id + "-" + token.productId + index}`}
+                    pict={token.cover ? token.cover : defaultImg}
+                    metadata={token.metadata}
+                    contract={token.contract}
+                    token={token.token}
+                    handleClickToken={handleClickToken}
+                    setSelectedToken={setSelectedToken}
+                    selectedToken={selectedToken}
+                    offerPrice={offerPrice}
+                    ownerAddress={token.ownerAddress}
+                    blockchain={blockchain}
+                    currentUser={currentUser}
+                    offerData={offerData}
+                    primaryColor={primaryColor}
+                    productsFromOffer={productsFromOffer}
+                    selectedData={selectedData}
+                    textColor={textColor}
+                    tokenData={tokenData}
+                    totalCount={totalCount}
+                    product={product}
+                    index={token.token}
+                    offer={token.offer}
+                  />
+                );
+              } else {
+                return null;
+              }
+            })
+          : tokenData.length > 0
           ? tokenData.map((token, index) => {
               if (token.cover !== "none") {
                 return (
@@ -173,24 +208,26 @@ const NftCollectionPageComponent = ({
             })}
       </div>
       <div className="collection-btn-more">
-        {isLoading && <div className="progress-token">
-          <CircularProgress style={
-            {
-              width: "50px",
-              height: "50px"
-            }
-          }
-          />
-        </div>}
+        {isLoading && (
+          <div className="progress-token">
+            <CircularProgress
+              style={{
+                width: "50px",
+                height: "50px",
+              }}
+            />
+          </div>
+        )}
 
-        {showToken <= totalCount && <CustomButton
-          onClick={loadToken}
-          width="232px"
-          height="48px"
-          margin="20px 0 0 0"
-          text="Show more"
-        />
-        }
+        {showToken <= totalCount && (
+          <CustomButton
+            onClick={loadToken}
+            width="232px"
+            height="48px"
+            margin="20px 0 0 0"
+            text="Show more"
+          />
+        )}
       </div>
       <CollectionInfo
         offerData={offerDataCol}

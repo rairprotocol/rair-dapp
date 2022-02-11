@@ -25,6 +25,7 @@ const NftItemForCollectionViewComponent = ({
   offer,
 }) => {
   const params = useParams();
+  // console.log(index);
   const history = useHistory();
   const [metaDataProducts /*setMetaDataProducts*/] = useState();
   const [playing, setPlaying] = useState(false);
@@ -75,12 +76,12 @@ const NftItemForCollectionViewComponent = ({
 
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
-      // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
-      return `${utils
-        .formatEther(
-          samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-        )
-        .toString()} ${chainDataFront[blockchain]?.name}`;
+      return `${samePrice} ${chainDataFront[blockchain]?.name}`;
+    //   return `${utils
+    //     .formatEther(
+    //       samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
+    //     )
+    //     .toString()} ${chainDataFront[blockchain]?.name}`;
     }
     return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
     // return `${utils
