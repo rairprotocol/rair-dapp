@@ -1,4 +1,5 @@
 import React from 'react';
+import DiscordIcon from './../../../SplashPage/images/discord-icon.png';
 
 const LeftTokenAbout = ({ primaryColor }) => {
     return (
@@ -11,22 +12,34 @@ const LeftTokenAbout = ({ primaryColor }) => {
                     <h3><span className="text-gradient">Mission</span></h3>
                 </div>
                 <div className="tokens-description">
-                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
-                        Data monopolies like Amazon, Google, Apple, and Netflix
-                        charge onerous fees, offer opaque analytics, and can change their
-                        terms of service at any time locking out creators and users alike.
+                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>
+                        RAIRtech has developed a new way to control content on the
+                        blockchain called DDRM or distributed digital rights management.
 
                     </p>
-                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
-                        DIY distribution meanwhile offers no protection,
-                        and cannot help package works into a scarce, valuable,
-                        tradeable framework.
-                    </p>
-                    <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
-                        RAIR, through its decentralized key management node system,
-                        empowers anyone to create unique, controllable, and transferable
-                        digital assets tied to the actual underlying content.
-                    </p>
+                    <ul>
+                        <li>
+                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>
+                                Allows for encrypted streaming of videos, music, images and data
+                            </p>
+                        </li>
+                        <li>
+                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>
+                                Only the owner of the NFT can stream the content
+                                this makes digital goods work like real goods
+                            </p>
+                        </li>
+                        <li>
+                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>
+                                Feature complete plaform: minting, streaming, royalties & metadata
+                            </p>
+                        </li>
+                    </ul>
+                    <div className="release-join-discord">
+                    <div className="btn-discord">
+                        <a href="https://discord.gg/APmkpQzxrx" target="_blank" rel="noreferrer"><img src={DiscordIcon} alt="discord icon" /> Join our Discord</a>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

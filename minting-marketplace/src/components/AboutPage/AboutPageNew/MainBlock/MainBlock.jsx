@@ -5,14 +5,15 @@ const MainBlock = ({ Metamask, RairLogo, primaryColor }) => {
         <div className="information-author">
             <div className="home-about-desc">
                 <h2 style={{
-                color: `${primaryColor === "rhyno" ? "#000" : "#fff"}`,
-              }}>Digital
-                    Ownership<br />
-                    Encryption</h2>
+                    color: `${primaryColor === "rhyno" ? "#000" : "#fff"}`,
+                }}>Encrypted,<br />
+                    Streaming NFTs</h2>
                 <div className="autor-about-text" style={{
-                color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
-              }}>
-                    RAIR is a blockchain-based digital rights management platform<br /> that uses NFTs to gate access to streaming content
+                    color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
+                }}>
+                    Our platform makes it possible to attach digital goods<br />
+                     to an NFT using encrypted streaming - making today's<br />
+                      NFT multi-dimensional.
                 </div>
                 <div className="btn-buy-metamask">
                     <button>
@@ -21,7 +22,7 @@ const MainBlock = ({ Metamask, RairLogo, primaryColor }) => {
                             src={Metamask}
                             alt="metamask-logo"
                         />{" "}
-                        Mint a token
+                        Test our streaming
                     </button>
                 </div>
             </div>

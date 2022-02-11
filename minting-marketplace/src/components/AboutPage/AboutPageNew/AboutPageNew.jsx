@@ -19,8 +19,15 @@ import Tokenomics from './Tokenomics/Tokenomics';
 import RoadMap from './RoadMapAbout/RoadMapAbout';
 import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
+import { useLocation } from 'react-router-dom';
 
 const AboutPageNew = ({ primaryColor }) => {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [pathname]);
+
     useEffect(() => {
         setDocumentTitle(`About Page`)
     }, []);
@@ -38,7 +45,7 @@ const AboutPageNew = ({ primaryColor }) => {
                 <RairOffer primaryColor={primaryColor} />
                 <ExclusiveNfts />
                 <StreamsAbout Metamask={Metamask} primaryColor={primaryColor} />
-                <Tokenomics Metamask={Metamask} />
+                {/* <Tokenomics Metamask={Metamask} /> */}
                 <RoadMap primaryColor={primaryColor} RairLogo={RairLogo} />
                 <CompareAbout />
                 <div className="about-page--team">

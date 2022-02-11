@@ -35,7 +35,7 @@ const CompareAbout = () => {
             onChange={handleChange}
             inputProps={{ 'aria-label': 'Without label' }}
           >
-            <MenuItem value={10}>Deployment</MenuItem>
+            <MenuItem value={10}>Storefront</MenuItem>
             <MenuItem value={20}>EVM Support</MenuItem>
             <MenuItem value={30}>Royalties</MenuItem>
             <MenuItem value={40}>Metadata</MenuItem>
@@ -58,7 +58,7 @@ const CompareAbout = () => {
             padding: '5px 0px',
           }}>
             <div style={{ marginLeft: '14px' }}>Platform</div>
-            <div style={{ marginLeft: '15px' }}>Whitelabel</div>
+            <div style={{ marginLeft: '15px' }}>Storefront</div>
             <div style={{ paddingLeft: '89px' }}>EVM Support</div>
             <div style={{}}>Royalties</div>
             <div style={{ marginRight: '15px' }}>Metadata</div>
@@ -186,12 +186,12 @@ const CompareAbout = () => {
                     <div className="img_wrapper">
                       <img style={{ width: "20px" }} src={Curios} alt="" />
                     </div>
-                    <span style={{ paddingLeft: "15px" }}>Curious</span>
+                    <span style={{ paddingLeft: "15px" }}>LooksRare</span>
                   </div>
                 </td>
-                <td>Curios backend..</td>
+                <td>Opensea clone</td>
                 <td>MATIC</td>
-                <td>5% Offchain</td>
+                <td>2.5%</td>
                 <td>Lazyminted</td>
                 <td>
                   <div className="circle-table">

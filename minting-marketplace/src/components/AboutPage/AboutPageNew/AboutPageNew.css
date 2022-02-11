@@ -20,7 +20,7 @@
     /* height: 694px; */
     background-image: url('./../assets/aboutPage_bg-1.png');
     background-repeat: no-repeat;
-    background-size: 55% auto;
+    background-size: 67% auto;
     background-position: 120% center;
 }
 
@@ -365,7 +365,18 @@
     background-repeat: no-repeat;
     width: 476px;
     height: 476px;
+}
 
+.left-tokens.about-page .tokens-description ul li {
+    list-style-type: disc;
+}
+
+.left-tokens.about-page .left-tokens-content {
+    justify-content: flex-start;
+}
+
+.left-tokens.about-page .left-tokens-content .release-join-discord {
+    margin-top: 0;
 }
 
 .about-streams-video {
@@ -1300,6 +1311,18 @@ button.btn-show-more {
         width: 1000px;
     }
 
+    .home-about--page .information-author {
+        background-size: 62% auto;
+    }
+
+    .home-about--page .information-author .home-about-desc .autor-about-text {
+        font-size: 18px;
+    }
+
+    .home-about--page .information-author .home-about-desc h2 {
+        font-size: 40px;
+    }
+
     .container-content-metamask .block-videos {
         justify-content: center;
     }
@@ -1340,6 +1363,10 @@ button.btn-show-more {
         width: 220.49px;
         height: 220.49px;
     }
+
+    .left-tokens.about-page .left-tokens-content .release-join-discord .btn-discord {
+        margin-top: 0;
+    }
 }
 
 @media screen and (max-width: 1130px) {
@@ -1368,6 +1395,14 @@ button.btn-show-more {
 
     .table-compare-container {
         width: 90% !important;
+    }
+
+    .about-page-platform-content {
+        margin-top: 50px;
+    }
+
+    .about-page-platform {
+        margin-top: 208px;
     }
 }
 
@@ -1519,7 +1554,7 @@ button.btn-show-more {
 
     .left-tokens.about-page {
         width: 100%;
-        margin-bottom: 200px;
+        margin-bottom: 325px;
         justify-content: center;
     }
 
@@ -2070,7 +2105,7 @@ button.btn-show-more {
     }
 
     .home-about--page .information-author {
-        background-position: center 160px;
+        background-position: center 145px;
         background-size: 400px auto;
     }
 
@@ -2255,6 +2290,14 @@ button.btn-show-more {
 
     .about-map-item .map-item-desc p {
         line-height: 20px;
+    }
+
+    .about-page-platform {
+        margin-top: 500px;
+    }
+
+    .home-about--page .btn-discord a {
+        font-size: 18px;
     }
 }
 
