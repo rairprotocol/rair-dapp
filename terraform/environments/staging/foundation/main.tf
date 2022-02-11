@@ -19,11 +19,11 @@ provider "google" {
 }
 
 module "config" {
-  source = "../shared/env_config"
+  source = "../../shared/env_config"
 }
 
 module "foundation" {
-  source = "../../modules/foundation"
+  source = "../../../modules/foundation"
 
   env_name = "staging"
   region = "us-west1"
