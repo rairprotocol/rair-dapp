@@ -2,6 +2,7 @@
    display: flex;
    justify-content: center;
    align-items: center;
+   flex-direction: column;
 }
 
 .home-about--page {
@@ -22,6 +23,19 @@
     background-repeat: no-repeat;
     background-size: 67% auto;
     background-position: 120% center;
+}
+
+.about-page-logo {
+    width: 1200px;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: -80px;
+    margin-bottom: 108px;
+    margin-left: -20px;
+}
+
+.about-page-logo img {
+    top: 20px;
 }
 
 .home-about--page .information-author .home-about--logo img {
@@ -1277,6 +1291,14 @@ button.btn-show-more {
     }
 }
 
+@media screen and (max-width: 1350px) {
+    .about-page-logo {
+        margin-bottom: 50px;
+        margin-top: -220px;
+    }
+}
+
+
 @media screen and (max-width: 1300px) {
     .home-about--page .left-tokens .block-left-tokens {
         width: 400px;
@@ -1307,8 +1329,12 @@ button.btn-show-more {
 }
 
 @media screen and (max-width: 1250px) {
-    .home-about--page {
+    .home-about--page, .about-page-logo {
         width: 1000px;
+    }
+
+    .about-page-logo {
+        margin-top: -100px;
     }
 
     .home-about--page .information-author {
@@ -1412,8 +1438,16 @@ button.btn-show-more {
         align-content: center;
     }
 
-    .home-about--page {
+    .home-about--page, .about-page-logo {
         width: 100%;
+    }
+
+    .about-page-logo {
+        margin-top: 0;
+    }
+
+    .wrapper-about-page {
+        margin-top: -220px;
     }
 
     .container-content-metamask {
@@ -1632,6 +1666,18 @@ button.btn-show-more {
     .roadmap-container-mobile .about-map-item:last-child {
         margin-bottom: 0;
     }
+
+    .wrapper-about-page {
+        margin-top: -230px;
+    }
+
+    .about-page-logo {
+        margin-bottom: 108px;
+    }
+
+    .about-page-logo img {
+        margin-left: 30px;
+    }
 } 
 
 @media screen and (max-width: 810px) {
@@ -1825,6 +1871,10 @@ button.btn-show-more {
 
     .roadmap-container .about-map-item .map-item-desc {
         padding: 10px;
+    }
+
+    .wrapper-about-page {
+        margin-top: -160px;
     }
 }
 
@@ -2112,6 +2162,10 @@ button.btn-show-more {
     .home-about-desc .autor-about-text {
         margin-top: 250px;
     }
+
+    .about-page-logo img {
+        width: 130px;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -2214,6 +2268,13 @@ button.btn-show-more {
 
     .about-compare-mobile .compare-select-mobile-container .block-logos-mobile .block-logo div {
         margin: 20px 10px !important;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .about-page-logo {
+        margin-top: 50px;
+        justify-content: center;
     }
 }
 

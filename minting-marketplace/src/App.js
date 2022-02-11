@@ -429,7 +429,11 @@ function App({ sentryHistory }) {
 											<WorkflowSteps {...{ sentryHistory }} />
 										</SentryRoute>}
 										<SentryRoute exact path="/about-page">
-											<AboutPageNew primaryColor={primaryColor} />
+											<AboutPageNew
+												primaryColor={primaryColor}
+												headerLogoWhite={headerLogoWhite}
+												headerLogoBlack={headerLogoBlack}
+											/>
 										</SentryRoute>
 										<SentryRoute path='/all'>
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
