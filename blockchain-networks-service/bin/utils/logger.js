@@ -17,7 +17,7 @@ module.exports = (module) => {
   });
 
   return new createLogger({
-    level: LOG_LEVEL,
+    level: LOG_LEVEL || 'info',
     format: combine(
       errors({ stack: true }),
       label({ label: path, message: true }),
@@ -32,11 +32,11 @@ module.exports = (module) => {
       // transport logs to mongodb
       new transports.MongoDB({
         db: PRODUCTION === 'true' ? MONGO_URI : MONGO_URI_LOCAL,
-        collection: MONGO_LOG_COLLECTION,
+        collection: MONGO_LOG_COLLECTION || 'Log',
         capped: true,
         tryReconnect: true,
         decolorize: true,
-        label: SERVICE_NAME
+        label: 'blockchain-networks'
       }),
     ],
   });
