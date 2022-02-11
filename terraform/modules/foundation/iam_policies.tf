@@ -1,31 +1,24 @@
-resource "google_project_iam_binding" "rair-file-manager-binding" {
+resource "google_project_iam_binding" "rair_file_manager_binding" {
   project = var.gcp_project_id
   role    = "roles/storage.admin"
   members  = [
-      "serviceAccount:rair-file-manager@rair-market-dev.iam.gserviceaccount.com"
+    "serviceAccount:${google_service_account.rair_file_manager.email}"
   ]
 }
 
-resource "google_project_iam_binding" "jenkins-gce-1" {
-  project = var.gcp_project_id
-  role    = "roles/compute.instanceAdmin.v1"
-  members  = [
-      "serviceAccount:jenkins-gce@rair-market-dev.iam.gserviceaccount.com"
+locals {
+  jenkins_roles_to_bind = [
+    "compute.instanceAdmin.v1",
+    "iam.serviceAccountUser",
+    "compute.networkAdmin"
   ]
 }
 
-resource "google_project_iam_binding" "jenkins-gce-2" {
+resource "google_project_iam_binding" "jenkins_gce" {
+  count = length(local.jenkins_roles_to_bind)
   project = var.gcp_project_id
-  role    = "roles/iam.serviceAccountUser"
+  role    = "roles/${local.jenkins_roles_to_bind[count.index]}"
   members  = [
-      "serviceAccount:jenkins-gce@rair-market-dev.iam.gserviceaccount.com"
-  ]
-}
-
-resource "google_project_iam_binding" "jenkins-gce-3" {
-  project = var.gcp_project_id
-  role    = "roles/compute.networkAdmin"
-  members  = [
-      "serviceAccount:jenkins-gce@rair-market-dev.iam.gserviceaccount.com"
+    "serviceAccount:${google_service_account.jenkins_gce.email}"
   ]
 }
