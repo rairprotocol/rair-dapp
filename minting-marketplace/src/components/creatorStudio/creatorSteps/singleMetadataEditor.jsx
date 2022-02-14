@@ -12,15 +12,8 @@ import { rFetch } from '../../../utils/rFetch.js';
 import { metamaskCall } from '../../../utils/metamaskUtils.js';
 import Swal from 'sweetalert2';
 
-<<<<<<< HEAD
-const SingleMetadataEditor = ({contractData, setStepNumber, steps}) => {
-	const stepNumber = 5;
-
-	const [nftArtist, setNftArtist] = useState('');
-=======
 const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, simpleMode}) => {
 	const [nftID, setNFTID] = useState(0);
->>>>>>> a1d98cded2527ef5f4012b0efaf0520645064b18
 	const [nftTitle, setNFTTitle] = useState('');
 	const [nftImage, setNFTImage] = useState(BinanceDiamond);
 	const [nftDescription, setNFTDescription] = useState('');
@@ -86,30 +79,18 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 				Single
 			</NavLink>
 		</div>
-<<<<<<< HEAD
-		<div className='col-6 text-start px-5'>
-			Artist
-			<br />
-			<div className='border-stimorol rounded-rair mb-3 w-100'>
-=======
 		<div className='col-12 col-md-6 text-start px-5'>
 			NFT #
 			<br />
 			<div className='border-stimorol col-12 col-md-3 rounded-rair mb-3'>
->>>>>>> a1d98cded2527ef5f4012b0efaf0520645064b18
 				<InputField
-					getter={nftArtist}
-					setter={setNftArtist}
+					getter={nftID}
+					setter={setNFTID}
 					customClass={`bg-${primaryColor} rounded-rair w-100 form-control`}
 					customCSS={{color: textColor}}
-<<<<<<< HEAD
-					// type='number'
-					// min='0'
-=======
 					type='number'
 					min='0'
 					max={contractData.product.copies - 1}
->>>>>>> a1d98cded2527ef5f4012b0efaf0520645064b18
 				/>
 			</div>
 			<br />
@@ -194,7 +175,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 			<div className='w-100 rounded-rair border-stimorol'>
 				<div className={`w-100 rounded-rair bg-${primaryColor} p-4`}>
 					{JSON.stringify({
-						artist: nftArtist,
+						artist: nftID,
 						title: nftTitle,
 						image: nftImage,
 						description: nftDescription,
