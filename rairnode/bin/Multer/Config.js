@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
       uploadPath = path.join(__dirname, '../csv/');
     }
 
-    if (file.fieldname === 'file') {
+    if (file.fieldname === 'file' || file.fieldname === 'files') {
       uploadPath = path.join(__dirname, '../file/');
     }
 

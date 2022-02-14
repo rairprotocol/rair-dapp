@@ -16,6 +16,31 @@ resource "google_container_cluster" "primary" {
   description               = "Kubernetes ${local.kubenetes_primary_cluster_name} cluster in ${local.kubernetes_location}"
   location                  = local.kubernetes_location
 
+  #scaling options
+  cluster_autoscaling {
+    enabled = true
+    resource_limits {
+      resource_type = "cpu"
+      minimum = 1
+      maximum = 4
+    }
+    resource_limits {
+      resource_type = "memory"
+      minimum = 4
+      maximum = 16
+    }
+  }
+  
+  addons_config {
+    http_load_balancing {
+      disabled = true
+    }
+
+    horizontal_pod_autoscaling {
+      disabled = true
+    }
+  }
+
   network = google_compute_network.primary.id
   subnetwork = google_compute_subnetwork.kubernetes_primary_cluster.id
   

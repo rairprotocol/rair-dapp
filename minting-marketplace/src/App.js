@@ -73,6 +73,12 @@ import VideoPlayer from './components/video/videoPlayer.jsx';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 import Footer from './components/Footer/Footer.jsx';
+import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace.jsx';
+
+// logos for About Page
+import headerLogoWhite from './images/rairTechLogoWhite.png';
+import headerLogoBlack from './images/rairTechLogoBlack.png';
+import MainLogo from './components/GroupLogos/MainLogo.jsx';
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -84,7 +90,6 @@ const ErrorFallback = () => {
 }
 
 function App({ sentryHistory }) {
-
 	const [/*userData*/, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
@@ -93,12 +98,12 @@ function App({ sentryHistory }) {
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false)
 
 	// Google Analytics
-	const TRACKING_ID = "UA-209450870-3"; // YOUR_OWN_TRACKING_ID
+	const TRACKING_ID = "UA-209450870-5"; // YOUR_OWN_TRACKING_ID
 	ReactGA.initialize(TRACKING_ID);
 
 	// Redux
 	const dispatch = useDispatch()
-	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider } = useSelector(store => store.contractStore);
+	const { currentUserAddress, minterInstance, factoryInstance, programmaticProvider, diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 	const { primaryColor, headerLogo, textColor, backgroundImage, backgroundImageEffect } = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
 
@@ -369,7 +374,14 @@ function App({ sentryHistory }) {
 							{/* <div className='col-1 d-none d-xl-inline-block' /> */}
 							<div className='col-1 rounded'>
 								<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
-									<img onClick={() => goHome()} alt='Header Logo' src={headerLogo} className='h-100 header_logo' />
+									<MainLogo
+										goHome={goHome}
+										sentryHistory={sentryHistory}
+										headerLogoWhite={headerLogoWhite}
+										headerLogoBlack={headerLogoBlack}
+										headerLogo={headerLogo}
+										primaryColor={primaryColor}
+									/>
 								</div>
 								{!loginDone ? <div className='btn-connect-wallet-wrapper'>
 									<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
@@ -387,7 +399,8 @@ function App({ sentryHistory }) {
 									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
 									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
 									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
-									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined }
+									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined }
 								].map((item, index) => {
 									if (!item.disabled) {
 										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -416,7 +429,11 @@ function App({ sentryHistory }) {
 											<WorkflowSteps {...{ sentryHistory }} />
 										</SentryRoute>}
 										<SentryRoute exact path="/about-page">
-											<AboutPageNew primaryColor={primaryColor} />
+											<AboutPageNew
+												primaryColor={primaryColor}
+												headerLogoWhite={headerLogoWhite}
+												headerLogoBlack={headerLogoBlack}
+											/>
 										</SentryRoute>
 										<SentryRoute path='/all'>
 											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
@@ -428,10 +445,10 @@ function App({ sentryHistory }) {
 										<SentryRoute path="/coming-soon" component={ComingSoon} />
 										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 
-										<SentryRoute exact path="/greyman-splash">
-											<GreymanSplashPage loginDone={loginDone} />
+										<SentryRoute exact path="/">
+											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
-										{/* <SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} /> */}
+										<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
 
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
@@ -461,6 +478,7 @@ function App({ sentryHistory }) {
 										{loginDone && <SentryRoute path='/new-factory' component={MyContracts} />}
 										{loginDone && <SentryRoute path='/on-sale' component={MinterMarketplace} />}
 										{loginDone && <SentryRoute path='/rair/:contract/:product' component={RairProduct} />}
+										{diamondMarketplaceInstance && <SentryRoute path='/diamondMinter' component={DiamondMarketplace} />}
 
 										<SentryRoute exact path='/'>
 											<div className='col-6 text-left'>
@@ -482,9 +500,9 @@ function App({ sentryHistory }) {
 								</div>
 							</div>
 						</div>
-						<div className='py-5' />
+						{/* <div className='py-5' /> */}
 					</div>
-					<Footer openAboutPage={openAboutPage} primaryColor={primaryColor} />
+					<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
 				</>
 			</Router>
 		</Sentry.ErrorBoundary>

@@ -124,6 +124,16 @@
     } */
 }
 
+@media screen and (max-width: 1077px) {
+    .col-1 {
+        width: inherit;
+    }
+
+    .col-1 img {
+        float: left;
+    }
+}
+
 @media screen and (max-width: 1100px) {
     .information-author.greyman-page-author {
         height: 100%;

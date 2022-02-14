@@ -9,3 +9,11 @@ variable "env_name" {
 variable "vpc_cidr_block" {
   type = string
 }
+
+variable "gcp_project_id" {
+  type = string
+}
+
+variable "mongo_atlas_org_id" {
+  type = string
+}
