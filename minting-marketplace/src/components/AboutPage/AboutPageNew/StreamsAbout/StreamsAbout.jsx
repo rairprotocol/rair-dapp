@@ -34,7 +34,7 @@ const StreamsAbout = ({ primaryColor, Metamask }) => {
                         </p>
 
                         <div className="btn-buy-metamask">
-                            <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" />Mint a token</button>
+                            <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" />Test our streaming</button>
                         </div>
                     </div>
                 </div>
@@ -95,11 +95,11 @@ const StreamsAbout = ({ primaryColor, Metamask }) => {
                                     </div>
                                     <div className="video-description">
                                         <div className="video-title">
-                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Expansion Plan</p>
+                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Coming soon</p>
                                         </div>
-                                        <div className="video-timer">
+                                        {/* <div className="video-timer">
                                             <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:27</p>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>
@@ -117,11 +117,11 @@ const StreamsAbout = ({ primaryColor, Metamask }) => {
                                     </div>
                                     <div className="video-description">
                                         <div className="video-title">
-                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Development Roadmap</p>
+                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Coming soon</p>
                                         </div>
-                                        <div className="video-timer">
+                                        {/* <div className="video-timer">
                                             <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:09:33</p>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>
@@ -139,11 +139,11 @@ const StreamsAbout = ({ primaryColor, Metamask }) => {
                                     </div>
                                     <div className="video-description">
                                         <div className="video-title">
-                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Fun Projects</p>
+                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>Coming soon</p>
                                         </div>
-                                        <div className="video-timer">
+                                        {/* <div className="video-timer">
                                             <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:27</p>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>

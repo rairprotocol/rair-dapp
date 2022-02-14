@@ -1,4 +1,7 @@
-FROM node:latest
+#FROM node:latest
+
+# Freez current version cause of -> https://github.com/nodejs/node/issues/41926
+FROM node:17.4.0
 
 #version management
 COPY VERSION /
