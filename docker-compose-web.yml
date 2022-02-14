@@ -32,12 +32,31 @@ services:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
       ADMIN_CONTRACT: ${admin_contract}
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
+      DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      GCP_PROJECT_ID: ${gcp_project_id}
+      GCP_IMAGE_BUCKET_NAME: ${gcp_image_bucket_name}
+      GCP_VIDEO_BUCKET_NAME: ${gcp_video_bucket_name}
+      GCP_GATEWAY: ${gcp_gateway}
+      GCP_CREDENTIALS: ${gcp_credentials}
+      IPFS_SERVICE: ${ipfs_service}
+      IPFS_GATEWAY: ${ipfs_gateway}
+      IPFS_API: ${ipfs_api}
+      PINATA_GATEWAY: ${pinata_gateway}
+      MATIC_TESTNET_RPC: ${matic_testnet_rpc}
+      MATIC_MAINNET_RPC: ${matic_mainnet_rpc}
+      BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
+      BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
+      ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
+      ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+      MONGO_LOG_COLLECTION: ${mongo_log_collection}
+      LOG_LEVEL: ${log_level}
     ports:
       - 3000:3000
       - 5000:5000
@@ -45,8 +64,6 @@ services:
       - rair-local
   blockchain-networks:
     image: raitechinc/blockchain-event-listener:dev_latest
-      context: blockchain-networks-service/
-      dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
@@ -64,8 +81,26 @@ services:
       MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
       MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
       MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
+      ETHEREUM_MAINNET_FACTORY_ADDRESS: ${ethereum_mainnet_factory_addres}
+      ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
+      IPFS_SERVICE: ${ipfs_service}
+      IPFS_GATEWAY: ${ipfs_gateway}
+      IPFS_API: ${ipfs_api}
+      MONGO_LOG_COLLECTION: ${mongo_log_collection}
+      LOG_LEVEL: ${log_level}
+      TEST_BSCSCAN_GATEWAY: ${test_bscscan_gateway}
+      TEST_POLYGONSCAN_GATEWAY: ${test_polygonscan_gateway}
+      TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
+      POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
+      ETHERSCAN_GATEWAY: ${etherscan_gateway}
+      MORALIS_SERVER_TEST: ${moralis_server_test}
+      MORALIS_SERVER_MAIN: ${moralis_server_main}
+      MORALIS_API_KEY_TEST: ${moralis_api_key_test}
+      MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
+      MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
+      MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
     ports:
       - 5001:5001
     networks:
@@ -102,6 +137,9 @@ services:
       REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
       REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
       REACT_APP_SENTRY_RELEASE: ${sentry_release}
+      #Google analytics
+      GA_ID: ${GA_ID}
+      GA: ${GA}
     ports:
       - 3001:3001
     networks:

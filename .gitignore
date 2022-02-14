@@ -55,8 +55,15 @@ Thumbs.db
 # Local video thumbnails
 !/demo-decrypt-node/bin/Videos/
 
+# Local csv folder
+!/demo-decrypt-node/bin/csv/
+
+# Local file folder
+!/demo-decrypt-node/bin/file/
+
 # configuration files
 .env
+blockchain-networks-service/.env
 
 #nginx configuration files
 nginx/*

@@ -12,10 +12,14 @@ const {
   MATIC_MUMBAI_MINTER_ADDRESS,
   MATIC_MAINNET_FACTORY_ADDRESS,
   MATIC_MAINNET_MINTER_ADDRESS,
+  ETHEREUM_MAINNET_FACTORY_ADDRESS,
+  ETHEREUM_MAINNET_MINTER_ADDRESS,
   MORALIS_SERVER_TEST,
   MORALIS_SERVER_MAIN,
   MORALIS_API_KEY_TEST,
-  MORALIS_API_KEY_MAIN
+  MORALIS_API_KEY_MAIN,
+  MORALIS_MASTER_KEY_TEST,
+  MORALIS_MASTER_KEY_MAIN
 } = process.env;
 
 module.exports = {
@@ -34,7 +38,18 @@ module.exports = {
         name: 'Binance Testnet',
         testnet: true
       },
-      // '0x1': 'Ethereum Mainnet',
+      '0x1': {
+        authenticityHost: ETHERSCAN_GATEWAY,
+        factoryAddress: ETHEREUM_MAINNET_FACTORY_ADDRESS,
+        minterAddress: ETHEREUM_MAINNET_MINTER_ADDRESS,
+        chainId: 1,
+        symbol: 'ETH',
+        watchFunction: 'watchEthAddress',
+        watchCollection: 'watchedEthAddress',
+        network: '0x1',
+        name: 'Ethereum Mainnet',
+        testnet: false
+      },
       '0x5': {
         authenticityHost: TEST_ETHERSCAN_GATEWAY,
         factoryAddress: GOERLI_FACTORY_ADDRESS,
@@ -75,11 +90,13 @@ module.exports = {
     moralis: {
       mainnet: {
         serverUrl: MORALIS_SERVER_MAIN,
-        appId: MORALIS_API_KEY_MAIN
+        appId: MORALIS_API_KEY_MAIN,
+        masterKey: MORALIS_MASTER_KEY_MAIN
       },
       testnet: {
         serverUrl: MORALIS_SERVER_TEST,
-        appId: MORALIS_API_KEY_TEST
+        appId: MORALIS_API_KEY_TEST,
+        masterKey: MORALIS_MASTER_KEY_TEST
       }
     }
   }

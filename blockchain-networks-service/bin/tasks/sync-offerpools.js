@@ -3,17 +3,20 @@ const _ = require('lodash');
 const log = require('../utils/logger')(module);
 const { getABIData } = require('../utils/helpers');
 const { minterAbi } = require('../integrations/ethers/contracts');
+const { logAgendaActionStart } = require('../utils/agenda_action_logger');
+const { AgendaTaskEnum } = require('../enums/agenda-task');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define('sync offerPools', { lockLifetime }, async (task, done) => {
+  context.agenda.define(AgendaTaskEnum.SyncOfferPools, { lockLifetime }, async (task, done) => {
     try {
+      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncOfferPools});
       const { network, name } = task.attrs.data;
       const offerPoolsForSave = [];
-      const block_number = [];
+      let block_number = [];
       const networkData = context.config.blockchain.networks[network];
-      const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
+      const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AddedOffer');
       const version = await context.db.Versioning.findOne({ name: 'sync offerPools', network });
 
@@ -26,28 +29,31 @@ module.exports = (context) => {
       };
 
       // Initialize moralis instances
-      Moralis.start({ serverUrl, appId });
+      Moralis.start({ serverUrl, appId, masterKey });
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 
-      _.forEach(events.result, offerPool => {
+      await Promise.all(_.map(events.result, async offerPool => {
         const {
           contractAddress,
           productIndex,
           rangesCreated,
           catalogIndex
         } = offerPool.data;
+        const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1 });
 
-        block_number.push(Number(offerPool.block_number));
+        if (!contract) return;
 
         offerPoolsForSave.push({
           marketplaceCatalogIndex: catalogIndex,
-          contract: contractAddress,
+          contract: contract._id,
           product: productIndex,
           rangeNumber: rangesCreated,
           minterAddress: networkData.minterAddress,
         });
-      });
+
+        block_number.push(Number(offerPool.block_number));
+      }));
 
       if (!_.isEmpty(offerPoolsForSave)) {
         try {
