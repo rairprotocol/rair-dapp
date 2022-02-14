@@ -19,36 +19,52 @@ import Tokenomics from './Tokenomics/Tokenomics';
 import RoadMap from './RoadMapAbout/RoadMapAbout';
 import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
+import { useLocation, useHistory } from 'react-router-dom';
 
-const AboutPageNew = ({ primaryColor }) => {
+const AboutPageNew = ({ primaryColor, headerLogoBlack, headerLogoWhite }) => {
+    const { pathname } = useLocation();
+    const history = useHistory();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
     useEffect(() => {
         setDocumentTitle(`About Page`)
     }, []);
 
     return (
-        <div className="wrapper-about-page">
-            <div className="home-about--page">
-                <MainBlock
-                    RairLogo={RairLogo}
-                    primaryColor={primaryColor}
-                    Metamask={Metamask}
-                />
-                <LeftTokenAbout primaryColor={primaryColor} />
-                <PlatformAbout />
-                <RairOffer primaryColor={primaryColor} />
-                <ExclusiveNfts />
-                <StreamsAbout Metamask={Metamask} primaryColor={primaryColor} />
-                <Tokenomics Metamask={Metamask} />
-                <RoadMap primaryColor={primaryColor} RairLogo={RairLogo} />
-                <CompareAbout />
-                <div className="about-page--team">
-                    <TeamMeet primaryColor={primaryColor} arraySplash={"rair"} />
+        <>
+            <div className="wrapper-about-page">
+                <div className="about-page-logo">
+                    <img onClick={() => history.push('/')}
+                        alt='Header Logo'
+                        src={primaryColor === "rhyno" ? headerLogoBlack : headerLogoWhite}
+                        className='header_logo-about' />
                 </div>
-                <div className="about-page--team">
-                    <TeamMeet primaryColor={primaryColor} arraySplash={"rair-advisors"} />
+                <div className="home-about--page">
+                    <MainBlock
+                        RairLogo={RairLogo}
+                        primaryColor={primaryColor}
+                        Metamask={Metamask}
+                    />
+                    <LeftTokenAbout primaryColor={primaryColor} />
+                    <PlatformAbout />
+                    <RairOffer primaryColor={primaryColor} />
+                    <ExclusiveNfts />
+                    <StreamsAbout Metamask={Metamask} primaryColor={primaryColor} />
+                    {/* <Tokenomics Metamask={Metamask} /> */}
+                    <RoadMap primaryColor={primaryColor} RairLogo={RairLogo} />
+                    <CompareAbout />
+                    <div className="about-page--team">
+                        <TeamMeet primaryColor={primaryColor} arraySplash={"rair"} />
+                    </div>
+                    <div className="about-page--team">
+                        <TeamMeet primaryColor={primaryColor} arraySplash={"rair-advisors"} />
+                    </div>
                 </div>
             </div>
-        </div >
+        </>
     )
 }
 

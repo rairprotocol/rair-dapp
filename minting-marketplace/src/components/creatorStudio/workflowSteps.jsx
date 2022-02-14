@@ -149,69 +149,73 @@ const WorkflowSteps = ({sentryHistory}) => {
 			response2.contract.product = (response2?.contract?.products?.filter(i => i?.collectionIndexInContract === Number(collectionIndex)))[0];
 			delete response2.contract.products;
 			setContractData(response2.contract);
-		} else {
-			// Try diamonds
-			let instance = contractCreator(address, diamondFactoryAbi);
-			let productData = await instance.getProductInfo(collectionIndex)
-			let rangesData = [];
-			for await (let rangeIndex of productData.rangeList) {
-				let rangeData = await instance.rangeInfo(rangeIndex);
-				if (rangeData) {
-					rangesData.push({
-						rangeIndex: Number(rangeIndex.toString()),
-						offerName: rangeData.data.rangeName,
-						range: [Number(rangeData.data.rangeStart.toString()), Number(rangeData.data.rangeEnd.toString())],
-						price: rangeData.data.rangePrice.toString(),
-						lockedTokens: Number(rangeData.data.lockedTokens.toString()),
-						tokensAllowed: Number(rangeData.data.tokensAllowed.toString()),
-						mintableTokens: Number(rangeData.data.mintableTokens.toString()),
-						fixed: true
-					})
-				}
-			};
-			if (diamondMarketplaceInstance) {
-				let offersCount = await diamondMarketplaceInstance.getOffersCountForAddress(instance.address);
-				for (let i = 0; i < offersCount.toString(); i++) {
-					let marketData = await diamondMarketplaceInstance.getOfferInfoForAddress(
-						instance.address,
-						i
-					);
-					let [selectedOffer] = rangesData.filter(item => item.offerName === marketData.rangeData.rangeName);
-					if (selectedOffer) {
-						selectedOffer.marketData = {
-							mintingOfferIndex: marketData.offerIndex.toString(),
-							visible: marketData.mintOffer.visible,
-							fees: marketData.mintOffer.fees,
-							fromMarket: true
+		} else if (process.env.REACT_APP_DIAMONDS_ENABLED === 'true') {
+			try {
+				// Try diamonds
+				let instance = contractCreator(address, diamondFactoryAbi);
+				let productData = await instance.getProductInfo(collectionIndex)
+				let rangesData = [];
+				for await (let rangeIndex of productData.rangeList) {
+					let rangeData = await instance.rangeInfo(rangeIndex);
+					if (rangeData) {
+						rangesData.push({
+							rangeIndex: Number(rangeIndex.toString()),
+							offerName: rangeData.data.rangeName,
+							range: [Number(rangeData.data.rangeStart.toString()), Number(rangeData.data.rangeEnd.toString())],
+							price: rangeData.data.rangePrice.toString(),
+							lockedTokens: Number(rangeData.data.lockedTokens.toString()),
+							tokensAllowed: Number(rangeData.data.tokensAllowed.toString()),
+							mintableTokens: Number(rangeData.data.mintableTokens.toString()),
+							fixed: true
+						})
+					}
+				};
+				if (diamondMarketplaceInstance) {
+					let offersCount = await diamondMarketplaceInstance.getOffersCountForAddress(instance.address);
+					for (let i = 0; i < offersCount.toString(); i++) {
+						let marketData = await diamondMarketplaceInstance.getOfferInfoForAddress(
+							instance.address,
+							i
+						);
+						let [selectedOffer] = rangesData.filter(item => item.offerName === marketData.rangeData.rangeName);
+						if (selectedOffer) {
+							selectedOffer.marketData = {
+								mintingOfferIndex: marketData.offerIndex.toString(),
+								visible: marketData.mintOffer.visible,
+								fees: marketData.mintOffer.fees,
+								fromMarket: true
+							}
 						}
 					}
 				}
-			}
-			rangesData.forEach(item => {
-				if (!item.marketData) {
-					item.marketData = {
-						mintingOfferIndex: undefined,
-						visible: true,
-						fees: undefined,
-						fromMarket: false
+				rangesData.forEach(item => {
+					if (!item.marketData) {
+						item.marketData = {
+							mintingOfferIndex: undefined,
+							visible: true,
+							fees: undefined,
+							fromMarket: false
+						}
 					}
-				}
-			})
-			setContractData({
-				title: await instance.name(),
-				contractAddress: address,
-				blockchain: window.ethereum.chainId,
-				diamond: instance,
-				product: {
-					collectionIndexInContract: collectionIndex,
-					name: productData.name,
-					firstTokenIndex: Number(productData.startingToken.toString()),
-					soldCopies: Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) + 1 - Number(productData.mintableTokens.toString()),
-					copies: Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) + 1,
-					offers: rangesData
-				},
-				instance
-			});
+				})
+				setContractData({
+					title: await instance.name(),
+					contractAddress: address,
+					blockchain: window.ethereum.chainId,
+					diamond: instance,
+					product: {
+						collectionIndexInContract: collectionIndex,
+						name: productData.name,
+						firstTokenIndex: Number(productData.startingToken.toString()),
+						soldCopies: Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) + 1 - Number(productData.mintableTokens.toString()),
+						copies: Number(productData.endingToken.toString()) - Number(productData.startingToken.toString()) + 1,
+						offers: rangesData
+					},
+					instance
+				});
+			} catch (err) {
+				console.error('Error parsing diamonds', err);
+			}
 		}
 	}, [address, blockchain, collectionIndex, contractCreator, diamondMarketplaceInstance]);
 
@@ -334,7 +338,7 @@ const WorkflowSteps = ({sentryHistory}) => {
 										textAlign: 'center',
 										color: currentStep >= index ? undefined : 'gray'
 									}}>
-										<div className='rair-abbr' stepLabel={item.shortName}>
+										<div className='rair-abbr' steplabel={item.shortName}>
 											{index + 1}
 										</div>
 									</div>

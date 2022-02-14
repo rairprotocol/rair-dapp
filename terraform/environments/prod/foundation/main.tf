@@ -3,7 +3,7 @@ terraform {
     hostname = "app.terraform.io"
     organization = "rairtech"
     workspaces {
-      name = "rair-staging"
+      name = "rair-production"
     }
   }
 }
@@ -15,20 +15,20 @@ variable "gcp_tf_admin_service_account_json" {
 
 provider "google" {
   credentials = var.gcp_tf_admin_service_account_json
-  project     = "rair-market-staging"
+  project     = "rair-market-production"
 }
 
 module "config" {
-  source = "../shared/env_config"
+  source = "../../shared/env_config"
 }
 
 module "foundation" {
-  source = "../../modules/foundation"
+  source = "../../../modules/foundation"
 
-  env_name = "staging"
+  env_name = "prod"
   region = "us-west1"
-  gcp_project_id = "rair-market-staging"
-  vpc_cidr_block = module.config.env_config.staging.vpc_cidr_block
+  gcp_project_id = "rair-market-production"
+  vpc_cidr_block = module.config.env_config.prod.vpc_cidr_block
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
 }
 
