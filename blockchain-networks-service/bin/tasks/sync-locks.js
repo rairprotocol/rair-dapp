@@ -18,7 +18,7 @@ module.exports = (context) => {
       let block_number_locked = [];
       let block_number_unlocked = [];
       const networkData = context.config.blockchain.networks[network];
-      const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
+      const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const locked = getABIData(erc721Abi, 'event', 'RangeLocked');
       const unlocked = getABIData(erc721Abi, 'event', 'RangeUnlocked');
       const versionLocked = await context.db.Versioning.findOne({ name: 'sync locks locked', network });
@@ -37,7 +37,7 @@ module.exports = (context) => {
       const arrayOfContracts = await context.db.Contract.find({ blockchain: network }, { _id: 1, contractAddress: 1 });
 
       // Initialize moralis instances
-      Moralis.start({ serverUrl, appId });
+      Moralis.start({ serverUrl, appId, masterKey });
 
       await Promise.all(_.map(arrayOfContracts, async item => {
         const { _id, contractAddress: contract } = item;

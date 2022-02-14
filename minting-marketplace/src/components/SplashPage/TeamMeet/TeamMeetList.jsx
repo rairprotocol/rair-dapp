@@ -156,16 +156,16 @@ const teamArray = [
 
 const teamAboutRair = [
     {
-        nameTeammate: "ED PRADO CHIEF EXECUTIVE OFFICER",
+        nameTeammate: "Ed Prado | Chief Executive Officer",
         imageUrl: Ed,
         aboutTeammate: [
-            `Deep financial technology experience, having created the world’s 
+            `Deep financial technology experience, having created the world’s
             first online bond trading platform, and owned two investment banks
-            (broker dealers) which were active in the trading and underwriting
-            of securities with volumes in the billions. Deep familiarity with
-            consumer and investor protection laws, KYC/AML guidelines, and the
-            fintech transaction landscape. Serial entrepreneur with strong
-            operational acumen.`
+            (broker dealers) which were active in the trading and underwriting 
+            of securities with volumes in the billions. Deep familiarity with consumer
+            and investor protection laws, KYC/AML guidelines, and the fintech 
+            transaction landscape. Serial entrepreneur with strong operational
+            acumen.`
         ],
         socials: [
             {
@@ -176,17 +176,17 @@ const teamAboutRair = [
         ]
     },
     {
-        nameTeammate: "GARRETT MINKS CHIEF TECHNOLOGY OFFICER",
+        nameTeammate: "Garrett Minks | Chief Technical Officer",
         imageUrl: Garrett,
         aboutTeammate: [
-            `Deep expertise in distributed ledger technologies and their unique
-            token economic incentive frameworks. An early adopter of blockchain
-            innovations, digital collectibles, and DLT based media platforms.
-            After writing his first book on distributed technologies, he realized
-            no viable publishing platform using next wave distributed technologies
-            existed where content could be sold and resold via immutable ledger 
-            tokens. Instead of using Kindle Direct Publishing and giving the 
-            majority of proceeds to a predatory intermediary, RAIR was born.
+            `Deep expertise in distributed ledger technologies and their unique token 
+            economic incentive frameworks. An early adopter of blockchain innovations,
+            digital collectibles, and DLT based media platforms. After writing his 
+            first book on distributed technologies, he realized no viable publishing
+            platform using next wave distributed technologies existed where content
+            could be sold and resold via immutable ledger tokens. Instead of using 
+            Kindle Direct Publishing and giving the majority of proceeds to a predatory
+            intermediary, RAIR was born.
             `
         ],
         socials: [
@@ -198,7 +198,7 @@ const teamAboutRair = [
         ]
     },
     {
-        nameTeammate: "GUNTHER SONNENFELD CHIEF STRATEGY OFFICER",
+        nameTeammate: "Gunther Sonnenfeld | Chief Strategy Officer",
         imageUrl: Gunther,
         aboutTeammate: [
             `Serial entrepreneur with deep technology, corporate and digital product
@@ -218,7 +218,7 @@ const teamAboutRair = [
         ]
     },
     {
-        nameTeammate: "MARTIN CASADO CHIEF DESIGN OFFICER",
+        nameTeammate: "Martin Casado | Chief Design Officer",
         imageUrl: Martin,
         aboutTeammate: [
             `Extensive expertise in conceptual design in functionality and aesthetics. 
@@ -235,7 +235,7 @@ const teamAboutRair = [
 
 const rairAdvisorsTeam = [
     {
-        nameTeammate: "MICHAEL TERPIN, STRATEGIC ADVISOR + INVESTOR",
+        nameTeammate: "Michael Terpin  | Strategic Advisor + Investor",
         imageUrl: MICHAEL,
         aboutTeammate: [
             `Michael Terpin is perhaps best known for founding Marketwire, which was funded by Sequoia
@@ -257,10 +257,17 @@ const rairAdvisorsTeam = [
             currency fund, as special advisor, CMO and head of their ICO investment committee.
             RAIR is proud to have Michael as the strategic investment lead in its efforts 
             to solve the problem of digital ownership.`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: '',
+                classLink: "arrrow-right"
+            }
         ]
     },
     {
-        nameTeammate: "DAVID JENSEN, STRATEGIC ADVISOR + INVESTOR",
+        nameTeammate: "David Jensen  |  Strategic Advisor + Investor",
         imageUrl: David,
         aboutTeammate: [
             `David Jensen is an award-winning experience designer, futurist, and
@@ -290,37 +297,44 @@ const rairAdvisorsTeam = [
             Leadership from Harvard Business School, and BArch from the University of
             Houston.
             `,
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: '',
+                classLink: "arrrow-right"
+            }
         ]
     },
+    // {
+    //     nameTeammate: "Gunther Sonnenfeld CSO",
+    //     imageUrl: Sonnenfeld,
+    //     aboutTeammate: [
+    //         `Two-time Emmy® Award winner Seth Shapiro is a global leader in media and
+    //         technology. He has worked on projects with partners including AT&T, Betfair
+    //         UK, Comcast, De Telegraaf, DIRECTV, Disney, Goldman Sachs, Intel, IPG, IBM,
+    //         NBC, Neo Cricket Mumbai, Nokia, RTL, SBS, Seachange, Showtime, Sun Microsystems,
+    //         SVT Sweden, Telstra, Time Warner Cable, Turner Networks and Universal Pictures.`,
+
+    //         `An Adjunct Professor at USC’s School of Cinematic Arts, he served previously
+    //         as a Governor at the Televison Academy (home of the Emmy’s) and a two-term
+    //         member of its Executive Committee. He is author of TELEVISION: Innovation,
+    //         Disruption, and the World’s Most Powerful Medium, an Amazon bestseller.`,
+
+    //         `An early proponent of blockchain technology , he is Entrepreneur in Residence
+    //         at Alphabit Fund, a fully-regulated digital currency hedge fund in the U.K.
+    //         with $400m AUM.`,
+
+    //         `Mr Shapiro has consulted on media matters before both the FCC and the Department
+    //         of Justice. His opinions have been quoted in The Economist, The New York Times,
+    //         CNBC, The LA Times, The Boston Globe, Bloomberg, The Associated Press, PBS and
+    //         The Daily Mail UK. As Head of Production at DIRECTV Advanced Services, he 
+    //         oversaw over 25 service launches, including TiVo by DIRECTV, the world’s
+    //         first major DVR platform.`
+    //     ]
+    // },
     {
-        nameTeammate: "Gunther Sonnenfeld CSO",
-        imageUrl: Sonnenfeld,
-        aboutTeammate: [
-            `Two-time Emmy® Award winner Seth Shapiro is a global leader in media and
-            technology. He has worked on projects with partners including AT&T, Betfair
-            UK, Comcast, De Telegraaf, DIRECTV, Disney, Goldman Sachs, Intel, IPG, IBM,
-            NBC, Neo Cricket Mumbai, Nokia, RTL, SBS, Seachange, Showtime, Sun Microsystems,
-            SVT Sweden, Telstra, Time Warner Cable, Turner Networks and Universal Pictures.`,
-
-            `An Adjunct Professor at USC’s School of Cinematic Arts, he served previously
-            as a Governor at the Televison Academy (home of the Emmy’s) and a two-term
-            member of its Executive Committee. He is author of TELEVISION: Innovation,
-            Disruption, and the World’s Most Powerful Medium, an Amazon bestseller.`,
-
-            `An early proponent of blockchain technology , he is Entrepreneur in Residence
-            at Alphabit Fund, a fully-regulated digital currency hedge fund in the U.K.
-            with $400m AUM.`,
-
-            `Mr Shapiro has consulted on media matters before both the FCC and the Department
-            of Justice. His opinions have been quoted in The Economist, The New York Times,
-            CNBC, The LA Times, The Boston Globe, Bloomberg, The Associated Press, PBS and
-            The Daily Mail UK. As Head of Production at DIRECTV Advanced Services, he 
-            oversaw over 25 service launches, including TiVo by DIRECTV, the world’s
-            first major DVR platform.`
-        ]
-    },
-    {
-        nameTeammate: "MATTHEW A. NECO, STRATEGIC ADVISOR",
+        nameTeammate: "Matthew A. Neco  |  Strategic Advisor ",
         imageUrl: Matthew,
         aboutTeammate: [
             `Matt is a business and technology lawyer and mediator with depth and
@@ -366,6 +380,13 @@ const rairAdvisorsTeam = [
             with regard to laws or regulatory requirements regarding investments, investment
             vehicles, securities, AML, KYC, CFT, MSBs, and blockchain entities, technologies,
             and tokens. RAIR engages other outside counsel.)`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: '',
+                classLink: "arrrow-right"
+            }
         ]
     }
 ];
@@ -546,6 +567,7 @@ const RairAdvisortComponent = ({ primaryColor }) => {
                         key={index + t.nameTeammate}
                         name={t.nameTeammate}
                         desc={t.aboutTeammate}
+                        socials={t.socials}
                         primaryColor={primaryColor}
                         url={t.imageUrl}
                     />

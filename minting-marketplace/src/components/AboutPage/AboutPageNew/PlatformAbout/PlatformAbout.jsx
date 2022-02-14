@@ -49,14 +49,14 @@ const PlatformAbout = () => {
                 <div className="platform-box">
                     <div className="platform-title-box">
                         <div className="platform-title">
-                            Deployment
+                            Tools
                         </div>
                     </div>
                     <div className="categories-list">
                         <ul>
-                            <li>Metaverse</li>
+                            <li>Drop page</li>
                             <li>Marketplace</li>
-                            <li>Creation Tools</li>
+                            <li>Streaming</li>
                             <li>Backend</li>
                         </ul>
                     </div>
@@ -64,7 +64,7 @@ const PlatformAbout = () => {
                 <div className="platform-box">
                     <div className="platform-title-box">
                         <div className="platform-title">
-                            EVM Support
+                            Minting
                         </div>
                     </div>
                     <div className="categories-list">
@@ -103,7 +103,7 @@ const PlatformAbout = () => {
                             <li>Generative Art</li>
                             <li>IPFS + Cloud</li>
                             <li>Aggregate to
-                                Opensea et al
+                                Opensea etc.
                             </li>
                         </ul>
                     </div>
