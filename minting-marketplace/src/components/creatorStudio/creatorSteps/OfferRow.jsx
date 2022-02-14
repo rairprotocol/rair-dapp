@@ -134,7 +134,7 @@ const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rere
 		<th className='text-center pt-0'>
 			<small>
 				{
-					utils.formatEther(individualPrice === '' || !validateInteger(individualPrice) ? 0 : individualPrice).toString()
+					utils.formatEther(individualPrice === '' || !validateInteger(individualPrice) ? 0 : individualPrice.toString()).toString()
 				} {blockchainSymbol}
 			</small>
 		</th>

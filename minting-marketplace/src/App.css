@@ -52,7 +52,7 @@ body {
     color: var(--rhyno);
     background-color: var(--charcoal-80);
     border-radius: 16px!important;
-    content: attr(stepLabel);
+    content: attr(steplabel);
 }
 
 .rair-table thead {
