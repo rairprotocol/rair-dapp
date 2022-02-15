@@ -1,7 +1,8 @@
 .wrapper-about-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
 }
 
 .home-about--page {
@@ -20,8 +21,21 @@
     /* height: 694px; */
     background-image: url('./../assets/aboutPage_bg-1.png');
     background-repeat: no-repeat;
-    background-size: 55% auto;
+    background-size: 67% auto;
     background-position: 120% center;
+}
+
+.about-page-logo {
+    width: 1200px;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: -80px;
+    margin-bottom: 108px;
+    margin-left: -20px;
+}
+
+.about-page-logo img {
+    top: 20px;
 }
 
 .home-about--page .information-author .home-about--logo img {
@@ -367,6 +381,18 @@
     background-repeat: no-repeat;
     width: 476px;
     height: 476px;
+}
+
+.left-tokens.about-page .tokens-description ul li {
+    list-style-type: disc;
+}
+
+.left-tokens.about-page .left-tokens-content {
+    justify-content: flex-start;
+}
+
+.left-tokens.about-page .left-tokens-content .release-join-discord {
+    margin-top: 0;
 }
 
 .about-streams-video {
@@ -1266,6 +1292,14 @@ button.btn-show-more {
     }
 }
 
+@media screen and (max-width: 1350px) {
+    .about-page-logo {
+        margin-bottom: 50px;
+        margin-top: -220px;
+    }
+}
+
+
 @media screen and (max-width: 1300px) {
     .home-about--page .left-tokens .block-left-tokens {
         width: 400px;
@@ -1295,9 +1329,26 @@ button.btn-show-more {
 }
 
 @media screen and (max-width: 1250px) {
-    .home-about--page {
+    .home-about--page, .about-page-logo {
         width: 1000px;
     }
+
+    .about-page-logo {
+        margin-top: -100px;
+    }
+
+    .home-about--page .information-author {
+        background-size: 62% auto;
+    }
+
+    .home-about--page .information-author .home-about-desc .autor-about-text {
+        font-size: 18px;
+    }
+
+    .home-about--page .information-author .home-about-desc h2 {
+        font-size: 40px;
+    }
+
     .container-content-metamask .block-videos {
         justify-content: center;
     }
@@ -1330,6 +1381,10 @@ button.btn-show-more {
         width: 220.49px;
         height: 220.49px;
     }
+
+    .left-tokens.about-page .left-tokens-content .release-join-discord .btn-discord {
+        margin-top: 0;
+    }
 }
 
 @media screen and (max-width: 1130px) {
@@ -1356,6 +1411,14 @@ button.btn-show-more {
     .table-compare-container {
         width: 90% !important;
     }
+
+    .about-page-platform-content {
+        margin-top: 50px;
+    }
+
+    .about-page-platform {
+        margin-top: 208px;
+    }
 }
 
 @media screen and (max-width: 1050px) {
@@ -1363,9 +1426,19 @@ button.btn-show-more {
         flex-direction: column;
         align-content: center;
     }
-    .home-about--page {
+
+    .home-about--page, .about-page-logo {
         width: 100%;
     }
+
+    .about-page-logo {
+        margin-top: 0;
+    }
+
+    .wrapper-about-page {
+        margin-top: -220px;
+    }
+
     .container-content-metamask {
         flex-direction: column-reverse;
     }
@@ -1482,7 +1555,7 @@ button.btn-show-more {
     }
     .left-tokens.about-page {
         width: 100%;
-        margin-bottom: 200px;
+        margin-bottom: 325px;
         justify-content: center;
     }
     .left-tokens-content .title-tokens h3 {
@@ -1549,7 +1622,19 @@ button.btn-show-more {
     .roadmap-container-mobile .about-map-item:last-child {
         margin-bottom: 0;
     }
-}
+
+    .wrapper-about-page {
+        margin-top: -230px;
+    }
+
+    .about-page-logo {
+        margin-bottom: 108px;
+    }
+
+    .about-page-logo img {
+        margin-left: 30px;
+    }
+} 
 
 @media screen and (max-width: 810px) {
     .about-page--team .meet-team .box-teammate {
@@ -1712,6 +1797,10 @@ button.btn-show-more {
     }
     .roadmap-container .about-map-item .map-item-desc {
         padding: 10px;
+    }
+
+    .wrapper-about-page {
+        margin-top: -160px;
     }
 }
 
@@ -1944,11 +2033,15 @@ button.btn-show-more {
         margin-bottom: 100px;
     }
     .home-about--page .information-author {
-        background-position: center 160px;
+        background-position: center 145px;
         background-size: 400px auto;
     }
     .home-about-desc .autor-about-text {
         margin-top: 250px;
+    }
+
+    .about-page-logo img {
+        width: 130px;
     }
 }
 
@@ -2037,6 +2130,13 @@ button.btn-show-more {
     }
 }
 
+@media screen and (max-width: 430px) {
+    .about-page-logo {
+        margin-top: 50px;
+        justify-content: center;
+    }
+}
+
 @media screen and (max-width: 400px) {
     .home-about--page .about-rair-offer .rair-offer-title,
     .about-rair-offer .change-color-text,
@@ -2100,6 +2200,14 @@ button.btn-show-more {
     }
     .about-map-item .map-item-desc p {
         line-height: 20px;
+    }
+
+    .about-page-platform {
+        margin-top: 500px;
+    }
+
+    .home-about--page .btn-discord a {
+        font-size: 18px;
     }
 }
 

@@ -1,14 +1,9 @@
 const Joi = require('joi');
+const  { customValidator } = require('./helpers');
 
 module.exports = Joi.object({
-  publicAddress: Joi.string()
-    .pattern(/^0x\w{40}$/)
-    .messages({ 'string.pattern.base': 'Invalid publicAddress' })
+  MetaMessage: Joi.custom(customValidator({ min: 3, max: 70 }))
     .required(),
-  signature: Joi.string()
-    .min(3)
-    .max(150)
-    .required(),
-  adminRights: Joi.boolean()
+  MetaSignature: Joi.custom(customValidator({ min: 3, max: 150 }))
     .required()
 });

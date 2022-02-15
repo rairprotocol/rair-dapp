@@ -63,6 +63,7 @@ Thumbs.db
 
 # configuration files
 .env
+blockchain-networks-service/.env
 
 #nginx configuration files
 nginx/*
