@@ -38,7 +38,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
                   }`,
               }}
             >
-              <div className="title-progress-left">NFTs remaining</div>
+              <div className="title-progress-left">NFTs minted</div>
               <Box className="box-progress" sx={{ position: "relative" }}>
                 <CircularProgress
                   className="progress-grey"
@@ -78,7 +78,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
                     <div style={{ color: "white" }} className="">
                       {leftTokensNumber} {" "}
                     </div>
-                    <div className="text-whole-tokens"> / {`${wholeTokens.toString().substr(0, 1)}b`}</div>
+                    <div className="text-whole-tokens"> / {`7.9b`}</div>
                   </div>
                 </div>
               </div>
