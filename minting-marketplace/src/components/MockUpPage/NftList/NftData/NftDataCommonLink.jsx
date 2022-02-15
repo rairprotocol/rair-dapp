@@ -180,6 +180,8 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         setShowToken={setShowToken}
         showToken={showToken}
         isLoading={isLoading}
+        setTokenData={setTokenData}
+        setTokenDataFiltered={setTokenDataFiltered}
       />
     );
   } else if (params.tokens === "unlockables") {

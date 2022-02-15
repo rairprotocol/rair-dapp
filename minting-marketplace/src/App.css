@@ -1132,7 +1132,11 @@ button.metamask-on-boarding:hover {
 #nft-data-page-wrapper {
     margin-bottom: 3rem;
 }
-
+.filter__btn__wrapper{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
 /* .nft-data-page_show__more_wrapper{
     width: 288px;
     height: 48px;
