@@ -7,6 +7,34 @@
     margin-left: 4rem;
 }
 
+.greyman-royalties-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: start;
+    width: 60%;
+    margin-left: 24px;
+    margin-top: -2rem;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 40px;
+    line-height: 60px;
+}
+.greyman-royalties-wrapper strong{
+    margin-bottom: 10px;
+}
+
+.greyman-royalties{
+    display: flex;
+    flex-direction: column;
+    color: #A7A6A6;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 28px;
+}
 .wrapper-splash-page.greyman-page .join-community .exclusive-nfts {
     display: none;
 }
