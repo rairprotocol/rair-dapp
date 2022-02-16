@@ -401,7 +401,7 @@ const SplashPage = ({ loginDone }) => {
                     <div className="modal-content-np">
                       <div className="modal-text-wrapper">
                         <span style={{width: '287px'}} className="modal-text">
-                        By accepting these terms, I agree not to have any fun with this greyman
+                        By accepting these terms, I agree <strong style={{color: "rgb(136 132 132)", fontWeight: 'bolder'}}>not</strong> to have any fun with this greyman
                         </span>
                         <img src={GreyManNotFun} alt="not-fun" />
 
