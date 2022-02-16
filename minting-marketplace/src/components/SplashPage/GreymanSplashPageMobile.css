@@ -254,6 +254,12 @@
     }
 }
 
+@media screen and (max-width: 670px) {
+    .modal-text-wrapper span {
+        width: 100% !important;
+    }
+}
+
 @media screen and (max-width: 610px) {
     .wrapper-splash-page.greyman-page .splash-team {
         margin-bottom: 100px;
@@ -323,6 +329,12 @@
     }
 }
 
+@media screen and (max-width: 500px) {
+    .modal-text-wrapper img {
+        width: 80px;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .wrapper-splash-page.greyman-page .home-splash--page .box-progress {
         margin-top: 90px;
@@ -376,6 +388,11 @@
         height: 100%;
         line-height: 20px;
     } */
+
+    .swal-img-greyman img.swal2-image{
+        height: auto;
+        width: 50%;
+    }
 }
 
 @media screen and (max-width: 385px) {

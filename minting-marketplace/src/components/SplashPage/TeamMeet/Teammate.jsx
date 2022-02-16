@@ -10,8 +10,8 @@ const Teammate = ({ url, name, desc, primaryColor, socials, chain }) => {
             <div className="position-teammate">
                 <div className="temmate-content-up">
                     <div className="teammate-title-socials">
-                        <div>
-                            <span>{chain}</span>
+                        <div className="teammate-wrapper-name">
+                            {chain && <span>{chain}</span>}
                             <h4>{name}</h4>
                         </div>
                     </div>

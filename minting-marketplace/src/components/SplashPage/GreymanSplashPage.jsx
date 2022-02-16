@@ -158,11 +158,11 @@ const SplashPage = ({ loginDone }) => {
         Swal.fire({
          // title : "Success", 
         imageUrl: GreyMan, 
-        imageHeight: 376,
-        imageWidth: "auto",
+        imageHeight: "auto",
+        imageWidth: "65%",
         imageAlt: 'GreyMan image',
         title: `You own #${nextToken}!`, 
-        icon: "success", 
+        icon: "success"
         });
       }
     }
@@ -400,10 +400,10 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-text-wrapper">
-                        <span style={{width: '287px'}}className="modal-text">
+                        <span style={{width: '287px'}} className="modal-text">
                         By accepting these terms, I agree not to have any fun with this greyman
                         </span>
-                        <img style={{width: '127px'}} src={GreyManNotFun} alt="not-fun" />
+                        <img src={GreyManNotFun} alt="not-fun" />
 
                       </div>
                       <div className="modal-btn-wrapper">
@@ -597,7 +597,7 @@ const SplashPage = ({ loginDone }) => {
                       target="_blank" rel="noreferrer"
                     >
                       <button className="property-btn">
-                        <span className="property-btn-ipfs">View on IPFS</span>
+                        View on IPFS
                       </button>
                     </a>
                   </div>
