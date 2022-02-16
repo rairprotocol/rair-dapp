@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import NftImage from './../../assets/grayman-matrix.png';
 import Nft_1 from './../../assets/monster.jpeg';
 import Nft_2 from './../../assets/coin-agenda_2.png';
@@ -19,7 +20,9 @@ const ExclusiveNfts = () => {
                     backgroundPosition: "center center"
                 }}>
                     <div className="btn-open-store">
-                        <span>Open in Store</span> <i className="fas fa-arrow-right"></i>
+                        <NavLink to="/greyman-splash">
+                            <span>View drop page</span> <i className="fas fa-arrow-right"></i>
+                        </NavLink>
                     </div>
                 </div>
                 <div className="block-nfts">

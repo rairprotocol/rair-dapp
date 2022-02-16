@@ -13,8 +13,7 @@ import Dropzone from 'react-dropzone'
 import videoIcon from '../../../images/videoIcon.svg';
 import MediaUploadRow from './MediaUploadRow.jsx';
 
-const MediaUpload = ({setStepNumber, contractData}) => {
-	const stepNumber = 6;
+const MediaUpload = ({setStepNumber, contractData, gotoNextStep, stepNumber}) => {
 	const {primaryColor, /*secondaryColor, textColor*/} = useSelector(store => store.colorStore);
 
 	const [mediaList, setMediaList] = useState([]);
@@ -74,7 +73,7 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 
 	useEffect(() => {
 		setStepNumber(stepNumber);
-	}, [setStepNumber]);
+	}, [setStepNumber, stepNumber]);
 
 	return <div className='col-12 mb-5'>
 		<div className='rounded-rair col-12 mb-3'>
@@ -112,7 +111,7 @@ const MediaUpload = ({setStepNumber, contractData}) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <MediaUpload {...value} />
+			return <MediaUpload {...value} {...props} />
 		}}
 	</WorkflowContext.Consumer>
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { erc721Abi } from '../../../contracts'
 import Swal from 'sweetalert2';
 import chainData from '../../../utils/blockchainData.js'
@@ -10,8 +10,7 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
-const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
-	const stepNumber = 1;
+const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState(false);
@@ -36,7 +35,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 
 	useEffect(() => {
 		setStepNumber(stepNumber);
-	}, [setStepNumber])
+	}, [setStepNumber, stepNumber])
 
 	const rerender = useCallback(() => {
 		setForceRerender(() => !forceRerender);
@@ -49,7 +48,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 			name: '',
 			starts: startingToken,
 			ends: startingToken,
-			price: 0,
+			price: 100,
 		});
 		setOfferList(aux);
 	}
@@ -62,7 +61,6 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 		aux.splice(index, 1);
 		setOfferList(aux);
 	}
-	const history = useHistory();
 
 	useEffect(() => {
 		if (onMyChain) {
@@ -76,7 +74,16 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 			return;
 		}
 		try {
-			setHasMinterRole(await instance.hasRole(await instance.MINTER(), minterInstance.address));
+			setHasMinterRole(
+				await metamaskCall(
+					instance.hasRole(
+						await metamaskCall(
+							instance.MINTER(),
+						),
+						minterInstance.address
+					)
+				)
+			);
 		} catch (err) {
 			console.error(err);
 			setHasMinterRole(false);
@@ -101,68 +108,58 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 	}
 
 	const createOffers = async () => {
-		try {
+		Swal.fire({
+			title: 'Creating offer...',
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		if (await metamaskCall(
+			minterInstance.addOffer(
+				instance.address,
+				collectionIndex,
+				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+				offerList.map((item) => item.ends),
+				offerList.map((item) => item.price),
+				offerList.map((item) => item.name),
+				process.env.REACT_APP_NODE_ADDRESS
+			)
+		)) {
 			Swal.fire({
-				title: 'Creating offer...',
-				html: 'Please wait...',
-				icon: 'info',
-				showConfirmButton: false
+				title: 'Success!',
+				html: 'The offer has been created!',
+				icon: 'success',
+				showConfirmButton: true
 			});
-			if (await metamaskCall(
-				minterInstance.addOffer(
-					instance.address,
-					collectionIndex,
-					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-					offerList.map((item) => item.ends),
-					offerList.map((item) => item.price),
-					offerList.map((item) => item.name),
-					process.env.REACT_APP_NODE_ADDRESS
-				)
-			)) {
-				Swal.fire({
-					title: 'Success!',
-					html: 'The offer has been created!',
-					icon: 'success',
-					showConfirmButton: true
-				});
-				gotoNextStep();
-			}
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
+			gotoNextStep();
 		}
 	}
 
 	const appendOffers = async () => {
-		try {
-			Swal.fire({
-				title: 'Appending offers...',
-				html: 'Please wait...',
-				icon: 'info',
-				showConfirmButton: false
-			});
-			if (await metamaskCall(
-				minterInstance.appendOfferRangeBatch(
+		Swal.fire({
+			title: 'Appending offers...',
+			html: 'Please wait...',
+			icon: 'info',
+			showConfirmButton: false
+		});
+		let filteredList = offerList.filter(item => !item.fixed);
+		if (await metamaskCall(
+			minterInstance.appendOfferRangeBatch(
 					contractData.product.offers[0].offerPool,
-					offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
-					offerList.map((item) => item.ends),
-					offerList.map((item) => item.price),
-					offerList.map((item) => item.name)
+					filteredList.map((item) => item.starts),
+					filteredList.map((item) => item.ends),
+					filteredList.map((item) => item.price),
+					filteredList.map((item) => item.name)
 				)
-			)) {
-				Swal.fire({
-					title: 'Success!',
-					html: 'The offers have been appended!',
-					icon: 'success',
-					showConfirmButton: true
-				});
-				gotoNextStep();
-			}
-		} catch (err) {
-			console.error(err)
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
+			)
+		) {
+			Swal.fire({
+				title: 'Success!',
+				html: 'The offers have been appended!',
+				icon: 'success',
+				showConfirmButton: true
+			});
+			gotoNextStep();
 		}
 	}
 
@@ -180,16 +177,6 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 	}, [contractData, programmaticProvider, currentChain])
 
 	return <div className='row px-0 mx-0'>
-		<div className='col-6 text-end'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Simple
-			</button>
-		</div>
-		<div className='col-6 text-start mb-3'>
-			<button className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Advanced
-			</button>
-		</div>
 		{contractData ? <>
 			{offerList?.length !== 0 && <table className='col-12 text-start'>
 				<thead>
@@ -235,9 +222,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 				First Token: {contractData?.product?.firstTokenIndex}, Last Token: {contractData?.product?.firstTokenIndex + contractData?.product?.copies - 1}, Mintable Tokens Left: {contractData?.product?.copies - contractData?.product?.soldCopies}
 			</div>
 			{chainData && <FixedBottomNavigation
-				backwardFunction={() => {
-					history.goBack()
-				}}
+				backwardFunction={goBack}
 				forwardFunctions={[{
 					action: !onMyChain ?
 					() => switchBlockchain(chainData[contractData?.blockchain]?.chainId)
@@ -252,7 +237,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 							createOffers)
 						:
 						giveMinterRole),
-					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Skip' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
+					label: !onMyChain ? `Switch to ${chainData[contractData?.blockchain]?.name}` : (hasMinterRole ? (offerList[0]?.fixed ? (offerList.filter(item => item.fixed !== true).length === 0 ? 'Continue' : 'Append to Offer') : 'Create Offer') : 'Approve Minter Marketplace'),
 					disabled: hasMinterRole ?
 						(
 							offerList.length === 0 ||
@@ -277,7 +262,7 @@ const ListOffers = ({contractData, setStepNumber, steps, gotoNextStep}) => {
 const ContextWrapper = (props) => {
 	return <WorkflowContext.Consumer> 
 		{(value) => {
-			return <ListOffers {...value} />
+			return <ListOffers {...value} {...props} />
 		}}
 	</WorkflowContext.Consumer>
 }

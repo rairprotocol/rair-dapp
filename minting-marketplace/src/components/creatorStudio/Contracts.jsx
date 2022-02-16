@@ -4,6 +4,7 @@ import chainData from '../../utils/blockchainData.js'
 import { rFetch } from '../../utils/rFetch.js';
 import { NavLink } from 'react-router-dom';
 import NavigatorFactory from './NavigatorFactory.jsx';
+import { diamondFactoryAbi } from '../../contracts';
 
 // React Redux types
 import * as authTypes from '../../ducks/auth/types'
@@ -13,20 +14,32 @@ const Contracts = () => {
 	const dispatch = useDispatch();
 
 	const [contractArray, setContractArray] = useState();
-	const { programmaticProvider } = useSelector(store => store.contractStore);
+	const { contractCreator, programmaticProvider, diamondFactoryInstance, currentUserAddress } = useSelector(store => store.contractStore);
 	const { primaryColor } = useSelector(store => store.colorStore);
 
 	const fetchContracts = useCallback(async () => {
 		let response = await rFetch('/api/contracts', undefined, { provider: programmaticProvider });
-
-		if (response.success) {
-			setContractArray(response.contracts.map(item => ({address: item.contractAddress, name: item.title, blockchain: item.blockchain})));
+		const diamondData = [];
+		if (diamondFactoryInstance) {
+			let diamondDeployments = await diamondFactoryInstance.creatorToContractList(currentUserAddress);
+			for await (let deployment of diamondDeployments) {
+				let instance = contractCreator(deployment, diamondFactoryAbi);
+				diamondData.push({
+					address: deployment,
+					name: await instance.name(),
+					blockchain: window.ethereum.chainId,
+					diamond: true
+				})
+			}
 		}
 
+		if (response.success) {
+			setContractArray(response.contracts.map(item => ({address: item.contractAddress, name: item.title, blockchain: item.blockchain, diamond: false})).concat(diamondData));
+		}
 		if (response.error && response.message) {
 			dispatch({ type: authTypes.GET_TOKEN_ERROR, error: response.error })
 		}
-	}, [programmaticProvider, dispatch])
+	}, [programmaticProvider, dispatch, contractCreator, currentUserAddress, diamondFactoryInstance])
 
 	useEffect(() => {
 		fetchContracts()
@@ -41,7 +54,7 @@ const Contracts = () => {
 		{contractArray ? (contractArray.length ? contractArray.map((item, index) => {
 				return <NavLink to={`/creator/contract/${item.blockchain}/${item.address}/createCollection`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
 					{item?.chainId && <img alt={chainData[item.chainId].name} src={chainData[item.chainId].image} style={{maxHeight: '1.5rem', maxWidth: '1.5rem'}} />}
-					{item.name}
+					{item.diamond === true && <i className='fas fa-gem' />} {item.name}
 					<i className='fas fa-arrow-right' style={{position: 'absolute', right: '10px', top: '10px', color: 'var(--bubblegum)'}}/>
 				</NavLink>
 			})
@@ -58,6 +71,7 @@ const Contracts = () => {
 		:
 		'Fetching data...'
 	}
+	<hr />
 	</NavigatorFactory>
 }
 

@@ -54,10 +54,10 @@ const signIn = async (provider) => {
 	if (!localStorage.token) {
 		let signer = provider;
 		if (window.ethereum) {
-			let ethProvider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = ethProvider.getSigner();
+			signer = new ethers.providers.Web3Provider(window.ethereum);
+			// signer = ethProvider.getSigner();
 		}
-		let token = await getJWT(signer, user, currentUser);
+		let token = await getJWT(signer, currentUser);
 		if (token) {
 			localStorage.setItem('token', token);
 			return true;
@@ -66,43 +66,52 @@ const signIn = async (provider) => {
 	return false;
 }
 
-const getJWT = async (signer, userData, userAddress, adminRights) => {
-	const msg = `Sign in for RAIR by nonce: ${userData.nonce}`;
-	let signature = await (signer.signMessage(msg, userAddress));
-	if(userAddress && signature ){
-		const { token, success } = await (await fetch('/api/auth/authentication', {
-			method: 'POST',
-			body: JSON.stringify({ publicAddress: 
-				userAddress.toLowerCase() 
-				, signature, adminRights: adminRights }),
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			}
-		})
-		).json();
-		if(!success){
-			return Swal.fire('Error', `${token}`, 'error'); ;
+const getJWT = async (signer, userAddress) => {
+	try {
+		const { response } = await (await fetch(`/api/auth/get_challenge/${ userAddress }`)).json();
+		let ethResponse;
+		let ethRequest = {
+			method: 'eth_signTypedData_v4',
+			params: [userAddress, response],
+			from: userAddress
+		};
+		if (window.ethereum) {
+			ethResponse = await window.ethereum.request(ethRequest);
+		} else if (signer) {
+			let parsedResponse = JSON.parse(response);
+
+			// EIP712Domain is added automatically by Ethers.js!
+			let { EIP712Domain, ...revisedTypes } = parsedResponse.types;
+			ethResponse = await signer._signTypedData(
+				parsedResponse.domain,
+				revisedTypes,
+				parsedResponse.message);
 		} else {
-			if (!token) {
-				return "no token";
-			}
-		
-			// const decoded = jsonwebtoken.decode(token);
-			// if (!decoded) {
-			// 	return Swal.fire('Error', `${token}`, 'error');;
-			// }
-			// if (decoded.exp * 1000 > new Date()) {
-			// 	return token
-			// };
-			// return Swal.fire('Error', `${token}`, 'error');
-			// ;
-			return token;
+			await Swal.fire('Error', 'Can\'t sign messages', 'error');
+			return;
 		}
+
+		if (userAddress) {
+			const {
+				token,
+				success
+			} = await (await fetch(`/api/auth/authentication/${ JSON.parse(response).message.challenge }/${ ethResponse }/`)).json();
+
+			if (!success) {
+				return Swal.fire('Error', `${ token }`, 'error');
+			} else {
+				if (!token) {
+					return 'no token';
+				}
+
+				return token;
+			}
+		}
+	} catch (e) {
+		console.log(e);
+		return 'no token';
 	}
-	
-	
-}
+};
 
 
 // Custom hook for taking jwt token from redux

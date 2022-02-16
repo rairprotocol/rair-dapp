@@ -16,7 +16,7 @@ module.exports = (context) => {
       const offerPoolsForSave = [];
       let block_number = [];
       const networkData = context.config.blockchain.networks[network];
-      const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
+      const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AddedOffer');
       const version = await context.db.Versioning.findOne({ name: 'sync offerPools', network });
 
@@ -29,7 +29,7 @@ module.exports = (context) => {
       };
 
       // Initialize moralis instances
-      Moralis.start({ serverUrl, appId });
+      Moralis.start({ serverUrl, appId, masterKey });
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 

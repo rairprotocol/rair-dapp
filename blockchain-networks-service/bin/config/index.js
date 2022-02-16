@@ -17,7 +17,9 @@ const {
   MORALIS_SERVER_TEST,
   MORALIS_SERVER_MAIN,
   MORALIS_API_KEY_TEST,
-  MORALIS_API_KEY_MAIN
+  MORALIS_API_KEY_MAIN,
+  MORALIS_MASTER_KEY_TEST,
+  MORALIS_MASTER_KEY_MAIN
 } = process.env;
 
 module.exports = {
@@ -88,11 +90,13 @@ module.exports = {
     moralis: {
       mainnet: {
         serverUrl: MORALIS_SERVER_MAIN,
-        appId: MORALIS_API_KEY_MAIN
+        appId: MORALIS_API_KEY_MAIN,
+        masterKey: MORALIS_MASTER_KEY_MAIN
       },
       testnet: {
         serverUrl: MORALIS_SERVER_TEST,
-        appId: MORALIS_API_KEY_TEST
+        appId: MORALIS_API_KEY_TEST,
+        masterKey: MORALIS_MASTER_KEY_TEST
       }
     }
   }

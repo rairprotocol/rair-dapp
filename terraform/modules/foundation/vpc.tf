@@ -30,6 +30,10 @@ module "vpc_cidr_ranges" {
     {
       name = "kubernetes_control_plane_range",
       new_bits = 12
+    },
+    {
+      name = "mongo_primary_cluster_range",
+      new_bits = 2
     }
   ]
 }
