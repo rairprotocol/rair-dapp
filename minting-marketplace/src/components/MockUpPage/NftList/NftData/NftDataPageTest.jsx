@@ -283,7 +283,9 @@ const NftDataPageTest = ({
         offerData.offerIndex,
         selectedToken,
         { value: offerData.price }
-      ))
+      ),
+      "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+      )
     ) {
       Swal.fire('Success', 'Now, you are the owner of this token', 'success');
     }
