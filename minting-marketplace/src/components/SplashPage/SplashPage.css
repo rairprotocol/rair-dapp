@@ -1266,6 +1266,8 @@ text-decoration: underline;
     padding-bottom: 2rem;
     display: flex;
     align-items: center;
+    margin-top: -4rem;
+    margin-left: 4rem;
 }
 
 .modal-text-wrapper img {
@@ -3040,6 +3042,11 @@ img.block-img-mobile{
     .meet-team .box-teammate .teammate-title-socials .teammate-wrapper-name span {
         font-size: 12px;
     }
+
+    .modal-text-wrapper {
+        margin-left: 1rem;
+        margin-top: 0rem;
+    }
 }
 
 @media screen and (max-width: 450px) {
@@ -3128,6 +3135,9 @@ img.block-img-mobile{
     }
 
     .modal-text-wrapper {
+        margin-left: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 10px;
         padding-bottom: 15px;
     }
 }
