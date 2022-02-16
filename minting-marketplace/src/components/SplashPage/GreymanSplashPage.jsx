@@ -11,6 +11,7 @@ import Modal from "react-modal";
 import Metamask from "../../images/metamask-fox.svg";
 import GreyMan from "./images/greyman1.png";
 import playImages from "./images/playImg.png";
+import GreyManNotFun from "./images/not-fun.png";
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -154,7 +155,15 @@ const SplashPage = ({ loginDone }) => {
           )
         )
       ) {
-        Swal.fire("Success", `Bought Grayman #${nextToken}!`, "success");
+        Swal.fire({
+         // title : "Success", 
+        imageUrl: GreyMan, 
+        imageHeight: 376,
+        imageWidth: "auto",
+        imageAlt: 'GreyMan image',
+        title: `You own #${nextToken}!`, 
+        icon: "success", 
+        });
       }
     }
   };
@@ -294,7 +303,7 @@ const SplashPage = ({ loginDone }) => {
               {timerLeft === 0 && (
                 <div className="text-description" style={{ color: "#A7A6A6" }}>
                   7.907.414.597 non-unique NFTs. All metadata is identical only
-                  the serial number changes. Claim yours for 1 MATIC
+                  the serial number changes. Claim yours for <strong>1</strong> MATIC
                 </div>
               )}
               {timerLeft !== 0 && (
@@ -391,11 +400,11 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-text-wrapper">
-                        <span className="modal-text">
-                          I understand this is a prerelease NFT. Final artwork
-                          and access to encrypted streams will be associated
-                          with your NFT serial number at the time of launch.
+                        <span style={{width: '287px'}}className="modal-text">
+                        By accepting these terms, I agree not to have any fun with this greyman
                         </span>
+                        <img style={{width: '127px'}} src={GreyManNotFun} alt="not-fun" />
+
                       </div>
                       <div className="modal-btn-wrapper">
                         <button
@@ -617,7 +626,7 @@ const SplashPage = ({ loginDone }) => {
                   <div className="join-pic-main">
                     <div className="show-more-wrap">
                       <span className="show-more" style={{ color: "#fff" }}>
-                        Open in Store <i className="fas fa-arrow-right"></i>{" "}
+                        Coming Soon <i className="fas fa-arrow-right"></i>{" "}
                       </span>
                     </div>
                     <img

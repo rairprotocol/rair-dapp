@@ -1,7 +1,7 @@
 import React from 'react'
 import TeammateDesc from './TeammateDesc';
 
-const Teammate = ({ url, name, desc, primaryColor, socials }) => {
+const Teammate = ({ url, name, desc, primaryColor, socials, chain }) => {
     return (
         <div className="box-teammate">
             <div className="img-teammate">
@@ -11,6 +11,7 @@ const Teammate = ({ url, name, desc, primaryColor, socials }) => {
                 <div className="temmate-content-up">
                     <div className="teammate-title-socials">
                         <div>
+                            <span>{chain}</span>
                             <h4>{name}</h4>
                         </div>
                     </div>

@@ -3,6 +3,7 @@ import Teammate_1 from '../images/mrlee.jpeg';
 import Teammate_2 from '../images/foundation.png';
 import Teammate_3 from '../images/south-dig.png';
 import Teammate_4 from '../images/rair-block.png';
+import Teammate_5 from '../images/movementontheground.png';
 import Estate_Teammate from '../images/estate_team.png';
 import Teammate from './Teammate';
 import GreymanAuthor from '../images/greymanAuthor.png';
@@ -393,6 +394,7 @@ const rairAdvisorsTeam = [
 
 const teamGreymanArray = [
     {
+        chain: '0x7bfbAAC8b6bC1B7b9e4bEB5c1d92C913B9598465',
         nameTeammate: "Dadara",
         imageUrl: GreymanAuthor,
         aboutTeammate: [
@@ -415,7 +417,27 @@ const teamGreymanArray = [
             }
         ]
     },
+    {   
+        chain: '0x4704DC390a5779fECfD77bd0852bF826569e028e',
+        nameTeammate: "Movement on the Ground",
+        imageUrl: Teammate_5,
+        aboutTeammate: [
+            `Movement on the Ground is a grassroot NGO that believes every human being affected by war, conflict or disaster, has the right to rebuild a new life in safety, dignity and full potential. 
+            Founded in 2015 by a group of creative entrepreneurs who were compelled to act during the unfolding Syrian refugee crisis in Europe, MOTG since then has always found innovative ways to positively impact the situation on the ground. From bringing in knowledge and expertise from the music festival industry to the crisis management of refugee camps, to setting up “Digital Learning labs” to educate digital skills to asylum seekers in order to kickstart a future. MOTG has always been a group of different thinkers at the forefront of unlocking human potential for good.`,
+            
+            `Throughout its 5 years presence on the Greek island Lesvos, MOTG was able to develop its blueprint model “from camp to campUs”. At the core of this holistic model is the empowerment of refugees in their independece and self-reliance and their preperation for integration in their host environment. Acces to mental health, education, technology, sports and art play a crucial role in the CampUs. 
+            `
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://movementontheground.com/',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
     {
+        chain: `0x7849194dD593d6c3aeD24035D70B5394a1C90F8F`,
         nameTeammate: "RAIR Technologies",
         imageUrl: Teammate_4,
         aboutTeammate: [
@@ -528,6 +550,7 @@ const GreyManTeamComponent = ({ primaryColor }) => {
                     return <Teammate
                         key={index + t.nameTeammate}
                         name={t.nameTeammate}
+                        chain={t.chain}
                         desc={t.aboutTeammate}
                         socials={t.socials}
                         primaryColor={primaryColor}
