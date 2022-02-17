@@ -19,6 +19,7 @@ module.exports = (context) => {
       const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AddedOffer');
       const version = await context.db.Versioning.findOne({ name: 'sync offerPools', network });
+      const forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, offerPools: false }).distinct('contractAddress');
 
       const options = {
         address: networkData.minterAddress,
@@ -40,6 +41,10 @@ module.exports = (context) => {
           rangesCreated,
           catalogIndex
         } = offerPool.data;
+
+        // prevent storing offerPools to DB for forbidden contracts
+        if (_.includes(forbiddenContracts, contractAddress.toLowerCase())) return;
+
         const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1 });
 
         if (!contract) return;
