@@ -247,15 +247,16 @@ const DiamondMarketplace = (props) => {
 				}} className={`btn my-2 py-0 btn-${offer.visible ? 'stimorol' : 'danger'}`}>
 					{offer.visible ? 'Buy the first available token token' : "Not for sale!"}
 				</button>
-				{offer.visible && <TokenSelector min={offer.startingToken} max={offer.endingToken} buyCall={async (tokenIndex) => {
+				{false && offer.visible && <TokenSelector min={offer.startingToken} max={offer.endingToken} buyCall={async (tokenIndex) => {
 					await mintTokenCall(
 						offer.offerIndex,
 						tokenIndex,
 						offer.price
 					);
 				}}/>}
-				{offer.visible && <BatchTokenSelector max={offer.tokensAllowed} batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />}
-				<button id={`button_${index}`} onClick={async e => {
+				{false && offer.visible && <BatchTokenSelector max={offer.tokensAllowed} batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />}
+				<br />
+				{offer.visible && <button id={`button_${index}`} onClick={async e => {
 						rSwal.fire({
 							html: <Provider store={store}>
 								<BuyTokenModalContent
@@ -281,7 +282,7 @@ const DiamondMarketplace = (props) => {
 					}
 				} className='btn btn-royal-ice py-0'>
 					More options
-				</button>
+				</button>}
 			</div>
 		})}
 	</div>
