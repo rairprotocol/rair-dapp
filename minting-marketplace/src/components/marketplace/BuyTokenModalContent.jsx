@@ -105,20 +105,23 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 					/>
 					<div className='col-2' />
 					<button disabled={!minterInstance} onClick={async e => {
-						if (await metamaskCall(
-							diamonds ?
-							buyTokenFunction(
+						let result;
+						if (diamonds) {
+							result = await buyTokenFunction(
 								offerIndex,
 								tokenIndex,
 								price
 							)
-							:
-							minterInstance.buyToken(
-								offerIndex,
-								rangeIndex,
-								tokenIndex,
-								{value: price}
-							))) {
+						} else {
+							result = await metamaskCall(
+								minterInstance.buyToken(
+									offerIndex,
+									rangeIndex,
+									tokenIndex,
+									{value: price}
+							))
+						}
+						if (result === true) {
 							Swal.close();
 						}
 					}} className='btn btn-stimorol col-8'>
