@@ -11,11 +11,14 @@ resource "vault_approle_auth_backend_role" "test_role" {
   ]
   
   bind_secret_id = true
-  # (Optional) Whether or not to require secret_id to be presented when logging in using this AppRole. Defaults to true.
+  # (Optional)
+  # Whether or not to require secret_id to be presented when logging in using this AppRole.
+  # Defaults to true.
 
   # TODO: tighten this up later
   secret_id_bound_cidrs = [
-    "0.0.0.0/0"
+    "0.0.0.0/0",
+    var.primary_app_role_secret_id_bound_cidrs
   ]
   # (Optional) If set, specifies blocks of IP addresses which can perform the login operation.
   

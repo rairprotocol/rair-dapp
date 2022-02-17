@@ -25,5 +25,7 @@ provider "vault" {
 
 module "vault_config" {
   source = "../../../modules/vault_config"
+
+  primary_app_role_secret_id_bound_cidrs = "0.0.0.0/0"
 }
 
