@@ -25,6 +25,8 @@ const AboutPageNew = ({ primaryColor, headerLogoBlack, headerLogoWhite }) => {
     const { pathname } = useLocation();
     const history = useHistory();
 
+    const termsText = "I understand this a test NFT designed to unlock RAIR streams";
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
@@ -47,6 +49,7 @@ const AboutPageNew = ({ primaryColor, headerLogoBlack, headerLogoWhite }) => {
                         RairLogo={RairLogo}
                         primaryColor={primaryColor}
                         Metamask={Metamask}
+                        termsText={termsText}
                     />
                     <LeftTokenAbout primaryColor={primaryColor} />
                     <PlatformAbout />
