@@ -1,29 +1,24 @@
 const express = require('express');
 const _ = require('lodash');
-const { validation } = require('../middleware');
+const { ObjectId } = require('mongodb');
 
 module.exports = context => {
   const router = express.Router();
 
   // Get full data about particular product and get list of tokens for it
-  router.get('/:adminToken/:contractName/:productName', async (req, res, next) => {
+  router.get('/:contractId/:productIndex', async (req, res, next) => {
     try {
-      const { adminToken, contractName, productName } = req.params;
-      const adminContract = process.env.ADMIN_CONTRACT.toLowerCase();
-      const user = await context.db.User.findOne({ adminNFT: `${ adminContract }:${ adminToken }` }, { publicAddress: 1 });
-
-      if (_.isEmpty(user)) {
-        return res.status(404).send({ success: false, message: 'User not found.' });
-      }
+      const { contractId, productIndex } = req.params;
+      const productInd = Number(productIndex);
 
       const [contract] = await context.db.Contract.aggregate([
-        { $match: { user: user.publicAddress, title: contractName } },
+        { $match: { _id: ObjectId(contractId) } },
         {
           $lookup: {
             from: 'Product',
             let: {
               contr: '$_id',
-              productName
+              productInd
             },
             pipeline: [
               {
@@ -38,8 +33,8 @@ module.exports = context => {
                       },
                       {
                         $eq: [
-                          '$name',
-                          '$$productName'
+                          '$collectionIndexInContract',
+                          '$$productInd'
                         ]
                       }
                     ]
@@ -128,7 +123,7 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'Tokens not found.' });
       }
 
-      res.json({ success: true, result: { product: _.omit(contract, ['offerPools']), tokens } });
+      res.json({ success: true, result: { contract: _.omit(contract, ['offerPools']), tokens } });
     } catch (e) {
       next(e);
     }
