@@ -2,7 +2,7 @@
 
 Get full data about particular product and get list of tokens for it
 
-**URL** : `/api/:adminToken/:contractName/:productName`
+**URL** : `/api/:contractId/:productIndex`
 
 **Method** : `GET`
 
@@ -10,22 +10,16 @@ Get full data about particular product and get list of tokens for it
 
 ```json
 {
-  "adminToken": {
+  "contractId": {
     "required": true,
     "content": {
       "type": "string"
     }
   },
-  "contractName": {
+  "productIndex": {
     "required": true,
     "content": {
-      "type": "string"
-    }
-  },
-  "productName": {
-    "required": true,
-    "content": {
-      "type": "string"
+      "type": "number"
     }
   }
 }
@@ -45,7 +39,7 @@ Returns founded user
 {
   "success": true,
   "result": {
-    "product": {
+    "contract": {
       "_id": "6149eeea440c69001dc2c500",
       "user": "0x679f47db5d0e5ff72d3216a54ed1fbe03464a579",
       "title": "Contract 2",
