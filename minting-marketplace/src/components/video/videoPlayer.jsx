@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
 import setDocumentTitle from '../../utils/setTitle';
+import { getRandomValues } from '../../utils/getRandomValues';
 
 const VideoPlayer = () => {
 	const params = useParams();
@@ -11,8 +12,8 @@ const VideoPlayer = () => {
 
 	const { programmaticProvider } = useSelector(state => state.contractStore);
 
-	const [videoName,] = useState(Math.round(Math.random() * 10000));
-	const [mediaAddress, setMediaAddress] = useState(Math.round(Math.random() * 10000));
+	const [videoName,] = useState(getRandomValues);
+	const [mediaAddress, setMediaAddress] = useState(getRandomValues);
 
 	const btnGoBack = () => {
 		history.goBack();
