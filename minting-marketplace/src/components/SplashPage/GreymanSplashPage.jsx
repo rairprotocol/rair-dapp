@@ -83,7 +83,7 @@ const SplashPage = ({ loginDone }) => {
   const [soldCopies, setSoldCopies] = useState();
 
   const [active, setActive] = useState({ policy: false, use: false });
-  const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
+  const GraymanSplashPageTESTNET = "0xA011723657362e28325E26F5CCEC517A920bbB43";
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
