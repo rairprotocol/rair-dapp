@@ -288,49 +288,50 @@ module.exports = context => {
     }
   });
 
-  router.post('/authentication', validation('authentication'), async (req, res, next) => {
-    const { publicAddress, signature, adminRights } = req.body;
-    const user = (await context.db.User.findOne({ publicAddress })).toObject();
+  router.get('/authentication/:MetaMessage/:MetaSignature/', validation('authentication', 'params'), metaAuth, async (req, res, next) => {
+    const ethAddres = req.metaAuth.recovered;
+    const reg = new RegExp(/^0x\w{40}:\w+$/);
+    let adminRights = false;
 
-    if (!user) {
-      const message = `User with publicAddress ${ publicAddress } is not found in database`;
-      log.error(message);
-      return res.status(404).send({
-        success: false,
-        message
-      });
+    try {
+      if (ethAddres) {
+        let user = await context.db.User.findOne({ publicAddress: ethAddres });
+
+        if (_.isNull(user)) {
+          return res.status(404).send({ success: false, message: 'User not found.' });
+        }
+
+        user = user.toObject();
+
+        const nftIdentifier = _.get(user, 'adminNFT', '');
+
+        log.info('Verifying user account has the admin token');
+
+        // verify the account holds the correct NFT
+        if (typeof nftIdentifier === 'string' && reg.test(nftIdentifier)) {
+          const [contractAddress, tokenId] = nftIdentifier.split(':');
+
+          try {
+            adminRights = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
+          } catch (e) {
+            log.error(e);
+          }
+        }
+      } else {
+        return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
+      }
+
+      jwt.sign(
+        { eth_addr: ethAddres, adminRights },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' },
+        (err, token) => {
+          if (err) next(new Error('Could not create JWT'));
+          res.send({ success: true, token });
+        });
+    } catch (err) {
+      return next(err);
     }
-
-    const msg = `Sign in for RAIR by nonce: ${ user.nonce }`;
-
-    // get the address from signature
-    const nonceBufferHex = bufferToHex(Buffer.from(msg, 'utf8'));
-    const address = recoverPersonalSignature({
-      data: nonceBufferHex,
-      sig: signature,
-    });
-
-    if (address !== publicAddress) {
-      log.error('Signature verification failed');
-      return res.status(401).send({
-        success: false,
-        message: 'Signature verification failed',
-      });
-    }
-
-    // Generate a new nonce for the user
-    const nonce = nanoid();
-
-    await context.db.User.updateOne({ publicAddress }, { $set: { nonce } });
-
-    jwt.sign(
-      { eth_addr: publicAddress, adminRights },
-      process.env.JWT_SECRET,
-      { expiresIn: '1d' },
-      (err, token) => {
-        if (err) next(new Error('Could not create JWT'));
-        res.send({ success: true, token });
-      });
   });
 
   router.get('/user_info', JWTVerification(context), async (req, res, next) => {

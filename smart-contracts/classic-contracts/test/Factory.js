@@ -34,9 +34,9 @@ describe("Token Factory", function () {
 	});
 
 	describe('Deployments', function() {
-		it ("ERC777", async function() {
-			erc777instance = await ERC777Factory.deploy(initialSupply, [addr1.address]);
-			erc777ExtraInstance = await ERC777Factory.deploy(initialSupply * 2, [addr2.address]);
+		it ("Should deploy the ERC777 contract", async function() {
+			erc777instance = await ERC777Factory.deploy(initialSupply, initialSupply * 5, owner.address, [addr1.address]);
+			erc777ExtraInstance = await ERC777Factory.deploy(initialSupply * 2, initialSupply * 5, owner.address, [addr2.address]);
 
 			expect(await erc777instance.name()).to.equal("RAIR");
 			expect(await erc777instance.symbol()).to.equal("RAIR");
@@ -54,7 +54,7 @@ describe("Token Factory", function () {
 			*/
 		});
 
-		it ("Should deploy the Factory", async function() {
+		it ("Should deploy the RAIR Factory", async function() {
 			factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
 			hre.tracer.nameTags[factoryInstance.address] = "Factory";
 		});
@@ -957,34 +957,47 @@ describe("Token Factory", function () {
 
 			it ("Should do a custom payment split (Single)", async function() {
 				await expect(await minterInstance.buyToken(2, 0, 0, {value: 888}))
-					.to.emit(rair721Instance, "Transfer")
+					.to.emit(rair721Instance, "Transfer").withArgs(ethers.constants.AddressZero,owner.address,262)
 					.to.changeEtherBalances([addr1, addr2, addr3, addr4], [266, 88, 222, 222]);
 			});
 		})
 
 		it ("721 instance returns the correct creator fee", async function() {
-			expect((await rair721Instance.royaltyInfo(1, 123000))[0]).to.equal(owner.address);
-			expect((await rair721Instance.royaltyInfo(1, 123000))[1]).to.equal(36900);
+			await expect((await rair721Instance.royaltyInfo(1, 123000))[0]).to.equal(owner.address);
+			await expect((await rair721Instance.royaltyInfo(1, 123000))[1]).to.equal(36900);
 		});
-
-
 	});
 
-	describe("Resale Marketplace", async function() {
-		describe("Permissions", async function() {
-			it("Should grant the resale marketplace the TRADER role");
-			it("Should revoke the resale marketplace the TRADER role");
-			it("Should approve the resale marketplace to transfer a single token");
-			it("Should approve the resale marketplace to transfer all token");
-		});
+	describe("RAIR 777", async () => {
+		describe("Access Control", async () => {
+			it ("Owner should have Admin role", async () => {
+				await expect(await erc777instance.getRoleMember(await erc777instance.DEFAULT_ADMIN_ROLE(), 0))
+					.to.equal(owner.address);
+			});
 
-		describe("Offers", async function() {
-			it("Shouldn't create offers from people that don't own the token");
-			it("Should create offers");
-			it("Shouldn't create offers for a token that's already on sale");
-			it("Shouldn't sell if there aren't enough funds");
-			it("Should sell the token with the proper splits");
-			it("Should return any excess funds");
+			it ("Owner should be able to grant minter roles", async () => {
+				await expect(await erc777instance.grantRole(await erc777instance.MINTER(), owner.address))
+					.to.emit(erc777instance, "RoleGranted")
+					.withArgs(await erc777instance.MINTER(), owner.address, owner.address);
+				await expect(await erc777instance.getRoleMember(await erc777instance.MINTER(), 0))
+					.to.equal(owner.address);
+			});
+
+			it ("Should mint new RAIR tokens as the owner", async () => {
+				await expect(await erc777instance.totalSupply())
+					.to.equal(initialSupply);
+				await expect(await erc777instance.mint(20, addr1.address))
+					.to.emit(erc777instance, "Minted")
+					.withArgs(owner.address, addr1.address, 20, '0x', '0x');
+				await expect(await erc777instance.totalSupply())
+					.to.equal(initialSupply + 20);
+			})
+
+			it ("Shouldn't mint new RAIR tokens as any other address", async () => {
+				let ownerAsOtherAddress = await erc777instance.connect(addr1);
+				await expect(ownerAsOtherAddress.mint(200, addr1.address))
+					.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await erc777instance.MINTER()}`);
+			})
 		});
-	})
+	});
 })

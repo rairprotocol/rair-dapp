@@ -28,7 +28,7 @@ async function checkBalanceProduct (accountAddress, blockchain, contractAddress,
 	// Static RPC Providers are used because the chain ID *WILL NOT* change,
 	//		doing this we save calls to the blockchain to verify Chain ID
 	try {
-		const provider = new ethers.providers.StaticJsonRpcProvider(endpoints[blockchain]);
+		let provider = new ethers.providers.StaticJsonRpcProvider(endpoints[blockchain]);
 		const tokenInstance = new ethers.Contract(contractAddress, RAIR_ERC721Abi, provider);
 		const result = await tokenInstance.hasTokenInProduct(accountAddress, productId, offerRangeStart, offerRangeEnd);
 		delete provider;
@@ -52,7 +52,7 @@ async function checkBalanceSingle (accountAddress, blockchain, contractAddress, 
 	// Static RPC Providers are used because the chain ID *WILL NOT* change,
 	//		doing this we save calls to the blockchain to verify Chain ID
 	try {
-		const provider = new ethers.providers.StaticJsonRpcProvider(endpoints[blockchain]);
+		let provider = new ethers.providers.StaticJsonRpcProvider(endpoints[blockchain]);
 		const tokenInstance = new ethers.Contract(contractAddress, RAIR_ERC721Abi, provider);
 		const result = await tokenInstance.ownerOf(tokenId);
 		delete provider;
