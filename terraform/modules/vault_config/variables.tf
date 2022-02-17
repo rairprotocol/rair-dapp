@@ -1,3 +1,3 @@
-variable "primary_app_role_secret_id_bound_cidrs" {
-  type = string
+variable "test_app_role_authorized_login_ips" {
+  type = list(string)
 }

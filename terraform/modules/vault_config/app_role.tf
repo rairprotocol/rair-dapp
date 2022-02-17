@@ -16,10 +16,7 @@ resource "vault_approle_auth_backend_role" "test_role" {
   # Defaults to true.
 
   # TODO: tighten this up later
-  secret_id_bound_cidrs = [
-    "0.0.0.0/0",
-    var.primary_app_role_secret_id_bound_cidrs
-  ]
+  secret_id_bound_cidrs = formatlist("%s/32", var.test_app_role_authorized_login_ips)
   # (Optional) If set, specifies blocks of IP addresses which can perform the login operation.
   
   secret_id_num_uses = 0
