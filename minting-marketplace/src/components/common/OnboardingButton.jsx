@@ -1,6 +1,6 @@
 import MetaMaskOnboarding from "@metamask/onboarding";
 // import Swal from "sweetalert2";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 const ONBOARD_TEXT = "Click here to install MetaMask!";
 const CONNECT_TEXT = "Connect Wallet";
@@ -10,7 +10,27 @@ export function OnboardingButton() {
   const [buttonText, setButtonText] = useState(ONBOARD_TEXT);
   const [isDisabled, setDisabled] = useState(false);
   const [accounts, setAccounts] = useState([]);
+  const [showButtonPhone, setShowButtonPhone] = useState();
   const onboarding = useRef();
+
+  const dappUrl = "dev.rair.tech";
+  const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
+
+  const isMobileDevice = useCallback(() => {
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      setShowButtonPhone(true);
+    } else {
+      setShowButtonPhone(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    isMobileDevice();
+  }, [isMobileDevice]);
 
   useEffect(() => {
     if (!onboarding.current) {
@@ -55,8 +75,18 @@ export function OnboardingButton() {
       onboarding.current.startOnboarding();
     }
   };
-  return (
-    <button className='metamask-on-boarding' disabled={isDisabled} onClick={onClick}>
+  return showButtonPhone ? (
+    <a href={metamaskAppDeepLink}>
+      <button className="metamask-on-boarding">
+        Connect your phone to MetaMask
+      </button>
+    </a>
+  ) : (
+    <button
+      className="metamask-on-boarding"
+      disabled={isDisabled}
+      onClick={onClick}
+    >
       {buttonText}
     </button>
   );
