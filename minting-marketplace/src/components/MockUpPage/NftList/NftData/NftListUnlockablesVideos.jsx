@@ -3,16 +3,18 @@ import { useHistory } from "react-router-dom";
 // import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftListUnlockablesVideos = ({
-  blockchain,
-  contract,
-  product,
+  // blockchain,
+  // contract,
+  // product,
   productsFromOffer,
   selectedData,
-  selectedToken,
+  // selectedToken,
 }) => {
   const history = useHistory();
-  // console.log(productsFromOffer, "productsFromOffer");
-  // console.log(productsFromOffer.map(of => of.offer[0]), "MAP");
+
+  const partOfVideo = productsFromOffer?.length
+    ? productsFromOffer.slice(0, 2)
+    : 0;
 
   return (
     <div
@@ -25,8 +27,8 @@ const NftListUnlockablesVideos = ({
       }}
     >
       {/* <NftDifferentRarity productsFromOffer={productsFromOffer} /> */}
-      {(productsFromOffer?.length &&
-        productsFromOffer.map((v) => {
+      {(partOfVideo?.length &&
+        partOfVideo.map((v) => {
           // console.log(v.offer[0], "rarity");
           return (
             <div

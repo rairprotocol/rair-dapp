@@ -52,7 +52,6 @@ const NftDataPageTest = ({
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
   const [ownerInfo, setOwnerInfo] = useState();
-
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
   const handlePlaying = () => {
@@ -772,7 +771,7 @@ const NftDataPageTest = ({
                   selectedData={selectedData}
                   selectedToken={selectedToken}
                 />
-                <CustomButton
+                {productsFromOffer.length !== 0 ? <CustomButton
                   onClick={() =>
                     history.push(
                       `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
@@ -784,7 +783,8 @@ const NftDataPageTest = ({
                   textColor={textColor}
                   primaryColor={primaryColor}
                   margin={'0 auto'}
-                />
+                /> : null }
+                
               </AccordionItemPanel>
             </AccordionItem>
 

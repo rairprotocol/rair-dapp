@@ -64,6 +64,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
 
   const changePage = (currentPage) => {
     setCurrentPage(currentPage);
+    window.scrollTo(0, 0);
   };
 
   const updateList = async () => {
