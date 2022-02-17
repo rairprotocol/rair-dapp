@@ -1359,6 +1359,7 @@ img.block-img-mobile{
     }
     .main-greyman-pic-wrapper{
         margin-left: 4rem;
+        width: 100%;
         /* width: 900px; */
         /* display: -webkit-inline-box; */
     }
@@ -2979,7 +2980,7 @@ img.block-img-mobile{
     }
 
     .video-grey-man-metamask-logo {
-        left: 130%;
+        left: 100%;
     }
 
     .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
@@ -3051,7 +3052,7 @@ img.block-img-mobile{
 
 @media screen and (max-width: 450px) {
     .video-grey-man-metamask-logo {
-        left: 110%;
+        left: 80%;
     }
 
     .wrapper-splash-page.nutcrackers .crackers-text {
@@ -3105,6 +3106,10 @@ img.block-img-mobile{
     .release-join-discord .mailchimp input.email {
         width: 200px;
     }
+
+    .video-grey-man-metamask-logo {
+        left: 60%;
+    }
 }
 
 
@@ -3115,7 +3120,7 @@ img.block-img-mobile{
     }
 
     .video-grey-man-metamask-logo {
-        left: 80%;
+        left: 40%;
     }
 
     .modal-content-wrapper {

@@ -216,6 +216,19 @@
     .non-commercial-content {
         background-position: 100% 10% !important;
     }
+
+    .information-author.greyman-page-author .block-splash .text-splash {
+        text-align: center;
+    }
+
+    .information-author.greyman-page-author .text-splash .text-description {
+        width: 100%;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask {
+        display: flex;
+        justify-content: center;
+    }
 } 
 
 @media screen and (max-width: 900px) {
