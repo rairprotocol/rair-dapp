@@ -7,10 +7,9 @@ import {minterAbi} from '../../contracts';
 // import { CSVReader } from 'react-papaparse'
 import csvParser from '../../utils/csvParser.js';
 import { metamaskCall } from '../../utils/metamaskUtils.js';
-import {utils} from 'ethers';
 
 
-const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName, minterAddress, diamonds, buyTokenFunction, buyTokenBatchFunction}) => {
+const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName, minterAddress}) => {
 	const [tokenIndex, setTokenIndex] = useState(start);
 	const [rows, setRows] = useState([]);
 
@@ -105,27 +104,19 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 					/>
 					<div className='col-2' />
 					<button disabled={!minterInstance} onClick={async e => {
-						let result;
-						if (diamonds) {
-							result = await buyTokenFunction(
+						if (await metamaskCall(
+							minterInstance.buyToken(
 								offerIndex,
+								rangeIndex,
 								tokenIndex,
-								price
-							)
-						} else {
-							result = await metamaskCall(
-								minterInstance.buyToken(
-									offerIndex,
-									rangeIndex,
-									tokenIndex,
-									{value: price}
-							))
-						}
-						if (result === true) {
+								{value: price}
+							),
+            				"Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+							)) {
 							Swal.close();
 						}
 					}} className='btn btn-stimorol col-8'>
-						Buy token #{tokenIndex} for {utils.formatEther(price)}
+						Buy token #{tokenIndex} for {price}
 					</button>
 					<div className='col-2' />
 				</>
@@ -138,7 +129,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 						Add <i className='fas fa-plus' />
 					</button>
 					<div className='col'>
-						Total: {utils.formatEther(diamonds ? price.mul(rows.length) : (price * rows.length))}
+						Total: {price * rows.length} wei
 					</div>
 					<div className='col-12' style={{maxHeight: '50vh', overflowY: 'scroll'}}>
 						{rows.map((item, index) => {
@@ -156,18 +147,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 							label='Or load addresses with CSV file'
 						/>
 					</div>
-					<button onClick={e => {
-						if (diamonds) {
-							buyTokenBatchFunction(
-								offerIndex,
-								rows.map(item => item['NFTID']),
-								rows.map(item => item['Public Address']),
-								price
-							)
-						} else {
-							batchMint(rows)
-						}
-					}} disabled={!minterInstance || !rows.length} className='col btn btn-stimorol'>
+					<button onClick={e => batchMint(rows)} disabled={!minterInstance || !rows.length} className='col btn btn-stimorol'>
 						Batch Mint {rows.length} tokens!
 					</button>
 				</>
