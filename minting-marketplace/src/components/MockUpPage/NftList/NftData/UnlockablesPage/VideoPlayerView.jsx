@@ -9,6 +9,8 @@ function VideoPlayerView({ productsFromOffer }) {
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
   const history = useHistory();
 
+  const colorRarity = [`#E4476D`, "gold", "silver"];
+
   // console.log(productsFromOffer, "productsFromOffer");
   // console.log(selectVideo, "selectVideo");
   return (
@@ -19,14 +21,14 @@ function VideoPlayerView({ productsFromOffer }) {
             return (
               <div
                 key={data._id}
-                onClick={() => {setSelectVideo(data); setOpenVideoplayer(false)}}
+                onClick={() => { setSelectVideo(data); setOpenVideoplayer(false) }}
                 style={{ backgroundImage: `url(${data?.staticThumbnail})` }}
                 className={cl.ListOfVideosOneVideo}
               >
                 <div className={cl.previewWrapper}>
                   <span className={cl.preview}>Preview</span>
                   <i
-                    style={{ color: `red` }}
+                    style={{ color: `${colorRarity[data.offer[0]]}` }}
                     className={`fas fa-key ${cl.iconKey}`}
                   />
                 </div>
@@ -49,12 +51,12 @@ function VideoPlayerView({ productsFromOffer }) {
               </div>
             );
           })}
-       
+
       </div>
       {productsFromOffer?.length ? (
         <div className={cl.SingleVideoWrapper}>
           {openVideoplayer ? (
-      <NftVideoplayer selectVideo={selectVideo}/>
+            <NftVideoplayer selectVideo={selectVideo} />
           ) : (
             <div
               style={{
