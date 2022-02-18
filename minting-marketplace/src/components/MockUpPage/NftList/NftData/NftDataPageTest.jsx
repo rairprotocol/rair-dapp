@@ -307,13 +307,13 @@ const NftDataPageTest = ({
       showConfirmButton: false,
     });
     if (
-      await metamaskCall(
-        minterInstance.buyToken(
-          offerData.offerPool,
-          offerData.offerIndex,
-          selectedToken,
-          { value: offerData.price }
-        )
+      await metamaskCall(minterInstance.buyToken(
+        offerData.offerPool,
+        offerData.offerIndex,
+        selectedToken,
+        { value: offerData.price }
+      ),
+      "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )
     ) {
       Swal.fire("Success", "Now, you are the owner of this token", "success");

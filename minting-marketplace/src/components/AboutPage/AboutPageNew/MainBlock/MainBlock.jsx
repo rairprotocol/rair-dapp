@@ -96,7 +96,8 @@ const MainBlock = ({ Metamask, primaryColor, termsText }) => {
             {
               value: aboutOffer.price,
             }
-          )
+          ),
+          "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
         )
       ) {
         Swal.fire("Success", `Bought token #${nextToken}!`, "success");
