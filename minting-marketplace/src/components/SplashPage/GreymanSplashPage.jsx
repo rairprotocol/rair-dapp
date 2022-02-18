@@ -143,18 +143,17 @@ const SplashPage = ({ loginDone }) => {
         icon: "info",
         showConfirmButton: false,
       });
-      if (
-        await metamaskCall(
-          minterInstance.buyToken(
-            products[0].offerPool.marketplaceCatalogIndex,
-            greyworldOffer.offerIndex,
-            nextToken,
-            {
-              value: greyworldOffer.price,
-            }
-          )
-        )
-      ) {
+      if (await metamaskCall(
+        minterInstance.buyToken(
+          products[0].offerPool.marketplaceCatalogIndex,
+          greyworldOffer.offerIndex,
+          nextToken,
+          {
+            value: greyworldOffer.price,
+          }
+        ),
+        "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+      )) {
         Swal.fire({
          // title : "Success", 
         imageUrl: GreyMan, 

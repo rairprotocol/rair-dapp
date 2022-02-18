@@ -110,7 +110,9 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 								rangeIndex,
 								tokenIndex,
 								{value: price}
-							))) {
+							),
+            				"Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+							)) {
 							Swal.close();
 						}
 					}} className='btn btn-stimorol col-8'>
