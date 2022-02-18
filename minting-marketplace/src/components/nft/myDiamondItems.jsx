@@ -7,15 +7,15 @@ import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import InputField from '../common/InputField.jsx';
 
-const TokenLayout = ({item}) => {
+const TokenLayout = ({item, openModal, setSelectedData}) => {
 	const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
 	const { primaryColor } = useSelector(store => store.colorStore);
 
 	return <div
 			onClick={() => {
-				//openModal();
-				//setSelectedData(item);
+				openModal();
+				setSelectedData(item);
 			}}
 			style={{ width: "291px", height: "291px" }}
 			className="p-1 my-1 col-2" >
@@ -72,7 +72,7 @@ const TokenLayout = ({item}) => {
 	</div>;
 }
 
-const ItemsForContract = ({item}) => {
+const ItemsForContract = ({item, openModal, setSelectedData}) => {
 	const [tokens, setTokens] = useState([]);
 	const [contractName, setContractName] = useState('');
 	
@@ -108,7 +108,7 @@ const ItemsForContract = ({item}) => {
 
 	return <>
 		{tokens.map((token, index) => {
-			return <TokenLayout item={token} key={index}/>
+			return <TokenLayout item={token} key={index} {...{openModal, setSelectedData}}/>
 		})}
 	</>
 }
@@ -155,7 +155,7 @@ const MyDiamondItems = (props) => {
 
 	return <div className='row'>
 		{deploymentAddresses.map((item, index) => {
-			return <ItemsForContract key={index} item={item} />
+			return <ItemsForContract key={index} item={item} {...props} />
 		})}
 	</div>
 }

@@ -243,7 +243,7 @@ const MyItems = (props) => {
       ) : (
         <></>
       )}
-      <MyDiamondItems />
+      <MyDiamondItems {...{openModal, setSelectedData}}/>
     </div>
   );
 };
