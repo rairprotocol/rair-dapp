@@ -18,7 +18,8 @@ module.exports = (context) => {
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
       const version = await context.db.Versioning.findOne({ name: 'sync contracts', network });
-      const forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, contract: false }).distinct('contractAddress');
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, contract: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       // Initialize moralis instances
       Moralis.start({ serverUrl, appId, masterKey });

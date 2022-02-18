@@ -23,7 +23,8 @@ module.exports = (context) => {
       const unlocked = getABIData(erc721Abi, 'event', 'RangeUnlocked');
       const versionLocked = await context.db.Versioning.findOne({ name: 'sync locks locked', network });
       const versionUnlocked = await context.db.Versioning.findOne({ name: 'sync locks unlocked', network });
-      const forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, locks: false }).distinct('contractAddress');
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, locks: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       const generalOptionsForLocked = {
         chain: networkData.network,

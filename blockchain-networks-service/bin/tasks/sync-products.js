@@ -19,7 +19,8 @@ module.exports = (context) => {
       const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(erc721Abi, 'event', 'ProductCreated');
       const version = await context.db.Versioning.findOne({ name: 'sync products', network });
-      const forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, products: false }).distinct('contractAddress');
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, products: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       const generalOptions = {
         chain: networkData.network,

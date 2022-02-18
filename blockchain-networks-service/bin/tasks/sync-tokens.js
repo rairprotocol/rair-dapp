@@ -22,7 +22,8 @@ module.exports = (context) => {
       const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'TokenMinted');
       const version = await context.db.Versioning.findOne({ name: 'sync tokens', network });
-      const forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, tokens: false }).distinct('contractAddress');
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, tokens: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       const options = {
         address: networkData.minterAddress,
