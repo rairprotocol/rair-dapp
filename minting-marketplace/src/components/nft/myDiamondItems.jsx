@@ -1,11 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
 import { diamondFactoryAbi } from '../../contracts'
-import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
-import InputField from '../common/InputField.jsx';
 
 const TokenLayout = ({item, openModal, setSelectedData}) => {
 	const defaultImg = "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
@@ -102,7 +98,7 @@ const ItemsForContract = ({item, openModal, setSelectedData}) => {
 			});
 		}
 		setTokens(tokenData);
-	}, [item])
+	}, [item, contractCreator, contractName, currentUserAddress])
 
 	useEffect(getTokens, [getTokens]);
 
@@ -114,11 +110,9 @@ const ItemsForContract = ({item, openModal, setSelectedData}) => {
 }
 
 const MyDiamondItems = (props) => {
-	const [offersArray, setOffersArray] = useState([]);
 	const [deploymentAddresses, setDeploymentAddresses] = useState([]);
-	const [transactionInProgress, setTransactionInProgress] = useState(false);
 
-	const { diamondMarketplaceInstance, contractCreator } = useSelector(store => store.contractStore);
+	const { diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 
 	const fetchDiamondData = useCallback(async () => {
 		if (!diamondMarketplaceInstance) {
@@ -148,7 +142,6 @@ const MyDiamondItems = (props) => {
 			})
 		}
 		setDeploymentAddresses(deployments)
-		setOffersArray(offerData);
 	}, [diamondMarketplaceInstance]);
 
 	useEffect(fetchDiamondData, [fetchDiamondData])
