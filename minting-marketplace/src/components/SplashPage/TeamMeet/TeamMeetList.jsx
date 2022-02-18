@@ -170,8 +170,8 @@ const teamAboutRair = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: 'https://www.linkedin.com/in/ed-prado-a8526a4/',
-                classLink: ""
+                link: '',
+                classLink: "arrrow-right"
             }
         ]
     },
@@ -192,8 +192,8 @@ const teamAboutRair = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: 'https://www.linkedin.com/in/garrettminks/',
-                classLink: ""
+                link: '',
+                classLink: "arrrow-right"
             }
         ]
     },
@@ -229,13 +229,6 @@ const teamAboutRair = [
             the first tracking and logistics integration applications for an 
             international shipping company.
             `
-        ],
-        socials: [
-            {
-                classIcon: 'fab fa-linkedin-in',
-                link: 'https://www.linkedin.com/in/martin-casado-484b353/',
-                classLink: ""
-            }
         ]
     }
 ];
@@ -268,8 +261,8 @@ const rairAdvisorsTeam = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: 'https://www.linkedin.com/in/michaelterpin/',
-                classLink: ""
+                link: '',
+                classLink: "arrrow-right"
             }
         ]
     },
@@ -308,8 +301,8 @@ const rairAdvisorsTeam = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: 'https://www.linkedin.com/in/davidnjensen/',
-                classLink: ""
+                link: '',
+                classLink: "arrrow-right"
             }
         ]
     },
@@ -391,8 +384,8 @@ const rairAdvisorsTeam = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: 'https://www.linkedin.com/in/mattneco/',
-                classLink: ""
+                link: '',
+                classLink: "arrrow-right"
             }
         ]
     }

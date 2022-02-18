@@ -132,7 +132,7 @@ const SplashPage = ({ loginDone }) => {
       let nextToken = await instance.getNextSequentialIndex(0, greyworldOffer.range[0], greyworldOffer.range[1]);
       Swal.fire({
         title: "Please wait...",
-        html: `Buying Greyman #${nextToken.toString()}`,
+        html: `Buying Grayman #${nextToken.toString()}`,
         icon: "info",
         showConfirmButton: false,
       });
@@ -144,10 +144,9 @@ const SplashPage = ({ loginDone }) => {
           {
             value: greyworldOffer.price,
           }
-        ),
-        "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+        )
       )) {
-        Swal.fire("Success", `Bought Greyman #${nextToken}!`, "success");
+        Swal.fire("Success", `Bought Grayman #${nextToken}!`, "success");
       }
     }
   };

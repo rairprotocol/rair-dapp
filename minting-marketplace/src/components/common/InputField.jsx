@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { getRandomValues } from '../../utils/getRandomValues'
+import React, {useState} from 'react'
 
 /***
 	InputField
@@ -31,9 +30,9 @@ const InputField = ({
 	getter,
 	setter,
 	setterField = ['value'],
-	customCSS = { color: 'black' },
+	customCSS = {color: 'black'},
 	customClass,
-	labelCSS = { color: 'inherit' },
+	labelCSS = {color: 'inherit'},
 	labelClass,
 	placeholder = '',
 	type,
@@ -45,9 +44,8 @@ const InputField = ({
 	max,
 	maxLength
 }) => {
+	const [id,] = useState(Number(new Date()) + '-' + Math.round(Math.random() * 1000000))
 	
-	const [id,] = useState(getRandomValues)
-
 	return <>
 		{label &&
 			<label
@@ -57,15 +55,15 @@ const InputField = ({
 					color: (required ? `${requiredColor}!important` : labelCSS.color)
 				}}
 				className={labelClass}>
-				{label + (required ? '*' : '')}
-			</label>}
+					 {label + (required ? '*' : '')}
+				</label>}
 		<input
-			type={type}
+			type={type} 
 			id={id}
-			onChange={e => setter(setterField.reduce((start, piece) => { return start[piece] }, e.target))}
+			onChange={e => setter(setterField.reduce((start, piece) => {return start[piece]}, e.target))}
 			value={getter}
 			disabled={disabled}
-			style={{ ...customCSS, ':required': { color: requiredColor } }}
+			style={{...customCSS, ':required': {color: requiredColor}}}
 			className={customClass}
 			required={required ? required : false}
 			min={min}

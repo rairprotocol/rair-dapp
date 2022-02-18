@@ -49,9 +49,7 @@ async function main() {
   const app = express();
 
   /* CORS */
-  let origin = `https://${ process.env.SERVICE_HOST }`;
-
-  app.use(cors({ origin }));
+  app.use(cors());
 
   const hls = await StartHLS();
 

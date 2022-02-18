@@ -20,6 +20,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 	const [forceRerender, setForceRerender] = useState(false);
 	const [propertiesArray, setPropertiesArray] = useState([]);
 	const [onMyChain, setOnMyChain] = useState();
+
 	const { /*minterInstance, contractCreator,*/ programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
@@ -35,7 +36,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 	const addRow = () => {
 		let aux = [...propertiesArray];
 		aux.push({
-			trait_type: '',
+			name: '',
 			value: ''
 		});
 		setPropertiesArray(aux);
@@ -175,7 +176,6 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 			<div className='w-100 rounded-rair border-stimorol'>
 				<div className={`w-100 rounded-rair bg-${primaryColor} p-4`}>
 					{JSON.stringify({
-						artist: nftID,
 						title: nftTitle,
 						image: nftImage,
 						description: nftDescription,

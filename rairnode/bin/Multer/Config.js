@@ -2,13 +2,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const log = require('../utils/logger')(module);
-const { customAlphabet } = require('nanoid');
-const nanoid = customAlphabet('1234567890', 10)
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let uploadPath = '';
-    const uniqueSuffix = `${Date.now()}-${nanoid()}`;
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
 
     if (file.fieldname === 'video') {
       uploadPath = path.join(__dirname, '../Videos/', uniqueSuffix);
@@ -37,10 +35,10 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const [type, extension] = file.mimetype.split('/');
     if (extension === 'csv') {
-      const uniqueSuffix = `${Date.now()}-${nanoid()}`;
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       cb(null, `${ uniqueSuffix }`);
     } else if (['image'].includes(type)) {
-      const uniqueSuffix = `${Date.now()}-${nanoid()}`;
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       cb(null, `${ uniqueSuffix }.${ extension }`);
     } else if (['video', 'audio'].includes(type)) {
       file.type = type;
