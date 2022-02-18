@@ -94,7 +94,7 @@ const ItemsForContract = ({item, openModal, setSelectedData}) => {
 				metadata = await (await fetch(tokenURI)).json();
 			}
 			tokenData.push({
-				nftId: index,
+				token: index.toString(),
 				metadata,
 				contract: item,
 				title: metadata ? metadata.name : contractName,
