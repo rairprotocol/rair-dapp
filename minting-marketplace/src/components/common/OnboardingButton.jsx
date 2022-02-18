@@ -13,7 +13,7 @@ export function OnboardingButton() {
   const [showButtonPhone, setShowButtonPhone] = useState();
   const onboarding = useRef();
 
-  const dappUrl = "dev.rair.tech";
+  const dappUrl = window.location.host;
   const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
 
   const isMobileDevice = useCallback(() => {
