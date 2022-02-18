@@ -111,6 +111,7 @@ const ItemsForContract = ({item, openModal, setSelectedData}) => {
 
 const MyDiamondItems = (props) => {
 	const [deploymentAddresses, setDeploymentAddresses] = useState([]);
+	const [status, setStatus] = useState('Fetching data...');
 
 	const { diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 
@@ -119,34 +120,23 @@ const MyDiamondItems = (props) => {
 			return;
 		}
 		let offerCount = Number((await diamondMarketplaceInstance.getTotalOfferCount()).toString());
+		setStatus(`Found ${offerCount} addresses...`);
 		let deployments = [];
-		let offerData = [];
 		for (let i = 0; i < offerCount; i++) {
+			setStatus(`Querying address ${i + 1} of ${offerCount}...`);
 			let singleOfferData = await diamondMarketplaceInstance.getOfferInfo(i);
 			if (!deployments.includes(singleOfferData.mintOffer.erc721Address)) {
 				deployments.push(singleOfferData.mintOffer.erc721Address);
 			}
-			offerData.push({
-				offerIndex: i,
-				contractAddress: singleOfferData.mintOffer.erc721Address,
-				rangeIndex: singleOfferData.mintOffer.rangeIndex.toString(),
-				visible: singleOfferData.mintOffer.visible,
-				startingToken: singleOfferData.rangeData.rangeStart.toString(),
-				endingToken: singleOfferData.rangeData.rangeEnd.toString(),
-				name: singleOfferData.rangeData.rangeName,
-				price: singleOfferData.rangeData.rangePrice,
-				tokensAllowed: singleOfferData.rangeData.tokensAllowed.toString(),
-				mintableTokens: singleOfferData.rangeData.mintableTokens.toString(),
-				lockedTokens: singleOfferData.rangeData.lockedTokens.toString(),
-				productIndex: singleOfferData.productIndex.toString()
-			})
 		}
-		setDeploymentAddresses(deployments)
+		setDeploymentAddresses(deployments);
+		setStatus(``);
 	}, [diamondMarketplaceInstance]);
 
 	useEffect(fetchDiamondData, [fetchDiamondData])
 
 	return <div className='row'>
+		<h5>{status}</h5>
 		{deploymentAddresses.map((item, index) => {
 			return <ItemsForContract key={index} item={item} {...props} />
 		})}
