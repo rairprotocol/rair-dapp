@@ -18,6 +18,8 @@ module.exports = (context) => {
       const networkData = context.config.blockchain.networks[network];
       const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
       const version = await context.db.Versioning.findOne({ name: 'sync contracts', network });
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, contract: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       // Initialize moralis instances
       Moralis.start({ serverUrl, appId, masterKey });
@@ -42,7 +44,8 @@ module.exports = (context) => {
         const nameAbi = getABIData(erc721Abi, 'function', 'name')
         const { token, owner, contractName } = contract.data
 
-        block_number.push(Number(contract.block_number));
+        // prevent storing contracts to DB and event listening for forbidden contracts from the list
+        if (_.includes(forbiddenContracts, token.toLowerCase())) return;
 
         contractsForSave.push({
           user: owner,
