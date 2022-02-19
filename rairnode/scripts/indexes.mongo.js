@@ -57,6 +57,8 @@ const { MongoClient } = require('mongodb');
 
   await db.collection('Versioning').createIndex({ name: 1, network: 1 }, { background: true, unique: true });
 
+  await db.collection('SyncRestriction').createIndex({ blockchain: 1, contractAddress: 1 }, { background: true, unique: true });
+
   console.log('Completed Database Indexes');
 
   process.exit(0);
