@@ -15,8 +15,7 @@ import Cracker from '../images/cracker-icon.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import PoweredRair from '../images/poweredRair.png';
 
-import { erc721Abi } from '../../../contracts/index.js';
-import { metamaskCall } from '../../../utils/metamaskUtils.js';
+import { erc721Abi } from '../../../contracts/index.js'
 import { rFetch } from '../../../utils/rFetch.js';
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import Swal from 'sweetalert2';
@@ -51,18 +50,19 @@ const Nutcrackers = () => {
               Swal.fire('Error', 'An error has ocurred', 'error');
               return;
             }
-            if (await metamaskCall(
-                minterInstance.buyToken(
-                    products[0].offerPool.marketplaceCatalogIndex,
-                    nutsOffer.offerIndex,
-                    nextToken,
-                    {
-                        value: nutsOffer.price
-                    }
-                ),
-                "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
-            )) {
+            try {
+              await (await minterInstance.buyToken(
+                products[0].offerPool.marketplaceCatalogIndex,
+                nutsOffer.offerIndex,
+                nextToken,
+                {
+                  value: nutsOffer.price
+                }
+              )).wait();
               Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
+            } catch (e) {
+              console.error(e);
+              Swal.fire('Error', e?.message, 'error');
             }
         }
     }

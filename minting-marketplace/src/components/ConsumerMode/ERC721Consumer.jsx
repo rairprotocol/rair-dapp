@@ -64,10 +64,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
 		</div>
 		<button onClick={async e => {
 			Swal.fire({title: 'Preparing transaction', html: 'Please wait', icon: 'info', showConfirmButton: false});
-			if (await metamaskCall(
-					minterInstance.buyToken(offerIndex, rangeIndex, next, { value: price }), 
-                	"Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
-				)) {
+			if (await metamaskCall(minterInstance.buyToken(offerIndex, rangeIndex, next, { value: price }))) {
 				Swal.fire('Success', 'Token Minted!', 'success');
 			}
 		}} className='btn btn-success py-0'>
