@@ -7,6 +7,34 @@
     margin-left: 4rem;
 }
 
+.greyman-royalties-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: start;
+    width: 60%;
+    margin-left: 24px;
+    margin-top: -2rem;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 40px;
+    line-height: 60px;
+}
+.greyman-royalties-wrapper strong{
+    margin-bottom: 10px;
+}
+
+.greyman-royalties{
+    display: flex;
+    flex-direction: column;
+    color: #A7A6A6;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 28px;
+}
 .wrapper-splash-page.greyman-page .join-community .exclusive-nfts {
     display: none;
 }
@@ -188,6 +216,19 @@
     .non-commercial-content {
         background-position: 100% 10% !important;
     }
+
+    .information-author.greyman-page-author .block-splash .text-splash {
+        text-align: center;
+    }
+
+    .information-author.greyman-page-author .text-splash .text-description {
+        width: 100%;
+    }
+
+    .information-author.greyman-page-author .btn-buy-metamask {
+        display: flex;
+        justify-content: center;
+    }
 } 
 
 @media screen and (max-width: 900px) {
@@ -223,6 +264,12 @@
     .ReactModal__Content.ReactModal__Content--after-open {
         /* width: 80%; */
         overflow: hidden;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .modal-text-wrapper span {
+        width: 100% !important;
     }
 }
 
@@ -295,6 +342,12 @@
     }
 }
 
+@media screen and (max-width: 500px) {
+    .modal-text-wrapper img {
+        width: 80px;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .wrapper-splash-page.greyman-page .home-splash--page .box-progress {
         margin-top: 90px;
@@ -348,6 +401,11 @@
         height: 100%;
         line-height: 20px;
     } */
+
+    .swal-img-greyman img.swal2-image{
+        height: auto;
+        width: 50%;
+    }
 }
 
 @media screen and (max-width: 385px) {

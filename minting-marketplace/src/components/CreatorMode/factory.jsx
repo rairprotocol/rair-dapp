@@ -1,10 +1,10 @@
-import {useState, useEffect, useCallback} from 'react'
-import * as ethers from 'ethers'
+import {useState, useEffect, useCallback} from 'react';
+import { utils } from 'ethers';
 import { useSelector } from 'react-redux';
-
+import { metamaskCall } from '../../utils/metamaskUtils.js'
+import Swal from 'sweetalert2';
 
 const FactoryManager = ({ setDeployedTokens }) => {
-
 	const [erc721Name, setERC721Name] = useState('');
 	const [clientTokens, setClientTokens] = useState();
 	const [tokensOwned, setTokensOwned] = useState();
@@ -39,17 +39,6 @@ const FactoryManager = ({ setDeployedTokens }) => {
 	return <div className='col py-4 border border-white rounded' style={{position: 'relative'}}>
 		<h5>Factory</h5>
 		<small>({factoryInstance.address})</small><br />
-		
-		{
-			// Initializer, do not use
-			false && <button
-				style={{position: 'absolute', right: 0, top: 0}}
-				onClick={e => factoryInstance.initialize(10, erc777Instance.address)}
-				className='btn btn-royal-ice'>
-				<i className='fas fa-arrow-up' />
-			</button>
-		}
-		
 		<button
 			style={{position: 'absolute', left: 0, top: 0, color: 'inherit'}}
 			onClick={refreshData}
@@ -63,18 +52,47 @@ const FactoryManager = ({ setDeployedTokens }) => {
 			New contract's name:
 			<input className='form-control w-75 mx-auto' value={erc721Name} onChange={e => setERC721Name(e.target.value)} />
 			<br/>
-			<button disabled={erc721Name === '' || clientTokens.lt(tokensRequired)} onClick={() => {
-				try {
-					erc777Instance.send(factoryInstance.address, tokensRequired, ethers.utils.toUtf8Bytes(erc721Name))
-				} catch (e) {
-					console.error(e);
+			<button disabled={erc721Name === '' || clientTokens.lt(tokensRequired)} onClick={async () => {
+				Swal.fire({
+					title: 'Deploying contract',
+					html: 'Please wait',
+					icon: 'info',
+					showConfirmButton: false
+				});
+				if (await metamaskCall(
+					erc777Instance.send(factoryInstance.address, tokensRequired, utils.toUtf8Bytes(erc721Name))
+				)) {
+					Swal.fire({
+						title: 'Success',
+						html: 'Contract Deployed',
+						icon: 'success'
+					})	
 				}
 			}} className='btn btn-royal-ice'>
-				Buy an ERC721 contract for {tokensRequired.div(
-					ethers.BigNumber.from('10')
-						.pow(tokenDecimals)
-					).toString()} {tokenSymbol} tokens!
+				Buy an ERC721 contract for { utils.formatEther(tokensRequired) } {tokenSymbol} tokens!
 			</button>
+			{tokensRequired.eq(0) && <>
+				<br />
+				<button onClick={async () => {
+					Swal.fire({
+						title: 'Adding new token to the Master Factory',
+						html: 'Please wait',
+						icon: 'info',
+						showConfirmButton: false
+					});
+					if (await metamaskCall(
+						factoryInstance.add777Token(erc777Instance.address, '10000000000000000000')
+					)) {
+						Swal.fire({
+							title: 'Success',
+							html: 'Token added',
+							icon: 'success'
+						})	
+					}
+				}} className='btn btn-royal-ice'>
+					Accept new token into the Master Factory
+				</button>
+			</>}
 			{clientTokens.lt(tokensRequired) && <> <br />Insufficient {tokenSymbol} Tokens! </>}
 		</> : 'Fetching info...'}
 	</div>

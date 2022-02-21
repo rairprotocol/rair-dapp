@@ -17,9 +17,11 @@ module.exports = (context) => {
       const offerPoolsForUpdate = [];
       let block_number = [];
       const networkData = context.config.blockchain.networks[network];
-      const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
+      const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(minterAbi, 'event', 'AppendedRange');
       const version = await context.db.Versioning.findOne({ name: 'sync offers', network });
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, offers: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       const options = {
         address: networkData.minterAddress,
@@ -30,7 +32,7 @@ module.exports = (context) => {
       };
 
       // Initialize moralis instances
-      Moralis.start({ serverUrl, appId });
+      Moralis.start({ serverUrl, appId, masterKey });
 
       const events = await Moralis.Web3API.native.getContractEvents(options);
 
@@ -45,6 +47,10 @@ module.exports = (context) => {
           price,
           name
         } = offer.data;
+
+        // prevent storing offers to DB for forbidden contracts
+        if (_.includes(forbiddenContracts, contractAddress.toLowerCase())) return;
+
         const contract = await context.db.Contract.findOne({ contractAddress: contractAddress.toLowerCase(), blockchain: network }, { _id: 1 });
 
         if (!contract) return;

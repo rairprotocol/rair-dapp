@@ -18,11 +18,13 @@ module.exports = (context) => {
       let block_number_locked = [];
       let block_number_unlocked = [];
       const networkData = context.config.blockchain.networks[network];
-      const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
+      const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const locked = getABIData(erc721Abi, 'event', 'RangeLocked');
       const unlocked = getABIData(erc721Abi, 'event', 'RangeUnlocked');
       const versionLocked = await context.db.Versioning.findOne({ name: 'sync locks locked', network });
       const versionUnlocked = await context.db.Versioning.findOne({ name: 'sync locks unlocked', network });
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, locks: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       const generalOptionsForLocked = {
         chain: networkData.network,
@@ -34,10 +36,12 @@ module.exports = (context) => {
         from_block: _.get(versionUnlocked, ['number'], 0),
         ...unlocked
       };
-      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }, { _id: 1, contractAddress: 1 });
+
+      // getting only contracts for which not forbidden locks sync
+      const arrayOfContracts = await context.db.Contract.find({ blockchain: network, contractAddress: { $nin: forbiddenContracts } }, { _id: 1, contractAddress: 1 });
 
       // Initialize moralis instances
-      Moralis.start({ serverUrl, appId });
+      Moralis.start({ serverUrl, appId, masterKey });
 
       await Promise.all(_.map(arrayOfContracts, async item => {
         const { _id, contractAddress: contract } = item;

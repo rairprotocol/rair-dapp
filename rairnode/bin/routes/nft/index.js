@@ -166,7 +166,7 @@ module.exports = context => {
                       name: record.name,
                       description: record.description,
                       artist: record.artist,
-                      external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                      external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract._id }/${ foundProduct.collectionIndexInContract }/${ offerPool.offer.offerIndex }/${ token }`),
                       image: record.image || '',
                       animation_url: record.animation_url || '',
                       attributes
@@ -186,7 +186,7 @@ module.exports = context => {
                           name: record.name,
                           description: record.description,
                           artist: record.artist,
-                          external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ adminToken }/${ foundContract.title }/${ foundProduct.name }/${ offerPool.offer.offerName }/${ token }`),
+                          external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract._id }/${ foundProduct.collectionIndexInContract }/${ offerPool.offer.offerIndex }/${ token }`),
                           image: record.image || '',
                           animation_url: record.animation_url || '',
                           isMetadataPinned: reg.test(token.metadataURI || ''),

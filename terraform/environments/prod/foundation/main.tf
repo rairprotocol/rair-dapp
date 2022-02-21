@@ -19,11 +19,11 @@ provider "google" {
 }
 
 module "config" {
-  source = "../shared/env_config"
+  source = "../../shared/env_config"
 }
 
 module "foundation" {
-  source = "../../modules/foundation"
+  source = "../../../modules/foundation"
 
   env_name = "prod"
   region = "us-west1"
@@ -32,6 +32,6 @@ module "foundation" {
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
 }
 
-output "vpc_cidr_range_output" {
-  value = module.foundation.vpc_cidr_range_output
+output "complete_output" {
+  value = module.foundation.complete_output
 }

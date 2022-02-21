@@ -49,7 +49,9 @@ async function main() {
   const app = express();
 
   /* CORS */
-  app.use(cors());
+  let origin = `https://${ process.env.SERVICE_HOST }`;
+
+  app.use(cors({ origin }));
 
   const hls = await StartHLS();
 
@@ -66,7 +68,8 @@ async function main() {
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
       Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning'),
       Blockchain: _mongoose.model('Blockchain', require('./models/blockchain'), 'Blockchain'),
-      Category: _mongoose.model('Category', require('./models/category'), 'Category')
+      Category: _mongoose.model('Category', require('./models/category'), 'Category'),
+      SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction')
     },
     config,
     gcp: gcp(config)

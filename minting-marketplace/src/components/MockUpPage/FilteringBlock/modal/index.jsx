@@ -36,7 +36,7 @@ const Backdrop = styled.div`
       transition-delay: 150ms;
       transition-duration: 350ms;
       width: 949px;
-      height: 417px;
+      height: auto;
       border-radius: 16px;
       background-color: #222021;
       color: #fff;
@@ -46,7 +46,7 @@ const Backdrop = styled.div`
 
 const Content = styled.div`
   position: relative;
-  height: 417px;
+  height: auto;
   width: 949px;
   box-sizing: border-box;
   min-height: 50px;

@@ -52,7 +52,7 @@ body {
     color: var(--rhyno);
     background-color: var(--charcoal-80);
     border-radius: 16px!important;
-    content: attr(stepLabel);
+    content: attr(steplabel);
 }
 
 .rair-table thead {
@@ -345,11 +345,18 @@ a {
 }
 
 /* v1 */
+.header_logo-about {
+  cursor: pointer;
+  width: 180px;
+  height: auto !important;
+  padding: 15px 0 0 15px;
+}
+
 .header_logo:hover{
   cursor: pointer;
-  filter: sepia(1);
+  /* filter: sepia(1);
   transform: rotate3d(1, 1, 1, 360deg);
-  transition-duration: 1.5s;
+  transition-duration: 1.5s; */
 }
 
 /* v2 */
@@ -857,6 +864,10 @@ text-decoration: none;
 
 
 /* style for My Items */
+.my-items-wrapper {
+  margin-bottom: 108px;
+}
+
 .my-items-bar-wrapper{
   display: flex;
   position: relative;

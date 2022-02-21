@@ -51,6 +51,7 @@ pipeline {
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
       }
     }
+    
     //stage('Push docker RAIR frontend') {
     //  steps {
     //    sh 'docker push rairtechinc/rairfront:${BRANCH}_0.${VERSION}'

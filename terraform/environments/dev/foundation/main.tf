@@ -12,11 +12,11 @@ provider "google" {
 provider "hcp" {}
 
 module "config" {
-  source = "../shared/env_config"
+  source = "../../shared/env_config"
 }
 
 module "foundation" {
-  source = "../../modules/foundation"
+  source = "../../../modules/foundation"
 
   env_name = "dev"
   region = "us-west1"
@@ -26,10 +26,10 @@ module "foundation" {
 }
 
 module "hcp_cloud" {
-  source = "../../modules/hcp_cloud"
+  source = "../../../modules/hcp_cloud"
   env_name = "dev"
 }
 
-output "vpc_cidr_range_output" {
-  value = module.foundation.vpc_cidr_range_output
+output "complete_output" {
+  value = module.foundation.complete_output
 }

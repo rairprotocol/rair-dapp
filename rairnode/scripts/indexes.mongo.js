@@ -24,10 +24,7 @@ const { MongoClient } = require('mongodb');
 
   await db.collection('Product').createIndex({ name: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1 }, { background: true });
-  await db.collection('Product').createIndex({ contract: 1, collectionIndexInContract: 1 }, {
-    background: true,
-    unique: true
-  });
+  await db.collection('Product').createIndex({ contract: 1, collectionIndexInContract: 1 }, { background: true, unique: true });
   await db.collection('Product').createIndex({ name: 'text'}, { weights: { name: 1 }, name: 'ProductSearchIdx' });
 
   await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true, unique: true });
@@ -35,10 +32,8 @@ const { MongoClient } = require('mongodb');
 
   await db.collection('Offer').createIndex({ offerPool: 1 }, { background: true });
   await db.collection('Offer').createIndex({ offerPool: 1, offerIndex: 1 }, { background: true });
-  await db.collection('Offer').createIndex({ contract: 1, offerPool: 1, offerIndex: 1 }, {
-    background: true,
-    unique: true
-  });
+  await db.collection('Offer').createIndex({ contract: 1, offerPool: 1, offerIndex: 1 }, { background: true, unique: true });
+  await db.collection('Offer').createIndex({ contract: 1, product: 1, offerIndex: 1 }, { background: true, unique: true });
   await db.collection('Offer').createIndex({ contract: 1, product: 1 }, { background: true});
 
   await db.collection('LockedTokens').createIndex({ contract: 1, product: 1 }, { background: true });
@@ -60,8 +55,9 @@ const { MongoClient } = require('mongodb');
 
   await db.collection('LockedTokens').createIndex({ contract: 1, lockIndex: 1 }, { background: true, unique: true });
 
-
   await db.collection('Versioning').createIndex({ name: 1, network: 1 }, { background: true, unique: true });
+
+  await db.collection('SyncRestriction').createIndex({ blockchain: 1, contractAddress: 1 }, { background: true, unique: true });
 
   console.log('Completed Database Indexes');
 

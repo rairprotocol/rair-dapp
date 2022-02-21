@@ -580,13 +580,23 @@ line-height: 30px;
     flex-direction: row;
 }
 .property-btn{
-    padding: 18px 91px 18px 92px;
+    /* padding: 18px 91px 18px 92px; */
     width: 303px;
     height: 64px;
     background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
     border-radius: 16px;
     text-align: center;
+    border: none;
+    transition: .3s all ease;
+
+    font-size: 20px;
+    color: #fff;
 }
+
+.property-btn:hover {
+    background: linear-gradient(320.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+
 .property-btn-ipfs{
     width: 120px;
     height: 28px;
@@ -1037,6 +1047,13 @@ line-height: 30px;
 .meet-team .box-teammate .teammate-title-socials {
     display: flex;
     align-items: center;
+    cursor: default;
+}
+
+.meet-team .box-teammate .teammate-title-socials .teammate-wrapper-name span {
+    margin-bottom: 1rem;
+    display: block;
+    font-size: 16px;
 }
 
 
@@ -1080,6 +1097,7 @@ line-height: 30px;
     max-width: 770px;
     margin-top: 16px;
     text-align: left;
+    cursor: default;
 }
 
 .teammate-description p {
@@ -1092,6 +1110,7 @@ line-height: 30px;
 .position-teammate h4 {
     text-align: left;
     font-size: 24px;
+    font-weight: 700;
 }
 
 .box-socials {
@@ -1244,12 +1263,21 @@ text-decoration: underline;
 }
 
 .modal-text-wrapper {
-    padding-bottom: 4rem;
+    padding-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    margin-top: -4rem;
+    margin-left: 4rem;
+}
+
+.modal-text-wrapper img {
+    width: 127px;
+    margin-left: 1rem;
 }
 
 .modal-text {
-    font-family: Plus Jakarta Sans;
-    font-size: 24px;
+    font-family: sans-serif 'Plus Jakarta Sans';
+    font-size: 22px;
     font-style: normal;
     font-weight: 400;
     line-height: 28px;
@@ -1331,6 +1359,7 @@ img.block-img-mobile{
     }
     .main-greyman-pic-wrapper{
         margin-left: 4rem;
+        width: 100%;
         /* width: 900px; */
         /* display: -webkit-inline-box; */
     }
@@ -2951,7 +2980,7 @@ img.block-img-mobile{
     }
 
     .video-grey-man-metamask-logo {
-        left: 130%;
+        left: 100%;
     }
 
     .home-splash-mobile .meet-team .box-teammate .teammate-title-socials span a.arrrow-right:hover {
@@ -3010,11 +3039,20 @@ img.block-img-mobile{
     #use:checked+label::before {
         left: 232px;
     }
+
+    .meet-team .box-teammate .teammate-title-socials .teammate-wrapper-name span {
+        font-size: 12px;
+    }
+
+    .modal-text-wrapper {
+        margin-left: 1rem;
+        margin-top: 0rem;
+    }
 }
 
 @media screen and (max-width: 450px) {
     .video-grey-man-metamask-logo {
-        left: 110%;
+        left: 80%;
     }
 
     .wrapper-splash-page.nutcrackers .crackers-text {
@@ -3068,6 +3106,10 @@ img.block-img-mobile{
     .release-join-discord .mailchimp input.email {
         width: 200px;
     }
+
+    .video-grey-man-metamask-logo {
+        left: 60%;
+    }
 }
 
 
@@ -3078,7 +3120,7 @@ img.block-img-mobile{
     }
 
     .video-grey-man-metamask-logo {
-        left: 80%;
+        left: 40%;
     }
 
     .modal-content-wrapper {
@@ -3098,6 +3140,9 @@ img.block-img-mobile{
     }
 
     .modal-text-wrapper {
+        margin-left: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 10px;
         padding-bottom: 15px;
     }
 }
@@ -3105,6 +3150,10 @@ img.block-img-mobile{
 @media screen and (max-width: 355px) {
     .wrapper-splash-page.nutcrackers .crackers-text {
         margin-top: 500px;
+    }
+
+    .meet-team .box-teammate .teammate-title-socials .teammate-wrapper-name span {
+        font-size: 10px;
     }
 }
 

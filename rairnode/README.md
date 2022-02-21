@@ -43,7 +43,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
         * [x] /get_token/:MetaMessage/:MetaSignature/:mediaId - GET - respond to a challenge to receive a JWT, [see details here](readme/get_token.md)
         * [x] /admin/:MetaMessage/:MetaSignature - GET - verify with a Metamask challenge if the user holds the current Administrator token, [see details here](readme/admin.md)
         * [x] /new_admin/:MetaMessage/:MetaSignature - POST - verify the user holds the current Admin token and then replace it with a new token, [see details here](readme/new_admin.md)
-        * [x] /authentication - POST - verification of user signature and generating of JWT token, [see details here](readme/get_jwt_token.md)
+        * [x] /authentication/:MetaMessage/:MetaSignature - GET - verification of user Metamask challenge and generating of JWT token, [see details here](readme/get_jwt_token.md)
         * [x] /user_info - GET - get details about user by JWT token, [see details here](readme/get_user_details.md)
     * [x] /media
         * [x] /add/:mediaId - POST - register a new piece of media, [see details here](readme/add_media.md)
@@ -75,7 +75,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
                 * [x] /locks - GET - get all locks for specific product, [see details here](readme/get_product_locks.md)
             * [x] /token/:tokenInContract - GET - Get specific token by contract address and unique toke ID in contract, [see details here](readme/get_minted_token_by_contract_index.md)
     * [x] /docs - swagger documentation for the server
-    * [x] /:adminToken/:contractName/:productName - GET - get full data about particular product and get list of tokens for it, [see details here](readme/get_token_metadata.md)
+    * [x] /:contractId/:productIndex - GET - get full data about particular product and get list of tokens for it, [see details here](readme/get_token_metadata.md)
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
 * [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
 

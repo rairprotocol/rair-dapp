@@ -3,3 +3,8 @@ resource "google_compute_address" "ip_address" {
   name = "primary-ingress-ip"
   region =var.region
 }
+
+resource "google_compute_address" "gke_nat" {
+  name = "gke-nat"
+  region =var.region
+}

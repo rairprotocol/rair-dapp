@@ -38,11 +38,26 @@ spec:
                 secretKeyRef:
                   name: mongodb-credential
                   key: MONGO_URI
+            - name: MONGO_URI_LOCAL
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
             - name: PINATA_SECRET
               valueFrom:
                 secretKeyRef:
                   name: pinata-secret
                   key: PINATA_SECRET
+            - name: MORALIS_MASTER_KEY_MAIN
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-main
+                  key: MORALIS_MASTER_KEY_MAIN
+            - name: MORALIS_MASTER_KEY_TEST
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-test
+                  key: MORALIS_MASTER_KEY_TEST
           envFrom:
           - configMapRef:
               name: blockchain-event-listener-env

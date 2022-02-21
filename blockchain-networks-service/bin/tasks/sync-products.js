@@ -16,9 +16,11 @@ module.exports = (context) => {
       const productsForSave = [];
       let block_number = [];
       const networkData = context.config.blockchain.networks[network];
-      const { serverUrl, appId } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
+      const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet'];
       const { abi, topic } = getABIData(erc721Abi, 'event', 'ProductCreated');
       const version = await context.db.Versioning.findOne({ name: 'sync products', network });
+      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, products: false }).distinct('contractAddress');
+      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
 
       const generalOptions = {
         chain: networkData.network,
@@ -26,10 +28,12 @@ module.exports = (context) => {
         abi,
         from_block: _.get(version, ['number'], 0)
       };
-      const arrayOfContracts = await context.db.Contract.find({ blockchain: network }, { _id: 1, contractAddress: 1 });
+
+      // getting only contracts for which not forbidden products sync
+      const arrayOfContracts = await context.db.Contract.find({ blockchain: network, contractAddress: { $nin: forbiddenContracts } }, { _id: 1, contractAddress: 1 });
 
       // Initialize moralis instances
-      Moralis.start({ serverUrl, appId });
+      Moralis.start({ serverUrl, appId, masterKey });
 
       await Promise.all(_.map(arrayOfContracts, async item => {
         const { _id, contractAddress: contract } = item;
