@@ -6,6 +6,7 @@ import { diamondFactoryAbi } from '../../contracts'
 import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import InputField from '../common/InputField.jsx';
+import {constants} from 'ethers';
 
 const BatchTokenSelector = ({batchMint, max}) => {
 	const [batchArray, setBatchArray] = useState([]);
@@ -106,6 +107,7 @@ const TokenSelector = ({buyCall, max, min}) => {
 const DiamondMarketplace = (props) => {
 	const [offersArray, setOffersArray] = useState([]);
 	const [transactionInProgress, setTransactionInProgress] = useState(false);
+	const [treasuryAddress, setTreasuryAddress] = useState();
 
 	const { diamondMarketplaceInstance, contractCreator } = useSelector(store => store.contractStore);
 
@@ -113,6 +115,7 @@ const DiamondMarketplace = (props) => {
 		if (!diamondMarketplaceInstance) {
 			return;
 		}
+		setTreasuryAddress(await diamondMarketplaceInstance.getTreasuryAddress());
 		let offerCount = Number((await diamondMarketplaceInstance.getTotalOfferCount()).toString());
 		let offerData = [];
 		for (let i = 0; i < offerCount; i++) {
@@ -197,6 +200,13 @@ const DiamondMarketplace = (props) => {
 			<h5> Diamond Marketplace </h5>
 			{offersArray.length} offers found.
 		</div>
+		{treasuryAddress === constants.AddressZero &&
+			<button onClick={() => {
+				diamondMarketplaceInstance.updateTreasuryAddress('0x7849194dD593d6c3aeD24035D70B5394a1C90F8F')
+			}} className='btn btn-success'>
+				Add Treasury Address
+			</button>
+		}
 		{offersArray.map((offer, index) => {
 			return <div style={{
 				position: 'relative'
