@@ -171,8 +171,8 @@ const teamAboutRair = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: '',
-                classLink: "arrrow-right"
+                link: 'https://www.linkedin.com/in/ed-prado-a8526a4/',
+                classLink: ""
             }
         ]
     },
@@ -193,8 +193,8 @@ const teamAboutRair = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: '',
-                classLink: "arrrow-right"
+                link: 'https://www.linkedin.com/in/garrettminks/',
+                classLink: ""
             }
         ]
     },
@@ -230,6 +230,13 @@ const teamAboutRair = [
             the first tracking and logistics integration applications for an 
             international shipping company.
             `
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: 'https://www.linkedin.com/in/martin-casado-484b353/',
+                classLink: ""
+            }
         ]
     }
 ];
@@ -262,8 +269,8 @@ const rairAdvisorsTeam = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: '',
-                classLink: "arrrow-right"
+                link: 'https://www.linkedin.com/in/michaelterpin/',
+                classLink: ""
             }
         ]
     },
@@ -302,8 +309,8 @@ const rairAdvisorsTeam = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: '',
-                classLink: "arrrow-right"
+                link: 'https://www.linkedin.com/in/davidnjensen/',
+                classLink: ""
             }
         ]
     },
@@ -385,8 +392,8 @@ const rairAdvisorsTeam = [
         socials: [
             {
                 classIcon: 'fab fa-linkedin-in',
-                link: '',
-                classLink: "arrrow-right"
+                link: 'https://www.linkedin.com/in/mattneco/',
+                classLink: ""
             }
         ]
     }

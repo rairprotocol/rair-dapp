@@ -38,6 +38,11 @@ spec:
                 secretKeyRef:
                   name: mongodb-credential
                   key: MONGO_URI
+            - name: MONGO_URI_LOCAL
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
             - name: PINATA_SECRET
               valueFrom:
                 secretKeyRef:
