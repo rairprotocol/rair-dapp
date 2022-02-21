@@ -163,9 +163,9 @@ module.exports = context => {
                     uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                     isMinted: false,
                     metadata: {
-                      name: record.name,
-                      description: record.description,
-                      artist: record.artist,
+                      name: context.textPurify.sanitize(record.name),
+                      description: context.textPurify.sanitize(record.description),
+                      artist: context.textPurify.sanitize(record.artist),
                       external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract._id }/${ foundProduct.collectionIndexInContract }/${ offerPool.offer.offerIndex }/${ token }`),
                       image: record.image || '',
                       animation_url: record.animation_url || '',
@@ -183,9 +183,9 @@ module.exports = context => {
                       update: {
                         ownerAddress: sanitizedOwnerAddress,
                         metadata: {
-                          name: record.name,
-                          description: record.description,
-                          artist: record.artist,
+                          name: context.textPurify.sanitize(record.name),
+                          description: context.textPurify.sanitize(record.description),
+                          artist: context.textPurify.sanitize(record.artist),
                           external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract._id }/${ foundProduct.collectionIndexInContract }/${ offerPool.offer.offerIndex }/${ token }`),
                           image: record.image || '',
                           animation_url: record.animation_url || '',

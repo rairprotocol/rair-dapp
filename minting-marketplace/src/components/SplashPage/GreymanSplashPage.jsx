@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -27,7 +27,7 @@ import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import VideoPlayer from "../video/videoPlayerGenerall";
-import setDocumentTitle from "./../../utils/setTitle";
+import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
 
 const customStyles = {
@@ -248,10 +248,6 @@ const SplashPage = ({ loginDone }) => {
 
   let subtitle;
 
-  useEffect(() => {
-    setDocumentTitle(`Cryptogreyman`);
-  }, []);
-
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
       await fetch(
@@ -273,6 +269,10 @@ const SplashPage = ({ loginDone }) => {
       setSoldCopies(0);
     }
   }, [setSoldCopies]);
+
+  useEffect(() => {
+    setTitle(`#Cryptogreyman`);
+  }, [])
 
   useEffect(() => {
     getAllProduct();

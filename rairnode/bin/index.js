@@ -13,6 +13,8 @@ const _ = require('lodash');
 const log = require('./utils/logger')(module);
 const seedDB = require('./seeds');
 require('dotenv').config();
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
 
 const config = require('./config');
 const gcp = require('./integrations/gcp');
@@ -49,11 +51,13 @@ async function main() {
   const app = express();
 
   /* CORS */
-  let origin = `https://${ process.env.SERVICE_HOST }`;
-
-  app.use(cors({ origin }));
+  app.use(cors());
 
   const hls = await StartHLS();
+
+  // XSS sanitizer
+  const window = new JSDOM('').window;
+  const textPurify = createDOMPurify(window);
 
   const context = {
     hls,
@@ -72,7 +76,8 @@ async function main() {
       SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction')
     },
     config,
-    gcp: gcp(config)
+    gcp: gcp(config),
+    textPurify
   };
 
   await seedDB(context);
