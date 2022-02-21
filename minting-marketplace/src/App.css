@@ -878,6 +878,10 @@ text-decoration: none;
 
 
 /* style for My Items */
+.my-items-wrapper {
+  margin-bottom: 108px;
+}
+
 .my-items-bar-wrapper{
   display: flex;
   position: relative;

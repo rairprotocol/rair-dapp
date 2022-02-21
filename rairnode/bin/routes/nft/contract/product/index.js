@@ -16,6 +16,9 @@ module.exports = context => {
       const numberOfTokens = Number(limit);
 
       const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+
+      if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+
       const totalCount = await context.db.MintedToken.countDocuments({
         contract: contract._id,
         offerPool: offerPool.marketplaceCatalogIndex
@@ -38,6 +41,9 @@ module.exports = context => {
     try {
       const { contract, product } = req;
       const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+
+      if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+
       const tokens = await context.db.MintedToken.find({
         contract: contract._id,
         offerPool: offerPool.marketplaceCatalogIndex
@@ -188,6 +194,8 @@ module.exports = context => {
       const { contract, product } = req;
 
       const locks = await context.db.LockedTokens.find({ contract: contract._id, product });
+
+      if (_.isEmpty(locks)) return res.status(404).send({ success: false, message: 'Locks not found.' });
 
       res.json({ success: true, locks });
     } catch (err) {
