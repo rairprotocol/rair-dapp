@@ -922,28 +922,28 @@ i.fas-custom {
 
 
 /* style for My Items */
-
-.my-items-bar-wrapper {
-    display: flex;
-    position: relative;
+.my-items-wrapper {
+  margin-bottom: 108px;
 }
 
-.my-items-title-wrapper {
-    width: 202px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    align-content: center;
-    margin-bottom: 22px;
+.my-items-bar-wrapper{
+  display: flex;
+  position: relative;
 }
-
-.my-items-title-wrapper:hover {
-    filter: brightness(0.5);
+.my-items-title-wrapper{
+  width: 202px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  margin-bottom: 22px;
 }
-
-.my-items-title {
-    cursor: pointer;
-    margin-left: 24px;
+.my-items-title-wrapper:hover{
+  filter: brightness(0.5);
+}
+.my-items-title{
+  cursor: pointer;
+  margin-left: 24px;
 }
 
 .fa-arrow-custom {
