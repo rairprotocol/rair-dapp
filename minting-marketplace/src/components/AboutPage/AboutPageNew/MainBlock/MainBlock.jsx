@@ -31,7 +31,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const MainBlock = ({ Metamask, primaryColor, termsText }) => {
+const MainBlock = ({ Metamask, primaryColor }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
@@ -96,8 +96,7 @@ const MainBlock = ({ Metamask, primaryColor, termsText }) => {
             {
               value: aboutOffer.price,
             }
-          ),
-          "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+          )
         )
       ) {
         Swal.fire("Success", `Bought token #${nextToken}!`, "success");
@@ -209,7 +208,9 @@ const MainBlock = ({ Metamask, primaryColor, termsText }) => {
               <div className="modal-content-np">
                 <div className="modal-text-wrapper">
                   <span className="modal-text">
-                    {termsText}
+                    I understand this is a prerelease NFT. Final artwork and
+                    access to encrypted streams will be associated with your NFT
+                    serial number at the time of launch.
                   </span>
                 </div>
                 <div className="modal-btn-wrapper">
