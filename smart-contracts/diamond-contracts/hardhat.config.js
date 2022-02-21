@@ -25,6 +25,10 @@ module.exports = {
 		"0x13881": {
 			url: process.env.MUMBAI_SPEEDY_NODE,
 			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+		},
+		"0x89": {
+			url: process.env.MATIC_SPEEDY_NODE,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY],
 		}
 	},
 	solidity: {

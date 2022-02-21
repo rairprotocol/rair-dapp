@@ -48,7 +48,8 @@ async function main() {
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
       Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning'),
-      Task: _mongoose.model('Task', require('./models/task'), 'Task')
+      Task: _mongoose.model('Task', require('./models/task'), 'Task'),
+      SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction')
     },
     mongo: _db,
     config

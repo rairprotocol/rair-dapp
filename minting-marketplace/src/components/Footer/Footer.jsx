@@ -35,11 +35,13 @@ const Footer = ({ primaryColor, openAboutPage, sentryHistory }) => {
                                 style={{
                                     color: `${primaryColor === "rhyno" ? "inherit" : "#fff"}`
                                 }}
-                                href="mailto:inquiries@rair.tech"
+                                // href="mailto:inquiries@rair.tech"
+                                href="https://discord.gg/Tm3KYWS7jA"
                                 rel="noreferrer"
                                 target="_blank"
                             >
-                                Inquiries
+                                {/* Inquiries */}
+                                Discord channel
                             </a>
                         </li>
                         <li>
