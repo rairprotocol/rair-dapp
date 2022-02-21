@@ -1,35 +1,27 @@
 import Swal from 'sweetalert2';
 
-const handleError = (errorMessage, defaultError = undefined) => {
+const handleError = (errorMessage) => {
 	console.error(errorMessage);
 	let cleanError = errorMessage?.data?.message;
-	console.log(cleanError);
 	if (!cleanError) {
-		cleanError = errorMessage?.message;
-		if (!cleanError) {
-			cleanError = errorMessage?.toString()?.split('"message":"execution reverted: ')?.at(1)?.split('"')?.at(0);
-		}
+		cleanError = errorMessage?.toString()?.split('"message":"execution reverted: ')?.at(1)?.split('"')?.at(0);
 	}
-	if (!cleanError || cleanError?.includes('=') || cleanError?.includes('0x')) {
-		cleanError = defaultError ? defaultError : 'An unexpected error has ocurred on your transaction, please try again later.';
-	}
-	Swal.fire('Error', cleanError, 'error');
+	Swal.fire('Error', cleanError ? cleanError : errorMessage?.message, 'error');
 }
 
-const metamaskCall = async (transaction, fallbackFailureMessage = undefined) => {
-	console.log(transaction);
+const metamaskCall = async (transaction) => {
 	let paramsValidation = undefined;
 	try {
 		paramsValidation = await transaction;
 	} catch (errorMessage) {
-		handleError(errorMessage, fallbackFailureMessage);
+		handleError(errorMessage)
 		return false;
 	}
 	if (paramsValidation.wait) {
 		try {
 			await (paramsValidation).wait();
 		} catch (errorMessage) {
-			handleError(errorMessage, fallbackFailureMessage);
+			handleError(errorMessage)
 			return false;
 		}
 		return true;
