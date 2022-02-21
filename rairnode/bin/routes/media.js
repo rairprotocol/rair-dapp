@@ -254,14 +254,14 @@ module.exports = context => {
         log.info('ffmpeg DONE: converted to stream.');
 
         const rairJson = {
-          title,
+          title: context.textPurify.sanitize(title),
           mainManifest: 'stream.m3u8',
           author,
           encryptionType: 'aes-128-cbc'
         };
 
         if (description) {
-          rairJson.description = description;
+          rairJson.description = context.textPurify.sanitize(description);
         }
 
         fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
@@ -299,7 +299,7 @@ module.exports = context => {
           mainManifest: 'stream.m3u8',
           author,
           encryptionType: 'aes-128-cbc',
-          title,
+          title: context.textPurify.sanitize(title),
           contract: foundContract._id,
           product,
           offer: demo === 'false' ? offer : [],
@@ -313,7 +313,7 @@ module.exports = context => {
         };
 
         if (description) {
-          meta.description = description;
+          meta.description = context.textPurify.sanitize(description);
         }
 
         log.info(`${ req.file.originalname } uploaded to ${storageName}: ${ cid }`);
