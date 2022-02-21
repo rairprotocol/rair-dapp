@@ -117,6 +117,7 @@ Returns found full contracts
       }
     },
     ...
-  ]
+  ],
+  "totalNumber": 12
 }
 ```
