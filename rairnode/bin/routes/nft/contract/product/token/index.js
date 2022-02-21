@@ -87,13 +87,19 @@ module.exports = context => {
           .value();
       }
 
-      fieldsForUpdate = _.mapKeys(fieldsForUpdate, (v, k) => `metadata.${ k }`);
+      // sanitize fields
+      let sanitizedFieldsForUpdate = {};
+      _.forEach(fieldsForUpdate, (v, k) => {
+        sanitizedFieldsForUpdate[k] = _.includes(['image', 'animation_url', 'external_url', 'attributes'], k) ? v : context.textPurify.sanitize(v);
+      })
+
+      sanitizedFieldsForUpdate = _.mapKeys(sanitizedFieldsForUpdate, (v, k) => `metadata.${ k }`);
 
       const updatedToken = await context.db.MintedToken.findOneAndUpdate({
         contract: contract._id,
         offerPool: offerPool.marketplaceCatalogIndex,
         token
-      }, fieldsForUpdate, { new: true });
+      }, sanitizedFieldsForUpdate, { new: true });
 
       if (req.files.length) {
         await Promise.all(_.map(req.files, async file => {
