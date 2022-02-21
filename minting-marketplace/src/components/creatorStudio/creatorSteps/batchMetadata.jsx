@@ -282,7 +282,14 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 				</button>
 			</div>
 			<hr />
-			<div className='col-12 col-md-9'>
+			<div className='col-12 col-md-3 pt-4'>
+				<button onClick={async () => {
+						setContractURI(await metamaskCall(contractData.instance.contractURI()));
+					}} className='btn btn-royal-ice'>
+						Read Contract URI
+				</button>
+			</div>
+			<div className='col-12 col-md-6'>
 				<InputField
 					customClass='form-control w-100'
 					getter={contractURI}
