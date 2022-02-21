@@ -144,12 +144,17 @@ module.exports = context => {
         options.unshift({ $match: { blockchain } });
       }
 
+      const totalNumber = _.chain(await context.db.Contract.aggregate(options).count('contracts'))
+        .head()
+        .get('contracts', 0)
+        .value();
+
       const contracts = await context.db.Contract.aggregate(options)
         .sort({ ['products.name']: 1 })
         .skip(skip)
         .limit(pageSize);
 
-      res.json({ success: true, contracts });
+      res.json({ success: true, contracts, totalNumber });
     } catch (e) {
       next(e);
     }
