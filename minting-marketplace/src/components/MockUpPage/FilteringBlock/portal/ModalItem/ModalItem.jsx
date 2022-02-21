@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { SvgKeyForModalItem } from "../../../NftList/SvgKeyForModalItem";
 import Modal from "../../modal";
+import "./ModalItemResponsive.css";
 
 const ModalItem = ({
   isOpenBlockchain,
@@ -24,35 +25,25 @@ const ModalItem = ({
   }
 
   return (
-    <Modal onClose={onCloseModal} open={isOpenBlockchain}>
+    <Modal style={{height: "auto !important"}} onClose={onCloseModal} open={isOpenBlockchain}>
       <div className="modal-content-metadata">
         <div className="block-close">
           <button onClick={onCloseModal}>
             <i className="fas fa-times"></i>
           </button>
         </div>
-        <div style={{ display: "flex", paddingLeft: "32px" }}>
+        <div className="modal-main-content">
           <div
             className="w-100 bg-my-items p-2"
             style={{
-              maxWidth: "291px",
-              height: "291px",
               backgroundImage: `url(${
                 selectedData?.metadata.image || defaultImg
               })`,
               backgroundColor: `var(--${primaryColor}-transparent)`,
-              overflow: "hidden",
             }}
           ></div>
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-evenly",
-              alignItems: "flex-start",
-              paddingLeft: "32px",
-            }}
-          >
+          className="modal-number-tokenContent">
             <span className="modal-item-title">
               {bidFirstLetter(selectedData.title)}
             </span>
