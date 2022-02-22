@@ -631,9 +631,9 @@ const NftDataPageTest = ({
             </div>
           </div>
           <Accordion
-            allowMultipleExpanded /* allowMultipleExpanded /* allowZeroExpanded allowMultipleExpanded*/
+            allowMultipleExpanded preExpanded={['a']} /* allowZeroExpanded allowMultipleExpanded*/
           >
-            <AccordionItem>
+            <AccordionItem uuid="a" >
               <AccordionItemHeading>
                 <AccordionItemButton>Description</AccordionItemButton>
               </AccordionItemHeading>
@@ -653,7 +653,7 @@ const NftDataPageTest = ({
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
-            <AccordionItem>
+            <AccordionItem uuid="b" >
               <AccordionItemHeading>
                 <AccordionItemButton>Properties</AccordionItemButton>
               </AccordionItemHeading>
