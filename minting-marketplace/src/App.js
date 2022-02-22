@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route, /*Redirect*/ NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch.js';
 
@@ -43,6 +43,7 @@ import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
 
 import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
+import { OnboardingButton } from './components/common/OnboardingButton';
 
 //Google Analytics
 import ReactGA from 'react-ga';
@@ -78,10 +79,10 @@ function App({ sentryHistory }) {
 
   const [/*userData*/, setUserData] = useState();
   const [adminAccess, setAdminAccess] = useState(null);
-  const [, setStartedLogin] = useState(false);
+  const [startedLogin, setStartedLogin] = useState(false);
   const [loginDone, setLoginDone] = useState(false);
   const [errorAuth, /*setErrorAuth*/] = useState('');
-  const [, setRenderBtnConnect] = useState(false);
+  const [renderBtnConnect, setRenderBtnConnect] = useState(false);
 
   // Google Analytics
   const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -332,6 +333,31 @@ function App({ sentryHistory }) {
 										primaryColor={primaryColor}
 									/>
 								</div>
+                {!loginDone ? <div className='btn-connect-wallet-wrapper'>
+									<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
+										className={`btn btn-${primaryColor} btn-connect-wallet`}
+										onClick={connectUserData}>
+										{startedLogin ? 'Please wait...' : 'Connect Wallet'}
+										{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+									</button>
+									{renderBtnConnect ? <OnboardingButton /> : <> </>}
+									{console.log(adminAccess)}
+								</div> : adminAccess === true && [
+									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
+									{ name: <i className="fas fa-key" />, route: '/my-nft' },
+									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+								].map((item, index) => {
+									if (!item.disabled) {
+										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+											<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
+												{item.name}
+											</NavLink>
+										</div>
+									}
+									return <div key={index}></div>
+								})}
 							</div>
 							<div className='col'>
 								<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
