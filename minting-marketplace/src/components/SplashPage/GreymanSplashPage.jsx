@@ -315,7 +315,7 @@ const SplashPage = ({ loginDone }) => {
                 <div className="greyman-">
                   <Countdown
                     setTimerLeft={setTimerLeft}
-                    time={"2022-02-02T22:22:00-00:00"}
+                    time={"2022-02-22T22:22:00-00:00"}
                   />
                 </div>
               )}
