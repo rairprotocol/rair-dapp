@@ -30,6 +30,6 @@ module "hcp_cloud" {
   env_name = "dev"
 }
 
-output "complete_output" {
-  value = module.foundation.complete_output
+output "vpc_cidr_range_output" {
+  value = module.foundation.vpc_cidr_range_output
 }

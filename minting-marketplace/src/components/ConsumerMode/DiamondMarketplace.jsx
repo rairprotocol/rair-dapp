@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useStore, Provider } from 'react-redux';
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../utils/metamaskUtils.js';
 import { diamondFactoryAbi } from '../../contracts'
 import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import InputField from '../common/InputField.jsx';
-import {constants} from 'ethers';
+import BuyTokenModalContent from '../marketplace/BuyTokenModalContent.jsx';
+import withReactContent from 'sweetalert2-react-content';
+const rSwal = withReactContent(Swal);
 
 const BatchTokenSelector = ({batchMint, max}) => {
 	const [batchArray, setBatchArray] = useState([]);
@@ -107,15 +109,17 @@ const TokenSelector = ({buyCall, max, min}) => {
 const DiamondMarketplace = (props) => {
 	const [offersArray, setOffersArray] = useState([]);
 	const [transactionInProgress, setTransactionInProgress] = useState(false);
-	const [treasuryAddress, setTreasuryAddress] = useState();
 
 	const { diamondMarketplaceInstance, contractCreator } = useSelector(store => store.contractStore);
+
+	const store = useStore();
+
+	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
 
 	const fetchDiamondData = useCallback(async () => {
 		if (!diamondMarketplaceInstance) {
 			return;
 		}
-		setTreasuryAddress(await diamondMarketplaceInstance.getTreasuryAddress());
 		let offerCount = Number((await diamondMarketplaceInstance.getTotalOfferCount()).toString());
 		let offerData = [];
 		for (let i = 0; i < offerCount; i++) {
@@ -180,7 +184,7 @@ const DiamondMarketplace = (props) => {
 			offerIndex,
 			tokens,
 			addresses,
-			{value: price * tokens.length}
+			{value: price.mul(tokens.length)}
 		))) {
 			Swal.fire({
 				title: 'Success',
@@ -200,13 +204,6 @@ const DiamondMarketplace = (props) => {
 			<h5> Diamond Marketplace </h5>
 			{offersArray.length} offers found.
 		</div>
-		{treasuryAddress === constants.AddressZero &&
-			<button onClick={() => {
-				diamondMarketplaceInstance.updateTreasuryAddress('0x7849194dD593d6c3aeD24035D70B5394a1C90F8F')
-			}} className='btn btn-success'>
-				Add Treasury Address
-			</button>
-		}
 		{offersArray.map((offer, index) => {
 			return <div style={{
 				position: 'relative'
@@ -248,16 +245,44 @@ const DiamondMarketplace = (props) => {
 						offer.price
 					);
 				}} className={`btn my-2 py-0 btn-${offer.visible ? 'stimorol' : 'danger'}`}>
-					{offer.visible ? 'Buy a token' : "Not for sale!"}
+					{offer.visible ? 'Buy the first available token token' : "Not for sale!"}
 				</button>
-				{offer.visible && <TokenSelector min={offer.startingToken} max={offer.endingToken} buyCall={async (tokenIndex) => {
+				{false && offer.visible && <TokenSelector min={offer.startingToken} max={offer.endingToken} buyCall={async (tokenIndex) => {
 					await mintTokenCall(
 						offer.offerIndex,
 						tokenIndex,
 						offer.price
 					);
 				}}/>}
-				{offer.visible && <BatchTokenSelector max={offer.tokensAllowed} batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />}
+				{false && offer.visible && <BatchTokenSelector max={offer.tokensAllowed} batchMint={(tokens, addresses) => batchMint(offer.offerIndex, tokens, addresses, offer.price)} />}
+				<br />
+				{offer.visible && <button id={`button_${index}`} onClick={async e => {
+						rSwal.fire({
+							html: <Provider store={store}>
+								<BuyTokenModalContent
+									diamonds={true}
+									buyTokenFunction={mintTokenCall}
+									buyTokenBatchFunction={batchMint}
+									start={offer.startingToken}
+									end={offer.endingToken}
+									blockchain={window.ethereum.chainId}
+									minterAddress={diamondMarketplaceInstance.address}
+									price={offer.price}
+									offerName={offer.name}
+									offerIndex={offer.offerIndex}
+								/>
+							</Provider>,
+							showConfirmButton: false,
+							width: '70vw',
+							customClass: {
+								popup: `bg-${primaryColor}`,
+								htmlContainer: `text-${secondaryColor}`,
+							}
+						})
+					}
+				} className='btn btn-royal-ice py-0'>
+					More options
+				</button>}
 			</div>
 		})}
 	</div>
