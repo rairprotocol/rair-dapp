@@ -421,7 +421,7 @@ const SplashPage = ({ loginDone }) => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          {window.ethereum.chainId !== GreymanChainId
+                          {window.ethereum?.chainId !== GreymanChainId
                             ? "Switch network"
                             : currentUserAddress
                             ? "PURCHASE"
