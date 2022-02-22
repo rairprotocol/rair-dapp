@@ -65,6 +65,20 @@ import Footer from './components/Footer/Footer.jsx';
 import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
 import MainLogo from './components/GroupLogos/MainLogo.jsx';
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+
+const analytics = Analytics({
+  app: 'greyman',
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-209450870-5'
+    })
+  ]
+})
+/* Track a page view */
+analytics.page()
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -84,9 +98,7 @@ function App({ sentryHistory }) {
   const [errorAuth, /*setErrorAuth*/] = useState('');
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
 
-  // Google Analytics
-  const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-  ReactGA.initialize(TRACKING_ID);
+
 
   // Redux
   const dispatch = useDispatch();
