@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import { getRandomValues } from '../../utils/getRandomValues'
 
 /***
 	InputSelect
@@ -41,7 +42,7 @@ const InputSelect = ({
 		requiredColor
 	}) => {
 
-	const [id,] = useState(Math.round(Math.random() * 1000))
+	const [id,] = useState(getRandomValues)
 	return <>
 	{label && <label htmlFor={id} style={{...labelCSS, color: (required ? `${requiredColor}!important` : labelCSS.color)}} className={labelClass}>
 			 {label + (required ? '*' : '')}
