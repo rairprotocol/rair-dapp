@@ -83,7 +83,7 @@ const SplashPage = ({ loginDone }) => {
   const [soldCopies, setSoldCopies] = useState();
 
   const [active, setActive] = useState({ policy: false, use: false });
-  const GraymanSplashPageTESTNET = "0xA011723657362e28325E26F5CCEC517A920bbB43";
+  const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
@@ -115,13 +115,13 @@ const SplashPage = ({ loginDone }) => {
   }
 
   const buyGrayman = async () => {
-    if (window.ethereum.chainId !== "0x13881") {
-      web3Switch("0x13881");
+    if (window.ethereum.chainId !== "0x89") {
+      web3Switch("0x89");
       return;
     }
 
     const { success, products } = await rFetch(
-      `/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`
+      `/api/contracts/network/0x89/${GraymanSplashPageTESTNET}/products/offers`
     );
     if (success) {
       let instance = contractCreator(GraymanSplashPageTESTNET, erc721Abi);
@@ -250,7 +250,7 @@ const SplashPage = ({ loginDone }) => {
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
       await fetch(
-        `/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`,
+        `/api/contracts/network/0x89/${GraymanSplashPageTESTNET}/products/offers`,
         {
           method: "GET",
           headers: {
@@ -420,7 +420,7 @@ const SplashPage = ({ loginDone }) => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          {window.ethereum.chainId !== "0x13881"
+                          {window.ethereum.chainId !== "0x89"
                             ? "Switch network"
                             : currentUserAddress
                             ? "PURCHASE"
