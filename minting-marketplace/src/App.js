@@ -205,7 +205,7 @@ function App({ sentryHistory }) {
   }, [dispatch]);
 
   useEffect(() => {
-    setTitle('Welcome');
+    setTitle('#Cryptogreyman');
   }, [dispatch, sentryHistory.push, setAdminAccess]);
 
   useEffect(() => {
