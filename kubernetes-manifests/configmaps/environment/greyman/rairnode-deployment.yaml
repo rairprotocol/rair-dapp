@@ -26,7 +26,7 @@ spec:
         io.kompose.service: rairnode
     spec:
       containers:
-        - image: rairtechinc/rairservernode:dev_latest
+        - image: rairtechinc/rairservernode:greyman-release_1.5
           name: rairnode
           imagePullPolicy: Always
           ports:
