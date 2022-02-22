@@ -30,6 +30,13 @@ import VideoPlayer from "../video/videoPlayerGenerall";
 import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
 
+//Google Analytics
+import ReactGA from 'react-ga';
+
+// Google Analytics
+const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
+
 const customStyles = {
   overlay: {
     zIndex: "1",
