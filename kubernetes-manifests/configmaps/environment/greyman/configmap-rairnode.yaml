@@ -17,3 +17,10 @@ data:
   IPFS_SERVICE: pinata
   IPFS_GATEWAY: http://rairipfs:8080/ipfs
   PINATA_GATEWAY: https://rair.mypinata.cloud/ipfs
+  BINANCE_MAINNET_RPC: https://data-seed-prebsc-1-s1.binance.org:8545/
+  BINANCE_TESTNET_RPC: https://bsc-dataseed.binance.org/
+  ETHEREUM_MAINNET_RPC: https://mainnet.infura.io/v3/8eca68adf20b4b94a573ca61c6519b61
+  ETHEREUM_TESTNET_RPC: https://goerli.infura.io/v3/8eca68adf20b4b94a573ca61c6519b61
+  MATIC_MAINNET_RPC: https://polygon-mainnet.infura.io/v3/8eca68adf20b4b94a573ca61c6519b61
+  MATIC_TESTNET_RPC: https://polygon-mumbai.infura.io/v3/8eca68adf20b4b94a573ca61c6519b61
+  
