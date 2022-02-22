@@ -19,7 +19,7 @@ import TokenLeftGreyman from "./TokenLeft/TokenLeftGreyman";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import { Timeline } from "./Timeline/Timeline";
 
-import { erc721Abi } from "../../contracts/index.js";
+import { diamondFactoryAbi } from "../../contracts/index.js";
 import { rFetch } from "../../utils/rFetch.js";
 import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
@@ -84,11 +84,12 @@ const SplashPage = ({ loginDone }) => {
 
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
+  const GreymanChainId = '0x89';
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
   //   const history = useHistory();
-  const { minterInstance, contractCreator, currentUserAddress } = useSelector(
+  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } = useSelector(
     (store) => store.contractStore
   );
 
@@ -115,28 +116,29 @@ const SplashPage = ({ loginDone }) => {
   }
 
   const buyGrayman = async () => {
-    if (window.ethereum.chainId !== "0x89") {
-      web3Switch("0x89");
+    if (window.ethereum.chainId !== GreymanChainId) {
+      web3Switch(GreymanChainId);
       return;
     }
-
-    const { success, products } = await rFetch(
-      `/api/contracts/network/0x89/${GraymanSplashPageTESTNET}/products/offers`
-    );
-    if (success) {
-      let instance = contractCreator(GraymanSplashPageTESTNET, erc721Abi);
-      let [greyworldOffer] = products[0].offers.filter(
-        (item) => item.offerName === "greyworld"
-      );
-      if (!greyworldOffer) {
-        Swal.fire("Error", "An error has ocurred", "error");
-        return;
-      }
-      let nextToken = await instance.getNextSequentialIndex(
-        0,
-        greyworldOffer.range[0],
-        greyworldOffer.range[1]
-      );
+    if (!diamondMarketplaceInstance) {
+      Swal.fire({
+        title: "An error has ocurred",
+        html: `Please try again later`,
+        icon: "info",
+      });
+      return;
+    }
+    let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(7));
+    console.log(greymanOffer);
+    if (greymanOffer) {
+    console.log(2);
+      let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
+      let nextToken = await metamaskCall(instance.getNextSequentialIndex(
+        greymanOffer.productIndex,
+        greymanOffer.rangeData.rangeStart,
+        greymanOffer.rangeData.rangeEnd
+      ));
+    console.log(3);
       Swal.fire({
         title: "Please wait...",
         html: `Buying Greyman #${nextToken.toString()}`,
@@ -144,12 +146,11 @@ const SplashPage = ({ loginDone }) => {
         showConfirmButton: false,
       });
       if (await metamaskCall(
-        minterInstance.buyToken(
-          products[0].offerPool.marketplaceCatalogIndex,
-          greyworldOffer.offerIndex,
+        diamondMarketplaceInstance.buyMintingOffer(
+          7,
           nextToken,
           {
-            value: greyworldOffer.price,
+            value: greymanOffer.rangeData.rangePrice,
           }
         ),
         "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
@@ -420,7 +421,7 @@ const SplashPage = ({ loginDone }) => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          {window.ethereum.chainId !== "0x89"
+                          {window.ethereum.chainId !== GreymanChainId
                             ? "Switch network"
                             : currentUserAddress
                             ? "PURCHASE"
