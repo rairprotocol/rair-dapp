@@ -92,6 +92,7 @@ const SplashPage = ({ loginDone }) => {
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
   const GreymanChainId = '0x89';
+  const offerIndexInMarketplace = 2;
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
@@ -135,17 +136,14 @@ const SplashPage = ({ loginDone }) => {
       });
       return;
     }
-    let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(7));
-    console.log(greymanOffer);
+    let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
     if (greymanOffer) {
-    console.log(2);
       let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
       let nextToken = await metamaskCall(instance.getNextSequentialIndex(
         greymanOffer.productIndex,
         greymanOffer.rangeData.rangeStart,
         greymanOffer.rangeData.rangeEnd
       ));
-    console.log(3);
       Swal.fire({
         title: "Please wait...",
         html: `Buying Greyman #${nextToken.toString()}`,
@@ -154,7 +152,7 @@ const SplashPage = ({ loginDone }) => {
       });
       if (await metamaskCall(
         diamondMarketplaceInstance.buyMintingOffer(
-          7,
+          offerIndexInMarketplace,
           nextToken,
           {
             value: greymanOffer.rangeData.rangePrice,
