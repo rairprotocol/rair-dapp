@@ -56,7 +56,10 @@
 .description{
     display: flex;
     flex-direction: column;
-    align-items: flex-start
+    align-items: flex-start;
+    text-align: start;
+    word-break: break-all;
+    overflow: scroll;
 }
 
 .iconKey{
