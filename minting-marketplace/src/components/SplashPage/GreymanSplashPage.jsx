@@ -1,16 +1,17 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
 import "./GreymanSplashPageMobile.css";
-import "./../AboutPage/AboutPageNew/AboutPageNew.css"
+import "./../AboutPage/AboutPageNew/AboutPageNew.css";
 import Modal from "react-modal";
 
 /* importing images*/
 import Metamask from "../../images/metamask-fox.svg";
 import GreyMan from "./images/greyman1.png";
 import playImages from "./images/playImg.png";
+import GreyManNotFun from "./images/not-fun.png";
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -18,7 +19,7 @@ import TokenLeftGreyman from "./TokenLeft/TokenLeftGreyman";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import { Timeline } from "./Timeline/Timeline";
 
-import { erc721Abi } from "../../contracts/index.js";
+import { diamondFactoryAbi } from "../../contracts/index.js";
 import { rFetch } from "../../utils/rFetch.js";
 import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
@@ -26,7 +27,7 @@ import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import VideoPlayer from "../video/videoPlayerGenerall";
-import setDocumentTitle from './../../utils/setTitle';
+import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
 
 const customStyles = {
@@ -81,13 +82,16 @@ const SplashPage = ({ loginDone }) => {
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
 
-  const [active, setActive] = useState({ policy: true, use: true });
-  const GraymanSplashPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
+  const [active, setActive] = useState({ policy: false, use: false });
+  const GraymanSplashPageTESTNET = "0xA011723657362e28325E26F5CCEC517A920bbB43";
+  const GreymanChainId = '0x13881';
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
   //   const history = useHistory();
-  const { minterInstance, contractCreator, currentUserAddress } = useSelector((store) => store.contractStore);
+  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } = useSelector(
+    (store) => store.contractStore
+  );
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -112,24 +116,29 @@ const SplashPage = ({ loginDone }) => {
   }
 
   const buyGrayman = async () => {
-    if (window.ethereum.chainId !== "0x13881") {
-      web3Switch("0x13881");
+    if (window.ethereum.chainId !== GreymanChainId) {
+      web3Switch(GreymanChainId);
       return;
     }
-
-    const { success, products } = await rFetch(
-      `/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`
-    );
-    if (success) {
-      let instance = contractCreator(GraymanSplashPageTESTNET, erc721Abi);
-      let [greyworldOffer] = products[0].offers.filter(
-        (item) => item.offerName === "greyworld"
-      );
-      if (!greyworldOffer) {
-        Swal.fire("Error", "An error has ocurred", "error");
-        return;
-      }
-      let nextToken = await instance.getNextSequentialIndex(0, greyworldOffer.range[0], greyworldOffer.range[1]);
+    if (!diamondMarketplaceInstance) {
+      Swal.fire({
+        title: "An error has ocurred",
+        html: `Please try again later`,
+        icon: "info",
+      });
+      return;
+    }
+    let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(7));
+    console.log(greymanOffer);
+    if (greymanOffer) {
+    console.log(2);
+      let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
+      let nextToken = await metamaskCall(instance.getNextSequentialIndex(
+        greymanOffer.productIndex,
+        greymanOffer.rangeData.rangeStart,
+        greymanOffer.rangeData.rangeEnd
+      ));
+    console.log(3);
       Swal.fire({
         title: "Please wait...",
         html: `Buying Greyman #${nextToken.toString()}`,
@@ -137,23 +146,30 @@ const SplashPage = ({ loginDone }) => {
         showConfirmButton: false,
       });
       if (await metamaskCall(
-        minterInstance.buyToken(
-          products[0].offerPool.marketplaceCatalogIndex,
-          greyworldOffer.offerIndex,
+        diamondMarketplaceInstance.buyMintingOffer(
+          7,
           nextToken,
           {
-            value: greyworldOffer.price,
+            value: greymanOffer.rangeData.rangePrice,
           }
         ),
         "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )) {
-        Swal.fire("Success", `Bought Greyman #${nextToken}!`, "success");
+        Swal.fire({
+         // title : "Success", 
+        imageUrl: GreyMan, 
+        imageHeight: "auto",
+        imageWidth: "65%",
+        imageAlt: 'GreyMan image',
+        title: `You own #${nextToken}!`, 
+        icon: "success"
+        });
       }
     }
   };
 
   const openVideo = () => {
-    openModalForVideo()
+    openModalForVideo();
   };
 
   const showVideoToLogginedUsers = () => {
@@ -232,31 +248,35 @@ const SplashPage = ({ loginDone }) => {
 
   let subtitle;
 
-  useEffect(() => {
-    setDocumentTitle(`Cryptogreyman`)
-  }, []);
-
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
-      await fetch(`/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`, {
-        method: "GET",
-      })
+      await fetch(
+        `/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "X-rair-token": localStorage.token,
+          },
+        }
+      )
     ).json();
-
-
-    if (responseAllProduct.product && responseAllProduct.product.copies && responseAllProduct.product.soldCopies) {
-      setCopies(responseAllProduct.product.copies);
-      setSoldCopies(responseAllProduct.product.soldCopies);
+    if (responseAllProduct.success) {
+      setCopies(responseAllProduct.products[0].copies);
+      setSoldCopies(responseAllProduct.products[0].soldCopies);
     } else {
       setCopies(7);
       setSoldCopies(0);
     }
-
   }, [setSoldCopies]);
 
   useEffect(() => {
-    getAllProduct()
-  }, [getAllProduct])
+    setTitle(`#Cryptogreyman`);
+  }, [])
+
+  useEffect(() => {
+    getAllProduct();
+  }, [getAllProduct]);
 
   return (
     <div className="wrapper-splash-page greyman-page">
@@ -280,24 +300,31 @@ const SplashPage = ({ loginDone }) => {
                   #Cryptogreyman
                 </h3>
               </div>
-              {timerLeft === 0 && <div className="text-description" style={{ color: "#A7A6A6" }}>
-                7.907.414.597 non-unique NFTs. All metadata is identical only
-                the serial number changes. Claim yours for 2 MATIC
-              </div>
-              }
-              {timerLeft !== 0 && <div className="greyman-">
-                <Countdown setTimerLeft={setTimerLeft} time={'2022-02-02T22:22:00-00:00'} />
-              </div>}
+              {timerLeft === 0 && (
+                <div className="text-description" style={{ color: "#A7A6A6" }}>
+                  7.907.414.597 non-unique NFTs. All metadata is identical only
+                  the serial number changes. Claim yours for <strong>1</strong> MATIC
+                </div>
+              )}
+              {timerLeft !== 0 && (
+                <div className="greyman-">
+                  <Countdown
+                    setTimerLeft={setTimerLeft}
+                    time={"2022-02-02T22:22:00-00:00"}
+                  />
+                </div>
+              )}
               <div className="btn-buy-metamask">
-                {timerLeft === 0 && <button onClick={() => openModal()}>
-                  <img
-                    className="metamask-logo"
-                    src={Metamask}
-                    alt="metamask-logo"
-                  />{" "}
-                  Mint with Matic
-                </button>
-                }
+                {timerLeft === 0 && (
+                  <button onClick={() => openModal()}>
+                    <img
+                      className="metamask-logo"
+                      src={Metamask}
+                      alt="metamask-logo"
+                    />{" "}
+                    Mint with Matic
+                  </button>
+                )}
               </div>
               <div className="btn-timer-nipsey">
                 <Modal
@@ -373,16 +400,19 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-text-wrapper">
-                        <span className="modal-text">
-                          I understand this is a prerelease NFT. Final artwork
-                          and access to encrypted streams will be associated
-                          with your NFT serial number at the time of launch.
+                        <span style={{width: '287px'}} className="modal-text">
+                        By accepting these terms, I agree <strong style={{color: "rgb(136 132 132)", fontWeight: 'bolder'}}>not</strong> to have any fun with this greyman
                         </span>
+                        <img src={GreyManNotFun} alt="not-fun" />
+
                       </div>
                       <div className="modal-btn-wrapper">
                         <button
                           onClick={buyGrayman}
-                          disabled={currentUserAddress === undefined || !Object.values(active).every((el) => el)}
+                          disabled={
+                            currentUserAddress === undefined ||
+                            !Object.values(active).every((el) => el)
+                          }
                           className="modal-btn"
                         >
                           <img
@@ -391,7 +421,11 @@ const SplashPage = ({ loginDone }) => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          {currentUserAddress ? 'PURCHASE' : 'Connect your wallet!'}
+                          {window.ethereum?.chainId !== GreymanChainId
+                            ? "Switch network"
+                            : currentUserAddress
+                            ? "PURCHASE"
+                            : "Connect your wallet!"}
                         </button>
                       </div>
                     </div>
@@ -401,12 +435,17 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        {
-          timerLeft === 0 && <TokenLeftGreyman Metamask={Metamask} primaryColor={primaryColor} soldCopies={soldCopies} copies={copies} />
-        }
+        {timerLeft === 0 && (
+          <TokenLeftGreyman
+            Metamask={Metamask}
+            primaryColor={primaryColor}
+            soldCopies={soldCopies}
+            copies={copies}
+          />
+        )}
         <div className="about-metadata-wrapper">
-          {
-            timerLeft === 0 && <>
+          {timerLeft === 0 && (
+            <>
               <div className="about-metadata">
                 <h1
                   style={{
@@ -423,34 +462,37 @@ const SplashPage = ({ loginDone }) => {
                 >
                   When a painting hangs on a wall, it’s always there for us to
                   enjoy. No electricity, no internet connection needed. No
-                  distractions, pings, and notifications calling us while we try to
-                  focus on the art. We can create our own bubble with the physical
-                  piece of art. It’s always there for us. We can admire the brush
-                  strokes from close by, and clearly see and feel that not one of
-                  them is the same. And in a world where everything is in flux and
-                  constant change, the painting is not changing, inviting us to go
-                  deeper and deeper and discover more aspects of it all the time.
-                  The painting remains the same, but our perception of it and
-                  relationship to it becomes deeper and more intimate.
+                  distractions, pings, and notifications calling us while we try
+                  to focus on the art. We can create our own bubble with the
+                  physical piece of art. It’s always there for us. We can admire
+                  the brush strokes from close by, and clearly see and feel that
+                  not one of them is the same. And in a world where everything
+                  is in flux and constant change, the painting is not changing,
+                  inviting us to go deeper and deeper and discover more aspects
+                  of it all the time. The painting remains the same, but our
+                  perception of it and relationship to it becomes deeper and
+                  more intimate.
                 </p>
                 <p
                   style={{
                     color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
                   }}
                 >
-                  So why artificially limit our NFTs to a one of one? We can create
-                  enough for everyone. There are 7.908.125.000 people on this planet
-                  as of the time of writing. So, we created 7.908.125.000 NFTs. And
-                  all are identical. No rare traits or characteristics which would
-                  artificially make one Greyman worth more than another - each and
-                  every one of those Greymen is exactly the same! The only thing
-                  that is different is their numeric identification: you can obtain
-                  number 5, or number 1971, or number 3.427.903.612. And actually,
-                  that is exactly what an NFT is about: it’s a number registered on
-                  the blockchain. And isn’t that what nowadays is also identifying
-                  us as human beings – just a number? After all, our social security
-                  number is what defines us increasingly in our current society. Or
-                  our geographical location, or our Metamask address, or…..
+                  So why artificially limit our NFTs to a one of one? We can
+                  create enough for everyone. There are 7.908.125.000 people on
+                  this planet as of the time of writing. So, we created
+                  7.908.125.000 NFTs. And all are identical. No rare traits or
+                  characteristics which would artificially make one Greyman
+                  worth more than another - each and every one of those Greymen
+                  is exactly the same! The only thing that is different is their
+                  numeric identification: you can obtain number 5, or number
+                  1971, or number 3.427.903.612. And actually, that is exactly
+                  what an NFT is about: it’s a number registered on the
+                  blockchain. And isn’t that what nowadays is also identifying
+                  us as human beings – just a number? After all, our social
+                  security number is what defines us increasingly in our current
+                  society. Or our geographical location, or our Metamask
+                  address, or…..
                 </p>
               </div>
               <div className="about-metadata-second-block-wrapper">
@@ -472,7 +514,9 @@ const SplashPage = ({ loginDone }) => {
                       style={{
                         fontWeight: "bolder",
                         fontSize: "18px",
-                        color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
+                        color: `${
+                          primaryColor === "rhyno" ? "#000" : "#c1c1c1"
+                        }`,
                       }}
                     >
                       MATIC blockchain
@@ -482,11 +526,13 @@ const SplashPage = ({ loginDone }) => {
                       style={{
                         fontWeight: "bolder",
                         fontSize: "18px",
-                        color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"}`,
+                        color: `${
+                          primaryColor === "rhyno" ? "#000" : "#c1c1c1"
+                        }`,
                       }}
                     >
                       {" "}
-                      a metadata {" "}
+                      a metadata{" "}
                     </span>
                     JSON file with properties
                   </p>
@@ -495,16 +541,16 @@ const SplashPage = ({ loginDone }) => {
                       color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
                     }}
                   >
-                    MATIC works just like Ethereum, but is less expensive and energy
-                    intense to point to metadata
+                    MATIC works just like Ethereum, but is less expensive and
+                    energy intense to point to metadata
                   </p>
                   <p
                     style={{
                       color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
                     }}
                   >
-                    The metadata files we point to are hosted on IPFS so they don’t
-                    get lost, censored, or tampered with
+                    The metadata files we point to are hosted on IPFS so they
+                    don’t get lost, censored, or tampered with
                   </p>
                   <p
                     style={{
@@ -519,7 +565,11 @@ const SplashPage = ({ loginDone }) => {
                     <div className="property-first">
                       <div
                         className="property"
-                        style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                        style={{
+                          background: `${
+                            primaryColor === "rhyno" ? "#cccccc" : "none"
+                          }`,
+                        }}
                       >
                         <span className="property-desc">Background Color</span>
                         <span className="property-name-color">Grey</span>
@@ -529,7 +579,11 @@ const SplashPage = ({ loginDone }) => {
                     <div className="property-second">
                       <div
                         className="property second"
-                        style={{ background: `${primaryColor === "rhyno" ? "#cccccc" : "none"}` }}
+                        style={{
+                          background: `${
+                            primaryColor === "rhyno" ? "#cccccc" : "none"
+                          }`,
+                        }}
                       >
                         <span className="property-desc">Pant Color</span>
                         <span className="property-name-color">Grey</span>
@@ -538,40 +592,41 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                   </div>
                   <div className="property-btn-wrapper">
-                    <a href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt" target="_blank">
-                      <button
-                        className="property-btn"
-                      >
-                        <span className="property-btn-ipfs">View on IPFS</span>
+                    <a
+                      href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt"
+                      target="_blank" rel="noreferrer"
+                    >
+                      <button className="property-btn">
+                        View on IPFS
                       </button>
                     </a>
                   </div>
                 </div>
               </div>
             </>
-          }
+          )}
         </div>
         <div className="join-community">
-          {
-            timerLeft === 0 && <>
+          {timerLeft === 0 && (
+            <>
               <div className="title-join">
                 <h3>
                   <span>
-                    Only <span className="text-gradient">7.907.414.597</span> NFTs
-                    will ever be minted
+                    Only <span className="text-gradient">7.907.414.597</span>{" "}
+                    NFTs will ever be minted
                   </span>
                 </h3>
               </div>
             </>
-          }
+          )}
           <div className="main-greyman-pic-wrapper">
-            {
-              timerLeft === 0 && <>
+            {timerLeft === 0 && (
+              <>
                 <div className="main-greyman-pic">
                   <div className="join-pic-main">
                     <div className="show-more-wrap">
                       <span className="show-more" style={{ color: "#fff" }}>
-                        Open in Store <i className="fas fa-arrow-right"></i>{" "}
+                        Coming Soon <i className="fas fa-arrow-right"></i>{" "}
                       </span>
                     </div>
                     <img
@@ -612,10 +667,10 @@ const SplashPage = ({ loginDone }) => {
                   </div>
                 </div>
               </>
-            }
+            )}
           </div>
-          {
-            timerLeft === 0 && <>
+          {timerLeft === 0 && (
+            <>
               <div className="exclusive-nfts">
                 <MobileCarouselNfts>
                   <img
@@ -641,10 +696,10 @@ const SplashPage = ({ loginDone }) => {
                 </MobileCarouselNfts>
               </div>
             </>
-          }
+          )}
         </div>
-        {
-          timerLeft === 0 && <>
+        {timerLeft === 0 && (
+          <>
             <div className="video-grey-man-wrapper">
               <p
                 className="video-grey-man-title"
@@ -654,13 +709,14 @@ const SplashPage = ({ loginDone }) => {
               >
                 For Greymen Only
               </p>
-              <div className="video-grey-man">
-                {showVideoToLogginedUsers()}
-              </div>
+              <div className="video-grey-man">{showVideoToLogginedUsers()}</div>
               <div className="video-grey-man-desc-wrapper">
-                <span style={{
-                  color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
-                }} className="video-grey-man-desc">
+                <span
+                  style={{
+                    color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
+                  }}
+                  className="video-grey-man-desc"
+                >
                   NFT owners can learn more about the project by signing with
                   metamask to unlock an encrypted stream{" "}
                 </span>
@@ -668,7 +724,10 @@ const SplashPage = ({ loginDone }) => {
             </div>
 
             <div className="greyman-timeline-wrapper">
-              <h1 style={{ color: "#6C6C6C" }} className="greyman-timeline-title">
+              <h1
+                style={{ color: "#6C6C6C" }}
+                className="greyman-timeline-title"
+              >
                 Greyman <span style={{ color: "white" }}>Timeline</span>
               </h1>
             </div>
@@ -676,7 +735,7 @@ const SplashPage = ({ loginDone }) => {
             <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
             <NotCommercial primaryColor={primaryColor} />
           </>
-        }
+        )}
       </div>
     </div>
   );

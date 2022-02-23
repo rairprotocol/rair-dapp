@@ -76,6 +76,8 @@ module.exports = context => {
         return res.status(400).send({ success: false, message: 'Nothing to update.' });
       }
 
+      if (fieldsForUpdate.nickName) fieldsForUpdate.nickName = context.textPurify.sanitize(fieldsForUpdate.nickName);
+
       const updatedUser = await context.db.User.findOneAndUpdate({ publicAddress }, fieldsForUpdate, { new: true });
 
       return res.json({ success: true, user: updatedUser });

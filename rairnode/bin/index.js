@@ -13,6 +13,8 @@ const _ = require('lodash');
 const log = require('./utils/logger')(module);
 const seedDB = require('./seeds');
 require('dotenv').config();
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
 
 const config = require('./config');
 const gcp = require('./integrations/gcp');
@@ -55,6 +57,10 @@ async function main() {
 
   const hls = await StartHLS();
 
+  // XSS sanitizer
+  const window = new JSDOM('').window;
+  const textPurify = createDOMPurify(window);
+
   const context = {
     hls,
     db: {
@@ -68,10 +74,12 @@ async function main() {
       LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
       Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning'),
       Blockchain: _mongoose.model('Blockchain', require('./models/blockchain'), 'Blockchain'),
-      Category: _mongoose.model('Category', require('./models/category'), 'Category')
+      Category: _mongoose.model('Category', require('./models/category'), 'Category'),
+      SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction')
     },
     config,
-    gcp: gcp(config)
+    gcp: gcp(config),
+    textPurify
   };
 
   await seedDB(context);
