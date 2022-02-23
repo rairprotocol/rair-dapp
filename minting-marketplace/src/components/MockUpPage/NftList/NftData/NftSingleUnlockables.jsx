@@ -93,11 +93,19 @@ const NftSingleUnlockables = ({
                             aria-hidden="true"
                           ></i>
                           <p
-                            style={{
+                            style={v.description.length > 20 ? {
                               textAlign: "center",
-                              marginLeft: "-2rem",
+                              marginLeft: "-5.8rem",
                               marginTop: "9px",
-                              width: "max-content",
+                              width: "220px",
+                              height: '50px',
+                              wordBreak: 'break-all',
+                              overflow: 'scroll',
+                            }: {
+                              textAlign: "center",
+                              marginLeft: "-85px",
+                              marginTop: "9px",
+                              width: "200px",
                             }}
                           >
                             {v.description}
