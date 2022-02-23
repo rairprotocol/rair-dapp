@@ -161,13 +161,13 @@ const SplashPage = ({ loginDone }) => {
         "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )) {
         Swal.fire({
-         // title : "Success", 
-        imageUrl: GreyMan, 
-        imageHeight: "auto",
-        imageWidth: "65%",
-        imageAlt: 'GreyMan image',
-        title: `You own #${nextToken}!`, 
-        icon: "success"
+          // title : "Success", 
+          imageUrl: GreyMan,
+          imageHeight: "auto",
+          imageWidth: "65%",
+          imageAlt: 'GreyMan image',
+          title: `You own #${nextToken}!`,
+          icon: "success"
         });
       }
     }
@@ -254,26 +254,21 @@ const SplashPage = ({ loginDone }) => {
   let subtitle;
 
   const getAllProduct = useCallback(async () => {
-    const responseAllProduct = await (
-      await fetch(
-        `/api/contracts/network/0x89/${GraymanSplashPageTESTNET}/products/offers`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "X-rair-token": localStorage.token,
-          },
-        }
-      )
-    ).json();
-    if (responseAllProduct.success) {
-      setCopies(responseAllProduct.products[0].copies);
-      setSoldCopies(responseAllProduct.products[0].soldCopies);
-    } else {
-      setCopies(7);
-      setSoldCopies(0);
+    // console.log(diamondMarketplaceInstance, "diamondMarketplaceInstance")
+    if (diamondMarketplaceInstance) {
+      let responseAllProduct = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(7));
+
+      if (responseAllProduct) {
+        // setCopies(responseAllProduct.products[0].copies);
+        setCopies(7800000000);
+        // setSoldCopies(responseAllProduct.products[0].soldCopies);
+        setSoldCopies(Number(responseAllProduct.rangeData.tokensAllowed.toString()))
+      } else {
+        setCopies(7);
+        setSoldCopies(0);
+      }
     }
-  }, [setSoldCopies]);
+  }, [setSoldCopies, diamondMarketplaceInstance]);
 
   useEffect(() => {
     setTitle(`#Cryptogreyman`);
@@ -405,8 +400,8 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-text-wrapper">
-                        <span style={{width: '287px'}} className="modal-text">
-                        By accepting these terms, I agree <strong style={{color: "rgb(136 132 132)", fontWeight: 'bolder'}}>not</strong> to have any fun with this greyman
+                        <span style={{ width: '287px' }} className="modal-text">
+                          By accepting these terms, I agree <strong style={{ color: "rgb(136 132 132)", fontWeight: 'bolder' }}>not</strong> to have any fun with this greyman
                         </span>
                         <img src={GreyManNotFun} alt="not-fun" />
 
@@ -429,8 +424,8 @@ const SplashPage = ({ loginDone }) => {
                           {window.ethereum?.chainId !== GreymanChainId
                             ? "Switch network"
                             : currentUserAddress
-                            ? "PURCHASE"
-                            : "Connect your wallet!"}
+                              ? "PURCHASE"
+                              : "Connect your wallet!"}
                         </button>
                       </div>
                     </div>
@@ -519,9 +514,8 @@ const SplashPage = ({ loginDone }) => {
                       style={{
                         fontWeight: "bolder",
                         fontSize: "18px",
-                        color: `${
-                          primaryColor === "rhyno" ? "#000" : "#c1c1c1"
-                        }`,
+                        color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"
+                          }`,
                       }}
                     >
                       MATIC blockchain
@@ -531,9 +525,8 @@ const SplashPage = ({ loginDone }) => {
                       style={{
                         fontWeight: "bolder",
                         fontSize: "18px",
-                        color: `${
-                          primaryColor === "rhyno" ? "#000" : "#c1c1c1"
-                        }`,
+                        color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"
+                          }`,
                       }}
                     >
                       {" "}
@@ -571,9 +564,8 @@ const SplashPage = ({ loginDone }) => {
                       <div
                         className="property"
                         style={{
-                          background: `${
-                            primaryColor === "rhyno" ? "#cccccc" : "none"
-                          }`,
+                          background: `${primaryColor === "rhyno" ? "#cccccc" : "none"
+                            }`,
                         }}
                       >
                         <span className="property-desc">Background Color</span>
@@ -585,9 +577,8 @@ const SplashPage = ({ loginDone }) => {
                       <div
                         className="property second"
                         style={{
-                          background: `${
-                            primaryColor === "rhyno" ? "#cccccc" : "none"
-                          }`,
+                          background: `${primaryColor === "rhyno" ? "#cccccc" : "none"
+                            }`,
                         }}
                       >
                         <span className="property-desc">Pant Color</span>
