@@ -25,5 +25,10 @@ provider "vault" {
 
 module "vault_config" {
   source = "../../../modules/vault_config"
+
+  test_app_role_authorized_login_ips = [
+    # gke nat gateway
+    "34.145.59.65",
+  ]
 }
 
