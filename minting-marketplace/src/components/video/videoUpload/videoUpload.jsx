@@ -6,6 +6,7 @@ import InputField from "../../common/InputField.jsx";
 import InputSelect from "../../common/InputSelect.jsx";
 import io from "socket.io-client";
 import "./videoUpload.css";
+import { getRandomValues } from "../../../utils/getRandomValues.js";
 // const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 // Admin view to upload media to the server
@@ -130,7 +131,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 	useEffect(async () => {
 		await getContract();
-		const sessionId = Math.random().toString(36).substr(2, 9);
+		const sessionId = getRandomValues().toString(36).substr(2, 9);
 		setThisSessionId(sessionId);
 		// const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
 		const so = io(`http://localhost:5000`, { transports: ["websocket"] });
@@ -152,7 +153,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		socket.on("uploadProgress", (data) => {
 			if (data.parts) {
 				setPart(
-					Math.round(((89 - data.done) / (data.parts * 2 + 3)) * 10) / 10
+					getRandomValues() / 10
 				);
 			}
 
@@ -161,7 +162,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 			}
 
 			if (data.part) {
-				setStatus(Math.round((status + part) * 10) / 10);
+				setStatus(getRandomValues() / 10);
 			}
 
 			setMessage(data.message);
