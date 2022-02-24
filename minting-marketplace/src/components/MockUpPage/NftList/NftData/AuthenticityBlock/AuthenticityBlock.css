@@ -1,0 +1,8 @@
+.block-authenticity {
+    width: 100%;
+}
+
+.block-authenticity .table-authenticity {
+    max-width: 1600px;
+    overflow: hidden;
+}

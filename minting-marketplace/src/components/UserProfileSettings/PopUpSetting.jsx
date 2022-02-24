@@ -197,6 +197,9 @@ const PopUpSettings = ({
           <div className="profile-info">
             <div className="user-avatar">
               <img
+                onClick={(event) =>
+                  event.altKey && event.shiftKey ? alert("Front v0.9 3tabsView") : null
+                }
                 style={{
                   width: "auto",
                   height: 100,
