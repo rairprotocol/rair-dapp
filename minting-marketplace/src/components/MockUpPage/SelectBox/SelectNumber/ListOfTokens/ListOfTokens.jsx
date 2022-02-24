@@ -52,26 +52,33 @@ const ListOfTokensComponent = ({
     [blockchain, contract, product, setSelectedToken]
   );
 
-  const getProductTokenNumbers = useCallback(async () => {
-    const response = await (
-      await fetch(
-        `/api/nft/network/${blockchain}/${contract}/${product}/tokenNumbers`,
-        {
-          method: "GET",
+  useEffect(() => {
+    let isDestroyed = false;
+    fetch(`/api/nft/network/${blockchain}/${contract}/${product}/tokenNumbers`)
+      .then((res) => res.json())
+      .then((response) => {
+        if(!isDestroyed){
+          setProductTokenNumbers(response.tokens);
+        }
+      });
+      return (
+        () => {
+          isDestroyed = true
         }
       )
-    ).json();
+  }, [blockchain, product, contract, setProductTokenNumbers]);
 
-    setProductTokenNumbers(response.tokens);
-  }, [blockchain, product, contract]);
-
-  const availableRanges = useMemo(() => productTokenNumbers.reduce( (acc, tokenNumber) => {
-    const tokenRange = Math.floor(tokenNumber / 100) * 100
-    return {
-      ...acc,
-      [tokenRange]: true
-    }
-  }, {}), [productTokenNumbers])
+  const availableRanges = useMemo(
+    () =>
+      productTokenNumbers.reduce((acc, tokenNumber) => {
+        const tokenRange = Math.floor(tokenNumber / 100) * 100;
+        return {
+          ...acc,
+          [tokenRange]: true,
+        };
+      }, {}),
+    [productTokenNumbers]
+  );
 
   const getPaginationToken = useCallback(
     (e) => {
@@ -81,15 +88,13 @@ const ListOfTokensComponent = ({
     [getPaginationData, setIsOpens]
   );
 
-    useEffect(()=>{
-      getProductTokenNumbers()
-    },[getProductTokenNumbers])
-
   const ranges = useMemo(() => {
     if (totalCount) {
       const number = 999;
       const rangesCount = Math.floor(number / 100) + 1;
-      return Array(rangesCount).fill(0).map((_, idx) => idx * 100)
+      return Array(rangesCount)
+        .fill(0)
+        .map((_, idx) => idx * 100);
     }
     return [];
   }, [totalCount]);
@@ -125,14 +130,14 @@ const ListOfTokensComponent = ({
           {ranges.map((i) => {
             return (
               <button
-               disabled={availableRanges[i] ? false : true}
+                disabled={availableRanges[i] ? false : true}
                 key={i}
                 onClick={(e) => getPaginationToken(e)}
                 className="serial-box serial-numb llll"
                 style={{
                   // border: "1px solid #D37AD6",
                   background: "#a7a6a6",
-                  color: '#rgb(0 0 0)'
+                  color: "#rgb(0 0 0)",
                   // background: availableRanges[i] ? "grey" : "red",
                 }}
               >

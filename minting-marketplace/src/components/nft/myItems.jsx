@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { rFetch /*useRfetch*/ } from "../../utils/rFetch.js";
 import { /*Link*/ useHistory } from "react-router-dom";
 import setDocumentTitle from "../../utils/setTitle";
+import MyDiamondItems from './myDiamondItems.jsx';
 
 // React Redux types
 import * as authTypes from "../../ducks/auth/types";
@@ -245,6 +246,7 @@ const MyItems = (props) => {
       ) : (
         <></>
       )}
+      <MyDiamondItems {...{openModal, setSelectedData}}/>
     </div>
   );
 };

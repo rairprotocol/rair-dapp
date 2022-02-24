@@ -1,0 +1,89 @@
+.container-title-collection {
+    margin-bottom: 48px;
+    max-width: 1600px;
+    position: relative;
+    z-index: 10;
+}
+
+.container-title-collection .block-title-share{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.container-title-collection .block-title-share h2 {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.container-title-collection .block-title-share button.block-btn-share {
+    font-size: 20px;
+    padding: 10px 53px;
+    border-radius: 16px;
+    background: none;
+    border: 1px solid #D37AD6;
+    transition: .3s all ease;
+    color: #fff;
+}
+
+.container-title-collection .block-title-share button.block-btn-share:focus {
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+
+}
+
+.container-title-collection .block-title-share button.block-btn-share:hover {
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+
+.container-title-collection .block-user-creator {
+    display: flex;
+    align-items: center;
+    margin: 14px 0 32px 0;
+}
+
+.container-title-collection .block-user-creator img {
+    width: auto;
+    height: 32px;
+    border-radius: 5px;
+    margin: 0 12px;
+}
+
+.container-title-collection .block-user-creator span {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.container-title-collection .block-user-creator h5 {
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+.container-title-collection .block-collection-desc {
+    max-width: 1600px;
+    text-align: left;
+    font-size: 16px;
+}
+
+.collection-btn-more button{
+    font-size: 20px;
+    padding: 10px 53px;
+    border-radius: 16px;
+    background: none;
+    border: 1px solid #D37AD6;
+    transition: .3s all ease;
+    color: #fff;
+}
+
+.collection-btn-more button:hover {
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+
+@media screen and (max-width: 700px) {
+    .container-title-collection .block-title-share button.block-btn-share {
+        font-size: 16px;
+    }
+
+    .container-title-collection .block-title-share h2 {
+        font-size: 32px;
+    }
+}

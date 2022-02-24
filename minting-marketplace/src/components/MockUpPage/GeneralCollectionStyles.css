@@ -1,0 +1,9 @@
+.collection-btn-more {
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-collection {
+        padding: 0 20px;
+    }
+}
