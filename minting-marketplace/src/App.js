@@ -25,26 +25,38 @@ import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
 
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
+import ConsumerMode from './components/consumerMode.jsx';
+import Contracts from './components/creatorStudio/Contracts.jsx';
+import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
+import CreatorMode from './components/creatorMode.jsx';
 
+import Deploy from './components/creatorStudio/Deploy.jsx';
+
+import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 // import Footer from './components/Footer/Footer';
 
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 
+import ListCollections from './components/creatorStudio/ListCollections.jsx';
+
 import MetadataEditor from './components/metadata/metadataEditor.jsx';
 import MyContracts from './components/whitelabel/myContracts.jsx';
+import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
 import MockUpPage from './components/MockUpPage/MockUpPage';
 import MyItems from './components/nft/myItems';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import {NftDataCommonLink} from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
 
 import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
+
 import { OnboardingButton } from './components/common/OnboardingButton';
 
+import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
 import ReactGA from 'react-ga';
 
@@ -59,26 +71,14 @@ import UserProfileSettings from './components/UserProfileSettings/UserProfileSet
 
 import VideoPlayer from './components/video/videoPlayer.jsx';
 
+import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
 import Footer from './components/Footer/Footer.jsx';
+import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace.jsx';
 
 // logos for About Page
 import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
 import MainLogo from './components/GroupLogos/MainLogo.jsx';
-import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
-
-
-const analytics = Analytics({
-  app: 'greyman',
-  plugins: [
-    googleAnalytics({
-      trackingId: 'UA-209450870-5'
-    })
-  ]
-})
-/* Track a page view */
-analytics.page()
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
@@ -91,20 +91,25 @@ const ErrorFallback = () => {
 
 function App({ sentryHistory }) {
 
-  const [/*userData*/, setUserData] = useState();
+  const [userData, setUserData] = useState();
   const [adminAccess, setAdminAccess] = useState(null);
   const [startedLogin, setStartedLogin] = useState(false);
   const [loginDone, setLoginDone] = useState(false);
   const [errorAuth, /*setErrorAuth*/] = useState('');
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
 
-
+  // Google Analytics
+  const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+  ReactGA.initialize(TRACKING_ID);
 
   // Redux
   const dispatch = useDispatch();
   const {
     currentUserAddress,
+    minterInstance,
+    factoryInstance,
     programmaticProvider,
+    diamondMarketplaceInstance
   } = useSelector(store => store.contractStore);
   const {
     primaryColor,
@@ -217,7 +222,14 @@ function App({ sentryHistory }) {
   }, [dispatch]);
 
   useEffect(() => {
-    setTitle('#Cryptogreyman');
+    // setTitle('Welcome');
+    if (process.env.NODE_ENV === 'development') {
+      window.gotoRouteBackdoor = sentryHistory.push;
+      window.adminAccessBackdoor = (boolean) => {
+        setAdminAccess(boolean);
+        dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
+      };
+    }
   }, [dispatch, sentryHistory.push, setAdminAccess]);
 
   useEffect(() => {
@@ -345,7 +357,7 @@ function App({ sentryHistory }) {
 										primaryColor={primaryColor}
 									/>
 								</div>
-                {!loginDone ? <div className='btn-connect-wallet-wrapper'>
+								{!loginDone ? <div className='btn-connect-wallet-wrapper'>
 									<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
 										className={`btn btn-${primaryColor} btn-connect-wallet`}
 										onClick={connectUserData}>
@@ -353,13 +365,16 @@ function App({ sentryHistory }) {
 										{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 									</button>
 									{renderBtnConnect ? <OnboardingButton /> : <> </>}
-									{console.log(adminAccess)}
+									{/* {console.log(adminAccess)} */}
 								</div> : adminAccess === true && [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className="fas fa-key" />, route: '/my-nft' },
 									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
 									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
 									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined }
 								].map((item, index) => {
 									if (!item.disabled) {
 										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -380,6 +395,13 @@ function App({ sentryHistory }) {
 								</div>
 								<div className='col-12 mt-3 row'>
 									<Switch>
+										{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
+										{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
+										{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
+										{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
+										{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
+											<WorkflowSteps {...{ sentryHistory }} />
+										</SentryRoute>}
 										<SentryRoute exact path="/about-page">
 											<AboutPageNew
 												primaryColor={primaryColor}
@@ -394,61 +416,81 @@ function App({ sentryHistory }) {
 											<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
-                    <SentryRoute path="/coming-soon" component={ ComingSoon }/>
-                    <SentryRoute path="/coming-soon-nutcrackers" component={ ComingSoonNut }/>
-
-										<SentryRoute exact path="/" component={GreymanSplashPage} />
-
+										<SentryRoute path="/coming-soon" component={ComingSoon} />
+										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
+										{/* 
+										<SentryRoute exact path="/">
+											<GreymanSplashPage loginDone={loginDone} />
+										</SentryRoute> */}
+										<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+										
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
-                    <SentryRoute exact path="/terms-use" component={ TermsUse }/>
-                    <SentryRoute exact path="/thankyou" component={ ThankYouPage }/>
-                    <SentryRoute exact path="/tokens/:blockchain/:contract/:product/:tokenId">
-                      <NftDataCommonLink currentUser={ currentUserAddress } primaryColor={ primaryColor }
-                                         textColor={ textColor }/>
-                    </SentryRoute>
+										<SentryRoute exact path="/terms-use" component={TermsUse} />
+										<SentryRoute exact path="/thankyou" component={ThankYouPage} />
 
-                    <SentryRoute exact path="/nipsey-splash" component={ SplashPage }/>
-                    <SentryRoute exact path="/nutcrackers-splash" component={ Nutcrackers }/>
-                    <SentryRoute exact path="/notifications" component={ NotificationPage }/>
-
-                    <SentryRoute path="/watch/:videoId/:mainManifest" component={ VideoPlayer }/>
-
-                    { loginDone && <SentryRoute path="/token/:contract/:identifier" component={ Token }/> }
-                    { loginDone && <SentryRoute exact path="/metadata/:blockchain/:contract/:product"
-                                                component={ MetadataEditor }/> }
-                    { loginDone && <SentryRoute exact path="/my-nft" component={ MyNFTs }/> }
-                    { loginDone && <SentryRoute exact path="/my-items">
-                      <MyItems goHome={ goHome }/>
-                    </SentryRoute> }
-                    { loginDone && <SentryRoute path="/new-factory" component={ MyContracts }/> }
-
-										<SentryRoute exact path='/'>
-											<div className='col-6 text-left'>
-												<h1 className='w-100' style={{ textAlign: 'left' }}>
-													Digital <b className='title'>Ownership</b>
-													<br />
-													Encryption
-												</h1>
-												<p className='w-100' style={{ textAlign: 'left' }}>
-													RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
-												</p>
-											</div>
-											<div className='col-12 mt-3 row' >
-												<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-											</div>
+										<SentryRoute exact path='/:tokens/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
-										<SentryRoute path="" component={NotFound} />
-									</Switch>
-								</div>
-							</div>
-						</div>
-						{/* <div className='py-5' /> */}
-					</div>
-					<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
-				</>
-			</Router>
-		</Sentry.ErrorBoundary>
+
+										<SentryRoute exact path='/:collection/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+										</SentryRoute>
+
+										<SentryRoute exact path='/:unlockables/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+										</SentryRoute>
+
+										<SentryRoute exact path="/nipsey-splash" component={ SplashPage }/>
+										<SentryRoute exact path="/nutcrackers-splash" component={ Nutcrackers }/>
+										<SentryRoute exact path="/notifications" component={ NotificationPage }/>
+
+										<SentryRoute path="/watch/:videoId/:mainManifest" component={ VideoPlayer }/>
+
+										{ adminAccess && <SentryRoute path="/admin">
+										<FileUpload primaryColor={ primaryColor } textColor={ textColor }/>
+										</SentryRoute> }
+										{ factoryInstance && <SentryRoute exact path="/factory" component={ CreatorMode }/> }
+										{ loginDone && <SentryRoute path="/token/:contract/:identifier" component={ Token }/> }
+										{ minterInstance && <SentryRoute exact path="/minter" component={ ConsumerMode }/> }
+										{ loginDone && <SentryRoute exact path="/metadata/:blockchain/:contract/:product"
+																	component={ MetadataEditor }/> }
+										{ loginDone && <SentryRoute exact path="/my-nft" component={ MyNFTs }/> }
+										{ loginDone && <SentryRoute exact path="/my-items">
+										<MyItems goHome={ goHome }/>
+										</SentryRoute> }
+										{ loginDone && <SentryRoute path="/new-factory" component={ MyContracts }/> }
+										{ loginDone && <SentryRoute path="/on-sale" component={ MinterMarketplace }/> }
+										{ loginDone && <SentryRoute path="/rair/:contract/:product" component={ RairProduct }/> }
+										{ diamondMarketplaceInstance &&
+										<SentryRoute path="/diamondMinter" component={ DiamondMarketplace }/> }
+
+															<SentryRoute exact path='/'>
+																<div className='col-6 text-left'>
+																	<h1 className='w-100' style={{ textAlign: 'left' }}>
+																		Digital <b className='title'>Ownership</b>
+																		<br />
+																		Encryption
+																	</h1>
+																	<p className='w-100' style={{ textAlign: 'left' }}>
+																		RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
+																	</p>
+																</div>
+																<div className='col-12 mt-3 row' >
+																	<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+																</div>
+															</SentryRoute>
+															<SentryRoute path="" component={NotFound} />
+														</Switch>
+													</div>
+												</div>
+											</div>
+											{/* <div className='py-5' /> */}
+										</div>
+										<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
+									</>
+								</Router>
+							</Sentry.ErrorBoundary>
 	);
 }
 

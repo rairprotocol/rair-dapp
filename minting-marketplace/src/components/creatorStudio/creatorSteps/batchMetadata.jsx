@@ -20,6 +20,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 	const [headers, setHeaders] = useState();
 	const [metadataExists, setMetadataExists] = useState(false);
 	const [metadataURI, setMetadataURI] = useState('');
+	const [contractURI, setContractURI] = useState('');
 	const [includeNumber, setIncludeNumber] = useState(true);
 
 	const onImageDrop = useCallback(acceptedFiles => {
@@ -255,7 +256,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 			<div className='col-2 pt-3'>
 				...or...
 			</div>
-			<div className='col-5'>
+			<div className='col-5 mb-3'>
 				<button onClick={async () => {
 					Swal.fire({
 						title: 'Sending metadata URI...',
@@ -278,6 +279,44 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 					}
 				}} className='btn btn-stimorol'>
 					{metadataURI === '' ? 'Uns' : 'S'}et Metadata URI for all tokens in the contract
+				</button>
+			</div>
+			<hr />
+			<div className='col-12 col-md-3 pt-4'>
+				<button onClick={async () => {
+						setContractURI(await metamaskCall(contractData.instance.contractURI()));
+					}} className='btn btn-royal-ice'>
+						Read Contract URI
+				</button>
+			</div>
+			<div className='col-12 col-md-6'>
+				<InputField
+					customClass='form-control w-100'
+					getter={contractURI}
+					setter={setContractURI}
+					label='Contract URI'
+				/>
+			</div>
+			<div className='col-12 col-md-3 pt-4'>
+				<button onClick={async () => {
+						Swal.fire({
+							title: 'Updating Contract URI...',
+							html: 'Please wait...',
+							icon: 'info',
+							showConfirmButton: false
+						});
+						if (await metamaskCall(
+							contractData.instance.setContractURI(contractURI)
+						)) {
+							Swal.fire({
+								title: 'Success!',
+								html: 'Contract URI has been set',
+								icon: 'success',
+								showConfirmButton: true
+							});
+						}
+					}} className='btn btn-stimorol'>
+						{contractURI === '' ? 'Uns' : 'S'}et Contract URI for OpenSea
 				</button>
 			</div>
 		</>}

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { CurrentTokens } from "./CurrentTokens/CurrentTokens";
 import { ListOfTokens } from "./ListOfTokens/ListOfTokens";
@@ -15,7 +15,7 @@ const SelectNumber = ({
   setSelectedToken,
 }) => {
   // console.log(items);
-  
+
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   const [selectedItem, setSelectedItem] = useState(selectedToken);
@@ -32,54 +32,50 @@ const SelectNumber = ({
     handleIsOpen();
   };
 
-  const handleClickOutSideNumberItem = (e) => {
-    if (!numberRef.current.contains(e.target)) {
-      setIsOpen(false);
-    }
-  };
-
-  const RenderOption = () => {
-    if (totalCount < 100) {
-      return (
-        <CurrentTokens
-          primaryColor={primaryColor}
-          items={items}
-          isOpen={isOpen}
-          selectedToken={selectedToken}
-          selectedItem={selectedItem}
-          setIsOpen={setIsOpen}
-          numberRef={numberRef}
-          handleIsOpen={handleIsOpen}
-          onClickItem={onClickItem}
-        />
-      );
-    }
-    return (
-      <ListOfTokens
-        blockchain={blockchain}
-        contract={contract}
-        isOpen={isOpen}
-        handleIsOpen={handleIsOpen}
-        numberRef={numberRef}
-        onClickItem={onClickItem}
-        product={product}
-        primaryColor={primaryColor}
-        setSelectedToken={setSelectedToken}
-        selectedToken={selectedToken}
-        selectedItem={selectedItem}
-        setIsOpen={setIsOpen}
-        totalCount={totalCount}
-      />
-    );
-  };
+  const handleClickOutSideNumberItem = useCallback(
+    (e) => {
+      if (!numberRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    },
+    [numberRef, setIsOpen]
+  );
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutSideNumberItem);
     return () =>
       document.removeEventListener("mousedown", handleClickOutSideNumberItem);
-  });
+  }, [handleClickOutSideNumberItem]);
 
-  return RenderOption();
+    return totalCount < 100 ? (
+      <CurrentTokens
+        primaryColor={primaryColor}
+        items={items}
+        isOpen={isOpen}
+        selectedToken={selectedToken}
+        selectedItem={selectedItem}
+        setIsOpen={setIsOpen}
+        numberRef={numberRef}
+        handleIsOpen={handleIsOpen}
+        onClickItem={onClickItem}
+      />
+    ) : (
+    <ListOfTokens
+      blockchain={blockchain}
+      contract={contract}
+      isOpen={isOpen}
+      handleIsOpen={handleIsOpen}
+      numberRef={numberRef}
+      onClickItem={onClickItem}
+      product={product}
+      primaryColor={primaryColor}
+      setSelectedToken={setSelectedToken}
+      selectedToken={selectedToken}
+      selectedItem={selectedItem}
+      setIsOpen={setIsOpen}
+      totalCount={totalCount}
+    />
+  )
 };
 
 export default SelectNumber;
