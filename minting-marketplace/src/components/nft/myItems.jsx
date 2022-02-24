@@ -39,6 +39,9 @@ const MyItems = (props) => {
       // console.log(response);
       let tokenData = [];
       for await (let token of response.result) {
+        if (!token.contract) {
+          return;
+        }
         let contractData = await rFetch(
           `/api/contracts/singleContract/${token.contract}`
         );
