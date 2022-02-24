@@ -47,7 +47,7 @@ import MyItems from './components/nft/myItems';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import NftDataCommonLink from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import {NftDataCommonLink} from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
@@ -91,7 +91,7 @@ const ErrorFallback = () => {
 
 function App({ sentryHistory }) {
 
-  const [/*userData*/, setUserData] = useState();
+  const [userData, setUserData] = useState();
   const [adminAccess, setAdminAccess] = useState(null);
   const [startedLogin, setStartedLogin] = useState(false);
   const [loginDone, setLoginDone] = useState(false);
@@ -365,7 +365,7 @@ function App({ sentryHistory }) {
 										{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 									</button>
 									{renderBtnConnect ? <OnboardingButton /> : <> </>}
-									{console.log(adminAccess)}
+									{/* {console.log(adminAccess)} */}
 								</div> : adminAccess === true && [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className="fas fa-key" />, route: '/my-nft' },
@@ -416,73 +416,81 @@ function App({ sentryHistory }) {
 											<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
-                    <SentryRoute path="/coming-soon" component={ ComingSoon }/>
-                    <SentryRoute path="/coming-soon-nutcrackers" component={ ComingSoonNut }/>
-
+										<SentryRoute path="/coming-soon" component={ComingSoon} />
+										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
+										{/* 
 										<SentryRoute exact path="/">
-											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute>
+											<GreymanSplashPage loginDone={loginDone} />
+										</SentryRoute> */}
 										<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
-
+										
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
-                    <SentryRoute exact path="/terms-use" component={ TermsUse }/>
-                    <SentryRoute exact path="/thankyou" component={ ThankYouPage }/>
-                    <SentryRoute exact path="/tokens/:blockchain/:contract/:product/:tokenId">
-                      <NftDataCommonLink currentUser={ currentUserAddress } primaryColor={ primaryColor }
-                                         textColor={ textColor }/>
-                    </SentryRoute>
+										<SentryRoute exact path="/terms-use" component={TermsUse} />
+										<SentryRoute exact path="/thankyou" component={ThankYouPage} />
 
-                    <SentryRoute exact path="/nipsey-splash" component={ SplashPage }/>
-                    <SentryRoute exact path="/nutcrackers-splash" component={ Nutcrackers }/>
-                    <SentryRoute exact path="/notifications" component={ NotificationPage }/>
-
-                    <SentryRoute path="/watch/:videoId/:mainManifest" component={ VideoPlayer }/>
-
-                    { adminAccess && <SentryRoute path="/admin">
-                      <FileUpload primaryColor={ primaryColor } textColor={ textColor }/>
-                    </SentryRoute> }
-                    { factoryInstance && <SentryRoute exact path="/factory" component={ CreatorMode }/> }
-                    { loginDone && <SentryRoute path="/token/:contract/:identifier" component={ Token }/> }
-                    { minterInstance && <SentryRoute exact path="/minter" component={ ConsumerMode }/> }
-                    { loginDone && <SentryRoute exact path="/metadata/:blockchain/:contract/:product"
-                                                component={ MetadataEditor }/> }
-                    { loginDone && <SentryRoute exact path="/my-nft" component={ MyNFTs }/> }
-                    { loginDone && <SentryRoute exact path="/my-items">
-                      <MyItems goHome={ goHome }/>
-                    </SentryRoute> }
-                    { loginDone && <SentryRoute path="/new-factory" component={ MyContracts }/> }
-                    { loginDone && <SentryRoute path="/on-sale" component={ MinterMarketplace }/> }
-                    { loginDone && <SentryRoute path="/rair/:contract/:product" component={ RairProduct }/> }
-                    { diamondMarketplaceInstance &&
-                      <SentryRoute path="/diamondMinter" component={ DiamondMarketplace }/> }
-
-										<SentryRoute exact path='/'>
-											<div className='col-6 text-left'>
-												<h1 className='w-100' style={{ textAlign: 'left' }}>
-													Digital <b className='title'>Ownership</b>
-													<br />
-													Encryption
-												</h1>
-												<p className='w-100' style={{ textAlign: 'left' }}>
-													RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
-												</p>
-											</div>
-											<div className='col-12 mt-3 row' >
-												<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-											</div>
+										<SentryRoute exact path='/:tokens/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
-										<SentryRoute path="" component={NotFound} />
-									</Switch>
-								</div>
-							</div>
-						</div>
-						{/* <div className='py-5' /> */}
-					</div>
-					<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
-				</>
-			</Router>
-		</Sentry.ErrorBoundary>
+
+										<SentryRoute exact path='/:collection/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+										</SentryRoute>
+
+										<SentryRoute exact path='/:unlockables/:blockchain/:contract/:product/:tokenId'>
+											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+										</SentryRoute>
+
+										<SentryRoute exact path="/nipsey-splash" component={ SplashPage }/>
+										<SentryRoute exact path="/nutcrackers-splash" component={ Nutcrackers }/>
+										<SentryRoute exact path="/notifications" component={ NotificationPage }/>
+
+										<SentryRoute path="/watch/:videoId/:mainManifest" component={ VideoPlayer }/>
+
+										{ adminAccess && <SentryRoute path="/admin">
+										<FileUpload primaryColor={ primaryColor } textColor={ textColor }/>
+										</SentryRoute> }
+										{ factoryInstance && <SentryRoute exact path="/factory" component={ CreatorMode }/> }
+										{ loginDone && <SentryRoute path="/token/:contract/:identifier" component={ Token }/> }
+										{ minterInstance && <SentryRoute exact path="/minter" component={ ConsumerMode }/> }
+										{ loginDone && <SentryRoute exact path="/metadata/:blockchain/:contract/:product"
+																	component={ MetadataEditor }/> }
+										{ loginDone && <SentryRoute exact path="/my-nft" component={ MyNFTs }/> }
+										{ loginDone && <SentryRoute exact path="/my-items">
+										<MyItems goHome={ goHome }/>
+										</SentryRoute> }
+										{ loginDone && <SentryRoute path="/new-factory" component={ MyContracts }/> }
+										{ loginDone && <SentryRoute path="/on-sale" component={ MinterMarketplace }/> }
+										{ loginDone && <SentryRoute path="/rair/:contract/:product" component={ RairProduct }/> }
+										{ diamondMarketplaceInstance &&
+										<SentryRoute path="/diamondMinter" component={ DiamondMarketplace }/> }
+
+															<SentryRoute exact path='/'>
+																<div className='col-6 text-left'>
+																	<h1 className='w-100' style={{ textAlign: 'left' }}>
+																		Digital <b className='title'>Ownership</b>
+																		<br />
+																		Encryption
+																	</h1>
+																	<p className='w-100' style={{ textAlign: 'left' }}>
+																		RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
+																	</p>
+																</div>
+																<div className='col-12 mt-3 row' >
+																	<MockUpPage primaryColor={primaryColor} textColor={textColor} />
+																</div>
+															</SentryRoute>
+															<SentryRoute path="" component={NotFound} />
+														</Switch>
+													</div>
+												</div>
+											</div>
+											{/* <div className='py-5' /> */}
+										</div>
+										<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
+									</>
+								</Router>
+							</Sentry.ErrorBoundary>
 	);
 }
 

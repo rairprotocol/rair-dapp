@@ -56,9 +56,9 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		getCategories();
 	}, [getCategories])
 
-
 	const getContract = async () => {
 		const {success, contracts} = await rFetch("/api/contracts");
+
 		if (success) {
 			const contractData = contracts.map((item) => ({
 				_id: item._id,
@@ -72,6 +72,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 	const getProduct = useCallback(async () => {
 		const {success, products} = await rFetch(`api/contracts/network/${networkId}/${contract}/products`);
+
 		if (success) {
 			const names = products.map((product) => ({
 				value: product.name,
@@ -82,7 +83,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 		const collectionIndexInContract = products[0]?.collectionIndexInContract;
 		setCollectionIndex(collectionIndexInContract);
-		// console.log('collectionIndexInContract', collectionIndex );
 
 		return products;
 	}, [contract]);
@@ -96,15 +96,19 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	const getOffers = useCallback(async () => {
 		const responseOffer = await rFetch(`api/contracts/network/${networkId}/${contract}/products/offers`);
 
-		const offersNames = responseOffer.products[0]?.offers.map((item) => ({
-			value: item.offerName,
-			label: item.offerName,
-		}));
+		const filteredOffer = responseOffer.products.filter(item => item.name === product);
+		const offersNames = filteredOffer[0]?.offers.map(prod => {
+			return {
+				value: prod.offerName,
+				label: prod.offerName,
+			}
+		})
 
 		setOffersData(responseOffer.products[0]?.offers);
 		setOffersOptions(offersNames);
+
 		return offersNames;
-	}, [contract]);
+	}, [contract, product]);
 
 	useEffect(async () => {
 		if (product !== 'null') {
@@ -122,7 +126,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 					}
 				});
 			});
-			// console.log('data',offersData)
 		}
 	}, [selectsData, offer]);
 
@@ -180,7 +183,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 	const createSelects = () => {
 		if (countOfSelects) {
-			setSelects([...selects, "select"]);
+			setSelects([...selects, "select11"]);
 			setCountOfSelects((prev) => prev - 1);
 		}
 	};
@@ -331,6 +334,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 								setProduct(e);
 								setOffer("null");
 								setOffersOptions([]);
+								setSelects([])
 							}}
 							placeholder="Choose a product"
 							options={productOptions}
