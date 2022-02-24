@@ -254,21 +254,31 @@ const SplashPage = ({ loginDone }) => {
   let subtitle;
 
   const getAllProduct = useCallback(async () => {
-    // console.log(diamondMarketplaceInstance, "diamondMarketplaceInstance")
-    if (diamondMarketplaceInstance) {
-      let responseAllProduct = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(7));
-
-      if (responseAllProduct) {
-        // setCopies(responseAllProduct.products[0].copies);
-        setCopies(7800000000);
-        // setSoldCopies(responseAllProduct.products[0].soldCopies);
-        setSoldCopies(Number(responseAllProduct.rangeData.tokensAllowed.toString()))
-      } else {
-        setCopies(7);
-        setSoldCopies(0);
+    try {
+      // console.log(diamondMarketplaceInstance, "diamondMarketplaceInstance")
+      if (diamondMarketplaceInstance) {
+        let responseAllProduct = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
+        if (responseAllProduct) {
+          let tokensInRange = responseAllProduct.rangeData.rangeEnd.sub(responseAllProduct.rangeData.rangeStart).add(2222);
+          let soldTokens = tokensInRange.sub(responseAllProduct.rangeData.mintableTokens);
+          setCopies(tokensInRange.toString());
+          // setCopies(responseAllProduct.products[0].copies);
+          // setSoldCopies(responseAllProduct.products[0].soldCopies);
+          setSoldCopies(soldTokens.toString());
+        }
       }
+    } catch (err) {
+      console.error(err);
     }
   }, [setSoldCopies, diamondMarketplaceInstance]);
+
+  useEffect(() => {
+    if (!diamondMarketplaceInstance) {
+      return;
+    }
+    diamondMarketplaceInstance.on('TokenMinted', getAllProduct);
+    return diamondMarketplaceInstance.off('TokenMinted', getAllProduct);
+  }, [diamondMarketplaceInstance, getAllProduct])
 
   useEffect(() => {
     setTitle(`#Cryptogreyman`);
@@ -435,7 +445,7 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        {timerLeft === 0 && (
+        {timerLeft === 0 && soldCopies !== undefined && (
           <TokenLeftGreyman
             Metamask={Metamask}
             primaryColor={primaryColor}
