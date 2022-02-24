@@ -245,7 +245,7 @@ const DiamondMarketplace = (props) => {
 						offer.price
 					);
 				}} className={`btn my-2 py-0 btn-${offer.visible ? 'stimorol' : 'danger'}`}>
-					{offer.visible ? 'Buy the first available token token' : "Not for sale!"}
+					{offer.visible ? 'Buy the first available token' : "Not for sale!"}
 				</button>
 				{false && offer.visible && <TokenSelector min={offer.startingToken} max={offer.endingToken} buyCall={async (tokenIndex) => {
 					await mintTokenCall(
