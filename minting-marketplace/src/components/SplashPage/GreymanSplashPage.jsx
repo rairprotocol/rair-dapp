@@ -262,7 +262,7 @@ const SplashPage = ({ loginDone }) => {
       if (diamondMarketplaceInstance && window.ethereum && currentChain === GreymanChainId) {
         let responseAllProduct = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
         if (responseAllProduct) {
-          let tokensInRange = responseAllProduct.rangeData.rangeEnd.sub(responseAllProduct.rangeData.rangeStart).add(2222);
+          let tokensInRange = responseAllProduct.rangeData.rangeEnd.sub(responseAllProduct.rangeData.rangeStart).add(2222).add(1);
           let soldTokens = tokensInRange.sub(responseAllProduct.rangeData.mintableTokens);
           setCopies(tokensInRange.toString());
           // setCopies(responseAllProduct.products[0].copies);
