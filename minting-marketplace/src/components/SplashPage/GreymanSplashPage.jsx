@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -20,7 +20,7 @@ import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import { Timeline } from "./Timeline/Timeline";
 
 import { diamondFactoryAbi } from "../../contracts/index.js";
-import { rFetch } from "../../utils/rFetch.js";
+//import { rFetch } from "../../utils/rFetch.js";
 import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
@@ -256,7 +256,7 @@ const SplashPage = ({ loginDone }) => {
   const getAllProduct = useCallback(async () => {
     try {
       // console.log(diamondMarketplaceInstance, "diamondMarketplaceInstance")
-      if (diamondMarketplaceInstance) {
+      if (diamondMarketplaceInstance && window.ethereum && window.ethereum.chainId === GreymanChainId) {
         let responseAllProduct = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
         if (responseAllProduct) {
           let tokensInRange = responseAllProduct.rangeData.rangeEnd.sub(responseAllProduct.rangeData.rangeStart).add(2222);
