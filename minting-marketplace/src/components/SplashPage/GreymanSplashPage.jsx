@@ -97,9 +97,12 @@ const SplashPage = ({ loginDone }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
   //   const history = useHistory();
-  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } = useSelector(
-    (store) => store.contractStore
-  );
+  const {
+    diamondMarketplaceInstance,
+    contractCreator,
+    currentUserAddress,
+    currentChain
+  } = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -256,7 +259,7 @@ const SplashPage = ({ loginDone }) => {
   const getAllProduct = useCallback(async () => {
     try {
       // console.log(diamondMarketplaceInstance, "diamondMarketplaceInstance")
-      if (diamondMarketplaceInstance && window.ethereum && window.ethereum.chainId === GreymanChainId) {
+      if (diamondMarketplaceInstance && window.ethereum && currentChain === GreymanChainId) {
         let responseAllProduct = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
         if (responseAllProduct) {
           let tokensInRange = responseAllProduct.rangeData.rangeEnd.sub(responseAllProduct.rangeData.rangeStart).add(2222);
@@ -270,7 +273,7 @@ const SplashPage = ({ loginDone }) => {
     } catch (err) {
       console.error(err);
     }
-  }, [setSoldCopies, diamondMarketplaceInstance]);
+  }, [setSoldCopies, diamondMarketplaceInstance, setCopies, currentChain]);
 
   useEffect(() => {
     if (!diamondMarketplaceInstance) {
