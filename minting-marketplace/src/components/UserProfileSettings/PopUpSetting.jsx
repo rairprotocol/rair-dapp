@@ -173,7 +173,7 @@ const PopUpSettings = ({
             <li onClick={pushToMyItems}>
               <i className="fas fa-boxes"></i>My items
             </li>
-            {
+            { process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== 'true' &&
               <li onClick={pushToFactory}>
                 <i className="fas fa-hammer"></i>Factory
               </li>
