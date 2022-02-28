@@ -407,7 +407,7 @@ describe("Diamonds", function () {
 			await expect(await tokensFacet.acceptNewToken(erc777Instance.address, priceToDeploy))
 				.to.emit(factoryDiamondInstance, 'RoleGranted')
 				.withArgs(await factoryDiamondInstance.ERC777(), erc777Instance.address, owner.address)
-				.to.emit(tokensFacet, 'NewTokenAccepted')
+				.to.emit(tokensFacet, 'AcceptedToken')
 				.withArgs(erc777Instance.address, priceToDeploy, owner.address);
 		});
 	});
@@ -442,8 +442,8 @@ describe("Diamonds", function () {
 			await expect(await erc777Instance.send(factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRairOne!')))
 				//.to.emit(erc777Instance, "Sent")
 				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
-				.to.emit(receiverFacet, 'NewContractDeployed')
-				.withArgs(owner.address, 1, firstDeploymentAddress, 'TestRairOne!');
+				.to.emit(receiverFacet, 'DeployedContract')
+				.withArgs(owner.address, 0, firstDeploymentAddress, 'TestRairOne!');
 		});
 
 		it ("Should return excess tokens from the deployment", async() => {
@@ -453,8 +453,8 @@ describe("Diamonds", function () {
 				//.withArgs(owner.address, owner.address, factoryDiamondInstance.address, priceToDeploy + 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
 				//.to.emit(erc777Instance, "Sent")
 				//.withArgs(factoryDiamondInstance.address, factoryDiamondInstance.address, owner.address, 5, ethers.utils.toUtf8Bytes('TestRair!'), ethers.utils.toUtf8Bytes(''))
-				.to.emit(receiverFacet, 'NewContractDeployed')
-				.withArgs(owner.address, 2, secondDeploymentAddress, 'TestRairTwo!');
+				.to.emit(receiverFacet, 'DeployedContract')
+				.withArgs(owner.address, 1, secondDeploymentAddress, 'TestRairTwo!');
 			await expect(await erc777Instance.balanceOf(owner.address))
 				.to.equal(initialRAIR777Supply - (priceToDeploy * 2));
 			await expect(await erc777Instance.balanceOf(factoryDiamondInstance.address))
@@ -541,7 +541,7 @@ describe("Diamonds", function () {
 			await expect(await tokensFacet.removeToken(erc777Instance.address))
 				.to.emit(factoryDiamondInstance, 'RoleRevoked')
 				.withArgs(await factoryDiamondInstance.ERC777(), erc777Instance.address, owner.address)
-				.to.emit(tokensFacet, 'TokenNoLongerAccepted')
+				.to.emit(tokensFacet, 'RemovedToken')
 				.withArgs(erc777Instance.address, owner.address);
 		});
 
@@ -627,18 +627,18 @@ describe("Diamonds", function () {
 		it ("Should create a product", async () => {
 			let productFacet = await ethers.getContractAt('RAIRProductFacet', firstDeploymentAddress);
 			await expect(await productFacet.createProduct("FirstFirst", 1000))
-				.to.emit(productFacet, 'ProductCreated')
+				.to.emit(productFacet, 'CreatedCollection')
 				.withArgs(0, "FirstFirst", 0, 1000);
 			await expect(await productFacet.createProduct("FirstSecond", 50))
-				.to.emit(productFacet, 'ProductCreated')
+				.to.emit(productFacet, 'CreatedCollection')
 				.withArgs(1, "FirstSecond", 1000, 50);
 
 			productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
 			await expect(await productFacet.createProduct("SecondFirst", 100))
-				.to.emit(productFacet, 'ProductCreated')
+				.to.emit(productFacet, 'CreatedCollection')
 				.withArgs(0, "SecondFirst", 0, 100);
 			await expect(await productFacet.createProduct("SecondSecond", 900))
-				.to.emit(productFacet, 'ProductCreated')
+				.to.emit(productFacet, 'CreatedCollection')
 				.withArgs(1, "SecondSecond", 100, 900);
 		});
 
@@ -680,7 +680,7 @@ describe("Diamonds", function () {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
 			// createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name)
 			await expect(rangesFacet.createRange(2, 0, 10, 1000, 950, 50, 'First First First'))
-				.to.be.revertedWith('RAIR ERC721: Product does not exist');
+				.to.be.revertedWith('RAIR ERC721 Ranges: Collection does not exist');
 		});
 
 		it ("Shouldn't create ranges with invalid information", async () => {
@@ -982,7 +982,7 @@ describe("Diamonds", function () {
 		it ("Shouldn't list the tokens minted in each product if the product doesn't exist", async () => {
 			let productFacet = await ethers.getContractAt('RAIRProductFacet', secondDeploymentAddress);
 			await expect(productFacet.tokenByProduct(2, 0))
-				.to.be.revertedWith('RAIR ERC721: Product does not exist');
+				.to.be.revertedWith('RAIR ERC721: Collection does not exist');
 		});
 
 		it ("Should say if an address owns a token inside a product", async () => {
@@ -1103,7 +1103,7 @@ describe("Diamonds", function () {
 		it ("Should set the contract's URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setContractURI("DEV.RAIR.TECH"))
-				.to.emit(metadataFacet, 'ContractURIChanged')
+				.to.emit(metadataFacet, 'UpdatedContractURI')
 				.withArgs('DEV.RAIR.TECH');
 			await expect(await metadataFacet.contractURI())
 				.to.equal('DEV.RAIR.TECH');
@@ -1112,7 +1112,7 @@ describe("Diamonds", function () {
 		it ("Should set the token's base URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setBaseURI("devs.rairs.techs/", true))
-				.to.emit(metadataFacet, 'BaseURIChanged')
+				.to.emit(metadataFacet, 'UpdatedBaseURI')
 				.withArgs('devs.rairs.techs/', true);
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("devs.rairs.techs/100");
@@ -1121,7 +1121,7 @@ describe("Diamonds", function () {
 		it ("Should set the token's product URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setProductURI(1, 'first.rair.tech/', true))
-				.to.emit(metadataFacet, 'ProductURIChanged')
+				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, 'first.rair.tech/', true);
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("first.rair.tech/0");
@@ -1136,7 +1136,7 @@ describe("Diamonds", function () {
 		it ("Should set the token's unique URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setUniqueURI(100, 'hundreth.rair.tech/ASDF'))
-				.to.emit(metadataFacet, 'TokenURIChanged')
+				.to.emit(metadataFacet, 'UpdatedTokenURI')
 				.withArgs(100, 'hundreth.rair.tech/ASDF');
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("hundreth.rair.tech/ASDF");
@@ -1152,11 +1152,11 @@ describe("Diamonds", function () {
 					'103.rair.tech/QWERTY'
 				]
 			))
-				.to.emit(metadataFacet, 'TokenURIChanged')
+				.to.emit(metadataFacet, 'UpdatedTokenURI')
 				.withArgs(101, '101.rair.tech/QWERTY')
-				.to.emit(metadataFacet, 'TokenURIChanged')
+				.to.emit(metadataFacet, 'UpdatedTokenURI')
 				.withArgs(102, '102.rair.tech/QWERTY')
-				.to.emit(metadataFacet, 'TokenURIChanged')
+				.to.emit(metadataFacet, 'UpdatedTokenURI')
 				.withArgs(103, '103.rair.tech/QWERTY');
 			await expect(await metadataFacet.tokenURI(101))
 				.to.equal("101.rair.tech/QWERTY");
@@ -1172,19 +1172,19 @@ describe("Diamonds", function () {
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("hundreth.rair.tech/ASDF");
 			await expect(await metadataFacet.setUniqueURI(100, ''))
-				.to.emit(metadataFacet, 'TokenURIChanged')
+				.to.emit(metadataFacet, 'UpdatedTokenURI')
 				.withArgs(100, '');
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("first.rair.tech/0");
 			await expect(await metadataFacet.setProductURI(1, '', true))
-				.to.emit(metadataFacet, 'ProductURIChanged')
+				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, '', true);
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("devs.rairs.techs/100");
 			await expect(await metadataFacet.setBaseURI("", false))
-				.to.emit(metadataFacet, 'BaseURIChanged')
+				.to.emit(metadataFacet, 'UpdatedBaseURI')
 				.withArgs('', false);
 
 			await expect(await metadataFacet.tokenURI(100))
@@ -1194,7 +1194,7 @@ describe("Diamonds", function () {
 		it ("Should set the baseURI without the token index", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setBaseURI("rair.cryptograyman.com/", false))
-				.to.emit(metadataFacet, 'BaseURIChanged')
+				.to.emit(metadataFacet, 'UpdatedBaseURI')
 				.withArgs("rair.cryptograyman.com/", false);
 
 			await expect(await metadataFacet.tokenURI(100))
@@ -1204,7 +1204,7 @@ describe("Diamonds", function () {
 		it ("Should set the productURI without the token index", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setProductURI(1, "rair.cryptograyman.com/product", false))
-				.to.emit(metadataFacet, 'ProductURIChanged')
+				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, "rair.cryptograyman.com/product", false);
 				
 			await expect(await metadataFacet.tokenURI(100))
@@ -1548,8 +1548,8 @@ describe("Diamonds", function () {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				let erc721Facet = await ethers.getContractAt('ERC721Facet', secondDeploymentAddress);
 				await expect(await mintingOffersFacet.buyMintingOffer(0, 0, {value: 4500}))
-					//TokenMinted(erc721Address, rangeIndex, tokenIndex, msg.sender);
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					//MintedToken(erc721Address, rangeIndex, tokenIndex, msg.sender);
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 0, owner.address)
 					.to.emit(erc721Facet, 'Transfer')
 					.withArgs(ethers.constants.AddressZero, owner.address, 0)
@@ -1606,25 +1606,25 @@ describe("Diamonds", function () {
 						addr1.address,
 					];
 				await expect(await mintingOffersFacet.buyMintingOfferBatch(0, tokensList, addressList, {value: 4500 * tokensList.length}))
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 1, owner.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 2, addr1.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 3, addr2.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 4, addr3.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 5, owner.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 6, addr1.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 7, addr2.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 8, addr3.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 9, owner.address)
-					.to.emit(mintingOffersFacet, 'TokenMinted')
+					.to.emit(mintingOffersFacet, 'MintedToken')
 					.withArgs(secondDeploymentAddress, 0, 10, addr1.address)
 					.to.changeEtherBalances([
 						owner,
