@@ -13,13 +13,16 @@ const removeTempFile = async (roadToFile) => {
 module.exports = context => {
   const router = express.Router();
 
+  // Create new user
   router.post('/', validation('createUser'), async (req, res, next) => {
-    try {
-      let { publicAddress, adminNFT } = req.body;
 
-      if (adminNFT === 'temp') {
-        adminNFT = `temp_${ nanoid() }`; //FIXME: should be removed right after fix the frontend functionality
-      }
+    //FIXME: endpoint have to be protected
+
+    try {
+      // let { publicAddress, adminNFT } = req.body;
+      let { publicAddress } = req.body;
+
+      const adminNFT = `temp_${ nanoid() }`; //FIXME: should be removed right after fix the frontend functionality
 
       publicAddress = publicAddress.toLowerCase();
 
@@ -31,6 +34,7 @@ module.exports = context => {
     }
   });
 
+  // Get specific user info
   router.get('/:publicAddress', validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
@@ -42,6 +46,7 @@ module.exports = context => {
     }
   });
 
+  // Update specific user fields
   router.post('/:publicAddress', upload.single('file'), JWTVerification(context), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
@@ -70,7 +75,7 @@ module.exports = context => {
         }
       }
 
-      fieldsForUpdate = _.pick(fieldsForUpdate, ['adminNFT', 'nickName', 'avatar', 'email']);
+      fieldsForUpdate = _.pick(fieldsForUpdate, ['nickName', 'avatar', 'email']);
 
       if (_.isEmpty(fieldsForUpdate)) {
         return res.status(400).send({ success: false, message: 'Nothing to update.' });
