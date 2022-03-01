@@ -345,6 +345,15 @@ function App({ sentryHistory }) {
 										primaryColor={primaryColor}
 									/>
 								</div>
+                {!loginDone ? <div className='btn-connect-wallet-wrapper'>
+                  <button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
+                    className={`btn btn-${primaryColor} btn-connect-wallet`}
+                    onClick={connectUserData}>
+                    {startedLogin ? 'Please wait...' : 'Connect Wallet'}
+                    {/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+                  </button>
+                  {renderBtnConnect ? <OnboardingButton /> : <> </>}
+                </div> : <></>}
 							</div>
 							<div className='col'>
 								<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
