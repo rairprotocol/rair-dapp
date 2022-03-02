@@ -1,8 +1,27 @@
 pipeline {
-  agent { label 'jenkins-slave-node-1' }
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
+  agent   {
+        kubernetes {
+            label 'jenkins-agent'
+            yaml """
+kind: Pod
+metadata:
+  name: jenkins-agent
+spec:
+  containers:
+  - name: golang
+    image: golang:1.12
+    command:
+    - cat
+    tty: true
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: Always
+    command:
+    - /busybox/cat
+    tty: true
+"""
+        }
+    }
   environment {
     DOCKERHUB_CREDENTIALS = credentials('rairtech-dockerhub')
     VERSION = "${env.BUILD_ID}"
