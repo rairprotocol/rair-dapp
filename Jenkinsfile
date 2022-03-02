@@ -3,30 +3,30 @@ pipeline {
         kubernetes {
             label 'jenkins-agent'
             yaml """
-    kind: Pod
-    spec:
-      containers:
-      - name: maven
-        image: maven:3.8.1-jdk-8
-        command:
-        - sleep
-        args:
-        - 99d
-      - name: kaniko
-        image: gcr.io/kaniko-project/executor:debug
-        command:
-        - sleep
-        args:
-        - 9999999
-        volumeMounts:
-        - name: kaniko-secret
-          mountPath: /kaniko/.docker
-      restartPolicy: Never
-      volumes:
-      - name: kaniko-secret
-        secret:
-            secretName: dockercred
-            items:
+kind: Pod
+metadata:
+  name: kaniko
+spec:
+  containers:
+  - name: jnlp
+    workingDir: /home/jenkins
+  - name: kaniko
+    workingDir: /home/jenkins
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: Always
+    command:
+    - /busybox/cat
+    tty: true
+    volumeMounts:
+      - name: jenkins-docker-cfg
+        mountPath: /kaniko/.docker
+  volumes:
+  - name: jenkins-docker-cfg
+    projected:
+      sources:
+      - secret:
+          name: docker-credentials (1)
+          items:
             - key: .dockerconfigjson
               path: config.json
 """
