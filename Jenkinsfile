@@ -36,9 +36,11 @@ spec:
   }
     stages{
      stage('Initialize'){
+       steps{
         def dockerHome = tool 'Docker-Installation'
         env.PATH = "${dockerHome}/bin:${env.PATH}"
       }
+     }
     stage('Build RAIR node') {
       steps {
         echo 'for branch' + env.BRANCH_NAME
