@@ -5,13 +5,14 @@ import Box from "@mui/material/Box";
 const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
   const [percentTokens, setPersentTokens] = useState(0);
   const [showMore, setShowMore] = useState(false);
+  const [fontSize, setFontSize] = useState('');
 
-  const wholeTokens = Number(copies) - Number(soldCopies);
+  const wholeTokens = Number(copies);
   const leftTokensNumber = Number(soldCopies);
 
   useEffect(() => {
     if (leftTokensNumber <= wholeTokens) {
-      const percentLeft = (leftTokensNumber * 100) / wholeTokens;
+      const percentLeft = (Number(leftTokensNumber) * 100) / Number(wholeTokens);
       if (percentLeft > 1) {
         setPersentTokens(Math.floor(percentLeft));
       } else if (percentLeft > 990) {
@@ -20,10 +21,19 @@ const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
         setPersentTokens(Math.ceil(percentLeft));
       }
     }
-    if (leftTokensNumber > wholeTokens) {
+    if (leftTokensNumber > wholeTokens || leftTokensNumber === wholeTokens ) {
       setPersentTokens(100);
     }
   }, [setPersentTokens, wholeTokens, leftTokensNumber]);
+
+  useEffect(() => {
+    if(leftTokensNumber >= 10000000) {
+      setFontSize("32px");
+    }
+    if (leftTokensNumber >= 1000000000) {
+      setFontSize("28px")
+    }
+  }, [leftTokensNumber, wholeTokens])
 
   return (
     <div className="left-tokens greyman-page left-tokens-response ">
@@ -76,7 +86,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
             >
               <div className="progress-info">
                 <div className="text-numbers">
-                  <div style={{ color: "white" }} className="">
+                  <div style={{ color: "white", fontSize: `${fontSize}` }} className="">
                     {leftTokensNumber}{" "}
                   </div>
                   <div className="text-whole-tokens"> / {`7.9b`}</div>

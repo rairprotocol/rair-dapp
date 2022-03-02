@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { rFetch /*useRfetch*/ } from "../../utils/rFetch.js";
 import { /*Link*/ useHistory } from "react-router-dom";
 import setDocumentTitle from "../../utils/setTitle";
+import MyDiamondItems from './myDiamondItems.jsx';
 
 // React Redux types
 import * as authTypes from "../../ducks/auth/types";
@@ -38,6 +39,9 @@ const MyItems = (props) => {
       // console.log(response);
       let tokenData = [];
       for await (let token of response.result) {
+        if (!token.contract) {
+          return;
+        }
         let contractData = await rFetch(
           `/api/contracts/singleContract/${token.contract}`
         );
@@ -242,6 +246,7 @@ const MyItems = (props) => {
       ) : (
         <></>
       )}
+      <MyDiamondItems {...{openModal, setSelectedData}}/>
     </div>
   );
 };

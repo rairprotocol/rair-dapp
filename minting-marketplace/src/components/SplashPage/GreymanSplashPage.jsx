@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -20,7 +20,7 @@ import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import { Timeline } from "./Timeline/Timeline";
 
 import { diamondFactoryAbi } from "../../contracts/index.js";
-import { rFetch } from "../../utils/rFetch.js";
+//import { rFetch } from "../../utils/rFetch.js";
 import { metamaskCall } from "../../utils/metamaskUtils.js";
 import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
@@ -29,6 +29,13 @@ import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCa
 import VideoPlayer from "../video/videoPlayerGenerall";
 import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
+
+//Google Analytics
+import ReactGA from 'react-ga';
+
+// Google Analytics
+const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
 
 const customStyles = {
   overlay: {
@@ -83,15 +90,19 @@ const SplashPage = ({ loginDone }) => {
   const [soldCopies, setSoldCopies] = useState();
 
   const [active, setActive] = useState({ policy: false, use: false });
-  const GraymanSplashPageTESTNET = "0xA011723657362e28325E26F5CCEC517A920bbB43";
-  const GreymanChainId = '0x13881';
+  const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
+  const GreymanChainId = '0x89';
+  const offerIndexInMarketplace = 2;
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
   //   const history = useHistory();
-  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } = useSelector(
-    (store) => store.contractStore
-  );
+  const {
+    diamondMarketplaceInstance,
+    contractCreator,
+    currentUserAddress,
+    currentChain
+  } = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -128,17 +139,14 @@ const SplashPage = ({ loginDone }) => {
       });
       return;
     }
-    let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(7));
-    console.log(greymanOffer);
+    let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
     if (greymanOffer) {
-    console.log(2);
       let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
       let nextToken = await metamaskCall(instance.getNextSequentialIndex(
         greymanOffer.productIndex,
         greymanOffer.rangeData.rangeStart,
         greymanOffer.rangeData.rangeEnd
       ));
-    console.log(3);
       Swal.fire({
         title: "Please wait...",
         html: `Buying Greyman #${nextToken.toString()}`,
@@ -147,7 +155,7 @@ const SplashPage = ({ loginDone }) => {
       });
       if (await metamaskCall(
         diamondMarketplaceInstance.buyMintingOffer(
-          7,
+          offerIndexInMarketplace,
           nextToken,
           {
             value: greymanOffer.rangeData.rangePrice,
@@ -156,13 +164,13 @@ const SplashPage = ({ loginDone }) => {
         "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )) {
         Swal.fire({
-         // title : "Success", 
-        imageUrl: GreyMan, 
-        imageHeight: "auto",
-        imageWidth: "65%",
-        imageAlt: 'GreyMan image',
-        title: `You own #${nextToken}!`, 
-        icon: "success"
+          // title : "Success", 
+          imageUrl: GreyMan,
+          imageHeight: "auto",
+          imageWidth: "65%",
+          imageAlt: 'GreyMan image',
+          title: `You own #${nextToken}!`,
+          icon: "success"
         });
       }
     }
@@ -249,26 +257,31 @@ const SplashPage = ({ loginDone }) => {
   let subtitle;
 
   const getAllProduct = useCallback(async () => {
-    const responseAllProduct = await (
-      await fetch(
-        `/api/contracts/network/0x13881/${GraymanSplashPageTESTNET}/products/offers`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "X-rair-token": localStorage.token,
-          },
+    try {
+      // console.log(diamondMarketplaceInstance, "diamondMarketplaceInstance")
+      if (diamondMarketplaceInstance && window.ethereum && currentChain === GreymanChainId) {
+        let responseAllProduct = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
+        if (responseAllProduct) {
+          let tokensInRange = responseAllProduct.rangeData.rangeEnd.sub(responseAllProduct.rangeData.rangeStart).add(2222).add(1);
+          let soldTokens = tokensInRange.sub(responseAllProduct.rangeData.mintableTokens);
+          setCopies(tokensInRange.toString());
+          // setCopies(responseAllProduct.products[0].copies);
+          // setSoldCopies(responseAllProduct.products[0].soldCopies);
+          setSoldCopies(soldTokens.toString());
         }
-      )
-    ).json();
-    if (responseAllProduct.success) {
-      setCopies(responseAllProduct.products[0].copies);
-      setSoldCopies(responseAllProduct.products[0].soldCopies);
-    } else {
-      setCopies(7);
-      setSoldCopies(0);
+      }
+    } catch (err) {
+      console.error(err);
     }
-  }, [setSoldCopies]);
+  }, [setSoldCopies, diamondMarketplaceInstance, setCopies, currentChain]);
+
+  useEffect(() => {
+    if (!diamondMarketplaceInstance) {
+      return;
+    }
+    diamondMarketplaceInstance.on('TokenMinted', getAllProduct);
+    return diamondMarketplaceInstance.off('TokenMinted', getAllProduct);
+  }, [diamondMarketplaceInstance, getAllProduct])
 
   useEffect(() => {
     setTitle(`#Cryptogreyman`);
@@ -310,7 +323,7 @@ const SplashPage = ({ loginDone }) => {
                 <div className="greyman-">
                   <Countdown
                     setTimerLeft={setTimerLeft}
-                    time={"2022-02-02T22:22:00-00:00"}
+                    time={"2022-02-22T22:22:00-00:00"}
                   />
                 </div>
               )}
@@ -400,8 +413,8 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-text-wrapper">
-                        <span style={{width: '287px'}} className="modal-text">
-                        By accepting these terms, I agree <strong style={{color: "rgb(136 132 132)", fontWeight: 'bolder'}}>not</strong> to have any fun with this greyman
+                        <span style={{ width: '287px' }} className="modal-text">
+                          By accepting these terms, I agree <strong style={{ color: "rgb(136 132 132)", fontWeight: 'bolder' }}>not</strong> to have any fun with this greyman
                         </span>
                         <img src={GreyManNotFun} alt="not-fun" />
 
@@ -424,8 +437,8 @@ const SplashPage = ({ loginDone }) => {
                           {window.ethereum?.chainId !== GreymanChainId
                             ? "Switch network"
                             : currentUserAddress
-                            ? "PURCHASE"
-                            : "Connect your wallet!"}
+                              ? "PURCHASE"
+                              : "Connect your wallet!"}
                         </button>
                       </div>
                     </div>
@@ -435,7 +448,7 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        {timerLeft === 0 && (
+        {timerLeft === 0 && soldCopies !== undefined && (
           <TokenLeftGreyman
             Metamask={Metamask}
             primaryColor={primaryColor}
@@ -514,9 +527,8 @@ const SplashPage = ({ loginDone }) => {
                       style={{
                         fontWeight: "bolder",
                         fontSize: "18px",
-                        color: `${
-                          primaryColor === "rhyno" ? "#000" : "#c1c1c1"
-                        }`,
+                        color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"
+                          }`,
                       }}
                     >
                       MATIC blockchain
@@ -526,9 +538,8 @@ const SplashPage = ({ loginDone }) => {
                       style={{
                         fontWeight: "bolder",
                         fontSize: "18px",
-                        color: `${
-                          primaryColor === "rhyno" ? "#000" : "#c1c1c1"
-                        }`,
+                        color: `${primaryColor === "rhyno" ? "#000" : "#c1c1c1"
+                          }`,
                       }}
                     >
                       {" "}
@@ -566,9 +577,8 @@ const SplashPage = ({ loginDone }) => {
                       <div
                         className="property"
                         style={{
-                          background: `${
-                            primaryColor === "rhyno" ? "#cccccc" : "none"
-                          }`,
+                          background: `${primaryColor === "rhyno" ? "#cccccc" : "none"
+                            }`,
                         }}
                       >
                         <span className="property-desc">Background Color</span>
@@ -580,9 +590,8 @@ const SplashPage = ({ loginDone }) => {
                       <div
                         className="property second"
                         style={{
-                          background: `${
-                            primaryColor === "rhyno" ? "#cccccc" : "none"
-                          }`,
+                          background: `${primaryColor === "rhyno" ? "#cccccc" : "none"
+                            }`,
                         }}
                       >
                         <span className="property-desc">Pant Color</span>

@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
 import ReactPlayer from "react-player";
+import { utils } from "ethers";
 
 // import Swal from 'sweetalert2';
 // import 'react-accessible-accordion/dist/fancy-example.css';
@@ -57,7 +58,7 @@ const NftItemComponent = ({
   // }, [getData, openModal, setSelected]);
 
   const redirection = () => {
-    history.push(`/tokens/${blockchain}/${contractName}/${collectionIndexInContract}/0`);
+    history.push(`/collection/${blockchain}/${contractName}/${collectionIndexInContract}/0`);
   };
 
   function arrayMin(arr) {
@@ -163,7 +164,7 @@ const NftItemComponent = ({
               className="col-12 h-100 w-100"
             />
           )}
-          {<SvgKey />}
+          {<SvgKey color={'white'} />}
         </div>
         <div className="col description-wrapper pic-description-wrapper">
           <span className="description-title">
@@ -184,6 +185,9 @@ const NftItemComponent = ({
               alt=""
             />
             <span className="description ">{minPrice} {chainDataFront[blockchain]?.name} </span>
+            {/* <span className="description ">{utils
+            .formatEther(minPrice !== Infinity && minPrice !== undefined ? minPrice : 0)
+            .toString()} {chainDataFront[blockchain]?.name} </span> */}
           </div>
           <div onClick={RedirectToMockUp} className="description-big">
             <img
