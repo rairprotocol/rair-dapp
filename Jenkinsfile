@@ -2,11 +2,17 @@ pipeline {
   agent   {
         kubernetes {
             label 'jenkins-agent'
-            podTemplate(yaml: '''
+            yaml: '''
     apiVersion: v1
     kind: Pod
     spec:
       containers:
+      - name: maven
+        image: maven:3.8.1-jdk-8
+        command:
+        - sleep
+        args:
+        - 99d
       - name: kaniko
         image: gcr.io/kaniko-project/executor:debug
         command:
@@ -24,7 +30,7 @@ pipeline {
             items:
             - key: .dockerconfigjson
               path: config.json
-''')
+'''
         }
     }
   environment {
