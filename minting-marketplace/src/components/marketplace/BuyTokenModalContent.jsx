@@ -16,8 +16,11 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 
 	const [batchMode, setBatchMode] = useState(false);
 	const [minterInstance, setMinterInstance] = useState();
+	const [batchPage, setBatchPage] = useState(0);
 
 	const {contractCreator} = useSelector(state => state.contractStore)
+
+	const rowsLimit = 100;
 
 	useEffect(() => {
 		if (minterAddress) {
@@ -67,6 +70,8 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		aux.splice(index, 1);
 		setRows(aux);
 	}
+
+	let paginatedRows = rows ? rows.slice(0 + (batchPage * 100), 100 + (batchPage * 100)) : [];
 
 	return <>
 		<div className='row w-100 px-0 mx-0'>
@@ -141,10 +146,21 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 						Total: {utils.formatEther(diamonds ? price.mul(rows.length) : (price * rows.length))}
 					</div>
 					<div className='col-12' style={{maxHeight: '50vh', overflowY: 'scroll'}}>
-						{rows.map((item, index) => {
-							return <BatchRow key={index} index={index} deleter={() => deleteRow(index)} array={rows}/>
+						{paginatedRows.map((item, index) => {
+							return <BatchRow key={index} index={index + (rowsLimit * batchPage)} deleter={() => deleteRow(index)} array={rows}/>
 						})}
 					</div>
+					{rows.length >= rowsLimit && <>
+						<button disabled={batchPage === 0} onClick={() => setBatchPage(batchPage - 1)} className='btn col-12 col-md-3 btn-royal-ice'>
+							<i className='fas fa-minus' />
+						</button>
+						<div className='col-12 col-md-6' >
+							Page: {batchPage} of {Number.parseInt((rows.length - 2) / rowsLimit)}
+						</div>
+						<button disabled={batchPage + 1 >= ((rows.length - 2) / rowsLimit)} onClick={() => setBatchPage(batchPage + 1)} className='btn col-12 col-md-3 btn-royal-ice'>
+							<i className='fas fa-plus' />
+						</button>
+					</>}
 					<div className='col-12'>
       					<InputField
 							customClass='py-0 form-control mb-2'
@@ -160,15 +176,15 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 						if (diamonds) {
 							buyTokenBatchFunction(
 								offerIndex,
-								rows.map(item => item['NFTID']),
-								rows.map(item => item['Public Address']),
+								paginatedRows.map(item => item['NFTID']),
+								paginatedRows.map(item => item['Public Address']),
 								price
 							)
 						} else {
-							batchMint(rows)
+							batchMint(paginatedRows)
 						}
-					}} disabled={!minterInstance || !rows.length} className='col btn btn-stimorol'>
-						Batch Mint {rows.length} tokens!
+					}} disabled={!minterInstance || !paginatedRows.length} className='col btn btn-stimorol'>
+						Batch Mint {paginatedRows.length} tokens!
 					</button>
 				</>
 			}

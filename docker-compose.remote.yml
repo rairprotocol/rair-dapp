@@ -10,9 +10,9 @@ services:
       - ./demo-decrypt-node/db:/usr/local/src/db
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
     environment:
-      PRODUCTION: "false"
-      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
-      MONGO_URI_LOCAL: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      PRODUCTION: "true"
+      MONGO_URI: mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority
+      MONGO_URI_LOCAL: mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
@@ -40,52 +40,6 @@ services:
     ports:
       - 3000:3000
       - 5000:5000
-    networks:
-      - rair-local
-  blockchain-networks:
-    container_name: 'blockchain-networks'
-    build:
-      context: blockchain-networks-service/
-      dockerfile: Dockerfile
-    environment:
-      PRODUCTION: "false"
-      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
-      MONGO_URI_LOCAL: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
-      PINATA_KEY: ${pinata_key}
-      PINATA_SECRET: ${pinata_secret}
-      PINATA_GATEWAY: ${pinata_gateway}
-      INFURA_PROJECT_ID: ${infura_project_id}
-      DEFAULT_PRODUCT_COVER: ${default_product_cover}
-      BINANCE_FACTORY_ADDRESS: ${binance_factory_addres}
-      BINANCE_MINTER_ADDRESS: ${binance_minter_address}
-      GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
-      GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
-      MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
-      MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
-      MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
-      MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
-      ETHEREUM_MAINNET_FACTORY_ADDRESS: ${ethereum_mainnet_factory_addres}
-      ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
-      SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
-      SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
-      IPFS_SERVICE: ${ipfs_service}
-      IPFS_GATEWAY: ${ipfs_gateway}
-      IPFS_API: ${ipfs_api}
-      MONGO_LOG_COLLECTION: ${mongo_log_collection}
-      LOG_LEVEL: ${log_level}
-      TEST_BSCSCAN_GATEWAY: ${test_bscscan_gateway}
-      TEST_POLYGONSCAN_GATEWAY: ${test_polygonscan_gateway}
-      TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
-      POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
-      ETHERSCAN_GATEWAY: ${etherscan_gateway}
-      MORALIS_SERVER_TEST: ${moralis_server_test}
-      MORALIS_SERVER_MAIN: ${moralis_server_main}
-      MORALIS_API_KEY_TEST: ${moralis_api_key_test}
-      MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
-      MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
-      MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
-    ports:
-      - 5001:5001
     networks:
       - rair-local
   minting-network:

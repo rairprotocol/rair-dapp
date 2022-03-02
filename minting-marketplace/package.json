@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://rairnode:5000",
   "dependencies": {
+    "@analytics/google-analytics": "^0.5.3",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@metamask/onboarding": "^1.0.1",
@@ -15,7 +16,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@trendyol-js/react-carousel": "^2.0.0",
-    "analytics": "^0.7.19",
+    "analytics": "^0.7.23",
     "antd": "^4.16.13",
     "axios": "^0.25.0",
     "ethers": "^5.5.3",

@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: ingress-env
 data:
-  IP_NAME: dev-ip
-  HOSTNAME: dev.rair.tech
+  IP_NAME: greyman-ip
+  HOSTNAME: cryptogreyman.com
