@@ -100,7 +100,7 @@ const ContractABIManager = ({
 						Add Selected Facets
 				</button>
 				<button
-					disabled={queryingFacets || queriedFacets === undefined || functions === undefined || selectorsInDiamond === undefined}
+					disabled={queryingFacets || queriedFacets === undefined || functions === undefined}
 					onClick={() => callItemCuts(FacetCutAction_REPLACE)}
 					className='btn btn-warning col-12 col-md-4'>
 						Replace Selected Facets
