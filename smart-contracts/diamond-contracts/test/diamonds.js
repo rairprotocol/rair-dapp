@@ -1353,6 +1353,18 @@ describe("Diamonds", function () {
 					.to.be.revertedWith("Minter Marketplace: Fees don't add up to 100%");
 			});
 
+			it ("Shouldn't add an offer if the fees don't divide properly", async () => {
+				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
+				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 0, [
+					{recipient: addr1.address, percentage: 2222},
+					{recipient: addr2.address, percentage: 20000},
+					{recipient: addr3.address, percentage: 20000},
+					{recipient: addr4.address, percentage: 20000},
+					{recipient: owner.address, percentage: 27778}
+				], true, addr4.address))
+					.to.be.revertedWith("Minter Marketplace: Current fee configuration will result in missing funds");
+			});
+
 			it ("Shouldn't add an offer if the range doesn't exist", async () => {
 				let mintingOffersFacet = await ethers.getContractAt('MintingOffersFacet', marketDiamondInstance.address);
 				await expect(mintingOffersFacet.addMintingOffer(firstDeploymentAddress, 4, [

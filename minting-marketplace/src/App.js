@@ -83,10 +83,10 @@ import MainLogo from './components/GroupLogos/MainLogo.jsx';
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
-  return <div className="bg-stiromol">
-    <h1> Whoops! </h1>
-    An error has ocurred
-  </div>;
+  return <div className="not-found-page">
+      <h3><span className="text-404">Sorry!</span></h3>
+      <p>An error has ocurred</p>
+  </div>
 };
 
 function App({ sentryHistory }) {
@@ -318,24 +318,26 @@ function App({ sentryHistory }) {
     }
   }, [primaryColor]);
 
+  let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
+
 	return (
-		<Sentry.ErrorBoundary fallback={ErrorFallback}>
-			<Router history={sentryHistory}>
+	  <Sentry.ErrorBoundary fallback={ErrorFallback}>
+      <Router history={sentryHistory}>
 				{/* {currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />} */}
-				<>
-					<div
-						style={{
-							...backgroundImageEffect,
-							backgroundSize: '100vw 100vh',
-							minHeight: '90vh',
-							position: 'relative',
-							backgroundColor: `var(--${primaryColor})`,
-							color: textColor,
-							backgroundImage: `url(${backgroundImage})`,
-							backgroundPosition: 'center top',
-							backgroundRepeat: 'no-repeat',
-						}}
-						className="App p-0 container-fluid">
+				  <>
+        		<div
+        			style={{
+        				...backgroundImageEffect,
+        				backgroundSize: '100vw 100vh',
+        				minHeight: '90vh',
+        				position: 'relative',
+        				backgroundColor: `var(--${primaryColor})`,
+        				color: textColor,
+        				backgroundImage: `url(${backgroundImage})`,
+        				backgroundPosition: 'center top',
+        				backgroundRepeat: 'no-repeat',
+        			}}
+        			className="App p-0 container-fluid">
 						<UserProfileSettings
 							errorAuth={errorAuth}
 							adminAccess={adminAccess}
@@ -366,7 +368,7 @@ function App({ sentryHistory }) {
 									</button>
 									{renderBtnConnect ? <OnboardingButton /> : <> </>}
 									{/* {console.log(adminAccess)} */}
-								</div> : adminAccess === true && [
+								</div> : adminAccess === true && !creatorViewsDisabled && [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className="fas fa-key" />, route: '/my-nft' },
 									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
@@ -395,13 +397,103 @@ function App({ sentryHistory }) {
 								</div>
 								<div className='col-12 mt-3 row'>
 									<Switch>
-										{loginDone && <SentryRoute path='/creator/deploy' component={Deploy} />}
-										{loginDone && <SentryRoute path='/creator/contracts' component={Contracts} />}
-										{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/createCollection' component={ContractDetails} />}
-										{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/listCollections' component={ListCollections} />}
-										{loginDone && <SentryRoute path='/creator/contract/:blockchain/:address/collection/:collectionIndex/'>
-											<WorkflowSteps {...{ sentryHistory }} />
-										</SentryRoute>}
+                      {[
+                        // New Creator UI
+                        {
+                          path: '/creator/deploy',
+                          content: <Deploy />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        {
+                          path: '/creator/contracts',
+                          content: <Contracts />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        {
+                          path: '/creator/contract/:blockchain/:address/createCollection',
+                          content: <ContractDetails />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        {
+                          path:'/creator/contract/:blockchain/:address/listCollections',
+                          content: <ListCollections />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        {
+                          path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/',
+                          content: <WorkflowSteps {...{ sentryHistory }} />,
+                          constraint: loginDone && !creatorViewsDisabled,
+                          exact: false
+                        },
+                        // Old Creator UI (Using the Database)
+                        {
+                          path: "/new-factory",
+                          content: <MyContracts />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        {
+                          path: "/on-sale",
+                          content: <MinterMarketplace />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        {
+                          path: "/rair/:contract/:product",
+                          content: <RairProduct />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        // Old Video Upload view
+                        {
+                          path: "/admin",
+                          content: <FileUpload primaryColor={ primaryColor } textColor={ textColor }/>,
+                          constraint: loginDone && !creatorViewsDisabled && adminAccess
+                        },
+                        // Old Metadata Editor
+                        {
+                          path: "/metadata/:blockchain/:contract/:product",
+                          content: <MetadataEditor />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        // Old MyNFTs (database)
+                        {
+                          path: "/my-nft",
+                          content: <MyNFTs />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        // Old Token Viewer (Database)
+                        {
+                          path: "/token/:contract/:identifier",
+                          content: <Token />,
+                          constraint: loginDone && !creatorViewsDisabled
+                        },
+                        // Classic Blockchain Factory
+                        {
+                          path: "/factory",
+                          content: <CreatorMode />,
+                          constraint: loginDone && !creatorViewsDisabled && factoryInstance !== undefined
+                        },
+                        // Classic Blockchain Minter Marketplace
+                        {
+                          path: "/minter",
+                          content: <ConsumerMode />,
+                          constraint: loginDone && !creatorViewsDisabled && minterInstance !== undefined
+                        },
+                        // Diamond Marketplace
+                        {
+                          path: '/diamondMinter',
+                          content: <DiamondMarketplace />,
+                          constraint: loginDone && !creatorViewsDisabled && diamondMarketplaceInstance !== undefined
+                        }
+                        /*
+                        */
+                      ].map((item, index) => {
+                        if (item.constraint !== undefined && !item.constraint) {
+                          return;
+                        }
+                        return <SentryRoute
+                          exact={item.exact !== undefined ? item.exact : true}
+                          path={item.path}
+                          render={() => item.content} />
+                      })}
 										<SentryRoute exact path="/about-page">
 											<AboutPageNew
 												primaryColor={primaryColor}
@@ -409,19 +501,33 @@ function App({ sentryHistory }) {
 												headerLogoBlack={headerLogoBlack}
 											/>
 										</SentryRoute>
-										<SentryRoute path='/all'>
-											<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute>
-										<SentryRoute path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
+                    <SentryRoute exact path='/'>
+                      <div className='col-6 text-left'>
+                        <h1 className='w-100' style={{ textAlign: 'left' }}>
+                          Digital <b className='title'>Ownership</b>
+                          <br />
+                          Encryption
+                        </h1>
+                        <p className='w-100' style={{ textAlign: 'left' }}>
+                          RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
+                        </p>
+                      </div>
+                      <div className='col-12 mt-3 row' >
+                        <MockUpPage primaryColor={primaryColor} textColor={textColor} />
+                      </div>
+                    </SentryRoute>
+                    <SentryRoute path='/all'>
+                      <MockUpPage primaryColor={primaryColor} textColor={textColor} />
+                    </SentryRoute>
+                    {loginDone && <SentryRoute exact path="/my-items"> 
+                      <MyItems goHome={ goHome }/>
+                    </SentryRoute> }
+										
+										<SentryRoute exact path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
 											<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
-
-										<SentryRoute path="/coming-soon" component={ComingSoon} />
-										<SentryRoute path="/coming-soon-nutcrackers" component={ComingSoonNut} />
-										{/* 
-										<SentryRoute exact path="/">
-											<GreymanSplashPage loginDone={loginDone} />
-										</SentryRoute> */}
+										<SentryRoute exact path="/coming-soon" component={ComingSoon} />
+										<SentryRoute exact path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 										<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
 										
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
@@ -446,51 +552,17 @@ function App({ sentryHistory }) {
 										<SentryRoute exact path="/notifications" component={ NotificationPage }/>
 
 										<SentryRoute path="/watch/:videoId/:mainManifest" component={ VideoPlayer }/>
-
-										{ adminAccess && <SentryRoute path="/admin">
-										<FileUpload primaryColor={ primaryColor } textColor={ textColor }/>
-										</SentryRoute> }
-										{ factoryInstance && <SentryRoute exact path="/factory" component={ CreatorMode }/> }
-										{ loginDone && <SentryRoute path="/token/:contract/:identifier" component={ Token }/> }
-										{ minterInstance && <SentryRoute exact path="/minter" component={ ConsumerMode }/> }
-										{ loginDone && <SentryRoute exact path="/metadata/:blockchain/:contract/:product"
-																	component={ MetadataEditor }/> }
-										{ loginDone && <SentryRoute exact path="/my-nft" component={ MyNFTs }/> }
-										{ loginDone && <SentryRoute exact path="/my-items">
-										<MyItems goHome={ goHome }/>
-										</SentryRoute> }
-										{ loginDone && <SentryRoute path="/new-factory" component={ MyContracts }/> }
-										{ loginDone && <SentryRoute path="/on-sale" component={ MinterMarketplace }/> }
-										{ loginDone && <SentryRoute path="/rair/:contract/:product" component={ RairProduct }/> }
-										{ diamondMarketplaceInstance &&
-										<SentryRoute path="/diamondMinter" component={ DiamondMarketplace }/> }
-
-															<SentryRoute exact path='/'>
-																<div className='col-6 text-left'>
-																	<h1 className='w-100' style={{ textAlign: 'left' }}>
-																		Digital <b className='title'>Ownership</b>
-																		<br />
-																		Encryption
-																	</h1>
-																	<p className='w-100' style={{ textAlign: 'left' }}>
-																		RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content
-																	</p>
-																</div>
-																<div className='col-12 mt-3 row' >
-																	<MockUpPage primaryColor={primaryColor} textColor={textColor} />
-																</div>
-															</SentryRoute>
-															<SentryRoute path="" component={NotFound} />
-														</Switch>
-													</div>
-												</div>
-											</div>
-											{/* <div className='py-5' /> */}
-										</div>
-										<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
-									</>
-								</Router>
-							</Sentry.ErrorBoundary>
+										<SentryRoute path="" component={NotFound} />
+									</Switch>
+								</div>
+							</div>
+						</div>
+						{/* <div className='py-5' /> */}
+		        </div>
+						<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
+					</>
+				</Router>
+			</Sentry.ErrorBoundary>
 	);
 }
 

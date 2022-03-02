@@ -133,16 +133,20 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		newOffer.rangeIndex = rangeIndex_;
 		newOffer.visible = visible_;
 		uint totalPercentage = s.nodeFee + s.treasuryFee;
+		uint totalFunds = rangeData.rangePrice * totalPercentage / (100 * s.decimalPow);
 		for (uint i = 0; i < splits.length; i++) {
 			require(!isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
+			uint splitForPercentage = rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow);
 			require(
-				rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow) > 0,
+				splitForPercentage > 0,
 				"Minter Marketplace: A percentage on the array will result in an empty transfer"
 			);
+			totalFunds += splitForPercentage;
 			totalPercentage += splits[i].percentage;
 			newOffer.fees.push(splits[i]);
 		}
 		require(totalPercentage == (100 * s.decimalPow), "Minter Marketplace: Fees don't add up to 100%");
+		require(totalFunds == rangeData.rangePrice, "Minter Marketplace: Current fee configuration will result in missing funds");
 		s.addressToOffers[erc721Address_].push(s.mintingOffers.length - 1);
 		s.addressToRangeOffer[erc721Address_][rangeIndex_] = s.mintingOffers.length - 1;
 		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, s.mintingOffers.length - 1);
