@@ -35,6 +35,12 @@ spec:
     MAIN_LOCATION = "southamerica-west1-a"
   }
   stages{
+    stage('initialize docker') {
+      steps {
+          sh 'docker run -u root --name jenkins_lts -d -p 8080:8080 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker jenkins/jenkins:lts-slim'
+        }
+      }
+    }
     stage('Build RAIR node') {
       steps {
         echo 'for branch' + env.BRANCH_NAME
