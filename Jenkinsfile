@@ -34,13 +34,7 @@ spec:
     MAIN_CLUSTER = "staging"
     MAIN_LOCATION = "southamerica-west1-a"
   }
-    stages{
-     stage('Initialize'){
-       steps{
-        def dockerHome = tool 'Docker-Installation'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-      }
-     }
+  stages{
     stage('Build RAIR node') {
       steps {
         echo 'for branch' + env.BRANCH_NAME
