@@ -34,15 +34,10 @@ spec:
     MAIN_CLUSTER = "staging"
     MAIN_LOCATION = "southamerica-west1-a"
   }
-  stages {
-    //stage('Build RAIR frontend') {
-    //  steps {
-    //    echo 'for branch' + env.BRANCH_NAME
-    //    dir("${env.WORKSPACE}/rair-front-master"){
-    //      sh 'docker build -t rairtechinc/rairfront:${BRANCH}_0.${VERSION} -t rairtechinc/rairfront:dev_latest --no-cache .'
-    //    }
-    //  }
-    //}
+   stage('Initialize'){
+        def dockerHome = tool 'Docker-Installation'
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
+    }
     stage('Build RAIR node') {
       steps {
         echo 'for branch' + env.BRANCH_NAME
