@@ -55,45 +55,6 @@ pipeline {
             }
           }
         }
-    stage('Build and push minting-network') {
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile \
-                    --context ./minting-network/ \
-                    --verbosity debug \
-                    --insecure \
-                    --skip-tls-verify \
-                    --destination rairtechinc/minting-network:${BRANCH}_1.${VERSION} \
-                    --destination rairtechinc/minting-network:latest \
-                    --destination rairtechinc/minting-network:${GIT_COMMIT}
-                '''
-              }
-
-            }
-          }
-        }
-    stage('Build and push event listener') {
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile \
-                    --context ./blockchain-networks-service/ \
-                    --verbosity debug \
-                    --insecure \
-                    --skip-tls-verify \
-                    --destination rairtechinc/blockchain-event-listener:${BRANCH}_1.${VERSION} \
-                    --destination rairtechinc/blockchain-event-listener:latest \
-                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT}
-                '''
-              }
-
-            }
-          }
-        }
+   
   }
 }
