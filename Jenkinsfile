@@ -55,14 +55,14 @@ pipeline {
             }
           }
         }
-    stage('Build and push minting-network') {
+    stage('Build and push minting-marketplace') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
                     --dockerfile Dockerfile \
-                    --context ./minting-network/ \
+                    --context ./minting-marketplace/ \
                     --verbosity debug \
                     --destination rairtechinc/minting-network:latest \
                     --destination rairtechinc/minting-network:${GIT_COMMIT}
