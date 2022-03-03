@@ -40,7 +40,7 @@ pipeline {
   stages{
     stage('Build RAIR node') {
       steps {
-      sh ‘/kaniko/executor -f `pwd`/rairnode/Dockerfile -c `pwd` — cache=true — destination=rairtechinc/rairnode:test’ 
+      sh ‘/kaniko/executor -f ./rairnode/Dockerfile -c ./ — cache=true — destination=rairtechinc/rairnode:test’ 
         }
       }
     }
