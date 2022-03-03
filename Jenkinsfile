@@ -48,7 +48,7 @@ pipeline {
                     --context ./rairnode/ \
                     --verbosity debug \
                     --destination rairtechinc/rairservernode:latest \
-                    --destination rairtechinc/rairservernode:${CI_COMMIT_TAG}
+                    --destination rairtechinc/rairservernode:${env.BUILD_ID}
                 '''
               }
 
