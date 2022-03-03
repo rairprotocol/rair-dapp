@@ -45,7 +45,7 @@ pipeline {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
-                  printenv
+                  echo env.GIT_COMMIT
                 '''
               }
 
