@@ -11,7 +11,7 @@ services:
       - ./rairnode/bin/Videos:/usr/local/src/bin/Videos
     environment:
       PRODUCTION: "false"
-      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
