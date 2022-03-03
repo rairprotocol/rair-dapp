@@ -47,11 +47,8 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
-                    --insecure \
-                    --skip-tls-verify \
                     --destination rairtechinc/rairservernode:${BRANCH}_1.${VERSION} \
                     --destination rairtechinc/rairservernode:latest \
-                    --destination rairtechinc/rairservernode:${GIT_COMMIT}
                 '''
               }
 
