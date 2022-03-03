@@ -38,16 +38,23 @@ pipeline {
     MAIN_LOCATION = "southamerica-west1-a"
   }
   stages{
-    stage('Build RAIR node') {
-      steps {
-      sh ‘/kaniko/executor -f ./rairnode/Dockerfile -c ./ — cache=true — destination=rairtechinc/rairnode:test’ 
+    stage('Build with Kaniko') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./rairnode/ \
+                    --verbosity debug \
+                    --insecure \
+                    --skip-tls-verify \
+                    --destination rairtechinc/rairnode:v0.1.0 \
+                    --destination rairtechinc/rairnode:test
+                '''
+              }
+
+            }
+          }
         }
-      }
-    }
-}
-  post {
-    always {
-      sh 'docker logout'
-    }
   }
-}
