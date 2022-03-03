@@ -47,7 +47,7 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
-                    --destination rairtechinc/rairservernode:latest \
+                    --destination rairtechinc/rairservernode:{GIT_COMMIT} \
                     --destination rairtechinc/rairservernode:${BUILD_ID}
                 '''
               }
