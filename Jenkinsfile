@@ -45,8 +45,11 @@ pipeline {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
-                  echo $GIT_COMMIT
-                  echo ${GIT_COMMIT}
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./rairnode/ \
+                    --verbosity debug 
+                    --destination rairtechinc/rairservernode:$GIT_COMMIT
                 '''
               }
 
