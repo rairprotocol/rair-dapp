@@ -55,7 +55,7 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/rairservernode:latest \
                     --destination rairtechinc/rairservernode:${GIT_COMMIT} \
-                    --destination rairtechinc/rairservernode:${BRANCH_ID}_1.{BUILD_ID}
+                    --destination rairtechinc/rairservernode:${GIT_BRANCH}_1.${BUILD_ID}
                 '''
               }
 
@@ -73,7 +73,7 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/minting-network:latest \
                     --destination rairtechinc/minting-network:${GIT_COMMIT} \
-                    --destination rairtechinc/minting-network:${BRANCH_ID}_1.{BUILD_ID}
+                    --destination rairtechinc/minting-network:${GIT_BRANCH}_1.${BUILD_ID}
                 '''
               }
 
@@ -91,7 +91,7 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/blockchain-event-listener:latest \
                     --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
-                    --destination rairtechinc/blockchain-event-listener:${BRANCH_ID}_1.{BUILD_ID}
+                    --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_1.${BUILD_ID}
                 '''
               }
 
