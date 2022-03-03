@@ -40,6 +40,7 @@ pipeline {
   stages{
     stage('Build and push rairnode') {
           steps {
+            echo env.GIT_COMMIT
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
@@ -47,7 +48,6 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
-                    --destination rairtechinc/rairservernode:{GIT_COMMIT} \
                     --destination rairtechinc/rairservernode:${BUILD_ID}
                 '''
               }
