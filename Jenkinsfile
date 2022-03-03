@@ -101,15 +101,33 @@ pipeline {
     stage('Deploy to k8s dev'){
       when { branch 'dev' }
       steps {
+        container('kubectl') {
         sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/dev-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.DEV_PROJECT_ID, clusterName: env.DEV_CLUSTER, zone: env.DEV_LOCATION, manifestPattern: '/home/jenkins/agent/workspace/dev-bitbucket-build_dev/kubernetes-manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+        sh("kubectl help")
+        step([$class: 'KubernetesEngineBuilder', 
+        namespace: "default", 
+        projectId: env.DEV_PROJECT_ID, 
+        clusterName: env.DEV_CLUSTER, 
+        zone: env.DEV_LOCATION, 
+        manifestPattern: 'kubernetes-manifests/dev-manifest', 
+        credentialsId: env.CREDENTIALS_ID, 
+        verifyDeployments: true])
+    }
+      }
     }
     }
     stage('Deploy to k8s staging'){
       when { branch 'main' }
       steps {
         sh("sed -i.bak 's#main_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/staging-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.MAIN_PROJECT_ID, clusterName: env.MAIN_CLUSTER, zone: env.MAIN_LOCATION, manifestPattern: 'kubernetes-manifests/staging-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+        step([$class: 'KubernetesEngineBuilder', 
+        namespace: "default", 
+        projectId: env.MAIN_PROJECT_ID, 
+        clusterName: env.MAIN_CLUSTER, zone: 
+        env.MAIN_LOCATION, 
+        manifestPattern: 'kubernetes-manifests/staging-manifest', 
+        credentialsId: env.CREDENTIALS_ID, 
+        verifyDeployments: true])
     }
   }
   }
