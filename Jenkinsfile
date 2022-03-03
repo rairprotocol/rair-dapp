@@ -49,7 +49,7 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug 
-                    --destination rairtechinc/rairservernode:$BUILD_ID
+                    --destination rairtechinc/rairservernode:${BUILD_ID}
                 '''
               }
 
