@@ -46,6 +46,7 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   echo env.GIT_COMMIT
+                  echo GIT_COMMIT
                 '''
               }
 
