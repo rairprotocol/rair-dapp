@@ -115,7 +115,6 @@ pipeline {
     }
       }
     }
-    }
     stage('Deploy to k8s staging'){
       when { branch 'main' }
       steps {
