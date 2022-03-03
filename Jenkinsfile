@@ -47,7 +47,9 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
-                    --destination rairtechinc/rairservernode:test 
+                    --destination rairtechinc/rairservernode:${BRANCH}_1.${VERSION} \
+                    --destination rairtechinc/rairservernode:latest \
+                    --destination rairtechinc/rairservernode:latest${GIT_COMMIT}
                 '''
               }
 
