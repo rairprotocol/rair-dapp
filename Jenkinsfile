@@ -58,7 +58,7 @@ pipeline {
             }
           }
         }
-    stage('Build and push rairnode') {
+    stage('Build and push minting-network') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -78,7 +78,7 @@ pipeline {
             }
           }
         }
-    stage('Build and push rairnode') {
+    stage('Build and push event listener') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
