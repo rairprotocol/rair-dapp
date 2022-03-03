@@ -41,14 +41,11 @@ pipeline {
     stage('Build and push rairnode') {
           steps {
             echo env.GIT_COMMIT
+            echo env.BRANCH_NAME
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile \
-                    --context ./rairnode/ \
-                    --verbosity debug 
-                    --destination rairtechinc/rairservernode:${BRANCH_NAME}
+                  printenv
                 '''
               }
 
