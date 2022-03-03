@@ -47,15 +47,47 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
-                    --destination rairtechinc/rairservernode:${BUILD_ID} \
-                    --destination rairtechinc/rairservernode:${GIT_COMMIT} \
-                    --destination rairtechinc/rairservernode:${BRANCH_NAME}_{BUILD_ID}
+                    --destination rairtechinc/rairservernode:latest \
+                    --destination rairtechinc/rairservernode:${GIT_COMMIT}
                 '''
               }
 
             }
           }
         }
-   
+    stage('Build and push minting-network') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./minting-network/ \
+                    --verbosity debug \
+                    --destination rairtechinc/minting-network:latest \
+                    --destination rairtechinc/minting-network:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push event-listener') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./blockchain-networks-service/ \
+                    --verbosity debug \
+                    --destination rairtechinc/blockchain-event-listener:latest \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
   }
 }
