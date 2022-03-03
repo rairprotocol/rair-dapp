@@ -16,11 +16,10 @@ pipeline {
           mountPath: /kaniko/.docker
         resources:
           limits:
-            memory: "5Gi"
-            cpu: "3"
+            memory: 8Gi
           requests:
-            cpu: "1000m"
-            memory: "3000Mi"
+            memory: 4Gi
+            cpu: 2
       restartPolicy: Never
       volumes:
       - name: kaniko-secret
