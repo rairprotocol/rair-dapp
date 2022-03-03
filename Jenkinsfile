@@ -17,6 +17,10 @@ pipeline {
         resources:
           limits:
             memory: "5Gi"
+            cpu: "3"
+          requests:
+            cpu: "1000m"
+            memory: "3000Mi"
       restartPolicy: Never
       volumes:
       - name: kaniko-secret
