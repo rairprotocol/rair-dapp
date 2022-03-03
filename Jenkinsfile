@@ -38,7 +38,7 @@ pipeline {
     MAIN_LOCATION = "southamerica-west1-a"
   }
   stages{
-    stage('Build with Kaniko') {
+    stage('Build and push rairnode') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -49,8 +49,49 @@ pipeline {
                     --verbosity debug \
                     --insecure \
                     --skip-tls-verify \
-                    --destination rairtechinc/rairnode:v0.1.0 \
-                    --destination rairtechinc/rairnode:test
+                    --destination rairtechinc/rairservernode:${BRANCH}_1.${VERSION} \
+                    --destination rairtechinc/rairservernode:latest \
+                    --destination rairtechinc/rairservernode:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push rairnode') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./minting-network/ \
+                    --verbosity debug \
+                    --insecure \
+                    --skip-tls-verify \
+                    --destination rairtechinc/minting-network:${BRANCH}_1.${VERSION} \
+                    --destination rairtechinc/minting-network:latest \
+                    --destination rairtechinc/minting-network:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push rairnode') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./blockchain-networks-service/ \
+                    --verbosity debug \
+                    --insecure \
+                    --skip-tls-verify \
+                    --destination rairtechinc/blockchain-event-listener:${BRANCH}_1.${VERSION} \
+                    --destination rairtechinc/blockchain-event-listener:latest \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT}
                 '''
               }
 
