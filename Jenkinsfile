@@ -48,7 +48,8 @@ pipeline {
                     --context ./rairnode/ \
                     --verbosity debug \
                     --destination rairtechinc/rairservernode:${BUILD_ID} \
-                    --destination rairtechinc/rairservernode:${GIT_COMMIT}
+                    --destination rairtechinc/rairservernode:${GIT_COMMIT} \
+                    --destination rairtechinc/rairservernode:${BRANCH_NAME}_{BUILD_ID}
                 '''
               }
 
