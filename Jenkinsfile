@@ -47,8 +47,8 @@ pipeline {
                   /kaniko/executor \
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
-                    --verbosity debug \
-                    --destination rairtechinc/rairservernode:${BUILD_ID}
+                    --verbosity debug 
+                    --destination rairtechinc/rairservernode:${BRANCH}_${BUILD_ID}
                 '''
               }
 
