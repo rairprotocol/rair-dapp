@@ -6,6 +6,11 @@ pipeline {
     kind: Pod
     spec:
       containers:
+      - name: kubectl
+        image: joshendriks/alpine-k8s
+        command:
+        - /bin/cat
+        tty: true
       - name: kaniko
         image: gcr.io/kaniko-project/executor:debug
         command:
