@@ -14,6 +14,9 @@ pipeline {
         volumeMounts:
         - name: kaniko-secret
           mountPath: /kaniko/.docker
+        resources:
+          limits:
+            memory: "5Gi"
       restartPolicy: Never
       volumes:
       - name: kaniko-secret
