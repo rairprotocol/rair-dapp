@@ -9,9 +9,8 @@ pipeline {
       - name: kaniko
         image: gcr.io/kaniko-project/executor:debug
         command:
-        - sleep
-        args:
-        - 9999999
+        - /busybox/cat
+        tty: true
         volumeMounts:
         - name: kaniko-secret
           mountPath: /kaniko/.docker
@@ -40,6 +39,9 @@ pipeline {
   }
   stages{
     stage('Build RAIR node') {
+      environment {
+        PATH = "/busybox:/kaniko:$PATH"
+      }
       steps {
         echo 'for branch' + env.BRANCH_NAME
         dir("${env.WORKSPACE}/rairnode"){
