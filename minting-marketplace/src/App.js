@@ -401,7 +401,6 @@ function App({ sentryHistory }) {
                     { loginDone && <SentryRoute path="/token/:contract/:identifier" component={ Token }/> }
                     { loginDone && <SentryRoute exact path="/metadata/:blockchain/:contract/:product"
                                                 component={ MetadataEditor }/> }
-                    { loginDone && <SentryRoute exact path="/my-nft" component={ MyNFTs }/> }
                     { loginDone && <SentryRoute exact path="/my-items">
                       <MyItems goHome={ goHome }/>
                     </SentryRoute> }
