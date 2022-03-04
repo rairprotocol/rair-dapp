@@ -1,8 +1,41 @@
 pipeline {
-  agent { label 'jenkins-slave-node-1' }
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
+  agent   {
+        kubernetes {
+            label 'jenkins-agent'
+            yaml """
+    kind: Pod
+    spec:
+      containers:
+      - name: kubectl
+        image: joshendriks/alpine-k8s
+        command:
+        - /bin/cat
+        tty: true
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:debug
+        command:
+        - /busybox/cat
+        tty: true
+        volumeMounts:
+        - name: kaniko-secret
+          mountPath: /kaniko/.docker
+        resources:
+          limits:
+            memory: 8Gi
+          requests:
+            memory: 4Gi
+            cpu: 2
+      restartPolicy: Never
+      volumes:
+      - name: kaniko-secret
+        secret:
+            secretName: regcred
+            items:
+            - key: .dockerconfigjson
+              path: config.json
+"""
+        }
+    }
   environment {
     DOCKERHUB_CREDENTIALS = credentials('rairtech-dockerhub')
     VERSION = "${env.BUILD_ID}"
@@ -15,98 +48,91 @@ pipeline {
     MAIN_CLUSTER = "staging"
     MAIN_LOCATION = "southamerica-west1-a"
   }
-  stages {
-    //stage('Build RAIR frontend') {
-    //  steps {
-    //    echo 'for branch' + env.BRANCH_NAME
-    //    dir("${env.WORKSPACE}/rair-front-master"){
-    //      sh 'docker build -t rairtechinc/rairfront:${BRANCH}_0.${VERSION} -t rairtechinc/rairfront:dev_latest --no-cache .'
-    //    }
-    //  }
-    //}
-    stage('Build RAIR node') {
-      steps {
-        echo 'for branch' + env.BRANCH_NAME
-        dir("${env.WORKSPACE}/rairnode"){
-          sh 'docker build -t rairtechinc/rairservernode:${BRANCH}_1.${VERSION} -t rairtechinc/rairservernode:${BRANCH}_latest -t rairtechinc/rairservernode:${GIT_COMMIT} .'
-        }
-      }
-    }
-    stage('Build minting-network') {
-      steps {
-        dir("${env.WORKSPACE}/minting-marketplace"){
-          sh 'docker build -t rairtechinc/minting-network:${BRANCH}_1.${VERSION} -t rairtechinc/minting-network:${BRANCH}_latest -t rairtechinc/minting-network:${GIT_COMMIT} .'
-        }
-      }
-    }
-    stage('Build blockchain-event-listener'){
-      steps {
-        dir("${env.WORKSPACE}/blockchain-networks-service"){
-          sh 'docker build -t rairtechinc/blockchain-event-listener:${BRANCH}_1.${VERSION} -t rairtechinc/blockchain-event-listener:${BRANCH}_latest -t rairtechinc/blockchain-event-listener:${GIT_COMMIT} .'
-        }
-      }
-    }
-    stage('Login') {
-      steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-      }
-    }
-    
-    //stage('Push docker RAIR frontend') {
-    //  steps {
-    //    sh 'docker push rairtechinc/rairfront:${BRANCH}_0.${VERSION}'
-    //    sh 'docker push rairtechinc/rairfront:${BRANCH}_latest'
-    //  }
-    //}
-    stage('Push docker RAIR node') {
-      steps {
-        sh 'docker push rairtechinc/rairservernode:${BRANCH}_1.${VERSION}'
-        sh 'docker push rairtechinc/rairservernode:${BRANCH}_latest'
-        sh 'docker push rairtechinc/rairservernode:${GIT_COMMIT}'
-      }
-    }
-    stage('Push docker minting-network') {
-      steps {
-        sh 'docker push rairtechinc/minting-network:${BRANCH}_1.${VERSION}'
-        sh 'docker push rairtechinc/minting-network:${BRANCH}_latest'
-        sh 'docker push rairtechinc/minting-network:${GIT_COMMIT}'
-      }
-    }
-    stage('Push docker blockchain-event-listener') {
-      steps {
-        sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_1.${VERSION}'
-        sh 'docker push rairtechinc/blockchain-event-listener:${BRANCH}_latest'
-        sh 'docker push rairtechinc/blockchain-event-listener:${GIT_COMMIT}'
-      }
-    }
-    stage('Update docker version file') {
-      steps {
-        dir("${env.WORKSPACE}/rairnode") {
-          script {
-            def data = "0.${VERSION}"
-            writeFile(file: 'VERSION', text: data)
+  stages{
+    stage('Build and push rairnode') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./rairnode/ \
+                    --verbosity debug \
+                    --destination rairtechinc/rairservernode:latest \
+                    --destination rairtechinc/rairservernode:${GIT_COMMIT} \
+                    --destination rairtechinc/rairservernode:${GIT_BRANCH}_1.${BUILD_ID}
+                '''
+              }
+
+            }
           }
         }
-      }
-    }
+    stage('Build and push minting-marketplace') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./minting-marketplace/ \
+                    --verbosity debug \
+                    --destination rairtechinc/minting-network:latest \
+                    --destination rairtechinc/minting-network:${GIT_COMMIT} \
+                    --destination rairtechinc/minting-network:${GIT_BRANCH}_1.${BUILD_ID}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push event-listener') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./blockchain-networks-service/ \
+                    --verbosity debug \
+                    --destination rairtechinc/blockchain-event-listener:latest \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_1.${BUILD_ID}
+                '''
+              }
+
+            }
+          }
+        }
     stage('Deploy to k8s dev'){
       when { branch 'dev' }
       steps {
+        container('kubectl') {
         sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/dev-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.DEV_PROJECT_ID, clusterName: env.DEV_CLUSTER, zone: env.DEV_LOCATION, manifestPattern: 'kubernetes-manifests/dev-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+        sh("kubectl help")
+        step([$class: 'KubernetesEngineBuilder', 
+        namespace: "default", 
+        projectId: env.DEV_PROJECT_ID, 
+        clusterName: env.DEV_CLUSTER, 
+        zone: env.DEV_LOCATION, 
+        manifestPattern: 'kubernetes-manifests/dev-manifest', 
+        credentialsId: env.CREDENTIALS_ID, 
+        verifyDeployments: true])
     }
+      }
     }
     stage('Deploy to k8s staging'){
       when { branch 'main' }
       steps {
         sh("sed -i.bak 's#main_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/staging-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', namespace: "default", projectId: env.MAIN_PROJECT_ID, clusterName: env.MAIN_CLUSTER, zone: env.MAIN_LOCATION, manifestPattern: 'kubernetes-manifests/staging-manifest', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+        step([$class: 'KubernetesEngineBuilder', 
+        namespace: "default", 
+        projectId: env.MAIN_PROJECT_ID, 
+        clusterName: env.MAIN_CLUSTER, zone: 
+        env.MAIN_LOCATION, 
+        manifestPattern: 'kubernetes-manifests/staging-manifest', 
+        credentialsId: env.CREDENTIALS_ID, 
+        verifyDeployments: true])
     }
   }
-}
-  post {
-    always {
-      sh 'docker logout'
-    }
   }
 }

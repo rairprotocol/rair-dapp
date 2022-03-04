@@ -448,7 +448,7 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        {timerLeft === 0 && soldCopies !== undefined && (
+        {timerLeft === 0 && (
           <TokenLeftGreyman
             Metamask={Metamask}
             primaryColor={primaryColor}
