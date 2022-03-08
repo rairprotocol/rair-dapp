@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 class VaultAppRoleIntegration {
-  constructor() {
+  async constructor() {
     this.token = null;
     this.newToken = null;
 
@@ -10,7 +10,9 @@ class VaultAppRoleIntegration {
 
     // fire the initial call to get token
     // when class is fisrt instantiated
-    this.getTokenWithAppRoleCreds();
+    await this.getTokenWithAppRoleCreds();
+    console.log('GET TOKEN')
+    console.log(this.getToken);
   }
 
   getAppRoleIDFromEnv() {
@@ -44,19 +46,41 @@ class VaultAppRoleIntegration {
       const res = await axios({
         method: 'POST',
         url: this.getAppRoleLoginURL(),
+        headers: {
+          "X-Vault-Request": true,
+          "X-Vault-Namespace": "admin/",
+        },
         data: {
           role_id: appRoleID,
           secret_id: appRoleSecretID
         }
       });
+      
+      // curl 
+      // -X PUT 
+      // -H "X-Vault-Request: true" 
+      // -H "X-Vault-Namespace: admin/" 
+      // -H "X-Vault-Token: $(vault print token)" 
+      // -d '{"role_id":"453d2063-f868-aa55-b776-b983b9ab6756","secret_id":"de3961f8-a9f6-96bf-b05c-4b974800d577"}'
+      // https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200/v1/auth/approle/login
 
-      console.log('res', res);
+      console.log('res ---------------', res);
+      console.log('res', res.status);
+      console.log('res', res.text);
+
+      if(res.status !== 200) {
+        throw new Error('Error getting token!');
+      }
+      // console.log('res', res.toJSON());
+      
 
       // pull from API response
-      const token = "???"
+      const {client_token} = res.data.auth
 
       // save token in this class
-      this.saveToken(token)
+      this.saveToken(client_token)
+
+      // TODO: start timer to do it again
 
     } catch(err) {
       console.log('ERROR', err);
