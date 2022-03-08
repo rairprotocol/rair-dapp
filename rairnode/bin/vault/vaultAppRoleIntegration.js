@@ -1,6 +1,10 @@
+const axios = require('axios');
+
 class VaultAppRoleIntegration {
   constructor() {
     this.token = null;
+    this.newToken = null;
+
     this.tokenRenewalTimer = null;
     this.tokenRenewalTimerInterval = null;
 
@@ -21,6 +25,10 @@ class VaultAppRoleIntegration {
     return process.env.VAULT_URL
   }
 
+  getAppRoleLoginURL() {
+    return this.getVaultURL() + "/v1/auth/approle/login"
+  }
+
   async getTokenWithAppRoleCreds() {
     try {
       // pull app role ROLE ID environment
@@ -31,10 +39,11 @@ class VaultAppRoleIntegration {
 
       // Pull vault URL from environment
       const vaultURL = this.getVaultURL();
-
+      
       // make login query to Vault
-      const res = await axios.post({
-        url: `${vaultURL}/v1/auth/approle/login`,
+      const res = await axios({
+        method: 'POST',
+        url: this.getAppRoleLoginURL(),
         data: {
           role_id: appRoleID,
           secret_id: appRoleSecretID
@@ -67,14 +76,18 @@ class VaultAppRoleIntegration {
     this.token = token;
   }
 
+  getToken() {
+    return this.token;
+  }
+
   renewToken() {
     // make call to get new token using existing token
     if(this.token === null) throw new Error('Existing token is null!');
 
-  } 
-
+    // make an api call to get the new token
+  }
 }
 
 // instantiate one class and export it
 // we only want one instance of this in the app
-export const vaultAppRoleIntegration = new VaultAppRoleIntegration()
+const vaultAppRoleIntegration = new VaultAppRoleIntegration()

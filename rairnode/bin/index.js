@@ -1,5 +1,8 @@
 const port = process.env.PORT;
 
+const { vaultAppRoleIntegration } = require('./vault/vaultAppRoleIntegration');
+return
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -18,8 +21,6 @@ const { JSDOM } = require('jsdom');
 
 const config = require('./config');
 const gcp = require('./integrations/gcp');
-
-const { vaultAppRoleIntegration } = require('./vault/vaultKVIntegration');
 
 async function main() {
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
