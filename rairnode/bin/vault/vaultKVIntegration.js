@@ -1,4 +1,4 @@
-class VaultKVIntegration {
+class VaultAppRoleIntegration {
   constructor() {
     this.token = null;
     this.tokenRenewalTimer = null;
@@ -10,51 +10,48 @@ class VaultKVIntegration {
   }
 
   getAppRoleIDFromEnv() {
-    // pull from process ENV?
-    return "???";
+    return process.env.APP_ROLE_ID
   }
 
   getAppRoleSecretIDFromEnv() {
-    // pull from process ENV?
-    return "???";
+    return process.env.APP_ROLE_SECRET_ID
   }
 
   getVaultURL() {
-    // pull from process ENV?
-    return "????";
+    return process.env.VAULT_URL
   }
 
-  getTokenWithAppRoleCreds() {
-    // pull app role ROLE ID environment
-    const appRoleID = this.getAppRoleIDFromEnv();
+  async getTokenWithAppRoleCreds() {
+    try {
+      // pull app role ROLE ID environment
+      const appRoleID = this.getAppRoleIDFromEnv();
 
-    // pull app role SECRET ID from environment
-    const appRoleSecretID = this.getAppRoleSecretIDFromEnv()
+      // pull app role SECRET ID from environment
+      const appRoleSecretID = this.getAppRoleSecretIDFromEnv()
 
-    // Pull vault URL from environment
-    const vaultURL = this.getVaultURL();
+      // Pull vault URL from environment
+      const vaultURL = this.getVaultURL();
 
-    // make login query to Vault
+      // make login query to Vault
+      const res = await axios.post({
+        url: `${vaultURL}/v1/auth/approle/login`,
+        data: {
+          role_id: appRoleID,
+          secret_id: appRoleSecretID
+        }
+      });
 
-    // official docs
-    // https://www.vaultproject.io/api-docs/auth/approle#login-with-approle
+      console.log('res', res);
 
-    // CLI example    
-    // vault write "auth/approle/login" \
-    // role_id=$ROLE_ID \
-    // secret_id=$SECRET_ID
+      // pull from API response
+      const token = "???"
 
-    // curl example
-    // $ curl \
-    // --request POST \
-    // --data @payload.json \
-    // http://127.0.0.1:8200/v1/auth/approle/login
+      // save token in this class
+      this.saveToken(token)
 
-    // pull from API response
-    const token = "???"
-
-    // save token in this class
-    this.saveToken(token)
+    } catch(err) {
+      console.log('ERROR', err);
+    }
   }
 
   startRenewalTimer() {
@@ -77,3 +74,7 @@ class VaultKVIntegration {
   } 
 
 }
+
+// instantiate one class and export it
+// we only want one instance of this in the app
+export const vaultAppRoleIntegration = new VaultAppRoleIntegration()
