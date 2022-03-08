@@ -29,6 +29,10 @@ module "vault_config" {
   test_app_role_authorized_login_ips = [
     # gke nat gateway
     "34.145.59.65",
+    
+    # Brian: 2nd Street inn, Eureka, CA
+    # Tues, March 8th, 2022
+    "75.109.250.107"
   ]
 }
 
