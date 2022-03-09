@@ -143,7 +143,7 @@ const SplashPage = ({ loginDone }) => {
   let subtitle;
 
   useEffect(() => {
-    setTitle(`#Cryptogreyman`);
+    setTitle(`#ImmersiVerse ATX`);
   }, [])
 
   return (
@@ -153,25 +153,20 @@ const SplashPage = ({ loginDone }) => {
           <div className="block-splash">
             <div className="text-splash">
               <div className="title-splash greyman-page">
-                <h3>
-                  "All greymen are grey, but some are more grey than others." -
-                  Dadara
-                </h3>
                 <h3
                   style={{
                     fontSize: "56px",
                     paddingBottom: "17px",
                     marginTop: "7rem",
                   }}
-                  className="text-gradient-grey"
+                  className="text-gradient-blue"
                 >
-                  #Cryptogreyman
+                  #ImmersiVerse ATX
                 </h3>
               </div>
               {timerLeft === 0 && (
                 <div className="text-description" style={{ color: "#A7A6A6" }}>
-                  7.907.414.597 non-unique NFTs. All metadata is identical only
-                  the serial number changes. Claim yours for <strong>1</strong> MATIC
+                  Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams on drop date
                 </div>
               )}
               {timerLeft !== 0 && (
@@ -181,7 +176,19 @@ const SplashPage = ({ loginDone }) => {
                     time={"2022-02-22T22:22:00-00:00"}
                   />
                 </div>
-              )}
+              )} {/*this stupid timer initializes the container width*/}
+              <div className="btn-buy-metamask">
+                {timerLeft === 0 && (
+                  <button onClick={() => openModal()}>
+                    <img
+                      className="metamask-logo"
+                      src={Metamask}
+                      alt="metamask-logo"
+                    />{" "}
+                    Mint with Matic
+                  </button>
+                )}
+              </div>
               <div className="btn-buy-metamask">
                 {timerLeft === 0 && (
                   <button onClick={() => openModal()}>
