@@ -113,7 +113,7 @@ pipeline {
         clusterName: env.DEV_CLUSTER, 
         zone: env.DEV_LOCATION, 
         manifestPattern: 'kubernetes-manifests/configmaps/dev', 
-        credentialsId: env.CREDENTIALS_ID)
+        credentialsId: env.CREDENTIALS_ID])
     }
       }
     }
