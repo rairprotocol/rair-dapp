@@ -112,7 +112,7 @@ pipeline {
         projectId: env.DEV_PROJECT_ID, 
         clusterName: env.DEV_CLUSTER, 
         zone: env.DEV_LOCATION, 
-        manifestPattern: 'kubernetes-manifests/configmaps/dev', 
+        manifestPattern: 'kubernetes-manifests/configmaps/environment/dev', 
         credentialsId: env.CREDENTIALS_ID])
     }
       }
