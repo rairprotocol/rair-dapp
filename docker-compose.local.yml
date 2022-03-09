@@ -38,6 +38,10 @@ services:
       ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
+      APP_ROLE_ID: ${APP_ROLE_ID}
+      APP_ROLE_SECRET_ID: ${APP_ROLE_SECRET_ID}
+      VAULT_URL: ${VAULT_URL}
+
     ports:
       - 3000:3000
       - 5000:5000
