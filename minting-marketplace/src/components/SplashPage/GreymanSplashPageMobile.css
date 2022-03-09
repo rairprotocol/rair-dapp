@@ -74,6 +74,60 @@
     }
 }
 
+
+@media screen and (max-width: 1400px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-size: 450px auto;
+        background-position: 90% 7rem;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-size: 300px auto;
+        background-position: 88% 9rem;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 190px;
+        background-size: 350px auto;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 220px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 120px;
+    }
+}
+
+@media screen and (max-width: 456px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 140px;
+    }
+}
+
+@media screen and (max-width: 456px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 120px;
+    }
+}
+
+@media screen and (max-width: 352px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 140px;
+    }
+}
+
+
+
 @media screen and (max-width: 1320px) {
     .list-of-greymans-pic {
         width: 450px;
@@ -568,7 +622,7 @@
     }
 
     .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
-        margin-bottom: 250px;
+        margin-bottom: 325px;
     }
 
     .home-splash--page .text-splash .text-description {
