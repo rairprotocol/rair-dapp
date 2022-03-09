@@ -57,7 +57,6 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 const SplashPage = ({ loginDone }) => {
-  const [timerLeft, setTimerLeft] = useState();
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
   const GreymanChainId = '0x89';
@@ -164,42 +163,29 @@ const SplashPage = ({ loginDone }) => {
                   #ImmersiVerse ATX
                 </h3>
               </div>
-              {timerLeft === 0 && (
-                <div className="text-description" style={{ color: "#A7A6A6" }}>
-                  Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams on drop date
-                </div>
-              )}
-              {timerLeft !== 0 && (
-                <div className="greyman-">
-                  <Countdown
-                    setTimerLeft={setTimerLeft}
-                    time={"2022-02-22T22:22:00-00:00"}
-                  />
-                </div>
-              )} {/*this stupid timer initializes the container width*/}
-              <div className="btn-buy-metamask">
-                {timerLeft === 0 && (
-                  <button onClick={() => openModal()}>
-                    <img
-                      className="metamask-logo"
-                      src={Metamask}
-                      alt="metamask-logo"
-                    />{" "}
-                    Mint with Matic
-                  </button>
-                )}
+              <div className="text-description" style={{ color: "#A7A6A6" }}>
+                Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams on drop date
               </div>
               <div className="btn-buy-metamask">
-                {timerLeft === 0 && (
-                  <button onClick={() => openModal()}>
-                    <img
-                      className="metamask-logo"
-                      src={Metamask}
-                      alt="metamask-logo"
-                    />{" "}
-                    Mint with Matic
-                  </button>
-                )}
+                <button onClick={() => openModal()}>
+                  <img
+                    className="metamask-logo"
+                    src={Metamask}
+                    alt="metamask-logo"
+                  />{" "}
+                  Mint with Matic
+                </button>
+              </div>
+              <div className="btn-buy-metamask">
+
+                <button onClick={() => openModal()}>
+                  <img
+                    className="metamask-logo"
+                    src={Metamask}
+                    alt="metamask-logo"
+                  />{" "}
+                  Mint with Matic
+                </button>
               </div>
               <div className="btn-timer-nipsey">
                 <Modal
@@ -310,7 +296,6 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        {timerLeft === 0 && (
           <>
             <div className="video-grey-man-wrapper">
             </div>
@@ -319,7 +304,6 @@ const SplashPage = ({ loginDone }) => {
             <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
             <NotCommercial primaryColor={primaryColor} />
           </>
-        )}
       </div>
     </div>
   );
