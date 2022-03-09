@@ -1,6 +1,6 @@
 const port = process.env.PORT;
 
-const { vaultAppRoleIntegration } = require('./vault/vaultAppRoleIntegration');
+const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
 return
 
 const express = require('express');

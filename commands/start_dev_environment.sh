@@ -7,7 +7,6 @@ echo "Starting dev environment..."
 DIR=$(dirname $0)
 
 DOCKER_COMPOSE_YML=$DIR/../docker-compose.local.yml
-ENV_FILE=$DIR/local.env
 
 ################################
 ################################
@@ -22,13 +21,11 @@ function progress_log {
 progress_log "DOWN"
 docker-compose \
   -f $DOCKER_COMPOSE_YML \
-  --env-file $ENV_FILE \
   down
 
 progress_log "BUILD"
 docker-compose \
   -f $DOCKER_COMPOSE_YML \
-  --env-file $ENV_FILE \
   build \
   --progress=plain
 
@@ -47,7 +44,6 @@ docker-compose \
 
 progress_log "mongo UP"
 docker-compose \
-  --env-file $ENV_FILE \
   --file $DOCKER_COMPOSE_YML up \
   --detach mongo
 # wait a few seconds for mongo to boot
@@ -56,19 +52,16 @@ sleep 10
 progress_log "blockchain-networks UP"
 # We're running with -d to keep the logs from interrupting the bash script
 docker-compose \
-  --env-file $ENV_FILE \
   --file $DOCKER_COMPOSE_YML up \
   --detach blockchain-networks
 
 progress_log "minting-network UP"
 docker-compose \
-  --env-file $ENV_FILE \
   --file $DOCKER_COMPOSE_YML up \
   --detach minting-network
 
 progress_log "rairnode UP"
 docker-compose \
-  --env-file $ENV_FILE \
   --file $DOCKER_COMPOSE_YML up \
   --detach rairnode
 

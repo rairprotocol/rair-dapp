@@ -38,10 +38,9 @@ services:
       ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
-
-      APP_ROLE_ID: "453d2063-f868-aa55-b776-b983b9ab6756"
-      APP_ROLE_SECRET_ID: "2aef9f69-c87d-25fd-4dba-6ea6a77f3f40"
-      VAULT_URL: "https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200"
+      APP_ROLE_ID: ${APP_ROLE_ID}
+      APP_ROLE_SECRET_ID: ${APP_ROLE_SECRET_ID}
+      VAULT_URL: ${VAULT_URL}
 
     ports:
       - 3000:3000
