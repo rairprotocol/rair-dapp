@@ -10,18 +10,11 @@ import Modal from "react-modal";
 /* importing images*/
 import Metamask from "../../images/metamask-fox.svg";
 import DocumentIcon from "../../images/documentIcon.svg"
-import GreyMan from "./images/greyman1.png";
-import GreyManNotFun from "./images/not-fun.png";
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 
-import { diamondFactoryAbi } from "../../contracts/index.js";
-//import { rFetch } from "../../utils/rFetch.js";
-import { metamaskCall } from "../../utils/metamaskUtils.js";
-import { web3Switch } from "../../utils/switchBlockchain.js";
-import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import setTitle from '../../utils/setTitle';
 
@@ -58,17 +51,10 @@ Modal.setAppElement("#root");
 
 const SplashPage = ({ loginDone }) => {
   const [active, setActive] = useState({ policy: false, use: false });
-  const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
-  const GreymanChainId = '0x89';
-  const offerIndexInMarketplace = 2;
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   //   const history = useHistory();
-  const {
-    diamondMarketplaceInstance,
-    contractCreator,
-    currentUserAddress,
-  } = useSelector((store) => store.contractStore);
+  const {currentUserAddress} = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -89,61 +75,18 @@ const SplashPage = ({ loginDone }) => {
     }));
   }
 
-  const buyGrayman = async () => {
-    if (window.ethereum.chainId !== GreymanChainId) {
-      web3Switch(GreymanChainId);
-      return;
-    }
-    if (!diamondMarketplaceInstance) {
-      Swal.fire({
-        title: "An error has ocurred",
-        html: `Please try again later`,
-        icon: "info",
-      });
-      return;
-    }
-    let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
-    if (greymanOffer) {
-      let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
-      let nextToken = await metamaskCall(instance.getNextSequentialIndex(
-        greymanOffer.productIndex,
-        greymanOffer.rangeData.rangeStart,
-        greymanOffer.rangeData.rangeEnd
-      ));
-      Swal.fire({
-        title: "Please wait...",
-        html: `Buying Greyman #${nextToken.toString()}`,
-        icon: "info",
-        showConfirmButton: false,
-      });
-      if (await metamaskCall(
-        diamondMarketplaceInstance.buyMintingOffer(
-          offerIndexInMarketplace,
-          nextToken,
-          {
-            value: greymanOffer.rangeData.rangePrice,
-          }
-        ),
-        "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
-      )) {
-        Swal.fire({
-          // title : "Success", 
-          imageUrl: GreyMan,
-          imageHeight: "auto",
-          imageWidth: "65%",
-          imageAlt: 'GreyMan image',
-          title: `You own #${nextToken}!`,
-          icon: "success"
-        });
-      }
-    }
-  };
-
   let subtitle;
 
   useEffect(() => {
     setTitle(`#ImmersiVerse ATX`);
   }, [])
+
+  const formHyperlink = () => {
+    window.open(
+      'https://docs.google.com/forms/d/e/1FAIpQLSeSoeMejqA_DntWIJTcJQA4UbWSSUaYfXrj4hFKPPkyzDuByw/viewform',
+      '_blank'
+    );  
+  }
 
   return (
     <div className="wrapper-splash-page greyman-page">
@@ -156,7 +99,7 @@ const SplashPage = ({ loginDone }) => {
                   style={{
                     fontSize: "56px",
                     paddingBottom: "17px",
-                    marginTop: "7rem",
+                    marginTop: "1rem",
                   }}
                   className="text-gradient-blue"
                 >
@@ -178,7 +121,7 @@ const SplashPage = ({ loginDone }) => {
               </div>
               <div className="btn-submit-with-form">
 
-                <button onClick={() => openModal()}>
+                <button onClick={() => formHyperlink()}>
                   <img
                     className="metamask-logo"
                     src={DocumentIcon}
@@ -260,21 +203,10 @@ const SplashPage = ({ loginDone }) => {
                       </form>
                     </div>
                     <div className="modal-content-np">
-                      <div className="modal-text-wrapper">
-                        <span style={{ width: '287px' }} className="modal-text">
-                          By accepting these terms, I agree <strong style={{ color: "rgb(136 132 132)", fontWeight: 'bolder' }}>not</strong> to have any fun with this greyman
-                        </span>
-                        <img src={GreyManNotFun} alt="not-fun" />
-
-                      </div>
                       <div className="modal-btn-wrapper">
-                        <button
-                          onClick={buyGrayman}
-                          disabled={
-                            currentUserAddress === undefined ||
-                            !Object.values(active).every((el) => el)
-                          }
+                        <div
                           className="modal-btn"
+                          // style={{background: '#9013FE'}}
                         >
                           <img
                             style={{ width: "100px", marginLeft: "-1rem" }}
@@ -282,12 +214,10 @@ const SplashPage = ({ loginDone }) => {
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          {window.ethereum?.chainId !== GreymanChainId
-                            ? "Switch network"
-                            : currentUserAddress
-                              ? "PURCHASE"
+                          { currentUserAddress
+                              ? "You're connected!"
                               : "Connect your wallet!"}
-                        </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -297,10 +227,10 @@ const SplashPage = ({ loginDone }) => {
           </div>
         </AuthorBlock>
           <>
-            <div className="video-grey-man-wrapper">
+            {/* <div className="video-grey-man-wrapper">
             </div>
             <div className="greyman-timeline-wrapper">
-            </div>
+            </div> */}
             <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
             <NotCommercial primaryColor={primaryColor} />
           </>

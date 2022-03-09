@@ -7,6 +7,14 @@
     margin-left: 4rem;
 }
 
+.wrapper-splash-page.greyman-page .block-left-content-greyman .btn-claim-airdrop {
+    margin-left: 4rem;
+}
+
+.wrapper-splash-page.greyman-page .block-left-content-greyman .btn-submit-with-form {
+    margin-left: 4rem;
+}
+
 .greyman-royalties-wrapper{
     display: flex;
     flex-direction: column;
@@ -183,6 +191,22 @@
         margin-bottom: 400px;
     }
 
+    .information-author.immersiverse-page-author {
+        height: 100%;
+    }
+
+    .home-splash--page .information-author.immersiverse-page-author {
+        padding: 60px 80px 40px 80px;
+    }
+
+    .information-author.immersiverse-page-author .block-splash {
+        width: 100%;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 400px;
+    }
+
     .home-splash--page .information-author {
         background-position: center 220px;
         background-size: 350px auto;
@@ -229,6 +253,24 @@
         display: flex;
         justify-content: center;
     }
+
+    .information-author.immersiverse-page-author .block-splash .text-splash {
+        text-align: center;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .text-description {
+        width: 100%;
+    }
+
+    .information-author.immersiverse-page-author .btn-claim-airdrop {
+        display: flex;
+        justify-content: center;
+    }
+
+    .information-author.immersiverse-page-author .btn-submit-with-form {
+        display: flex;
+        justify-content: center;
+    }
 } 
 
 @media screen and (max-width: 900px) {
@@ -240,6 +282,10 @@
 @media screen and (max-width: 845px) {
     .home-splash--page .information-author.greyman-page-author {
         background-image: url('./images/greyman1.png');
+    }
+
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-image: url('./images/SxSW-IMSV-ATX-2022-Concept01.jpg');
     }
 
     .main-greyman-pic-wrapper {
@@ -308,6 +354,40 @@
         padding: 20px 20px;
     }
 
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3 {
+        font-size: 20px;
+        width: 100%;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3.text-gradient-blue {
+        font-size: 40px !important;
+        text-align: center;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 350px;
+    }
+
+    .home-splash--page .information-author {
+        background-position: center 130px;
+    }
+
+    .information-author.immersiverse-page-author .btn-claim-airdrop {
+        justify-content: center;
+        display: flex;
+        margin-top: 40px;
+    }
+
+    .information-author.immersiverse-page-author .btn-submit-with-form {
+        justify-content: center;
+        display: flex;
+        margin-top: 15px;
+    }
+
+    .home-splash--page .information-author.immersiverse-page-author {
+        padding: 20px 20px;
+    }
+
     .property-wrapper {
         justify-content: space-between;
         width: 100%;
@@ -363,6 +443,18 @@
         display: flex;
         justify-content: center;
     }
+
+    .wrapper-splash-page.greyman-page .block-left-content-greyman .btn-claim-airdrop {
+        margin-left: 0rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .wrapper-splash-page.greyman-page .block-left-content-greyman .btn-submit-with-form {
+        margin-left: 0rem;
+        display: flex;
+        justify-content: center;
+    }
     
 }
 
@@ -379,6 +471,15 @@
     .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3.text-gradient-grey {
         font-size: 32px !important;
     }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3 {
+        font-size: 18px;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3.text-gradient-blue {
+        font-size: 32px !important;
+    }
+
 
     .property-wrapper .property {
         width: 130px;
@@ -456,6 +557,20 @@
         margin-bottom: 350px;
     }
 
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3 {
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3.text-gradient-blue {
+        font-size: 30px !important;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 250px;
+    }
+
     .home-splash--page .text-splash .text-description {
         font-size: 14px;
         text-align: center;
@@ -464,6 +579,15 @@
     .information-author.greyman-page-author .btn-buy-metamask {
         width: 250px;
     }
+
+    .information-author.immersiverse-page-author .btn-claim-airdrop {
+        width: 250px;
+    }
+
+    .information-author.immersiverse-page-author .btn-submit-with-form {
+        width: 250px;
+    }
+
 
     .wrapper-splash-page.greyman-page .splash-team {
         margin-bottom: 100px;
@@ -481,6 +605,32 @@
         width: 250px;
         height: 48px;
     }
+
+    .information-author.immersiverse-page-author .btn-claim-airdrop {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .information-author.immersiverse-page-author .btn-claim-airdrop button {
+        width: 250px;
+        height: 48px;
+    }
+
+    .information-author.immersiverse-page-author  .btn-submit-with-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .information-author.immersiverse-page-author .btn-submit-with-form button {
+        width: 250px;
+        height: 48px;
+    }
 }
 
 @media screen and (max-width: 360px) {
@@ -491,6 +641,16 @@
 
 @media screen and (max-width: 350px) {
     .information-author.greyman-page-author .btn-buy-metamask {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .information-author.immersiverse-page-author .btn-submit-with-form {
+        width: 100%;
+    }
+
+    .information-author.immersiverse-page-author .btn-claim-airdrop {
         width: 100%;
     }
 }
