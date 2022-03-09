@@ -9,6 +9,7 @@ import Modal from "react-modal";
 
 /* importing images*/
 import Metamask from "../../images/metamask-fox.svg";
+import DocumentIcon from "../../images/documentIcon.svg"
 import GreyMan from "./images/greyman1.png";
 import GreyManNotFun from "./images/not-fun.png";
 
@@ -23,7 +24,6 @@ import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import setTitle from '../../utils/setTitle';
-import { Countdown } from "./Timer/CountDown";
 
 //Google Analytics
 import ReactGA from 'react-ga';
@@ -148,7 +148,7 @@ const SplashPage = ({ loginDone }) => {
   return (
     <div className="wrapper-splash-page greyman-page">
       <div className="home-splash--page">
-        <AuthorBlock mainClass="greyman-page-author">
+        <AuthorBlock mainClass="immersiverse-page-author">
           <div className="block-splash">
             <div className="text-splash">
               <div className="title-splash greyman-page">
@@ -166,25 +166,25 @@ const SplashPage = ({ loginDone }) => {
               <div className="text-description" style={{ color: "#A7A6A6" }}>
                 Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams on drop date
               </div>
-              <div className="btn-buy-metamask">
+              <div className="btn-claim-airdrop">
                 <button onClick={() => openModal()}>
                   <img
                     className="metamask-logo"
                     src={Metamask}
                     alt="metamask-logo"
                   />{" "}
-                  Mint with Matic
+                  Claim Airdrop
                 </button>
               </div>
-              <div className="btn-buy-metamask">
+              <div className="btn-submit-with-form">
 
                 <button onClick={() => openModal()}>
                   <img
                     className="metamask-logo"
-                    src={Metamask}
-                    alt="metamask-logo"
+                    src={DocumentIcon}
+                    alt="form-logo"
                   />{" "}
-                  Mint with Matic
+                  Submit with Form
                 </button>
               </div>
               <div className="btn-timer-nipsey">

@@ -190,6 +190,18 @@
     width: 50%;
 }
 
+.information-author.immersiverse-page-author {
+    background-image: url('./images/SxSW-IMSV-ATX-2022-Concept01.jpg');
+    background-size: 516px 516px;
+    background-position: 90% center;
+    height: 694px;
+}
+
+.information-author.immersiverse-page-author .block-splash {
+    justify-content: start;
+    width: 50%;
+}
+
 .block-splash {
     display: flex;
     flex-direction: column;
@@ -211,6 +223,18 @@
     margin-bottom: 24px;
 }
 
+.information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3 {
+    color: #222021;
+    font-size: 26px;
+    margin-top: 2rem;
+}
+
+.information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3.text-gradient {
+    font-size: 56px;
+    margin-top: 7rem;
+    padding-bottom: 17px;
+}
+
 .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
     color: #222021;
     font-size: 26px;
@@ -222,6 +246,7 @@
     margin-top: 7rem;
     padding-bottom: 17px;
 }
+
 
 .text-splash .title-splash.nipsey h3, .text-splash .title-splash.nipsey h4, .text-splash .title-splash.nipsey span{
     color: #725BDB;
@@ -264,6 +289,10 @@
     line-height: 28px;
 }
 
+.information-author.immersiverse-page-author .text-splash p {
+    line-height: 28px;
+}
+
 .btn-buy-metamask {
     margin-top: 90px;
 }
@@ -291,6 +320,64 @@
     height: 32px;
     margin-right: 10px;
 }
+
+.btn-claim-airdrop {
+    margin-top: 90px;
+}
+
+.btn-claim-airdrop button {
+    font-size: 20px;
+    color: #fff;
+    background: #79CBBD;
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-claim-airdrop button:hover {
+    background: #79CBBD;
+    /* background: red; */
+}
+
+.btn-claim-airdrop button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+
+.btn-submit-with-form {
+    margin-top: 20px;
+}
+
+.btn-submit-with-form button {
+    font-size: 20px;
+    color: #fff;
+    background: #0A464F;
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-submit-with-form button:hover {
+    background: #0A464F;
+    /* background: red; */
+}
+
+.btn-submit-with-form button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
 
 .block-splash-img {
     position: absolute;
