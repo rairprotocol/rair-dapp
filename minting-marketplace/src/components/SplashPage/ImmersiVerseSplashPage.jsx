@@ -9,12 +9,14 @@ import Modal from "react-modal";
 
 /* importing images*/
 import Metamask from "../../images/metamask-fox.svg";
-import DocumentIcon from "../../images/documentIcon.svg"
-
+import DocumentIcon from "../../images/documentIcon.svg";
+import SXSW1 from './images/SxSW-IMSV-ATX-2022-Concept01.jpg';
+import SXSW2 from './images/SxSW-IMSV-ATX-2022-Concept02.jpg';
+import SXSW3 from './images/SxSW-IMSV-ATX-2022-Concept03.jpg';
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
-
+import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import setTitle from '../../utils/setTitle';
 
@@ -60,7 +62,10 @@ const SplashPage = ({ loginDone }) => {
     setIsOpen(true);
   }, []);
 
-
+  const carousel_match = window.matchMedia('(min-width: 600px)')
+  const [carousel, setCarousel] = useState(carousel_match.matches)
+  window.addEventListener("resize", () => setCarousel(carousel_match.matches))
+  
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
@@ -226,14 +231,53 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-          <>
-            {/* <div className="video-grey-man-wrapper">
-            </div>
-            <div className="greyman-timeline-wrapper">
-            </div> */}
-            <TeamMeet primaryColor={primaryColor} arraySplash={"greyman"} />
-            <NotCommercial primaryColor={primaryColor} />
-          </>
+        {carousel?
+              <div className="list-of-greymans-pic">
+                <div className="join-pic">
+                  <img
+                    className="join-pic-img"
+                    src={SXSW1}
+                    alt="community-img"
+                  />
+                </div>
+                <div className="join-pic">
+                  <img
+                    className="join-pic-img"
+                    src={SXSW2}
+                    alt="community-img"
+                  />
+                </div>
+                <div className="join-pic">
+                  <img
+                    className="join-pic-img"
+                    src={SXSW3}
+                    alt="community-img"
+                  />
+                </div>
+              </div>
+              :
+              <div className="exclusive-nfts">
+                <MobileCarouselNfts>
+                  <img
+                    className="join-pic-img"
+                    src={SXSW1}
+                    alt="community-img"
+                  />
+                  <img
+                    className="join-pic-img"
+                    src={SXSW2}
+                    alt="community-img"
+                  />
+                  <img
+                    className="join-pic-img"
+                    src={SXSW3}
+                    alt="community-img"
+                  />
+                </MobileCarouselNfts>
+          </div>
+          }
+        <TeamMeet primaryColor={primaryColor} arraySplash={"immersiverse"} />
+        <NotCommercial primaryColor={primaryColor} />
       </div>
     </div>
   );
