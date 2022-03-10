@@ -103,12 +103,25 @@ pipeline {
             }
           }
         }
-    stage('Deploy to k8s dev'){
+    stage('Deploy configmap to k8s environment'){
+      when { branch 'dev' }
+      steps {
+        container('kubectl') {
+        step([$class: 'KubernetesEngineBuilder', 
+        namespace: "default", 
+        projectId: env.DEV_PROJECT_ID, 
+        clusterName: env.DEV_CLUSTER, 
+        zone: env.DEV_LOCATION, 
+        manifestPattern: 'kubernetes-manifests/configmaps/environment/dev', 
+        credentialsId: env.CREDENTIALS_ID])
+    }
+      }
+    }
+    stage('Deploy k8s'){
       when { branch 'dev' }
       steps {
         container('kubectl') {
         sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/dev-manifest/*.yaml")
-        sh("kubectl help")
         step([$class: 'KubernetesEngineBuilder', 
         namespace: "default", 
         projectId: env.DEV_PROJECT_ID, 
