@@ -68,11 +68,7 @@
     border-radius: 16px;
 }
 
-@media screen and (max-width: 1300px) {
-    .home-splash--page .information-author {
-        background-size: 300px auto;
-    }
-}
+
 
 
 @media screen and (max-width: 1400px) {
@@ -89,64 +85,6 @@
         background-position: 88% 9rem;
     }
 }
-
-@media screen and (max-width: 1100px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        background-position: center 190px;
-        background-size: 350px auto;
-        padding: 60px 80px 40px 80px;
-        height: 100%;
-    }
-
-    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
-        margin-bottom: 400px;
-    }
-}
-
-@media screen and (max-width: 800px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        background-position: center 220px;
-    }
-}
-
-@media screen and (max-width: 700px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        padding: 20px 80px 40px 80px;
-        background-position: center 150px;
-    }
-    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
-        margin-bottom: 350px;
-    }
-}
-
-
-@media screen and (max-width: 600px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        background-position: center 120px;
-    }
-}
-
-
-
-@media screen and (max-width: 456px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        background-position: center 160px;
-    }
-}
-
-@media screen and (max-width: 420px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        background-position: center 120px;
-    }
-}
-
-@media screen and (max-width: 352px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        background-position: center 140px;
-    }
-}
-
-
 
 @media screen and (max-width: 1320px) {
     .list-of-greymans-pic {
@@ -185,34 +123,12 @@
     }
 }
 
-@media screen and (max-width: 1000px) {
-    .join-pic-img {
-        width: 190px;
-        height: 190px;
-    }
-
-    .list-of-greymans-pic {
-        width: 390px;
-    }
-
-    .join-pic-main-img {
-        width: 395px;
-        height: 395px;
-    }
-
-    .show-more-wrap .show-more {
-        bottom: -310px;
-        width: 395px;
-    }
-
-    .main-greyman-pic-wrapper {
-        padding: 0 20px;
-    }
-
-    .wrapper-splash-page.greyman-page .join-community .title-join {
-        padding: 0 20px;
+@media screen and (max-width: 1300px) {
+    .home-splash--page .information-author {
+        background-size: 300px auto;
     }
 }
+
 
 @media screen and (max-width: 1260px) { 
     .about-metadata-wrapper  {
@@ -232,16 +148,6 @@
     .show-more {
 
     } */
-}
-
-@media screen and (max-width: 1077px) {
-    .col-1 {
-        width: inherit;
-    }
-
-    .col-1 img {
-        float: left;
-    }
 }
 
 @media screen and (max-width: 1100px) {
@@ -337,7 +243,60 @@
         display: flex;
         justify-content: center;
     }
+
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 190px;
+        background-size: 350px auto;
+        padding: 60px 80px 40px 80px;
+        height: 100%;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 400px;
+    }
+
 } 
+
+
+@media screen and (max-width: 1077px) {
+    .col-1 {
+        width: inherit;
+    }
+
+    .col-1 img {
+        float: left;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .join-pic-img {
+        width: 190px;
+        height: 190px;
+    }
+
+    .list-of-greymans-pic {
+        width: 390px;
+    }
+
+    .join-pic-main-img {
+        width: 395px;
+        height: 395px;
+    }
+
+    .show-more-wrap .show-more {
+        bottom: -310px;
+        width: 395px;
+    }
+
+    .main-greyman-pic-wrapper {
+        padding: 0 20px;
+    }
+
+    .wrapper-splash-page.greyman-page .join-community .title-join {
+        padding: 0 20px;
+    }
+}
+
 
 @media screen and (max-width: 900px) {
     .non-commercial-content {
@@ -373,6 +332,19 @@
         /* width: 80%; */
         overflow: hidden;
     }
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 220px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        padding: 20px 80px 40px 80px;
+        background-position: center 150px;
+    }
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 350px;
+    }
 }
 
 @media screen and (max-width: 670px) {
@@ -386,8 +358,11 @@
         margin-bottom: 100px;
     }
 }
-
 @media screen and (max-width: 600px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 120px;
+    }
+
     .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
         font-size: 20px;
         width: 100%;
@@ -520,7 +495,18 @@
     
 }
 
+
+@media screen and (max-width: 456px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 160px;
+    }
+}
+
 @media screen and (max-width: 420px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 120px;
+    }
+    
     .home-splash--page .information-author {
         background-position: center 150px;
         background-size: 300px auto;
@@ -700,14 +686,15 @@
         padding: 5px;
     }
 }
-
 @media screen and (max-width: 350px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        background-position: center 140px;
+    }
+
     .information-author.greyman-page-author .btn-buy-metamask {
         width: 100%;
     }
-}
 
-@media screen and (max-width: 350px) {
     .information-author.immersiverse-page-author .btn-submit-with-form {
         width: 100%;
     }

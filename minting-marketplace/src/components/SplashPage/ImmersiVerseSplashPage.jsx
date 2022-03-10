@@ -55,7 +55,6 @@ const SplashPage = ({ loginDone }) => {
   const [active, setActive] = useState({ policy: false, use: false });
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
-  //   const history = useHistory();
   const {currentUserAddress} = useSelector((store) => store.contractStore);
 
   const openModal = useCallback(() => {
@@ -154,7 +153,6 @@ const SplashPage = ({ loginDone }) => {
                   >
                     Terms of Service
                   </h2>
-                  {/* <button onClick={closeModal}>close</button> */}
                   <div className="modal-content-wrapper">
                     <div className="modal-form">
                       <form>
@@ -211,7 +209,6 @@ const SplashPage = ({ loginDone }) => {
                       <div className="modal-btn-wrapper">
                         <div
                           className="modal-btn"
-                          // style={{background: '#9013FE'}}
                         >
                           <img
                             style={{ width: "100px", marginLeft: "-1rem" }}
