@@ -12,8 +12,6 @@ const log = require('../utils/logger')(module);
 //const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
-const { vaultFileWriter } = require('../vault/vaultKeyWriter');
-const { vaultAppRoleTokenManager } = require('../vault/vaultAppRoleTokenManager');
 
 module.exports = context => {
   const router = express.Router();
