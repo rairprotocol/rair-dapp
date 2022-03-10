@@ -191,7 +191,7 @@
 }
 
 .information-author.immersiverse-page-author {
-    background-image: url('./images/SxSW-IMSV-ATX-2022-Concept01.jpg');
+    background-image: url('./images/SxSW-IMSV-ATX-2022-Concept01-modified.png');
     background-size: 516px 516px;
     background-position: 90% center;
     height: 694px;
@@ -594,6 +594,17 @@ width: 1200px;
     justify-content: space-around;
     align-items: baseline;
 }
+
+.list-of-immersiverse-pic{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    justify-content: space-around;
+    align-items: baseline;
+}
+
 .about-metadata-second-block{
     /* width: 80%; */
     width: 100%;
@@ -611,6 +622,13 @@ width: 1200px;
     width: 283.5px;
     height: 283.5px;
 }
+
+.join-pic-img-list{
+    width: 22vw;
+    height: 22vw;
+    border-radius: 16px;
+}
+
 .show-more-wrap{
     position: absolute;
 }
@@ -904,7 +922,13 @@ line-height: 30px;
 }
 
 
+
 /* Exclusive NFTs Block*/
+
+.carousel-title{
+    margin-bottom: 50px;
+    text-align: left;
+}
 
 .exclusive-nfts {
     display: flex;
@@ -1579,6 +1603,9 @@ img.block-img-mobile{
 } 
 
 @media screen and (max-width: 1100px) {
+    .carousel-title{
+        text-align: center;
+    }
     .wrapper-splash-page {
         background-image: none;
     }

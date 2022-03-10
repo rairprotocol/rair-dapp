@@ -79,10 +79,11 @@
     .home-splash--page .information-author.immersiverse-page-author {
         background-size: 450px auto;
         background-position: 90% 7rem;
+        height: 600px;
     }
 }
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1335px) {
     .home-splash--page .information-author.immersiverse-page-author {
         background-size: 300px auto;
         background-position: 88% 9rem;
@@ -93,6 +94,12 @@
     .home-splash--page .information-author.immersiverse-page-author {
         background-position: center 190px;
         background-size: 350px auto;
+        padding: 60px 80px 40px 80px;
+        height: 100%;
+    }
+
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 400px;
     }
 }
 
@@ -102,19 +109,32 @@
     }
 }
 
+@media screen and (max-width: 700px) {
+    .home-splash--page .information-author.immersiverse-page-author {
+        padding: 20px 80px 40px 80px;
+        background-position: center 150px;
+    }
+    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
+        margin-bottom: 350px;
+    }
+}
+
+
 @media screen and (max-width: 600px) {
     .home-splash--page .information-author.immersiverse-page-author {
         background-position: center 120px;
     }
 }
 
+
+
 @media screen and (max-width: 456px) {
     .home-splash--page .information-author.immersiverse-page-author {
-        background-position: center 140px;
+        background-position: center 160px;
     }
 }
 
-@media screen and (max-width: 456px) {
+@media screen and (max-width: 420px) {
     .home-splash--page .information-author.immersiverse-page-author {
         background-position: center 120px;
     }
@@ -134,7 +154,7 @@
         justify-content: space-between;
         align-content: center;
     }
-
+    
     .main-greyman-pic-wrapper {
         max-height: 1000px;
         margin-top: 20px;
@@ -249,16 +269,8 @@
         height: 100%;
     }
 
-    .home-splash--page .information-author.immersiverse-page-author {
-        padding: 60px 80px 40px 80px;
-    }
-
     .information-author.immersiverse-page-author .block-splash {
         width: 100%;
-    }
-
-    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
-        margin-bottom: 400px;
     }
 
     .home-splash--page .information-author {
@@ -336,10 +348,6 @@
 @media screen and (max-width: 845px) {
     .home-splash--page .information-author.greyman-page-author {
         background-image: url('./images/greyman1.png');
-    }
-
-    .home-splash--page .information-author.immersiverse-page-author {
-        background-image: url('./images/SxSW-IMSV-ATX-2022-Concept01.jpg');
     }
 
     .main-greyman-pic-wrapper {

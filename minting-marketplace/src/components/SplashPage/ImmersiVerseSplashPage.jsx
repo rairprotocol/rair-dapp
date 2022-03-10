@@ -17,11 +17,11 @@ import SXSW3 from './images/SxSW-IMSV-ATX-2022-Concept03.jpg';
 import TeamMeet from "./TeamMeet/TeamMeetList";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
-import NotCommercial from "./NotCommercial/NotCommercial";
 import setTitle from '../../utils/setTitle';
 
 //Google Analytics
 import ReactGA from 'react-ga';
+import NotCommercialGeneric from "./NotCommercial/NotCommercialGeneric";
 
 // Google Analytics
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -231,53 +231,66 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
+        <div className="exclusive-nfts" style={{marginTop: "80px"}}>
+        <h2 className="carousel-title"> 3 Unique Styles </h2>
         {carousel?
-              <div className="list-of-greymans-pic">
-                <div className="join-pic">
+              <div className="list-of-immersiverse-pic">
+                <div className="join-pic-list">
+                  <h4 style={{marginBottom: "15px"}}> Bubblegum </h4>
                   <img
-                    className="join-pic-img"
+                    className="join-pic-img-list"
                     src={SXSW1}
                     alt="community-img"
                   />
                 </div>
-                <div className="join-pic">
+                <div className="join-pic-list">
+                  <h4 style={{marginBottom: "15px"}}> Gold </h4>
                   <img
-                    className="join-pic-img"
+                    className="join-pic-img-list"
                     src={SXSW2}
                     alt="community-img"
                   />
                 </div>
-                <div className="join-pic">
+                <div className="join-pic-list">
+                  <h4 style={{marginBottom: "15px"}}> Seabreeze</h4>
                   <img
-                    className="join-pic-img"
+                    className="join-pic-img-list"
                     src={SXSW3}
                     alt="community-img"
                   />
                 </div>
               </div>
               :
-              <div className="exclusive-nfts">
-                <MobileCarouselNfts>
+              <MobileCarouselNfts>
+                <div className="join-pic-carousel">
+                  <h4 style={{marginBottom: "15px"}}> Bubblegum </h4>
                   <img
                     className="join-pic-img"
                     src={SXSW1}
                     alt="community-img"
                   />
+                </div>
+                <div className="join-pic-carousel">
+                  <h4 style={{marginBottom: "15px"}}> Gold</h4>
                   <img
                     className="join-pic-img"
                     src={SXSW2}
                     alt="community-img"
                   />
+                </div>
+                <div className="join-pic-carousel">
+                  <h4 style={{marginBottom: "15px"}}> Seabreeze </h4>
                   <img
                     className="join-pic-img"
                     src={SXSW3}
                     alt="community-img"
                   />
-                </MobileCarouselNfts>
+                </div>
+              </MobileCarouselNfts>
+            }
           </div>
-          }
         <TeamMeet primaryColor={primaryColor} arraySplash={"immersiverse"} />
-        <NotCommercial primaryColor={primaryColor} />
+        <NotCommercialGeneric primaryColor={primaryColor} />
       </div>
     </div>
   );
