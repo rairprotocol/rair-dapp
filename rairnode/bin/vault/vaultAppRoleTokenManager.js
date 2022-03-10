@@ -1,5 +1,10 @@
 const axios = require('axios');
-const auth = require('../routes/auth');
+const {
+  getVaultNamespace,
+  getVaultUrl,
+  getAppRoleIDFromEnv,
+  getAppRoleSecretIDFromEnv
+} = require('./vaultUtils');
 
 class VaultAppRoleTokenManager {
   constructor() {
@@ -12,54 +17,45 @@ class VaultAppRoleTokenManager {
 
     // fire the initial call to get token
     // when class is fisrt instantiated
-    this.getTokenWithAppRoleCreds()
-    .then(() => {
-      console.log('Initial app role login suceeded');
+  }
+
+  initialLogin() {
+    return new Promise((resolve, reject) => {
+      this.getTokenWithAppRoleCreds()
+      .then(() => {
+        console.log('Initial app role login suceeded');
+        resolve();
+      })
+      .catch((err) => {
+        reject(err);
+      })
     })
-    .catch(() => {
-      console.log('err', err);
-    })
-  }
-
-  getAppRoleIDFromEnv() {
-    return process.env.APP_ROLE_ID
-  }
-
-  getAppRoleSecretIDFromEnv() {
-    return process.env.APP_ROLE_SECRET_ID
-  }
-
-  getVaultURL() {
-    return process.env.VAULT_URL
   }
 
   getAppRoleLoginURL() {
-    return this.getVaultURL() + "/v1/auth/approle/login"
+    return getVaultUrl() + "/v1/auth/approle/login"
   }
 
   getTokenRenewSelfUrl() {
-    return this.getVaultURL() + "/v1/auth/token/renew-self"
-  }
-
-  getVaultNamespace() {
-    return "admin/"
+    return getVaultUrl() + "/v1/auth/token/renew-self"
   }
 
   async getTokenWithAppRoleCreds() {
     try {
       // make login query to Vault
-      const res = await axios({
+      const axiosParams = {
         method: 'POST',
         url: this.getAppRoleLoginURL(),
         headers: {
           "X-Vault-Request": true,
-          "X-Vault-Namespace": this.getVaultNamespace(),
+          "X-Vault-Namespace": getVaultNamespace(),
         },
         data: {
-          role_id: this.getAppRoleIDFromEnv(),
-          secret_id: this.getAppRoleSecretIDFromEnv()
+          role_id: getAppRoleIDFromEnv(),
+          secret_id: getAppRoleSecretIDFromEnv()
         }
-      });
+      };
+      const res = await axios(axiosParams);
 
       if(res.status !== 200) {
         throw new Error('Error getting token! Received non 200 code from App Role Login url');
@@ -74,10 +70,10 @@ class VaultAppRoleTokenManager {
       // start timer to do it again
       this.startRenewalTimeout({
         leaseDurationSeconds: auth.lease_duration
-      })
+      });
 
     } catch(err) {
-      console.log('ERROR executing getTokenWithAppRoleCreds:', err);
+      throw err;
     }
   }
 
@@ -95,7 +91,6 @@ class VaultAppRoleTokenManager {
   }
 
   saveAuthData(authData) {
-    console.log('save auth data', authData)
     this.authData = authData;
   }
 
@@ -117,7 +112,7 @@ class VaultAppRoleTokenManager {
         url: this.getTokenRenewSelfUrl(),
         headers: {
           "X-Vault-Request": true,
-          "X-Vault-Namespace": this.getVaultNamespace(),
+          "X-Vault-Namespace": getVaultNamespace(),
           "X-Vault-Token": this.token
         },
         data: {
@@ -134,10 +129,10 @@ class VaultAppRoleTokenManager {
 
       this.startRenewalTimeout({
         leaseDurationSeconds: auth.lease_duration
-      })
+      });
 
     } catch(err) {
-      console.log('Error renewing token:', err);
+      throw err;
     }
   }
 }
@@ -145,3 +140,7 @@ class VaultAppRoleTokenManager {
 // instantiate one class and export it
 // we only want one instance of this in the app
 const vaultAppRoleTokenManager = new VaultAppRoleTokenManager()
+
+module.exports = {
+  vaultAppRoleTokenManager
+}

@@ -4,6 +4,12 @@ resource "vault_mount" "primary" {
   description = "Primary KV secret storage"
 }
 
+resource "vault_mount" "key_storage" {
+  path        = "key_storage"
+  type        = "kv-v2"
+  description = "Key storage"
+}
+
 locals {
   generic_secret_test_sub_path = "test"
 }
