@@ -233,7 +233,7 @@ const SplashPage = ({ loginDone }) => {
         {carousel?
               <div className="list-of-immersiverse-pic">
                 <div className="join-pic-list">
-                  <h4 style={{marginBottom: "15px"}}> Bubblegum </h4>
+                  <h4 className="carousel-items"> Bubblegum </h4>
                   <img
                     className="join-pic-img-list"
                     src={SXSW1}
@@ -241,7 +241,7 @@ const SplashPage = ({ loginDone }) => {
                   />
                 </div>
                 <div className="join-pic-list">
-                  <h4 style={{marginBottom: "15px"}}> Gold </h4>
+                  <h4 className="carousel-items"> Gold </h4>
                   <img
                     className="join-pic-img-list"
                     src={SXSW2}
@@ -249,7 +249,7 @@ const SplashPage = ({ loginDone }) => {
                   />
                 </div>
                 <div className="join-pic-list">
-                  <h4 style={{marginBottom: "15px"}}> Seabreeze</h4>
+                  <h4 className="carousel-items"> Seabreeze</h4>
                   <img
                     className="join-pic-img-list"
                     src={SXSW3}
@@ -260,7 +260,7 @@ const SplashPage = ({ loginDone }) => {
               :
               <MobileCarouselNfts>
                 <div className="join-pic-carousel">
-                  <h4 style={{marginBottom: "15px"}}> Bubblegum </h4>
+                  <h4 className="carousel-items"> Bubblegum </h4>
                   <img
                     className="join-pic-img"
                     src={SXSW1}
@@ -268,7 +268,7 @@ const SplashPage = ({ loginDone }) => {
                   />
                 </div>
                 <div className="join-pic-carousel">
-                  <h4 style={{marginBottom: "15px"}}> Gold</h4>
+                  <h4 className="carousel-items"> Gold</h4>
                   <img
                     className="join-pic-img"
                     src={SXSW2}
@@ -276,7 +276,7 @@ const SplashPage = ({ loginDone }) => {
                   />
                 </div>
                 <div className="join-pic-carousel">
-                  <h4 style={{marginBottom: "15px"}}> Seabreeze </h4>
+                  <h4 className="carousel-items"> Seabreeze </h4>
                   <img
                     className="join-pic-img"
                     src={SXSW3}

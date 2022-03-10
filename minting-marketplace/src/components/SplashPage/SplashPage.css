@@ -928,6 +928,14 @@ line-height: 30px;
 .carousel-title{
     margin-bottom: 50px;
     text-align: left;
+    font-weight: 500;
+    font-size: 40px;
+}
+
+.carousel-items{
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 24px;
 }
 
 .exclusive-nfts {
