@@ -51,7 +51,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const SplashPage = ({ loginDone }) => {
+const SplashPage = ({ loginDone, connectUserData }) => {
   const [active, setActive] = useState({ policy: false, use: false });
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -65,6 +65,12 @@ const SplashPage = ({ loginDone }) => {
   const [carousel, setCarousel] = useState(carousel_match.matches)
   window.addEventListener("resize", () => setCarousel(carousel_match.matches))
   
+  const getNFT = async () => {
+    if (!currentUserAddress) {
+      connectUserData();
+      return;
+    }
+  }
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
@@ -207,7 +213,8 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-btn-wrapper">
-                        <div
+                        <button
+                          onClick={getNFT}
                           className="modal-btn"
                         >
                           <img
@@ -219,7 +226,7 @@ const SplashPage = ({ loginDone }) => {
                           { currentUserAddress
                               ? "You're connected!"
                               : "Connect your wallet!"}
-                        </div>
+                        </button>
                       </div>
                     </div>
                   </div>
