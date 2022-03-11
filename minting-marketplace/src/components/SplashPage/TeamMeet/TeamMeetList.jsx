@@ -4,6 +4,7 @@ import Teammate_2 from '../images/foundation.png';
 import Teammate_3 from '../images/south-dig.png';
 import Teammate_4 from '../images/rair-block.png';
 import Teammate_5 from '../images/movementontheground.png';
+import Teammate_6 from '../images/immersiverse_logo.png';
 import Estate_Teammate from '../images/estate_team.png';
 import Teammate from './Teammate';
 import GreymanAuthor from '../images/greymanAuthor.png';
@@ -469,6 +470,48 @@ const teamGreymanArray = [
     }
 ];
 
+const teamImmersiverseArray = [
+    {   
+        chain: '',
+        nameTeammate: "ImmersiVerse",
+        imageUrl: Teammate_6,
+        aboutTeammate: [
+            'ImmersiVerses are premium experiential destination featuring great speakers, meaningful discussions and live demonstrations of important technology—alongside great art, music, and networking. These multi-day events focus on Finance, Technology, The Arts, and Future-Culture. ImmersiVerses are scheduled during major global gatherings such as SXSW, Sundance, Tribeca and IBC Amsterdam.'
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'http://iverse.events',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+    {
+        chain: `0x7849194dD593d6c3aeD24035D70B5394a1C90F8F`,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
 const teamNutArray = [
     {
         nameTeammate: "MC Cranksy",
@@ -569,6 +612,26 @@ const GreyManTeamComponent = ({ primaryColor }) => {
     )
 }
 
+const ImmersiVerseTeamComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamImmersiverseArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
 const RairTeamComponent = ({ primaryColor }) => {
     return (
         <>
@@ -618,6 +681,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                     arraySplash === "greyman" && <h3>About the <span className="text-gradient">Artist</span></h3>
                 }
                 {
+                    arraySplash === "immersiverse" && <h3>About</h3>
+                }
+                {
                     arraySplash === "rair" && <h3>Meet the <span className="text-gradient">Team</span></h3>
                 }
                 {
@@ -630,6 +696,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
             <div className="meet-team">
                 {
                     arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />
+                }
+                {
+                    arraySplash === "immersiverse" && <ImmersiVerseTeamComponent primaryColor={primaryColor} />
                 }
                 {
                     arraySplash === "nipsey" && <NipseyTeamComponent primaryColor={primaryColor} />

@@ -36,7 +36,7 @@ import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 // import Footer from './components/Footer/Footer';
 
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
-
+import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
 import ListCollections from './components/creatorStudio/ListCollections.jsx';
 
 import MetadataEditor from './components/metadata/metadataEditor.jsx';
@@ -529,6 +529,7 @@ function App({ sentryHistory }) {
 										<SentryRoute exact path="/coming-soon" component={ComingSoon} />
 										<SentryRoute exact path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 										<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
+                    <SentryRoute exact path="/immersiverse-splash" component={ImmersiVerseSplashPage} />
 										
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
