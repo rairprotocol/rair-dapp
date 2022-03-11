@@ -345,9 +345,8 @@ module.exports = context => {
             },
             vaultToken: vaultAppRoleTokenManager.getToken()
           })
-          console.log('ress', vaultWriteRes);
         } catch(err) {
-          console.log('Error writing key to vault:', cid)
+          console.log('Error writing key to vault:', cid);
         }
 
         log.info(`${ req.file.originalname } stored to DB.`);
