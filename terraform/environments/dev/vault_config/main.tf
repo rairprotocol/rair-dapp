@@ -29,6 +29,9 @@ module "vault_config" {
   test_app_role_authorized_login_ips = [
     # gke nat gateway
     "34.145.59.65",
+
+    # Carquinez house, March 9th, 2022
+    "99.47.22.182",
   ]
 }
 

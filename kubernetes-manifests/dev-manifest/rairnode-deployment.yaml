@@ -69,7 +69,9 @@ spec:
         - name: rairnode-claim0
           persistentVolumeClaim:
             claimName: rairnode-claim0
+            readOnly: false
         - name: rairnode-claim1
           persistentVolumeClaim:
             claimName: rairnode-claim1
+            readOnly: false
 status: {}
