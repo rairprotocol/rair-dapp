@@ -120,6 +120,7 @@ services:
       REACT_APP_SENTRY_RELEASE: ${sentry_release}
       REACT_APP_GOOGLE_ANALYTICS: ${react-app-google-analytics}
       REACT_APP_GA_NAME: ${react-app-ga-name}
+      REACT_APP_DISABLE_CREATOR_VIEWS: ${react-app-disable-creator-views}
     ports:
       - 80:3001
     networks:
