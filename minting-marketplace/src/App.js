@@ -80,6 +80,20 @@ import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
 import MainLogo from './components/GroupLogos/MainLogo.jsx';
 
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+const gAppName = process.env.REACT_APP_GA_NAME
+const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
+const analytics = Analytics({
+  app: gAppName,
+  plugins: [
+    googleAnalytics({
+      trackingId: gUaNumber
+    })
+  ]
+})
+
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -97,11 +111,7 @@ function App({ sentryHistory }) {
   const [loginDone, setLoginDone] = useState(false);
   const [errorAuth, /*setErrorAuth*/] = useState('');
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
-
-  // Google Analytics
-  const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-  ReactGA.initialize(TRACKING_ID);
-
+  
   // Redux
   const dispatch = useDispatch();
   const {
