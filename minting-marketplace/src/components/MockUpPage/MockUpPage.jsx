@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SearchPanel from "./SearchPanel";
 import setDocumentTitle from "../../utils/setTitle";
 
-const MockUpPage = ({ item, primaryColor, textColor }) => {
+const MockUpPage = ({ item }) => {
   const dispatch = useDispatch();
+  const { primaryColor, textColor } = useSelector(store => store.colorStore);
   useEffect(() => {
     setDocumentTitle(`All`);
     dispatch({
