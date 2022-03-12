@@ -12,8 +12,6 @@ const log = require('../utils/logger')(module);
 //const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
-const { vaultKeyWriter } = require('../vault/vaultKeyWriter');
-const { vaultAppRoleTokenManager } = require('../vault/vaultAppRoleTokenManager');
 
 module.exports = context => {
   const router = express.Router();
@@ -327,27 +325,13 @@ module.exports = context => {
           last: false
         });
 
-        const key = exportedKey.toJSON();
-
         await db.File.create({
           _id: cid,
-          key,
+          key: exportedKey.toJSON(),
           uri: storageLink,
           ...meta,
         });
-
-        try {
-          const vaultWriteRes = await vaultKeyWriter.write({
-            secretName: cid,
-            data: {
-              uri: storageLink,
-              key
-            },
-            vaultToken: vaultAppRoleTokenManager.getToken()
-          })
-        } catch(err) {
-          console.log('Error writing key to vault:', cid);
-        }
+        // TODO: add vault key writer here
 
         log.info(`${ req.file.originalname } stored to DB.`);
         socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: ['gcp'].includes(storage) ? true : false, done: ['gcp'].includes(storage) ? 100 : 96 });
