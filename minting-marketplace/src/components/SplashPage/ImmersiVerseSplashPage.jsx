@@ -24,8 +24,8 @@ import ReactGA from 'react-ga';
 import NotCommercialGeneric from "./NotCommercial/NotCommercialGeneric";
 
 // Google Analytics
-const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-ReactGA.initialize(TRACKING_ID);
+//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
+//ReactGA.initialize(TRACKING_ID);
 
 const customStyles = {
   overlay: {
@@ -51,7 +51,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const SplashPage = ({ loginDone, connectUserData }) => {
+const SplashPage = ({ loginDone }) => {
   const [active, setActive] = useState({ policy: false, use: false });
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -65,12 +65,6 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   const [carousel, setCarousel] = useState(carousel_match.matches)
   window.addEventListener("resize", () => setCarousel(carousel_match.matches))
   
-  const getNFT = async () => {
-    if (!currentUserAddress) {
-      connectUserData();
-      return;
-    }
-  }
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
@@ -117,17 +111,9 @@ const SplashPage = ({ loginDone, connectUserData }) => {
                 </h3>
               </div>
               <div className="text-description" style={{ color: "#A7A6A6" }}>
-                Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams on drop date
-              </div>
-              <div className="btn-claim-airdrop">
-                <button onClick={() => openModal()}>
-                  <img
-                    className="metamask-logo"
-                    src={Metamask}
-                    alt="metamask-logo"
-                  />{" "}
-                  Claim Airdrop
-                </button>
+                Let us know you're coming! Click the "Connect Wallet" button in the top right corner of the page,
+                then click the button below to fill out the form to receive a free airdrop to unlock encrypted streams 
+                on the drop date!
               </div>
               <div className="btn-submit-with-form">
 
@@ -213,8 +199,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-btn-wrapper">
-                        <button
-                          onClick={getNFT}
+                        <div
                           className="modal-btn"
                         >
                           <img
@@ -226,7 +211,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
                           { currentUserAddress
                               ? "You're connected!"
                               : "Connect your wallet!"}
-                        </button>
+                        </div>
                       </div>
                     </div>
                   </div>

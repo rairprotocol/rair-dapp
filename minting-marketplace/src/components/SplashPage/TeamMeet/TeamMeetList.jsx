@@ -476,7 +476,11 @@ const teamImmersiverseArray = [
         nameTeammate: "ImmersiVerse",
         imageUrl: Teammate_6,
         aboutTeammate: [
-            'ImmersiVerses are premium experiential destination featuring great speakers, meaningful discussions and live demonstrations of important technology—alongside great art, music, and networking. These multi-day events focus on Finance, Technology, The Arts, and Future-Culture. ImmersiVerses are scheduled during major global gatherings such as SXSW, Sundance, Tribeca and IBC Amsterdam.'
+            `ImmersiVerse is a premium experiential destination featuring great speakers, meaningful 
+            discussions and live demos of emerging technology. These multi-day events focus 
+            on “Future-Culture”, finance, networking, the arts, and technology. Also included are macro-topics 
+            like public policy and digital health. ImmersiVerses are designed for invite-only audiences and 
+            scheduled during major gatherings such as SXSW, Sundance, Tribeca and IBC.`
         ],
         socials: [
             {
@@ -487,12 +491,12 @@ const teamImmersiverseArray = [
         ]
     },
     {
-        chain: `0x7849194dD593d6c3aeD24035D70B5394a1C90F8F`,
+        chain: ``,
         nameTeammate: "RAIR Technologies",
         imageUrl: Teammate_4,
         aboutTeammate: [
             ` RAIR is a blockchain-based digital rights management platform that
-        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        uses NFTs to gate access to streaming content. Data monopolies like Amazon,
         YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
         and can change their terms of service at any time locking out creators
         and users alike.  DIY distribution meanwhile offers no protection, and cannot
