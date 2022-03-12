@@ -5,8 +5,9 @@ const {
 } = require('./vaultUtils');
 
 class VaultKeyWriter {
-  async write({secretName, data, vaultToken}) {
+  async write({key, data, vaultToken}) {
     try {
+      const secretName = key;
       const secretKVDestinationName = "key_storage"
       const url = getVaultUrl() + "/v1/" + secretKVDestinationName + "/data/" + secretName
       const res = await axios({
