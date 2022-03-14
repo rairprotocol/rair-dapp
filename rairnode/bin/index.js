@@ -130,8 +130,14 @@ async function main() {
 
 (async () => {
 
-  // Login with vault app role creds first
-  await vaultAppRoleTokenManager.initialLogin()
+  // wrapping in a try catch block temporarily to prevent
+  // outages during development
+  try {
+    // Login with vault app role creds first
+    await vaultAppRoleTokenManager.initialLogin()
+  } catch(err) {
+    console.log('Error initializing vault app role token manager')
+  }
   
   // fire up the rest of the app
   await main();
