@@ -18,16 +18,16 @@ function progress_log {
   echo "###############################################"
 }
 
-# progress_log "DOWN"
-# docker-compose \
-#   -f $DOCKER_COMPOSE_YML \
-#   down
+progress_log "DOWN"
+docker-compose \
+  -f $DOCKER_COMPOSE_YML \
+  down
 
-# progress_log "BUILD"
-# docker-compose \
-#   -f $DOCKER_COMPOSE_YML \
-#   build \
-#   --progress=plain
+progress_log "BUILD"
+docker-compose \
+  -f $DOCKER_COMPOSE_YML \
+  build \
+  --progress=plain
 
 ################################
 ################################
