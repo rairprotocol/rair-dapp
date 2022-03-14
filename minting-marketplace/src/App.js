@@ -37,7 +37,7 @@ import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
-import NFTLASplashPage from './components/SplashPage/NFTLASplash.jsx';
+import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 import ListCollections from './components/creatorStudio/ListCollections.jsx';
 
 import MetadataEditor from './components/metadata/metadataEditor.jsx';

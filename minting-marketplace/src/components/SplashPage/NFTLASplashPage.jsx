@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import "./SplashPage.css";
-import "./GreymanSplashPageMobile.css";
+import "./NFTLASplashPage.css";
 import "./../AboutPage/AboutPageNew/AboutPageNew.css";
 
 /* importing images*/
