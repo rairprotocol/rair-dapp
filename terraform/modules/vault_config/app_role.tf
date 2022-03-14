@@ -7,7 +7,7 @@ resource "vault_approle_auth_backend_role" "test_role" {
   role_name      = "test-role"
   
   token_policies = [
-    vault_policy.primary.name
+    vault_policy.key_storage_admin.name
   ]
   
   bind_secret_id = true

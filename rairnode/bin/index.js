@@ -1,8 +1,5 @@
 const port = process.env.PORT;
 
-// initialize app role token manager
-const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');

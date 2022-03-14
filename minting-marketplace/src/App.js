@@ -36,7 +36,7 @@ import FileUpload from './components/video/videoUpload/videoUpload.jsx';
 // import Footer from './components/Footer/Footer';
 
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
-
+import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
 import ListCollections from './components/creatorStudio/ListCollections.jsx';
 
 import MetadataEditor from './components/metadata/metadataEditor.jsx';
@@ -80,6 +80,20 @@ import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
 import MainLogo from './components/GroupLogos/MainLogo.jsx';
 
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+const gAppName = process.env.REACT_APP_GA_NAME
+const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
+const analytics = Analytics({
+  app: gAppName,
+  plugins: [
+    googleAnalytics({
+      trackingId: gUaNumber
+    })
+  ]
+})
+
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
@@ -97,11 +111,7 @@ function App({ sentryHistory }) {
   const [loginDone, setLoginDone] = useState(false);
   const [errorAuth, /*setErrorAuth*/] = useState('');
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
-
-  // Google Analytics
-  const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-  ReactGA.initialize(TRACKING_ID);
-
+  
   // Redux
   const dispatch = useDispatch();
   const {
@@ -123,17 +133,18 @@ function App({ sentryHistory }) {
   const connectUserData = useCallback(async () => {
     setStartedLogin(true);
     let currentUser;
+    let dispatchStack = [];
     if (window.ethereum) {
       let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] });
-      dispatch({
+      dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] })
+      dispatchStack.push({
         type: contractTypes.SET_CHAIN_ID,
         payload: window.ethereum.chainId?.toLowerCase()
       });
       currentUser = accounts[0];
     } else if (programmaticProvider) {
-      dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
-      dispatch({
+      dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
+      dispatchStack.push({
         type: contractTypes.SET_CHAIN_ID,
         payload: `0x${ programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase() }`
       });
@@ -168,27 +179,30 @@ function App({ sentryHistory }) {
 
       // Authorize user and get JWT token
       if (adminAccess === null || !localStorage.token || !isTokenValid(localStorage.token)) {
-        dispatch({ type: authTypes.GET_TOKEN_START });
+        dispatchStack.push({ type: authTypes.GET_TOKEN_START });
         let token = await getJWT(programmaticProvider, currentUser);
 
         if (!success) {
           setStartedLogin(false);
           setLoginDone(false);
-          dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
-          dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+          dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
+          dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
           setAdminAccess(false);
           localStorage.setItem('token', token);
         } else {
           const decoded = jsonwebtoken.decode(token);
 
           setAdminAccess(decoded.adminRights);
-          dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: decoded.adminRights });
-          dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+          dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: decoded.adminRights });
+          dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
           localStorage.setItem('token', token);
         }
       }
 
       setStartedLogin(false);
+      dispatchStack.forEach(dispatchItem => {
+        dispatch(dispatchItem);
+      })
       setLoginDone(true);
     } catch (err) {
       console.log('Error', err);
@@ -367,7 +381,6 @@ function App({ sentryHistory }) {
 										{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
 									</button>
 									{renderBtnConnect ? <OnboardingButton /> : <> </>}
-									{/* {console.log(adminAccess)} */}
 								</div> : adminAccess === true && !creatorViewsDisabled && [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className="fas fa-key" />, route: '/my-nft' },
@@ -528,8 +541,35 @@ function App({ sentryHistory }) {
 										</SentryRoute>
 										<SentryRoute exact path="/coming-soon" component={ComingSoon} />
 										<SentryRoute exact path="/coming-soon-nutcrackers" component={ComingSoonNut} />
-										<SentryRoute exact path="/greyman-splash" component={GreymanSplashPage} />
-										
+
+                    {/*
+                      Iterate over any splash page and add the connect user data function
+                    */}
+                    {
+                      [
+                        {
+                          route: '/immersiverse-splash',
+                          component: ImmersiVerseSplashPage
+                        },
+                        {
+                          route: '/greyman-splash',
+                          component: GreymanSplashPage
+                        },
+                        {
+                          route: '/nutcrackers-splash',
+                          component: Nutcrackers
+                        },
+                        {
+                          route: '/nipsey-splash',
+                          component: SplashPage
+                        },
+                      ].map((item, index) => {
+                        return <SentryRoute exact path={item.route}>
+                          <item.component {...{connectUserData}}/>
+                        </SentryRoute>
+                      })
+                    }
+                    
 										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
 										<SentryRoute exact path="/terms-use" component={TermsUse} />
@@ -547,8 +587,6 @@ function App({ sentryHistory }) {
 											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
 										</SentryRoute>
 
-										<SentryRoute exact path="/nipsey-splash" component={ SplashPage }/>
-										<SentryRoute exact path="/nutcrackers-splash" component={ Nutcrackers }/>
 										<SentryRoute exact path="/notifications" component={ NotificationPage }/>
 
 										<SentryRoute path="/watch/:videoId/:mainManifest" component={ VideoPlayer }/>
