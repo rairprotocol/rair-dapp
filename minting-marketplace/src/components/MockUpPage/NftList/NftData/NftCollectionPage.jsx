@@ -125,7 +125,7 @@ const NftCollectionPageComponent = ({
     >
       <BreadcrumbsView />
       <TitleCollection
-        tokenData={tokenData}
+        selectedData={tokenData[0]?.metadata}
         title={collectionName}
         userName={offerAllData?.owner}
         currentUser={currentUser}

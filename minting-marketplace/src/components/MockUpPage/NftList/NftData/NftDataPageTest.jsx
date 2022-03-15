@@ -473,6 +473,7 @@ const NftDataPageTest = ({
       <BreadcrumbsView />
       <div>
         <TitleCollection
+          selectedData={selectedData}
           currentUser={currentUser}
           title={selectedData?.name}
           userName={ownerInfo?.owner}

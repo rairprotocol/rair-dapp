@@ -4,12 +4,11 @@ import defaultUser from "./../../../assets/defultUser.png";
 import SharePopUp from "./SharePopUp/SharePopUp";
 import { useParams } from "react-router-dom";
 
-const TitleCollection = ({ title, userName, currentUser, tokenData }) => {
+const TitleCollection = ({ title, userName, currentUser, tokenData, selectedData }) => {
   const { tokenId } = useParams();
   const [sharePopUp, setSharePopUp] = useState(false);
   const shareRef = useRef();
 
-  //   console.log(userName,currentUser );
   const toggleShare = () => {
     setSharePopUp((prev) => !prev);
   };
@@ -43,7 +42,7 @@ const TitleCollection = ({ title, userName, currentUser, tokenData }) => {
         </div>
         <div className="block-collection-desc">
           {
-            tokenData ? tokenData[0]?.metadata.description : "none desc"
+            selectedData && selectedData.description
           }
         </div>
       </div>
@@ -67,7 +66,7 @@ const TitleCollection = ({ title, userName, currentUser, tokenData }) => {
       </div>
       <div className="block-collection-desc">
         {
-          tokenData ? tokenData[0]?.metadata.description : ""
+          selectedData && selectedData.description
         }
       </div>
     </div>
