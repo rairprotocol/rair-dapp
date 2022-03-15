@@ -138,7 +138,7 @@
 /* submit with form*/
 
 .template-author-card .text-splash .btn-submit-with-form {
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 .template-author-card .text-splash .btn-submit-with-form button {
@@ -168,152 +168,25 @@
 
 /* Media Responsive*/
 
-@media screen and (max-width: 1488px) {
-    .wrapper-splash-page {
-        display: flex;
-        justify-content: center;
-        padding-left: 0px;
-    }
-    .home-splash-page {
-        padding-left: 0;
-    }
-}
-
-@media screen and (max-width: 1400px) {
-    .template-author-card {
-        background-size: 450px auto;
-        background-position: 90% 7rem;
-        height: 600px;
-    }
-}
-
-@media screen and (max-width: 1335px) {
-    .template-author-card {
-        background-size: 300px auto;
-        background-position: 88% 9rem;
-    }
-}
-
-
-@media screen and (max-width: 1300px) {
-    .wrapper-splash-page {
-        align-items: center;
-    }
-
-    .home-splash-page {
-        padding-left: 0px;
-        align-items: center;
-    }
-
-    .template-author-card {
-        /* background-size: 300px auto; */
-        background-size: 400px auto;
-        background-position: 88% 9rem;
-    }
-
-    .text-gradient{
-        margin-top: 3rem !important;
-        font-size: 40px !important;
-    }
-}
-
+/* horizontal */
+/* vertical */
 @media screen and (max-width: 1100px) {
 
-    .template-author-card {
-        /* height: 100%;
-        justify-content: center;
-        background-position: center 220px;
-        background-size: 350px auto;
-        background-position: 95% 9rem; */
-    }
-
-    .template-author-card {
-        background-position: center 190px;
-        background-size: 350px auto;
-        padding: 60px 80px 40px 80px;
-        height: 100%;
-    }
-
-    .wrapper-splash-page {
-        background-image: none;
-    }
     .home-splash-page {
-        padding-left: 20px;
-    }
-
-
-    .template-author-card .block-splash {
-        width: 100%;
-    }
-
-   
-    .template-author-card .text-splash {
-        text-align: center;
-    }
-
-    .template-author-card .text-splash .text-description {
-        width: 100%;
-    }
-
-    .template-author-card .btn-claim-airdrop {
-        display: flex;
-        justify-content: center;
-    }
-
-    .template-author-card .btn-submit-with-form {
-        display: flex;
-        justify-content: center;
-    }
-
-
-    .template-author-card .text-splash .title-splash h3:first-child {
-        margin-bottom: 400px;
-    }
-}
-
-@media screen and (max-width: 950px) {
-    .wrapper-splash-page {
-        overflow-x: auto;
-        max-width: 900px;
-    }
-
-    .home-splash-page {
-        max-width: 100%;
-        padding-left: 0px;
-    }
-
-}
-
-@media screen and (max-width: 850px) {
-    .template-author-card{
-        max-width: 95%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .template-author-card .block-splash {
-        justify-content: center;
+        padding-left: 7vw;
         align-items: center;
     }
 
-    .template-author-card .block-splash .logo-author {
-        display: flex;
-        justify-content: center;
-    }
-} 
-
-
-@media screen and (max-width: 800px) {
     .template-author-card {
-        background-position: center 220px;
-    }
-}
-
-@media screen and (max-width: 700px) {
-    .template-author-card {
-        background-position: center 25vw;
-        background-size: 50vw auto;
+        background-position: center 18vw;
+        background-size: 40vw auto;
         padding: 0 0 5vw 0;
+        max-width: 88vw;
+        height: 80vw;
+    }
+
+    .template-author-card .text-splash {
+        text-align: center;
     }
 
     .template-author-card .text-splash .title-splash{
@@ -324,17 +197,18 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 12vw !important;
+        font-size: 10vw !important;
         text-align: center;
         width: 100%;
-        margin-bottom: 60vw;
+        margin-bottom: 45vw;
         padding: 0 0 0 0;
-        height: 12vw;
+        height: 10vw;
     }
 
     .template-author-card .text-splash .text-description {
-        padding: 0 5vw 0 5vw;
-        font-size: 4vw;
+        padding: 0 10vw 0 10vw;
+        font-size: 2.5vw;
+        width: 100%
     }
 
     .template-author-card .btn-claim-airdrop {
@@ -343,31 +217,59 @@
         margin-top: 40px;
     }
 
-    .template-author-card .btn-submit-with-form {
+    .template-author-card .text-splash .btn-submit-with-form{
         justify-content: center;
         display: flex;
-        margin-top: 15px;
+        margin-top: 2vw;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .template-author-card {
+        background-position: center 22vw;
+        background-size: 47vw auto;
+        height: 100vw;
+    }
+
+    .template-author-card .text-splash .text-description {
+        padding: 0 15vw 0 15vw;
+        font-size: 3vw;
     }
 
 }
 
-
-
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 600px) {
 
     .template-author-card {
-        background-position: center 32vw;
+        background-position: center 25vw;
+        background-size: 40vw auto;
+        padding: 0 0 5vw 0;
+        height: 100vw;
+    }
+    .template-author-card .text-splash .title-splash h3.text-gradient{
+        margin-bottom: 50vw;
+        font-size: 12vw !important;
+        height: 12vw;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .template-author-card {
+        background-position: center 25vw;
+        background-size: 45vw auto;
+        padding: 0 0 5vw 0;
+        height: 110vw;
     }
 
     .template-author-card .text-splash .title-splash h3.text-gradient{
-        font-size: 16vw !important;
-        height: 16vw;
+        margin-bottom: 50vw;
     }
 
-}
-
-@media screen and (max-width: 370px){
-    .template-author-card {
-        background-position: center 35vw;
+    .template-author-card .text-splash .text-description {
+        padding: 0 15vw 0 15vw;
+        font-size: 4vw;
     }
 }
+
+
+
