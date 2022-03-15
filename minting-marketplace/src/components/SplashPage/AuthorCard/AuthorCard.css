@@ -1,0 +1,522 @@
+
+/* main block */
+
+.wrapper-splash-page {
+    display: flex;
+    justify-content: center;
+    background-image: none;
+}
+
+.home-splash-page {
+    max-width: 1300px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 54px;
+    overflow: hidden;
+}
+
+
+/* Author Information Block*/
+
+.text-gradient{
+    /* background: #A4396F; VARIABLE */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 45px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+
+.template-author-card {
+    background-size: 516px 516px;
+    background-position: 88% center;
+    height: 694px;
+    position: relative;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 24px;
+    background-repeat: no-repeat;
+}
+
+.block-splash {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.block-splash .logo-author {
+    margin-top: 88px;
+}
+
+.block-splash .logo-author img:first-child {
+    width: 313px;
+    height: auto;
+}
+
+.text-splash .title-splash {
+    margin-bottom: 24px;
+}
+
+
+.template-author-card .text-splash .title-splash h3.text-gradient {
+    font-size: 56px;
+    /* margin-top: 7rem; */
+    margin-top: 1rem;
+    padding-bottom: 17px;
+}
+
+
+.text-splash .text-description {
+    width: 500px;
+    font-size: 20px;
+    color: #A7A6A6;
+}
+
+.btn-buy-metamask {
+    margin-top: 90px;
+}
+
+.btn-buy-metamask button {
+    font-size: 20px;
+    color: #fff;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-buy-metamask button:hover {
+    background: linear-gradient(320.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    /* background: red; */
+}
+
+.btn-buy-metamask button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.btn-claim-airdrop {
+    margin-top: 40px;
+}
+
+.btn-claim-airdrop button {
+    font-size: 20px;
+    color: #fff;
+    background: #79CBBD;
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-claim-airdrop button:hover {
+    background: #79CBBD;
+    /* background: red; */
+}
+
+.btn-claim-airdrop button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+
+.btn-submit-with-form {
+    margin-top: 20px;
+}
+
+.btn-submit-with-form button {
+    font-size: 20px;
+    color: #fff;
+    background: #0A464F;
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-submit-with-form button:hover {
+    background: #0A464F;
+    /* background: red; */
+}
+
+.btn-submit-with-form button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+
+.block-splash-img {
+    position: absolute;
+    top: 79px;
+    right: -60px;
+}
+
+.block-splash-img img {
+    width: 667px;
+    height: 494px;
+}
+
+
+/* Media Responsive*/
+
+@media screen and (max-width: 1488px) {
+    .wrapper-splash-page {
+        display: flex;
+        justify-content: center;
+        padding-left: 0px;
+    }
+    .home-splash-page {
+        padding-left: 0;
+    }
+}
+
+@media screen and (max-width: 1430px) {
+    .block-videos {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    .home-splash-page .template-author-card {
+        background-size: 450px auto;
+        background-position: 90% 7rem;
+        height: 600px;
+    }
+}
+
+@media screen and (max-width: 1335px) {
+    .home-splash-page .template-author-card {
+        background-size: 300px auto;
+        background-position: 88% 9rem;
+    }
+}
+
+
+@media screen and (max-width: 1300px) {
+    .home-splash-page .template-author-card {
+        /* background-size: 300px auto; */
+        background-size: 400px auto;
+        background-position: 88% 9rem;
+    }
+    .wrapper-splash-page {
+        align-items: center;
+    }
+
+    .home-splash-page {
+        padding-left: 0px;
+        align-items: center;
+    }
+
+    .text-gradient{
+        margin-top: 3rem !important;
+        font-size: 40px !important;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+
+
+
+    .home-splash-page .template-author-card {
+        height: 100%;
+        justify-content: center;
+        background-position: center 220px;
+        background-size: 350px auto;
+        /* background-position: 95% 9rem; */
+    }
+
+    .footer ul li {
+        font-size: 15px;
+    }
+
+    .wrapper-splash-page {
+        background-image: none;
+    }
+    .home-splash-page {
+        padding-left: 20px;
+    }
+
+
+    .template-author-card .block-splash {
+        width: 100%;
+    }
+
+   
+    .template-author-card .block-splash .text-splash {
+        text-align: center;
+    }
+
+    .template-author-card .text-splash .text-description {
+        width: 100%;
+    }
+
+    .template-author-card .btn-claim-airdrop {
+        display: flex;
+        justify-content: center;
+    }
+
+    .template-author-card .btn-submit-with-form {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash-page .template-author-card {
+        background-position: center 190px;
+        background-size: 350px auto;
+        padding: 60px 80px 40px 80px;
+        height: 100%;
+    }
+
+    .template-author-card .text-splash .title-splash h3:first-child {
+        margin-bottom: 400px;
+    }
+}
+
+@media screen and (max-width: 1077px) {
+    .col-1 {
+        width: inherit;
+    }
+
+    .col-1 img {
+        float: left;
+    }
+}
+
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page {
+        overflow-x: auto;
+        max-width: 900px;
+    }
+
+    .home-splash-page {
+        max-width: 100%;
+        padding-left: 0px;
+    }
+
+}
+
+@media screen and (max-width: 850px) {
+    .home-splash-page .template-author-card{
+        max-width: 95%;
+    }
+
+
+    .home-splash-page .template-author-card {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-splash-page .block-splash {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .home-splash-page .block-splash .logo-author {
+        display: flex;
+        justify-content: center;
+    }
+} 
+
+
+@media screen and (max-width: 800px) {
+    .footer {
+        flex-direction: column;
+    }
+
+    .footer ul {
+        margin-top: 20px;
+        padding-left: 0;
+    }
+
+    .home-splash-page .template-author-card {
+        background-position: center 220px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .home-splash-page .template-author-card {
+        padding: 20px 80px 40px 80px;
+        background-position: center 150px;
+    }
+    .template-author-card .text-splash .title-splash h3:first-child {
+        margin-bottom: 350px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .footer ul {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer ul li {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .home-splash-page .template-author-card {
+        background-position: center 120px;
+        /* background-position: center 130px; */
+    }
+
+    .template-author-card .text-splash .title-splash h3 {
+        font-size: 20px;
+        width: 100%;
+    }
+
+    .template-author-card .text-splash .title-splash h3.text-gradient{
+        font-size: 40px !important;
+        text-align: center;
+    }
+
+    .template-author-card .text-splash .title-splash h3:first-child {
+        margin-bottom: 350px;
+    }
+
+    .home-splash-page .template-author-card {
+        background-position: center 130px;
+        padding: 20px 20px;
+    }
+
+    .template-author-card .btn-claim-airdrop {
+        justify-content: center;
+        display: flex;
+        margin-top: 40px;
+    }
+
+    .template-author-card .btn-submit-with-form {
+        justify-content: center;
+        display: flex;
+        margin-top: 15px;
+    }
+
+}
+
+
+@media screen and (max-width: 570px) {
+
+    .home-splash-page .text-splash .text-description {
+        width: 100%;
+        font-size: 16px;
+    }
+
+}
+
+
+@media screen and (max-width: 456px) {
+    .home-splash-page .template-author-card {
+        background-position: center 160px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .home-splash-page .template-author-card {
+        /* background-position: center 120px; */
+        background-position: center 150px;
+        background-size: 300px auto;
+    }
+
+    .template-author-card .text-splash .title-splash h3 {
+        font-size: 18px;
+    }
+
+    .template-author-card .text-splash .title-splash h3.text-gradient {
+        font-size: 32px !important;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    .block-splash .logo-author img:first-child {
+        width: 290px;
+    }
+
+    .home-splash-page .template-author-card {
+        background-position: center 150px;
+        background-size: 250px auto;
+    }
+
+    .template-author-card .text-splash .title-splash h3 {
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .template-author-card .text-splash .title-splash h3.text-gradient {
+        font-size: 30px !important;
+    }
+
+    .template-author-card .text-splash .title-splash h3:first-child {
+        margin-bottom: 325px;
+    }
+
+    .home-splash-page .text-splash .text-description {
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .template-author-card .btn-claim-airdrop {
+        width: 250px;
+    }
+
+    .template-author-card .btn-submit-with-form {
+        width: 250px;
+    }
+
+    .template-author-card .btn-claim-airdrop {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .template-author-card .btn-claim-airdrop button {
+        width: 250px;
+        height: 48px;
+    }
+
+    .template-author-card  .btn-submit-with-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    .template-author-card .btn-submit-with-form button {
+        width: 250px;
+        height: 48px;
+    }
+}
+
+
+@media screen and (max-width: 350px) {
+    .home-splash-page .template-author-card {
+        background-position: center 140px;
+    }
+
+    .template-author-card .btn-submit-with-form {
+        width: 100%;
+    }
+
+    .template-author-card .btn-claim-airdrop {
+        width: 100%;
+    }
+}

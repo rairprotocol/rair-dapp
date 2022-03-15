@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import "./NFTLASplashPage.css";
+// import "./AuthorCard/AuthorCard.css";
 import "./../AboutPage/AboutPageNew/AboutPageNew.css";
 
 /* importing images*/
-import DocumentIcon from "../../images/documentIcon.svg";
 import NFTLA1_rounded from './images/NFT-LA-Dig-V01-modified.png';
 import NFTLA1 from './images/NFT-LA-Dig-V01.jpg';
 import NFTLA2 from './images/NFT-LA-Dig-V02.png';
@@ -13,7 +12,7 @@ import NFTLA3 from './images/NFT-LA-Dig-V03.png';
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
-import AuthorBlock from "./AuthorBlock/AuthorBlock";
+import AuthorCard from "./AuthorCard/AuthorCard";
 import setTitle from '../../utils/setTitle';
 import NotCommercialGeneric from "./NotCommercial/NotCommercialGeneric";
 import Carousel from "./Carousel";
@@ -22,7 +21,13 @@ import Carousel from "./Carousel";
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-
+const splashData = {
+  title: "#nftla",
+  description: "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams",
+  backgroundImage: NFTLA1_rounded,
+  buttonColor: "#A4396F",
+  buttonLabel: "Submit with Form"
+}
 const carouselData = [
   {
     title: "Horizon",
@@ -57,47 +62,12 @@ const NFTLASplashPage = ({ loginDone }) => {
   }
 
   return (
-    <div className="wrapper-splash-page greyman-page">
-      <div className="home-splash--page">
-        <AuthorBlock mainClass="immersiverse-page-author" style={{backgroundImage: NFTLA1_rounded}}>
-          <div className="block-splash">
-            <div className="text-splash">
-              <div className="title-splash greyman-page">
-                <h3
-                  style={{
-                    fontSize: "56px",
-                    paddingBottom: "17px",
-                    marginTop: "1rem",
-                  }}
-                  className="text-gradient-pink"
-                >
-                  #nftla
-                </h3>
-              </div>
-              <div className="text-description" style={{ color: "#A7A6A6" }}>
-              Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams
-              </div>
-              <div className="btn-submit-with-form">
-                <button 
-                onClick={() => formHyperlink()}
-                style={{
-                  background: '#A4396F'
-                }}
-                >
-                  <img
-                    className="metamask-logo"
-                    src={DocumentIcon}
-                    alt="form-logo"
-                  />{" "}
-                  Submit with Form
-                </button>
-              </div>
-            </div>
-          </div>
-        </AuthorBlock>
-        <Carousel carousel={!carousel} carouselData={carouselData}/>
+    <div className="wrapper-splash-page">
+      <div className="home-splash-page">
+        <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
+        {/* <Carousel carousel={!carousel} carouselData={carouselData}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"immersiverse"} />
-        <NotCommercialGeneric primaryColor={primaryColor} />
+        <NotCommercialGeneric primaryColor={primaryColor} /> */}
       </div>
     </div>
   );
