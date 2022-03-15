@@ -1,7 +1,5 @@
-import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts"
-import "./SplashPage.css";
-import "./GreymanSplashPageMobile.css";
-import "./../AboutPage/AboutPageNew/AboutPageNew.css";
+import MobileCarouselNfts from "../../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts"
+import './Carousel.css'
 
 const CarouselListItem = (props) => {
     const {carouselItemTitle, carouselItemImg} = props
@@ -34,13 +32,13 @@ const CarouselItem = (props) => {
 const Carousel = (props) => {
     const {carousel, carouselData} = props
     return (
-        <div className="exclusive-nfts" style={{marginTop: "80px"}}>
+        <div className="carousel-container" style={{marginTop: "80px"}}>
         <h2 className="carousel-title"> 3 Unique Styles </h2>
         { carousel 
         ? <MobileCarouselNfts> 
             {carouselData.map(row => <CarouselItem carouselItemTitle={row.title} carouselItemImg={row.img}/>)} 
             </MobileCarouselNfts>
-        : <div className="list-of-immersiverse-pic">
+        : <div className="carousel-list">
             {carouselData.map(row => <CarouselListItem carouselItemTitle={row.title} carouselItemImg={row.img}/>)} 
             </div>
         }

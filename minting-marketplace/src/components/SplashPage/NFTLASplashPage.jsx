@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-// import "./AuthorCard/AuthorCard.css";
+import "./SplashPageTemplate/AuthorCard/AuthorCard.css";
 import "./../AboutPage/AboutPageNew/AboutPageNew.css";
 
 /* importing images*/
@@ -12,10 +12,10 @@ import NFTLA3 from './images/NFT-LA-Dig-V03.png';
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
-import AuthorCard from "./AuthorCard/AuthorCard";
+import AuthorCard from "./SplashPageTemplate/AuthorCard/AuthorCard";
 import setTitle from '../../utils/setTitle';
-import NotCommercialGeneric from "./NotCommercial/NotCommercialGeneric";
-import Carousel from "./Carousel";
+import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
+import Carousel from "./SplashPageTemplate/Carousel/Carousel";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -26,22 +26,24 @@ const splashData = {
   description: "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams",
   backgroundImage: NFTLA1_rounded,
   buttonColor: "#A4396F",
-  buttonLabel: "Submit with Form"
+  buttonLabel: "Submit with Form",
+  NFTName: "NFT art",
+  carouselData: [
+    {
+      title: "Horizon",
+      img: NFTLA1
+    },
+    {
+      title: "Dark",
+      img: NFTLA2
+    },
+    {
+      title: "Palm",
+      img: NFTLA3
+    }
+  ]
 }
-const carouselData = [
-  {
-    title: "Horizon",
-    img: NFTLA1
-  },
-  {
-    title: "Dark",
-    img: NFTLA2
-  },
-  {
-    title: "Palm",
-    img: NFTLA3
-  }
-]
+
 
 
 const NFTLASplashPage = ({ loginDone }) => {
@@ -65,9 +67,9 @@ const NFTLASplashPage = ({ loginDone }) => {
     <div className="wrapper-splash-page">
       <div className="home-splash-page">
         <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
-        {/* <Carousel carousel={!carousel} carouselData={carouselData}/>
+        <Carousel carousel={!carousel} carouselData={splashData.carouselData}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"immersiverse"} />
-        <NotCommercialGeneric primaryColor={primaryColor} /> */}
+        <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 
       </div>
     </div>
   );

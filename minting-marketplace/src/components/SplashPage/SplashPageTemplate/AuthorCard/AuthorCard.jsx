@@ -1,5 +1,5 @@
 import React from 'react'
-import DocumentIcon from "../../../images/documentIcon.svg";
+import DocumentIcon from "../../../../images/documentIcon.svg";
 import './AuthorCard.css'
 
 const AuthorCard = ({ formHyperlink, splashData }) => {
