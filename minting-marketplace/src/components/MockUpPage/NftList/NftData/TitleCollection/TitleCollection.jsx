@@ -67,7 +67,7 @@ const TitleCollection = ({ title, userName, currentUser, tokenData }) => {
       </div>
       <div className="block-collection-desc">
         {
-          tokenData ? tokenData[0]?.metadata.description : "none desc"
+          tokenData ? tokenData[0]?.metadata.description : ""
         }
       </div>
     </div>
