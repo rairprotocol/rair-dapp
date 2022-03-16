@@ -64,7 +64,11 @@
 }
 
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 900px) {
+
+    .carousel-container {
+        margin: 15vw 0;
+    }
 
     .carousel-container .join-pic-img{
         width: 35vw;

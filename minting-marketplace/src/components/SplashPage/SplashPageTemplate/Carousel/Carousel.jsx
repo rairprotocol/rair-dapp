@@ -34,7 +34,7 @@ const CarouselModule = (props) => {
 
     const responsive = {
         mobile: {
-            breakpoint: { max: 750, min: 0 },
+            breakpoint: { max: 900, min: 0 },
             items: 1,
         },
     };
