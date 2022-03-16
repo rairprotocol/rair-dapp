@@ -12,7 +12,7 @@ const log = require('../utils/logger')(module);
 //const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
-const { vaultKeyWriter } = require('../vault/vaultKeyWriter');
+const { vaultKeyManager } = require('../vault/vaultKeyManager');
 const { vaultAppRoleTokenManager } = require('../vault/vaultAppRoleTokenManager');
 
 module.exports = context => {
@@ -337,7 +337,7 @@ module.exports = context => {
         });
 
         try {
-          const vaultWriteRes = await vaultKeyWriter.write({
+          const vaultWriteRes = await vaultKeyManager.write({
             secretName: cid,
             data: {
               uri: storageLink,
