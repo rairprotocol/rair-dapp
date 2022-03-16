@@ -80,3 +80,7 @@ const chainData = {
 }
 
 export default chainData;
+
+export const detectBlockchain = (chainId) => {
+	return chainData[chainId]?.name ? chainData[chainId]?.name : null
+}

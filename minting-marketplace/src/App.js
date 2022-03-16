@@ -82,6 +82,8 @@ import MainLogo from './components/GroupLogos/MainLogo.jsx';
 
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
+import { detectBlockchain } from './utils/blockchainData.js';
+import AlertMetamask from './components/AlertMetamask/index.jsx';
 
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
@@ -111,6 +113,7 @@ function App({ sentryHistory }) {
   const [loginDone, setLoginDone] = useState(false);
   const [errorAuth, /*setErrorAuth*/] = useState('');
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
+  const [showAlert, setShowAlert] = useState(true);
   
   // Redux
   const dispatch = useDispatch();
@@ -129,6 +132,9 @@ function App({ sentryHistory }) {
     backgroundImageEffect
   } = useSelector(store => store.colorStore);
   const { token } = useSelector(store => store.accessStore);
+  const chainId = useSelector(store => store.contractStore?.currentChain);
+
+  const selectedChain = detectBlockchain(chainId);
 
   const connectUserData = useCallback(async () => {
     setStartedLogin(true);
@@ -332,10 +338,20 @@ function App({ sentryHistory }) {
     }
   }, [primaryColor]);
 
+  useEffect(() => {
+    if(!selectedChain) return
+
+    if(!showAlert){
+      setShowAlert(true)
+    }
+
+  }, [selectedChain]);
+
   let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
 
 	return (
 	  <Sentry.ErrorBoundary fallback={ErrorFallback}>
+      {selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} setShowAlert={setShowAlert}/> : null}
       <Router history={sentryHistory}>
 				{/* {currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />} */}
 				  <>
