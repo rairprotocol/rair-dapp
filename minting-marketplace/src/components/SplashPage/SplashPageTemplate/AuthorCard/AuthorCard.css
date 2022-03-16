@@ -1,3 +1,24 @@
+/* overriding minting marketplace styling */
+
+@media screen and (max-width: 1077px) {
+    .col-1 {
+        width: inherit;
+    }
+
+    .col-1 img {
+        float: left;
+    }
+}
+
+@media screen and (max-width: 900px) and (min-width: 500px) {
+    .col-1.rounded {
+        display: block;
+        width: inherit;
+    }
+    .col-12.pt-2.mb-4 {
+        margin-right: 0px;
+    }
+}
 
 /* main block */
 
@@ -8,7 +29,7 @@
 }
 
 .home-splash-page {
-    max-width: 75vw;
+    max-width: 90vw;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -38,7 +59,7 @@
     flex-direction: column;
     justify-content: center;
     text-align: left;
-    padding-left: 7vw;
+    padding-left: 0vw;
     height: 80%;
 }
 
@@ -47,6 +68,7 @@
     flex-direction: column;
     height: 70%;
     justify-content: space-around;
+    padding-left: 10vw;
 }
 
 
@@ -208,6 +230,8 @@
 
     .template-author-card .text-splash {
         text-align: center;
+        padding-left: 0vw;
+
     }
 
     .template-author-card .text-splash .title-splash{
