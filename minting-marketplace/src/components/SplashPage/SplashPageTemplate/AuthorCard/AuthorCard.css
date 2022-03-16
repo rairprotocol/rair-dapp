@@ -66,7 +66,7 @@
 .template-author-card .text-splash {
     display: flex;
     flex-direction: column;
-    height: 70%;
+    height: 75%;
     justify-content: space-around;
     padding-left: 10vw;
 }
@@ -315,6 +315,7 @@
     .home-splash-page {
         padding-left: 0;
         align-items: center;
+        max-width: 95vw;
     }
 
     .template-author-card {
