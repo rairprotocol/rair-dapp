@@ -5,14 +5,16 @@ import { rFetch } from '../../utils/rFetch.js';
 import { useSelector } from 'react-redux';
 import blockchainData from '../../utils/blockchainData';
 import { web3Switch } from '../../utils/switchBlockchain';
-import { erc721Abi } from '../../contracts';
+import { erc721Abi, diamondFactoryAbi } from '../../contracts';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
+import {utils} from 'ethers';
 
 const TransferTokens = () => {
 	const { currentChain, currentUserAddress, contractCreator } = useSelector(store => store.contractStore);
 
 	const [isCreator, setIsCreator] = useState(false);
+	const [isDiamond, setIsDiamond] = useState(false);
 	const [traderRole, setTraderRole] = useState(false);
 
 	const [contractData, setContractData] = useState();
@@ -47,6 +49,9 @@ const TransferTokens = () => {
 	const getContractData = useCallback(async () => {
 		setSelectedProducts('null');
 		setContractProducts([]);
+		setTraderRole(false);
+		setContractInstance();
+
 		if (selectedContract !== 'null') {
 			let response1 = await rFetch(`/api/contracts/${selectedContract}`);
 			if (response1.success) {
@@ -63,7 +68,6 @@ const TransferTokens = () => {
 			}
 			let selectedBlockchain = selectedContract.split('/')[2];
 			setContractBlockchain(blockchainData[selectedBlockchain]);
-			console.log(blockchainData[selectedBlockchain]);
 		}
 	}, [selectedContract]);
 
@@ -83,27 +87,20 @@ const TransferTokens = () => {
 	useEffect(() => {
 		if (contractBlockchain && currentChain === contractBlockchain.chainId) {
 			let contractAddress = selectedContract.split('/')[3];
-			console.log(erc721Abi);
-			let instance = contractCreator(contractAddress, erc721Abi);
-			console.log(instance);
+			let instance = contractCreator(contractAddress, contractData.diamond ? diamondFactoryAbi : erc721Abi);
 			setContractInstance(instance);
 		}
 	}, [currentChain, contractBlockchain, selectedContract]);
 
 	const hasTraderRole = useCallback(async () => {
-		if (contractInstance) {
-			setTraderRole(
-				await metamaskCall(
-					contractInstance.hasRole(
-						await contractInstance.TRADER(),
-						currentUserAddress
-					)
+		if (contractInstance !== undefined) {
+			const response = await metamaskCall(
+				contractInstance.hasRole(
+					await contractInstance.TRADER(),
+					currentUserAddress
 				)
-			);
-			let tokenCount = await metamaskCall(contractInstance.balanceOf(currentUserAddress));
-			for (let i = 0; tokenCount.gte(i); i++) {
-				console.log((await metamaskCall(contractInstance.tokenOfOwnerByIndex(currentUserAddress, i))).toString());
-			}
+			)
+			setTraderRole(response);
 		}
 	}, [contractInstance]);
 
@@ -181,7 +178,7 @@ const TransferTokens = () => {
 			<div className='col-12 col-md-6'>
 				{contractInstance &&
 					<button
-						disabled={currentChain !== contractBlockchain.chainId || traderRole}
+						disabled={currentChain !== contractBlockchain.chainId}
 						className='btn btn-royal-ice'
 						onClick={async () => {
 							Swal.fire({
@@ -190,7 +187,7 @@ const TransferTokens = () => {
 								icon: 'info',
 								showConfirmButton: false
 							});
-							if (await metamaskCall(contractInstance.grantRole(await contractInstance.TRADER(), currentUserAddress))) {
+							if (await metamaskCall(contractInstance.approve(currentUserAddress, tokenId))) {
 								Swal.fire({
 									title: 'Success',
 									html: 'Role granted',
@@ -198,7 +195,7 @@ const TransferTokens = () => {
 								});
 							}
 						}}>
-					2.- Grant Trader Role to {currentUserAddress}
+					2.- Approve your address
 				</button>}
 			</div>
 			<hr/>
@@ -213,7 +210,7 @@ const TransferTokens = () => {
 							icon: 'info',
 							showConfirmButton: false
 						});
-						if (await metamaskCall(contractInstance.transferFrom(currentUserAddress, targetAddress, tokenId))) {
+						if (await metamaskCall(contractInstance['safeTransferFrom(address,address,uint256)'](utils.getAddress(currentUserAddress), utils.getAddress(targetAddress), tokenId))) {
 							Swal.fire({
 								title: 'Please wait',
 								html: 'Token sent',
@@ -226,6 +223,7 @@ const TransferTokens = () => {
 			</div>
 		</>}
 	</div>
+
 }
 
 export default TransferTokens;
