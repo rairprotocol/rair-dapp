@@ -7,7 +7,7 @@ const CarouselListItem = (props) => {
         <div className="join-pic-list">
             <h4 className="carousel-items"> {carouselItemTitle} </h4>
             <img
-            className="join-pic-img-list"
+            className="join-pic-img"
             src={carouselItemImg}
             alt="community-img"
             />
@@ -48,6 +48,7 @@ const CarouselModule = (props) => {
             showDots={true}
             infinite={true}
             responsive={responsive}
+            className="carousel"
             >
             {carouselData.map(row => <CarouselItem carouselItemTitle={row.title} carouselItemImg={row.img}/>)} 
         </Carousel>
