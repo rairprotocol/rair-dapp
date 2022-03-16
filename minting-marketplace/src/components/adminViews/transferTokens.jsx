@@ -212,8 +212,8 @@ const TransferTokens = () => {
 						});
 						
 						if (await metamaskCall(contractInstance['safeTransferFrom(address,address,uint256)'](
-							utils.getAddress(currentUserAddress),
-							utils.getAddress(targetAddress),
+							currentUserAddress,
+							targetAddress,
 							tokenId
 						))) {
 							Swal.fire({
