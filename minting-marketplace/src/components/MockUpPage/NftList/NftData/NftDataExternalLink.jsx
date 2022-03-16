@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import Swal from "sweetalert2";
 import NftDataPageTest from "./NftDataPageTest";
 
-const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
+const NftDataExternalLink = () => {
   const [data, setData] = useState();
   const [offerPrice, setOfferPrice] = useState();
+
+  const { currentUserAddress } = useSelector(store => store.contractStore);
+  const { primaryColor, textColor } = useSelector(store => store.colorStore);
 
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
@@ -73,7 +77,7 @@ const NftDataExternalLink = ({ currentUser, primaryColor, textColor }) => {
 
   return (
     <NftDataPageTest
-      currentUser={currentUser}
+      currentUser={currentUserAddress}
       onSelect={onSelect}
       handleClickToken={handleClickToken}
       setSelectedToken={setSelectedToken}

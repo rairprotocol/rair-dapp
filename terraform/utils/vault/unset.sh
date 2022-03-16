@@ -1,3 +1,3 @@
 unset VAULT_ADDR
 unset VAULT_NAMESPACE
-unset VAULT_ADDR
+unset VAULT_TOKEN

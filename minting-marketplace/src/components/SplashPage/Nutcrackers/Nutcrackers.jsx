@@ -21,16 +21,22 @@ import { rFetch } from '../../../utils/rFetch.js';
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import Swal from 'sweetalert2';
 
-const Nutcrackers = () => {
+const Nutcrackers = ({connectUserData}) => {
     const { primaryColor } = useSelector((store) => store.colorStore);
     const [/*percentTokens*/, setPresentTokens] = useState(0);
 
     const leftTokensNumber = 50;
     const wholeTokens = 50;
-    const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
+    const { currentUserAddress ,minterInstance, contractCreator } = useSelector((store) => store.contractStore);
 
     const nutcrackerAddress = '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
     const mintNutcracker = async () => {
+
+        if (!currentUserAddress) {
+            connectUserData();
+            return;
+        }
+
         if (window.ethereum.chainId !== '0x89') {
             web3Switch('0x89');
             return;

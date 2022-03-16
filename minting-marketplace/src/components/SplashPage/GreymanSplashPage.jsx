@@ -84,7 +84,7 @@ const customStylesForVideo = {
 };
 Modal.setAppElement("#root");
 
-const SplashPage = ({ loginDone }) => {
+const SplashPage = ({ loginDone, connectUserData }) => {
   const [timerLeft, setTimerLeft] = useState();
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
@@ -127,6 +127,10 @@ const SplashPage = ({ loginDone }) => {
   }
 
   const buyGrayman = async () => {
+    if (!currentUserAddress) {
+      connectUserData();
+      return;
+    }
     if (window.ethereum.chainId !== GreymanChainId) {
       web3Switch(GreymanChainId);
       return;
@@ -422,10 +426,7 @@ const SplashPage = ({ loginDone }) => {
                       <div className="modal-btn-wrapper">
                         <button
                           onClick={buyGrayman}
-                          disabled={
-                            currentUserAddress === undefined ||
-                            !Object.values(active).every((el) => el)
-                          }
+                          disabled={!Object.values(active).every((el) => el)}
                           className="modal-btn"
                         >
                           <img
@@ -448,7 +449,7 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        {timerLeft === 0 && soldCopies !== undefined && (
+        {timerLeft === 0 && (
           <TokenLeftGreyman
             Metamask={Metamask}
             primaryColor={primaryColor}
