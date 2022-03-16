@@ -41,7 +41,7 @@ const CarouselModule = (props) => {
 
 
     return (
-        <div className="carousel-container" style={{marginTop: "80px"}}>
+        <div className="carousel-container">
         <h2 className="carousel-title"> 3 Unique Styles </h2>
         { carousel 
         ? <Carousel

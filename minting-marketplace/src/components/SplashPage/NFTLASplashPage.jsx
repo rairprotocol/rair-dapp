@@ -59,7 +59,7 @@ const NFTLASplashPage = ({ loginDone }) => {
 
   const formHyperlink = () => {
     window.open(
-      'https://placekitten.com/g/200/300'
+      'https://placekitten.com/200/300'
     );  
   }
 
