@@ -70,10 +70,9 @@
 
 
 .template-author-card .text-splash .title-splash h3.text-gradient-template {
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     font-size: 5vw;
     font-weight: 700;
+    z-index: 10;
 }
 
 
@@ -359,5 +358,15 @@
     }
 }
 
+@media screen and (max-width: 430px) {
+    .template-author-card {
+        background-position: center 22vw;
+        padding: 5vw 0 5vw 0;
+        height: 112vw;
+    }
 
-
+    .template-author-card .text-splash .btn-submit-with-form button {
+        width: 45vw;
+        margin-top: 2.5vw;
+    }
+}
