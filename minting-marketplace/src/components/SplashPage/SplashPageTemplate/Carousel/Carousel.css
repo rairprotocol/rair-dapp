@@ -24,7 +24,7 @@
 .carousel-container .carousel-list{
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: 100%;
     flex-wrap: nowrap;
     align-content: space-between;
     justify-content: space-around;
@@ -38,8 +38,8 @@
 
 
 .carousel-container .join-pic-img{
-    width: 22vw;
-    height: 22vw;
+    width: 21vw;
+    height: 21vw;
     border-radius: 16px;
 }
 
@@ -51,6 +51,11 @@
 @media screen and (max-width: 1100px) {
     .carousel-container .carousel-title{
         text-align: center;
+    }
+
+    .carousel-container .join-pic-img{
+        width: 19vw;
+        height: 19vw;
     }
 }
 
