@@ -5,7 +5,7 @@ import "react-multi-carousel/lib/styles.css";
 const MobileCarouselNfts = (props) => {
     const responsive = {
         mobile: {
-            breakpoint: { max: 600, min: 0 },
+            breakpoint: { max: 750, min: 0 },
             items: 1,
         },
     };
