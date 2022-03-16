@@ -391,7 +391,7 @@ function App({ sentryHistory }) {
 									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
 									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
                   { name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
-									{ name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: diamondMarketplaceInstance === undefined }
+									{ name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone }
 								].map((item, index) => {
 									if (!item.disabled) {
 										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -501,7 +501,7 @@ function App({ sentryHistory }) {
                         {
                           path: '/admin/transferNFTs',
                           content: <TransferTokens />,
-                          constraint: loginDone && !creatorViewsDisabled && diamondMarketplaceInstance !== undefined
+                          constraint: loginDone && !creatorViewsDisabled
                         }
 
                         

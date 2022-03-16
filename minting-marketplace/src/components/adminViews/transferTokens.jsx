@@ -37,7 +37,7 @@ const TransferTokens = () => {
 		if (response.success) {
 			setUserContracts(response.contracts.map(item => {
 				return {
-					label: item.title,
+					label: `${item.title} (${item.diamond ? 'Diamond' : 'Classic'})`,
 					value: `/network/${item.blockchain}/${item.contractAddress}`
 				}
 			}));
@@ -61,7 +61,7 @@ const TransferTokens = () => {
 			if (response2.success) {
 				setContractProducts(response2.products.map(item => {
 					return {
-						label: item.name,
+						label: `${item.name}`,
 						value: item.collectionIndexInContract
 					}
 				}));
@@ -178,7 +178,7 @@ const TransferTokens = () => {
 			<div className='col-12 col-md-6'>
 				{contractInstance &&
 					<button
-						disabled={currentChain !== contractBlockchain.chainId}
+						disabled={currentChain !== contractBlockchain.chainId || traderRole}
 						className='btn btn-royal-ice'
 						onClick={async () => {
 							Swal.fire({
@@ -187,7 +187,7 @@ const TransferTokens = () => {
 								icon: 'info',
 								showConfirmButton: false
 							});
-							if (await metamaskCall(contractInstance.approve(currentUserAddress, tokenId))) {
+							if (await metamaskCall(contractInstance.grantRole(await contractInstance.TRADER(), currentUserAddress))) {
 								Swal.fire({
 									title: 'Success',
 									html: 'Role granted',
@@ -210,7 +210,12 @@ const TransferTokens = () => {
 							icon: 'info',
 							showConfirmButton: false
 						});
-						if (await metamaskCall(contractInstance['safeTransferFrom(address,address,uint256)'](utils.getAddress(currentUserAddress), utils.getAddress(targetAddress), tokenId))) {
+						
+						if (await metamaskCall(contractInstance['safeTransferFrom(address,address,uint256)'](
+							utils.getAddress(currentUserAddress),
+							utils.getAddress(targetAddress),
+							tokenId
+						))) {
 							Swal.fire({
 								title: 'Please wait',
 								html: 'Token sent',
