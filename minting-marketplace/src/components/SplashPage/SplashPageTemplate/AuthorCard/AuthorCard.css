@@ -55,8 +55,13 @@
     margin-bottom: 0px;
 }
 
+.template-author-card .text-splash h3 {
+    margin-bottom: 0px;
+}
+
 
 .template-author-card .text-splash .title-splash h3.text-gradient {
+    background: none;
     font-size: 5vw;
     /* margin-top: 7rem; */
     margin-top: 0;

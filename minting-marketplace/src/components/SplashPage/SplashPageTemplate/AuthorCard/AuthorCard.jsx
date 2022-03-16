@@ -3,7 +3,7 @@ import DocumentIcon from "../../../../images/documentIcon.svg";
 import './AuthorCard.css'
 
 const AuthorCard = ({ formHyperlink, splashData }) => {
-  const {title, description, backgroundImage, buttonColor, buttonLabel} = splashData
+  const {title, titleColor, description, backgroundImage, buttonColor, buttonLabel} = splashData
     return (
         <div 
             className="template-author-card"
@@ -12,7 +12,12 @@ const AuthorCard = ({ formHyperlink, splashData }) => {
             <div className="block-splash">
             <div className="text-splash">
               <div className="title-splash">
-                <h3 className="text-gradient">
+                <h3 
+                className="text-gradient"
+                style={{
+                  color: titleColor
+                }}
+                >
                   {title}
                 </h3>
               </div>

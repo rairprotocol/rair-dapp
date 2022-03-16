@@ -23,6 +23,7 @@ import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
 
 const splashData = {
   title: "#nftla",
+  titleColor: "#A4396F",
   description: "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams",
   backgroundImage: NFTLA1_rounded,
   buttonColor: "#A4396F",
@@ -31,15 +32,15 @@ const splashData = {
   carouselData: [
     {
       title: "Horizon",
-      img: NFTLA1
-    },
-    {
-      title: "Dark",
       img: NFTLA2
     },
     {
-      title: "Palm",
+      title: "Dark",
       img: NFTLA3
+    },
+    {
+      title: "Palm",
+      img: NFTLA1
     }
   ]
 }
@@ -58,8 +59,7 @@ const NFTLASplashPage = ({ loginDone }) => {
 
   const formHyperlink = () => {
     window.open(
-      'https://docs.google.com/forms/d/e/1FAIpQLSeSoeMejqA_DntWIJTcJQA4UbWSSUaYfXrj4hFKPPkyzDuByw/viewform',
-      '_blank'
+      'https://placekitten.com/g/200/300'
     );  
   }
 
@@ -68,7 +68,7 @@ const NFTLASplashPage = ({ loginDone }) => {
       <div className="home-splash-page">
         <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
         <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
-        <TeamMeet primaryColor={primaryColor} arraySplash={"immersiverse"} />
+        <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 
       </div>
     </div>
