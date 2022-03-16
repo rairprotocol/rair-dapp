@@ -13,9 +13,9 @@ const AuthorCard = ({ formHyperlink, splashData }) => {
             <div className="text-splash">
               <div className="title-splash">
                 <h3 
-                className="text-gradient"
+                className="text-gradient-template"
                 style={{
-                  color: titleColor
+                  backgroundColor: titleColor
                 }}
                 >
                   {title}

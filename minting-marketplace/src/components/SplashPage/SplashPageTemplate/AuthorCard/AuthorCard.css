@@ -60,12 +60,11 @@
 }
 
 
-.template-author-card .text-splash .title-splash h3.text-gradient {
-    background: none;
+.template-author-card .text-splash .title-splash h3.text-gradient-template {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     font-size: 5vw;
-    /* margin-top: 7rem; */
-    margin-top: 0;
-    padding-bottom: 2vw;
+    font-weight: 700;
 }
 
 
@@ -206,7 +205,7 @@
         margin-bottom: 0;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template{
         display: flex;
         justify-content: center;
         align-items: center;
@@ -253,7 +252,7 @@
         height: 95vw;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template{
         margin-bottom: 50vw;
         font-size: 11vw !important;
         height: 11vw;
@@ -286,7 +285,7 @@
         height: 100vw;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template{
         font-size: 11vw !important;
         height: 11vw;
         margin-top: 2vw;
@@ -313,7 +312,7 @@
         background-position: center 23vw;
         background-size: 40vw auto;
     }
-    .template-author-card .text-splash .title-splash h3.text-gradient{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template{
         margin-bottom: 50vw;
         font-size: 12vw !important;
         height: 12vw;
@@ -328,7 +327,7 @@
         height: 110vw;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template{
         margin-bottom: 55vw;
     }
 
