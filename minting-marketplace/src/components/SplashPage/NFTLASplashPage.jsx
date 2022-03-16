@@ -15,7 +15,7 @@ import TeamMeet from "./TeamMeet/TeamMeetList";
 import AuthorCard from "./SplashPageTemplate/AuthorCard/AuthorCard";
 import setTitle from '../../utils/setTitle';
 import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
-import Carousel from "./SplashPageTemplate/Carousel/Carousel";
+import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -67,7 +67,7 @@ const NFTLASplashPage = ({ loginDone }) => {
     <div className="wrapper-splash-page">
       <div className="home-splash-page">
         <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
-        <Carousel carousel={!carousel} carouselData={splashData.carouselData}/>
+        <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"immersiverse"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 
       </div>

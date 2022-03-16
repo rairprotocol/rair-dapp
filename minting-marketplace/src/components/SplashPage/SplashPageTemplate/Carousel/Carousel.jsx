@@ -1,5 +1,5 @@
-import MobileCarouselNfts from "../../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts"
 import './Carousel.css'
+import Carousel from "react-multi-carousel"
 
 const CarouselListItem = (props) => {
     const {carouselItemTitle, carouselItemImg} = props
@@ -29,15 +29,30 @@ const CarouselItem = (props) => {
     )
 }
 
-const Carousel = (props) => {
+const CarouselModule = (props) => {
     const {carousel, carouselData} = props
+
+    const responsive = {
+        mobile: {
+            breakpoint: { max: 600, min: 0 },
+            items: 1,
+        },
+    };
+
+
     return (
         <div className="carousel-container" style={{marginTop: "80px"}}>
         <h2 className="carousel-title"> 3 Unique Styles </h2>
         { carousel 
-        ? <MobileCarouselNfts> 
+        ? <Carousel
+            showDots={true}
+            infinite={true}
+            responsive={responsive}
+            >
             {carouselData.map(row => <CarouselItem carouselItemTitle={row.title} carouselItemImg={row.img}/>)} 
-            </MobileCarouselNfts>
+        </Carousel>
+
+            
         : <div className="carousel-list">
             {carouselData.map(row => <CarouselListItem carouselItemTitle={row.title} carouselItemImg={row.img}/>)} 
             </div>
@@ -46,4 +61,4 @@ const Carousel = (props) => {
     )
 }
 
-export default Carousel;
+export default CarouselModule;

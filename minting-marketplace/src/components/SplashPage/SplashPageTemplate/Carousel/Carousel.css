@@ -61,9 +61,12 @@
 
 
 @media screen and (max-width: 1000px) {
+    .carousel-container {
+        width: 100%;
+    }
     .carousel-container .join-pic-img {
-        width: 190px;
-        height: 190px;
+        width: 30vw;
+        height: 30vw;
     }
 
     .carousel-container .carousel-list {

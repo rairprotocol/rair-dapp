@@ -5,7 +5,7 @@ import "react-multi-carousel/lib/styles.css";
 const MobileCarouselNfts = (props) => {
     const responsive = {
         mobile: {
-            breakpoint: { max: 750, min: 0 },
+            breakpoint: { max: 600, min: 0 },
             items: 1,
         },
     };
@@ -13,7 +13,6 @@ const MobileCarouselNfts = (props) => {
     return (
         <div className="nft-select-mobile">
             <Carousel
-                itemWidth={"600px"}
                 showDots={true}
                 infinite={true}
                 responsive={responsive}
