@@ -5,13 +5,14 @@
     flex-direction: column;
     width: 100%;
     margin: 7vw 0;
+    align-items: center;
 }
 
 .carousel-container .carousel-title{
     margin-bottom: 4vw;
     text-align: left;
     font-weight: 500;
-    font-size: 3vw;
+    font-size: 4vw;
 }
 
 .carousel-container .carousel-items{
@@ -31,7 +32,7 @@
 }
 
 .carousel-container .carousel{
-    width: 60%
+    width: 80%
 }
 
 
@@ -53,14 +54,21 @@
     }
 }
 
-@media screen and (max-width: 600px) {
 
-    .carousel-container {
-        align-items: center;
+@media screen and (max-width: 750px) {
+
+    .carousel-container .join-pic-img{
+        width: 35vw;
+        height: 35vw;
     }
-    
+
+    .carousel-container .carousel-items{
+        font-size: 3.5vw;
+    }
+
+    .carousel-container .carousel-title{
+        font-size: 5vw;
+    }
 }
-
-
 
 

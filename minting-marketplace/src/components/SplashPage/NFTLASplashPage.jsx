@@ -48,7 +48,7 @@ const splashData = {
 
 const NFTLASplashPage = ({ loginDone }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const carousel_match = window.matchMedia('(min-width: 600px)')
+  const carousel_match = window.matchMedia('(min-width: 750px)')
   const [carousel, setCarousel] = useState(carousel_match.matches)
   window.addEventListener("resize", () => setCarousel(carousel_match.matches))
   
