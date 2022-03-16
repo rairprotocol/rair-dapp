@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-
 import "./SplashPageTemplate/AuthorCard/AuthorCard.css";
 import "./../AboutPage/AboutPageNew/AboutPageNew.css";
 
@@ -9,6 +8,7 @@ import NFTLA1_rounded from './images/NFT-LA-Dig-V01-modified.png';
 import NFTLA1 from './images/NFT-LA-Dig-V01.jpg';
 import NFTLA2 from './images/NFT-LA-Dig-V02.png';
 import NFTLA3 from './images/NFT-LA-Dig-V03.png';
+import NFTLA_Video from "./images/NFT-LA-RAIR-2021.mp4"
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -16,6 +16,7 @@ import AuthorCard from "./SplashPageTemplate/AuthorCard/AuthorCard";
 import setTitle from '../../utils/setTitle';
 import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
 import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
+import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayer";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -29,6 +30,7 @@ const splashData = {
   buttonColor: "#A4396F",
   buttonLabel: "Submit with Form",
   NFTName: "NFT art",
+  video: NFTLA_Video,
   carouselData: [
     {
       title: "Horizon",
@@ -68,6 +70,7 @@ const NFTLASplashPage = ({ loginDone }) => {
       <div className="template-home-splash-page">
         <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
         <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
+        <VideoPlayerModule backgroundImage={splashData.backgroundImage} video={splashData.video}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 
       </div>
