@@ -20,6 +20,53 @@
     }
 }
 
+/* overriding about page */
+
+
+.template-home-splash-page .img-teammate {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.template-home-splash-page .img-teammate img {
+    width: 21vw;
+    height: 21vw;
+}
+
+.template-home-splash-page .splash-team-greyman {
+    margin-bottom: 600px;
+}
+
+@media screen and (max-width: 1100px) {
+    .template-home-splash-page .img-teammate img {
+        width: 24vw;
+        height: 24vw;
+    }
+    
+}
+
+@media screen and (max-width: 900px) {
+    .template-home-splash-page .img-teammate img{
+        width: 384px;
+        height: 384px;
+    }
+
+    .template-home-splash-page .splash-team-greyman {
+        margin-bottom: 750px;
+    }
+}
+@media screen and (max-width: 570px) {
+    .template-home-splash-page .img-teammate img {
+        width: 50vw;
+        height: 50vw;
+    }
+}
+
+
+
+
 /* main block */
 
 .wrapper-splash-page {
@@ -28,7 +75,7 @@
     background-image: none;
 }
 
-.home-splash-page {
+.template-home-splash-page {
     max-width: 90vw;
     display: flex;
     justify-content: center;
@@ -208,7 +255,7 @@
 /* vertical */
 @media screen and (max-width: 1100px) {
 
-    .home-splash-page {
+    .template-home-splash-page {
         padding-left: 7vw;
         align-items: center;
     }
@@ -312,7 +359,7 @@
 
 @media screen and (max-width: 700px) {
 
-    .home-splash-page {
+    .template-home-splash-page {
         padding-left: 0;
         align-items: center;
         max-width: 95vw;
@@ -386,8 +433,9 @@
 @media screen and (max-width: 430px) {
     .template-author-card {
         background-position: center 22vw;
-        padding: 5vw 0 5vw 0;
-        height: 112vw;
+        background-size: 47vw auto;
+        padding: 5vw 0 6vw 0;
+        height: 110vw;
     }
 
     .template-author-card .text-splash .btn-submit-with-form button {

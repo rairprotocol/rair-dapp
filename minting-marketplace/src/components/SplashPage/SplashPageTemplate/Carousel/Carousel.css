@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 7vw 0;
+    margin: 10vw 0;
     align-items: center;
 }
 
@@ -58,8 +58,8 @@
     }
 
     .carousel-container .join-pic-img{
-        width: 19vw;
-        height: 19vw;
+        width: 24vw;
+        height: 24vw;
     }
 }
 
@@ -70,8 +70,26 @@
         margin: 15vw 0;
     }
 
+    .carousel-container .carousel{
+        width: 100%
+    }
+
     .carousel-container .join-pic-img{
-        width: 35vw;
-        height: 35vw;
+        width: 384px;
+        height: 384px;
+    }
+}
+
+
+@media screen and (max-width: 570px) {
+    .carousel-container .join-pic-img{
+        width: 50vw;
+        height: 50vw;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .carousel-container {
+        margin: 20vw 0;
     }
 }

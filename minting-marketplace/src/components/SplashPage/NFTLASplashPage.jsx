@@ -65,7 +65,7 @@ const NFTLASplashPage = ({ loginDone }) => {
 
   return (
     <div className="wrapper-splash-page">
-      <div className="home-splash-page">
+      <div className="template-home-splash-page">
         <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
         <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />
