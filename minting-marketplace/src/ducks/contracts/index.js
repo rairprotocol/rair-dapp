@@ -6,7 +6,7 @@ import {minterAbi, factoryAbi, erc777Abi, diamondFactoryAbi, diamondMarketplaceA
 
 const contractAddresses = {
 	'0x61': { // Binance Testnet
-		factory: '0xb173E2F7eD8Bb697e70b02Ed38faaa2319dB3C23',
+		factory: '0x2b5ed3C018DA72270C3C30003C8d5affdBB9F7f5',
 		erc777: '0x5b01aBE2DCfaa4C9c80ccE87223c8e21D7Fc9845',
 		minterMarketplace: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD',
 		diamondFactory: undefined,
