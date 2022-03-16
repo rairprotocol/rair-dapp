@@ -3,8 +3,9 @@ import { useParams, useHistory } from "react-router-dom";
 import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageTest from "./NftDataPageTest";
 import NftUnlockablesPage from "./NftUnlockablesPage";
+import { useSelector } from 'react-redux';
 
-const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userData) => {
+const NftDataCommonLinkComponent = (userData) => {
   const [tokenData, setTokenData] = useState([]);
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
@@ -16,6 +17,9 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
   const [totalCount, setTotalCount] = useState();
   const [showToken, setShowToken] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { currentUserAddress } = useSelector(store => store.contractStore);
+  const { primaryColor, textColor } = useSelector(store => store.colorStore);
 
   const history = useHistory();
   const params = useParams();
@@ -161,7 +165,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         userData={userData}
         blockchain={blockchain}
         contract={contract}
-        currentUser={currentUser}
+        currentUser={currentUserAddress}
         handleClickToken={handleClickToken}
         onSelect={onSelect}
         offerData={offerData}
@@ -190,7 +194,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         userData={userData}
         blockchain={blockchain}
         contract={contract}
-        currentUser={currentUser}
+        currentUser={currentUserAddress}
         handleClickToken={handleClickToken}
         onSelect={onSelect}
         offerData={offerData}
@@ -213,7 +217,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         userData={userData}
         blockchain={blockchain}
         contract={contract}
-        currentUser={currentUser}
+        currentUser={currentUserAddress}
         handleClickToken={handleClickToken}
         onSelect={onSelect}
         offerData={offerData}
