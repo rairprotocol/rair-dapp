@@ -22,9 +22,9 @@ import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
 //ReactGA.initialize(TRACKING_ID);
 
 const splashData = {
-  title: "#nftla",
+  title: "#NFTLA",
   titleColor: "#A4396F",
-  description: "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams",
+  description: "Connect with Metamask and receive a free airdrop to unlock exclusive encrypted streams!",
   backgroundImage: NFTLA1_rounded,
   buttonColor: "#A4396F",
   buttonLabel: "Submit with Form",
@@ -59,7 +59,7 @@ const NFTLASplashPage = ({ loginDone }) => {
 
   const formHyperlink = () => {
     window.open(
-      'https://placekitten.com/200/300'
+      'https://forms.gle/wWUqQoEgboyHAAvx9'
     );  
   }
 
