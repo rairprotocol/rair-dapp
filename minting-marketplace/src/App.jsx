@@ -47,7 +47,7 @@ import MyItems from './components/nft/myItems';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import {NftDataCommonLink} from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
@@ -60,7 +60,6 @@ import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
 import ReactGA from 'react-ga';
 
-import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 import SplashPage from './components/SplashPage';
 import setTitle from './utils/setTitle';
 
@@ -89,21 +88,21 @@ import AlertMetamask from './components/AlertMetamask/index.jsx';
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
 const analytics = Analytics({
-	app: gAppName,
-	plugins: [
-		googleAnalytics({
-			trackingId: gUaNumber
-		})
-	]
+  app: gAppName,
+  plugins: [
+    googleAnalytics({
+      trackingId: gUaNumber
+    })
+  ]
 })
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
-	return <div className="not-found-page">
-		<h3><span className="text-404">Sorry!</span></h3>
-		<p>An error has ocurred</p>
-	</div>
+  return <div className="not-found-page">
+      <h3><span className="text-404">Sorry!</span></h3>
+      <p>An error has ocurred</p>
+  </div>
 };
 
 function App({ sentryHistory }) {
