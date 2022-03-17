@@ -299,8 +299,8 @@ const SplashPage = ({ loginDone, connectUserData }) => {
     if (!diamondMarketplaceInstance) {
       return;
     }
-    diamondMarketplaceInstance.on('TokenMinted', getAllProduct);
-    return diamondMarketplaceInstance.off('TokenMinted', getAllProduct);
+    diamondMarketplaceInstance.on('MintedToken', getAllProduct);
+    return diamondMarketplaceInstance.off('MintedToken', getAllProduct);
   }, [diamondMarketplaceInstance, getAllProduct])
 
   useEffect(() => {

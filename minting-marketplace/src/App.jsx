@@ -60,6 +60,7 @@ import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
 import ReactGA from 'react-ga';
 
+import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 import SplashPage from './components/SplashPage';
 import setTitle from './utils/setTitle';
 
@@ -456,6 +457,10 @@ function App({ sentryHistory }) {
 											{
 												path: '/immersiverse-splash',
 												content: ImmersiVerseSplashPage
+											},
+											{
+												path: '/nftla-splash',
+												content: NFTLASplashPage
 											},
 											{
 												path: '/greyman-splash',
