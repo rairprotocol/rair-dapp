@@ -32,6 +32,9 @@ module "vault_config" {
 
     # Carquinez house, March 9th, 2022
     "99.47.22.182",
+
+    #Camerford house, March 16th, 2022
+    "172.117.206.216",
   ]
 }
 

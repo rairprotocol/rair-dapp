@@ -13,7 +13,6 @@ const MobileCarouselNfts = (props) => {
     return (
         <div className="nft-select-mobile">
             <Carousel
-                itemWidth={"600px"}
                 showDots={true}
                 infinite={true}
                 responsive={responsive}
