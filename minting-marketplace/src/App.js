@@ -47,7 +47,7 @@ import MyItems from './components/nft/myItems';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import {NftDataCommonLink} from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
@@ -100,8 +100,8 @@ const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
   return <div className="not-found-page">
-      <h3><span className="text-404">Sorry!</span></h3>
-      <p>An error has ocurred</p>
+    <h3><span className="text-404">Sorry!</span></h3>
+    <p>An error has ocurred</p>
   </div>
 };
 
@@ -114,7 +114,7 @@ function App({ sentryHistory }) {
   const [errorAuth, /*setErrorAuth*/] = useState('');
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
-  
+
   // Redux
   const dispatch = useDispatch();
   const {
@@ -152,7 +152,7 @@ function App({ sentryHistory }) {
       dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
       dispatchStack.push({
         type: contractTypes.SET_CHAIN_ID,
-        payload: `0x${ programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase() }`
+        payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
       });
       currentUser = programmaticProvider.address;
     }
@@ -165,7 +165,7 @@ function App({ sentryHistory }) {
 
     try {
       // Check if user exists in DB
-      const { success, user } = await (await fetch(`/api/users/${ currentUser }`)).json();
+      const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
       if (!success || !user) {
         // If the user doesn't exist, send a request to register him using a TEMP adminNFT
         console.log('Address is not registered!');
@@ -339,197 +339,198 @@ function App({ sentryHistory }) {
   }, [primaryColor]);
 
   useEffect(() => {
-    if(!selectedChain) return
+    if (!selectedChain) return
 
-    if(!showAlert){
+    if (!showAlert) {
       setShowAlert(true)
     }
 
   }, [selectedChain]);
 
+  console.log(selectedChain, chainId);
+
   let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
 
-	return (
-	  <Sentry.ErrorBoundary fallback={ErrorFallback}>
-      {selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} setShowAlert={setShowAlert}/> : null}
+  return (
+    <Sentry.ErrorBoundary fallback={ErrorFallback}>
+      {selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} setShowAlert={setShowAlert} /> : null}
       <Router history={sentryHistory}>
-				{/* {currentUserAddress === undefined && !window.ethereum && <Redirect to='/' />} */}
-				  <>
-        		<div
-        			style={{
-        				...backgroundImageEffect,
-        				backgroundSize: '100vw 100vh',
-        				minHeight: '90vh',
-        				position: 'relative',
-        				backgroundColor: `var(--${primaryColor})`,
-        				color: textColor,
-        				backgroundImage: `url(${backgroundImage})`,
-        				backgroundPosition: 'center top',
-        				backgroundRepeat: 'no-repeat',
-        			}}
-        			className="App p-0 container-fluid">
-						<UserProfileSettings
-							errorAuth={errorAuth}
-							adminAccess={adminAccess}
-							primaryColor={primaryColor}
-							currentUserAddress={currentUserAddress}
-							loginDone={loginDone}
-							setLoginDone={setLoginDone}
-						/>
-						<div className='row w-100 m-0 p-0'>
-							{/* <div className='col-1 d-none d-xl-inline-block' /> */}
-							<div className='col-1 rounded'>
-								<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
-									<MainLogo
-										goHome={goHome}
-										sentryHistory={sentryHistory}
-										headerLogoWhite={headerLogoWhite}
-										headerLogoBlack={headerLogoBlack}
-										headerLogo={headerLogo}
-										primaryColor={primaryColor}
-									/>
-								</div>
-								{!loginDone ? <div className='btn-connect-wallet-wrapper'>
-									<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
-										className={`btn btn-${primaryColor} btn-connect-wallet`}
-										onClick={connectUserData}>
-										{startedLogin ? 'Please wait...' : 'Connect Wallet'}
-										{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-									</button>
-									{renderBtnConnect ? <OnboardingButton /> : <> </>}
-								</div> : adminAccess === true && !creatorViewsDisabled && [
-									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
-									{ name: <i className="fas fa-key" />, route: '/my-nft' },
-									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
-									{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
-									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
-									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
-									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
-									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined }
-								].map((item, index) => {
-									if (!item.disabled) {
-										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
-											<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
-												{item.name}
-											</NavLink>
-										</div>
-									}
-									return <div key={index}></div>
-								})}
-							</div>
-							<div className='col'>
-								<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
-									{/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
-									<Switch>
-										<SentryRoute path='/admin' component={BlockChainSwitcher} />
-									</Switch>
-								</div>
-								<div className='col-12 mt-3 row'>
-									<Switch>
-                      {[
-                        // New Creator UI
-                        {
-                          path: '/creator/deploy',
-                          content: <Deploy />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        {
-                          path: '/creator/contracts',
-                          content: <Contracts />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        {
-                          path: '/creator/contract/:blockchain/:address/createCollection',
-                          content: <ContractDetails />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        {
-                          path:'/creator/contract/:blockchain/:address/listCollections',
-                          content: <ListCollections />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        {
-                          path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/',
-                          content: <WorkflowSteps {...{ sentryHistory }} />,
-                          constraint: loginDone && !creatorViewsDisabled,
-                          exact: false
-                        },
-                        // Old Creator UI (Using the Database)
-                        {
-                          path: "/new-factory",
-                          content: <MyContracts />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        {
-                          path: "/on-sale",
-                          content: <MinterMarketplace />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        {
-                          path: "/rair/:contract/:product",
-                          content: <RairProduct />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        // Old Video Upload view
-                        {
-                          path: "/admin",
-                          content: <FileUpload primaryColor={ primaryColor } textColor={ textColor }/>,
-                          constraint: loginDone && !creatorViewsDisabled && adminAccess
-                        },
-                        // Old Metadata Editor
-                        {
-                          path: "/metadata/:blockchain/:contract/:product",
-                          content: <MetadataEditor />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        // Old MyNFTs (database)
-                        {
-                          path: "/my-nft",
-                          content: <MyNFTs />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        // Old Token Viewer (Database)
-                        {
-                          path: "/token/:contract/:identifier",
-                          content: <Token />,
-                          constraint: loginDone && !creatorViewsDisabled
-                        },
-                        // Classic Blockchain Factory
-                        {
-                          path: "/factory",
-                          content: <CreatorMode />,
-                          constraint: loginDone && !creatorViewsDisabled && factoryInstance !== undefined
-                        },
-                        // Classic Blockchain Minter Marketplace
-                        {
-                          path: "/minter",
-                          content: <ConsumerMode />,
-                          constraint: loginDone && !creatorViewsDisabled && minterInstance !== undefined
-                        },
-                        // Diamond Marketplace
-                        {
-                          path: '/diamondMinter',
-                          content: <DiamondMarketplace />,
-                          constraint: loginDone && !creatorViewsDisabled && diamondMarketplaceInstance !== undefined
-                        }
-                        /*
-                        */
-                      ].map((item, index) => {
-                        if (item.constraint !== undefined && !item.constraint) {
-                          return;
-                        }
-                        return <SentryRoute
-                          exact={item.exact !== undefined ? item.exact : true}
-                          path={item.path}
-                          render={() => item.content} />
-                      })}
-										<SentryRoute exact path="/about-page">
-											<AboutPageNew
-												primaryColor={primaryColor}
-												headerLogoWhite={headerLogoWhite}
-												headerLogoBlack={headerLogoBlack}
-											/>
-										</SentryRoute>
+        <>
+          <div
+            style={{
+              ...backgroundImageEffect,
+              backgroundSize: '100vw 100vh',
+              minHeight: '90vh',
+              position: 'relative',
+              backgroundColor: `var(--${primaryColor})`,
+              color: textColor,
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundPosition: 'center top',
+              backgroundRepeat: 'no-repeat',
+            }}
+            className="App p-0 container-fluid">
+            <UserProfileSettings
+              errorAuth={errorAuth}
+              adminAccess={adminAccess}
+              primaryColor={primaryColor}
+              currentUserAddress={currentUserAddress}
+              loginDone={loginDone}
+              setLoginDone={setLoginDone}
+            />
+            <div className='row w-100 m-0 p-0'>
+              {/* <div className='col-1 d-none d-xl-inline-block' /> */}
+              <div className='col-1 rounded'>
+                <div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
+                  <MainLogo
+                    goHome={goHome}
+                    sentryHistory={sentryHistory}
+                    headerLogoWhite={headerLogoWhite}
+                    headerLogoBlack={headerLogoBlack}
+                    headerLogo={headerLogo}
+                    primaryColor={primaryColor}
+                  />
+                </div>
+                {!loginDone ? <div className='btn-connect-wallet-wrapper'>
+                  <button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
+                    className={`btn btn-${primaryColor} btn-connect-wallet`}
+                    onClick={connectUserData}>
+                    {startedLogin ? 'Please wait...' : 'Connect Wallet'}
+                    {/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+                  </button>
+                  {renderBtnConnect ? <OnboardingButton /> : <> </>}
+                </div> : adminAccess === true && !creatorViewsDisabled && [
+                  { name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
+                  { name: <i className="fas fa-key" />, route: '/my-nft' },
+                  { name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+                  { name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+                  { name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+                  { name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+                  { name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+                  { name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined }
+                ].map((item, index) => {
+                  if (!item.disabled) {
+                    return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+                      <NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
+                        {item.name}
+                      </NavLink>
+                    </div>
+                  }
+                  return <div key={index}></div>
+                })}
+              </div>
+              <div className='col'>
+                <div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
+                  {/* {currentUserAddress && `Connected with ${currentUserAddress}!`}<br /> */}
+                  <Switch>
+                    <SentryRoute path='/admin' component={BlockChainSwitcher} />
+                  </Switch>
+                </div>
+                <div className='col-12 mt-3 row'>
+                  <Switch>
+                    {[
+                      // New Creator UI
+                      {
+                        path: '/creator/deploy',
+                        content: <Deploy />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      {
+                        path: '/creator/contracts',
+                        content: <Contracts />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      {
+                        path: '/creator/contract/:blockchain/:address/createCollection',
+                        content: <ContractDetails />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      {
+                        path: '/creator/contract/:blockchain/:address/listCollections',
+                        content: <ListCollections />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      {
+                        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/',
+                        content: <WorkflowSteps {...{ sentryHistory }} />,
+                        constraint: loginDone && !creatorViewsDisabled,
+                        exact: false
+                      },
+                      // Old Creator UI (Using the Database)
+                      {
+                        path: "/new-factory",
+                        content: <MyContracts />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      {
+                        path: "/on-sale",
+                        content: <MinterMarketplace />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      {
+                        path: "/rair/:contract/:product",
+                        content: <RairProduct />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      // Old Video Upload view
+                      {
+                        path: "/admin",
+                        content: <FileUpload primaryColor={primaryColor} textColor={textColor} />,
+                        constraint: loginDone && !creatorViewsDisabled && adminAccess
+                      },
+                      // Old Metadata Editor
+                      {
+                        path: "/metadata/:blockchain/:contract/:product",
+                        content: <MetadataEditor />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      // Old MyNFTs (database)
+                      {
+                        path: "/my-nft",
+                        content: <MyNFTs />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      // Old Token Viewer (Database)
+                      {
+                        path: "/token/:contract/:identifier",
+                        content: <Token />,
+                        constraint: loginDone && !creatorViewsDisabled
+                      },
+                      // Classic Blockchain Factory
+                      {
+                        path: "/factory",
+                        content: <CreatorMode />,
+                        constraint: loginDone && !creatorViewsDisabled && factoryInstance !== undefined
+                      },
+                      // Classic Blockchain Minter Marketplace
+                      {
+                        path: "/minter",
+                        content: <ConsumerMode />,
+                        constraint: loginDone && !creatorViewsDisabled && minterInstance !== undefined
+                      },
+                      // Diamond Marketplace
+                      {
+                        path: '/diamondMinter',
+                        content: <DiamondMarketplace />,
+                        constraint: loginDone && !creatorViewsDisabled && diamondMarketplaceInstance !== undefined
+                      }
+                      /*
+                      */
+                    ].map((item, index) => {
+                      if (item.constraint !== undefined && !item.constraint) {
+                        return;
+                      }
+                      return <SentryRoute
+                        exact={item.exact !== undefined ? item.exact : true}
+                        path={item.path}
+                        render={() => item.content} />
+                    })}
+                    <SentryRoute exact path="/about-page">
+                      <AboutPageNew
+                        primaryColor={primaryColor}
+                        headerLogoWhite={headerLogoWhite}
+                        headerLogoBlack={headerLogoBlack}
+                      />
+                    </SentryRoute>
                     <SentryRoute exact path='/'>
                       <div className='col-6 text-left'>
                         <h1 className='w-100' style={{ textAlign: 'left' }}>
@@ -548,15 +549,15 @@ function App({ sentryHistory }) {
                     <SentryRoute path='/all'>
                       <MockUpPage primaryColor={primaryColor} textColor={textColor} />
                     </SentryRoute>
-                    {loginDone && <SentryRoute exact path="/my-items"> 
-                      <MyItems goHome={ goHome }/>
-                    </SentryRoute> }
-										
-										<SentryRoute exact path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
-											<NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute>
-										<SentryRoute exact path="/coming-soon" component={ComingSoon} />
-										<SentryRoute exact path="/coming-soon-nutcrackers" component={ComingSoonNut} />
+                    {loginDone && <SentryRoute exact path="/my-items">
+                      <MyItems goHome={goHome} />
+                    </SentryRoute>}
+
+                    <SentryRoute exact path='/:adminToken/:blockchain/:contract/:product/:offer/:token'>
+                      <NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+                    </SentryRoute>
+                    <SentryRoute exact path="/coming-soon" component={ComingSoon} />
+                    <SentryRoute exact path="/coming-soon-nutcrackers" component={ComingSoonNut} />
 
                     {/*
                       Iterate over any splash page and add the connect user data function
@@ -581,43 +582,43 @@ function App({ sentryHistory }) {
                         },
                       ].map((item, index) => {
                         return <SentryRoute exact path={item.route}>
-                          <item.component {...{connectUserData}}/>
+                          <item.component {...{ connectUserData }} />
                         </SentryRoute>
                       })
                     }
-                    
-										<SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
-										<SentryRoute exact path="/terms-use" component={TermsUse} />
-										<SentryRoute exact path="/thankyou" component={ThankYouPage} />
+                    <SentryRoute exact path="/privacy" component={PrivacyPolicy} />
 
-										<SentryRoute exact path='/:tokens/:blockchain/:contract/:product/:tokenId'>
-											<NftDataCommonLink userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute>
+                    <SentryRoute exact path="/terms-use" component={TermsUse} />
+                    <SentryRoute exact path="/thankyou" component={ThankYouPage} />
 
-										<SentryRoute exact path='/:collection/:blockchain/:contract/:product/:tokenId'>
-											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute>
+                    <SentryRoute exact path='/:tokens/:blockchain/:contract/:product/:tokenId'>
+                      <NftDataCommonLink userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+                    </SentryRoute>
 
-										<SentryRoute exact path='/:unlockables/:blockchain/:contract/:product/:tokenId'>
-											<NftDataCommonLink  userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
-										</SentryRoute>
+                    <SentryRoute exact path='/:collection/:blockchain/:contract/:product/:tokenId'>
+                      <NftDataCommonLink userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+                    </SentryRoute>
 
-										<SentryRoute exact path="/notifications" component={ NotificationPage }/>
+                    <SentryRoute exact path='/:unlockables/:blockchain/:contract/:product/:tokenId'>
+                      <NftDataCommonLink userData={userData} currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />
+                    </SentryRoute>
 
-										<SentryRoute path="/watch/:videoId/:mainManifest" component={ VideoPlayer }/>
-										<SentryRoute path="" component={NotFound} />
-									</Switch>
-								</div>
-							</div>
-						</div>
-						{/* <div className='py-5' /> */}
-		        </div>
-						<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
-					</>
-				</Router>
-			</Sentry.ErrorBoundary>
-	);
+                    <SentryRoute exact path="/notifications" component={NotificationPage} />
+
+                    <SentryRoute path="/watch/:videoId/:mainManifest" component={VideoPlayer} />
+                    <SentryRoute path="" component={NotFound} />
+                  </Switch>
+                </div>
+              </div>
+            </div>
+            {/* <div className='py-5' /> */}
+          </div>
+          <Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
+        </>
+      </Router>
+    </Sentry.ErrorBoundary>
+  );
 }
 
 export default App;

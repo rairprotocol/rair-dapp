@@ -2,7 +2,7 @@
   "name": "frontend-minting-marketplace",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://rairnode:5000",
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "@analytics/google-analytics": "^0.5.3",
     "@emotion/react": "^11.5.0",

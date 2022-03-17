@@ -5,6 +5,8 @@ import Teammate_3 from '../images/south-dig.png';
 import Teammate_4 from '../images/rair-block.png';
 import Teammate_5 from '../images/movementontheground.png';
 import Teammate_6 from '../images/immersiverse_logo.png';
+import NFTLA_ICON from '../images/NFTLA_icon.png'
+import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
 import Teammate from './Teammate';
 import GreymanAuthor from '../images/greymanAuthor.png';
@@ -470,6 +472,65 @@ const teamGreymanArray = [
     }
 ];
 
+const teamNFTLAarray = [
+    {   
+        chain: '',
+        nameTeammate: "NFT LA",
+        imageUrl: NFTLA_ICON,
+        aboutTeammate: [
+            `NFT | LA is an integrated conference experience: an epic IRL conference fused with an immersive Metaverse integrations and L.A's robust nightlife scene. Explore the city of angels and journey into its new role as a global conduit for the adoption of web3 in of sports, music, art, and entertainment.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://www.nftla.live/',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+
+    {   
+        chain: '',
+        nameTeammate: "The Crypto Company",
+        imageUrl: TCC_ICON,
+        aboutTeammate: [
+            "The future will be powered by truth, not only trust. As one of the first public companies in the blockchain sector (OTC: CRCW), we are proud to comply with even higher standards of accountability and governance. Our mission is to build, grow and guide how institutions, entrepreneurs and investors can seamlessly enable a bold new world of blockchain-powered truth, trust and prosperity."
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://www.thecryptocompany.com/',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+
+    {
+        chain: ``,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content. Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
 const teamImmersiverseArray = [
     {   
         chain: '',
@@ -616,6 +677,26 @@ const GreyManTeamComponent = ({ primaryColor }) => {
     )
 }
 
+const NFTLATeamComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamNFTLAarray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
 const ImmersiVerseTeamComponent = ({ primaryColor }) => {
     return (
         <div className="splash-team-greyman">
@@ -688,6 +769,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                     arraySplash === "immersiverse" && <h3>About</h3>
                 }
                 {
+                    arraySplash === "NFTLA" && <h3>About</h3>
+                }
+                {
                     arraySplash === "rair" && <h3>Meet the <span className="text-gradient">Team</span></h3>
                 }
                 {
@@ -703,6 +787,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                 }
                 {
                     arraySplash === "immersiverse" && <ImmersiVerseTeamComponent primaryColor={primaryColor} />
+                }
+                {
+                    arraySplash === "NFTLA" && <NFTLATeamComponent primaryColor={primaryColor} />
                 }
                 {
                     arraySplash === "nipsey" && <NipseyTeamComponent primaryColor={primaryColor} />
