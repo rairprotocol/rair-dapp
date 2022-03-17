@@ -16,3 +16,7 @@ terraform {
 
 provider "cloudflare" {
 }
+
+resource "cloudflare_zone" "rair-tech" {
+    zone = "rair.tech"
+}
