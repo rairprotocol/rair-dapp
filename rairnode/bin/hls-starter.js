@@ -27,13 +27,11 @@ module.exports = async () => {
     // don't use it yet, we'll switch over to this later
     try {
       const vaultToken = vaultAppRoleTokenManager.getToken();
-      console.log('vaultToken', vaultToken);
-
       const vaultRes = await vaultKeyManager.read({
         secretName: mediaId,
         vaultToken
       });
-      console.log('vault res success', vaultRes);
+      // console.log('vault res success', vaultRes);
 
     } catch(err) {
       // swallow error for now
