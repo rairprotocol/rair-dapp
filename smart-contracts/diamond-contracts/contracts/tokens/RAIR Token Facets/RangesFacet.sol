@@ -29,6 +29,11 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		_;
 	}
 
+	modifier collectionExists(uint collectionId) {
+		require(s.products.length > collectionId, "RAIR ERC721 Ranges: Collection does not exist");
+		_;
+	}
+
 	function rangeToProduct(uint rangeIndex_) public view rangeExists(rangeIndex_) returns (uint) {
 		return s.rangeToProduct[rangeIndex_];
 	}
@@ -42,10 +47,9 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		return s.ranges[rangeId].lockedTokens > 0;
 	}
 
-	function productRangeInfo(uint productId, uint rangeIndex) external view returns(range memory data) {
-		require(s.products.length > productId, "RAIR ERC721 Ranges: Product does not exist");
-		require(s.products[productId].rangeList.length > rangeIndex, "RAIR ERC721 Ranges: Invalid range index");
-		data = s.ranges[s.products[productId].rangeList[rangeIndex]];
+	function productRangeInfo(uint collectionId, uint rangeIndex) external view collectionExists(collectionId) returns(range memory data) {
+		require(s.products[collectionId].rangeList.length > rangeIndex, "RAIR ERC721 Ranges: Invalid range index");
+		data = s.ranges[s.products[collectionId].rangeList[rangeIndex]];
 	}
 
 	function updateRange(uint rangeId, string memory name, uint price_, uint tokensAllowed_, uint lockedTokens_) public rangeExists(rangeId) onlyRole(CREATOR) {
@@ -76,7 +80,15 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		return true;
 	}
 	
-	function _createRange(uint productId_, uint rangeStart_, uint rangeEnd_, uint price_, uint tokensAllowed_, uint lockedTokens_, string memory name_) internal {
+	function _createRange(
+		uint productId_,
+		uint rangeStart_,
+		uint rangeEnd_,
+		uint price_,
+		uint tokensAllowed_,
+		uint lockedTokens_,
+		string memory name_
+	) internal {
 		require(price_ >= 100, "RAIR ERC721: Minimum price allowed is 100 wei");
 		require(rangeStart_ <= rangeEnd_, 'RAIR ERC721: Invalid starting or ending token');
 		// Add one because the starting token is included!
@@ -103,19 +115,25 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		emit CreatedRange(productId_, rangeStart_, rangeEnd_, price_, tokensAllowed_, lockedTokens_, name_, rangeIndex);
 	}
 
-	function createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name) external onlyRole(CREATOR) {
-		require(s.products.length > productId, "RAIR ERC721: Product does not exist");
-		_createRange(productId, rangeStart, rangeEnd, price, tokensAllowed, lockedTokens, name);
+	function createRange(
+		uint collectionId,
+		uint rangeStart,
+		uint rangeEnd,
+		uint price,
+		uint tokensAllowed,
+		uint lockedTokens,
+		string calldata name
+	) external onlyRole(CREATOR) collectionExists(collectionId) {
+		_createRange(collectionId, rangeStart, rangeEnd, price, tokensAllowed, lockedTokens, name);
 	}
 
 	function createRangeBatch(
-		uint productId,
+		uint collectionId,
 		rangeData[] calldata data
-	) external onlyRole(CREATOR) {
+	) external onlyRole(CREATOR) collectionExists(collectionId) {
 		require(data.length > 0, "RAIR ERC721: Empty array");
-		require(s.products.length > productId, "RAIR ERC721: Product does not exist");
 		for (uint i = 0; i < data.length; i++) {
-			_createRange(productId, data[i].rangeStart, data[i].rangeEnd, data[i].price, data[i].tokensAllowed, data[i].lockedTokens, data[i].name);
+			_createRange(collectionId, data[i].rangeStart, data[i].rangeEnd, data[i].price, data[i].tokensAllowed, data[i].lockedTokens, data[i].name);
 		}
 	}
 }

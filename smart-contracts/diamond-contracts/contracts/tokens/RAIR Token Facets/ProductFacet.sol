@@ -5,12 +5,12 @@ import './AppStorage.sol';
 
 contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
-	event ProductCreated(uint indexed id, string name, uint startingToken, uint length);
+	event CreatedCollection(uint indexed collectionIndex, string collectionName, uint startingToken, uint collectionLength);
 
 	/// @notice Verifies that the product exists
-	/// @param	productID	Product to verify
-	modifier productExists(uint productID) {
-		require(s.products.length > productID, "RAIR ERC721: Product does not exist");
+	/// @param	collectionId	Collection to verify
+	modifier collectionExists(uint collectionId) {
+		require(s.products.length > collectionId, "RAIR ERC721: Collection does not exist");
 		_;
 	}
 
@@ -30,8 +30,8 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice Wrapper for the validator, searching for the entire product
 	/// @param	find			Address to search
-	/// @param	productIndex	Product to verify
-	function ownsTokenInProduct(address find, uint productIndex) public view productExists(productIndex) returns (bool) {
+	/// @param	productIndex	Collection to verify
+	function ownsTokenInProduct(address find, uint productIndex) public view collectionExists(productIndex) returns (bool) {
 		product storage selectedProduct = s.products[productIndex];
 		return _ownsTokenInsideRange(find, selectedProduct.startingToken, selectedProduct.endingToken);
 	}
@@ -59,11 +59,11 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		return false;
 	}
 
-	function tokenByProduct(uint productIndex_, uint tokenIndex_) public view productExists(productIndex_) returns (uint) {
+	function tokenByProduct(uint productIndex_, uint tokenIndex_) public view collectionExists(productIndex_) returns (uint) {
 		return s.tokensByProduct[productIndex_][tokenIndex_];
 	}
 
-	function productToToken(uint productIndex_, uint tokenIndex_) public view productExists(productIndex_) returns(uint) {
+	function productToToken(uint productIndex_, uint tokenIndex_) public view collectionExists(productIndex_) returns(uint) {
 		return s.products[productIndex_].startingToken + tokenIndex_;
 	}
 
@@ -82,7 +82,7 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		return s.products.length;
 	}
 
-	function getProductInfo(uint productIndex_) external view productExists(productIndex_) returns (product memory) {
+	function getProductInfo(uint productIndex_) external view collectionExists(productIndex_) returns (product memory) {
 		return s.products[productIndex_];
 	}
 
@@ -102,11 +102,11 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	
 	/// @notice	Loops through a range of tokens inside a product and returns the first token without an owner
 	/// @dev	Uses a loop, do not call this from a non-view function!
-	/// @param	productID	Index of the product to search
+	/// @param	collectionId	Index of the product to search
 	/// @param	startingIndex	Index of the product to search
 	/// @param	endingIndex		Index of the product to search
-	function getNextSequentialIndex(uint productID, uint startingIndex, uint endingIndex) public view productExists(productID) returns(uint nextIndex) {
-		product memory currentProduct = s.products[productID];
+	function getNextSequentialIndex(uint collectionId, uint startingIndex, uint endingIndex) public view collectionExists(collectionId) returns(uint nextIndex) {
+		product memory currentProduct = s.products[collectionId];
 		for (uint i = currentProduct.startingToken + startingIndex; i <= currentProduct.startingToken + endingIndex; i++) {
 			if (!_exists(i)) {
 				return i - currentProduct.startingToken;
@@ -118,9 +118,9 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	/// @notice	Loops over the user's tokens looking for one that belongs to a product and a specific range
 	/// @dev	Loops are expensive in solidity, so don't use this in a function that requires gas
 	/// @param	userAddress			User to search
-	/// @param	productIndex		Product to search
-	/// @param	startingToken		Product to search
-	/// @param	endingToken			Product to search
+	/// @param	productIndex		Collection to search
+	/// @param	startingToken		Starting point of search
+	/// @param	endingToken			Ending point of search
 	function hasTokenInProduct(
 				address userAddress,
 				uint productIndex,
@@ -160,6 +160,6 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		newProduct.name = string(_productName);
 		newProduct.mintableTokens = _copies;
 		
-		emit ProductCreated(s.products.length - 1, _productName, lastToken, _copies);
+		emit CreatedCollection(s.products.length - 1, _productName, lastToken, _copies);
 	}
 }
