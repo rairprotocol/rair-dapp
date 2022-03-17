@@ -64,7 +64,7 @@ class VaultKeyManager {
       if(res.status !== 200) {
         throw new Error('Vault received non 200 code while trying to retrive secret!')
       }
-      const { data } = res.data;
+      const { data } = res.data.data;
       return data;
     } catch(err) {
       throw err;
