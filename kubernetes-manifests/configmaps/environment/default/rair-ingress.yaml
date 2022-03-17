@@ -3,13 +3,15 @@ kind: Ingress
 metadata:
   name: rair-ingress
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: "dev-ip"
-    networking.gke.io/managed-certificates: dev-managed-cert
+#CREATE DEDICATED IP ADDRESS -- gcloud compute addresses create $IP-NAME --global
+    kubernetes.io/ingress.global-static-ip-name: $
+    networking.gke.io/managed-certificates: managed-cert
     kubernetes.io/ingress.class: "gce"
     networking.gke.io/v1beta1.FrontendConfig: ssl-redirect
 spec:
   rules:
-  - host: dev.rair.tech
+#Add the host for DNS rules
+  - host: $HOSTNAME
     http:
       paths:
       - path: /*
