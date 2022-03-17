@@ -60,6 +60,66 @@
     border-radius: 16px;
 }
 
+.tutorial-checklist {
+    position: fixed;
+    background: #676767;
+    bottom: 0;
+    left: 0;
+    font-size: 18px;
+    width: 100%;
+    padding: 10px 0;
+    z-index: 2;
+}
+
+.tutorial-checklist .tutorial-close {
+    position: absolute;
+    right: 20px;
+    top: 2px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.tutorial-show-list {
+    position: absolute;
+    right: 80px;
+    top: 2px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.tutorial-checklist .tutorial-close:hover, .tutorial-checklist .tutorial-show-list:hover {
+    color: rgb(231, 130, 213);
+}
+
+.tutorial-checklist h5 {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.tutorial-checklist ul {
+    line-height: 30px;
+    margin: 10px 0 0 0;
+}
+
+.tutorial-checklist ul li a {
+    border-bottom: 1px solid white;
+}
+
+.information-author.greyman-page-author .btn-help {
+    position: absolute;
+    top: 20px;
+    right: 5vw;
+    width: 200px;
+    height: 48px;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+
 @media screen and (max-width: 1300px) {
     .home-splash--page .information-author {
         background-size: 300px auto;
