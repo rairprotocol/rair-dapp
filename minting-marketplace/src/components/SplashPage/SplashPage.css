@@ -38,6 +38,14 @@
     font-weight: 700;
 }
 
+.text-gradient-pink{
+    background: #A4396F;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 45px;
+    font-size: 40px;
+    font-weight: 700;
+}
 
 
 .home-splash-mobile {
