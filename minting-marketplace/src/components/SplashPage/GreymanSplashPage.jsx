@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -103,6 +103,12 @@ const SplashPage = ({ loginDone, connectUserData }) => {
     currentUserAddress,
     currentChain
   } = useSelector((store) => store.contractStore);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({type: 'SET_REAL_CHAIN', payload: GreymanChainId})
+    //eslint-disable-next-line
+  }, []);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
