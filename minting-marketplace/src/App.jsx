@@ -351,7 +351,7 @@ function App({ sentryHistory }) {
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
-			{showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
+			{selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
 			<Router history={sentryHistory}>
 				<div
 					style={{
