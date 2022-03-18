@@ -150,6 +150,14 @@ const SplashPage = ({ loginDone, connectUserData }) => {
       return;
     }
     let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
+    if (!greymanOffer) {
+      Swal.fire({
+        title: "An error has ocurred",
+        html: `Please try again later`,
+        icon: "info",
+      });
+      return;
+    }
     if (greymanOffer) {
       let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
       let nextToken = await metamaskCall(instance.getNextSequentialIndex(
@@ -157,6 +165,14 @@ const SplashPage = ({ loginDone, connectUserData }) => {
         greymanOffer.rangeData.rangeStart,
         greymanOffer.rangeData.rangeEnd
       ));
+      if (!nextToken) {
+        Swal.fire({
+          title: "An error has ocurred",
+          html: `Please try again later`,
+          icon: "info",
+        });
+        return;
+      }
       Swal.fire({
         title: "Please wait...",
         html: `Buying Greyman #${nextToken.toString()}`,
