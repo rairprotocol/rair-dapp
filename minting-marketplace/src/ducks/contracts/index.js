@@ -2,7 +2,7 @@ import * as types from './types';
 
 import * as ethers from 'ethers'
 
-import {minterAbi, factoryAbi, erc777Abi, diamondFactoryAbi, diamondMarketplaceAbi} from '../../contracts';
+import { minterAbi, factoryAbi, erc777Abi, diamondFactoryAbi, diamondMarketplaceAbi } from '../../contracts';
 
 const contractAddresses = {
 	'0x61': { // Binance Testnet
@@ -51,7 +51,8 @@ const InitialState = {
 	currentChain: undefined,
 	currentUserAddress: undefined,
 	programmaticProvider: undefined,
-	contractCreator: undefined
+	contractCreator: undefined,
+	realChain: undefined
 };
 
 export default function userStore(state = InitialState, action) {
@@ -61,7 +62,7 @@ export default function userStore(state = InitialState, action) {
 				let signer;
 				if (window.ethereum) {
 					let provider = new ethers.providers.Web3Provider(window.ethereum);
-					provider.on('debug', ({action, request, response, provider}) => {
+					provider.on('debug', ({ action, request, response, provider }) => {
 						if (process.env.REACT_APP_LOG_WEB3 === 'true') {
 							console.log(response ? 'Receiving response to' : 'Sending request', request.method);
 						}
@@ -80,7 +81,7 @@ export default function userStore(state = InitialState, action) {
 						contractCreator: undefined,
 						diamondFactoryInstance: undefined,
 						diamondMarketplaceInstance: undefined,
-					} 
+					}
 				}
 				const contractCreator = (address, abi) => {
 					if (address) {
@@ -92,7 +93,7 @@ export default function userStore(state = InitialState, action) {
 					...state,
 					currentChain: action.payload,
 					factoryInstance: contractCreator(contractAddresses[action.payload].factory, factoryAbi),
-					minterInstance: contractCreator(contractAddresses[action.payload].minterMarketplace, minterAbi),		
+					minterInstance: contractCreator(contractAddresses[action.payload].minterMarketplace, minterAbi),
 					erc777Instance: contractCreator(contractAddresses[action.payload].erc777, erc777Abi),
 					diamondFactoryInstance: contractCreator(contractAddresses[action.payload].diamondFactory, diamondFactoryAbi),
 					diamondMarketplaceInstance: contractCreator(contractAddresses[action.payload].diamondMarketplace, diamondMarketplaceAbi),
@@ -120,6 +121,11 @@ export default function userStore(state = InitialState, action) {
 				...state,
 				programmaticProvider: action.payload
 			};
+		case types.SET_REAL_CHAIN:
+			return {
+				...state,
+				realChain: action.payload
+			}
 		default:
 			return state;
 	}

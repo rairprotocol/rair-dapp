@@ -80,3 +80,18 @@ const chainData = {
 }
 
 export default chainData;
+
+export const detectBlockchain = (currentChain, realChain) => {
+	console.log(realChain);
+	if(realChain !== undefined && chainData[currentChain]?.chainId !== realChain){
+		return {
+			selectedChain: chainData[currentChain]?.name,
+			realNameChain: chainData[realChain]?.name
+		}
+	}else{
+		return {
+			selectedChain: null,
+			realNameChain: null
+		}
+	}
+}

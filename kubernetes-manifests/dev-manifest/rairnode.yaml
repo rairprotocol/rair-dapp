@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode
+  name: rairnode
+spec:
+  ports:
+    - name: "3000"
+      port: 3000
+      targetPort: 3000
+    - name: "5000"
+      port: 5000
+      targetPort: 5000
+  selector:
+    io.kompose.service: rairnode
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode
+  name: rairnode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: rairnode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rair-local: "true"
+        io.kompose.service: rairnode
+    spec:
+      containers:
+        - image: rairtechinc/rairservernode:dev_latest
+          name: rairnode
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credential
+                  key: MONGO_URI
+            - name: GCP_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: rair-manager-key
+                  key: key.json
+            - name: PINATA_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pinata-secret
+                  key: PINATA_SECRET
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET
+          envFrom:
+          - configMapRef:
+              name: rairnode-env
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/src/db
+              name: rairnode-claim0
+            - mountPath: /usr/local/src/bin/Videos
+              name: rairnode-claim1
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always
+      volumes:
+        - name: rairnode-claim0
+          persistentVolumeClaim:
+            claimName: rairnode-claim0
+            readOnly: false
+        - name: rairnode-claim1
+          persistentVolumeClaim:
+            claimName: rairnode-claim1
+            readOnly: false
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode-claim0
+  name: rairnode-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rairnode-claim1
+  name: rairnode-claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+status: {}
+
