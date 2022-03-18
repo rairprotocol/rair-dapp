@@ -39,7 +39,7 @@ ReactGA.initialize(TRACKING_ID);
 
 const customStyles = {
   overlay: {
-    zIndex: "1",
+    zIndex: "3",
   },
   content: {
     top: "50%",
