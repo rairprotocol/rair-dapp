@@ -37,7 +37,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
 
   return (
     <div className="left-tokens greyman-page left-tokens-response ">
-      <div className="block-left-content-greyman">
+      {soldCopies !== undefined && <div className="block-left-content-greyman">
         <div className="block-left-tokens">
           <div
             className="progress-tokens"
@@ -112,7 +112,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
       <div className="left-tokens-content">
         <div className="title-tokens">
           <h3>
@@ -121,7 +121,7 @@ const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
             story
           </h3>
         </div>
-        <div className="tokens-description">
+        <div className={`tokens-description ${soldCopies === undefined && 'w-100'}`}>
           <p
             style={{
               color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,

@@ -3,8 +3,9 @@ import { useParams, useHistory } from "react-router-dom";
 import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageTest from "./NftDataPageTest";
 import NftUnlockablesPage from "./NftUnlockablesPage";
+import { useDispatch, useSelector } from 'react-redux';
 
-const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userData) => {
+const NftDataCommonLinkComponent = (userData) => {
   const [tokenData, setTokenData] = useState([]);
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
@@ -16,11 +17,21 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
   const [totalCount, setTotalCount] = useState();
   const [showToken, setShowToken] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const { currentUserAddress } = useSelector(store => store.contractStore);
+  const { primaryColor, textColor } = useSelector(store => store.colorStore);
 
   const history = useHistory();
   const params = useParams();
 
   const { contract, product, tokenId, blockchain } = params;
+  console.log(blockchain);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_REAL_CHAIN', payload: blockchain })
+    //eslint-disable-next-line
+  }, []);
 
   const getAllProduct = useCallback(async (fromToken, toToken) => {
     setIsLoading(true)
@@ -125,7 +136,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
 
     setProductsFromOffer(response.files);
     setSelectedOfferIndex(tokenData[tokenId]?.offer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain, contract, product, tokenId]);
 
   const onSelect = useCallback(
@@ -161,7 +172,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         userData={userData}
         blockchain={blockchain}
         contract={contract}
-        currentUser={currentUser}
+        currentUser={currentUserAddress}
         handleClickToken={handleClickToken}
         onSelect={onSelect}
         offerData={offerData}
@@ -190,7 +201,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         userData={userData}
         blockchain={blockchain}
         contract={contract}
-        currentUser={currentUser}
+        currentUser={currentUserAddress}
         handleClickToken={handleClickToken}
         onSelect={onSelect}
         offerData={offerData}
@@ -213,7 +224,7 @@ const NftDataCommonLinkComponent = (currentUser, primaryColor, textColor, userDa
         userData={userData}
         blockchain={blockchain}
         contract={contract}
-        currentUser={currentUser}
+        currentUser={currentUserAddress}
         handleClickToken={handleClickToken}
         onSelect={onSelect}
         offerData={offerData}

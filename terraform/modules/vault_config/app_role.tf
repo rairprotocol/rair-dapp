@@ -7,7 +7,7 @@ resource "vault_approle_auth_backend_role" "test_role" {
   role_name      = "test-role"
   
   token_policies = [
-    vault_policy.primary.name
+    vault_policy.key_storage_admin.name
   ]
   
   bind_secret_id = true
@@ -20,5 +20,7 @@ resource "vault_approle_auth_backend_role" "test_role" {
   # (Optional) If set, specifies blocks of IP addresses which can perform the login operation.
   
   secret_id_num_uses = 0
-  # (Optional) The number of times any particular SecretID can be used to fetch a token from this AppRole, after which the SecretID will expire. A value of zero will allow unlimited uses.
+  # (Optional) The number of times any particular SecretID can be used to fetch a token from this AppRole,
+  # after which the SecretID will expire.
+  # A value of zero will allow unlimited uses.
 }

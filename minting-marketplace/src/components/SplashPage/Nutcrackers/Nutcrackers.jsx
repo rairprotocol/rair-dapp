@@ -3,7 +3,7 @@ import Nuts from '../images/nuts-main.png';
 import Metamask from "../images/metamask_logo.png";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import NftImage from '../images/exclusive-nuts_1.jpeg';
 import Nft_1 from '../images/exclusive-nuts_2.jpeg';
 import Nft_2 from '../images/exclusive-nuts_3.jpeg';
@@ -21,16 +21,23 @@ import { rFetch } from '../../../utils/rFetch.js';
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import Swal from 'sweetalert2';
 
-const Nutcrackers = () => {
+const Nutcrackers = ({ connectUserData }) => {
+    const dispatch = useDispatch();
     const { primaryColor } = useSelector((store) => store.colorStore);
     const [/*percentTokens*/, setPresentTokens] = useState(0);
 
     const leftTokensNumber = 50;
     const wholeTokens = 50;
-    const { minterInstance, contractCreator } = useSelector((store) => store.contractStore);
+    const { currentUserAddress, minterInstance, contractCreator } = useSelector((store) => store.contractStore);
 
     const nutcrackerAddress = '0xF4ca90d4a796f57133c6de47c2261BF237cfF780'.toLowerCase();
     const mintNutcracker = async () => {
+
+        if (!currentUserAddress) {
+            connectUserData();
+            return;
+        }
+
         if (window.ethereum.chainId !== '0x89') {
             web3Switch('0x89');
             return;
@@ -41,15 +48,15 @@ const Nutcrackers = () => {
             let instance = contractCreator(nutcrackerAddress, erc721Abi);
             let nextToken = await instance.getNextSequentialIndex(0, 0, 50);
             Swal.fire({
-              title: 'Please wait...',
-              html: `Buying Nutcracker #${nextToken.toString()}`,
-              icon: 'info',
-              showConfirmButton: false
+                title: 'Please wait...',
+                html: `Buying Nutcracker #${nextToken.toString()}`,
+                icon: 'info',
+                showConfirmButton: false
             });
             let [nutsOffer] = products[0].offers.filter(item => item.offerName === 'Nuts');
             if (!nutsOffer) {
-              Swal.fire('Error', 'An error has ocurred', 'error');
-              return;
+                Swal.fire('Error', 'An error has ocurred', 'error');
+                return;
             }
             if (await metamaskCall(
                 minterInstance.buyToken(
@@ -62,10 +69,15 @@ const Nutcrackers = () => {
                 ),
                 "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
             )) {
-              Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
+                Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
             }
         }
     }
+
+    useEffect(() => {
+        dispatch({ type: 'SET_REAL_CHAIN', payload: '0x89' })
+        //eslint-disable-next-line
+    }, []);
 
     useEffect(() => {
         if (leftTokensNumber <= wholeTokens) {
