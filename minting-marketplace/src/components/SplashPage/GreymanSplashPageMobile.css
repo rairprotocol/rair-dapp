@@ -102,6 +102,7 @@
 .tutorial-checklist ul {
     line-height: 30px;
     margin: 10px 0 0 0;
+    padding: 0 10px;
 }
 
 .tutorial-checklist ul li a {
@@ -253,6 +254,10 @@
         width: 100%;
         padding: 0 20px;
     }
+
+    .left-tokens.greyman-page .tokens-description {
+        padding: 0 20px;
+    }
     
 
     .about-metadata {
@@ -327,6 +332,20 @@
     }
 }
 
+@media screen and (max-width: 720px) {
+    .tutorial-checklist h5 {
+        font-size: 20px;
+    }
+
+    .tutorial-checklist ul li {
+        font-size: 16px;
+    }
+
+    .tutorial-checklist .tutorial-close, .tutorial-checklist .tutorial-show-list {
+        font-size: 24px;
+    }
+}
+
 @media screen and (max-width: 670px) {
     .modal-text-wrapper span {
         width: 100% !important;
@@ -394,6 +413,33 @@
     .wrapper-splash-page.greyman-page .information-author .root-time {
         padding: 10px 15px;
     }
+
+    .information-author.greyman-page-author .btn-help {
+        height: 30px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+        margin: auto;
+    }
+
+    .tutorial-checklist .tutorial-show-list {
+        right: 60px;
+    }
+
+    .tutorial-checklist h5 {
+        font-size: 18px;
+        text-align: left;
+        padding-left: 10px;
+    }
+
+    .tutorial-checklist ul {
+        line-height: 25px;
+        text-align: left;
+    }
+
+    .tutorial-checklist ul li {
+        font-size: 14px;
+    }
 }
 
 @media screen and (max-width: 530px) {
@@ -424,6 +470,20 @@
         justify-content: center;
     }
     
+}
+
+@media screen and (max-width: 430px) {
+    .tutorial-checklist h5 {
+        font-size: 16px;
+    }
+
+    .tutorial-checklist ul li {
+        font-size: 12px;
+    }
+
+    .tutorial-checklist .tutorial-close, .tutorial-checklist .tutorial-show-list {
+        font-size: 20px;
+    }
 }
 
 @media screen and (max-width: 420px) {
@@ -465,6 +525,16 @@
     .swal-img-greyman img.swal2-image{
         height: auto;
         width: 50%;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .tutorial-checklist .tutorial-show-list {
+        right: 45px;
+    }
+
+    .tutorial-checklist .tutorial-close {
+        right: 10px;
     }
 }
 
@@ -541,6 +611,16 @@
         width: 250px;
         height: 48px;
     }
+
+    .tutorial-checklist h5 {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .tutorial-checklist .tutorial-show-list {
+        right: 90%;
+
+    }
 }
 
 @media screen and (max-width: 360px) {
@@ -552,5 +632,9 @@
 @media screen and (max-width: 350px) {
     .information-author.greyman-page-author .btn-buy-metamask {
         width: 100%;
+    }
+
+    .tutorial-checklist ul {
+        line-height: 15px;
     }
 }
