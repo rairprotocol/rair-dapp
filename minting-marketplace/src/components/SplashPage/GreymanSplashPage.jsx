@@ -102,7 +102,6 @@ const SplashPage = ({ loginDone }) => {
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
 
-  //   const history = useHistory();
   const {
     diamondMarketplaceInstance,
     contractCreator,
