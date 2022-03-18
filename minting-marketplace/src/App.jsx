@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, /*Redirect*/ NavLink } from 'react-router-dom';
+import { Router, Switch, Route, /*Redirect*/ NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch.js';
 
@@ -47,7 +47,7 @@ import MyItems from './components/nft/myItems';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import {NftDataCommonLink} from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
@@ -60,7 +60,6 @@ import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
 import ReactGA from 'react-ga';
 
-import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 import SplashPage from './components/SplashPage';
 import setTitle from './utils/setTitle';
 
@@ -83,6 +82,9 @@ import MainLogo from './components/GroupLogos/MainLogo.jsx';
 
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
+import { detectBlockchain } from './utils/blockchainData.js';
+import AlertMetamask from './components/AlertMetamask/index.jsx';
+import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
@@ -102,22 +104,24 @@ const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
 	return <div className="not-found-page">
-			<h3><span className="text-404">Sorry!</span></h3>
-			<p>An error has ocurred</p>
+		<h3><span className="text-404">Sorry!</span></h3>
+		<p>An error has ocurred</p>
 	</div>
 };
 
 function App({ sentryHistory }) {
-
+	const dispatch = useDispatch()
 	const [userData, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	const [errorAuth, /*setErrorAuth*/] = useState('');
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false);
-	
+	const [showAlert, setShowAlert] = useState(true);
+	const { currentChain, realChain } = useSelector(store => store.contractStore);
+	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
+
 	// Redux
-	const dispatch = useDispatch();
 	const {
 		currentUserAddress,
 		minterInstance,
@@ -150,7 +154,7 @@ function App({ sentryHistory }) {
 			dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
 			dispatchStack.push({
 				type: contractTypes.SET_CHAIN_ID,
-				payload: `0x${ programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase() }`
+				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
 			});
 			currentUser = programmaticProvider.address;
 		}
@@ -163,7 +167,7 @@ function App({ sentryHistory }) {
 
 		try {
 			// Check if user exists in DB
-			const { success, user } = await (await fetch(`/api/users/${ currentUser }`)).json();
+			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
 			if (!success || !user) {
 				// If the user doesn't exist, send a request to register him using a TEMP adminNFT
 				console.log('Address is not registered!');
@@ -216,6 +220,7 @@ function App({ sentryHistory }) {
 
 	const goHome = () => {
 		sentryHistory.push(`/`);
+		setShowAlert(false)
 	};
 
 	const openAboutPage = useCallback(() => {
@@ -336,10 +341,20 @@ function App({ sentryHistory }) {
 		}
 	}, [primaryColor]);
 
+	useEffect(() => {
+		if (!selectedChain) return
+
+		if (!showAlert) {
+			setShowAlert(true)
+		}
+		//eslint-disable-next-line
+	}, [selectedChain]);
+
 	let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
+			{selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
 			<Router history={sentryHistory}>
 				<div
 					style={{
@@ -486,7 +501,7 @@ function App({ sentryHistory }) {
 											}
 
 											return <SentryRoute key={index} exact path={isHome ? '/' : item.path}>
-												<item.content {...{connectUserData}}/>
+												<item.content {...{ connectUserData }} />
 											</SentryRoute>
 										})
 									}
@@ -533,7 +548,7 @@ function App({ sentryHistory }) {
 											requirement: loginDone && !creatorViewsDisabled
 										},
 										{
-											path:'/creator/contract/:blockchain/:address/listCollections',
+											path: '/creator/contract/:blockchain/:address/listCollections',
 											content: <ListCollections />,
 											requirement: loginDone && !creatorViewsDisabled
 										},
@@ -564,7 +579,7 @@ function App({ sentryHistory }) {
 										// Old Video Upload view
 										{
 											path: "/admin",
-											content: <FileUpload primaryColor={ primaryColor } textColor={ textColor }/>,
+											content: <FileUpload primaryColor={primaryColor} textColor={textColor} />,
 											requirement: loginDone && !creatorViewsDisabled && adminAccess
 										},
 
@@ -614,7 +629,7 @@ function App({ sentryHistory }) {
 											content: <AboutPageNew
 												headerLogoWhite={headerLogoWhite}
 												headerLogoBlack={headerLogoBlack}
-											/> 
+											/>
 										},
 
 										/*
@@ -626,7 +641,7 @@ function App({ sentryHistory }) {
 										},
 										{
 											path: '/my-items',
-											content: <MyItems goHome={ goHome }/>,
+											content: <MyItems goHome={goHome} />,
 											requirement: loginDone
 										},
 										{
@@ -714,7 +729,7 @@ function App({ sentryHistory }) {
 				</div>
 				<Footer sentryHistory={sentryHistory} openAboutPage={openAboutPage} primaryColor={primaryColor} />
 			</Router>
-			</Sentry.ErrorBoundary>
+		</Sentry.ErrorBoundary>
 	);
 }
 
