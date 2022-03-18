@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { erc721Abi } from '../../contracts/index.js'
 import { rFetch } from '../../utils/rFetch.js';
@@ -71,7 +71,7 @@ const SplashPage = () => {
   const [dataNipsey, setDataNipsey] = useState();
   const [copies, setCopies] = useState();
   const [timerLeft, setTimerLeft] = useState();
-
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const switchEthereumChain = async (chainData) => {
@@ -97,6 +97,11 @@ const SplashPage = () => {
     }
   }
 
+  useEffect(() => {
+    dispatch({ type: 'SET_REAL_CHAIN', payload: '0x1' })
+    //eslint-disable-next-line
+  }, []);
+
   // let params = `scrollbars=no,resizable=no,status=no,location=no,
   //               toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
 
@@ -120,14 +125,14 @@ const SplashPage = () => {
       return;
     }
     if (await metamaskCall(minterInstance.buyToken(
-        products[0].offerPool.marketplaceCatalogIndex,
-        firstPressingOffer.offerIndex,
-        nextToken,
-        {
-          value: firstPressingOffer.price
-        }
-      ), "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!")) {
-      Swal.fire('Success',`Bought token #${nextToken}!`,'success');
+      products[0].offerPool.marketplaceCatalogIndex,
+      firstPressingOffer.offerIndex,
+      nextToken,
+      {
+        value: firstPressingOffer.price
+      }
+    ), "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!")) {
+      Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
     }
   }
 
@@ -151,7 +156,7 @@ const SplashPage = () => {
       use: false
     }))
   }
-  console.log(Object.values(active).every(el => el));
+  // console.log(Object.values(active).every(el => el));
 
   const { primaryColor } = useSelector((store) => store.colorStore);
 

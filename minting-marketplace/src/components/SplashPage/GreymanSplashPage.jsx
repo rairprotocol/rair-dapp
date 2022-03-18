@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -103,6 +103,12 @@ const SplashPage = ({ loginDone, connectUserData }) => {
     currentUserAddress,
     currentChain
   } = useSelector((store) => store.contractStore);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({type: 'SET_REAL_CHAIN', payload: GreymanChainId})
+    //eslint-disable-next-line
+  }, []);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -144,6 +150,14 @@ const SplashPage = ({ loginDone, connectUserData }) => {
       return;
     }
     let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
+    if (!greymanOffer) {
+      Swal.fire({
+        title: "An error has ocurred",
+        html: `Please try again later`,
+        icon: "info",
+      });
+      return;
+    }
     if (greymanOffer) {
       let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
       let nextToken = await metamaskCall(instance.getNextSequentialIndex(
@@ -151,6 +165,14 @@ const SplashPage = ({ loginDone, connectUserData }) => {
         greymanOffer.rangeData.rangeStart,
         greymanOffer.rangeData.rangeEnd
       ));
+      if (!nextToken) {
+        Swal.fire({
+          title: "An error has ocurred",
+          html: `Please try again later`,
+          icon: "info",
+        });
+        return;
+      }
       Swal.fire({
         title: "Please wait...",
         html: `Buying Greyman #${nextToken.toString()}`,
