@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, /*Redirect*/ NavLink } from 'react-router-dom';
+import { Router, Switch, Route, /*Redirect*/ NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch.js';
 
@@ -47,7 +47,7 @@ import MyItems from './components/nft/myItems';
 import MyNFTs from './components/nft/myNFT.jsx';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
-import {NftDataCommonLink} from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
+import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
 import NftDataExternalLink from './components/MockUpPage/NftList/NftData/NftDataExternalLink';
 import NotFound from './components/NotFound/NotFound';
 import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
@@ -84,29 +84,30 @@ import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 import { detectBlockchain } from './utils/blockchainData.js';
 import AlertMetamask from './components/AlertMetamask/index.jsx';
+import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
 const analytics = Analytics({
-  app: gAppName,
-  plugins: [
-    googleAnalytics({
-      trackingId: gUaNumber
-    })
-  ]
+	app: gAppName,
+	plugins: [
+		googleAnalytics({
+			trackingId: gUaNumber
+		})
+	]
 })
 
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
-  return <div className="not-found-page">
-      <h3><span className="text-404">Sorry!</span></h3>
-      <p>An error has ocurred</p>
-  </div>
+	return <div className="not-found-page">
+		<h3><span className="text-404">Sorry!</span></h3>
+		<p>An error has ocurred</p>
+	</div>
 };
 
 function App({ sentryHistory }) {
-
+	const dispatch = useDispatch()
 	const [userData, setUserData] = useState();
 	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
@@ -115,11 +116,9 @@ function App({ sentryHistory }) {
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false);
 	const [showAlert, setShowAlert] = useState(true);
 	const { currentChain, realChain } = useSelector(store => store.contractStore);
-	const {selectedChain, realNameChain} = detectBlockchain(currentChain, realChain);
-	console.log(selectedChain);
+	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
 
 	// Redux
-	const dispatch = useDispatch();
 	const {
 		currentUserAddress,
 		minterInstance,
@@ -218,6 +217,7 @@ function App({ sentryHistory }) {
 
 	const goHome = () => {
 		sentryHistory.push(`/`);
+		setShowAlert(false)
 	};
 
 	const openAboutPage = useCallback(() => {
@@ -344,14 +344,14 @@ function App({ sentryHistory }) {
 		if (!showAlert) {
 			setShowAlert(true)
 		}
-
+		//eslint-disable-next-line
 	}, [selectedChain]);
 
 	let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
 
 	return (
 		<Sentry.ErrorBoundary fallback={ErrorFallback}>
-			{selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
+			{showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
 			<Router history={sentryHistory}>
 				<div
 					style={{
