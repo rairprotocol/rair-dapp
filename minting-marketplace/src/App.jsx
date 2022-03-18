@@ -95,6 +95,9 @@ const analytics = Analytics({
 	]
 })
 
+/* Track a page view */
+analytics.page()
+
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
