@@ -98,6 +98,10 @@ const SplashPage = ({ loginDone }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
+
+  const dappUrl = window.location.host;
+  const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
+
   //   const history = useHistory();
   const {
     diamondMarketplaceInstance,
@@ -315,7 +319,7 @@ const SplashPage = ({ loginDone }) => {
           <ul style={{display: `${purchaseList ? "block" : "none"}`}}>
             <li>1. Make sure you have the
               <a
-                href="#"
+                href={metamaskAppDeepLink}
                 target="_blank"
                 rel="noreferrer"
               > metamask extension </a>
