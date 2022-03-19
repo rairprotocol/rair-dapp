@@ -1,13 +1,8 @@
-locals {
-  rair_market_ttl = 3600
-}
-
 resource "cloudflare_record" "rair_market__coinagenda" {
   zone_id = cloudflare_zone.rair_market.id
   name    = "Coinagenda"
   value   = "95.217.235.127"
   type    = local.record_type.A
-  ttl     = local.rair_market_ttl
 }
 
 resource "cloudflare_record" "rair_market__demo" {
@@ -15,7 +10,6 @@ resource "cloudflare_record" "rair_market__demo" {
   name    = "Demo"
   value   = "34.120.49.144"
   type    = local.record_type.A
-  ttl     = local.rair_market_ttl
 }
 
 resource "cloudflare_record" "rair_market__iverse" {
@@ -23,7 +17,6 @@ resource "cloudflare_record" "rair_market__iverse" {
   name    = "Iverse"
   value   = "34.111.142.112"
   type    = local.record_type.A
-  ttl     = local.rair_market_ttl
 }
 
 resource "cloudflare_record" "rair_market__nipsey" {
@@ -31,7 +24,6 @@ resource "cloudflare_record" "rair_market__nipsey" {
   name    = "Nipsey"
   value   = "34.95.69.25"
   type    = local.record_type.A
-  ttl     = local.rair_market_ttl
 }
 
 # TODO: clarify this one
@@ -42,7 +34,6 @@ resource "cloudflare_record" "rair_market_txt_1" {
   name    = "@v=spf1"
   value   = "include:transmail.net"
   type    = local.record_type.TXT
-  ttl     = local.rair_market_ttl
 }
 
 
