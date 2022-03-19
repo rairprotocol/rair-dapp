@@ -2,8 +2,10 @@ locals {
   rair_tech_base_domain = "rair.tech"
 }
 
-##########################################
-##########################################
+###########################################################
+###########################################################
+###########################################################
+###########################################################
 # A RECORDS
 
 resource "cloudflare_record" "rair_tech__rair_tech" {
@@ -133,8 +135,10 @@ resource "cloudflare_record" "rair_tech__sundance_rair_tech" {
 }
 
 
-##########################################
-##########################################
+###########################################################
+###########################################################
+###########################################################
+###########################################################
 # MX RECORDS
 
 resource "cloudflare_record" "rair_tech__rair_tech_0" {
@@ -177,8 +181,10 @@ resource "cloudflare_record" "rair_tech__rair_tech_4" {
   priority = 10
 }
 
-##########################################
-##########################################
+###########################################################
+###########################################################
+###########################################################
+###########################################################
 # CNAME RECORDS
 
 resource "cloudflare_record" "rair_tech__imap_rair_tech" {
@@ -237,8 +243,10 @@ resource "cloudflare_record" "rair_tech__otfdc2v3j6zt_rair_tech" {
   type    = local.record_type.CNAME
 }
 
-##########################################
-##########################################
+###########################################################
+###########################################################
+###########################################################
+###########################################################
 # TXT RECORDS
 
 resource "cloudflare_record" "rair_tech__rair_tech_txt" {
@@ -262,14 +270,7 @@ resource "cloudflare_record" "rair_tech__rair_tech_txt_1" {
   type    = local.record_type.TXT
 }
 
-resource "cloudflare_record" "rair_tech__rair_tech_txt_2" {
-  zone_id = cloudflare_zone.rair_tech.id
-  name    = local.rair_tech_base_domain
-  value   = ""
-  type    = local.record_type.TXT
-}
-
-resource "cloudflare_record" "rair_tech__rair_tech_txt_3" {
+resource "cloudflare_record" "rair_tech__rair_tech_txt_google_site_verification" {
   zone_id = cloudflare_zone.rair_tech.id
   name    = local.rair_tech_base_domain
   value   = "google-site-verification=t9aSZpWxCZBhS3eflPmB1woxbV9zYcahOeFetkjSiiM"

@@ -26,13 +26,10 @@ resource "cloudflare_record" "rair_market__nipsey" {
   type    = local.record_type.A
 }
 
-# TODO: clarify this one
-# not sure about this format
-# @v=spf1 include:transmail.net ~all
 resource "cloudflare_record" "rair_market_txt_1" {
   zone_id = cloudflare_zone.rair_market.id
-  name    = "@v=spf1"
-  value   = "include:transmail.net"
+  name    = "@"
+  value   = "v=spf1 include:transmail.net ~all"
   type    = local.record_type.TXT
 }
 
