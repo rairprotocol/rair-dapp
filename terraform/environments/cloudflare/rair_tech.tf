@@ -1,5 +1,6 @@
 locals {
   rair_tech_ttl = 3600
+  rair_tech_base_domain = "rair.tech"
 }
 
 ##########################################
@@ -8,7 +9,7 @@ locals {
 
 resource "cloudflare_record" "rair_tech__rair_tech" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "34.149.48.222"
   type    = "A"
   ttl     = local.rair_tech_ttl
@@ -71,7 +72,7 @@ resource "cloudflare_record" "rair_tech__swdd_rair_tech" {
 }
 
 resource "cloudflare_record" "rair_tech__deployment1_rair_tech" {
-  zone_id = cloudflare_zone.rair_market.rair_tech
+  zone_id = cloudflare_zone.rair_market.id
   name    = "deployment1"
   value   = "162.215.226.7"
   type    = "A"
@@ -103,7 +104,7 @@ resource "cloudflare_record" "rair_tech__minter_rair_tech" {
 }
 
 resource "cloudflare_record" "rair_tech__banqminter_rair_tech" {
-  zone_id = cloudflare_zone.rair_market.rair_tech
+  zone_id = cloudflare_zone.rair_market.id
   name    = "banqminter"
   value   = "95.217.235.127"
   type    = "A"
@@ -157,7 +158,7 @@ resource "cloudflare_record" "rair_tech__sundance_rair_tech" {
 
 resource "cloudflare_record" "rair_tech__rair_tech_0" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "aspmx.l.google.com"
   type    = "MX"
   ttl     = local.rair_tech_ttl
@@ -166,7 +167,7 @@ resource "cloudflare_record" "rair_tech__rair_tech_0" {
 
 resource "cloudflare_record" "rair_tech__rair_tech_1" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "alt1.aspmx.l.google.com"
   type    = "MX"
   ttl     = local.rair_tech_ttl
@@ -175,7 +176,7 @@ resource "cloudflare_record" "rair_tech__rair_tech_1" {
 
 resource "cloudflare_record" "rair_tech__rair_tech_2" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "alt2.aspmx.l.google.com"
   type    = "MX"
   ttl     = local.rair_tech_ttl
@@ -184,7 +185,7 @@ resource "cloudflare_record" "rair_tech__rair_tech_2" {
 
 resource "cloudflare_record" "rair_tech__rair_tech_3" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "alt3.aspmx.l.google.com"
   type    = "MX"
   ttl     = local.rair_tech_ttl
@@ -193,7 +194,7 @@ resource "cloudflare_record" "rair_tech__rair_tech_3" {
 
 resource "cloudflare_record" "rair_tech__rair_tech_4" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "alt4.aspmx.l.google.com"
   type    = "MX"
   ttl     = local.rair_tech_ttl
@@ -274,7 +275,7 @@ resource "cloudflare_record" "rair_tech__otfdc2v3j6zt_rair_tech" {
 
 resource "cloudflare_record" "rair_tech__rair_tech_txt" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "atlassian-domain-verification=PpZV7awFb2jgoqpJ3rm0PRBaQ22cOfTR1neO/1pSleFSPTLUmAc7iDTYoYz6xi/K"
   type    = "TXT"
 }
@@ -288,21 +289,21 @@ resource "cloudflare_record" "rair_tech__1522905413783__domainkey_rair_tech" {
 
 resource "cloudflare_record" "rair_tech__rair_tech_txt_1" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "v=spf1 include:transmail.net ~all"
   type    = "TXT"
 }
 
 resource "cloudflare_record" "rair_tech__rair_tech_txt_2" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = ""
   type    = "TXT"
 }
 
 resource "cloudflare_record" "rair_tech__rair_tech_txt_3" {
   zone_id = cloudflare_zone.rair_tech.id
-  name    = "rair.tech"
+  name    = local.rair_tech_base_domain
   value   = "google-site-verification=t9aSZpWxCZBhS3eflPmB1woxbV9zYcahOeFetkjSiiM"
   type    = "TXT"
 }
