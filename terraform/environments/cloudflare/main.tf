@@ -15,3 +15,12 @@ terraform {
 }
 
 provider "cloudflare" {}
+
+locals {
+  record_type = {
+    A: "A",
+    CNAME: "CNAME",
+    MX: "MX",
+    TXT: "TXT"
+  }
+}
