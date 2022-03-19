@@ -272,7 +272,7 @@ resource "cloudflare_record" "rair_tech__otfdc2v3j6zt_rair_tech" {
 ##########################################
 # TXT RECORDS
 
-resource "cloudflare_record" "rair_tech__rair_tech" {
+resource "cloudflare_record" "rair_tech__rair_tech_txt" {
   zone_id = cloudflare_zone.rair_tech.id
   name    = "rair.tech"
   value   = "atlassian-domain-verification=PpZV7awFb2jgoqpJ3rm0PRBaQ22cOfTR1neO/1pSleFSPTLUmAc7iDTYoYz6xi/K"
