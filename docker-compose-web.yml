@@ -97,6 +97,7 @@ services:
       TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
       POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
       ETHERSCAN_GATEWAY: ${etherscan_gateway}
+      BSCSCAN_GATEWAY: ${bscscan_gateway}
       MORALIS_SERVER_TEST: ${moralis_server_test}
       MORALIS_SERVER_MAIN: ${moralis_server_main}
       MORALIS_API_KEY_TEST: ${moralis_api_key_test}
