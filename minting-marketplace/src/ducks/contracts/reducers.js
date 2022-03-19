@@ -28,7 +28,8 @@ const InitialState = {
 	erc777Instance: undefined,
 	currentChain: undefined,
 	currentUserAddress: undefined,
-	programmaticProvider: undefined
+	programmaticProvider: undefined,
+	realChain: undefined
 };
 
 export default function userStore(state = InitialState, action) {
@@ -84,6 +85,11 @@ export default function userStore(state = InitialState, action) {
 				...state,
 				programmaticProvider: action.payload
 			};
+		case types.SET_REAL_CHAIN:
+			return {
+				...state,
+				realChain: action.payload
+			}
 		default:
 			return state;
 	}
