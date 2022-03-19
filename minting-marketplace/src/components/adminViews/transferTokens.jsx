@@ -8,16 +8,13 @@ import { web3Switch } from '../../utils/switchBlockchain';
 import { erc721Abi, diamondFactoryAbi } from '../../contracts';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
-import {utils} from 'ethers';
 
 const TransferTokens = () => {
 	const { currentChain, currentUserAddress, contractCreator } = useSelector(store => store.contractStore);
 
-	const [isCreator, setIsCreator] = useState(false);
-	const [isDiamond, setIsDiamond] = useState(false);
-	const [traderRole, setTraderRole] = useState(false);
+	const [traderRole, setTraderRole] = useState();
 
-	const [contractData, setContractData] = useState();
+	const [, setContractData] = useState();
 
 	const [userContracts, setUserContracts] = useState([]);
 	const [selectedContract, setSelectedContract] = useState('null');
@@ -47,11 +44,11 @@ const TransferTokens = () => {
 	useEffect(getUserContracts, [getUserContracts]);
 
 	const getContractData = useCallback(async () => {
+		setContractInstance();
 		setSelectedProducts('null');
 		setContractProducts([]);
-		setTraderRole(false);
-		setContractInstance();
-
+		setContractBlockchain();
+		setTraderRole();
 		if (selectedContract !== 'null') {
 			let response1 = await rFetch(`/api/contracts/${selectedContract}`);
 			if (response1.success) {
@@ -66,10 +63,14 @@ const TransferTokens = () => {
 					}
 				}));
 			}
-			let selectedBlockchain = selectedContract.split('/')[2];
+			let [,,selectedBlockchain,contractAddress] = selectedContract.split('/');
 			setContractBlockchain(blockchainData[selectedBlockchain]);
+			if (selectedBlockchain === currentChain) {
+				let instance = contractCreator(contractAddress, response1.contract.diamond ? diamondFactoryAbi : erc721Abi);
+				setContractInstance(instance);
+			}
 		}
-	}, [selectedContract]);
+	}, [selectedContract, currentChain, contractCreator]);
 
 	useEffect(getContractData, [getContractData]);
 
@@ -80,20 +81,12 @@ const TransferTokens = () => {
 				setOwnedTokens(response4.result.tokens);
 			}
 		}
-	}, [selectedProduct])
+	}, [selectedProduct, selectedContract])
 
 	useEffect(getProductNFTs, [getProductNFTs]);
 
-	useEffect(() => {
-		if (contractBlockchain && currentChain === contractBlockchain.chainId) {
-			let contractAddress = selectedContract.split('/')[3];
-			let instance = contractCreator(contractAddress, contractData.diamond ? diamondFactoryAbi : erc721Abi);
-			setContractInstance(instance);
-		}
-	}, [currentChain, contractBlockchain, selectedContract]);
-
 	const hasTraderRole = useCallback(async () => {
-		if (contractInstance !== undefined) {
+		if (contractInstance) {
 			const response = await metamaskCall(
 				contractInstance.hasRole(
 					await contractInstance.TRADER(),
@@ -102,7 +95,7 @@ const TransferTokens = () => {
 			)
 			setTraderRole(response);
 		}
-	}, [contractInstance]);
+	}, [contractInstance, currentUserAddress]);
 
 	useEffect(hasTraderRole, [hasTraderRole]);
 
@@ -131,8 +124,8 @@ const TransferTokens = () => {
 		<br/>
 		<hr/>
 		{selectedProduct !== 'null' && <>
-			<div className='col-12'>
-				<br/>
+			<div className='col-12 row'>
+				<div className='col-12'>
 				Your owned tokens:<br />
 				{
 					ownedTokens.map((item, index) => {
@@ -145,23 +138,26 @@ const TransferTokens = () => {
 						</button>
 					})
 				}
-				<br/>
-				<InputField 
-					getter={tokenId}
-					setter={setTokenId}
-					label='Token #'
-					customClass='form-control'
-					labelClass='col-12'
-					type='number'
-				/>
-				<br/>
-				<InputField 
-					getter={targetAddress}
-					setter={setTargetAddress}
-					label='Send to'
-					customClass='form-control'
-					labelClass='col-12'
-				/>
+				</div>
+				<div className='col-12 col-md-6'>
+					<InputField 
+						getter={tokenId}
+						setter={setTokenId}
+						label='Token #'
+						customClass='form-control'
+						labelClass='col-12'
+						type='number'
+					/>
+				</div>
+				<div className='col-12 col-md-6'>
+					<InputField 
+						getter={targetAddress}
+						setter={setTargetAddress}
+						label='Send to'
+						customClass='form-control'
+						labelClass='col-12'
+					/>
+				</div>
 			</div>
 			<br/>
 			<br/>
@@ -172,13 +168,13 @@ const TransferTokens = () => {
 						disabled={currentChain === contractBlockchain.chainId}
 						className='btn btn-royal-ice'
 						onClick={() => web3Switch(contractBlockchain.chainId)}>
-					1.- Switch to {contractBlockchain.name}
+					1.- {currentChain === contractBlockchain.chainId ? 'Connected to' : 'Switch to'} {contractBlockchain.name}
 				</button>}
 			</div>
 			<div className='col-12 col-md-6'>
 				{contractInstance &&
 					<button
-						disabled={currentChain !== contractBlockchain.chainId || traderRole}
+						disabled={currentChain !== contractBlockchain.chainId || traderRole !== false}
 						className='btn btn-royal-ice'
 						onClick={async () => {
 							Swal.fire({
@@ -195,36 +191,45 @@ const TransferTokens = () => {
 								});
 							}
 						}}>
-					2.- Approve your address
+					2.- {traderRole === undefined ?
+							'Querying roles...'
+							:
+							traderRole === true ?
+								'Already have Trader role'
+								:
+								'Grant yourself the Trader role'
+							}
 				</button>}
 			</div>
 			<hr/>
 			<div className='col-12 col-md-12'>
-				<button
-					disabled={currentChain !== contractBlockchain.chainId || !traderRole || targetAddress === ''}
-					className='btn btn-royal-ice'
-					onClick={async () => {
-						Swal.fire({
-							title: 'Please wait',
-							html: `Transferring token to ${targetAddress}`,
-							icon: 'info',
-							showConfirmButton: false
-						});
-						
-						if (await metamaskCall(contractInstance['safeTransferFrom(address,address,uint256)'](
-							currentUserAddress,
-							targetAddress,
-							tokenId
-						))) {
+				{contractInstance &&
+					<button
+						disabled={currentChain !== contractBlockchain.chainId || !traderRole || targetAddress === ''}
+						className='btn btn-royal-ice'
+						onClick={async () => {
 							Swal.fire({
 								title: 'Please wait',
-								html: 'Token sent',
-								icon: 'info'
+								html: `Transferring token to ${targetAddress}`,
+								icon: 'info',
+								showConfirmButton: false
 							});
-						}
-					}}>
-					Transfer #{tokenId} to {targetAddress}
-				</button>
+							
+							if (await metamaskCall(contractInstance['safeTransferFrom(address,address,uint256)'](
+								currentUserAddress,
+								targetAddress,
+								tokenId
+							))) {
+								Swal.fire({
+									title: 'Please wait',
+									html: 'Token sent',
+									icon: 'info'
+								});
+							}
+						}}>
+						Transfer #{tokenId} to {targetAddress}
+					</button>
+				}
 			</div>
 		</>}
 	</div>
