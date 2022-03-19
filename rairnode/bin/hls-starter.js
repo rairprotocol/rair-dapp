@@ -31,7 +31,7 @@ module.exports = async () => {
         secretName: mediaId,
         vaultToken
       });
-      // console.log('vault res success', vaultRes);
+       console.log('vault res success', vaultRes);
 
     } catch(err) {
       // swallow error for now
@@ -39,8 +39,8 @@ module.exports = async () => {
       console.log('========', err)
     }
 
-    const mongoRes = await File.findOne({ _id: mediaId }).toObject();
-    return mongoRes;
+    const mongoRes = await File.findOne({ _id: mediaId });
+    return mongoRes.toObject();
   } 
 
   return HLSServer({
