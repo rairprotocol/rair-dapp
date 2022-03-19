@@ -221,9 +221,9 @@ const TransferTokens = () => {
 								tokenId
 							))) {
 								Swal.fire({
-									title: 'Please wait',
+									title: 'Success',
 									html: 'Token sent',
-									icon: 'info'
+									icon: 'success'
 								});
 							}
 						}}>
