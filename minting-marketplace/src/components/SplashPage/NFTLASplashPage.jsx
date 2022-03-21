@@ -16,7 +16,7 @@ import AuthorCard from "./SplashPageTemplate/AuthorCard/AuthorCard";
 import setTitle from '../../utils/setTitle';
 import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
 import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
-import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayer";
+import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayerModule";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID

@@ -1,6 +1,6 @@
 import playIcon from "../../images/playImg.png";
 import Modal from "react-modal";
-import ReactPlayer from 'react-player'
+import VideoPlayerBySignature from "./VideoPlayerBySignature ";
 import { useState, useCallback } from "react";
 // let subtitle;
 
@@ -84,12 +84,7 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
               NFT LA
             </h2>
             {/* <button onClick={closeModal}>close</button> */}
-            <ReactPlayer 
-                url={video}
-                width="100%"
-                height="100%"
-                controls="true"
-                />
+            <VideoPlayerBySignature mediaAddress={video}/>
           </Modal>
         </>
     ); }
