@@ -134,13 +134,6 @@ resource "cloudflare_record" "rair_tech__sundance_rair_tech" {
   type    = local.record_type.A
 }
 
-resource "cloudflare_record" "rair_tech__nftla_rair_tech" {
-  zone_id = cloudflare_zone.rair_tech.id
-  name    = "nftla"
-  value   = "34.111.149.83"
-  type    = local.record_type.A
-}
-
 
 ###########################################################
 ###########################################################
