@@ -15,7 +15,15 @@ interface IRAIR721 {
 		string rangeName;
 	}
 
+	/// @notice This function returns the information of the selected range
+	/// @param rangeId 		  Contains the specific range that we want to check
+	/// @return data		  Constains the data inside the range
+	/// @return productIndex  Constains the index of the products for the range
 	function rangeInfo(uint rangeId) external view returns(range memory data, uint productIndex);
+	/// @notice This function allow us to mint token from a specific range 
+	/// @param to Contains the address that will mint the token
+    /// @param rangeId Contains the range identification where we want to mint
+	/// @param indexInRange Contains the index inside the range that we want to use for minting 
 	function mintFromRange(address to, uint rangeId, uint indexInRange) external;
 }
 
@@ -23,8 +31,16 @@ interface IRAIR721 {
 /// @title  RAIR Diamond - Minting offers facet
 /// @notice Facet in charge of the minting offers in the RAIR Marketplace
 /// @author Juan M. Sanchez M.
+/// @dev 	Notice that this contract is inheriting from AccessControlAppStorageEnumerableMarket
 contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 
+	/// @notice This event stores in the blockchain when a Minting Offer is Added
+    /// @param  erc721Address Contains the address of the erc721
+    /// @param  rangeindex contains the previous status of the role
+	/// @param  rangeName contains the new status of the role
+	/// @param  price Contains the role we want to update
+    /// @param  feeSplitsLength contains the previous status of the role
+	/// @param  offerIndex contains the new status of the role
 	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, uint offerIndex);
 	event UpdatedMintingOffer(address erc721Address, uint rangeIndex, uint feeSplitsLength, bool visible, uint offerIndex);
 	
@@ -81,6 +97,8 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		return s.mintingOffers.length;
 	}
 
+	/// @param erc721Address Contains the facet addresses and function selectors
+    /// @param rangeIndex Contains the facet addresses and function selectors
 	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (uint offerIndex, mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {
 		mintingOffer memory selectedOffer = s.mintingOffers[s.addressToOffers[erc721Address][rangeIndex]];
 		(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
@@ -88,12 +106,18 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		mintOffer = selectedOffer;
 	}
 
+	/// @param offerindex Contains the facet addresses and function selectors
 	function getOfferInfo(uint offerIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {
 		mintingOffer memory selectedOffer = s.mintingOffers[offerIndex];
 		mintOffer = selectedOffer;
 		(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
 	}
 
+	/// @param erc721Address_ Contains the facet addresses and function selectors
+	/// @param rangeIndex_ Contains the facet addresses and function selectors
+	/// @param splits Contains the facet addresses and function selectors
+	/// @param visible_ Contains the facet addresses and function selectors
+	/// @param nodeAddress_ Contains the facet addresses and function selectors
 	function addMintingOffer(
 		address erc721Address_,
 		uint rangeIndex_,
@@ -104,6 +128,11 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_addMintingOffer(erc721Address_, rangeIndex_, splits, visible_, nodeAddress_);
 	}
 
+	/// @param erc721Address_ Contains the facet addresses and function selectors
+	/// @param rangeIndexes Contains the facet addresses and function selectors
+	/// @param splits Contains the facet addresses and function selectors
+	/// @param visibility Contains the facet addresses and function selectors
+	/// @param nodeAddress_ Contains the facet addresses and function selectors
 	function addMintingOfferBatch(
 		address erc721Address_,
 		uint[] calldata rangeIndexes,
@@ -118,6 +147,11 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		}
 	}
 
+	/// @param erc721Address_ Contains the facet addresses and function selectors
+	/// @param rangeIndex_ Contains the facet addresses and function selectors
+	/// @param splits Contains the facet addresses and function selectors
+	/// @param visible_ Contains the facet addresses and function selectors
+	/// @param nodeAddress_ Contains the facet addresses and function selectors
 	function _addMintingOffer(
 		address erc721Address_,
 		uint rangeIndex_,
@@ -152,6 +186,9 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, s.mintingOffers.length - 1);
 	}
 
+	/// @param mintingOfferId_ Contains the facet addresses and function selectors
+	/// @param splits Contains the facet addresses and function selectors
+	/// @param visible_ Contains the facet addresses and function selectors
 	function updateMintingOffer (
 		uint mintingOfferId_,
 		feeSplits[] memory splits_,
@@ -160,6 +197,9 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_updateMintingOffer(mintingOfferId_, splits_, visible_);
 	}
 
+	/// @param mintingOfferId_ Contains the facet addresses and function selectors
+	/// @param splits Contains the facet addresses and function selectors
+	/// @param visible_ Contains the facet addresses and function selectors
 	function _updateMintingOffer (
 		uint mintingOfferId_,
 		feeSplits[] memory splits_,
@@ -197,6 +237,8 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		);
 	}
 
+	/// @param offerIndex_ Contains the facet addresses and function selectors
+	/// @param tokenIndex_ Contains the facet addresses and function selectors
 	function buyMintingOffer(uint offerIndex_, uint tokenIndex_) public mintingOfferExists(offerIndex_) payable {
 		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
@@ -219,6 +261,9 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndex_, msg.sender);
 	}
 
+	/// @param offerIndex_ Contains the facet addresses and function selectors
+	/// @param tokenIndexes Contains the facet addresses and function selectors
+	/// @param recipients Contains the facet addresses and function selectors
 	function buyMintingOfferBatch(
 		uint offerIndex_,
 		uint[] calldata tokenIndexes,
@@ -250,6 +295,10 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		}
 	}
 
+	/// @param erc721Address Contains the facet addresses and function selectors
+	/// @param rangeIndex Contains the facet addresses and function selectors
+	/// @param tokenIndex Contains the facet addresses and function selectors
+	/// @param recipient Contains the facet addresses and function selectors
 	function _buyMintingOffer(address erc721Address, uint rangeIndex, uint tokenIndex, address recipient) internal {
 		IRAIR721(erc721Address).mintFromRange(recipient, rangeIndex, tokenIndex);
 		emit TokenMinted(erc721Address, rangeIndex, tokenIndex, recipient);

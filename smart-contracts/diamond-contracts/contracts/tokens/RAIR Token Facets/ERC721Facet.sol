@@ -4,6 +4,10 @@ import './AppStorage.sol';
 import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 
+/// @title  This is contract to manage the ERC721 NFT facet 
+/// @notice You can use this contract to administrate ranges, transfers & minting of the tokens
+/// @author Juan M. Sanchez M.
+/// @dev 	Notice that this contract is inheriting from AccessControlAppStorageEnumerable721
 contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	using Address for address;
 
@@ -11,13 +15,32 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant MINTER = keccak256("MINTER");
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 
+	/// @notice This event stores in the blockchain when a product is succesfully finished
+    /// @param  productIndex Contains the position where the product was indexed
 	event ProductCompleted(uint indexed productIndex);
+	/// @notice This event stores in the blockchain when a range is succesfully established
+    /// @param  rangeIndex Contains the position where the range was indexed 
+	/// @param  productIndex Contains the indexed location for the product
 	event RangeCompleted(uint indexed rangeIndex, uint productIndex);
-	
+	/// @notice This event stores in the blockchain when a trading is unlocked
+	/// @param  rangeIndex Contains the position where the range is indexed
+    /// @param  from Containt the date of begining of the range
+	/// @param  to Contain the date of end for the range
 	event TradingUnlocked(uint indexed rangeIndex, uint from, uint to);
-
+	/// @notice This event stores in the blockchain when a trasfer is made
+    /// @param  from Contains the sender of the transaction
+	/// @param  to Contains the destiny address of the transaction
+	/// @param  tokenId Contains the id of the token to transfer
 	event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+	/// @notice This event stores in the blockchain when 
+    /// @param  owner Contains the address of the owner of the tokens
+	/// @param  approved Contains the address of the aproved transaction
+	/// @param 	tokenId Contains the id of the transfered token
 	event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+	/// @notice This event stores in the blockchain when a product is succesfully finished
+    /// @param  owner Contains the role we want to update
+	/// @param  operator Contains the role we want to update
+	/// @param	approved 
 	event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 	
 	function name() public view returns (string memory) {
@@ -28,11 +51,14 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		return s._symbol;
 	}
 
+	/// @param owner Contains the facet addresses and function selectors
 	function balanceOf(address owner) public view returns (uint256) {
 		require(owner != address(0), "ERC721: balance query for the zero address");
 		return s._balances[owner];
 	}
 
+	/// @param owner Contains the facet addresses and function selectors
+	/// @param index Contains the facet addresses and function selectors
 	function tokenOfOwnerByIndex(address owner, uint256 index) public view returns (uint256) {
 		require(index < balanceOf(owner), "ERC721Enumerable: owner index out of bounds");
 		return s._ownedTokens[owner][index];
@@ -42,6 +68,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		return s._allTokens.length;
 	}
 
+	/// @param index Contains the facet addresses and function selectors
 	function tokenByIndex(uint256 index) public view returns (uint256) {
 		require(index < totalSupply(), "ERC721Enumerable: global index out of bounds");
 		return s._allTokens[index];
@@ -55,6 +82,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		return (hasRole(TRADER, operator) || s._operatorApprovals[owner][operator]);
 	}
 
+	/// @param rangeIndex Contains the facet addresses and function selectors
 	function nextMintableTokenInRange(uint rangeIndex) public view returns (uint) {
 		require(s.ranges.length > rangeIndex, "RAIR ERC721 Ranges: Range does not exist");
 		range memory selectedRange = s.ranges[rangeIndex];
@@ -67,6 +95,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		require(false, 'RAIR ERC721: There are no tokens available for minting');
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param rangeId Contains the facet addresses and function selectors
+	/// @param indexInRange Contains the facet addresses and function selectors
 	function _mintFromRange(address to, uint rangeId, uint indexInRange) internal {
 		require(s.ranges.length > rangeId, "RAIR ERC721: Range does not exist");
 		range storage selectedRange = s.ranges[rangeId];
@@ -103,6 +134,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		s.tokensByProduct[s.rangeToProduct[rangeId]].push(selectedProduct.startingToken + indexInRange);
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param rangeId Contains the facet addresses and function selectors
+	/// @param indexInRange Contains the facet addresses and function selectors
 	function mintFromRangeBatch(
 		address[] calldata to,
 		uint rangeId,
@@ -115,16 +149,23 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		}
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param rangeId Contains the facet addresses and function selectors
+	/// @param indexInRange Contains the facet addresses and function selectors
 	function mintFromRange(address to, uint rangeId, uint indexInRange) external onlyRole(MINTER) {
 		_mintFromRange(to, rangeId, indexInRange);
 	}
 
+	/// @param spender Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function _isApprovedOrOwner(address spender, uint256 tokenId) internal view returns (bool) {
 		require(_exists(tokenId), "ERC721: operator query for nonexistent token");
 		address owner = ownerOf(tokenId);
 		return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function approve(address to, uint256 tokenId) public {
 		address owner = ownerOf(tokenId);
 		require(to != owner, "ERC721: approval to current owner");
@@ -137,10 +178,15 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		_approve(to, tokenId);
 	}
 
+	/// @param operator Contains the facet addresses and function selectors
+	/// @param approved Contains the facet addresses and function selectors
 	function setApprovalForAll(address operator, bool approved) public {
 		_setApprovalForAll(_msgSender(), operator, approved);
 	}
 
+	/// @param owner Contains the facet addresses and function selectors
+	/// @param operator Contains the facet addresses and function selectors
+	/// @param approved Contains the facet addresses and function selectors
 	function _setApprovalForAll(
 		address owner,
 		address operator,
@@ -151,24 +197,33 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		emit ApprovalForAll(owner, operator, approved);
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function _approve(address to, uint256 tokenId) internal virtual {
 		s._tokenApprovals[tokenId] = to;
 		emit Approval(ownerOf(tokenId), to, tokenId);
 	}
 
+	/// @param tokenId Contains the facet addresses and function selectors
 	function getApproved(uint256 tokenId) public view returns (address) {
 		require(_exists(tokenId), "ERC721: approved query for nonexistent token");
 		return s._tokenApprovals[tokenId];
 	}
 	
+	/// @param tokenId Contains the facet addresses and function selectors
 	function _exists(uint256 tokenId) internal view virtual returns (bool) {
 		return s._owners[tokenId] != address(0);
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function _safeMint(address to, uint256 tokenId) internal virtual {
 		_safeMint(to, tokenId, "");
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
+	/// @param _data Contains the facet addresses and function selectors
 	function _safeMint(
 		address to,
 		uint256 tokenId,
@@ -181,6 +236,8 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		);
 	}
 
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function _mint(address to, uint256 tokenId) internal virtual {
 		require(to != address(0), "ERC721: mint to the zero address");
 		require(!_exists(tokenId), "ERC721: token already minted");
@@ -194,6 +251,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		emit Transfer(address(0), to, tokenId);
 	}
 
+	/// @param tokenId Contains the facet addresses and function selectors
 	function ownerOf(uint256 tokenId) public view returns (address) {
 		address owner = s._owners[tokenId];
 		require(owner != address(0), "ERC721: owner query for nonexistent token");
@@ -297,6 +355,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		s._allTokens.pop();
 	}
 
+	/// @param from Contains the facet addresses and function selectors
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function transferFrom(
 		address from,
 		address to,
@@ -309,6 +370,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/**
 	 * @dev See {IERC721-safeTransferFrom}.
 	 */
+	/// @param from Contains the facet addresses and function selectors
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function safeTransferFrom(
 		address from,
 		address to,
@@ -320,6 +384,10 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/**
 	 * @dev See {IERC721-safeTransferFrom}.
 	 */
+	/// @param from Contains the facet addresses and function selectors
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
+	/// @param _data Contains the facet addresses and function selectors
 	function safeTransferFrom(
 		address from,
 		address to,
@@ -348,6 +416,10 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	 *
 	 * Emits a {Transfer} event.
 	 */
+	/// @param from Contains the facet addresses and function selectors
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
+	/// @param _data Contains the facet addresses and function selectors
 	function _safeTransfer(
 		address from,
 		address to,
@@ -369,6 +441,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	 *
 	 * Emits a {Transfer} event.
 	 */
+	/// @param from Contains the facet addresses and function selectors
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
 	function _transfer(
 		address from,
 		address to,
@@ -389,6 +464,10 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		emit Transfer(from, to, tokenId);
 	}
 
+	/// @param from Contains the facet addresses and function selectors
+	/// @param to Contains the facet addresses and function selectors
+	/// @param tokenId Contains the facet addresses and function selectors
+	/// @param _data Contains the facet addresses and function selectors
 	function _checkOnERC721Received(
 		address from,
 		address to,
