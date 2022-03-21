@@ -33,5 +33,10 @@ resource "cloudflare_record" "rair_market_txt_1" {
   type    = local.record_type.TXT
 }
 
-
+resource "cloudflare_record" "rair_market__nftla_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "Nftla"
+  value   = "34.111.149.83"
+  type    = local.record_type.A
+}
 
