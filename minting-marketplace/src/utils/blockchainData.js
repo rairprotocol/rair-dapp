@@ -3,6 +3,24 @@ import MaticLogo from '../images/polygon-matic.svg';
 import EthereumLogo from '../images/ethereum-logo.svg';
 
 const chainData = {
+	'0x38': {
+		image: BinanceDiamond,
+		name: 'Binance Mainnet',
+		chainId: '0x38',
+		symbol: 'BNB',
+		addChainData: {
+			chainId: '0x38',
+			chainName: 'Binance Testnet',
+			nativeCurrency:
+			{
+				name: 'BNB',
+				symbol: 'BNB',
+				decimals: 18
+			},
+			rpcUrls: ['https://bsc-dataseed.binance.org/'],
+			blockExplorerUrls: ['https://www.bscscan.com/']
+		}
+	},
 	'0x61': {
 		image: BinanceDiamond,
 		name: 'Binance Testnet',
