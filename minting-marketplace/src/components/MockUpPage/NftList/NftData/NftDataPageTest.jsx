@@ -49,6 +49,7 @@ const NftDataPageTest = ({
   offerData,
   offerPrice,
 }) => {
+  console.log(currentUser, "currentUser")
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
   const [ownerInfo, setOwnerInfo] = useState();
@@ -335,7 +336,7 @@ const NftDataPageTest = ({
               "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
           }}
         >
-          Owned
+          Sell
         </button>
       );
     } else
