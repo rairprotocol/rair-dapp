@@ -9,18 +9,6 @@ data "google_compute_image" "tailscale_relay" {
   project = local.tailscale_relay_compute_image_project
 }
 
-data "template_file" "tailscale_relay_starup_script" {
-  template = file("${path.module}/tailscale_relay_startup_script.sh")
-  vars = {
-    tags = "tag:private-subnet-relay-${var.env_name}"
-    advertised_routes = join(",", [
-      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
-    ])
-    tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
-    hostname = "tailscale-relay-${var.env_name}"
-  }
-}
-
 resource "google_compute_instance_template" "tailsacle_relay" {
   name_prefix = "${local.tailscale_relay_resource_namespace}-"
   description = "Tailscale relay instance template"
@@ -51,7 +39,14 @@ resource "google_compute_instance_template" "tailsacle_relay" {
     scopes = ["cloud-platform"]
   }
 
-  metadata_startup_script = data.template_file.tailscale_relay_starup_script.rendered
+  metadata_startup_script = templatefile(file("${path.module}/tailscale_relay_startup_script.sh"), {
+    tags = "tag:private-subnet-relay-${var.env_name}"
+    advertised_routes = join(",", [
+      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
+    ])
+    tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
+    hostname = "tailscale-relay-${var.env_name}"
+  })
   
   # Instance Templates cannot be updated after creation with the Google Cloud Platform API.
   # In order to update an Instance Template, Terraform will destroy the existing resource and create a replacement.
