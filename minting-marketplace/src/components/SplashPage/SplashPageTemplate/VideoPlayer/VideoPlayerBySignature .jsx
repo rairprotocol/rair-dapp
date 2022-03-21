@@ -5,10 +5,11 @@ import setDocumentTitle from "../../../../utils/setTitle";
 
 const VideoPlayerBySignature = ({mediaAddress}) => {
   const { programmaticProvider } = useSelector((state) => state.contractStore);
+  const {signature, setSignature} = useState(null)
   const [videoName] = useState(Math.round(Math.random() * 10000));
 
   const requestChallenge = useCallback(async () => {
-    let signature;
+    let sign;
     let parsedResponse;
     if (window.ethereum) {
       let [account] = await window.ethereum.request({
@@ -18,22 +19,32 @@ const VideoPlayerBySignature = ({mediaAddress}) => {
         await fetch("/api/auth/get_challenge/" + account)
       ).json();
       parsedResponse = JSON.parse(response.response);
-      signature = await window.ethereum.request({
+      try {
+      sign = await window.ethereum.request({
         method: "eth_signTypedData_v4",
         params: [account, response.response],
         from: account,
-      });
+      })
+      setSignature(sign);
+    }
+    catch (error){}
     } else if (programmaticProvider) {
       let response = await (
         await fetch("/api/auth/get_challenge/" + programmaticProvider.address)
       ).json();
       parsedResponse = JSON.parse(response.response);
       let { EIP712Domain, ...revisedTypes } = parsedResponse.types;
-      signature = await programmaticProvider._signTypedData(
-        parsedResponse.domain,
-        revisedTypes,
-        parsedResponse.message
-      );
+      try {
+        sign = await programmaticProvider._signTypedData(
+          parsedResponse.domain,
+          revisedTypes,
+          parsedResponse.message
+        );
+        setSignature(sign)
+      } catch (error) {
+        Swal.fire("Metamask Signature Required to Access Video");
+      }
+      
     } else {
       Swal.fire("Error", "Unable to decrypt videos", "error");
       return;
@@ -41,38 +52,39 @@ const VideoPlayerBySignature = ({mediaAddress}) => {
     }, [videoName, programmaticProvider]);
 
   useEffect(() => {
-    try {
-        requestChallenge()
-    }
-    catch(error){
-        console.log(error);
-        Swal.fire("Metamask Signature Requested");
-    }
+    requestChallenge()
   }, [requestChallenge]);
 
   useEffect(() => {
     setDocumentTitle(`Streaming`);
   }, [videoName]);
-
-  return (
-    <>
-      <div className="col-12 row mx-0 bg-secondary h1">
-        <video
-          // id={"vjs-" + videoName}
-          // className="video-js vjs-16-9"
-          controls
-          preload="auto"
-          data-setup="{}"
-        >
-          <source
-            // autostart="false"
-            src={mediaAddress}
-            type="video/mp4"
-          />
-        </video>
-      </div>
-    </>
-  );
+  if (signature) {
+    return (
+      <>
+        <div className="col-12 row mx-0 bg-secondary h1">
+          <video
+            // id={"vjs-" + videoName}
+            // className="video-js vjs-16-9"
+            controls
+            preload="auto"
+            data-setup="{}"
+          >
+            <source
+              // autostart="false"
+              src={mediaAddress}
+              type="video/mp4"
+            />
+          </video>
+        </div>
+      </>
+    );
+  }
+  else {
+    <div className="col-12 row mx-0 bg-secondary h1">
+      Metamask Signature Required to Access Video
+        </div>
+  }
+  
 };
 
 export default VideoPlayerBySignature;
