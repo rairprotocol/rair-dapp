@@ -39,7 +39,7 @@ resource "google_compute_instance_template" "tailsacle_relay" {
     scopes = ["cloud-platform"]
   }
 
-  metadata_startup_script = templatefile(file("${path.module}/tailscale_relay_startup_script.sh"), {
+  metadata_startup_script = templatefile("${path.module}/tailscale_relay_startup_script.sh", {
     tags = "tag:private-subnet-relay-${var.env_name}"
     advertised_routes = join(",", [
       module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
