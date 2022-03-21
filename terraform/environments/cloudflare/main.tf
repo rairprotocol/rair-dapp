@@ -14,13 +14,13 @@ terraform {
   }
 }
 
-provider "cloudflare" {
-}
+provider "cloudflare" {}
 
-resource "cloudflare_zone" "rair-tech" {
-    zone = "rair.tech"
-}
-
-resource "cloudflare_zone" "rair-market" {
-    zone = "rair.market"
+locals {
+  record_type = {
+    A: "A",
+    CNAME: "CNAME",
+    MX: "MX",
+    TXT: "TXT"
+  }
 }
