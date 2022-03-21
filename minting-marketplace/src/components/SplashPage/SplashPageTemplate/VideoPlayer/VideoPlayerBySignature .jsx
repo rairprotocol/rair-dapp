@@ -67,7 +67,7 @@ const VideoPlayerBySignature = ({mediaAddress}) => {
           <source
             // autostart="false"
             src={mediaAddress}
-            type="application/x-mpegURL"
+            type="video/mp4"
           />
         </video>
       </div>
