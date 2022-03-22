@@ -22,6 +22,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
+import TransferTokens from './components/adminViews/transferTokens.jsx';
 
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
@@ -415,7 +416,8 @@ function App({ sentryHistory }) {
 									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
 									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
 									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
-									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined }
+									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
+									{ name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone }
 								].map((item, index) => {
 									if (!item.disabled) {
 										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -623,6 +625,11 @@ function App({ sentryHistory }) {
 											path: '/diamondMinter',
 											content: <DiamondMarketplace />,
 											requirement: loginDone && !creatorViewsDisabled && diamondMarketplaceInstance !== undefined
+										},
+										{
+											path: '/admin/transferNFTs',
+											content: <TransferTokens />,
+											constraint: loginDone && !creatorViewsDisabled
 										},
 										{
 											path: '/about-page',
