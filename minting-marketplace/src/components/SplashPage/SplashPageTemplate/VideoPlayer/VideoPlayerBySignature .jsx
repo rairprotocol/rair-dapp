@@ -34,18 +34,13 @@ const VideoWindowError = () => {
 const VideoPlayerBySignature = ({mediaAddress}) => {
   const { programmaticProvider } = useSelector((state) => state.contractStore);
   const [signature, setSignature] = useState(null)
-  console.log("test")
-  console.log(programmaticProvider)
-  console.log(window.ethereum)
 
   const requestChallenge = useCallback(async () => {
-    console.log("running -1")
 
     let sign;
     let parsedResponse;
 
     if (window.ethereum) {
-      console.log("running - 2a")
       let [account] = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
@@ -53,33 +48,41 @@ const VideoPlayerBySignature = ({mediaAddress}) => {
         await fetch("/api/auth/get_challenge/" + account)
       ).json();
       parsedResponse = JSON.parse(response.response);
-      sign = await window.ethereum.request({
-        method: "eth_signTypedData_v4",
-        params: [account, response.response],
-        from: account,
-      });
-      setSignature(sign);
-      console.log("success - eth")
+      try {
+        sign = await window.ethereum.request({
+          method: "eth_signTypedData_v4",
+          params: [account, response.response],
+          from: account,
+        });
+        setSignature(sign);
       }
+      catch(error){
+        console.log(error)
+        Swal.fire("Error", "MetaMask signature required to stream video", "error");
+      }
+    }
 
       else if (programmaticProvider) {
-      console.log("running - 2b")
       let response = await (
         await fetch("/api/auth/get_challenge/" + programmaticProvider.address)
       ).json();
       parsedResponse = JSON.parse(response.response);
       let { EIP712Domain, ...revisedTypes } = parsedResponse.types;
-      sign = await programmaticProvider._signTypedData(
-        parsedResponse.domain,
-        revisedTypes,
-        parsedResponse.message
-      );
-      setSignature(sign);
-      console.log("success")
-      return;
+      try {
+        sign = await programmaticProvider._signTypedData(
+          parsedResponse.domain,
+          revisedTypes,
+          parsedResponse.message
+        );
+        setSignature(sign);
+      }
+      catch(error){
+        console.log(error)
+        Swal.fire("Error", "MetaMask signature required to stream video", "error");
+      }
+    }
       
-    } else {
-      console.log("failure")
+    else {
       Swal.fire("Error", "Unable to decrypt videos", "error");
       return;
     }
@@ -90,7 +93,9 @@ const VideoPlayerBySignature = ({mediaAddress}) => {
     requestChallenge()
   }, [requestChallenge]);
 
-  useEffect(() => {console.log(signature)}, [signature])
+  useEffect(() => {
+    setDocumentTitle(`Streaming`);
+  }, []);
 
 
   return (
@@ -103,9 +108,3 @@ const VideoPlayerBySignature = ({mediaAddress}) => {
 export default VideoPlayerBySignature;
 
 
-/* stuff to put back in 
-  useEffect(() => {
-    setDocumentTitle(`Streaming`);
-  }, [videoName]);
-
-*/

@@ -3,14 +3,6 @@ import Modal from "react-modal";
 import VideoPlayerBySignature from "./VideoPlayerBySignature ";
 import { useState, useCallback } from "react";
 
-// let subtitle;
-
-
-// let loginDone;
-
-// function afterOpenModal() {
-//     subtitle.style.color = "#9013FE";
-//   }
 
 
 
@@ -53,7 +45,6 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
     function closeModal() {
         setVideoIsOpen(false);
     }
-    // if (loginDone) {
 
     return (
         <>
@@ -73,59 +64,20 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
           </div>
           <Modal
             isOpen={modalVideoIsOpen}
-            // onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
             style={customStylesForVideo}
             contentLabel="Example Modal"
           >
             <h2
               className="video-grey-man-video-title"
-            //   ref={(_subtitle) => (subtitle = _subtitle)}
             >
               NFT LA
             </h2>
-            {/* <button onClick={closeModal}>close</button> */}
             <VideoPlayerBySignature mediaAddress={video}/>
           </Modal>
         </>
-    ); }
-    // } else {
-    //   return (
-    //     <>
-    //       <img
-    //         className="video-grey-man-pic"
-    //         src={backgroundImage}
-    //         alt="community-img"
-    //       />
-    //       <div className="video-grey-man-metamask-logo-wrapper">
-    //         <button
-    //           style={{ border: "none", background: "none" }}
-    //           className="video-grey-man-metamask-logo metamask-logo"
-    //           onClick={() => openVideo()}
-    //         >
-    //           <img src={playIcon} alt="Play" />
-    //         </button>
-    //       </div>
-    //       <Modal
-    //         isOpen={modalVideoIsOpen}
-    //         onAfterOpen={afterOpenModal}
-    //         onRequestClose={closeModal}
-    //         style={customStylesForVideo}
-    //         contentLabel="Example Modal"
-    //       >
-    //         <h2
-    //           className="video-grey-man-video-title"
-    //           ref={(_subtitle) => (subtitle = _subtitle)}
-    //         >
-    //           NFT LA
-    //         </h2>
-    //         {/* <button onClick={closeModal}>close</button> */}
-    //         <VideoPlayer />
-    //       </Modal>
-    //     </>
-    //   );
-    // }
- 
+    );
+}
 
   const VideoPlayerModule = ({backgroundImage, video}) => {
       return (
