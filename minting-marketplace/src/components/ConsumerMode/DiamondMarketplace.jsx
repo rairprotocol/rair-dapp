@@ -143,8 +143,8 @@ const DiamondMarketplace = (props) => {
 	}, [diamondMarketplaceInstance]);
 
 	useEffect(() => {
-		diamondMarketplaceInstance.on('TokenMinted', fetchDiamondData);
-		return () => diamondMarketplaceInstance.off('TokenMinted', fetchDiamondData);
+		diamondMarketplaceInstance.on('MintedToken', fetchDiamondData);
+		return () => diamondMarketplaceInstance.off('MintedToken', fetchDiamondData);
 	}, [diamondMarketplaceInstance, fetchDiamondData])
 
 	useEffect(fetchDiamondData, [fetchDiamondData])

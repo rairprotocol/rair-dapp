@@ -8,9 +8,9 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	bytes32 constant OWNER = keccak256("OWNER");
 	bytes32 constant ERC777 = keccak256("ERC777");
 	
-	event NewTokenAccepted(address contractAddress, uint priceToDeploy, address responsible);
-	event TokenNoLongerAccepted(address erc777, address responsible);
-	event TokensWithdrawn(address recipient, address erc777, uint amount);
+	event AcceptedToken(address contractAddress, uint priceToDeploy, address responsible);
+	event RemovedToken(address erc777, address responsible);
+	event WithdrawTokens(address recipient, address erc777, uint amount);
 
 	/// @notice Transfers tokens from the factory to any of the OWNER addresses
 	/// @dev 	If the contract has less than the amount, the ERC777 contract will revert
@@ -20,7 +20,7 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	function withdrawTokens(address erc777, uint amount) public onlyRole(OWNER) {
 		require(hasRole(ERC777, erc777), "RAIR Factory: Specified contract isn't an approved erc777 contract");
 		IERC777(erc777).send(msg.sender, amount, bytes("Factory Withdraw"));
-		emit TokensWithdrawn(msg.sender, erc777, amount);
+		emit WithdrawTokens(msg.sender, erc777, amount);
 	}
 
 	/// @notice	Adds an address to the list of allowed minters
@@ -28,7 +28,7 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	function acceptNewToken(address _erc777Address, uint _priceToDeploy) public onlyRole(OWNER) {
 		grantRole(ERC777, _erc777Address);
 		s.deploymentCostForToken[_erc777Address] = _priceToDeploy;
-		emit NewTokenAccepted(_erc777Address, _priceToDeploy, msg.sender);
+		emit AcceptedToken(_erc777Address, _priceToDeploy, msg.sender);
 	}
 
 	/// @notice	Removes an address from the list of allowed minters
@@ -36,7 +36,7 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	function removeToken(address _erc777Address) public onlyRole(OWNER) {
 		revokeRole(ERC777, _erc777Address);
 		s.deploymentCostForToken[_erc777Address] = 0;
-		emit TokenNoLongerAccepted(_erc777Address, msg.sender);
+		emit RemovedToken(_erc777Address, msg.sender);
 	}
 
 	/// @notice	Returns the number of required tokens, given an erc777 address

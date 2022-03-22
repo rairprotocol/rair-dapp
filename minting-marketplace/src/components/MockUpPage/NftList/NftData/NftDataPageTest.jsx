@@ -313,7 +313,7 @@ const NftDataPageTest = ({
         selectedToken,
         { value: offerData.price }
       ),
-      "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+        "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )
     ) {
       Swal.fire("Success", "Now, you are the owner of this token", "success");
@@ -473,6 +473,7 @@ const NftDataPageTest = ({
       <BreadcrumbsView />
       <div>
         <TitleCollection
+          selectedData={selectedData}
           currentUser={currentUser}
           title={selectedData?.name}
           userName={ownerInfo?.owner}
@@ -783,8 +784,8 @@ const NftDataPageTest = ({
                   textColor={textColor}
                   primaryColor={primaryColor}
                   margin={'0 auto'}
-                /> : null }
-                
+                /> : null}
+
               </AccordionItemPanel>
             </AccordionItem>
 
@@ -805,6 +806,7 @@ const NftDataPageTest = ({
               <AccordionItemPanel>
                 {/* <div>{showLink()}</div> */}
                 <AuthenticityBlock
+                  ownerInfo={ownerInfo}
                   tokenData={tokenData}
                   selectedToken={selectedToken}
                 />

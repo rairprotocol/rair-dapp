@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 import "./SplashPage.css";
@@ -84,7 +84,7 @@ const customStylesForVideo = {
 };
 Modal.setAppElement("#root");
 
-const SplashPage = ({ loginDone }) => {
+const SplashPage = ({ loginDone, connectUserData }) => {
   const [timerLeft, setTimerLeft] = useState();
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
@@ -98,7 +98,7 @@ const SplashPage = ({ loginDone }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
-
+  
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
 
@@ -108,14 +108,19 @@ const SplashPage = ({ loginDone }) => {
     currentUserAddress,
     currentChain
   } = useSelector((store) => store.contractStore);
+  const dispatch = useDispatch();
 
   const toggleCheckList = () => {
     setOpenCheckList(prev => !prev)
   }
-
   const togglePurchaseList = () => {
     setPurshaseList(prev => !prev);
   }
+
+  useEffect(() => {
+    dispatch({type: 'SET_REAL_CHAIN', payload: GreymanChainId})
+    //eslint-disable-next-line
+  }, []);
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -140,6 +145,10 @@ const SplashPage = ({ loginDone }) => {
   }
 
   const buyGrayman = async () => {
+    if (!currentUserAddress) {
+      connectUserData();
+      return;
+    }
     if (window.ethereum.chainId !== GreymanChainId) {
       web3Switch(GreymanChainId);
       return;
@@ -153,6 +162,14 @@ const SplashPage = ({ loginDone }) => {
       return;
     }
     let greymanOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
+    if (!greymanOffer) {
+      Swal.fire({
+        title: "An error has ocurred",
+        html: `Please try again later`,
+        icon: "info",
+      });
+      return;
+    }
     if (greymanOffer) {
       let instance = contractCreator(GraymanSplashPageTESTNET, diamondFactoryAbi);
       let nextToken = await metamaskCall(instance.getNextSequentialIndex(
@@ -160,6 +177,14 @@ const SplashPage = ({ loginDone }) => {
         greymanOffer.rangeData.rangeStart,
         greymanOffer.rangeData.rangeEnd
       ));
+      if (!nextToken) {
+        Swal.fire({
+          title: "An error has ocurred",
+          html: `Please try again later`,
+          icon: "info",
+        });
+        return;
+      }
       Swal.fire({
         title: "Please wait...",
         html: `Buying Greyman #${nextToken.toString()}`,
@@ -292,8 +317,8 @@ const SplashPage = ({ loginDone }) => {
     if (!diamondMarketplaceInstance) {
       return;
     }
-    diamondMarketplaceInstance.on('TokenMinted', getAllProduct);
-    return diamondMarketplaceInstance.off('TokenMinted', getAllProduct);
+    diamondMarketplaceInstance.on('MintedToken', getAllProduct);
+    return diamondMarketplaceInstance.off('MintedToken', getAllProduct);
   }, [diamondMarketplaceInstance, getAllProduct])
 
   useEffect(() => {
@@ -479,10 +504,7 @@ const SplashPage = ({ loginDone }) => {
                       <div className="modal-btn-wrapper">
                         <button
                           onClick={buyGrayman}
-                          disabled={
-                            currentUserAddress === undefined ||
-                            !Object.values(active).every((el) => el)
-                          }
+                          disabled={!Object.values(active).every((el) => el)}
                           className="modal-btn"
                         >
                           <img

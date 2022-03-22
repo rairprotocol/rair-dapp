@@ -23,12 +23,14 @@ const storage = multer.diskStorage({
     }
 
     if (!fs.existsSync(uploadPath)) {
-      fs.mkdir(uploadPath, (err) => {
-        if (err) {
-          log.error('Error in folder creation');
-          return cb(new Error('Error in folder creation'));
-        }
-      });
+      try {
+        fs.mkdirSync(uploadPath);
+      } catch (err) {
+        log.error(err);
+        log.error(err.stack);
+        log.error('Error in folder creation');
+        return cb(new Error('Error in folder creation'));
+      }
     }
 
     file.destinationFolder = uniqueSuffix;

@@ -4,12 +4,11 @@ import defaultUser from "./../../../assets/defultUser.png";
 import SharePopUp from "./SharePopUp/SharePopUp";
 import { useParams } from "react-router-dom";
 
-const TitleCollection = ({ title, userName, currentUser }) => {
+const TitleCollection = ({ title, userName, currentUser, tokenData, selectedData }) => {
   const { tokenId } = useParams();
   const [sharePopUp, setSharePopUp] = useState(false);
   const shareRef = useRef();
 
-//   console.log(userName,currentUser );
   const toggleShare = () => {
     setSharePopUp((prev) => !prev);
   };
@@ -42,12 +41,9 @@ const TitleCollection = ({ title, userName, currentUser }) => {
           </h5>
         </div>
         <div className="block-collection-desc">
-          BAYC is a collection of 10,000 Bored Ape NFTs—unique digital
-          collectibles living on the Ethereum blockchain. Your Bored Ape doubles
-          as your Yacht Club membership card, and grants access to members-only
-          benefits, the first of which is access to THE BATHROOM, a
-          collaborative graffiti board. Future areas and perks can be unlocked
-          by the community through roadmap activation.
+          {
+            selectedData && selectedData.description
+          }
         </div>
       </div>
     );
@@ -69,12 +65,9 @@ const TitleCollection = ({ title, userName, currentUser }) => {
         <h5>{userName}</h5>
       </div>
       <div className="block-collection-desc">
-        BAYC is a collection of 10,000 Bored Ape NFTs—unique digital
-        collectibles living on the Ethereum blockchain. Your Bored Ape doubles
-        as your Yacht Club membership card, and grants access to members-only
-        benefits, the first of which is access to THE BATHROOM, a collaborative
-        graffiti board. Future areas and perks can be unlocked by the community
-        through roadmap activation.
+        {
+          selectedData && selectedData.description
+        }
       </div>
     </div>
   );

@@ -28,6 +28,26 @@
     font-weight: 700;
 }
 
+.text-gradient-blue{
+    background: #08606D;
+    /* background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%); */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 45px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.text-gradient-pink{
+    background: #A4396F;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 45px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+
 .home-splash-mobile {
     padding-bottom: 208px;
     display: none;
@@ -178,6 +198,18 @@
     width: 50%;
 }
 
+.information-author.immersiverse-page-author {
+    background-image: url('./images/SxSW-IMSV-ATX-2022-Concept01-modified.png');
+    background-size: 516px 516px;
+    background-position: 88% center;
+    height: 694px;
+}
+
+.information-author.immersiverse-page-author .block-splash {
+    justify-content: start;
+    width: 50%;
+}
+
 .block-splash {
     display: flex;
     flex-direction: column;
@@ -199,6 +231,18 @@
     margin-bottom: 24px;
 }
 
+.information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3 {
+    color: #222021;
+    font-size: 26px;
+    margin-top: 2rem;
+}
+
+.information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3.text-gradient {
+    font-size: 56px;
+    margin-top: 7rem;
+    padding-bottom: 17px;
+}
+
 .information-author.greyman-page-author .text-splash .title-splash.greyman-page h3 {
     color: #222021;
     font-size: 26px;
@@ -210,6 +254,7 @@
     margin-top: 7rem;
     padding-bottom: 17px;
 }
+
 
 .text-splash .title-splash.nipsey h3, .text-splash .title-splash.nipsey h4, .text-splash .title-splash.nipsey span{
     color: #725BDB;
@@ -252,6 +297,10 @@
     line-height: 28px;
 }
 
+.information-author.immersiverse-page-author .text-splash p {
+    line-height: 28px;
+}
+
 .btn-buy-metamask {
     margin-top: 90px;
 }
@@ -279,6 +328,64 @@
     height: 32px;
     margin-right: 10px;
 }
+
+.btn-claim-airdrop {
+    margin-top: 40px;
+}
+
+.btn-claim-airdrop button {
+    font-size: 20px;
+    color: #fff;
+    background: #79CBBD;
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-claim-airdrop button:hover {
+    background: #79CBBD;
+    /* background: red; */
+}
+
+.btn-claim-airdrop button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+
+.btn-submit-with-form {
+    margin-top: 20px;
+}
+
+.btn-submit-with-form button {
+    font-size: 20px;
+    color: #fff;
+    background: #0A464F;
+    width: 303px;
+    height: 64px;
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-submit-with-form button:hover {
+    background: #0A464F;
+    /* background: red; */
+}
+
+.btn-submit-with-form button img.metamask-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
 
 .block-splash-img {
     position: absolute;
@@ -495,6 +602,17 @@ width: 1200px;
     justify-content: space-around;
     align-items: baseline;
 }
+
+.list-of-immersiverse-pic{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    justify-content: space-around;
+    align-items: baseline;
+}
+
 .about-metadata-second-block{
     /* width: 80%; */
     width: 100%;
@@ -512,6 +630,13 @@ width: 1200px;
     width: 283.5px;
     height: 283.5px;
 }
+
+.join-pic-img-list{
+    width: 22vw;
+    height: 22vw;
+    border-radius: 16px;
+}
+
 .show-more-wrap{
     position: absolute;
 }
@@ -805,7 +930,21 @@ line-height: 30px;
 }
 
 
+
 /* Exclusive NFTs Block*/
+
+.carousel-title{
+    margin-bottom: 50px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 40px;
+}
+
+.carousel-items{
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 24px;
+}
 
 .exclusive-nfts {
     display: flex;
@@ -1343,7 +1482,7 @@ img.block-img-mobile{
         padding-left: 0px;
     }
     .home-splash--page {
-        padding-left: 80px;
+        padding-left: 0;
     }
 }
 
@@ -1480,6 +1619,9 @@ img.block-img-mobile{
 } 
 
 @media screen and (max-width: 1100px) {
+    .carousel-title{
+        text-align: center;
+    }
     .wrapper-splash-page {
         background-image: none;
     }
