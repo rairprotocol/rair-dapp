@@ -717,6 +717,7 @@ function App({ sentryHistory }) {
 											return;
 										}
 										return <SentryRoute
+											key={index}
 											exact={item.exact !== undefined ? item.exact : true}
 											path={item.path}
 											render={() => item.content}
