@@ -6,10 +6,15 @@ import "./VideoPlayer.css"
 
 const VideoWindow = ({mediaAddress}) => {
   return (
-    <div className="col-12 row mx-0 bg-secondary h1">
+    <div 
+    className="col-12 row mx-0 h1"
+    style={{
+       justifyContent: "center"
+    }}
+    >
     <video
       // id={"vjs-" + videoName}
-      className="video-js vjs-16-9"
+      className="video-player"
       controls
       preload="auto"
       data-setup="{}"
