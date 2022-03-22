@@ -4,11 +4,10 @@ metadata:
   name: blockchain-event-listener-env
 data:
   PRODUCTION: "true"
-  PINATA_KEY: aaa581a498f99ed85279
+  PINATA_KEY: "aaa581a498f99ed85279"
   PINATA_GATEWAY: https://rair.mypinata.cloud/ipfs
-  INFURA_PROJECT_ID: 92a88973a28d41318792f77451db4c5b
+  INFURA_PROJECT_ID: "92a88973a28d41318792f77451db4c5b"
   DEFAULT_PRODUCT_COVER: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
-  
   TEST_BSCSCAN_GATEWAY: https://testnet.bscscan.com/token
   TEST_POLYGONSCAN_GATEWAY: https://mumbai.polygonscan.com/token
   TEST_ETHERSCAN_GATEWAY: https://goerli.etherscan.io/token
