@@ -55,7 +55,7 @@ services:
     environment:
       PRODUCTION: "false"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
-      MONGO_URI_LOCAL:  mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/RairDev1
+      MONGO_URI_LOCAL:  mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       PINATA_GATEWAY: ${pinata_gateway}

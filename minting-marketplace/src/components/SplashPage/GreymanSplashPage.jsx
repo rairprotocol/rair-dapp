@@ -39,7 +39,7 @@ ReactGA.initialize(TRACKING_ID);
 
 const customStyles = {
   overlay: {
-    zIndex: "1",
+    zIndex: "3",
   },
   content: {
     top: "50%",
@@ -88,6 +88,8 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   const [timerLeft, setTimerLeft] = useState();
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
+  const [openCheckList, setOpenCheckList] = useState(false);
+  const [purchaseList, setPurshaseList] = useState(true);
 
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
@@ -96,7 +98,10 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
-  //   const history = useHistory();
+  
+  const dappUrl = window.location.host;
+  const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
+
   const {
     diamondMarketplaceInstance,
     contractCreator,
@@ -104,6 +109,13 @@ const SplashPage = ({ loginDone, connectUserData }) => {
     currentChain
   } = useSelector((store) => store.contractStore);
   const dispatch = useDispatch();
+
+  const toggleCheckList = () => {
+    setOpenCheckList(prev => !prev)
+  }
+  const togglePurchaseList = () => {
+    setPurshaseList(prev => !prev);
+  }
 
   useEffect(() => {
     dispatch({type: 'SET_REAL_CHAIN', payload: GreymanChainId})
@@ -320,7 +332,51 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   return (
     <div className="wrapper-splash-page greyman-page">
       <div className="home-splash--page">
+        <div style={{ display: `${openCheckList ? "block" : "none"}` }} className="tutorial-checklist">
+          <h5>Cryptogreyman purchase checklist</h5>
+          <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
+            <i className={`fas fa-chevron-${purchaseList ? "down" : "up"}`}></i>
+          </div>
+          <div className="tutorial-close" onClick={() => toggleCheckList()}>
+            <i className="fas fa-times"></i>
+          </div>
+          <ul style={{display: `${purchaseList ? "block" : "none"}`}}>
+            <li>1. Make sure you have the
+              <a
+                href={metamaskAppDeepLink}
+                target="_blank"
+                rel="noreferrer"
+              > metamask extension </a>
+              installed
+            </li>
+            <li>2. Click connect wallet in top right corner. You must be  fully logged into metamask with your password first</li>
+            <li>3. Sign the request to complete login. You can’t purchase until you see a picture of Elon</li>
+            <li>
+              4. If you have errors purchasing see
+              <a
+                href="https://rair-technologies.gitbook.io/knowledge-base/evm-strategy"
+                target="_blank"
+                rel="noreferrer"
+              > RPC article </a>
+              for error issues. Bignumber, mispriced, Internal JSON-RPC, etc
+            </li>
+            <li>5. Make sure you are switched to the MATIC network and have at least 1.01 MATIC</li>
+            <li>6. Still need help?
+              <a
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+              > Watch this troubleshooting video </a>
+            </li>
+          </ul>
+        </div>
         <AuthorBlock mainClass="greyman-page-author">
+          <button
+            className="btn-help"
+            onClick={() => toggleCheckList()}
+          >
+            Need help?
+          </button>
           <div className="block-splash">
             <div className="text-splash">
               <div className="title-splash greyman-page">
