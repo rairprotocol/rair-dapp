@@ -10,11 +10,12 @@
     "hardhat:compile": "hardhat compile",
     "hardhat:test": "hardhat test",
     "hardhat:testEvents": "hardhat test --logs",
-    "deploy-binance": "npx hardhat --network binanceSmartchain deploy",
+    "deploy-binance": "npx hardhat --network binanceTestnet deploy",
     "deploy-goerli": "npx hardhat --network goerli deploy",
     "deploy-mumbai": "npx hardhat --network mumbai deploy",
     "PAYABLE-deploy-matic": "npx hardhat --network matic deploy",
-    "PAYABLE-deploy-ethereum": "npx hardhat --network ethMainnet deploy"
+    "PAYABLE-deploy-ethereum": "npx hardhat --network ethMainnet deploy",
+    "PAYABLE-deploy-binance": "npx hardhat --network binanceMainnet deploy"
   },
   "author": "Juan Miguel Sanchez Mola <jmsm412@gmail.com>",
   "homepage": "",
