@@ -121,10 +121,6 @@
     background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
 }
 
-
-
-
-
 @media screen and (max-width: 1400px) {
     .home-splash--page .information-author.immersiverse-page-author {
         background-size: 450px auto;
@@ -243,9 +239,11 @@
         width: 100%;
         padding: 0 20px;
     }
+
     .left-tokens.greyman-page .tokens-description {
         padding: 0 20px;
     }
+    
 
     .about-metadata {
         width: 100% !important;
@@ -393,28 +391,19 @@
     }
 }
 
-@media screen and (max-width: 700px) {
-    .home-splash--page .information-author.immersiverse-page-author {
-        padding: 20px 80px 40px 80px;
-        background-position: center 150px;
-    }
-    .information-author.immersiverse-page-author .text-splash .title-splash.greyman-page h3:first-child {
-        margin-bottom: 350px;
-    }
-}
-
 @media screen and (max-width: 720px) {
     .tutorial-checklist h5 {
         font-size: 20px;
     }
+
     .tutorial-checklist ul li {
         font-size: 16px;
     }
+
     .tutorial-checklist .tutorial-close, .tutorial-checklist .tutorial-show-list {
         font-size: 24px;
     }
 }
-
 
 @media screen and (max-width: 670px) {
     .modal-text-wrapper span {
@@ -520,35 +509,57 @@
     .wrapper-splash-page.greyman-page .information-author .root-time {
         padding: 10px 15px;
     }
-}
 
-.information-author.greyman-page-author .btn-help {
+    .information-author.greyman-page-author .btn-help {
+        height: 30px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+        margin: auto;
+    }
 
-    height: 30px;
+    .tutorial-checklist .tutorial-show-list {
+        right: 60px;
+    }
 
-    width: 150px;
+    .tutorial-checklist h5 {
+        font-size: 18px;
+        text-align: left;
+        padding-left: 10px;
+    }
 
-    top: 10px;
+    .tutorial-checklist ul {
+        line-height: 25px;
+        text-align: left;
+    }
 
-    left: 40px;
+    .tutorial-checklist ul li {
+        font-size: 14px;
+    }
 
-    margin: auto;
-
-}
-.tutorial-checklist .tutorial-show-list {
-    right: 60px;
-}
-.tutorial-checklist h5 {
-    font-size: 18px;
-    text-align: left;
-    padding-left: 10px;
-}
-.tutorial-checklist ul {
-    line-height: 25px;
-    text-align: left;
-}
-.tutorial-checklist ul li {
-    font-size: 14px;
+    .information-author.greyman-page-author .btn-help {
+        height: 30px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+        margin: auto;
+    
+    }
+    .tutorial-checklist .tutorial-show-list {
+        right: 60px;
+    }
+    .tutorial-checklist h5 {
+        font-size: 18px;
+        text-align: left;
+        padding-left: 10px;
+    }
+    .tutorial-checklist ul {
+        line-height: 25px;
+        text-align: left;
+    }
+    .tutorial-checklist ul li {
+        font-size: 14px;
+    }
 }
 
 @media screen and (max-width: 530px) {
@@ -615,10 +626,23 @@
     
 }
 
-
 @media screen and (max-width: 456px) {
     .home-splash--page .information-author.immersiverse-page-author {
         background-position: center 160px;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .tutorial-checklist h5 {
+        font-size: 16px;
+    }
+
+    .tutorial-checklist ul li {
+        font-size: 12px;
+    }
+
+    .tutorial-checklist .tutorial-close, .tutorial-checklist .tutorial-show-list {
+        font-size: 20px;
     }
 }
 
@@ -674,6 +698,16 @@
     .swal-img-greyman img.swal2-image{
         height: auto;
         width: 50%;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .tutorial-checklist .tutorial-show-list {
+        right: 45px;
+    }
+
+    .tutorial-checklist .tutorial-close {
+        right: 10px;
     }
 }
 
@@ -774,6 +808,16 @@
         height: 48px;
     }
 
+    .tutorial-checklist h5 {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .tutorial-checklist .tutorial-show-list {
+        right: 90%;
+
+    }
+
     .information-author.immersiverse-page-author .btn-claim-airdrop {
         display: flex;
         justify-content: center;
@@ -800,16 +844,14 @@
         height: 48px;
     }
 }
-.tutorial-checklist h5 {
-    margin-top: 15px;
-    text-align: center;
-}
-.tutorial-checklist .tutorial-show-list {
-    right: 90%;
-}
+
 @media screen and (max-width: 360px) {
     .wrapper-splash-page.greyman-page .information-author .root-time {
         padding: 5px;
+    }
+
+    .information-author.immersiverse-page-author .btn-submit-with-form {
+        width: 100%;
     }
 }
 @media screen and (max-width: 350px) {
@@ -820,6 +862,7 @@
     .information-author.greyman-page-author .btn-buy-metamask {
         width: 100%;
     }
+
     .tutorial-checklist ul {
         line-height: 15px;
     }

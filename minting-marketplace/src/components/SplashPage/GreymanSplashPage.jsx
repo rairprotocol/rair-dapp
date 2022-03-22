@@ -332,7 +332,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   return (
     <div className="wrapper-splash-page greyman-page">
       <div className="home-splash--page">
-      <div style={{ display: `${openCheckList ? "block" : "none"}` }} className="tutorial-checklist">
+        <div style={{ display: `${openCheckList ? "block" : "none"}` }} className="tutorial-checklist">
           <h5>Cryptogreyman purchase checklist</h5>
           <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
             <i className={`fas fa-chevron-${purchaseList ? "down" : "up"}`}></i>
