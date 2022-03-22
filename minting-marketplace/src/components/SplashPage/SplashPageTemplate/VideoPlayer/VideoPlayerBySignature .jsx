@@ -33,14 +33,37 @@ const VideoWindowError = () => {
 
 const VideoPlayerBySignature = ({mediaAddress}) => {
   const { programmaticProvider } = useSelector((state) => state.contractStore);
-  const {signature, setSignature} = useState(null)
+  const [signature, setSignature] = useState(null)
+  console.log("test")
+  console.log(programmaticProvider)
+  console.log(window.ethereum)
 
   const requestChallenge = useCallback(async () => {
+    console.log("running -1")
 
     let sign;
     let parsedResponse;
 
-    if (programmaticProvider) {
+    if (window.ethereum) {
+      console.log("running - 2a")
+      let [account] = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      let response = await (
+        await fetch("/api/auth/get_challenge/" + account)
+      ).json();
+      parsedResponse = JSON.parse(response.response);
+      sign = await window.ethereum.request({
+        method: "eth_signTypedData_v4",
+        params: [account, response.response],
+        from: account,
+      });
+      setSignature(sign);
+      console.log("success - eth")
+      }
+
+      else if (programmaticProvider) {
+      console.log("running - 2b")
       let response = await (
         await fetch("/api/auth/get_challenge/" + programmaticProvider.address)
       ).json();
@@ -52,9 +75,11 @@ const VideoPlayerBySignature = ({mediaAddress}) => {
         parsedResponse.message
       );
       setSignature(sign);
+      console.log("success")
       return;
       
     } else {
+      console.log("failure")
       Swal.fire("Error", "Unable to decrypt videos", "error");
       return;
     }
