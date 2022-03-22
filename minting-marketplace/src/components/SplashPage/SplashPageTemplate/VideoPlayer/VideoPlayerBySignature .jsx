@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import setDocumentTitle from "../../../../utils/setTitle";
+import "./VideoPlayer.css"
 
 const VideoWindow = ({mediaAddress}) => {
   return (
@@ -26,7 +27,7 @@ const VideoWindow = ({mediaAddress}) => {
 const VideoWindowError = () => {
   return (
     <div className="col-12 row mx-0 bg-secondary h1">
-      Metamask Signature Required to Access Video
+      <text className="video-window-error"> Metamask Signature Required to Access Video</text>
     </div>
   )
 }

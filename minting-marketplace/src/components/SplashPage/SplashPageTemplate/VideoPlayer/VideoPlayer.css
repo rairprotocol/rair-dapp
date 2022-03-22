@@ -1,0 +1,6 @@
+.video-window-error {
+    color: white;
+    padding: 2vw;
+    text-align: center;
+    font-size: calc(24px + .5vw);
+}
