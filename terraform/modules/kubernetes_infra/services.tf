@@ -11,7 +11,7 @@ resource "kubernetes_service" "rairnode" {
     labels = {
       "io.kompose.service": local.rairnode_name
     }
-    name = local.rairnode_name
+    name = "${local.rairnode_name}-test"
   }
 
   spec {
