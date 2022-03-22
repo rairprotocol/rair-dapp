@@ -5,15 +5,15 @@ metadata:
 data:
   PRODUCTION: "true"
   PINATA_KEY: "aaa581a498f99ed85279"
-  PINATA_GATEWAY: https://rair.mypinata.cloud/ipfs
+  PINATA_GATEWAY: "https://rair.mypinata.cloud/ipfs"
   INFURA_PROJECT_ID: "92a88973a28d41318792f77451db4c5b"
-  DEFAULT_PRODUCT_COVER: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
-  TEST_BSCSCAN_GATEWAY: https://testnet.bscscan.com/token
-  TEST_POLYGONSCAN_GATEWAY: https://mumbai.polygonscan.com/token
-  TEST_ETHERSCAN_GATEWAY: https://goerli.etherscan.io/token
-  POLYGONSCAN_GATEWAY: https://polygonscan.com/token
-  ETHERSCAN_GATEWAY: https://etherscan.io/token
-  BSCSCAN_GATEWAY: https://bscscan.com/token 
+  DEFAULT_PRODUCT_COVER: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
+  TEST_BSCSCAN_GATEWAY: "https://testnet.bscscan.com/token"
+  TEST_POLYGONSCAN_GATEWAY: "https://mumbai.polygonscan.com/token"
+  TEST_ETHERSCAN_GATEWAY: "https://goerli.etherscan.io/token"
+  POLYGONSCAN_GATEWAY: "https://polygonscan.com/token"
+  ETHERSCAN_GATEWAY: "https://etherscan.io/token"
+  BSCSCAN_GATEWAY: "https://bscscan.com/token"
   BINANCE_TESTNET_FACTORY_ADDRES: "0x2b5ed3C018DA72270C3C30003C8d5affdBB9F7f5"
   BINANCE_TESTNET_MINTER_ADDRESS: "0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD"
   BINANCE_TESTNET_DIAMOND_FACTORY_ADDRESS: "0xA2c57691b8DF0D8479f5f888c69346363D23a49F"
