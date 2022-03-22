@@ -9,7 +9,7 @@ const VideoWindow = ({mediaAddress}) => {
     <div className="col-12 row mx-0 bg-secondary h1">
     <video
       // id={"vjs-" + videoName}
-      // className="video-js vjs-16-9"
+      className="video-js vjs-16-9"
       controls
       preload="auto"
       data-setup="{}"
