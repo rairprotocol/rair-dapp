@@ -30,7 +30,7 @@
     "ethers": "^5.4.1",
     "express": "^4.17.1",
     "foreman": "^3.0.1",
-    "ipfs-http-client": "^49.0.4",
+    "ipfs-http-client": "^56.0.1",
     "lodash": "^4.17.20",
     "moment-timezone": "^0.5.33",
     "mongodb": "^3.6.8",
