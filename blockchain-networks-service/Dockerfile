@@ -1,11 +1,15 @@
-#FROM node:latest
+FROM node:boron
 
-# Freez current version cause of -> https://github.com/nodejs/node/issues/41926
-FROM node:latest
-#install blockchain-networks
-WORKDIR /usr/local/src
-COPY . /usr/local/src
-COPY package*.json ./
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package.json /usr/src/app/
 RUN npm install
+
+# Bundle app source
+COPY . /usr/src/app
+
 EXPOSE 5001
-CMD npm start
+CMD [ "npm", "start" ]
