@@ -489,22 +489,6 @@ const teamNFTLAarray = [
         ]
     },
 
-    {   
-        chain: '',
-        nameTeammate: "The Crypto Company",
-        imageUrl: TCC_ICON,
-        aboutTeammate: [
-            "The future will be powered by truth, not only trust. As one of the first public companies in the blockchain sector (OTC: CRCW), we are proud to comply with even higher standards of accountability and governance. Our mission is to build, grow and guide how institutions, entrepreneurs and investors can seamlessly enable a bold new world of blockchain-powered truth, trust and prosperity."
-        ],
-        socials: [
-            {
-                classIcon: 'fas fa-arrow-right',
-                link: 'https://www.thecryptocompany.com/',
-                classLink: "arrrow-right"
-            }
-        ]
-    },
-
     {
         chain: ``,
         nameTeammate: "RAIR Technologies",
