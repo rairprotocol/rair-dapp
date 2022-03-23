@@ -9,6 +9,9 @@ import NFTLA1 from './images/NFT-LA-Dig-V01.jpg';
 import NFTLA2 from './images/NFT-LA-Dig-V02.png';
 import NFTLA3 from './images/NFT-LA-Dig-V03.png';
 import NFTLA_Video from "./images/NFT-LA-RAIR-2021.mp4"
+import DocumentIcon from "../../images/documentIcon.svg";
+import DiscordIcon from './images/discord-icon.png';
+
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -29,8 +32,18 @@ const splashData = {
   titleColor: "#A4396F",
   description: "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams",
   backgroundImage: NFTLA1_rounded,
-  buttonColor: "#A4396F",
-  buttonLabel: "Submit with Form",
+  button1 :{
+    buttonColor: "#A4396F",
+    buttonLabel: "Submit with Form",
+    buttonImg: DocumentIcon,
+    buttonLink: "https://docs.google.com/forms/d/e/1FAIpQLSeMAtvf2DOMrB05M1lH8ruvKsawEWNqWQOM-1EsQ4w59Nv71A/viewform",
+  },
+  button2 :{
+    buttonColor: "#E6B4A2",
+    buttonLabel: "Join Our Discord",
+    buttonImg: DiscordIcon,
+    buttonLink: "https://discord.com/invite/y98EMXRsCE",
+  },
   NFTName: "NFT art",
   carouselData: [
     {
@@ -67,16 +80,10 @@ const NFTLASplashPage = ({ loginDone }) => {
     setTitle(`NFTLA`);
   }, [])
 
-  const formHyperlink = () => {
-    window.open(
-      'https://docs.google.com/forms/d/e/1FAIpQLSeMAtvf2DOMrB05M1lH8ruvKsawEWNqWQOM-1EsQ4w59Nv71A/viewform'
-    );  
-  }
-
   return (
     <div className="wrapper-splash-page">
       <div className="template-home-splash-page">
-        <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
+        <AuthorCard splashData={splashData}/>
         <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
         <VideoPlayerModule backgroundImage={splashData.backgroundImage} videoData={splashData.videoData}/>
         <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/>

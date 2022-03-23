@@ -213,6 +213,11 @@
 
 /* submit with form*/
 
+.template-author-card .text-splash .button-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .template-author-card .text-splash .btn-submit-with-form {
     margin-top: 2vw;
 }
