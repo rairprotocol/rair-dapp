@@ -73,7 +73,8 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
             <h2
               className="video-grey-man-video-title"
               style={{
-                paddingTop: "0em"
+                paddingTop: "0rem",
+                paddingBottom: "1rem"
               }}
             >
               NFT LA

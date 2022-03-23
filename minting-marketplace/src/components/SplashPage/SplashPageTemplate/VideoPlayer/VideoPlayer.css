@@ -7,6 +7,9 @@
     font-size: calc(24px + .5vw);
 }
 
+.video-player {
+    width: 95vh;
+}
 
 
 
@@ -71,18 +74,6 @@
 /* Media Responsive*/
 
 
-@media (min-width: 1400px){
-    .video-player {
-        width: 60%
-    }
-}
-
-@media (min-width: 1900px){
-    .video-player {
-        width: 50%
-    }
-}
-
 
 @media screen and (max-width: 1100px) {
     .video-module-title{
@@ -91,14 +82,6 @@
     .video-module-wrapper {
         margin-bottom: 10vw;
     }
-}
-
-
-@media (min-width: 1100px){
-    .video-player {
-        width: 80%
-    }
-    
 }
 
 @media screen and (max-width: 900px) {
