@@ -4,4 +4,4 @@ metadata:
   name: managed-cert
 spec:
   domains:
-    -  staging.rair.tech
+    -  staging.rair.market
