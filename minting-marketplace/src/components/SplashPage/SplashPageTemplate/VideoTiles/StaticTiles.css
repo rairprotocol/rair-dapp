@@ -1,0 +1,13 @@
+.title-gets h3{
+    font-size: 32px !important;
+}
+
+@media screen and (max-width:700px){
+    .video-locked{
+        width: 90vw;
+    } 
+    .box-video {
+        margin-right: 0;
+    }
+}
+

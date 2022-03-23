@@ -17,6 +17,8 @@ import setTitle from '../../utils/setTitle';
 import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
 import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
 import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayerModule";
+import StaticTiles from "./SplashPageTemplate/VideoTiles/StaticTiles";
+import UnlockableVideo from "./images/nipsey1.png";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -44,7 +46,8 @@ const splashData = {
       title: "Palm",
       img: NFTLA1
     }
-  ]
+  ],
+  tilesTitle: "Unlockable Conference Videos Coming Soon"
 }
 
 
@@ -71,6 +74,7 @@ const NFTLASplashPage = ({ loginDone }) => {
         <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
         <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
         <VideoPlayerModule backgroundImage={splashData.backgroundImage} video={splashData.video}/>
+        <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 
       </div>

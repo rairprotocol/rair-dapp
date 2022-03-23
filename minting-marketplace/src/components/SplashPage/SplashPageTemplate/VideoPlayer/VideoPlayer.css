@@ -20,7 +20,7 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-bottom: 8vw;
+    /* margin-bottom: 8vw; */
     max-width: 100%;
 }
 
@@ -79,16 +79,16 @@
     .video-module-title{
         text-align: center;
     }
-    .video-module-wrapper {
+    /* .video-module-wrapper {
         margin-bottom: 10vw;
-    }
+    } */
 }
 
 @media screen and (max-width: 900px) {
 
-    .video-module-wrapper {
+    /* .video-module-wrapper {
         margin-bottom: 13vw;
-    }
+    } */
 
 }
 
@@ -102,7 +102,7 @@
 
 
 @media screen and (max-width: 430px) {
-    .video-module-wrapper {
+    /* .video-module-wrapper {
         margin-bottom: 18vw;
-    }
+    } */
 }
