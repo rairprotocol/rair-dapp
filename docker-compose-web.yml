@@ -73,8 +73,10 @@ services:
       PINATA_GATEWAY: ${pinata_gateway}
       INFURA_PROJECT_ID: ${infura_project_id}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
-      BINANCE_FACTORY_ADDRESS: ${binance_factory_addres}
-      BINANCE_MINTER_ADDRESS: ${binance_minter_address}
+      BINANCE_TESTNET_FACTORY_ADDRESS: ${binance_testnet_factory_addres}
+      BINANCE_TESTNET_MINTER_ADDRESS: ${binance_testnet_minter_address}
+      BINANCE_MAINNET_FACTORY_ADDRESS: ${binance_mainnet_factory_addres}
+      BINANCE_MAINNET_MINTER_ADDRESS: ${binance_mainnet_minter_address}
       GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
       GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
       MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
@@ -95,6 +97,7 @@ services:
       TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
       POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
       ETHERSCAN_GATEWAY: ${etherscan_gateway}
+      BSCSCAN_GATEWAY: ${bscscan_gateway}
       MORALIS_SERVER_TEST: ${moralis_server_test}
       MORALIS_SERVER_MAIN: ${moralis_server_main}
       MORALIS_API_KEY_TEST: ${moralis_api_key_test}

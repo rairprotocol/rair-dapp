@@ -374,7 +374,7 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 	/// @param	_tokenId	Token's ID
 	function _beforeTokenTransfer(address _from, address _to, uint256 _tokenId) internal virtual override(ERC721Enumerable) {
 		if (_from != address(0) && _to != address(0)) {
-			if (_lockedRange[tokenToLock[_tokenId]].productIndex == tokenToProduct[_tokenId]) {
+			if (_lockedRange.length > 0 && _lockedRange[tokenToLock[_tokenId]].productIndex == tokenToProduct[_tokenId]) {
 				require(_lockedRange[tokenToLock[_tokenId]].lockCountdown == 0, "RAIR ERC721: Transfers for this range are currently locked");
 			}
 			_checkRole(TRADER, msg.sender);

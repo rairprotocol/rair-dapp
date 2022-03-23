@@ -28,9 +28,9 @@ import UnlockableVideo from "./images/nipsey1.png";
 //ReactGA.initialize(TRACKING_ID);
 
 const splashData = {
-  title: "#nftla",
+  title: "#NFTLA",
   titleColor: "#A4396F",
-  description: "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams",
+  description: "Connect with Metamask and receive a free airdrop to unlock exclusive encrypted streams!",
   backgroundImage: NFTLA1_rounded,
   button1 :{
     buttonColor: "#A4396F",

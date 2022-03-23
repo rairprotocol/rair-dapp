@@ -58,22 +58,23 @@ const ModalItem = ({
         </div>
         <hr />
         <div className="modal-item-footer-wrapper modal-filtering-btn">
-          {false && <>
-            <div className="filtering-price">
+          {true && <>
+            {/* <div className="filtering-price">
               <select className="select-price">
                 <option value="0">Select network</option>
                 <option value="1">Ethereum(ETH)</option>
                 <option value="2">Bitcoin(BTC)</option>
               </select>
             </div>
-            <button className="modal-item-footer-price">Price</button>
-            <div style={{ marginLeft: "auto" }}>
-              <Link
+            <button className="modal-item-footer-price">Price</button> */}
+            <div>
+              <button>Sell</button>
+              {/* <Link
                 to={`/token/${selectedData.contract}/${selectedData.uniqueIndexInContract}`}
                 className="btn btn-stimorol modal-item-footer-view-token"
               >
                 View Token
-              </Link>
+              </Link> */}
             </div>
           </>}
         </div>

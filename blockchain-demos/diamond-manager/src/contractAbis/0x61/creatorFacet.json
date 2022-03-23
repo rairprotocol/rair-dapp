@@ -1,0 +1,615 @@
+{
+  "address": "0xdd58F0e81Ad9A67D97c7000897252B28b3eE47d5",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "deployedContract",
+          "type": "address"
+        }
+      ],
+      "name": "contractToCreator",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "deployer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "creatorToContractIndex",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "deployedContract",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "deployer",
+          "type": "address"
+        }
+      ],
+      "name": "creatorToContractList",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "deployedContracts",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "deployer",
+          "type": "address"
+        }
+      ],
+      "name": "getContractCountOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "count",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCreatorAtIndex",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCreatorsCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "count",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoleMember",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleMemberCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x0534afb6404141b62a79588b0890dda74cb83aca695715e14233837215caa105",
+  "receipt": {
+    "to": null,
+    "from": "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+    "contractAddress": "0xdd58F0e81Ad9A67D97c7000897252B28b3eE47d5",
+    "transactionIndex": 1,
+    "gasUsed": "718255",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xe2ea0c323468e36a2511a5613b4109bbcac28e4abf89c2d5d5686cd12ff27d7a",
+    "transactionHash": "0x0534afb6404141b62a79588b0890dda74cb83aca695715e14233837215caa105",
+    "logs": [],
+    "blockNumber": 17676864,
+    "cumulativeGasUsed": "739255",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "dab41e518a34db4157b5822de8d6a702",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"deployedContract\",\"type\":\"address\"}],\"name\":\"contractToCreator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"creatorToContractIndex\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"deployedContract\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"}],\"name\":\"creatorToContractList\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"deployedContracts\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"}],\"name\":\"getContractCountOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getCreatorAtIndex\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCreatorsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"getContractCountOf(address)\":{\"details\":\"Use alongside creatorToContracts for the full list of tokens \",\"params\":{\"deployer\":\"Wallet address to query\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"contractToCreator(address)\":{\"notice\":\"Returns the address of the creator given a deployed contract's address\"},\"creatorToContractIndex(address,uint256)\":{\"notice\":\"Necessary view function now that public mappings are not possible\"},\"creatorToContractList(address)\":{\"notice\":\"Returns the whole array of deployed addresses of a creator\"},\"getContractCountOf(address)\":{\"notice\":\"Returns the number of contracts deployed by an address\"},\"getCreatorAtIndex(uint256)\":{\"notice\":\"Returns a single address inside the creators array\"},\"getCreatorsCount()\":{\"notice\":\"Returns the number of addresses that have deployed a contract\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Factory/facets/creatorsFacet.sol\":\"creatorFacet\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Strings.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Strings.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev String operations.\\n */\\nlibrary Strings {\\n    bytes16 private constant _HEX_SYMBOLS = \\\"0123456789abcdef\\\";\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` decimal representation.\\n     */\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        // Inspired by OraclizeAPI's implementation - MIT licence\\n        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol\\n\\n        if (value == 0) {\\n            return \\\"0\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 digits;\\n        while (temp != 0) {\\n            digits++;\\n            temp /= 10;\\n        }\\n        bytes memory buffer = new bytes(digits);\\n        while (value != 0) {\\n            digits -= 1;\\n            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));\\n            value /= 10;\\n        }\\n        return string(buffer);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.\\n     */\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return \\\"0x00\\\";\\n        }\\n        uint256 temp = value;\\n        uint256 length = 0;\\n        while (temp != 0) {\\n            length++;\\n            temp >>= 8;\\n        }\\n        return toHexString(value, length);\\n    }\\n\\n    /**\\n     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.\\n     */\\n    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = \\\"0\\\";\\n        buffer[1] = \\\"x\\\";\\n        for (uint256 i = 2 * length + 1; i > 1; --i) {\\n            buffer[i] = _HEX_SYMBOLS[value & 0xf];\\n            value >>= 4;\\n        }\\n        require(value == 0, \\\"Strings: hex length insufficient\\\");\\n        return string(buffer);\\n    }\\n}\\n\",\"keccak256\":\"0x32c202bd28995dd20c4347b7c6467a6d3241c74c8ad3edcbb610cd9205916c45\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/structs/EnumerableSet.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Library for managing\\n * https://en.wikipedia.org/wiki/Set_(abstract_data_type)[sets] of primitive\\n * types.\\n *\\n * Sets have the following properties:\\n *\\n * - Elements are added, removed, and checked for existence in constant time\\n * (O(1)).\\n * - Elements are enumerated in O(n). No guarantees are made on the ordering.\\n *\\n * ```\\n * contract Example {\\n *     // Add the library methods\\n *     using EnumerableSet for EnumerableSet.AddressSet;\\n *\\n *     // Declare a set state variable\\n *     EnumerableSet.AddressSet private mySet;\\n * }\\n * ```\\n *\\n * As of v3.3.0, sets of type `bytes32` (`Bytes32Set`), `address` (`AddressSet`)\\n * and `uint256` (`UintSet`) are supported.\\n */\\nlibrary EnumerableSet {\\n    // To implement this library for multiple types with as little code\\n    // repetition as possible, we write it in terms of a generic Set type with\\n    // bytes32 values.\\n    // The Set implementation uses private functions, and user-facing\\n    // implementations (such as AddressSet) are just wrappers around the\\n    // underlying Set.\\n    // This means that we can only create new EnumerableSets for types that fit\\n    // in bytes32.\\n\\n    struct Set {\\n        // Storage of set values\\n        bytes32[] _values;\\n        // Position of the value in the `values` array, plus 1 because index 0\\n        // means a value is not in the set.\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function _add(Set storage set, bytes32 value) private returns (bool) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            // The value is stored at length-1, but we add 1 to all indexes\\n            // and use 0 as a sentinel value\\n            set._indexes[value] = set._values.length;\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function _remove(Set storage set, bytes32 value) private returns (bool) {\\n        // We read and store the value's index to prevent multiple reads from the same storage slot\\n        uint256 valueIndex = set._indexes[value];\\n\\n        if (valueIndex != 0) {\\n            // Equivalent to contains(set, value)\\n            // To delete an element from the _values array in O(1), we swap the element to delete with the last one in\\n            // the array, and then remove the last element (sometimes called as 'swap and pop').\\n            // This modifies the order of the array, as noted in {at}.\\n\\n            uint256 toDeleteIndex = valueIndex - 1;\\n            uint256 lastIndex = set._values.length - 1;\\n\\n            if (lastIndex != toDeleteIndex) {\\n                bytes32 lastvalue = set._values[lastIndex];\\n\\n                // Move the last value to the index where the value to delete is\\n                set._values[toDeleteIndex] = lastvalue;\\n                // Update the index for the moved value\\n                set._indexes[lastvalue] = valueIndex; // Replace lastvalue's index to valueIndex\\n            }\\n\\n            // Delete the slot where the moved value was stored\\n            set._values.pop();\\n\\n            // Delete the index for the deleted slot\\n            delete set._indexes[value];\\n\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function _contains(Set storage set, bytes32 value) private view returns (bool) {\\n        return set._indexes[value] != 0;\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function _at(Set storage set, uint256 index) private view returns (bytes32) {\\n        return set._values[index];\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function _values(Set storage set) private view returns (bytes32[] memory) {\\n        return set._values;\\n    }\\n\\n    // Bytes32Set\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(Bytes32Set storage set, bytes32 value) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(Bytes32Set storage set, bytes32 value) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(Bytes32Set storage set, uint256 index) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(Bytes32Set storage set) internal view returns (bytes32[] memory) {\\n        return _values(set._inner);\\n    }\\n\\n    // AddressSet\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(AddressSet storage set, address value) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(AddressSet storage set, address value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(AddressSet storage set, address value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values in the set. O(1).\\n     */\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(AddressSet storage set, uint256 index) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(AddressSet storage set) internal view returns (address[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        address[] memory result;\\n\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n\\n    // UintSet\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    /**\\n     * @dev Add a value to a set. O(1).\\n     *\\n     * Returns true if the value was added to the set, that is if it was not\\n     * already present.\\n     */\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Removes a value from a set. O(1).\\n     *\\n     * Returns true if the value was removed from the set, that is if it was\\n     * present.\\n     */\\n    function remove(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns true if the value is in the set. O(1).\\n     */\\n    function contains(UintSet storage set, uint256 value) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    /**\\n     * @dev Returns the number of values on the set. O(1).\\n     */\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    /**\\n     * @dev Returns the value stored at position `index` in the set. O(1).\\n     *\\n     * Note that there are no guarantees on the ordering of values inside the\\n     * array, and it may change when more values are added or removed.\\n     *\\n     * Requirements:\\n     *\\n     * - `index` must be strictly less than {length}.\\n     */\\n    function at(UintSet storage set, uint256 index) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    /**\\n     * @dev Return the entire set in an array\\n     *\\n     * WARNING: This operation will copy the entire storage to memory, which can be quite expensive. This is designed\\n     * to mostly be used by view accessors that are queried without any gas fees. Developers should keep in mind that\\n     * this function has an unbounded cost, and using it as part of a state-changing function may render the function\\n     * uncallable if the set grows to a point where copying to memory consumes too much gas to fit in a block.\\n     */\\n    function values(UintSet storage set) internal view returns (uint256[] memory) {\\n        bytes32[] memory store = _values(set._inner);\\n        uint256[] memory result;\\n\\n        assembly {\\n            result := store\\n        }\\n\\n        return result;\\n    }\\n}\\n\",\"keccak256\":\"0x9772845c886f87a3aab315f8d6b68aa599027c20f441b131cd4afaf65b588900\",\"license\":\"MIT\"},\"contracts/Factory/AppStorage.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport \\\"@openzeppelin/contracts/utils/Context.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/Strings.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\nimport \\\"../common/AccessControl.sol\\\";\\n\\nstruct AppStorage {\\n\\t// Access Control Enumerable\\n\\tmapping(bytes32 => RoleData) _roles;\\n\\tstring failsafe;\\n\\tmapping(bytes32 => EnumerableSet.AddressSet) _roleMembers;\\n\\t// App\\n\\taddress[] creators;\\n\\tmapping(address => address[]) creatorToContracts;\\n\\tmapping(address => address) contractToCreator;\\n\\tmapping(address => uint) deploymentCostForToken;\\n\\t// Always add new variables at the end of the struct!\\n}\\n\\nlibrary LibAppStorage {\\n\\tfunction diamondStorage() internal pure\\treturns (AppStorage storage ds) {\\n\\t\\tassembly {\\n\\t\\t\\tds.slot := 0\\n\\t\\t}\\n\\t}\\n}\\n\\ncontract AccessControlAppStorageEnumerable is Context, AccessControlEnumerable {\\n\\tusing EnumerableSet for EnumerableSet.AddressSet;\\n\\t\\n\\tAppStorage internal s;\\n\\n\\tfunction hasRole(bytes32 role, address account) public view override returns (bool) {\\n\\t\\treturn s._roles[role].members[account];\\n\\t}\\n\\n\\tfunction getRoleAdmin(bytes32 role) public view override returns (bytes32) {\\n\\t\\treturn s._roles[role].adminRole;\\n\\t}\\n\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view override returns (address) {\\n\\t\\treturn s._roleMembers[role].at(index);\\n\\t}\\n\\n\\tfunction getRoleMemberCount(bytes32 role) public view override returns (uint256) {\\n\\t\\treturn s._roleMembers[role].length();\\n\\t}\\n\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal override {\\n\\t\\tbytes32 previousAdminRole = getRoleAdmin(role);\\n\\t\\ts._roles[role].adminRole = adminRole;\\n\\t\\temit RoleAdminChanged(role, previousAdminRole, adminRole);\\n\\t}\\n\\n\\tfunction _grantRole(bytes32 role, address account) internal override {\\n\\t\\tif (!hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = true;\\n\\t\\t\\temit RoleGranted(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].add(account);\\n\\t\\t}\\n\\t}\\n\\n\\tfunction _revokeRole(bytes32 role, address account) internal override {\\n\\t\\tif (hasRole(role, account)) {\\n\\t\\t\\ts._roles[role].members[account] = false;\\n\\t\\t\\temit RoleRevoked(role, account, _msgSender());\\n\\t\\t\\ts._roleMembers[role].remove(account);\\n\\t\\t}\\n\\t}\\n}\",\"keccak256\":\"0xc392e4ea22e9c6778e804fad860e422dbd8d743bd1b6e407ac61a6123aec8bd3\",\"license\":\"GPL-3.0\"},\"contracts/Factory/facets/creatorsFacet.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport '../AppStorage.sol';\\n\\ncontract creatorFacet is AccessControlAppStorageEnumerable {\\n\\t/// @notice Returns the number of addresses that have deployed a contract\\n\\tfunction getCreatorsCount() public view returns(uint count) {\\n\\t\\treturn s.creators.length;\\n\\t}\\n\\n\\t/// @notice Returns a single address inside the creators array\\n\\tfunction getCreatorAtIndex(uint index) public view returns (address creator) {\\n\\t\\tcreator = s.creators[index];\\n\\t}\\n\\n\\t/// @notice Returns the number of contracts deployed by an address\\n\\t/// @dev\\tUse alongside creatorToContracts for the full list of tokens \\n\\t/// @param\\tdeployer\\tWallet address to query\\n\\tfunction getContractCountOf(address deployer) public view returns(uint count) {\\n\\t\\treturn s.creatorToContracts[deployer].length;\\n\\t}\\n\\n\\t/// @notice Necessary view function now that public mappings are not possible\\n\\tfunction creatorToContractIndex(address deployer, uint index) public view returns(address deployedContract) {\\n\\t\\treturn s.creatorToContracts[deployer][index];\\n\\t}\\n\\n\\t/// @notice Returns the whole array of deployed addresses of a creator\\n\\tfunction creatorToContractList(address deployer) public view returns(address[] memory deployedContracts) {\\n\\t\\treturn s.creatorToContracts[deployer];\\n\\t}\\n\\n\\t/// @notice Returns the address of the creator given a deployed contract's address\\n\\tfunction contractToCreator(address deployedContract) public view returns (address creator) {\\n\\t\\tcreator = s.contractToCreator[deployedContract];\\n\\t}\\n}\",\"keccak256\":\"0x055ca1963a49fde1341c2caafb46019283a7b3e733c2f45bce7bfac9948b642b\",\"license\":\"GPL-3.0\"},\"contracts/common/AccessControl.sol\":{\"content\":\"// SPDX-License-Identifier: GPL-3.0\\npragma solidity ^0.8.11; \\n\\nimport \\\"@openzeppelin/contracts/utils/Context.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/Strings.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/structs/EnumerableSet.sol\\\";\\n\\nstruct RoleData {\\n\\tmapping(address => bool) members;\\n\\tbytes32 adminRole;\\n}\\n\\nabstract contract AccessControlEnumerable is Context {\\t\\n\\tevent RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\tevent RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role, _msgSender());\\n        _;\\n    }\\n\\n    function renounceRole(bytes32 role, address account) public {\\n        require(account == _msgSender(), \\\"AccessControl: can only renounce roles for self\\\");\\n        _revokeRole(role, account);\\n    }\\n\\n    function grantRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _grantRole(role, account);\\n    }\\n\\n    function revokeRole(bytes32 role, address account) public onlyRole(getRoleAdmin(role)) {\\n        _revokeRole(role, account);\\n    }\\n\\n    function _checkRole(bytes32 role, address account) internal view {\\n        if (!hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        \\\"AccessControl: account \\\",\\n                        Strings.toHexString(uint160(account), 20),\\n                        \\\" is missing role \\\",\\n                        Strings.toHexString(uint256(role), 32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n\\tfunction hasRole(bytes32 role, address account) public view virtual returns (bool);\\n\\n\\tfunction getRoleAdmin(bytes32 role) public view virtual returns (bytes32);\\n\\n\\tfunction getRoleMember(bytes32 role, uint256 index) public view virtual returns (address);\\n\\n\\tfunction getRoleMemberCount(bytes32 role) public view virtual returns (uint256);\\n\\n\\tfunction _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual;\\n\\n\\tfunction _grantRole(bytes32 role, address account) internal virtual;\\n\\n\\tfunction _revokeRole(bytes32 role, address account) internal virtual;\\n}\",\"keccak256\":\"0xe479262c4dd61696ceb630e3b066b5832e90189fa44d414020a1290bdeab548f\",\"license\":\"GPL-3.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610c09806100206000396000f3fe608060405234801561001057600080fd5b50600436106100cf5760003560e01c80639010d07c1161008c578063aa55ecbc11610066578063aa55ecbc146101ef578063ba7c6282146101f7578063ca15c87314610223578063d547741f1461023657600080fd5b80639010d07c1461019057806391d14854146101a3578063956f9038146101c657600080fd5b8063248a9ca3146100d45780632c6a94ec1461010a5780632f2ff15d1461012a57806336568abe1461013f57806366780031146101525780637fbbc0a41461017d575b600080fd5b6100f76100e2366004610929565b60009081526020819052604090206001015490565b6040519081526020015b60405180910390f35b61011d61011836600461095e565b610249565b6040516101019190610979565b61013d6101383660046109c6565b6102bf565b005b61013d61014d3660046109c6565b6102ea565b6101656101603660046109f2565b61036d565b6040516001600160a01b039091168152602001610101565b61016561018b366004610929565b6103b5565b61016561019e366004610a1c565b6103e7565b6101b66101b13660046109c6565b610406565b6040519015158152602001610101565b6100f76101d436600461095e565b6001600160a01b031660009081526004602052604090205490565b6003546100f7565b61016561020536600461095e565b6001600160a01b039081166000908152600560205260409020541690565b6100f7610231366004610929565b61042f565b61013d6102443660046109c6565b610446565b6001600160a01b0381166000908152600460209081526040918290208054835181840281018401909452808452606093928301828280156102b357602002820191906000526020600020905b81546001600160a01b03168152600190910190602001808311610295575b50505050509050919050565b6000828152602081905260409020600101546102db813361046c565b6102e583836104d0565b505050565b6001600160a01b038116331461035f5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b60648201526084015b60405180910390fd5b6103698282610568565b5050565b6001600160a01b038216600090815260046020526040812080548390811061039757610397610a3e565b6000918252602090912001546001600160a01b031690505b92915050565b60008060030182815481106103cc576103cc610a3e565b6000918252602090912001546001600160a01b031692915050565b60008281526002602052604081206103ff90836105e1565b9392505050565b6000918252602082815260408084206001600160a01b0393909316845291905290205460ff1690565b60008181526002602052604081206103af906105ed565b600082815260208190526040902060010154610462813361046c565b6102e58383610568565b6104768282610406565b6103695761048e816001600160a01b031660146105f7565b6104998360206105f7565b6040516020016104aa929190610a84565b60408051601f198184030181529082905262461bcd60e51b825261035691600401610af9565b6104da8282610406565b610369576000828152602081815260408083206001600160a01b03851684529091529020805460ff191660011790556105103390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a460008281526002602052604090206102e59082610793565b6105728282610406565b15610369576000828152602081815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a460008281526002602052604090206102e590826107a8565b60006103ff83836107bd565b60006103af825490565b60606000610606836002610b42565b610611906002610b61565b67ffffffffffffffff81111561062957610629610b79565b6040519080825280601f01601f191660200182016040528015610653576020820181803683370190505b509050600360fc1b8160008151811061066e5761066e610a3e565b60200101906001600160f81b031916908160001a905350600f60fb1b8160018151811061069d5761069d610a3e565b60200101906001600160f81b031916908160001a90535060006106c1846002610b42565b6106cc906001610b61565b90505b6001811115610744576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061070057610700610a3e565b1a60f81b82828151811061071657610716610a3e565b60200101906001600160f81b031916908160001a90535060049490941c9361073d81610b8f565b90506106cf565b5083156103ff5760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610356565b60006103ff836001600160a01b0384166107e7565b60006103ff836001600160a01b038416610836565b60008260000182815481106107d4576107d4610a3e565b9060005260206000200154905092915050565b600081815260018301602052604081205461082e575081546001818101845560008481526020808220909301849055845484825282860190935260409020919091556103af565b5060006103af565b6000818152600183016020526040812054801561091f57600061085a600183610ba6565b855490915060009061086e90600190610ba6565b90508181146108d357600086600001828154811061088e5761088e610a3e565b90600052602060002001549050808760000184815481106108b1576108b1610a3e565b6000918252602080832090910192909255918252600188019052604090208390555b85548690806108e4576108e4610bbd565b6001900381819060005260206000200160009055905585600101600086815260200190815260200160002060009055600193505050506103af565b60009150506103af565b60006020828403121561093b57600080fd5b5035919050565b80356001600160a01b038116811461095957600080fd5b919050565b60006020828403121561097057600080fd5b6103ff82610942565b6020808252825182820181905260009190848201906040850190845b818110156109ba5783516001600160a01b031683529284019291840191600101610995565b50909695505050505050565b600080604083850312156109d957600080fd5b823591506109e960208401610942565b90509250929050565b60008060408385031215610a0557600080fd5b610a0e83610942565b946020939093013593505050565b60008060408385031215610a2f57600080fd5b50508035926020909101359150565b634e487b7160e01b600052603260045260246000fd5b60005b83811015610a6f578181015183820152602001610a57565b83811115610a7e576000848401525b50505050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351610abc816017850160208801610a54565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351610aed816028840160208801610a54565b01602801949350505050565b6020815260008251806020840152610b18816040850160208701610a54565b601f01601f19169190910160400192915050565b634e487b7160e01b600052601160045260246000fd5b6000816000190483118215151615610b5c57610b5c610b2c565b500290565b60008219821115610b7457610b74610b2c565b500190565b634e487b7160e01b600052604160045260246000fd5b600081610b9e57610b9e610b2c565b506000190190565b600082821015610bb857610bb8610b2c565b500390565b634e487b7160e01b600052603160045260246000fdfea26469706673582212207a93a4dafe71c876fe19ec7b4a702681502e0e2ed8d85093f09c9374534ff68064736f6c634300080b0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100cf5760003560e01c80639010d07c1161008c578063aa55ecbc11610066578063aa55ecbc146101ef578063ba7c6282146101f7578063ca15c87314610223578063d547741f1461023657600080fd5b80639010d07c1461019057806391d14854146101a3578063956f9038146101c657600080fd5b8063248a9ca3146100d45780632c6a94ec1461010a5780632f2ff15d1461012a57806336568abe1461013f57806366780031146101525780637fbbc0a41461017d575b600080fd5b6100f76100e2366004610929565b60009081526020819052604090206001015490565b6040519081526020015b60405180910390f35b61011d61011836600461095e565b610249565b6040516101019190610979565b61013d6101383660046109c6565b6102bf565b005b61013d61014d3660046109c6565b6102ea565b6101656101603660046109f2565b61036d565b6040516001600160a01b039091168152602001610101565b61016561018b366004610929565b6103b5565b61016561019e366004610a1c565b6103e7565b6101b66101b13660046109c6565b610406565b6040519015158152602001610101565b6100f76101d436600461095e565b6001600160a01b031660009081526004602052604090205490565b6003546100f7565b61016561020536600461095e565b6001600160a01b039081166000908152600560205260409020541690565b6100f7610231366004610929565b61042f565b61013d6102443660046109c6565b610446565b6001600160a01b0381166000908152600460209081526040918290208054835181840281018401909452808452606093928301828280156102b357602002820191906000526020600020905b81546001600160a01b03168152600190910190602001808311610295575b50505050509050919050565b6000828152602081905260409020600101546102db813361046c565b6102e583836104d0565b505050565b6001600160a01b038116331461035f5760405162461bcd60e51b815260206004820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b60648201526084015b60405180910390fd5b6103698282610568565b5050565b6001600160a01b038216600090815260046020526040812080548390811061039757610397610a3e565b6000918252602090912001546001600160a01b031690505b92915050565b60008060030182815481106103cc576103cc610a3e565b6000918252602090912001546001600160a01b031692915050565b60008281526002602052604081206103ff90836105e1565b9392505050565b6000918252602082815260408084206001600160a01b0393909316845291905290205460ff1690565b60008181526002602052604081206103af906105ed565b600082815260208190526040902060010154610462813361046c565b6102e58383610568565b6104768282610406565b6103695761048e816001600160a01b031660146105f7565b6104998360206105f7565b6040516020016104aa929190610a84565b60408051601f198184030181529082905262461bcd60e51b825261035691600401610af9565b6104da8282610406565b610369576000828152602081815260408083206001600160a01b03851684529091529020805460ff191660011790556105103390565b6001600160a01b0316816001600160a01b0316837f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d60405160405180910390a460008281526002602052604090206102e59082610793565b6105728282610406565b15610369576000828152602081815260408083206001600160a01b0385168085529252808320805460ff1916905551339285917ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b9190a460008281526002602052604090206102e590826107a8565b60006103ff83836107bd565b60006103af825490565b60606000610606836002610b42565b610611906002610b61565b67ffffffffffffffff81111561062957610629610b79565b6040519080825280601f01601f191660200182016040528015610653576020820181803683370190505b509050600360fc1b8160008151811061066e5761066e610a3e565b60200101906001600160f81b031916908160001a905350600f60fb1b8160018151811061069d5761069d610a3e565b60200101906001600160f81b031916908160001a90535060006106c1846002610b42565b6106cc906001610b61565b90505b6001811115610744576f181899199a1a9b1b9c1cb0b131b232b360811b85600f166010811061070057610700610a3e565b1a60f81b82828151811061071657610716610a3e565b60200101906001600160f81b031916908160001a90535060049490941c9361073d81610b8f565b90506106cf565b5083156103ff5760405162461bcd60e51b815260206004820181905260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152606401610356565b60006103ff836001600160a01b0384166107e7565b60006103ff836001600160a01b038416610836565b60008260000182815481106107d4576107d4610a3e565b9060005260206000200154905092915050565b600081815260018301602052604081205461082e575081546001818101845560008481526020808220909301849055845484825282860190935260409020919091556103af565b5060006103af565b6000818152600183016020526040812054801561091f57600061085a600183610ba6565b855490915060009061086e90600190610ba6565b90508181146108d357600086600001828154811061088e5761088e610a3e565b90600052602060002001549050808760000184815481106108b1576108b1610a3e565b6000918252602080832090910192909255918252600188019052604090208390555b85548690806108e4576108e4610bbd565b6001900381819060005260206000200160009055905585600101600086815260200190815260200160002060009055600193505050506103af565b60009150506103af565b60006020828403121561093b57600080fd5b5035919050565b80356001600160a01b038116811461095957600080fd5b919050565b60006020828403121561097057600080fd5b6103ff82610942565b6020808252825182820181905260009190848201906040850190845b818110156109ba5783516001600160a01b031683529284019291840191600101610995565b50909695505050505050565b600080604083850312156109d957600080fd5b823591506109e960208401610942565b90509250929050565b60008060408385031215610a0557600080fd5b610a0e83610942565b946020939093013593505050565b60008060408385031215610a2f57600080fd5b50508035926020909101359150565b634e487b7160e01b600052603260045260246000fd5b60005b83811015610a6f578181015183820152602001610a57565b83811115610a7e576000848401525b50505050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351610abc816017850160208801610a54565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351610aed816028840160208801610a54565b01602801949350505050565b6020815260008251806020840152610b18816040850160208701610a54565b601f01601f19169190910160400192915050565b634e487b7160e01b600052601160045260246000fd5b6000816000190483118215151615610b5c57610b5c610b2c565b500290565b60008219821115610b7457610b74610b2c565b500190565b634e487b7160e01b600052604160045260246000fd5b600081610b9e57610b9e610b2c565b506000190190565b600082821015610bb857610bb8610b2c565b500390565b634e487b7160e01b600052603160045260246000fdfea26469706673582212207a93a4dafe71c876fe19ec7b4a702681502e0e2ed8d85093f09c9374534ff68064736f6c634300080b0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "getContractCountOf(address)": {
+        "details": "Use alongside creatorToContracts for the full list of tokens ",
+        "params": {
+          "deployer": "Wallet address to query"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "contractToCreator(address)": {
+        "notice": "Returns the address of the creator given a deployed contract's address"
+      },
+      "creatorToContractIndex(address,uint256)": {
+        "notice": "Necessary view function now that public mappings are not possible"
+      },
+      "creatorToContractList(address)": {
+        "notice": "Returns the whole array of deployed addresses of a creator"
+      },
+      "getContractCountOf(address)": {
+        "notice": "Returns the number of contracts deployed by an address"
+      },
+      "getCreatorAtIndex(uint256)": {
+        "notice": "Returns a single address inside the creators array"
+      },
+      "getCreatorsCount()": {
+        "notice": "Returns the number of addresses that have deployed a contract"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3004,
+        "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+        "label": "s",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_struct(AppStorage)2984_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_address)dyn_storage": {
+        "base": "t_address",
+        "encoding": "dynamic_array",
+        "label": "address[]",
+        "numberOfBytes": "32"
+      },
+      "t_array(t_bytes32)dyn_storage": {
+        "base": "t_bytes32",
+        "encoding": "dynamic_array",
+        "label": "bytes32[]",
+        "numberOfBytes": "32"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_address)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      },
+      "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => address[])",
+        "numberOfBytes": "32",
+        "value": "t_array(t_address)dyn_storage"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_bytes32,t_struct(AddressSet)2662_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct EnumerableSet.AddressSet)",
+        "numberOfBytes": "32",
+        "value": "t_struct(AddressSet)2662_storage"
+      },
+      "t_mapping(t_bytes32,t_struct(RoleData)5744_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct RoleData)",
+        "numberOfBytes": "32",
+        "value": "t_struct(RoleData)5744_storage"
+      },
+      "t_mapping(t_bytes32,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_struct(AddressSet)2662_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.AddressSet",
+        "members": [
+          {
+            "astId": 2661,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "_inner",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_struct(Set)2361_storage"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(AppStorage)2984_storage": {
+        "encoding": "inplace",
+        "label": "struct AppStorage",
+        "members": [
+          {
+            "astId": 2960,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "_roles",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)5744_storage)"
+          },
+          {
+            "astId": 2962,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "failsafe",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage"
+          },
+          {
+            "astId": 2967,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "_roleMembers",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_bytes32,t_struct(AddressSet)2662_storage)"
+          },
+          {
+            "astId": 2970,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "creators",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_address)dyn_storage"
+          },
+          {
+            "astId": 2975,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "creatorToContracts",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)"
+          },
+          {
+            "astId": 2979,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "contractToCreator",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_address)"
+          },
+          {
+            "astId": 2983,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "deploymentCostForToken",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_uint256)"
+          }
+        ],
+        "numberOfBytes": "224"
+      },
+      "t_struct(RoleData)5744_storage": {
+        "encoding": "inplace",
+        "label": "struct RoleData",
+        "members": [
+          {
+            "astId": 5741,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "members",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_address,t_bool)"
+          },
+          {
+            "astId": 5743,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "adminRole",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_struct(Set)2361_storage": {
+        "encoding": "inplace",
+        "label": "struct EnumerableSet.Set",
+        "members": [
+          {
+            "astId": 2356,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "_values",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_array(t_bytes32)dyn_storage"
+          },
+          {
+            "astId": 2360,
+            "contract": "contracts/Factory/facets/creatorsFacet.sol:creatorFacet",
+            "label": "_indexes",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes32,t_uint256)"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

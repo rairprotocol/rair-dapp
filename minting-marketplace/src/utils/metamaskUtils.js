@@ -1,4 +1,8 @@
 import Swal from 'sweetalert2';
+import { rFetch } from './rFetch.js';
+
+// 2 for the transaction catcher, 1 for speed
+const confirmationsRequired = 1;
 
 const handleError = (errorMessage, defaultError = undefined) => {
 	//console.log('Reason:', errorMessage.reason)
@@ -7,9 +11,21 @@ const handleError = (errorMessage, defaultError = undefined) => {
 	//console.log('Method', errorMessage.method)
 	//console.log('Transaction', errorMessage.transaction);
 
+	let cleanError;
+
+	if (errorMessage.cancelled) {
+		cleanError = "The transaction has been cancelled!";
+	} else if (errorMessage.receipt) {
+		//console.log('Repriced');
+		handleReceipt(errorMessage.receipt);
+		return true;
+	}
+
 	// Attempt #1: Smart Contract Error
 	// Will have a readable revert message for the user
-	let cleanError = errorMessage?.error?.message;
+	if (!cleanError) {
+		cleanError = errorMessage?.error?.message;
+	}
 
 	// Attempt #2: Frontend Error
 	// An error from sending the data to the blockchain
@@ -32,6 +48,7 @@ const handleError = (errorMessage, defaultError = undefined) => {
 	}
 
 	Swal.fire('Error', cleanError, 'error');
+	return false;
 }
 
 const metamaskCall = async (transaction, fallbackFailureMessage = undefined) => {
@@ -43,15 +60,29 @@ const metamaskCall = async (transaction, fallbackFailureMessage = undefined) => 
 		return false;
 	}
 	if (paramsValidation?.wait) {
+		let transactionReceipt;
 		try {
-			await (paramsValidation).wait();
+			transactionReceipt = await (paramsValidation).wait(confirmationsRequired);
 		} catch (errorMessage) {
-			handleError(errorMessage, fallbackFailureMessage);
-			return false;
+			return handleError(errorMessage, fallbackFailureMessage);
+		}
+		if (transactionReceipt) {
+			handleReceipt(transactionReceipt)
 		}
 		return true;
 	}
 	return paramsValidation;
+}
+
+// This does nothing here, it's for the transaction catcher.
+const handleReceipt = async (transactionReceipt) => {
+	//console.log('Handling Receipt', transactionReceipt);
+	// Use window.ethereum.chainId because switching networks on Metamask cancels all transactions
+	/*
+	await rFetch(`/api/transaction/${window.ethereum.chainId}/${transactionReceipt.transactionHash}`, {
+		method: 'POST'
+	});
+	*/
 }
 
 const validateInteger = (number) => {

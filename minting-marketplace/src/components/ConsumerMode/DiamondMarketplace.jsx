@@ -3,7 +3,7 @@ import { useSelector, useStore, Provider } from 'react-redux';
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../utils/metamaskUtils.js';
 import { diamondFactoryAbi } from '../../contracts'
-import { utils } from 'ethers';
+import { utils, constants } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import InputField from '../common/InputField.jsx';
 import BuyTokenModalContent from '../marketplace/BuyTokenModalContent.jsx';
@@ -109,6 +109,7 @@ const TokenSelector = ({buyCall, max, min}) => {
 const DiamondMarketplace = (props) => {
 	const [offersArray, setOffersArray] = useState([]);
 	const [transactionInProgress, setTransactionInProgress] = useState(false);
+	const [treasuryAddress, setTreasuryAddress] = useState();
 
 	const { diamondMarketplaceInstance, contractCreator } = useSelector(store => store.contractStore);
 
@@ -120,6 +121,7 @@ const DiamondMarketplace = (props) => {
 		if (!diamondMarketplaceInstance) {
 			return;
 		}
+		setTreasuryAddress(await diamondMarketplaceInstance.getTreasuryAddress());
 		let offerCount = Number((await diamondMarketplaceInstance.getTotalOfferCount()).toString());
 		let offerData = [];
 		for (let i = 0; i < offerCount; i++) {
@@ -143,8 +145,8 @@ const DiamondMarketplace = (props) => {
 	}, [diamondMarketplaceInstance]);
 
 	useEffect(() => {
-		diamondMarketplaceInstance.on('TokenMinted', fetchDiamondData);
-		return () => diamondMarketplaceInstance.off('TokenMinted', fetchDiamondData);
+		diamondMarketplaceInstance.on('MintedToken', fetchDiamondData);
+		return () => diamondMarketplaceInstance.off('MintedToken', fetchDiamondData);
 	}, [diamondMarketplaceInstance, fetchDiamondData])
 
 	useEffect(fetchDiamondData, [fetchDiamondData])
@@ -204,6 +206,16 @@ const DiamondMarketplace = (props) => {
 			<h5> Diamond Marketplace </h5>
 			{offersArray.length} offers found.
 		</div>
+		{treasuryAddress === constants.AddressZero &&
+			<button
+				className='btn btn-stimorol'
+				onClick={async () => {
+					await metamaskCall(diamondMarketplaceInstance.updateTreasuryAddress('0x3fD4268B03cce553f180E77dfC14fde00271F9B7'));
+				}}
+				>
+				Set Treasury Address
+			</button>
+		}
 		{offersArray.map((offer, index) => {
 			return <div style={{
 				position: 'relative'

@@ -34,11 +34,13 @@ module.exports = {
       url: process.env.MATIC_MAINNET_SPEEDY_NODE,
       accounts: [process.env.ADDRESS_PRIVATE_KEY]
     },
-    binanceSmartchain: {
-      url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-      chainId: 97,
-      accounts: [process.env.ADDRESS_PRIVATE_KEY],
-      timeout: 0
+    binanceTestnet: {
+      url: process.env.BINANCE_TESTNET_SPEEDY_NODE,
+      accounts: [process.env.ADDRESS_PRIVATE_KEY]
+    },
+    binanceMainnet: {
+      url: process.env.BINANCE_MAINNET_SPEEDY_NODE,
+      accounts: [process.env.ADDRESS_PRIVATE_KEY]
     }
   },
   solidity: {

@@ -21,6 +21,7 @@
     --rhyno-40: #F2F2F2;
     --rhyno-20: #F8F8F8;
     --rhyno-transparent: #DEDEDEAA;
+    --yellow-alert: #EEB600;
     --royal-ice: linear-gradient(to right, var(--arctic-blue), var(--royal-purple));
     --royal-ice-hover: linear-gradient(to right, var(--arctic-blue-hover), var(--royal-purple-hover));
     --royal-ice-click: linear-gradient(to right, var(--arctic-blue-click), var(--royal-purple-click));

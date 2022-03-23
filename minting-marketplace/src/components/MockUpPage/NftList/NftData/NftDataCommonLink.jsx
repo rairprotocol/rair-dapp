@@ -3,7 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageTest from "./NftDataPageTest";
 import NftUnlockablesPage from "./NftUnlockablesPage";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const NftDataCommonLinkComponent = (userData) => {
   const [tokenData, setTokenData] = useState([]);
@@ -17,6 +17,7 @@ const NftDataCommonLinkComponent = (userData) => {
   const [totalCount, setTotalCount] = useState();
   const [showToken, setShowToken] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const { currentUserAddress } = useSelector(store => store.contractStore);
   const { primaryColor, textColor } = useSelector(store => store.colorStore);
@@ -25,6 +26,12 @@ const NftDataCommonLinkComponent = (userData) => {
   const params = useParams();
 
   const { contract, product, tokenId, blockchain } = params;
+  console.log(blockchain);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_REAL_CHAIN', payload: blockchain })
+    //eslint-disable-next-line
+  }, []);
 
   const getAllProduct = useCallback(async (fromToken, toToken) => {
     setIsLoading(true)
@@ -129,7 +136,7 @@ const NftDataCommonLinkComponent = (userData) => {
 
     setProductsFromOffer(response.files);
     setSelectedOfferIndex(tokenData[tokenId]?.offer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain, contract, product, tokenId]);
 
   const onSelect = useCallback(
