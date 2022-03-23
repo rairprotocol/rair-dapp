@@ -10,9 +10,10 @@
 
 .carousel-container .carousel-title{
     margin-bottom: calc(24px + 1vw);
-    text-align: left;
+    text-align: center;
     font-weight: 500;
     font-size: calc(32px + .5vw);
+    width: 100%;
 }
 
 .carousel-container .carousel-items{

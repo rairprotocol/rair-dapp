@@ -1,6 +1,7 @@
 import playIcon from "../../images/playImg.png";
 import Modal from "react-modal";
 import VideoPlayerBySignature from "./VideoPlayerBySignature ";
+import "./VideoPlayer.css"
 import { useState, useCallback } from "react";
 
 
@@ -48,19 +49,20 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
 
     return (
         <>
-          <img
-            className="video-grey-man-pic"
-            src={backgroundImage}
+          <div
+            className="video-module-background"
+            style={{backgroundImage: 'url(' + backgroundImage + ')',}}
             alt="community-img"
-          />
-          <div className="video-grey-man-metamask-logo-wrapper">
-            <button
-              style={{ border: "none", background: "none" }}
-              className="video-grey-man-metamask-logo metamask-logo"
-              onClick={() => openVideo()}
-            >
-              <img src={playIcon} alt="Play" />
-            </button>
+          >
+            <div className="video-module-play-button-wrapper">
+              <button
+                style={{ border: "none", background: "none" }}
+                className="video-module-play-button"
+                onClick={() => openVideo()}
+              >
+                <img src={playIcon} alt="Play" />
+              </button>
+            </div>  
           </div>
           <Modal
             isOpen={modalVideoIsOpen}
@@ -70,6 +72,9 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
           >
             <h2
               className="video-grey-man-video-title"
+              style={{
+                paddingTop: "0em"
+              }}
             >
               NFT LA
             </h2>
@@ -81,22 +86,18 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
 
   const VideoPlayerModule = ({backgroundImage, video}) => {
       return (
-        <div className="video-grey-man-wrapper">
-            <p
-            className="video-grey-man-title"
-            style={{
-                // color: `${primaryColor === "rhyno" ? "#000" : "#FFFFFF"}`,
-            }}
+        <div className="video-module-wrapper">
+            <h3
+            className="video-module-title"
             >
             NFT LA Video
-            </p>
-            <div className="video-grey-man">{<ShowVideoToLoggedInUsers backgroundImage={backgroundImage} video={video}/>}</div>
-            <div className="video-grey-man-desc-wrapper">
+            </h3>
+            <div className="video-module">
+              <ShowVideoToLoggedInUsers backgroundImage={backgroundImage} video={video}/>
+            </div>
+            <div className="video-module-desc-wrapper">
             <span
-                style={{
-                // color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}`,
-                }}
-                className="video-grey-man-desc"
+                className="video-module-desc"
             >
                 NFT owners can learn more about the project by signing with
                 metamask to unlock an encrypted stream{" "}
