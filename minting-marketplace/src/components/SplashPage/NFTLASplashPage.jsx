@@ -32,7 +32,6 @@ const splashData = {
   buttonColor: "#A4396F",
   buttonLabel: "Submit with Form",
   NFTName: "NFT art",
-  video: NFTLA_Video,
   carouselData: [
     {
       title: "Horizon",
@@ -47,6 +46,12 @@ const splashData = {
       img: NFTLA1
     }
   ],
+  videoData : {
+    video: NFTLA_Video,
+    videoTitle: "NFT LA",
+    videoModuleDescription: "NFT owners can learn more about the project by signing with metamask to unlock an encrypted stream  ",
+    videoModuleTitle: "Preview",
+  },
   tilesTitle: "Unlockable Conference Videos Coming Soon"
 }
 
@@ -73,7 +78,7 @@ const NFTLASplashPage = ({ loginDone }) => {
       <div className="template-home-splash-page">
         <AuthorCard formHyperlink={formHyperlink} splashData={splashData}/>
         <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
-        <VideoPlayerModule backgroundImage={splashData.backgroundImage} video={splashData.video}/>
+        <VideoPlayerModule backgroundImage={splashData.backgroundImage} videoData={splashData.videoData}/>
         <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 

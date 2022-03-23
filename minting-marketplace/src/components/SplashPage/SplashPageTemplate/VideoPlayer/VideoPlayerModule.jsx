@@ -33,7 +33,7 @@ const customStylesForVideo = {
   };
   Modal.setAppElement("#root");
 
-const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
+const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle}) => {
     const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
     const openModalForVideo = useCallback(() => {
         setVideoIsOpen(true);
@@ -77,7 +77,7 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
                 paddingBottom: "1rem"
               }}
             >
-              NFT LA
+              {videoTitle}
             </h2>
             <VideoPlayerBySignature mediaAddress={video}/>
           </Modal>
@@ -85,23 +85,23 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video}) => {
     );
 }
 
-  const VideoPlayerModule = ({backgroundImage, video}) => {
+  const VideoPlayerModule = ({backgroundImage, videoData}) => {
+      const {videoTitle, videoModuleDescription, videoModuleTitle, video} = videoData
       return (
         <div className="video-module-wrapper">
             <h3
             className="video-module-title"
             >
-            NFT LA Video
+            {videoModuleTitle}
             </h3>
             <div className="video-module">
-              <ShowVideoToLoggedInUsers backgroundImage={backgroundImage} video={video}/>
+              <ShowVideoToLoggedInUsers backgroundImage={backgroundImage} video={video} videoTitle={videoTitle}/>
             </div>
             <div className="video-module-desc-wrapper">
             <span
                 className="video-module-desc"
             >
-                NFT owners can learn more about the project by signing with
-                metamask to unlock an encrypted stream{" "}
+                {videoModuleDescription}
             </span>
             </div>
         </div>
