@@ -216,6 +216,7 @@
 .template-author-card .text-splash .button-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .template-author-card .text-splash .btn-submit-with-form {
@@ -260,6 +261,12 @@
 /* vertical */
 @media screen and (max-width: 1100px) {
 
+    .template-author-card .text-splash .button-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .template-home-splash-page {
         padding-left: 7vw;
         align-items: center;
@@ -270,7 +277,7 @@
         background-size: 38vw auto;
         padding: 0 0 5vw 0;
         max-width: 88vw;
-        height: 85vw;
+        height: 98vw;
         padding-bottom: 0;
     }
 
@@ -339,7 +346,7 @@
     .template-author-card {
         padding-top: 2vw;
         background-size: 45vw auto;
-        height: 95vw;
+        height: 105vw;
     }
 
     .template-author-card .text-splash .title-splash h3.text-gradient-template{
@@ -352,14 +359,6 @@
         padding: 0 15vw 0 15vw;
         font-size: 3vw;
     }
-
-    .template-author-card .text-splash .btn-submit-with-form button {
-        font-size: 3vw;
-        width: 37vw;
-        height: 8vw;
-        margin-top: 2.5vw;
-    }
-
 }
 
 @media screen and (max-width: 700px) {
@@ -371,9 +370,9 @@
     }
 
     .template-author-card {
-        background-position: center 21vw;
+        background-position: center 23vw;
         background-size: 45vw auto;
-        height: 100vw;
+        height: 110vw;
     }
 
     .template-author-card .text-splash .title-splash h3.text-gradient-template{
@@ -391,8 +390,7 @@
     .template-author-card .text-splash .btn-submit-with-form button {
         font-size: 2.5vw;
         width: 40vw;
-        height: 10vw;
-        margin-top: 2vw;
+        height: 8vw;
     }
 
 }
@@ -402,6 +400,7 @@
     .template-author-card {
         background-position: center 23vw;
         background-size: 40vw auto;
+        height: 105vw;
     }
     .template-author-card .text-splash .title-splash h3.text-gradient-template{
         margin-bottom: 50vw;
@@ -415,7 +414,7 @@
         background-position: center 22vw;
         background-size: 45vw auto;
         padding: 3vw 0 5vw 0;
-        height: 110vw;
+        height: 120vw;
     }
 
     .template-author-card .text-splash .title-splash h3.text-gradient-template{
@@ -431,7 +430,6 @@
         font-size: 3vw;
         width: 40vw;
         height: 10vw;
-        margin-top: 2.5vw;
     }
 }
 
@@ -440,11 +438,9 @@
         background-position: center 22vw;
         background-size: 47vw auto;
         padding: 5vw 0 6vw 0;
-        height: 110vw;
     }
 
     .template-author-card .text-splash .btn-submit-with-form button {
         width: 45vw;
-        margin-top: 2.5vw;
     }
 }
