@@ -5,6 +5,7 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.22.0 (955b78124)
     networking.gke.io/load-balancer-type: "Internal"
+    beta.cloud.google.com/backend-config: '{"default": "config-default"}'
   creationTimestamp: null
   labels:
     io.kompose.service: minting-network
@@ -48,7 +49,7 @@ spec:
         app: minting-network
     spec:
       containers:
-        - image: rairtechinc/minting-network:dev_latest
+        - image: rairtechinc/minting-network:b563f7f7100d840b84bb427d99fd95516f1874f4
           name: minting-network
           imagePullPolicy: Always
           ports:
