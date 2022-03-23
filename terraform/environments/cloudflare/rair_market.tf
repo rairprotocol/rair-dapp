@@ -40,3 +40,9 @@ resource "cloudflare_record" "rair_market__nftla_rair_market" {
   type    = local.record_type.A
 }
 
+resource "cloudflare_record" "rair_market__staging_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "Staging"
+  value   = "35.227.249.6"
+  type    = local.record_type.A
+}
