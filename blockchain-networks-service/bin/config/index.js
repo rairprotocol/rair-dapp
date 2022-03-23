@@ -30,7 +30,7 @@ module.exports = {
     networks: {
       // '0x38': 'Binance Mainnet',
       '0x38': {
-        authenticityHost: TEST_BSCSCAN_GATEWAY,
+        authenticityHost: BSCSCAN_GATEWAY,
         factoryAddress: BINANCE_MAINNET_FACTORY_ADDRESS,
         minterAddress: BINANCE_MAINNET_MINTER_ADDRESS,
         chainId: 56,
