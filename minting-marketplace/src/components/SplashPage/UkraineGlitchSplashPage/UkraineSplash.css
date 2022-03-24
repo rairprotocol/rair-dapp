@@ -31,6 +31,7 @@
     .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
         width: 90vw;
         display: -webkit-inline-box !important;
+        margin-left: -2rem;
     }
 }
 

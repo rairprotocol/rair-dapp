@@ -47,7 +47,7 @@ const CarouselModule = (props) => {
         <h2 className="carousel-title"> {carouselTitle} </h2>
         { carousel 
         ? <Carousel
-            showDots={true}
+            showDots={false}
             infinite={true}
             responsive={responsive}
             className="carousel"

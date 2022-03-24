@@ -38,6 +38,8 @@ import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
 import UnlockableVideo from "../images/nipsey1.png";
 import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
 import MobileCarouselNfts from "../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
+import ExclusiveNft from "../ExclusiveNft/ExclusiveNft";
+import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -46,19 +48,23 @@ import MobileCarouselNfts from "../../AboutPage/AboutPageNew/ExclusiveNfts/Mobil
 const splashData = {
   title: "#UkraineGlitch",
   titleColor: "#FFD505",
-  description: ["1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ", <br/>,<br/>, "100% of proceeds fund tactical first aid supplies and Ukrainian developers"],
+  description: ["1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ", <br />, <br />, "100% of proceeds fund tactical first aid supplies and Ukrainian developers"],
   backgroundImage: UKR_rounded,
-  button1 :{
+  button1: {
     buttonColor: "#035BBC",
     buttonLabel: "Mint for .1 ETH",
     buttonImg: MetaMaskIcon,
     buttonLink: "https://placekitten.com/200/300",
   },
-  button2 :{
+  button2: {
     buttonColor: "#FFD505",
     buttonLabel: "Join Our Discord",
     buttonImg: DiscordIcon,
     buttonLink: "https://discord.com/invite/y98EMXRsCE",
+  },
+  exclusiveNft: {
+    title: "NFTs",
+    titleColor: "rgb(3, 91, 188)"
   },
   carouselTitle: "Our Developers",
   carouselData: [
@@ -78,7 +84,7 @@ const splashData = {
       description: "Originally based in Kharkiv, Valerii and Natalia are respsonsible for backend database architecture and syncing to allow for seemless purchase"
     }
   ],
-  videoData : {
+  videoData: {
     video: null,
     videoTitle: "Watch the Transformation",
     videoModuleDescription: "Flag owners sign in with metamask to watch",
@@ -87,11 +93,11 @@ const splashData = {
   tilesTitle: null,
   NFTName: "#ukraineglitch",
   counterData: {
-    titleColor: "#FFD505" ,
+    titleColor: "#FFD505",
     title1: "#ukraineglitch",
     title2: "origins",
     backgroundImage: `url(${UKR246})`,
-    description: ["This (de)generative art project was created to provide 100% direct aid to Ukraine.", <br/>,<br/>, "2014", <br/>, "Ukrainian immigrants in the Pacific Northwest of the United States had taken it into their own hands to provide a direct supply chain of specialty tactical medical equipment to Ukraine’s grassroots militias. We are here to continue their story.", <br/>,<br/>, "2022",<br/>, "This website was built by Ukrainian Web3 developers. The logic of the algorithm written by a Ukranian generative artist. Prior to the war they were making NFTs for fun, now for a purpose.", <br/>,<br/>, "About the piece",<br/>,"The algorithm is set such that as the number of the NFT increases, the chaotic opposite square masses also increase, eventually inverting or turning the flag upside-down. Some NFTs are animated (sparkling) to show parts of this progression, and others are still. Only holders of a UkraineGlitch NFT can watch the full animation of the flag transformation occur below."]
+    description: ["This (de)generative art project was created to provide 100% direct aid to Ukraine.", <br />, <br />, "2014", <br />, "Ukrainian immigrants in the Pacific Northwest of the United States had taken it into their own hands to provide a direct supply chain of specialty tactical medical equipment to Ukraine’s grassroots militias. We are here to continue their story.", <br />, <br />, "2022", <br />, "This website was built by Ukrainian Web3 developers. The logic of the algorithm written by a Ukranian generative artist. Prior to the war they were making NFTs for fun, now for a purpose.", <br />, <br />, "About the piece", <br />, "The algorithm is set such that as the number of the NFT increases, the chaotic opposite square masses also increase, eventually inverting or turning the flag upside-down. Some NFTs are animated (sparkling) to show parts of this progression, and others are still. Only holders of a UkraineGlitch NFT can watch the full animation of the flag transformation occur below."]
   }
 
 }
@@ -103,7 +109,7 @@ const UkraineSplashPage = ({ loginDone }) => {
   const carousel_match = window.matchMedia('(min-width: 900px)')
   const [carousel, setCarousel] = useState(carousel_match.matches)
   window.addEventListener("resize", () => setCarousel(carousel_match.matches))
-  
+
   useEffect(() => {
     setTitle(`#UkraineGlitch`);
   }, [])
@@ -111,91 +117,26 @@ const UkraineSplashPage = ({ loginDone }) => {
   return (
     <div className="wrapper-splash-page ukraineglitch">
       <div className="template-home-splash-page">
-        <AuthorCard splashData={splashData}/>
-        <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData}/>
-        <div className="main-greyman-pic-wrapper">
-              {true && <>
-                <div className="main-greyman-pic">
-                  <div className="join-pic-main">
-                    <div className="show-more-wrap">
-                      <span className="show-more" style={{ color: "#fff" }}>
-                        Coming Soon <i className="fas fa-arrow-right"></i>{" "}
-                      </span>
-                    </div>
-                    <img
-                      className="join-pic-main-img"
-                      src={UKR5}
-                      alt="community-img"
-                    />
-                  </div>
-                </div>
-                <div className="list-of-greymans-pic">
-                  <div className="join-pic">
-                    <img
-                      className="join-pic-img"
-                      src={UKR497}
-                      alt="community-img"
-                    />
-                  </div>
-                  <div className="join-pic">
-                    <img
-                      className="join-pic-img"
-                      src={UKR1989}
-                      alt="community-img"
-                    />
-                  </div>
-                  <div className="join-pic">
-                    <img
-                      className="join-pic-img"
-                      src={UKR4}
-                      alt="community-img"
-                    />
-                  </div>
-                  <div className="join-pic">
-                    <img
-                      className="join-pic-img"
-                      src={UKR126}
-                      alt="community-img"
-                    />
-                  </div>
-                </div>
-              </> }
-            {/* {!carousel && <> 
-              <div className="exclusive-nfts"
-              style={{width: "100%"}}>
-                <MobileCarouselNfts>
-                  <img
-                    className="join-pic-img"
-                    src={UKR497}
-                    alt="community-img"
-                  />
-                  <img
-                    className="join-pic-img"
-                    src={UKR1989}
-                    alt="community-img"
-                  />
-                  <img
-                    className="join-pic-img"
-                    src={UKR4}
-                    alt="community-img"
-                  />
-                  <img
-                    className="join-pic-img"
-                    src={UKR126}
-                    alt="community-img"
-                  />
-                </MobileCarouselNfts>
-              </div>
-            </> } */}
-        </div>
-        <div style={{height:"108px"}}/>
-        <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData}/>
-        {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
-        <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData}/>
-        <TeamMeet primaryColor={primaryColor} arraySplash={"ukraine"} />
-        <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 
-      </div>
+        <AuthorCard splashData={splashData} />
+        <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} />
+        <NFTImages
+          NftImage={UKR5}
+          Nft_1={UKR497}
+          Nft_2={UKR1989}
+          Nft_3={UKR4}
+          Nft_4={UKR126}
+          titleNft={splashData.exclusiveNft.title}
+          colorText={splashData.exclusiveNft.titleColor}
+          carousel={carousel}
+        />
+      <div style={{ height: "108px" }} />
+      <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
+      {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
+      <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData} />
+      <TeamMeet primaryColor={primaryColor} arraySplash={"ukraine"} />
+      <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName} />
     </div>
+    </div >
   );
 };
 
