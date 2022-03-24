@@ -1,5 +1,23 @@
 /* use .wrapper-splash-page.ukraineglitch selector to override any general styling*/
 
+.wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper .join-pic-main img,
+.wrapper-splash-page.ukraineglitch .list-of-greymans-pic .join-pic img{
+    border-radius: 16px;
+}
+
+.wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
+    width: 90vw;
+    display: flex;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1320px) {
+    .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
+        margin-left: 0rem;
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 1100px) {
     .wrapper-splash-page.ukraineglitch .template-author-card {
         background-position: center 15vw;
@@ -8,6 +26,11 @@
         max-width: 88vw;
         height: 100vw;
         padding-bottom: 0;
+    }
+
+    .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
+        width: 90vw;
+        display: -webkit-inline-box !important;
     }
 }
 
