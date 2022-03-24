@@ -1,5 +1,11 @@
 /* Carousel Styles*/
 
+.carousel-description{
+    width:100%;
+    padding: 0 5vw;
+    margin: 2vw 0;
+    font-size: calc(12px + .5vw)
+}
 .carousel-container {
     display: flex;
     flex-direction: column;

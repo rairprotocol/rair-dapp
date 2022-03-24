@@ -51,7 +51,11 @@ const NFTCounter = ({primaryColor, leftTokensNumber, wholeTokens, counterData}) 
                             >
                                 <div className="progress-info">
                                     <div className="text-numbers">
-                                        <div className="text-left-tokens text-gradient">{leftTokensNumber}</div>
+                                        <div className="text-left-tokens"
+                                        style={{
+                                            color: titleColor
+                                        }}
+                                        >{leftTokensNumber}</div>
                                         <div className="text-whole-tokens"> / {wholeTokens}</div>
                                     </div>
                                     <div>left</div>
@@ -61,10 +65,10 @@ const NFTCounter = ({primaryColor, leftTokensNumber, wholeTokens, counterData}) 
                     </div>
                     <div className="left-tokens-content nutcrackers">
                         <div className="title-tokens">
-                            <h3><span style={{color: titleColor}}>{title1}</span> {title2}</h3>
+                            <h3><span style={{color: "#035BBC"}}>{title1}</span> {title2}</h3>
                         </div>
                         <div className="tokens-description">
-                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>
+                            <p>
                                 {description}
                             </p>
                         </div>

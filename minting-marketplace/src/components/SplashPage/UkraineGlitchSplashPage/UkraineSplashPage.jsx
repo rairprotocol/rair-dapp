@@ -1,41 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import "./SplashPageTemplate/AuthorCard/AuthorCard.css";
-import "./../AboutPage/AboutPageNew/AboutPageNew.css";
+import "../SplashPageTemplate/AuthorCard/AuthorCard.css";
+import "../../AboutPage/AboutPageNew/AboutPageNew.css";
+import "./UkraineSplash.css"
 
 /* importing images*/
-import UKR_rounded from './images/UkraineGlitchNFTExamples/rounded_corners.png';
-import UKR4 from './images/UkraineGlitchNFTExamples/4.jpg'
-import UKR5 from './images/UkraineGlitchNFTExamples/5.gif'
-import UKR126 from './images/UkraineGlitchNFTExamples/126.jpg'
-import UKR246 from './images/UkraineGlitchNFTExamples/246.jpg'
-import UKR497 from './images/UkraineGlitchNFTExamples/497.jpg'
-import UKR653 from './images/UkraineGlitchNFTExamples/653.jpg'
-import UKR777 from './images/UkraineGlitchNFTExamples/777.jpg'
-import UKR1050 from './images/UkraineGlitchNFTExamples/1050.jpg'
-import UKR1294 from './images/UkraineGlitchNFTExamples/1294.jpg'
-import UKR1518 from './images/UkraineGlitchNFTExamples/1518.jpg'
-import UKR1641 from './images/UkraineGlitchNFTExamples/1641.jpg'
-import UKR1896 from './images/UkraineGlitchNFTExamples/1896.jpg'
-import UKR1989 from './images/UkraineGlitchNFTExamples/1989.jpg'
+import UKR_rounded from '../images/UkraineGlitchNFTExamples/rounded_corners.png';
+import UKR4 from '../images/UkraineGlitchNFTExamples/4.jpg'
+import UKR5 from '../images/UkraineGlitchNFTExamples/5.gif'
+import UKR126 from '../images/UkraineGlitchNFTExamples/126.jpg'
+import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg'
+import UKR497 from '../images/UkraineGlitchNFTExamples/497.jpg'
+import UKR653 from '../images/UkraineGlitchNFTExamples/653.jpg'
+import UKR777 from '../images/UkraineGlitchNFTExamples/777.jpg'
+import UKR1050 from '../images/UkraineGlitchNFTExamples/1050.jpg'
+import UKR1294 from '../images/UkraineGlitchNFTExamples/1294.jpg'
+import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg'
+import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
+import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
+import UKR1989 from '../images/UkraineGlitchNFTExamples/1989.jpg'
+import videoBackground from '../images/metamask-vid-final.png'
 
 
-import NFTLA_Video from "./images/NFT-LA-RAIR-2021.mp4"
-import MetaMaskIcon from "./images/metamask_logo.png"
-import DiscordIcon from './images/discord-icon.png';
+import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
+import MetaMaskIcon from "../images/metamask_logo.png"
+import DiscordIcon from '../images/discord-icon.png';
 
 
 /* importing Components*/
-import TeamMeet from "./TeamMeet/TeamMeetList";
-import AuthorCard from "./SplashPageTemplate/AuthorCard/AuthorCard";
-import setTitle from '../../utils/setTitle';
-import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
-import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
-import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayerModule";
-import StaticTiles from "./SplashPageTemplate/VideoTiles/StaticTiles";
-import UnlockableVideo from "./images/nipsey1.png";
-import NFTCounter from "./SplashPageTemplate/NFTCounter/NFTCounter";
-import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
+import TeamMeet from "../TeamMeet/TeamMeetList";
+import AuthorCard from "../SplashPageTemplate/AuthorCard/AuthorCard";
+import setTitle from '../../../utils/setTitle';
+import NotCommercialTemplate from "../NotCommercial/NotCommercialTemplate";
+import CarouselModule from "../SplashPageTemplate/Carousel/Carousel";
+import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModule";
+import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
+import UnlockableVideo from "../images/nipsey1.png";
+import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
+import MobileCarouselNfts from "../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -107,12 +109,12 @@ const UkraineSplashPage = ({ loginDone }) => {
   }, [])
 
   return (
-    <div className="wrapper-splash-page">
+    <div className="wrapper-splash-page ukraineglitch">
       <div className="template-home-splash-page">
         <AuthorCard splashData={splashData}/>
         <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData}/>
         <div className="main-greyman-pic-wrapper">
-              <>
+              {true && <>
                 <div className="main-greyman-pic">
                   <div className="join-pic-main">
                     <div className="show-more-wrap">
@@ -157,9 +159,10 @@ const UkraineSplashPage = ({ loginDone }) => {
                     />
                   </div>
                 </div>
-              </>
-            <>
-              <div className="exclusive-nfts">
+              </> }
+            {/* {!carousel && <> 
+              <div className="exclusive-nfts"
+              style={{width: "100%"}}>
                 <MobileCarouselNfts>
                   <img
                     className="join-pic-img"
@@ -183,12 +186,12 @@ const UkraineSplashPage = ({ loginDone }) => {
                   />
                 </MobileCarouselNfts>
               </div>
-            </>
+            </> } */}
         </div>
         <div style={{height:"108px"}}/>
-        <VideoPlayerModule backgroundImage={splashData.backgroundImage} videoData={splashData.videoData}/>
+        <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData}/>
         {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
-        <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
+        <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"ukraine"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName}/> 
       </div>

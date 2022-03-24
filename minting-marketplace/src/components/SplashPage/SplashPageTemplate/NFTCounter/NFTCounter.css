@@ -17,6 +17,14 @@
     background-size: 472px auto;
     position: relative;
 }
+
+.template-home-splash-page .left-tokens-content .title-tokens {
+    margin: 24px 0;
+}
+
+
+
+
 /*
 .left-tokens.greyman-page .block-left-tokens {
     background: url('./images/greyman1.png') center center;
@@ -146,6 +154,7 @@
     text-align: left;
     height: fit-content;
 }
+
 /*
 .left-tokens.greyman-page .tokens-description {
     height: auto;
@@ -167,3 +176,20 @@
     justify-content: center;
 }  
 */
+
+
+@media screen and (max-width: 1100px) {
+    .template-home-splash-page  .left-tokens {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .template-home-splash-page .tokens-description {
+        text-align: center;
+    }
+
+    .template-home-splash-page .left-tokens-content {
+        align-items: center;
+    }
+        
+}

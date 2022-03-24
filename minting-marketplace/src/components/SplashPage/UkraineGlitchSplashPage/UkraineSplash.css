@@ -1,0 +1,50 @@
+/* use .wrapper-splash-page.ukraineglitch selector to override any general styling*/
+
+@media screen and (max-width: 1100px) {
+    .wrapper-splash-page.ukraineglitch .template-author-card {
+        background-position: center 15vw;
+        background-size: 38vw auto;
+        padding: 0 0 5vw 0;
+        max-width: 88vw;
+        height: 100vw;
+        padding-bottom: 0;
+    }
+}
+
+
+
+@media screen and (max-width: 900px)  {
+
+    .wrapper-splash-page.ukraineglitch .template-author-card {
+        background-size: 45vw auto;
+        height: 120vw;
+    }
+}
+
+
+@media screen and (max-width: 700px) {
+
+
+    .wrapper-splash-page.ukraineglitch .template-author-card {
+        background-position: center 21vw;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+
+    .wrapper-splash-page.ukraineglitch .template-author-card .text-splash .title-splash h3.text-gradient-template{
+        margin-bottom: 50vw;
+        font-size: 10vw !important;
+        height: 10vw;
+    }
+}
+
+@media screen and (max-width: 500px) {
+
+
+    .wrapper-splash-page.ukraineglitch .template-author-card {
+        background-position: center 22vw;
+        height: 150vw;
+    }
+}
