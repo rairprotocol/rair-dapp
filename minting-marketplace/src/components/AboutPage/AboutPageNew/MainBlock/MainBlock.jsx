@@ -39,8 +39,8 @@ const MainBlock = ({ Metamask, primaryColor, termsText }) => {
     (store) => store.contractStore
   );
 
-  const switchToNetwork = "0x13881";
-  const AboutPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
+  const switchToNetwork = "0x38";
+  const AboutPageTESTNET = "0xB6163454DA87E9f3fd63683c5d476F7d067f75a2".toLowerCase();
 
   let subtitle;
 
@@ -70,7 +70,7 @@ const MainBlock = ({ Metamask, primaryColor, termsText }) => {
     if (success) {
       let instance = contractCreator(AboutPageTESTNET, erc721Abi);
       let [aboutOffer] = products[0].offers.filter(
-        (item) => item.offerName === "greyworld"
+        (item) => item.offerName === "RairWatch"
       );
       if (!aboutOffer) {
         Swal.fire("Error", "An error has ocurred", "error");
