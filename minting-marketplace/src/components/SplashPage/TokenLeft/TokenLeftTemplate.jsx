@@ -60,7 +60,7 @@ const TokenLeftTemplate = ({
                         }}
                     >
                         <div className="title-progress-left">NFTs minted</div>
-                        <Box className="box-progress" sx={{ position: "relative" }}>
+                        <Box className="box-progress progress-template" sx={{ position: "relative" }}>
                             <CircularProgress
                                 className="progress-grey"
                                 variant="determinate"
@@ -89,7 +89,7 @@ const TokenLeftTemplate = ({
                             />
                         </Box>
                         <div
-                            className="text-progress"
+                            className="text-progress progress-text-template"
                             style={{
                                 fontSize: `${leftTokensNumber === wholeTokens && "32px"}`,
                             }}

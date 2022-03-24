@@ -24,4 +24,15 @@
         margin-bottom: 40px;
         align-items: center;
     }
+
+    .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
+        left: 35px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.ukraineglitch  .text-progress.progress-text-template {
+        bottom: 0;
+        left: 45%;
+    }
 }
