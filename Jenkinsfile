@@ -103,7 +103,7 @@ pipeline {
             }
           }
         }
-    stage('Deploy configmap to k8s environment'){
+    stage('Deploy configmap to dev k8s environment'){
       when { branch 'dev' }
       steps {
         container('kubectl') {
@@ -133,6 +133,20 @@ pipeline {
     }
       }
     }
+    stage('Deploy configmap to staging k8s environment'){
+      when { branch 'main' }
+      steps {
+        container('kubectl') {
+        step([$class: 'KubernetesEngineBuilder', 
+        namespace: "default", 
+        projectId: env.MAIN_PROJECT_ID, 
+        clusterName: env.MAIN_CLUSTER, 
+        zone: env.MAIN_LOCATION, 
+        manifestPattern: 'kubernetes-manifests/configmaps/environment/staging', 
+        credentialsId: env.CREDENTIALS_ID])
+    }
+      }
+    }
     stage('Deploy to k8s staging'){
       when { branch 'main' }
       steps {
@@ -147,5 +161,5 @@ pipeline {
         verifyDeployments: true])
     }
   }
-  }
+}
 }
