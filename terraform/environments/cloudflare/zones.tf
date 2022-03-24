@@ -9,3 +9,7 @@ resource "cloudflare_zone" "rair_market" {
 resource "cloudflare_zone" "cryptogreyman_com" {
   zone = "cryptogreyman.com"
 }
+
+resource "cloudflare_zone" "ukraineglitch_com" {
+  zone = "ukraineglitch.com"
+}
