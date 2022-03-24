@@ -133,7 +133,7 @@ pipeline {
     }
       }
     }
-    stage('Deploy configmap to dev k8s environment'){
+    stage('Deploy configmap to staging k8s environment'){
       when { branch 'main' }
       steps {
         container('kubectl') {
