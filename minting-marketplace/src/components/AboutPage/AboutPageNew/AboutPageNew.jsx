@@ -22,7 +22,7 @@ import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const AboutPageNew = ({ headerLogoBlack, headerLogoWhite }) => {
+const AboutPageNew = ({ headerLogoBlack, headerLogoWhite, connectUserData }) => {
     const { pathname } = useLocation();
     const history = useHistory();
     const { primaryColor } = useSelector(store => store.colorStore);
@@ -48,6 +48,7 @@ const AboutPageNew = ({ headerLogoBlack, headerLogoWhite }) => {
                 </div>
                 <div className="home-about--page">
                     <MainBlock
+                        connectUserData={connectUserData}
                         RairLogo={RairLogo}
                         primaryColor={primaryColor}
                         Metamask={Metamask}
