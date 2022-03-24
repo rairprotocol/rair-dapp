@@ -64,7 +64,7 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle}) => {
               </button>
             </div>  
           </div>
-          <Modal
+          {video && <Modal
             isOpen={modalVideoIsOpen}
             onRequestClose={closeModal}
             style={customStylesForVideo}
@@ -80,7 +80,7 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle}) => {
               {videoTitle}
             </h2>
             <VideoPlayerBySignature mediaAddress={video}/>
-          </Modal>
+          </Modal>}
         </>
     );
 }

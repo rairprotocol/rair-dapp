@@ -48,15 +48,18 @@ const splashData = {
   carouselData: [
     {
       title: "Horizon",
-      img: NFTLA2
+      img: NFTLA2,
+      description: null
     },
     {
       title: "Dark",
-      img: NFTLA3
+      img: NFTLA3,
+      description: null
     },
     {
       title: "Palm",
-      img: NFTLA1
+      img: NFTLA1,
+      description: null
     }
   ],
   videoData : {
