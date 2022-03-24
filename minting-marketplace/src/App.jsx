@@ -639,6 +639,7 @@ function App({ sentryHistory }) {
 										{
 											path: '/about-page',
 											content: <AboutPageNew
+												connectUserData={connectUserData}
 												headerLogoWhite={headerLogoWhite}
 												headerLogoBlack={headerLogoBlack}
 											/>
