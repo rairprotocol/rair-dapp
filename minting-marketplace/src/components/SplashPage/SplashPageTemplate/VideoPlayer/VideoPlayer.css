@@ -34,17 +34,15 @@
 
 .video-module {
     width: 50vw;
-    height: 50vw
+    height: 30vw
 }
-
 
 .video-module-background{
     height: 100%;
     background-size: 100% auto;
     background-position: center;
-
+    background-repeat: no-repeat;
 }
-
 
 .video-module-play-button-wrapper{
     height: 100%;
@@ -53,11 +51,9 @@
     justify-content: center;
 }
 
-
 .video-module-play-button img{
     height: 40%;
 }
-
 
 .video-module-desc-wrapper{
     margin-top: 28px;
@@ -99,7 +95,6 @@
         height: 384px;
     }
 }
-
 
 @media screen and (max-width: 430px) {
     /* .video-module-wrapper {
