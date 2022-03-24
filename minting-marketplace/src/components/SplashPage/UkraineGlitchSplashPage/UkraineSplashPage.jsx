@@ -37,9 +37,8 @@ import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModu
 import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
 import UnlockableVideo from "../images/nipsey1.png";
 import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
-import MobileCarouselNfts from "../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
-import ExclusiveNft from "../ExclusiveNft/ExclusiveNft";
 import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
+import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -97,12 +96,25 @@ const splashData = {
     title1: "#ukraineglitch",
     title2: "origins",
     backgroundImage: `url(${UKR246})`,
-    description: ["This (de)generative art project was created to provide 100% direct aid to Ukraine.", <br />, <br />, "2014", <br />, "Ukrainian immigrants in the Pacific Northwest of the United States had taken it into their own hands to provide a direct supply chain of specialty tactical medical equipment to Ukraine’s grassroots militias. We are here to continue their story.", <br />, <br />, "2022", <br />, "This website was built by Ukrainian Web3 developers. The logic of the algorithm written by a Ukranian generative artist. Prior to the war they were making NFTs for fun, now for a purpose.", <br />, <br />, "About the piece", <br />, "The algorithm is set such that as the number of the NFT increases, the chaotic opposite square masses also increase, eventually inverting or turning the flag upside-down. Some NFTs are animated (sparkling) to show parts of this progression, and others are still. Only holders of a UkraineGlitch NFT can watch the full animation of the flag transformation occur below."]
+    btnColorIPFS: "#035BBC",
+    properties: [
+      {
+        titleProperty: "Fermion Freckles",
+        titleColor: "#FFD505",
+        propertyDesc: "14",
+        percent: "32%"
+      },
+      {
+        titleProperty: "Boson Movement",
+        titleColor: "#035BBC",
+        propertyDesc: "Sparklink / Still",
+        percent: "1.7%"
+      }
+    ],
+    description: ["This (de)generative art project was created to provide 100% direct aid to Ukraine.", "2014", "Ukrainian immigrants in the Pacific Northwest of the United States had taken it into their own hands to provide a direct supply chain of specialty tactical medical equipment to Ukraine’s grassroots militias. We are here to continue their story.", "2022", "This website was built by Ukrainian Web3 developers. The logic of the algorithm written by a Ukranian generative artist. Prior to the war they were making NFTs for fun, now for a purpose.", "About the piece", "The algorithm is set such that as the number of the NFT increases, the chaotic opposite square masses also increase, eventually inverting or turning the flag upside-down. Some NFTs are animated (sparkling) to show parts of this progression, and others are still. Only holders of a UkraineGlitch NFT can watch the full animation of the flag transformation occur below."]
   }
 
 }
-
-
 
 const UkraineSplashPage = ({ loginDone }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -118,7 +130,8 @@ const UkraineSplashPage = ({ loginDone }) => {
     <div className="wrapper-splash-page ukraineglitch">
       <div className="template-home-splash-page">
         <AuthorCard splashData={splashData} />
-        <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} />
+        {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
+        <TokenLeftTemplate counterData={splashData.counterData} copies={100} soldCopies={0} primaryColor={primaryColor} />
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
@@ -129,13 +142,13 @@ const UkraineSplashPage = ({ loginDone }) => {
           colorText={splashData.exclusiveNft.titleColor}
           carousel={carousel}
         />
-      <div style={{ height: "108px" }} />
-      <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
-      {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
-      <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData} />
-      <TeamMeet primaryColor={primaryColor} arraySplash={"ukraine"} />
-      <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName} />
-    </div>
+        <div style={{ height: "108px" }} />
+        <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
+        {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
+        <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData} />
+        <TeamMeet primaryColor={primaryColor} arraySplash={"ukraine"} />
+        <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName} />
+      </div>
     </div >
   );
 };
