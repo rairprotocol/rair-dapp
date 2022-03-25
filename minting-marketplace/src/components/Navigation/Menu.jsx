@@ -7,7 +7,7 @@ import * as authTypes from "../../ducks/auth/types";
 import * as contractTypes from "../../ducks/contracts/types";
 
 const Nav = styled.nav`
-  background: ${(props) => props.primaryColor === "rhyno" ? "white" : "rgb(43, 40, 41)"};
+  background: ${(props) => props.primaryColor === "rhyno" ? "rgb(192, 192, 192)" : "rgb(43, 40, 41)"};
   height: 85px;
   display: flex;
   justify-content: space-between;
@@ -17,13 +17,15 @@ const Nav = styled.nav`
 `;
 
 const ListItem = styled.li`
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 10vw;
     padding: 30px 0px;
+    width: 100%;
     &:hover {
-        background:rgb(46, 44, 45)
+        background: ${props => props.primaryColor === "rhyno" ? "rgb(211, 210, 211)" : "rgb(46, 44, 45)"};
     }
 
     .burger-menu-logout {
@@ -38,6 +40,28 @@ const ListItem = styled.li`
         width: 100%;
     }
 `;
+
+const List = styled.ul`
+        background: ${props => props.primaryColor === "rhyno" ? "rgb(201, 201, 201)" : "rgb(56, 54, 55)"};
+        overflow: ${(props) => props.click && "hidden"};
+        border-bottom-right-radius:  ${(props) => props.click ? "16px" : ""};
+        border-bottom-left-radius: ${(props) => props.click ? "16px" : ""};
+        margin-top: 5px;
+        display: flex;
+        width: 100%;
+        position: absolute;
+        top: 80px;
+        left: ${(props) => props.click ? "0" : "-100%"};
+        opacity: ${(props) => props.click ? "1" : "0"};
+        align-items: ${props => props.click && "center"};
+        padding-left: ${props => props.click && "0px"};
+        transition: all 0.5s ease;
+        flex-direction: column;
+        list-style-type: none;
+        grid-gap: 0px;
+        z-index: 1;
+`;
+
 
 const MenuNavigation = ({
     headerLogo,
@@ -70,8 +94,8 @@ const MenuNavigation = ({
                 <div>
                     <img style={{ width: "50px", height: "auto" }} src={headerLogo} alt="" />
                 </div>
-                <ul className={click ? "nav-options active" : "nav-options"}>
-                    {!loginDone && !renderBtnConnect && <ListItem>
+                <List primaryColor={primaryColor} click={click}>
+                    {!loginDone && !renderBtnConnect && <ListItem primaryColor={primaryColor}>
                         <div className='btn-connect-wallet-wrapper'>
                             <button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
                                 className={`btn btn-${primaryColor} btn-connect-wallet`}
@@ -86,7 +110,7 @@ const MenuNavigation = ({
                             } */}
                         </div>
                     </ListItem>}
-                    <ListItem>
+                    <ListItem primaryColor={primaryColor}>
                         <a
                             href="https://rair.tech/"
                             target="_blank"
@@ -95,7 +119,7 @@ const MenuNavigation = ({
                             RAIR TECH
                         </a>
                     </ListItem>
-                    <ListItem>
+                    <ListItem primaryColor={primaryColor}>
                         <button
                             className="btn-change-theme"
                             style={{
@@ -120,11 +144,14 @@ const MenuNavigation = ({
                             )}
                         </button>
                     </ListItem>
-                    {loginDone && <ListItem onClick={logout}>
+                    {loginDone && <ListItem primaryColor={primaryColor} onClick={logout}>
                         <div className="burger-menu-logout">
                             <i className="fas fa-sign-out-alt"></i>Logout
                         </div>
                     </ListItem>}
+                </List>
+                <ul className={click ? "nav-options active" : "nav-options"}>
+
                 </ul>
                 <div className="mobile-menu" onClick={toggleMenu}>
                     {click ? (
