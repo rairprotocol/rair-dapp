@@ -21,7 +21,7 @@ import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
 import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
 import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayerModule";
 import StaticTiles from "./SplashPageTemplate/VideoTiles/StaticTiles";
-import UnlockableVideo from "./images/nipsey1.png";
+import UnlockableVideo from "./images/white_pixel.png";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -30,7 +30,7 @@ import UnlockableVideo from "./images/nipsey1.png";
 const splashData = {
   title: "#NFTLA",
   titleColor: "#A4396F",
-  description: "Connect with Metamask and receive a free airdrop to unlock exclusive encrypted streams!",
+  description: "Connect with Metamask for your free NFT airdrop and access exclusive streaming content from our event!",
   backgroundImage: NFTLA1_rounded,
   button1 :{
     buttonColor: "#A4396F",
@@ -62,11 +62,11 @@ const splashData = {
   videoData : {
     video: NFTLA_Video,
     videoTitle: "NFT LA",
-    videoModuleDescription: "NFT owners can learn more about the project by signing with metamask to unlock an encrypted stream  ",
+    videoModuleDescription: "Want to learn more about the project? Only NFT owners get access to exclusive streaming content. Connect with Metamask and get yours today!",
     videoModuleTitle: "Preview",
   },
-  tilesTitle: "Unlockable Conference Videos Coming Soon"
-}
+  tilesTitle: "Unlockable Conference Videos Coming Soon!"
+} 
 
 
 

@@ -1106,14 +1106,17 @@ line-height: 30px;
 
 .video-block-metamask-some {
     position: absolute;
-    top: 30px;
-    left: 75px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .video-block-metamask-some img {
-    width: 80px;
+    width: 35%;
     height: auto;
-    position: absolute;
+    position: relative;
     /* filter: blur(0px); */
     /* opacity: 1; */
     /* top: 30px;
@@ -1135,7 +1138,7 @@ line-height: 30px;
 
 .video-description .video-title {
     color: #fff;
-    font-size: 18px;
+    font-size: 130%;
 }
 
 .video-description .video-title p {
@@ -1144,7 +1147,7 @@ line-height: 30px;
 
 .video-description .video-timer p {
     color: #fff;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .video-key {
