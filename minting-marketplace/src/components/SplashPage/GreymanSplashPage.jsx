@@ -26,7 +26,7 @@ import { web3Switch } from "../../utils/switchBlockchain.js";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
-import VideoPlayer from "../video/videoPlayerGenerall";
+import StandaloneVideoPlayer from "../video/videoPlayerGenerall";
 import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
 
@@ -250,7 +250,10 @@ const SplashPage = ({ loginDone, connectUserData }) => {
               Interview with artist Dadara.
             </h2>
             {/* <button onClick={closeModal}>close</button> */}
-            <VideoPlayer />
+            <StandaloneVideoPlayer
+              baseURL={"https://storage.googleapis.com/rair-videos/"}
+              mediaId={"QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8"}
+            />
           </Modal>
         </>
       );
@@ -285,7 +288,10 @@ const SplashPage = ({ loginDone, connectUserData }) => {
               Interview with artist Dadara.
             </h2>
             {/* <button onClick={closeModal}>close</button> */}
-            <VideoPlayer />
+            <StandaloneVideoPlayer
+              baseURL={"https://storage.googleapis.com/rair-videos/"}
+              mediaId={"QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8"}
+            />
           </Modal>
         </>
       );
