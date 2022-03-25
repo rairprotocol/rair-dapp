@@ -1,0 +1,37 @@
+.col-1.rounded.burder-menu .btn-connect-wallet-wrapper {
+    position: relative;
+    top: 0;
+    right: 0;
+}
+
+.nav-options {
+    margin-top: 5px;
+    display: flex;
+    width: 100%;
+    position: absolute;
+    top: 80px;
+    left: -100%;
+    opacity: 0;
+    transition: all 0.5s ease;
+    flex-direction: column;
+    list-style-type: none;
+    grid-gap: 0px;
+    z-index: 1;
+}
+.nav-options.active {
+    background: rgb(56, 54, 55);
+    overflow: hidden;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+    align-content: center;
+    padding-left: 0px;
+}
+.mobile-menu {
+  display: block;
+  font-size: 30px;
+  cursor: pointer;
+}
