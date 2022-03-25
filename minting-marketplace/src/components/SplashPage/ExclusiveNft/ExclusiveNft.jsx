@@ -1,11 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const ExclusiveNft = ({ Nft_1, Nft_2, Nft_3, Nft_4, NftImage, amountTokens, linkComing }) => {
+const ExclusiveNft = ({ Nft_1, Nft_2, Nft_3, Nft_4, NftImage, amountTokens, linkComing, titleNft, colorText }) => {
     return (
         <div className="exclusive-nfts">
             <div className="title-nft">
-                <h3>Only <span className="text-gradient">{amountTokens ? amountTokens : 1000}</span> originals will ever be minted</h3>
+                <h3>Only <span 
+                className={colorText ? "" : "text-gradient"}
+                style={{color: `${colorText && colorText}`}}
+                >{amountTokens ? amountTokens : 1000}</span> {titleNft ? titleNft : "originals will ever be minted"}</h3>
             </div>
             <div className="nfts-select">
                 <div className="main-nft" style={{

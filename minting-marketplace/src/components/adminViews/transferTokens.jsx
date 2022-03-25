@@ -13,8 +13,10 @@ const TransferTokens = () => {
 	const { currentChain, currentUserAddress, contractCreator } = useSelector(store => store.contractStore);
 
 	const [traderRole, setTraderRole] = useState();
+	const [manualAddress, setManualAddress] = useState(false);
+	const [manualDiamond, setManualDiamond] = useState(false);
 
-	const [, setContractData] = useState();
+	const [contractData, setContractData] = useState();
 
 	const [userContracts, setUserContracts] = useState([]);
 	const [selectedContract, setSelectedContract] = useState('null');
@@ -43,12 +45,54 @@ const TransferTokens = () => {
 
 	useEffect(getUserContracts, [getUserContracts]);
 
+	const connectAddressManual = async () => {
+		if (selectedContract === "") return;
+		let instance;
+		try {
+			instance = contractCreator(selectedContract, manualDiamond ? diamondFactoryAbi : erc721Abi);
+		} catch (err) {
+			console.error("Can't connect to address");
+		}
+		let name = await metamaskCall(
+			instance.name(),
+			"Unable to connect to the contract, please verify the address, blockchain and type of the contract"
+		);
+
+		if (name !== false) {
+			setContractData({
+				title: name,
+				contractAddress: instance.address
+			});
+			setContractBlockchain(blockchainData[currentChain]);
+			//0xbadd57ebb7778de50515be69c0d126e8f562a6a4
+			setContractInstance(instance);
+		} else {
+			return;
+		}
+
+		let tokensOwnedAsyncCall = (async () => {
+			let ownedTokensArray = [];
+			let numberOfOwnedTokens = (await metamaskCall(instance.balanceOf(currentUserAddress)));
+			for (let i = 0; i < numberOfOwnedTokens; i++) {
+				ownedTokensArray.push({
+					uniqueIndexInContract: (await metamaskCall(instance.tokenOfOwnerByIndex(currentUserAddress, i))).toString()
+				});
+			}
+			setOwnedTokens(ownedTokensArray);
+		})();
+	}
+
 	const getContractData = useCallback(async () => {
 		setContractInstance();
 		setSelectedProducts('null');
 		setContractProducts([]);
 		setContractBlockchain();
 		setTraderRole();
+		setOwnedTokens([]);
+		setContractData();
+		if (manualAddress) {
+			return;
+		}
 		if (selectedContract !== 'null') {
 			let response1 = await rFetch(`/api/contracts/${selectedContract}`);
 			if (response1.success) {
@@ -70,11 +114,14 @@ const TransferTokens = () => {
 				setContractInstance(instance);
 			}
 		}
-	}, [selectedContract, currentChain, contractCreator]);
+	}, [selectedContract, currentChain, contractCreator, manualAddress, setManualDiamond]);
 
 	useEffect(getContractData, [getContractData]);
 
 	const getProductNFTs = useCallback(async () => {
+		if (manualAddress) {
+			return;
+		}
 		if (selectedProduct !== 'null') {
 			let response4 = await rFetch(`/api/nft/${selectedContract}/${Number(selectedProduct)}`);
 			if (response4.success) {
@@ -100,7 +147,22 @@ const TransferTokens = () => {
 	useEffect(hasTraderRole, [hasTraderRole]);
 
 	return <div className='col-12 row'>
-		<div className='col-12'>
+		<button onClick={() => {
+			setManualAddress(false)
+			setSelectedContract("null");
+			setContractData();
+		}} className='btn col-6 btn-royal-ice'>
+			Database
+		</button>
+		<button onClick={() => {
+			setManualAddress(true)
+			setSelectedContract("");
+			setContractData();
+		}} className='btn col-6 btn-stimorol'>
+			Blockchain
+		</button>
+		<div className='col-12 row'>
+		{manualAddress === false ? <>
 			<InputSelect
 				getter={selectedContract}
 				setter={setSelectedContract}
@@ -109,7 +171,6 @@ const TransferTokens = () => {
 				label='Contract'
 				placeholder='Select your contract'
 			/>
-			<br/>
 			{selectedContract !== null && contractProducts.length > 0 &&
 				<InputSelect
 					getter={selectedProduct}
@@ -120,11 +181,35 @@ const TransferTokens = () => {
 					placeholder='Select your product'
 				/>
 			}
+		</> : <>
+			<div className='col-12 col-md-10'>
+				<InputField 
+					getter={selectedContract}
+					setter={setSelectedContract}
+					label='Contract address'
+					customClass='form-control'
+					labelClass='col-12'
+				/>
+			</div>
+			<div className='col-12 col-md-2 pt-4'>
+				<button onClick={() => setManualDiamond(!manualDiamond)} className={`btn btn-${manualDiamond ? 'royal-ice' : 'stimorol'}`}>
+					{manualDiamond ? 'Diamond' : 'Classic'} Contract
+				</button>
+			</div>
+			<div className='col-12'>
+				<button disabled={selectedContract === "" || (contractData && contractData.address === selectedContract)} onClick={connectAddressManual} className='btn btn-success'>
+					Connect to address!
+				</button>
+			</div>
+		</>}
 		</div>
 		<br/>
 		<hr/>
-		{selectedProduct !== 'null' && <>
+		{(selectedProduct !== 'null' || (contractData && manualAddress)) && <>
 			<div className='col-12 row'>
+				{contractData && <div className='col-12'>
+					Connected to: {contractData.title} ({contractData.contractAddress})
+				</div>}
 				<div className='col-12'>
 				Your owned tokens:<br />
 				{
