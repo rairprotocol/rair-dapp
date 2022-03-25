@@ -9,6 +9,7 @@ import './AppStorage.sol';
 /// @dev 	Notice that this contract is inheriting from AccessControlAppStorageEnumerable721
 contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
+<<<<<<< HEAD
 
 	/// @notice This event stores in the blockchain when the product is correctly created
     /// @param  id Contains the unique id that will be indexed for the product
@@ -16,11 +17,14 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	/// @param  startingToken Contains the selected NTF token to start the product 
 	/// @param  length Contains the total of tokens that we want the product to have
 	event ProductCreated(uint indexed id, string name, uint startingToken, uint length);
+=======
+	event CreatedCollection(uint indexed collectionIndex, string collectionName, uint startingToken, uint collectionLength);
+>>>>>>> remotes/origin/dev
 
 	/// @notice Verifies that the product exists
-	/// @param	productID	Product to verify
-	modifier productExists(uint productID) {
-		require(s.products.length > productID, "RAIR ERC721: Product does not exist");
+	/// @param	collectionId	Collection to verify
+	modifier collectionExists(uint collectionId) {
+		require(s.products.length > collectionId, "RAIR ERC721: Collection does not exist");
 		_;
 	}
 
@@ -41,9 +45,14 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	/// @notice Wrapper for the validator, searching for the entire product
 	/// @dev 	This function require that the product exist
 	/// @param	find			Address to search
+<<<<<<< HEAD
 	/// @param	productIndex	Product to verify
 	/// @return bool 			For the existence or not, of the token in the product 
 	function ownsTokenInProduct(address find, uint productIndex) public view productExists(productIndex) returns (bool) {
+=======
+	/// @param	productIndex	Collection to verify
+	function ownsTokenInProduct(address find, uint productIndex) public view collectionExists(productIndex) returns (bool) {
+>>>>>>> remotes/origin/dev
 		product storage selectedProduct = s.products[productIndex];
 		return _ownsTokenInsideRange(find, selectedProduct.startingToken, selectedProduct.endingToken);
 	}
@@ -74,6 +83,7 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		return false;
 	}
 
+<<<<<<< HEAD
 	/// @param productIndex_ Contains the facet addresses and function selectors
 	/// @param tokenIndex_ Contains the facet addresses and function selectors
 	function tokenByProduct(uint productIndex_, uint tokenIndex_) public view productExists(productIndex_) returns (uint) {
@@ -83,6 +93,13 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	/// @param productIndex Contains the facet addresses and function selectors
 	/// @param tokenIndex_ Contains the facet addresses and function selectors
 	function productToToken(uint productIndex_, uint tokenIndex_) public view productExists(productIndex_) returns(uint) {
+=======
+	function tokenByProduct(uint productIndex_, uint tokenIndex_) public view collectionExists(productIndex_) returns (uint) {
+		return s.tokensByProduct[productIndex_][tokenIndex_];
+	}
+
+	function productToToken(uint productIndex_, uint tokenIndex_) public view collectionExists(productIndex_) returns(uint) {
+>>>>>>> remotes/origin/dev
 		return s.products[productIndex_].startingToken + tokenIndex_;
 	}
 
@@ -104,11 +121,15 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		return s.products.length;
 	}
 
+<<<<<<< HEAD
 	/// @notice This function allow us to check the information of a product
 	/// @dev 	This function require that the product exist
 	/// @param productIndex_ Contains the id of the product that we want to verify
 	/// @return product which contain the information of the product
 	function getProductInfo(uint productIndex_) external view productExists(productIndex_) returns (product memory) {
+=======
+	function getProductInfo(uint productIndex_) external view collectionExists(productIndex_) returns (product memory) {
+>>>>>>> remotes/origin/dev
 		return s.products[productIndex_];
 	}
 
@@ -138,12 +159,20 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	
 	/// @notice	Loops through a range of tokens inside a product and returns the first token without an owner
 	/// @dev	Uses a loop, do not call this from a non-view function!
+<<<<<<< HEAD
 	/// @param	productID		Index of the product to search
 	/// @param	startingIndex	Index of the starting token of the product
 	/// @param	endingIndex		Index of the last token of the product 
 	/// @return nextIndex		With the next starting point available for new products
 	function getNextSequentialIndex(uint productID, uint startingIndex, uint endingIndex) public view productExists(productID) returns(uint nextIndex) {
 		product memory currentProduct = s.products[productID];
+=======
+	/// @param	collectionId	Index of the product to search
+	/// @param	startingIndex	Index of the product to search
+	/// @param	endingIndex		Index of the product to search
+	function getNextSequentialIndex(uint collectionId, uint startingIndex, uint endingIndex) public view collectionExists(collectionId) returns(uint nextIndex) {
+		product memory currentProduct = s.products[collectionId];
+>>>>>>> remotes/origin/dev
 		for (uint i = currentProduct.startingToken + startingIndex; i <= currentProduct.startingToken + endingIndex; i++) {
 			if (!_exists(i)) {
 				return i - currentProduct.startingToken;
@@ -154,11 +183,18 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice	Loops over the user's tokens looking for one that belongs to a product and a specific range
 	/// @dev	Loops are expensive in solidity, so don't use this in a function that requires gas
+<<<<<<< HEAD
 	/// @param	userAddress			Address that will be uses to see the belonging tokens of a product and a range
 	/// @param	productIndex		Index of the Product to search
 	/// @param	startingToken		Starting token to search
 	/// @param	endingToken			Last token to search 
 	/// @return bool 				Which respond if the tokens belongs or not to a product and a range
+=======
+	/// @param	userAddress			User to search
+	/// @param	productIndex		Collection to search
+	/// @param	startingToken		Starting point of search
+	/// @param	endingToken			Ending point of search
+>>>>>>> remotes/origin/dev
 	function hasTokenInProduct(
 				address userAddress,
 				uint productIndex,
@@ -199,6 +235,6 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 		newProduct.name = string(_productName);
 		newProduct.mintableTokens = _copies;
 		
-		emit ProductCreated(s.products.length - 1, _productName, lastToken, _copies);
+		emit CreatedCollection(s.products.length - 1, _productName, lastToken, _copies);
 	}
 }

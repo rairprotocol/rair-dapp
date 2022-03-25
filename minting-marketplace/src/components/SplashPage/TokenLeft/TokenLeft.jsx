@@ -6,23 +6,6 @@ import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 
 const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
     const [percentTokens, setPersentTokens] = useState(0);
-    // const history = useHistory();
-    // const [emailField, setEmailField] = useState('');
-
-    // const onChangeEmail = (e) => {
-    //     setEmailField(e.target.value);
-    // }
-
-    // const onSubmit = (e) => {
-    //     setTimeout(() => {
-    //         if (emailField === "") {
-    //             alert('Filling the field!')
-    //         } else {
-    //             e.preventDefault();
-    //             history.push('/thankyou');
-    //         }
-    //     }, 1000)
-    // }
 
     const leftTokensNumber = Number(copies) - Number(soldCopies);
     const wholeTokens = Number(copies);

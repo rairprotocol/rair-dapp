@@ -12,6 +12,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	using Strings for uint256;
 
+<<<<<<< HEAD
 	/// @notice This event stores in the blockchain when the base code of all the tokens has a valid change in its URI
     /// @param  newURI Contains the new  base identifier for all the tokens
 	/// @param  appendTokenIndex Contains the index of the tokens appended to the URI
@@ -27,6 +28,12 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @notice This event stores in the blockchain when a contract has a change in its URI
     /// @param  newURI Contains the new identifier for the contract 
 	event ContractURIChanged(string newURI);
+=======
+	event UpdatedBaseURI(string newURI, bool appendTokenIndex);
+	event UpdatedTokenURI(uint tokenId, string newURI);
+	event UpdatedProductURI(uint productId, string newURI, bool appendTokenIndex);
+	event UpdatedContractURI(string newURI);
+>>>>>>> remotes/origin/dev
 
 	// For OpenSea's Freezing
 	event PermanentURI(string _value, uint256 indexed _id);
@@ -65,7 +72,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @param	newURI	New URI to be given
 	function setUniqueURI(uint tokenId, string calldata newURI) public onlyRole(CREATOR) {
 		s.uniqueTokenURI[tokenId] = newURI;
-		emit TokenURIChanged(tokenId, newURI);
+		emit UpdatedTokenURI(tokenId, newURI);
 	}
 
 	/// @notice	Gives an individual token an unique URI
@@ -77,7 +84,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	function setProductURI(uint productId, string calldata newURI, bool appendTokenIndexToProductURI) public onlyRole(CREATOR) {
 		s.productURI[productId] = newURI;
 		s.appendTokenIndexToProductURI[productId] = appendTokenIndexToProductURI;
-		emit ProductURIChanged(productId, newURI, appendTokenIndexToProductURI);
+		emit UpdatedProductURI(productId, newURI, appendTokenIndexToProductURI);
 	}
 
 	/// @notice	This function use OpenSea's to freeze the metadata
@@ -92,7 +99,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @param newURI New URI to be given
 	function setContractURI(string calldata newURI) external onlyRole(CREATOR) {
 		s.contractMetadataURI = newURI;
-		emit ContractURIChanged(newURI);
+		emit UpdatedContractURI(newURI);
 	}
 
 	/// @notice	This function allow us to see the current URI of the contract
@@ -109,7 +116,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	function setBaseURI(string calldata newURI, bool appendTokenIndexToBaseURI) external onlyRole(CREATOR) {
 		s.baseURI = newURI;
 		s.appendTokenIndexToBaseURI = appendTokenIndexToBaseURI;
-		emit BaseURIChanged(newURI, appendTokenIndexToBaseURI);
+		emit UpdatedBaseURI(newURI, appendTokenIndexToBaseURI);
 	}
 
 	/// @notice	Returns a token's URI, could be specific or general

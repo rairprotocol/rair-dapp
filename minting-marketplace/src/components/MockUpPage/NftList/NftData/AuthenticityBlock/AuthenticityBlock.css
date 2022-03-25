@@ -6,3 +6,9 @@
     max-width: 1600px;
     overflow: hidden;
 }
+
+.nftDataPageTest-a-hover {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}

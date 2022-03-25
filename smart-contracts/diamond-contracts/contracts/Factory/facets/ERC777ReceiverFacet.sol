@@ -12,12 +12,16 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 	bytes32 constant ERC777 = keccak256("ERC777");
 	bytes32 constant OWNER = keccak256("OWNER");
 	
+<<<<<<< HEAD
 	/// @notice This event stores in the blockchain when a new contract is deployed
     /// @param	owner contains the address of the owner of the contract 
     /// @param 	id asociated to the new contract
     /// @param 	address of the token that is used in the contract
 	/// @param 	contractName with the number of the new contract
 	event NewContractDeployed(address owner, uint id, address token, string contractName);
+=======
+	event DeployedContract(address deployerAddress, uint deploymentIndex, address deploymentAddress, string deploymentName);
+>>>>>>> remotes/origin/dev
 	
 	/// @notice Function called by an ERC777 when they send tokens
 	/// @dev   	This is our deployment mechanism for ERC721 contracts!
@@ -43,6 +47,6 @@ contract ERC777ReceiverFacet is IERC777Recipient, AccessControlAppStorageEnumera
 		RAIR_ERC721_Diamond newToken = new RAIR_ERC721_Diamond(string(userData), from, 30000);
 		deploymentsFromOwner.push(address(newToken));
 		s.contractToCreator[address(newToken)] = from;
-		emit NewContractDeployed(from, deploymentsFromOwner.length, address(newToken), string(userData));
+		emit DeployedContract(from, deploymentsFromOwner.length - 1, address(newToken), string(userData));
 	}
 }

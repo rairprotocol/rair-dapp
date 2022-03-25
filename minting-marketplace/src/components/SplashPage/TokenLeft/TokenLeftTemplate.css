@@ -1,0 +1,38 @@
+.wrapper-splash-page.ukraineglitch .left-tokens-content {
+    justify-content: flex-start;
+    text-align: center;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper .property-first:first-child {
+    margin-right: 30px;
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page.ukraineglitch .left-tokens-content .tokens-description {
+        padding: 0 15px;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper {
+        margin-bottom: 40px;
+        align-items: center;
+    }
+
+    .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
+        left: 35px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.ukraineglitch  .text-progress.progress-text-template {
+        bottom: 0;
+        left: 45%;
+    }
+}

@@ -49,6 +49,7 @@ const NftDataPageTest = ({
   offerData,
   offerPrice,
 }) => {
+  console.log(currentUser, "currentUser")
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
   const [ownerInfo, setOwnerInfo] = useState();
@@ -313,7 +314,7 @@ const NftDataPageTest = ({
         selectedToken,
         { value: offerData.price }
       ),
-      "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+        "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )
     ) {
       Swal.fire("Success", "Now, you are the owner of this token", "success");
@@ -335,7 +336,7 @@ const NftDataPageTest = ({
               "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
           }}
         >
-          Owned
+          Sell
         </button>
       );
     } else
@@ -473,6 +474,7 @@ const NftDataPageTest = ({
       <BreadcrumbsView />
       <div>
         <TitleCollection
+          selectedData={selectedData}
           currentUser={currentUser}
           title={selectedData?.name}
           userName={ownerInfo?.owner}
@@ -783,8 +785,8 @@ const NftDataPageTest = ({
                   textColor={textColor}
                   primaryColor={primaryColor}
                   margin={'0 auto'}
-                /> : null }
-                
+                /> : null}
+
               </AccordionItemPanel>
             </AccordionItem>
 
@@ -805,6 +807,7 @@ const NftDataPageTest = ({
               <AccordionItemPanel>
                 {/* <div>{showLink()}</div> */}
                 <AuthenticityBlock
+                  ownerInfo={ownerInfo}
                   tokenData={tokenData}
                   selectedToken={selectedToken}
                 />

@@ -331,6 +331,7 @@ module.exports = context => {
           uri: storageLink,
           ...meta,
         });
+        // TODO: add vault key writer here
 
         log.info(`${ req.file.originalname } stored to DB.`);
         socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: ['gcp'].includes(storage) ? true : false, done: ['gcp'].includes(storage) ? 100 : 96 });

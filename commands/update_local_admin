@@ -1,0 +1,19 @@
+input public publicAddress
+sanitize (make all lower case)
+
+input adminNFT
+sanitize (make all lowercase)
+sanity check (is this really an nft?) 
+
+-- 
+//connect to mongo
+docker exec -it mongo mongo -uadmin -padmin
+
+//connect to rair-db
+use rair-db
+
+//update database with variables 
+db.User.updateOne(
+  { publicAddress: "$publicAddress"},
+  { $set: { adminNFT: "$adminNFT"} }
+)

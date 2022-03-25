@@ -44,7 +44,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, uint offerIndex);
 	event UpdatedMintingOffer(address erc721Address, uint rangeIndex, uint feeSplitsLength, bool visible, uint offerIndex);
 	
-	event TokenMinted(address erc721Address, uint rangeIndex, uint tokenIndex, address buyer);
+	event MintedToken(address erc721Address, uint rangeIndex, uint tokenIndex, address buyer);
 
 	modifier checkCreatorRole(address erc721Address) {
 		require(IAccessControl(erc721Address).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)), "Minter Marketplace: Sender isn't the creator of the contract!");
@@ -330,6 +330,6 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 	/// @param recipient   	  Contains the address of the recipient of the token
 	function _buyMintingOffer(address erc721Address, uint rangeIndex, uint tokenIndex, address recipient) internal {
 		IRAIR721(erc721Address).mintFromRange(recipient, rangeIndex, tokenIndex);
-		emit TokenMinted(erc721Address, rangeIndex, tokenIndex, recipient);
+		emit MintedToken(erc721Address, rangeIndex, tokenIndex, recipient);
 	}
 }

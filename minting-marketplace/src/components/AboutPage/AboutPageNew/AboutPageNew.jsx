@@ -20,10 +20,12 @@ import RoadMap from './RoadMapAbout/RoadMapAbout';
 import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
 import { useLocation, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const AboutPageNew = ({ primaryColor, headerLogoBlack, headerLogoWhite }) => {
+const AboutPageNew = ({ headerLogoBlack, headerLogoWhite, connectUserData }) => {
     const { pathname } = useLocation();
     const history = useHistory();
+    const { primaryColor } = useSelector(store => store.colorStore);
 
     const termsText = "I understand this a test NFT designed to unlock RAIR streams";
 
@@ -46,6 +48,7 @@ const AboutPageNew = ({ primaryColor, headerLogoBlack, headerLogoWhite }) => {
                 </div>
                 <div className="home-about--page">
                     <MainBlock
+                        connectUserData={connectUserData}
                         RairLogo={RairLogo}
                         primaryColor={primaryColor}
                         Metamask={Metamask}

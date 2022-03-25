@@ -4,6 +4,10 @@ import Teammate_2 from '../images/foundation.png';
 import Teammate_3 from '../images/south-dig.png';
 import Teammate_4 from '../images/rair-block.png';
 import Teammate_5 from '../images/movementontheground.png';
+import Teammate_6 from '../images/immersiverse_logo.png';
+import Teammate_7 from '../images/UkrainianAmericanCons/15724868_10208080805993720_1581371147497725224_o.jpeg';
+import NFTLA_ICON from '../images/NFTLA_icon.png'
+import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
 import Teammate from './Teammate';
 import GreymanAuthor from '../images/greymanAuthor.png';
@@ -469,6 +473,141 @@ const teamGreymanArray = [
     }
 ];
 
+const teamUkraineArray = [
+    {   
+        chain: '0x7bfbAAC8b6bC1B7b9e4bEB5c1d92C913B9598465',
+        nameTeammate: "Ukrainian American Coordinating Council",
+        imageUrl: Teammate_7,
+        aboutTeammate: [
+            "Please, join the Ukrainian-American Cultural Association of Oregon & SW Washington and the Ukrainian American Coordinating Council in raising money to fund medical supplies to Ukraine. As soon as funds will arrive in their bank accounts, they transfer it to Come Back Alive fund, Ukrainian Government Medical Fund, Ukrainian Refugee Fund and fund containers with medical supplies to Ukrainian hospitals. The Ukrainian community in Oregon and SW Washington has been shipping medical supplies to Ukraine since 2014. They have shipped 5 medical containers and hundreds of boxes of medical supplies generously donated by Medical Teams International. They are grateful to MTI for their donations, and to local volunteers who work with MTI to receive and repackage donations as well as volunteers in Ukraine who distribute these donations to hospitals and mobile clinics there. We ask for your support in helping pay for the shipment of these supplies from warehouses in Oregon and SW Washington to Ukraine. Any amount helps. UACC regularly posts pictures of previous shipments and will keep updating their fb fundraiser pages with pictures of medical shipment (or shipments!) your contributions help fund. Thank you! Дякуємо!"
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-facebook',
+                link: 'https://www.facebook.com/UACCusa/',
+            },
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://uaccusa.org/',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+    {
+        chain: `0x7849194dD593d6c3aeD24035D70B5394a1C90F8F`,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
+const teamNFTLAarray = [
+    {   
+        chain: '',
+        nameTeammate: "NFT LA",
+        imageUrl: NFTLA_ICON,
+        aboutTeammate: [
+            `NFT | LA is an integrated conference experience: an epic IRL conference fused with an immersive Metaverse integrations and L.A's robust nightlife scene. Explore the city of angels and journey into its new role as a global conduit for the adoption of web3 in of sports, music, art, and entertainment.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://www.nftla.live/',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+
+    {
+        chain: ``,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content. Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
+const teamImmersiverseArray = [
+    {   
+        chain: '',
+        nameTeammate: "ImmersiVerse",
+        imageUrl: Teammate_6,
+        aboutTeammate: [
+            `ImmersiVerse is a premium experiential destination featuring great speakers, meaningful 
+            discussions and live demos of emerging technology. These multi-day events focus 
+            on “Future-Culture”, finance, networking, the arts, and technology. Also included are macro-topics 
+            like public policy and digital health. ImmersiVerses are designed for invite-only audiences and 
+            scheduled during major gatherings such as SXSW, Sundance, Tribeca and IBC.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'http://iverse.events',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+    {
+        chain: ``,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content. Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
 const teamNutArray = [
     {
         nameTeammate: "MC Cranksy",
@@ -549,11 +688,71 @@ const NipseyTeamComponent = ({ primaryColor }) => {
     )
 }
 
+const UkraineGlitchComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamUkraineArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
 const GreyManTeamComponent = ({ primaryColor }) => {
     return (
         <div className="splash-team-greyman">
             {
                 teamGreymanArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
+const NFTLATeamComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamNFTLAarray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
+const ImmersiVerseTeamComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamImmersiverseArray.map((t, index) => {
                     return <Teammate
                         key={index + t.nameTeammate}
                         name={t.nameTeammate}
@@ -612,10 +811,19 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
         <div className="splash-team">
             <div className="title-team">
                 {
+                    arraySplash === "ukraine" && <h3> About the <span style={{color:"#035BBC"}}>Cause</span></h3>
+                }
+                {
                     arraySplash === "nipsey" && <h3>Meet the <span className="text-gradient">Team</span></h3>
                 }
                 {
                     arraySplash === "greyman" && <h3>About the <span className="text-gradient">Artist</span></h3>
+                }
+                {
+                    arraySplash === "immersiverse" && <h3>About</h3>
+                }
+                {
+                    arraySplash === "NFTLA" && <h3>About</h3>
                 }
                 {
                     arraySplash === "rair" && <h3>Meet the <span className="text-gradient">Team</span></h3>
@@ -629,7 +837,16 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
             </div>
             <div className="meet-team">
                 {
+                    arraySplash === "ukraine" &&  <UkraineGlitchComponent />
+                }
+                {
                     arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />
+                }
+                {
+                    arraySplash === "immersiverse" && <ImmersiVerseTeamComponent primaryColor={primaryColor} />
+                }
+                {
+                    arraySplash === "NFTLA" && <NFTLATeamComponent primaryColor={primaryColor} />
                 }
                 {
                     arraySplash === "nipsey" && <NipseyTeamComponent primaryColor={primaryColor} />
