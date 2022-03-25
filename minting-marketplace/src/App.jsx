@@ -444,6 +444,7 @@ function App({ sentryHistory }) {
 							renderBtnConnect={renderBtnConnect}
 							loginDone={loginDone}
 							setLoginDone={setLoginDone}
+							currentUserAddress={currentUserAddress}
 						/>
 						}
 
