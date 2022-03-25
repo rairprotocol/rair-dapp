@@ -87,6 +87,7 @@ import { detectBlockchain } from './utils/blockchainData.js';
 import AlertMetamask from './components/AlertMetamask/index.jsx';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 import MenuNavigation from './components/Navigation/Menu.jsx';
+import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage.jsx';
 
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
@@ -499,6 +500,10 @@ function App({ sentryHistory }) {
 												content: NFTLASplashPage
 											},
 											{
+												path: '/ukraineglitch',
+												content: UkraineSplashPage
+											},
+											{
 												path: '/greyman-splash',
 												content: GreymanSplashPage
 											},
@@ -650,6 +655,7 @@ function App({ sentryHistory }) {
 										{
 											path: '/about-page',
 											content: <AboutPageNew
+												connectUserData={connectUserData}
 												headerLogoWhite={headerLogoWhite}
 												headerLogoBlack={headerLogoBlack}
 											/>

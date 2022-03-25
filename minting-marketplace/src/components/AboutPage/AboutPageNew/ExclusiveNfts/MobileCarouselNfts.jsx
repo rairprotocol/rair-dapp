@@ -3,9 +3,10 @@ import Carousel from 'react-multi-carousel';
 import "react-multi-carousel/lib/styles.css";
 
 const MobileCarouselNfts = (props) => {
+    const { children, screen } = props;
     const responsive = {
         mobile: {
-            breakpoint: { max: 750, min: 0 },
+            breakpoint: { max: screen ? screen : "750", min: 0 },
             items: 1,
         },
     };
@@ -18,7 +19,7 @@ const MobileCarouselNfts = (props) => {
                 responsive={responsive}
                 itemClass="carousel-item-padding-4-px"
             >
-                {props.children}
+                {children}
             </Carousel>
         </div>
     )

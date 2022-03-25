@@ -45,18 +45,22 @@ const splashData = {
     buttonLink: "https://discord.com/invite/y98EMXRsCE",
   },
   NFTName: "NFT art",
+  carouselTitle: "3 Unique Styles",
   carouselData: [
     {
       title: "Horizon",
-      img: NFTLA2
+      img: NFTLA2,
+      description: null
     },
     {
       title: "Dark",
-      img: NFTLA3
+      img: NFTLA3,
+      description: null
     },
     {
       title: "Palm",
-      img: NFTLA1
+      img: NFTLA1,
+      description: null
     }
   ],
   videoData : {
@@ -84,7 +88,7 @@ const NFTLASplashPage = ({ loginDone }) => {
     <div className="wrapper-splash-page">
       <div className="template-home-splash-page">
         <AuthorCard splashData={splashData}/>
-        <CarouselModule carousel={!carousel} carouselData={splashData.carouselData}/>
+        <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle}  carouselData={splashData.carouselData}/>
         <VideoPlayerModule backgroundImage={splashData.backgroundImage} videoData={splashData.videoData}/>
         <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />

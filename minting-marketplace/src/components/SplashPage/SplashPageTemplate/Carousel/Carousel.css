@@ -1,5 +1,11 @@
 /* Carousel Styles*/
 
+.carousel-description{
+    width: 21vw;
+    /* padding: 0 5vw; */
+    margin: 2vw 0;
+    font-size: calc(12px + .5vw);
+}
 .carousel-container {
     display: flex;
     flex-direction: column;
@@ -58,6 +64,10 @@
         text-align: center;
     }
 
+    .carousel-description {
+        width: 24vw;
+    }
+
     .carousel-container .join-pic-img{
         width: 24vw;
         height: 24vw;
@@ -75,9 +85,19 @@
         width: 100%
     }
 
+    .carousel-description {
+        width: 384px;
+    }
+
     .carousel-container .join-pic-img{
         width: 384px;
         height: 384px;
+    }
+
+    .join-pic-carousel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
 
@@ -87,10 +107,19 @@
         width: 50vw;
         height: 50vw;
     }
+
+    .carousel-container .carousel-description {
+        margin: 3vh;
+    }
 }
 
 @media screen and (max-width: 430px) {
     .carousel-container {
         margin: 20vw 0;
+    }
+
+    .carousel-container .carousel-description {
+        width: 100%;
+        padding: 0 10px;
     }
 }
