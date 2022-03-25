@@ -4,27 +4,27 @@ import "./StaticTiles.css"
 
 const videoArr = [
     {
-        typeVideo: "Sneak Preview Coming Soon",
-        unlockVideoName: "Intro",
-        timeVideo: "000:TBO:00",
+        typeVideo: "NFTLA-EXCLUSIVE-1",
+        unlockVideoName: "Welcome to NFTLA",
+        timeVideo: "00:00:00",
         locked: true
     },
     {
-        typeVideo: "ipseyverse Exclusive",
-        unlockVideoName: "Track 2",
-        timeVideo: "00:TBO:00",
+        typeVideo: "NFTLA-EXCLUSIVE-2",
+        unlockVideoName: "Speaker: Bun B",
+        timeVideo: "00:00:00",
         locked: false
     },
     {
-        typeVideo: "ipseyverse Exclusive",
-        unlockVideoName: "Track 3",
-        timeVideo: "00:04:02",
+        typeVideo: "NFTLA-EXCLUSIVE-3",
+        unlockVideoName: "Speaker: Dr. Peace Uche",
+        timeVideo: "00:00:00",
         locked: false
     },
     {
-        typeVideo: "ipseyverse Exclusive",
-        unlockVideoName: "Track 3",
-        timeVideo: "00:TBO:00",
+        typeVideo: "NFTLA-EXCLUSIVE-4",
+        unlockVideoName: "Closing Cermonies",
+        timeVideo: "00:00:00",
         locked: true
     }
 ]
