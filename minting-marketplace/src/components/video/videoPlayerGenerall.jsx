@@ -80,6 +80,11 @@ const VideoPlayer = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
     setDocumentTitle(`Streaming`);
   }, [videoName]);
 
+  if (mediaAddress === '') {
+    return <>
+    </>
+  }
+
   return (
     <>
       <div className="col-12 row mx-0 bg-secondary h1">
