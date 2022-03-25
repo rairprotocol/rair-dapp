@@ -12,8 +12,8 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice This event stores in the blockchain when the product is correctly created
     /// @param  id Contains the unique id that will be indexed for the product
-	/// @param  name Constains the name to identify the product
-	/// @param  startingToken Constains the selected NTF token to start the product 
+	/// @param  name Contains the name to identify the product
+	/// @param  startingToken Contains the selected NTF token to start the product 
 	/// @param  length Contains the total of tokens that we want the product to have
 	event ProductCreated(uint indexed id, string name, uint startingToken, uint length);
 

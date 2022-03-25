@@ -32,43 +32,55 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/// @param  to Contains the destiny address of the transaction
 	/// @param  tokenId Contains the id of the token to transfer
 	event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-	/// @notice This event stores in the blockchain when 
+	/// @notice This event stores in the blockchain when an user is approved to move a token
     /// @param  owner Contains the address of the owner of the tokens
-	/// @param  approved Contains the address of the aproved transaction
+	/// @param  approved Contains the address of the user approved for move the token
 	/// @param 	tokenId Contains the id of the transfered token
 	event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
-	/// @notice This event stores in the blockchain when a product is succesfully finished
-    /// @param  owner Contains the role we want to update
-	/// @param  operator Contains the role we want to update
+	/// @notice This event stores in the blockchain when a owner is approved to move all the tokens
+    /// @param  owner Contains the address of the owner of the tokens
+	/// @param  operator Contains the address of the user approved for move all the tokens
 	/// @param	approved 
 	event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 	
+	/// @notice This function allow us to check the name of the token
+	/// @return string with the name of the token
 	function name() public view returns (string memory) {
 		return s._name;
 	}
 
+	/// @notice This function allow us to check the symbol of the token
+	/// @return string with the symbol of the token
 	function symbol() public view returns (string memory) {
 		return s._symbol;
 	}
 
-	/// @param owner Contains the facet addresses and function selectors
+	/// @notice This function allow us to check the balance of an account
+	/// @param 	owner Contains the address of the owner of tokens that we want to verify
+	/// @return uint256  with the total of the owned tokens
 	function balanceOf(address owner) public view returns (uint256) {
 		require(owner != address(0), "ERC721: balance query for the zero address");
 		return s._balances[owner];
 	}
 
-	/// @param owner Contains the facet addresses and function selectors
-	/// @param index Contains the facet addresses and function selectors
+	/// @notice This function allow us to check the balance of an account for a specific indexed token 
+	/// @param 	owner Contains the address of the owner of tokens that we want to verify
+	/// @param 	index Contains the index of the list of owned token that we want to check
+	/// @return uint256 which contains the owned token 
 	function tokenOfOwnerByIndex(address owner, uint256 index) public view returns (uint256) {
 		require(index < balanceOf(owner), "ERC721Enumerable: owner index out of bounds");
 		return s._ownedTokens[owner][index];
 	}
 
+	/// @notice This function allow us to check the total amount of tokens
+	/// @return uint256 which contains the total amount of tokens 
 	function totalSupply() public view returns (uint256) {
 		return s._allTokens.length;
 	}
 
-	/// @param index Contains the facet addresses and function selectors
+	/// @notice This function allow us to verify the token indexed in a selected position 
+	/// @param 	index Contains the index position that we want to check
+	/// @return uint256 which contains the token indexed in that position 
 	function tokenByIndex(uint256 index) public view returns (uint256) {
 		require(index < totalSupply(), "ERC721Enumerable: global index out of bounds");
 		return s._allTokens[index];
@@ -76,13 +88,16 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice Queries if an operator can act on behalf of an owner on all of their tokens
 	/// @dev Overrides the OpenZeppelin standard by allowing anyone with the TRADER role to transfer tokens
-	/// @param owner 		Owner of the tokens.
-	/// @param operator 	Operator of the tokens.
+	/// @param 	owner 		Owner of the tokens.
+	/// @param 	operator 	Operator of the tokens.
+	/// @return bool 		Notify if the operator is approved or not for move all the tokens
 	function isApprovedForAll(address owner, address operator) public view virtual returns (bool) {
 		return (hasRole(TRADER, operator) || s._operatorApprovals[owner][operator]);
 	}
 
-	/// @param rangeIndex Contains the facet addresses and function selectors
+	/// @notice This function returns immediately next token without owner in the range
+	/// @param 	rangeIndex Contains index of the range that we want to veify
+	/// @return uint which containts the immediately next token absent of owner
 	function nextMintableTokenInRange(uint rangeIndex) public view returns (uint) {
 		require(s.ranges.length > rangeIndex, "RAIR ERC721 Ranges: Range does not exist");
 		range memory selectedRange = s.ranges[rangeIndex];
@@ -95,9 +110,10 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		require(false, 'RAIR ERC721: There are no tokens available for minting');
 	}
 
-	/// @param to Contains the facet addresses and function selectors
-	/// @param rangeId Contains the facet addresses and function selectors
-	/// @param indexInRange Contains the facet addresses and function selectors
+	/// @notice This function allow us to mint a token form a specific range
+	/// @param to Contains the address that will own the minted token
+	/// @param rangeId Contains the id of the range that we want to use for minting 
+	/// @param indexInRange Contains the position where the minted token will be indexed
 	function _mintFromRange(address to, uint rangeId, uint indexInRange) internal {
 		require(s.ranges.length > rangeId, "RAIR ERC721: Range does not exist");
 		range storage selectedRange = s.ranges[rangeId];
@@ -134,9 +150,10 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		s.tokensByProduct[s.rangeToProduct[rangeId]].push(selectedProduct.startingToken + indexInRange);
 	}
 
-	/// @param to Contains the facet addresses and function selectors
-	/// @param rangeId Contains the facet addresses and function selectors
-	/// @param indexInRange Contains the facet addresses and function selectors
+	/// @notice This function allow us to mint a token form a batch of ranges
+	/// @param to Contains the address that will own the minted token
+	/// @param rangeId Contains the id of the range that we want to use for minting 
+	/// @param indexInRange Contains array of ranges that will be used to index the minted NFT
 	function mintFromRangeBatch(
 		address[] calldata to,
 		uint rangeId,
@@ -150,20 +167,24 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	}
 
 	/// @param to Contains the facet addresses and function selectors
+	///	@dev	Only an account with the `MINTER` role is available to use this function
 	/// @param rangeId Contains the facet addresses and function selectors
 	/// @param indexInRange Contains the facet addresses and function selectors
 	function mintFromRange(address to, uint rangeId, uint indexInRange) external onlyRole(MINTER) {
 		_mintFromRange(to, rangeId, indexInRange);
 	}
 
-	/// @param spender Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @notice This function allow us to check if an user is approved for spend the token or the owner 
+	/// @param spender Contains the addres which status and permision we want to validate
+	/// @param tokenId Contains the id of the token that we want to spend
+	/// @return bool with the status of true is the account has the owner or approved role
 	function _isApprovedOrOwner(address spender, uint256 tokenId) internal view returns (bool) {
 		require(_exists(tokenId), "ERC721: operator query for nonexistent token");
 		address owner = ownerOf(tokenId);
 		return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
 	}
 
+	/// @notice This function grants permision to an account for move one specific token
 	/// @param to Contains the facet addresses and function selectors
 	/// @param tokenId Contains the facet addresses and function selectors
 	function approve(address to, uint256 tokenId) public {
@@ -178,15 +199,17 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		_approve(to, tokenId);
 	}
 
-	/// @param operator Contains the facet addresses and function selectors
-	/// @param approved Contains the facet addresses and function selectors
+	/// @notice This function grants permision to an account for move any token
+	/// @param operator Contains the address with authorization to move the tokens
+	/// @param approved Contains the status of approved or not for the operator
 	function setApprovalForAll(address operator, bool approved) public {
 		_setApprovalForAll(_msgSender(), operator, approved);
 	}
 
-	/// @param owner Contains the facet addresses and function selectors
-	/// @param operator Contains the facet addresses and function selectors
-	/// @param approved Contains the facet addresses and function selectors
+	/// @notice This function grants permision to an account for move any token
+	/// @param owner Contains the address of the owner of the token 
+	/// @param operator Contains the address with authorization to move the tokens
+	/// @param approved Contains the status of approved or not for the operator
 	function _setApprovalForAll(
 		address owner,
 		address operator,
@@ -197,33 +220,33 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		emit ApprovalForAll(owner, operator, approved);
 	}
 
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @notice This function grants permision to an account for move one specific token
+	/// @param to Contains the address that we want to grant the permision fot the token
+	/// @param tokenId Contains the id of the token to be approved
 	function _approve(address to, uint256 tokenId) internal virtual {
 		s._tokenApprovals[tokenId] = to;
 		emit Approval(ownerOf(tokenId), to, tokenId);
 	}
 
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @notice This function allow us to see the address approved for an specific token
+	/// @param tokenId Contains the token of the id to be added to the account
+	/// @return address which has the authorization to move the token
 	function getApproved(uint256 tokenId) public view returns (address) {
 		require(_exists(tokenId), "ERC721: approved query for nonexistent token");
 		return s._tokenApprovals[tokenId];
 	}
 	
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @notice This function allow us to know if the token exist or not
+	/// @param tokenId Contains the id of the token that we want to verify
 	function _exists(uint256 tokenId) internal view virtual returns (bool) {
 		return s._owners[tokenId] != address(0);
 	}
 
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @notice This function allow us to mint 
 	function _safeMint(address to, uint256 tokenId) internal virtual {
 		_safeMint(to, tokenId, "");
 	}
 
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
-	/// @param _data Contains the facet addresses and function selectors
 	function _safeMint(
 		address to,
 		uint256 tokenId,
@@ -355,9 +378,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		s._allTokens.pop();
 	}
 
-	/// @param from Contains the facet addresses and function selectors
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @param from Contains the address of the owner of the token
+	/// @param to Contains the address of the receiver of the token
+	/// @param tokenId Contains the ID of the token to transfer
 	function transferFrom(
 		address from,
 		address to,
@@ -370,9 +393,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/**
 	 * @dev See {IERC721-safeTransferFrom}.
 	 */
-	/// @param from Contains the facet addresses and function selectors
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @param from 	Contains the address of the owner of the token
+	/// @param to 		Contains the address of the receiver of the token
+	/// @param tokenId	Contains the ID of the token to transfer
 	function safeTransferFrom(
 		address from,
 		address to,
@@ -381,13 +404,14 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		safeTransferFrom(from, to, tokenId, "");
 	}
 
+	/// @notice This function grant permision to approved accounts to transfer a token 
 	/**
 	 * @dev See {IERC721-safeTransferFrom}.
 	 */
-	/// @param from Contains the facet addresses and function selectors
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
-	/// @param _data Contains the facet addresses and function selectors
+	/// @param from 	Contains the address of the owner of the token
+	/// @param to 		Contains the address of the receiver of the token
+	/// @param tokenId	Contains the ID of the token to transfer
+	/// @param _data 	Contains any adicional info or massage
 	function safeTransferFrom(
 		address from,
 		address to,
@@ -398,6 +422,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		_safeTransfer(from, to, tokenId, _data);
 	}
 
+	/// @notice This funtion allow us to safetely transfer a token to a valid recipient 
 	/**
 	 * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
 	 * are aware of the ERC721 protocol to prevent tokens from being forever locked.
@@ -416,10 +441,10 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	 *
 	 * Emits a {Transfer} event.
 	 */
-	/// @param from Contains the facet addresses and function selectors
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
-	/// @param _data Contains the facet addresses and function selectors
+	/// @param from 	Contains the address of the owner of the token
+	/// @param to 		Contains the address of the receiver of the token
+	/// @param tokenId  Contains the ID of the token to transfer
+	/// @param _data	Contains any adicional info or massage
 	function _safeTransfer(
 		address from,
 		address to,
@@ -430,6 +455,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		require(_checkOnERC721Received(from, to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
 	}
 
+	/// @notice This function is use to trasfer a owned token to a selected addresss
 	/**
 	 * @dev Transfers `tokenId` from `from` to `to`.
 	 *  As opposed to {transferFrom}, this imposes no restrictions on msg.sender.
@@ -441,9 +467,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	 *
 	 * Emits a {Transfer} event.
 	 */
-	/// @param from Contains the facet addresses and function selectors
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @param from 	Contains the address of the owner of the token
+	/// @param to 		Contains the address of the receiver of the token
+	/// @param tokenId  Contains the ID of the token to transfer
 	function _transfer(
 		address from,
 		address to,
@@ -464,10 +490,11 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		emit Transfer(from, to, tokenId);
 	}
 
-	/// @param from Contains the facet addresses and function selectors
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
-	/// @param _data Contains the facet addresses and function selectors
+	/// @param from 	Contains the address of the sender
+	/// @param to 		Contains the address of the receiver
+	/// @param tokenId  Contains the ID of the token to send
+	/// @param _data 	Contains any adicional info or massage 
+	/// @return bool 	That show us if the transaction was successful or not
 	function _checkOnERC721Received(
 		address from,
 		address to,
