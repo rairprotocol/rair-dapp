@@ -1,8 +1,8 @@
 /* to override Left Tokens Block use .template-home-splash-page selector */
 
-.template-home-splash-page  .left-tokens {
+.template-home-splash-page .left-tokens {
     display: flex;
-    margin: 108px 0;
+    margin-top: 108px;
     justify-content: space-between;
     max-width: 1200px;
 }

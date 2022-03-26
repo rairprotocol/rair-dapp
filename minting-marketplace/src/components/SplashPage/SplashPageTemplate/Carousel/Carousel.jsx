@@ -52,7 +52,7 @@ const CarouselModule = (props) => {
             responsive={responsive}
             className="carousel"
             >
-            {carouselData.map(row => <CarouselItem carouselItemTitle={row.title} carouselItemImg={row.img}  carouselDescription={row.description}/>)} 
+            {carouselData.map((row, index) => <CarouselItem key={index} carouselItemTitle={row.title} carouselItemImg={row.img}  carouselDescription={row.description}/>)} 
         </Carousel>
 
             
