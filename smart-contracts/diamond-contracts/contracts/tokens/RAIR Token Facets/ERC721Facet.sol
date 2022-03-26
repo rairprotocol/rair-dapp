@@ -166,6 +166,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		}
 	}
 
+	/// @notice This function allow us to mint from a range
 	/// @param to Contains the facet addresses and function selectors
 	///	@dev	Only an account with the `MINTER` role is available to use this function
 	/// @param rangeId Contains the facet addresses and function selectors
@@ -325,6 +326,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		s._allTokens.push(tokenId);
 	}
 
+	/// @notice This function will remove a token from the owner account 
 	/**
 	 * @dev Private function to remove a token from this extension's ownership-tracking data structures. Note that
 	 * while the token is not assigned a new owner, the `_ownedTokensIndex` mapping is _not_ updated: this allows for
@@ -353,6 +355,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		delete s._ownedTokens[from][lastTokenIndex];
 	}
 
+	/// @notice This function will remove a token for the extension's data structures
 	/**
 	 * @dev Private function to remove a token from this extension's token tracking data structures.
 	 * This has O(1) time complexity, but alters the order of the _allTokens array.
@@ -378,6 +381,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		s._allTokens.pop();
 	}
 
+	/// @notice This function is used to transfer tokens from an account to another 
 	/// @param from Contains the address of the owner of the token
 	/// @param to Contains the address of the receiver of the token
 	/// @param tokenId Contains the ID of the token to transfer
@@ -390,6 +394,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		_transfer(from, to, tokenId);
 	}
 
+	/// @notice This function grant permision to approved accounts to transfer a token 
 	/**
 	 * @dev See {IERC721-safeTransferFrom}.
 	 */

@@ -12,28 +12,22 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	bytes32 public constant CREATOR = keccak256("CREATOR");
 	using Strings for uint256;
 
-<<<<<<< HEAD
-	/// @notice This event stores in the blockchain when the base code of all the tokens has a valid change in its URI
+	/// @notice This event stores in the blockchain when the base code of all the tokens has an update in its URI
     /// @param  newURI Contains the new  base identifier for all the tokens
 	/// @param  appendTokenIndex Contains the index of the tokens appended to the URI
-	event BaseURIChanged(string newURI, bool appendTokenIndex);
+	event UpdatedBaseURI(string newURI, bool appendTokenIndex);
 	/// @notice This event stores in the blockchain when a token has a change in its URI
 	/// @param  tokenId Contains the index of the token appended to the URI
     /// @param  newURI Contains the new identifier for the token
-	event TokenURIChanged(uint tokenId, string newURI);
+	event UpdatedTokenURI(uint tokenId, string newURI);
 	/// @notice This event stores in the blockchain when a product has a change in its URI
+	/// @param 	productId Contains the index of the product to change
     /// @param  newURI Contains the new identifier for the product
 	/// @param  appendTokenIndex Contains the index of the token appended to the URI
-	event ProductURIChanged(uint productId, string newURI, bool appendTokenIndex);
+	event UpdatedProductURI(uint productId, string newURI, bool appendTokenIndex);
 	/// @notice This event stores in the blockchain when a contract has a change in its URI
     /// @param  newURI Contains the new identifier for the contract 
-	event ContractURIChanged(string newURI);
-=======
-	event UpdatedBaseURI(string newURI, bool appendTokenIndex);
-	event UpdatedTokenURI(uint tokenId, string newURI);
-	event UpdatedProductURI(uint productId, string newURI, bool appendTokenIndex);
 	event UpdatedContractURI(string newURI);
->>>>>>> remotes/origin/dev
 
 	// For OpenSea's Freezing
 	event PermanentURI(string _value, uint256 indexed _id);

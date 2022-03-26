@@ -56,18 +56,17 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		_;
 	}
 
-<<<<<<< HEAD
-	/// @notice This functions
-	/// @dev 	This function requires that the rangeIndex_ points to an existing range 
-	/// @param	rangeIndex	Identification of the range to verify
-	/// @return uint which indicates the 
-=======
+	/// @notice This functions verify if the current colecction exist or not
+	/// @param	collectionId	Identification of the collection that we want to use
 	modifier collectionExists(uint collectionId) {
 		require(s.products.length > collectionId, "RAIR ERC721 Ranges: Collection does not exist");
 		_;
 	}
 
->>>>>>> remotes/origin/dev
+	/// @notice This functions return us the product that containt the selected range
+	/// @dev 	This function requires that the rangeIndex_ points to an existing range 
+	/// @param	rangeIndex	Identification of the range to verify
+	/// @return uint which indicates the index of the product
 	function rangeToProduct(uint rangeIndex_) public view rangeExists(rangeIndex_) returns (uint) {
 		return s.rangeToProduct[rangeIndex_];
 	}
@@ -91,20 +90,13 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		return s.ranges[rangeId].lockedTokens > 0;
 	}
 
-<<<<<<< HEAD
 	/// @notice This functions shows the information for the range of a product
 	/// @param	productId	Identification of the product to verify
 	/// @param	rangeIndex	Identification of the range to verify
 	/// @return range which has the saved memory iformation about the range
-	function productRangeInfo(uint productId, uint rangeIndex) external view returns(range memory data) {
-		require(s.products.length > productId, "RAIR ERC721 Ranges: Product does not exist");
-		require(s.products[productId].rangeList.length > rangeIndex, "RAIR ERC721 Ranges: Invalid range index");
-		data = s.ranges[s.products[productId].rangeList[rangeIndex]];
-=======
 	function productRangeInfo(uint collectionId, uint rangeIndex) external view collectionExists(collectionId) returns(range memory data) {
 		require(s.products[collectionId].rangeList.length > rangeIndex, "RAIR ERC721 Ranges: Invalid range index");
 		data = s.ranges[s.products[collectionId].rangeList[rangeIndex]];
->>>>>>> remotes/origin/dev
 	}
 
 	/// @notice This functions allow us to update the information about a range
@@ -148,7 +140,6 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		return true;
 	}
 	
-<<<<<<< HEAD
 	/// @notice This is a internal function that will create the NTF range if the requirements are meet
 	/// @param	productId_	Contains the identification for the product
 	/// @param	rangeStart_	Contains the tentative NTF to use as starting point of the range 
@@ -157,8 +148,6 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 	/// @param 	tokensAllowed_ Contains all the allowed NFT tokens in the range that are available for sell
 	/// @param 	lockedTokens_ Contains all the NFT tokens in the range that are unavailable for sell
 	/// @param 	name_ Contains the name for the created NFT collection range
-	function _createRange(uint productId_, uint rangeStart_, uint rangeEnd_, uint price_, uint tokensAllowed_, uint lockedTokens_, string memory name_) internal {
-=======
 	function _createRange(
 		uint productId_,
 		uint rangeStart_,
@@ -168,7 +157,6 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		uint lockedTokens_,
 		string memory name_
 	) internal {
->>>>>>> remotes/origin/dev
 		require(price_ >= 100, "RAIR ERC721: Minimum price allowed is 100 wei");
 		require(rangeStart_ <= rangeEnd_, 'RAIR ERC721: Invalid starting or ending token');
 		// Add one because the starting token is included!
@@ -195,20 +183,16 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		emit CreatedRange(productId_, rangeStart_, rangeEnd_, price_, tokensAllowed_, lockedTokens_, name_, rangeIndex);
 	}
 
-<<<<<<< HEAD
 	/// @notice This function that will create the NTF range if the requirements are meet
 	/// @dev 	This function is only available to an account with a `CREATOR` role
-	/// @param	productId	Contains the identification for the product
+	/// @dev 	This function require thar the collection ID match a valid collection 
+	/// @param	collectionId	Contains the identification for the product
 	/// @param	rangeStart	Contains the tentative NTF to use as starting point of the range 
 	/// @param	rangeEnd	Contains the tentative NTF to use as ending point of the range
 	/// @param 	price Contains the selling price for the range of NFT
 	/// @param 	tokensAllowed Contains all the allowed NFT tokens in the range that are available for sell
 	/// @param 	lockedTokens Contains all the NFT tokens in the range that are unavailable for sell
 	/// @param 	name Contains the name for the created NFT collection range
-	function createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name) external onlyRole(CREATOR) {
-		require(s.products.length > productId, "RAIR ERC721: Product does not exist");
-		_createRange(productId, rangeStart, rangeEnd, price, tokensAllowed, lockedTokens, name);
-=======
 	function createRange(
 		uint collectionId,
 		uint rangeStart,
@@ -219,11 +203,11 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		string calldata name
 	) external onlyRole(CREATOR) collectionExists(collectionId) {
 		_createRange(collectionId, rangeStart, rangeEnd, price, tokensAllowed, lockedTokens, name);
->>>>>>> remotes/origin/dev
 	}
 
 	/// @notice This function will create as much ranges as the data array requires
 	/// @dev 	This function is only available to an account with a `CREATOR` role
+	/// @dev 	This function require thar the collection ID match a valid collection 
 	/// @param	productId	Contains the identification for the product
 	/// @param	data An array with the data for all the ranges that we want to implement 
 	function createRangeBatch(
