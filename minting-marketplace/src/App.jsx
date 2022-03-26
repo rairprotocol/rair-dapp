@@ -516,6 +516,10 @@ function App({ sentryHistory }) {
 												path: '/nipsey-splash',
 												content: SplashPage
 											},
+											{
+												path: '/about-page',
+												content: AboutPageNew
+											},
 										].map((item, index) => {
 											// If the path is set as the Home Page, render it as the default path (/)
 											let isHome = item.path === process.env.REACT_APP_HOME_PAGE;
