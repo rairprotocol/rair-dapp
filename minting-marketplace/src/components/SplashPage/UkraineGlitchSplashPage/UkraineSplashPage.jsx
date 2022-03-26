@@ -20,6 +20,7 @@ import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
 import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
 import UKR1989 from '../images/UkraineGlitchNFTExamples/1989.jpg'
 import videoBackground from '../images/metamask-vid-final.png'
+import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
 
 
 import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
@@ -95,8 +96,9 @@ const splashData = {
     titleColor: "#FFD505",
     title1: "#ukraineglitch",
     title2: "origins",
-    backgroundImage: `url(${UKR246})`,
+    backgroundImage: `url(${nftCountUkraine})`,
     btnColorIPFS: "#035BBC",
+    nftCount: 1991,
     properties: [
       {
         titleProperty: "Fermion Freckles",
@@ -131,18 +133,19 @@ const UkraineSplashPage = ({ loginDone }) => {
       <div className="template-home-splash-page">
         <AuthorCard splashData={splashData} />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        <TokenLeftTemplate counterData={splashData.counterData} copies={100} soldCopies={0} primaryColor={primaryColor} />
+        <TokenLeftTemplate counterData={splashData.counterData} copies={splashData.counterData.nftCount} soldCopies={0} primaryColor={primaryColor} />
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
           Nft_2={UKR1989}
           Nft_3={UKR4}
           Nft_4={UKR126}
+          amountTokens={splashData.counterData.nftCount}
           titleNft={splashData.exclusiveNft.title}
           colorText={splashData.exclusiveNft.titleColor}
           carousel={carousel}
         />
-        <div style={{ height: "108px" }} />
+        {/* <div style={{ height: "108px" }} /> */}
         <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
         {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
         <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData} />

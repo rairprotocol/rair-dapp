@@ -50,9 +50,7 @@ const AuthorCard = ({ splashData }) => {
             </h3>
           </div>
           <div className="text-description">
-            {description && description.map((item, index) => {
-              return <React.Fragment key={index}>{item}</React.Fragment>
-            })}
+            {description}
           </div>
           <div className='button-wrapper'>
             {button1 && <AuthorCardButton buttonData={button1} />}

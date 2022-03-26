@@ -3,7 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 // import { useHistory } from 'react-router';
 import './TokenLeftTemplate.css';
-import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
+// import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 
 const TokenLeftTemplate = ({
     primaryColor,
@@ -131,17 +131,17 @@ const TokenLeftTemplate = ({
                             
                         </div>
                         <div className="property-btn-wrapper">
-                            <a
+                            {/* <a
                                 href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt"
                                 target="_blank" rel="noreferrer"
-                            >
+                            > */}
                                 <button
                                     className="property-btn"
                                     style={{ background: `${btnColorIPFS ? btnColorIPFS : ""}` }}
                                 >
                                     View on IPFS
                                 </button>
-                            </a>
+                            {/* </a> */}
                         </div>
                     </div>
                 </div>
