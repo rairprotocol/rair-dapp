@@ -5,20 +5,15 @@ import videojs from "video.js";
 import Swal from "sweetalert2";
 import setDocumentTitle from "../../utils/setTitle";
 
-const VideoPlayer = () => {
-  // const params = useParams();
-  // const history = useHistory();
-  const videoId = "QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8"; //"QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8";
-  const mainManifest = "stream.m3u8";
+const VideoPlayer = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
   const { programmaticProvider } = useSelector((state) => state.contractStore);
   const [videoName] = useState(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState(
-    `https://storage.googleapis.com/rair-videos/${videoId}`
+    `${baseURL}${mediaId}`
   );
-  // const [mediaAddress, setMediaAddress] = useState("https://rair.mypinata.cloud/ipfs/QmT5suRLf5fq3ersqBmrcUHjqzj7J9y2kkq6fXfN6aLBUc");
-  // const btnGoBack = () => {
-  // 	history.goBack();
-  // }
+
+  //https://storage.googleapis.com/rair-videos/
+  //https://rair.mypinata.cloud/ipfs/
 
   const requestChallenge = useCallback(async () => {
     let signature;
@@ -58,12 +53,12 @@ const VideoPlayer = () => {
           "/" +
           signature +
           "/" +
-          videoId
+          mediaId
       )
     ).json();
     if (streamAddress.success) {
       await setMediaAddress(
-        "/stream/" + streamAddress.token + "/" + videoId + "/" + mainManifest
+        "/stream/" + streamAddress.token + "/" + mediaId + "/" + mainManifest
       );
       setTimeout(() => {
         videojs("vjs-" + videoName);
@@ -85,11 +80,13 @@ const VideoPlayer = () => {
     setDocumentTitle(`Streaming`);
   }, [videoName]);
 
+  if (mediaAddress === '') {
+    return <>
+    </>
+  }
+
   return (
     <>
-      {/* <div className='video-btn-back'>
-		<button onClick={() => btnGoBack()}>back</button>
-	</div> */}
       <div className="col-12 row mx-0 bg-secondary h1">
         <video
           id={"vjs-" + videoName}

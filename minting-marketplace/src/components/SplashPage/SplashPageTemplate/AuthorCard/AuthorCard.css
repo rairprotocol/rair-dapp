@@ -175,12 +175,6 @@
     /* background: red; */
 }
 
-.template-author-card .text-splash .btn-buy-metamask button img.metamask-logo {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
-}
-
 /* claim airdrop */
 
 .template-author-card .text-splash .btn-claim-airdrop {
@@ -203,12 +197,6 @@
 .template-author-card .text-splash .btn-claim-airdrop button:hover {
     background: #79CBBD;
     /* background: red; */
-}
-
-.template-author-card .text-splash .btn-claim-airdrop button img.metamask-logo {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
 }
 
 /* submit with form*/
@@ -242,8 +230,8 @@
 }
 
 .template-author-card .text-splash .btn-submit-with-form button img.metamask-logo {
-    width: 32px;
-    height: 32px;
+    width: 15%;
+    height: auto;
     margin-right: 10px;
 }
 

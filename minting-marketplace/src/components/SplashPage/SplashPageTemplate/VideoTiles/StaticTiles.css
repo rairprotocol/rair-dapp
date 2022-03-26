@@ -3,6 +3,7 @@
 }
 .block-videos{
     justify-content: center;
+    text-align: left;
 }
 @media screen and (max-width:700px){
     .video-locked{
