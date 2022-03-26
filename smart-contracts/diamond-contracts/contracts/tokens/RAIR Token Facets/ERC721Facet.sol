@@ -243,11 +243,18 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		return s._owners[tokenId] != address(0);
 	}
 
-	/// @notice This function allow us to mint 
+
+	/// @notice This function allow us to mint a token
+	/// @param to Contains the address which will mint the token
+	/// @param tokenId constains the indexed identification of the token 
 	function _safeMint(address to, uint256 tokenId) internal virtual {
 		_safeMint(to, tokenId, "");
 	}
 
+	/// @notice This function allow us to mint a token
+	/// @param to Contains the address which will mint the token
+	/// @param tokenId Constains the indexed identification of the token
+	/// @param _data Constains the additional message fot the receiver of the token
 	function _safeMint(
 		address to,
 		uint256 tokenId,
@@ -260,8 +267,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		);
 	}
 
-	/// @param to Contains the facet addresses and function selectors
-	/// @param tokenId Contains the facet addresses and function selectors
+	/// @notice This function allow us to mint 
+	/// @param to Contains the address which will mint the token
+	/// @param tokenId constains the indexed identification of the token 
 	function _mint(address to, uint256 tokenId) internal virtual {
 		require(to != address(0), "ERC721: mint to the zero address");
 		require(!_exists(tokenId), "ERC721: token already minted");
@@ -275,7 +283,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		emit Transfer(address(0), to, tokenId);
 	}
 
+	/// @notice This functions allow us to know the address that owns the token
 	/// @param tokenId Contains the facet addresses and function selectors
+	/// @return address Which contains the owner of the token 
 	function ownerOf(uint256 tokenId) public view returns (address) {
 		address owner = s._owners[tokenId];
 		require(owner != address(0), "ERC721: owner query for nonexistent token");
