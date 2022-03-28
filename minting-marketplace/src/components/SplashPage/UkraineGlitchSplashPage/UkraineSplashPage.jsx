@@ -41,6 +41,8 @@ import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
 import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
+import PurchaseTokenButton from '../../../utils/purchaseTokenUtils.jsx';
+
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -50,6 +52,11 @@ const splashData = {
   titleColor: "#FFD505",
   description: ["1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ", <br />, <br />, "100% of proceeds fund tactical first aid supplies and Ukrainian developers"],
   backgroundImage: UKR_rounded,
+  purchaseButton: {
+    buttonComponent: PurchaseTokenButton,
+    price: '0.1 ETH',
+    img: MetaMaskIcon
+  },
   button1: {
     buttonColor: "#035BBC",
     buttonLabel: "Mint for .1 ETH",
