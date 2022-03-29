@@ -243,7 +243,6 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 		return s._owners[tokenId] != address(0);
 	}
 
-
 	/// @notice This function allow us to mint a token
 	/// @param to Contains the address which will mint the token
 	/// @param tokenId constains the indexed identification of the token 
