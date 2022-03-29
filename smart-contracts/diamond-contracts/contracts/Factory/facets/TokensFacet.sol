@@ -10,26 +10,20 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	bytes32 constant OWNER = keccak256("OWNER");
 	bytes32 constant ERC777 = keccak256("ERC777");
 	
-<<<<<<< HEAD
 	/// @notice This event stores in the blockchain when a new token is indexed as accepted 
     /// @param 	contractAddress contains the address of the tokens contract 
     /// @param 	pricetoDeploy contains the deployment cost for the token
     /// @param 	responsible address of the person that implement the new token
-	event NewTokenAccepted(address contractAddress, uint priceToDeploy, address responsible);
+	event AcceptedToken(address contractAddress, uint priceToDeploy, address responsible);
 	/// @notice This event stores in the blockchain when a token is revoked
     /// @param 	erc777 contains the address of the tokens contract to remove
     /// @param 	responsible address of the person that revokes the token
-	event TokenNoLongerAccepted(address erc777, address responsible);
+	event RemovedToken(address erc777, address responsible);
 	/// @notice This event stores in the blockchain when the tokens are withdrawed from the contract
     /// @param 	recipient address who will recieve the tokens
     /// @param 	erc777 contains the address of the tokens contract to withdraw
 	/// @param 	amount total of tokens to recieve
-	event TokensWithdrawn(address recipient, address erc777, uint amount);
-=======
-	event AcceptedToken(address contractAddress, uint priceToDeploy, address responsible);
-	event RemovedToken(address erc777, address responsible);
 	event WithdrawTokens(address recipient, address erc777, uint amount);
->>>>>>> remotes/origin/dev
 
 	/// @notice Transfers tokens from the factory to any of the OWNER addresses
 	/// @dev 	If the contract has less than the amount, the ERC777 contract will revert
