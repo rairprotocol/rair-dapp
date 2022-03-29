@@ -543,10 +543,7 @@ function App({ sentryHistory }) {
 											path: '/',
 											content: <div className='main-wrapper'>
 												<div 
-													className='col-6 text-left'
-													style={{
-														marginLeft: '15vw',
-													}}
+													className='col-6 text-left main'
 													>
 													<h1 className='w-100' style={{ textAlign: 'left' }}>
 														Digital <b className='title'>Ownership</b>

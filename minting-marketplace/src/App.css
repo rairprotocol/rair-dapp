@@ -896,6 +896,11 @@ i.fas-custom {
     height: 600px !important;
 }
 
+.col-6.text-left.main {
+    margin-left: 11vw;
+    margin-bottom: 24px;
+}
+
 .main-wrapper {
     padding: 0 0 0 0;
 }
@@ -1349,6 +1354,18 @@ body::-webkit-scrollbar-thumb:active {
 
     .list-button-wrapper {
         margin-left: 9vw;
+    }
+
+    .col-6.text-left.main {
+        margin-left: 24vw;
+    }
+
+    .col-6.text-left.main h1{
+        text-align: center !important;
+    }
+
+    .col-6.text-left.main p{
+        text-align: center !important;
     }
 }
 
