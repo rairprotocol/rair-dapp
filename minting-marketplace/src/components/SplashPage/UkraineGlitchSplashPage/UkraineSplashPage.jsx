@@ -41,6 +41,8 @@ import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
 import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
+import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
+
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -50,12 +52,32 @@ const splashData = {
   titleColor: "#FFD505",
   description: ["1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ", <br />, <br />, "100% of proceeds fund tactical first aid supplies and Ukrainian developers"],
   backgroundImage: UKR_rounded,
+  purchaseButton: {
+    // Reusable component
+    buttonComponent: PurchaseTokenButton,
+    // OPTIONAL: Image on the purchase button
+    img: MetaMaskIcon,
+    // Contract address
+    contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+    // Contract's blockchain
+    requiredBlockchain: '0x1',
+    // Offer index (array of 2 elements - OfferPool, Offer - for Classic Contracts)
+    offerIndex: [0, 1],
+    // Custom style for the button
+    customStyle: {
+      backgroundColor: "#035BBC"
+    },
+    // Custom class for the div surrounding the button
+    customWrapperClassName: 'btn-submit-with-form'
+  },
+  /*
   button1: {
     buttonColor: "#035BBC",
     buttonLabel: "Mint for .1 ETH",
     buttonImg: MetaMaskIcon,
     buttonLink: "https://placekitten.com/200/300",
   },
+  */
   button2: {
     buttonColor: "#FFD505",
     buttonLabel: "Join Our Discord",
@@ -118,7 +140,7 @@ const splashData = {
 
 }
 
-const UkraineSplashPage = ({ loginDone }) => {
+const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const carousel_match = window.matchMedia('(min-width: 900px)')
   const [carousel, setCarousel] = useState(carousel_match.matches)
@@ -131,7 +153,7 @@ const UkraineSplashPage = ({ loginDone }) => {
   return (
     <div className="wrapper-splash-page ukraineglitch">
       <div className="template-home-splash-page">
-        <AuthorCard splashData={splashData} />
+        <AuthorCard {...{splashData, connectUserData}}/>
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
         <TokenLeftTemplate counterData={splashData.counterData} copies={splashData.counterData.nftCount} soldCopies={0} primaryColor={primaryColor} />
         <NFTImages
