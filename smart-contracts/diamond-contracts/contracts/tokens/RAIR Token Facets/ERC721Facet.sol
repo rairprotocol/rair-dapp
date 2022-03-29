@@ -317,7 +317,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	}
 
 	/**
-	 * @dev Private function to add a token to this extension's ownership-tracking data structures.
+	 * @dev   Private function to add a token to this extension's ownership-tracking data structures.
 	 * @param to address representing the new owner of the given token ID
 	 * @param tokenId uint256 ID of the token to be added to the tokens list of the given address
 	 */
@@ -328,7 +328,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	}
 
 	/**
-	 * @dev Private function to add a token to this extension's token tracking data structures.
+	 * @dev   Private function to add a token to this extension's token tracking data structures.
 	 * @param tokenId uint256 ID of the token to be added to the tokens list
 	 */
 	function _addTokenToAllTokensEnumeration(uint256 tokenId) private {
@@ -392,9 +392,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	}
 
 	/// @notice This function is used to transfer tokens from an account to another 
-	/// @param from Contains the address of the owner of the token
-	/// @param to Contains the address of the receiver of the token
-	/// @param tokenId Contains the ID of the token to transfer
+	/// @param  from Contains the address of the owner of the token
+	/// @param  to Contains the address of the receiver of the token
+	/// @param  tokenId Contains the ID of the token to transfer
 	function transferFrom(
 		address from,
 		address to,
@@ -406,11 +406,11 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice This function grant permision to approved accounts to transfer a token 
 	/**
-	 * @dev See {IERC721-safeTransferFrom}.
+	 * @dev 	See {IERC721-safeTransferFrom}.
 	 */
-	/// @param from 	Contains the address of the owner of the token
-	/// @param to 		Contains the address of the receiver of the token
-	/// @param tokenId	Contains the ID of the token to transfer
+	/// @param  from 	Contains the address of the owner of the token
+	/// @param  to 		Contains the address of the receiver of the token
+	/// @param  tokenId	Contains the ID of the token to transfer
 	function safeTransferFrom(
 		address from,
 		address to,
@@ -421,12 +421,12 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice This function grant permision to approved accounts to transfer a token 
 	/**
-	 * @dev See {IERC721-safeTransferFrom}.
+	 * @dev 	See {IERC721-safeTransferFrom}.
 	 */
-	/// @param from 	Contains the address of the owner of the token
-	/// @param to 		Contains the address of the receiver of the token
-	/// @param tokenId	Contains the ID of the token to transfer
-	/// @param _data 	Contains any adicional info or massage
+	/// @param  from 	Contains the address of the owner of the token
+	/// @param  to 		Contains the address of the receiver of the token
+	/// @param  tokenId	Contains the ID of the token to transfer
+	/// @param  _data 	Contains any adicional info or massage
 	function safeTransferFrom(
 		address from,
 		address to,
@@ -439,7 +439,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice This funtion allow us to safetely transfer a token to a valid recipient 
 	/**
-	 * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
+	 * @dev 	Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
 	 * are aware of the ERC721 protocol to prevent tokens from being forever locked.
 	 *
 	 * `_data` is additional data, it has no specified format and it is sent in call to `to`.
@@ -472,7 +472,7 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice This function is use to trasfer a owned token to a selected addresss
 	/**
-	 * @dev Transfers `tokenId` from `from` to `to`.
+	 * @dev 	Transfers `tokenId` from `from` to `to`.
 	 *  As opposed to {transferFrom}, this imposes no restrictions on msg.sender.
 	 *
 	 * Requirements:
@@ -482,9 +482,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	 *
 	 * Emits a {Transfer} event.
 	 */
-	/// @param from 	Contains the address of the owner of the token
-	/// @param to 		Contains the address of the receiver of the token
-	/// @param tokenId  Contains the ID of the token to transfer
+	/// @param  from 	Contains the address of the owner of the token
+	/// @param  to 		Contains the address of the receiver of the token
+	/// @param  tokenId  Contains the ID of the token to transfer
 	function _transfer(
 		address from,
 		address to,
