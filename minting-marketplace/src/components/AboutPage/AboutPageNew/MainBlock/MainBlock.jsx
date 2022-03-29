@@ -41,7 +41,7 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
   );
 
   const switchToNetwork = "0x38";
-  const aboutPageAddress = "0xB6163454DA87E9f3fd63683c5d476F7d067f75a2".toLowerCase();
+  const aboutPageAddress = "0xb6163454da87e9f3fd63683c5d476f7d067f75a2".toLowerCase();
   const offerIndexInMarketplace = 1;
 
   let subtitle;

@@ -8,6 +8,7 @@ import '../diamondStandard/Diamond.sol';
 /// @title  RAIR ERC721 Marketplace Diamond
 /// @notice Handles the trading of ERC721 RAIR Tokens
 /// @author Juan M. Sanchez M.
+/// @dev 	Notice this contract is inheriting from Diamond & AccessControlAppStorageEnumerableMarket
 contract MarketplaceDiamond is Diamond, AccessControlAppStorageEnumerableMarket {
 	bytes32 public constant MAINTAINER = keccak256("MAINTAINER");
 	bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
