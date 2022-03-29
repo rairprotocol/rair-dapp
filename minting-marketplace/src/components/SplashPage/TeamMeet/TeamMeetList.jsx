@@ -7,7 +7,7 @@ import Teammate_5 from '../images/movementontheground.png';
 import Teammate_6 from '../images/immersiverse_logo.png';
 import Teammate_7 from '../images/UkrainianAmericanCons/15724868_10208080805993720_1581371147497725224_o.jpeg';
 import NFTLA_ICON from '../images/NFTLA_icon.png'
-import TCC_ICON from '../images/TCC_icon.png'
+// import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
 import Teammate from './Teammate';
 import GreymanAuthor from '../images/greymanAuthor.png';
@@ -17,7 +17,7 @@ import Gunther from '../../AboutPage/assets/Gunther.jpeg';
 import Martin from '../../AboutPage/assets/Martin.jpeg';
 import MICHAEL from '../../AboutPage/assets/MICHAEL.jpg';
 import David from '../../AboutPage/assets/David.jpeg';
-import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
+// import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
 import Matthew from '../../AboutPage/assets/Matthew.jpg';
 import NutTeam from '../images/nuts-teammate.jpeg';
 

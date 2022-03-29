@@ -1,9 +1,9 @@
 import React from 'react';
 import VideoBg_1 from './../../assets/video-bg_1.png';
 import VideoBg_2 from './../../assets/video-bg_2.png';
-import ArrowUp from './../../assets/arrow-up-about.png';
-import MetamaskTutorial from './../../assets/matamaskTutorial.png';
-import JoinCom from '../../../SplashPage/JoinCom/JoinCom';
+// import ArrowUp from './../../assets/arrow-up-about.png';
+// import MetamaskTutorial from './../../assets/matamaskTutorial.png';
+// import JoinCom from '../../../SplashPage/JoinCom/JoinCom';
 
 const StreamsAbout = ({ primaryColor, Metamask }) => {
     return (

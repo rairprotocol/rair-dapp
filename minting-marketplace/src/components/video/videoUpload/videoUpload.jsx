@@ -22,7 +22,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	const [socket, setSocket] = useState(null);
 	const [status, setStatus] = useState(0);
 	const [message, setMessage] = useState(0);
-	const [part, setPart] = useState(0);
+	const [/*part,*/ setPart] = useState(0);
 	const [, setVPV] = useState();
 	// const [productData,setProductData] = useState();
 	const [product, setProduct] = useState("null");

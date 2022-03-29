@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, /*useCallback, */ useEffect } from "react";
 import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
@@ -10,17 +10,18 @@ import Modal from "react-modal";
 /* importing images*/
 import Metamask from "../../images/metamask-fox.svg";
 import DocumentIcon from "../../images/documentIcon.svg";
-import SXSW1 from './images/SxSW-IMSV-ATX-2022-Concept01.jpg';
-import SXSW2 from './images/SxSW-IMSV-ATX-2022-Concept02.jpg';
-import SXSW3 from './images/SxSW-IMSV-ATX-2022-Concept03.jpg';
+import SXSW1 from "./images/SxSW-IMSV-ATX-2022-Concept01.jpg";
+import SXSW2 from "./images/SxSW-IMSV-ATX-2022-Concept02.jpg";
+import SXSW3 from "./images/SxSW-IMSV-ATX-2022-Concept03.jpg";
+
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
-import setTitle from '../../utils/setTitle';
+import setTitle from "../../utils/setTitle";
 
 //Google Analytics
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 import NotCommercialGeneric from "./NotCommercial/NotCommercialGeneric";
 
 // Google Analytics
@@ -52,19 +53,18 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 const SplashPage = ({ loginDone }) => {
-  const [active, setActive] = useState({ policy: false, use: false });
+  const [/*active,*/ setActive] = useState({ policy: false, use: false });
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
-  const {currentUserAddress} = useSelector((store) => store.contractStore);
+  const { currentUserAddress } = useSelector((store) => store.contractStore);
 
-  const openModal = useCallback(() => {
-    setIsOpen(true);
-  }, []);
+  // const openModal = useCallback(() => {
+  //   setIsOpen(true);
+  // }, []);
 
-  const carousel_match = window.matchMedia('(min-width: 600px)')
-  const [carousel, setCarousel] = useState(carousel_match.matches)
-  window.addEventListener("resize", () => setCarousel(carousel_match.matches))
-  
+  const carousel_match = window.matchMedia("(min-width: 600px)");
+  const [carousel, setCarousel] = useState(carousel_match.matches);
+  window.addEventListener("resize", () => setCarousel(carousel_match.matches));
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
@@ -83,14 +83,14 @@ const SplashPage = ({ loginDone }) => {
 
   useEffect(() => {
     setTitle(`#ImmersiVerse ATX`);
-  }, [])
+  }, []);
 
   const formHyperlink = () => {
     window.open(
-      'https://docs.google.com/forms/d/e/1FAIpQLSeSoeMejqA_DntWIJTcJQA4UbWSSUaYfXrj4hFKPPkyzDuByw/viewform',
-      '_blank'
-    );  
-  }
+      "https://docs.google.com/forms/d/e/1FAIpQLSeSoeMejqA_DntWIJTcJQA4UbWSSUaYfXrj4hFKPPkyzDuByw/viewform",
+      "_blank"
+    );
+  };
 
   return (
     <div className="wrapper-splash-page greyman-page">
@@ -111,12 +111,12 @@ const SplashPage = ({ loginDone }) => {
                 </h3>
               </div>
               <div className="text-description" style={{ color: "#A7A6A6" }}>
-                Let us know you're coming! Click the "Connect Wallet" button in the top right corner of the page,
-                then click the button below to fill out the form to receive a free airdrop to unlock encrypted streams 
-                on the drop date!
+                Let us know you're coming! Click the "Connect Wallet" button in
+                the top right corner of the page, then click the button below to
+                fill out the form to receive a free airdrop to unlock encrypted
+                streams on the drop date!
               </div>
               <div className="btn-submit-with-form">
-
                 <button onClick={() => formHyperlink()}>
                   <img
                     className="metamask-logo"
@@ -199,18 +199,16 @@ const SplashPage = ({ loginDone }) => {
                     </div>
                     <div className="modal-content-np">
                       <div className="modal-btn-wrapper">
-                        <div
-                          className="modal-btn"
-                        >
+                        <div className="modal-btn">
                           <img
                             style={{ width: "100px", marginLeft: "-1rem" }}
                             className="metamask-logo modal-btn-logo"
                             src={Metamask}
                             alt="metamask-logo"
                           />{" "}
-                          { currentUserAddress
-                              ? "You're connected!"
-                              : "Connect your wallet!"}
+                          {currentUserAddress
+                            ? "You're connected!"
+                            : "Connect your wallet!"}
                         </div>
                       </div>
                     </div>
@@ -220,64 +218,52 @@ const SplashPage = ({ loginDone }) => {
             </div>
           </div>
         </AuthorBlock>
-        <div className="exclusive-nfts" style={{marginTop: "80px"}}>
-        <h2 className="carousel-title"> 3 Unique Styles </h2>
-        {carousel?
-              <div className="list-of-immersiverse-pic">
-                <div className="join-pic-list">
-                  <h4 className="carousel-items"> Bubblegum </h4>
-                  <img
-                    className="join-pic-img-list"
-                    src={SXSW1}
-                    alt="community-img"
-                  />
-                </div>
-                <div className="join-pic-list">
-                  <h4 className="carousel-items"> Gold </h4>
-                  <img
-                    className="join-pic-img-list"
-                    src={SXSW2}
-                    alt="community-img"
-                  />
-                </div>
-                <div className="join-pic-list">
-                  <h4 className="carousel-items"> Seabreeze</h4>
-                  <img
-                    className="join-pic-img-list"
-                    src={SXSW3}
-                    alt="community-img"
-                  />
-                </div>
+        <div className="exclusive-nfts" style={{ marginTop: "80px" }}>
+          <h2 className="carousel-title"> 3 Unique Styles </h2>
+          {carousel ? (
+            <div className="list-of-immersiverse-pic">
+              <div className="join-pic-list">
+                <h4 className="carousel-items"> Bubblegum </h4>
+                <img
+                  className="join-pic-img-list"
+                  src={SXSW1}
+                  alt="community-img"
+                />
               </div>
-              :
-              <MobileCarouselNfts>
-                <div className="join-pic-carousel">
-                  <h4 className="carousel-items"> Bubblegum </h4>
-                  <img
-                    className="join-pic-img"
-                    src={SXSW1}
-                    alt="community-img"
-                  />
-                </div>
-                <div className="join-pic-carousel">
-                  <h4 className="carousel-items"> Gold</h4>
-                  <img
-                    className="join-pic-img"
-                    src={SXSW2}
-                    alt="community-img"
-                  />
-                </div>
-                <div className="join-pic-carousel">
-                  <h4 className="carousel-items"> Seabreeze </h4>
-                  <img
-                    className="join-pic-img"
-                    src={SXSW3}
-                    alt="community-img"
-                  />
-                </div>
-              </MobileCarouselNfts>
-            }
-          </div>
+              <div className="join-pic-list">
+                <h4 className="carousel-items"> Gold </h4>
+                <img
+                  className="join-pic-img-list"
+                  src={SXSW2}
+                  alt="community-img"
+                />
+              </div>
+              <div className="join-pic-list">
+                <h4 className="carousel-items"> Seabreeze</h4>
+                <img
+                  className="join-pic-img-list"
+                  src={SXSW3}
+                  alt="community-img"
+                />
+              </div>
+            </div>
+          ) : (
+            <MobileCarouselNfts>
+              <div className="join-pic-carousel">
+                <h4 className="carousel-items"> Bubblegum </h4>
+                <img className="join-pic-img" src={SXSW1} alt="community-img" />
+              </div>
+              <div className="join-pic-carousel">
+                <h4 className="carousel-items"> Gold</h4>
+                <img className="join-pic-img" src={SXSW2} alt="community-img" />
+              </div>
+              <div className="join-pic-carousel">
+                <h4 className="carousel-items"> Seabreeze </h4>
+                <img className="join-pic-img" src={SXSW3} alt="community-img" />
+              </div>
+            </MobileCarouselNfts>
+          )}
+        </div>
         <TeamMeet primaryColor={primaryColor} arraySplash={"immersiverse"} />
         <NotCommercialGeneric primaryColor={primaryColor} />
       </div>
