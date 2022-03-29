@@ -86,6 +86,7 @@ import googleAnalytics from '@analytics/google-analytics'
 import { detectBlockchain } from './utils/blockchainData.js';
 import AlertMetamask from './components/AlertMetamask/index.jsx';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
+import MenuNavigation from './components/Navigation/Menu.jsx';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage.jsx';
 
 const gAppName = process.env.REACT_APP_GA_NAME
@@ -122,6 +123,10 @@ function App({ sentryHistory }) {
 	const [showAlert, setShowAlert] = useState(true);
 	const { currentChain, realChain } = useSelector(store => store.contractStore);
 	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
+
+	const carousel_match = window.matchMedia('(min-width: 600px)')
+	const [carousel, setCarousel] = useState(carousel_match.matches)
+	window.addEventListener("resize", () => setCarousel(carousel_match.matches))
 
 	// Redux
 	const {
@@ -371,19 +376,19 @@ function App({ sentryHistory }) {
 						backgroundRepeat: 'no-repeat',
 					}}
 					className="App p-0 container-fluid">
-					<UserProfileSettings
+					{carousel && <UserProfileSettings
 						errorAuth={errorAuth}
 						adminAccess={adminAccess}
 						primaryColor={primaryColor}
 						currentUserAddress={currentUserAddress}
 						loginDone={loginDone}
 						setLoginDone={setLoginDone}
-					/>
+					/>}
 					<div className='row w-100 m-0 p-0'>
 						{/*
 							Left sidebar, includes the RAIR logo and the admin sidebar
 						*/}
-						<div className='col-1 rounded'>
+						{carousel ? <div className='col-1 rounded'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
 								<MainLogo
 									goHome={goHome}
@@ -430,7 +435,19 @@ function App({ sentryHistory }) {
 									return <div key={index}></div>
 								})
 							}
-						</div>
+						</div> : <MenuNavigation
+							primaryColor={primaryColor}
+							headerLogo={headerLogo}
+							programmaticProvider={programmaticProvider}
+							startedLogin={startedLogin}
+							connectUserData={connectUserData}
+							renderBtnConnect={renderBtnConnect}
+							loginDone={loginDone}
+							setLoginDone={setLoginDone}
+							currentUserAddress={currentUserAddress}
+						/>
+						}
+
 						{/*
 							Main body, the header, router and footer are here
 						*/}
@@ -498,6 +515,10 @@ function App({ sentryHistory }) {
 											{
 												path: '/nipsey-splash',
 												content: SplashPage
+											},
+											{
+												path: '/about-page',
+												content: AboutPageNew
 											},
 										].map((item, index) => {
 											// If the path is set as the Home Page, render it as the default path (/)

@@ -39,13 +39,13 @@ const AboutPageNew = ({ headerLogoBlack, headerLogoWhite, connectUserData }) => 
 
     return (
         <>
-            <div className="wrapper-about-page">
-                <div className="about-page-logo">
+            <div className="wrapper-about-page" style={{marginTop: 0}}>
+                {/* <div className="about-page-logo">
                     <img onClick={() => history.push('/')}
                         alt='Header Logo'
                         src={primaryColor === "rhyno" ? headerLogoBlack : headerLogoWhite}
                         className='header_logo-about' />
-                </div>
+                </div> */}
                 <div className="home-about--page">
                     <MainBlock
                         connectUserData={connectUserData}

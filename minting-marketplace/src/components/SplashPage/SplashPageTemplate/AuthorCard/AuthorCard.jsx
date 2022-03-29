@@ -23,9 +23,16 @@ const AuthorCardButton = ({ buttonData }) => {
   );
 };
 
-const AuthorCard = ({ splashData }) => {
-  const { title, titleColor, description, backgroundImage, button1, button2 } =
-    splashData;
+const AuthorCard = ({ splashData, connectUserData }) => {
+  const {
+    title,
+    titleColor,
+    description,
+    backgroundImage,
+    button1,
+    button2,
+    purchaseButton,
+  } = splashData;
   return (
     <div
       className="template-author-card"
@@ -45,6 +52,11 @@ const AuthorCard = ({ splashData }) => {
           </div>
           <div className="text-description">{description}</div>
           <div className="button-wrapper">
+            {purchaseButton && (
+              <purchaseButton.buttonComponent
+                {...{ ...purchaseButton, connectUserData }}
+              />
+            )}
             {button1 && <AuthorCardButton buttonData={button1} />}
             {button2 && <AuthorCardButton buttonData={button2} />}
           </div>

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import "./TokenLeftTemplate.css";
-
 // import { useHistory } from 'react-router';
+import "./TokenLeftTemplate.css";
 // import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 
 const TokenLeftTemplate = ({
@@ -162,20 +161,17 @@ const TokenLeftTemplate = ({
                   })}
               </div>
               <div className="property-btn-wrapper">
-                <a
-                  href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt"
-                  target="_blank"
-                  rel="noreferrer"
+                {/* <a
+                                href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt"
+                                target="_blank" rel="noreferrer"
+                            > */}
+                <button
+                  className="property-btn"
+                  style={{ background: `${btnColorIPFS ? btnColorIPFS : ""}` }}
                 >
-                  <button
-                    className="property-btn"
-                    style={{
-                      background: `${btnColorIPFS ? btnColorIPFS : ""}`,
-                    }}
-                  >
-                    View on IPFS
-                  </button>
-                </a>
+                  View on IPFS
+                </button>
+                {/* </a> */}
               </div>
             </div>
           </div>

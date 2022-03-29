@@ -1,11 +1,44 @@
-import React from 'react';
+// import { useState } from 'react';
 import VideoBg_1 from './../../assets/video-bg_1.png';
 import VideoBg_2 from './../../assets/video-bg_2.png';
 // import ArrowUp from './../../assets/arrow-up-about.png';
 // import MetamaskTutorial from './../../assets/matamaskTutorial.png';
 // import JoinCom from '../../../SplashPage/JoinCom/JoinCom';
+// import Modal from "react-modal";
+import { useSelector, Provider, useStore } from 'react-redux';
+import StandaloneVideoPlayer from "../../../video/videoPlayerGenerall";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
-const StreamsAbout = ({ primaryColor, Metamask }) => {
+const reactSwal = withReactContent(Swal);
+
+const StreamsAbout = ({ Metamask }) => {
+
+    // const [showVideo, setShowVideo] = useState(false);
+
+    // const { currentUserAddress } = useSelector(store => store.contractStore);
+    const { primaryColor, textColor } = useSelector(store => store.colorStore);
+
+    const store = useStore();
+
+    const openVideo = (baseURL, mediaId) => {
+        reactSwal.fire({
+            title: 'How RAIR works',
+            html: <Provider store={store}>
+                <StandaloneVideoPlayer
+                    {...{baseURL, mediaId}}
+                />
+            </Provider>,
+            width: '90vw',
+            height: '90vh',
+            customClass: {
+                popup: `bg-${primaryColor}`,
+                title: `text-${textColor}`,
+            },
+            showConfirmButton: false
+        })
+    }
+
     return (
         <div className="about-streams-video">
             <div className="about-streams-video-title">How it  <span className="change-color-text">works</span></div>
@@ -61,6 +94,10 @@ const StreamsAbout = ({ primaryColor, Metamask }) => {
                         <div className="block-videos">
                             <div className="box-video">
                                 <div
+                                    onClick={() => openVideo(
+                                        "https://storage.googleapis.com/rair-videos/",
+                                        "pxlXm5vHD6KE3nVarq5HygBuKA54wqWsBoYf4vci_hp0Tc"
+                                    )}
                                     className="video-locked"
                                     style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}
                                 >

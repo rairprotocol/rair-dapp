@@ -5,22 +5,22 @@ import "../../AboutPage/AboutPageNew/AboutPageNew.css";
 import "./UkraineSplash.css";
 
 /* importing images*/
-import UKR_rounded from "../images/UkraineGlitchNFTExamples/rounded_corners.png";
-import UKR4 from "../images/UkraineGlitchNFTExamples/4.jpg";
-import UKR5 from "../images/UkraineGlitchNFTExamples/5.gif";
-import UKR126 from "../images/UkraineGlitchNFTExamples/126.jpg";
-import UKR246 from "../images/UkraineGlitchNFTExamples/246.jpg";
-import UKR497 from "../images/UkraineGlitchNFTExamples/497.jpg";
+import UKR_rounded from '../images/UkraineGlitchNFTExamples/rounded_corners.png';
+import UKR4 from '../images/UkraineGlitchNFTExamples/4.jpg'
+import UKR5 from '../images/UkraineGlitchNFTExamples/5.gif'
+import UKR126 from '../images/UkraineGlitchNFTExamples/126.jpg'
+// import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg'
+import UKR497 from '../images/UkraineGlitchNFTExamples/497.jpg'
 // import UKR653 from '../images/UkraineGlitchNFTExamples/653.jpg'
 // import UKR777 from '../images/UkraineGlitchNFTExamples/777.jpg'
 // import UKR1050 from '../images/UkraineGlitchNFTExamples/1050.jpg'
-import UKR1294 from "../images/UkraineGlitchNFTExamples/1294.jpg";
+import UKR1294 from '../images/UkraineGlitchNFTExamples/1294.jpg'
 // import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg'
 // import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
 // import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
-import UKR1989 from "../images/UkraineGlitchNFTExamples/1989.jpg";
-import videoBackground from "../images/metamask-vid-final.png";
-
+import UKR1989 from '../images/UkraineGlitchNFTExamples/1989.jpg'
+import videoBackground from '../images/metamask-vid-final.png'
+import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import MetaMaskIcon from "../images/metamask_logo.png";
 import DiscordIcon from "../images/discord-icon.png";
@@ -38,6 +38,8 @@ import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModu
 import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
+import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
+
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -52,12 +54,32 @@ const splashData = {
     "100% of proceeds fund tactical first aid supplies and Ukrainian developers",
   ],
   backgroundImage: UKR_rounded,
+  purchaseButton: {
+    // Reusable component
+    buttonComponent: PurchaseTokenButton,
+    // OPTIONAL: Image on the purchase button
+    img: MetaMaskIcon,
+    // Contract address
+    contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+    // Contract's blockchain
+    requiredBlockchain: '0x1',
+    // Offer index (array of 2 elements - OfferPool, Offer - for Classic Contracts)
+    offerIndex: [0, 1],
+    // Custom style for the button
+    customStyle: {
+      backgroundColor: "#035BBC"
+    },
+    // Custom class for the div surrounding the button
+    customWrapperClassName: 'btn-submit-with-form'
+  },
+  /*
   button1: {
     buttonColor: "#035BBC",
     buttonLabel: "Mint for .1 ETH",
     buttonImg: MetaMaskIcon,
     buttonLink: "https://placekitten.com/200/300",
   },
+  */
   button2: {
     buttonColor: "#FFD505",
     buttonLabel: "Join Our Discord",
@@ -101,8 +123,9 @@ const splashData = {
     titleColor: "#FFD505",
     title1: "#ukraineglitch",
     title2: "origins",
-    backgroundImage: `url(${UKR246})`,
+    backgroundImage: `url(${nftCountUkraine})`,
     btnColorIPFS: "#035BBC",
+    nftCount: 1991,
     properties: [
       {
         titleProperty: "Fermion Freckles",
@@ -129,7 +152,7 @@ const splashData = {
   },
 };
 
-const UkraineSplashPage = ({ loginDone }) => {
+const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const carousel_match = window.matchMedia("(min-width: 900px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
@@ -142,29 +165,22 @@ const UkraineSplashPage = ({ loginDone }) => {
   return (
     <div className="wrapper-splash-page ukraineglitch">
       <div className="template-home-splash-page">
-        <AuthorCard splashData={splashData} />
+        <AuthorCard {...{splashData, connectUserData}}/>
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        <TokenLeftTemplate
-          counterData={splashData.counterData}
-          copies={100}
-          soldCopies={0}
-          primaryColor={primaryColor}
-        />
+        <TokenLeftTemplate counterData={splashData.counterData} copies={splashData.counterData.nftCount} soldCopies={0} primaryColor={primaryColor} />
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
           Nft_2={UKR1989}
           Nft_3={UKR4}
           Nft_4={UKR126}
+          amountTokens={splashData.counterData.nftCount}
           titleNft={splashData.exclusiveNft.title}
           colorText={splashData.exclusiveNft.titleColor}
           carousel={carousel}
         />
-        <div style={{ height: "108px" }} />
-        <VideoPlayerModule
-          backgroundImage={videoBackground}
-          videoData={splashData.videoData}
-        />
+        {/* <div style={{ height: "108px" }} /> */}
+        <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
         {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
         <CarouselModule
           carousel={!carousel}
