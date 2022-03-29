@@ -42,6 +42,7 @@ import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
 import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
+import Swal from 'sweetalert2';
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -68,7 +69,12 @@ const splashData = {
       backgroundColor: "#035BBC"
     },
     // Custom class for the div surrounding the button
-    customWrapperClassName: 'btn-submit-with-form'
+    customWrapperClassName: 'btn-submit-with-form',
+    // Custom function that will be called if the minting is a success
+    // First parameter will be the minted token's number
+    customSuccessAction: (nextToken) => {
+      Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+    }
   },
   /*
   button1: {

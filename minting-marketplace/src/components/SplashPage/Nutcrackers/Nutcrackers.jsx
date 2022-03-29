@@ -126,6 +126,9 @@ const Nutcrackers = ({ connectUserData }) => {
                                   offerIndex: [1, 0],
                                   connectUserData,
                                   buttonLabel: "Mint with Matic",
+                                  customSuccessAction: (nextToken) => {
+                                    Swal.fire('Success', `Bought token #${nextToken}!`, 'success');
+                                  }
                                 }}
                               />
 
