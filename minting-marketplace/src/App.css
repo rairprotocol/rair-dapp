@@ -586,6 +586,7 @@ a:hover {
     flex-direction: row;
     justify-content: flex-start;
     margin-bottom: 3rem;
+    margin-left: 5vw;
 }
 
 .input-search-wrapper {
@@ -639,7 +640,7 @@ i.fas-custom {
     display: flex;
     flex-direction: row;
     margin: 0;
-    padding-left: 0;
+    padding-left: 6vw;
 }
 
 .category-button {
@@ -893,6 +894,10 @@ i.fas-custom {
 .nft-collection .react-player__preview {
     width: auto !important;
     height: 600px !important;
+}
+
+.main-wrapper {
+    padding: 0 0 0 0;
 }
 
 .col-12 .rounded .react-player__play-icon {
@@ -1341,12 +1346,20 @@ body::-webkit-scrollbar-thumb:active {
         top: 50px;
         right: 0;
     }
+
+    .list-button-wrapper {
+        margin-left: 9vw;
+    }
 }
 
 @media screen and (max-width: 450px) {
     .btn-connect-wallet-wrapper button.metamask-on-boarding {
         top: 50px;
         right: -55px;
+    }
+
+    .list-button-wrapper {
+        margin-left: 7vw;
     }
 }
 
@@ -1355,4 +1368,5 @@ body::-webkit-scrollbar-thumb:active {
         top: 100px;
         right: -55px;
     }
+    
 }

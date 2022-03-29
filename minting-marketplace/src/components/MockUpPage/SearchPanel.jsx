@@ -145,7 +145,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             Unlockables
           </Tab>
         </TabList>
-        <div style={{ position: "relative", display: "flex", flexDirection: mobile ? "row" :"column"}}>
+        <div 
+          style= {{ 
+            position: "relative",
+            display: "flex",
+            flexDirection: mobile ? "row" :"column",
+            paddingLeft: "6vw",
+            }}>
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
@@ -169,7 +175,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               marginBottom: "32px"
               }
             }>
-          <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
+          <i 
+            className="fas fa-search fa-lg fas-custom"
+            aria-hidden="true"
+            style={{
+              left: "7vw"
+            }}
+            ></i>
           <FilteringBlock
             sortItem={sortItem}
             setSortItem={setSortItem}
