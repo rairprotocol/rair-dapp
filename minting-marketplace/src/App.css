@@ -1353,7 +1353,8 @@ body::-webkit-scrollbar-thumb:active {
     }
 
     .list-button-wrapper {
-        margin-left: 9vw;
+        justify-content: center;
+        margin-left: 5vw;
     }
 
     .col-6.text-left.main {
@@ -1376,7 +1377,7 @@ body::-webkit-scrollbar-thumb:active {
     }
 
     .list-button-wrapper {
-        margin-left: 7vw;
+        margin-left: 5vw;
     }
 }
 

@@ -295,3 +295,12 @@ select.select-price option {
     }
 }
     
+@media screen and (max-width: 400px) {
+    .select-sort {
+        width: 130px;
+    }
+
+    .category-button-nft.category-button {
+        width: 130px;
+    }
+}
