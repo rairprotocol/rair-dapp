@@ -13,6 +13,10 @@
     margin-right: 30px;
 }
 
+.wrapper-splash-page.ukraineglitch .left-tokens .progress-main svg {
+    color: #035BBC;
+}
+
 @media screen and (max-width: 1300px) {
     .wrapper-splash-page.ukraineglitch .left-tokens-content .tokens-description {
         padding: 0 15px;
@@ -31,8 +35,24 @@
 }
 
 @media screen and (max-width: 950px) {
-    .wrapper-splash-page.ukraineglitch  .text-progress.progress-text-template {
+    .wrapper-splash-page.ukraineglitch .text-progress.progress-text-template {
         bottom: 0;
-        left: 45%;
+        left: 35%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .wrapper-splash-page.ukraineglitch .exclusive-nfts .exclusive-nfts {
+        margin: 10px 0 0 0;
+    }
+
+    .wrapper-splash-page.ukraineglitch .exclusive-nfts .title-nft {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 385px) {
+    .wrapper-splash-page.ukraineglitch .block-left-tokens .down-text {
+        left: 60px;
     }
 }

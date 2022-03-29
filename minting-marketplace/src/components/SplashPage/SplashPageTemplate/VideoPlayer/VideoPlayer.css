@@ -47,17 +47,18 @@
 .video-module-play-button-wrapper{
     height: 100%;
     display: flex;
-    align-content: center;
+    align-items: center;
     justify-content: center;
 }
 
 .video-module-play-button img{
     height: 40%;
+    width: auto;
 }
 
 .video-module-desc-wrapper{
     margin-top: 28px;
-    max-width: 50%;
+    max-width: 75%;
 }
 
 .video-module-desc{
