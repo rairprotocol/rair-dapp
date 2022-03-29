@@ -327,7 +327,7 @@ const PurchaseTokenButton = ({
 		<button
 			style={customStyle}
 			onClick={fireAgreementModal}>
-			{img && <img className='metamask-logo' src={img} />} {buttonLabel}
+			{img && <img alt='metamask-logo' className='metamask-logo' src={img} />} {buttonLabel}
 		</button>
 	</div>
 }
