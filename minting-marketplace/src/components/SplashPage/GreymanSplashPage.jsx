@@ -29,6 +29,7 @@ import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCa
 import StandaloneVideoPlayer from "../video/videoPlayerGenerall";
 import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
+import PurchaseTokenButton from "../common/PurchaseToken.jsx";
 
 //Google Analytics
 import ReactGA from 'react-ga';
@@ -416,7 +417,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
                 </div>
               )}
               <div className="btn-buy-metamask">
-                {timerLeft === 0 && (
+                {false && timerLeft === 0 &&
                   <button onClick={() => openModal()}>
                     <img
                       className="metamask-logo"
@@ -425,9 +426,39 @@ const SplashPage = ({ loginDone, connectUserData }) => {
                     />{" "}
                     Mint with Matic
                   </button>
+                }
+                {timerLeft === 0 && (
+                  <PurchaseTokenButton
+                    {...{
+                      customStyle: {},
+                      customWrapperClassName: '',
+                      img: Metamask,
+                      contractAddress: GraymanSplashPageTESTNET,
+                      requiredBlockchain: GreymanChainId,
+                      offerIndex: [offerIndexInMarketplace],
+                      connectUserData,
+                      buttonLabel: "Mint with Matic",
+                      presaleMessage: <div className='w-100 row'>
+                        <div className='col-3' />
+                        <div className='col-3 h4'>
+                          By accepting these terms, I agree <b>not</b> to have any fun with this greyman
+                        </div>
+                        <div className='col-3 text-end'>
+                          <img
+                            style={{display: 'inline', maxHeight: '25vh' }}
+                            src={GreyManNotFun}
+                            alt="not-fun"
+                          />
+                        </div>
+                        <div className='col-3' />
+                      </div>,
+                      diamond: true
+                    }}
+                  />
                 )}
               </div>
               <div className="btn-timer-nipsey">
+                {/**/}
                 <Modal
                   isOpen={modalIsOpen}
                   onAfterOpen={afterOpenModal}
