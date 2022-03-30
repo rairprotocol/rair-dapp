@@ -537,8 +537,10 @@ function App({ sentryHistory }) {
 										*/
 										{
 											path: '/',
-											content: <>
-												<div className='col-6 text-left'>
+											content: <div className='main-wrapper'>
+												<div 
+													className='col-6 text-left main'
+													>
 													<h1 className='w-100' style={{ textAlign: 'left' }}>
 														Digital <b className='title'>Ownership</b>
 														<br />
@@ -551,7 +553,7 @@ function App({ sentryHistory }) {
 												<div className='col-12 mt-3 row' >
 													<MockUpPage />
 												</div>
-											</>,
+											</div>,
 											requirement: process.env.REACT_APP_HOME_PAGE === '/',
 										},
 

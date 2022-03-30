@@ -271,3 +271,36 @@ select.select-price option {
 }
 
 
+/* Media */
+
+@media screen and (max-width: 700px) {
+    .select-filters {
+        margin: 0;
+    }
+}
+
+
+@media screen and (max-width: 500px) {
+    .select-sort {
+        width: 200px;
+    }
+
+    .select-sort-title {
+        justify-content: flex-start;
+        padding: 0 8px;
+    }
+
+    .title-left {
+        margin-right: 16px;
+    }
+}
+    
+@media screen and (max-width: 400px) {
+    .select-sort {
+        width: 130px;
+    }
+
+    .category-button-nft.category-button {
+        width: 130px;
+    }
+}
