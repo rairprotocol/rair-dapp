@@ -35,6 +35,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
     contractCreator,
     programmaticProvider,
     diamondMarketplaceInstance,
+    currentChain
   } = useSelector((store) => store.contractStore);
   const [contractData, setContractData] = useState();
   const [tokenInstance, setTokenInstance] = useState();
@@ -175,6 +176,9 @@ const WorkflowSteps = ({ sentryHistory }) => {
         (i) => i?.collectionIndexInContract === Number(collectionIndex)
       ))[0];
       delete response2.contract.products;
+      if (response2.contract.blockchain === currentChain) {
+      	response2.contract.instance = contractCreator(response2.contract.contractAddress, erc721Abi);
+      }
       setContractData(response2.contract);
     } else if (process.env.REACT_APP_DIAMONDS_ENABLED === "true") {
       try {
@@ -280,7 +284,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
   }, [diamondMarketplaceInstance, fetchData]);
 
   useEffect(() => {
-    if (contractData?.instance) {
+    if (contractData?.instance && contractData.diamond) {
       contractData.instance.on("CreatedRange", fetchData);
       contractData.instance.on("RoleGranted", fetchData);
       return () => {
