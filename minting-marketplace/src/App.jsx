@@ -529,7 +529,7 @@ function App({ sentryHistory }) {
 											}
 
 											return <SentryRoute key={index} exact path={isHome ? '/' : item.path}>
-												<item.content {...{ connectUserData }} />
+												<item.content {...{ connectUserData }} loginDone={loginDone} />
 											</SentryRoute>
 										})
 									}
