@@ -439,20 +439,30 @@ const SplashPage = ({ loginDone, connectUserData }) => {
                       connectUserData,
                       buttonLabel: "Mint with Matic",
                       presaleMessage: <div className='w-100 row'>
-                        <div className='col-3' />
-                        <div className='col-3 h4'>
+                        <div className='col-12 col-md-3' />
+                        <div className='col-12 col-md-4 ps-xl-5 h4'>
                           By accepting these terms, I agree <b>not</b> to have any fun with this greyman
                         </div>
-                        <div className='col-3 text-end'>
+                        <div className='col-12 col-md-3 text-center text-md-start text-xl-center'>
                           <img
                             style={{display: 'inline', maxHeight: '25vh' }}
                             src={GreyManNotFun}
                             alt="not-fun"
                           />
                         </div>
-                        <div className='col-3' />
+                        <div className='col-12 col-md-2' />
                       </div>,
-                      diamond: true
+                      diamond: true,
+                      customSuccessAction: (nextToken) => {
+                        Swal.fire({
+                          imageUrl: GreyMan,
+                          imageHeight: "auto",
+                          imageWidth: "65%",
+                          imageAlt: 'GreyMan image',
+                          title: `You own #${nextToken}!`,
+                          icon: "success"
+                        });
+                      }
                     }}
                   />
                 )}
