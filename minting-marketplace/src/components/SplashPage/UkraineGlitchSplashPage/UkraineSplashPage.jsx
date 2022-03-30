@@ -111,6 +111,8 @@ const splashData = {
     videoTitle: "Watch the Transformation",
     videoModuleDescription: "Flag owners sign in with metamask to watch",
     videoModuleTitle: "Coming Soon",
+    baseURL: 'https://storage.googleapis.com/rair-videos/',
+    mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
   },
   tilesTitle: null,
   NFTName: "#ukraineglitch",
