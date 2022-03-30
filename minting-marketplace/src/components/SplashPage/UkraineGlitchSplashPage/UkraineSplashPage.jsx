@@ -130,7 +130,7 @@ const splashData = {
     video: null,
     videoTitle: "Watch the Transformation",
     videoModuleDescription: "Flag owners sign in with metamask to watch",
-    videoModuleTitle: "Coming Soon",
+    videoModuleTitle: "For Supporters Only",
     baseURL: 'https://storage.googleapis.com/rair-videos/',
     mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
   },
