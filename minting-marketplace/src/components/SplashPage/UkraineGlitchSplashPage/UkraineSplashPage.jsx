@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import "../SplashPageTemplate/AuthorCard/AuthorCard.css";
 import "../../AboutPage/AboutPageNew/AboutPageNew.css";
@@ -23,7 +23,7 @@ import videoBackground from '../images/metamask-vid-final.png'
 import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
 
 
-import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
+// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import MetaMaskIcon from "../images/metamask_logo.png"
 import DiscordIcon from '../images/discord-icon.png';
 
@@ -143,14 +143,33 @@ const splashData = {
     ],
     description: ["This (de)generative art project was created to provide 100% direct aid to Ukraine.", "2014", "Ukrainian immigrants in the Pacific Northwest of the United States had taken it into their own hands to provide a direct supply chain of specialty tactical medical equipment to Ukraine’s grassroots militias. We are here to continue their story.", "2022", "This website was built by Ukrainian Web3 developers. The logic of the algorithm written by a Ukranian generative artist. Prior to the war they were making NFTs for fun, now for a purpose.", "About the piece", "The algorithm is set such that as the number of the NFT increases, the chaotic opposite square masses also increase, eventually inverting or turning the flag upside-down. Some NFTs are animated (sparkling) to show parts of this progression, and others are still. Only holders of a UkraineGlitch NFT can watch the full animation of the flag transformation occur below."]
   }
-
 }
 
 const UkraineSplashPage = ({ loginDone, connectUserData }) => {
+  const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
   const carousel_match = window.matchMedia('(min-width: 900px)')
   const [carousel, setCarousel] = useState(carousel_match.matches)
   window.addEventListener("resize", () => setCarousel(carousel_match.matches))
+
+  const getAllProduct = useCallback(async () => {
+    const responseAllProduct = await (
+      await fetch(`/api/contracts/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/products/offers`, {
+        method: "GET",
+      })
+    ).json();
+
+    if (responseAllProduct.products && responseAllProduct.products[0].soldCopies) {
+      setSoldCopies(responseAllProduct.products[0].soldCopies);
+    } else {
+      setSoldCopies(0);
+    }
+
+  }, [setSoldCopies]);
+
+  useEffect(() => {
+    getAllProduct()
+  }, [getAllProduct])
 
   useEffect(() => {
     setTitle(`#UkraineGlitch`);
@@ -159,9 +178,9 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   return (
     <div className="wrapper-splash-page ukraineglitch">
       <div className="template-home-splash-page">
-        <AuthorCard {...{splashData, connectUserData}}/>
+        <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        <TokenLeftTemplate counterData={splashData.counterData} copies={splashData.counterData.nftCount} soldCopies={0} primaryColor={primaryColor} />
+        <TokenLeftTemplate counterData={splashData.counterData} copies={splashData.counterData.nftCount} soldCopies={soldCopies} primaryColor={primaryColor} />
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
