@@ -43,6 +43,7 @@ import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
 import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
 import Swal from 'sweetalert2';
+import { rFetch } from '../../../utils/rFetch';
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -68,12 +69,25 @@ const splashData = {
     customStyle: {
       backgroundColor: "#035BBC"
     },
+    presaleMessage: 'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button
     customWrapperClassName: 'btn-submit-with-form',
     // Custom function that will be called if the minting is a success
     // First parameter will be the minted token's number
-    customSuccessAction: (nextToken) => {
-      Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+    customSuccessAction: async (nextToken) => {
+      let tokenMetadata = await rFetch(`/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`);
+      if (tokenMetadata.success) {
+        Swal.fire({
+          imageUrl: tokenMetadata.result.metadata.image,
+          imageHeight: "auto",
+          imageWidth: "65%",
+          imageAlt: "Your NFT's image",
+          title: `You own #${nextToken}!`,
+          icon: "success"
+        });
+      } else {
+        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+      }
     }
   },
   /*
