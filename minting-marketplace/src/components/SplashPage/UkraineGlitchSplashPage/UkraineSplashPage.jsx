@@ -148,7 +148,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
-      const responseAllProduct = await (
+      const { success, products } = await (
         await fetch(`/api/contracts/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/products/offers`, {
           method: "GET",
           headers: {
@@ -157,8 +157,8 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
         })
       ).json();
 
-      if (responseAllProduct.products && responseAllProduct.products[0].soldCopies) {
-        setSoldCopies(responseAllProduct.products[0].soldCopies);
+      if (success && products.length > 0 && products[0].soldCopies) {
+        setSoldCopies(products[0].soldCopies);
       } else {
         setSoldCopies(0);
       }
