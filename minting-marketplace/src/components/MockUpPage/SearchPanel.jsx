@@ -16,6 +16,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const media_match = window.matchMedia('(min-width: 700px)')
+  const [mobile, setMobile] = useState(media_match.matches)
+  window.addEventListener("resize", () => setMobile(media_match.matches))
+
   let pagesArray = [];
   for (let i = 0; i < totalPage; i++) {
     pagesArray.push(i + 1);
@@ -141,7 +145,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             Unlockables
           </Tab>
         </TabList>
-        <div style={{ position: "relative", display: "flex" }}>
+        <div 
+          style= {{ 
+            position: "relative",
+            display: "flex",
+            flexDirection: mobile ? "row" :"column",
+            paddingLeft: "6vw",
+            }}>
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
@@ -150,11 +160,28 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
               borderTopLeftRadius: "0",
-              width: "54.5%",
+              width:  mobile ? "54.5%" :"100%",
+              marginBottom: mobile ? "32px" : "8px",
             }}
             customClass="form-control input-styled"
           />
-          <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
+          <div style={
+            mobile ? {
+            display:"flex",
+            }:{
+              display:"flex",
+              width: "100%",
+              justifyContent: "space-between",
+              marginBottom: "32px"
+              }
+            }>
+          <i 
+            className="fas fa-search fa-lg fas-custom"
+            aria-hidden="true"
+            style={{
+              left: "7vw"
+            }}
+            ></i>
           <FilteringBlock
             sortItem={sortItem}
             setSortItem={setSortItem}
@@ -162,6 +189,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             textColor={textColor}
             isFilterShow={true}
           />
+          </div>
         </div>
         <TabPanel>
           <NftList
