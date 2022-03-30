@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.11; 
 
+/// @title  IERC2981 interface contract
+/// @notice This contracts contains all th logic and function for
+///         the correct implementation of the NFT Royalty Standard
 interface IERC2981 {
     /// ERC165 bytes to add to interface array - set in parent contract
     /// implementing this standard
@@ -23,9 +26,9 @@ interface IERC2981 {
     	uint256 royaltyAmount);
 
     /// @notice Informs callers that this contract supports ERC2981
-    /// @dev If `_registerInterface(_INTERFACE_ID_ERC2981)` is called
-    ///      in the initializer, this should be automatic
-    /// @param interfaceID The interface identifier, as specified in ERC-165
+    /// @dev    If `_registerInterface(_INTERFACE_ID_ERC2981)` is called
+    ///         in the initializer, this should be automatic
+    /// @param  interfaceID The interface identifier, as specified in ERC-165
     /// @return `true` if the contract implements
     ///         `_INTERFACE_ID_ERC2981` and `false` otherwise
     function supportsInterface(bytes4 interfaceID) external view returns (bool);

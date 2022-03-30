@@ -20,6 +20,7 @@ import { metamaskCall } from '../../../utils/metamaskUtils.js';
 import { rFetch } from '../../../utils/rFetch.js';
 import { web3Switch } from '../../../utils/switchBlockchain.js';
 import Swal from 'sweetalert2';
+import PurchaseTokenButton from "../../common/PurchaseToken.jsx";
 
 const Nutcrackers = ({ connectUserData }) => {
     const dispatch = useDispatch();
@@ -116,11 +117,23 @@ const Nutcrackers = ({ connectUserData }) => {
                                 </div>
                             </div>
 
-                            <div className="btn-buy-metamask">
+                            <PurchaseTokenButton
+                                {...{
+                                  customWrapperClassName: 'btn-buy-metamask',
+                                  img: Metamask,
+                                  contractAddress: nutcrackerAddress,
+                                  requiredBlockchain: '0x89',
+                                  offerIndex: [1, 0],
+                                  connectUserData,
+                                  buttonLabel: "Mint with Matic",
+                                }}
+                              />
+
+                            {false && <div className="btn-buy-metamask">
                                 <button onClick={mintNutcracker}>
                                     <img className="metamask-logo" src={Metamask} alt="metamask-logo" /> Mint with Matic
                                 </button>
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>
