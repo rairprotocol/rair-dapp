@@ -130,7 +130,7 @@ const splashData = {
     video: null,
     videoTitle: "Watch the Transformation",
     videoModuleDescription: "Flag owners sign in with metamask to watch",
-    videoModuleTitle: "Coming Soon",
+    videoModuleTitle: "Watch the Transformation",
   },
   tilesTitle: null,
   NFTName: "#ukraineglitch",
