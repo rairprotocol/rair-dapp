@@ -7,6 +7,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    line-height: 25px;
 }
 
 .wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper .property-first:first-child {
@@ -15,6 +16,15 @@
 
 .wrapper-splash-page.ukraineglitch .left-tokens .progress-main svg {
     color: #035BBC;
+}
+
+.wrapper-splash-page.ukraineglitch .block-after-ipfs {
+    width: 472px;
+    text-align: left;
+}
+
+.wrapper-splash-page.ukraineglitch .block-after-ipfs a {
+    color: #5865f2;
 }
 
 @media screen and (max-width: 1300px) {
@@ -31,6 +41,11 @@
 
     .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
         left: 35px;
+    }
+
+    .wrapper-splash-page.ukraineglitch .block-after-ipfs {
+        width: 100%;
+        text-align: center;
     }
 }
 
