@@ -206,6 +206,11 @@ const Agreements = ({
 
 					setButtonMessage(`Minting token #${nextToken.toString()}`)
 
+					if ((await contractInstance.provider.getBalance(currentUserAddress)).lt(price)) {
+						Swal.fire("Error", "Insufficient funds!", 'error');
+						return;
+					}
+
 					let purchaseResult = await purchaseFunction(
 						diamond ? diamondMarketplaceInstance : minterInstance,
 						contractInstance,
