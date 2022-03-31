@@ -11,6 +11,7 @@ const TokenLeftTemplate = ({
     copies,
     soldCopies,
     counterData,
+    ipftButton
 }) => {
     const { backgroundImage, description, title1, title2, titleColor, btnColorIPFS, properties } = counterData;
 
@@ -114,33 +115,44 @@ const TokenLeftTemplate = ({
                             {
                                 properties && properties.map((item, index) => {
                                     return <div key={index} className="property-first">
-                                    <div
-                                        className="property"
-                                        style={{
-                                            background: `${primaryColor === "rhyno" ? "#cccccc" : "none"
-                                                }`,
-                                        }}
-                                    >
-                                        <span className="property-desc" style={{color: item.titleColor && item.titleColor}}>{item.titleProperty}</span>
-                                        <span className="property-name-color">{item.propertyDesc}</span>
-                                        <span className="property-color">{item.percent}</span>
+                                        <div
+                                            className="property"
+                                            style={{
+                                                background: `${primaryColor === "rhyno" ? "#cccccc" : "none"
+                                                    }`,
+                                            }}
+                                        >
+                                            <span className="property-desc" style={{ color: item.titleColor && item.titleColor }}>{item.titleProperty}</span>
+                                            <span className="property-name-color">{item.propertyDesc}</span>
+                                            <span className="property-color">{item.percent}</span>
+                                        </div>
                                     </div>
-                                </div>
                                 })
                             }
-                            
+
                         </div>
                         <div className="property-btn-wrapper">
                             {/* <a
                                 href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt"
                                 target="_blank" rel="noreferrer"
                             > */}
-                                <button
+                            {
+                                ipftButton ? <button
                                     className="property-btn"
                                     style={{ background: `${btnColorIPFS ? btnColorIPFS : ""}` }}
                                 >
                                     View on IPFS
-                                </button>
+                                </button> :
+                                    <div className="block-after-ipfs">
+                                        Metadata will be frozen to ipfs in batches as tokens are minted.<br/>
+                                        Please be patient with seeing your NFT on Opensea.<br/>
+                                        <a
+                                            href="https://discord.com/invite/y98EMXRsCE"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        > Inquire on our discord</a> for more info.
+                                    </div>
+                            }
                             {/* </a> */}
                         </div>
                     </div>
