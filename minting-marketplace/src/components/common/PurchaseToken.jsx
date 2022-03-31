@@ -44,7 +44,7 @@ const queryRangeDataFromDatabase = async (contractInstance, network, offerIndex,
 					start: selectedOffer.range[0],
 					end: selectedOffer.range[1],
 					product: selectedOffer.product,
-					price: selectedOffer.price
+					price: selectedOffer.price.toString()
 				}
 			}
 		}
