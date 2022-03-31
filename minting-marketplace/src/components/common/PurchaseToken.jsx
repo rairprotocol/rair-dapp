@@ -30,7 +30,12 @@ const queryRangeDataFromBlockchain = async (marketplaceInstance, offerIndex, dia
 }
 
 const queryRangeDataFromDatabase = async (contractInstance, network, offerIndex, diamond = false) => {
-	let { success, products } = await rFetch(`/api/contracts/network/${network}/${contractInstance.address}/products/offers`);
+	let { success, products } = await rFetch(
+		`/api/contracts/network/${network}/${contractInstance.address}/products/offers`,
+		undefined,
+		undefined,
+		false // disables error messages for this rFetch call, because if this fails, the blockchain query starts
+	);
 	if (success) {
 		let [selectedOfferPool] = products.filter(item => item.offerPool.marketplaceCatalogIndex === offerIndex[0]);
 		if (!selectedOfferPool) {

@@ -145,7 +145,7 @@ const getJWT = async (signer, userAddress) => {
 // 	}
 // }
 
-const rFetch = async (route, options, retryOptions = undefined) => {
+const rFetch = async (route, options, retryOptions = undefined, showErrorMessages = true) => {
 	let request = await fetch(route, {
 		...options,
 		headers: {
@@ -163,7 +163,9 @@ const rFetch = async (route, options, retryOptions = undefined) => {
 					return rFetch(route, options);
 				}
 			}
-			Swal.fire('Error', parsing?.message, 'error');
+			if (showErrorMessages) {
+				Swal.fire('Error', parsing?.message, 'error');
+			}
 		}
 		return parsing;
 	} catch (err) {
