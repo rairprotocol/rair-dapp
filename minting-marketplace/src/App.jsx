@@ -447,7 +447,7 @@ function App({ sentryHistory }) {
 						{/*
 							Main body, the header, router and footer are here
 						*/}
-						<div className={`col-${adminRights ? '11' : '11'}`}>
+						<div className={`col-12 col-md-${adminRights ? '11' : '11'}`}>
 							<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
 								<Switch>
 									<SentryRoute path='/admin' component={BlockChainSwitcher} />
