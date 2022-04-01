@@ -3,9 +3,12 @@ import Modal from "react-modal";
 import VideoPlayerBySignature from "./VideoPlayerBySignature ";
 import "./VideoPlayer.css"
 import { useState, useCallback } from "react";
+import StandaloneVideoPlayer from "../../../video/videoPlayerGenerall";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { Provider, useStore, useSelector } from 'react-redux';
 
-
-
+const reactSwal = withReactContent(Swal);
 
 const customStylesForVideo = {
     overlay: {
@@ -33,7 +36,7 @@ const customStylesForVideo = {
   };
   Modal.setAppElement("#root");
 
-const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle}) => {
+const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle, baseURL, mediaId}) => {
     const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
     const openModalForVideo = useCallback(() => {
         setVideoIsOpen(true);
@@ -47,9 +50,27 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle}) => {
         setVideoIsOpen(false);
     }
 
+    const store = useStore();
+    const { primaryColor, textColor } = useSelector(store => store.colorStore);
+
     return (
         <>
           <div
+            onClick={() => reactSwal.fire({
+                title: videoTitle,
+                html: <Provider store={store}>
+                    <StandaloneVideoPlayer
+                        {...{baseURL, mediaId}}
+                    />
+                </Provider>,
+                width: '90vw',
+                height: '90vh',
+                customClass: {
+                    popup: `bg-${primaryColor}`,
+                    title: `text-${textColor}`,
+                },
+                showConfirmButton: false
+            })}
             className="video-module-background"
             style={{backgroundImage: 'url(' + backgroundImage + ')',}}
             alt="community-img"
@@ -86,7 +107,7 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle}) => {
 }
 
   const VideoPlayerModule = ({backgroundImage, videoData}) => {
-      const {videoTitle, videoModuleDescription, videoModuleTitle, video} = videoData
+      const {videoTitle, videoModuleDescription, videoModuleTitle, video, baseURL, mediaId} = videoData
       return (
         <div className="video-module-wrapper">
             <h3
@@ -95,7 +116,14 @@ const ShowVideoToLoggedInUsers = ({backgroundImage, video, videoTitle}) => {
             {videoModuleTitle}
             </h3>
             <div className="video-module">
-              <ShowVideoToLoggedInUsers backgroundImage={backgroundImage} video={video} videoTitle={videoTitle}/>
+              <ShowVideoToLoggedInUsers
+                {...{
+                  backgroundImage,
+                  video,
+                  baseURL,
+                  mediaId,
+                  videoTitle
+                }}/>
             </div>
             <div className="video-module-desc-wrapper">
             <span

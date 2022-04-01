@@ -13,7 +13,7 @@ const Footer = ({ primaryColor, /*openAboutPage,*/ sentryHistory }) => {
             }}
         >
             <div className="text-rairtech" style={{ color: `${primaryColor === "rhyno" ? "#000" : ""}` }}>
-                © Rairtech 2021. All rights reserved
+                © Rairtech 2022. All rights reserved
             </div>
             {
                 sentryHistory.location.pathname === "/about-page" ?
