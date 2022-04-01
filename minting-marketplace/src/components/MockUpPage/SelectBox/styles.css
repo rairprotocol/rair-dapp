@@ -260,3 +260,26 @@
   border-end-start-radius: 16px;
   cursor: pointer;
 }
+
+
+@media screen and (max-width: 700px) {
+
+  .pagination__wrapper {
+    width: 100%;
+    justify-content: center;
+    margin-left:5vw;
+    overflow-x: hidden;
+  }
+
+}
+    
+@media screen and (max-width: 700px) {
+
+    .pagination__wrapper {
+      width: 45%;
+      justify-content: flex-start;
+      margin-left: 27vw;
+      overflow-x: hidden;
+    }
+  
+  }

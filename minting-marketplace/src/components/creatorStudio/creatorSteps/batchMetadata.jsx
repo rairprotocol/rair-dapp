@@ -211,7 +211,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 				<tfoot />
 			</table>
 		</div>}
-		{!simpleMode && contractData.diamond && contractData.instance && <>
+		{!simpleMode && contractData.instance && <>
 			<hr />
 			<div className='col-12 col-md-9'>
 				<InputField
@@ -222,13 +222,17 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 				/>
 			</div>
 			<div className='col-12 col-md-3 pt-4'>
-				<button onClick={() => setIncludeNumber(!includeNumber)} className={`btn btn-${includeNumber ? 'royal-ice' : 'warning'}`}>
-					{!includeNumber && "Don't " }Include token ID
+				<button disabled={!contractData.diamond} onClick={() => setIncludeNumber(!includeNumber)} className={`btn btn-${includeNumber ? 'royal-ice' : 'warning'}`}>
+					{!includeNumber && "Don't " }Include token ID {!contractData.diamond && <>( Diamonds Only )</>}
 				</button>
 			</div>
 			<br />
 			<div className='col-5'>
 				<button onClick={async () => {
+					let args = [contractData.product.collectionIndexInContract, metadataURI];
+					if (contractData.diamond) {
+						args.push(includeNumber);
+					}
 					Swal.fire({
 						title: 'Sending metadata URI...',
 						html: 'Please wait...',
@@ -236,11 +240,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 						showConfirmButton: false
 					});
 					if (await metamaskCall(
-						contractData.instance.setProductURI(
-							contractData.product.collectionIndexInContract,
-							metadataURI,
-							includeNumber
-						)
+						contractData.instance.setProductURI(...args)
 					)) {
 						Swal.fire({
 							title: 'Success!',
@@ -258,6 +258,10 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 			</div>
 			<div className='col-5 mb-3'>
 				<button onClick={async () => {
+					let args = [metadataURI];
+					if (contractData.diamond) {
+						args.push(includeNumber);
+					}
 					Swal.fire({
 						title: 'Sending metadata URI...',
 						html: 'Please wait...',
@@ -265,10 +269,7 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 						showConfirmButton: false
 					});
 					if (await metamaskCall(
-						contractData.instance.setBaseURI(
-							metadataURI,
-							includeNumber
-						)
+						contractData.instance.setBaseURI(...args)
 					)) {
 						Swal.fire({
 							title: 'Success!',

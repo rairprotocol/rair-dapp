@@ -4,6 +4,11 @@ import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
 const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilterShow }) => {
+
+    const media_match = window.matchMedia('(min-width: 400px)')
+    const [mobile, setMobile] = useState(media_match.matches)
+    window.addEventListener("resize", () => setMobile(media_match.matches))
+
     const [filterPopUp, setFilterPopUp] = useState(false);
     const [/*filterItem*/, setFilterItem] = useState('Filters');
     const filterRef = useRef();
@@ -102,7 +107,7 @@ const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilt
                                 <i style={{ color: `${sortItem === "down" ? "#E882D5" : "#A7A6A6"}` }} className="fas fa-arrow-down"></i>
                             </div>
                             <div>
-                                Sort by name
+                                Sort{mobile && " by name"}
                             </div>
                         </div>
                         <div className="title-right-arrow">

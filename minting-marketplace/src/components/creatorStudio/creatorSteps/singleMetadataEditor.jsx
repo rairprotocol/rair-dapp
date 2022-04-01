@@ -206,7 +206,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 				label: 'Continue'
 			}]}
 		/>}
-		{!simpleMode && contractData.diamond && contractData.instance && <>
+		{!simpleMode && contractData.instance && <>
 			<div className='col-12'>
 				<button onClick={async () => {
 					let URI = await metamaskCall(contractData.instance.tokenURI(contractData.product.firstTokenIndex + Number(nftID)))

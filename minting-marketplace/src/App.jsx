@@ -115,7 +115,6 @@ const ErrorFallback = () => {
 function App({ sentryHistory }) {
 	const dispatch = useDispatch()
 	const [userData, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	const [errorAuth, /*setErrorAuth*/] = useState('');
@@ -144,6 +143,7 @@ function App({ sentryHistory }) {
 		backgroundImageEffect
 	} = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
+	const { adminRights } = useSelector(store => store.userStore);
 
 	const connectUserData = useCallback(async () => {
 		setStartedLogin(true);
@@ -193,7 +193,7 @@ function App({ sentryHistory }) {
 			}
 
 			// Authorize user and get JWT token
-			if (adminAccess === null || !localStorage.token || !isTokenValid(localStorage.token)) {
+			if (adminRights === null || !localStorage.token || !isTokenValid(localStorage.token)) {
 				dispatchStack.push({ type: authTypes.GET_TOKEN_START });
 				let token = await getJWT(programmaticProvider, currentUser);
 
@@ -202,12 +202,9 @@ function App({ sentryHistory }) {
 					setLoginDone(false);
 					dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
 					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-					setAdminAccess(false);
 					localStorage.setItem('token', token);
 				} else {
 					const decoded = jsonwebtoken.decode(token);
-
-					setAdminAccess(decoded.adminRights);
 					dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: decoded.adminRights });
 					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
 					localStorage.setItem('token', token);
@@ -223,7 +220,7 @@ function App({ sentryHistory }) {
 			console.log('Error', err);
 			setStartedLogin(false);
 		}
-	}, [adminAccess, programmaticProvider, dispatch]);
+	}, [programmaticProvider, dispatch]);
 
 	const goHome = () => {
 		sentryHistory.push(`/`);
@@ -256,11 +253,10 @@ function App({ sentryHistory }) {
 		if (process.env.NODE_ENV === 'development') {
 			window.gotoRouteBackdoor = sentryHistory.push;
 			window.adminAccessBackdoor = (boolean) => {
-				setAdminAccess(boolean);
 				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
 			};
 		}
-	}, [dispatch, sentryHistory.push, setAdminAccess]);
+	}, [dispatch, sentryHistory.push]);
 
 	useEffect(() => {
 		btnCheck();
@@ -378,7 +374,7 @@ function App({ sentryHistory }) {
 					className="App p-0 container-fluid">
 					{carousel && <UserProfileSettings
 						errorAuth={errorAuth}
-						adminAccess={adminAccess}
+						adminAccess={adminRights}
 						primaryColor={primaryColor}
 						currentUserAddress={currentUserAddress}
 						loginDone={loginDone}
@@ -388,7 +384,7 @@ function App({ sentryHistory }) {
 						{/*
 							Left sidebar, includes the RAIR logo and the admin sidebar
 						*/}
-						{carousel ? <div className='col-1 rounded'>
+						{carousel ? <div className='col-1'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
 								<MainLogo
 									goHome={goHome}
@@ -414,7 +410,7 @@ function App({ sentryHistory }) {
 									}
 								</div>
 								:
-								adminAccess === true && !creatorViewsDisabled && [
+								adminRights === true && !creatorViewsDisabled && [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className="fas fa-key" />, route: '/my-nft' },
 									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
@@ -451,7 +447,7 @@ function App({ sentryHistory }) {
 						{/*
 							Main body, the header, router and footer are here
 						*/}
-						<div className='col'>
+						<div className={`col-12 col-md-${adminRights ? '11' : '11'}`}>
 							<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
 								<Switch>
 									<SentryRoute path='/admin' component={BlockChainSwitcher} />
@@ -529,7 +525,7 @@ function App({ sentryHistory }) {
 											}
 
 											return <SentryRoute key={index} exact path={isHome ? '/' : item.path}>
-												<item.content {...{ connectUserData }} />
+												<item.content {...{ connectUserData }} loginDone={loginDone} />
 											</SentryRoute>
 										})
 									}
@@ -541,8 +537,10 @@ function App({ sentryHistory }) {
 										*/
 										{
 											path: '/',
-											content: <>
-												<div className='col-6 text-left'>
+											content: <div className='main-wrapper'>
+												<div 
+													className='col-6 text-left main'
+													>
 													<h1 className='w-100' style={{ textAlign: 'left' }}>
 														Digital <b className='title'>Ownership</b>
 														<br />
@@ -555,7 +553,7 @@ function App({ sentryHistory }) {
 												<div className='col-12 mt-3 row' >
 													<MockUpPage />
 												</div>
-											</>,
+											</div>,
 											requirement: process.env.REACT_APP_HOME_PAGE === '/',
 										},
 
@@ -608,7 +606,7 @@ function App({ sentryHistory }) {
 										{
 											path: "/admin",
 											content: <FileUpload primaryColor={primaryColor} textColor={textColor} />,
-											requirement: loginDone && !creatorViewsDisabled && adminAccess
+											requirement: loginDone && !creatorViewsDisabled && adminRights
 										},
 
 										// Old Metadata Editor

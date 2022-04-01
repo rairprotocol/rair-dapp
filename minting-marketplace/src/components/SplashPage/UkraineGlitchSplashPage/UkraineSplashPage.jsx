@@ -42,6 +42,8 @@ import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
 import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
+import Swal from 'sweetalert2';
+import { rFetch } from '../../../utils/rFetch';
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -67,8 +69,26 @@ const splashData = {
     customStyle: {
       backgroundColor: "#035BBC"
     },
+    presaleMessage: 'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button
-    customWrapperClassName: 'btn-submit-with-form'
+    customWrapperClassName: 'btn-submit-with-form',
+    // Custom function that will be called if the minting is a success
+    // First parameter will be the minted token's number
+    customSuccessAction: async (nextToken) => {
+      let tokenMetadata = await rFetch(`/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`);
+      if (tokenMetadata.success) {
+        Swal.fire({
+          imageUrl: tokenMetadata.result.metadata.image,
+          imageHeight: "auto",
+          imageWidth: "65%",
+          imageAlt: "Your NFT's image",
+          title: `You own #${nextToken}!`,
+          icon: "success"
+        });
+      } else {
+        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
+      }
+    }
   },
   /*
   button1: {
@@ -110,7 +130,9 @@ const splashData = {
     video: null,
     videoTitle: "Watch the Transformation",
     videoModuleDescription: "Flag owners sign in with metamask to watch",
-    videoModuleTitle: "Coming Soon",
+    videoModuleTitle: "For Supporters Only",
+    baseURL: 'https://storage.googleapis.com/rair-videos/',
+    mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
   },
   tilesTitle: null,
   NFTName: "#ukraineglitch",
@@ -147,19 +169,24 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   window.addEventListener("resize", () => setCarousel(carousel_match.matches))
 
   const getAllProduct = useCallback(async () => {
-    const responseAllProduct = await (
-      await fetch(`/api/contracts/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/products/offers`, {
-        method: "GET",
-      })
-    ).json();
+    if (loginDone) {
+      const { success, products } = await (
+        await fetch(`/api/contracts/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/products/offers`, {
+          method: "GET",
+          headers: {
+            'X-rair-token': `${localStorage.getItem('token')}`
+          },
+        })
+      ).json();
 
-    if (responseAllProduct.products && responseAllProduct.products[0].soldCopies) {
-      setSoldCopies(responseAllProduct.products[0].soldCopies);
-    } else {
-      setSoldCopies(0);
+      if (success && products.length > 0 && products[0].soldCopies) {
+        setSoldCopies(products[0].soldCopies);
+      } else {
+        setSoldCopies(0);
+      }
     }
 
-  }, [setSoldCopies]);
+  }, [setSoldCopies, loginDone]);
 
   useEffect(() => {
     getAllProduct()
