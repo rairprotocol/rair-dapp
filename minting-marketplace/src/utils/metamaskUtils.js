@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { rFetch } from './rFetch.js';
+// import { rFetch } from './rFetch.js';
 
 // 2 for the transaction catcher, 1 for speed
 const confirmationsRequired = 1;
