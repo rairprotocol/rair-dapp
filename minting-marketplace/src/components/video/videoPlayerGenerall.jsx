@@ -67,7 +67,7 @@ const VideoPlayer = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
       console.error(streamAddress);
       Swal.fire("NFT required to view this content");
     }
-  }, [videoName, programmaticProvider]);
+  }, [programmaticProvider, mediaId, mainManifest, videoName]);
 
   useEffect(() => {
     requestChallenge();

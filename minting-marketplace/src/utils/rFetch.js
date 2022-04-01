@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 import jsonwebtoken from 'jsonwebtoken';
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
 const signIn = async (provider) => {
 	let currentUser = provider?.address;
@@ -47,7 +47,7 @@ const signIn = async (provider) => {
 	}
 	*/
 
-	const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
+	const { success, /*user*/ } = await (await fetch(`/api/users/${currentUser}`)).json();
 	if (!success) {
 		return;
 	}
