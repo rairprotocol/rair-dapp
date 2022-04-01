@@ -30,7 +30,12 @@ const queryRangeDataFromBlockchain = async (marketplaceInstance, offerIndex, dia
 }
 
 const queryRangeDataFromDatabase = async (contractInstance, network, offerIndex, diamond = false) => {
-	let { success, products } = await rFetch(`/api/contracts/network/${network}/${contractInstance.address}/products/offers`);
+	let { success, products } = await rFetch(
+		`/api/contracts/network/${network}/${contractInstance.address}/products/offers`,
+		undefined,
+		undefined,
+		false // disables error messages for this rFetch call, because if this fails, the blockchain query starts
+	);
 	if (success) {
 		let [selectedOfferPool] = products.filter(item => item.offerPool.marketplaceCatalogIndex === offerIndex[0]);
 		if (!selectedOfferPool) {
@@ -44,7 +49,7 @@ const queryRangeDataFromDatabase = async (contractInstance, network, offerIndex,
 					start: selectedOffer.range[0],
 					end: selectedOffer.range[1],
 					product: selectedOffer.product,
-					price: selectedOffer.price
+					price: selectedOffer.price.toString()
 				}
 			}
 		}
@@ -200,6 +205,11 @@ const Agreements = ({
 					let nextToken = await getNextSequentialIndex(contractInstance, start, end, product, diamond);
 
 					setButtonMessage(`Minting token #${nextToken.toString()}`)
+
+					if ((await contractInstance.provider.getBalance(currentUserAddress)).lt(price)) {
+						Swal.fire("Error", "Insufficient funds!", 'error');
+						return;
+					}
 
 					let purchaseResult = await purchaseFunction(
 						diamond ? diamondMarketplaceInstance : minterInstance,
