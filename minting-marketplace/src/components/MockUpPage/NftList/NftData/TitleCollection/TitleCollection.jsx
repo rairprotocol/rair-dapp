@@ -62,7 +62,7 @@ const TitleCollection = ({ title, userName, currentUser, tokenData, selectedData
       <div className="block-user-creator">
         <span>by:</span>
         <img src={defaultUser} alt="user" />
-        <h5>{userName}</h5>
+        <h5>{userName.length > 25 ? `${userName.substring(0, 25)}...` : userName}</h5>
       </div>
       <div className="block-collection-desc">
         {

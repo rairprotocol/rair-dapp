@@ -580,6 +580,10 @@ a:hover {
 
 /* for videoList input */
 
+.wrapper-collection .list-button-wrapper {
+    margin-left: 0;
+} 
+
 .list-button-wrapper {
     display: flex;
     flex-wrap: wrap;
