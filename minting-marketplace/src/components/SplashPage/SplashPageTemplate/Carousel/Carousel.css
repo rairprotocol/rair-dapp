@@ -81,6 +81,10 @@
         margin: 15vw 0;
     }
 
+    .wrapper-splash-page.ukraineglitch .carousel-container {
+        margin: 15vw 0 0 0;
+    }    
+
     .carousel-container .carousel{
         width: 100%
     }

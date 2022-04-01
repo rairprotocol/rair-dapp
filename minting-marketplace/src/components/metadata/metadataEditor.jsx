@@ -170,7 +170,7 @@ const MetadataEditor = (props) => {
 		let nftResponse = await (await fetch(`/api/nft/network/${params.blockchain}/${params.contract.toLowerCase()}/${params.product}`)).json()
 		let sortedMetadataArray = [];
 		let sortedURIArray = [];
-		if (nftResponse?.success && nftResponse?.totalCount) {
+		if (nftResponse?.success && nftResponse?.result?.totalCount) {
 			for await (let token of nftResponse?.result?.tokens) {
 				sortedMetadataArray[token.token] = token.metadata;
 				sortedURIArray[token.token] = token.metadataURI;
@@ -352,7 +352,6 @@ const MetadataEditor = (props) => {
 
 		</div>
 		<hr />
-
 		{existingMetadataArray && 
 			<div className='p-5 col-12'>
 				<button onClick={async e => {

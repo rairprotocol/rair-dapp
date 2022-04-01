@@ -15,7 +15,15 @@ interface IRAIR721 {
 		string rangeName;
 	}
 
+	/// @notice This function returns the information of the selected range
+	/// @param rangeId 		  Contains the specific range that we want to check
+	/// @return data		  Contains the data inside the range
+	/// @return productIndex  Contains the index of the products for the range
 	function rangeInfo(uint rangeId) external view returns(range memory data, uint productIndex);
+	/// @notice This function allow us to mint token from a specific range 
+	/// @param to Contains the address that will mint the token
+    /// @param rangeId Contains the range identification where we want to mint
+	/// @param indexInRange Contains the index inside the range that we want to use for minting 
 	function mintFromRange(address to, uint rangeId, uint indexInRange) external;
 }
 
@@ -23,8 +31,16 @@ interface IRAIR721 {
 /// @title  RAIR Diamond - Minting offers facet
 /// @notice Facet in charge of the minting offers in the RAIR Marketplace
 /// @author Juan M. Sanchez M.
+/// @dev 	Notice that this contract is inheriting from AccessControlAppStorageEnumerableMarket
 contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 
+	/// @notice This event stores in the blockchain when a Minting Offer is Added
+    /// @param  erc721Address Contains the address of the erc721
+    /// @param  rangeindex contains the id of the minted token
+	/// @param  rangeName contains the name of the range where the token is
+	/// @param  price Contains the price of the offer fot the token
+    /// @param  feeSplitsLength contains the previous status of the role
+	/// @param  offerIndex contains the new status of the role
 	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, uint offerIndex);
 	event UpdatedMintingOffer(address erc721Address, uint rangeIndex, uint feeSplitsLength, bool visible, uint offerIndex);
 	
@@ -57,8 +73,9 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 
 	/// @notice Utility function to verify that the recipient of a custom splits ISN'T a contract
 	/// @dev 	This isn't a foolproof function, a contract running code in it's constructor has a code size of 0
-	/// @param addr 	Address to verify
+	/// @param 	addr 	Address to verify
 	/// @return If the address has a code size bigger than 0 (Wallets don't have code so their code size is 0)
+	/// @return bool that indicates if the address is a contract or not
 	function isContract(address addr) internal view returns (bool) {
 		uint size;
 		assembly { size := extcodesize(addr) }
@@ -67,20 +84,31 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 
 	/// @notice Utility function to verify if the Marketplace has a MINTER role
 	/// @param  erc721Address 	Address of the ERC721 token with AccessControl
+	/// @return bool that indicates if the marketplace has a `MINTER` role or not
 	function hasMinterRole(address erc721Address) internal view returns (bool) {
 		return IAccessControl(erc721Address).hasRole(bytes32(keccak256("MINTER")), address(this));
 	}
 
 	/// @notice Returns the number of offers for a specific ERC721 address
 	/// @param  erc721Address 	Address of the ERC721 token
+	/// @return uint with the total of offers
 	function getOffersCountForAddress(address erc721Address) public view returns (uint) {
 		return s.addressToOffers[erc721Address].length;
 	}
 
+	/// @notice Returns the number of all the minting offers 
+	/// @return uint with the total of offers
 	function getTotalOfferCount() public view returns (uint) {
 		return s.mintingOffers.length;
 	}
 
+	/// @notice This functions show us the information of an offer asociated to a marketplace
+	/// @param erc721Address Contains the facet addresses and function selectors
+    /// @param rangeIndex Contains the facet addresses and function selectors
+	/// @return offerindex Show us the indexed position of the offer
+	/// @return mintOffer Show us the information about the minting offer 
+	/// @return rangeData Show us the data about the selected range
+	/// @return productIndex Show us the indexed position for the product inside the range
 	function getOfferInfoForAddress(address erc721Address, uint rangeIndex) public view returns (uint offerIndex, mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {
 		mintingOffer memory selectedOffer = s.mintingOffers[s.addressToOffers[erc721Address][rangeIndex]];
 		(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
@@ -88,12 +116,23 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		mintOffer = selectedOffer;
 	}
 
+	/// @notice This function show us the information of an selected minting offer
+	/// @param offerindex Contains the facet addresses and function selectors
+	/// @return mintOffer Show us the information about the minting offer 
+	/// @return rangeData Show us the data about the selected range
+	/// @return productIndex Show us the indexed position for the product inside the range
 	function getOfferInfo(uint offerIndex) public view returns (mintingOffer memory mintOffer, IRAIR721.range memory rangeData, uint productIndex) {
 		mintingOffer memory selectedOffer = s.mintingOffers[offerIndex];
 		mintOffer = selectedOffer;
 		(rangeData, productIndex) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
 	}
 
+	/// @notice This function allow us to add a new minting offer
+	/// @param erc721Address_ Contains the address of the minter marketplace contract
+	/// @param rangeIndex_ Contains the index location of the range where the offer will be placed
+	/// @param splits Contains the shares and address to pay when the offer is succesfull 
+	/// @param visible_ Contains a boolean to set if the offer is public or not 
+	/// @param nodeAddress_ Contains address of the node where the offer was placed
 	function addMintingOffer(
 		address erc721Address_,
 		uint rangeIndex_,
@@ -104,6 +143,12 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_addMintingOffer(erc721Address_, rangeIndex_, splits, visible_, nodeAddress_);
 	}
 
+	/// @notice This function allow us to create a group of minting offers in a single call
+	/// @param erc721Address_ Contains the address of the minter marketplace contract
+	/// @param rangeIndexes Contains the collection of ranges where the offer will be placed
+	/// @param splits Contains the shares and address to pay when the offer is succesfull 
+	/// @param visibility Contains a collection of booleans that set the offer as public or not 
+	/// @param nodeAddress_ Contains address of the node where the offer was placed
 	function addMintingOfferBatch(
 		address erc721Address_,
 		uint[] calldata rangeIndexes,
@@ -118,6 +163,15 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		}
 	}
 
+	/// @notice This function allow us to add a new minting offer
+	/// @dev 	This function requires that account has the role of `CREATOR`
+	/// @dev 	This function requires that the marketplace is defined as MINTER
+	/// @dev 	This function requires that the range is available to create a new offer
+	/// @param erc721Address_ Contains the address of the minter marketplace contract
+	/// @param rangeIndex_ Contains the index location of the range where the offer will be placed
+	/// @param splits Contains the shares and address to pay when the offer is succesfull 
+	/// @param visible_ Contains a boolean to set if the offer is public or not 
+	/// @param nodeAddress_ Contains address of the node where the offer was placed
 	function _addMintingOffer(
 		address erc721Address_,
 		uint rangeIndex_,
@@ -152,6 +206,11 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, s.mintingOffers.length - 1);
 	}
 
+	/// @notice This function allow us to update the parameters of a minting offers
+	/// @dev 	This function requires that the mintingOfferExists points to an valid offer  
+	/// @param 	mintingOfferId_  Contains index location of the minting offer
+	/// @param 	splits_ 		 Contains the shares and address to pay when the offer is succesfull 
+	/// @param 	visible_    	 Contains a boolean to set if the offer is public or not 
 	function updateMintingOffer (
 		uint mintingOfferId_,
 		feeSplits[] memory splits_,
@@ -160,6 +219,10 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_updateMintingOffer(mintingOfferId_, splits_, visible_);
 	}
 
+	/// @notice This function allow us to update the parameters of a minting offers 
+	/// @param 	mintingOfferId_  Contains index location of the minting offer
+	/// @param 	splits_ 		 Contains the shares and address to pay when the offer is succesfull 
+	/// @param 	visible_         Contains a boolean to set if the offer is public or not 
 	function _updateMintingOffer (
 		uint mintingOfferId_,
 		feeSplits[] memory splits_,
@@ -197,6 +260,11 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		);
 	}
 
+	/// @notice This function allow us to buy a minting offers
+	/// @dev 	This function requires that the mintingOfferExists points to an valid offer  
+	/// @param 	offerIndex_  Contains index location of the offer
+	/// @param 	tokenIndex_  Contains the id of the tokens that we want to mint
+	/// @param 	recipient    Contains the collection of addresses that will receive
 	function buyMintingOffer(uint offerIndex_, uint tokenIndex_) public mintingOfferExists(offerIndex_) payable {
 		mintingOffer storage selectedOffer = s.mintingOffers[offerIndex_];
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
@@ -219,6 +287,11 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndex_, msg.sender);
 	}
 
+	/// @notice This function allow us to buy a collection of minting offers
+	/// @dev 	This function requires that the mintingOfferExists points to an valid offer  
+	/// @param 	offerIndex_  Contains index location of the offer
+	/// @param 	tokenIndexes Contains the collection of tokens that we want to mint
+	/// @param 	recipient    Contains the collection of addresses that will receive
 	function buyMintingOfferBatch(
 		uint offerIndex_,
 		uint[] calldata tokenIndexes,
@@ -250,6 +323,11 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		}
 	}
 
+	/// @notice This function is in charge of buying a desired minting offer 
+	/// @param erc721Address  Contains the address where the offer is located
+	/// @param rangeIndex	  Contains the index location of the range where the token is 
+	/// @param tokenIndex  	  Contains the index location of the token to buy 
+	/// @param recipient   	  Contains the address of the recipient of the token
 	function _buyMintingOffer(address erc721Address, uint rangeIndex, uint tokenIndex, address recipient) internal {
 		IRAIR721(erc721Address).mintFromRange(recipient, rangeIndex, tokenIndex);
 		emit MintedToken(erc721Address, rangeIndex, tokenIndex, recipient);
