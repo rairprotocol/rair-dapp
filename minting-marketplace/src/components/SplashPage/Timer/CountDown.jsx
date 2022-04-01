@@ -41,7 +41,7 @@ const CountdownComponent = ({ setTimerLeft, time }) => {
             setTimerLeft(0);
         }
 
-    }, [countdownDate]);
+    }, [countdownDate, setTimerLeft]);
     useEffect(() => {
         const interval = setInterval(() => setNewTime(), 1000);
         return () => {

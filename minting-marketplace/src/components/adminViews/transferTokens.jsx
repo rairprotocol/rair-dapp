@@ -70,16 +70,16 @@ const TransferTokens = () => {
 			return;
 		}
 
-		let tokensOwnedAsyncCall = (async () => {
-			let ownedTokensArray = [];
-			let numberOfOwnedTokens = (await metamaskCall(instance.balanceOf(currentUserAddress)));
-			for (let i = 0; i < numberOfOwnedTokens; i++) {
-				ownedTokensArray.push({
-					uniqueIndexInContract: (await metamaskCall(instance.tokenOfOwnerByIndex(currentUserAddress, i))).toString()
-				});
-			}
-			setOwnedTokens(ownedTokensArray);
-		})();
+		// let tokensOwnedAsyncCall = (async () => {
+		// 	let ownedTokensArray = [];
+		// 	let numberOfOwnedTokens = (await metamaskCall(instance.balanceOf(currentUserAddress)));
+		// 	for (let i = 0; i < numberOfOwnedTokens; i++) {
+		// 		ownedTokensArray.push({
+		// 			uniqueIndexInContract: (await metamaskCall(instance.tokenOfOwnerByIndex(currentUserAddress, i))).toString()
+		// 		});
+		// 	}
+		// 	setOwnedTokens(ownedTokensArray);
+		// })();
 	}
 
 	const getContractData = useCallback(async () => {
@@ -114,7 +114,7 @@ const TransferTokens = () => {
 				setContractInstance(instance);
 			}
 		}
-	}, [selectedContract, currentChain, contractCreator, manualAddress, setManualDiamond]);
+	}, [selectedContract, currentChain, contractCreator, manualAddress]);
 
 	useEffect(getContractData, [getContractData]);
 
@@ -128,7 +128,7 @@ const TransferTokens = () => {
 				setOwnedTokens(response4.result.tokens);
 			}
 		}
-	}, [selectedProduct, selectedContract])
+	}, [manualAddress, selectedProduct, selectedContract])
 
 	useEffect(getProductNFTs, [getProductNFTs]);
 

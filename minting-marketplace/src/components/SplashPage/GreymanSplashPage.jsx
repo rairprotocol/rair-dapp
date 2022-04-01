@@ -370,7 +370,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
             <li>5. Make sure you are switched to the MATIC network and have at least 1.01 MATIC</li>
             <li>6. Still need help?
               <a
-                href="#"
+                href="#video"
                 target="_blank"
                 rel="noreferrer"
               > Watch this troubleshooting video </a>

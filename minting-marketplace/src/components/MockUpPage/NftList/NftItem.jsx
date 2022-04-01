@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
 import ReactPlayer from "react-player";
-import { utils } from "ethers";
+// import { utils } from "ethers";
 
 // import Swal from 'sweetalert2';
 // import 'react-accessible-accordion/dist/fancy-example.css';

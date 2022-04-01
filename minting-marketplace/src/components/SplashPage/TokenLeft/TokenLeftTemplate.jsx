@@ -16,7 +16,7 @@ const TokenLeftTemplate = ({
     const { backgroundImage, description, title1, title2, titleColor, btnColorIPFS, properties } = counterData;
 
     const [percentTokens, setPersentTokens] = useState(0);
-    const [showMore, setShowMore] = useState(false);
+    // const [showMore, setShowMore] = useState(false);
     const [fontSize, setFontSize] = useState('');
 
     const wholeTokens = Number(copies);
