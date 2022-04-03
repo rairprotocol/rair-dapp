@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 // import { erc721Abi } from "../../../../contracts";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
 import { diamondFactoryAbi } from "../../../../contracts/index.js";
+import PurchaseTokenButton from "../../../common/PurchaseToken.jsx";
 
 const customStyles = {
   overlay: {
@@ -152,12 +153,20 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
           <br />
           NFT multi-dimensional.
         </div>
-        <div className="btn-buy-metamask">
-          <button onClick={() => openModal()}>
-            <img className="metamask-logo" src={Metamask} alt="metamask-logo" />{" "}
-            Test our streaming
-          </button>
-        </div>
+        <PurchaseTokenButton
+          {...{
+            customStyle: {},
+            customWrapperClassName: 'btn-buy-metamask',
+            img: Metamask,
+            contractAddress: aboutPageAddress,
+            requiredBlockchain: switchToNetwork,
+            offerIndex: [offerIndexInMarketplace],
+            connectUserData,
+            buttonLabel: "Test our Streaming",
+            presaleMessage: termsText,
+            diamond: true
+          }}
+        />
         <div className="modal__wrapper__about__page">
           <Modal
             isOpen={modalIsOpen}
