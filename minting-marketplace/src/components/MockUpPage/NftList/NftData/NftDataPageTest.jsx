@@ -478,11 +478,7 @@ const NftDataPageTest = ({
           >
             {selectedData?.animation_url ? (
               <div
-                style={{
-                  width: "600px",
-                  height: "600px",
-                  margin: "auto",
-                }}
+              className="single-token-block-video"
               >
                 <ReactPlayer
                   width={"100%"}

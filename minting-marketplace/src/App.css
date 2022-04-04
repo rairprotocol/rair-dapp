@@ -1224,17 +1224,30 @@ button.metamask-on-boarding:hover {
     }
 }
 
-@media screen and (max-width: 1000px) and (min-width: 901px) {
+@media screen and (max-width: 900px) and (min-width: 768px) {
     #nft-data-page-wrapper {
-        max-width: 55rem;
         margin-left: 5vw;
     }
 }
 
-@media screen and (max-width: 1200px) and (min-width: 1001px) {
+@media screen and (max-width: 1000px) and (min-width: 901px) {
+    #nft-data-page-wrapper {
+        max-width: 55rem;
+        margin-left: 3vw;
+    }
+}
+
+@media screen and (max-width: 1077px) and (min-width: 1001px) {
     #nft-data-page-wrapper {
         max-width: 100%;
         margin-left: 5vw;
+    }
+}
+
+@media screen and (max-width: 1200px) and (min-width: 1078px) {
+    #nft-data-page-wrapper {
+        max-width: 100%;
+        margin-left: 0px;
     }
 }
 
