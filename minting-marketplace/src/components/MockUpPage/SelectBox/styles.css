@@ -312,3 +312,14 @@
         padding: 5px 15px;
     }
 }
+
+@media screen and (max-width: 440px) {
+    .authenticity-box {
+        font-size: 16px;
+    }
+
+    .authenticity-box .block-arrow, .authenticity-box .link-block span {
+        width: 35px;
+        height: 35px;
+    }
+}

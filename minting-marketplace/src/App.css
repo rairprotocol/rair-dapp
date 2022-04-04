@@ -1228,6 +1228,10 @@ button.metamask-on-boarding:hover {
     #nft-data-page-wrapper {
         margin-left: 5vw;
     }
+
+    .wrapper-collection {
+        margin-left: 3vw;
+    }
 }
 
 @media screen and (max-width: 1000px) and (min-width: 901px) {
@@ -1235,10 +1239,14 @@ button.metamask-on-boarding:hover {
         max-width: 55rem;
         margin-left: 3vw;
     }
+
+    .wrapper-collection {
+        margin-left: 3vw;
+    }
 }
 
 @media screen and (max-width: 1077px) and (min-width: 1001px) {
-    #nft-data-page-wrapper {
+    #nft-data-page-wrapper, .wrapper-collection {
         max-width: 100%;
         margin-left: 5vw;
     }
