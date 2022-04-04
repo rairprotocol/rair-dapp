@@ -12,7 +12,7 @@ import withReactContent from 'sweetalert2-react-content';
 
 const reactSwal = withReactContent(Swal);
 
-const StreamsAbout = ({ Metamask }) => {
+const StreamsAbout = ({ Metamask, purchaseButton }) => {
 
     // const [showVideo, setShowVideo] = useState(false);
 
@@ -66,9 +66,7 @@ const StreamsAbout = ({ Metamask }) => {
                             To stream the videos below you’ll need to mint a watch token for .1 MATIC
                         </p>
 
-                        <div className="btn-buy-metamask">
-                            <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" />Test our streaming</button>
-                        </div>
+                        {purchaseButton}
                     </div>
                 </div>
             </div>

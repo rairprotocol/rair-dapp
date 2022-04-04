@@ -32,7 +32,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
+const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData, purchaseButton }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
@@ -152,12 +152,7 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
           <br />
           NFT multi-dimensional.
         </div>
-        <div className="btn-buy-metamask">
-          <button onClick={() => openModal()}>
-            <img className="metamask-logo" src={Metamask} alt="metamask-logo" />{" "}
-            Test our streaming
-          </button>
-        </div>
+        {purchaseButton}
         <div className="modal__wrapper__about__page">
           <Modal
             isOpen={modalIsOpen}
