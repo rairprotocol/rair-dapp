@@ -261,25 +261,54 @@
   cursor: pointer;
 }
 
+.nft-btn-sell{
+    width: 228px;
+    height: 48px;
+    border: none;
+    border-radius: 16px;
+    background-image: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+
+.nft-btn-stimorol {
+    width: 291px;
+    font-size: 12px;
+    height: 48px;
+    border: none;
+    background-image: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    border-radius: 16px;
+}
 
 @media screen and (max-width: 700px) {
-
   .pagination__wrapper {
     width: 100%;
     justify-content: center;
     margin-left:5vw;
     overflow-x: hidden;
   }
-
 }
     
 @media screen and (max-width: 700px) {
-
     .pagination__wrapper {
       width: 45%;
       justify-content: flex-start;
       margin-left: 27vw;
       overflow-x: hidden;
     }
-  
-  }
+}
+
+@media screen and (max-width: 653px) {
+    .main-tab {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nft-single-price-range, .item-rant--box, .nft-btn-price-owner, .nft-btn-stimorol {
+        width: 80vw;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .nft-collection {
+        padding: 5px 15px;
+    }
+}

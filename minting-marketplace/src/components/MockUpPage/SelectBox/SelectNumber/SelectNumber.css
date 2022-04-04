@@ -100,3 +100,9 @@
 .backClose-current-tokens:hover{
 color: #D37AD6;
 }
+
+@media screen and (max-width: 653px) {
+    .select-field {
+        width: 80vw;
+    }
+}

@@ -1207,9 +1207,11 @@ button.metamask-on-boarding:hover {
     display: inline-block;
     padding: 12.5px;
 } */
+
 @media screen and (max-width: 900px) and (min-width: 500px) {
     #nft-data-page-wrapper {
         max-width: 50rem;
+        padding-left: 4rem;
     }
     .col-1.rounded {
         display: flex;
@@ -1224,19 +1226,21 @@ button.metamask-on-boarding:hover {
 
 @media screen and (max-width: 1000px) and (min-width: 901px) {
     #nft-data-page-wrapper {
-        max-width: 50rem;
+        max-width: 55rem;
+        margin-left: 5vw;
     }
 }
 
 @media screen and (max-width: 1200px) and (min-width: 1001px) {
     #nft-data-page-wrapper {
-        max-width: 56rem;
+        max-width: 100%;
+        margin-left: 5vw;
     }
 }
 
 @media screen and (max-width: 1500px) and (min-width: 1201px) {
     #nft-data-page-wrapper {
-        max-width: 59rem;
+        max-width: 1200;
     }
 }
 
@@ -1346,6 +1350,12 @@ body::-webkit-scrollbar-thumb:active {
 .video-btn-back button:hover {
     background: #AF6FD8;
 }
+
+@media screen and (max-width: 767px) {
+    #nft-data-page-wrapper {
+        padding-left: 0;
+    }
+} 
 
 @media screen and (max-width: 700px) {
     .blockchain-switcher {
