@@ -21,6 +21,8 @@ import CompareAbout from "./CompareAbout/CompareAbout";
 import TeamMeet from "../../SplashPage/TeamMeet/TeamMeetList";
 import { useLocation /*useHistory*/ } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import PurchaseTokenButton from "../../common/PurchaseToken.jsx";
 
 const AboutPageNew = ({
   headerLogoBlack,
@@ -42,6 +44,26 @@ const AboutPageNew = ({
     setDocumentTitle(`About Page`);
   }, []);
 
+  const switchToNetwork = "0x38";
+  const aboutPageAddress = "0xb6163454da87e9f3fd63683c5d476f7d067f75a2".toLowerCase();
+  const offerIndexInMarketplace = 1;
+
+  const purchaseButton = <PurchaseTokenButton
+    {...{
+      customStyle: {},
+      customWrapperClassName: 'btn-buy-metamask',
+      img: Metamask,
+      contractAddress: aboutPageAddress,
+      requiredBlockchain: switchToNetwork,
+      offerIndex: [offerIndexInMarketplace],
+      connectUserData,
+      buttonLabel: "Test our Streaming",
+      presaleMessage: termsText,
+      diamond: true,
+      customSuccessAction: (nextToken) => Swal.fire("Success", `You own token #${nextToken}!`, "success")
+    }}
+  />
+
   return (
     <>
       <div className="wrapper-about-page" style={{ marginTop: 0 }}>
@@ -58,12 +80,13 @@ const AboutPageNew = ({
             primaryColor={primaryColor}
             Metamask={Metamask}
             termsText={termsText}
+            purchaseButton={purchaseButton}
           />
           <LeftTokenAbout primaryColor={primaryColor} />
           <PlatformAbout />
           <RairOffer primaryColor={primaryColor} />
           <ExclusiveNfts />
-          <StreamsAbout Metamask={Metamask} primaryColor={primaryColor} />
+          <StreamsAbout Metamask={Metamask} primaryColor={primaryColor} purchaseButton={purchaseButton} />
           {/* <Tokenomics Metamask={Metamask} /> */}
           <RoadMap primaryColor={primaryColor} RairLogo={RairLogo} />
           <CompareAbout />
