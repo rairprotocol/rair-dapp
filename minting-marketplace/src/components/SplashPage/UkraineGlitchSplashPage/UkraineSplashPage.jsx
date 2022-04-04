@@ -172,12 +172,22 @@ const splashData = {
 const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
+  const { currentChain, currentUserAddress, minterInstance } = useSelector((store) => store.contractStore);
   const carousel_match = window.matchMedia("(min-width: 900px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
+      if (currentChain === splashData.purchaseButton.requiredBlockchain) {
+        setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
+      } else {
+        setSoldCopies();
+      }
+      /*
+      //contractAddress
+      //requiredBlockchain
+      //offerIndex
       const { success, products } = await (
         await fetch(`/api/contracts/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/products/offers`, {
           method: "GET",
@@ -192,9 +202,10 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       } else {
         setSoldCopies(0);
       }
+      */
     }
 
-  }, [setSoldCopies, loginDone]);
+  }, [setSoldCopies, loginDone, currentChain]);
 
   useEffect(() => {
     getAllProduct()
@@ -209,7 +220,13 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       <div className="template-home-splash-page">
         <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        <TokenLeftTemplate counterData={splashData.counterData} copies={splashData.counterData.nftCount} soldCopies={soldCopies} primaryColor={primaryColor} />
+        <TokenLeftTemplate
+          counterData={splashData.counterData}
+          copies={splashData.counterData.nftCount}
+          soldCopies={soldCopies}
+          primaryColor={primaryColor}
+          nftTitle="NFTs Left"
+        />
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
