@@ -38,6 +38,7 @@ const NftCollectionPageComponent = ({
   tokenDataFiltered,
   setTokenDataFiltered,
   setTokenData,
+  userData
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -128,7 +129,7 @@ const NftCollectionPageComponent = ({
         selectedData={tokenData[0]?.metadata}
         title={collectionName}
         userName={offerAllData?.owner}
-        currentUser={currentUser}
+        currentUser={userData}
       />
       {tokenDataFiltered.length > 0 ? (
         <div className="filter__btn__wrapper">
