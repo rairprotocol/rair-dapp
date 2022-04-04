@@ -25,7 +25,7 @@ import setDocumentTitle from "../../../../utils/setTitle";
 
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs.jsx";
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock.jsx";
-import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
+// import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
 import CustomButton from "../../utils/button/CustomButton.jsx";
 import CollectionInfo from "./CollectionInfo/CollectionInfo.jsx";
 import TitleCollection from "./TitleCollection/TitleCollection.jsx";
@@ -49,6 +49,7 @@ const NftDataPageTest = ({
   offerData,
   offerPrice,
 }) => {
+  console.log(currentUser, "currentUser")
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
   const [ownerInfo, setOwnerInfo] = useState();
@@ -151,77 +152,77 @@ const NftDataPageTest = ({
     `;
   }
 
-  function showLink() {
-    //  checks if you are the owner and shows only to the owner
+  // function showLink() {
+  //   //  checks if you are the owner and shows only to the owner
 
-    // if (currentUser === tokenData[selectedToken]?.ownerAddress) {
-    //   return (
-    //     <div>
-    //       {tokenData[selectedToken]?.authenticityLink !== "none" ? (
-    //         <a href={tokenData[selectedToken]?.authenticityLink}>
-    //           {tokenData[selectedToken]?.authenticityLink}
-    //         </a>
-    //       ) : (
-    //         "Not minted yet"
-    //       )}
-    //     </div>
-    //   );
-    // } else {
-    //   return <span>Not minted yet</span>;
-    // }
+  //   // if (currentUser === tokenData[selectedToken]?.ownerAddress) {
+  //   //   return (
+  //   //     <div>
+  //   //       {tokenData[selectedToken]?.authenticityLink !== "none" ? (
+  //   //         <a href={tokenData[selectedToken]?.authenticityLink}>
+  //   //           {tokenData[selectedToken]?.authenticityLink}
+  //   //         </a>
+  //   //       ) : (
+  //   //         "Not minted yet"
+  //   //       )}
+  //   //     </div>
+  //   //   );
+  //   // } else {
+  //   //   return <span>Not minted yet</span>;
+  //   // }
 
-    // shows everyone
-    // v1
-    // return (
-    //   <div>
-    //     {tokenData[selectedToken]?.authenticityLink ? (
-    //       <a href={tokenData[selectedToken]?.authenticityLink}>
-    //         {tokenData[selectedToken]?.authenticityLink}
-    //       </a>
-    //     ) : (
-    //       "Not minted yet"
-    //     )}
-    //   </div>
-    // );
+  //   // shows everyone
+  //   // v1
+  //   // return (
+  //   //   <div>
+  //   //     {tokenData[selectedToken]?.authenticityLink ? (
+  //   //       <a href={tokenData[selectedToken]?.authenticityLink}>
+  //   //         {tokenData[selectedToken]?.authenticityLink}
+  //   //       </a>
+  //   //     ) : (
+  //   //       "Not minted yet"
+  //   //     )}
+  //   //   </div>
+  //   // );
 
-    // v2
-    // eslint-disable-next-line array-callback-return
-    return tokenData.map((el, index) => {
-      if (Number(el.token) === Number(selectedToken)) {
-        return (
-          <a
-            className="nftDataPageTest-a-hover"
-            key={index}
-            href={el?.authenticityLink}
-          >
-            {el?.authenticityLink}
-          </a>
-        );
-      }
-      //   //  else {
-      // return <span style={{cursor:"default"}}>Not minted yet</span>;
-      //   // }
-    });
+  //   // v2
+  //   // eslint-disable-next-line array-callback-return
+  //   return tokenData.map((el, index) => {
+  //     if (Number(el.token) === Number(selectedToken)) {
+  //       return (
+  //         <a
+  //           className="nftDataPageTest-a-hover"
+  //           key={index}
+  //           href={el?.authenticityLink}
+  //         >
+  //           {el?.authenticityLink}
+  //         </a>
+  //       );
+  //     }
+  //     //   //  else {
+  //     // return <span style={{cursor:"default"}}>Not minted yet</span>;
+  //     //   // }
+  //   });
 
-    // if (tokenData[selectedToken]) {
-    // eslint-disable-next-line array-callback-return
-    //     return tokenData.map((el, index) => {
-    //       if (Number(el.token) === Number(selectedToken)) {
-    //         return (
-    //           <a
-    //             className="nftDataPageTest-a-hover"
-    //             key={index}
-    //             href={el?.authenticityLink}
-    //           >
-    //             {el?.authenticityLink}
-    //           </a>
-    //         );
-    //       }
-    //     });
-    //   } else {
-    //     return <span style={{ cursor: "default" }}>Not minted yet</span>;
-    //   }
-  }
+  //   // if (tokenData[selectedToken]) {
+  //   // eslint-disable-next-line array-callback-return
+  //   //     return tokenData.map((el, index) => {
+  //   //       if (Number(el.token) === Number(selectedToken)) {
+  //   //         return (
+  //   //           <a
+  //   //             className="nftDataPageTest-a-hover"
+  //   //             key={index}
+  //   //             href={el?.authenticityLink}
+  //   //           >
+  //   //             {el?.authenticityLink}
+  //   //           </a>
+  //   //         );
+  //   //       }
+  //   //     });
+  //   //   } else {
+  //   //     return <span style={{ cursor: "default" }}>Not minted yet</span>;
+  //   //   }
+  // }
 
   const switchEthereumChain = async (chainData) => {
     try {
@@ -335,7 +336,7 @@ const NftDataPageTest = ({
               "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
           }}
         >
-          Owned
+          Sell
         </button>
       );
     } else

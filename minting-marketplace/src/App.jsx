@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, /*Redirect*/ NavLink, useLocation } from 'react-router-dom';
+import { Router, Switch, Route, /*Redirect*/ NavLink, /*useLocation*/ } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch.js';
 
@@ -22,6 +22,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
+import TransferTokens from './components/adminViews/transferTokens.jsx';
 
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
@@ -58,10 +59,10 @@ import { OnboardingButton } from './components/common/OnboardingButton';
 
 import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 import SplashPage from './components/SplashPage';
-import setTitle from './utils/setTitle';
+// import setTitle from './utils/setTitle';
 
 import ThankYouPage from './components/ThankYouPage';
 import Token from './components/nft/Token.jsx';
@@ -85,6 +86,8 @@ import googleAnalytics from '@analytics/google-analytics'
 import { detectBlockchain } from './utils/blockchainData.js';
 import AlertMetamask from './components/AlertMetamask/index.jsx';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
+import MenuNavigation from './components/Navigation/Menu.jsx';
+import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage.jsx';
 
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
@@ -112,7 +115,6 @@ const ErrorFallback = () => {
 function App({ sentryHistory }) {
 	const dispatch = useDispatch()
 	const [userData, setUserData] = useState();
-	const [adminAccess, setAdminAccess] = useState(null);
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
 	const [errorAuth, /*setErrorAuth*/] = useState('');
@@ -120,6 +122,10 @@ function App({ sentryHistory }) {
 	const [showAlert, setShowAlert] = useState(true);
 	const { currentChain, realChain } = useSelector(store => store.contractStore);
 	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
+
+	const carousel_match = window.matchMedia('(min-width: 600px)')
+	const [carousel, setCarousel] = useState(carousel_match.matches)
+	window.addEventListener("resize", () => setCarousel(carousel_match.matches))
 
 	// Redux
 	const {
@@ -137,6 +143,7 @@ function App({ sentryHistory }) {
 		backgroundImageEffect
 	} = useSelector(store => store.colorStore);
 	const { token } = useSelector(store => store.accessStore);
+	const { adminRights } = useSelector(store => store.userStore);
 
 	const connectUserData = useCallback(async () => {
 		setStartedLogin(true);
@@ -186,7 +193,7 @@ function App({ sentryHistory }) {
 			}
 
 			// Authorize user and get JWT token
-			if (adminAccess === null || !localStorage.token || !isTokenValid(localStorage.token)) {
+			if (adminRights === null || !localStorage.token || !isTokenValid(localStorage.token)) {
 				dispatchStack.push({ type: authTypes.GET_TOKEN_START });
 				let token = await getJWT(programmaticProvider, currentUser);
 
@@ -195,12 +202,9 @@ function App({ sentryHistory }) {
 					setLoginDone(false);
 					dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
 					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-					setAdminAccess(false);
 					localStorage.setItem('token', token);
 				} else {
 					const decoded = jsonwebtoken.decode(token);
-
-					setAdminAccess(decoded.adminRights);
 					dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: decoded.adminRights });
 					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
 					localStorage.setItem('token', token);
@@ -216,7 +220,7 @@ function App({ sentryHistory }) {
 			console.log('Error', err);
 			setStartedLogin(false);
 		}
-	}, [adminAccess, programmaticProvider, dispatch]);
+	}, [programmaticProvider, adminRights, dispatch]);
 
 	const goHome = () => {
 		sentryHistory.push(`/`);
@@ -249,11 +253,10 @@ function App({ sentryHistory }) {
 		if (process.env.NODE_ENV === 'development') {
 			window.gotoRouteBackdoor = sentryHistory.push;
 			window.adminAccessBackdoor = (boolean) => {
-				setAdminAccess(boolean);
 				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
 			};
 		}
-	}, [dispatch, sentryHistory.push, setAdminAccess]);
+	}, [dispatch, sentryHistory.push]);
 
 	useEffect(() => {
 		btnCheck();
@@ -369,19 +372,19 @@ function App({ sentryHistory }) {
 						backgroundRepeat: 'no-repeat',
 					}}
 					className="App p-0 container-fluid">
-					<UserProfileSettings
+					{carousel && <UserProfileSettings
 						errorAuth={errorAuth}
-						adminAccess={adminAccess}
+						adminAccess={adminRights}
 						primaryColor={primaryColor}
 						currentUserAddress={currentUserAddress}
 						loginDone={loginDone}
 						setLoginDone={setLoginDone}
-					/>
+					/>}
 					<div className='row w-100 m-0 p-0'>
 						{/*
 							Left sidebar, includes the RAIR logo and the admin sidebar
 						*/}
-						<div className='col-1 rounded'>
+						{carousel ? <div className='col-1'>
 							<div className='col-12 pt-2 mb-4' style={{ height: '100px' }}>
 								<MainLogo
 									goHome={goHome}
@@ -407,7 +410,7 @@ function App({ sentryHistory }) {
 									}
 								</div>
 								:
-								adminAccess === true && !creatorViewsDisabled && [
+								adminRights === true && !creatorViewsDisabled && [
 									{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
 									{ name: <i className="fas fa-key" />, route: '/my-nft' },
 									{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
@@ -415,7 +418,8 @@ function App({ sentryHistory }) {
 									{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
 									{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
 									{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
-									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined }
+									{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
+									{ name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone }
 								].map((item, index) => {
 									if (!item.disabled) {
 										return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
@@ -427,11 +431,23 @@ function App({ sentryHistory }) {
 									return <div key={index}></div>
 								})
 							}
-						</div>
+						</div> : <MenuNavigation
+							primaryColor={primaryColor}
+							headerLogo={headerLogo}
+							programmaticProvider={programmaticProvider}
+							startedLogin={startedLogin}
+							connectUserData={connectUserData}
+							renderBtnConnect={renderBtnConnect}
+							loginDone={loginDone}
+							setLoginDone={setLoginDone}
+							currentUserAddress={currentUserAddress}
+						/>
+						}
+
 						{/*
 							Main body, the header, router and footer are here
 						*/}
-						<div className='col'>
+						<div className={`col-12 col-md-${adminRights ? '11' : '11'}`}>
 							<div className='col-12 blockchain-switcher' style={{ height: '10vh' }}>
 								<Switch>
 									<SentryRoute path='/admin' component={BlockChainSwitcher} />
@@ -481,6 +497,10 @@ function App({ sentryHistory }) {
 												content: NFTLASplashPage
 											},
 											{
+												path: '/ukraineglitch',
+												content: UkraineSplashPage
+											},
+											{
 												path: '/greyman-splash',
 												content: GreymanSplashPage
 											},
@@ -492,6 +512,10 @@ function App({ sentryHistory }) {
 												path: '/nipsey-splash',
 												content: SplashPage
 											},
+											{
+												path: '/about-page',
+												content: AboutPageNew
+											},
 										].map((item, index) => {
 											// If the path is set as the Home Page, render it as the default path (/)
 											let isHome = item.path === process.env.REACT_APP_HOME_PAGE;
@@ -501,7 +525,7 @@ function App({ sentryHistory }) {
 											}
 
 											return <SentryRoute key={index} exact path={isHome ? '/' : item.path}>
-												<item.content {...{ connectUserData }} />
+												<item.content {...{ connectUserData }} loginDone={loginDone} />
 											</SentryRoute>
 										})
 									}
@@ -513,8 +537,10 @@ function App({ sentryHistory }) {
 										*/
 										{
 											path: '/',
-											content: <>
-												<div className='col-6 text-left'>
+											content: <div className='main-wrapper'>
+												<div 
+													className='col-6 text-left main'
+													>
 													<h1 className='w-100' style={{ textAlign: 'left' }}>
 														Digital <b className='title'>Ownership</b>
 														<br />
@@ -527,7 +553,7 @@ function App({ sentryHistory }) {
 												<div className='col-12 mt-3 row' >
 													<MockUpPage />
 												</div>
-											</>,
+											</div>,
 											requirement: process.env.REACT_APP_HOME_PAGE === '/',
 										},
 
@@ -580,7 +606,7 @@ function App({ sentryHistory }) {
 										{
 											path: "/admin",
 											content: <FileUpload primaryColor={primaryColor} textColor={textColor} />,
-											requirement: loginDone && !creatorViewsDisabled && adminAccess
+											requirement: loginDone && !creatorViewsDisabled && adminRights
 										},
 
 										// Old Metadata Editor
@@ -625,8 +651,14 @@ function App({ sentryHistory }) {
 											requirement: loginDone && !creatorViewsDisabled && diamondMarketplaceInstance !== undefined
 										},
 										{
+											path: '/admin/transferNFTs',
+											content: <TransferTokens />,
+											constraint: loginDone && !creatorViewsDisabled
+										},
+										{
 											path: '/about-page',
 											content: <AboutPageNew
+												connectUserData={connectUserData}
 												headerLogoWhite={headerLogoWhite}
 												headerLogoBlack={headerLogoBlack}
 											/>
@@ -714,9 +746,10 @@ function App({ sentryHistory }) {
 									].map((item, index) => {
 										// If the requirements for the route aren't met, it won't return anything
 										if (item.requirement !== undefined && !item.requirement) {
-											return;
+											return null;
 										}
 										return <SentryRoute
+											key={index}
 											exact={item.exact !== undefined ? item.exact : true}
 											path={item.path}
 											render={() => item.content}

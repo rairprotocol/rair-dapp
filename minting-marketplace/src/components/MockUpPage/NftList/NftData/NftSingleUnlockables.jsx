@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftSingleUnlockables = ({
@@ -7,7 +7,7 @@ const NftSingleUnlockables = ({
   // tokenData,
   setTokenDataFiltered,
 }) => {
-  const history = useHistory();
+  // const history = useHistory();
   const [sections, setSections] = useState(null);
   const rarity = ["Ultra Rair", "Rair", "Common"];
 

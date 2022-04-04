@@ -18,6 +18,19 @@ const binanceTestnetData = {
 	blockExplorerUrls: ['https://testnet.bscscan.com']
 }
 
+const binanceMainnetData = {
+	chainId: '0x38',
+	chainName: 'Binance Mainnet',
+	nativeCurrency:
+	{
+		name: 'BNB',
+		symbol: 'BNB',
+		decimals: 18
+	},
+	rpcUrls: ['https://bsc-dataseed.binance.org/'],
+	blockExplorerUrls: ['https://bscscan.com']
+}
+
 const klaytnBaobabData = {
 	chainId: '0x3e9',
 	chainName: 'Klaytn Baobab',
@@ -59,6 +72,7 @@ const maticMainnetData = {
 
 const blockchains = [
 	{chainData: binanceTestnetData, bootstrapColor: 'warning'},
+	{chainData: binanceMainnetData, bootstrapColor: 'warning'},
 	{chainData: klaytnBaobabData, bootstrapColor: 'light'},
 	{chainData: {chainId: '0x1', chainName: 'Ethereum Mainnet'}, bootstrapColor: 'primary'},
 	{chainData: {chainId: '0x5', chainName: 'Goerli (Ethereum)'}, bootstrapColor: 'secondary'},

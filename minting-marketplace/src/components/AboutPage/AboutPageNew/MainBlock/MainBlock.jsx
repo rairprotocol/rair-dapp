@@ -1,11 +1,12 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback /*useEffect*/ } from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
 import { web3Switch } from "../../../../utils/switchBlockchain";
 import Swal from "sweetalert2";
-import { rFetch } from "../../../../utils/rFetch";
-import { erc721Abi } from "../../../../contracts";
+// import { rFetch } from "../../../../utils/rFetch";
+// import { erc721Abi } from "../../../../contracts";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
+import { diamondFactoryAbi } from "../../../../contracts/index.js";
 
 const customStyles = {
   overlay: {
@@ -31,16 +32,17 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const MainBlock = ({ Metamask, primaryColor, termsText }) => {
+const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
-  const { minterInstance, contractCreator, currentUserAddress } = useSelector(
+  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } = useSelector(
     (store) => store.contractStore
   );
 
-  const switchToNetwork = "0x13881";
-  const AboutPageTESTNET = "0x1bf2b3aB0014d2B2363dd999889d407792A28C06";
+  const switchToNetwork = "0x38";
+  const aboutPageAddress = "0xb6163454da87e9f3fd63683c5d476f7d067f75a2".toLowerCase();
+  const offerIndexInMarketplace = 1;
 
   let subtitle;
 
@@ -59,48 +61,69 @@ const MainBlock = ({ Metamask, primaryColor, termsText }) => {
       use: false,
     }));
   }
-  const buyTokenFromAboutPage = async () => {
+
+  const buyWatchToken = async () => {
+    if (!currentUserAddress) {
+      connectUserData();
+      return;
+    }
     if (window.ethereum.chainId !== switchToNetwork) {
       web3Switch(switchToNetwork);
       return;
     }
-    const { success, products } = await rFetch(
-      `/api/contracts/network/${switchToNetwork}/${AboutPageTESTNET}/products/offers`
-    );
-    if (success) {
-      let instance = contractCreator(AboutPageTESTNET, erc721Abi);
-      let [aboutOffer] = products[0].offers.filter(
-        (item) => item.offerName === "greyworld"
-      );
-      if (!aboutOffer) {
-        Swal.fire("Error", "An error has ocurred", "error");
+    if (!diamondMarketplaceInstance) {
+      Swal.fire({
+        title: "An error has ocurred",
+        html: `Please try again later`,
+        icon: "info",
+      });
+      return;
+    }
+    let watchTokenOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
+    if (!watchTokenOffer) {
+      Swal.fire({
+        title: "An error has ocurred",
+        html: `Please try again later`,
+        icon: "info",
+      });
+      return;
+    }
+    if (watchTokenOffer) {
+      let instance = contractCreator(aboutPageAddress, diamondFactoryAbi);
+      let nextToken = await metamaskCall(instance.getNextSequentialIndex(
+        watchTokenOffer.productIndex,
+        watchTokenOffer.rangeData.rangeStart,
+        watchTokenOffer.rangeData.rangeEnd
+      ));
+      if (!nextToken) {
+        Swal.fire({
+          title: "An error has ocurred",
+          html: `Please try again later`,
+          icon: "info",
+        });
         return;
       }
-      let nextToken = await instance.getNextSequentialIndex(
-        0,
-        aboutOffer.range[0],
-        aboutOffer.range[1]
-      );
       Swal.fire({
         title: "Please wait...",
-        html: `Buying token #${nextToken.toString()}`,
+        html: `Buying Watch Token #${nextToken.toString()}`,
         icon: "info",
         showConfirmButton: false,
       });
-      if (
-        await metamaskCall(
-          minterInstance.buyToken(
-            products[0].offerPool.marketplaceCatalogIndex,
-            aboutOffer.offerIndex,
-            nextToken,
-            {
-              value: aboutOffer.price,
-            }
-          ),
-          "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
-        )
-      ) {
-        Swal.fire("Success", `Bought token #${nextToken}!`, "success");
+      if (await metamaskCall(
+        diamondMarketplaceInstance.buyMintingOffer(
+          offerIndexInMarketplace,
+          nextToken,
+          {
+            value: watchTokenOffer.rangeData.rangePrice,
+          }
+        ),
+        "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
+      )) {
+        Swal.fire({
+          // title : "Success", 
+          title: `You own #${nextToken}!`,
+          icon: "success"
+        });
       }
     }
   };
@@ -214,9 +237,8 @@ const MainBlock = ({ Metamask, primaryColor, termsText }) => {
                 </div>
                 <div className="modal-btn-wrapper">
                   <button
-                    onClick={buyTokenFromAboutPage}
+                    onClick={buyWatchToken}
                     disabled={
-                      currentUserAddress === undefined ||
                       !Object.values(active).every((el) => el)
                     }
                     className="modal-btn"
