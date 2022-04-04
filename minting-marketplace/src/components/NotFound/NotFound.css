@@ -1,6 +1,11 @@
 .not-found-page {
     margin-top: 100px;
-    margin-left: -100px;
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .not-found-page h3{
@@ -22,4 +27,18 @@
     color: #805FDA;
     cursor: pointer;
     font-weight: 600;
+}
+
+@media screen and (max-width: 500px) {
+    .not-found-page h3 {
+        font-size: 25px;
+    }
+
+    .not-found-page h3 span {
+        font-size: 70px;
+    }
+
+    .not-found-page p {
+        padding: 0 10px;
+    }
 }

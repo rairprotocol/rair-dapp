@@ -35,6 +35,9 @@ module "vault_config" {
 
     #Camerford house, March 16th, 2022
     "172.117.206.216",
+    
+    # QA server, March 22nd, 2022
+    "65.21.191.184",
   ]
 }
 

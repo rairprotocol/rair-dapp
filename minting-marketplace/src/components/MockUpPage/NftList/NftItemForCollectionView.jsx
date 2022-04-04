@@ -71,17 +71,17 @@ const NftItemForCollectionViewComponent = ({
   }
 
   function checkPrice() {
-    let maxPriceF = maxPrice;
-    let minPriceF = minPrice;
+    // let maxPriceF = maxPrice;
+    // let minPriceF = minPrice;
 
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
       return `${samePrice} ${chainDataFront[blockchain]?.name}`;
-    //   return `${utils
-    //     .formatEther(
-    //       samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-    //     )
-    //     .toString()} ${chainDataFront[blockchain]?.name}`;
+      //   return `${utils
+      //     .formatEther(
+      //       samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
+      //     )
+      //     .toString()} ${chainDataFront[blockchain]?.name}`;
     }
     return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
     // return `${utils

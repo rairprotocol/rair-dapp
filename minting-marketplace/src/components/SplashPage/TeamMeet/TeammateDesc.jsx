@@ -49,6 +49,8 @@ const TeammateDesc = ({ desc, primaryColor }) => {
                         }
                         return <p key={index} style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>{p}</p>
                     }
+                    
+                    return null
                 })
             }
         </div>

@@ -5,8 +5,9 @@ import Teammate_3 from '../images/south-dig.png';
 import Teammate_4 from '../images/rair-block.png';
 import Teammate_5 from '../images/movementontheground.png';
 import Teammate_6 from '../images/immersiverse_logo.png';
+import Teammate_7 from '../images/UkrainianAmericanCons/15724868_10208080805993720_1581371147497725224_o.jpeg';
 import NFTLA_ICON from '../images/NFTLA_icon.png'
-import TCC_ICON from '../images/TCC_icon.png'
+// import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
 import Teammate from './Teammate';
 import GreymanAuthor from '../images/greymanAuthor.png';
@@ -16,7 +17,7 @@ import Gunther from '../../AboutPage/assets/Gunther.jpeg';
 import Martin from '../../AboutPage/assets/Martin.jpeg';
 import MICHAEL from '../../AboutPage/assets/MICHAEL.jpg';
 import David from '../../AboutPage/assets/David.jpeg';
-import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
+// import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
 import Matthew from '../../AboutPage/assets/Matthew.jpg';
 import NutTeam from '../images/nuts-teammate.jpeg';
 
@@ -472,6 +473,52 @@ const teamGreymanArray = [
     }
 ];
 
+const teamUkraineArray = [
+    {   
+        chain: '0x7bfbAAC8b6bC1B7b9e4bEB5c1d92C913B9598465',
+        nameTeammate: "Ukrainian American Coordinating Council",
+        imageUrl: Teammate_7,
+        aboutTeammate: [
+            "Please, join the Ukrainian-American Cultural Association of Oregon & SW Washington and the Ukrainian American Coordinating Council in raising money to fund medical supplies to Ukraine. As soon as funds will arrive in their bank accounts, they transfer it to Come Back Alive fund, Ukrainian Government Medical Fund, Ukrainian Refugee Fund and fund containers with medical supplies to Ukrainian hospitals. The Ukrainian community in Oregon and SW Washington has been shipping medical supplies to Ukraine since 2014. They have shipped 5 medical containers and hundreds of boxes of medical supplies generously donated by Medical Teams International. They are grateful to MTI for their donations, and to local volunteers who work with MTI to receive and repackage donations as well as volunteers in Ukraine who distribute these donations to hospitals and mobile clinics there. We ask for your support in helping pay for the shipment of these supplies from warehouses in Oregon and SW Washington to Ukraine. Any amount helps. UACC regularly posts pictures of previous shipments and will keep updating their fb fundraiser pages with pictures of medical shipment (or shipments!) your contributions help fund. Thank you! Дякуємо!"
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-facebook',
+                link: 'https://www.facebook.com/UACCusa/',
+            },
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://uaccusa.org/',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+    {
+        chain: `0x7849194dD593d6c3aeD24035D70B5394a1C90F8F`,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
 const teamNFTLAarray = [
     {   
         chain: '',
@@ -484,22 +531,6 @@ const teamNFTLAarray = [
             {
                 classIcon: 'fas fa-arrow-right',
                 link: 'https://www.nftla.live/',
-                classLink: "arrrow-right"
-            }
-        ]
-    },
-
-    {   
-        chain: '',
-        nameTeammate: "The Crypto Company",
-        imageUrl: TCC_ICON,
-        aboutTeammate: [
-            "The future will be powered by truth, not only trust. As one of the first public companies in the blockchain sector (OTC: CRCW), we are proud to comply with even higher standards of accountability and governance. Our mission is to build, grow and guide how institutions, entrepreneurs and investors can seamlessly enable a bold new world of blockchain-powered truth, trust and prosperity."
-        ],
-        socials: [
-            {
-                classIcon: 'fas fa-arrow-right',
-                link: 'https://www.thecryptocompany.com/',
                 classLink: "arrrow-right"
             }
         ]
@@ -657,6 +688,26 @@ const NipseyTeamComponent = ({ primaryColor }) => {
     )
 }
 
+const UkraineGlitchComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamUkraineArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
 const GreyManTeamComponent = ({ primaryColor }) => {
     return (
         <div className="splash-team-greyman">
@@ -760,6 +811,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
         <div className="splash-team">
             <div className="title-team">
                 {
+                    arraySplash === "ukraine" && <h3> About the <span style={{color:"#035BBC"}}>Cause</span></h3>
+                }
+                {
                     arraySplash === "nipsey" && <h3>Meet the <span className="text-gradient">Team</span></h3>
                 }
                 {
@@ -782,6 +836,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                 }
             </div>
             <div className="meet-team">
+                {
+                    arraySplash === "ukraine" &&  <UkraineGlitchComponent />
+                }
                 {
                     arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />
                 }

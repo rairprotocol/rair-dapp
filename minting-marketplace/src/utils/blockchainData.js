@@ -3,6 +3,24 @@ import MaticLogo from '../images/polygon-matic.svg';
 import EthereumLogo from '../images/ethereum-logo.svg';
 
 const chainData = {
+	'0x38': {
+		image: BinanceDiamond,
+		name: 'Binance Mainnet',
+		chainId: '0x38',
+		symbol: 'BNB',
+		addChainData: {
+			chainId: '0x38',
+			chainName: 'Binance Smart Chain Mainnet',
+			nativeCurrency:
+			{
+				name: 'BNB',
+				symbol: 'BNB',
+				decimals: 18
+			},
+			rpcUrls: ['https://bsc-dataseed1.binance.org'],
+			blockExplorerUrls: ['https://www.bscscan.com/']
+		}
+	},
 	'0x61': {
 		image: BinanceDiamond,
 		name: 'Binance Testnet',
@@ -82,7 +100,6 @@ const chainData = {
 export default chainData;
 
 export const detectBlockchain = (currentChain, realChain) => {
-	console.log(realChain);
 	if(realChain !== undefined && chainData[currentChain]?.chainId !== realChain){
 		return {
 			selectedChain: chainData[currentChain]?.name,

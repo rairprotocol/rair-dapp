@@ -1,0 +1,73 @@
+.wrapper-splash-page.ukraineglitch .left-tokens-content {
+    justify-content: flex-start;
+    text-align: center;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 25px;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper .property-first:first-child {
+    margin-right: 30px;
+}
+
+.wrapper-splash-page.ukraineglitch .left-tokens .progress-main svg {
+    color: #035BBC;
+}
+
+.wrapper-splash-page.ukraineglitch .block-after-ipfs {
+    width: 472px;
+    text-align: left;
+}
+
+.wrapper-splash-page.ukraineglitch .block-after-ipfs a {
+    color: #5865f2;
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper-splash-page.ukraineglitch .left-tokens-content .tokens-description {
+        padding: 0 15px;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper {
+        margin-bottom: 40px;
+        align-items: center;
+    }
+
+    .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
+        left: 35px;
+    }
+
+    .wrapper-splash-page.ukraineglitch .block-after-ipfs {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .wrapper-splash-page.ukraineglitch .text-progress.progress-text-template {
+        bottom: 0;
+        left: 35%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .wrapper-splash-page.ukraineglitch .exclusive-nfts .exclusive-nfts {
+        margin: 10px 0 0 0;
+    }
+
+    .wrapper-splash-page.ukraineglitch .exclusive-nfts .title-nft {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 385px) {
+    .wrapper-splash-page.ukraineglitch .block-left-tokens .down-text {
+        left: 60px;
+    }
+}

@@ -4,12 +4,25 @@ pragma solidity ^0.8.11;
 import '../AppStorage.sol';
 import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
 
+/// @title 	Our Facet creator for tokens
+/// @notice You can use this contract to manage the use of tokens
 contract TokensFacet is AccessControlAppStorageEnumerable {
 	bytes32 constant OWNER = keccak256("OWNER");
 	bytes32 constant ERC777 = keccak256("ERC777");
 	
+	/// @notice This event stores in the blockchain when a new token is indexed as accepted 
+    /// @param 	contractAddress contains the address of the tokens contract 
+    /// @param 	pricetoDeploy contains the deployment cost for the token
+    /// @param 	responsible address of the person that implement the new token
 	event AcceptedToken(address contractAddress, uint priceToDeploy, address responsible);
+	/// @notice This event stores in the blockchain when a token is revoked
+    /// @param 	erc777 contains the address of the tokens contract to remove
+    /// @param 	responsible address of the person that revokes the token
 	event RemovedToken(address erc777, address responsible);
+	/// @notice This event stores in the blockchain when the tokens are withdrawed from the contract
+    /// @param 	recipient address who will recieve the tokens
+    /// @param 	erc777 contains the address of the tokens contract to withdraw
+	/// @param 	amount total of tokens to recieve
 	event WithdrawTokens(address recipient, address erc777, uint amount);
 
 	/// @notice Transfers tokens from the factory to any of the OWNER addresses
@@ -25,6 +38,7 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 
 	/// @notice	Adds an address to the list of allowed minters
 	/// @param	_erc777Address	Address of the new Token
+	/// @param	_priceToDeploy	Price of deployment for the new Token
 	function acceptNewToken(address _erc777Address, uint _priceToDeploy) public onlyRole(OWNER) {
 		grantRole(ERC777, _erc777Address);
 		s.deploymentCostForToken[_erc777Address] = _priceToDeploy;
@@ -40,6 +54,8 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	}
 
 	/// @notice	Returns the number of required tokens, given an erc777 address
+	/// @param 	erc777 Contains the facet addresses and function selectors
+	/// @return uint  Shows the price of deployment for the token
 	function getDeploymentCost(address erc777) public view returns (uint price) {
 		price = s.deploymentCostForToken[erc777];
 	}

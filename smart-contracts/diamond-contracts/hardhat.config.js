@@ -29,6 +29,14 @@ module.exports = {
 		"0x89": {
 			url: process.env.MATIC_SPEEDY_NODE,
 			accounts: [process.env.ADDRESS_PRIVATE_KEY],
+		},
+		"0x61": {
+			url: process.env.BINANCE_TESTNET_SPEEDY_NODE,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY]
+		},
+		"0x38": {
+			url: process.env.BINANCE_MAINNET_SPEEDY_NODE,
+			accounts: [process.env.ADDRESS_PRIVATE_KEY]
 		}
 	},
 	solidity: {
