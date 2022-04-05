@@ -78,7 +78,9 @@ const ItemRank = ({ items, primaryColor, selectedToken }) => {
           style={{
             display: showItems ? "block" : "none",
             backgroundColor: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"}`,
-            border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`
+            border: `${primaryColor === "rhyno" ? "1px solid #D37AD6" : "none"}`,
+            position: "relative",
+            zIndex: "10"
           }}
           className={"select-box--items items-rank"}
         >
