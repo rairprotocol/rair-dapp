@@ -38,13 +38,14 @@ const NftCollectionPageComponent = ({
   tokenDataFiltered,
   setTokenDataFiltered,
   setTokenData,
-  userData
+  userData,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [offerDataCol, setOfferDataCol] = useState();
   const [offerAllData, setOfferAllData] = useState();
   const [collectionName, setCollectionName] = useState();
+  const [someUsersData, setSomeUsersData] = useState();
   const [show, setShow] = useState(true);
 
   const loadToken = useCallback(() => {
@@ -71,6 +72,21 @@ const NftCollectionPageComponent = ({
       setCollectionName(response.product.name);
     }
   }, [product, contract, blockchain]);
+
+  const neededUserAddress = offerAllData?.owner;
+
+  const getInfoFromUser = useCallback(async () => {
+    // find user
+    const result = await fetch(`/api/users/${neededUserAddress}`).then((blob) =>
+      blob.json()
+    );
+
+    setSomeUsersData(result.user);
+  }, [neededUserAddress]);
+
+  useEffect(() => {
+    getInfoFromUser();
+  }, [getInfoFromUser]);
 
   useEffect(() => {
     getParticularOffer();
@@ -128,6 +144,7 @@ const NftCollectionPageComponent = ({
       <TitleCollection
         selectedData={tokenData[0]?.metadata}
         title={collectionName}
+        someUsersData={someUsersData}
         userName={offerAllData?.owner}
         currentUser={userData}
       />
@@ -148,40 +165,40 @@ const NftCollectionPageComponent = ({
       <div className={"list-button-wrapper"}>
         {tokenDataFiltered.length > 0
           ? tokenDataFiltered.map((token, index) => {
-            if (token.cover !== "none") {
-              // console.log(index, 'ddd');
-              return (
-                <NftItemForCollectionView
-                  key={`${token.id + "-" + token.productId + index}`}
-                  pict={token.cover ? token.cover : defaultImg}
-                  metadata={token.metadata}
-                  contract={token.contract}
-                  token={token.token}
-                  handleClickToken={handleClickToken}
-                  setSelectedToken={setSelectedToken}
-                  selectedToken={selectedToken}
-                  offerPrice={offerPrice}
-                  ownerAddress={token.ownerAddress}
-                  blockchain={blockchain}
-                  currentUser={currentUser}
-                  offerData={offerData}
-                  primaryColor={primaryColor}
-                  productsFromOffer={productsFromOffer}
-                  selectedData={selectedData}
-                  textColor={textColor}
-                  tokenData={tokenData}
-                  totalCount={totalCount}
-                  product={product}
-                  index={token.token}
-                  offer={token.offer}
-                />
-              );
-            } else {
-              return null;
-            }
-          })
+              if (token.cover !== "none") {
+                // console.log(index, 'ddd');
+                return (
+                  <NftItemForCollectionView
+                    key={`${token.id + "-" + token.productId + index}`}
+                    pict={token.cover ? token.cover : defaultImg}
+                    metadata={token.metadata}
+                    contract={token.contract}
+                    token={token.token}
+                    handleClickToken={handleClickToken}
+                    setSelectedToken={setSelectedToken}
+                    selectedToken={selectedToken}
+                    offerPrice={offerPrice}
+                    ownerAddress={token.ownerAddress}
+                    blockchain={blockchain}
+                    currentUser={currentUser}
+                    offerData={offerData}
+                    primaryColor={primaryColor}
+                    productsFromOffer={productsFromOffer}
+                    selectedData={selectedData}
+                    textColor={textColor}
+                    tokenData={tokenData}
+                    totalCount={totalCount}
+                    product={product}
+                    index={token.token}
+                    offer={token.offer}
+                  />
+                );
+              } else {
+                return null;
+              }
+            })
           : tokenData.length > 0
-            ? tokenData.map((token, index) => {
+          ? tokenData.map((token, index) => {
               if (token.cover !== "none") {
                 return (
                   <NftItemForCollectionView
@@ -213,7 +230,7 @@ const NftCollectionPageComponent = ({
                 return null;
               }
             })
-            : Array.from(new Array(10)).map((item, index) => {
+          : Array.from(new Array(10)).map((item, index) => {
               return (
                 <Skeleton
                   key={index}
@@ -237,15 +254,17 @@ const NftCollectionPageComponent = ({
             />
           </div>
         )}
-        {tokenDataFiltered.length ? null : showToken <= totalCount && (
-          <CustomButton
-            onClick={loadToken}
-            width="232px"
-            height="48px"
-            margin="20px 0 0 0"
-            text="Show more"
-          />
-        )}
+        {tokenDataFiltered.length
+          ? null
+          : showToken <= totalCount && (
+              <CustomButton
+                onClick={loadToken}
+                width="232px"
+                height="48px"
+                margin="20px 0 0 0"
+                text="Show more"
+              />
+            )}
       </div>
       <CollectionInfo
         offerData={offerDataCol}

@@ -10,6 +10,7 @@ const TitleCollection = ({
   userName,
   currentUser,
   tokenData,
+  someUsersData,
   selectedData,
 }) => {
   const { tokenId } = useParams();
@@ -24,8 +25,8 @@ const TitleCollection = ({
   // console.log(currentUser);
   // console.log(userName, 'userName');
   // if (currentUser) {
-
-  if (currentUser?.publicAddress === userName) {
+  // if (currentUser?.publicAddress === userName) {
+  if (someUsersData) {
     return (
       <div className="container-title-collection">
         <div className="block-title-share">
@@ -40,10 +41,12 @@ const TitleCollection = ({
         <div className="block-user-creator">
           <span>by:</span>
           <img
-            src={currentUser?.avatar ? currentUser.avatar : defaultUser}
+            // src={currentUser?.avatar ? currentUser.avatar : defaultUser}
+            src={someUsersData ? someUsersData.avatar : defaultUser}
             alt="user"
           />
-          <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5>
+          {/* <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5> */}
+          <h5>{someUsersData ? someUsersData.nickName : userName}</h5>
         </div>
         <div className="block-collection-desc">
           {selectedData && selectedData.description}
