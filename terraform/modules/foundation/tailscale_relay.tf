@@ -31,8 +31,6 @@ resource "google_compute_instance_template" "tailsacle_relay" {
     network = google_compute_network.primary.id
     subnetwork = google_compute_subnetwork.public.id
     stack_type = "IPV4_ONLY"
-    # take this out later, this makes the vpn machines with public IPs
-    access_config {}
   }
 
   service_account {
@@ -44,11 +42,6 @@ resource "google_compute_instance_template" "tailsacle_relay" {
   metadata_startup_script = templatefile("${path.module}/tailscale_relay_startup_script.sh", {
     tags = "tag:private-subnet-relay-${var.env_name}"
     advertised_routes = join(",", [
-      # module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range,
-      # this one didn't work
-      # module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_pod_cluster_secondary_range,
-      # this one we're testing
-      # module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_services_secondary_range
       var.vpc_cidr_block
     ])
     tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
