@@ -1,10 +1,8 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
 import { web3Switch } from "../../../../utils/switchBlockchain";
 import Swal from "sweetalert2";
-import { rFetch } from "../../../../utils/rFetch";
-import { erc721Abi } from "../../../../contracts";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
 import { diamondFactoryAbi } from "../../../../contracts/index.js";
 

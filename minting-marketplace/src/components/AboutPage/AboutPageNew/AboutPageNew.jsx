@@ -15,16 +15,16 @@ import PlatformAbout from './PlatformAbout/PlatformAbout';
 import RairOffer from './RairOffer/RairOffer';
 import ExclusiveNfts from './ExclusiveNfts/ExclusiveNfts';
 import StreamsAbout from './StreamsAbout/StreamsAbout';
-import Tokenomics from './Tokenomics/Tokenomics';
+// import Tokenomics from './Tokenomics/Tokenomics';
 import RoadMap from './RoadMapAbout/RoadMapAbout';
 import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const AboutPageNew = ({ headerLogoBlack, headerLogoWhite, connectUserData }) => {
+const AboutPageNew = ({ /*headerLogoBlack, headerLogoWhite,*/ connectUserData }) => {
     const { pathname } = useLocation();
-    const history = useHistory();
+    // const history = useHistory();
     const { primaryColor } = useSelector(store => store.colorStore);
 
     const termsText = "I understand this a test NFT designed to unlock RAIR streams";

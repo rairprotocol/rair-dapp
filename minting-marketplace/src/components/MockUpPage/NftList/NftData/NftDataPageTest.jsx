@@ -49,7 +49,6 @@ const NftDataPageTest = ({
   offerData,
   offerPrice,
 }) => {
-  console.log(currentUser, "currentUser")
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
   const [ownerInfo, setOwnerInfo] = useState();

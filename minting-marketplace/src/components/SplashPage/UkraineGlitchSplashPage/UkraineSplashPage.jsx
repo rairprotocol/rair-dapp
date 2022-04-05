@@ -9,15 +9,15 @@ import UKR_rounded from '../images/UkraineGlitchNFTExamples/rounded_corners.png'
 import UKR4 from '../images/UkraineGlitchNFTExamples/4.jpg'
 import UKR5 from '../images/UkraineGlitchNFTExamples/5.gif'
 import UKR126 from '../images/UkraineGlitchNFTExamples/126.jpg'
-import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg'
+// import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg'
 import UKR497 from '../images/UkraineGlitchNFTExamples/497.jpg'
-import UKR653 from '../images/UkraineGlitchNFTExamples/653.jpg'
-import UKR777 from '../images/UkraineGlitchNFTExamples/777.jpg'
-import UKR1050 from '../images/UkraineGlitchNFTExamples/1050.jpg'
+// import UKR653 from '../images/UkraineGlitchNFTExamples/653.jpg'
+// import UKR777 from '../images/UkraineGlitchNFTExamples/777.jpg'
+// import UKR1050 from '../images/UkraineGlitchNFTExamples/1050.jpg'
 import UKR1294 from '../images/UkraineGlitchNFTExamples/1294.jpg'
-import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg'
-import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
-import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
+// import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg'
+// import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
+// import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
 import UKR1989 from '../images/UkraineGlitchNFTExamples/1989.jpg'
 import videoBackground from '../images/metamask-vid-final.png'
 import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
@@ -35,9 +35,9 @@ import setTitle from '../../../utils/setTitle';
 import NotCommercialTemplate from "../NotCommercial/NotCommercialTemplate";
 import CarouselModule from "../SplashPageTemplate/Carousel/Carousel";
 import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModule";
-import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
-import UnlockableVideo from "../images/nipsey1.png";
-import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
+// import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
+// import UnlockableVideo from "../images/nipsey1.png";
+// import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
 import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 

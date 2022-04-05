@@ -6,23 +6,31 @@ import { useParams } from "react-router-dom";
 
 const TitleCollection = ({ title, userName, currentUser, tokenData, selectedData }) => {
   const { tokenId } = useParams();
-  const [sharePopUp, setSharePopUp] = useState(false);
-  const shareRef = useRef();
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(0);
 
-  const toggleShare = () => {
-    setSharePopUp((prev) => !prev);
+  const handleClickOpen = () => {
+    setOpen(true);
   };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+
   if (currentUser?.userData?.publicAddress === userName) {
     return (
       <div className="container-title-collection">
         <div className="block-title-share">
           <h2>{title === "none" ? `#${tokenId}` : title}</h2>
-          <button className="block-btn-share" onClick={toggleShare}>
-            Share
-          </button>
-          {sharePopUp && (
-            <SharePopUp setSharePopUp={setSharePopUp} shareRef={shareRef} />
-          )}
+          <div>
+            <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
+            <SharePopUp
+              selectedValue={selectedValue}
+              open={open}
+              onClose={handleClose}
+            />
+          </div>
         </div>
         <div className="block-user-creator">
           <span>by:</span>
@@ -52,12 +60,14 @@ const TitleCollection = ({ title, userName, currentUser, tokenData, selectedData
     <div className="container-title-collection">
       <div className="block-title-share">
         <h2>{title === "none" ? `#${tokenId}` : title}</h2>
-        <button className="block-btn-share" onClick={toggleShare}>
-          Share
-        </button>
-        {sharePopUp && (
-          <SharePopUp setSharePopUp={setSharePopUp} shareRef={shareRef} />
-        )}
+        <div>
+          <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
+          <SharePopUp
+            selectedValue={selectedValue}
+            open={open}
+            onClose={handleClose}
+          />
+        </div>
       </div>
       <div className="block-user-creator">
         <span>by:</span>

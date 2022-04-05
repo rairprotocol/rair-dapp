@@ -46,7 +46,7 @@ const AuthenticityBlock = ({ tokenData, ownerInfo, selectedToken, title, collect
                         tokenData.map((el, index) => {
                             if (Number(el.token) === Number(selectedToken)) {
                                 return (
-                                    <div className="authenticity-box">
+                                    <div key={index} className="authenticity-box">
                                         <a
                                             className="nftDataPageTest-a-hover"
                                             href={el.authenticityLink}
