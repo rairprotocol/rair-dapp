@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.1.7",
-  "serial": 71,
+  "serial": 20,
   "lineage": "b7310538-5976-ec90-c733-837bee991bfb",
   "outputs": {},
   "resources": [
@@ -26,8 +26,8 @@
                 },
                 "name": "jenkins-primary-deployment",
                 "namespace": "default",
-                "resource_version": "30176828",
-                "uid": "673afc61-2571-4c54-9ae7-8d959dd8d520"
+                "resource_version": "30149231",
+                "uid": "e3da1cd4-029c-478b-a120-3f7d5659a537"
               }
             ],
             "spec": [
@@ -155,6 +155,77 @@
     {
       "module": "module.kubernetes_infra",
       "mode": "managed",
+      "type": "kubernetes_ingress",
+      "name": "jenkins_ingress",
+      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "id": "default/jenkins-primary-ingress",
+            "metadata": [
+              {
+                "annotations": {
+                  "kubernetes.io/ingress.class": "nginx"
+                },
+                "generate_name": "",
+                "generation": 1,
+                "labels": {},
+                "name": "jenkins-primary-ingress",
+                "namespace": "default",
+                "resource_version": "30148592",
+                "uid": "ea3d9456-ea26-4742-9b90-efad74cec931"
+              }
+            ],
+            "spec": [
+              {
+                "backend": [],
+                "ingress_class_name": "",
+                "rule": [
+                  {
+                    "host": "",
+                    "http": [
+                      {
+                        "path": [
+                          {
+                            "backend": [
+                              {
+                                "service_name": "jenkins-primary",
+                                "service_port": "80"
+                              }
+                            ],
+                            "path": "/*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "tls": []
+              }
+            ],
+            "status": [
+              {
+                "load_balancer": [
+                  {
+                    "ingress": []
+                  }
+                ]
+              }
+            ],
+            "wait_for_load_balancer": null
+          },
+          "sensitive_attributes": [],
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "module.kubernetes_infra.kubernetes_service.jenkins_service"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.kubernetes_infra",
+      "mode": "managed",
       "type": "kubernetes_service",
       "name": "jenkins_service",
       "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
@@ -165,9 +236,7 @@
             "id": "default/jenkins-primary",
             "metadata": [
               {
-                "annotations": {
-                  "networking.gke.io/load-balancer-type": "Internal"
-                },
+                "annotations": {},
                 "generate_name": "",
                 "generation": 0,
                 "labels": {
@@ -176,89 +245,13 @@
                 },
                 "name": "jenkins-primary",
                 "namespace": "default",
-                "resource_version": "30201693",
-                "uid": "249321ab-d7e6-4655-8fff-81f2ce062239"
+                "resource_version": "30153597",
+                "uid": "46d6ce21-cb72-486f-8011-384e05f8e799"
               }
             ],
             "spec": [
               {
-                "cluster_ip": "10.0.147.225",
-                "external_ips": null,
-                "external_name": "",
-                "external_traffic_policy": "Cluster",
-                "health_check_node_port": 0,
-                "load_balancer_ip": "",
-                "load_balancer_source_ranges": null,
-                "port": [
-                  {
-                    "name": "http",
-                    "node_port": 32000,
-                    "port": 80,
-                    "protocol": "TCP",
-                    "target_port": "8080"
-                  }
-                ],
-                "publish_not_ready_addresses": false,
-                "selector": {
-                  "app": "jenkins-primary"
-                },
-                "session_affinity": "None",
-                "type": "LoadBalancer"
-              }
-            ],
-            "status": [
-              {
-                "load_balancer": [
-                  {
-                    "ingress": [
-                      {
-                        "hostname": "",
-                        "ip": "10.0.64.31"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "timeouts": null,
-            "wait_for_load_balancer": true
-          },
-          "sensitive_attributes": [],
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDB9LCJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
-        }
-      ]
-    },
-    {
-      "module": "module.kubernetes_infra",
-      "mode": "managed",
-      "type": "kubernetes_service",
-      "name": "rairnode",
-      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
-      "instances": [
-        {
-          "schema_version": 1,
-          "attributes": {
-            "id": "default/rairnode-test",
-            "metadata": [
-              {
-                "annotations": {
-                  "kompose.cmd": "kompose convert",
-                  "kompose.version": "1.22.0 (955b78124)"
-                },
-                "generate_name": "",
-                "generation": 0,
-                "labels": {
-                  "io.kompose.service": "rairnode"
-                },
-                "name": "rairnode-test",
-                "namespace": "default",
-                "resource_version": "30177515",
-                "uid": "f94c8e87-8815-435e-a41a-4ad98dc1d3a1"
-              }
-            ],
-            "spec": [
-              {
-                "cluster_ip": "10.0.157.19",
+                "cluster_ip": "10.0.155.184",
                 "external_ips": [],
                 "external_name": "",
                 "external_traffic_policy": "Cluster",
@@ -267,38 +260,26 @@
                 "load_balancer_source_ranges": [],
                 "port": [
                   {
-                    "name": "3000",
-                    "node_port": 32362,
-                    "port": 3000,
+                    "name": "http",
+                    "node_port": 30258,
+                    "port": 8080,
                     "protocol": "TCP",
-                    "target_port": "3000"
-                  },
-                  {
-                    "name": "5000",
-                    "node_port": 32187,
-                    "port": 5000,
-                    "protocol": "TCP",
-                    "target_port": "5000"
+                    "target_port": "80"
                   }
                 ],
                 "publish_not_ready_addresses": false,
                 "selector": {
-                  "io.kompose.service": "rairnode"
+                  "app": "jenkins-primary"
                 },
                 "session_affinity": "None",
-                "type": "LoadBalancer"
+                "type": "NodePort"
               }
             ],
             "status": [
               {
                 "load_balancer": [
                   {
-                    "ingress": [
-                      {
-                        "hostname": "",
-                        "ip": "35.233.151.17"
-                      }
-                    ]
+                    "ingress": []
                   }
                 ]
               }

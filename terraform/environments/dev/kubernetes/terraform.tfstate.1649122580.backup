@@ -1,0 +1,149 @@
+{
+  "version": 4,
+  "terraform_version": "1.1.7",
+  "serial": 21,
+  "lineage": "b7310538-5976-ec90-c733-837bee991bfb",
+  "outputs": {},
+  "resources": [
+    {
+      "module": "module.kubernetes_infra",
+      "mode": "managed",
+      "type": "kubernetes_ingress",
+      "name": "jenkins_ingress",
+      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "id": "default/jenkins-primary-ingress",
+            "metadata": [
+              {
+                "annotations": {
+                  "kubernetes.io/ingress.class": "nginx"
+                },
+                "generate_name": "",
+                "generation": 1,
+                "labels": {},
+                "name": "jenkins-primary-ingress",
+                "namespace": "default",
+                "resource_version": "30148592",
+                "uid": "ea3d9456-ea26-4742-9b90-efad74cec931"
+              }
+            ],
+            "spec": [
+              {
+                "backend": [],
+                "ingress_class_name": "",
+                "rule": [
+                  {
+                    "host": "",
+                    "http": [
+                      {
+                        "path": [
+                          {
+                            "backend": [
+                              {
+                                "service_name": "jenkins-primary",
+                                "service_port": "80"
+                              }
+                            ],
+                            "path": "/*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "tls": []
+              }
+            ],
+            "status": [
+              {
+                "load_balancer": [
+                  {
+                    "ingress": []
+                  }
+                ]
+              }
+            ],
+            "wait_for_load_balancer": null
+          },
+          "sensitive_attributes": [],
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==",
+          "dependencies": [
+            "module.kubernetes_infra.kubernetes_service.jenkins_service"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.kubernetes_infra",
+      "mode": "managed",
+      "type": "kubernetes_service",
+      "name": "jenkins_service",
+      "provider": "provider[\"registry.terraform.io/hashicorp/kubernetes\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "id": "default/jenkins-primary",
+            "metadata": [
+              {
+                "annotations": {},
+                "generate_name": "",
+                "generation": 0,
+                "labels": {
+                  "managedby": "terraform",
+                  "service": "jenkins-primary"
+                },
+                "name": "jenkins-primary",
+                "namespace": "default",
+                "resource_version": "30153597",
+                "uid": "46d6ce21-cb72-486f-8011-384e05f8e799"
+              }
+            ],
+            "spec": [
+              {
+                "cluster_ip": "10.0.155.184",
+                "external_ips": [],
+                "external_name": "",
+                "external_traffic_policy": "Cluster",
+                "health_check_node_port": 0,
+                "load_balancer_ip": "",
+                "load_balancer_source_ranges": [],
+                "port": [
+                  {
+                    "name": "http",
+                    "node_port": 30258,
+                    "port": 8080,
+                    "protocol": "TCP",
+                    "target_port": "80"
+                  }
+                ],
+                "publish_not_ready_addresses": false,
+                "selector": {
+                  "app": "jenkins-primary"
+                },
+                "session_affinity": "None",
+                "type": "NodePort"
+              }
+            ],
+            "status": [
+              {
+                "load_balancer": [
+                  {
+                    "ingress": []
+                  }
+                ]
+              }
+            ],
+            "timeouts": null,
+            "wait_for_load_balancer": true
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDB9LCJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    }
+  ]
+}
