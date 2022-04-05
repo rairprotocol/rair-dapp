@@ -14,7 +14,7 @@ resource "kubernetes_persistent_volume_claim" "claim" {
     }
   }
   spec {
-    access_modes = ["ReadWriteMany"]
+    access_modes = ["ReadWriteOnce"]
     resources {
       requests = {
         storage = "20Gi"
@@ -38,6 +38,7 @@ resource "kubernetes_deployment" "jenkins" {
   }
 
   spec {
+    
     replicas = 1
 
     selector {
@@ -54,6 +55,11 @@ resource "kubernetes_deployment" "jenkins" {
       }
 
       spec {
+        security_context {
+          fs_group = 1000
+          run_as_user = 0
+        }
+
         container {
           image = local.jenkins_image
           name  = local.jenkins_namespace
