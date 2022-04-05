@@ -18,6 +18,6 @@ variable "mongo_atlas_org_id" {
   type = string
 }
 
-variable "jenkins_internal_private_ip" {
+variable "jenkins_internal_load_balancer_name" {
   type = string
 }

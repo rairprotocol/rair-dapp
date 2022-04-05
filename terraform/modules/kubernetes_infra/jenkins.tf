@@ -1,7 +1,7 @@
 locals {
   jenkins_namespace = "jenkins-primary"
   jenkins_image = "jenkins/jenkins:latest"
-  jenkins_node_port = 32000
+  # jenkins_node_port = 32000
 }
 
 # resource "kubernetes_namespace" "jenkins_namespace" {
@@ -40,6 +40,12 @@ locals {
 #     kubernetes_namespace.jenkins_namespace
 #   ]
 # }
+
+data "google_compute_address" "jenkins_internal_load_balancer" {
+  name = var.jenkins_internal_load_balancer_name
+  project = var.gcp_project_id
+  region = var.region
+}
 
 resource "kubernetes_deployment" "jenkins" {
   # depends_on = [
@@ -109,15 +115,14 @@ resource "kubernetes_service" "jenkins_service" {
     }
   }
   spec {
-    # health_check_node_port = 30000
-    # external_traffic_policy = "Local"
+    load_balancer_ip = data.google_compute_address.jenkins_internal_load_balancer.address
     selector = {
       app = local.jenkins_namespace
     }
     port {
-      port        = 8080
+      port        = 80
       target_port = 8080
-      node_port = local.jenkins_node_port
+      # node_port = local.jenkins_node_port
       name = "http"
     }
     type = "LoadBalancer"

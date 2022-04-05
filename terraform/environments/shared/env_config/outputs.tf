@@ -18,3 +18,7 @@ output "env_config" {
 output "mongo_atlas_org_id" {
   value = "613266a1347a1374f958cd7d"
 }
+
+output "jenkins_internal_load_balancer_name" {
+  value = "jenkins-internal-load-balancer"
+}

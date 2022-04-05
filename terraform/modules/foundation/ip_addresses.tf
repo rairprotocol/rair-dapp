@@ -18,5 +18,5 @@ resource "google_compute_address" "jenkins_internal_load_balancer" {
   name = "jenkins-internal-load-balancer"
   region = var.region
   address_type = "INTERNAL"
-  address      = var.jenkins_internal_private_ip
+  subnetwork = google_compute_subnetwork.kubernetes_primary_cluster.id
  }

@@ -23,7 +23,7 @@ module "foundation" {
   gcp_project_id = "rair-market-dev"
   vpc_cidr_block = module.config.env_config.dev.vpc_cidr_block
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
-  jenkins_internal_private_ip = module.config.jenkins_internal_private_ip
+  jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
 }
 
 module "hcp_cloud" {
