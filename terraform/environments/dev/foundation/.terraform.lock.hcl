@@ -39,13 +39,6 @@ provider "registry.terraform.io/hashicorp/hcp" {
   ]
 }
 
-provider "registry.terraform.io/hashicorp/template" {
-  version = "2.2.0"
-  hashes = [
-    "h1:YB8aQZpJyZEEMlrfzSyA6P6Oay3BmoB3G+8V48ShRJQ=",
-  ]
-}
-
 provider "registry.terraform.io/mongodb/mongodbatlas" {
   version     = "1.2.0"
   constraints = "1.2.0"
