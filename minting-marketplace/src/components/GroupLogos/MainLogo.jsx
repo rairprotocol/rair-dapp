@@ -1,9 +1,9 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
 
-const MainLogo = ({ goHome, sentryHistory, headerLogo, headerLogoBlack, headerLogoWhite, primaryColor }) => {
-    const params = useParams();
+const MainLogo = ({ goHome, sentryHistory, headerLogo /*, headerLogoBlack, headerLogoWhite, primaryColor*/ }) => {
+    // const params = useParams();
 
     return (
         <>

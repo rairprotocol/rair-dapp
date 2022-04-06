@@ -17,3 +17,7 @@ variable "gcp_project_id" {
 variable "mongo_atlas_org_id" {
   type = string
 }
+
+variable "jenkins_internal_load_balancer_name" {
+  type = string
+}

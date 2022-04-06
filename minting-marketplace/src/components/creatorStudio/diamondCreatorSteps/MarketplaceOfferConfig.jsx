@@ -1,6 +1,6 @@
 import {useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
-import { utils, BigNumber } from 'ethers';
+import { utils /*, BigNumber*/ } from 'ethers';
 import { useSelector } from 'react-redux';
 import DiamondCustomPaymentRow from './diamondCustomPaymentRow.jsx'
 import Swal from 'sweetalert2';
@@ -82,9 +82,9 @@ const MarketplaceOfferConfig = ({
 	}, [customPayments, rerender, array, index]);
 
 	let total = customPayments.reduce((prev, current) => {return Number(prev) + Number(current.percentage)}, 0);
-	let splitTotal = customPayments.reduce((prev, current) => {
-		return prev.add((BigNumber.from(current.percentage)).div(100).mul(item.price))
-	}, BigNumber.from(0));
+	// let splitTotal = customPayments.reduce((prev, current) => {
+	// 	return prev.add((BigNumber.from(current.percentage)).div(100).mul(item.price))
+	// }, BigNumber.from(0));
 	let updateAvailable = simpleMode || !marketValuesChanged;
 
 	return <div className={`rounded-rair col-12 col-md-12 ${!item.selected && !item.marketData.fromMarket && 'text-secondary'}`}>

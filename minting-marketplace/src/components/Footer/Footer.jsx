@@ -1,9 +1,9 @@
 import React from 'react'
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, /*useParams*/ } from 'react-router-dom';
 import DiscordIcon from './../../images/discord.png'
 
-const Footer = ({ primaryColor, openAboutPage, sentryHistory }) => {
-    const params = useParams();
+const Footer = ({ primaryColor, /*openAboutPage,*/ sentryHistory }) => {
+    // const params = useParams();
 
     return (
         <footer
