@@ -1,11 +1,11 @@
 # In this file we are defining a complete list of all secrets
-# used by terraform in each namespace
+# used by kubernetes in each of it's namespaces
 
 # Because we are creating these secrets manually,
 # but we need to reference their names throughout the TF code
-# we need a source of truth for all secret names/metadata
+# we need a source of truth for all secret names and metadata
 # without importing secret data resources
-# as that will allow secret data to leak into the TF state
+# as that will allow secrets to leak into the TF state
 
 # this file will be maintained and kept up to date with various secrets
 # created by the kubernetes admin team
@@ -13,31 +13,40 @@
 # eventually we will move to Vault hosted secrets
 # and this won't be neccesary
 
-variable "namespaces" {
+variable "namespace_secrets" {
   type = map(object({
+    # kubernetes namespace
     namespace = string,
-    secrets = map(object({
-      name: string
+    # env_secrets: secrets specifically used for env variables
+    # in kubernetes services/deploymemts
+    env_secrets = map(object({
+      secret_name: string,
+      env_reference_name: string
     }))
   }))
 
+  # this double default is very confusing...
+  # deafault: the terraform default value for this variable
   default = {
+    # default: the kubernetes namespace!
     default: {
-      namespace: "defaut",
-      secrets: {
-        "cd-jenkins": {
-          name: "cd-jenkins",
-        }
-        "jwt-secret": {
-          name: "jwt-secret"
-        }
-      }
-    },
-    ukraine: {
-      namespace: "ukraine",
-      secrets: {
+      namespace: "default",
+      env_secrets: {
+        "mongodb-credential": {
+          secret_name: "mongodb-credential",
+          env_reference_name: "MONGO_URI"
+        },
+        "rair-manager-key": {
+          secret_name: "rair-manager-key",
+          env_reference_name: "GCP_CREDENTIALS"
+        },
         "pinata-secret": {
-          name: "pinata-secret",
+          secret_name: "pinata-secret",
+          env_reference_name: "PINATA_SECRET"
+        },
+        "jwt-secret": {
+          secret_name: "jwt-secret",
+          env_reference_name: "JWT_SECRET"
         }
       }
     }
