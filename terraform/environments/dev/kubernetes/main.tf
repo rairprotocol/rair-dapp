@@ -21,4 +21,6 @@ module "kubernetes_infra" {
   region = "us-west1"
   jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
   rairnode_configmap_data = local.rairnode_configmap
+  minting_network_configmap_data = local.minting_network_configmap
+  blockchain_event_listener_configmap_data = local.blockchain_event_listener_configmap
 }
