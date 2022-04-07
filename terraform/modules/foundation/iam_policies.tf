@@ -10,7 +10,8 @@ locals {
   jenkins_roles_to_bind = [
     "compute.instanceAdmin.v1",
     "iam.serviceAccountUser",
-    "compute.networkAdmin"
+    "compute.networkAdmin",
+    "compute.storageAdmin"
   ]
 }
 

@@ -2,12 +2,12 @@
 
 // initialize app role token manager
 const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
-const { vaultKeyWriter } = require('./vault/vaultKeyWriter');
+const { vaultKeyManager } = require('./vault/vaultKeyManager');
 
 vaultAppRoleTokenManager.initialLogin().then((res) => {
   try {
     // write into vault here
-    vaultKeyWriter.write({
+    vaultKeyManager.write({
       key: "123",
       data: {
         key: 'test_key',

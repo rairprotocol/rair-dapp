@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 import jsonwebtoken from 'jsonwebtoken';
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
 const signIn = async (provider) => {
 	let currentUser = provider?.address;
@@ -47,7 +47,7 @@ const signIn = async (provider) => {
 	}
 	*/
 
-	const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
+	const { success, /*user*/ } = await (await fetch(`/api/users/${currentUser}`)).json();
 	if (!success) {
 		return;
 	}
@@ -145,7 +145,7 @@ const getJWT = async (signer, userAddress) => {
 // 	}
 // }
 
-const rFetch = async (route, options, retryOptions = undefined) => {
+const rFetch = async (route, options, retryOptions = undefined, showErrorMessages = true) => {
 	let request = await fetch(route, {
 		...options,
 		headers: {
@@ -163,7 +163,9 @@ const rFetch = async (route, options, retryOptions = undefined) => {
 					return rFetch(route, options);
 				}
 			}
-			Swal.fire('Error', parsing?.message, 'error');
+			if (showErrorMessages) {
+				Swal.fire('Error', parsing?.message, 'error');
+			}
 		}
 		return parsing;
 	} catch (err) {

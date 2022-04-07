@@ -264,13 +264,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
         console.error("Error parsing diamonds", err);
       }
     }
-  }, [
-    address,
-    blockchain,
-    collectionIndex,
-    contractCreator,
-    diamondMarketplaceInstance,
-  ]);
+  }, [address, blockchain, collectionIndex, contractCreator, currentChain, diamondMarketplaceInstance]);
 
   useEffect(() => {
     if (diamondMarketplaceInstance) {

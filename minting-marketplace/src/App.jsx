@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, /*Redirect*/ NavLink, useLocation } from 'react-router-dom';
+import { Router, Switch, Route, /*Redirect*/ NavLink, /*useLocation*/ } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch.js';
 
@@ -59,10 +59,10 @@ import { OnboardingButton } from './components/common/OnboardingButton';
 
 import RairProduct from './components/nft/rairCollection.jsx';
 //Google Analytics
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 import SplashPage from './components/SplashPage';
-import setTitle from './utils/setTitle';
+// import setTitle from './utils/setTitle';
 
 import ThankYouPage from './components/ThankYouPage';
 import Token from './components/nft/Token.jsx';
@@ -220,7 +220,7 @@ function App({ sentryHistory }) {
 			console.log('Error', err);
 			setStartedLogin(false);
 		}
-	}, [programmaticProvider, dispatch]);
+	}, [programmaticProvider, adminRights, dispatch]);
 
 	const goHome = () => {
 		sentryHistory.push(`/`);
@@ -746,7 +746,7 @@ function App({ sentryHistory }) {
 									].map((item, index) => {
 										// If the requirements for the route aren't met, it won't return anything
 										if (item.requirement !== undefined && !item.requirement) {
-											return;
+											return null;
 										}
 										return <SentryRoute
 											key={index}

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import VideoBg_1 from './../../assets/video-bg_1.png';
 import VideoBg_2 from './../../assets/video-bg_2.png';
-import ArrowUp from './../../assets/arrow-up-about.png';
-import MetamaskTutorial from './../../assets/matamaskTutorial.png';
-import JoinCom from '../../../SplashPage/JoinCom/JoinCom';
-import Modal from "react-modal";
+// import ArrowUp from './../../assets/arrow-up-about.png';
+// import MetamaskTutorial from './../../assets/matamaskTutorial.png';
+// import JoinCom from '../../../SplashPage/JoinCom/JoinCom';
+// import Modal from "react-modal";
 import { useSelector, Provider, useStore } from 'react-redux';
 import StandaloneVideoPlayer from "../../../video/videoPlayerGenerall";
 import Swal from 'sweetalert2';
@@ -12,11 +12,11 @@ import withReactContent from 'sweetalert2-react-content';
 
 const reactSwal = withReactContent(Swal);
 
-const StreamsAbout = ({ Metamask }) => {
+const StreamsAbout = ({ Metamask, purchaseButton }) => {
 
-    const [showVideo, setShowVideo] = useState(false);
+    // const [showVideo, setShowVideo] = useState(false);
 
-    const { currentUserAddress } = useSelector(store => store.contractStore);
+    // const { currentUserAddress } = useSelector(store => store.contractStore);
     const { primaryColor, textColor } = useSelector(store => store.colorStore);
 
     const store = useStore();
@@ -46,7 +46,7 @@ const StreamsAbout = ({ Metamask }) => {
                 Watch our tutorial video on Web2 to learn how to watch encrypted videos on Web3
             </div>
             <div className="box-video-player">
-                <iframe title="unique-box-video" src="https://www.youtube.com/embed/fL5UAV5cuIQ">
+                <iframe title="unique-box-video" src="https://www.youtube.com/embed/ju4aohAfXEs">
                 </iframe>
             </div>
             {/* <div className="about-video-tutorial-text">
@@ -66,9 +66,7 @@ const StreamsAbout = ({ Metamask }) => {
                             To stream the videos below you’ll need to mint a watch token for .1 MATIC
                         </p>
 
-                        <div className="btn-buy-metamask">
-                            <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" />Test our streaming</button>
-                        </div>
+                        {purchaseButton}
                     </div>
                 </div>
             </div>

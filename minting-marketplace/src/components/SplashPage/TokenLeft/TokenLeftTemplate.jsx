@@ -11,12 +11,13 @@ const TokenLeftTemplate = ({
     copies,
     soldCopies,
     counterData,
-    ipftButton
+    ipftButton,
+    nftTitle = "NFTs minted"
 }) => {
     const { backgroundImage, description, title1, title2, titleColor, btnColorIPFS, properties } = counterData;
 
     const [percentTokens, setPersentTokens] = useState(0);
-    const [showMore, setShowMore] = useState(false);
+    // const [showMore, setShowMore] = useState(false);
     const [fontSize, setFontSize] = useState('');
 
     const wholeTokens = Number(copies);
@@ -60,7 +61,9 @@ const TokenLeftTemplate = ({
                                 }`,
                         }}
                     >
-                        <div className="title-progress-left">NFTs minted</div>
+                        <div className="title-progress-left">
+                            {nftTitle}
+                        </div>
                         <Box className="box-progress progress-template" sx={{ position: "relative" }}>
                             <CircularProgress
                                 className="progress-grey"
@@ -158,7 +161,7 @@ const TokenLeftTemplate = ({
                     </div>
                 </div>
             </div>}
-            <div className="left-tokens-content">
+            <div className={`left-tokens-content`}>
                 <div className="title-tokens">
                     <h3>
                         <span style={{ color: titleColor && titleColor }}>{title1}</span>

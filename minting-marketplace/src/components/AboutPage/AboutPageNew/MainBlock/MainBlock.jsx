@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback /*useEffect*/ } from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
 import { web3Switch } from "../../../../utils/switchBlockchain";
 import Swal from "sweetalert2";
+// import { rFetch } from "../../../../utils/rFetch";
+// import { erc721Abi } from "../../../../contracts";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
 import { diamondFactoryAbi } from "../../../../contracts/index.js";
 
@@ -30,7 +32,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
+const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData, purchaseButton }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
@@ -118,7 +120,7 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
         "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )) {
         Swal.fire({
-          title : "Success", 
+          // title : "Success", 
           title: `You own #${nextToken}!`,
           icon: "success"
         });
@@ -150,12 +152,7 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData }) => {
           <br />
           NFT multi-dimensional.
         </div>
-        <div className="btn-buy-metamask">
-          <button onClick={() => openModal()}>
-            <img className="metamask-logo" src={Metamask} alt="metamask-logo" />{" "}
-            Test our streaming
-          </button>
-        </div>
+        {purchaseButton}
         <div className="modal__wrapper__about__page">
           <Modal
             isOpen={modalIsOpen}

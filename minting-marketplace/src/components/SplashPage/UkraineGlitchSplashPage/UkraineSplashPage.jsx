@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import "../SplashPageTemplate/AuthorCard/AuthorCard.css";
 import "../../AboutPage/AboutPageNew/AboutPageNew.css";
-import "./UkraineSplash.css"
+import "./UkraineSplash.css";
 
 /* importing images*/
 import UKR_rounded from '../images/UkraineGlitchNFTExamples/rounded_corners.png';
@@ -31,7 +31,7 @@ import DiscordIcon from '../images/discord-icon.png';
 /* importing Components*/
 import TeamMeet from "../TeamMeet/TeamMeetList";
 import AuthorCard from "../SplashPageTemplate/AuthorCard/AuthorCard";
-import setTitle from '../../../utils/setTitle';
+import setTitle from "../../../utils/setTitle";
 import NotCommercialTemplate from "../NotCommercial/NotCommercialTemplate";
 import CarouselModule from "../SplashPageTemplate/Carousel/Carousel";
 import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModule";
@@ -52,7 +52,12 @@ import { rFetch } from '../../../utils/rFetch';
 const splashData = {
   title: "#UkraineGlitch",
   titleColor: "#FFD505",
-  description: ["1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ", <br />, <br />, "100% of proceeds fund tactical first aid supplies and Ukrainian developers"],
+  description: [
+    "1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ",
+    <br />,
+    <br />,
+    "100% of proceeds fund tactical first aid supplies and Ukrainian developers",
+  ],
   backgroundImage: UKR_rounded,
   purchaseButton: {
     // Reusable component
@@ -106,25 +111,28 @@ const splashData = {
   },
   exclusiveNft: {
     title: "NFTs",
-    titleColor: "rgb(3, 91, 188)"
+    titleColor: "rgb(3, 91, 188)",
   },
   carouselTitle: "Our Developers",
   carouselData: [
     {
       title: "Alex & Arsenii",
       img: UKR126,
-      description: "Originally based in Kharkiv, Alex and Arsenii are experienced frontend REACT developers that created the site you see here"
+      description:
+        "Originally based in Kharkiv, Alex and Arsenii are experienced frontend REACT developers that created the site you see here",
     },
     {
       title: "Masha",
       img: UKR497,
-      description: "Born in Odessa, Masha emigrated with her family to the US when she was a small child. They remained closely connected to the Post-Soviet immigrant community of the Pacific NW while growing up. She created these pieces of glitch art as a way to process the grief of a country in dispair, and to continue funding the shipment of medical supplies to the war-torn area."
+      description:
+        "Born in Odessa, Masha emigrated with her family to the US when she was a small child. They remained closely connected to the Post-Soviet immigrant community of the Pacific NW while growing up. She created these pieces of glitch art as a way to process the grief of a country in dispair, and to continue funding the shipment of medical supplies to the war-torn area.",
     },
     {
       title: "Valerii & Natalia",
       img: UKR1294,
-      description: "Originally based in Kharkiv, Valerii and Natalia are respsonsible for backend database architecture and syncing to allow for seemless purchase"
-    }
+      description:
+        "Originally based in Kharkiv, Valerii and Natalia are respsonsible for backend database architecture and syncing to allow for seemless purchase",
+    },
   ],
   videoData: {
     video: null,
@@ -148,14 +156,14 @@ const splashData = {
         titleProperty: "Fermion Freckles",
         titleColor: "#FFD505",
         propertyDesc: "14",
-        percent: "32%"
+        percent: "32%",
       },
       {
         titleProperty: "Boson Movement",
         titleColor: "#035BBC",
         propertyDesc: "Sparklink / Still",
-        percent: "1.7%"
-      }
+        percent: "1.7%",
+      },
     ],
     description: ["This (de)generative art project was created to provide 100% direct aid to Ukraine.", "2014", "Ukrainian immigrants in the Pacific Northwest of the United States had taken it into their own hands to provide a direct supply chain of specialty tactical medical equipment to Ukraine’s grassroots militias. We are here to continue their story.", "2022", "This website was built by Ukrainian Web3 developers. The logic of the algorithm written by a Ukranian generative artist. Prior to the war they were making NFTs for fun, now for a purpose.", "About the piece", "The algorithm is set such that as the number of the NFT increases, the chaotic opposite square masses also increase, eventually inverting or turning the flag upside-down. Some NFTs are animated (sparkling) to show parts of this progression, and others are still. Only holders of a UkraineGlitch NFT can watch the full animation of the flag transformation occur below."]
   }
@@ -164,12 +172,22 @@ const splashData = {
 const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const carousel_match = window.matchMedia('(min-width: 900px)')
-  const [carousel, setCarousel] = useState(carousel_match.matches)
-  window.addEventListener("resize", () => setCarousel(carousel_match.matches))
+  const { currentChain, currentUserAddress, minterInstance } = useSelector((store) => store.contractStore);
+  const carousel_match = window.matchMedia("(min-width: 900px)");
+  const [carousel, setCarousel] = useState(carousel_match.matches);
+  window.addEventListener("resize", () => setCarousel(carousel_match.matches));
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
+      if (currentChain === splashData.purchaseButton.requiredBlockchain) {
+        setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
+      } else {
+        setSoldCopies();
+      }
+      /*
+      //contractAddress
+      //requiredBlockchain
+      //offerIndex
       const { success, products } = await (
         await fetch(`/api/contracts/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/products/offers`, {
           method: "GET",
@@ -184,9 +202,10 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       } else {
         setSoldCopies(0);
       }
+      */
     }
 
-  }, [setSoldCopies, loginDone]);
+  }, [setSoldCopies, loginDone, currentChain]);
 
   useEffect(() => {
     getAllProduct()
@@ -194,14 +213,20 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
 
   useEffect(() => {
     setTitle(`#UkraineGlitch`);
-  }, [])
+  }, []);
 
   return (
     <div className="wrapper-splash-page ukraineglitch">
       <div className="template-home-splash-page">
         <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        <TokenLeftTemplate counterData={splashData.counterData} copies={splashData.counterData.nftCount} soldCopies={soldCopies} primaryColor={primaryColor} />
+        <TokenLeftTemplate
+          counterData={splashData.counterData}
+          copies={splashData.counterData.nftCount}
+          soldCopies={soldCopies}
+          primaryColor={primaryColor}
+          nftTitle="NFTs Left"
+        />
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
@@ -216,11 +241,18 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
         {/* <div style={{ height: "108px" }} /> */}
         <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
         {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
-        <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData} />
+        <CarouselModule
+          carousel={!carousel}
+          carouselTitle={splashData.carouselTitle}
+          carouselData={splashData.carouselData}
+        />
         <TeamMeet primaryColor={primaryColor} arraySplash={"ukraine"} />
-        <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName} />
+        <NotCommercialTemplate
+          primaryColor={primaryColor}
+          NFTName={splashData.NFTName}
+        />
       </div>
-    </div >
+    </div>
   );
 };
 

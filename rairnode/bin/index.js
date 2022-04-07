@@ -1,3 +1,5 @@
+const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
+
 const port = process.env.PORT;
 
 const express = require('express');
@@ -127,7 +129,19 @@ async function main() {
 }
 
 (async () => {
+
+  // wrapping in a try catch block temporarily to prevent
+  // outages during development
+  try {
+    // Login with vault app role creds first
+    await vaultAppRoleTokenManager.initialLogin()
+  } catch(err) {
+    console.log('Error initializing vault app role token manager')
+  }
+  
+  // fire up the rest of the app
   await main();
+
 })().catch(e => {
   log.error(e);
   process.exit();
