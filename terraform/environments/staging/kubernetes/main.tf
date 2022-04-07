@@ -1,4 +1,8 @@
 terraform {
+  backend "gcs" {
+    bucket  = "rair-market-staging-kubernetes-tf-state"
+    prefix  = "terraform/state"
+  }
   required_providers {
     kubernetes = {
       source = "hashicorp/kubernetes"
