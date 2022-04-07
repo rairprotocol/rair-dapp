@@ -225,6 +225,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
           copies={splashData.counterData.nftCount}
           soldCopies={soldCopies}
           primaryColor={primaryColor}
+          loginDone={loginDone}
           nftTitle="NFTs Left"
         />
         <NFTImages
