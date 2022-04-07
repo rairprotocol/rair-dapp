@@ -499,7 +499,7 @@ const teamGreymanArray = [
 
 const teamUkraineArray = [
     {   
-        chain: '0x7bfbAAC8b6bC1B7b9e4bEB5c1d92C913B9598465',
+        chain: '0xFC9E791955AeDB8dbAd1Be054f82720c8bDbf582',
         nameTeammate: "Ukrainian American Coordinating Council",
         imageUrl: Teammate_7,
         aboutTeammate: [
