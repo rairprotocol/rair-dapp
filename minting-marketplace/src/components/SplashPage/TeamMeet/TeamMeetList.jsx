@@ -16,6 +16,7 @@ import Garrett from '../../AboutPage/assets/GARRETT.jpeg';
 import Gunther from '../../AboutPage/assets/Gunther.jpeg';
 import Martin from '../../AboutPage/assets/Martin.jpeg';
 import MICHAEL from '../../AboutPage/assets/MICHAEL.jpg';
+import JULIA from '../../AboutPage/assets/JULIA.jpg';
 import David from '../../AboutPage/assets/David.jpeg';
 // import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
 import Matthew from '../../AboutPage/assets/Matthew.jpg';
@@ -274,6 +275,29 @@ const rairAdvisorsTeam = [
             {
                 classIcon: 'fab fa-linkedin-in',
                 link: 'https://www.linkedin.com/in/michaelterpin/',
+                classLink: ""
+            }
+        ]
+    },
+    {
+        nameTeammate: "Julia Yan  | Strategic Advisor",
+        imageUrl: JULIA,
+        aboutTeammate: [
+            `Julia is a growth leader focused on consumer product, tech and media. Her experience 
+            in building growth engines and scaling product adoption from zero to one enabled companies 
+            like Amazon and TikTok to achieve unprecedented hyper growth. She is currently the Head of 
+            Growth at TikTok and has been in the position since 2018.
+            Prior to TikTok, Julia was a product marketing leader at Amazon focusing on global 
+            e-commerce marketplace expansion and product growth for the Alexa Echo device family. 
+            Julia started her career in consulting, providing strategic solutions for clients across 
+            private and public sectors at Deloitte and PwC.
+            Julia is also passionate about growing the Web3 space. She connects innovative and creative 
+            minds with the right communities to help reach their potentials and maximize impact.`
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-linkedin-in',
+                link: 'https://www.linkedin.com/in/juliayan',
                 classLink: ""
             }
         ]

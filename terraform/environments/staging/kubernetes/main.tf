@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket  = "rair-market-dev-kubernetes-tf-state"
+    bucket  = "rair-market-staging-kubernetes-tf-state"
     prefix  = "terraform/state"
   }
   required_providers {
@@ -21,7 +21,7 @@ module "config" {
 
 module "kubernetes_infra" {
   source = "../../../modules/kubernetes_infra"
-  gcp_project_id = "rair-market-dev"
+  gcp_project_id = "rair-market-staging"
   region = "us-west1"
   jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
 }
