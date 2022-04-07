@@ -182,7 +182,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       if (currentChain === splashData.purchaseButton.requiredBlockchain) {
         setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
       } else {
-        setSoldCopies();
+        setSoldCopies(0);
       }
       /*
       //contractAddress
