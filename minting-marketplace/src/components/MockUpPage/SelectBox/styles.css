@@ -311,6 +311,10 @@
     .nft-collection {
         padding: 5px 15px;
     }
+
+    .nft-data-page-wrapper .col-12.row.mx-0.box--properties .col-4.my-2.p-1.custom-desc-to-offer {
+        width: 100% !important;
+    }
 }
 
 @media screen and (max-width: 440px) {

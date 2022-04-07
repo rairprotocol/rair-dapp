@@ -325,7 +325,7 @@ const NftDataPageTest = ({
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
       return (
         <button
-        className="nft-btn-sell"
+          className="nft-btn-sell"
           style={{
             color: `var(--${textColor})`
           }}
@@ -467,7 +467,7 @@ const NftDataPageTest = ({
           userName={ownerInfo?.owner}
         />
         <div
-        className="nft-data-content"
+          className="nft-data-content"
         >
           <div
             className="nft-collection"
@@ -477,7 +477,7 @@ const NftDataPageTest = ({
           >
             {selectedData?.animation_url ? (
               <div
-              className="single-token-block-video"
+                className="single-token-block-video"
               >
                 <ReactPlayer
                   width={"100%"}
@@ -497,7 +497,7 @@ const NftDataPageTest = ({
               </div>
             ) : (
               <div
-              className="single-token-block-img"
+                className="single-token-block-img"
                 style={{
                   backgroundImage: `url(${selectedData?.image ? selectedData.image : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"})`,
                 }}
@@ -508,7 +508,7 @@ const NftDataPageTest = ({
             <div>
               <div className="collection-label-name">Price range</div>
               <div
-              className="nft-single-price-range"
+                className="nft-single-price-range"
               >
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
@@ -612,7 +612,10 @@ const NftDataPageTest = ({
                     {selectedData?.description}
                   </div>
                   <div className="my-2 px-4 custom-desc-to-offer">
-                    <a href={selectedData?.external_url}>
+                    <a target="_blank"
+                      rel="noreferrer"
+                      href={selectedData?.external_url}
+                    >
                       {selectedData?.external_url}
                     </a>
                   </div>

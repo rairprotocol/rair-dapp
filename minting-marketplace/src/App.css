@@ -711,6 +711,10 @@ i.fas-custom {
     border-radius: 16px;
 }
 
+.custom-desc-to-offer a {
+    word-wrap: break-word;
+}
+
 .custom-offer-pic-link:hover {
     color: rgb(186, 89, 224) !important;
     text-decoration: none;

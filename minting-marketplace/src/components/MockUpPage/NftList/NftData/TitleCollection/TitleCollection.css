@@ -81,11 +81,17 @@
 @media screen and (max-width: 900px) {
     .container-title-collection .block-title-share {
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
     }
 
     .container-title-collection .block-title-share .block-btn-share {
         margin: 10px;
+    }
+}
+
+@media screen and (max-width: 720px) {
+    .container-title-collection .block-title-share {
+        align-items: center;
     }
 }
 

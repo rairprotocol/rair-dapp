@@ -10,7 +10,7 @@
     border-radius: 16px;
     border: 1px solid #D37AD6;
     padding: 0 16px;
-    
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -49,7 +49,7 @@
     font-weight: 700;
     line-height: 28px;
     width: 100%;
-    position: absolute;   
+    position: absolute;
 }
 
 .select-number-popup .select-number-box {
@@ -80,29 +80,55 @@
 .select-number-popup::-webkit-scrollbar {
     width: 10px;
 }
-  
+
 /* Track */
 .select-number-popup::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
+    box-shadow: inset 0 0 5px grey;
     border-radius: 12px;
 }
-   
+
 /* Handle */
 .select-number-popup::-webkit-scrollbar-thumb {
     background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
     border-radius: 12px;
 }
-  
+
 /* Handle on hover */
 .select-number-popup::-webkit-scrollbar-thumb:hover {
     background: #A46BD9;
 }
-.backClose-current-tokens:hover{
-color: #D37AD6;
+
+.backClose-current-tokens:hover {
+    color: #D37AD6;
+}
+
+@media screen and (max-width: 1330px) {
+    .select-number-popup {
+        width: 100%;
+        grid-template-columns: 72px 72px 72px;
+    }
+
 }
 
 @media screen and (max-width: 653px) {
     .select-field {
         width: 80vw;
+    }
+
+    .select-number-popup {
+        grid-template-columns: 25% 25% 25% 25%;
+    }
+}
+
+
+@media screen and (max-width: 460px) {
+    .select-number-popup {
+        grid-template-columns: 30% 30% 30%;
+    }
+}
+
+@media screen and (max-width: 330px) {
+    .select-number-popup {
+        grid-template-columns: 50% 50%;
     }
 }
