@@ -1225,6 +1225,7 @@
 .meet-team .box-teammate .teammate-title-socials .teammate-wrapper-name span {
     margin-bottom: 1rem;
     display: block;
+    text-align: left;
     font-size: 16px;
 }
 
