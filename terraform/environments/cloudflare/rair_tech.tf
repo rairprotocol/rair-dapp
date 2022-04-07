@@ -276,3 +276,26 @@ resource "cloudflare_record" "rair_tech__rair_tech_txt_google_site_verification"
   value   = "google-site-verification=t9aSZpWxCZBhS3eflPmB1woxbV9zYcahOeFetkjSiiM"
   type    = local.record_type.TXT
 }
+
+
+
+###########################################################
+###########################################################
+###########################################################
+###########################################################
+############################################################
+# Internal IP routes
+
+resource "cloudflare_record" "rair_tech__dev_jenkins" {
+  zone_id = cloudflare_zone.rair_tech.id
+  name    = "jenkins.dev"
+  value   = "10.0.64.35"
+  type    = local.record_type.A
+}
+
+resource "cloudflare_record" "rair_tech__dev_jenkins" {
+  zone_id = cloudflare_zone.rair_tech.id
+  name    = "jenkins.staging"
+  value   = "10.1.64.7"
+  type    = local.record_type.A
+}

@@ -46,22 +46,3 @@ resource "cloudflare_record" "rair_market__staging_rair_market" {
   value   = "35.227.249.6"
   type    = local.record_type.A
 }
-
-
-############################################################
-# Jenkins internal IP routes
-
-resource "cloudflare_record" "rair_market__dev_jenkins" {
-  zone_id = cloudflare_zone.rair_market.id
-  name    = "jenkins.dev"
-  value   = "10.0.64.35"
-  type    = local.record_type.A
-}
-
-resource "cloudflare_record" "rair_market__dev_jenkins" {
-  zone_id = cloudflare_zone.rair_market.id
-  name    = "jenkins.staging"
-  value   = "10.1.64.7"
-  type    = local.record_type.A
-}
-
