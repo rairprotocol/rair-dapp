@@ -220,13 +220,15 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       <div className="template-home-splash-page">
         <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        <TokenLeftTemplate
-          counterData={splashData.counterData}
-          copies={splashData.counterData.nftCount}
-          soldCopies={soldCopies}
-          primaryColor={primaryColor}
-          nftTitle="NFTs Left"
-        />
+        {
+          loginDone && <TokenLeftTemplate
+            counterData={splashData.counterData}
+            copies={splashData.counterData.nftCount}
+            soldCopies={soldCopies}
+            primaryColor={primaryColor}
+            nftTitle="NFTs Left"
+          />
+        }
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
