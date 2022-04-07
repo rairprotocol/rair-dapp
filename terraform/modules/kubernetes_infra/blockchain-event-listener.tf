@@ -1,7 +1,7 @@
 resource "kubernetes_config_map" "blockchain_event_listener_configmap" {
   metadata {
-    name = "blockchain_event_listener-env"
+    name = "blockchain-event-listener-env"
   }
 
-  data = var.blockchain_event_listener
+  data = var.blockchain_event_listener_configmap_data
 }
