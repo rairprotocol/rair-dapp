@@ -47,6 +47,14 @@ variable "namespace_secrets" {
         "jwt-secret": {
           secret_name: "jwt-secret",
           env_reference_name: "JWT_SECRET"
+        },
+        "moralis-master-key-test": {
+          secret_name: "moralis-master-key-test",
+          env_reference_name: "MORALIS_MASTER_KEY_TEST"
+        },
+        "moralis-master-key-main": {
+          secret_name: "moralis-master-key-main",
+          env_reference_name: "MORALIS_MASTER_KEY_MAIN"
         }
       }
     }
