@@ -182,7 +182,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       if (currentChain === splashData.purchaseButton.requiredBlockchain) {
         setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
       } else {
-        setSoldCopies(0);
+        setSoldCopies();
       }
       /*
       //contractAddress
@@ -220,15 +220,14 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       <div className="template-home-splash-page">
         <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        {
-          loginDone && <TokenLeftTemplate
-            counterData={splashData.counterData}
-            copies={splashData.counterData.nftCount}
-            soldCopies={soldCopies}
-            primaryColor={primaryColor}
-            nftTitle="NFTs Left"
-          />
-        }
+        <TokenLeftTemplate
+          counterData={splashData.counterData}
+          copies={splashData.counterData.nftCount}
+          soldCopies={soldCopies}
+          primaryColor={primaryColor}
+          loginDone={loginDone}
+          nftTitle="NFTs Left"
+        />
         <NFTImages
           NftImage={UKR5}
           Nft_1={UKR497}
