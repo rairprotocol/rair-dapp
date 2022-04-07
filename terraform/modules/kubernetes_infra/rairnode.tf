@@ -4,6 +4,8 @@ locals {
   rairnode_default_port_2 = "5000"
   rairnode_persistent_volume_claim_name_0 = "rairnode-claim0"
   rairnode_persistent_volume_claim_name_1 = "rairnode-claim1"
+  rairnode_persistent_storage_name_0 = "rairnode-claim0"
+  rairnode_persistent_storage_name_1 = "rairnode-claim1"
   rairnode_image = "rairtechinc/rairservernode:dev_latest"
   pull_secret_name = "regcred"
 }
@@ -165,18 +167,30 @@ resource "kubernetes_deployment" "rairnode" {
               }
             }
           }
-/*           volume_mount {
+           volume_mount {
             name       = local.rairnode_persistent_volume_claim_name_0
             mount_path = "/usr/local/src/db"
           }
           volume_mount {
             name       = local.rairnode_persistent_volume_claim_name_1
             mount_path = "/usr/local/src/bin/Videos"
-          } */
+          }
         }
       image_pull_secrets {
         name        = local.pull_secret_name
       }
+      volume {
+          name = local.rairnode_persistent_storage_name_0
+          persistent_volume_claim {
+            claim_name = local.rairnode_persistent_volume_claim_name_0
+          }
+        }
+      volume {
+          name = local.rairnode_persistent_storage_name_1
+          persistent_volume_claim {
+            claim_name = local.rairnode_persistent_volume_claim_name_1
+          }
+        }
       }
     }
   }
