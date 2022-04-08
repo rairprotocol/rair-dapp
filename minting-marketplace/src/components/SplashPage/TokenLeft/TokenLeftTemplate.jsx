@@ -15,7 +15,7 @@ const TokenLeftTemplate = ({
     loginDone,
     nftTitle = "NFTs minted"
 }) => {
-    const { backgroundImage, description, title1, title2, titleColor, btnColorIPFS, properties } = counterData;
+    const { backgroundImage, description, title1, title2, titleColor, btnColorIPFS, properties, royaltiesNft } = counterData;
 
     const [percentTokens, setPersentTokens] = useState(0);
     // const [showMore, setShowMore] = useState(false);
@@ -182,6 +182,33 @@ const TokenLeftTemplate = ({
                             </p>
                         })
                     }
+                    {royaltiesNft && <div className="template-royalties-wrapper">
+                        <h4>Royalties</h4>
+                        <div className="tempalte-royalties-block">
+                            {
+                                royaltiesNft.firstBlock && <div className="template-royalties-box">
+                                    {
+                                        royaltiesNft.firstBlock.map((item, index) => {
+                                            return <div key={index}>
+                                                {item}
+                                            </div>
+                                        })
+                                    }
+                                </div>
+                            }
+                            {
+                                royaltiesNft.secondBlock && <div className="template-royalties-box">
+                                    {
+                                        royaltiesNft.secondBlock.map((item, index) => {
+                                            return <div key={index}>
+                                                {item}
+                                            </div>
+                                        })
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>}
                 </div>
             </div>
         </div>

@@ -32,6 +32,7 @@ const AuthorCard = ({ splashData, connectUserData }) => {
     button1,
     button2,
     purchaseButton,
+    buttonLabel
   } = splashData;
   return (
     <div
@@ -54,7 +55,7 @@ const AuthorCard = ({ splashData, connectUserData }) => {
           <div className="button-wrapper">
             {purchaseButton && (
               <purchaseButton.buttonComponent
-                {...{ ...purchaseButton, connectUserData }}
+                {...{ ...purchaseButton, connectUserData, buttonLabel}}
               />
             )}
             {button1 && <AuthorCardButton buttonData={button1} />}
