@@ -166,6 +166,12 @@ const NftDataCommonLinkComponent = (userData) => {
     getProductsFromOffer();
   }, [getAllProduct, getParticularOffer, getProductsFromOffer, showToken]);
 
+//   const getBlockchains = async () => {
+//     var res = await (await fetch('/api/blockchains')).json();
+// console.log(res, 'res');
+
+//   }
+//   getBlockchains();
   if (params.tokens === "collection") {
     return (
       <NftCollectionPage

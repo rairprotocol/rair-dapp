@@ -3,7 +3,7 @@ import "./FilteringBlock.css";
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
-const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilterShow }) => {
+const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilterShow, setBlockchain, getContract }) => {
 
     const media_match = window.matchMedia('(min-width: 400px)')
     const [mobile, setMobile] = useState(media_match.matches)
@@ -134,7 +134,7 @@ const FilteringBlock = ({ primaryColor, textColor, sortItem, setSortItem, isFilt
                     </div>
                 }
                 <ModalCategories setIsOpenCategories={setIsOpenCategories} isOpenCategories={isOpenCategories} />
-                <ModalBlockchain setIsOpenBlockchain={setIsOpenBlockchain} isOpenBlockchain={isOpenBlockchain} />
+                <ModalBlockchain getContract={ getContract }setBlockchain={setBlockchain} setIsOpenBlockchain={setIsOpenBlockchain} isOpenBlockchain={isOpenBlockchain} />
             </div>
         </>
     )
