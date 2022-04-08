@@ -82,7 +82,7 @@ const splashData = {
     // First parameter will be the minted token's number
     customSuccessAction: async (nextToken) => {
       let tokenMetadata = await rFetch(`/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`);
-      if (tokenMetadata.success) {
+      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
         Swal.fire({
           imageUrl: tokenMetadata.result.metadata.image,
           imageHeight: "auto",

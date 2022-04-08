@@ -197,7 +197,8 @@ const Agreements = ({
 					}
 
 					if (!rangeData) {
-						setButtonMessage("An error has ocurred.");
+						Swal.fire("Error","An error has ocurred.","error");
+						return;
 					}
 
 					let {start, end, product, price} = rangeData;
