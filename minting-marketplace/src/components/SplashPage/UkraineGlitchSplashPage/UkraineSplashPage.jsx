@@ -78,6 +78,7 @@ const splashData = {
     presaleMessage: 'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button
     customWrapperClassName: 'btn-submit-with-form',
+    blockchainOnly: true,
     // Custom function that will be called if the minting is a success
     // First parameter will be the minted token's number
     customSuccessAction: async (nextToken) => {
