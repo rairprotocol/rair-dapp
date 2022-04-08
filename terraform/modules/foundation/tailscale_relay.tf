@@ -42,7 +42,7 @@ resource "google_compute_instance_template" "tailsacle_relay" {
   metadata_startup_script = templatefile("${path.module}/tailscale_relay_startup_script.sh", {
     tags = "tag:private-subnet-relay-${var.env_name}"
     advertised_routes = join(",", [
-      module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_control_plane_range
+      var.vpc_cidr_block
     ])
     tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
     hostname = "tailscale-relay-${var.env_name}"

@@ -57,7 +57,7 @@ const CollectionInfo = ({ defaultImg, blockchain, offerData, openTitle }) => {
                       {utils
                         .formatEther(
                           token.price !== Infinity && token.price !== undefined
-                            ? token.price
+                            ? token.price.toString()
                             : 0
                         )
                         .toString()}{" "}

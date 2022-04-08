@@ -12,3 +12,10 @@ resource "google_storage_bucket" "vault_cluster_tf_admin" {
   location      = var.region
   storage_class = "STANDARD"
 }
+
+resource "google_storage_bucket" "kubernetes_tf_state_storage" {
+  name          = "${var.gcp_project_id}-kubernetes-tf-state"
+  location      = var.region
+  project       = var.gcp_project_id
+  storage_class = "STANDARD"
+}

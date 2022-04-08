@@ -66,8 +66,19 @@
     }
 }
 
+@media screen and (max-width: 500px) {
+    .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
+        margin-left: 70px !important;
+    }
+}
+
 @media screen and (max-width: 385px) {
     .wrapper-splash-page.ukraineglitch .block-left-tokens .down-text {
         left: 60px;
+    }
+
+    .wrapper-splash-page.ukraineglitch .box-progress.progress-template .MuiCircularProgress-root.MuiCircularProgress-determinate.MuiCircularProgress-colorPrimary.progress-main.css-1l24ewf-MuiCircularProgress-root{
+        margin-top: 0px;
+        margin-left: -6px;
     }
 }

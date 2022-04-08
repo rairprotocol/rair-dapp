@@ -11,7 +11,9 @@ const TokenLeftTemplate = ({
     copies,
     soldCopies,
     counterData,
-    ipftButton
+    ipftButton,
+    loginDone,
+    nftTitle = "NFTs minted"
 }) => {
     const { backgroundImage, description, title1, title2, titleColor, btnColorIPFS, properties } = counterData;
 
@@ -49,7 +51,7 @@ const TokenLeftTemplate = ({
 
     return (
         <div className="left-tokens left-tokens-response">
-            {soldCopies !== undefined && <div className="block-left-content-greyman">
+            {soldCopies !== undefined && loginDone && <div className="block-left-content-greyman">
                 <div className="block-left-tokens" style={{ backgroundImage: `${backgroundImage}` }}>
                     <div
                         className="progress-tokens"
@@ -60,7 +62,9 @@ const TokenLeftTemplate = ({
                                 }`,
                         }}
                     >
-                        <div className="title-progress-left">NFTs minted</div>
+                        <div className="title-progress-left">
+                            {nftTitle}
+                        </div>
                         <Box className="box-progress progress-template" sx={{ position: "relative" }}>
                             <CircularProgress
                                 className="progress-grey"
@@ -144,8 +148,8 @@ const TokenLeftTemplate = ({
                                     View on IPFS
                                 </button> :
                                     <div className="block-after-ipfs">
-                                        Metadata will be frozen to ipfs in batches as tokens are minted.<br/>
-                                        Please be patient with seeing your NFT on Opensea.<br/>
+                                        Metadata will be frozen to ipfs in batches as tokens are minted.<br />
+                                        Please be patient with seeing your NFT on Opensea.<br />
                                         <a
                                             href="https://discord.com/invite/y98EMXRsCE"
                                             target="_blank"
@@ -158,7 +162,7 @@ const TokenLeftTemplate = ({
                     </div>
                 </div>
             </div>}
-            <div className="left-tokens-content">
+            <div className={`left-tokens-content`}>
                 <div className="title-tokens">
                     <h3>
                         <span style={{ color: titleColor && titleColor }}>{title1}</span>
