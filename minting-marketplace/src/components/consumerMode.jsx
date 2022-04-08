@@ -10,7 +10,7 @@ import ERC721Consumer from './ConsumerMode/ERC721Consumer.jsx';
 const ConsumerMode = ({ addresses }) => {
 
 	const [offerCount, setOfferCount] = useState();
-	const [/*treasuryAddress,*/ setTreasuryAddress] = useState();
+	const [/*treasuryAddress*/, setTreasuryAddress] = useState();
 	const [salesCount, setSalesCount] = useState();
 	const [collectionsData, setCollectionsData] = useState();
 	const [refetchingFlag, setRefetchingFlag] = useState(false);
