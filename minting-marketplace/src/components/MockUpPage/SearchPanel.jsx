@@ -12,7 +12,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [sortItem, setSortItem] = useState("");
   const [mediaList, setMediaList] = useState();
   const [data, setData] = useState();
-  const [totalPage /*setTotalPages*/] = useState([10]);
+  const [totalPage, setTotalPages] = useState([10]);
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -24,7 +24,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   for (let i = 0; i < totalPage; i++) {
     pagesArray.push(i + 1);
   }
-  // console.log(pagesArray, "pagesArray");
 
   const getContract = useCallback(async () => {
     const responseContract = await axios.get("/api/contracts/full", {
@@ -58,13 +57,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       })),
     }));
     setData(covers);
-
-    // setTotalPages( респонс с кол продуктов )
+    const totalCount = responseContract.data.totalNumber;
+    setTotalPages(getPagesCount(totalCount, itemsPerPage))
   }, [currentPage, itemsPerPage]);
 
-  // const getPagesCount = (totalPage) => {
-  //   return Math.ceil(totalPage / itemsPerPage);
-  // };
+  const getPagesCount = (totalCount, itemsPerPage) => {
+    return Math.ceil(totalCount / itemsPerPage);
+  };
 
   const changePage = (currentPage) => {
     setCurrentPage(currentPage);

@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import { FacebookShareButton, TwitterShareButton } from 'react-share';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import { useSelector } from "react-redux";
 import "./SharePopUp.css";
 
-const SharePopUp = ({ setSharePopUp, shareRef }) => {
+const SharePopUp = ({ onClose, selectedValue, open }) => {
     const [copySuccess, setCopySuccess] = useState('Copy link');
     const currentUrl = document.location.href;
-    const { headerLogo } = useSelector(store => store.colorStore)
+    const { headerLogo } = useSelector(store => store.colorStore);
+
+    const handleClose = () => {
+        onClose(selectedValue);
+    };
 
 
     function copyStringToClipboard(str) {
@@ -23,39 +35,55 @@ const SharePopUp = ({ setSharePopUp, shareRef }) => {
 
     const closePopUp = () => {
         copyStringToClipboard(currentUrl);
+        console.log(currentUrl)
         setTimeout(() => {
-            setSharePopUp(false);
+            handleClose()
         }, 1000)
     }
 
-    return <div ref={shareRef} className="share-pop-up">
-        <button className="share-copy-link" onClick={closePopUp}>
-            {
-                copySuccess === "Copy link" ? <>
-                    <img src={headerLogo} alt="rair tech" />
-                    {/* {copySuccess} */}
-                </> : copySuccess
-            }
-        </button>
-        <div className="share-copy-link">
-            <FacebookShareButton
-                className="share-copy-link network__share-button"
-                url={currentUrl}
-                quote={"Rair tech"}
-            >
-                <i className="fab fa-facebook"></i>
-            </FacebookShareButton>
-        </div>
-        <div className="share-copy-link">
-            <TwitterShareButton
-                className="share-copy-link"
-                url={currentUrl}
-                quote={"Rair tech"}
-            >
-                <i className="fab fa-twitter"></i>
-            </TwitterShareButton>
-        </div>
-    </div>
-};
+    return (
+        <Dialog onClose={handleClose} open={open}>
+            <DialogTitle style={{ background: "rgb(56, 54, 55)", color: "white" }}>Share</DialogTitle>
+            <List style={{ background: "rgb(56, 54, 55)" }} sx={{ pt: 0 }}>
+                <ListItem onClick={closePopUp} autoFocus button>
+                    <ListItemAvatar>
+                        <img style={{ width: 30, height: "auto", marginLeft: "10px" }} src={headerLogo} alt="rair tech" />
+                    </ListItemAvatar>
+                    <ListItemText style={{ color: "white" }} primary={copySuccess} />
+                </ListItem>
+                <ListItem style={{ overflow: "hidden" }} autoFocus button >
+                    <FacebookShareButton
+                        className="share-copy-link network__share-button"
+                        url={currentUrl}
+                        quote={"Rair tech"}
+                        style={{ display: "flex" }}
+                    >
+                        <ListItemAvatar>
+                            <FacebookRoundedIcon
+                                style={{ color: "#4267B2", fontSize: 40 }}
+                            />
+                        </ListItemAvatar>
+                        <ListItemText style={{ color: "white" }} primary="Share on Facebook" />
+                    </FacebookShareButton>
+                </ListItem>
+                <ListItem autoFocus>
+                    <TwitterShareButton
+                        className="share-copy-link"
+                        url={currentUrl}
+                        quote={"Rair tech"}
+                        style={{ display: "flex" }}
+                    >
+                        <ListItemAvatar>
+                            <TwitterIcon
+                                style={{ color: "#1D9BF0", fontSize: 40 }}
+                            />
+                        </ListItemAvatar>
+                        <ListItemText style={{ color: "white" }} primary="Share on Twitter" />
+                    </TwitterShareButton>
+                </ListItem>
+            </List>
+        </Dialog>
+    );
+}
 
 export default SharePopUp;

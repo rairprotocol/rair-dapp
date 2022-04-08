@@ -30,6 +30,7 @@ module "foundation" {
   gcp_project_id = "rair-market-production"
   vpc_cidr_block = module.config.env_config.prod.vpc_cidr_block
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
+  jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
 }
 
 output "complete_output" {

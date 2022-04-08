@@ -57,7 +57,7 @@ const CarouselModule = (props) => {
 
             
         : <div className="carousel-list">
-            {carouselData.map(row => <CarouselListItem carouselItemTitle={row.title} carouselItemImg={row.img} carouselDescription={row.description}/>)} 
+            {carouselData.map((row, index) => <CarouselListItem key={index} carouselItemTitle={row.title} carouselItemImg={row.img} carouselDescription={row.description}/>)} 
             </div>
         }
         </div>
