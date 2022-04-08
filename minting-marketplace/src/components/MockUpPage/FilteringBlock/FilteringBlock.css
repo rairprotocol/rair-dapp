@@ -98,12 +98,28 @@
     background: none;
     font-size: 20px;
     color: #fff;
-    padding: 9px 24px 11px;
+    padding: 9px 24px 15px;
     margin-right: 16px;
+    margin-bottom: 16px;
+}
+
+.modal-filtering-clear-btn:hover{
+    border-radius: 16px;
+    padding: 0 16px;
+    background: #9e9e9e !important;
+    cursor: pointer;
+}
+
+.modal-content-close:hover{
+    color: #9e9e9e;
 }
 
 .filtering-categories button:last-child {
     margin-right: 0;
+}
+
+.modal-filtering-apply-btn:hover {
+    background: var(--stimorol-hover) !important;
 }
 
 .modal-filtering-btn {

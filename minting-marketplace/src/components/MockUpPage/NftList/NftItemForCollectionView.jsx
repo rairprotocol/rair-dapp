@@ -23,6 +23,16 @@ const NftItemForCollectionViewComponent = ({
   contract,
   ownerAddress,
   offer,
+  pic,
+  currentUser,
+  offerData,
+  primaryColor,
+  productsFromOffer,
+  selectedData,
+  textColor,
+  tokenData,
+  totalCount,
+  product,
 }) => {
   const params = useParams();
   // console.log(index);
@@ -71,28 +81,28 @@ const NftItemForCollectionViewComponent = ({
   }
 
   function checkPrice() {
-    // let maxPriceF = maxPrice;
-    // let minPriceF = minPrice;
+    let maxPriceF = maxPrice;
+    let minPriceF = minPrice;
 
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
-      return `${samePrice} ${chainDataFront[blockchain]?.name}`;
-      //   return `${utils
-      //     .formatEther(
-      //       samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-      //     )
-      //     .toString()} ${chainDataFront[blockchain]?.name}`;
+      // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
+        return `${utils
+          .formatEther(
+            samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
+          )
+          .toString()} ${chainDataFront[blockchain]?.name}`;
     }
-    return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
-    // return `${utils
-    //   .formatEther(
-    //     minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
-    //   )
-    //   .toString()} – ${utils
-    //   .formatEther(
-    //     maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
-    //   )
-    //   .toString()} ${chainDataFront[blockchain]?.name}`;
+    // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
+    return `${utils
+      .formatEther(
+        minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
+      )
+      .toString()} – ${utils
+      .formatEther(
+        maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
+      )
+      .toString()} ${chainDataFront[blockchain]?.name}`;
   }
 
   return (
@@ -188,20 +198,29 @@ const NftItemForCollectionViewComponent = ({
             <SvgKey color={"silver"} />
           )}
         </div>
-        <div className="col description-wrapper pic-description-wrapper">
+        <div className="col description-wrapper pic-description-wrapper wrapper-for-collection-view">
           <span className="description-title">
+            {metadata?.name === "none" ? contract : metadata?.name}
+
             {/* {contract} */}
-            {contract.slice(0, 14)}
-            {contract.length > 12 ? "..." : ""}
+            {/* {contract.slice(0, 14)} */}
+            {/* {contract.length > 12 ? "..." : ""} */}
             <br />
           </span>
-          <span className="description">
-            {/* {ownerAddress} */}
-            {ownerAddress.slice(0, 7)}
-            {ownerAddress.length > 10 ? "..." : ""}
-            <br></br>
-          </span>
-          <div className="description-small" style={{ paddingRight: "16px" }}>
+          {/* <span className="description"> */}
+          {/* {ownerAddress} */}
+          {/* {ownerAddress.slice(0, 7)} */}
+          {/* {ownerAddress.length > 10 ? "..." : ""} */}
+          {/* <br></br> */}
+          {/* </span> */}
+          <div
+            className="description-small"
+            style={{
+              paddingRight: "16px",
+              textAlign: "center",
+              lineHeight: "9px",
+            }}
+          >
             <img
               className="blockchain-img"
               src={`${chainDataFront[blockchain]?.image}`}

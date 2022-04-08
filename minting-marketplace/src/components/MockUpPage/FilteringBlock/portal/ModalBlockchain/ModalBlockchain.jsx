@@ -50,60 +50,72 @@ const ModalBlockchain = ({
   isOpenBlockchain,
   setIsOpenBlockchain,
   getContract,
+  setIsShow,
+  setFilterText,
+  click,
+  setClick
 }) => {
-  const [arrBlockchains, setArrBlockchains] = useState(blockchains);
+  const [arrBlockchains, /*setArrBlockchains*/] = useState(blockchains);
   const [clearAll, setClearAll] = useState(false);
-  // const [click, setClick] = useState(false);
 
   const onChangeClicked = (name) => {
-    // const onChangeClicked = () => {
-    // setClick(!click);
-    // console.log(name, 'name');
-    const updatedBlockchains = arrBlockchains.map((bch, index) => {
-      if (name === bch.name) {
-        return {
-          ...bch,
-          clicked: !bch.clicked,
-        };
-      } else {
-        return {
-          ...bch,
-          clicked: bch.clicked,
-        };
-      }
-    });
+    setClick(name);
+
+    // const updatedBlockchains = arrBlockchains.map((bch, index) => {
+    //   if (name === bch.name) {
+    //     return {
+    //       ...bch,
+    //       clicked: !bch.clicked,
+    //     };
+    //   } else {
+    //     return {
+    //       ...bch,
+    //       clicked: bch.clicked,
+    //     };
+    //   }
+    // });
+    // setArrBlockchains(updatedBlockchains);
+
     setClearAll(false);
-    setArrBlockchains(updatedBlockchains);
-    // console.log(updatedBlockchains, 'updatedBlockchains');
+    setIsShow(true);
+    setFilterText(name);
   };
 
   const clearAllFilters = () => {
-    const clearArrBlockchains = arrBlockchains.map((cat) => {
-      return {
-        ...cat,
-        clicked: false,
-      };
-    });
     setBlockchain(null);
-    setArrBlockchains(clearArrBlockchains);
     setClearAll(true);
+    setIsShow(false);
+    setClick(null);
+
+    // const clearArrBlockchains = arrBlockchains.map((cat) => {
+    //   return {
+    //     ...cat,
+    //     clicked: false,
+    //   };
+    // });
+    // setArrBlockchains(clearArrBlockchains);
   };
 
   const onCloseModal = () => {
     setIsOpenBlockchain(false);
-    // clearAllFilters();
     setClearAll(true);
+    // clearAllFilters();
   };
 
-  // const onClickApply = () => {
-
-  // }
+  const onClickApply = () => {
+    // getContract();
+    onCloseModal();
+  };
+  const onClickButton = (data) => {
+    onChangeClicked(data.name);
+    setBlockchain(data.chainId);
+  };
 
   return (
     <Modal onClose={onCloseModal} open={isOpenBlockchain}>
       <div className="modal-content-metadata">
         <div className="block-close">
-          <button onClick={onCloseModal}>
+          <button className="modal-content-close" onClick={onCloseModal}>
             <i className="fas fa-times"></i>
           </button>
         </div>
@@ -117,7 +129,9 @@ const ModalBlockchain = ({
                 <option value="0">Select</option>
                 <option value="1">Ethereum(ETH)</option>
                 <option value="2">Bitcoin(BTC)</option>
-                {/* <span className="price-arrow"><i className="fas fa-chevron-down"></i></span> */}
+                {/* <span className="price-arrow">
+                    <i className="fas fa-chevron-down"></i>
+                  </span> */}
               </select>
               <BlockMinMax clearAll={clearAll} />
             </div>
@@ -127,18 +141,21 @@ const ModalBlockchain = ({
               <h4>Blockchain</h4>
             </div>
             <div className="filtering-categories">
-              {arrBlockchains.map((c) => {
+              {arrBlockchains.map((blockchainFromArray) => {
                 return (
                   <button
-                    className={`${c.clicked ? "categories-clicked" : ""}`}
+                    className={`${
+                      click === blockchainFromArray.name
+                        ? "categories-clicked"
+                        : ""
+                    }`}
                     // className={`${click ? "categories-clicked" : ""}`}
-                    key={c.name}
+                    key={blockchainFromArray.name}
                     onClick={() => {
-                      onChangeClicked(c.name);
-                      setBlockchain(c.chainId);
+                      onClickButton(blockchainFromArray);
                     }}
                   >
-                    {c.name}
+                    {blockchainFromArray.name}
                   </button>
                 );
               })}
@@ -147,11 +164,16 @@ const ModalBlockchain = ({
         </div>
         <hr />
         <div className="modal-filtering-btn">
-          <button onClick={clearAllFilters}>Clear All</button>
           <button
+            className="modal-filtering-clear-btn"
+            onClick={() => clearAllFilters()}
+          >
+            Clear All
+          </button>
+          <button
+            className="modal-filtering-apply-btn"
             onClick={() => {
-              getContract();
-              onCloseModal();
+              onClickApply();
             }}
           >
             Apply

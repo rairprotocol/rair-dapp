@@ -16,6 +16,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [blockchain, setBlockchain] = useState();
+  const [isShow, setIsShow] = useState(false);
+  const [filterText, setFilterText] = useState("");
+  const [click, setClick] = useState(null);
 
   const media_match = window.matchMedia("(min-width: 700px)");
   const [mobile, setMobile] = useState(media_match.matches);
@@ -113,6 +116,11 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     [data]
   );
 
+  const clearFilter = () => {
+    setBlockchain(null);
+    setIsShow(false);
+    setClick(null)
+  };
   return (
     <div className="input-search-wrapper list-button-wrapper">
       <Tabs>
@@ -196,10 +204,27 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               primaryColor={primaryColor}
               textColor={textColor}
               isFilterShow={true}
+              setIsShow={setIsShow}
+              setFilterText={setFilterText}
+              click={click}
+              setClick={setClick}
             />
           </div>
         </div>
         <TabPanel>
+          <div className="clear-filter-wrapper">
+            {isShow ? (
+              <button 
+                style={{color: `var(--${textColor})`}}
+                className="clear-filter"
+                onClick={() => clearFilter()}>
+                {filterText}
+              </button>
+            ) : (
+              <></>
+            )}
+          </div>
+
           <NftList
             sortItem={sortItem}
             titleSearch={titleSearch}
