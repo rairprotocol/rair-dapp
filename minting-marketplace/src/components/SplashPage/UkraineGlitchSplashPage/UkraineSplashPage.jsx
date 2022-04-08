@@ -58,6 +58,7 @@ const splashData = {
     <br />,
     "100% of proceeds fund tactical first aid supplies and Ukrainian developers",
   ],
+  buttonLabel: "Mint for .1991 Eth",
   backgroundImage: UKR_rounded,
   purchaseButton: {
     // Reusable component
@@ -95,14 +96,14 @@ const splashData = {
       }
     }
   },
-  /*
-  button1: {
-    buttonColor: "#035BBC",
-    buttonLabel: "Mint for .1 ETH",
-    buttonImg: MetaMaskIcon,
-    buttonLink: "https://placekitten.com/200/300",
-  },
-  */
+
+  // button1: {
+  //   buttonColor: "#035BBC",
+  //   buttonLabel: "Mint for .1 ETH",
+  //   buttonImg: MetaMaskIcon,
+  //   buttonLink: "https://placekitten.com/200/300",
+  // },
+
   button2: {
     buttonColor: "#FFD505",
     buttonLabel: "Join Our Discord",
@@ -151,6 +152,14 @@ const splashData = {
     backgroundImage: `url(${nftCountUkraine})`,
     btnColorIPFS: "#035BBC",
     nftCount: 1991,
+    royaltiesNft: {
+      firstBlock: [
+        'Ukrainian Dev Fund: 42%', 'Medical Supplies: 42%', 'RAIR Node Fee: 10%', 'Contract Gas Fund: 6%'
+      ],
+      secondBlock: [
+        '1 UkraineGlitch Flag Supports', '- weeks of lodging for 1 Ukrainian', '- 10 Tourniquets sent to those in need'
+      ]
+    },
     properties: [
       {
         titleProperty: "Fermion Freckles",
