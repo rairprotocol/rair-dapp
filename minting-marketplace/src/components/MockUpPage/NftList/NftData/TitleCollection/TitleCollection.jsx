@@ -46,7 +46,7 @@ const TitleCollection = ({
           <span>by:</span>
           <img
             // src={currentUser?.avatar ? currentUser.avatar : defaultUser}
-            src={someUsersData ? someUsersData.avatar : defaultUser}
+            src={someUsersData && someUsersData.avatar ? someUsersData.avatar : defaultUser}
             alt="user"
           />
           {/* <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5> */}
