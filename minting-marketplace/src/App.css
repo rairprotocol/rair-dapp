@@ -580,6 +580,10 @@ a:hover {
 
 /* for videoList input */
 
+.wrapper-collection .list-button-wrapper {
+    margin-left: 0;
+} 
+
 .list-button-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -705,6 +709,10 @@ i.fas-custom {
     border: 1px solid #4E4D4D;
     background-color: transparent;
     border-radius: 16px;
+}
+
+.custom-desc-to-offer a {
+    word-wrap: break-word;
 }
 
 .custom-offer-pic-link:hover {
@@ -1203,9 +1211,11 @@ button.metamask-on-boarding:hover {
     display: inline-block;
     padding: 12.5px;
 } */
+
 @media screen and (max-width: 900px) and (min-width: 500px) {
     #nft-data-page-wrapper {
         max-width: 50rem;
+        padding-left: 4rem;
     }
     .col-1.rounded {
         display: flex;
@@ -1218,21 +1228,44 @@ button.metamask-on-boarding:hover {
     }
 }
 
-@media screen and (max-width: 1000px) and (min-width: 901px) {
+@media screen and (max-width: 900px) and (min-width: 768px) {
     #nft-data-page-wrapper {
-        max-width: 50rem;
+        margin-left: 5vw;
+    }
+
+    .wrapper-collection {
+        margin-left: 3vw;
     }
 }
 
-@media screen and (max-width: 1200px) and (min-width: 1001px) {
+@media screen and (max-width: 1000px) and (min-width: 901px) {
     #nft-data-page-wrapper {
-        max-width: 56rem;
+        max-width: 55rem;
+        margin-left: 3vw;
+    }
+
+    .wrapper-collection {
+        margin-left: 3vw;
+    }
+}
+
+@media screen and (max-width: 1077px) and (min-width: 1001px) {
+    #nft-data-page-wrapper, .wrapper-collection {
+        max-width: 100%;
+        margin-left: 5vw;
+    }
+}
+
+@media screen and (max-width: 1200px) and (min-width: 1078px) {
+    #nft-data-page-wrapper {
+        max-width: 100%;
+        margin-left: 0px;
     }
 }
 
 @media screen and (max-width: 1500px) and (min-width: 1201px) {
     #nft-data-page-wrapper {
-        max-width: 59rem;
+        max-width: 1200;
     }
 }
 
@@ -1342,6 +1375,12 @@ body::-webkit-scrollbar-thumb:active {
 .video-btn-back button:hover {
     background: #AF6FD8;
 }
+
+@media screen and (max-width: 767px) {
+    #nft-data-page-wrapper {
+        padding-left: 0;
+    }
+} 
 
 @media screen and (max-width: 700px) {
     .blockchain-switcher {

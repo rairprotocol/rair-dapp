@@ -55,7 +55,7 @@ export const List = styled.ul`
       flex-direction: column;
       list-style-type: none;
       grid-gap: 0px;
-      z-index: 1;
+      z-index: 12;
 `;
 
 export const ListProfileItem = styled.div`

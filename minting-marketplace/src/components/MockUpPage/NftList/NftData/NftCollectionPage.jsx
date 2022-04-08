@@ -136,7 +136,7 @@ const NftCollectionPageComponent = ({
         flexDirection: "column",
         alignContent: "flex-start",
         justifyContent: "center",
-        alignItems: "flex-start",
+        // alignItems: "flex-start",
         marginBottom: "66px",
       }}
     >

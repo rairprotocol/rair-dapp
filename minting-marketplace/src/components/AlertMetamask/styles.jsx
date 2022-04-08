@@ -9,6 +9,11 @@ export const Alert = styled.div`
     justify-content: center;
     background: var(--yellow-alert);
 
+    @media (max-width: 500px) {
+        height: 100px;
+        font-size: 14px;
+    }
+
     svg {
         cursor: pointer;
     }

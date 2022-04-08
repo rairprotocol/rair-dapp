@@ -50,7 +50,6 @@ const NftDataPageTest = ({
   offerPrice,
   userData
 }) => {
-
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
   const [ownerInfo, setOwnerInfo] = useState();
@@ -327,14 +326,9 @@ const NftDataPageTest = ({
     if (currentUser === tokenData[selectedToken]?.ownerAddress) {
       return (
         <button
+          className="nft-btn-sell"
           style={{
-            width: "228px",
-            height: "48px",
-            border: "none",
-            borderRadius: "16px",
-            color: `var(--${textColor})`,
-            backgroundImage:
-              "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
+            color: `var(--${textColor})`
           }}
         >
           Sell
@@ -343,7 +337,7 @@ const NftDataPageTest = ({
     } else
       return (
         <button
-          className="btn rounded-rair btn-stimorol"
+          className="btn rounded-rair btn-stimorol nft-btn-stimorol"
           disabled={!offerData?.offerPool}
           onClick={
             window?.ethereum?.chainId === blockchain
@@ -353,14 +347,7 @@ const NftDataPageTest = ({
           // onClick={() => buyContract()}
           // onClick={() => alert("Coming soon")}
           style={{
-            width: "291px",
-            fontSize: "12px",
-            height: "48px",
-            border: "none",
-            borderRadius: "16px",
-            color: `var(--${textColor})`,
-            backgroundImage:
-              "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
+            color: `var(--${textColor})`
           }}
         >
           {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
@@ -481,12 +468,7 @@ const NftDataPageTest = ({
           userName={ownerInfo?.owner}
         />
         <div
-          style={{
-            maxWidth: "1600px",
-            margin: "auto",
-            borderRadius: "16px",
-            padding: "24px 0",
-          }}
+          className="nft-data-content"
         >
           <div
             className="nft-collection"
@@ -496,11 +478,7 @@ const NftDataPageTest = ({
           >
             {selectedData?.animation_url ? (
               <div
-                style={{
-                  width: "600px",
-                  height: "600px",
-                  margin: "auto",
-                }}
+                className="single-token-block-video"
               >
                 <ReactPlayer
                   width={"100%"}
@@ -520,14 +498,9 @@ const NftDataPageTest = ({
               </div>
             ) : (
               <div
+                className="single-token-block-img"
                 style={{
-                  margin: "auto",
                   backgroundImage: `url(${selectedData?.image ? selectedData.image : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"})`,
-                  width: "604px",
-                  height: "45rem",
-                  backgroundPosition: "center",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat",
                 }}
               ></div>
             )}
@@ -536,16 +509,7 @@ const NftDataPageTest = ({
             <div>
               <div className="collection-label-name">Price range</div>
               <div
-                style={{
-                  borderRadius: "16px",
-                  padding: "10px",
-                  width: "288px",
-                  height: "48px",
-                  border: "1px solid #D37AD6",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="nft-single-price-range"
               >
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
@@ -649,7 +613,10 @@ const NftDataPageTest = ({
                     {selectedData?.description}
                   </div>
                   <div className="my-2 px-4 custom-desc-to-offer">
-                    <a href={selectedData?.external_url}>
+                    <a target="_blank"
+                      rel="noreferrer"
+                      href={selectedData?.external_url}
+                    >
                       {selectedData?.external_url}
                     </a>
                   </div>
