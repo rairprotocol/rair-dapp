@@ -13,8 +13,6 @@ const ModalItem = ({
 }) => {
   const [ /*clearAll*/ , setClearAll ] = useState(false);
 
-  console.log(selectedData, "selectedData");
-
   const onCloseModal = () => {
     setIsOpenBlockchain(false);
     setClearAll(true);

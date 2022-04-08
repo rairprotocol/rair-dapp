@@ -48,6 +48,7 @@ const NftDataPageTest = ({
   textColor,
   offerData,
   offerPrice,
+  userData
 }) => {
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
@@ -462,7 +463,7 @@ const NftDataPageTest = ({
       <div>
         <TitleCollection
           selectedData={selectedData}
-          currentUser={currentUser}
+          currentUser={userData}
           title={selectedData?.name}
           userName={ownerInfo?.owner}
         />
