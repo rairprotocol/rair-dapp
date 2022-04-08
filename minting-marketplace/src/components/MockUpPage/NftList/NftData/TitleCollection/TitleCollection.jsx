@@ -26,68 +26,62 @@ const TitleCollection = ({
     setSelectedValue(value);
   };
 
-  if (currentUser?.userData?.publicAddress === userName) {
-    useEffect(() => { }, [currentUser, userName]);
+  useEffect(() => { }, [currentUser, userName]);
 
-    // console.log(currentUser);
-    // console.log(userName, 'userName');
-    // if (currentUser) {
-    // if (currentUser?.publicAddress === userName) {
-    if (someUsersData) {
-      return (
-        <div className="container-title-collection">
-          <div className="block-title-share">
-            <h2>{title === "none" ? `#${tokenId}` : title}</h2>
-            <div>
-              <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
-              <SharePopUp
-                selectedValue={selectedValue}
-                open={open}
-                onClose={handleClose}
-              />
-            </div>
-          </div>
-          <div className="block-user-creator">
-            <span>by:</span>
-            <img
-              // src={currentUser?.avatar ? currentUser.avatar : defaultUser}
-              src={someUsersData ? someUsersData.avatar : defaultUser}
-              alt="user"
+  if (someUsersData) {
+    return (
+      <div className="container-title-collection">
+        <div className="block-title-share">
+          <h2>{title === "none" ? `#${tokenId}` : title}</h2>
+          <div>
+            <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
+            <SharePopUp
+              selectedValue={selectedValue}
+              open={open}
+              onClose={handleClose}
             />
-            {/* <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5> */}
-            <h5>{someUsersData ? someUsersData.nickName : userName}</h5>
-          </div>
-          <div className="block-collection-desc">
-            {selectedData && selectedData.description}
           </div>
         </div>
-      );
-    } else {
-      return (
-        <div className="container-title-collection">
-          <div className="block-title-share">
-            <h2>{title === "none" ? `#${tokenId}` : title}</h2>
-            <div>
-              <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
-              <SharePopUp
-                selectedValue={selectedValue}
-                open={open}
-                onClose={handleClose}
-              />
-            </div>
-          </div>
-          <div className="block-user-creator">
-            <span>by:</span>
-            <img src={defaultUser} alt="user" />
-            <h5>{userName}</h5>
-          </div>
-          <div className="block-collection-desc">
-            {selectedData && selectedData.description}
+        <div className="block-user-creator">
+          <span>by:</span>
+          <img
+            // src={currentUser?.avatar ? currentUser.avatar : defaultUser}
+            src={someUsersData ? someUsersData.avatar : defaultUser}
+            alt="user"
+          />
+          {/* <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5> */}
+          <h5 style={{wordBreak: "break-all"}}>{someUsersData ? someUsersData.nickName : userName}</h5>
+        </div>
+        <div className="block-collection-desc">
+          {selectedData && selectedData.description}
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="container-title-collection">
+        <div className="block-title-share">
+          <h2>{title === "none" ? `#${tokenId}` : title}</h2>
+          <div>
+            <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
+            <SharePopUp
+              selectedValue={selectedValue}
+              open={open}
+              onClose={handleClose}
+            />
           </div>
         </div>
-      );
-    }
-  };
-}
+        <div className="block-user-creator">
+          <span>by:</span>
+          <img src={defaultUser} alt="user" />
+          <h5>{userName && userName.length > 25 ? `${userName.substring(0, 25)}...` : userName}</h5>
+        </div>
+        <div className="block-collection-desc">
+          {selectedData && selectedData.description}
+        </div>
+      </div>
+    );
+  }
+};
 
 export default TitleCollection;
