@@ -2,8 +2,82 @@
     margin: 0 auto;
 }
 
+#nft-data-page-wrapper .single-token-block-img {
+    margin: auto;
+    width: 604px;
+    height: 45rem;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#nft-data-page-wrapper .single-token-block-video {
+    width: 600px;
+    height: 600px;
+    margin: auto;
+}
+
+#nft-data-page-wrapper .nft-data-content {
+    max-width: 1600px;
+    margin: auto;
+    border-radius: 16px;
+    padding: 24px 0;
+}
+
+.nft-collection {
+    padding: 0 10px;
+}
+
+.nft-single-price-range {
+    border-radius: 16px;
+    padding: 10px;
+    width: 288px;
+    height: 48px;
+    border: 1px solid #D37AD6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media screen and (max-width: 950px) {
-    .wrapper-collection {
-        padding: 0 20px;
+    .wrapper-collection, #nft-data-page-wrapper {
+        padding: 0 10px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #nft-data-page-wrapper .single-token-block-img {
+        width: 100%;
+        height: 400px;
+    }
+
+    #nft-data-page-wrapper .single-token-block-video {
+        width: 400px;
+        height: auto;
+    }
+
+    .nft-collection .react-player__preview {
+        width: 100% !important;
+        height: 400px !important;
+    }
+
+    #nft-data-page-wrapper .nft-data-content {
+        padding: 30px 15px;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    #nft-data-page-wrapper .single-token-block-video {
+        width: 100%;
+        height: 400px;
+        padding: 0 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nft-collection .react-player__preview {
+        width: 100% !important;
+        height: 250px !important;
     }
 }
