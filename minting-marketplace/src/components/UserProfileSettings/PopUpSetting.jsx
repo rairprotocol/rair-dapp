@@ -72,6 +72,16 @@ const PopUpSettings = ({
     setOpenModal(prev => !prev);
   }
 
+  const onCloseNext = useCallback(() => {
+    if (!triggerState) {
+      setNext(false);
+    }
+  }, [triggerState])
+
+  useEffect(() => {
+    onCloseNext();
+  }, [onCloseNext])
+
   if (openModalPic) {
     return (
       <>
@@ -82,6 +92,7 @@ const PopUpSettings = ({
           setOpenModalPic={setOpenModalPic}
           setImagePreviewUrl={setImagePreviewUrl}
           imagePreviewUrl={imagePreviewUrl}
+          setTriggerState={setTriggerState}
         />
       </>
     );
@@ -91,56 +102,60 @@ const PopUpSettings = ({
 
   return (
     <>
-      <Popup
-        trigger={<button
-          className="button profile-btn"
+      <button
+        onClick={() => setTriggerState(prev => !prev)}
+        className="button profile-btn"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-around",
+          alignContent: "center",
+          flexDirection: "row",
+          backgroundColor: `${primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
+            }`,
+        }}
+      >
+        <img
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-around",
-            alignContent: "center",
-            flexDirection: "row",
-            backgroundColor: `${primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
-              }`,
+            position: "absolute",
+            width: "30px",
+            height: "100%",
+            objectFit: "cover",
+            left: 0,
+            top: 0,
+          }}
+          src={
+            imagePreviewUrl === null
+              ? "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+              : imagePreviewUrl
+          }
+          alt="avatart-user"
+        />
+        <span
+          style={{
+            padding: "0 10px 0 5px",
+            color: primaryColor === "charcoal" ? "#fff" : "#383637",
           }}
         >
-          <img
-            style={{
-              position: "absolute",
-              width: "30px",
-              height: "100%",
-              objectFit: "cover",
-              left: 0,
-              top: 0,
-            }}
-            src={
-              imagePreviewUrl === null
-                ? "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
-                : imagePreviewUrl
-            }
-            alt="avatart-user"
-          />
-          <span
-            style={{
-              padding: "0 10px 0 5px",
-              color: primaryColor === "charcoal" ? "#fff" : "#383637",
-            }}
-          >
-            {userName
-              ? userName.slice(0, 12)
-              : currentUserAddress.slice(0, 7)}
-            {currentUserAddress.length || userName.length > 13
-              ? userName
-                ? ""
-                : "..."
-              : currentUserAddress.length > 13
-                ? "..."
-                : ""}
-          </span>
-          <i className="icon-menu fas fa-bars"></i>
-        </button>}
+          {userName
+            ? userName.slice(0, 12)
+            : currentUserAddress.slice(0, 7)}
+          {currentUserAddress.length || userName.length > 13
+            ? userName
+              ? ""
+              : "..."
+            : currentUserAddress.length > 13
+              ? "..."
+              : ""}
+        </span>
+        <i className="icon-menu fas fa-bars"></i>
+      </button>
+      <Popup
+        className="popup-settings-block"
+        open={triggerState}
         position="bottom center"
         closeOnDocumentClick
+        onClose={() => setTriggerState(false)}
       >
         <div
           ref={settingBlockRef}

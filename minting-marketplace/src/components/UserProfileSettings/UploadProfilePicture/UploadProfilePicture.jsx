@@ -9,6 +9,7 @@ const UploadProfilePicture = ({
   setUserEmail,
   setImagePreviewUrl,
   imagePreviewUrl,
+  setTriggerState
 }) => {
   const [file, setFile] = useState("");
   const [name, setName] = useState("");
@@ -21,7 +22,7 @@ const UploadProfilePicture = ({
     let formData = new FormData();
     formData.append("nickName", name);
     formData.append("email", status);
-    if(file){
+    if (file) {
       formData.append("file", file);
     }
     const res = await fetch(`/api/users/${currentUserAddress.toLowerCase()}`, {
@@ -35,7 +36,7 @@ const UploadProfilePicture = ({
     setUpdateUsr(res);
     setUserName(res.user.nickName);
     setUserEmail(res.user.email);
-    if(res.user.avatar){
+    if (res.user.avatar) {
       setImagePreviewUrl(res.user.avatar);
     }
   }, [
@@ -81,11 +82,17 @@ const UploadProfilePicture = ({
 
   const rootEl = useRef(null);
 
+  const onCloseModalPic = useCallback(() => {
+    setOpenModalPic(false);
+    setTriggerState(false);
+  })
+
+  const onClick = (e) =>
+    rootEl.current.contains(e.target) || onCloseModalPic();
+
   useEffect(() => {
-    const onClick = (e) =>
-      rootEl.current.contains(e.target) || setOpenModalPic(false);
-    document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
   }, [setOpenModalPic]);
 
   return (
@@ -102,6 +109,7 @@ const UploadProfilePicture = ({
           setFile={setFile}
           onSubmit={handleSubmit}
           setOpenModalPic={setOpenModalPic}
+          setTriggerState={setTriggerState}
         />
       ) : (
         <Profile
@@ -110,6 +118,7 @@ const UploadProfilePicture = ({
           src={imagePreviewUrl}
           name={name}
           status={status}
+          setTriggerState={setTriggerState}
         />
       )}
     </div>
