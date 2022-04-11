@@ -150,7 +150,7 @@ pipeline {
     stage('Deploy to k8s staging'){
       when { branch 'main' }
       steps {
-        sh("sed -i.bak 's#main_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/staging-manifest/*.yaml")
+        sh("sed -i.bak 's#latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/staging-manifest/*.yaml")
         step([$class: 'KubernetesEngineBuilder', 
         namespace: "default", 
         projectId: env.MAIN_PROJECT_ID, 
