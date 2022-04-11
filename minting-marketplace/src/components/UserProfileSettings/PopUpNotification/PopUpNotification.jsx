@@ -16,7 +16,6 @@ const PopUpNotification = ({ primaryColor, isNotification }) => {
     return (
         <Popup
             trigger={open => {
-                setOpenModal(false);
                 return <button className="btn-notification" style={{
                     // color: primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)",
                     backgroundColor: primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
