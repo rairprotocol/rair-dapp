@@ -6,6 +6,12 @@
 
 }
 
+.popup-content.popup-settings-block-content {
+    position: absolute !important;
+    right: 40px;
+    top: 50px;
+}
+
 .user-block {
     position: relative;
 }
