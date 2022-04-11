@@ -84,25 +84,27 @@ const NftItemForCollectionViewComponent = ({
     let maxPriceF = maxPrice;
     let minPriceF = minPrice;
 
-    if (maxPrice === minPrice) {
-      const samePrice = maxPrice;
-      // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
+    if (maxPrice && minPrice) {
+      if (maxPrice === minPrice) {
+        const samePrice = maxPrice;
+        // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
         return `${utils
           .formatEther(
             samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
           )
           .toString()} ${chainDataFront[blockchain]?.name}`;
+      }
+      // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
+      return `${utils
+        .formatEther(
+          minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
+        )
+        .toString()} – ${utils
+        .formatEther(
+          maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
+        )
+        .toString()} ${chainDataFront[blockchain]?.name}`;
     }
-    // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
-    return `${utils
-      .formatEther(
-        minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
-      )
-      .toString()} – ${utils
-      .formatEther(
-        maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
-      )
-      .toString()} ${chainDataFront[blockchain]?.name}`;
   }
 
   return (
