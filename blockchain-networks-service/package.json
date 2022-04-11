@@ -28,7 +28,7 @@
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",
     "ethers": "^5.4.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "foreman": "^3.0.1",
     "ipfs-http-client": "^56.0.1",
     "lodash": "^4.17.20",
