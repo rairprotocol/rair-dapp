@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Popup } from "reactjs-popup";
+import defaultPictures from './images/defaultUserPictures.png';
+import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 // React Redux types
 import * as authTypes from "../../ducks/auth/types";
 import * as userTypes from "../../ducks/users/types";
 import * as contractTypes from "../../ducks/contracts/types";
-import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 const PopUpSettings = ({
   currentUserAddress,
@@ -20,7 +21,7 @@ const PopUpSettings = ({
   const dispatch = useDispatch();
   const [next, setNext] = useState(false);
   // const [userName, setUserName] = useState(currentUserAddress);
-  const [openModal, setOpenModal] = useState(false);
+  const [/*openModal*/, setOpenModal] = useState(false);
   const [openModalPic, setOpenModalPic] = useState(false);
   const [, /*userData*/ setUserData] = useState({});
   const [userName, setUserName] = useState();
@@ -28,7 +29,8 @@ const PopUpSettings = ({
   const [triggerState, setTriggerState] = useState();
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(
-    "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+    // "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+    defaultPictures
   );
 
   const getInfoFromUser = useCallback(async () => {
@@ -121,12 +123,13 @@ const PopUpSettings = ({
             width: "30px",
             height: "100%",
             objectFit: "cover",
-            left: 0,
+            left: 5,
             top: 0,
+            transform: 'scale(0.8)',
           }}
           src={
             imagePreviewUrl === null
-              ? "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+              ? defaultPictures
               : imagePreviewUrl
           }
           alt="avatart-user"
@@ -204,7 +207,7 @@ const PopUpSettings = ({
                     }}
                     src={
                       imagePreviewUrl === null
-                        ? "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
+                        ? defaultPictures
                         : imagePreviewUrl
                     }
                     alt="avatart"

@@ -42,13 +42,16 @@ const MenuNavigation = ({
 
     const getInfoFromUser = useCallback(async () => {
         // find user
-        const result = await fetch(`/api/users/${currentUserAddress}`).then(
-            (blob) => blob.json()
-        );
-
-        if(result.success) {
-            setUserData(result.user);
+        if(currentUserAddress){
+            const result = await fetch(`/api/users/${currentUserAddress}`).then(
+                (blob) => blob.json()
+            );
+    
+            if(result.success) {
+                setUserData(result.user);
+            }
         }
+        
 
     }, [currentUserAddress]);
 
