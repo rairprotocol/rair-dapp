@@ -95,15 +95,22 @@ const NftItemForCollectionViewComponent = ({
           .toString()} ${chainDataFront[blockchain]?.name}`;
       }
       // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
-      return `${utils
-        .formatEther(
-          minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
-        )
-        .toString()} – ${utils
-        .formatEther(
-          maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
-        )
-        .toString()} ${chainDataFront[blockchain]?.name}`;
+
+      if(maxPriceF && minPriceF && maxPriceF !== Infinity  &&  minPriceF !== Infinity){
+        return `${utils
+          .formatEther(
+            minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
+          )
+          .toString()} 
+          – 
+          ${utils
+            .formatEther(
+              maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
+            )
+            .toString()} 
+          ${chainDataFront[blockchain]?.name}`;
+      }
+      
     }
   }
 
