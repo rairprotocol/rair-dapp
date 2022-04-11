@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./TitleCollection.css";
 import defaultUser from "./../../../assets/defultUser.png";
@@ -26,7 +26,7 @@ const TitleCollection = ({
     setSelectedValue(value);
   };
 
-  useEffect(() => { }, [currentUser, userName]);
+  useEffect(() => {}, [currentUser, userName]);
 
   if (someUsersData) {
     return (
@@ -34,7 +34,9 @@ const TitleCollection = ({
         <div className="block-title-share">
           <h2>{title === "none" ? `#${tokenId}` : title}</h2>
           <div>
-            <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
+            <button className="block-btn-share" onClick={handleClickOpen}>
+              Share
+            </button>
             <SharePopUp
               selectedValue={selectedValue}
               open={open}
@@ -46,11 +48,13 @@ const TitleCollection = ({
           <span>by:</span>
           <img
             // src={currentUser?.avatar ? currentUser.avatar : defaultUser}
-            src={someUsersData && someUsersData.avatar ? someUsersData.avatar : defaultUser}
+            src={someUsersData.avatar ? someUsersData.avatar : defaultUser}
             alt="user"
           />
           {/* <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5> */}
-          <h5 style={{wordBreak: "break-all"}}>{someUsersData ? someUsersData.nickName : userName}</h5>
+          <h5 style={{ wordBreak: "break-all" }}>
+            {someUsersData.nickName ? someUsersData.nickName : userName}
+          </h5>
         </div>
         <div className="block-collection-desc">
           {selectedData && selectedData.description}
@@ -63,7 +67,9 @@ const TitleCollection = ({
         <div className="block-title-share">
           <h2>{title === "none" ? `#${tokenId}` : title}</h2>
           <div>
-            <button className="block-btn-share" onClick={handleClickOpen}>Share</button>
+            <button className="block-btn-share" onClick={handleClickOpen}>
+              Share
+            </button>
             <SharePopUp
               selectedValue={selectedValue}
               open={open}
@@ -74,7 +80,11 @@ const TitleCollection = ({
         <div className="block-user-creator">
           <span>by:</span>
           <img src={defaultUser} alt="user" />
-          <h5>{userName && userName.length > 25 ? `${userName.substring(0, 25)}...` : userName}</h5>
+          <h5>
+            {userName && userName.length > 25
+              ? `${userName.substring(0, 25)}...`
+              : userName}
+          </h5>
         </div>
         <div className="block-collection-desc">
           {selectedData && selectedData.description}
