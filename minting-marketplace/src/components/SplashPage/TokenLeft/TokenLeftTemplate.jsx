@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-// import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router-dom';
 import './TokenLeftTemplate.css';
 // import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
 
