@@ -56,6 +56,10 @@ variable "namespace_secrets" {
           secret_name: "moralis-master-key-main",
           env_reference_name: "MORALIS_MASTER_KEY_MAIN"
         }
+        "rair-file-manager": {
+          secret_name: "rair-manager-key",
+          env_reference_name: "key.json"
+        }
       }
     }
   }
