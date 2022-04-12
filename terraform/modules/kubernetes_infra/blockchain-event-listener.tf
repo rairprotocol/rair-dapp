@@ -1,5 +1,6 @@
 locals {
-  blockchain_event_listener_namespace = "blockchain-event-listener-primary"
+  blockchain_event_listener_namespace = var.namespace_secrets.default.namespace
+  blockchain_event_listener_service = "blockchain-event-listener-primary"
   blockchain_event_listener_image = "rairtechinc/blockchain-event-listener:dev_latest"
   blockchain_event_listener_default_port_1 = "5001"
   pull_secret_name = "regcred"
@@ -18,18 +19,18 @@ resource "kubernetes_config_map" "blockchain_event_listener_configmap" {
 
 resource "kubernetes_service" "blockchain_event_listener_service" {
   metadata {
-    name = local.blockchain_event_listener_namespace
+    name = local.blockchain_event_listener_service
     labels =  {
       managedby = "terraform"
-      service   = local.blockchain_event_listener_namespace
+      service   = local.blockchain_event_listener_service
     }
   }
 
   spec {
     port {
-      port        = 5001
+      port        = local.blockchain_event_listener_default_port_1
       target_port = local.blockchain_event_listener_default_port_1
-      name        = 5001
+      name        = local.blockchain_event_listener_default_port_1
     }
     type = "LoadBalancer"
   }
@@ -39,7 +40,7 @@ resource "kubernetes_service" "blockchain_event_listener_service" {
 
 resource "kubernetes_deployment" "blockchain_event_listener" {
   metadata {
-    name =  "${local.blockchain_event_listener_namespace}-deployment"
+    name =  "${local.blockchain_event_listener_service}-deployment"
     labels =  {
       managedby = "terraform"
     }
@@ -49,7 +50,7 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
     replicas = 1
     selector {
       match_labels = {
-        app = local.blockchain_event_listener_namespace
+        app = local.blockchain_event_listener_service
       }
     }
     
@@ -60,18 +61,18 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
     template {
       metadata {
         labels = {
-          app = local.blockchain_event_listener_namespace
+          app = local.blockchain_event_listener_service
         }
       }
 
       spec {
         container {
           image = local.blockchain_event_listener_image
-          name  = local.blockchain_event_listener_namespace
+          name  = local.blockchain_event_listener_service
           image_pull_policy = "Always"
          
           port {
-            container_port = "${local.blockchain_event_listener_default_port_1}"
+            container_port = local.blockchain_event_listener_default_port_1
           }
 
           env_from {
@@ -81,11 +82,11 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
           }
 
           env{
-            name = "MONGO_URI"
+            name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
             value_from {
               secret_key_ref {
-                name = "mongodb-credential"
-                key = "MONGO_URI"
+                name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
+                key = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
               }
             }
           }
@@ -101,31 +102,31 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
           }
 
           env{
-            name = "PINATA_SECRET"
+            name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
             value_from {
               secret_key_ref {
-                name = "pinata-secret"
-                key = "PINATA_SECRET"
+                name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
+                key = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
               }
             }
           }
           
           env{
-            name = "MORALIS_MASTER_KEY_MAIN"
+            name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
             value_from {
               secret_key_ref {
-                name = "moralis-master_key_main"
-                key = "MORALIS_MASTER_KEY_MAIN"
+                name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
+                key = var.namespace_secrets.default.env_secrets.moralis-master-key-main.env_reference_name
               }
             }
           }
 
           env{
-            name = "MORALIS_MASTER_KEY_TEST"
+            name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
             value_from {
               secret_key_ref {
-                name = "moralis-master_key_test"
-                key = "MORALIS_MASTER_KEY_TEST"
+                name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
+                key = var.namespace_secrets.default.env_secrets.moralis-master-key-test.env_reference_name
               }
             }
           }
