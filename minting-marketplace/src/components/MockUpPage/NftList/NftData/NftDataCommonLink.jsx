@@ -3,9 +3,9 @@ import { useParams, useHistory } from "react-router-dom";
 import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageTest from "./NftDataPageTest";
 import NftUnlockablesPage from "./NftUnlockablesPage";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 
-const NftDataCommonLinkComponent = (userData) => {
+const NftDataCommonLinkComponent = ({ userData }) => {
   const [tokenData, setTokenData] = useState([]);
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
@@ -19,40 +19,45 @@ const NftDataCommonLinkComponent = (userData) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const { currentUserAddress } = useSelector(store => store.contractStore);
-  const { primaryColor, textColor } = useSelector(store => store.colorStore);
+  const { currentUserAddress } = useSelector((store) => store.contractStore);
+  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
 
   const history = useHistory();
   const params = useParams();
 
   const { contract, product, tokenId, blockchain } = params;
-  console.log(blockchain);
 
   useEffect(() => {
-    dispatch({ type: 'SET_REAL_CHAIN', payload: blockchain })
+    dispatch({ type: "SET_REAL_CHAIN", payload: blockchain });
     //eslint-disable-next-line
   }, []);
 
-  const getAllProduct = useCallback(async (fromToken, toToken) => {
-    setIsLoading(true)
+  const getAllProduct = useCallback(
+    async (fromToken, toToken) => {
+      setIsLoading(true);
 
-    const responseAllProduct = await (
-      await fetch(`/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`, {
-        method: "GET",
-      })
-    ).json();
+      const responseAllProduct = await (
+        await fetch(
+          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`,
+          {
+            method: "GET",
+          }
+        )
+      ).json();
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    setTokenData(responseAllProduct.result.tokens);
-    setTotalCount(responseAllProduct.result.totalCount);
+      setTokenData(responseAllProduct.result.tokens);
+      setTotalCount(responseAllProduct.result.totalCount);
 
-    if (responseAllProduct.result.tokens.length >= Number(tokenId)) {
-      setSelectedData(responseAllProduct.result?.tokens[tokenId]?.metadata);
-    }
+      if (responseAllProduct.result.tokens.length >= Number(tokenId)) {
+        setSelectedData(responseAllProduct.result?.tokens[tokenId]?.metadata);
+      }
 
-    setSelectedToken(tokenId);
-  }, [product, contract, tokenId, blockchain]);
+      setSelectedToken(tokenId);
+    },
+    [product, contract, tokenId, blockchain]
+  );
 
   // ---- return only offers for particular contract with x-token ----
 
@@ -166,6 +171,12 @@ const NftDataCommonLinkComponent = (userData) => {
     getProductsFromOffer();
   }, [getAllProduct, getParticularOffer, getProductsFromOffer, showToken]);
 
+//   const getBlockchains = async () => {
+//     var res = await (await fetch('/api/blockchains')).json();
+// console.log(res, 'res');
+
+//   }
+//   getBlockchains();
   if (params.tokens === "collection") {
     return (
       <NftCollectionPage

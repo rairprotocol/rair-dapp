@@ -38,12 +38,14 @@ const NftCollectionPageComponent = ({
   tokenDataFiltered,
   setTokenDataFiltered,
   setTokenData,
+  userData,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [offerDataCol, setOfferDataCol] = useState();
   const [offerAllData, setOfferAllData] = useState();
   const [collectionName, setCollectionName] = useState();
+  const [someUsersData, setSomeUsersData] = useState();
   const [show, setShow] = useState(true);
 
   const loadToken = useCallback(() => {
@@ -64,12 +66,25 @@ const NftCollectionPageComponent = ({
     if (response.success) {
       setOfferAllData(response.product);
       setOfferDataCol(response.product.offers);
-    }
-
-    if (response.success) {
       setCollectionName(response.product.name);
     }
   }, [product, contract, blockchain]);
+
+  const neededUserAddress = offerAllData?.owner;
+
+  const getInfoFromUser = useCallback(async () => {
+    // find user
+    if(neededUserAddress){
+      const result = await fetch(`/api/users/${neededUserAddress}`).then((blob) =>
+      blob.json()
+    );
+    setSomeUsersData(result.user);
+    }
+  }, [neededUserAddress]);
+
+  useEffect(() => {
+    getInfoFromUser();
+  }, [getInfoFromUser]);
 
   useEffect(() => {
     getParticularOffer();
@@ -119,7 +134,7 @@ const NftCollectionPageComponent = ({
         flexDirection: "column",
         alignContent: "flex-start",
         justifyContent: "center",
-        alignItems: "flex-start",
+        // alignItems: "flex-start",
         marginBottom: "66px",
       }}
     >
@@ -127,8 +142,9 @@ const NftCollectionPageComponent = ({
       <TitleCollection
         selectedData={tokenData[0]?.metadata}
         title={collectionName}
+        someUsersData={someUsersData}
         userName={offerAllData?.owner}
-        currentUser={currentUser}
+        currentUser={userData}
       />
       {tokenDataFiltered.length > 0 ? (
         <div className="filter__btn__wrapper">
@@ -148,7 +164,6 @@ const NftCollectionPageComponent = ({
         {tokenDataFiltered.length > 0
           ? tokenDataFiltered.map((token, index) => {
             if (token.cover !== "none") {
-              // console.log(index, 'ddd');
               return (
                 <NftItemForCollectionView
                   key={`${token.id + "-" + token.productId + index}`}
@@ -180,7 +195,7 @@ const NftCollectionPageComponent = ({
             }
           })
           : tokenData.length > 0
-            ? tokenData.map((token, index) => {
+          ? tokenData.map((token, index) => {
               if (token.cover !== "none") {
                 return (
                   <NftItemForCollectionView
@@ -212,7 +227,7 @@ const NftCollectionPageComponent = ({
                 return null;
               }
             })
-            : Array.from(new Array(10)).map((item, index) => {
+          : Array.from(new Array(10)).map((item, index) => {
               return (
                 <Skeleton
                   key={index}
@@ -236,15 +251,17 @@ const NftCollectionPageComponent = ({
             />
           </div>
         )}
-        {tokenDataFiltered.length ? null : showToken <= totalCount && (
-          <CustomButton
-            onClick={loadToken}
-            width="232px"
-            height="48px"
-            margin="20px 0 0 0"
-            text="Show more"
-          />
-        )}
+        {tokenDataFiltered.length
+          ? null
+          : showToken <= totalCount && (
+              <CustomButton
+                onClick={loadToken}
+                width="232px"
+                height="48px"
+                margin="20px 0 0 0"
+                text="Show more"
+              />
+            )}
       </div>
       <CollectionInfo
         offerData={offerDataCol}

@@ -1,6 +1,6 @@
 import React from 'react';
 import "./NotFound.css";
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 const NotFound = () => {
     const history = useHistory();

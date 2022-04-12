@@ -10,6 +10,32 @@
     line-height: 25px;
 }
 
+.template-royalties-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.template-royalties-wrapper h4 {
+    font-size: 30px;
+}
+
+.template-royalties-wrapper .tempalte-royalties-block .template-royalties-box {
+    color: rgb(255, 213, 5);
+    text-align: left;
+}
+
+.template-royalties-wrapper .tempalte-royalties-block .template-royalties-box:first-child {
+    color: #025cbd;
+    margin-right: 20px;
+}
+
+.template-royalties-wrapper .tempalte-royalties-block {
+    margin-top: 10px;
+    display: flex;
+}
+
 .wrapper-splash-page.ukraineglitch .left-tokens .property-wrapper .property-first:first-child {
     margin-right: 30px;
 }
@@ -70,6 +96,25 @@
     .wrapper-splash-page.ukraineglitch .box-progress.progress-template {
         margin-left: 70px !important;
     }
+
+    .template-royalties-wrapper .tempalte-royalties-block .template-royalties-box {
+        text-align: center;
+    }
+
+    .template-royalties-wrapper .tempalte-royalties-block .template-royalties-box:first-child {
+        margin-bottom: 20px;
+        margin-right: 0;
+    }
+
+    .template-royalties-wrapper {
+        align-items: center;
+    }
+
+    .template-royalties-wrapper .tempalte-royalties-block {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 @media screen and (max-width: 385px) {
@@ -77,7 +122,7 @@
         left: 60px;
     }
 
-    .wrapper-splash-page.ukraineglitch .box-progress.progress-template .MuiCircularProgress-root.MuiCircularProgress-determinate.MuiCircularProgress-colorPrimary.progress-main.css-1l24ewf-MuiCircularProgress-root{
+    .wrapper-splash-page.ukraineglitch .box-progress.progress-template .MuiCircularProgress-root.MuiCircularProgress-determinate.MuiCircularProgress-colorPrimary.progress-main.css-1l24ewf-MuiCircularProgress-root {
         margin-top: 0px;
         margin-left: -6px;
     }

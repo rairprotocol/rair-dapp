@@ -58,3 +58,8 @@
     background-color: none !important;
     border-radius: none !important;
 }
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+    background-color: grey !important;
+    border-radius: 16px !important;
+}

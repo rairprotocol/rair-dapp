@@ -1,4 +1,4 @@
-import React, { useState, useCallback /*useEffect*/ } from "react";
+import React, { useState, /*useCallback, useEffect*/ } from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
 import { web3Switch } from "../../../../utils/switchBlockchain";
@@ -46,9 +46,9 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData, purchas
 
   let subtitle;
 
-  const openModal = useCallback(() => {
-    setIsOpen(true);
-  }, []);
+  // const openModal = useCallback(() => {
+  //   setIsOpen(true);
+  // }, []);
 
   function afterOpenModal() {
     subtitle.style.color = "#9013FE";
