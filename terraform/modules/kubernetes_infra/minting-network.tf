@@ -1,5 +1,5 @@
 locals {
-  minting_network_namespace = "minting-network-primary"
+  minting_network_service = "minting-network-primary"
   minting_network_image = "rairtechinc/minting-network:dev_latest"
   minting_network_default_port_1 = "3001"
   pull_secret_name = "regcred"
@@ -19,18 +19,18 @@ resource "kubernetes_config_map" "minting_network_configmap" {
 
 resource "kubernetes_service" "minting_network_service" {
   metadata {
-    name = local.minting_network_namespace
+    name = local.minting_network_service
     labels = {
       managedby = "terraform"
-      service   = local.minting_network_namespace
+      service   = local.minting_network_service
     }
   }
 
   spec {
     port {
-      port        = 3001
+      port        = local.minting_network_default_port_1
       target_port =  local.minting_network_default_port_1
-      name        = "3001"
+      name        = local.minting_network_default_port_1
     }
     type = "LoadBalancer"
   }
@@ -40,7 +40,7 @@ resource "kubernetes_service" "minting_network_service" {
 
 resource "kubernetes_deployment" "minting_network" {
   metadata {
-    name = "${local.minting_network_namespace}-deployment"
+    name = "${local.minting_network_service}-deployment"
     labels = {
       managedby = "terraform"
     }
@@ -50,25 +50,25 @@ resource "kubernetes_deployment" "minting_network" {
     replicas = 1
     selector {
       match_labels = {
-        app = local.minting_network_namespace
+        app = local.minting_network_service
       }
     }
 
     template {
      metadata {
        labels = {
-         app = local.minting_network_namespace
+         app = local.minting_network_service
        }
      }
 
      spec{
        container {
         image = local.minting_network_image
-        name  = local.minting_network_namespace
+        name  = local.minting_network_service
         image_pull_policy = "Always"
         
         port {
-          container_port = "${local.minting_network_default_port_1}"
+          container_port = local.minting_network_default_port_1
         }
        }
       image_pull_secrets {
