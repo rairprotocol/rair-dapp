@@ -8,11 +8,12 @@ locals {
   rairnode_persistent_storage_name_1 = "rairnode-claim1"
   rairnode_image = "rairtechinc/rairservernode:dev_latest"
   pull_secret_name = "regcred"
+  rairnode_configmap_name = "rairnode-env"
 }
 
 resource "kubernetes_config_map" "rairnode_configmap" {
   metadata {
-    name = "rairnode-env"
+    name = local.rairnode_configmap_name
   }
 
   data = var.rairnode_configmap_data
@@ -80,6 +81,9 @@ resource "kubernetes_persistent_volume_claim" "rairnode-claim1" {
 }
 
 resource "kubernetes_deployment" "rairnode" {
+  depends_on = [
+    kubernetes_config_map.rairnode_configmap
+  ]
   metadata {
     name = "${local.rairnode_namespace}-deployment"
     labels = {
@@ -128,33 +132,33 @@ resource "kubernetes_deployment" "rairnode" {
           }
           env_from {
             config_map_ref {
-              name = "rairnode-env"
-            }
+              name = local.rairnode_configmap_name
+           }
           }
           env {
-            name = "MONGO_URI"
+            name = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
             value_from {
               secret_key_ref {
-                name = "mongodb-credential"
-                key = "MONGO_URI"
+                name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
+                key = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
               }
             }
           }
           env {
-            name = "PINATA_SECRET"
+            name = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
             value_from {
               secret_key_ref {
-                name = "pinata-secret"
-                key = "PINATA_SECRET"
+                name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
+                key = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
               }
             }
           }
           env {
-            name = "JWT_SECRET"
+            name = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
             value_from {
               secret_key_ref {
-                name = "jwt-secret"
-                key = "JWT_SECRET"
+                name = var.namespace_secrets.default.env_secrets.jwt-secret.secret_name
+                key = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
               }
             }
           }
@@ -162,8 +166,8 @@ resource "kubernetes_deployment" "rairnode" {
             name = "GCP_CREDENTIALS"
             value_from {
               secret_key_ref {
-                name = "rair-manager-key"
-                key = "key.json"
+                name = var.namespace_secrets.default.env_secrets.rair-file-manager.secret_name
+                key = var.namespace_secrets.default.env_secrets.rair-file-manager.env_reference_name
               }
             }
           }
