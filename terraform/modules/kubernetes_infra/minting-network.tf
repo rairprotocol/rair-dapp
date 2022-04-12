@@ -2,7 +2,7 @@ locals {
   minting_network_service = "minting-network-primary"
   minting_network_image = "rairtechinc/minting-network:dev_latest"
   minting_network_default_port_1 = "3001"
-  pull_secret_name = "regcred"
+  //pull_secret_name = "regcred"
 }
 
 
@@ -72,7 +72,7 @@ resource "kubernetes_deployment" "minting_network" {
         }
        }
       image_pull_secrets {
-        name = local.pull_secret_name
+        name = var.pull_secret_name
       }
      } 
     }
