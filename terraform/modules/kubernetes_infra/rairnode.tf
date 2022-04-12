@@ -7,7 +7,6 @@ locals {
   rairnode_persistent_storage_name_0 = "rairnode-claim0"
   rairnode_persistent_storage_name_1 = "rairnode-claim1"
   rairnode_image = "rairtechinc/rairservernode:dev_latest"
-  pull_secret_name = "regcred"
   rairnode_configmap_name = "rairnode-env"
 }
 
@@ -181,7 +180,7 @@ resource "kubernetes_deployment" "rairnode" {
           }
         }
       image_pull_secrets {
-        name        = local.pull_secret_name
+        name        = var.pull_secret_name
       }
       volume {
           name = local.rairnode_persistent_storage_name_0

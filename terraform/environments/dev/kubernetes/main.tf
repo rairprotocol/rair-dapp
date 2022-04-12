@@ -27,4 +27,5 @@ module "kubernetes_infra" {
   rairnode_configmap_data = local.rairnode_configmap
   minting_network_configmap_data = local.minting_network_configmap
   blockchain_event_listener_configmap_data = local.blockchain_event_listener_configmap
+  pull_secret_name = "regcred"
 }
