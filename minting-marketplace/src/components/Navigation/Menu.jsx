@@ -24,6 +24,7 @@ const MenuNavigation = ({
     const [userData, setUserData] = useState(null)
     const [openProfile, setOpenProfile] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     const { primaryColor } = useSelector(store => store.colorStore);
@@ -53,14 +54,18 @@ const MenuNavigation = ({
         // find user
         if (currentUserAddress) {
             const result = await fetch(`/api/users/${currentUserAddress}`).then(
-                (blob) => blob.json()
+                (blob) => {
+                    setLoading(true);
+                    return blob.json();
+                }
             );
 
             if (result.success) {
+                setLoading(false);
                 setUserData(result.user);
             }
         }
-    }, [currentUserAddress]);
+    }, [currentUserAddress, editMode]);
 
     useEffect(() => {
         getInfoFromUser();
@@ -90,6 +95,8 @@ const MenuNavigation = ({
                     userData={userData}
                     toggleEditMode={toggleEditMode}
                     editMode={editMode}
+                    currentUserAddress={currentUserAddress}
+                    loading={loading}
                 /> : <MobileListMenu
                     primaryColor={primaryColor}
                     click={click}

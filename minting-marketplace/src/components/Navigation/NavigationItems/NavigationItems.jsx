@@ -66,17 +66,65 @@ export const ListProfileItem = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  min-height: 20vh;
+  min-height: 30vh;
 `;
 
 export const ListEditProfileMode = styled.div`
+  padding: 20px;
   height: 92vh;
   background: ${props => props.primaryColor === "rhyno" ? "rgb(201, 201, 201)" : "rgb(56, 54, 55)"};
   position: fixed;
   width: 100%;
+  left: ${(props) => props.editMode ? "0" : "-50%"};
+  opacity: ${(props) => props.editMode ? "1" : "0"};
+  transition: .5s all ease;
+
+  h4 {
+    font-weight: bold;
+  }
 `;
+
+export const BlockAvatar = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+`
 
 export const ProfileButtonBack = styled.div`
   text-align: left;
   cursor: pointer;
+  font-size: 25px;
 `;
+
+export const InputChange = styled.input`
+  width: 90vw;
+  background: #383637;
+  border: 2px solid #E882D5;
+  border-radius: 16px;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: grey;
+  padding: 10px 16px;
+
+  &:focus {
+    border: 2px solid #fff;
+    outline: none;
+    color: white;
+  }
+`;
+
+export const LabelForm = styled.div`
+  color: white;
+  font-size: 20px;
+  padding: 0 0 10px 10px;
+`
+
+export const ButtonEdit = styled.button`
+  border-radius: 12px;
+  border: none;
+  background: #E882D5;
+  font-size: 25px;
+  padding: 10px 20px;
+  color: white;
+  margin-top: 20px;
+`
