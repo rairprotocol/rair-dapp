@@ -25,12 +25,14 @@ resource "kubernetes_service" "minting_network_service" {
       service   = local.minting_network_namespace
     }
   }
+
   spec {
     port {
       port        = 3001
       target_port =  local.minting_network_default_port_1
       name        = "3001"
     }
+    type = "LoadBalancer"
   }
 }
 
