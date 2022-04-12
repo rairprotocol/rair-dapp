@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 
 export const Nav = styled.nav`
-background: ${(props) => props.primaryColor === "rhyno" ? "rgb(192, 192, 192)" : "rgb(43, 40, 41)"};
-height: 85px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 1.5rem;
-z-index: 12;
+  background: ${(props) => props.primaryColor === "rhyno" ? "rgb(192, 192, 192)" : "rgb(43, 40, 41)"};
+  height: 85px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  z-index: 12;
+  width: 100%;
+  position: ${(props) => props.editMode ? "fixed" : "reletive"}
 `;
 
 export const ListItem = styled.li`
@@ -65,6 +67,13 @@ export const ListProfileItem = styled.div`
   justify-content: center;
   width: 100%;
   min-height: 20vh;
+`;
+
+export const ListEditProfileMode = styled.div`
+  height: 92vh;
+  background: ${props => props.primaryColor === "rhyno" ? "rgb(201, 201, 201)" : "rgb(56, 54, 55)"};
+  position: fixed;
+  width: 100%;
 `;
 
 export const ProfileButtonBack = styled.div`
