@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router";
 import { Popup } from "reactjs-popup";
 import defaultPictures from './images/defaultUserPictures.png';
 import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";

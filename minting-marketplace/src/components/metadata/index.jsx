@@ -5,7 +5,7 @@ import StepOne from './Steps/stepOne'
 import StepTwo from './Steps/stepTwo'
 import StepThree from './Steps/stepThree'
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 const { Step } = ContentSteps;
 

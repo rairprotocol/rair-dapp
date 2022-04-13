@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router';
 
 import DiscordIcon from '../SplashPage/images/discord-icon.png';
 import logoAuthor from '../SplashPage/images/colab.png';
