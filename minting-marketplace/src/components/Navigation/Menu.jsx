@@ -1,11 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import "./Menu.css";
 import { useDispatch, useSelector } from 'react-redux';
-import * as colorTypes from "../../ducks/colors/types";
 import * as authTypes from "../../ducks/auth/types";
 import * as contractTypes from "../../ducks/contracts/types";
-import { OnboardingButton } from '../common/OnboardingButton';
-import { List, ListItem, ListProfileItem, Nav, ProfileButtonBack } from './NavigationItems/NavigationItems';
+import { Nav } from './NavigationItems/NavigationItems';
 import { NavLink } from 'react-router-dom';
 import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
 import MobileListMenu from './MenuComponents/MobileListMenu';
@@ -55,6 +53,7 @@ const MenuNavigation = ({
         if (currentUserAddress) {
             const result = await fetch(`/api/users/${currentUserAddress}`).then(
                 (blob) => {
+                    setUserData(null);
                     setLoading(true);
                     return blob.json();
                 }
@@ -88,16 +87,18 @@ const MenuNavigation = ({
                         <img src={headerLogo} alt="logo_rair" />
                     </NavLink>
                 </div>
-                {openProfile ? <MobileProfileInfo
-                    primaryColor={primaryColor}
-                    click={click}
-                    toggleOpenProfile={toggleOpenProfile}
-                    userData={userData}
-                    toggleEditMode={toggleEditMode}
-                    editMode={editMode}
-                    currentUserAddress={currentUserAddress}
-                    loading={loading}
-                /> : <MobileListMenu
+                {openProfile ? <Suspense fallback={<h1>Loading profile...</h1>}>
+                    <MobileProfileInfo
+                        primaryColor={primaryColor}
+                        click={click}
+                        toggleOpenProfile={toggleOpenProfile}
+                        userData={userData}
+                        toggleEditMode={toggleEditMode}
+                        editMode={editMode}
+                        currentUserAddress={currentUserAddress}
+                        loading={loading}
+                    />
+                </Suspense> : <MobileListMenu
                     primaryColor={primaryColor}
                     click={click}
                     renderBtnConnect={renderBtnConnect}

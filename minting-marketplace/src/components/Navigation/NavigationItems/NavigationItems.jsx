@@ -39,6 +39,12 @@ export const ListItem = styled.li`
   }
 `;
 
+export const TitleEditProfile = styled.h4`
+    @media screen and (max-width: 380px) {
+      margin-top: -30px;
+    }
+`;
+
 export const List = styled.ul`
       background: ${props => props.primaryColor === "rhyno" ? "rgb(201, 201, 201)" : "rgb(56, 54, 55)"};
       overflow: ${(props) => props.click && "hidden"};
@@ -71,16 +77,19 @@ export const ListProfileItem = styled.div`
 
 export const ListEditProfileMode = styled.div`
   padding: 20px;
-  height: 92vh;
+  height: 100%;
   background: ${props => props.primaryColor === "rhyno" ? "rgb(201, 201, 201)" : "rgb(56, 54, 55)"};
   position: fixed;
   width: 100%;
-  left: ${(props) => props.editMode ? "0" : "-50%"};
-  opacity: ${(props) => props.editMode ? "1" : "0"};
   transition: .5s all ease;
+  overflow: auto;
 
   h4 {
     font-weight: bold;
+  }
+
+  @media screen and (max-width: 340px) {
+    height: 83vh;
   }
 `;
 
@@ -88,6 +97,10 @@ export const BlockAvatar = styled.div`
   display: flex;
   justify-content: center;
   margin: 20px 0;
+
+  @media screen and (max-width: 380px) {
+    margin: 10px 0 0 0;
+  }
 `
 
 export const ProfileButtonBack = styled.div`
@@ -111,12 +124,22 @@ export const InputChange = styled.input`
     outline: none;
     color: white;
   }
+
+  @media screen and (max-width: 380px) {
+    margin-bottom: 10px;
+    font-size: 16px;
+    width: 80vw;
+  }
 `;
 
 export const LabelForm = styled.div`
   color: white;
   font-size: 20px;
   padding: 0 0 10px 10px;
+
+  @media screen and (max-width: 380px) {
+    font-size: 16px;
+  }
 `
 
 export const ButtonEdit = styled.button`
@@ -127,4 +150,8 @@ export const ButtonEdit = styled.button`
   padding: 10px 20px;
   color: white;
   margin-top: 20px;
+
+  @media screen and (max-width: 380px) {
+    font-size: 16px;
+  }
 `

@@ -1,14 +1,15 @@
 import React, { useCallback, useState } from 'react'
 import { ImageUpload } from '../../UserProfileSettings/UploadProfilePicture/ImageUpload/ImageUpload';
-import { BlockAvatar, ButtonEdit, InputChange, LabelForm, ListEditProfileMode, ProfileButtonBack } from '../NavigationItems/NavigationItems'
+import { BlockAvatar, ButtonEdit, InputChange, LabelForm, ListEditProfileMode, ProfileButtonBack, TitleEditProfile } from '../NavigationItems/NavigationItems'
 // import defaultPictures from './../../../images/defaultUserPictures.png'
 
 const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, currentUserAddress }) => {
-    const [name, setName] = useState(userData.nickName.replace(/[\@]/g, ''));
+    const [name, setName] = useState(userData.nickName);
     const [email, setEmail] = useState(userData.email);
     const [imagePreviewUrl, setImagePreviewUrl] = useState(userData.avatar);
     const [file, setFile] = useState("");
     const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState(false);
 
     const onChangeName = (e) => {
         setName(e.target.value);
@@ -17,6 +18,8 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
     const onChangeEmail = (e) => {
         setEmail(e.target.value);
     }
+
+    console.log(loading, "loading")
 
     const photoUpload = useCallback(
         (e) => {
@@ -33,6 +36,7 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
     );
 
     const updateProfile = useCallback(async () => {
+        setLoading(true);
         let formData = new FormData();
         formData.append("nickName", name);
         formData.append("email", email);
@@ -47,17 +51,17 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
             },
             body: formData,
         }).then((data) => {
-            setLoading(true);
             return data.json()
         });
 
         if (res.success) {
-            setLoading(false);
             setName(res.user.nickName);
             setEmail(res.user.email);
             if (res.user.avatar) {
                 setImagePreviewUrl(res.user.avatar);
             }
+            setLoading(false);
+            setStatus(true);
         }
     }, [
         name,
@@ -67,6 +71,7 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
         setName,
         setEmail,
         setImagePreviewUrl,
+        setLoading
     ]);
 
     const handleSubmit = useCallback(
@@ -81,7 +86,7 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
     return (
         <ListEditProfileMode editMode={editMode} primaryColor={primaryColor}>
             <ProfileButtonBack onClick={toggleEditMode}><i className="fas fa-chevron-left"></i></ProfileButtonBack>
-            <h4>Edit Profile</h4>
+            <TitleEditProfile>Edit Profile</TitleEditProfile>
 
             <form onSubmit={handleSubmit}>
                 <BlockAvatar>
@@ -89,12 +94,18 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
                 </BlockAvatar>
                 <div>
                     <LabelForm>Name:</LabelForm>
-                    <InputChange onChange={onChangeName} type="text" value={name} />
+                    <InputChange onChange={onChangeName} type="text" value={name.replace(/\@/g, '')} />
                     <LabelForm>Email:</LabelForm>
                     <InputChange onChange={onChangeEmail} type="email" value={email} />
                 </div>
 
-                {loading ? <div>...loading</div> : <ButtonEdit type="submit">Save changes</ButtonEdit>}
+                {
+                    status ? <h5>Saved!</h5> : <>
+                        {
+                            loading ? <h5>loading...</h5> : <ButtonEdit type="submit">Save changes</ButtonEdit>
+                        }
+                    </>
+                }
             </form>
 
         </ListEditProfileMode >
