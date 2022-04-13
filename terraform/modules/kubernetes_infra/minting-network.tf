@@ -2,14 +2,14 @@ locals {
   minting_network_service = "minting-network-primary"
   minting_network_image = "rairtechinc/minting-network:dev_latest"
   minting_network_default_port_1 = "3001"
-  //pull_secret_name = "regcred"
+  minting_network_configmap_name = "minting-network-env"
 }
 
 
 
 resource "kubernetes_config_map" "minting_network_configmap" {
   metadata {
-    name = "minting-network-env"
+    name = local.minting_network_configmap_name
   }
 
   data = var.minting_network_configmap_data
@@ -70,6 +70,11 @@ resource "kubernetes_deployment" "minting_network" {
         port {
           container_port = local.minting_network_default_port_1
         }
+        env_from {
+            config_map_ref {
+              name = local.minting_network_configmap_name
+            }
+          }
        }
       image_pull_secrets {
         name = var.pull_secret_name
