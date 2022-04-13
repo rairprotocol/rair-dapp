@@ -19,3 +19,7 @@ output "mongo_atlas_org_id" {
 output "jenkins_internal_load_balancer_name" {
   value = "jenkins-internal-load-balancer"
 }
+
+output "rair_internal_load_balancer_name" {
+  value = "rair-internal-load-balancer"
+}
