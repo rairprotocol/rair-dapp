@@ -33,6 +33,8 @@ resource "kubernetes_service" "minting_network_service" {
       name        = local.minting_network_default_port_1
     }
     type = "LoadBalancer"
+    external_traffic_policy = "Cluster"
+    
   }
 }
 
