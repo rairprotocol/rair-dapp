@@ -26,7 +26,7 @@ resource "kubernetes_service" "rairnode_service" {
       service   = local.rairnode_namespace
     }
     annotations = {
-      "networking.gke.io/load-balancer-type" = "Internal"
+      "networking.gke.io/load-balancer-type" = "loadBalancer"
     }
   }
   spec {
@@ -41,7 +41,7 @@ resource "kubernetes_service" "rairnode_service" {
       name = "5000"
     }
 
-    type = "LoadBalancer"
+    type = "ClusterIP"
   }
 }
 
