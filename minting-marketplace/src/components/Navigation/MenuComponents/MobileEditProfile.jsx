@@ -19,8 +19,6 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
         setEmail(e.target.value);
     }
 
-    console.log(loading, "loading")
-
     const photoUpload = useCallback(
         (e) => {
             e.preventDefault();
