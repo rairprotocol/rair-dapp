@@ -92,16 +92,6 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
           }
 
           env{
-            name = "MONGO_URI_LOCAL"
-            value_from {
-              secret_key_ref {
-                name = "mongodb-credential"
-                key = "MONGO_URI"
-              }
-            }
-          }
-
-          env{
             name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
             value_from {
               secret_key_ref {
