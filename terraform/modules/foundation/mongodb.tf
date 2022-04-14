@@ -3,7 +3,7 @@ locals {
 }
 
 resource "mongodbatlas_project" "primary" {
-  name   = "primary-${var.env_name}"
+  name   = "primary-${var.env_name}-tf-managed"
   org_id = var.mongo_atlas_org_id
 }
 
