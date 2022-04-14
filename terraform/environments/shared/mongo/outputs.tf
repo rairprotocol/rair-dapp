@@ -76,3 +76,26 @@ output "instance_size_map" {
     # Default ram: 1.7 GB
   }
 }
+
+# Built in roles used in MongoDB as per this document
+# https://www.mongodb.com/docs/manual/reference/built-in-roles/
+output "built_in_roles_map" {
+  value = {
+    read: "read",
+    readWrite: "readWrite",
+    dbAdmin: "dbAdmin",
+    dbOwner: "dbOwner",
+    userAdmin: "userAdmin",
+    clusterAdmin: "clusterAdmin",
+    clusterManager: "clusterManager",
+    clusterMonitor: "clusterMonitor",
+    hostManager: "hostManager",
+    backup: "backup",
+    restore: "restore",
+    readAnyDatabase: "readAnyDatabase",
+    readWriteAnyDatabase: "readWriteAnyDatabase",
+    userAdminAnyDatabase: "userAdminAnyDatabase",
+    dbAdminAnyDatabase: "dbAdminAnyDatabase",
+    root: "root",
+  }
+}
