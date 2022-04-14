@@ -78,11 +78,12 @@ const splashData = {
     presaleMessage: 'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button
     customWrapperClassName: 'btn-submit-with-form',
+    blockchainOnly: true,
     // Custom function that will be called if the minting is a success
     // First parameter will be the minted token's number
     customSuccessAction: async (nextToken) => {
       let tokenMetadata = await rFetch(`/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`);
-      if (tokenMetadata.success) {
+      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
         Swal.fire({
           imageUrl: tokenMetadata.result.metadata.image,
           imageHeight: "auto",
