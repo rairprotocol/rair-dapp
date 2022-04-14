@@ -20,7 +20,7 @@ module "mongo_shared" {
 
 # common resources used in all mongo projects
 module "mongo_common" {
-  source = "../../../mongo"
+  source = "../../../../mongo"
   primary_db_name = mongodbatlas_cluster.primary.name
   project_id = module.mongo_shared.mongo_project_id_map.dev.project_id
 }
