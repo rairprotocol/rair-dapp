@@ -3,7 +3,7 @@ resource "mongodbatlas_custom_db_role" "read_write_primary_db" {
   name = "read-write-primary-db"
 
   inheritedRoles {
-    role_name = module.mongo_shared.built_in_roles.readWrite
+    role_name = module.mongo_shared.built_in_roles_map.readWrite
     database_name = var.primary_db_name
   }
 }

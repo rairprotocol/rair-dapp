@@ -77,9 +77,9 @@ output "instance_size_map" {
   }
 }
 
-# As per this document
+# Built in roles used in MongoDB as per this document
 # https://www.mongodb.com/docs/manual/reference/built-in-roles/
-output "built_in_roles" {
+output "built_in_roles_map" {
   value = {
     read: "read",
     readWrite: "readWrite",
