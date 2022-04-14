@@ -31,7 +31,6 @@ resource "kubernetes_service" "minting_network_service" {
       "networking.gke.io/load-balancer-type" = "Internal"
     }
   }
-
   spec {
     load_balancer_ip = data.google_compute_address.rair_internal_load_balancer.address
     selector = {
@@ -62,22 +61,22 @@ resource "kubernetes_deployment" "minting_network" {
     }
 
     template {
-     metadata {
-       labels = {
-         app = local.minting_network_service
-       }
-     }
-
-     spec{
-       container {
-        image = local.minting_network_image
-        name  = local.minting_network_service
-        image_pull_policy = "Always"
-        
-        port {
-          container_port = local.minting_network_default_port_1
+      metadata {
+        labels = {
+          app = local.minting_network_service
         }
-        env_from {
+      }
+
+      spec{
+        container {
+          image = local.minting_network_image
+          name  = local.minting_network_service
+          image_pull_policy = "Always"
+        
+          port {
+            container_port = local.minting_network_default_port_1
+          }
+          env_from {
             config_map_ref {
               name = local.minting_network_configmap_name
             }
