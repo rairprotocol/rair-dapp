@@ -40,7 +40,6 @@ resource "mongodbatlas_cluster" "primary" {
   auto_scaling_disk_gb_enabled = false
   auto_scaling_compute_enabled = false
   auto_scaling_compute_scale_down_enabled = false
-  encryption_at_rest_provider = module.mongo_shared.gcp_provider_name
 
   # Provider Settings "block"
   provider_name               = module.mongo_shared.gcp_provider_name
