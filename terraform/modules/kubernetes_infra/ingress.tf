@@ -12,7 +12,9 @@ resource "kubernetes_ingress" "rair_ingress" {
       service_port = local.minting_network_default_port_1
     }
 
+
     rule {
+      host = "new.dev.rair.tech"
       http {
         path {
           backend {
