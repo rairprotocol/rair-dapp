@@ -1,16 +1,15 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import "./Menu.css";
-import { useDispatch } from 'react-redux';
-import * as colorTypes from "../../ducks/colors/types";
+import { useDispatch, useSelector } from 'react-redux';
 import * as authTypes from "../../ducks/auth/types";
 import * as contractTypes from "../../ducks/contracts/types";
-import { OnboardingButton } from '../common/OnboardingButton';
-import { List, ListItem, ListProfileItem, Nav, ProfileButtonBack } from './NavigationItems/NavigationItems';
+import { Nav } from './NavigationItems/NavigationItems';
 import { NavLink } from 'react-router-dom';
+import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
+import MobileListMenu from './MenuComponents/MobileListMenu';
 
 const MenuNavigation = ({
     headerLogo,
-    primaryColor,
     connectUserData,
     startedLogin,
     programmaticProvider,
@@ -22,11 +21,20 @@ const MenuNavigation = ({
     const [click, setClick] = useState(false);
     const [userData, setUserData] = useState(null)
     const [openProfile, setOpenProfile] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+
+    const { primaryColor } = useSelector(store => store.colorStore);
 
     const toggleMenu = () => {
         setClick(prev => !prev);
+        setEditMode(false)
     }
+
+    const toggleEditMode = useCallback(() => {
+        setEditMode(prev => !prev);
+    }, [setEditMode])
 
     const toggleOpenProfile = () => {
         setOpenProfile(prev => !prev);
@@ -42,105 +50,68 @@ const MenuNavigation = ({
 
     const getInfoFromUser = useCallback(async () => {
         // find user
-        if(currentUserAddress){
+        if (currentUserAddress) {
             const result = await fetch(`/api/users/${currentUserAddress}`).then(
-                (blob) => blob.json()
+                (blob) => {
+                    setUserData(null);
+                    setLoading(true);
+                    return blob.json();
+                }
             );
-    
-            if(result.success) {
+
+            if (result.success) {
+                setLoading(false);
                 setUserData(result.user);
             }
         }
-        
-
-    }, [currentUserAddress]);
+    }, [currentUserAddress, editMode]);
 
     useEffect(() => {
         getInfoFromUser();
     }, [getInfoFromUser]);
 
+    useEffect(() => {
+        if (editMode) {
+            document.body.style.overflow = 'hidden';
+        }
+        else {
+            document.body.style.overflow = 'unset';
+        }
+    }, [editMode])
+
     return (
         <div className="col-1 rounded burder-menu">
-            <Nav primaryColor={primaryColor}>
+            <Nav primaryColor={primaryColor} editMode={editMode}>
                 <div className="burder-menu-logo">
                     <NavLink to="/">
                         <img src={headerLogo} alt="logo_rair" />
                     </NavLink>
                 </div>
-                {openProfile ? <List primaryColor={primaryColor} click={click}>
-                    <ListProfileItem>
-                        <ProfileButtonBack onClick={toggleOpenProfile}><i className="fas fa-chevron-left"></i></ProfileButtonBack>
-                        {userData && <div className="burger-menu-profile">
-                            {userData.avatar && <div><img className="burger-menu-avatar" src={userData.avatar} alt="avatar" /></div>}
-                            <div style={{margin: "10px 0"}}>Name: {userData.nickName && userData.nickName.substr(0, 20) + "..."}</div>
-                            <div>Email: {userData.email}</div>
-                        </div>}
-                    </ListProfileItem>
-                </List> : <List primaryColor={primaryColor} click={click}>
-                    {!loginDone && !renderBtnConnect && <ListItem primaryColor={primaryColor}>
-                        <div className='btn-connect-wallet-wrapper'>
-                            <button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
-                                className={`btn btn-${primaryColor} btn-connect-wallet`}
-                                onClick={connectUserData}>
-                                {startedLogin ? 'Please wait...' : 'Connect Wallet'}
-                            </button>
-                        </div>
-                    </ListItem>}
-                    {
-                        renderBtnConnect && <ListItem>
-                            <OnboardingButton className="borading-btn-mobile" />
-                        </ListItem>
-                    }
-                    {
-                        loginDone && <ListItem primaryColor={primaryColor}>
-                            <div className="burder-menu-profile" onClick={toggleOpenProfile}>
-                                <i className="fas fa-cog"></i>Profile settings
-                            </div>
-                        </ListItem>
-                    }
-                    <ListItem primaryColor={primaryColor}>
-                        <a
-                            href="https://rair.tech/"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            RAIR TECH
-                        </a>
-                    </ListItem>
-                    <ListItem primaryColor={primaryColor}>
-                        <button
-                            className="btn-change-theme"
-                            style={{
-                                backgroundColor:
-                                    primaryColor === "charcoal" ? "#222021" : "#D3D2D3",
-                                borderRadius: "12px",
-                                width: 32,
-                                height: 32,
-                                fontSize: 18,
-                            }}
-                            onClick={(e) => {
-                                dispatch({
-                                    type: colorTypes.SET_COLOR_SCHEME,
-                                    payload: primaryColor === "rhyno" ? "charcoal" : "rhyno",
-                                });
-                            }}
-                        >
-                            {primaryColor === "rhyno" ? (
-                                <i className="far fa-moon" />
-                            ) : (
-                                <i className="fas fa-sun" />
-                            )}
-                        </button>
-                    </ListItem>
-                    {loginDone && <ListItem primaryColor={primaryColor} onClick={logout}>
-                        <div className="burger-menu-logout">
-                            <i className="fas fa-sign-out-alt"></i>Logout
-                        </div>
-                    </ListItem>}
-                </List>}
+                {openProfile ? <Suspense fallback={<h1>Loading profile...</h1>}>
+                    <MobileProfileInfo
+                        primaryColor={primaryColor}
+                        click={click}
+                        toggleOpenProfile={toggleOpenProfile}
+                        userData={userData}
+                        toggleEditMode={toggleEditMode}
+                        editMode={editMode}
+                        currentUserAddress={currentUserAddress}
+                        loading={loading}
+                    />
+                </Suspense> : <MobileListMenu
+                    primaryColor={primaryColor}
+                    click={click}
+                    renderBtnConnect={renderBtnConnect}
+                    loginDone={loginDone}
+                    startedLogin={startedLogin}
+                    programmaticProvider={programmaticProvider}
+                    connectUserData={connectUserData}
+                    toggleOpenProfile={toggleOpenProfile}
+                    logout={logout}
+                />}
                 {click ? <div className="mobile-menu" onClick={toggleMenu}>
                     <i className="fa fa-times" aria-hidden="true"></i>
-                </div> : <div className="mobile-menu" onClick={() => { toggleMenu(); setOpenProfile(false) }}>
+                </div> : <div className="mobile-menu" onClick={() => { toggleMenu(); setOpenProfile(false); }}>
                     <i className="fa fa-bars" aria-hidden="true"></i>
                 </div>}
             </Nav>
