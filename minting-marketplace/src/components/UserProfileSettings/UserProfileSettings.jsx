@@ -40,7 +40,7 @@ const UserProfileSettings = ({
               display: "flex",
               alignContent: "center",
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "flex-start",
             }}
             className="user-block"
           >
