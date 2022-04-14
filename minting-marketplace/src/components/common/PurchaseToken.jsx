@@ -96,7 +96,9 @@ const Agreements = ({
 	offerIndex,
 	connectUserData,
 	diamond,
-	customSuccessAction
+	customSuccessAction,
+	blockchainOnly,
+	databaseOnly
 }) => {
 	const [privacyPolicy, setPrivacyPolicy] = useState(false);	
 	const [termsOfUse, setTermsOfUse] = useState(false);
@@ -188,11 +190,15 @@ const Agreements = ({
 					let contractInstance = contractCreator(contractAddress, diamond ? erc721Abi : diamondFactoryAbi);
 
 					setButtonMessage("Querying next mintable NFT...");
-					// Get the range's data (start token, ending token, price)
-					let rangeData = await queryRangeDataFromDatabase(contractInstance, requiredBlockchain, offerIndex, diamond);
 					
-					// Get the range's data from the blockchain if the db has no data
-					if (!rangeData) {
+					let rangeData;
+					if (!blockchainOnly) {
+						// Get the range's data (start token, ending token, price)
+						rangeData = await queryRangeDataFromDatabase(contractInstance, requiredBlockchain, offerIndex, diamond);
+					}
+
+					if (!rangeData && !databaseOnly) {
+						// Get the range's data from the blockchain if the db has no data
 						rangeData = await queryRangeDataFromBlockchain(diamond ? diamondMarketplaceInstance : minterInstance, offerIndex, diamond);
 					}
 
@@ -256,7 +262,9 @@ const PurchaseTokenButton = ({
 	connectUserData,
 	presaleMessage,
 	diamond,
-	customSuccessAction
+	customSuccessAction,
+	blockchainOnly,
+	databaseOnly
 }) => {
 	const store = useStore();
 	const { primaryColor, textColor } = useSelector(store => store.colorStore);
@@ -273,7 +281,9 @@ const PurchaseTokenButton = ({
 						diamond,
 						offerIndex,
 						presaleMessage,
-						customSuccessAction
+						customSuccessAction,
+						blockchainOnly,
+						databaseOnly
 					}}
 				/>
 			</Provider>,
