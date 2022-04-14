@@ -1,11 +1,15 @@
 locals {
   minting_network_service = "minting-network-primary"
   minting_network_image = "rairtechinc/minting-network:dev_latest"
-  minting_network_default_port_1 = "3001"
+  minting_network_default_port_1 = 3001
   minting_network_configmap_name = "minting-network-env"
 }
 
-
+data "google_compute_address" "rair_internal_load_balancer" {
+  name = var.rair_internal_load_balancer_name
+  project = var.gcp_project_id
+  region = var.region
+}
 
 resource "kubernetes_config_map" "minting_network_configmap" {
   metadata {
@@ -16,7 +20,6 @@ resource "kubernetes_config_map" "minting_network_configmap" {
 }
 
 
-
 resource "kubernetes_service" "minting_network_service" {
   metadata {
     name = local.minting_network_service
@@ -24,22 +27,23 @@ resource "kubernetes_service" "minting_network_service" {
       managedby = "terraform"
       service   = local.minting_network_service
     }
+    annotations = {
+      "networking.gke.io/load-balancer-type" = "Internal"
+    }
   }
-
   spec {
+    load_balancer_ip = data.google_compute_address.rair_internal_load_balancer.address
+    selector = {
+      app = local.minting_network_service
+    }
     port {
-      port        = local.minting_network_default_port_1
-      target_port =  local.minting_network_default_port_1
-      name        = local.minting_network_default_port_1
+      port        = 80
+      target_port = local.minting_network_default_port_1
+      name = "http"
     }
     type = "LoadBalancer"
-    external_traffic_policy = "Cluster"
-    
   }
 }
-
-
-
 resource "kubernetes_deployment" "minting_network" {
   metadata {
     name = "${local.minting_network_service}-deployment"
@@ -57,22 +61,22 @@ resource "kubernetes_deployment" "minting_network" {
     }
 
     template {
-     metadata {
-       labels = {
-         app = local.minting_network_service
-       }
-     }
-
-     spec{
-       container {
-        image = local.minting_network_image
-        name  = local.minting_network_service
-        image_pull_policy = "Always"
-        
-        port {
-          container_port = local.minting_network_default_port_1
+      metadata {
+        labels = {
+          app = local.minting_network_service
         }
-        env_from {
+      }
+
+      spec{
+        container {
+          image = local.minting_network_image
+          name  = local.minting_network_service
+          image_pull_policy = "Always"
+        
+          port {
+            container_port = local.minting_network_default_port_1
+          }
+          env_from {
             config_map_ref {
               name = local.minting_network_configmap_name
             }
