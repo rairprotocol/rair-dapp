@@ -36,6 +36,10 @@ variable "namespace_secrets" {
           secret_name: "mongodb-credential",
           env_reference_name: "MONGO_URI"
         },
+        "mongodb-credential-local": {
+          secret_name: "mongodb-credential",
+          env_reference_name: "MONGO_URI_LOCAL"
+        },
         "rair-manager-key": {
           secret_name: "rair-manager-key",
           env_reference_name: "GCP_CREDENTIALS"
@@ -55,6 +59,10 @@ variable "namespace_secrets" {
         "moralis-master-key-main": {
           secret_name: "moralis-master-key-main",
           env_reference_name: "MORALIS_MASTER_KEY_MAIN"
+        }
+        "rair-file-manager": {
+          secret_name: "rair-manager-key",
+          env_reference_name: "key.json"
         }
       }
     }

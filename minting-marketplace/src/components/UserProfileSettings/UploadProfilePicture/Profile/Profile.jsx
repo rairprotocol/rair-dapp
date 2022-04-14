@@ -1,7 +1,13 @@
 import React, { memo } from "react";
 import cl from "./Profile.module.css";
 
-const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic }) => {
+const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic, setTriggerState }) => {
+
+  const onCloseEditProfile = () => {
+    setTriggerState(false);
+    setOpenModalPic(false)
+  }
+
   return (
     <div className={cl.card}>
       <form onSubmit={onSubmit}>
@@ -16,7 +22,7 @@ const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic }) => {
         <button type="submit" className={cl.edit}>
           Edit Profile{" "}
         </button>
-        <button onClick={() => setOpenModalPic(false)} className={cl.edit}>
+        <button onClick={onCloseEditProfile} className={cl.edit}>
           Exit{" "}
         </button>
       </form>

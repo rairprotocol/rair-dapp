@@ -9,9 +9,11 @@ resource "google_compute_address" "gke_nat" {
   region =var.region
 }
 
-resource "google_compute_address" "rairnode_api_endpoint" {
-  name = "rairnode-api-endpoint"
+resource "google_compute_address" "rair_internal_load_balancer" {
+  name = var.rair_internal_load_balancer_name
   region = var.region
+  address_type = "INTERNAL"
+  subnetwork = google_compute_subnetwork.kubernetes_primary_cluster.id
 }
 
 resource "google_compute_address" "jenkins_internal_load_balancer" {
