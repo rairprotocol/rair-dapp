@@ -1,5 +1,5 @@
 resource "mongodbatlas_database_user" "rairnode" {
-  auth_database_name = mongodbatlas_cluster.primary.name
+  auth_database_name = var.primary_db_name
   project_id   = var.project_id
 
   roles {
