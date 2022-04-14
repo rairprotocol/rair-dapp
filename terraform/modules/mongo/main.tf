@@ -1,3 +1,3 @@
 module "mongo_shared" {
-  source = "../../shared/mongo"
+  source = "../../environments/shared/mongo"
 }
