@@ -15,10 +15,14 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [totalPage, setTotalPages] = useState([10]);
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
+  const [blockchain, setBlockchain] = useState();
+  const [isShow, setIsShow] = useState(false);
+  const [filterText, setFilterText] = useState("");
+  const [click, setClick] = useState(null);
 
-  const media_match = window.matchMedia('(min-width: 700px)')
-  const [mobile, setMobile] = useState(media_match.matches)
-  window.addEventListener("resize", () => setMobile(media_match.matches))
+  const media_match = window.matchMedia("(min-width: 700px)");
+  const [mobile, setMobile] = useState(media_match.matches);
+  window.addEventListener("resize", () => setMobile(media_match.matches));
 
   let pagesArray = [];
   for (let i = 0; i < totalPage; i++) {
@@ -27,7 +31,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
 
   const getContract = useCallback(async () => {
     const responseContract = await axios.get("/api/contracts/full", {
-      // method: "GET",
       headers: {
         Accept: "application/json",
         "X-rair-token": localStorage.token,
@@ -35,9 +38,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       params: {
         itemsPerPage: itemsPerPage,
         pageNum: currentPage,
+        blockchain: blockchain,
       },
     });
-    // console.log(responseContract, "responseContract");
+
     const covers = responseContract.data.contracts.map((item) => ({
       id: item._id,
       productId: item.products?._id ?? "wut",
@@ -57,9 +61,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       })),
     }));
     setData(covers);
+
     const totalCount = responseContract.data.totalNumber;
-    setTotalPages(getPagesCount(totalCount, itemsPerPage))
-  }, [currentPage, itemsPerPage]);
+    setTotalPages(getPagesCount(totalCount, itemsPerPage));
+  }, [currentPage, itemsPerPage, blockchain]);
 
   const getPagesCount = (totalCount, itemsPerPage) => {
     return Math.ceil(totalCount / itemsPerPage);
@@ -89,7 +94,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       console.log(response?.message);
     }
   };
-  
+
   useEffect(() => {
     getContract();
   }, [currentPage, getContract]);
@@ -111,6 +116,11 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     [data]
   );
 
+  const clearFilter = () => {
+    setBlockchain(null);
+    setIsShow(false);
+    setClick(null)
+  };
   return (
     <div className="input-search-wrapper list-button-wrapper">
       <Tabs>
@@ -144,13 +154,14 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             Unlockables
           </Tab>
         </TabList>
-        <div 
-          style= {{ 
+        <div
+          style={{
             position: "relative",
             display: "flex",
-            flexDirection: mobile ? "row" :"column",
+            flexDirection: mobile ? "row" : "column",
             paddingLeft: "6vw",
-            }}>
+          }}
+        >
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
@@ -159,38 +170,61 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
               borderTopLeftRadius: "0",
-              width:  mobile ? "54.5%" :"100%",
+              width: mobile ? "54.5%" : "100%",
               marginBottom: mobile ? "32px" : "8px",
             }}
             customClass="form-control input-styled"
           />
-          <div style={
-            mobile ? {
-            display:"flex",
-            }:{
-              display:"flex",
-              width: "100%",
-              justifyContent: "space-between",
-              marginBottom: "32px"
-              }
-            }>
-          <i 
-            className="fas fa-search fa-lg fas-custom"
-            aria-hidden="true"
-            style={{
-              left: "7vw"
-            }}
+          <div
+            style={
+              mobile
+                ? {
+                    display: "flex",
+                  }
+                : {
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    marginBottom: "32px",
+                  }
+            }
+          >
+            <i
+              className="fas fa-search fa-lg fas-custom"
+              aria-hidden="true"
+              style={{
+                left: "7vw",
+              }}
             ></i>
-          <FilteringBlock
-            sortItem={sortItem}
-            setSortItem={setSortItem}
-            primaryColor={primaryColor}
-            textColor={textColor}
-            isFilterShow={true}
-          />
+            <FilteringBlock
+              sortItem={sortItem}
+              setSortItem={setSortItem}
+              getContract={getContract}
+              setBlockchain={setBlockchain}
+              primaryColor={primaryColor}
+              textColor={textColor}
+              isFilterShow={true}
+              setIsShow={setIsShow}
+              setFilterText={setFilterText}
+              click={click}
+              setClick={setClick}
+            />
           </div>
         </div>
         <TabPanel>
+          <div className="clear-filter-wrapper">
+            {isShow ? (
+              <button 
+                style={{color: `var(--${textColor})`}}
+                className="clear-filter"
+                onClick={() => clearFilter()}>
+                {filterText}
+              </button>
+            ) : (
+              <></>
+            )}
+          </div>
+
           <NftList
             sortItem={sortItem}
             titleSearch={titleSearch}

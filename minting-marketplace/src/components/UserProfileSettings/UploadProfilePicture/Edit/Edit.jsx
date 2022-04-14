@@ -13,7 +13,8 @@ const EditComponent = ({
   setStatus,
   status,
   setFile,
-  setOpenModalPic
+  setOpenModalPic,
+  setTriggerState
 }) => {
   
   const photoUpload = useCallback(
@@ -30,6 +31,11 @@ const EditComponent = ({
     [setImagePreviewUrl, setFile]
   );
 
+  const closeEditList = () => {
+    setTriggerState(false);
+    setOpenModalPic(false)
+  }
+
   return (
     <div className={cl.card}>
       <form onSubmit={onSubmit}>
@@ -41,7 +47,7 @@ const EditComponent = ({
         type="submit" className={cl.save}>
           Save{" "}
         </button>
-        <button onClick={() => setOpenModalPic(false)} className={cl.save}>
+        <button onClick={closeEditList} className={cl.save}>
           Exit{" "}
         </button>
       </form>

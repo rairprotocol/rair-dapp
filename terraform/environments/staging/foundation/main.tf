@@ -31,6 +31,7 @@ module "foundation" {
   vpc_cidr_block = module.config.env_config.staging.vpc_cidr_block
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
   jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
+  rair_internal_load_balancer_name = module.config.rair_internal_load_balancer_name
 }
 
 output "complete_output" {
