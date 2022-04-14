@@ -91,14 +91,17 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
                     </LabelForm>
                     <InputChange
                         id="name"
-                        {...register('name', { required: true, maxLength: 50 })}
+                        {...register('name', { required: true, maxLength: 20, minLength: 2 })}
                         type="text"
                     />
                     {errors.name && errors.name.type === "required" && (
                         <ErrorInput>This field is required!</ErrorInput>
                     )}
                     {errors.name && errors.name.type === "maxLength" && (
-                        <ErrorInput>Name should be less 50 letters!</ErrorInput>
+                        <ErrorInput>Name should be less 20 letters!</ErrorInput>
+                    )}
+                    {errors.name && errors.name.type === "minLength" && (
+                        <ErrorInput>Name should be more 2 letters!</ErrorInput>
                     )}
                     <LabelForm
                     >Email:</LabelForm>
