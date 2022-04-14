@@ -18,6 +18,11 @@ module "mongo_shared" {
   source = "../../shared/mongo"
 }
 
+# common resources used in all mongo projects
+module "mongo_common" {
+  source = "../../../mongo"
+}
+
 resource "mongodbatlas_cluster" "primary" {
   project_id   = module.mongo_shared.mongo_project_id_map.dev.project_id
   name         = "primary"
