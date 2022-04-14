@@ -142,6 +142,12 @@ export const LabelForm = styled.div`
   }
 `
 
+export const ErrorInput = styled.div`
+  color: rgb(228, 71, 109);
+  font-size: 16px;
+  font-weight: 700;
+`
+
 export const ButtonEdit = styled.button`
   border-radius: 12px;
   border: none;
@@ -149,7 +155,7 @@ export const ButtonEdit = styled.button`
   font-size: 25px;
   padding: 10px 20px;
   color: white;
-  margin-top: 20px;
+  margin-top: 10px;
 
   @media screen and (max-width: 380px) {
     font-size: 16px;

@@ -12,7 +12,7 @@
     cursor: pointer;
     /* background: linear-gradient(270deg, #3fa1a9, #79f1a4); */
     background: linear-gradient(217deg, #af6fd8, #ffc107);
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .customFileUpload input {

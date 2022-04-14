@@ -1,23 +1,29 @@
 import React, { useCallback, useState } from 'react'
 import { ImageUpload } from '../../UserProfileSettings/UploadProfilePicture/ImageUpload/ImageUpload';
-import { BlockAvatar, ButtonEdit, InputChange, LabelForm, ListEditProfileMode, ProfileButtonBack, TitleEditProfile } from '../NavigationItems/NavigationItems'
-// import defaultPictures from './../../../images/defaultUserPictures.png'
+import { useForm } from 'react-hook-form';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import {
+    BlockAvatar,
+    ButtonEdit,
+    ErrorInput,
+    InputChange,
+    LabelForm,
+    ListEditProfileMode,
+    ProfileButtonBack,
+    TitleEditProfile
+} from '../NavigationItems/NavigationItems'
 
 const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, currentUserAddress }) => {
-    const [name, setName] = useState(userData.nickName);
-    const [email, setEmail] = useState(userData.email);
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            email: userData.email
+        }
+    });
     const [imagePreviewUrl, setImagePreviewUrl] = useState(userData.avatar);
     const [file, setFile] = useState("");
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(false);
-
-    const onChangeName = (e) => {
-        setName(e.target.value);
-    }
-
-    const onChangeEmail = (e) => {
-        setEmail(e.target.value);
-    }
 
     const photoUpload = useCallback(
         (e) => {
@@ -33,11 +39,11 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
         [setImagePreviewUrl, setFile]
     );
 
-    const updateProfile = useCallback(async () => {
+    const updateProfile = useCallback(async (data) => {
         setLoading(true);
         let formData = new FormData();
-        formData.append("nickName", name);
-        formData.append("email", email);
+        formData.append("nickName", data.name);
+        formData.append("email", data.email);
         if (file) {
             formData.append("file", file);
         }
@@ -53,8 +59,6 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
         });
 
         if (res.success) {
-            setName(res.user.nickName);
-            setEmail(res.user.email);
             if (res.user.avatar) {
                 setImagePreviewUrl(res.user.avatar);
             }
@@ -62,45 +66,59 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
             setStatus(true);
         }
     }, [
-        name,
-        email,
         file,
         currentUserAddress,
-        setName,
-        setEmail,
         setImagePreviewUrl,
         setLoading
     ]);
 
-    const handleSubmit = useCallback(
-        (e) => {
-            e.preventDefault();
-
-            updateProfile();
-        },
-        [updateProfile]
-    );
+    const onSubmit = (data) => {
+        updateProfile(data);
+    }
 
     return (
         <ListEditProfileMode editMode={editMode} primaryColor={primaryColor}>
             <ProfileButtonBack onClick={toggleEditMode}><i className="fas fa-chevron-left"></i></ProfileButtonBack>
             <TitleEditProfile>Edit Profile</TitleEditProfile>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <BlockAvatar>
                     <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
                 </BlockAvatar>
                 <div>
-                    <LabelForm>Name:</LabelForm>
-                    <InputChange onChange={onChangeName} type="text" value={name.replace(/\@/g, '')} />
-                    <LabelForm>Email:</LabelForm>
-                    <InputChange onChange={onChangeEmail} type="email" value={email} />
+                    <LabelForm>
+                        Name:
+                    </LabelForm>
+                    <InputChange
+                        id="name"
+                        {...register('name', { required: true, maxLength: 20, minLength: 2 })}
+                        type="text"
+                    />
+                    {errors.name && errors.name.type === "required" && (
+                        <ErrorInput>This field is required!</ErrorInput>
+                    )}
+                    {errors.name && errors.name.type === "maxLength" && (
+                        <ErrorInput>Name should be less 20 letters!</ErrorInput>
+                    )}
+                    {errors.name && errors.name.type === "minLength" && (
+                        <ErrorInput>Name should be more 2 letters!</ErrorInput>
+                    )}
+                    <LabelForm
+                    >Email:</LabelForm>
+                    <InputChange
+                        id="email"
+                        {...register('email', { required: true })}
+                        type="email"
+                    />
+                    {errors.email && errors.email.type === "required" && (
+                        <ErrorInput>This field is required!</ErrorInput>
+                    )}
                 </div>
 
                 {
-                    status ? <h5>Saved!</h5> : <>
+                    status ? <Alert style={{display: "flex", justifyContent: "center"}} variant="standard" severity="success">Success! Your profile's updated</Alert> : <>
                         {
-                            loading ? <h5>loading...</h5> : <ButtonEdit type="submit">Save changes</ButtonEdit>
+                            loading ? <><CircularProgress /></> : <ButtonEdit type="submit">Save changes</ButtonEdit>
                         }
                     </>
                 }
