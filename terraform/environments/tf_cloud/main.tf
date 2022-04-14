@@ -8,3 +8,11 @@ terraform {
 }
 
 provider "tfe" {}
+
+module "mongo_shared" {
+  source = "../../environments/shared/mongo"
+}
+
+locals {
+  mongo_atlas_variable_description_template = "Mongo DB Atlas %s generated from project id: %s"
+}
