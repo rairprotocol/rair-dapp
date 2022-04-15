@@ -7,6 +7,10 @@ terraform {
   }
 }
 
+locals {
+  mongo_admin_db_name = "admin"
+}
+
 module "mongo_shared" {
   source = "../../environments/shared/mongo"
 }
