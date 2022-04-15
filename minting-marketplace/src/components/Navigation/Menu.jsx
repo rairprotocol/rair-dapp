@@ -12,16 +12,16 @@ const MenuNavigation = ({
     headerLogo,
     connectUserData,
     startedLogin,
-    programmaticProvider,
     renderBtnConnect,
     loginDone,
     setLoginDone,
-    currentUserAddress
+    currentUserAddress,
+    adminRights,
+    creatorViewsDisabled
 }) => {
     const [click, setClick] = useState(false);
     const [userData, setUserData] = useState(null)
     const [openProfile, setOpenProfile] = useState(false);
-    const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
@@ -29,16 +29,11 @@ const MenuNavigation = ({
 
     const toggleMenu = () => {
         setClick(prev => !prev);
-        setEditMode(false)
     }
 
-    const toggleEditMode = useCallback(() => {
-        setEditMode(prev => !prev);
-    }, [setEditMode])
-
-    const toggleOpenProfile = () => {
+    const toggleOpenProfile = useCallback(() => {
         setOpenProfile(prev => !prev);
-    }
+    }, [setOpenProfile])
 
     const logout = () => {
         dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
@@ -64,24 +59,25 @@ const MenuNavigation = ({
                 setUserData(result.user);
             }
         }
-    }, [currentUserAddress, editMode]);
+    }, [currentUserAddress, setUserData, setLoading]);
+
+    const onScrollClick = useCallback(() => {
+        if (!click) {
+            document.body.style.overflow = 'unset';
+        }
+    }, [click])
+
+    useEffect(() => {
+        onScrollClick()
+    }, [onScrollClick])
 
     useEffect(() => {
         getInfoFromUser();
     }, [getInfoFromUser]);
 
-    useEffect(() => {
-        if (editMode) {
-            document.body.style.overflow = 'hidden';
-        }
-        else {
-            document.body.style.overflow = 'unset';
-        }
-    }, [editMode])
-
     return (
         <div className="col-1 rounded burder-menu">
-            <Nav primaryColor={primaryColor} editMode={editMode}>
+            <Nav primaryColor={primaryColor}>
                 <div className="burder-menu-logo">
                     <NavLink to="/">
                         <img src={headerLogo} alt="logo_rair" />
@@ -89,23 +85,24 @@ const MenuNavigation = ({
                 </div>
                 {openProfile ? <Suspense fallback={<h1>Loading profile...</h1>}>
                     <MobileProfileInfo
+                        setUserData={setUserData}
                         primaryColor={primaryColor}
                         click={click}
                         toggleOpenProfile={toggleOpenProfile}
                         userData={userData}
-                        toggleEditMode={toggleEditMode}
-                        editMode={editMode}
                         currentUserAddress={currentUserAddress}
                         loading={loading}
                     />
                 </Suspense> : <MobileListMenu
+                    creatorViewsDisabled={creatorViewsDisabled}
+                    adminRights={adminRights}
                     primaryColor={primaryColor}
                     click={click}
                     renderBtnConnect={renderBtnConnect}
                     loginDone={loginDone}
                     startedLogin={startedLogin}
-                    programmaticProvider={programmaticProvider}
                     connectUserData={connectUserData}
+                    toggleMenu={toggleMenu}
                     toggleOpenProfile={toggleOpenProfile}
                     logout={logout}
                 />}

@@ -432,15 +432,16 @@ function App({ sentryHistory }) {
 								})
 							}
 						</div> : <MenuNavigation
+							adminRights={adminRights}
 							primaryColor={primaryColor}
 							headerLogo={headerLogo}
-							programmaticProvider={programmaticProvider}
 							startedLogin={startedLogin}
 							connectUserData={connectUserData}
 							renderBtnConnect={renderBtnConnect}
 							loginDone={loginDone}
 							setLoginDone={setLoginDone}
 							currentUserAddress={currentUserAddress}
+							creatorViewsDisabled={creatorViewsDisabled}
 						/>
 						}
 

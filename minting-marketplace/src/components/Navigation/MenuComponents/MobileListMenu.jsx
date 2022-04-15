@@ -1,8 +1,9 @@
 import React from 'react';
 import * as colorTypes from "./../../../ducks/colors/types";
 import { OnboardingButton } from './../../common/OnboardingButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItem } from './../NavigationItems/NavigationItems';
+import { NavLink } from 'react-router-dom';
 
 const MobileListMenu = ({
     primaryColor,
@@ -10,11 +11,20 @@ const MobileListMenu = ({
     renderBtnConnect,
     loginDone,
     startedLogin,
-    programmaticProvider,
     connectUserData,
     toggleOpenProfile,
-    logout
+    logout,
+    adminRights,
+    creatorViewsDisabled,
+    toggleMenu
 }) => {
+    const {
+        minterInstance,
+        factoryInstance,
+        programmaticProvider,
+        diamondMarketplaceInstance
+    } = useSelector(store => store.contractStore);
+
     const dispatch = useDispatch();
 
     return (
@@ -38,6 +48,15 @@ const MobileListMenu = ({
                     <div className="burder-menu-profile" onClick={toggleOpenProfile}>
                         <i className="fas fa-cog"></i>Profile settings
                     </div>
+                </ListItem>
+            }
+            {
+                loginDone && <ListItem onClick={toggleMenu} primaryColor={primaryColor}>
+                    <NavLink to="/my-items">
+                        <div className="burder-menu-profile">
+                            <i className="fas fa-boxes"></i>My Items
+                        </div>
+                    </NavLink>
                 </ListItem>
             }
             <ListItem primaryColor={primaryColor}>
@@ -74,6 +93,28 @@ const MobileListMenu = ({
                     )}
                 </button>
             </ListItem>
+            {
+                loginDone && adminRights === true && !creatorViewsDisabled ? [
+                    { name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
+                    { name: <i className="fas fa-key" />, route: '/my-nft' },
+                    { name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+                    { name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+                    { name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+                    { name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+                    { name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+                    { name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
+                    { name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone }
+                ].map((item, index) => {
+                    if (!item.disabled) {
+                        return <ListItem primaryColor={primaryColor} onClick={toggleMenu} key={index}>
+                            <NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ textDecoration: 'none' }}>
+                                {item.name}
+                            </NavLink>
+                        </ListItem>
+                    }
+                    return <div key={index}></div>
+                }) : <></>
+            }
             {loginDone && <ListItem primaryColor={primaryColor} onClick={logout}>
                 <div className="burger-menu-logout">
                     <i className="fas fa-sign-out-alt"></i>Logout

@@ -75,6 +75,18 @@ export const ListProfileItem = styled.div`
   min-height: 30vh;
 `;
 
+export const ListProfileLoading = styled.div`
+  min-height: 30vh;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+
+  .mobile-profile-preloader {
+    width: 100%;
+    margin-top: 100px;
+  }
+`
+
 export const ListEditProfileMode = styled.div`
   padding: 20px;
   height: 100%;

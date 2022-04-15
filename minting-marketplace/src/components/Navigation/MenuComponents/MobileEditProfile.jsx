@@ -14,13 +14,21 @@ import {
     TitleEditProfile
 } from '../NavigationItems/NavigationItems'
 
-const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, currentUserAddress }) => {
+const MobileEditProfile = ({
+    toggleEditMode,
+    userData,
+    editMode,
+    currentUserAddress,
+    setUserData,
+    defaultPictures
+}) => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             email: userData.email
         }
     });
-    const [imagePreviewUrl, setImagePreviewUrl] = useState(userData.avatar);
+    const avatarFile = userData.avatar ? userData.avatar : defaultPictures;
+    const [imagePreviewUrl, setImagePreviewUrl] = useState(avatarFile);
     const [file, setFile] = useState("");
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(false);
@@ -59,6 +67,8 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
         });
 
         if (res.success) {
+            setUserData(res.user);
+
             if (res.user.avatar) {
                 setImagePreviewUrl(res.user.avatar);
             }
@@ -69,7 +79,8 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
         file,
         currentUserAddress,
         setImagePreviewUrl,
-        setLoading
+        setLoading,
+        setUserData
     ]);
 
     const onSubmit = (data) => {
@@ -77,7 +88,7 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
     }
 
     return (
-        <ListEditProfileMode editMode={editMode} primaryColor={primaryColor}>
+        <ListEditProfileMode editMode={editMode} primaryColor={123}>
             <ProfileButtonBack onClick={toggleEditMode}><i className="fas fa-chevron-left"></i></ProfileButtonBack>
             <TitleEditProfile>Edit Profile</TitleEditProfile>
 
@@ -98,7 +109,7 @@ const MobileEditProfile = ({ primaryColor, toggleEditMode, userData, editMode, c
                         <ErrorInput>This field is required!</ErrorInput>
                     )}
                     {errors.name && errors.name.type === "maxLength" && (
-                        <ErrorInput>Name should be less 20 letters!</ErrorInput>
+                        <ErrorInput>Name should be less 13 letters!</ErrorInput>
                     )}
                     {errors.name && errors.name.type === "minLength" && (
                         <ErrorInput>Name should be more 2 letters!</ErrorInput>
