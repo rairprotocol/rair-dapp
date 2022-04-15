@@ -21,6 +21,3 @@ resource "tfe_variable" "STAGING_MONGODB_ATLAS_PUBLIC_KEY" {
   workspace_id = tfe_workspace.mongo_db_staging.id
   sensitive = true
 }
-
-# terraform import tfe_variable.STAGING_MONGODB_ATLAS_PRIVATE_KEY rairtech/mongo-db-staging/var-xdzu6v46CbDRMQqA
-# terraform import tfe_variable.STAGING_MONGODB_ATLAS_PUBLIC_KEY rairtech/mongo-db-staging/var-c3EFqGquUoc9FwPz
