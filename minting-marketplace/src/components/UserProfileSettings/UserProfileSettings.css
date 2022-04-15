@@ -231,6 +231,9 @@
     border-width: 1px;
     border-image-slice: 1; */
 }
+.profile-input.deff{
+    font-size: x-small;
+}
 .profile-input-edit{
     padding: 6px 9px !important;
 }

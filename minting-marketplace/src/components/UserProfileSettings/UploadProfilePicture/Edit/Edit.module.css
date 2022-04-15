@@ -9,7 +9,7 @@
     /* box-shadow: 15px 10px 25px 0px #3fa1a9; */
     box-shadow: 15px 10px 25px 0px #af6fd89e;
     background: #383637;
-    background-image: url('../../../../images/binance-diamond.svg'), url('../../../../images/ethereum-logo.svg');
+    /* background-image: url('../../../../images/binance-diamond.svg'), url('../../../../images/ethereum-logo.svg'); */
     background-repeat: no-repeat, no-repeat;
     background-position: 120% -5%, 200% -40%;
     background-size: 40%, 80%;

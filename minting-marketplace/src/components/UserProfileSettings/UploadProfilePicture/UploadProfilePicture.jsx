@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Edit } from "./Edit/Edit";
 import { Profile } from "./Profile/Profile";
+import Swal from "sweetalert2";
 
 const UploadProfilePicture = ({
   setOpenModalPic,
@@ -9,7 +10,7 @@ const UploadProfilePicture = ({
   setUserEmail,
   setImagePreviewUrl,
   imagePreviewUrl,
-  setTriggerState
+  setTriggerState,
 }) => {
   const [file, setFile] = useState("");
   const [name, setName] = useState("");
@@ -34,10 +35,18 @@ const UploadProfilePicture = ({
       body: formData,
     }).then((blob) => blob.json());
     setUpdateUsr(res);
-    setUserName(res.user.nickName);
-    setUserEmail(res.user.email);
-    if (res.user.avatar) {
+
+    if (res.success) {
+      setUserName(res.user.nickName);
+      setUserEmail(res.user.email);
+    }
+
+    if (res?.user?.avatar) {
       setImagePreviewUrl(res.user.avatar);
+    }
+
+    if(!res.success){
+			Swal.fire('Info', `${res.message}`, 'question');
     }
   }, [
     name,
@@ -85,15 +94,17 @@ const UploadProfilePicture = ({
   const onCloseModalPic = useCallback(() => {
     setOpenModalPic(false);
     setTriggerState(false);
-  })
+  }, [setOpenModalPic, setTriggerState]);
 
-  const onClick = (e) =>
-    rootEl.current.contains(e.target) || onCloseModalPic();
+  const onClick = useCallback(
+    (e) => rootEl.current.contains(e.target) || onCloseModalPic(),
+    [onCloseModalPic]
+  );
 
   useEffect(() => {
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
-  }, [setOpenModalPic]);
+  }, [onClick, setOpenModalPic]);
 
   return (
     <div ref={rootEl}>

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Popup } from "reactjs-popup";
-import defaultPictures from './images/defaultUserPictures.png';
+import defaultPictures from "./images/defaultUserPictures.png";
 import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 // React Redux types
@@ -21,7 +21,7 @@ const PopUpSettings = ({
   const dispatch = useDispatch();
   const [next, setNext] = useState(false);
   // const [userName, setUserName] = useState(currentUserAddress);
-  const [/*openModal*/, setOpenModal] = useState(false);
+  const [, /*openModal*/ setOpenModal] = useState(false);
   const [openModalPic, setOpenModalPic] = useState(false);
   const [, /*userData*/ setUserData] = useState({});
   const [userName, setUserName] = useState();
@@ -32,6 +32,20 @@ const PopUpSettings = ({
     // "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
     defaultPictures
   );
+
+  const cutUserAddress = () => {
+    if (userName) {
+      let length = userName.length;
+      return length > 13
+        ? userName.slice(0, 5) + "...." + userName.slice(length - 4)
+        : userName;
+    }
+    if (currentUserAddress) {
+      return (
+        currentUserAddress.slice(0, 4) + "...." + currentUserAddress.slice(38)
+      );
+    }
+  };
 
   const getInfoFromUser = useCallback(async () => {
     // find user
@@ -70,19 +84,19 @@ const PopUpSettings = ({
   };
 
   const handlePopUp = () => {
-    setNext(prev => !prev);
-    setOpenModal(prev => !prev);
-  }
+    setNext((prev) => !prev);
+    setOpenModal((prev) => !prev);
+  };
 
   const onCloseNext = useCallback(() => {
     if (!triggerState) {
       setNext(false);
     }
-  }, [triggerState])
+  }, [triggerState]);
 
   useEffect(() => {
     onCloseNext();
-  }, [onCloseNext])
+  }, [onCloseNext]);
 
   if (openModalPic) {
     return (
@@ -105,7 +119,7 @@ const PopUpSettings = ({
   return (
     <>
       <button
-        onClick={() => setTriggerState(prev => !prev)}
+        onClick={() => setTriggerState((prev) => !prev)}
         className="button profile-btn"
         style={{
           display: "flex",
@@ -113,8 +127,9 @@ const PopUpSettings = ({
           justifyContent: "space-around",
           alignContent: "center",
           flexDirection: "row",
-          backgroundColor: `${primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
-            }`,
+          backgroundColor: `${
+            primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
+          }`,
         }}
       >
         <img
@@ -125,13 +140,10 @@ const PopUpSettings = ({
             objectFit: "cover",
             left: 5,
             top: 0,
-            transform: 'scale(0.8)',
+            transform: "scale(0.8)",
+            borderRadius: 16,
           }}
-          src={
-            imagePreviewUrl === null
-              ? defaultPictures
-              : imagePreviewUrl
-          }
+          src={imagePreviewUrl === null ? defaultPictures : imagePreviewUrl}
           alt="avatart-user"
         />
         <span
@@ -140,7 +152,8 @@ const PopUpSettings = ({
             color: primaryColor === "charcoal" ? "#fff" : "#383637",
           }}
         >
-          {userName
+          {cutUserAddress()}
+          {/* {userName
             ? userName.slice(0, 12)
             : currentUserAddress.slice(0, 7)}
           {currentUserAddress.length || userName.length > 13
@@ -149,7 +162,7 @@ const PopUpSettings = ({
               : "..."
             : currentUserAddress.length > 13
               ? "..."
-              : ""}
+              : ""} */}
         </span>
         <i className="icon-menu fas fa-bars"></i>
       </button>
@@ -165,8 +178,8 @@ const PopUpSettings = ({
           className="user-popup"
           style={{ background: "#383637", borderRadius: 16 }}
         >
-          {
-            !next ? <div>
+          {!next ? (
+            <div>
               <ul className="list-popup">
                 <li onClick={handlePopUp}>
                   <i className="fas fa-cog"></i>Profile settings
@@ -174,19 +187,18 @@ const PopUpSettings = ({
                 <li onClick={pushToMyItems}>
                   <i className="fas fa-boxes"></i>My items
                 </li>
-                {process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== 'true' &&
+                {process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== "true" && (
                   <li onClick={pushToFactory}>
                     <i className="fas fa-hammer"></i>Factory
                   </li>
-                }
+                )}
                 <li onClick={logout}>
                   <i className="fas fa-sign-out-alt"></i>Logout
                 </li>
               </ul>
-            </div> : <div
-              className="profile-settings"
-
-            >
+            </div>
+          ) : (
+            <div className="profile-settings">
               <div className="profile-header">
                 <div className="btn-back" onClick={handlePopUp}>
                   <i className="fas fa-chevron-left"></i>
@@ -198,7 +210,9 @@ const PopUpSettings = ({
                 <div className="user-avatar">
                   <img
                     onClick={(event) =>
-                      event.altKey && event.shiftKey ? alert("Front v0.9 3tabsView") : null
+                      event.altKey && event.shiftKey
+                        ? alert("Front v1.2 filtering")
+                        : null
                     }
                     style={{
                       width: "auto",
@@ -216,10 +230,15 @@ const PopUpSettings = ({
                 <div className="profile-form">
                   <div>
                     <label>Name</label>
-                    <div className="profile-input">
+                    <div
+                      className={`profile-input ${
+                        userName.length > 13 && " deff"
+                      }`}
+                    >
                       <span>
-                        {userName
-                          ? userName.slice(0, 24)
+                        {userName ? userName : currentUserAddress}
+                        {/* {userName
+                          ? userName 
                           : currentUserAddress.slice(0, 24)}
                         {currentUserAddress.length || userName.length > 24
                           ? userName
@@ -227,7 +246,7 @@ const PopUpSettings = ({
                             : ""
                           : currentUserAddress.length > 13
                             ? "..."
-                            : ""}
+                            : ""} */}
                       </span>
                     </div>
 
@@ -250,7 +269,7 @@ const PopUpSettings = ({
                 </div>
               </div>
             </div>
-          }
+          )}
         </div>
       </Popup>
     </>
