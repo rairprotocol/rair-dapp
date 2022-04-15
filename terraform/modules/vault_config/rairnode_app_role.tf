@@ -1,0 +1,21 @@
+resource "vault_approle_auth_backend_role" "rairnode" {
+  backend        = vault_auth_backend.primary.path
+  role_name      = "rairnode"
+  
+  token_policies = [
+    vault_policy.key_storage_admin.name
+  ]
+  
+  bind_secret_id = true
+  # (Optional)
+  # Whether or not to require secret_id to be presented when logging in using this AppRole.
+  # Defaults to true.
+
+  secret_id_bound_cidrs = formatlist("%s/32", var.rairnode_app_role_authorized_login_ips)
+  # (Optional) If set, specifies blocks of IP addresses which can perform the login operation.
+  
+  secret_id_num_uses = 0
+  # (Optional) The number of times any particular SecretID can be used to fetch a token from this AppRole,
+  # after which the SecretID will expire.
+  # A value of zero will allow unlimited uses.
+}

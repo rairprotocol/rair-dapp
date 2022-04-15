@@ -23,12 +23,16 @@ provider "vault" {
   token = var.vault_token
 }
 
+locals {
+  gke_nat_gateway = "34.145.59.65"
+}
+
 module "vault_config" {
   source = "../../../modules/vault_config"
 
   test_app_role_authorized_login_ips = [
     # gke nat gateway
-    "34.145.59.65",
+    local.gke_nat_gateway,
 
     # Carquinez house, March 9th, 2022
     "99.47.22.182",
@@ -39,5 +43,9 @@ module "vault_config" {
     # QA server, March 22nd, 2022
     "65.21.191.184",
   ]
-}
 
+  rairnode_app_role_authorized_login_ips = [
+    # gke nat gateway
+    local.gke_nat_gateway,
+  ]
+}
