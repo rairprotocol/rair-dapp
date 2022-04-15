@@ -54,11 +54,11 @@ resource "mongodbatlas_cluster" "primary" {
   provider_instance_size_name = module.mongo_shared.instance_size_map.M10.name
 }
 
-resource "mongodbatlas_cloud_backup_schedule" "primary_backup" {
-  project_id   = module.mongo_shared.mongo_project_id_map.dev.project_id
-  cluster_name = mongodbatlas_cluster.primary.name
+# resource "mongodbatlas_cloud_backup_schedule" "primary_backup" {
+#   project_id   = module.mongo_shared.mongo_project_id_map.dev.project_id
+#   cluster_name = mongodbatlas_cluster.primary.name
 
-  reference_hour_of_day    = 3
-  reference_minute_of_hour = 45
-  restore_window_days      = 4
-}
+#   reference_hour_of_day    = 3
+#   reference_minute_of_hour = 45
+#   restore_window_days      = 4
+# }
