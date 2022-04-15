@@ -15,12 +15,12 @@ pipelines:
           name: Run tsc on Minting Network
           script:
             - /bin/bash ./minting-marketplace/commands/run_tsc.sh
-  branches: #these will run on every push of the branch
-    dev:
-      - step:
-          script:
-            - ...
-    main:
-      - step:
-          script:
-            - ...
+  #branches: #these will run on every push of the branch
+  #  dev:
+  #    - step:
+  #        script:
+  #          - ...
+  #  main:
+  #    - step:
+  #        script:
+  #          - ...
