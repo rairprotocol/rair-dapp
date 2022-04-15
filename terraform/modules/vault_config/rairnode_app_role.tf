@@ -3,7 +3,10 @@ resource "vault_approle_auth_backend_role" "rairnode" {
   role_name      = "rairnode"
   
   token_policies = [
-    vault_policy.key_storage_admin.name
+    # allow access to administer key storage
+    vault_policy.key_storage_admin.name,
+    # allow access to read secrets for rairnode application
+    vault_policy.app_directory_secret_read_access[var.applications.rairnode.vault_secrets_dirname].name
   ]
   
   bind_secret_id = true
