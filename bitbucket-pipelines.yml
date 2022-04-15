@@ -1,0 +1,26 @@
+image: node:16.13.0
+
+pipelines:
+  pull-requests:
+    '**': #this runs as default for any branch not elsewhere defined
+      - step:
+          name: Install Dependencies and run typescript test
+          caches:
+            - node
+          script:
+            - yarn --cwd ./minting-marketplace
+            - cd ./minting-marketplace && ./commands/run_tsc.sh
+    feature/*: #any branch with a feature prefix
+      - step:
+          name: Run tsc on Minting Network
+          script:
+            - /bin/bash ./minting-marketplace/commands/run_tsc.sh
+  branches: #these will run on every push of the branch
+    dev:
+      - step:
+          script:
+            - ...
+    main:
+      - step:
+          script:
+            - ...
