@@ -5,8 +5,6 @@ resource "tfe_variable" "rair_prod_HCP_CLIENT_SECRET" {
   category = var.tf_variable_types.ENV
   sensitive = true
 }
-# terraform import tfe_variable.rair_prod_HCP_CLIENT_SECRET rairtech/rair-production/var-UGbP2pLcWPf2jEcv
-
 
 resource "tfe_variable" "rair_prod_HCP_CLIENT_ID" {
   key = "HCP_CLIENT_ID"
@@ -15,8 +13,6 @@ resource "tfe_variable" "rair_prod_HCP_CLIENT_ID" {
   category = var.tf_variable_types.ENV
   sensitive = true
 }
-# terraform import tfe_variable.rair_prod_HCP_CLIENT_ID rairtech/rair-production/var-ZDjUoJexiZwaBeKa
-
 
 resource "tfe_variable" "rair_prod_MONGODB_ATLAS_PRIVATE_KEY" {
   key = "MONGODB_ATLAS_PRIVATE_KEY"
@@ -25,8 +21,6 @@ resource "tfe_variable" "rair_prod_MONGODB_ATLAS_PRIVATE_KEY" {
   category = var.tf_variable_types.ENV
   sensitive = true
 }
-# terraform import tfe_variable.rair_prod_MONGODB_ATLAS_PRIVATE_KEY rairtech/rair-production/var-Dgv8EnnLPGpgBafi
-
 
 resource "tfe_variable" "rair_prod_MONGODB_ATLAS_PUBLIC_KEY" {
   key = "MONGODB_ATLAS_PUBLIC_KEY"
@@ -35,8 +29,6 @@ resource "tfe_variable" "rair_prod_MONGODB_ATLAS_PUBLIC_KEY" {
   category = var.tf_variable_types.ENV
   sensitive = true
 }
-# terraform import tfe_variable.rair_prod_MONGODB_ATLAS_PUBLIC_KEY rairtech/rair-production/var-G2aHqMy4thnsRKCt
-
 
 resource "tfe_variable" "rair_prod_gcp_tf_admin_service_account_json" {
   key = "gcp_tf_admin_service_account_json"
@@ -45,4 +37,3 @@ resource "tfe_variable" "rair_prod_gcp_tf_admin_service_account_json" {
   category = var.tf_variable_types.TERRAFORM
   sensitive = true
 }
-# terraform import tfe_variable.rair_prod_gcp_tf_admin_service_account_json rairtech/rair-production/var-QEkLYVrDmoGXYdsu

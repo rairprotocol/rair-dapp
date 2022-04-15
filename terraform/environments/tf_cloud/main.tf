@@ -14,5 +14,7 @@ module "mongo_shared" {
 }
 
 locals {
-  mongo_atlas_variable_description_template = "Mongo DB Atlas %s generated from project id: %s"
+  mongo_atlas_variable_description_template = "%s generated from Mongo Atlas project id: %s"
+  mongo_private_key_constant = "MONGODB_ATLAS_PRIVATE_KEY"
+  mongo_public_key_constant = "MONGODB_ATLAS_PUBLIC_KEY"
 }
