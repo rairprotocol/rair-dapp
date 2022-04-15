@@ -15,16 +15,16 @@ resource "tfe_variable" "rair_prod_HCP_CLIENT_ID" {
 }
 
 resource "tfe_variable" "rair_prod_MONGODB_ATLAS_PRIVATE_KEY" {
-  key = "MONGODB_ATLAS_PRIVATE_KEY"
-  description = "MONGODB_ATLAS_PRIVATE_KEY"
+  key = local.mongo_private_key_constant
+  description = local.mongo_private_key_constant
   workspace_id = tfe_workspace.rair_production.id
   category = var.tf_variable_types.ENV
   sensitive = true
 }
 
 resource "tfe_variable" "rair_prod_MONGODB_ATLAS_PUBLIC_KEY" {
-  key = "MONGODB_ATLAS_PUBLIC_KEY"
-  description = "MONGODB_ATLAS_PUBLIC_KEY"
+  key = local.mongo_public_key_constant
+  description = local.mongo_public_key_constant
   workspace_id = tfe_workspace.rair_production.id
   category = var.tf_variable_types.ENV
   sensitive = true
