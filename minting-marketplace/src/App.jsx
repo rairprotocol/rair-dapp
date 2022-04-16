@@ -293,9 +293,14 @@ function App({ sentryHistory }) {
 
 	useEffect(() => {
 		if (localStorage.token && isTokenValid(localStorage.token)) {
-			connectUserData();
-			dispatch({ type: authTypes.GET_TOKEN_START });
-			dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+			if (window.ethereum) {
+				connectUserData();
+				dispatch({ type: authTypes.GET_TOKEN_START });
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+			} else {
+				// If the token exists but Metamask is not enabled, delete the JWT so the user has to sign in again
+				localStorage.removeItem("token");
+			}
 		}
 	}, [connectUserData, dispatch, token]);
 
