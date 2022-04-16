@@ -4,12 +4,16 @@ pipelines:
   pull-requests:
     '**': #this runs as default for any branch not elsewhere defined
       - step:
-          name: Install Dependencies and run typescript test
+          name: Install Dependencies and run typescript test for minting-network
           caches:
             - node
           script:
             - yarn --cwd ./minting-marketplace
             - cd ./minting-marketplace && ./commands/run_tsc.sh
+          condition:
+            changesets:
+              includePaths:
+                - "minting-marketplace/**"
     feature/*: #any branch with a feature prefix
       - step:
           name: Run tsc on Minting Network
