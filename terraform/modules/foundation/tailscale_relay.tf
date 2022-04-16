@@ -31,6 +31,11 @@ resource "google_compute_instance_template" "tailsacle_relay" {
     network = google_compute_network.primary.id
     subnetwork = google_compute_subnetwork.public.id
     stack_type = "IPV4_ONLY"
+
+
+    # Comment this back in to get a public address on the dev Tailscale machine
+    # We need this if we want to SSH into the machine for testing
+    # access_config {}
   }
 
   service_account {
@@ -41,8 +46,14 @@ resource "google_compute_instance_template" "tailsacle_relay" {
 
   metadata_startup_script = templatefile("${path.module}/tailscale_relay_startup_script.sh", {
     tags = "tag:private-subnet-relay-${var.env_name}"
+
+    # List of routes/cidr ranges that Tailscale advertises
+    # and automatically proxies traffic through from developer machines
     advertised_routes = join(",", [
-      var.vpc_cidr_block
+      # access entire VPC CIDR range
+      var.vpc_cidr_block,
+      # Access peered Mongo DB CIDR Range
+      module.vpc_cidr_ranges.network_cidr_blocks.mongo_primary_cluster_range
     ])
     tailscale_auth_key_secret_name = local.tailscale_relay_secret_id
     hostname = "tailscale-relay-${var.env_name}"

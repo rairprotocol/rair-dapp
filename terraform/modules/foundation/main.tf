@@ -6,6 +6,10 @@ locals {
   }
 }
 
+module "shared_config" {
+  source = "../../environments/shared/env_config"
+}
+
 resource "google_compute_resource_policy" "daily_backup" {
   name   = "every-day-4am"
   region = "us-central1"

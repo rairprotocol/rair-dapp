@@ -29,11 +29,25 @@ resource "google_compute_network_peering" "mongodb_primary" {
   peer_network = "https://www.googleapis.com/compute/v1/projects/${mongodbatlas_network_peering.primary.atlas_gcp_project_id}/global/networks/${mongodbatlas_network_peering.primary.atlas_vpc_name}"
 }
 
+locals {
+  primary_db_access_map = [
+    {
+      cidr_block: module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_primary_cluster,
+      comment: "Allows access to db from kubernetes_primary_cluster subnet cidr range."
+    },
+    {
+      cidr_block: module.vpc_cidr_ranges.network_cidr_blocks.public,
+      comment: "Allows access from Dev computers directly to DB (Tailscale/public subnet)"
+    }
+  ]
+}
+
 resource "mongodbatlas_project_ip_access_list" "primary_access_list" {
   depends_on = [mongodbatlas_network_peering.primary]
+  count = length(local.primary_db_access_map)
 
   project_id = mongodbatlas_project.primary.id
 
-  cidr_block = module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_primary_cluster
-  comment    = "Allows access to db from kubernetes_primary_cluster subnet cidr range"
+  cidr_block = local.primary_db_access_map[count.index].cidr_block
+  comment    = local.primary_db_access_map[count.index].comment
 }
