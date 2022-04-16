@@ -25,9 +25,9 @@ module "config" {
 module "foundation" {
   source = "../../../modules/foundation"
 
-  env_name = "prod"
-  region = "us-west1"
-  gcp_project_id = "rair-market-production"
+  env_name = module.config.env_config.prod.env_name
+  region = module.config.env_config.prod.region
+  gcp_project_id = module.config.env_config.prod.gcp_project_id
   vpc_cidr_block = module.config.env_config.prod.vpc_cidr_block
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
   jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name

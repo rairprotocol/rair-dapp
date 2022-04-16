@@ -1,13 +1,22 @@
 output "env_config" {
   value = {
-    "dev" = {
-      "vpc_cidr_block" = "10.0.0.0/16"
+    "dev": {
+      env_name: "dev",
+      vpc_cidr_block: "10.0.0.0/16",
+      gcp_project_id: "rair-market-dev",
+      region: "us-west1"
     },
     "staging": {
-      "vpc_cidr_block" = "10.1.0.0/16"
+      env_name: "staging",
+      vpc_cidr_block: "10.1.0.0/16",
+      gcp_project_id: "rair-market-staging",
+      region: "us-west1"
     },
     "prod": {
-      "vpc_cidr_block" = "10.2.0.0/16"
+      env_name: "prod",
+      vpc_cidr_block: "10.2.0.0/16",
+      gcp_project_id: "rair-market-production",
+      region: "us-west1"
     }
   }
 }
