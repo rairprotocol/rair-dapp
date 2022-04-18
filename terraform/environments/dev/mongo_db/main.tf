@@ -24,7 +24,11 @@ module "mongo_common" {
   primary_db_name = mongodbatlas_cluster.primary.name
   project_id = module.mongo_shared.mongo_project_id_map.dev.project_id
   dev_team_db_admins = {
-    brian: module.mongo_shared.db_users.brian
+    brian: module.mongo_shared.db_users.brian,
+    garrett: module.mongo_shared.db_users.garrett,
+    masha: module.mongo_shared.db_users.masha,
+    zeph: module.mongo_shared.db_users.zeph,
+    chris: module.mongo_shared.db_users.chris
   }
 }
 
