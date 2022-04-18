@@ -6,7 +6,7 @@ resource "mongodbatlas_database_user" "db_admin_user_garrett" {
   password = module.mongo_shared.initial_db_user_password_before_manual_reset
   
   roles {
-    role_name = module.mongo_common.loweset_data_access_custom_role_id
+    role_name = module.mongo_common.loweset_data_access_custom_role_name
     database_name = module.mongo_shared.mongo_admin_db_name
   }
   
