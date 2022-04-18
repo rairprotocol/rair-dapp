@@ -3,10 +3,9 @@ resource "mongodbatlas_database_user" "db_admin_user_garrett" {
   auth_database_name = module.mongo_shared.mongo_admin_db_name
   project_id   = local.project_id
   username = module.mongo_shared.db_admin_users.garrett.username
-  password = module.mongo_shared.initial_db_user_password_before_manual_reset
   
   roles {
-    role_name = module.mongo_common.loweset_data_access_custom_role_name
+    role_name = module.mongo_shared.built_in_roles_map.dbAdmin
     database_name = module.mongo_shared.mongo_admin_db_name
   }
   
