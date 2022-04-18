@@ -1,10 +1,7 @@
 terraform {
-  backend "remote" {
-    hostname = "app.terraform.io"
-    organization = "rairtech"
-    workspaces {
-      name = "mongo-db-dev"
-    }
+  backend "gcs" {
+    bucket  = "rair-market-dev-mongo-dev-tf-state"
+    prefix  = "terraform/state"
   }
   required_providers {
     mongodbatlas = {
