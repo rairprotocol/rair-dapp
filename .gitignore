@@ -64,6 +64,7 @@ Thumbs.db
 # configuration files
 .env
 blockchain-networks-service/.env
+commands/update-local-admin/.env
 
 #nginx configuration files
 nginx/*
