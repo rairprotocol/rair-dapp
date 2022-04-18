@@ -26,29 +26,6 @@ resource "tfe_workspace" "cloudflare" {
   }
 }
 
-resource "tfe_workspace" "mongo_db_dev" {
-  name         = "mongo-db-dev"
-  description = format(local.mongo_db_description, "DEV")
-  organization = tfe_organization.rairtech.name
-  auto_apply = false
-  allow_destroy_plan = false
-  working_directory = "terraform/environments/dev/mongo_db"
-  queue_all_runs = false
-  speculative_enabled = true
-  structured_run_output_enabled = true
-
-
-  # VCS repo data is entered into the web UI first
-  # then the identifier and oath_token_id are pulled from the
-  # proposed changes in tf plan and pasted here
-  vcs_repo {
-    identifier = "%7Bf5368d7b-2fae-49fe-bbf0-6e342bd034c9%7D/%7Ba23789fe-787d-42a1-8c68-0098270f2999%7D"
-    branch = local.default_vcs_branch
-    ingress_submodules = false
-    oauth_token_id = "ot-pmtxUjKskMf1r9wQ"
-  }
-}
-
 resource "tfe_workspace" "mongo_db_prod" {
   name         = "mongo-db-prod"
   description = format(local.mongo_db_description, "PROD")
