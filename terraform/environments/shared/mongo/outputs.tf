@@ -1,19 +1,19 @@
-output "db_admin_users" {
+output "db_users" {
   value = {
     garrett: {
-      username: "garrett-db-admin"
+      username: "garrett"
     },
     brian: {
-      username: "brian-db-admin"
+      username: "brian"
     },
     chris: {
-      username: "chris-db-admin"
+      username: "chris"
     },
     zeph: {
-      username: "zeph-db-admin"
+      username: "zeph"
     },
     masha: {
-      username: "zeph-db-admin"
+      username: "masha"
     }
   }
 }
