@@ -6,7 +6,8 @@ resource "mongodbatlas_database_user" "db_admin_user_garrett" {
   password = module.mongo_shared.initial_db_user_password_before_manual_reset
   
   roles {
-  #   role_name = module.mongo_shared.built_in_roles_map.dbAdminAnyDatabase
+    #   role_name = module.mongo_shared.built_in_roles_map.dbAdminAnyDatabase
+    database_name = module.mongo_shared.mongo_admin_db_name
   }
   
   # Scope db admin user to specific DB's
@@ -26,6 +27,7 @@ resource "mongodbatlas_database_user" "admin_user_brian" {
   
   roles {
   #   role_name = module.mongo_shared.built_in_roles_map.dbAdminAnyDatabase
+    database_name = module.mongo_shared.mongo_admin_db_name
   }
   
   # Scope db admin user to specific DB's
@@ -45,6 +47,7 @@ resource "mongodbatlas_database_user" "db_admin_user_chris" {
   
   roles {
   #   role_name = module.mongo_shared.built_in_roles_map.dbAdminAnyDatabase
+    database_name = module.mongo_shared.mongo_admin_db_name
   }
   
   # Scope db admin user to specific DB's
@@ -64,6 +67,7 @@ resource "mongodbatlas_database_user" "db_admin_user_masha" {
   
   roles {
   #   role_name = module.mongo_shared.built_in_roles_map.dbAdminAnyDatabase
+    database_name = module.mongo_shared.mongo_admin_db_name
   }
   
   # Scope db admin user to specific DB's
@@ -83,6 +87,7 @@ resource "mongodbatlas_database_user" "db_admin_user_zeph" {
   
   roles {
     # role_name = module.mongo_shared.built_in_roles_map.dbAdminAnyDatabase
+    database_name = module.mongo_shared.mongo_admin_db_name
   }
   
   # Scope db admin user to specific DB's
