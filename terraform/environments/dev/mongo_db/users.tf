@@ -3,7 +3,6 @@ resource "mongodbatlas_database_user" "db_admin_user_garrett" {
   auth_database_name = module.mongo_shared.mongo_admin_db_name
   project_id   = local.project_id
   username = module.mongo_shared.db_users.garrett.username
-  password = module.mongo_shared.initial_db_user_password_before_manual_reset
 
   roles {
     role_name = module.mongo_shared.built_in_roles_map.dbAdmin
@@ -23,7 +22,6 @@ resource "mongodbatlas_database_user" "admin_user_brian" {
   auth_database_name = module.mongo_shared.mongo_admin_db_name
   project_id   = local.project_id
   username = module.mongo_shared.db_users.brian.username
-  password = module.mongo_shared.initial_db_user_password_before_manual_reset
   
   roles {
     role_name = module.mongo_shared.built_in_roles_map.dbAdmin
@@ -43,7 +41,6 @@ resource "mongodbatlas_database_user" "db_admin_user_chris" {
   auth_database_name = module.mongo_shared.mongo_admin_db_name
   project_id   = local.project_id
   username = module.mongo_shared.db_users.chris.username
-  password = module.mongo_shared.initial_db_user_password_before_manual_reset
   
   roles {
     role_name = module.mongo_shared.built_in_roles_map.dbAdmin
@@ -63,7 +60,6 @@ resource "mongodbatlas_database_user" "db_admin_user_masha" {
   auth_database_name = module.mongo_shared.mongo_admin_db_name
   project_id   = local.project_id
   username = module.mongo_shared.db_users.masha.username
-  password = module.mongo_shared.initial_db_user_password_before_manual_reset
   
   roles {
     role_name = module.mongo_shared.built_in_roles_map.dbAdmin
@@ -83,7 +79,6 @@ resource "mongodbatlas_database_user" "db_admin_user_zeph" {
   auth_database_name = module.mongo_shared.mongo_admin_db_name
   project_id   = local.project_id
   username = module.mongo_shared.db_users.zeph.username
-  password = module.mongo_shared.initial_db_user_password_before_manual_reset
   
   roles {
     role_name = module.mongo_shared.built_in_roles_map.dbAdmin
