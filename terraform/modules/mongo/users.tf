@@ -24,6 +24,6 @@ resource "mongodbatlas_database_user" "dev_team_db_users" {
 
   roles {
     role_name = module.mongo_shared.built_in_roles_map.dbAdmin
-    database_name = local.mongo_admin_db_name
+    database_name = module.mongo_shared.mongo_external_db_name
   }
 }
