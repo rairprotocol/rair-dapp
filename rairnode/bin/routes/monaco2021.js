@@ -118,12 +118,13 @@ module.exports = context => {
       }
 
       const tokens = await context.db.MintedToken.find({ contract: contract._id, offerPool: contract.offerPools.marketplaceCatalogIndex });
+      const totalCount = await context.db.MintedToken.countDocuments({ contract: contract._id, offerPool: contract.offerPools.marketplaceCatalogIndex });
 
       if (_.isEmpty(tokens)) {
         return res.status(404).send({ success: false, message: 'Tokens not found.' });
       }
 
-      res.json({ success: true, result: { contract: _.omit(contract, ['offerPools']), tokens } });
+      res.json({ success: true, result: { contract: _.omit(contract, ['offerPools']), tokens, totalCount } });
     } catch (e) {
       next(e);
     }

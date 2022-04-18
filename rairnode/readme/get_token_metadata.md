@@ -143,7 +143,8 @@ Returns founded user
         "creationDate": "2021-10-08T10:29:57.553Z"
       },
       ...
-    ]
+    ],
+    "totalCount": 28
   }
 }
 ```
