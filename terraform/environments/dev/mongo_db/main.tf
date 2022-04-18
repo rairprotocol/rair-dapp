@@ -25,8 +25,12 @@ module "mongo_common" {
   project_id = module.mongo_shared.mongo_project_id_map.dev.project_id
 }
 
+locals {
+  project_id = module.mongo_shared.mongo_project_id_map.dev.project_id
+}
+
 resource "mongodbatlas_cluster" "primary" {
-  project_id   = module.mongo_shared.mongo_project_id_map.dev.project_id
+  project_id   = local.project_id
   name         = "primary"
   cluster_type = module.mongo_shared.cluster_type_map.REPLICASET
 

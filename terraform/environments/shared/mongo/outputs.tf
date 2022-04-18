@@ -1,3 +1,23 @@
+output "db_admin_users" {
+  value = {
+    garrett: {
+      username: "garrett-db-admin"
+    },
+    brian: {
+      username: "brian-db-admin"
+    },
+    chris: {
+      username: "chris-db-admin"
+    },
+    zeph: {
+      username: "zeph-db-admin"
+    },
+    masha: {
+      username: "zeph-db-admin"
+    }
+  }
+}
+
 output "mongo_project_id_map" {
   value = {
     dev: {
@@ -98,4 +118,12 @@ output "built_in_roles_map" {
     dbAdminAnyDatabase: "dbAdminAnyDatabase",
     root: "root",
   }
+}
+
+output "mongo_admin_db_name" {
+  value = "admin"
+}
+
+output "initial_db_user_password_before_manual_reset" {
+  value = "change_me_in_dashboard_after_TF_apply"
 }
