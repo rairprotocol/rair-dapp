@@ -120,10 +120,20 @@ output "built_in_roles_map" {
   }
 }
 
+output "X509Type" {
+  value = {
+    NONE: "NONE",
+    MANAGED: "MANAGED",
+    CUSTOMER: "CUSTOMER"
+  }
+}
+
+# NEVER CHANGE THIS
 output "mongo_admin_db_name" {
   value = "admin"
 }
 
+# NEVER CHANGE THIS
 output "initial_db_user_password_before_manual_reset" {
   value = "change_me_in_dashboard_after_TF_apply"
 }

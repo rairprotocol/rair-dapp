@@ -23,6 +23,9 @@ module "mongo_common" {
   source = "../../../modules/mongo"
   primary_db_name = mongodbatlas_cluster.primary.name
   project_id = module.mongo_shared.mongo_project_id_map.dev.project_id
+  dev_team_db_admins = {
+    brian: module.mongo_shared.db_users.brian
+  }
 }
 
 locals {
