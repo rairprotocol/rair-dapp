@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  mongo_admin_db_name = "admin"
+  mongo_admin_db_name = module.mongo_shared.mongo_admin_db_name
 }
 
 module "mongo_shared" {
