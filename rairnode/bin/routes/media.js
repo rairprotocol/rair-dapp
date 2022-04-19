@@ -259,7 +259,7 @@ module.exports = context => {
           title: context.textPurify.sanitize(title),
           mainManifest: 'stream.m3u8',
           author,
-          encryptionType: 'aes-128-cbc'
+          encryptionType: 'aes-256-gcm'
         };
 
         if (description) {
@@ -300,7 +300,7 @@ module.exports = context => {
         const meta = {
           mainManifest: 'stream.m3u8',
           author,
-          encryptionType: 'aes-128-cbc',
+          encryptionType: 'aes-256-gcm',
           title: context.textPurify.sanitize(title),
           contract: foundContract._id,
           product,
@@ -327,7 +327,7 @@ module.exports = context => {
           last: false
         });
 
-        const key = exportedKey.toJSON();
+        const key = { ...exportedKey, key: exportedKey.key.toJSON()};
 
         await db.File.create({
           _id: cid,

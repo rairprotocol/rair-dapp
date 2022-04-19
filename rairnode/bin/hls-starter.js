@@ -41,7 +41,7 @@ module.exports = async () => {
 
     const mongoRes = await File.findOne({ _id: mediaId });
     return mongoRes.toObject();
-  } 
+  }
 
   return HLSServer({
     mediaConfigStore: getMediaConfigStoreData,

@@ -3,6 +3,7 @@ const { spawnSync, spawn } = require('child_process');
 const path = require('path');
 const {generateKeySync, createCipheriv} = require('crypto');
 const {copyFileSync, rm, promises, createReadStream, createWriteStream, renameSync} = require('fs');
+const _ = require('lodash');
 const log = require('./logger')(module);
 
 const standardResolutions = [
@@ -41,13 +42,12 @@ function intToByteArray(num) {
 }
 
 const encryptFolderContents = async (mediaData, encryptExtensions, socketInstance) => {
-	const key = generateKeySync('aes', { length: 128 });
-
+	const key = generateKeySync('aes', { length: 256 });
 	const promiseList = [];
 
 	let directoryData = await promises.readdir(mediaData.destination);
 
-	for await (entry of directoryData) {
+	for await (const entry of directoryData) {
 		const extension = entry.split('.')[1];
 		if (!encryptExtensions.includes(extension)) {
 			log.info(`Ignoring file ${entry}`);
@@ -59,14 +59,15 @@ const encryptFolderContents = async (mediaData, encryptExtensions, socketInstanc
 			const encryptedPath = fullPath + '.encrypted';
 			try {
 				const iv = intToByteArray(parseInt(entry.match(/([0-9]+).ts/)[1]));
-				const encrypt = createCipheriv('aes-128-cbc', key, iv);
+				const encrypt = createCipheriv('aes-256-gcm', key, iv);
 				const source = createReadStream(fullPath);
 				const dest = createWriteStream(encryptedPath);
+
 				source.pipe(encrypt).pipe(dest).on('finish', () => {
 					// overwrite the unencrypted file so we don't have to modify the manifests
 					renameSync(encryptedPath, fullPath);
-					resolve(true);
 					console.log(`finished encrypting: ${fullPath}`);
+					return resolve({ [_.chain(entry).split('.').head().value()]: encrypt.getAuthTag().toString('hex') });
 				});
 			} catch (e) {
 				console.error('Could not encrypt', fullPath, e);
@@ -81,8 +82,9 @@ const encryptFolderContents = async (mediaData, encryptExtensions, socketInstanc
 		done: 15,
 		parts: promiseList.length
 	});
-	await Promise.all(promiseList);
-	return key.export();
+	const authOfChunks = await Promise.all(promiseList);
+	const authTag = authOfChunks.reduce((pv, value) => ({ ...pv, ...value }), {});
+	return { key: key.export(), authTag };
 }
 
 const convertToHLS = async (mediaData, socketInstance) => {
@@ -154,7 +156,7 @@ const getMediaData = async (mediaData) => {
 					mediaData.height = height;
 				}
 			} catch (e) {
-				log.error('Error fetching video dimensions!', e);				
+				log.error('Error fetching video dimensions!', e);
 			}
 		}
 	} catch (e) {

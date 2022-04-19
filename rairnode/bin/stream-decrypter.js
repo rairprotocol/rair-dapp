@@ -3,11 +3,22 @@ const stream = require('stream')
 
 // Will decrypt of the key and IV are present in the mediaConfig.
 const streamDecrypter = req => {
-  const { key } = req.mediaConfig
-  if (key && key.data) {
-    const keyBuffer = Buffer.from(key.data)
+  const reg = /^\/(.*)\..*/;
+  const { key, encryptionType } = req.mediaConfig
+  if ((key && key.data) || (key.key && key.key.data && key.authTag)) {
     const iv = intToByteArray(parseInt(req.filePath.match(/([0-9]+).ts/)[1]))
-    return crypto.createDecipheriv('aes-128-cbc', keyBuffer, iv)
+
+    // Support previous version of encryption
+    if (encryptionType !== 'aes-256-gcm') {
+      const keyBuffer = Buffer.from(key.data)
+      return crypto.createDecipheriv(encryptionType, keyBuffer, iv)
+    }
+
+    // support encryption aes-256-gcm
+    const keyBuffer = Buffer.from(key.key.data)
+    const authTag = key.authTag[req.filePath.match(reg)[1]];
+    let decipher = crypto.createDecipheriv(encryptionType, keyBuffer, iv);
+    return decipher.setAuthTag(Buffer.from(authTag, 'hex'));
   } else {
     return new stream.PassThrough()
   }
