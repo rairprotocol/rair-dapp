@@ -49,6 +49,19 @@ import { rFetch } from '../../../utils/rFetch';
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
+// This will be the default contract used in this splash page
+const mainContract = {
+    contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+    requiredBlockchain: '0x1',
+    offerIndex: [0, 1]
+};
+// By setting REACT_APP_TEST_CONTRACTS
+const testContract = {
+    contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
+    requiredBlockchain: '0x5',
+    offerIndex: [52, 0]
+};
+
 const splashData = {
   title: "#UkraineGlitch",
   titleColor: "#FFD505",
@@ -66,11 +79,7 @@ const splashData = {
     // OPTIONAL: Image on the purchase button
     img: MetaMaskIcon,
     // Contract address
-    contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
-    // Contract's blockchain
-    requiredBlockchain: '0x1',
-    // Offer index (array of 2 elements - OfferPool, Offer - for Classic Contracts)
-    offerIndex: [0, 1],
+    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true' ? testContract : mainContract),
     // Custom style for the button
     customStyle: {
       backgroundColor: "#035BBC"
