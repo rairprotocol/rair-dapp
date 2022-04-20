@@ -124,6 +124,9 @@ module.exports = context => {
       let ownsTheAdminToken;
       let ownsTheAccessTokens = [];
       const file = await context.db.File.findOne({ _id: mediaId });
+      if (!file) {
+        return res.status(400).send({ success: false, message: 'No file found' });
+      }
       const offers = await context.db.Offer.find({
         offerIndex: {
           $in: file.offer
