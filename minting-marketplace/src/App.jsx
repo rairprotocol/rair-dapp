@@ -16,6 +16,8 @@ import * as Sentry from '@sentry/react';
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
+import gtag from './utils/gtag.js';
+
 import jsonwebtoken from 'jsonwebtoken';
 
 //import CSVParser from './components/metadata/csvParser.jsx';
@@ -80,7 +82,6 @@ import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace.jsx
 import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
 import MainLogo from './components/GroupLogos/MainLogo.jsx';
-
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 import { detectBlockchain } from './utils/blockchainData.js';
@@ -88,6 +89,7 @@ import AlertMetamask from './components/AlertMetamask/index.jsx';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 import MenuNavigation from './components/Navigation/Menu.jsx';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage.jsx';
+
 
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
@@ -99,7 +101,6 @@ const analytics = Analytics({
 		})
 	]
 })
-
 /* Track a page view */
 analytics.page()
 
@@ -247,6 +248,12 @@ function App({ sentryHistory }) {
 			});
 		}
 	}, [dispatch]);
+
+	// gtag 
+	
+	useEffect(() => {
+		gtag('event', 'page_view', {page_title: window.location.pathname, page_location: window.location.href});
+	} , []);
 
 	useEffect(() => {
 		// setTitle('Welcome');
