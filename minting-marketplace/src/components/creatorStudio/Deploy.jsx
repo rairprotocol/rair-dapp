@@ -8,6 +8,7 @@ import { utils } from 'ethers';
 import { metamaskCall } from '../../utils/metamaskUtils.js';
 
 import NavigatorFactory from './NavigatorFactory.jsx';
+import setTitle from '../../utils/setTitle.js';
 
 const Factory = () => {
 	const [contractName, setContractName] = useState('');
@@ -61,6 +62,10 @@ const Factory = () => {
 			setUserBalance(0);
 		}
 	}, [chainId])
+
+	useEffect(() => {
+		setTitle("Rair Factory")
+	}, [setTitle])
 
 	return <div className='row my-5 px-0 mx-0'>
 		<NavigatorFactory>

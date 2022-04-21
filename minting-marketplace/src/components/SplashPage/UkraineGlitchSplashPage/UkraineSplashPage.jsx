@@ -21,6 +21,7 @@ import UKR1294 from '../images/UkraineGlitchNFTExamples/1294.jpg'
 import UKR1989 from '../images/UkraineGlitchNFTExamples/1989.jpg'
 import videoBackground from '../images/metamask-vid-final.png'
 import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
+import faviconUkraine from './../images/favicons/favicon-ukraine.ico'
 
 
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
@@ -43,6 +44,7 @@ import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
 import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
 import Swal from 'sweetalert2';
+import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 
 // Google Analytics
@@ -71,6 +73,14 @@ const splashData = {
     <br />,
     "100% of proceeds fund tactical first aid supplies and Ukrainian developers",
   ],
+  seoInformation: {
+    title: "Слава Україні!",
+    contentName: "author",
+    content: "#UkraineGlitch",
+    description: "1991 Generative Abstract Glitch Art pieces to aid Ukraine",
+    favicon: faviconUkraine,
+    image: UKR_rounded
+  },
   buttonLabel: "Mint for .1991 Eth",
   backgroundImage: UKR_rounded,
   purchaseButton: {
@@ -203,25 +213,6 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       } else {
         setSoldCopies();
       }
-      /*
-      //contractAddress
-      //requiredBlockchain
-      //offerIndex
-      const { success, products } = await (
-        await fetch(`/api/contracts/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/products/offers`, {
-          method: "GET",
-          headers: {
-            'X-rair-token': `${localStorage.getItem('token')}`
-          },
-        })
-      ).json();
-
-      if (success && products.length > 0 && products[0].soldCopies) {
-        setSoldCopies(products[0].soldCopies);
-      } else {
-        setSoldCopies(0);
-      }
-      */
     }
 
   }, [setSoldCopies, loginDone, currentChain]);
@@ -230,12 +221,13 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
     getAllProduct()
   }, [getAllProduct])
 
-  useEffect(() => {
-    setTitle(`#UkraineGlitch`);
-  }, []);
+  // useEffect(() => {
+  //   setTitle(`#UkraineGlitch`);
+  // }, []);
 
   return (
     <div className="wrapper-splash-page ukraineglitch">
+      <MetaTags seoMetaTags={splashData.seoInformation} />
       <div className="template-home-splash-page">
         <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}

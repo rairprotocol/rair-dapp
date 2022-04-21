@@ -12,6 +12,7 @@ import Metamask from "../../images/metamask-fox.svg";
 import GreyMan from "./images/greyman1.png";
 import playImages from "./images/playImg.png";
 import GreyManNotFun from "./images/not-fun.png";
+import GreymanFavicon from './images/favicons/greyman-favicon.ico';
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -33,6 +34,7 @@ import PurchaseTokenButton from "../common/PurchaseToken.jsx";
 
 //Google Analytics
 import ReactGA from 'react-ga';
+import MetaTags from "../SeoTags/MetaTags";
 
 // Google Analytics
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -102,6 +104,15 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
+
+  const seoInformation = {
+    title: "#Cryptogreyman",
+    contentName: "author",
+    content: "#Cryptogreyman",
+    description: "7.907.414.597 Non-Unique NFTs",
+    favicon: GreymanFavicon,
+    faviconMobile: GreymanFavicon
+  }
 
   const {
     diamondMarketplaceInstance,
@@ -328,9 +339,9 @@ const SplashPage = ({ loginDone, connectUserData }) => {
     return diamondMarketplaceInstance.off('MintedToken', getAllProduct);
   }, [diamondMarketplaceInstance, getAllProduct])
 
-  useEffect(() => {
-    setTitle(`#Cryptogreyman`);
-  }, [])
+  // useEffect(() => {
+  //   setTitle(`#Cryptogreyman`);
+  // }, [])
 
   useEffect(() => {
     getAllProduct();
@@ -338,6 +349,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
 
   return (
     <div className="wrapper-splash-page greyman-page">
+      <MetaTags seoMetaTags={seoInformation} />
       <div className="home-splash--page">
         <div style={{ display: `${openCheckList ? "block" : "none"}` }} className="tutorial-checklist">
           <h5>Cryptogreyman purchase checklist</h5>

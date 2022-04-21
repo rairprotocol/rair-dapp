@@ -81,6 +81,7 @@ import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace.jsx
 // logos for About Page
 import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
+import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico'
 import MainLogo from './components/GroupLogos/MainLogo.jsx';
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
@@ -89,6 +90,7 @@ import AlertMetamask from './components/AlertMetamask/index.jsx';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
 import MenuNavigation from './components/Navigation/Menu.jsx';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage.jsx';
+import MetaTags from './components/SeoTags/MetaTags.jsx';
 
 
 const gAppName = process.env.REACT_APP_GA_NAME
@@ -127,6 +129,15 @@ function App({ sentryHistory }) {
 	const carousel_match = window.matchMedia('(min-width: 600px)')
 	const [carousel, setCarousel] = useState(carousel_match.matches)
 	window.addEventListener("resize", () => setCarousel(carousel_match.matches))
+
+	const seoInformation = {
+		title: "Rair Tech Marketplace",
+		contentName: "author",
+		content: "Digital Ownership Encryption",
+		description: "RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content",
+		favicon: RairFavicon,
+		faviconMobile: RairFavicon
+	}
 
 	// Redux
 	const {
@@ -551,9 +562,10 @@ function App({ sentryHistory }) {
 										{
 											path: '/',
 											content: <div className='main-wrapper'>
-												<div 
+												<MetaTags seoMetaTags={seoInformation} />
+												<div
 													className='col-6 text-left main'
-													>
+												>
 													<h1 className='w-100' style={{ textAlign: 'left' }}>
 														Digital <b className='title'>Ownership</b>
 														<br />

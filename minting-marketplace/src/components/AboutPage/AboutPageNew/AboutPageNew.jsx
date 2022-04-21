@@ -23,6 +23,8 @@ import { useLocation /*useHistory*/ } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import PurchaseTokenButton from "../../common/PurchaseToken.jsx";
+import FaviconRair from './../assets/rair_favicon.ico';
+import MetaTags from "../../SeoTags/MetaTags";
 
 const AboutPageNew = ({
   headerLogoBlack,
@@ -35,6 +37,15 @@ const AboutPageNew = ({
 
   const termsText =
     "I understand this a test NFT designed to unlock RAIR streams";
+
+  const seoInformation = {
+    title: "RAIR Technologies",
+    contentName: "author",
+    content: "#Cryptogreyman",
+    description: "Encrypted, Streaming NFTs",
+    favicon: FaviconRair,
+    faviconMobile: FaviconRair
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -67,6 +78,7 @@ const AboutPageNew = ({
   return (
     <>
       <div className="wrapper-about-page" style={{ marginTop: 0 }}>
+        <MetaTags seoMetaTags={seoInformation} />
         {/* <div className="about-page-logo">
                     <img onClick={() => history.push('/')}
                         alt='Header Logo'

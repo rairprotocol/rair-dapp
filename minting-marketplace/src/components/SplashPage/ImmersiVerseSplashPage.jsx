@@ -23,6 +23,7 @@ import setTitle from "../../utils/setTitle";
 //Google Analytics
 // import ReactGA from 'react-ga';
 import NotCommercialGeneric from "./NotCommercial/NotCommercialGeneric";
+import MetaTags from "../SeoTags/MetaTags";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -62,6 +63,15 @@ const SplashPage = ({ loginDone }) => {
   //   setIsOpen(true);
   // }, []);
 
+  const seoInformation = {
+    title: "#ImmersiverseATX",
+    contentName: "author",
+    content: "ImmersiverseATX",
+    description: "Claim your NFT to unlock encrypted streams from the ImmersiverseATX event",
+    favicon: "",
+    faviconMobile: ""
+  }
+
   const carousel_match = window.matchMedia("(min-width: 600px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
@@ -81,9 +91,9 @@ const SplashPage = ({ loginDone }) => {
 
   let subtitle;
 
-  useEffect(() => {
-    setTitle(`#ImmersiVerse ATX`);
-  }, []);
+  // useEffect(() => {
+  //   setTitle(`#ImmersiVerse ATX`);
+  // }, []);
 
   const formHyperlink = () => {
     window.open(
@@ -94,6 +104,7 @@ const SplashPage = ({ loginDone }) => {
 
   return (
     <div className="wrapper-splash-page greyman-page">
+      <MetaTags seoMetaTags={seoInformation} />
       <div className="home-splash--page">
         <AuthorBlock mainClass="immersiverse-page-author">
           <div className="block-splash">
