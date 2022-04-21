@@ -11,10 +11,6 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import { metamaskCall } from "../../../../utils/metamaskUtils.js";
-
-// import Carousel from "react-multi-carousel";
-// import "react-multi-carousel/lib/styles.css";
-
 import chainDataFront from "../../utils/blockchainDataFront";
 import ItemRank from "../../SelectBox/ItemRank";
 import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
@@ -25,7 +21,6 @@ import setDocumentTitle from "../../../../utils/setTitle";
 
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs.jsx";
 import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock.jsx";
-// import NftSingleUnlockables from "./NftSingleUnlockables.jsx";
 import CustomButton from "../../utils/button/CustomButton.jsx";
 import CollectionInfo from "./CollectionInfo/CollectionInfo.jsx";
 import TitleCollection from "./TitleCollection/TitleCollection.jsx";
@@ -48,13 +43,15 @@ const NftDataPageTest = ({
   textColor,
   offerData,
   offerPrice,
-  userData
+  userData,
+  someUsersData,
 }) => {
   const history = useHistory();
   const [offerDataInfo, setOfferDataInfo] = useState();
   const [ownerInfo, setOwnerInfo] = useState();
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
+
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
@@ -72,21 +69,29 @@ const NftDataPageTest = ({
   }
 
   const getParticularOffer = useCallback(async () => {
-    let response = await (
-      await fetch(
-        `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
-        {
-          method: "GET",
-        }
-      )
-    ).json();
+    if(blockchain){
+      let response = await (
+        await fetch(
+          `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
+          {
+            method: "GET",
+          }
+        )
+      ).json();
+
+       if(response.success){
+        setOwnerInfo(response.product)
+        setOfferDataInfo(response.product.offers);
+       }
+     
+    }
+   
 
     // console.log(response, "response");
 
-    if (response.success) {
-      setOwnerInfo(response.product)
-      setOfferDataInfo(response.product.offers);
-    }
+    // if (response.success) {
+     
+    // }
 
   }, [product, contract, blockchain]);
 
@@ -463,9 +468,10 @@ const NftDataPageTest = ({
       <div>
         <TitleCollection
           selectedData={selectedData}
-          currentUser={userData}
           title={selectedData?.name}
+          someUsersData={someUsersData}
           userName={ownerInfo?.owner}
+          currentUser={userData}
         />
         <div
           className="nft-data-content"
@@ -513,7 +519,7 @@ const NftDataPageTest = ({
               >
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
-                  src={`${chainDataFront[data?.product.blockchain]?.image}`}
+                  src={`${chainDataFront[data?.contract.blockchain]?.image}`}
                   alt=""
                 />
                 <span
@@ -532,7 +538,8 @@ const NftDataPageTest = ({
                     color: "#E882D5",
                   }}
                 >
-                  {data?.product.blockchain || ""}
+                  {/* {data?.contract.blockchain || ""} */}
+                  {chainDataFront[data?.contract.blockchain]?.name || ""}
                 </span>
               </div>
             </div>
@@ -741,7 +748,7 @@ const NftDataPageTest = ({
                   selectedData={selectedData}
                   selectedToken={selectedToken}
                 />
-                {productsFromOffer.length !== 0 ? <CustomButton
+                {productsFromOffer && productsFromOffer.length !== 0 ? <CustomButton
                   onClick={() =>
                     history.push(
                       `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`

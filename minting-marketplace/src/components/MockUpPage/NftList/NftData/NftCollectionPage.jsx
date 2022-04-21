@@ -39,13 +39,13 @@ const NftCollectionPageComponent = ({
   setTokenDataFiltered,
   setTokenData,
   userData,
+  someUsersData,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [offerDataCol, setOfferDataCol] = useState();
   const [offerAllData, setOfferAllData] = useState();
   const [collectionName, setCollectionName] = useState();
-  const [someUsersData, setSomeUsersData] = useState();
   const [show, setShow] = useState(true);
 
   const loadToken = useCallback(() => {
@@ -69,22 +69,6 @@ const NftCollectionPageComponent = ({
       setCollectionName(response.product.name);
     }
   }, [product, contract, blockchain]);
-
-  const neededUserAddress = offerAllData?.owner;
-
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    if(neededUserAddress){
-      const result = await fetch(`/api/users/${neededUserAddress}`).then((blob) =>
-      blob.json()
-    );
-    setSomeUsersData(result.user);
-    }
-  }, [neededUserAddress]);
-
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
 
   useEffect(() => {
     getParticularOffer();

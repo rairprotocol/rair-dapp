@@ -9,7 +9,6 @@ const TitleCollection = ({
   title,
   userName,
   currentUser,
-  tokenData,
   someUsersData,
   selectedData,
 }) => {

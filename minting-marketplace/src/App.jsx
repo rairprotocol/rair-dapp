@@ -702,7 +702,7 @@ function App({ sentryHistory }) {
 											requirement: loginDone
 										},
 										{
-											path: ':contractId/:product/:offer/:token',
+											path: '/:contractId/:product/:offer/:token',
 											content: <NftDataExternalLink currentUser={currentUserAddress} primaryColor={primaryColor} textColor={textColor} />,
 										},
 										{

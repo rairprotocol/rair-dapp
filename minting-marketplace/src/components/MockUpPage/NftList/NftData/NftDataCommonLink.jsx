@@ -8,15 +8,18 @@ import { useDispatch, useSelector } from "react-redux";
 const NftDataCommonLinkComponent = ({ userData }) => {
   const [tokenData, setTokenData] = useState([]);
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
+  const [totalCount, setTotalCount] = useState();
   const [selectedData, setSelectedData] = useState([]);
   const [selectedOfferIndex, setSelectedOfferIndex] = useState();
   const [selectedToken, setSelectedToken] = useState();
   const [offerPrice, setOfferPrice] = useState([]);
   const [offerData, setOfferData] = useState([]);
   const [productsFromOffer, setProductsFromOffer] = useState([]);
-  const [totalCount, setTotalCount] = useState();
   const [showToken, setShowToken] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
+  const [someUsersData, setSomeUsersData] = useState();
+  const [dataForUser, setDataForUser] = useState();
+
   const dispatch = useDispatch();
 
   const { currentUserAddress } = useSelector((store) => store.contractStore);
@@ -29,8 +32,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
 
   useEffect(() => {
     dispatch({ type: "SET_REAL_CHAIN", payload: blockchain });
-    //eslint-disable-next-line
-  }, []);
+  }, [blockchain, dispatch]);
 
   const getAllProduct = useCallback(
     async (fromToken, toToken) => {
@@ -106,6 +108,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     ).json();
 
     if (response.success) {
+      setDataForUser(response.product);
       setOfferData(
         response.product.offers.find(
           (neededOfferIndex) =>
@@ -127,6 +130,22 @@ const NftDataCommonLinkComponent = ({ userData }) => {
       console.log(response?.message);
     }
   }, [product, contract, selectedOfferIndex, blockchain]);
+
+  const neededUserAddress = dataForUser?.owner;
+
+  const getInfoFromUser = useCallback(async () => {
+    // find user
+    if(neededUserAddress){
+      const result = await fetch(`/api/users/${neededUserAddress}`).then((blob) =>
+      blob.json()
+    );
+    setSomeUsersData(result.user);
+    }
+  }, [neededUserAddress]);
+
+  useEffect(() => {
+    getInfoFromUser();
+  }, [getInfoFromUser]);
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await (
@@ -191,6 +210,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         primaryColor={primaryColor}
         productsFromOffer={productsFromOffer}
         setSelectedToken={setSelectedToken}
+        someUsersData={someUsersData}
         selectedData={selectedData}
         selectedToken={selectedToken}
         textColor={textColor}
@@ -243,6 +263,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         primaryColor={primaryColor}
         productsFromOffer={productsFromOffer}
         setSelectedToken={setSelectedToken}
+        someUsersData={someUsersData}
         selectedData={selectedData}
         selectedToken={selectedToken}
         textColor={textColor}

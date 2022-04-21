@@ -57,15 +57,13 @@ const ListOfTokensComponent = ({
     fetch(`/api/nft/network/${blockchain}/${contract}/${product}/tokenNumbers`)
       .then((res) => res.json())
       .then((response) => {
-        if(!isDestroyed){
+        if (!isDestroyed) {
           setProductTokenNumbers(response.tokens);
         }
       });
-      return (
-        () => {
-          isDestroyed = true
-        }
-      )
+    return () => {
+      isDestroyed = true;
+    };
   }, [blockchain, product, contract, setProductTokenNumbers]);
 
   const availableRanges = useMemo(

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import NftDataPageTest from "./NftDataPageTest";
 
@@ -8,54 +8,75 @@ const NftDataExternalLink = () => {
   const [data, setData] = useState();
   const [offerPrice, setOfferPrice] = useState();
 
-  const { currentUserAddress } = useSelector(store => store.contractStore);
-  const { primaryColor, textColor } = useSelector(store => store.colorStore);
-
+  const { currentUserAddress } = useSelector((store) => store.contractStore);
+  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const [totalCount, setTotalCount] = useState();
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedToken, setSelectedToken] = useState();
+  const [neededBlockchain, setNeededBlockchain] = useState();
+  const [neededContract, setNeededContract] = useState();
   const [productsFromOffer, setProductsFromOffer] = useState([]);
-  const [selectedContract, setSelectedContract] = useState();
+  // const [/*selectedContract*/, setSelectedContract] = useState();
+  const [someUsersData, setSomeUsersData] = useState();
+  const [dataForUser, setDataForUser] = useState();
   const [selectedIndexInContract, setSelectedIndexInContract] = useState();
 
-  // eslint-disable-next-line no-unused-vars
   const history = useHistory();
   const params = useParams();
-  const { blockchain, adminToken, contract, product, token, offer } = params;
+  const { contractId, product, token } = params;
 
   const getData = useCallback(async () => {
-    if (adminToken && contract && product) {
+    if (contractId && product) {
       const response = await (
-        await fetch(`/api/${adminToken}/${contract}/${product}`, { //add blabla before adminToken
+        await fetch(`/api/${contractId}/${product}`, {
           method: "GET",
         })
       ).json();
-      if(response.success === true){
+      if (response.success) {
         setData(response.result);
-        setSelectedContract(response.result.product.products.contract)
-        setSelectedIndexInContract(response.result.product.products.collectionIndexInContract)
-  
+        setDataForUser(response.result.contract);
+        setNeededContract(response.result.contract.contractAddress);
+        setNeededBlockchain(response.result.contract.blockchain);
+        // setSelectedContract(response.result.contract.products.contract);
+        setSelectedIndexInContract(
+          response.result.contract.products.collectionIndexInContract
+        );
+        setTotalCount(response.result.totalCount);
         setTokenData(response.result.tokens);
-        setSelectedData(response.result.tokens[token].metadata);
+
+        if (response.result.tokens.length >= Number(token)) {
+          setSelectedData(response.result?.tokens[token]?.metadata);
+        }
+
         setSelectedToken(token);
         setOfferPrice(
-          response.result.product.products.offers.map((p) => p.price)
+          response.result.contract.products.offers.map((p) => p.price)
         );
       } else {
-        Swal.fire('Error', `${response.message}`, 'error');
+        Swal.fire("Error", `${response.message}`, "error");
       }
-      
     } else return null;
-  }, [adminToken, contract, product, token]);
+  }, [contractId, product, token]);
 
   const getProductsFromOffer = useCallback(async () => {
-    const response = await (
-      await fetch(`/api/nft/network/${blockchain}/${selectedContract}/${selectedIndexInContract}/files/${token}`, {
-        method: "GET",
-      })
-    ).json();
-    setProductsFromOffer(response.files);
-  }, [selectedContract, selectedIndexInContract, token, blockchain]);
+    // console.log(neededBlockchain, 'neededBlockchain');
+    // console.log(neededContract, 'neededContract');
+    // console.log(selectedIndexInContract, "selectedIndexInContract");
+    // console.log(neededBlockchain && selectedIndexInContract &&neededContract  , 'dfd');
+
+    if (neededBlockchain && neededContract) {
+      const response = await (
+        await fetch(
+          `/api/nft/network/${neededBlockchain}/${neededContract}/${selectedIndexInContract}/files`,
+          {
+            method: "GET",
+          }
+        )
+      ).json();
+      setProductsFromOffer(response.files);
+    }
+  }, [neededContract, selectedIndexInContract, neededBlockchain]);
 
   function onSelect(id) {
     tokenData.forEach((p) => {
@@ -65,31 +86,49 @@ const NftDataExternalLink = () => {
     });
   }
   const handleClickToken = async (token) => {
-    history.push(`/${adminToken}/${blockchain}/${contract}/${product}/${offer}/${token}`);
+    history.push(
+      `/tokens/${neededBlockchain}/${neededContract}/${product}/${token}`
+    );
     setSelectedData(tokenData[token].metadata);
     setSelectedToken(token);
   };
 
+  const neededUserAddress = dataForUser?.user;
+
+  const getInfoFromUser = useCallback(async () => {
+    if (neededUserAddress) {
+      const result = await fetch(`/api/users/${neededUserAddress}`).then(
+        (blob) => blob.json()
+      );
+      setSomeUsersData(result.user);
+    }
+  }, [neededUserAddress]);
+
   useEffect(() => {
     getData();
     getProductsFromOffer();
-  }, [getData, getProductsFromOffer]);
+    getInfoFromUser();
+  }, [getData, getProductsFromOffer, getInfoFromUser]);
 
   return (
     <NftDataPageTest
+      blockchain={neededBlockchain}
+      contract={neededContract}
       currentUser={currentUserAddress}
-      onSelect={onSelect}
+      data={data}
       handleClickToken={handleClickToken}
+      onSelect={onSelect}
+      offerPrice={offerPrice}
       setSelectedToken={setSelectedToken}
-      contract={contract}
       tokenData={tokenData}
+      totalCount={totalCount}
+      textColor={textColor}
       selectedData={selectedData}
       selectedToken={selectedToken}
-      data={data}
-      offerPrice={offerPrice}
+      someUsersData={someUsersData}
       primaryColor={primaryColor}
       productsFromOffer={productsFromOffer}
-      textColor={textColor}
+      product={product}
     />
   );
 };
