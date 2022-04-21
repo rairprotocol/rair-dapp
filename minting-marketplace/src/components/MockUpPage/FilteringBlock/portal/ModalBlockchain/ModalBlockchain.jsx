@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "../../modal";
-import BlockMinMax from "../BlockMinMax/BlockMinMax";
+// import BlockMinMax from "../BlockMinMax/BlockMinMax";
 
 const blockchains = [
   {
@@ -53,10 +53,10 @@ const ModalBlockchain = ({
   setIsShow,
   setFilterText,
   click,
-  setClick
+  setClick,
 }) => {
-  const [arrBlockchains, /*setArrBlockchains*/] = useState(blockchains);
-  const [clearAll, setClearAll] = useState(false);
+  const [arrBlockchains /*setArrBlockchains*/] = useState(blockchains);
+  const [, /*clearAll*/ setClearAll] = useState(false);
 
   const onChangeClicked = (name) => {
     setClick(name);
@@ -106,6 +106,7 @@ const ModalBlockchain = ({
     // getContract();
     onCloseModal();
   };
+
   const onClickButton = (data) => {
     onChangeClicked(data.name);
     setBlockchain(data.chainId);
@@ -121,20 +122,20 @@ const ModalBlockchain = ({
         </div>
         <div className="modal-filtering">
           <div className="price-wrapper">
-            <div className="modal-filtering-price-title">
+            {/* <div className="modal-filtering-price-title">
               <h4>Price</h4>
-            </div>
-            <div className="filtering-price">
+            </div> */}
+            {/* <div className="filtering-price">
               <select className="select-price">
                 <option value="0">Select</option>
                 <option value="1">Ethereum(ETH)</option>
-                <option value="2">Bitcoin(BTC)</option>
-                {/* <span className="price-arrow">
+                <option value="2">Bitcoin(BTC)</option> */}
+            {/* <span className="price-arrow">
                     <i className="fas fa-chevron-down"></i>
                   </span> */}
-              </select>
+            {/* </select>
               <BlockMinMax clearAll={clearAll} />
-            </div>
+            </div> */}
           </div>
           <div className="categories-wraper">
             <div className="modal-filtering-title">
@@ -168,7 +169,7 @@ const ModalBlockchain = ({
             className="modal-filtering-clear-btn"
             onClick={() => clearAllFilters()}
           >
-            Clear All
+            Clear
           </button>
           <button
             className="modal-filtering-apply-btn"

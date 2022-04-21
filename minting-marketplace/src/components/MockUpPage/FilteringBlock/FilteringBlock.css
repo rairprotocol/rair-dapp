@@ -84,7 +84,7 @@
 }
 
 .filtering-categories {
-    margin: 16px 0 48px;
+    margin: 34px 0 48px;
 }
 
 .filtering-categories button.categories-clicked {
@@ -98,7 +98,7 @@
     background: none;
     font-size: 20px;
     color: #fff;
-    padding: 9px 24px 15px;
+    padding: 9px 24px 10px;
     margin-right: 16px;
     margin-bottom: 16px;
 }

@@ -10,9 +10,12 @@ const FilteringBlock = ({
   setSortItem,
   isFilterShow,
   setBlockchain,
+  setCategory,
   getContract,
   setIsShow,
+  setIsShowCategories,
   setFilterText,
+  setFilterCategoriesText,
   click,
   setClick,
 }) => {
@@ -120,12 +123,12 @@ const FilteringBlock = ({
               >
                 Blockchain
               </div>
-              <div
+              {/* <div
                 onClick={() => onChangeFilterItem("Creator")}
                 className="select-filters-item"
               >
                 Creator
-              </div>
+              </div> */}
               <div
                 onClick={() => {
                   onChangeFilterItem("Metadata");
@@ -203,18 +206,23 @@ const FilteringBlock = ({
           </div>
         )}
         <ModalCategories
-          setIsOpenCategories={setIsOpenCategories}
+          click={click}
           isOpenCategories={isOpenCategories}
+          setIsOpenCategories={setIsOpenCategories}
+          setCategory={setCategory}
+          setClick={setClick}
+          setIsShowCategories={setIsShowCategories}
+          setFilterCategoriesText={setFilterCategoriesText}
         />
         <ModalBlockchain
-          getContract={getContract}
-          setBlockchain={setBlockchain}
-          setIsOpenBlockchain={setIsOpenBlockchain}
+          click={click}
           isOpenBlockchain={isOpenBlockchain}
+          setBlockchain={setBlockchain}
+          setClick={setClick}
+          setIsOpenBlockchain={setIsOpenBlockchain}
           setIsShow={setIsShow}
           setFilterText={setFilterText}
-          click={click}
-          setClick={setClick}
+          getContract={getContract}
         />
       </div>
     </>

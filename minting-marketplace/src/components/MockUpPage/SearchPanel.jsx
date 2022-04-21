@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import InputField from "../common/InputField.jsx";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-// import 'react-tabs/style/react-tabs.css';
 import { NftList } from "./NftList/NftList.jsx";
 import VideoList from "../video/videoList.jsx";
 import FilteringBlock from "./FilteringBlock/FilteringBlock.jsx";
@@ -16,8 +15,11 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [blockchain, setBlockchain] = useState();
+  const [category, setCategory] = useState();
   const [isShow, setIsShow] = useState(false);
+  const [isShowCategories, setIsShowCategories] = useState(false);
   const [filterText, setFilterText] = useState("");
+  const [filterCategoriesText, setFilterCategoriesText] = useState("");
   const [click, setClick] = useState(null);
 
   const media_match = window.matchMedia("(min-width: 700px)");
@@ -39,6 +41,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
         itemsPerPage: itemsPerPage,
         pageNum: currentPage,
         blockchain: blockchain,
+        category: category,
       },
     });
 
@@ -64,7 +67,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
 
     const totalCount = responseContract.data.totalNumber;
     setTotalPages(getPagesCount(totalCount, itemsPerPage));
-  }, [currentPage, itemsPerPage, blockchain]);
+  }, [currentPage, itemsPerPage, blockchain, category]);
 
   const getPagesCount = (totalCount, itemsPerPage) => {
     return Math.ceil(totalCount / itemsPerPage);
@@ -118,8 +121,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
 
   const clearFilter = () => {
     setBlockchain(null);
+    setClick(null);
     setIsShow(false);
-    setClick(null)
+  };
+  const clearCategoriesFilter = () => {
+    setCategory(null);
+    setClick(null);
+    setIsShowCategories(false);
   };
   return (
     <div className="input-search-wrapper list-button-wrapper">
@@ -197,28 +205,43 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               }}
             ></i>
             <FilteringBlock
-              sortItem={sortItem}
-              setSortItem={setSortItem}
-              getContract={getContract}
-              setBlockchain={setBlockchain}
-              primaryColor={primaryColor}
-              textColor={textColor}
-              isFilterShow={true}
-              setIsShow={setIsShow}
-              setFilterText={setFilterText}
               click={click}
+              isFilterShow={true}
+              textColor={textColor}
+              primaryColor={primaryColor}
+              sortItem={sortItem}
+              setBlockchain={setBlockchain}
+              setCategory={setCategory}
               setClick={setClick}
+              setSortItem={setSortItem}
+              setIsShow={setIsShow}
+              setIsShowCategories={setIsShowCategories}
+              setFilterText={setFilterText}
+              setFilterCategoriesText={setFilterCategoriesText}
+              getContract={getContract}
             />
           </div>
         </div>
         <TabPanel>
           <div className="clear-filter-wrapper">
             {isShow ? (
-              <button 
-                style={{color: `var(--${textColor})`}}
+              <button
+                style={{ color: `var(--${textColor})` }}
                 className="clear-filter"
-                onClick={() => clearFilter()}>
+                onClick={() => clearFilter()}
+              >
                 {filterText}
+              </button>
+            ) : (
+              <></>
+            )}
+            {isShowCategories ? (
+              <button
+                style={{ color: `var(--${textColor})` }}
+                className="clear-filter filter-category"
+                onClick={() => clearCategoriesFilter()}
+              >
+                {filterCategoriesText}
               </button>
             ) : (
               <></>
@@ -234,19 +257,23 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             data={data}
           />
           <div className="pagination__wrapper">
-            {pagesArray.map((p) => (
-              <span
-                key={p}
-                onClick={() => changePage(p)}
-                className={
-                  currentPage === p
-                    ? "pagination__page pagination__page__current"
-                    : "pagination__page"
-                }
-              >
-                {p}
-              </span>
-            ))}
+            {pagesArray && pagesArray.length > 0 ? (
+              pagesArray.map((p) => (
+                <span
+                  key={p}
+                  onClick={() => changePage(p)}
+                  className={
+                    currentPage === p
+                      ? "pagination__page pagination__page__current"
+                      : "pagination__page"
+                  }
+                >
+                  {p}
+                </span>
+              ))
+            ) : (
+              <h1 className="search-panel-empty-text">No items to display</h1>
+            )}
           </div>
         </TabPanel>
         <TabPanel>
