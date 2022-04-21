@@ -16,9 +16,16 @@ pipelines:
                 - "minting-marketplace/**"
     feature/*: #any branch with a feature prefix
       - step:
-          name: Run tsc on Minting Network
+          name: Install Dependencies and run typescript test for minting-network
+          caches:
+            - node
           script:
-            - /bin/bash ./minting-marketplace/commands/run_tsc.sh
+            - yarn --cwd ./minting-marketplace
+            - cd ./minting-marketplace && ./commands/run_tsc.sh
+          condition:
+            changesets:
+              includePaths:
+                - "minting-marketplace/**"
   #branches: #these will run on every push of the branch
   #  dev:
   #    - step:
