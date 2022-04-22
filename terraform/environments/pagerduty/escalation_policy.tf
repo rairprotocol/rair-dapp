@@ -1,4 +1,4 @@
-resource "pagerduty_escalation_policy" "engineering" {
+resource "pagerduty_escalation_policy" "devops" {
   name      = "Engineering Escalation Policy"
   num_loops = 2
 
