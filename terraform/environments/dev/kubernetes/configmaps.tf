@@ -32,6 +32,12 @@ locals {
     BINANCE_MAINNET_RPC: "https://bsc-dataseed.binance.org/",
     MONGO_LOG_COLLECTION: "Log",
     LOG_LEVEL: "debug"
+    TEST_BSCSCAN_GATEWAY: "https://testnet.bscscan.com/token",
+    TEST_POLYGONSCAN_GATEWAY: "https://mumbai.polygonscan.com/token",
+    TEST_ETHERSCAN_GATEWAY: "https://goerli.etherscan.io/token",
+    POLYGONSCAN_GATEWAY: "https://polygonscan.com/token",
+    ETHERSCAN_GATEWAY: "https://etherscan.io/token",
+    BSCSCAN_GATEWAY: "https://bscscan.com/token"
   }
 
   minting_network_configmap = {
