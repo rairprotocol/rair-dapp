@@ -30,8 +30,6 @@ async function main() {
       log.error(`Reason: ${ e.message }`);
     });
 
-  mongoose.set('useFindAndModify', false);
-
   const app = express();
 
   const client = await MongoClient.connect(connectionString, { useNewUrlParser: true });
@@ -46,10 +44,14 @@ async function main() {
       OfferPool: _mongoose.model('OfferPool', require('./models/offerPool'), 'OfferPool'),
       Offer: _mongoose.model('Offer', require('./models/offer'), 'Offer'),
       MintedToken: _mongoose.model('MintedToken', require('./models/mintedToken'), 'MintedToken'),
-      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokes'), 'LockedTokens'),
+      LockedTokens: _mongoose.model('LockedTokens', require('./models/lockedTokens'), 'LockedTokens'),
       Versioning: _mongoose.model('Versioning', require('./models/versioning'), 'Versioning'),
       Task: _mongoose.model('Task', require('./models/task'), 'Task'),
-      SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction')
+      SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction'),
+      Transaction: _mongoose.model('Transaction', require('./models/transaction.js'), 'Transaction'),
+      TokenMetadata: _mongoose.model('TokenMetadata', require('./models/tokenMetadata.js'), 'TokenMetadata'),
+      MetadataLink: _mongoose.model('MetadataLink', require('./models/metadataLink.js'), 'MetadataLink'),
+      PastAddress: _mongoose.model('PastAddress', require('./models/pastAddress.js'), 'PastAddress'),
     },
     mongo: _db,
     config

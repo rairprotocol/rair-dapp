@@ -10,6 +10,7 @@ const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
   context.agenda.define(AgendaTaskEnum.SyncLocks, { lockLifetime }, async (task, done) => {
+    return done();
     try {
       logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncLocks});
       const { network, name } = task.attrs.data;

@@ -30,75 +30,154 @@ module.exports = context => {
     try {
       const { contract } = req;
 
-      const products = await context.db.Product.aggregate([
-        { $match: { contract: contract._id } },
-        { $sort: { creationDate: -1 } },
-        {
-          $lookup: {
-            from: 'OfferPool',
-            let: {
-              contr: '$contract',
-              prod: '$collectionIndexInContract'
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          '$contract',
-                          '$$contr'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$product',
-                          '$$prod'
-                        ]
-                      }
-                    ]
+      let products;
+
+      let commonQuery = [
+          { $match: { contract: contract._id } },
+          { $sort: { creationDate: -1 } },
+      ]
+
+      if (contract?.diamond) {
+        products = await context.db.Product.aggregate([
+          ...commonQuery,
+          // Diamond contracts have no OfferPools, use token locks to find the offers
+          {
+            $lookup: {
+              from: 'LockedTokens',
+              let: {
+                contr: '$contract',
+                prod: '$collectionIndexInContract'
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        {
+                          $eq: [
+                            '$contract',
+                            '$$contr'
+                          ]
+                        },
+                        {
+                          $eq: [
+                            '$product',
+                            '$$prod'
+                          ]
+                        }
+                      ]
+                    }
                   }
                 }
-              }
-            ],
-            as: 'offerPool'
-          }
-        },
-        { $unwind: '$offerPool' },
-        {
-          $lookup: {
-            from: 'Offer',
-            let: {
-              offerPoolL: '$offerPool.marketplaceCatalogIndex',
-              contractL: '$contract'
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          '$contract',
-                          '$$contractL'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$offerPool',
-                          '$$offerPoolL'
-                        ]
-                      }
-                    ]
+              ],
+              as: 'tokenLock'
+            }
+          },
+          { $unwind: '$tokenLock' },
+          {
+            $lookup: {
+              from: 'Offer',
+              let: {
+                contr: '$contract',
+                prod: '$collectionIndexInContract'
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        {
+                          $eq: [
+                            '$contract',
+                            '$$contr'
+                          ]
+                        },
+                        {
+                          $eq: [
+                            '$product',
+                            '$$prod'
+                          ]
+                        }
+                      ]
+                    }
                   }
                 }
-              }
-            ],
-            as: 'offers'
+              ],
+              as: 'offers'
+            }
           }
-        }
-      ]);
+          ]);
+      } else {
+        products = await context.db.Product.aggregate([
+          ...commonQuery,
+          {
+            $lookup: {
+              from: 'OfferPool',
+              let: {
+                contr: '$contract',
+                prod: '$collectionIndexInContract'
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        {
+                          $eq: [
+                            '$contract',
+                            '$$contr'
+                          ]
+                        },
+                        {
+                          $eq: [
+                            '$product',
+                            '$$prod'
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              as: 'offerPool'
+            }
+          },
+          { $unwind: '$offerPool' },
+          {
+            $lookup: {
+              from: 'Offer',
+              let: {
+                offerPoolL: '$offerPool.marketplaceCatalogIndex',
+                contractL: '$contract'
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        {
+                          $eq: [
+                            '$contract',
+                            '$$contractL'
+                          ]
+                        },
+                        {
+                          $eq: [
+                            '$offerPool',
+                            '$$offerPoolL'
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              as: 'offers'
+            }
+          }
+        ]);
+      }
+
 
       res.json({ success: true, products });
     } catch (err) {

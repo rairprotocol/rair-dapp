@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.9; 
+pragma solidity ^0.8.10; 
 
 interface IERC2981 {
     /// ERC165 bytes to add to interface array - set in parent contract

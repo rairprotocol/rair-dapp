@@ -239,9 +239,11 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 						icon: 'info',
 						showConfirmButton: false
 					});
-					if (await metamaskCall(
-						contractData.instance.setProductURI(...args)
-					)) {
+					let params = [contractData.product.collectionIndexInContract, metadataURI];
+					if (contractData.diamond) {
+						params.push(includeNumber);
+					}
+					if (await metamaskCall(contractData.instance.setProductURI(...params))) {
 						Swal.fire({
 							title: 'Success!',
 							html: `Metadata URI has been set for all tokens in product #${contractData.product.collectionIndexInContract}`,

@@ -201,7 +201,7 @@ const splashData = {
 const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentChain, currentUserAddress, minterInstance } = useSelector((store) => store.contractStore);
+  const { currentChain, minterInstance } = useSelector((store) => store.contractStore);
   const carousel_match = window.matchMedia("(min-width: 900px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
@@ -215,7 +215,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       }
     }
 
-  }, [setSoldCopies, loginDone, currentChain]);
+  }, [setSoldCopies, loginDone, currentChain, minterInstance]);
 
   useEffect(() => {
     getAllProduct()

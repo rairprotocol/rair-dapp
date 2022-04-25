@@ -1,0 +1,6 @@
+{
+  "description": "Events that are deprecated (they don't exist in the current ABIs but are still necessary for historical data)",
+  "abi": [
+    
+  ]
+}

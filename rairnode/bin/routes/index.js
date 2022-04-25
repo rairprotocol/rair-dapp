@@ -11,6 +11,7 @@ module.exports = context => {
   router.use('/blockchains', require('./blockchains')(context));
   router.use('/categories', require('./categories')(context));
   router.use('/search', require('./search')(context));
+  router.use('/transaction', require('./transactions')(context));
 
   // Custom temporary endpoint for the monaco2021
   router.use('/', require('./monaco2021')(context));

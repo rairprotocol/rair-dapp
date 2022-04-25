@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
 const Metadata = new Schema({
   name: { type: String, required: true, default: 'none' },
@@ -21,7 +21,7 @@ const MintedToken = new Schema({
   token: { type: Number, required: true },
   uniqueIndexInContract: { type: Number, required: true },
   ownerAddress: { type: String, lowercase: true },
-  offerPool: { type: Number, required: true },
+  offerPool: { type: Number },
   offer: { type: Number, required: true },
   contract: { type: Schema.ObjectId, required: true },
   metadata: { type: Metadata, default: () => ({}) },
@@ -39,7 +39,7 @@ MintedToken.pre('save', function (next) {
   if (token.isNew) {
     token.isMetadataPinned = reg.test(token.metadataURI || '');
   } else if (token.metadata) {
-    MintedToken.findOne({
+    model('MintedToken', MintedToken, 'MintedToken').findOne({
       contract: token.contract,
       offerPool: token.offerPool,
       token: token.token

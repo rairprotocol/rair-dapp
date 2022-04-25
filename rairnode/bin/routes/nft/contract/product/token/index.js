@@ -12,13 +12,20 @@ module.exports = context => {
   // Get specific token by internal token ID
   router.get('/', async (req, res, next) => {
     try {
-      const { contract, offerPool, token } = req;
-
-      const result = await context.db.MintedToken.findOne({
+      const { contract, offers, offerPool, token } = req;
+      let result = null;
+      const options = {
         contract: contract._id,
-        offerPool: offerPool.marketplaceCatalogIndex,
         token
-      });
+      };
+
+      if (contract.diamond) {
+        result = await context.db.MintedToken.findOne({ ...options, offer: { $in: offers } });
+      } else {
+        result = await context.db.MintedToken.findOne({ ...options, offerPool: offerPool.marketplaceCatalogIndex });
+      }
+
+      if (result === null) return res.status(404).send({ success: false, message: 'Token not found.' });
 
       return res.json({ success: true, result });
     } catch (err) {
@@ -29,9 +36,10 @@ module.exports = context => {
   // Update specific token metadata by internal token ID
   router.post('/', JWTVerification(context), upload.array('files', 2), validation('updateTokenMetadata'), async (req, res, next) => {
     try {
-      const { contract, offerPool, token } = req;
+      const { contract, offers, offerPool, token } = req;
       const { user } = req;
       let fieldsForUpdate = _.pick(req.body, ['name', 'description', 'artist', 'external_url', 'image', 'animation_url', 'attributes']);
+      let updatedToken = null;
 
       if (user.publicAddress !== contract.user) {
         if (req.files.length) {
@@ -94,12 +102,22 @@ module.exports = context => {
       })
 
       sanitizedFieldsForUpdate = _.mapKeys(sanitizedFieldsForUpdate, (v, k) => `metadata.${ k }`);
-
-      const updatedToken = await context.db.MintedToken.findOneAndUpdate({
+      const options = {
         contract: contract._id,
-        offerPool: offerPool.marketplaceCatalogIndex,
         token
-      }, sanitizedFieldsForUpdate, { new: true });
+      };
+
+      if (contract.diamond) {
+        updatedToken = await context.db.MintedToken.findOneAndUpdate({
+          ...options,
+          offer: { $in: offers }
+        }, sanitizedFieldsForUpdate, { new: true });
+      } else {
+        updatedToken = await context.db.MintedToken.findOneAndUpdate({
+          ...options,
+          offerPool: offerPool.marketplaceCatalogIndex
+        }, sanitizedFieldsForUpdate, { new: true });
+      }
 
       if (req.files.length) {
         await Promise.all(_.map(req.files, async file => {
@@ -124,10 +142,11 @@ module.exports = context => {
   // Pin metadata to pinata cloud
   router.get('/pinning', JWTVerification(context), async (req, res, next) => {
     try {
-      const { contract, offerPool, token } = req;
+      const { contract, offers, offerPool, token } = req;
       const { user } = req;
       const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
       let metadataURI = 'none';
+      let foundToken = null;
 
       if (user.publicAddress !== contract.user) {
         return res.status(403).send({
@@ -136,11 +155,16 @@ module.exports = context => {
         });
       }
 
-      const foundToken = await context.db.MintedToken.findOne({
+      const options = {
         contract: contract._id,
-        offerPool: offerPool.marketplaceCatalogIndex,
         token
-      });
+      };
+
+      if (contract.diamond) {
+        foundToken = await context.db.MintedToken.findOne({ ...options, offer: { $in: offers } });
+      } else {
+        foundToken = await context.db.MintedToken.findOne({ ...options, offerPool: offerPool.marketplaceCatalogIndex });
+      }
 
       if (_.isEmpty(foundToken)) {
         return res.status(400).send({ success: false, message: 'Token not found.' });

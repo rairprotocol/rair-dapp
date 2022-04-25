@@ -7,7 +7,11 @@ const Contract = new Schema({
   user: { type: String, lowercase:true, required: true },
   blockchain: { type: String, required: true },
   contractAddress: { type: String, required: true, lowercase: true },
-  creationDate: { type: Date, default: Date.now }
+  diamond: { type: Boolean, required: true, default: false },
+  creationDate: { type: Date, default: Date.now },
+  transactionHash: { type: String, required: false },
+  lastSyncedBlock: { type: String, required: false, default: '0'},
+  external: { type: Boolean, required: true, default: false }
 }, { versionKey: false });
 
 module.exports = Contract;

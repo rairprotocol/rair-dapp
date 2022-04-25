@@ -8,6 +8,8 @@ module.exports = async (context) => {
 
   // remove all old sync and sync-contracts tasks
   await context.db.Task.deleteMany({ name: { $in: ['sync', 'sync contracts'] } })
+  // Mark all sync task as Not Running
+  await context.db.Versioning.updateMany({}, {$set: {running: false}});
 
   // Start a new instance of agenda
   const agenda = new Agenda({
@@ -40,9 +42,10 @@ module.exports = async (context) => {
     await agenda.create('sync')
       .schedule(moment()
         .utc()
-        .add(5, 'minutes')
+        .add(1, 'minutes')
         .toDate())
       .save();
+      log.info('Sync tasks will start in a minute!');
   });
 
   agenda.on('error', (err) => {
@@ -53,41 +56,42 @@ module.exports = async (context) => {
     let data = task.attrs.data;
     let additionalInfo = '';
 
+    console.log(`Finished task: ${task.attrs.name}!`, data);
     switch (task.attrs.name) {
       case AgendaTaskEnum.SyncContracts:
-        await agenda.create(AgendaTaskEnum.SyncProducts, data)
+        await agenda.create(AgendaTaskEnum.SyncDiamondContracts, data)
           .schedule(moment()
             .utc()
             .toDate())
-          .save();
+          .save()
         break;
-      case AgendaTaskEnum.SyncProducts:
-        await agenda.create(AgendaTaskEnum.SyncOfferPools, data)
+      case AgendaTaskEnum.SyncDiamondContracts:
+        await agenda.create(AgendaTaskEnum.SyncAll721Events, data)
           .schedule(moment()
             .utc()
             .toDate())
-          .save();
+          .save()
         break;
-      case AgendaTaskEnum.SyncOfferPools:
-        await agenda.create(AgendaTaskEnum.SyncOffers, data)
+      case AgendaTaskEnum.SyncAll721Events:
+        await agenda.create(AgendaTaskEnum.SyncClassicMarketplaceEvents, data)
           .schedule(moment()
             .utc()
             .toDate())
-          .save();
+          .save()
         break;
-      case AgendaTaskEnum.SyncOffers:
-        await agenda.create(AgendaTaskEnum.SyncTokens, data)
+      case AgendaTaskEnum.SyncClassicMarketplaceEvents:
+        await agenda.create(AgendaTaskEnum.SyncAllDiamond721Events, data)
           .schedule(moment()
             .utc()
             .toDate())
-          .save();
+          .save()
         break;
-      case AgendaTaskEnum.SyncTokens:
-        await agenda.create(AgendaTaskEnum.SyncLocks, data)
+      case AgendaTaskEnum.SyncAllDiamond721Events:
+        await agenda.create(AgendaTaskEnum.SyncDiamondMarketplaceEvents, data)
           .schedule(moment()
             .utc()
             .toDate())
-          .save();
+          .save()
         break;
       default:
         break;

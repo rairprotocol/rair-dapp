@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
-// import { rFetch } from './rFetch.js';
+import { rFetch } from './rFetch.js';
 
 // 2 for the transaction catcher, 1 for speed
-const confirmationsRequired = 1;
+const confirmationsRequired = 2;
 
 const handleError = (errorMessage, defaultError = undefined) => {
 	//console.log('Reason:', errorMessage.reason)
@@ -74,15 +74,12 @@ const metamaskCall = async (transaction, fallbackFailureMessage = undefined) => 
 	return paramsValidation;
 }
 
-// This does nothing here, it's for the transaction catcher.
 const handleReceipt = async (transactionReceipt) => {
 	//console.log('Handling Receipt', transactionReceipt);
 	// Use window.ethereum.chainId because switching networks on Metamask cancels all transactions
-	/*
 	await rFetch(`/api/transaction/${window.ethereum.chainId}/${transactionReceipt.transactionHash}`, {
 		method: 'POST'
 	});
-	*/
 }
 
 const validateInteger = (number) => {

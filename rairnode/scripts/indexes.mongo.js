@@ -19,25 +19,29 @@ const { MongoClient } = require('mongodb');
     }
   );
 
+  await db.collection('Contract').dropIndexes();
   await db.collection('Contract').createIndex({ user: 1 }, { background: true });
   await db.collection('Contract').createIndex({ contractAddress: 1, blockchain: 1 }, { background: true, unique: true });
 
+  await db.collection('Product').dropIndexes();
   await db.collection('Product').createIndex({ name: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1 }, { background: true });
   await db.collection('Product').createIndex({ contract: 1, collectionIndexInContract: 1 }, { background: true, unique: true });
   await db.collection('Product').createIndex({ name: 'text'}, { weights: { name: 1 }, name: 'ProductSearchIdx' });
 
+  await db.collection('OfferPool').dropIndexes();
   await db.collection('OfferPool').createIndex({ contract: 1, product: 1 }, { background: true, unique: true });
   await db.collection('OfferPool').createIndex({ contract: 1, marketplaceCatalogIndex: 1 }, { background: true, unique: true });
 
+  await db.collection('Offer').dropIndexes();
   await db.collection('Offer').createIndex({ offerPool: 1 }, { background: true });
-  await db.collection('Offer').createIndex({ offerPool: 1, offerIndex: 1 }, { background: true });
-  await db.collection('Offer').createIndex({ contract: 1, offerPool: 1, offerIndex: 1 }, { background: true, unique: true });
-  await db.collection('Offer').createIndex({ contract: 1, product: 1, offerIndex: 1 }, { background: true, unique: true });
   await db.collection('Offer').createIndex({ contract: 1, product: 1 }, { background: true});
+  await db.collection('Offer').createIndex({ contract: 1, diamondRangeIndex: 1 }, { background: true});
 
+  await db.collection('LockedTokens').dropIndexes();
   await db.collection('LockedTokens').createIndex({ contract: 1, product: 1 }, { background: true });
 
+  await db.collection('File').dropIndexes();
   await db.collection('File').createIndex({ author: 1 }, { background: true });
   await db.collection('File').createIndex({ title: 1 }, { background: true });
   await db.collection('File').createIndex({ creationDate: 1 }, { background: true });
@@ -50,14 +54,19 @@ const { MongoClient } = require('mongodb');
     }
   );
 
-  await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1, token: 1 }, { background: true, unique: true, name: 'MintedTokenUniqueIndex' });
+  await db.collection('MintedToken').dropIndexes();
+  await db.collection('MintedToken').createIndex({ contract: 1, uniqueIndexInContract: 1 }, { background: true, unique: true, name: 'MintedTokenUniqueIndex' });
   await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1 }, { background: true });
+  await db.collection('MintedToken').createIndex({ contract: 1, offer: 1 }, { background: true });
 
-  await db.collection('LockedTokens').createIndex({ contract: 1, lockIndex: 1 }, { background: true, unique: true });
-
+  await db.collection('Versioning').dropIndexes();
   await db.collection('Versioning').createIndex({ name: 1, network: 1 }, { background: true, unique: true });
 
+  await db.collection('SyncRestriction').dropIndexes();
   await db.collection('SyncRestriction').createIndex({ blockchain: 1, contractAddress: 1 }, { background: true, unique: true });
+
+  await db.collection('Transaction').dropIndexes();
+  await db.collection('Transaction').createIndex({ _id: 1, blockchainId: 1 }, { background: true, uniquer: true })
 
   console.log('Completed Database Indexes');
 

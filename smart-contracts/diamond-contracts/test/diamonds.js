@@ -1406,7 +1406,7 @@ describe("Diamonds", function () {
 					{recipient: addr2.address, percentage: 60000}
 				], true, addr4.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
-					.withArgs(secondDeploymentAddress, 0, 'Second First First 2', 4500, 2, 0);
+					.withArgs(secondDeploymentAddress, 0, 'Second First First 2', 4500, 2, true, 0);
 				/*
 					event AddedMintingOffer(
 						address erc721Address,
@@ -1436,7 +1436,7 @@ describe("Diamonds", function () {
 					{recipient: addr2.address, percentage: 30000}
 				], true, addr4.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
-					.withArgs(secondDeploymentAddress, 1, 'Second First Second', 3500, 3, 1);
+					.withArgs(secondDeploymentAddress, 1, 'Second First Second', 3500, 3, true, 1);
 			});
 
 			it ("Should add an offer for a range on a different address", async () => {
@@ -1445,7 +1445,7 @@ describe("Diamonds", function () {
 					{recipient: addr2.address, percentage: 90000}
 				], true, addr4.address))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
-					.withArgs(firstDeploymentAddress, 0, 'First First First', 100, 1, 2);
+					.withArgs(firstDeploymentAddress, 0, 'First First First', 100, 1, true, 2);
 			});
 
 			it ("Should return the number of offers each contract has", async () => {
@@ -1511,9 +1511,9 @@ describe("Diamonds", function () {
 					addr4.address
 				))
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
-					.withArgs(secondDeploymentAddress, 2, 'Second Second First', 20000, 4, 3)
+					.withArgs(secondDeploymentAddress, 2, 'Second Second First', 20000, 4, false, 3)
 					.to.emit(mintingOffersFacet, "AddedMintingOffer")
-					.withArgs(secondDeploymentAddress, 3, 'Second Second Second', 35000, 4, 4);
+					.withArgs(secondDeploymentAddress, 3, 'Second Second Second', 35000, 4, false, 4);
 				await expect(await mintingOffersFacet.getTotalOfferCount()).to.equal(currentOffers.add(2));
 			});
 		});

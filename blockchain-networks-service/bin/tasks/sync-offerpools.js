@@ -11,6 +11,7 @@ const lockLifetime = 1000 * 60 * 5;
 module.exports = (context) => {
   context.agenda.define(AgendaTaskEnum.SyncOfferPools, { lockLifetime }, async (task, done) => {
     try {
+      return done();
       logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncOfferPools});
       const { network, name } = task.attrs.data;
       const offerPoolsForSave = [];

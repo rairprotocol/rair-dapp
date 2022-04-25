@@ -31,6 +31,8 @@ module.exports = context => {
       const forSave = [];
       const forUpdate = [];
       const tokens = [];
+      let foundTokens = [];
+      let result = [];
 
       if (!user.adminRights) {
         return res.status(403).send({ success: false, message: 'Not have admin rights.' });
@@ -46,51 +48,15 @@ module.exports = context => {
         return res.status(403).send({ success: false, message: 'This contract not belong to you.' });
       }
 
-      const [, adminToken] = user.adminNFT.split(':');
+      const offerPool = await context.db.OfferPool.findOne({ contract: foundContract._id, product: prod });
+      const offers = await context.db.Offer.find({ contract: foundContract._id, product: prod });
 
-      const offerPools = await context.db.OfferPool.aggregate([
-        { $match: { contract: ObjectId(contract), product: prod } },
-        {
-          $lookup: {
-            from: 'Offer',
-            let: {
-              contractP: '$contract',
-              productP: '$product'
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      {
-                        $eq: [
-                          '$contract',
-                          '$$contractP'
-                        ]
-                      },
-                      {
-                        $eq: [
-                          '$product',
-                          '$$productP'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            as: 'offer'
-          }
-        },
-        { $unwind: '$offer' }
-      ]);
-
-      if (_.isEmpty(offerPools)) {
+      if (_.isEmpty(offers)) {
         await removeTempFile(roadToFile);
         return res.status(404).send({ success: false, message: 'Offers not found.' });
       }
 
-
+      const offerIndexes = offers.map(v => v.offerIndex);
       const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
 
       if (_.isEmpty(foundProduct)) {
@@ -98,7 +64,22 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'Product not found.' });
       }
 
-      const foundTokens = await context.db.MintedToken.find({ contract, offerPool: _.head(offerPools).marketplaceCatalogIndex  });
+      if (foundContract.diamond) {
+        foundTokens = await context.db.MintedToken.find({
+          contract,
+          offer: { $in: offerIndexes }
+        });
+      } else {
+        if (_.isEmpty(offerPool)) {
+          await removeTempFile(roadToFile);
+          return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+        }
+
+        foundTokens = await context.db.MintedToken.find({
+          contract,
+          offerPool: offerPool.marketplaceCatalogIndex
+        });
+      }
 
       await new Promise((resolve, reject) => fs.createReadStream(`${ req.file.destination }${ req.file.filename }`)
         .pipe(csv({
@@ -133,11 +114,11 @@ module.exports = context => {
           if (isValid && isCoverPresent) records.push(data);
         })
         .on('end', () => {
-          _.forEach(offerPools, offerPool => {
+          _.forEach(offers, offer => {
             _.forEach(records, record => {
               const token = Number(record.nftid);
 
-              if (_.inRange(token, offerPool.offer.range[0], (offerPool.offer.range[1] + 1))) {
+              if (_.inRange(token, offer.range[0], (offer.range[1] + 1))) {
                 const address = !!record.publicaddress ? record.publicaddress : '0xooooooooooooooooooooooooooooooooooo' + token;
                 const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
@@ -148,18 +129,21 @@ module.exports = context => {
                     return re;
                   }, [])
                   .value();
-                const foundToken = _.find(foundTokens, t => t.offer === offerPool.offer.offerIndex && t.token === token);
+                const foundToken = _.find(foundTokens, t => t.offer === offer.offerIndex && t.token === token);
                 const mainFields = {
                   contract,
-                  offerPool: offerPool.marketplaceCatalogIndex,
                   token
+                }
+
+                if (!foundContract.diamond) {
+                  mainFields.offerPool = offerPool.marketplaceCatalogIndex;
                 }
 
                 if (!foundToken) {
                   forSave.push({
                     ...mainFields,
                     ownerAddress: sanitizedOwnerAddress,
-                    offer: offerPool.offer.offerIndex,
+                    offer: offer.offerIndex,
                     uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                     isMinted: false,
                     metadata: {
@@ -204,7 +188,7 @@ module.exports = context => {
             return resolve(records);
           });
 
-          if (_.isEmpty(offerPools)) return resolve();
+          if (_.isEmpty(offers)) return resolve();
         })
         .on('error', reject)
       );
@@ -227,12 +211,17 @@ module.exports = context => {
         } catch (e) {}
       }
 
-      const result = await context.db.MintedToken.find({
+      const resultOptions = {
         contract,
-        offerPool: offerPools[0].marketplaceCatalogIndex,
         token: { $in: tokens },
         isMinted: false
-      });
+      };
+
+      if (foundContract.diamond) {
+        result = await context.db.MintedToken.find({ ...resultOptions, offer: { $in: offerIndexes } });
+      } else {
+        result = await context.db.MintedToken.find({ ...resultOptions, offerPool: offerPool.marketplaceCatalogIndex });
+      }
 
       res.json({ success: true, result });
     } catch (err) {

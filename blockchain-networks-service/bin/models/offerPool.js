@@ -8,7 +8,8 @@ const OfferPool = new Schema({
   product: { type: Number },
   rangeNumber: { type: Number },
   minterAddress: { type: String },
-  creationDate: { type: Date, default: Date.now }
+  creationDate: { type: Date, default: Date.now },
+  transactionHash: { type: String, required: false }
 }, { versionKey: false });
 
 module.exports = OfferPool;

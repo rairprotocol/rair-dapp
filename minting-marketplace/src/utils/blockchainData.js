@@ -22,6 +22,7 @@ const chainData = {
 		}
 	},
 	'0x61': {
+		testnet: true,
 		image: BinanceDiamond,
 		name: 'Binance Testnet',
 		chainId: '0x61',
@@ -40,6 +41,7 @@ const chainData = {
 		}
 	},
 	'0x13881': {
+		testnet: true,
 		image: MaticLogo,
 		name: 'Matic(Polygon) Testnet',
 		chainId: '0x13881',
@@ -58,6 +60,7 @@ const chainData = {
 		}
 	},
 	'0x5': {
+		testnet: true,
 		image: EthereumLogo,
 		name: 'Ethereum Goerli',
 		chainId: '0x5',

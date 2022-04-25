@@ -15,21 +15,42 @@ module.exports = context => {
       const lastToken = Number(toToken);
       const numberOfTokens = Number(limit);
 
-      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+      let totalCount = 0;
+      let tokens = [];
 
-      if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+      if (contract.diamond) {
+        const offers = await context.db.Offer.find({ contract: contract._id, product }).distinct('offerIndex');
 
-      const totalCount = await context.db.MintedToken.countDocuments({
-        contract: contract._id,
-        offerPool: offerPool.marketplaceCatalogIndex
-      });
-      const tokens = await context.db.MintedToken.find({
-        contract: contract._id,
-        offerPool: offerPool.marketplaceCatalogIndex,
-        token: !!lastToken ? { $gt: (firstToken - 1), $lt: (lastToken + 1) } : { $gt: (firstToken - 1) }
-      })
-        .sort([['token', 1]])
-        .limit(numberOfTokens);
+        if (_.isEmpty(offers)) return res.status(404).send({ success: false, message: 'Offers not found.' });
+
+        totalCount = await context.db.MintedToken.countDocuments({
+          contract: contract._id,
+          offer: { $in: offers }
+        });
+        tokens = await context.db.MintedToken.find({
+          contract: contract._id,
+          offer: { $in: offers },
+          token: !!lastToken ? { $gt: (firstToken - 1), $lt: (lastToken + 1) } : { $gt: (firstToken - 1) }
+        })
+          .sort([['token', 1]])
+          .limit(numberOfTokens);
+      } else {
+        const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+
+        if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+
+        totalCount = await context.db.MintedToken.countDocuments({
+          contract: contract._id,
+          offerPool: offerPool.marketplaceCatalogIndex
+        });
+        tokens = await context.db.MintedToken.find({
+          contract: contract._id,
+          offerPool: offerPool.marketplaceCatalogIndex,
+          token: !!lastToken ? { $gt: (firstToken - 1), $lt: (lastToken + 1) } : { $gt: (firstToken - 1) }
+        })
+          .sort([['token', 1]])
+          .limit(numberOfTokens);
+      }
 
       return res.json({ success: true, result: { totalCount, tokens } });
     } catch (err) {
@@ -40,16 +61,31 @@ module.exports = context => {
   router.get('/tokenNumbers', async (req, res, next) => {
     try {
       const { contract, product } = req;
-      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+      let tokens = [];
 
-      if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+      if (contract.diamond) {
+        const offers = await context.db.Offer.find({ contract: contract._id, product }).distinct('offerIndex');
 
-      const tokens = await context.db.MintedToken.find({
-        contract: contract._id,
-        offerPool: offerPool.marketplaceCatalogIndex
-      })
-        .sort([['token', 1]])
-        .distinct('token');
+        if (_.isEmpty(offers)) return res.status(404).send({ success: false, message: 'Offers not found.' });
+
+        tokens = await context.db.MintedToken.find({
+          contract: contract._id,
+          offer: { $in: offers }
+        })
+          .sort([['token', 1]])
+          .distinct('token');
+      } else {
+        const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+
+        if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+
+        tokens = await context.db.MintedToken.find({
+          contract: contract._id,
+          offerPool: offerPool.marketplaceCatalogIndex
+        })
+          .sort([['token', 1]])
+          .distinct('token');
+      }
 
       return res.json({ success: true, tokens });
     } catch (err) {
@@ -63,17 +99,7 @@ module.exports = context => {
       const { token } = req.params;
       const { contract, product } = req;
       const sanitizedToken = Number(token);
-      const offerPoolRaw = await context.db.OfferPool.findOne({ contract: contract._id, product });
-
-      if (_.isEmpty(offerPoolRaw)) {
-        res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
-        return;
-      }
-
-      const offerPool = offerPoolRaw.toObject();
-
-      const files = await context.db.MintedToken.aggregate([
-        { $match: { contract: contract._id, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } },
+      const options = [
         {
           $lookup: {
             from: 'File',
@@ -115,7 +141,28 @@ module.exports = context => {
         },
         { $unwind: '$files' },
         { $replaceRoot: { newRoot: '$files' } },
-      ]);
+      ];
+
+      if (contract.diamond) {
+        const offers = await context.db.Offer.find({ contract: contract._id, product }).distinct('offerIndex');
+
+        if (_.isEmpty(offers)) return res.status(404).send({ success: false, message: 'Offers not found.' });
+
+        options.unshift({ $match: { contract: contract._id, offer: { $in: offers }, token: sanitizedToken } });
+      } else {
+        const offerPoolRaw = await context.db.OfferPool.findOne({ contract: contract._id, product });
+
+        if (_.isEmpty(offerPoolRaw)) {
+          res.json({ success: false, message: 'Offer pool which belong to this particular product not found.' });
+          return;
+        }
+
+        const offerPool = offerPoolRaw.toObject();
+
+        options.unshift({ $match: { contract: contract._id, offerPool: offerPool.marketplaceCatalogIndex, token: sanitizedToken } });
+      }
+
+      const files = await context.db.MintedToken.aggregate(options);
 
       res.json({ success: true, files });
     } catch (err) {
@@ -209,11 +256,15 @@ module.exports = context => {
       const { contract, product } = req;
       req.token = Number(req.params.token);
 
-      const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
-
-      if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPool not found.' });
-
-      req.offerPool = offerPool;
+      if (contract.diamond) {
+        const offers = await context.db.Offer.find({ contract: contract._id, product }).distinct('offerIndex');
+        if (_.isEmpty(offers)) return res.status(404).send({ success: false, message: 'Offers not found.' });
+        req.offers = offers;
+      } else {
+        const offerPool = await context.db.OfferPool.findOne({ contract: contract._id, product });
+        if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPool not found.' });
+        req.offerPool = offerPool;
+      }
 
       return next();
     } catch (e) {

@@ -1,85 +1,202 @@
 const Moralis = require('moralis/node');
-const _ = require('lodash');
 const log = require('../utils/logger')(module);
-const { getABIData } = require('../utils/helpers');
-const { factoryAbi, erc721Abi } = require('../integrations/ethers/contracts');
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
+const { processLog, wasteTime } = require('../utils/logUtils.js');
 
 const lockLifetime = 1000 * 60 * 5;
 
 module.exports = (context) => {
-  context.agenda.define(AgendaTaskEnum.SyncContracts, { lockLifetime }, async (task, done) => {
-    try {
-      logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncContracts});
-      const { network, name } = task.attrs.data;
-      const contractsForSave = [];
-      let block_number = [];
-      const networkData = context.config.blockchain.networks[network];
-      const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
-      const version = await context.db.Versioning.findOne({ name: 'sync contracts', network });
-      let forbiddenContracts = await context.db.SyncRestriction.find({ blockchain: networkData.network, contract: false }).distinct('contractAddress');
-      forbiddenContracts = _.map(forbiddenContracts, c => c.toLowerCase());
+	// This will receive all logs emitted from a contract in a certain timeframe and process them
+	// Which is cheaper than the current approach of each event for each contract
+	context.agenda.define(AgendaTaskEnum.SyncContracts, { lockLifetime }, async (task, done) => {
+		try {
+			// Log the start of the task
+			wasteTime(10000);
+			logAgendaActionStart({agendaDefinition: AgendaTaskEnum.SyncContracts});
+			
+			// Extract network hash and task name from the task data
+			const { network, name } = task.attrs.data;
 
-      // Initialize moralis instances
-      Moralis.start({ serverUrl, appId, masterKey });
+			// Get network data using the task's blockchain hash
+			// This includes minter address and factory address
+			const networkData = context.config.blockchain.networks[network];
 
-      await Moralis.Cloud.run(networkData.watchFunction, {
-        address: networkData.factoryAddress,
-        'sync_historical': true
-      }, { useMasterKey: true });
+			if (!networkData.factoryAddress) {
+				log.info(`Skipping classic deployment events of ${network}, factory address is not defined.`);
+				return done();
+			}
+			// Find previous master factories
+			let contractsToQuery = await context.db.PastAddress.find({
+				contractType: 'factory',
+				blockchain: network,
+				diamond: false
+			}).distinct('address');
 
-      const {abi, topic} = getABIData(factoryAbi, 'event', 'NewContractDeployed');
-      const options = {
-        address: networkData.factoryAddress,
-        chain: networkData.network,
-        topic,
-        abi,
-        from_block: _.get(version, ['number'], 0)
-      }
+			if (!contractsToQuery.includes(networkData.factoryAddress)) {
+				await (new context.db.PastAddress({
+					contractType: 'factory',
+					blockchain: network,
+					diamond: false,
+					address: networkData.factoryAddress
+				})).save();
+				log.info(`Added a new Factory address for ${network}`);
+				contractsToQuery.push(networkData.factoryAddress);
+			}
 
-      let events = await Moralis.Web3API.native.getContractEvents(options);
+			log.info(`[${network}] Querying the events of ${contractsToQuery.length} factories`);
 
-      await Promise.all(_.map(events.result, async contract => {
-        const nameAbi = getABIData(erc721Abi, 'function', 'name')
-        const { token, owner, contractName } = contract.data
+			// Fetch Moralis auth data
+			const { serverUrl, appId, masterKey } = context.config.blockchain.moralis[networkData.testnet ? 'testnet' : 'mainnet']
 
-        // prevent storing contracts to DB and event listening for forbidden contracts from the list
-        if (_.includes(forbiddenContracts, token.toLowerCase())) return;
+			// Initialize moralis instances
+			Moralis.start({ serverUrl, appId, masterKey });
 
-        contractsForSave.push({
-          user: owner,
-          title: contractName,
-          contractAddress: token,
-          blockchain: networkData.network
-        });
+			// Get last block parsed from the Versioning collection
+			let version = await context.db.Versioning.findOne({ name: AgendaTaskEnum.SyncContracts, network });
 
-        block_number.push(Number(contract.block_number));
+			if (version === null) {
+				version = await (new context.db.Versioning({
+					name: AgendaTaskEnum.SyncContracts,
+					network,
+					number: 0,
+					running: false
+				})).save();
+			}
 
-        // Listen to this contract's events
-        await Moralis.Cloud.run(networkData.watchFunction, {
-          address: token.toLowerCase(),
-          'sync_historical': true
-        }, { useMasterKey: true });
-      }))
+			if (version?.running === true) {
+				return done({reason: `A ${AgendaTaskEnum.SyncAll721Events} process for network ${network} is already running!`});
+			} else {
+				version.running = true;
+				version = await version.save();
+			}
 
-      if (!_.isEmpty(contractsForSave)) {
-        try {
-          await context.db.Contract.insertMany(contractsForSave, { ordered: false });
-        } catch (e) {}
-      }
+			/*
+				Collection Name 	Description
+				------------------------------------------------------------
+				'Contract',			Deployed contracts (This file)
+				'File', 			No need to sync
+				'User', 			No need to sync
+				'Product', 			From ERC721 Contracts
+				'OfferPool', 		Sync from Minter Marketplace
+				'Offer', 			Sync from Minter Marketplace
+				'MintedToken', 		Sync from Minter Marketplace
+				'LockedTokens', 	From ERC721 Contracts
+				'Versioning',		No need to Sync
+				'Task',				No need to Sync
+				'SyncRestriction',	No need to Sync
+				'Transaction'		Syncs on every file
+			*/
 
-      if (!_.isEmpty(block_number)) {
-        await context.db.Versioning.updateOne({
-          name: 'sync contracts',
-          network
-        }, { number: _.chain(block_number).sortBy().last().value() }, { upsert: true });
-      }
+			// Keep track of the latest block number processed
+			let lastSuccessfullBlock = version.number;
+			let transactionArray = [];
+			let insertions = {};
 
-      return done();
-    } catch (e) {
-      log.error(e);
-      return done(e);
-    }
-  });
+			for await (let masterFactory of contractsToQuery) {
+				wasteTime(7000)
+				// Call Moralis SDK and receive ALL logs emitted in a timeframe
+				// This counts as 2 requests in the Rate Limiting (March 2022)
+				const options = {
+					address: masterFactory,
+					chain: network,
+					from_block: version.number
+				};
+
+				// Result is in DESCENDING order
+				const {result, ...logData} = await Moralis.Web3API.native.getLogsByAddress(options);
+				log.info(`[${network}] Found ${logData.total} events on classic master factory since block #${version.number}`);
+				
+				if (logData.total === 0) {
+					continue;
+				}
+
+				// Reverse to get it in ascending order (useful for the block number tracking)
+				let processedResult = await result.reverse().map(processLog);
+
+				let processedTransactions = await context.db.Transaction.find({
+					toAddress: masterFactory,
+					blockchainId: network,
+					processed: true
+				});
+
+				for await (let [event] of processedResult) {
+					let [filteredTransaction] = processedTransactions.filter(item => item._id === event.transactionHash);
+					if (filteredTransaction && (filteredTransaction.caught || filteredTransaction.toAddress.includes(masterFactory))) {
+						log.info(`Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${masterFactory}`);
+					} else {
+						if (event && event.operation) {
+
+							// If the log is already on DB, update the address list
+							if (filteredTransaction) {
+								filteredTransaction.toAddress.push(contract);
+								await filteredTransaction.save();
+							} else if (!transactionArray.includes(event.transactionHash)) {
+								// Otherwise, push it into the insertion list
+								transactionArray.push(event.transactionHash);
+								// And create a DB entry right away
+								await (new context.db.Transaction({
+									_id: event.transactionHash,
+									toAddress: masterFactory,
+									processed: true,
+									blockchainId: network
+								})).save();
+							}
+
+							try {
+								let documentToInsert = await event.operation(
+									context.db,
+									network,
+									// Make up a transaction data, the logs don't include it
+									{
+										transactionHash: event.transactionHash,
+										to: masterFactory,
+										blockNumber: event.blockNumber
+									},
+									event.diamondEvent,
+									...event.arguments
+								);
+								// This used to be for an optimized batch insertion, now it's just for logging
+								if (insertions[event.eventSignature] === undefined) {
+									insertions[event.eventSignature] = [];
+								}
+								insertions[event.eventSignature].push(documentToInsert);
+							} catch (err) {
+								console.error('An error has ocurred!', event);
+								throw err;
+							}
+							
+							// Update the latest successfull block
+							if (lastSuccessfullBlock <= event.blockNumber) {
+								lastSuccessfullBlock = event.blockNumber;
+							}
+						}
+					}
+				}
+			}
+
+			for await (let sig of Object.keys(insertions)) {
+				if (insertions[sig]?.length > 0) {
+					log.info(`[${network}] Inserted ${insertions[sig]?.length} documents for ${sig}`);
+				}
+			}
+
+			log.info(`Done with ${network}, ${AgendaTaskEnum.SyncContracts}`);
+
+			// Add 1 to the last successful block so the next query to Moralis excludes it
+			// Because the last successfull block was already processed here
+			// But validate that the last parsed block is different from the current one,
+			// Otherwise it will keep increasing and could ignore events
+			version.running = false;
+			if (version.number < lastSuccessfullBlock) {
+				version.number = lastSuccessfullBlock + 1;
+			}
+			await version.save()
+
+			return done();
+		} catch (e) {
+			log.error(e);
+			return done(e);
+		}
+	});
 };

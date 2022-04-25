@@ -9,15 +9,63 @@ const {
   IPFS_SERVICE
 } = process.env;
 
+const binanceTestnetData = {
+  name: 'Binance Testnet',
+  blockchainId: '0x61',
+  testnet: true,
+  rpc: process.env.BINANCE_TESTNET_RPC
+}
+const binanceMainnetData = {
+  name: 'Binance Mainnet',
+  blockchainId: '0x38',
+  testnet: false,
+  rpc: process.env.BINANCE_MAINNET_RPC
+}
+const ethereumMainnetData = {
+  name: 'Ethereum Mainnet',
+  blockchainId: '0x1',
+  testnet: false,
+  rpc: process.env.ETHEREUM_MAINNET_RPC
+}
+const ethereumGoerliData = {
+  name: 'Ethereum Goerli',
+  blockchainId: '0x5',
+  testnet: true,
+  rpc: process.env.ETHEREUM_TESTNET_GOERLI_RPC
+}
+const polygonMainnetData = {
+  name: 'Polygon Mainnet',
+  blockchainId: '0x89',
+  testnet: false,
+  rpc: process.env.MATIC_MAINNET_RPC
+}
+const polygonTestnetData = {
+  name: 'Polygon Testnet',
+  blockchainId: '0x13881',
+  testnet: true,
+  rpc: process.env.MATIC_TESTNET_RPC
+}
+
 module.exports = {
   blockchain: {
     networks: {
-      '0x61': 'Binance Testnet',
-      '0x38': 'Binance Mainnet',
-      '0x1': 'Ethereum Mainnet',
-      '0x5': 'Ethereum Goerli',
-      '0x89': 'Matic Mainnet',
-      '0x13881': 'Matic Mumbai'
+      '0x13881': polygonTestnetData,
+      'mumbai': polygonTestnetData,
+
+      '0x89': polygonMainnetData,
+      'matic': polygonMainnetData,
+
+      '0x38': binanceMainnetData,
+      'binance-mainnet': binanceMainnetData,
+      
+      '0x61': binanceTestnetData,
+      'binance-testnet': binanceTestnetData,
+      
+      '0x1': ethereumMainnetData,
+      'ethereum': ethereumMainnetData,
+      
+      '0x5': ethereumGoerliData,
+      'goerli': ethereumGoerliData,
     }
   },
   gcp: {

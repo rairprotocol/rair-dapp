@@ -8,7 +8,7 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
 import MarketplaceOfferConfig from './MarketplaceOfferConfig.jsx';
 
-const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMode, stepNumber, gotoNextStep}) => {
+const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMode, stepNumber, gotoNextStep, mintingRole}) => {
 	const { diamondMarketplaceInstance } = useSelector(store => store.contractStore);
 	const history = useHistory();
 
@@ -18,7 +18,6 @@ const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMod
 	const [treasuryAddress, setTreasuryAddress] = useState(undefined);
 	const [minterDecimals, setMinterDecimals] = useState(0);
 	const [sendingData, setSendingData] = useState(false);
-	const [hasMinterRole, setHasMinterRole] = useState();
 	const [rerender, setRerender] = useState(false);
 
 	const getOfferData = useCallback(async () => {
@@ -26,8 +25,9 @@ const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMod
 			return;
 		}
 		setOfferData(contractData.product.offers.map(item => {
+			item.price = item.price.toString()
 			return {
-				selected: !item.marketData.fromMarket,
+				selected: !item._id,
 				...item
 			}
 		}))
@@ -47,13 +47,7 @@ const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMod
 		let treasuryFeeData = await diamondMarketplaceInstance.getTreasuryFee();
 		setTreasuryFee(Number(treasuryFeeData.treasuryFee.toString()));
 		setTreasuryAddress(await diamondMarketplaceInstance.getTreasuryAddress());
-		setHasMinterRole(
-			await contractData.instance.hasRole(
-				await contractData.instance.MINTER(),
-				diamondMarketplaceInstance.address
-			)
-		)
-	}, [diamondMarketplaceInstance, contractData.instance])
+	}, [diamondMarketplaceInstance])
 
 	useEffect(() => {
 		getContractData()
@@ -81,7 +75,7 @@ const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMod
 			diamondMarketplaceInstance.addMintingOfferBatch(
 			//console.log(
 				contractData.contractAddress,
-				filteredOffers.map(item => item.rangeIndex),
+				filteredOffers.map(item => item.diamondRangeIndex),
 				filteredOffers.map(item => item.customSplits.filter(split => split.editable)),
 				filteredOffers.map(item => item.marketData.visible),
 				process.env.REACT_APP_NODE_ADDRESS
@@ -139,9 +133,9 @@ const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMod
 					history.goBack()
 				}}
 				forwardFunctions={[{
-					label: hasMinterRole ? 'Put selected ranges up for sale!' : 'Approve the marketplace as a Minter!',
-					action: hasMinterRole ? setCustomFees : giveMinterRole,
-					disabled: sendingData || hasMinterRole === undefined || offerData.filter(item => item.selected === true).length === 0
+					label: mintingRole ? 'Put selected ranges up for sale!' : 'Approve the marketplace as a Minter!',
+					action: mintingRole ? setCustomFees : giveMinterRole,
+					disabled: sendingData || mintingRole === undefined || offerData.filter(item => item.selected === true).length === 0
 				},{
 					label: 'Continue',
 					action: gotoNextStep,

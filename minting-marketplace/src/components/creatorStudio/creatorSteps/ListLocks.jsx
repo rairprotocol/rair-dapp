@@ -9,8 +9,8 @@ import chainData from '../../../utils/blockchainData.js'
 import colors from '../../../utils/offerLockColors.js'
 import {web3Switch} from '../../../utils/switchBlockchain.js';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import {utils} from 'ethers';
-import { validateInteger } from '../../../utils/metamaskUtils';
+import { utils } from 'ethers';
+import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
 
 const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerender, maxCopies, lockedNumber, blockchainSymbol}) => {
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
@@ -18,7 +18,6 @@ const LockRow = ({index, locker, name, starts, ends, price, fixed, array, rerend
 	const [itemName, ] = useState(name);
 	const [startingToken, ] = useState(starts);
 	const [endingToken, ] = useState(ends);
-	// const [individualPrice, ] = useState(price);
 	const [lockedTokens, setLockedTokens] = useState(lockedNumber);
 
 	const randColor = colors[index];
@@ -109,29 +108,26 @@ const ListLocks = ({contractData, setStepNumber, steps, gotoNextStep, stepNumber
 	const {address, /*collectionIndex*/} = useParams();
 
 	const locker = async (data) => {
-	    try {
-	    	Swal.fire({
-				title: `Locking ${data.ends - data.starts} tokens from ${data.name}`,
-				html: `${data.lockedNumber} tokens will have to be minted to unlock them again.`,
-				icon: 'info',
-				showConfirmButton: false
-			});
-	    	await (await instance.createRangeLock(
-    			data.productIndex,
-    			data.starts,
-    			data.ends,
-    			data.lockedNumber)
-	    	).wait(); 
-	    	Swal.fire({
+		Swal.fire({
+			title: `Locking ${data.ends - data.starts} tokens from ${data.name}`,
+			html: `${data.lockedNumber} tokens will have to be minted to unlock them again.`,
+			icon: 'info',
+			showConfirmButton: false
+		});
+		if (await metamaskCall(
+				instance.createRangeLock(
+				data.productIndex,
+				data.starts,
+				data.ends,
+				data.lockedNumber)
+			)
+		) {
+			Swal.fire({
 				title: `Success!`,
 				html: `The range has been locked`,
-				icon: 'success',
-				showConfirmButton: false
+				icon: 'success'
 			});
-	    } catch (err) {
-			Swal.fire('Error',err?.data?.message ? err?.data?.message : 'An error has occurred','error');
-			return;
-	    }
+		}
 	}
 
 	useEffect(() => {
@@ -141,7 +137,7 @@ const ListLocks = ({contractData, setStepNumber, steps, gotoNextStep, stepNumber
 				name: item.offerName,
 				starts: item.range[0],
 				ends: item.range[1],
-				price: item.price,
+				price: item.price.toString(),
 				lockedNumber: 0
 			}
 		}) : [])

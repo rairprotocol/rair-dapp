@@ -38,6 +38,7 @@ const ContractDetails = () => {
 				dataRequest.contract.products = productsRequest.products;
 			}
 			setData(dataRequest.contract);
+			setIsDiamond(dataRequest.diamond);
 		} else {
 			// Try diamonds
 			let instance = contractCreator(address, diamondFactoryAbi);

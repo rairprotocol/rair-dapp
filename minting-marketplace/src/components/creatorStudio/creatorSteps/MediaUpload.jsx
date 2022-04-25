@@ -35,12 +35,12 @@ const MediaUpload = ({setStepNumber, contractData, gotoNextStep, stepNumber}) =>
 		const unlocked = [{
 			label: 'Unlocked',
 			value: "-1"
-		}]
+		}];
 
 		setOfferList(contractData?.product?.offers ? unlocked.concat(contractData?.product?.offers.map(item => {
 			return {
-				label: `${item.offerName} (${item.range[1] - item.range[0] + 1} tokens for ${utils.formatEther(validateInteger(item.price) ? item.price : 0).toString()} ${chainData[contractData.blockchain].symbol} each)`,
-				value: item.offerIndex
+				label: `${item.offerName} (${item.range[1] - item.range[0] + 1} tokens for ${utils.formatEther(validateInteger(item.price) ? item.price.toString() : 0).toString()} ${chainData[contractData.blockchain].symbol} each)`,
+				value: contractData.diamond ? item.diamondRangeIndex : item.offerIndex
 			}
 		})) : [])
 	}, [contractData]);

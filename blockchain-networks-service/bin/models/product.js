@@ -16,7 +16,9 @@ const Product = new Schema({
   firstTokenIndex: { type: Number, required: true },
   cover: { type: String, default: DEFAULT_PRODUCT_COVER },
   category: { type: Schema.ObjectId },
-  creationDate: { type: Date, default: Date.now }
+  creationDate: { type: Date, default: Date.now },
+  transactionHash: { type: String, required: false },
+  diamond: { type: Boolean, required: true, default: false },
 }, { versionKey: false });
 
 Product.statics = {

@@ -60,9 +60,9 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 			showConfirmButton: false
 		});
 		if (await metamaskCall(
-			contractData.diamond.createRangeBatch(
+			contractData.instance.createRangeBatch(
 				collectionIndex,
-				offerList.filter(item => item.fixed !== true).map(item => {
+				offerList.filter(item => !item._id).map(item => {
 					return {
 						rangeStart: item.range[0],
 						rangeEnd: item.range[1],
@@ -128,8 +128,8 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 					action: !onMyChain ?
 						switchBlockchain
 						:
-						(offerList[0]?.fixed ?
-							(offerList.filter(item => item.fixed !== true).length === 0 ? 
+						(offerList[0]?._id ?
+							(offerList.filter(item => !item._id).length === 0 ? 
 								gotoNextStep
 								:
 								createOffers)
@@ -138,19 +138,23 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 					label: !onMyChain ?
 						`Switch to ${chainData[contractData?.blockchain]?.name}`
 						:
-						(offerList[0]?.fixed ?
-							(offerList.filter(item => item.fixed !== true).length === 0 ?
+						(offerList[0]?._id ?
+							(offerList.filter(item => !item._id).length === 0 ?
 								'Continue'
 								:
 								'Append Ranges')
 							:
 							'Create Ranges'),
 					disabled: (
+						onMyChain &&
+						(!contractData.diamond ||
 						offerList.length === 0 ||
-						offerList.at(-1).range[1] > Number(contractData.product.copies) - 1 ||
-						offerList.reduce((current, item) => {
+						(
+							offerList.at(-1).range[1] > Number(contractData.product.copies) - 1 &&
+ 							offerList.at(-1)._id === undefined
+ 						) || offerList.reduce((current, item) => {
 							return current || item.offerName === ''
-						}, false)
+						}, false))
 					)
 				}]}
 			/>}

@@ -10,6 +10,8 @@ module.exports = context => {
     try {
       const { contractId, productIndex } = req.params;
       const productInd = Number(productIndex);
+      let tokens = [];
+      let totalCount = 0;
 
       const [contract] = await context.db.Contract.aggregate([
         { $match: { _id: ObjectId(contractId) } },
@@ -117,8 +119,27 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'Product or contract not found.' });
       }
 
-      const tokens = await context.db.MintedToken.find({ contract: contract._id, offerPool: contract.offerPools.marketplaceCatalogIndex });
-      const totalCount = await context.db.MintedToken.countDocuments({ contract: contract._id, offerPool: contract.offerPools.marketplaceCatalogIndex });
+      if (contract.diamond) {
+        const offers = await context.db.Offer.find({ contract: contract._id, product: productInd }).distinct('offerIndex');
+
+        tokens = await context.db.MintedToken.find({
+          contract: contract._id,
+          offer: { $in: offers }
+        });
+        totalCount = await context.db.MintedToken.countDocuments({
+          contract: contract._id,
+          offer: { $in: offers }
+        });
+      } else {
+        tokens = await context.db.MintedToken.find({
+          contract: contract._id,
+          offerPool: contract.offerPools.marketplaceCatalogIndex
+        });
+        totalCount = await context.db.MintedToken.countDocuments({
+          contract: contract._id,
+          offerPool: contract.offerPools.marketplaceCatalogIndex
+        });
+      }
 
       if (_.isEmpty(tokens)) {
         return res.status(404).send({ success: false, message: 'Tokens not found.' });

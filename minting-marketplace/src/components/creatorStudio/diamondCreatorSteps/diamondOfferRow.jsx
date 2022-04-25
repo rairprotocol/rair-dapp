@@ -12,16 +12,18 @@ const DiamondOfferRow = ({
 	offerName,
 	range,
 	price,
-	fixed,
+	_id,
 	array,
 	rerender,
 	maxCopies,
 	blockchainSymbol,
-	tokensAllowed,
+	copies,
 	lockedTokens,
 	simpleMode,
 	instance,
-	rangeIndex
+	offerIndex,
+	diamondRangeIndex,
+	...leftovers
 }) => {
 	const {primaryColor, secondaryColor} = useSelector(store => store.colorStore);
 
@@ -29,7 +31,7 @@ const DiamondOfferRow = ({
 	const [startingToken, setStartingToken] = useState(range?.at(0));
 	const [endingToken, setEndingToken] = useState(range?.at(1));
 	const [individualPrice, setIndividualPrice] = useState(price);
-	const [allowedTokenCount, setAllowedTokenCount] = useState(tokensAllowed);
+	const [allowedTokenCount, setAllowedTokenCount] = useState(copies);
 	const [lockedTokenCount, setLockedTokenCount] = useState(lockedTokens);
 	const [valuesChanged, setValuesChanged] = useState(false);
 
@@ -39,13 +41,12 @@ const DiamondOfferRow = ({
 		array[index][fieldName] = value;
 		setter(value);
 		if (doRerender) {
-			if (fixed && !valuesChanged) {
-				console.log(fieldName);
+			if (_id && !valuesChanged) {
 				setValuesChanged(true);
 			}
 			rerender();
 		}
-	}, [array, index, rerender, fixed, valuesChanged]);
+	}, [array, index, rerender, _id, valuesChanged]);
 
 	const updateEndingToken = useCallback( (value) => {
 		if (!array) {
@@ -54,7 +55,7 @@ const DiamondOfferRow = ({
 		array[index].range[1] = Number(value);
 		setEndingToken(Number(value));
 		if (array[Number(index) + 1] !== undefined) {
-			array[Number(index) + 1].range[1] = Number(value) + 1;
+			array[Number(index) + 1].range[0] = Number(value) + 1;
 		}
 		rerender();
 	},[array, index, rerender])
@@ -80,14 +81,14 @@ const DiamondOfferRow = ({
 
 	useEffect(() => {
 		let correctCount = endingToken - startingToken + 1;
-		if (!fixed && simpleMode && correctCount !== allowedTokenCount) {
+		if (!_id && simpleMode && correctCount !== allowedTokenCount) {
 			updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
 			updater('lockedTokens', setLockedTokenCount, correctCount, false);
 		}
-		if (!fixed && correctCount < allowedTokenCount) {
+		if (!_id && correctCount < allowedTokenCount) {
 			updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
 		}
-		if (!fixed && correctCount < lockedTokenCount) {
+		if (!_id && correctCount < lockedTokenCount) {
 			updater('lockedTokens', setLockedTokenCount, correctCount, false);
 		}
 		if (range?.at(1) === endingToken) {
@@ -105,7 +106,7 @@ const DiamondOfferRow = ({
 		allowedTokenCount,
 		lockedTokenCount,
 		simpleMode,
-		fixed,
+		_id,
 		valuesChanged
 	])
 
@@ -117,9 +118,13 @@ const DiamondOfferRow = ({
 		setItemName(offerName);
 	}, [offerName])
 
-	const disabledClass = (fixed && !valuesChanged) ? '' : 'border-stimorol rounded-rair'
+	const disabledClass = (_id && !valuesChanged) ? '' : 'border-stimorol rounded-rair'
 
 	const updateRange = async () => {
+		if (instance === undefined) {
+			Swal.fire("Error", "Couldn't connect to the contract, are you on the correct blockchain?", 'error');
+			return;
+		}
 		Swal.fire({
 			title: 'Updating range...',
 			html: 'Please wait...',
@@ -128,7 +133,7 @@ const DiamondOfferRow = ({
 		});
 		if (await metamaskCall(
 			instance.updateRange(
-				rangeIndex,
+				diamondRangeIndex,
 				itemName,
 				individualPrice,
 				allowedTokenCount,
@@ -161,7 +166,7 @@ const DiamondOfferRow = ({
 				</div>
 			</div>
 			<div className={`col-12 col-md-1 pt-4 px-0`}>
-				{fixed ?
+				{_id ?
 				<button
 					onClick={updateRange}
 					disabled={!valuesChanged}
@@ -177,7 +182,7 @@ const DiamondOfferRow = ({
 			</div>
 			<div className={`col-12 col-md-4`}>
 				Starting token:
-				<div className={`${!fixed && disabledClass} w-100`}>
+				<div className={`${!_id && disabledClass} w-100`}>
 					<InputField
 						disabled={true}
 						getter={startingToken}
@@ -191,15 +196,15 @@ const DiamondOfferRow = ({
 			</div>
 			<div className={`col-12 col-md-4`}>
 				Ending token:
-				{!fixed && <button onClick={() => updateEndingToken(maxCopies)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+				{!_id && <button onClick={() => updateEndingToken(maxCopies)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
 					Max
 				</button>}
-				<div className={`${!fixed && disabledClass} w-100`}>
+				<div className={`${!_id && disabledClass} w-100`}>
 					<InputField
 						getter={endingToken}
 						setter={updateEndingToken}
 						customClass='form-control rounded-rair'
-						disabled={fixed}
+						disabled={_id}
 						type='number'
 						min={startingToken}
 						max={maxCopies}
@@ -221,18 +226,18 @@ const DiamondOfferRow = ({
 				</div>
 				{validateInteger(individualPrice) && 
 					<small>
-						{utils.formatEther(individualPrice === '' ? 0 : individualPrice).toString()} {blockchainSymbol}
+						{utils.formatEther(individualPrice === '' ? 0 : individualPrice.toString()).toString()} {blockchainSymbol}
 					</small>}
 			</div>
 			{!simpleMode && <div className={`col-12 col-md-6`}>
 				Tokens allowed to mint:
-				{!fixed && <button onClick={() => updater('tokensAllowed', setAllowedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+				{!_id && <button onClick={() => updater('copies', setAllowedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
 					Max
 				</button>}
 				<div className={`${disabledClass} w-100`}>
 					<InputField
 						getter={allowedTokenCount}
-						setter={value => updater('tokensAllowed', setAllowedTokenCount, value)}
+						setter={value => updater('copies', setAllowedTokenCount, value)}
 						type='number'
 						min='0'
 						max={endingToken - startingToken + 1}
@@ -243,7 +248,7 @@ const DiamondOfferRow = ({
 			</div>}
 			{!simpleMode && <div className={`col-12 col-md-6`}>
 				Minted tokens needed before trades are unlocked:
-				{!fixed && <button onClick={() => updater('lockedTokens', setLockedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
+				{!_id && <button onClick={() => updater('lockedTokens', setLockedTokenCount, endingToken - startingToken + 1)} className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
 					Max
 				</button>}
 				<div className={`${disabledClass} w-100`}>

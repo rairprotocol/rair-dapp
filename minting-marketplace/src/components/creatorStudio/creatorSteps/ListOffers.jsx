@@ -10,7 +10,7 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
 import OfferRow from './OfferRow.jsx'
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
-const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack}) => {
+const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack, forceRefetch}) => {
 	const [offerList, setOfferList] = useState([]);
 	const [forceRerender, setForceRerender] = useState(false);
 	const [hasMinterRole, setHasMinterRole] = useState(false);
@@ -96,15 +96,12 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 
 	const giveMinterRole = async () => {
 		Swal.fire({title: 'Granting Role...', html: 'Please wait', icon: 'info', showConfirmButton: false});
-		try {
-			await (await instance.grantRole(await instance.MINTER(), minterInstance.address)).wait();
-		} catch (err) {
-			console.error(err);
-			Swal.fire('Error','An error has ocurred','error');
-			return;
+		if (await metamaskCall(
+			instance.grantRole(await instance.MINTER(), minterInstance.address)
+		)) {
+			Swal.fire('Success!','You can create offers now!','success');
+			fetchMintingStatus()
 		}
-		Swal.fire('Success!','You can create offers now!','success');
-		fetchMintingStatus()
 	}
 
 	const createOffers = async () => {
@@ -118,7 +115,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 			minterInstance.addOffer(
 				instance.address,
 				collectionIndex,
-				offerList.map((item, index, array) => (index === 0) ? 0 : array[index - 1].starts),
+				offerList.map((item) => item.starts),
 				offerList.map((item) => item.ends),
 				offerList.map((item) => item.price),
 				offerList.map((item) => item.name),
@@ -131,6 +128,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				icon: 'success',
 				showConfirmButton: true
 			});
+			forceRefetch();
 			gotoNextStep();
 		}
 	}
@@ -159,6 +157,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				icon: 'success',
 				showConfirmButton: true
 			});
+			forceRefetch();
 			gotoNextStep();
 		}
 	}

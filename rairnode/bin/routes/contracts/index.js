@@ -9,7 +9,7 @@ module.exports = context => {
   router.get('/', JWTVerification(context), async (req, res, next) => {
     try {
       const { publicAddress: user } = req.user;
-      const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1, title: 1, blockchain: 1 });
+      const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1, title: 1, blockchain: 1, diamond: 1 });
 
       res.json({ success: true, contracts });
     } catch (e) {

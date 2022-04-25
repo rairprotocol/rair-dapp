@@ -35,6 +35,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
 # API
 
 * [x] /api
+    * [x] /transaction/:network/:hash - GET - Process the transaction hash given, [see details here](readme/get_transaction.md)
     * [x] /blockchains - GET - get blockchains list, [see details here](readme/get_blockchains.md)
     * [x] /categories - GET - get categories list, [see details here](readme/get_categories.md)
     * [x] /search - POST - searching by files, products, users, [see details here](readme/search.md)

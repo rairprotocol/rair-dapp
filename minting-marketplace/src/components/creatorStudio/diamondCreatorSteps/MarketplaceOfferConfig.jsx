@@ -38,7 +38,7 @@ const MarketplaceOfferConfig = ({
 	}]);
 
 	useEffect(() => {
-		if (!array[index].marketData || array[index].marketData.fromMarket === false) {
+		if (!array[index].marketData || array[index]._id === false) {
 			return;
 		}
 		setCustomPayments([{
@@ -87,7 +87,7 @@ const MarketplaceOfferConfig = ({
 	// }, BigNumber.from(0));
 	let updateAvailable = simpleMode || !marketValuesChanged;
 
-	return <div className={`rounded-rair col-12 col-md-12 ${!item.selected && !item.marketData.fromMarket && 'text-secondary'}`}>
+	return <div className={`rounded-rair col-12 col-md-12 ${!item.selected && !item._id && 'text-secondary'}`}>
 		<div className='row w-100 p-3'>
 			<div className='col-10 rounded-rair text-start'>
 				<h3>{item.offerName}</h3>
@@ -98,7 +98,7 @@ const MarketplaceOfferConfig = ({
 				</h5>
 			</div>
 			<div className='col-2 rounded-rair text-end'>
-				{item.marketData.fromMarket &&
+				{(item._id && item.offerIndex) &&
 				<button 
 					disabled={updateAvailable}
 					className={`btn col-12 btn-${(updateAvailable) ? 'success' : 'stimorol'}`}
@@ -129,13 +129,13 @@ const MarketplaceOfferConfig = ({
 						{updateAvailable ? 'On the marketplace!' : 'Update offer'}
 					</small>
 				</button>}
-				{!item.marketData.fromMarket && <button onClick={() => {
+				{!(item._id && item.offerIndex) && <button onClick={() => {
 					array[index].selected = !array[index].selected;
 					rerender()
 				}} className={`btn col-12 btn-${array[index].selected ? 'royal-ice' : 'danger'} rounded-rair`}>
 					{!array[index]?.selected && 'Not'} Selected <i className={`fas fa-${array[index].selected ? 'check' : 'times'}`} />
 				</button>}
-				{!simpleMode && <button disabled={!array[index].selected && !item.marketData.fromMarket} onClick={() => {
+				{!simpleMode && <button disabled={!array[index].selected && !item._id} onClick={() => {
 					array[index].marketData.visible = !array[index].marketData.visible;
 					rerender();
 					if (!marketValuesChanged) {

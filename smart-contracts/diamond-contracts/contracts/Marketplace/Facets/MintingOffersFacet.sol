@@ -39,9 +39,10 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
     /// @param  rangeindex contains the id of the minted token
 	/// @param  rangeName contains the name of the range where the token is
 	/// @param  price Contains the price of the offer fot the token
-    /// @param  feeSplitsLength contains the previous status of the role
-	/// @param  offerIndex contains the new status of the role
-	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, uint offerIndex);
+    /// @param  feeSplitsLength contains the previous status of the offer
+    /// @param  feeSplitsLength Contains the visibility of the offer
+	/// @param  offerIndex contains the new status of the offer
+	event AddedMintingOffer(address erc721Address, uint rangeIndex, string rangeName, uint price, uint feeSplitsLength, bool visible, uint offerIndex);
 	event UpdatedMintingOffer(address erc721Address, uint rangeIndex, uint feeSplitsLength, bool visible, uint offerIndex);
 	
 	event MintedToken(address erc721Address, uint rangeIndex, uint tokenIndex, address buyer);
@@ -203,7 +204,7 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		require(totalFunds == rangeData.rangePrice, "Minter Marketplace: Current fee configuration will result in missing funds");
 		s.addressToOffers[erc721Address_].push(s.mintingOffers.length - 1);
 		s.addressToRangeOffer[erc721Address_][rangeIndex_] = s.mintingOffers.length - 1;
-		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, s.mintingOffers.length - 1);
+		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, visible_, s.mintingOffers.length - 1);
 	}
 
 	/// @notice This function allow us to update the parameters of a minting offers

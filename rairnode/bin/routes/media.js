@@ -199,10 +199,16 @@ module.exports = context => {
       return res.status(404).send({ success: false, message: 'Category not found.' });
     }
 
+    // Diamond contracts have no offerPools
     const foundOfferPool = await db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
 
     if (demo === 'false') {
-      const foundOffers = await db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
+      let foundOffers;
+      if (foundContract?.diamond) {
+        foundOffers = await db.Offer.find({ contract: foundContract._id, diamondRangeIndex: { $in: offer } }).distinct('diamondRangeIndex');
+      } else {
+        foundOffers = await db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
+      }
 
       offer.forEach(item => {
         if (!_.includes(foundOffers, item)) {

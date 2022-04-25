@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.9; 
+pragma solidity ^0.8.10; 
 
 // Used on interfaces
 import '@openzeppelin/contracts/access/AccessControl.sol';
@@ -378,7 +378,6 @@ contract Minter_Marketplace is Ownable {
 				// Should send whatever's left after transferring treasury and node fees
 				payable(creatorAddress).transfer(selectedProduct.rangePrice[rangeIndex] * (100000 - (treasuryFee + nodeFee)) / 100000);
 			}
-
 		}
 		// Pay the buyer any excess they transferred
 		payable(msg.sender).transfer(msg.value - selectedProduct.rangePrice[rangeIndex]);
