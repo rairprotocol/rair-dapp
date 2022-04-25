@@ -76,6 +76,16 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_SECRET
+            - name: MORALIS_MASTER_KEY_MAIN
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-main
+                  key: MORALIS_MASTER_KEY_MAIN
+            - name: MORALIS_MASTER_KEY_TEST
+              valueFrom:
+                secretKeyRef:
+                  name: moralis-master-key-test
+                  key: MORALIS_MASTER_KEY_TEST
           envFrom:
           - configMapRef:
               name: rairnode-env
