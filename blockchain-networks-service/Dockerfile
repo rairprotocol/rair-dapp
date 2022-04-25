@@ -1,11 +1,8 @@
 FROM node:latest
 
-WORKDIR /usr/src/app
-COPY package.json ./
+WORKDIR /usr/local/src
+COPY . /usr/local/src
+
 RUN npm install
-COPY . /usr/src/app
-
-
-EXPOSE 5001
 
 CMD npm start
