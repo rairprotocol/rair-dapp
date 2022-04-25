@@ -48,7 +48,7 @@ spec:
     spec:
       containers:
         - image: rairtechinc/blockchain-event-listener:dev_latest
-          name: rairnode
+          name: blockchain-event-listener
           imagePullPolicy: Always
           ports:
             - containerPort: 5001
