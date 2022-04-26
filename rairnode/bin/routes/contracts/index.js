@@ -1,6 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const { JWTVerification, validation } = require('../../middleware');
+const { importContractData } = require('../../integrations/ethers/importContractData.js');
 
 module.exports = context => {
   const router = express.Router()
@@ -169,6 +170,22 @@ module.exports = context => {
 
     next();
   }, require('./contract')(context));
+
+  router.get('/import/network/:networkId/:contractAddress/', JWTVerification(context), async (req, res, next) => {
+    try {
+      if (!req.user || !req.user.adminRights) {
+        return res.json({
+          success: false,
+          result: "Unauthorized request"
+        });
+      }
+      const { networkId, contractAddress } = req.params;
+      let { success, result, message } = await importContractData(networkId, contractAddress, req.user, context.db);
+      return res.json({success, result, message});
+    } catch (err) {
+      console.error(err);
+    }
+  })
 
   return router
 }

@@ -170,6 +170,25 @@ resource "kubernetes_deployment" "rairnode" {
               }
             }
           }
+          env{
+            name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
+            value_from {
+              secret_key_ref {
+                name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
+                key = var.namespace_secrets.default.env_secrets.moralis-master-key-main.env_reference_name
+              }
+            }
+          }
+
+          env{
+            name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
+            value_from {
+              secret_key_ref {
+                name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
+                key = var.namespace_secrets.default.env_secrets.moralis-master-key-test.env_reference_name
+              }
+            }
+          }
            volume_mount {
             name       = local.rairnode_persistent_volume_claim_name_0
             mount_path = "/usr/local/src/db"

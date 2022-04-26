@@ -55,6 +55,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
         * [x] /:publicAddress - GET - get single user, [see details here](readme/get_user.md)
         * [x] /:publicAddress - POST - update specific user, [see details here](readme/update_user.md)
     * [x] /contracts - GET - get list of contracts for specific user, [see details here](readme/get_contracts.md)
+        * [x] /import/network/:networkId/:contractAddress/ - GET - Import the given contract's NFTs, [see details here](readme/get_external_contract.md)
         * [x] /network/:networkId
             * [x] /:contractAddress - GET - get specific contract, [see details here](readme/get_single_contract.md)
                 * [x] /products - GET - get all products for specific contract, [see details here](readme/get_products_for_contract.md)
