@@ -22,10 +22,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [filterCategoriesText, setFilterCategoriesText] = useState("");
   const [click, setClick] = useState(null);
 
-  const media_match = window.matchMedia("(min-width: 700px)");
-  const [mobile, setMobile] = useState(media_match.matches);
-  window.addEventListener("resize", () => setMobile(media_match.matches));
-
   let pagesArray = [];
   for (let i = 0; i < totalPage; i++) {
     pagesArray.push(i + 1);
@@ -138,9 +134,8 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${
-              primaryColor === "rhyno" ? "default" : "dark"
-            }`}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
+              }`}
             className="category-button-nft category-button"
           >
             NFT
@@ -154,21 +149,15 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${
-              primaryColor === "rhyno" ? "default" : "dark"
-            }`}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
+              }`}
             className="category-button-videos category-button"
           >
             Unlockables
           </Tab>
         </TabList>
         <div
-          style={{
-            position: "relative",
-            display: "flex",
-            flexDirection: mobile ? "row" : "column",
-            paddingLeft: "6vw",
-          }}
+          className="container-search"
         >
           <InputField
             getter={titleSearch}
@@ -178,25 +167,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
               borderTopLeftRadius: "0",
-              width: mobile ? "54.5%" : "100%",
-              marginBottom: mobile ? "32px" : "8px",
             }}
             customClass="form-control input-styled"
           />
-          <div
-            style={
-              mobile
-                ? {
-                    display: "flex",
-                  }
-                : {
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                    marginBottom: "32px",
-                  }
-            }
-          >
+          <div className="nft-form-control-icon">
             <i
               className="fas fa-search fa-lg fas-custom"
               aria-hidden="true"

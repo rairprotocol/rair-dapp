@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-// import { Link } from "react-router-dom";
+import React, { useCallback } from "react";
 import { SvgKeyForModalItem } from "../../../NftList/SvgKeyForModalItem";
 import Modal from "../../modal";
 import "./ModalItemResponsive.css";
@@ -11,19 +10,18 @@ const ModalItem = ({
   defaultImg,
   primaryColor,
 }) => {
-  const [ /*clearAll*/ , setClearAll ] = useState(false);
+  ;
 
-  const onCloseModal = () => {
+  const onCloseModal = useCallback(() => {
     setIsOpenBlockchain(false);
-    setClearAll(true);
-  };
+  }, [setIsOpenBlockchain])
 
   function bidFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   return (
-    <Modal style={{height: "auto !important"}} onClose={onCloseModal} open={isOpenBlockchain}>
+    <Modal style={{ height: "auto !important" }} onClose={onCloseModal} open={isOpenBlockchain}>
       <div className="modal-content-metadata">
         <div className="block-close">
           <button onClick={onCloseModal}>
@@ -34,14 +32,13 @@ const ModalItem = ({
           <div
             className="w-100 bg-my-items p-2"
             style={{
-              backgroundImage: `url(${
-                selectedData?.metadata.image || defaultImg
-              })`,
+              backgroundImage: `url(${selectedData?.metadata.image || defaultImg
+                })`,
               backgroundColor: `var(--${primaryColor}-transparent)`,
             }}
           ></div>
           <div
-          className="modal-number-tokenContent">
+            className="modal-number-tokenContent">
             <span className="modal-item-title">
               {bidFirstLetter(selectedData.title)}
             </span>

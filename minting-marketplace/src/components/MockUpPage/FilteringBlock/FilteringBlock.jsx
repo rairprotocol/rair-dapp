@@ -19,10 +19,6 @@ const FilteringBlock = ({
   click,
   setClick,
 }) => {
-  const media_match = window.matchMedia("(min-width: 400px)");
-  const [mobile, setMobile] = useState(media_match.matches);
-  window.addEventListener("resize", () => setMobile(media_match.matches));
-
   const [filterPopUp, setFilterPopUp] = useState(false);
   const [, /*filterItem*/ setFilterItem] = useState("Filters");
   const filterRef = useRef();
@@ -85,9 +81,8 @@ const FilteringBlock = ({
         <div ref={filterRef} className="select-filters-wrapper">
           <div
             style={{
-              backgroundColor: `${
-                filterPopUp ? "#E882D5" : `var(--${primaryColor})`
-              }`,
+              backgroundColor: `${filterPopUp ? "#E882D5" : `var(--${primaryColor})`
+                }`,
               color: `${filterPopUp ? "#fff" : `var(--${textColor})`}`,
               border: `${filterPopUp ? "1px solid #E882D5" : ""}`,
             }}
@@ -168,7 +163,7 @@ const FilteringBlock = ({
                   className="fas fa-arrow-down"
                 ></i>
               </div>
-              <div>Sort{mobile && " by name"}</div>
+              <div>Sort by name</div>
             </div>
             <div className="title-right-arrow">
               {sortPopUp ? (
@@ -186,7 +181,7 @@ const FilteringBlock = ({
               color: `var(--${textColor})`,
             }}
             className="select-sort-title-pop-up"
-            // onClick={() => onChangeSortItem(<i className="fas fa-sort-amount-up"></i>)}
+          // onClick={() => onChangeSortItem(<i className="fas fa-sort-amount-up"></i>)}
           >
             {sortItem === "up" ? (
               <div

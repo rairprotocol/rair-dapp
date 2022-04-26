@@ -128,7 +128,6 @@ function App({ sentryHistory }) {
 
 	const carousel_match = window.matchMedia('(min-width: 600px)')
 	const [carousel, setCarousel] = useState(carousel_match.matches)
-	window.addEventListener("resize", () => setCarousel(carousel_match.matches))
 
 	const seoInformation = {
 		title: "Rair Tech Marketplace",
@@ -279,6 +278,11 @@ function App({ sentryHistory }) {
 	useEffect(() => {
 		btnCheck();
 	}, [btnCheck]);
+
+	useEffect(() => {
+		window.addEventListener("resize", () => setCarousel(carousel_match.matches));
+		return () => window.removeEventListener("resize", () => setCarousel(carousel_match.matches));
+	}, [carousel_match.matches])
 
 	// const checkToken = useCallback(() => {
 	//  btnCheck()
