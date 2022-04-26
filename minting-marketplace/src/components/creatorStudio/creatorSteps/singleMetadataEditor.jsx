@@ -13,6 +13,9 @@ import { metamaskCall } from '../../../utils/metamaskUtils.js';
 import Swal from 'sweetalert2';
 
 const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, simpleMode}) => {
+	const [nftMapping, setNFTMapping] = useState([]);
+	const [nftCount, setNFTCount] = useState(0);
+
 	const [nftID, setNFTID] = useState(0);
 	const [nftTitle, setNFTTitle] = useState('');
 	const [nftImage, setNFTImage] = useState(BinanceDiamond);
@@ -20,7 +23,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 	const [forceRerender, setForceRerender] = useState(false);
 	const [propertiesArray, setPropertiesArray] = useState([]);
 	const [onMyChain, setOnMyChain] = useState();
-	const { /*minterInstance, contractCreator,*/ programmaticProvider, currentChain } = useSelector(store => store.contractStore);
+	const { programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 	const {address, collectionIndex} = useParams();
 	const history = useHistory();
@@ -28,8 +31,15 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 	const [metadataURI, setMetadataURI] = useState('');
 
 	const getNFTData = useCallback(async () => {
-		let aux = await rFetch(`/api/nft/${contractData.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
-		console.log(aux);
+		let {success, result} = await rFetch(`/api/nft/network/${contractData.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
+		if (success) {
+			let mapping = {};
+			result.tokens.forEach(token => {
+				mapping[token.uniqueIndexInContract] = token;
+			})
+			setNFTMapping(mapping);
+			setNFTCount(result.totalCount);
+		}
 	}, [address, collectionIndex, contractData.blockchain]);
 
 	const addRow = () => {
@@ -54,6 +64,21 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 	useEffect(() => {
 		getNFTData();
 	}, [getNFTData]);
+
+	useEffect(() => {
+		let tokenData = nftMapping[nftID];
+		if (tokenData) {
+			setNFTImage(tokenData?.metadata?.image);
+			setNFTTitle(tokenData?.metadata?.name);
+			setNFTDescription(tokenData?.metadata?.description);
+			setPropertiesArray(tokenData?.metadata?.attributes);
+		} else {
+			setNFTImage(BinanceDiamond)
+			setNFTTitle("")
+			setNFTDescription("")
+			setPropertiesArray("")
+		}
+	}, [nftID, nftMapping])
 
 	const switchBlockchain = async (chainId) => {
 		web3Switch(chainId)
@@ -80,6 +105,7 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 			</NavLink>
 		</div>
 		<div className='col-12 col-md-6 text-start px-5'>
+			<h5>{nftCount} NFTs available!</h5>
 			NFT #
 			<br />
 			<div className='border-stimorol col-12 col-md-3 rounded-rair mb-3'>

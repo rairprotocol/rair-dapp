@@ -56,7 +56,7 @@ module.exports = context => {
         return res.status(404).send({ success: false, message: 'Offers not found.' });
       }
 
-      const offerIndexes = offers.map(v => v.offerIndex);
+      const offerIndexes = offers.map(v => foundContract.diamond ? v.diamondRangeIndex : v.offerIndex);
       const foundProduct = await context.db.Product.findOne({ contract, collectionIndexInContract: product });
 
       if (_.isEmpty(foundProduct)) {
@@ -139,18 +139,30 @@ module.exports = context => {
                   mainFields.offerPool = offerPool.marketplaceCatalogIndex;
                 }
 
+                let externalURL = encodeURI(`https://${
+                    process.env.SERVICE_HOST
+                  }/${
+                    foundContract._id
+                  }/${
+                    foundProduct.collectionIndexInContract
+                  }/${
+                    foundContract.diamond ? offer.diamondRangeIndex : offer.offerIndex
+                  }/${
+                    token
+                  }`);
+
                 if (!foundToken) {
                   forSave.push({
                     ...mainFields,
                     ownerAddress: sanitizedOwnerAddress,
-                    offer: offer.offerIndex,
+                    offer: foundContract.diamond ? offer.diamondRangeIndex : offer.offerIndex,
                     uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                     isMinted: false,
                     metadata: {
                       name: context.textPurify.sanitize(record.name),
                       description: context.textPurify.sanitize(record.description),
                       artist: context.textPurify.sanitize(record.artist),
-                      external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract._id }/${ foundProduct.collectionIndexInContract }/${ offerPool.offer.offerIndex }/${ token }`),
+                      external_url: externalURL,
                       image: record.image || '',
                       animation_url: record.animation_url || '',
                       attributes
@@ -170,7 +182,7 @@ module.exports = context => {
                           name: context.textPurify.sanitize(record.name),
                           description: context.textPurify.sanitize(record.description),
                           artist: context.textPurify.sanitize(record.artist),
-                          external_url: encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract._id }/${ foundProduct.collectionIndexInContract }/${ offerPool.offer.offerIndex }/${ token }`),
+                          external_url: externalURL,
                           image: record.image || '',
                           animation_url: record.animation_url || '',
                           isMetadataPinned: reg.test(token.metadataURI || ''),
@@ -202,13 +214,13 @@ module.exports = context => {
       if (!_.isEmpty(forSave)) {
         try {
           await context.db.MintedToken.insertMany(forSave, { ordered: false });
-        } catch (err) {}
+        } catch (err) {console.log(err)}
       }
 
       if (!_.isEmpty(forUpdate)) {
         try {
           await context.db.MintedToken.bulkWrite(forUpdate, { ordered: false });
-        } catch (e) {}
+        } catch (e) {console.log(err)}
       }
 
       const resultOptions = {

@@ -2,15 +2,15 @@
 import InputField from '../../common/InputField.jsx';
 import { useSelector } from 'react-redux';
 
-const PropertyRow = ({name, value, deleter, rerender, array, index}) => {
+const PropertyRow = ({trait_type, value, deleter, rerender, array, index}) => {
 	
-	// const [propertyName, setPropertyName] = useState(name);
+	// const [propertyName, setPropertyName] = useState(trait_type);
 	// const [propertyValue, setPropertyValue] = useState(value);
 
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
 
 	const updatePropertyName = (value) => {
-		array[index].name = value;
+		array[index].trait_type = value;
 		rerender()
 	}
 
@@ -24,7 +24,7 @@ const PropertyRow = ({name, value, deleter, rerender, array, index}) => {
 			<div className='border-stimorol rounded-rair w-100'>
 				<InputField
 					customClass={`form-control rounded-rair bg-${primaryColor}`}
-					getter={name}
+					getter={trait_type}
 					setter={updatePropertyName}
 					customCSS={{color: textColor}}
 				/>

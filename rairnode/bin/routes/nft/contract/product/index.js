@@ -19,7 +19,7 @@ module.exports = context => {
       let tokens = [];
 
       if (contract.diamond) {
-        const offers = await context.db.Offer.find({ contract: contract._id, product }).distinct('offerIndex');
+        const offers = await context.db.Offer.find({ contract: contract._id, product }).distinct('diamondRangeIndex');
 
         if (_.isEmpty(offers)) return res.status(404).send({ success: false, message: 'Offers not found.' });
 
