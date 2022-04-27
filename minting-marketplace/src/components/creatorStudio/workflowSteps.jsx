@@ -200,7 +200,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
 					if (response2.contract.product.tokenLock.lockIndex === offer.diamondRangeIndex) {
 						offer.lockedTokens = response2.contract.product.tokenLock.lockedTokens;
 					}
-					if (offer.offerIndex) {
+					if (offer.offerIndex && diamondMarketplaceInstance) {
 						let aux = await diamondMarketplaceInstance.getOfferInfo(offer.offerIndex);
 						offer.marketData = {
 							visible: aux.mintOffer.visible,
