@@ -44,8 +44,7 @@ module "vault_config" {
     "65.21.191.184",
   ]
 
-  rairnode_app_role_authorized_login_ips = [
-    # gke nat gateway
-    local.gke_nat_gateway,
+  rairnode_app_role_authorized_login_cidr_ranges = [
+    "0.0.0.0/0"
   ]
 }

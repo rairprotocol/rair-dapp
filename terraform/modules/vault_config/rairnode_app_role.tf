@@ -14,7 +14,7 @@ resource "vault_approle_auth_backend_role" "rairnode" {
   # Whether or not to require secret_id to be presented when logging in using this AppRole.
   # Defaults to true.
 
-  secret_id_bound_cidrs = formatlist("%s/32", var.rairnode_app_role_authorized_login_ips)
+  secret_id_bound_cidrs = var.rairnode_app_role_authorized_login_cidr_ranges
   # (Optional) If set, specifies blocks of IP addresses which can perform the login operation.
   
   secret_id_num_uses = 0
