@@ -30,20 +30,6 @@ locals {
 module "vault_config" {
   source = "../../../modules/vault_config"
 
-  test_app_role_authorized_login_ips = [
-    # gke nat gateway
-    local.gke_nat_gateway,
-
-    # Carquinez house, March 9th, 2022
-    "99.47.22.182",
-
-    #Camerford house, March 16th, 2022
-    "172.117.206.216",
-    
-    # QA server, March 22nd, 2022
-    "65.21.191.184",
-  ]
-
   rairnode_app_role_authorized_login_cidr_ranges = [
     "0.0.0.0/0"
   ]
