@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "\nEnter Vault token:"
+echo "Enter Vault token:"
 read -s VAULT_TOKEN_INPUT
 export VAULT_TOKEN=$VAULT_TOKEN_INPUT
 
