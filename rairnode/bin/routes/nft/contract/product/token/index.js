@@ -13,17 +13,12 @@ module.exports = context => {
   router.get('/', async (req, res, next) => {
     try {
       const { contract, offers, offerPool, token } = req;
-      let result = null;
-      const options = {
+      const options = _.assign({
         contract: contract._id,
         token
-      };
+      }, contract.diamond ? { offer: { $in: offers } } : { offerPool: offerPool.marketplaceCatalogIndex });
 
-      if (contract.diamond) {
-        result = await context.db.MintedToken.findOne({ ...options, offer: { $in: offers } });
-      } else {
-        result = await context.db.MintedToken.findOne({ ...options, offerPool: offerPool.marketplaceCatalogIndex });
-      }
+      const result = await context.db.MintedToken.findOne(options);
 
       if (result === null) return res.status(404).send({ success: false, message: 'Token not found.' });
 
@@ -39,7 +34,10 @@ module.exports = context => {
       const { contract, offers, offerPool, token } = req;
       const { user } = req;
       let fieldsForUpdate = _.pick(req.body, ['name', 'description', 'artist', 'external_url', 'image', 'animation_url', 'attributes']);
-      let updatedToken = null;
+      const options = _.assign({
+        contract: contract._id,
+        token
+      }, contract.diamond ? { offer: { $in: offers } } : { offerPool: offerPool.marketplaceCatalogIndex });
 
       if (user.publicAddress !== contract.user) {
         if (req.files.length) {
@@ -64,6 +62,19 @@ module.exports = context => {
         }
 
         return res.status(400).send({ success: false, message: 'Nothing to update.' });
+      }
+
+      const countDocuments = await context.db.MintedToken.countDocuments(options);
+
+      if (countDocuments === 0) {
+        if (req.files.length) {
+          await Promise.all(_.map(req.files, async file => {
+            await fs.rm(`${ file.destination }/${ file.filename }`);
+            log.info(`File ${ file.filename } has removed.`);
+          }));
+        }
+
+        return res.status(400).send({ success: false, message: 'Token not found.' });
       }
 
       if (req.files.length) {
@@ -102,22 +113,8 @@ module.exports = context => {
       })
 
       sanitizedFieldsForUpdate = _.mapKeys(sanitizedFieldsForUpdate, (v, k) => `metadata.${ k }`);
-      const options = {
-        contract: contract._id,
-        token
-      };
 
-      if (contract.diamond) {
-        updatedToken = await context.db.MintedToken.findOneAndUpdate({
-          ...options,
-          offer: { $in: offers }
-        }, sanitizedFieldsForUpdate, { new: true });
-      } else {
-        updatedToken = await context.db.MintedToken.findOneAndUpdate({
-          ...options,
-          offerPool: offerPool.marketplaceCatalogIndex
-        }, sanitizedFieldsForUpdate, { new: true });
-      }
+      const updatedToken = await context.db.MintedToken.findOneAndUpdate(options, sanitizedFieldsForUpdate, { new: true });
 
       if (req.files.length) {
         await Promise.all(_.map(req.files, async file => {
@@ -146,7 +143,6 @@ module.exports = context => {
       const { user } = req;
       const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
       let metadataURI = 'none';
-      let foundToken = null;
 
       if (user.publicAddress !== contract.user) {
         return res.status(403).send({
@@ -155,16 +151,12 @@ module.exports = context => {
         });
       }
 
-      const options = {
+      const options = _.assign({
         contract: contract._id,
         token
-      };
+      }, contract.diamond ? { offer: { $in: offers } } : { offerPool: offerPool.marketplaceCatalogIndex });
 
-      if (contract.diamond) {
-        foundToken = await context.db.MintedToken.findOne({ ...options, offer: { $in: offers } });
-      } else {
-        foundToken = await context.db.MintedToken.findOne({ ...options, offerPool: offerPool.marketplaceCatalogIndex });
-      }
+      const foundToken = await context.db.MintedToken.findOne(options);
 
       if (_.isEmpty(foundToken)) {
         return res.status(400).send({ success: false, message: 'Token not found.' });
