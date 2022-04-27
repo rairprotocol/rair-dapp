@@ -15,6 +15,22 @@ resource "mongodbatlas_database_user" "rairnode" {
   }
 }
 
+resource "mongodbatlas_database_user" "rairnode_password_option" {
+  auth_database_name = local.mongo_admin_db_name
+  project_id   = var.project_id
+  username = "rairnode-password-option"
+
+  roles {
+    role_name = mongodbatlas_custom_db_role.read_write_primary_db.role_name
+    database_name = local.mongo_admin_db_name
+  }
+  
+  scopes {
+    name   = var.primary_db_name
+    type = "CLUSTER"
+  }
+}
+
 resource "mongodbatlas_database_user" "dev_team_db_users" {
   for_each = var.dev_team_db_admins
 
