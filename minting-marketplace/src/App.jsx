@@ -401,6 +401,7 @@ function App({ sentryHistory }) {
 					}}
 					className="App p-0 container-fluid">
 					{carousel && <UserProfileSettings
+						userData={userData}
 						errorAuth={errorAuth}
 						adminAccess={adminRights}
 						primaryColor={primaryColor}

@@ -147,11 +147,11 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 			so.emit("end", sessionId);
 		};
 	}, []);
-
 	if (socket) {
 		socket.removeListener("uploadProgress");
 		socket.on("uploadProgress", (data) => {
-			if (data.parts) {
+			
+			if (data.part) {
 				setPart(
 					getRandomValues() / 10
 				);

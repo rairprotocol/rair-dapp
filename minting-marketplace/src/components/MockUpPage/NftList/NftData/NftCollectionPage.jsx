@@ -16,7 +16,7 @@ import CustomButton from "../../utils/button/CustomButton";
 
 const NftCollectionPageComponent = ({
   blockchain,
-  contract,
+  // contract,
   currentUser,
   handleClickToken,
   product,
@@ -40,39 +40,18 @@ const NftCollectionPageComponent = ({
   setTokenData,
   userData,
   someUsersData,
+  offerDataCol,
+  offerAllData,
+  collectionName,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [offerDataCol, setOfferDataCol] = useState();
-  const [offerAllData, setOfferAllData] = useState();
-  const [collectionName, setCollectionName] = useState();
   const [show, setShow] = useState(true);
 
   const loadToken = useCallback(() => {
     getAllProduct(0, showToken);
     setShowToken(showToken * 2);
   }, [getAllProduct, setShowToken, showToken]);
-
-  const getParticularOffer = useCallback(async () => {
-    let response = await (
-      await fetch(
-        `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
-        {
-          method: "GET",
-        }
-      )
-    ).json();
-
-    if (response.success) {
-      setOfferAllData(response.product);
-      setOfferDataCol(response.product.offers);
-      setCollectionName(response.product.name);
-    }
-  }, [product, contract, blockchain]);
-
-  useEffect(() => {
-    getParticularOffer();
-  }, [getParticularOffer]);
 
   useEffect(() => {
     setDocumentTitle("Collection");
@@ -147,37 +126,37 @@ const NftCollectionPageComponent = ({
       <div className={"list-button-wrapper"}>
         {tokenDataFiltered.length > 0
           ? tokenDataFiltered.map((token, index) => {
-            if (token.cover !== "none") {
-              return (
-                <NftItemForCollectionView
-                  key={`${token.id + "-" + token.productId + index}`}
-                  pict={token.cover ? token.cover : defaultImg}
-                  metadata={token.metadata}
-                  contract={token.contract}
-                  token={token.token}
-                  handleClickToken={handleClickToken}
-                  setSelectedToken={setSelectedToken}
-                  selectedToken={selectedToken}
-                  offerPrice={offerPrice}
-                  ownerAddress={token.ownerAddress}
-                  blockchain={blockchain}
-                  currentUser={currentUser}
-                  offerData={offerData}
-                  primaryColor={primaryColor}
-                  productsFromOffer={productsFromOffer}
-                  selectedData={selectedData}
-                  textColor={textColor}
-                  tokenData={tokenData}
-                  totalCount={totalCount}
-                  product={product}
-                  index={token.token}
-                  offer={token.offer}
-                />
-              );
-            } else {
-              return null;
-            }
-          })
+              if (token.cover !== "none") {
+                return (
+                  <NftItemForCollectionView
+                    key={`${token.id + "-" + token.productId + index}`}
+                    pict={token.cover ? token.cover : defaultImg}
+                    metadata={token.metadata}
+                    contract={token.contract}
+                    token={token.token}
+                    handleClickToken={handleClickToken}
+                    setSelectedToken={setSelectedToken}
+                    selectedToken={selectedToken}
+                    offerPrice={offerPrice}
+                    ownerAddress={token.ownerAddress}
+                    blockchain={blockchain}
+                    currentUser={currentUser}
+                    offerData={offerData}
+                    primaryColor={primaryColor}
+                    productsFromOffer={productsFromOffer}
+                    selectedData={selectedData}
+                    textColor={textColor}
+                    tokenData={tokenData}
+                    totalCount={totalCount}
+                    product={product}
+                    index={token.token}
+                    offer={token.offer}
+                  />
+                );
+              } else {
+                return null;
+              }
+            })
           : tokenData.length > 0
           ? tokenData.map((token, index) => {
               if (token.cover !== "none") {

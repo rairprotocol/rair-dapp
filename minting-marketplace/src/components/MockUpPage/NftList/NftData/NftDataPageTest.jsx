@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { utils } from "ethers";
@@ -42,13 +42,14 @@ const NftDataPageTest = ({
   totalCount,
   textColor,
   offerData,
+  offerDataInfo,
   offerPrice,
   userData,
   someUsersData,
+  ownerInfo,
 }) => {
   const history = useHistory();
-  const [offerDataInfo, setOfferDataInfo] = useState();
-  const [ownerInfo, setOwnerInfo] = useState();
+
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
 
@@ -67,37 +68,6 @@ const NftDataPageTest = ({
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
-
-  const getParticularOffer = useCallback(async () => {
-    if(blockchain){
-      let response = await (
-        await fetch(
-          `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
-          {
-            method: "GET",
-          }
-        )
-      ).json();
-
-       if(response.success){
-        setOwnerInfo(response.product)
-        setOfferDataInfo(response.product.offers);
-       }
-     
-    }
-   
-
-    // console.log(response, "response");
-
-    // if (response.success) {
-     
-    // }
-
-  }, [product, contract, blockchain]);
-
-  useEffect(() => {
-    getParticularOffer()
-  }, [getParticularOffer])
 
   function percentToRGB(percent) {
     if (percent) {
@@ -151,7 +121,8 @@ const NftDataPageTest = ({
       return `${utils
         .formatEther(
           samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-        ).toString()} ${chainDataFront[blockchain]?.name}`;
+        )
+        .toString()} ${chainDataFront[blockchain]?.name}`;
     }
     return `${minPrice} – ${maxPrice} 
     `;
@@ -313,12 +284,13 @@ const NftDataPageTest = ({
       showConfirmButton: false,
     });
     if (
-      await metamaskCall(minterInstance.buyToken(
-        offerData.offerPool,
-        offerData.offerIndex,
-        selectedToken,
-        { value: offerData.price }
-      ),
+      await metamaskCall(
+        minterInstance.buyToken(
+          offerData.offerPool,
+          offerData.offerIndex,
+          selectedToken,
+          { value: offerData.price }
+        ),
         "Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!"
       )
     ) {
@@ -333,7 +305,7 @@ const NftDataPageTest = ({
         <button
           className="nft-btn-sell"
           style={{
-            color: `var(--${textColor})`
+            color: `var(--${textColor})`,
           }}
         >
           Sell
@@ -352,7 +324,7 @@ const NftDataPageTest = ({
           // onClick={() => buyContract()}
           // onClick={() => alert("Coming soon")}
           style={{
-            color: `var(--${textColor})`
+            color: `var(--${textColor})`,
           }}
         >
           {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
@@ -459,8 +431,8 @@ const NftDataPageTest = ({
   // }
 
   useEffect(() => {
-    window.scroll(0, 0)
-  }, [])
+    window.scroll(0, 0);
+  }, []);
 
   return (
     <div id="nft-data-page-wrapper">
@@ -473,9 +445,7 @@ const NftDataPageTest = ({
           userName={ownerInfo?.owner}
           currentUser={userData}
         />
-        <div
-          className="nft-data-content"
-        >
+        <div className="nft-data-content">
           <div
             className="nft-collection"
             style={{
@@ -483,9 +453,7 @@ const NftDataPageTest = ({
             }}
           >
             {selectedData?.animation_url ? (
-              <div
-                className="single-token-block-video"
-              >
+              <div className="single-token-block-video">
                 <ReactPlayer
                   width={"100%"}
                   height={"auto"}
@@ -506,7 +474,11 @@ const NftDataPageTest = ({
               <div
                 className="single-token-block-img"
                 style={{
-                  backgroundImage: `url(${selectedData?.image ? selectedData.image : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"})`,
+                  backgroundImage: `url(${
+                    selectedData?.image
+                      ? selectedData.image
+                      : "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW"
+                  })`,
                 }}
               ></div>
             )}
@@ -514,9 +486,7 @@ const NftDataPageTest = ({
           <div className="main-tab">
             <div>
               <div className="collection-label-name">Price range</div>
-              <div
-                className="nft-single-price-range"
-              >
+              <div className="nft-single-price-range">
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
                   src={`${chainDataFront[data?.contract.blockchain]?.image}`}
@@ -529,9 +499,7 @@ const NftDataPageTest = ({
                     fontSize: "13px",
                   }}
                 >
-                  {
-                    offerPrice && `${checkPrice()}`
-                  }
+                  {offerPrice && `${checkPrice()}`}
                 </span>
                 <span
                   style={{
@@ -605,9 +573,10 @@ const NftDataPageTest = ({
             </div>
           </div>
           <Accordion
-            allowMultipleExpanded preExpanded={['a']} /* allowZeroExpanded allowMultipleExpanded*/
+            allowMultipleExpanded
+            preExpanded={["a"]} /* allowZeroExpanded allowMultipleExpanded*/
           >
-            <AccordionItem uuid="a" >
+            <AccordionItem uuid="a">
               <AccordionItemHeading>
                 <AccordionItemButton>Description</AccordionItemButton>
               </AccordionItemHeading>
@@ -620,7 +589,8 @@ const NftDataPageTest = ({
                     {selectedData?.description}
                   </div>
                   <div className="my-2 px-4 custom-desc-to-offer">
-                    <a target="_blank"
+                    <a
+                      target="_blank"
                       rel="noreferrer"
                       href={selectedData?.external_url}
                     >
@@ -630,7 +600,7 @@ const NftDataPageTest = ({
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
-            <AccordionItem uuid="b" >
+            <AccordionItem uuid="b">
               <AccordionItemHeading>
                 <AccordionItemButton>Properties</AccordionItemButton>
               </AccordionItemHeading>
@@ -639,8 +609,8 @@ const NftDataPageTest = ({
                   {/* {checkDataOfProperty()} */}
                   {selectedData ? (
                     Object.keys(selectedData).length &&
-                      // ? selectedData.length &&
-                      selectedData?.attributes.length > 0 ? (
+                    // ? selectedData.length &&
+                    selectedData?.attributes.length > 0 ? (
                       selectedData?.attributes.map((item, index) => {
                         if (
                           item.trait_type === "External URL" &&
@@ -770,9 +740,10 @@ const NftDataPageTest = ({
                 <AccordionItemButton>Collection info</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
-
-                <CollectionInfo offerData={offerDataInfo} blockchain={blockchain} />
-
+                <CollectionInfo
+                  offerData={offerDataInfo}
+                  blockchain={blockchain}
+                />
               </AccordionItemPanel>
             </AccordionItem>
             <AccordionItem>

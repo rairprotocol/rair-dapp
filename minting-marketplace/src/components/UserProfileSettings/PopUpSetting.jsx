@@ -15,6 +15,7 @@ const PopUpSettings = ({
   // adminAccess,
   setLoginDone,
   primaryColor,
+  userData,
 }) => {
   const settingBlockRef = useRef();
   const history = useHistory();
@@ -33,6 +34,20 @@ const PopUpSettings = ({
     defaultPictures
   );
 
+  useEffect(() => {
+    setUserName(userData.nickName);
+    setUserEmail(userData.email);
+    setUserData(userData);
+    setImagePreviewUrl(userData.avatar);
+
+    // console.log(userData, 'userData from UserProfileSettings');
+
+    // console.log(userData.avatar, 'userData from UserProfileSettings');
+    // console.log(userData.nickName, 'userData from UserProfileSettings');
+    // console.log(userData.email, 'userData from UserProfileSettings');
+  },[userData])
+ 
+
   const cutUserAddress = () => {
     if (userName) {
       let length = userName.length;
@@ -47,20 +62,20 @@ const PopUpSettings = ({
     }
   };
 
-  const getInfoFromUser = useCallback(async () => {
-    // find user
-    const result = await fetch(`/api/users/${currentUserAddress}`).then(
-      (blob) => blob.json()
-    );
-    setUserName(result.user.nickName);
-    setUserEmail(result.user.email);
-    setUserData(result.user);
-    setImagePreviewUrl(result.user?.avatar);
-  }, [currentUserAddress]);
+  // const getInfoFromUser = useCallback(async () => {
+  //   // find user
+  //   const result = await fetch(`/api/users/${currentUserAddress}`).then(
+  //     (blob) => blob.json()
+  //   );
+  //   setUserName(result.user.nickName);
+  //   setUserEmail(result.user.email);
+  //   setUserData(result.user);
+  //   setImagePreviewUrl(result.user?.avatar);
+  // }, [currentUserAddress]);
 
-  useEffect(() => {
-    getInfoFromUser();
-  }, [getInfoFromUser]);
+  // useEffect(() => {
+  //   getInfoFromUser();
+  // }, [getInfoFromUser]);
 
   useEffect(() => {
     setOpenModal();

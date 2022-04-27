@@ -12,6 +12,7 @@ const UserProfileSettings = ({
   currentUserAddress,
   adminAccess,
   setLoginDone,
+  userData
 }) => {
   const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -49,6 +50,7 @@ const UserProfileSettings = ({
               isNotification={false}
             />
             <PopUpSettings
+              userData={userData}
               primaryColor={primaryColor}
               setLoginDone={setLoginDone}
               adminAccess={adminAccess}

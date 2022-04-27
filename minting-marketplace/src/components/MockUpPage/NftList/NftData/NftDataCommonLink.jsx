@@ -6,6 +6,7 @@ import NftUnlockablesPage from "./NftUnlockablesPage";
 import { useDispatch, useSelector } from "react-redux";
 
 const NftDataCommonLinkComponent = ({ userData }) => {
+  const [collectionName, setCollectionName] = useState();
   const [tokenData, setTokenData] = useState([]);
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
   const [totalCount, setTotalCount] = useState();
@@ -14,12 +15,15 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   const [selectedToken, setSelectedToken] = useState();
   const [offerPrice, setOfferPrice] = useState([]);
   const [offerData, setOfferData] = useState([]);
+  const [offerDataInfo, setOfferDataInfo] = useState();
+  const [ownerInfo, setOwnerInfo] = useState();
   const [productsFromOffer, setProductsFromOffer] = useState([]);
   const [showToken, setShowToken] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
   const [someUsersData, setSomeUsersData] = useState();
   const [dataForUser, setDataForUser] = useState();
 
+  
   const dispatch = useDispatch();
 
   const { currentUserAddress } = useSelector((store) => store.contractStore);
@@ -121,6 +125,11 @@ const NftDataCommonLinkComponent = ({ userData }) => {
           return p.price;
         })
       );
+      
+      setOwnerInfo(response.product);
+      setOfferDataInfo(response.product.offers);
+      setCollectionName(response.product.name);
+      
     } else if (
       response?.message === "jwt expired" ||
       response?.message === "jwt malformed"
@@ -190,12 +199,12 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     getProductsFromOffer();
   }, [getAllProduct, getParticularOffer, getProductsFromOffer, showToken]);
 
-//   const getBlockchains = async () => {
-//     var res = await (await fetch('/api/blockchains')).json();
-// console.log(res, 'res');
+  //   const getBlockchains = async () => {
+  //     var res = await (await fetch('/api/blockchains')).json();
+  // console.log(res, 'res');
 
-//   }
-//   getBlockchains();
+  //   }
+  //   getBlockchains();
   if (params.tokens === "collection") {
     return (
       <NftCollectionPage
@@ -224,6 +233,9 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         isLoading={isLoading}
         setTokenData={setTokenData}
         setTokenDataFiltered={setTokenDataFiltered}
+        offerDataCol={offerDataInfo}
+        offerAllData={ownerInfo}
+        collectionName={collectionName}
       />
     );
   } else if (params.tokens === "unlockables") {
@@ -270,6 +282,8 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         tokenData={tokenData}
         totalCount={totalCount}
         product={product}
+        ownerInfo={ownerInfo}
+        offerDataInfo={offerDataInfo}
       />
     );
   }
