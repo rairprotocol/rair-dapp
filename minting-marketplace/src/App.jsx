@@ -205,7 +205,7 @@ function App({ sentryHistory }) {
 			}
 
 			// Authorize user and get JWT token
-			if (adminRights === null || !localStorage.token || !isTokenValid(localStorage.token)) {
+			if (adminRights === null || adminRights === undefined || !localStorage.token || !isTokenValid(localStorage.token)) {
 				dispatchStack.push({ type: authTypes.GET_TOKEN_START });
 				let token = await getJWT(programmaticProvider, currentUser);
 
