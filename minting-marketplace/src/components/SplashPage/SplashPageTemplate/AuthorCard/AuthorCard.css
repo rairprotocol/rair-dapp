@@ -15,6 +15,7 @@
         display: block;
         width: inherit;
     }
+
     .col-12.pt-2.mb-4 {
         margin-right: 0px;
     }
@@ -44,11 +45,11 @@
         width: 24vw;
         height: 24vw;
     }
-    
+
 }
 
 @media screen and (max-width: 900px) {
-    .template-home-splash-page .img-teammate img{
+    .template-home-splash-page .img-teammate img {
         width: 384px;
         height: 384px;
     }
@@ -57,6 +58,7 @@
         margin-bottom: 750px;
     }
 }
+
 @media screen and (max-width: 570px) {
     .template-home-splash-page .img-teammate img {
         width: 50vw;
@@ -99,6 +101,17 @@
     background-repeat: no-repeat;
     display: flex;
     align-items: center;
+}
+
+.template-author-card .btn-help {
+    position: absolute;
+    top: 20px;
+    right: 5vw;
+    width: 200px;
+    height: 48px;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
 }
 
 .template-author-card .block-splash {
@@ -241,9 +254,9 @@
 /* horizontal */
 
 @media screen and (max-width: 1400px) {
-   .template-author-card{
+    .template-author-card {
         height: 45vw;
-   }
+    }
 }
 
 /* vertical */
@@ -281,11 +294,11 @@
 
     }
 
-    .template-author-card .text-splash .title-splash{
+    .template-author-card .text-splash .title-splash {
         margin-bottom: 0;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient-template{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -295,7 +308,7 @@
         width: 100%;
         margin-bottom: 45vw;
         padding: 0 0 0 0;
- 
+
     }
 
     .template-author-card .text-splash .text-description {
@@ -310,26 +323,26 @@
         margin-top: 40px;
     }
 
-    .template-author-card .text-splash .btn-submit-with-form{
+    .template-author-card .text-splash .btn-submit-with-form {
         justify-content: center;
         display: flex;
         margin-top: 2.5vw;
     }
 
-    .template-author-card .text-splash .btn-submit-with-form button{
+    .template-author-card .text-splash .btn-submit-with-form button {
         width: 35vw;
         height: 8vw;
         font-size: 2.5vw;
     }
 }
 
-@media screen and (max-width: 1000px){
+@media screen and (max-width: 1000px) {
     .template-author-card {
         background-position: center 19vw;
     }
 }
 
-@media screen and (max-width: 900px)  {
+@media screen and (max-width: 900px) {
 
     .template-author-card {
         padding-top: 2vw;
@@ -337,7 +350,7 @@
         height: 105vw;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient-template{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template {
         margin-bottom: 50vw;
         font-size: 11vw !important;
         height: 11vw;
@@ -363,7 +376,7 @@
         height: 110vw;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient-template{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template {
         font-size: 11vw !important;
         height: 11vw;
         margin-top: 2vw;
@@ -390,10 +403,19 @@
         background-size: 40vw auto;
         height: 105vw;
     }
-    .template-author-card .text-splash .title-splash h3.text-gradient-template{
+
+    .template-author-card .text-splash .title-splash h3.text-gradient-template {
         margin-bottom: 50vw;
         font-size: 12vw !important;
         height: 12vw;
+    }
+
+    .template-author-card .btn-help {
+        height: 30px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+        margin: auto;
     }
 }
 
@@ -405,7 +427,7 @@
         height: 120vw;
     }
 
-    .template-author-card .text-splash .title-splash h3.text-gradient-template{
+    .template-author-card .text-splash .title-splash h3.text-gradient-template {
         margin-bottom: 55vw;
     }
 

@@ -4,6 +4,7 @@ import "./TitleCollection.css";
 import defaultUser from "./../../../assets/defultUser.png";
 import SharePopUp from "./SharePopUp/SharePopUp";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const TitleCollection = ({
   title,
@@ -12,6 +13,8 @@ const TitleCollection = ({
   someUsersData,
   selectedData,
 }) => {
+  const { primaryColor } = useSelector(store => store.colorStore)
+
   const { tokenId } = useParams();
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(0);
@@ -25,7 +28,7 @@ const TitleCollection = ({
     setSelectedValue(value);
   };
 
-  useEffect(() => {}, [currentUser, userName]);
+  useEffect(() => { }, [currentUser, userName]);
 
   if (someUsersData) {
     return (
@@ -33,10 +36,15 @@ const TitleCollection = ({
         <div className="block-title-share">
           <h2>{title === "none" ? `#${tokenId}` : title}</h2>
           <div>
-            <button className="block-btn-share" onClick={handleClickOpen}>
+            <button
+              className="block-btn-share"
+              onClick={handleClickOpen}
+              style={{ color: `${primaryColor === "rhyno" ? "black" : "white"}` }}
+            >
               Share
             </button>
             <SharePopUp
+              primaryColor={primaryColor}
               selectedValue={selectedValue}
               open={open}
               onClose={handleClose}
@@ -66,10 +74,15 @@ const TitleCollection = ({
         <div className="block-title-share">
           <h2>{title === "none" ? `#${tokenId}` : title}</h2>
           <div>
-            <button className="block-btn-share" onClick={handleClickOpen}>
+            <button
+              className="block-btn-share"
+              onClick={handleClickOpen}
+              style={{ color: `${primaryColor === "rhyno" ? "black" : "white"}` }}
+            >
               Share
             </button>
             <SharePopUp
+              primaryColor={primaryColor}
               selectedValue={selectedValue}
               open={open}
               onClose={handleClose}

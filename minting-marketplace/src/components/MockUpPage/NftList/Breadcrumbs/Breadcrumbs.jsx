@@ -7,10 +7,12 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
 import { useParams, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const BreadcrumbsComponent = () => {
   const params = useParams();
   const history = useHistory();
+  const { primaryColor } = useSelector(store => store.colorStore);
 
   function handleClick(event) {
     event.preventDefault();
@@ -19,7 +21,7 @@ const BreadcrumbsComponent = () => {
     );
     console.info("You clicked a breadcrumb.");
   }
-  function goToSingleView(event){
+  function goToSingleView(event) {
     event.preventDefault();
     history.goBack()
   }
@@ -39,7 +41,7 @@ const BreadcrumbsComponent = () => {
             sx={{ fontSize: "x-large" }}
           />
         </NavLink>,
-        <Typography key="3" color="white">
+        <Typography key="3" color={`${primaryColor === "rhyno" ? "black" : "white"}`}>
           Collection
         </Typography>,
       ];
@@ -67,7 +69,7 @@ const BreadcrumbsComponent = () => {
         >
           Collection
         </Link>,
-        <Typography key="3" color="white">
+        <Typography key="3" color={`${primaryColor === "rhyno" ? "black" : "white"}`}>
           Single Token
         </Typography>,
       ];
@@ -104,7 +106,7 @@ const BreadcrumbsComponent = () => {
         >
           Single Token
         </Link>,
-        <Typography key="3" color="white">
+        <Typography key="3" color={`${primaryColor === "rhyno" ? "black" : "white"}`}>
           Unlockables Content
         </Typography>,
       ];

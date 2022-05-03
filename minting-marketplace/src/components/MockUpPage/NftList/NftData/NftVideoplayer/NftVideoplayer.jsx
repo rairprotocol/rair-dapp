@@ -98,7 +98,7 @@ const NftVideoplayer = ({ selectVideo }) => {
       <div
         className=""
         style={{
-          width: "406px",
+          width: "40vw",
           height: "406px",
         }}
       >

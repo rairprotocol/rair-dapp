@@ -4,7 +4,7 @@ import playImages from "../../../../SplashPage/images/playImg.png";
 // import { useHistory } from "react-router-dom";
 import NftVideoplayer from "../NftVideoplayer/NftVideoplayer";
 
-function VideoPlayerView({ productsFromOffer }) {
+function VideoPlayerView({ productsFromOffer, primaryColor }) {
   const [selectVideo, setSelectVideo] = useState(productsFromOffer[0]);
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
   // const history = useHistory();
@@ -14,7 +14,12 @@ function VideoPlayerView({ productsFromOffer }) {
   // console.log(productsFromOffer, "productsFromOffer");
   // console.log(selectVideo, "selectVideo");
   return (
-    <div className={cl.VideoPlayerViewWrapper}>
+    <div 
+    className={cl.VideoPlayerViewWrapper}
+    style={{
+      background: `${primaryColor === "rhyno" ? "rgb(189,189,189)" : "#383637"}`
+    }}
+    >
       <div className={cl.ListOfVideosWrapper}>
         {productsFromOffer?.length &&
           productsFromOffer.map((data) => {
@@ -25,7 +30,9 @@ function VideoPlayerView({ productsFromOffer }) {
                   setSelectVideo(data);
                   setOpenVideoplayer(false);
                 }}
-                style={{ backgroundImage: `url(${data?.staticThumbnail})` }}
+                style={{ 
+                  backgroundImage: `url(${data?.staticThumbnail})`, 
+                }}
                 className={cl.ListOfVideosOneVideo}
               >
                 <div className={cl.previewWrapper}>

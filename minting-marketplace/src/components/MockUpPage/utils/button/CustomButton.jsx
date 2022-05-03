@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import cl from "./CustomButton.module.css";
 
@@ -9,8 +10,10 @@ function CustomButton({
   onClick,
   textColor,
   margin,
-//   primaryColor,
+  //   primaryColor,
 }) {
+  const { primaryColor } = useSelector(store => store.colorStore);
+
   return (
     <div
       style={{
@@ -28,8 +31,7 @@ function CustomButton({
             width: width,
             height: height,
             color: textColor,
-            // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "red"
-            //                      }`,
+            background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#434343"}`,
           }}
           className={cl.nftDataPageShowMore}
         >

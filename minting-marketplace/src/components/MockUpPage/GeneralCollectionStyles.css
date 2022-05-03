@@ -55,11 +55,64 @@
     margin-bottom: 32px;
 }
 
+.nftlist-unlockable-videos {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+.nftlist-unlockable-videos .nft-unlockable-videoItem {
+    cursor: pointer;
+    display: flex;
+    border-radius: 16px;
+    min-width: 540px;
+}
+
+.nftlist-unlockable-videos .nft-unlockable-videoItem img {
+    width: 230px;
+    opacity: 0.4;
+    height: 135px;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+.nft-unlockable-videoItem .nft-unlockable-contentItem p {
+    font-size: 20px;
+}
+
+.nft-unlockable-videoItem .nft-unlockable-imgContent {
+    width: 32px;
+    height: 32px;
+    background: #CCA541;
+    border-radius: 50%;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    z-index: 1;
+}
+
+@media screen and (max-width: 1230px) {
+    .nftlist-unlockable-videos {
+        justify-content: center;
+    }
+}
+
 @media screen and (max-width: 950px) {
 
     .wrapper-collection,
     #nft-data-page-wrapper {
         padding: 0 10px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .nftlist-unlockable-videos .nft-unlockable-videoItem {
+        cursor: pointer;
+        display: flex;
+        border-radius: 16px;
+        min-width: 80vw;
     }
 }
 
@@ -98,6 +151,30 @@
         width: 100%;
         justify-content: space-between;
         margin-bottom: 32px;
+    }
+
+    .nft-unlockable-videoItem .nft-unlockable-contentItem p {
+        font-size: 16px;
+    }
+    
+    .nft-unlockable-videoItem .nft-unlockable-imgContent p {
+        font-size: 14px;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+    .nftlist-unlockable-videos .nft-unlockable-videoItem img {
+        height: 100px;
+        width: 35vw;
+    }
+
+    .nft-unlockable-videoItem .nft-unlockable-contentItem p {
+        font-size: 14px;
+    }
+    
+    .nft-unlockable-videoItem .nft-unlockable-imgContent p {
+        font-size: 12px;
     }
 }
 

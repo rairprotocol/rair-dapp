@@ -46,6 +46,7 @@ import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
 import Swal from 'sweetalert2';
 import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
+import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -53,15 +54,15 @@ import { rFetch } from '../../../utils/rFetch';
 
 // This will be the default contract used in this splash page
 const mainContract = {
-    contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
-    requiredBlockchain: '0x1',
-    offerIndex: [0, 1]
+  contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+  requiredBlockchain: '0x1',
+  offerIndex: [0, 1]
 };
 // By setting REACT_APP_TEST_CONTRACTS
 const testContract = {
-    contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
-    requiredBlockchain: '0x5',
-    offerIndex: [52, 0]
+  contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
+  requiredBlockchain: '0x5',
+  offerIndex: [52, 0]
 };
 
 const splashData = {
@@ -82,6 +83,7 @@ const splashData = {
     image: UKR_rounded
   },
   buttonLabel: "Mint for .1991 Eth",
+  buttonBackgroundHelp: "rgb(3, 91, 188)",
   backgroundImage: UKR_rounded,
   purchaseButton: {
     // Reusable component
@@ -199,12 +201,17 @@ const splashData = {
 }
 
 const UkraineSplashPage = ({ loginDone, connectUserData }) => {
+  const [openCheckList, setOpenCheckList] = useState(false);
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
   const { currentChain, minterInstance } = useSelector((store) => store.contractStore);
   const carousel_match = window.matchMedia("(min-width: 900px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
+
+  const toggleCheckList = () => {
+    setOpenCheckList(prev => !prev)
+  }
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
@@ -229,7 +236,13 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
     <div className="wrapper-splash-page ukraineglitch">
       <MetaTags seoMetaTags={splashData.seoInformation} />
       <div className="template-home-splash-page">
-        <AuthorCard {...{ splashData, connectUserData }} />
+        <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
+        <PurchaseChecklist
+          toggleCheckList={toggleCheckList}
+          openCheckList={openCheckList}
+          nameSplash={"UkraineGlitch"}
+          backgroundColor={{ darkTheme: "rgb(3, 91, 188)", lightTheme: "rgb(3, 91, 188)" }}
+        />
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
         <TokenLeftTemplate
           counterData={splashData.counterData}

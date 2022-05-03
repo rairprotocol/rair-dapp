@@ -8,7 +8,6 @@
 
 .contianer-collection-info {
     max-width: 1600px;
-    background: #383637;
     border-radius: 16px;
     overflow: hidden;
 }
@@ -63,25 +62,6 @@
     text-align: left;
     margin-bottom: 24px;
     width: 100%;
-}
-
-.collection-info-body {
-    width: 100%;
-}
-
-.collection-info-body .block-item-collection {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 13px 0;
-    display: flex;
-    justify-content: space-between;
-
-    font-size: 19px;
-}
-
-.collection-info-body .block-item-collection:nth-child(odd) {
-    background: #2D2B2C;
 }
 
 .collection-info-body .block-item-collection .item-name {

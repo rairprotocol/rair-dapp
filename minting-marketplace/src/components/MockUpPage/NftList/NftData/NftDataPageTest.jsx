@@ -449,7 +449,7 @@ const NftDataPageTest = ({
           <div
             className="nft-collection"
             style={{
-              background: "#383637",
+              background: `${primaryColor === "rhyno" ? "rgb(191 191 191)" : "#383637"}`,
             }}
           >
             {selectedData?.animation_url ? (
@@ -717,6 +717,7 @@ const NftDataPageTest = ({
                   productsFromOffer={productsFromOffer}
                   selectedData={selectedData}
                   selectedToken={selectedToken}
+                  primaryColor={primaryColor}
                 />
                 {productsFromOffer && productsFromOffer.length !== 0 ? <CustomButton
                   onClick={() =>

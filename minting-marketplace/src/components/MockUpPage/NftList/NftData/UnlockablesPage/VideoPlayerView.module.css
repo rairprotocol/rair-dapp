@@ -1,7 +1,6 @@
 .VideoPlayerViewWrapper{
-    width: 1200px;
+    max-width: 1600px;
     height: 446px;
-    background: #383637;
     margin: auto;
     border-radius: 16px;
     display: flex;
@@ -19,6 +18,7 @@
     align-content: center;
     justify-content: space-between;
     align-items: center;
+    color: #fff;
 }
 
 .ListOfVideosOneVideo{
@@ -33,7 +33,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     margin-bottom: 12px;
-    filter: contrast(0.4);
+    filter: contrast(0.6);
 }
 
 .ListOfVideosOneVideo:hover{
@@ -59,7 +59,8 @@
     align-items: flex-start;
     text-align: start;
     word-break: break-all;
-    overflow: scroll;
+    overflow: auto;
+    color: #fff;
 }
 
 .iconKey{
@@ -71,7 +72,7 @@
 padding: 24px 209px 16px 249px;
 }
 .SingleVideo{
-    width: 406px;
+    width: 40vw;
     height: 406px;
     background-size: cover;
     background-position: center center;

@@ -19,6 +19,8 @@ import TeamMeet from "./TeamMeet/TeamMeetList";
 import TokenLeftGreyman from "./TokenLeft/TokenLeftGreyman";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import { Timeline } from "./Timeline/Timeline";
+import PurchaseChecklist from './PurchaseChecklist/PurchaseChecklist';
+import ButtonHelp from './PurchaseChecklist/ButtonHelp.jsx';
 
 import { diamondFactoryAbi } from "../../contracts/index.js";
 //import { rFetch } from "../../utils/rFetch.js";
@@ -92,7 +94,6 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
   const [openCheckList, setOpenCheckList] = useState(false);
-  const [purchaseList, setPurshaseList] = useState(true);
 
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
@@ -101,9 +102,6 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
-  
-  const dappUrl = window.location.host;
-  const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
 
   const seoInformation = {
     title: "#Cryptogreyman",
@@ -125,12 +123,9 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   const toggleCheckList = () => {
     setOpenCheckList(prev => !prev)
   }
-  const togglePurchaseList = () => {
-    setPurshaseList(prev => !prev);
-  }
 
   useEffect(() => {
-    dispatch({type: 'SET_REAL_CHAIN', payload: GreymanChainId})
+    dispatch({ type: 'SET_REAL_CHAIN', payload: GreymanChainId })
     //eslint-disable-next-line
   }, []);
 
@@ -351,51 +346,14 @@ const SplashPage = ({ loginDone, connectUserData }) => {
     <div className="wrapper-splash-page greyman-page">
       <MetaTags seoMetaTags={seoInformation} />
       <div className="home-splash--page">
-        <div style={{ display: `${openCheckList ? "block" : "none"}` }} className="tutorial-checklist">
-          <h5>Cryptogreyman purchase checklist</h5>
-          <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
-            <i className={`fas fa-chevron-${purchaseList ? "down" : "up"}`}></i>
-          </div>
-          <div className="tutorial-close" onClick={() => toggleCheckList()}>
-            <i className="fas fa-times"></i>
-          </div>
-          <ul style={{display: `${purchaseList ? "block" : "none"}`}}>
-            <li>1. Make sure you have the
-              <a
-                href={metamaskAppDeepLink}
-                target="_blank"
-                rel="noreferrer"
-              > metamask extension </a>
-              installed
-            </li>
-            <li>2. Click connect wallet in top right corner. You must be  fully logged into metamask with your password first</li>
-            <li>3. Sign the request to complete login. You can’t purchase until you see a picture of Elon</li>
-            <li>
-              4. If you have errors purchasing see
-              <a
-                href="https://rair-technologies.gitbook.io/knowledge-base/evm-strategy"
-                target="_blank"
-                rel="noreferrer"
-              > RPC article </a>
-              for error issues. Bignumber, mispriced, Internal JSON-RPC, etc
-            </li>
-            <li>5. Make sure you are switched to the MATIC network and have at least 1.01 MATIC</li>
-            <li>6. Still need help?
-              <a
-                href="#video"
-                target="_blank"
-                rel="noreferrer"
-              > Watch this troubleshooting video </a>
-            </li>
-          </ul>
-        </div>
+        <PurchaseChecklist
+          openCheckList={openCheckList}
+          toggleCheckList={toggleCheckList}
+          nameSplash={"Cryptogreyman"}
+          backgroundColor={{darkTheme: "#676767", lightTheme: "#818181"}}
+        />
         <AuthorBlock mainClass="greyman-page-author">
-          <button
-            className="btn-help"
-            onClick={() => toggleCheckList()}
-          >
-            Need help?
-          </button>
+          <ButtonHelp backgroundButton={"var(--stimorol)"} toggleCheckList={toggleCheckList} />
           <div className="block-splash">
             <div className="text-splash">
               <div className="title-splash greyman-page">
@@ -457,7 +415,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
                         </div>
                         <div className='col-12 col-md-3 text-center text-md-start text-xl-center'>
                           <img
-                            style={{display: 'inline', maxHeight: '25vh' }}
+                            style={{ display: 'inline', maxHeight: '25vh' }}
                             src={GreyManNotFun}
                             alt="not-fun"
                           />

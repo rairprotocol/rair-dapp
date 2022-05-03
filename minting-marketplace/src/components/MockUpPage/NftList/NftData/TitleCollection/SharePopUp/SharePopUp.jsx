@@ -11,7 +11,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import { useSelector } from "react-redux";
 import "./SharePopUp.css";
 
-const SharePopUp = ({ onClose, selectedValue, open }) => {
+const SharePopUp = ({ onClose, selectedValue, open, primaryColor }) => {
     const [copySuccess, setCopySuccess] = useState('Copy link');
     const currentUrl = document.location.href;
     const { headerLogo } = useSelector(store => store.colorStore);
@@ -43,13 +43,19 @@ const SharePopUp = ({ onClose, selectedValue, open }) => {
 
     return (
         <Dialog onClose={handleClose} open={open}>
-            <DialogTitle style={{ background: "rgb(56, 54, 55)", color: "white" }}>Share</DialogTitle>
-            <List style={{ background: "rgb(56, 54, 55)" }} sx={{ pt: 0 }}>
+            <DialogTitle style={{
+                background: `${primaryColor === "rhyno" ? "#e3e4e6" : "rgb(56, 54, 55)"}`,
+                color: `${primaryColor === "rhyno" ? "black" : "white"}`
+            }}
+            >
+                Share
+            </DialogTitle>
+            <List style={{ background: `${primaryColor === "rhyno" ? "#e3e4e6" : "rgb(56, 54, 55)"}` }} sx={{ pt: 0 }}>
                 <ListItem onClick={closePopUp} autoFocus button>
                     <ListItemAvatar>
                         <img style={{ width: 30, height: "auto", marginLeft: "10px" }} src={headerLogo} alt="rair tech" />
                     </ListItemAvatar>
-                    <ListItemText style={{ color: "white" }} primary={copySuccess} />
+                    <ListItemText style={{ color: `${primaryColor === "rhyno" ? "black" : "white"}` }} primary={copySuccess} />
                 </ListItem>
                 <ListItem style={{ overflow: "hidden" }} autoFocus button >
                     <FacebookShareButton
@@ -63,7 +69,7 @@ const SharePopUp = ({ onClose, selectedValue, open }) => {
                                 style={{ color: "#4267B2", fontSize: 40 }}
                             />
                         </ListItemAvatar>
-                        <ListItemText style={{ color: "white" }} primary="Share on Facebook" />
+                        <ListItemText style={{ color: `${primaryColor === "rhyno" ? "black" : "white"}` }} primary="Share on Facebook" />
                     </FacebookShareButton>
                 </ListItem>
                 <ListItem autoFocus>
@@ -78,7 +84,7 @@ const SharePopUp = ({ onClose, selectedValue, open }) => {
                                 style={{ color: "#1D9BF0", fontSize: 40 }}
                             />
                         </ListItemAvatar>
-                        <ListItemText style={{ color: "white" }} primary="Share on Twitter" />
+                        <ListItemText style={{ color: `${primaryColor === "rhyno" ? "black" : "white"}` }} primary="Share on Twitter" />
                     </TwitterShareButton>
                 </ListItem>
             </List>

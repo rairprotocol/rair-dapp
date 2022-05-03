@@ -25,40 +25,54 @@ const NftUnlockablesPage = ({
   setTokenDataFiltered,
 }) => {
   const dispatch = useDispatch();
+  
   useEffect(() => {
     setDocumentTitle("Unlockables");
     dispatch({
       type: "SHOW_SIDEBAR_TRUE",
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    window.scroll(0, 0)
+  }, [])
+
   return (
-    <div>
+    <div
+    >
       <BreadcrumbsView />
-      <VideoPlayerView productsFromOffer={productsFromOffer} />
-
-      <div style={{ maxWidth: "1250px", margin: "auto" }} className="">
-        <NftSingleUnlockables
-          blockchain={blockchain}
-          contract={contract}
-          product={product}
+      <div
+        style={{ marginBottom: 108 }}
+      >
+        <VideoPlayerView
           productsFromOffer={productsFromOffer}
-          selectedData={selectedData}
-          selectedToken={selectedToken}
-          tokenData={tokenData}
-          setTokenDataFiltered={setTokenDataFiltered}
+          primaryColor={primaryColor}
         />
-      </div>
+        <div style={{ maxWidth: "1600px", margin: "auto" }} className="">
+          <NftSingleUnlockables
+            blockchain={blockchain}
+            contract={contract}
+            product={product}
+            productsFromOffer={productsFromOffer}
+            selectedData={selectedData}
+            selectedToken={selectedToken}
+            tokenData={tokenData}
+            setTokenDataFiltered={setTokenDataFiltered}
+            primaryColor={primaryColor}
+          />
+        </div>
 
-      {productsFromOffer?.length < 2 ? (
-        <CustomButton
-          text="Show More"
-          width="288px"
-          height="48px"
-          margin={"0 auto"}
-        />
-      ) : (
-        <></>
-      )}
+        {productsFromOffer?.length < 2 ? (
+          <CustomButton
+            text="Show More"
+            width="288px"
+            height="48px"
+            margin={"0 auto"}
+          />
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   );
 };

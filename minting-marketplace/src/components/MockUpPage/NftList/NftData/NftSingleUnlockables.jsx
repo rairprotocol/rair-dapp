@@ -6,6 +6,7 @@ const NftSingleUnlockables = ({
   productsFromOffer,
   // tokenData,
   setTokenDataFiltered,
+  primaryColor
 }) => {
   // const history = useHistory();
   const [sections, setSections] = useState(null);
@@ -32,14 +33,19 @@ const NftSingleUnlockables = ({
         display: "flex",
         flexWrap: "wrap",
         overflow: "hidden",
-        flexDirection: "row",
-        justifyContent: "space-between",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        maxWidth: "1600px"
       }}
     >
       {sections &&
         Object.entries(sections).map(([key, item]) => {
           return (
-            <div key={key}>
+            <div
+              key={key}
+              style={{ width: "100%" }}
+            >
               <NftDifferentRarity
                 setTokenDataFiltered={setTokenDataFiltered}
                 title={rarity[key]}
@@ -54,16 +60,16 @@ const NftSingleUnlockables = ({
                   >
                     <div
                       // onClick={
-                        // () => history.push(`/watch/${v._id}/${v.mainManifest}`)
-                        // history.push(
-                        // `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
-                        // )
+                      // () => history.push(`/watch/${v._id}/${v.mainManifest}`)
+                      // history.push(
+                      // `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
+                      // )
                       // }
                       style={{
                         display: "flex",
                         borderRadius: "16px",
                         minWidth: "592px",
-                        backgroundColor: "#4E4D4DCC",
+                        backgroundColor: `${primaryColor === "rhyno" ? "rgb(167, 166, 166)" : "#4E4D4DCC"}`,
                       }}
                     >
                       <div
@@ -100,12 +106,14 @@ const NftSingleUnlockables = ({
                               width: "220px",
                               height: '50px',
                               wordBreak: 'break-all',
-                              overflow: 'scroll',
-                            }: {
+                              overflow: 'auto',
+                              color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
+                            } : {
                               textAlign: "center",
                               marginLeft: "-85px",
                               marginTop: "9px",
                               width: "200px",
+                              color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
                             }}
                           >
                             {v.description}
@@ -138,7 +146,11 @@ const NftSingleUnlockables = ({
                       >
                         <div>
                           {" "}
-                          <p style={{ fontSize: 20 }}>
+                          <p style={{
+                            fontSize: 20,
+                            color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`
+                          }}
+                          >
                             {v?.title}
                             {/* Video {selectedData?.name} */}
                           </p>{" "}
@@ -146,8 +158,8 @@ const NftSingleUnlockables = ({
                         <div>
                           <p
                             style={{
-                              color: "#A7A6A6",
                               fontSize: 20,
+                              color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
                             }}
                           >
                             {v?.duration}

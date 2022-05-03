@@ -60,6 +60,7 @@
 }
 
 
+
 /* main block */
 
 .wrapper-splash-page {
@@ -76,6 +77,17 @@
 .wrapper-splash-page.greyman-page {
     /* background-image: none; */
     /* text-align: -webkit-center; */
+}
+
+.information-author .btn-help {
+    position: absolute;
+    top: 20px;
+    right: 5vw;
+    width: 200px;
+    height: 48px;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
 }
 
 .home-splash--page {

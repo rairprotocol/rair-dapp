@@ -1,4 +1,5 @@
 import React from "react";
+import ButtonHelp from "../../PurchaseChecklist/ButtonHelp";
 // import DocumentIcon from "../../../../images/documentIcon.svg";
 import "./AuthorCard.css";
 
@@ -23,7 +24,7 @@ const AuthorCardButton = ({ buttonData }) => {
   );
 };
 
-const AuthorCard = ({ splashData, connectUserData }) => {
+const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
   const {
     title,
     titleColor,
@@ -32,13 +33,15 @@ const AuthorCard = ({ splashData, connectUserData }) => {
     button1,
     button2,
     purchaseButton,
-    buttonLabel
+    buttonLabel,
+    buttonBackgroundHelp
   } = splashData;
   return (
     <div
       className="template-author-card"
       style={{ backgroundImage: "url(" + backgroundImage + ")" }}
     >
+      {toggleCheckList && <ButtonHelp backgroundButton={buttonBackgroundHelp} toggleCheckList={toggleCheckList} />}
       <div className="block-splash">
         <div className="text-splash">
           <div className="title-splash">
@@ -55,7 +58,7 @@ const AuthorCard = ({ splashData, connectUserData }) => {
           <div className="button-wrapper">
             {purchaseButton && (
               <purchaseButton.buttonComponent
-                {...{ ...purchaseButton, connectUserData, buttonLabel}}
+                {...{ ...purchaseButton, connectUserData, buttonLabel }}
               />
             )}
             {button1 && <AuthorCardButton buttonData={button1} />}

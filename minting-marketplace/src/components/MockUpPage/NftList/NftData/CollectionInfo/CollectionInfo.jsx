@@ -2,22 +2,29 @@ import React from "react";
 import "./CollectionInfo.css";
 import { utils } from "ethers";
 import chainDataFront from "./../../../utils/blockchainDataFront";
+import { useSelector } from "react-redux";
+import { BlockItemCollection, CollectionInfoBody } from "./CollectionInfoItems";
 
 const CollectionInfo = ({ defaultImg, blockchain, offerData, openTitle }) => {
+  const { primaryColor } = useSelector(store => store.colorStore)
   const defaultPhoto =
     "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
   return (
     <div className="wrapper-collection-info">
       {openTitle && <div className="collection-info-head">Collection Info</div>}
-      <div className="contianer-collection-info">
+      <div className="contianer-collection-info"
+        style={{ background: `${primaryColor === "rhyno" ? "#bdbdbd" : "#383637"}` }}>
         <div className="collection-info-title">
           <div className="collection-part-text">Item name</div>
           <div className="collection-part-text">Rank</div>
           <div className="collection-part-text">Availability</div>
           <div className="collection-part-text">Floor Price</div>
         </div>
-        <div className="collection-info-body">
+        <CollectionInfoBody
+          primaryColor={primaryColor}
+          className="collection-info-body"
+        >
           {offerData &&
             offerData
               ?.sort((a, b) => {
@@ -28,9 +35,9 @@ const CollectionInfo = ({ defaultImg, blockchain, offerData, openTitle }) => {
               })
               .map((token, index) => {
                 return (
-                  <div
-                    key={index + token.price}
+                  <BlockItemCollection
                     className="block-item-collection"
+                    key={index + token.price}
                   >
                     <div className="item-name">
                       <img
@@ -64,12 +71,12 @@ const CollectionInfo = ({ defaultImg, blockchain, offerData, openTitle }) => {
                       {chainDataFront[blockchain]?.name}
                       {/* {token.price} */}
                     </div>
-                  </div>
+                  </BlockItemCollection>
                 );
               })}
-        </div>
+        </CollectionInfoBody>
       </div>
-    </div>
+    </div >
   );
 };
 

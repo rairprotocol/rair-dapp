@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import "./AuthenticityBlock.css";
+import { TableAuthenticity } from "./AuthenticityBlockItems";
 
 const AuthenticityBlock = ({
   tokenData,
@@ -10,6 +12,8 @@ const AuthenticityBlock = ({
   title,
   collectionToken,
 }) => {
+  const { primaryColor } = useSelector(store => store.colorStore);
+
   const [authCollection, setAuthCollection] = useState(false);
   const [ipfsLink, setIpfsLink] = useState("");
   const defaultImg =
@@ -46,7 +50,10 @@ const AuthenticityBlock = ({
   return (
     <div className="block-authenticity">
       {title && <div className="authenticity-title">Authenticity</div>}
-      <div className="table-authenticity">
+      <TableAuthenticity
+        primaryColor={primaryColor}
+        className="table-authenticity"
+      >
         <div className="table-authenticity-title">Action</div>
         {tokenData && (
           <>
@@ -115,7 +122,7 @@ const AuthenticityBlock = ({
             </div>
           </a>
         </div>
-      </div>
+      </TableAuthenticity>
     </div>
   );
 };
