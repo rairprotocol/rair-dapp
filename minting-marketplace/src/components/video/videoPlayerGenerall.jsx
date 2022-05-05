@@ -58,7 +58,7 @@ const VideoPlayer = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
     ).json();
     if (streamAddress.success) {
       await setMediaAddress(
-        "/stream/" + streamAddress.token + "/" + mediaId + "/" + mainManifest
+        "/stream/" + mediaId + "/" + mainManifest
       );
       setTimeout(() => {
         videojs("vjs-" + videoName);
@@ -78,6 +78,12 @@ const VideoPlayer = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
 
   useEffect(() => {
     setDocumentTitle(`Streaming`);
+  }, [videoName]);
+
+  useEffect(() => {
+    return () => {
+      fetch('/api/auth/stream/out');
+    }
   }, [videoName]);
 
   if (mediaAddress === '') {

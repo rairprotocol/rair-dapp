@@ -12,6 +12,9 @@ const mongoose = require('mongoose');
 const Socket = require('socket.io');
 const morgan = require('morgan');
 const _ = require('lodash');
+const session = require('express-session');
+const redisStorage = require('connect-redis')(session);
+const redis = require('redis');
 const log = require('./utils/logger')(module);
 const seedDB = require('./seeds');
 require('dotenv').config();
@@ -23,6 +26,14 @@ const gcp = require('./integrations/gcp');
 
 async function main() {
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
+
+  // Create Redis client
+  const client = redis.createClient({
+    url: `redis://${ config.redis.connection.host }:${ config.redis.connection.port }`,
+    legacyMode: true
+  });
+
+  client.connect().catch(log.error);
 
   for (const folder of mediaDirectories) {
     if (!fs.existsSync(folder)) {
@@ -84,14 +95,39 @@ async function main() {
     },
     config,
     gcp: gcp(config),
-    textPurify
+    textPurify,
+    redis: {
+      client
+    }
   };
+
+  // connect redisService
+  context.redis.redisService = require('./services/redis')(context);
 
   await seedDB(context);
 
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
   app.use(bodyParser.json());
+  app.use(
+    session({
+      store: new redisStorage({
+        client,
+        ttl: (config.session.ttl * 60 * 60) // default 12 hours
+      }),
+      secret: config.session.secret,
+      saveUninitialized: true,
+      resave: false,
+      name: 'id',
+      cookie: {
+        path: '/',
+        httpOnly: true,
+        // secure: true,
+        // maxAge:  (12 * 60 * 60 * 1000)  // 12 hours
+      }
+    })
+  );
+
   app.use('/thumbnails', express.static(path.join(__dirname, 'Videos/Thumbnails')));
   app.use('/stream', require('./routes/stream')(context));
   app.use('/api', require('./routes')(context));
@@ -141,7 +177,7 @@ async function main() {
   } catch(err) {
     console.log('Error initializing vault app role token manager')
   }
-  
+
   // fire up the rest of the app
   await main();
 

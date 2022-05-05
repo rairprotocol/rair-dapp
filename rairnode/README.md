@@ -39,6 +39,7 @@ Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file
     * [x] /blockchains - GET - get blockchains list, [see details here](readme/get_blockchains.md)
     * [x] /categories - GET - get categories list, [see details here](readme/get_categories.md)
     * [x] /search - POST - searching by files, products, users, [see details here](readme/search.md)
+    * [x] /stream/out - GET - terminating access for video streaming session, [see details here](readme/terminate_stream_session.md)
     * [x] /auth
         * [x] /get_challenge/:MetaAddress - GET - request an auth challenge for the given ethereum address, [see details here](readme/get_challenge.md)
         * [x] /get_token/:MetaMessage/:MetaSignature/:mediaId - GET - respond to a challenge to receive a JWT, [see details here](readme/get_token.md)

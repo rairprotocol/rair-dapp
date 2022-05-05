@@ -46,7 +46,7 @@ const VideoPlayer = () => {
 		}
 		let streamAddress = await (await fetch('/api/auth/get_token/' + parsedResponse.message.challenge + '/' + signature + '/' + params.videoId)).json();
 		if (streamAddress.success) {
-			await setMediaAddress('/stream/' + streamAddress.token + '/' + params.videoId + '/' + params.mainManifest);
+			await setMediaAddress('/stream/' + params.videoId + '/' + params.mainManifest);
 			setTimeout(() => {
 				videojs('vjs-' + videoName);
 			}, 1000);
@@ -66,6 +66,12 @@ const VideoPlayer = () => {
 	useEffect(() => {
 		setDocumentTitle(`Streaming`);
 	}, [videoName])
+
+	useEffect(() => {
+		return () => {
+			fetch('/api/auth/stream/out');
+		}
+	}, [videoName]);
 
 	return <>
 	<div className='video-btn-back'>

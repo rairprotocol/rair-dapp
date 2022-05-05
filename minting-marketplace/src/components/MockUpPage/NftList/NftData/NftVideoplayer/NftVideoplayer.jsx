@@ -67,8 +67,6 @@ const NftVideoplayer = ({ selectVideo }) => {
     if (streamAddress.success) {
       await setMediaAddress(
         "/stream/" +
-          streamAddress.token +
-          "/" +
           selectVideo._id +
           "/" +
           mainManifest
@@ -91,6 +89,12 @@ const NftVideoplayer = ({ selectVideo }) => {
 
   useEffect(() => {
     setDocumentTitle(`Streaming`);
+  }, [videoName]);
+
+  useEffect(() => {
+    return () => {
+      fetch('/api/auth/stream/out');
+    }
   }, [videoName]);
 
   return (

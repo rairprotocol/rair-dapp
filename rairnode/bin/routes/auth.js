@@ -175,14 +175,14 @@ module.exports = context => {
           return res.status(403).send({ success: false, message: 'You don\'t have permission.' });
         }
 
-        jwt.sign(
-          { eth_addr: ethAddres, media_id: mediaId },
-          process.env.JWT_SECRET,
-          { expiresIn: '1d' },
-          (err, token) => {
-            if (err) next(new Error('Could not create JWT'));
-            res.send({ success: true, token });
-          });
+        await context.redis.redisService.set(`sess:${ req.sessionID }`, {
+          ...req.session,
+          eth_addr: ethAddres,
+          media_id: mediaId,
+          streamAuthorized: true
+        });
+
+        res.send({ success: true });
       } else {
         return res.status(400).send({ success: false });
       }
@@ -348,5 +348,17 @@ module.exports = context => {
       user
     });
   });
+
+  // Terminating access for video streaming session
+  router.get('/stream/out', (req, res, next) => {
+    try {
+      req.session.streamAuthorized = false;
+      delete req.session.media_id;
+      res.send({ success: true });
+    } catch (err) {
+      return next(err);
+    }
+  });
+
   return router;
 };

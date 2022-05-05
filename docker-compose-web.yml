@@ -57,6 +57,10 @@ services:
       ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
+      REDIS_HOST: ${redisthhost}
+      REDIS_PORT: ${redisport}
+      SESSION_SECRET: ${session_secret}
+      SESSION_TTL: ${session_ttl}
     ports:
       - 3000:3000
       - 5000:5000
@@ -106,6 +110,15 @@ services:
       MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
     ports:
       - 5001:5001
+    networks:
+      - rair-local
+  rair-redis:
+    container_name: "rair-redis"
+    image: redis
+    command: redis-server --appendonly yes
+    restart: always
+    ports:
+      - 6379:6379
     networks:
       - rair-local
   rairfront:

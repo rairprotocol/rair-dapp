@@ -31,7 +31,11 @@ locals {
     BINANCE_TESTNET_RPC: "https://data-seed-prebsc-1-s1.binance.org:8545/",
     BINANCE_MAINNET_RPC: "https://bsc-dataseed.binance.org/",
     MONGO_LOG_COLLECTION: "Log",
-    LOG_LEVEL: "production"
+    LOG_LEVEL: "production",
+    REDIS_HOST: "rair-redis",
+    REDIS_PORT: "6379",
+    SESSION_SECRET: "testsecret",
+    SESSION_TTL: "12"
   }
 
   minting_network_configmap = {

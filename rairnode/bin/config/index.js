@@ -6,7 +6,11 @@ const {
   GCP_GATEWAY,
   PINATA_GATEWAY,
   IPFS_GATEWAY,
-  IPFS_SERVICE
+  IPFS_SERVICE,
+  REDIS_HOST,
+  REDIS_PORT,
+  SESSION_SECRET,
+  SESSION_TTL
 } = process.env;
 
 const binanceTestnetData = {
@@ -81,5 +85,12 @@ module.exports = {
   ipfs: {
     gateway: IPFS_GATEWAY
   },
-  ipfsService: IPFS_SERVICE || 'pinata'
+  ipfsService: IPFS_SERVICE || 'pinata',
+  redis: {
+    connection: { host: REDIS_HOST, port: REDIS_PORT }
+  },
+  session: {
+    secret: SESSION_SECRET,
+    ttl: SESSION_TTL || 12
+  }
 };

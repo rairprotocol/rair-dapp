@@ -31,13 +31,16 @@ locals {
     BINANCE_TESTNET_RPC: "https://data-seed-prebsc-1-s1.binance.org:8545/",
     BINANCE_MAINNET_RPC: "https://bsc-dataseed.binance.org/",
     MONGO_LOG_COLLECTION: "Log",
-    LOG_LEVEL: "debug"
-    TEST_BSCSCAN_GATEWAY: "https://testnet.bscscan.com/token",
-    TEST_POLYGONSCAN_GATEWAY: "https://mumbai.polygonscan.com/token",
-    TEST_ETHERSCAN_GATEWAY: "https://goerli.etherscan.io/token",
-    POLYGONSCAN_GATEWAY: "https://polygonscan.com/token",
-    ETHERSCAN_GATEWAY: "https://etherscan.io/token",
-    BSCSCAN_GATEWAY: "https://bscscan.com/token"
+    LOG_LEVEL: "debug",
+    MORALIS_SERVER_TEST: https://ldz2lkdhowt1.usemoralis.com:2053/server
+    MORALIS_SERVER_MAIN: https://y14jhwis7uao.moralishost.com:2053/server
+    MORALIS_API_KEY_TEST: 1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn
+    MORALIS_MASTER_KEY_TEST: P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5
+    MORALIS_MASTER_KEY_TEST: P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5
+    REDIS_HOST: "rair-redis",
+    REDIS_PORT: "6379",
+    SESSION_SECRET: "testsecret",
+    SESSION_TTL: "12"
   }
 
   minting_network_configmap = {
@@ -77,5 +80,22 @@ locals {
     ETHEREUM_MAINNET_MINTER_ADDRESS: "0x0Ce668D271b8016a785Bf146e58739F432300B12",
     SYNC_CONTRACT_REPEAT_EVERY: "5",
     SYNC_CONTRACT_TASK_INTERVAL: "5"
+    IPFS_SERVICE: ${ipfs_service}
+    IPFS_GATEWAY: ${ipfs_gateway}
+    IPFS_API: ${ipfs_api}
+    MONGO_LOG_COLLECTION: ${mongo_log_collection}
+    LOG_LEVEL: ${log_level}
+    TEST_BSCSCAN_GATEWAY: ${test_bscscan_gateway}
+    TEST_POLYGONSCAN_GATEWAY: ${test_polygonscan_gateway}
+    TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
+    POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
+    ETHERSCAN_GATEWAY: ${etherscan_gateway}
+    BSCSCAN_GATEWAY: ${bscscan_gateway}
+    MORALIS_SERVER_TEST: ${moralis_server_test}
+    MORALIS_SERVER_MAIN: ${moralis_server_main}
+    MORALIS_API_KEY_TEST: ${moralis_api_key_test}
+    MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
+    MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
+    MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
   }
 }

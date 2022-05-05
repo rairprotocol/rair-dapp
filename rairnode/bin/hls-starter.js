@@ -46,6 +46,6 @@ module.exports = async () => {
   return HLSServer({
     mediaConfigStore: getMediaConfigStoreData,
     segmentTransformation: streamDecrypter,
-    authCallback: req => req.token && req.token.media_id === req.mediaId
+    authCallback: req => req.session && req.session.media_id === req.mediaId
   });
 };
