@@ -4,7 +4,7 @@ resource "vault_policy" "app_directory_secret_read_access" {
   name = "${each.value.vault_secrets_dirname}-app-secrets-read-only"
 
   policy = <<EOT
-path "${vault_mount.app_secrets.path}/${each.value.vault_secrets_dirname}/data/*" { 
+path "${vault_mount.app_secrets.path}/data/${each.value.vault_secrets_dirname}/*" {
   capabilities = ["read"]
 }
 EOT
