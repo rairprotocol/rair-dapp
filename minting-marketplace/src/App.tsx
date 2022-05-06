@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { Router, Switch, Route, /*Redirect*/ NavLink, /*useLocation*/ } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
