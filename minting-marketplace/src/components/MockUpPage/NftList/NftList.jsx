@@ -7,6 +7,7 @@ import { NftItem } from "./NftItem";
 
 const NftListComponent = ({
   data,
+  // dataAll,
   primaryColor,
   textColor,
   titleSearch,
@@ -16,8 +17,10 @@ const NftListComponent = ({
     "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
   const filteredData =
-    data &&
-    data
+  // dataAll && 
+  // dataAll
+  data && 
+  data
       .filter((item) => {
         return item.name.toLowerCase().includes(titleSearch.toLowerCase());
       })

@@ -11,6 +11,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [sortItem, setSortItem] = useState("");
   const [mediaList, setMediaList] = useState();
   const [data, setData] = useState();
+  // const [dataAll, setAllData] = useState();
   const [totalPage, setTotalPages] = useState([10]);
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,8 +20,12 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [isShow, setIsShow] = useState(false);
   const [isShowCategories, setIsShowCategories] = useState(false);
   const [filterText, setFilterText] = useState("");
+  // const [totalCountAll, setTotalCountAll] = useState();
   const [filterCategoriesText, setFilterCategoriesText] = useState("");
   const [click, setClick] = useState(null);
+
+  // console.log(dataAll, 'dataAll from all');
+  // console.log(titleSearch, "titleSearch");
 
   let pagesArray = [];
   for (let i = 0; i < totalPage; i++) {
@@ -60,10 +65,68 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       })),
     }));
     setData(covers);
+    // setTotalCountAll(responseContract.data.totalNumber);
 
-    const totalCount = responseContract.data.totalNumber;
+    const totalCount = responseContract.data.totalNumber;    
     setTotalPages(getPagesCount(totalCount, itemsPerPage));
   }, [currentPage, itemsPerPage, blockchain, category]);
+
+  // TODO: for search for the future
+
+  // const getAllContract = useCallback(async () => {
+  // const responseContract = await axios.post("/api/search", {
+  // headers: {
+  //   Accept: "application/json",
+  //   "X-rair-token": localStorage.token,
+  // },
+  // body: {
+  // searchString: 'ddsx',
+  // searchBy: 'products',
+  // }
+  // params: {
+  // searchString: 'ddsx',
+  //   pageNum: currentPage,
+  //   blockchain: blockchain,
+  //   category: category,
+  // },
+  // });
+
+  // if(totalCountAll){
+  //   const responseContract = await axios.get("/api/contracts/full", {
+  //     headers: {
+  //       Accept: "application/json",
+  //       "X-rair-token": localStorage.token,
+  //     },
+  //     params: {
+  //       itemsPerPage: totalCountAll,
+  //     //   pageNum: currentPage,
+  //     //   blockchain: blockchain,
+  //     //   category: category,
+  //     },
+  //   });
+
+  //   const covers = responseContract.data.contracts.map((item) => ({
+  //     id: item._id,
+  //     productId: item.products?._id ?? "wut",
+  //     blockchain: item.blockchain,
+  //     collectionIndexInContract: item.products.collectionIndexInContract,
+  //     contract: item.contractAddress,
+  //     cover: item.products.cover,
+  //     title: item.title,
+  //     name: item.products.name,
+  //     user: item.user,
+  //     copiesProduct: item.products.copies,
+  //     offerData: item.products.offers.map((elem) => ({
+  //       price: elem.price,
+  //       offerName: elem.offerName,
+  //       offerIndex: elem.offerIndex,
+  //       productNumber: elem.product,
+  //     })),
+  //   }));
+  // setAllData(responseContract);
+  // }
+  // }, [totalCountAll]);
+  // }, []);
 
   const getPagesCount = (totalCount, itemsPerPage) => {
     return Math.ceil(totalCount / itemsPerPage);
@@ -73,6 +136,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     setCurrentPage(currentPage);
     window.scrollTo(0, 0);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [blockchain, category]);
 
   const updateList = async () => {
     let response = await (
@@ -93,6 +160,10 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       console.log(response?.message);
     }
   };
+
+  // useEffect(() => {
+  //   getAllContract();
+  // }, [getAllContract]);
 
   useEffect(() => {
     getContract();
@@ -134,8 +205,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
-              }`}
+            selectedClassName={`search-tab-selected-${
+              primaryColor === "rhyno" ? "default" : "dark"
+            }`}
             className="category-button-nft category-button"
           >
             NFT
@@ -149,16 +221,15 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
-              }`}
+            selectedClassName={`search-tab-selected-${
+              primaryColor === "rhyno" ? "default" : "dark"
+            }`}
             className="category-button-videos category-button"
           >
             Unlockables
           </Tab>
         </TabList>
-        <div
-          className="container-search"
-        >
+        <div className="container-search">
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
@@ -229,6 +300,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             textColor={textColor}
             handleClick={handleClick}
             data={data}
+            // dataAll={dataAll}
           />
           <div className="pagination__wrapper">
             {pagesArray && pagesArray.length > 0 ? (
