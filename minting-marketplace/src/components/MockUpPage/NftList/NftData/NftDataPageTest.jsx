@@ -581,25 +581,41 @@ const NftDataPageTest = ({
                 <AccordionItemButton>Description</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
-                <div className=" custom-desc-to-offer-wrapper">
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    {toUpper(selectedData?.artist)}
+                {selectedData.artist === "none" &&
+                selectedData.description === "none" &&
+                selectedData.external_url === "none" ? (
+                  <div className=" custom-desc-to-offer-wrapper">
+                    <div className="my-2 px-4 custom-desc-to-offer">
+                      <span>Created by </span>
+                      <strong>
+                        {someUsersData !== null
+                          ? someUsersData?.nickName
+                          : ownerInfo?.owner}
+                      </strong>
+                    </div>
                   </div>
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    {selectedData?.description}
+                ) : (
+                  <div className=" custom-desc-to-offer-wrapper">
+                    <div className="my-2 px-4 custom-desc-to-offer">
+                      {toUpper(selectedData?.artist)}
+                    </div>
+                    <div className="my-2 px-4 custom-desc-to-offer">
+                      {selectedData?.description}
+                    </div>
+                    <div className="my-2 px-4 custom-desc-to-offer">
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href={selectedData?.external_url}
+                      >
+                        {selectedData?.external_url}
+                      </a>
+                    </div>
                   </div>
-                  <div className="my-2 px-4 custom-desc-to-offer">
-                    <a
-                      target="_blank"
-                      rel="noreferrer"
-                      href={selectedData?.external_url}
-                    >
-                      {selectedData?.external_url}
-                    </a>
-                  </div>
-                </div>
+                )}
               </AccordionItemPanel>
             </AccordionItem>
+
             <AccordionItem uuid="b">
               <AccordionItemHeading>
                 <AccordionItemButton>Properties</AccordionItemButton>
@@ -705,6 +721,7 @@ const NftDataPageTest = ({
                 </div>
               </AccordionItemPanel>
             </AccordionItem>
+
             <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>This NFT unlocks</AccordionItemButton>
@@ -719,20 +736,21 @@ const NftDataPageTest = ({
                   selectedToken={selectedToken}
                   primaryColor={primaryColor}
                 />
-                {productsFromOffer && productsFromOffer.length !== 0 ? <CustomButton
-                  onClick={() =>
-                    history.push(
-                      `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
-                    )
-                  }
-                  text="More Unlockables"
-                  width="288px"
-                  height="48px"
-                  textColor={textColor}
-                  primaryColor={primaryColor}
-                  margin={'0 auto'}
-                /> : null}
-
+                {productsFromOffer && productsFromOffer.length !== 0 ? (
+                  <CustomButton
+                    onClick={() =>
+                      history.push(
+                        `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
+                      )
+                    }
+                    text="More Unlockables"
+                    width="288px"
+                    height="48px"
+                    textColor={textColor}
+                    primaryColor={primaryColor}
+                    margin={"0 auto"}
+                  />
+                ) : null}
               </AccordionItemPanel>
             </AccordionItem>
 
@@ -747,6 +765,7 @@ const NftDataPageTest = ({
                 />
               </AccordionItemPanel>
             </AccordionItem>
+
             <AccordionItem>
               <AccordionItemHeading>
                 <AccordionItemButton>Authenticity</AccordionItemButton>
@@ -764,29 +783,6 @@ const NftDataPageTest = ({
         </div>
         <div style={{ maxWidth: "1200px", margin: "auto" }}>
           {/* <span style={{}}>More by {tokenData[selectedToken]?.ownerAddress ? tokenData[selectedToken]?.ownerAddress : "User" }</span> */}
-          {/* {tokenData.length ? (
-            <Carousel
-              itemWidth={"300px"}
-              showDots={false}
-              // infinite={true}
-              responsive={responsive}
-              itemClass="carousel-item-padding-4-px"
-            >
-              {tokenData.map((p, index) => (
-                <OfferItem
-                  key={index}
-                  index={index}
-                  metadata={p.metadata}
-                  token={p.token}
-                  handleClickToken={handleClickToken}
-                  setSelectedToken={setSelectedToken}
-                  selectedToken={selectedToken}
-                />
-              ))}
-            </Carousel>
-          ) : (
-            <></>
-          )} */}
         </div>
       </div>
     </div>
