@@ -11,5 +11,5 @@ module.exports = Joi.object({
     .required(),
   blockchain: Joi.any()
     .valid(...(_.keys(config.blockchain.networks)))
-    .required()
+    .required(),
 });

@@ -13,7 +13,7 @@ module.exports = (context) => async (req, res, next) => {
     req.user = _.assign(user.toObject(), { adminRights: decoded.adminRights });
 
     return next();
-  } catch(err) {
+  } catch (err) {
     return next(err);
   }
-}
+};

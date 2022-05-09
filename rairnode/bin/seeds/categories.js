@@ -1,6 +1,6 @@
 module.exports = [
-  {name: 'Music'},
-  {name: 'Art'},
-  {name: 'Conference'},
-  {name: 'Science'}
+  { name: 'Music' },
+  { name: 'Art' },
+  { name: 'Conference' },
+  { name: 'Science' },
 ];

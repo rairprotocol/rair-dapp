@@ -29,13 +29,13 @@ const File = new Schema({
   category: { type: Schema.ObjectId, required: true },
   demo: { type: Boolean, default: false },
 
-  creationDate: { type: Date, default: Date.now }
+  creationDate: { type: Date, default: Date.now },
 }, { versionKey: false });
 
 File.statics = {
-  searchPartial: async function (filter, { sortBy, direction }) {
+  async searchPartial(filter, { sortBy, direction }) {
     const filters = _.omit(filter, 'query');
-    const reg = new RegExp(_.get(filter, 'query', ''), "gi");
+    const reg = new RegExp(_.get(filter, 'query', ''), 'gi');
 
     return this.find({
       $or: [
@@ -46,7 +46,7 @@ File.statics = {
     }, { key: 0 }, { sort: { [sortBy]: direction } });
   },
 
-  searchFull: async function (filter, { sortBy, direction }) {
+  async searchFull(filter, { sortBy, direction }) {
     const filters = _.omit(filter, 'query');
 
     return this.find({
@@ -55,7 +55,7 @@ File.statics = {
     }, { key: 0 }, { sort: { [sortBy]: direction } });
   },
 
-  search: async function (filter, options = { sortBy: 'title', direction: 1 }) {
+  async search(filter, options = { sortBy: 'title', direction: 1 }) {
     return this.searchFull(filter, options)
       .then((data) => {
         if (!data.length || data.length === 0) return this.searchPartial(filter, options);

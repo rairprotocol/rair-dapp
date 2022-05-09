@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
 
   router.get('/', async (req, res, next) => {

@@ -7,7 +7,7 @@ module.exports = [
     offerPools: true,
     offers: true,
     tokens: false,
-    locks: true
+    locks: true,
   },
   {
     blockchain: '0x13881',
@@ -17,6 +17,6 @@ module.exports = [
     offerPools: true,
     offers: true,
     tokens: false,
-    locks: true
-  }
+    locks: true,
+  },
 ];

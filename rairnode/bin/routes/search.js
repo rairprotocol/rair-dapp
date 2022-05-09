@@ -1,12 +1,14 @@
 const express = require('express');
 const { validation } = require('../middleware');
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
 
   router.post('/', validation('search'), async (req, res, next) => {
     try {
-      const { searchBy = 'users', blockchain = '', category = '', searchString = '' } = req.body;
+      const {
+        searchBy = 'users', blockchain = '', category = '', searchString = '',
+      } = req.body;
       const searchQuery = { query: searchString };
       let result;
 

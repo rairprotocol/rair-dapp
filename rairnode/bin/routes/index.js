@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
   router.use('/auth', require('./auth')(context));
   router.use('/docs', require('./swagger'));

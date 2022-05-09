@@ -22,7 +22,7 @@ const Product = new Schema({
 }, { versionKey: false });
 
 Product.statics = {
-  searchPartial: async function (filter, { sortBy, direction }) {
+  async searchPartial(filter, { sortBy, direction }) {
     const filters = _.omit(filter, 'query');
 
     return this.find({
@@ -31,7 +31,7 @@ Product.statics = {
     }, null, { sort: { [sortBy]: direction } });
   },
 
-  searchFull: async function (filter, { sortBy, direction }) {
+  async searchFull(filter, { sortBy, direction }) {
     const filters = _.omit(filter, 'query');
 
     return this.find({
@@ -40,7 +40,7 @@ Product.statics = {
     }, null, { sort: { [sortBy]: direction } });
   },
 
-  search: async function (filter, options = { sortBy: 'name', direction: 1 }) {
+  async search(filter, options = { sortBy: 'name', direction: 1 }) {
     return this.searchFull(filter, options)
       .then((data) => {
         if (!data.length || data.length === 0) return this.searchPartial(filter, options);

@@ -16,7 +16,7 @@ const Offer = new Schema({
   creationDate: { type: Date, default: Date.now },
   diamond: { type: Boolean, required: true, default: false },
   diamondRangeIndex: { type: Number, required: false },
-  transactionHash: { type: String, required: false }
+  transactionHash: { type: String, required: false },
 }, { versionKey: false });
 
 Offer.pre('save', function (next) {
@@ -30,9 +30,9 @@ Offer.pre('save', function (next) {
   next();
 });
 
-Offer.pre('insertMany', async function (next, offers) {
+Offer.pre('insertMany', async (next, offers) => {
   if (Array.isArray(offers) && offers.length) {
-    offers = offers.map(offer => {
+    offers = offers.map((offer) => {
       offer.copies = (offer.range[1] - offer.range[0]) + 1;
       return offer;
     });

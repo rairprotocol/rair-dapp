@@ -1,32 +1,31 @@
 const express = require('express');
 const _ = require('lodash');
-const { JWTVerification, validation } = require('../middleware');
 const { nanoid } = require('nanoid');
-const upload = require('../Multer/Config.js');
+const { JWTVerification, validation } = require('../middleware');
+const upload = require('../Multer/Config');
 const { execPromise } = require('../utils/helpers');
 
 const removeTempFile = async (roadToFile) => {
-  const command = `rm ${ roadToFile }`;
+  const command = `rm ${roadToFile}`;
   await execPromise(command);
 };
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
 
   // Create new user
   router.post('/', validation('createUser'), async (req, res, next) => {
-
-    //FIXME: endpoint have to be protected
+    // FIXME: endpoint have to be protected
 
     try {
       // let { publicAddress, adminNFT } = req.body;
       let { publicAddress } = req.body;
 
-      const adminNFT = `temp_${ nanoid() }`; //FIXME: should be removed right after fix the frontend functionality
+      const adminNFT = `temp_${nanoid()}`; // FIXME: should be removed right after fix the frontend functionality
 
       publicAddress = publicAddress.toLowerCase();
 
-      let user = await context.db.User.create({ publicAddress, adminNFT });
+      const user = await context.db.User.create({ publicAddress, adminNFT });
 
       res.json({ success: true, user });
     } catch (e) {
@@ -62,16 +61,16 @@ module.exports = context => {
       if (publicAddress !== user.publicAddress) {
         return res.status(403).send({
           success: false,
-          message: `You have no permissions for updating user ${ publicAddress }.`
+          message: `You have no permissions for updating user ${publicAddress}.`,
         });
       }
 
       if (req.file) {
         avatarFile = await context.gcp.uploadFile(context.config.gcp.imageBucketName, req.file);
-        await removeTempFile(`${ req.file.destination }${ req.file.filename }`);
+        await removeTempFile(`${req.file.destination}${req.file.filename}`);
 
-        if (!!avatarFile) {
-          _.assign(fieldsForUpdate, { avatar: `${ context.config.gcp.gateway }/${ context.config.gcp.imageBucketName }/${ avatarFile }` });
+        if (avatarFile) {
+          _.assign(fieldsForUpdate, { avatar: `${context.config.gcp.gateway}/${context.config.gcp.imageBucketName}/${avatarFile}` });
         }
       }
 
@@ -81,17 +80,23 @@ module.exports = context => {
         return res.status(400).send({ success: false, message: 'Nothing to update.' });
       }
 
-      if (fieldsForUpdate.nickName) fieldsForUpdate.nickName = context.textPurify.sanitize(fieldsForUpdate.nickName);
+      if (fieldsForUpdate.nickName) {
+        fieldsForUpdate.nickName = context.textPurify.sanitize(fieldsForUpdate.nickName);
+      }
 
-      const updatedUser = await context.db.User.findOneAndUpdate({ publicAddress }, fieldsForUpdate, { new: true });
+      const updatedUser = await context.db.User.findOneAndUpdate(
+        { publicAddress },
+        fieldsForUpdate,
+        { new: true },
+      );
 
       return res.json({ success: true, user: updatedUser });
     } catch (e) {
       if (req.file) {
-        await removeTempFile(`${ req.file.destination }${ req.file.filename }`);
+        await removeTempFile(`${req.file.destination}${req.file.filename}`);
       }
 
-      next(e);
+      return next(e);
     }
   });
 

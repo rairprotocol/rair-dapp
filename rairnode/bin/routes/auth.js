@@ -1,12 +1,12 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
-const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation.js');
 const _ = require('lodash');
 const { recoverPersonalSignature } = require('eth-sig-util');
 const { bufferToHex } = require('ethereumjs-util');
 const { ObjectId } = require('mongodb');
 const { nanoid } = require('nanoid');
+const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation.js');
 const { JWTVerification, validation } = require('../middleware');
 const log = require('../utils/logger')(module);
 
@@ -19,7 +19,7 @@ const getTokensForUser = async (context, ownerAddress, { offer, contract, produc
         contractT: '$contract',
         offerP: '$offerPool',
         of: '$offerIndex',
-        owner: ownerAddress.toLowerCase()
+        owner: ownerAddress.toLowerCase(),
       },
       pipeline: [
         {
@@ -29,40 +29,40 @@ const getTokensForUser = async (context, ownerAddress, { offer, contract, produc
                 {
                   $eq: [
                     '$contract',
-                    '$$contractT'
-                  ]
+                    '$$contractT',
+                  ],
                 },
                 {
                   $eq: [
                     '$offerPool',
-                    '$$offerP'
-                  ]
+                    '$$offerP',
+                  ],
                 },
                 {
                   $eq: [
                     '$offer',
-                    '$$of'
-                  ]
+                    '$$of',
+                  ],
                 },
                 {
                   $eq: [
                     '$ownerAddress',
-                    '$$owner'
-                  ]
-                }
-              ]
-            }
-          }
-        }
+                    '$$owner',
+                  ],
+                },
+              ],
+            },
+          },
+        },
       ],
-      as: 'tokens'
+      as: 'tokens',
     },
   },
   { $unwind: '$tokens' },
-  { $replaceRoot: { newRoot: '$tokens' } }
+  { $replaceRoot: { newRoot: '$tokens' } },
 ]);
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
   /**
    * @swagger
@@ -82,7 +82,7 @@ module.exports = context => {
    *       200:
    *         description: Returns a challenge for the client to sign with the ethereum private key
    */
-  router.get('/get_challenge/:MetaAddress', validation('getChallenge', 'params'), metaAuth, function (req, res) {
+  router.get('/get_challenge/:MetaAddress', validation('getChallenge', 'params'), metaAuth, (req, res) => {
     res.send({ success: true, response: req.metaAuth.challenge });
   });
 
@@ -122,38 +122,37 @@ module.exports = context => {
     const { mediaId } = req.params;
     try {
       let ownsTheAdminToken;
-      let ownsTheAccessTokens = [];
+      const ownsTheAccessTokens = [];
       const file = await context.db.File.findOne({ _id: mediaId });
       if (!file) {
         return res.status(400).send({ success: false, message: 'No file found' });
       }
       const offers = await context.db.Offer.find({
         offerIndex: {
-          $in: file.offer
+          $in: file.offer,
         },
-        contract: file.contract
+        contract: file.contract,
       });
       const contract = await context.db.Contract.findOne(file.contract);
       if (ethAddres) {
         // verify the user have needed tokens
 
         // Replace with full blockchain authentication
-        //ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
-        //async function checkBalanceProduct (accountAddress, blockchain, contractAddress, productId, offerRangeStart, offerRangeEnd) {
-        for await (let offer of offers) {
+        // ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
+        // async function checkBalanceProduct (accountAddress, blockchain, contractAddress, productId, offerRangeStart, offerRangeEnd) {
+        for await (const offer of offers) {
           ownsTheAccessTokens.push(await checkBalanceProduct(
             ethAddres,
             contract.blockchain,
             contract.contractAddress,
             offer.product,
             offer.range[0],
-            offer.range[1]
+            offer.range[1],
           ));
           if (ownsTheAccessTokens.includes(true)) {
             break;
           }
         }
-
 
         // TODO: have to be the call functionality of tokens sync
         // if (_.isEmpty(ownsTheAccessTokens)) {
@@ -167,7 +166,7 @@ module.exports = context => {
           try {
             ownsTheAdminToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
           } catch (e) {
-            return next(new Error(`Could not verify account: ${ e }`));
+            return next(new Error(`Could not verify account: ${e}`));
           }
         }
 
@@ -253,7 +252,7 @@ module.exports = context => {
           log.info('There was no NFT identifier, so', adminNFT, 'is the new admin token');
           res.status(200).json({
             success: true,
-            message: 'New NFT set!'
+            message: 'New NFT set!',
           });
           return;
         }
@@ -272,7 +271,7 @@ module.exports = context => {
               await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
               res.json({
                 success: true,
-                message: 'New NFT set!'
+                message: 'New NFT set!',
               });
             }
           } catch (e) {
@@ -286,7 +285,7 @@ module.exports = context => {
       log.error('New NFT Admin Error:', err);
       res.json({
         success: false,
-        message: 'There was an error validating your request'
+        message: 'There was an error validating your request',
       });
     }
   });
@@ -331,7 +330,8 @@ module.exports = context => {
         (err, token) => {
           if (err) next(new Error('Could not create JWT'));
           res.send({ success: true, token });
-        });
+        },
+      );
     } catch (err) {
       return next(err);
     }
@@ -345,7 +345,7 @@ module.exports = context => {
 
     res.send({
       success: true,
-      user
+      user,
     });
   });
 

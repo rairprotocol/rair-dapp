@@ -1,22 +1,14 @@
-const getVaultNamespace = () => {
-  return 'admin/'
-}
+const getVaultNamespace = () => 'admin/';
 
-const getVaultUrl = () => {
-  return process.env.VAULT_URL
-}
+const getVaultUrl = () => process.env.VAULT_URL;
 
-const getAppRoleIDFromEnv = () => {
-  return process.env.APP_ROLE_ID
-}
+const getAppRoleIDFromEnv = () => process.env.APP_ROLE_ID;
 
-const getAppRoleSecretIDFromEnv = () => {
-  return process.env.APP_ROLE_SECRET_ID
-}
+const getAppRoleSecretIDFromEnv = () => process.env.APP_ROLE_SECRET_ID;
 
 module.exports = {
   getVaultNamespace,
   getVaultUrl,
   getAppRoleIDFromEnv,
-  getAppRoleSecretIDFromEnv 
-}
+  getAppRoleSecretIDFromEnv,
+};

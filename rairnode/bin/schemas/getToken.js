@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const  { customValidator } = require('./helpers');
+const { customValidator } = require('./helpers');
 
 module.exports = Joi.object({
   MetaMessage: Joi.custom(customValidator({ min: 3, max: 70 }))
@@ -7,5 +7,5 @@ module.exports = Joi.object({
   MetaSignature: Joi.custom(customValidator({ min: 3, max: 150 }))
     .required(),
   mediaId: Joi.custom(customValidator({ min: 3, max: 50 }))
-    .required()
+    .required(),
 });

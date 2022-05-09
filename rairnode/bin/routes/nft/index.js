@@ -32,7 +32,6 @@ module.exports = context => {
       const forUpdate = [];
       const tokens = [];
       let foundTokens = [];
-      let result = [];
 
       if (!user.adminRights) {
         return res.status(403).send({ success: false, message: 'Not have admin rights.' });
@@ -129,7 +128,7 @@ module.exports = context => {
                     return re;
                   }, [])
                   .value();
-                const foundToken = _.find(foundTokens, t => t.offer === offer.offerIndex && t.token === token);
+                const foundToken = _.find(foundTokens, t => t.offer === (foundContract.diamond ? offer.diamondRangeIndex : offer.offerIndex) && t.token === token);
                 const mainFields = {
                   contract,
                   token
@@ -139,23 +138,15 @@ module.exports = context => {
                   mainFields.offerPool = offerPool.marketplaceCatalogIndex;
                 }
 
-                let externalURL = encodeURI(`https://${
-                    process.env.SERVICE_HOST
-                  }/${
-                    foundContract._id
-                  }/${
-                    foundProduct.collectionIndexInContract
-                  }/${
-                    foundContract.diamond ? offer.diamondRangeIndex : offer.offerIndex
-                  }/${
-                    token
-                  }`);
+                const offerIndex = foundContract.diamond ? offer.diamondRangeIndex : offer.offerIndex;
+
+                let externalURL = encodeURI(`https://${ process.env.SERVICE_HOST }/${ foundContract._id }/${ foundProduct.collectionIndexInContract }/${ offerIndex }/${ token }`);
 
                 if (!foundToken) {
                   forSave.push({
                     ...mainFields,
                     ownerAddress: sanitizedOwnerAddress,
-                    offer: foundContract.diamond ? offer.diamondRangeIndex : offer.offerIndex,
+                    offer: offerIndex,
                     uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
                     isMinted: false,
                     metadata: {
@@ -214,26 +205,22 @@ module.exports = context => {
       if (!_.isEmpty(forSave)) {
         try {
           await context.db.MintedToken.insertMany(forSave, { ordered: false });
-        } catch (err) {console.log(err)}
+        } catch (err) {log.error(err)}
       }
 
       if (!_.isEmpty(forUpdate)) {
         try {
           await context.db.MintedToken.bulkWrite(forUpdate, { ordered: false });
-        } catch (e) {console.log(err)}
+        } catch (err) {log.error(err)}
       }
 
-      const resultOptions = {
+      const resultOptions = _.assign({
         contract,
         token: { $in: tokens },
         isMinted: false
-      };
+      }, foundContract.diamond ? { offer: { $in: offerIndexes } } : { offerPool: offerPool.marketplaceCatalogIndex });
 
-      if (foundContract.diamond) {
-        result = await context.db.MintedToken.find({ ...resultOptions, offer: { $in: offerIndexes } });
-      } else {
-        result = await context.db.MintedToken.find({ ...resultOptions, offerPool: offerPool.marketplaceCatalogIndex });
-      }
+      const result = await context.db.MintedToken.find(resultOptions);
 
       res.json({ success: true, result });
     } catch (err) {

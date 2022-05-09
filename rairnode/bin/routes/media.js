@@ -1,21 +1,27 @@
 const express = require('express');
-const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfsService')();
-const upload = require('../Multer/Config.js');
+const {
+  retrieveMediaInfo, addPin, removePin, addFolder,
+} = require('../integrations/ipfsService')();
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const readdirp = require('readdirp');
-const StartHLS = require('../hls-starter.js');
 const _ = require('lodash');
-const { JWTVerification, validation, isOwner, formDataHandler } = require('../middleware');
+const StartHLS = require('../hls-starter.js');
+const upload = require('../Multer/Config.js');
+const {
+  JWTVerification, validation, isOwner, formDataHandler,
+} = require('../middleware');
 const log = require('../utils/logger')(module);
-//const { execPromise } = require('../utils/helpers');
+// const { execPromise } = require('../utils/helpers');
 const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
-const { generateThumbnails, getMediaData, convertToHLS, encryptFolderContents } = require('../utils/ffmpegUtils.js');
+const {
+  generateThumbnails, getMediaData, convertToHLS, encryptFolderContents,
+} = require('../utils/ffmpegUtils.js');
 const { vaultKeyManager } = require('../vault/vaultKeyManager');
 const { vaultAppRoleTokenManager } = require('../vault/vaultAppRoleTokenManager');
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
 
   /**
@@ -47,7 +53,7 @@ module.exports = context => {
    */
   router.post('/add/:mediaId', validation('addMedia', 'params'), async (req, res, next) => {
     const key = req.body.length > 0 ? req.body : undefined;
-    const mediaId = req.params.mediaId;
+    const { mediaId } = req.params;
 
     // lookup in IPFS at CID for a rair.json manifest
     try {
@@ -56,7 +62,7 @@ module.exports = context => {
       await addPin(mediaId, _.get(meta, 'title', 'New_pinned_file'));
       res.sendStatus(200);
     } catch (e) {
-      next(new Error(`Cannot retrieve rair.json manifest for ${ mediaId }. Check the CID is correct and is a folder containing a manifest. ${ e }`));
+      next(new Error(`Cannot retrieve rair.json manifest for ${mediaId}. Check the CID is correct and is a folder containing a manifest. ${e}`));
     }
   });
 
@@ -80,11 +86,11 @@ module.exports = context => {
    */
   router.delete('/remove/:mediaId', JWTVerification(context), validation('removeMedia', 'params'), isOwner(context), async (req, res, next) => {
     try {
-      const mediaId = req.params.mediaId;
+      const { mediaId } = req.params;
 
       await context.db.File.deleteOne({ _id: mediaId });
 
-      log.info(`File with ID: ${ mediaId }, was removed from DB.`);
+      log.info(`File with ID: ${mediaId}, was removed from DB.`);
 
       // unpin from ipfsService
       await removePin(mediaId);
@@ -109,9 +115,11 @@ module.exports = context => {
    *         schema:
    *           type: object
    */
-  router.get('/list', /*JWTVerification(context),*/ validation('filterAndSort', 'query'), async (req, res, next) => {
+  router.get('/list', /* JWTVerification(context), */ validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', itemsPerPage = '20', blockchain = '', category = '' } = req.query;
+      const {
+        pageNum = '1', itemsPerPage = '20', blockchain = '', category = '',
+      } = req.query;
       const searchQuery = {};
       const pageSize = parseInt(itemsPerPage, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
@@ -160,7 +168,9 @@ module.exports = context => {
 
   router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
     // Get video information from the request's body
-    const { title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs' } = req.body;
+    const {
+      title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs',
+    } = req.body;
     // Get the user information
     const { adminNFT: author, adminRights, publicAddress } = req.user;
     // Get the socket ID from the request's query
@@ -172,8 +182,8 @@ module.exports = context => {
 
     if (!adminRights) {
       if (req.file) {
-        fs.rm(req.file.destination, {recursive: true}, (err) => {
-          log.info(`User ${publicAddress} don\'t have permission to upload the files.`)
+        fs.rm(req.file.destination, { recursive: true }, (err) => {
+          log.info(`User ${publicAddress} don\'t have permission to upload the files.`);
 
           if (err) log.error(err);
         });
@@ -184,13 +194,13 @@ module.exports = context => {
     const foundContract = await db.Contract.findById(contract);
 
     if (!foundContract) {
-      return res.status(404).send({ success: false, message: `Contract ${ contract } not found.` });
+      return res.status(404).send({ success: false, message: `Contract ${contract} not found.` });
     }
 
     const foundProduct = await db.Product.findOne({ contract: foundContract._id, collectionIndexInContract: product });
 
     if (!foundProduct) {
-      return res.status(404).send({ success: false, message: `Product ${ product } not found.` });
+      return res.status(404).send({ success: false, message: `Product ${product} not found.` });
     }
 
     const foundCategory = await db.Category.findOne({ name: category });
@@ -210,11 +220,11 @@ module.exports = context => {
         foundOffers = await db.Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
       }
 
-      offer.forEach(item => {
+      offer.forEach((item) => {
         if (!_.includes(foundOffers, item)) {
-          return res.status(404).send({ success: false, message: `Offer ${ item } not found.` });
+          return res.status(404).send({ success: false, message: `Offer ${item} not found.` });
         }
-      })
+      });
     }
 
     // Get the socket connection from Express app
@@ -223,19 +233,19 @@ module.exports = context => {
     const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
     const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : {
       emit: (eventName, eventData) => {
-        log.info(`Dummy event: "${ eventName }" socket emitter fired with message: "${ eventData.message }" `);
-      }
+        log.info(`Dummy event: "${eventName}" socket emitter fired with message: "${eventData.message}" `);
+      },
     };
 
     if (req.file) {
       try {
-        let storageName = {
-          'ipfs': 'IPFS',
-          'gcp': 'Google Cloud'
+        const storageName = {
+          ipfs: 'IPFS',
+          gcp: 'Google Cloud',
         }[storage];
         socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
-        log.info(`Processing: ${ req.file.originalname }`);
-        log.info(`${ req.file.originalname } generating thumbnails`);
+        log.info(`Processing: ${req.file.originalname}`);
+        log.info(`${req.file.originalname} generating thumbnails`);
 
         res.json({ success: true, result: req.file.filename });
 
@@ -247,11 +257,11 @@ module.exports = context => {
         // ONLY for videos
         await generateThumbnails(req.file, socketInstance);
 
-        log.info(`${ req.file.originalname } converting to stream`);
+        log.info(`${req.file.originalname} converting to stream`);
         socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } converting to stream`,
+          message: `${req.file.originalname} converting to stream`,
           last: false,
-          done: 11
+          done: 11,
         });
 
         // Converts the file with FFMPEG
@@ -265,39 +275,39 @@ module.exports = context => {
           title: context.textPurify.sanitize(title),
           mainManifest: 'stream.m3u8',
           author,
-          encryptionType: 'aes-256-gcm'
+          encryptionType: 'aes-256-gcm',
         };
 
         if (description) {
           rairJson.description = context.textPurify.sanitize(description);
         }
 
-        fs.writeFileSync(`${ req.file.destination }/rair.json`, JSON.stringify(rairJson, null, 4));
+        fs.writeFileSync(`${req.file.destination}/rair.json`, JSON.stringify(rairJson, null, 4));
 
-        log.info(`${ req.file.originalname } uploading to ${storageName}`);
+        log.info(`${req.file.originalname} uploading to ${storageName}`);
         socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } uploading to ${storageName}`,
-          last: false
+          message: `${req.file.originalname} uploading to ${storageName}`,
+          last: false,
         });
 
         switch (storage) {
           case 'ipfs':
             cid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
-            defaultGateway = `${ config.pinata.gateway }/${ cid }`;
+            defaultGateway = `${config.pinata.gateway}/${cid}`;
             const gateway = {
-              ipfs: `${ config.ipfs.gateway }/${ cid }`,
-              pinata: `${ config.pinata.gateway }/${ cid }`
+              ipfs: `${config.ipfs.gateway}/${cid}`,
+              pinata: `${config.pinata.gateway}/${cid}`,
             };
             storageLink = _.get(gateway, config.ipfsService, defaultGateway);
             break;
           case 'gcp':
             cid = await context.gcp.uploadFolder(config.gcp.videoBucketName, req.file.destination, socketInstance);
-            defaultGateway = `${ config.gcp.gateway }/${ config.gcp.videoBucketName }/${ cid }`;
+            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
             storageLink = defaultGateway;
             break;
         }
 
-        fs.rm(req.file.destination, {recursive: true}, (err) => {
+        fs.rm(req.file.destination, { recursive: true }, (err) => {
           if (err) log.error(err);
         });
         log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
@@ -317,23 +327,23 @@ module.exports = context => {
           type: req.file.type,
           extension: req.file.extension,
           duration: req.file.duration,
-          demo: demo === 'true'
+          demo: demo === 'true',
         };
 
         if (description) {
           meta.description = context.textPurify.sanitize(description);
         }
 
-        log.info(`${ req.file.originalname } uploaded to ${storageName}: ${ cid }`);
+        log.info(`${req.file.originalname} uploaded to ${storageName}: ${cid}`);
         socketInstance.emit('uploadProgress', { message: `uploaded to ${storageName}.`, last: false, done: 90 });
 
-        log.info(`${ req.file.originalname } storing to DB.`);
+        log.info(`${req.file.originalname} storing to DB.`);
         socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } storing to database.`,
-          last: false
+          message: `${req.file.originalname} storing to database.`,
+          last: false,
         });
 
-        const key = { ...exportedKey, key: exportedKey.key.toJSON()};
+        const key = { ...exportedKey, key: exportedKey.key.toJSON() };
 
         await db.File.create({
           _id: cid,
@@ -347,29 +357,29 @@ module.exports = context => {
             secretName: cid,
             data: {
               uri: storageLink,
-              key
+              key,
             },
-            vaultToken: vaultAppRoleTokenManager.getToken()
-          })
-        } catch(err) {
+            vaultToken: vaultAppRoleTokenManager.getToken(),
+          });
+        } catch (err) {
           console.log('Error writing key to vault:', cid);
         }
 
-        log.info(`${ req.file.originalname } stored to DB.`);
-        socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: ['gcp'].includes(storage) ? true : false, done: ['gcp'].includes(storage) ? 100 : 96 });
+        log.info(`${req.file.originalname} stored to DB.`);
+        socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: !!['gcp'].includes(storage), done: ['gcp'].includes(storage) ? 100 : 96 });
 
         // context.hls = StartHLS();
 
-        log.info(`${ req.file.originalname } pinning to ${storageName}.`);
+        log.info(`${req.file.originalname} pinning to ${storageName}.`);
         socketInstance.emit('uploadProgress', {
-          message: `${ req.file.originalname } pinning to ${storageName}.`,
-          last: false
+          message: `${req.file.originalname} pinning to ${storageName}.`,
+          last: false,
         });
 
         if (storage === 'ipfs') await addPin(cid, title, socketInstance);
       } catch (e) {
         if (req.file.destination) {
-          fs.rm(req.file.destination, {recursive: true}, (err) => {
+          fs.rm(req.file.destination, { recursive: true }, (err) => {
             log.error('An error has occurred encoding the file', e);
 
             if (err) log.error(err);

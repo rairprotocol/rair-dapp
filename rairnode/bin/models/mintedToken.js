@@ -12,9 +12,9 @@ const Metadata = new Schema({
   attributes: {
     type: [{
       trait_type: String,
-      value: String
-    }]
-  }
+      value: String,
+    }],
+  },
 }, { _id: false });
 
 const MintedToken = new Schema({
@@ -29,7 +29,7 @@ const MintedToken = new Schema({
   authenticityLink: { type: String, default: 'none' },
   isMinted: { type: Boolean, required: true },
   isMetadataPinned: { type: Boolean },
-  creationDate: { type: Date, default: Date.now }
+  creationDate: { type: Date, default: Date.now },
 }, { versionKey: false });
 
 MintedToken.pre('save', function (next) {
@@ -42,8 +42,8 @@ MintedToken.pre('save', function (next) {
     model('MintedToken', MintedToken, 'MintedToken').findOne({
       contract: token.contract,
       offerPool: token.offerPool,
-      token: token.token
-    }, function (err, result) {
+      token: token.token,
+    }, (err, result) => {
       if (err) {
         next(err);
       } else {
@@ -74,11 +74,11 @@ MintedToken.pre(['update', 'updateOne', 'findOneAndUpdate'], async function (nex
   }
 });
 
-MintedToken.pre('insertMany', async function (next, tokens) {
+MintedToken.pre('insertMany', async (next, tokens) => {
   const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
 
   if (Array.isArray(tokens) && tokens.length) {
-    tokens.map(token => {
+    tokens.map((token) => {
       token.isMetadataPinned = reg.test(token.metadataURI || '');
       return token;
     });

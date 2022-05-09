@@ -47,5 +47,5 @@ module.exports = {
   nftProduct,
   getTokensByContractProduct,
   search,
-  updateTokenMetadata
+  updateTokenMetadata,
 };

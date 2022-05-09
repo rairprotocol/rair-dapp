@@ -10,5 +10,5 @@ const execPromise = (command, options = {}) => new Promise((resolve, reject) => 
 });
 
 module.exports = {
-  execPromise
-}
+  execPromise,
+};

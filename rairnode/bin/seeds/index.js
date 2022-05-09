@@ -18,16 +18,16 @@ module.exports = async (context) => {
   log.info('Blockchains was seeded.');
 
   try {
-    const resultSyncRestrictions = _.map(syncRestrictions, sr => ({
+    const resultSyncRestrictions = _.map(syncRestrictions, (sr) => ({
       updateOne: {
         filter: _.pick(sr, ['blockchain', 'contractAddress']),
         update: _.omit(sr, ['blockchain', 'contractAddress']),
-        upsert: true
-      }
+        upsert: true,
+      },
     }));
 
     await context.db.SyncRestriction.bulkWrite(resultSyncRestrictions, { ordered: false });
   } catch (e) {}
 
   log.info('SyncRestrictions was seeded.');
-}
+};

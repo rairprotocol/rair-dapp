@@ -1,16 +1,20 @@
 const express = require('express');
 const _ = require('lodash');
 const { JWTVerification, validation } = require('../../middleware');
-const { importContractData } = require('../../integrations/ethers/importContractData.js');
+const { importContractData } = require('../../integrations/ethers/importContractData');
+const log = require('../../utils/logger')(module);
+const contractRoutes = require('./contract');
 
-module.exports = context => {
-  const router = express.Router()
+module.exports = (context) => {
+  const router = express.Router();
 
   // Get list of contracts for specific user
   router.get('/', JWTVerification(context), async (req, res, next) => {
     try {
       const { publicAddress: user } = req.user;
-      const contracts = await context.db.Contract.find({ user }, { _id: 1, contractAddress: 1, title: 1, blockchain: 1, diamond: 1 });
+      const contracts = await context.db.Contract.find({ user }, {
+        _id: 1, contractAddress: 1, title: 1, blockchain: 1, diamond: 1,
+      });
 
       res.json({ success: true, contracts });
     } catch (e) {
@@ -21,7 +25,9 @@ module.exports = context => {
   // Get specific contract by ID
   router.get('/singleContract/:contractId', async (req, res, next) => {
     try {
-      const contract = await context.db.Contract.findById(req.params.contractId, { _id: 1, contractAddress: 1, title: 1, blockchain: 1 });
+      const contract = await context.db.Contract.findById(req.params.contractId, {
+        _id: 1, contractAddress: 1, title: 1, blockchain: 1,
+      });
 
       res.json({ success: true, contract });
     } catch (e) {
@@ -32,7 +38,9 @@ module.exports = context => {
   // Get list of contracts with all products and offers
   router.get('/full', validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
-      const { pageNum = '1', itemsPerPage = '20', blockchain = '', category = '' } = req.query;
+      const {
+        pageNum = '1', itemsPerPage = '20', blockchain = '', category = '',
+      } = req.query;
       const pageSize = parseInt(itemsPerPage, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
 
@@ -40,7 +48,7 @@ module.exports = context => {
         $lookup: {
           from: 'Product',
           let: {
-            contr: '$_id'
+            contr: '$_id',
           },
           pipeline: [
             {
@@ -50,16 +58,16 @@ module.exports = context => {
                     {
                       $eq: [
                         '$contract',
-                        '$$contr'
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
+                        '$$contr',
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
           ],
-          as: 'products'
-        }
+          as: 'products',
+        },
       };
 
       const foundCategory = await context.db.Category.findOne({ name: category });
@@ -77,7 +85,7 @@ module.exports = context => {
             from: 'OfferPool',
             let: {
               contr: '$_id',
-              prod: '$products.collectionIndexInContract'
+              prod: '$products.collectionIndexInContract',
             },
             pipeline: [
               {
@@ -87,30 +95,35 @@ module.exports = context => {
                       {
                         $eq: [
                           '$contract',
-                          '$$contr'
-                        ]
+                          '$$contr',
+                        ],
                       },
                       {
                         $eq: [
                           '$product',
-                          '$$prod'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
+                          '$$prod',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
             ],
-            as: 'offerPool'
-          }
+            as: 'offerPool',
+          },
         },
-        { $unwind: '$offerPool' },
+        {
+          $unwind: {
+            path: '$offerPool',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
         {
           $lookup: {
             from: 'Offer',
             let: {
-              offerPoolL: '$offerPool.marketplaceCatalogIndex',
-              contractL: '$_id'
+              prod: '$products.collectionIndexInContract',
+              contractL: '$_id',
             },
             pipeline: [
               {
@@ -120,23 +133,31 @@ module.exports = context => {
                       {
                         $eq: [
                           '$contract',
-                          '$$contractL'
-                        ]
+                          '$$contractL',
+                        ],
                       },
                       {
                         $eq: [
-                          '$offerPool',
-                          '$$offerPoolL'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
+                          '$product',
+                          '$$prod',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
             ],
-            as: 'products.offers'
-          }
-        }
+            as: 'products.offers',
+          },
+        },
+        {
+          $match: {
+            $or: [
+              { diamond: true, 'products.offers': { $not: { $size: 0 } } },
+              { diamond: { $in: [false, undefined] }, offerPool: { $ne: null }, 'products.offers': { $not: { $size: 0 } } },
+            ],
+          },
+        },
       ];
 
       const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
@@ -151,7 +172,7 @@ module.exports = context => {
         .value();
 
       const contracts = await context.db.Contract.aggregate(options)
-        .sort({ ['products.name']: 1 })
+        .sort({ 'products.name': 1 })
         .skip(skip)
         .limit(pageSize);
 
@@ -161,31 +182,39 @@ module.exports = context => {
     }
   });
 
-  router.use('/network/:networkId/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), async (req, res, next) => {
-    const contract = await context.db.Contract.findOne({ contractAddress: req.params.contractAddress.toLowerCase(), blockchain: req.params.networkId });
-
-    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
-
-    req.contract = contract;
-
-    next();
-  }, require('./contract')(context));
-
   router.get('/import/network/:networkId/:contractAddress/', JWTVerification(context), async (req, res, next) => {
     try {
       if (!req.user || !req.user.adminRights) {
         return res.json({
           success: false,
-          result: "Unauthorized request"
+          result: 'Unauthorized request',
         });
       }
       const { networkId, contractAddress } = req.params;
-      let { success, result, message } = await importContractData(networkId, contractAddress, req.user, context.db);
-      return res.json({success, result, message});
+      const {
+        success,
+        result,
+        message,
+      } = await importContractData(networkId, contractAddress, req.user, context.db);
+      return res.json({ success, result, message });
     } catch (err) {
-      console.error(err);
+      log.error(err);
+      return next(err);
     }
-  })
+  });
 
-  return router
-}
+  router.use('/network/:networkId/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), async (req, res, next) => {
+    const contract = await context.db.Contract.findOne({
+      contractAddress: req.params.contractAddress.toLowerCase(),
+      blockchain: req.params.networkId,
+    });
+
+    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+
+    req.contract = contract;
+
+    return next();
+  }, contractRoutes(context));
+
+  return router;
+};

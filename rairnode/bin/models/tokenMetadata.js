@@ -43,19 +43,22 @@ const { Schema } = mongoose;
 */
 
 const TokenMetadata = new Schema({
-	image: { type: String, required: true, default: process.env.DEFAULT_PRODUCT_COVER },
-	image_data: { type: String, required: false },
-	external_url: { type: String, required: false },
-	description: { type: String, required: false },
-	name: { type: String, required: false },
-	attributes: { type: [{
-		display_type: { type: String, required: false },
-		trait_type: { type: String, required: false },
-		value: { type: String, required: true }
-	}], required: false },
-	background_color: { type: String, required: false },
-	animation_url: { type: String, required: false },
-	youtube_url: { type: String, required: false }
+  image: { type: String, required: true, default: process.env.DEFAULT_PRODUCT_COVER },
+  image_data: { type: String, required: false },
+  external_url: { type: String, required: false },
+  description: { type: String, required: false },
+  name: { type: String, required: false },
+  attributes: {
+    type: [{
+      display_type: { type: String, required: false },
+      trait_type: { type: String, required: false },
+      value: { type: String, required: true },
+    }],
+    required: false,
+  },
+  background_color: { type: String, required: false },
+  animation_url: { type: String, required: false },
+  youtube_url: { type: String, required: false },
 }, { timestamps: false });
 
 module.exports = TokenMetadata;

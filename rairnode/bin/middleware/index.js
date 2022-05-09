@@ -9,5 +9,5 @@ module.exports = {
   validation,
   isOwner,
   formDataHandler,
-  streamVerification
-}
+  streamVerification,
+};

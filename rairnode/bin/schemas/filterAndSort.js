@@ -9,5 +9,5 @@ module.exports = Joi.object({
     .pattern(/^0x\w*/)
     .messages({ 'string.pattern.base': 'Invalid blockchain hash' }),
   category: Joi.string()
-    .min(1)
+    .min(1),
 });

@@ -5,5 +5,5 @@ module.exports = Joi.object({
   avatar: Joi.string()
     .uri(),
   email: Joi.string()
-    .email()
+    .email(),
 });

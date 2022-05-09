@@ -7,7 +7,7 @@ const Transaction = new Schema({
   caught: { type: Boolean, default: false },
   blockchainId: { type: String, required: true },
   toAddress: [{ type: String, required: true }],
-  processed: { type: Boolean, default: false }
+  processed: { type: Boolean, default: false },
 }, { versionKey: false, timestamps: true, _id: false });
 
 module.exports = Transaction;

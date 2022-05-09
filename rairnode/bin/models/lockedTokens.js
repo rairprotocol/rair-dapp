@@ -8,7 +8,7 @@ const LockedTokens = new Schema({
   product: { type: Number, required: true },
   range: { type: [Number], required: true },
   lockedTokens: { type: Number, required: true },
-  isLocked: { type: Boolean, required: true }
+  isLocked: { type: Boolean, required: true },
 }, { versionKey: false });
 
 module.exports = LockedTokens;

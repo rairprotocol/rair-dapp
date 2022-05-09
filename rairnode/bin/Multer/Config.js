@@ -1,12 +1,13 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const log = require('../utils/logger')(module);
 const { customAlphabet } = require('nanoid');
-const nanoid = customAlphabet('1234567890', 10)
+const log = require('../utils/logger')(module);
+
+const nanoid = customAlphabet('1234567890', 10);
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination(req, file, cb) {
     let uploadPath = '';
     const uniqueSuffix = `${Date.now()}-${nanoid()}`;
 
@@ -34,23 +35,23 @@ const storage = multer.diskStorage({
     }
 
     file.destinationFolder = uniqueSuffix;
-    cb(null, uploadPath);
+    return cb(null, uploadPath);
   },
-  filename: function (req, file, cb) {
+  filename(req, file, cb) {
     const [type, extension] = file.mimetype.split('/');
     if (extension === 'csv') {
       const uniqueSuffix = `${Date.now()}-${nanoid()}`;
-      cb(null, `${ uniqueSuffix }`);
+      cb(null, `${uniqueSuffix}`);
     } else if (['image'].includes(type)) {
       const uniqueSuffix = `${Date.now()}-${nanoid()}`;
-      cb(null, `${ uniqueSuffix }.${ extension }`);
+      cb(null, `${uniqueSuffix}.${extension}`);
     } else if (['video', 'audio'].includes(type)) {
       file.type = type;
       file.extension = extension;
-      cb(null, `rawfile.${ extension }`);
+      cb(null, `rawfile.${extension}`);
     }
-  }
+  },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 module.exports = upload;

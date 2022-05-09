@@ -15,7 +15,7 @@ module.exports = (context) => async (req, res, next) => {
     }
 
     return next();
-  } catch(err) {
+  } catch (err) {
     return next(err);
   }
-}
+};

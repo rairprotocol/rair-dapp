@@ -1,17 +1,24 @@
 const { createLogger, format, transports } = require('winston');
-const { combine, splat, timestamp, printf, label, errors, colorize, metadata } = format;
+
+const {
+  combine, splat, timestamp, printf, label, errors, colorize, metadata,
+} = format;
 const _ = require('lodash');
 require('winston-mongodb');
 
-const { LOG_LEVEL, PRODUCTION, MONGO_URI, MONGO_URI_LOCAL, MONGO_LOG_COLLECTION, SERVICE_NAME } = process.env;
+const {
+  LOG_LEVEL, PRODUCTION, MONGO_URI, MONGO_URI_LOCAL, MONGO_LOG_COLLECTION, SERVICE_NAME,
+} = process.env;
 
 module.exports = (module) => {
   const path = module.filename.split('/').slice(-2).join('/');
-  const myFormat = printf(({ level, message, timestamp, stack }) => {
-    let msg = `${ timestamp } [${ level }] : ${ message } `;
+  const myFormat = printf(({
+    level, message, timestamp, stack,
+  }) => {
+    let msg = `${timestamp} [${level}] : ${message} `;
 
     if (stack && !_.isEmpty(stack)) {
-      msg = `${ msg } - ${ stack }`;
+      msg = `${msg} - ${stack}`;
     }
     return msg;
   });
@@ -25,7 +32,7 @@ module.exports = (module) => {
       splat(),
       timestamp(),
       myFormat,
-      metadata()
+      metadata(),
     ),
     transports: [
       new transports.Console(),
@@ -36,7 +43,7 @@ module.exports = (module) => {
         capped: true,
         tryReconnect: true,
         decolorize: true,
-        label: 'rairnode'
+        label: 'rairnode',
       }),
     ],
   });

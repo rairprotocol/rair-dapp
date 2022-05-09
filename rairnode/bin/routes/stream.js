@@ -1,7 +1,7 @@
 const express = require('express');
 const { validation, streamVerification } = require('../middleware');
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
 
   /**
@@ -35,10 +35,11 @@ module.exports = context => {
    *       200:
    *         description: Returns if added successfully
    */
-  router.use('/:mediaId',
+  router.use(
+    '/:mediaId',
     streamVerification(context),
     validation('stream', 'params'),
-    context.hls.middleware
+    context.hls.middleware,
   );
 
   return router;

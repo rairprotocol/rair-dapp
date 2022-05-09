@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
 
-module.exports = context => {
+module.exports = (context) => {
   const router = express.Router();
 
   // Get full data about particular product and get list of tokens for it
@@ -10,8 +10,6 @@ module.exports = context => {
     try {
       const { contractId, productIndex } = req.params;
       const productInd = Number(productIndex);
-      let tokens = [];
-      let totalCount = 0;
 
       const [contract] = await context.db.Contract.aggregate([
         { $match: { _id: ObjectId(contractId) } },
@@ -20,7 +18,7 @@ module.exports = context => {
             from: 'Product',
             let: {
               contr: '$_id',
-              productInd
+              productInd,
             },
             pipeline: [
               {
@@ -30,22 +28,22 @@ module.exports = context => {
                       {
                         $eq: [
                           '$contract',
-                          '$$contr'
-                        ]
+                          '$$contr',
+                        ],
                       },
                       {
                         $eq: [
                           '$collectionIndexInContract',
-                          '$$productInd'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
+                          '$$productInd',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
             ],
-            as: 'products'
-          }
+            as: 'products',
+          },
         },
         { $unwind: '$products' },
         {
@@ -53,7 +51,7 @@ module.exports = context => {
             from: 'OfferPool',
             let: {
               contr: '$_id',
-              prod: '$products.collectionIndexInContract'
+              prod: '$products.collectionIndexInContract',
             },
             pipeline: [
               {
@@ -63,22 +61,22 @@ module.exports = context => {
                       {
                         $eq: [
                           '$contract',
-                          '$$contr'
-                        ]
+                          '$$contr',
+                        ],
                       },
                       {
                         $eq: [
                           '$product',
-                          '$$prod'
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
+                          '$$prod',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
             ],
-            as: 'offerPools'
-          }
+            as: 'offerPools',
+          },
         },
         { $unwind: '$offerPools' },
         {
@@ -96,50 +94,37 @@ module.exports = context => {
                       {
                         $eq: [
                           '$contract',
-                          '$$contr'
-                        ]
+                          '$$contr',
+                        ],
                       },
                       {
                         $eq: [
                           '$product',
-                          '$$productIndex'
-                        ]
+                          '$$productIndex',
+                        ],
                       },
-                    ]
-                  }
-                }
-              }
+                    ],
+                  },
+                },
+              },
             ],
-            as: 'products.offers'
-          }
-        }
+            as: 'products.offers',
+          },
+        },
       ]);
 
       if (_.isEmpty(contract)) {
         return res.status(404).send({ success: false, message: 'Product or contract not found.' });
       }
 
-      if (contract.diamond) {
-        const offers = await context.db.Offer.find({ contract: contract._id, product: productInd }).distinct('offerIndex');
+      const offers = await context.db.Offer.find({ contract: contract._id, product: productInd }).distinct('diamondRangeIndex');
 
-        tokens = await context.db.MintedToken.find({
-          contract: contract._id,
-          offer: { $in: offers }
-        });
-        totalCount = await context.db.MintedToken.countDocuments({
-          contract: contract._id,
-          offer: { $in: offers }
-        });
-      } else {
-        tokens = await context.db.MintedToken.find({
-          contract: contract._id,
-          offerPool: contract.offerPools.marketplaceCatalogIndex
-        });
-        totalCount = await context.db.MintedToken.countDocuments({
-          contract: contract._id,
-          offerPool: contract.offerPools.marketplaceCatalogIndex
-        });
-      }
+      const options = _.assign({
+        contract: contract._id,
+      }, contract.diamond ? { offer: { $in: offers } } : { offerPool: contract.offerPools.marketplaceCatalogIndex });
+
+      const tokens = await context.db.MintedToken.find(options);
+      const totalCount = await context.db.MintedToken.countDocuments(options);
 
       if (_.isEmpty(tokens)) {
         return res.status(404).send({ success: false, message: 'Tokens not found.' });

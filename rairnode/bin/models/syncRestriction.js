@@ -10,7 +10,7 @@ const SyncRestriction = new Schema({
   offerPools: { type: Boolean, required: true },
   offers: { type: Boolean, required: true },
   tokens: { type: Boolean, required: true },
-  locks: { type: Boolean, required: true }
+  locks: { type: Boolean, required: true },
 }, { versionKey: false });
 
 module.exports = SyncRestriction;

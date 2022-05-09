@@ -10,11 +10,11 @@ module.exports = (schemaName, destination = 'body') => (req, res, next) => {
       next();
     } else {
       const { details } = error;
-      const message = details.map(e => e.message).join(',');
+      const message = details.map((e) => e.message).join(',');
 
       log.error(message);
 
-      res.status(400).json({ success: false, error: true, message })
+      res.status(400).json({ success: false, error: true, message });
     }
   } catch (err) {
     return next(err);

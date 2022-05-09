@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
 
     req.body.offer = JSON.parse(offer);
 
-    next();
+    return next();
   } catch (err) {
     return next(err);
   }
