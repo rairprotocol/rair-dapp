@@ -2,7 +2,7 @@ import {useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
 import { utils /*, BigNumber*/ } from 'ethers';
 import { useSelector } from 'react-redux';
-import DiamondCustomPaymentRow from './diamondCustomPaymentRow.jsx'
+import CustomFeeRow from '../common/customFeeRow.jsx'
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../../utils/metamaskUtils.js';
 
@@ -166,7 +166,7 @@ const MarketplaceOfferConfig = ({
 						</thead>
 						<tbody>
 							{customPayments.map((customPaymentItem, index, array) => {
-								return <DiamondCustomPaymentRow
+								return <CustomFeeRow
 											key={index}
 											index={index}
 											array={customPayments}

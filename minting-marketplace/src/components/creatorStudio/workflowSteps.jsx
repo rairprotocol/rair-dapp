@@ -23,6 +23,8 @@ import BatchMetadata from "./creatorSteps/batchMetadata.jsx";
 import SingleMetadataEditor from "./creatorSteps/singleMetadataEditor.jsx";
 import MediaUpload from "./creatorSteps/MediaUpload.jsx";
 
+import ResaleMarketplace from './creatorSteps/ResaleMarketplace.jsx';
+
 import ListOffersDiamond from "./diamondCreatorSteps/ListOffersDiamond.jsx";
 import DiamondMinterMarketplace from "./diamondCreatorSteps/DiamondMinterMarketplace.jsx";
 
@@ -104,6 +106,16 @@ const WorkflowSteps = ({ sentryHistory }) => {
 				classic: false,
 				diamond: true,
 				shortName: "Offers",
+				hasAdvancedFeatures: true,
+			},
+			{
+				path: "/creator/contract/:blockchain/:address/collection/:collectionIndex/resaleMarketplace",
+				populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/resaleMarketplace`,
+				component: ResaleMarketplace,
+				simple: false,
+				classic: true,
+				diamond: true,
+				shortName: "Resale Setup",
 				hasAdvancedFeatures: true,
 			},
 			{

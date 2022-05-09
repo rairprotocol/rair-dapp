@@ -65,7 +65,7 @@ const Factory = () => {
 
 	useEffect(() => {
 		setTitle("Rair Factory")
-	}, [setTitle])
+	}, []);
 
 	return <div className='row my-5 px-0 mx-0'>
 		<NavigatorFactory>

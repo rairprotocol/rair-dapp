@@ -26,6 +26,9 @@ const handleError = (errorMessage, defaultError = undefined) => {
 	if (!cleanError) {
 		cleanError = errorMessage?.error?.message;
 	}
+	if (!cleanError) {
+		cleanError = errorMessage?.data?.message;
+	}
 
 	// Attempt #2: Frontend Error
 	// An error from sending the data to the blockchain
@@ -83,6 +86,9 @@ const handleReceipt = async (transactionReceipt) => {
 }
 
 const validateInteger = (number) => {
+	if (number === undefined || number === "") {
+		return false;
+	}
 	let stringified = number.toString();
 	return ['e',',','.'].reduce((previous, current) => {
 		return previous && !stringified.includes(current);
