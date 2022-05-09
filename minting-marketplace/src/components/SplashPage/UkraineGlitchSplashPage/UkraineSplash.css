@@ -19,6 +19,19 @@
     max-width: 1600px;
 }
 
+.btn-help{
+    position: absolute;
+    top: 20px;
+    right: 5vw;
+    width: 200px;
+    height: 48px;
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    background: #FFD505;
+    cursor: pointer;
+}
+
 @media screen and (max-width: 1320px) {
     .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
         margin-left: 0rem;

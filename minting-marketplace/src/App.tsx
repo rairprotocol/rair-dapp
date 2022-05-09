@@ -127,7 +127,6 @@ function App({ sentryHistory }) {
 	const [showAlert, setShowAlert] = useState(true);
 	const { currentChain, realChain } = useSelector(store => store.contractStore);
 	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
-
 	const carousel_match = window.matchMedia('(min-width: 600px)')
 	const [carousel, setCarousel] = useState(carousel_match.matches)
 

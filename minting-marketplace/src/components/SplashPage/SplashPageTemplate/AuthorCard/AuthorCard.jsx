@@ -36,6 +36,8 @@ const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
     buttonLabel,
     buttonBackgroundHelp
   } = splashData;
+
+ 
   return (
     <div
       className="template-author-card"
@@ -45,6 +47,12 @@ const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
       <div className="block-splash">
         <div className="text-splash">
           <div className="title-splash">
+            <button
+              className="btn-help"
+              onClick={() => toggleCheckList()}
+            >
+              Need help?
+            </button>
             <h3
               className="text-gradient-template"
               style={{
@@ -53,6 +61,7 @@ const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
             >
               {title}
             </h3>
+
           </div>
           <div className="text-description">{description}</div>
           <div className="button-wrapper">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../SplashPageTemplate/AuthorCard/AuthorCard.css";
 import "../../AboutPage/AboutPageNew/AboutPageNew.css";
 import "./UkraineSplash.css";
@@ -46,6 +46,7 @@ import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
 import Swal from 'sweetalert2';
 import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
+import ModalHelp from "./ModalHelp";
 import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics
@@ -207,6 +208,19 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const { currentChain, minterInstance } = useSelector((store) => store.contractStore);
   const carousel_match = window.matchMedia("(min-width: 900px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
+  const [openCheckList, setOpenCheckList] = useState(false);
+  const [purchaseList, setPurshaseList] = useState(true);
+  const ukraineglitchChainId = '0x1'
+  const dispatch = useDispatch()
+
+  const toggleCheckList = () => {
+      setOpenCheckList(prev => !prev)
+  }
+
+  const togglePurchaseList = () => {
+      setPurshaseList(prev => !prev);
+  }
+
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
 
   const toggleCheckList = () => {
@@ -228,14 +242,22 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
     getAllProduct()
   }, [getAllProduct])
 
-  // useEffect(() => {
-  //   setTitle(`#UkraineGlitch`);
-  // }, []);
+  useEffect(() => {
+    dispatch({type: 'SET_REAL_CHAIN', payload: ukraineglitchChainId})
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className="wrapper-splash-page ukraineglitch">
       <MetaTags seoMetaTags={splashData.seoInformation} />
       <div className="template-home-splash-page">
+        <ModalHelp 
+          openCheckList={openCheckList}
+          purchaseList={purchaseList}
+          togglePurchaseList={togglePurchaseList}
+          toggleCheckList={toggleCheckList}
+        />
+        <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
         <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
         <PurchaseChecklist
           toggleCheckList={toggleCheckList}
