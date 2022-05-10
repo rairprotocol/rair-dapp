@@ -32,6 +32,22 @@ Supported options:
 
 Have to be set current value of `ADMIN_CONTRACT` variable in `.env` file 
 
+# Redis
+
+For correct work of Redis we have to set
+
+`REDIS_HOST=rair-redis`
+
+`REDIS_PORT=6379`
+
+# Sessions
+
+For correct work of sessions we need to set
+
+`SESSION_SECRET` - any string
+
+`SESSION_TTL` - number of hours (**default 12**)
+
 # API
 
 * [x] /api
