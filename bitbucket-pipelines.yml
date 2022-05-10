@@ -1,18 +1,6 @@
 image: node:16.13.0
 
 pipelines:
-  default:
-      - step:
-          name: Run yarn install and compare generated yarn lock file with committed lock file
-          caches:
-            - node
-          script:
-            - cd ./commands/dependency_sync_check/ && ./init.sh
-          condition:
-            changesets:
-              includePaths:
-                - "**/package.json"
-                - "**/yarn.lock"
   pull-requests:
     '**': #this runs as default for any branch not elsewhere defined
       - step:
@@ -26,6 +14,17 @@ pipelines:
             changesets:
               includePaths:
                 - "minting-marketplace/**"
+      - step:
+          name: Run yarn install and compare generated yarn lock file with committed lock file
+          caches:
+            - node
+          script:
+            - cd ./commands/dependency_sync_check/ && ./init.sh
+          condition:
+            changesets:
+              includePaths:
+                - "**/package.json"
+                - "**/yarn.lock"
     feature/*: #any branch with a feature prefix
       - step:
           name: Install Dependencies and run typescript test for minting-network
