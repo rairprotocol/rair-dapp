@@ -13,6 +13,9 @@ services:
       PRODUCTION: "false"
       MONGO_URI:  mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${generate_mongo_uri_with_vault_credential_util}
+      MONGO_DB_HOSTNAME: ${mongo_db_hostname}
+      MONGO_DB_NAME: ${mongo_db_name}
       JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}

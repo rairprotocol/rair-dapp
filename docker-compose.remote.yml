@@ -11,8 +11,11 @@ services:
       - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
     environment:
       PRODUCTION: "true"
-      MONGO_URI: mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority
-      MONGO_URI_LOCAL: mongodb+srv://rairtech:k5e95atCrcpPYuUJ@rairdev1.ll3lf.mongodb.net/staging?retryWrites=true&w=majority
+      MONGO_URI:  mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${generate_mongo_uri_with_vault_credential_util}
+      MONGO_DB_HOSTNAME: ${mongo_db_hostname}
+      MONGO_DB_NAME: ${mongo_db_name}
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}

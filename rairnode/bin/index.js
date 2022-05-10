@@ -1,4 +1,5 @@
 const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
+const { appSecretManager } = require('./vault/appSecretManager');
 
 const port = process.env.PORT;
 
@@ -23,6 +24,11 @@ const { JSDOM } = require('jsdom');
 
 const config = require('./config');
 const gcp = require('./integrations/gcp');
+const {
+  getMongoConnectionStringURI
+} = require('./utils/mongoUtils');
+
+const mongoConfig = require('./config/mongoConfig');
 
 async function main() {
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
@@ -42,7 +48,7 @@ async function main() {
     }
   }
 
-  const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, {
+  const _mongoose = await mongoose.connect(getMongoConnectionStringURI(), {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -173,9 +179,17 @@ async function main() {
   // outages during development
   try {
     // Login with vault app role creds first
-    await vaultAppRoleTokenManager.initialLogin()
+    await vaultAppRoleTokenManager.initialLogin();
+
+    await appSecretManager.getAppSecrets({
+      vaultToken: vaultAppRoleTokenManager.getToken(),
+      appName: "rairnode",
+      listOfSecretsToFetch: [
+        mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY
+      ]
+    });
   } catch(err) {
-    console.log('Error initializing vault app role token manager')
+    console.log('Error initializing vault integration on app boot')
   }
 
   // fire up the rest of the app

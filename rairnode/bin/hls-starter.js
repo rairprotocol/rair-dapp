@@ -4,9 +4,12 @@ const HLSServer = require('@rair/hls-server');
 const log = require('./utils/logger')(module);
 const { vaultKeyManager } = require('./vault/vaultKeyManager');
 const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
+const {
+  getMongoConnectionStringURI
+} = require('./utils/mongoUtils');
 
 module.exports = async () => {
-  const _mongoose = await mongoose.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true })
+  const _mongoose = await mongoose.connect(getMongoConnectionStringURI(), { useNewUrlParser: true, useUnifiedTopology: true })
     .then((c) => {
       if (process.env.PRODUCTION === 'true') {
         log.info('DB Connected!');

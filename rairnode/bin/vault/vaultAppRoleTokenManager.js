@@ -128,8 +128,9 @@ class VaultAppRoleTokenManager {
       this.startRenewalTimeout({
         leaseDurationSeconds: auth.lease_duration,
       });
-    } catch (err) {
-      throw err;
+
+    } catch(err) {
+      throw new Error('Error renewing token in Vault App Role token manager')
     }
   }
 }

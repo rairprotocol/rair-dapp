@@ -6,9 +6,14 @@ const getAppRoleIDFromEnv = () => process.env.APP_ROLE_ID;
 
 const getAppRoleSecretIDFromEnv = () => process.env.APP_ROLE_SECRET_ID;
 
+const getVaultAppSecretKVLocation = () => {
+  return "app_secrets"
+}
+
 module.exports = {
   getVaultNamespace,
   getVaultUrl,
   getAppRoleIDFromEnv,
   getAppRoleSecretIDFromEnv,
-};
+  getVaultAppSecretKVLocation
+}

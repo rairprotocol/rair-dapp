@@ -6,7 +6,7 @@ const {
 
 class VaultKeyManager {
   getKVProviderName() {
-    return 'key_storage';
+    return "key_storage"
   }
 
   getKeyWriteReadUrl({
@@ -52,7 +52,30 @@ class VaultKeyManager {
       const secretKVDestinationName = this.getKVProviderName();
       const url = this.getKeyWriteReadUrl({
         secretKVDestinationName,
-        secretName,
+        secretName
+      })
+      const res = await axios({
+        method: "POST",
+        url,
+        headers: this.generateVaultHeaders({vaultToken}),
+        data: {
+          data: {
+            ...data
+          }
+        }
+      });
+      return res;
+    } catch(err) {
+      throw new Error('Error writing key to vault');
+    }    
+  }
+
+  async read({secretName, vaultToken}) {
+    try {
+      const secretKVDestinationName = this.getKVProviderName()
+      const url = this.getKeyWriteReadUrl({
+        secretKVDestinationName,
+        secretName
       });
       const axiosParams = {
         method: 'GET',
@@ -65,8 +88,8 @@ class VaultKeyManager {
       }
       const { data } = res.data.data;
       return data;
-    } catch (err) {
-      throw err;
+    } catch(err) {
+      throw new Error('Error reading key from Vault');
     }
   }
 }

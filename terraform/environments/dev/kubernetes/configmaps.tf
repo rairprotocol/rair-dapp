@@ -41,6 +41,9 @@ locals {
     REDIS_PORT: "6379",
     SESSION_SECRET: "testsecret",
     SESSION_TTL: "12"
+    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: "false"
+    MONGO_DB_HOSTNAME: "primary-pri.ahxui.mongodb.net"
+    MONGO_DB_NAME: "test"
   }
 
   minting_network_configmap = {
