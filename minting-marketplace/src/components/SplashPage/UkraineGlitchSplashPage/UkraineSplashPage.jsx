@@ -42,7 +42,7 @@ import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModu
 import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
 import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
-import PurchaseTokenButton from '../../common/PurchaseToken.jsx';
+import PurchaseTokenButton from '../../common/PurchaseToken';
 import Swal from 'sweetalert2';
 import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
@@ -211,6 +211,8 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const [purchaseList, setPurshaseList] = useState(true);
   const ukraineglitchChainId = '0x1'
   const dispatch = useDispatch()
+
+
 
   const togglePurchaseList = () => {
       setPurshaseList(prev => !prev);

@@ -4,18 +4,18 @@ import React, {
   useCallback /*createElement*/,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { rFetch /*useRfetch*/ } from "../../utils/rFetch.js";
+import { rFetch /*useRfetch*/ } from "../../utils/rFetch";
 import { /*Link*/ useHistory } from "react-router-dom";
 import setDocumentTitle from "../../utils/setTitle";
-import MyDiamondItems from './myDiamondItems.jsx';
+import MyDiamondItems from './myDiamondItems';
 
 // React Redux types
 import * as authTypes from "../../ducks/auth/types";
 
-import InputField from "../common/InputField.jsx";
-import FilteringBlock from "../MockUpPage/FilteringBlock/FilteringBlock.jsx";
-import ModalItem from "../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem.jsx";
-import chainDataFront from "../MockUpPage/utils/blockchainDataFront.js";
+import InputField from "../common/InputField";
+import FilteringBlock from "../MockUpPage/FilteringBlock/FilteringBlock";
+import ModalItem from "../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem";
+import chainDataFront from "../MockUpPage/utils/blockchainDataFront";
 
 const MyItems = (props) => {
   const dispatch = useDispatch();

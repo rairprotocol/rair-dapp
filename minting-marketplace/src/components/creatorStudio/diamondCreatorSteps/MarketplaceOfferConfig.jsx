@@ -2,9 +2,10 @@ import {useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
 import { utils /*, BigNumber*/ } from 'ethers';
 import { useSelector } from 'react-redux';
-import CustomFeeRow from '../common/customFeeRow.jsx'
+import DiamondCustomPaymentRow from './diamondCustomPaymentRow'
+import CustomFeeRow from '../common/customFeeRow'
 import Swal from 'sweetalert2';
-import { metamaskCall } from '../../../utils/metamaskUtils.js';
+import { metamaskCall } from '../../../utils/metamaskUtils';
 
 const MarketplaceOfferConfig = ({
 	array,

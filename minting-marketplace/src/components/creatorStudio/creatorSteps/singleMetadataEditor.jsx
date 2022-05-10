@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
-import InputField from '../../common/InputField.jsx';
+import InputField from '../../common/InputField';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
-import PropertyRow from './propertyRow.jsx';
+import PropertyRow from './propertyRow';
 import { useSelector } from 'react-redux';
 import { useParams, useHistory, NavLink } from 'react-router-dom';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import { web3Switch } from '../../../utils/switchBlockchain.js';
-import chainData from '../../../utils/blockchainData.js'
-import { rFetch } from '../../../utils/rFetch.js';
-import { metamaskCall } from '../../../utils/metamaskUtils.js';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import FixedBottomNavigation from '../FixedBottomNavigation';
+import { web3Switch } from '../../../utils/switchBlockchain';
+import chainData from '../../../utils/blockchainData'
+import { rFetch } from '../../../utils/rFetch';
+import { metamaskCall } from '../../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
 
 const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, simpleMode}) => {

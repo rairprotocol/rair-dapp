@@ -5,7 +5,7 @@ import setTitle from '../utils/setTitle';
 import * as ethers from 'ethers'
 import {erc721Abi} from '../contracts';
 
-import ERC721Consumer from './ConsumerMode/ERC721Consumer.jsx';
+import ERC721Consumer from './ConsumerMode/ERC721Consumer';
 
 const ConsumerMode = ({ addresses }) => {
 

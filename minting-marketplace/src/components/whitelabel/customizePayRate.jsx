@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import InputField from '../common/InputField.jsx';
+import InputField from '../common/InputField';
 import { useSelector } from 'react-redux';
 import chainData from '../../utils/blockchainData';
 const rSwal = withReactContent(Swal);

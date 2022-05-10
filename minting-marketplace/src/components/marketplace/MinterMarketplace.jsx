@@ -1,8 +1,8 @@
 import {useState, useEffect, useCallback} from 'react';
-import {rFetch} from '../../utils/rFetch.js';
+import {rFetch} from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 
-import MinterMarketplaceItem from './MinterMarketplaceItem.jsx';
+import MinterMarketplaceItem from './MinterMarketplaceItem';
 
 
 const MinterMarketplace = () => {

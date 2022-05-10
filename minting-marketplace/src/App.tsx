@@ -2,54 +2,54 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Router, Switch, Route, /*Redirect*/ NavLink, /*useLocation*/ } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getJWT, isTokenValid } from './utils/rFetch.js';
+import { getJWT, isTokenValid } from './utils/rFetch';
 
 import './App.css';
 
 // React Redux types
-import * as contractTypes from './ducks/contracts/types.js';
-import * as userTypes from './ducks/users/types.js';
-import * as authTypes from './ducks/auth/types.js';
+import * as contractTypes from './ducks/contracts/types';
+import * as userTypes from './ducks/users/types';
+import * as authTypes from './ducks/auth/types';
 import * as Sentry from '@sentry/react';
 // import * as ethers from 'ethers';
-// import * as colorTypes from './ducks/colors/types.js';
+// import * as colorTypes from './ducks/colors/types';
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
 
-import gtag from './utils/gtag.js';
+import gtag from './utils/gtag';
 
 import jsonwebtoken from 'jsonwebtoken';
 
-//import CSVParser from './components/metadata/csvParser.jsx';
+//import CSVParser from './components/metadata/csvParser';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 
-import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher.jsx';
-import TransferTokens from './components/adminViews/transferTokens.jsx';
-import ImportExternalContracts from './components/adminViews/ImportExternalContracts.jsx';
+import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher';
+import TransferTokens from './components/adminViews/transferTokens';
+import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
 
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
-import ConsumerMode from './components/consumerMode.jsx';
-import Contracts from './components/creatorStudio/Contracts.jsx';
-import ContractDetails from './components/creatorStudio/ContractDetails.jsx';
-import CreatorMode from './components/creatorMode.jsx';
+import ConsumerMode from './components/consumerMode';
+import Contracts from './components/creatorStudio/Contracts';
+import ContractDetails from './components/creatorStudio/ContractDetails';
+import CreatorMode from './components/creatorMode';
 
-import Deploy from './components/creatorStudio/Deploy.jsx';
+import Deploy from './components/creatorStudio/Deploy';
 
-import FileUpload from './components/video/videoUpload/videoUpload.jsx';
+import FileUpload from './components/video/videoUpload/videoUpload';
 // import Footer from './components/Footer/Footer';
 
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
 import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
-import ListCollections from './components/creatorStudio/ListCollections.jsx';
+import ListCollections from './components/creatorStudio/ListCollections';
 
-import MetadataEditor from './components/metadata/metadataEditor.jsx';
-import MyContracts from './components/whitelabel/myContracts.jsx';
-import MinterMarketplace from './components/marketplace/MinterMarketplace.jsx';
+import MetadataEditor from './components/metadata/metadataEditor';
+import MyContracts from './components/whitelabel/myContracts';
+import MinterMarketplace from './components/marketplace/MinterMarketplace';
 import MockUpPage from './components/MockUpPage/MockUpPage';
 import MyItems from './components/nft/myItems';
-import MyNFTs from './components/nft/myNFT.jsx';
+import MyNFTs from './components/nft/myNFT';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
@@ -61,7 +61,7 @@ import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
 
 import { OnboardingButton } from './components/common/OnboardingButton';
 
-import RairProduct from './components/nft/rairCollection.jsx';
+import RairProduct from './components/nft/rairCollection';
 //Google Analytics
 // import ReactGA from 'react-ga';
 
@@ -69,30 +69,30 @@ import SplashPage from './components/SplashPage';
 // import setTitle from './utils/setTitle';
 
 import ThankYouPage from './components/ThankYouPage';
-import Token from './components/nft/Token.jsx';
+import Token from './components/nft/Token';
 import { TermsUse } from './components/SplashPage/TermsUse';
 
 import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
 
-import VideoPlayer from './components/video/videoPlayer.jsx';
+import VideoPlayer from './components/video/videoPlayer';
 
-import WorkflowSteps from './components/creatorStudio/workflowSteps.jsx';
-import Footer from './components/Footer/Footer.jsx';
-import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace.jsx';
+import WorkflowSteps from './components/creatorStudio/workflowSteps';
+import Footer from './components/Footer/Footer';
+import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
 
 // logos for About Page
 import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
 import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico'
-import MainLogo from './components/GroupLogos/MainLogo.jsx';
+import MainLogo from './components/GroupLogos/MainLogo';
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
-import { detectBlockchain } from './utils/blockchainData.js';
-import AlertMetamask from './components/AlertMetamask/index.jsx';
-import NFTLASplashPage from './components/SplashPage/NFTLASplashPage.jsx';
-import MenuNavigation from './components/Navigation/Menu.jsx';
-import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage.jsx';
-import MetaTags from './components/SeoTags/MetaTags.jsx';
+import { detectBlockchain } from './utils/blockchainData';
+import AlertMetamask from './components/AlertMetamask/index';
+import NFTLASplashPage from './components/SplashPage/NFTLASplashPage';
+import MenuNavigation from './components/Navigation/Menu';
+import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
+import MetaTags from './components/SeoTags/MetaTags';
 
 
 const gAppName = process.env.REACT_APP_GA_NAME

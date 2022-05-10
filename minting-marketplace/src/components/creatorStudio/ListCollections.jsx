@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { rFetch } from '../../utils/rFetch.js';
+import { rFetch } from '../../utils/rFetch';
 import { useParams, useHistory, NavLink } from 'react-router-dom';
 import { diamondFactoryAbi } from '../../contracts';
 
-import FixedBottomNavigation from './FixedBottomNavigation.jsx';
-import NavigatorContract from './NavigatorContract.jsx';
+import FixedBottomNavigation from './FixedBottomNavigation';
+import NavigatorContract from './NavigatorContract';
 
 const ListCollections = () => {
 	const { primaryColor } = useSelector(store => store.colorStore);

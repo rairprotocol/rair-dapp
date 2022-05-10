@@ -20,19 +20,19 @@ import TokenLeftGreyman from "./TokenLeft/TokenLeftGreyman";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import { Timeline } from "./Timeline/Timeline";
 import PurchaseChecklist from './PurchaseChecklist/PurchaseChecklist';
-import ButtonHelp from './PurchaseChecklist/ButtonHelp.jsx';
+import ButtonHelp from './PurchaseChecklist/ButtonHelp';
 
-import { diamondFactoryAbi } from "../../contracts/index.js";
-//import { rFetch } from "../../utils/rFetch.js";
-import { metamaskCall } from "../../utils/metamaskUtils.js";
-import { web3Switch } from "../../utils/switchBlockchain.js";
+import { diamondFactoryAbi } from "../../contracts/index";
+//import { rFetch } from "../../utils/rFetch";
+import { metamaskCall } from "../../utils/metamaskUtils";
+import { web3Switch } from "../../utils/switchBlockchain";
 import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import StandaloneVideoPlayer from "../video/videoPlayerGenerall";
 import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
-import PurchaseTokenButton from "../common/PurchaseToken.jsx";
+import PurchaseTokenButton from "../common/PurchaseToken";
 
 //Google Analytics
 import ReactGA from 'react-ga';

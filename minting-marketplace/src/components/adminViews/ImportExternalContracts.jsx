@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import InputField from '../common/InputField.jsx';
-import InputSelect from '../common/InputSelect.jsx';
-import { rFetch } from '../../utils/rFetch.js';
+import InputField from '../common/InputField';
+import InputSelect from '../common/InputSelect';
+import { rFetch } from '../../utils/rFetch';
 import { utils } from "ethers";
 import blockchainData from '../../utils/blockchainData';
 

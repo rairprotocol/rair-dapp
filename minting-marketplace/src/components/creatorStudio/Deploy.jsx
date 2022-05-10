@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import chainData from '../../utils/blockchainData.js'
-import InputField from '../common/InputField.jsx';
-import InputSelect from '../common/InputSelect.jsx';
+import chainData from '../../utils/blockchainData'
+import InputField from '../common/InputField';
+import InputSelect from '../common/InputSelect';
 import Swal from 'sweetalert2';
 import { utils } from 'ethers';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import { metamaskCall } from '../../utils/metamaskUtils';
 
-import NavigatorFactory from './NavigatorFactory.jsx';
-import setTitle from '../../utils/setTitle.js';
+import NavigatorFactory from './NavigatorFactory';
+import setTitle from '../../utils/setTitle';
 
 const Factory = () => {
 	const [contractName, setContractName] = useState('');

@@ -10,21 +10,21 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-import { metamaskCall } from "../../../../utils/metamaskUtils.js";
+import { metamaskCall } from "../../../../utils/metamaskUtils";
 import chainDataFront from "../../utils/blockchainDataFront";
 import ItemRank from "../../SelectBox/ItemRank";
 import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
 import ReactPlayer from "react-player";
-import chainData from "../../../../utils/blockchainData.js";
+import chainData from "../../../../utils/blockchainData";
 import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
 
-import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs.jsx";
-import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock.jsx";
-import CustomButton from "../../utils/button/CustomButton.jsx";
-import CollectionInfo from "./CollectionInfo/CollectionInfo.jsx";
-import TitleCollection from "./TitleCollection/TitleCollection.jsx";
-import NftListUnlockablesVideos from "./NftListUnlockablesVideos.jsx";
+import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
+import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
+import CustomButton from "../../utils/button/CustomButton";
+import CollectionInfo from "./CollectionInfo/CollectionInfo";
+import TitleCollection from "./TitleCollection/TitleCollection";
+import NftListUnlockablesVideos from "./NftListUnlockablesVideos";
 
 const NftDataPageTest = ({
   blockchain,

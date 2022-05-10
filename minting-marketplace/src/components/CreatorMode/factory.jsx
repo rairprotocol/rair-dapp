@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import { utils } from 'ethers';
 import { useSelector } from 'react-redux';
-import { metamaskCall } from '../../utils/metamaskUtils.js'
+import { metamaskCall } from '../../utils/metamaskUtils'
 import Swal from 'sweetalert2';
 
 const FactoryManager = ({ setDeployedTokens }) => {

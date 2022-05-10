@@ -6,9 +6,9 @@ import setDocumentTitle from '../../utils/setTitle';
 
 import * as ethers from 'ethers'
 
-import { rFetch } from '../../utils/rFetch.js';
+import { rFetch } from '../../utils/rFetch';
 
-import MinterMarketplaceItem from '../marketplace/MinterMarketplaceItem.jsx';
+import MinterMarketplaceItem from '../marketplace/MinterMarketplaceItem';
 
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
 const erc721Abi = ERC721Token.default.abi;

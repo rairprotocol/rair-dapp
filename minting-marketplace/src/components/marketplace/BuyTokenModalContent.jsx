@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import InputField from '../common/InputField.jsx';
+import InputField from '../common/InputField';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
-import BatchRow from './BatchRow.jsx';
+import BatchRow from './BatchRow';
 import {minterAbi} from '../../contracts';
 // import { CSVReader } from 'react-papaparse'
-import csvParser from '../../utils/csvParser.js';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import csvParser from '../../utils/csvParser';
+import { metamaskCall } from '../../utils/metamaskUtils';
 import {utils} from 'ethers';
 
 

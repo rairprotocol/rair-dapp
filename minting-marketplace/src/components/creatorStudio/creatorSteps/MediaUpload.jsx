@@ -1,17 +1,17 @@
 import { useEffect, useState, useCallback } from 'react';
-import { rFetch } from '../../../utils/rFetch.js';
+import { rFetch } from '../../../utils/rFetch';
 import { useSelector } from 'react-redux';
 // import { useParams, useHistory, NavLink } from 'react-router-dom';
-import { validateInteger } from '../../../utils/metamaskUtils.js';
-// import { rFetch } from '../../../utils/rFetch.js';
+import { validateInteger } from '../../../utils/metamaskUtils';
+// import { rFetch } from '../../../utils/rFetch';
 import { utils } from 'ethers';
-// import InputSelect from '../../common/InputSelect.jsx';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-// import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import chainData from '../../../utils/blockchainData.js'
+// import InputSelect from '../../common/InputSelect';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+// import FixedBottomNavigation from '../FixedBottomNavigation';
+import chainData from '../../../utils/blockchainData'
 import Dropzone from 'react-dropzone'
 import videoIcon from '../../../images/videoIcon.svg';
-import MediaUploadRow from './MediaUploadRow.jsx';
+import MediaUploadRow from './MediaUploadRow';
 
 const MediaUpload = ({setStepNumber, contractData, gotoNextStep, stepNumber}) => {
 	const {primaryColor, /*secondaryColor, textColor*/} = useSelector(store => store.colorStore);

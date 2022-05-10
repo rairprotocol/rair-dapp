@@ -3,7 +3,7 @@ import * as ethers from 'ethers'
 import { useSelector } from 'react-redux';
 
 import * as ERC721Token from '../../contracts/RAIR_ERC721.json';
-import ProductManager from './CollectionManager.jsx';
+import ProductManager from './CollectionManager';
 
 const erc721Abi = ERC721Token.default.abi;
 

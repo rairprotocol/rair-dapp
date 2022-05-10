@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { erc721Abi } from '../../contracts/index.js'
-import { rFetch } from '../../utils/rFetch.js';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import { erc721Abi } from '../../contracts/index'
+import { rFetch } from '../../utils/rFetch';
+import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
 
 import "./SplashPage.css";
@@ -38,9 +38,9 @@ import TeamMeet from "./TeamMeet/TeamMeetList";
 // import JoinCom from "./JoinCom/JoinCom";
 
 import Modal from "react-modal";
-import RoadMap from "./Roadmap/RoadMap.jsx";
-import NipseyRelease from "./NipseyRelease/NipseyRelease.jsx";
-import { Countdown } from "./Timer/CountDown.jsx";
+import RoadMap from "./Roadmap/RoadMap";
+import NipseyRelease from "./NipseyRelease/NipseyRelease";
+import { Countdown } from "./Timer/CountDown";
 import { useHistory } from "react-router-dom";
 
 const customStyles = {

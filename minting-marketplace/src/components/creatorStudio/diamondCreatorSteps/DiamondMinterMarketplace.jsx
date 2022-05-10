@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import { metamaskCall } from '../../../utils/metamaskUtils'; 
 import chainData from '../../../utils/blockchainData';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import MarketplaceOfferConfig from './MarketplaceOfferConfig.jsx';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import FixedBottomNavigation from '../FixedBottomNavigation';
+import MarketplaceOfferConfig from './MarketplaceOfferConfig';
 
 const DiamondMinterMarketplace = ({contractData, setStepNumber, steps, simpleMode, stepNumber, gotoNextStep, mintingRole}) => {
 	const { diamondMarketplaceInstance } = useSelector(store => store.contractStore);

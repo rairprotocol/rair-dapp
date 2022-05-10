@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import { utils, BigNumber } from 'ethers';
-import blockchainData from '../../utils/blockchainData.js';
+import blockchainData from '../../utils/blockchainData';
 
 const BatchRow = ({index, deleter, array}) => {
 

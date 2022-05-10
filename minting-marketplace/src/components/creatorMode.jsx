@@ -5,9 +5,9 @@ import setTitle from '../utils/setTitle';
 import * as ethers from 'ethers'
 import * as MinterMarketplace from '../contracts/Minter_Marketplace.json';
 
-import ERC721Manager from './CreatorMode/ERC721Manager.jsx';
-import ERC777Manager from './CreatorMode/erc777.jsx';
-import FactoryManager from './CreatorMode/factory.jsx';
+import ERC721Manager from './CreatorMode/ERC721Manager';
+import ERC777Manager from './CreatorMode/erc777';
+import FactoryManager from './CreatorMode/factory';
 
 const minterAbi = MinterMarketplace.default.abi;
 

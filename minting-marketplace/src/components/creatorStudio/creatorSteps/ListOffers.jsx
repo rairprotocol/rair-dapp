@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 import { useParams } from 'react-router-dom';
 import { erc721Abi } from '../../../contracts'
 import Swal from 'sweetalert2';
-import chainData from '../../../utils/blockchainData.js'
-import { web3Switch } from '../../../utils/switchBlockchain.js';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import OfferRow from './OfferRow.jsx'
+import chainData from '../../../utils/blockchainData'
+import { web3Switch } from '../../../utils/switchBlockchain';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import OfferRow from './OfferRow'
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 
 const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack, forceRefetch}) => {

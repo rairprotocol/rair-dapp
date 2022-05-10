@@ -1,12 +1,12 @@
 import {useState, useEffect, useCallback} from 'react';
 import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
-import InputField from '../../common/InputField.jsx';
+import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
 import chainData from '../../../utils/blockchainData';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-// import {web3Switch} from '../../../utils/switchBlockchain.js';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import FixedBottomNavigation from '../FixedBottomNavigation';
+// import {web3Switch} from '../../../utils/switchBlockchain';
 
 // const rSwal = withReactContent(Swal);
 

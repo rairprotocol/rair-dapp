@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import InputField from '../common/InputField.jsx';
-import InputSelect from '../common/InputSelect.jsx';
-import { rFetch } from '../../utils/rFetch.js';
+import InputField from '../common/InputField';
+import InputSelect from '../common/InputSelect';
+import { rFetch } from '../../utils/rFetch';
 import { useSelector } from 'react-redux';
 import blockchainData from '../../utils/blockchainData';
 import { web3Switch } from '../../utils/switchBlockchain';

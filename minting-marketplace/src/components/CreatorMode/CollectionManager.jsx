@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import CustomPayRate from '../whitelabel/customizePayRate.jsx';
+import CustomPayRate from '../whitelabel/customizePayRate';
 import { utils } from 'ethers';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import { metamaskCall } from '../../utils/metamaskUtils';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 

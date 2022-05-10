@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useCallback } from "react";
 import Swal from "sweetalert2";
-import { rFetch } from "../../../utils/rFetch.js";
-import InputField from "../../common/InputField.jsx";
-import InputSelect from "../../common/InputSelect.jsx";
+import { rFetch } from "../../../utils/rFetch";
+import InputField from "../../common/InputField";
+import InputSelect from "../../common/InputSelect";
 import io from "socket.io-client";
 import "./videoUpload.css";
-import { getRandomValues } from "../../../utils/getRandomValues.js";
+import { getRandomValues } from "../../../utils/getRandomValues";
 // const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 // Admin view to upload media to the server

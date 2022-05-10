@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import swal from 'sweetalert2';
 import chainData from '../../utils/blockchainData';
 import { erc721Abi } from '../../contracts'
-import InputField from '../common/InputField.jsx';
+import InputField from '../common/InputField';
 
 const BatchDataItem = ({tokenId, metadataURI, deleter, index, array, endingToken}) => {
 

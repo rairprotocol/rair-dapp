@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { withSentryRouting } from "@sentry/react";
-import { rFetch } from "../../utils/rFetch.js";
-import { metamaskCall } from "../../utils/metamaskUtils.js";
+import { rFetch } from "../../utils/rFetch";
+import { metamaskCall } from "../../utils/metamaskUtils";
 import { useSelector } from "react-redux";
 import {
 	useParams,
@@ -11,22 +11,22 @@ import {
 	useHistory,
 	NavLink,
 } from "react-router-dom";
-import WorkflowContext from "../../contexts/CreatorWorkflowContext.js";
-import { web3Switch } from "../../utils/switchBlockchain.js";
+import WorkflowContext from "../../contexts/CreatorWorkflowContext";
+import { web3Switch } from "../../utils/switchBlockchain";
 import { minterAbi, erc721Abi, diamondFactoryAbi } from "../../contracts";
-import chainData from "../../utils/blockchainData.js";
+import chainData from "../../utils/blockchainData";
 
-import ListOffers from "./creatorSteps/ListOffers.jsx";
-import ListLocks from "./creatorSteps/ListLocks.jsx";
-import CustomizeFees from "./creatorSteps/CustomizeFees.jsx";
-import BatchMetadata from "./creatorSteps/batchMetadata.jsx";
-import SingleMetadataEditor from "./creatorSteps/singleMetadataEditor.jsx";
-import MediaUpload from "./creatorSteps/MediaUpload.jsx";
+import ListOffers from "./creatorSteps/ListOffers";
+import ListLocks from "./creatorSteps/ListLocks";
+import CustomizeFees from "./creatorSteps/CustomizeFees";
+import BatchMetadata from "./creatorSteps/batchMetadata";
+import SingleMetadataEditor from "./creatorSteps/singleMetadataEditor";
+import MediaUpload from "./creatorSteps/MediaUpload";
 
-import ResaleMarketplace from './creatorSteps/ResaleMarketplace.jsx';
+import ListOffersDiamond from "./diamondCreatorSteps/ListOffersDiamond";
+import DiamondMinterMarketplace from "./diamondCreatorSteps/DiamondMinterMarketplace";
+import ResaleMarketplace from './creatorSteps/ResaleMarketplace';
 
-import ListOffersDiamond from "./diamondCreatorSteps/ListOffersDiamond.jsx";
-import DiamondMinterMarketplace from "./diamondCreatorSteps/DiamondMinterMarketplace.jsx";
 
 const SentryRoute = withSentryRouting(Route);
 

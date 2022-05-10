@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import chainData from '../../utils/blockchainData.js'
-import { rFetch } from '../../utils/rFetch.js';
+import chainData from '../../utils/blockchainData'
+import { rFetch } from '../../utils/rFetch';
 import { NavLink } from 'react-router-dom';
-import NavigatorFactory from './NavigatorFactory.jsx';
+import NavigatorFactory from './NavigatorFactory';
 
 // React Redux types
 import * as authTypes from '../../ducks/auth/types'

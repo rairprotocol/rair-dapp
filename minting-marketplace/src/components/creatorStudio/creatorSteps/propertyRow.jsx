@@ -1,5 +1,5 @@
 // import {useState, useEffect, useCallback} from 'react';
-import InputField from '../../common/InputField.jsx';
+import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
 
 const PropertyRow = ({trait_type, value, deleter, rerender, array, index}) => {

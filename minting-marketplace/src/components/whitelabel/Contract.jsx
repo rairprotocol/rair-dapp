@@ -2,13 +2,13 @@ import {useState, useEffect, useCallback} from 'react'
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 
-import CreateProduct from './CreateProduct.jsx';
-import AddOffer from './AddOffer.jsx';
-import LockRange from './LockRange.jsx';
+import CreateProduct from './CreateProduct';
+import AddOffer from './AddOffer';
+import LockRange from './LockRange';
 
 import chainData from '../../utils/blockchainData';
-import { rFetch } from '../../utils/rFetch.js';
-import CustomPayRate from './customizePayRate.jsx';
+import { rFetch } from '../../utils/rFetch';
+import CustomPayRate from './customizePayRate';
 
 const Contract = ({contractAddress, blockchain, title}) => {
 

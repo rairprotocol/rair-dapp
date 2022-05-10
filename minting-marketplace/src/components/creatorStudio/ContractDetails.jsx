@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import chainData from '../../utils/blockchainData.js'
-import InputField from '../common/InputField.jsx';
-import { rFetch } from '../../utils/rFetch.js';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import chainData from '../../utils/blockchainData'
+import InputField from '../common/InputField';
+import { rFetch } from '../../utils/rFetch';
+import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
 import { useParams, useHistory } from 'react-router-dom';
 import { erc721Abi, diamondFactoryAbi } from '../../contracts';
 
-import FixedBottomNavigation from './FixedBottomNavigation.jsx';
-import NavigatorContract from './NavigatorContract.jsx';
+import FixedBottomNavigation from './FixedBottomNavigation';
+import NavigatorContract from './NavigatorContract';
 
 const ContractDetails = () => {
 

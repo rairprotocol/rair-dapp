@@ -1,11 +1,11 @@
 import {useState, useEffect, useCallback} from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import InputField from '../common/InputField.jsx';
+import InputField from '../common/InputField';
 import {useSelector, Provider, useStore} from 'react-redux';
 import {erc721Abi} from '../../contracts';
 import chainData from '../../utils/blockchainData';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import { metamaskCall } from '../../utils/metamaskUtils';
 
 const rSwal = withReactContent(Swal.mixin({
 	showConfirmButton: false

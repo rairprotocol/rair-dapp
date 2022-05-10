@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { rFetch } from './rFetch.js';
+import { rFetch } from './rFetch';
 
 // 2 for the transaction catcher, 1 for speed
 const confirmationsRequired = 2;
@@ -90,7 +90,7 @@ const validateInteger = (number) => {
 		return false;
 	}
 	let stringified = number.toString();
-	return ['e',',','.'].reduce((previous, current) => {
+	return ['e', ',', '.'].reduce((previous, current) => {
 		return previous && !stringified.includes(current);
 	}, true);
 }

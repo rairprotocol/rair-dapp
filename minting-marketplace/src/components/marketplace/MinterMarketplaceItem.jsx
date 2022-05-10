@@ -1,5 +1,5 @@
 import { useSelector, useStore, Provider } from 'react-redux';
-import BuyTokenModalContent from './BuyTokenModalContent.jsx';
+import BuyTokenModalContent from './BuyTokenModalContent';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import chainData from '../../utils/blockchainData';

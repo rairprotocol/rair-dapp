@@ -1,6 +1,6 @@
 // import { useEffect, useState } from 'react';
-import VideoItem from './videoItem.jsx';
-// import InputField from '../common/InputField.jsx';
+import VideoItem from './videoItem';
+// import InputField from '../common/InputField';
 // import setDocumentTitle from '../../utils/setTitle';
 
 const VideoList = ({mediaList, titleSearch,  primaryColor}) => {

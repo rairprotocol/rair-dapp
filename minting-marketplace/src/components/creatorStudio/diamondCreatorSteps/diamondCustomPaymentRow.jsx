@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import InputField from '../../common/InputField.jsx';
+import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
 import { utils, BigNumber } from 'ethers';
 

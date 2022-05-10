@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
-import InputField from '../../common/InputField.jsx'
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
+import InputField from '../../common/InputField'
+import FixedBottomNavigation from '../FixedBottomNavigation';
 import { useParams } from 'react-router-dom';
 import {erc721Abi} from '../../../contracts'
 import Swal from 'sweetalert2';
-import chainData from '../../../utils/blockchainData.js'
-import colors from '../../../utils/offerLockColors.js'
-import {web3Switch} from '../../../utils/switchBlockchain.js';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
+import chainData from '../../../utils/blockchainData'
+import colors from '../../../utils/offerLockColors'
+import {web3Switch} from '../../../utils/switchBlockchain';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { utils } from 'ethers';
 import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
 

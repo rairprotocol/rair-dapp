@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import InputField from '../../common/InputField.jsx';
-import InputSelect from '../../common/InputSelect.jsx';
+import InputField from '../../common/InputField';
+import InputSelect from '../../common/InputSelect';
 import { useSelector } from 'react-redux';
-import { rFetch } from '../../../utils/rFetch.js';
+import { rFetch } from '../../../utils/rFetch';
 import io from "socket.io-client";
 
 const MediaUploadRow = ({item, offerList, deleter, rerender, index, array, categoriesArray}) => {

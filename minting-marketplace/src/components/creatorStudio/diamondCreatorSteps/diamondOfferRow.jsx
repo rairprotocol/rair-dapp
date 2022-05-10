@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
-import colors from '../../../utils/offerLockColors.js'
-import InputField from '../../common/InputField.jsx'
+import colors from '../../../utils/offerLockColors'
+import InputField from '../../common/InputField'
 import { utils } from 'ethers';
-import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils.js';
+import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
 
 const DiamondOfferRow = ({

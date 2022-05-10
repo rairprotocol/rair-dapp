@@ -22,7 +22,7 @@ import TeamMeet from "../../SplashPage/TeamMeet/TeamMeetList";
 import { useLocation /*useHistory*/ } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import PurchaseTokenButton from "../../common/PurchaseToken.jsx";
+import PurchaseTokenButton from "../../common/PurchaseToken";
 import FaviconRair from './../assets/rair_favicon.ico';
 import MetaTags from "../../SeoTags/MetaTags";
 

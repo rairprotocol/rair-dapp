@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as contractTypes from '../../ducks/contracts/types.js';
+import * as contractTypes from '../../ducks/contracts/types';
 import * as ethers from 'ethers'
 import Swal from 'sweetalert2';
-import InputField from '../common/InputField.jsx';
+import InputField from '../common/InputField';
 
 const binanceTestnetData = {
 	chainId: '0x61',

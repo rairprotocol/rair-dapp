@@ -1,4 +1,4 @@
-import chainData from './blockchainData.js';
+import chainData from './blockchainData';
 
 const web3Switch = async (chainId) => {
 	try {
@@ -27,4 +27,4 @@ const programmaticSwitch = async (chainId) => {
 
 }
 
-export {web3Switch, programmaticSwitch};
+export { web3Switch, programmaticSwitch };

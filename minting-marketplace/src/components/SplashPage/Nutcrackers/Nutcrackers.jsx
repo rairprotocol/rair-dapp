@@ -15,12 +15,12 @@ import Cracker from '../images/cracker-icon.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import PoweredRair from '../images/poweredRair.png';
 
-import { erc721Abi } from '../../../contracts/index.js';
-import { metamaskCall } from '../../../utils/metamaskUtils.js';
-import { rFetch } from '../../../utils/rFetch.js';
-import { web3Switch } from '../../../utils/switchBlockchain.js';
+import { erc721Abi } from '../../../contracts/index';
+import { metamaskCall } from '../../../utils/metamaskUtils';
+import { rFetch } from '../../../utils/rFetch';
+import { web3Switch } from '../../../utils/switchBlockchain';
 import Swal from 'sweetalert2';
-import PurchaseTokenButton from "../../common/PurchaseToken.jsx";
+import PurchaseTokenButton from "../../common/PurchaseToken";
 
 const Nutcrackers = ({ connectUserData }) => {
     const dispatch = useDispatch();

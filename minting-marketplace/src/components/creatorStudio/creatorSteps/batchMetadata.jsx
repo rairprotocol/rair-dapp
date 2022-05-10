@@ -3,14 +3,14 @@ import { useSelector } from 'react-redux'
 import imageIcon from '../../../images/imageIcon.svg';
 // import documentIcon from '../../../images/documentIcon.svg';
 import { NavLink, useParams } from 'react-router-dom'
-import { rFetch } from '../../../utils/rFetch.js';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import csvParser from '../../../utils/csvParser.js';
+import { rFetch } from '../../../utils/rFetch';
+import FixedBottomNavigation from '../FixedBottomNavigation';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import csvParser from '../../../utils/csvParser';
 import Dropzone from 'react-dropzone'
 import Swal from 'sweetalert2';
-import InputField from '../../common/InputField.jsx';
-import { metamaskCall } from '../../../utils/metamaskUtils.js';
+import InputField from '../../common/InputField';
+import { metamaskCall } from '../../../utils/metamaskUtils';
 
 const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack, simpleMode}) => {
 	const { address, collectionIndex } = useParams();

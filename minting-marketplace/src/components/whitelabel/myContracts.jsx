@@ -3,11 +3,11 @@ import { useState, useEffect, useCallback } from 'react'
 // React Redux types
 import * as authTypes from '../../ducks/auth/types'
 
-import DeployContracts from './DeployContracts.jsx';
+import DeployContracts from './DeployContracts';
 import setDocumentTitle from '../../utils/setTitle';
 
-import Contract from './Contract.jsx';
-import { rFetch } from '../../utils/rFetch.js';
+import Contract from './Contract';
+import { rFetch } from '../../utils/rFetch';
 
 import { useDispatch, useSelector } from 'react-redux';
 

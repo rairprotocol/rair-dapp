@@ -3,10 +3,10 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
-import BatchMinting from './BatchMinting.jsx';
+import BatchMinting from './BatchMinting';
 import { utils } from 'ethers';
-import blockchainData from '../../utils/blockchainData.js';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import blockchainData from '../../utils/blockchainData';
+import { metamaskCall } from '../../utils/metamaskUtils';
 const MySwal = withReactContent(Swal)
 
 const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {

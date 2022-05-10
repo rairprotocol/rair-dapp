@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import InputField from '../common/InputField.jsx';
+import InputField from '../common/InputField';
 //import setDocumentTitle from '../../utils/setTitle';
-import {rFetch} from '../../utils/rFetch.js';
+import {rFetch} from '../../utils/rFetch';
 import {useSelector} from 'react-redux';
 import { erc721Abi } from '../../contracts'
 import chainData from '../../utils/blockchainData';

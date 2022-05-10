@@ -1,14 +1,14 @@
 import {useState, useEffect, useCallback} from 'react';
-import InputField from '../common/InputField.jsx';
+import InputField from '../common/InputField';
 import { Link, useParams } from "react-router-dom";
-import {rFetch} from '../../utils/rFetch.js';
+import {rFetch} from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import {useSelector} from 'react-redux';
 import { erc721Abi } from '../../contracts'
 import chainData from '../../utils/blockchainData';
 import swal from 'sweetalert2';
 
-import MetadataSender from './metadataSender.jsx';
+import MetadataSender from './metadataSender';
 
 /*
 	"metadata": {

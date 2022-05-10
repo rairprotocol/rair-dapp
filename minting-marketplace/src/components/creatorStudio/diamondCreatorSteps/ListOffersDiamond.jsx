@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
+import FixedBottomNavigation from '../FixedBottomNavigation';
 import { useParams, useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import chainData from '../../../utils/blockchainData.js'
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import { metamaskCall } from '../../../utils/metamaskUtils.js';
-import DiamondOfferRow from './diamondOfferRow.jsx';
+import chainData from '../../../utils/blockchainData'
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import { metamaskCall } from '../../../utils/metamaskUtils';
+import DiamondOfferRow from './diamondOfferRow';
 
 const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber, switchBlockchain, gotoNextStep}) => {
 	const [offerList, setOfferList] = useState([]);

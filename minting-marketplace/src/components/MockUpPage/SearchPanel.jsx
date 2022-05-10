@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import InputField from "../common/InputField.jsx";
+import InputField from "../common/InputField";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { NftList } from "./NftList/NftList.jsx";
-import VideoList from "../video/videoList.jsx";
-import FilteringBlock from "./FilteringBlock/FilteringBlock.jsx";
+import { NftList } from "./NftList/NftList";
+import VideoList from "../video/videoList";
+import FilteringBlock from "./FilteringBlock/FilteringBlock";
 import axios from "axios";
 
 const SearchPanel = ({ primaryColor, textColor }) => {

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import {useSelector} from 'react-redux';
-import colors from '../../../utils/offerLockColors.js'
-import { validateInteger } from '../../../utils/metamaskUtils.js'
-import InputField from '../../common/InputField.jsx'
+import colors from '../../../utils/offerLockColors'
+import { validateInteger } from '../../../utils/metamaskUtils'
+import InputField from '../../common/InputField'
 import {utils} from 'ethers';
 
 const OfferRow = ({index, deleter, name, starts, ends, price, fixed, array, rerender, maxCopies, blockchainSymbol}) => {

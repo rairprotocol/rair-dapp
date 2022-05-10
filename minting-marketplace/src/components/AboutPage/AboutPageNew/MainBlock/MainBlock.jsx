@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 // import { rFetch } from "../../../../utils/rFetch";
 // import { erc721Abi } from "../../../../contracts";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
-import { diamondFactoryAbi } from "../../../../contracts/index.js";
+import { diamondFactoryAbi } from "../../../../contracts/index";
 
 const customStyles = {
   overlay: {

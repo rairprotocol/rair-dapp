@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useStore, Provider } from 'react-redux';
 import Swal from 'sweetalert2';
-import { metamaskCall } from '../../utils/metamaskUtils.js';
+import { metamaskCall } from '../../utils/metamaskUtils';
 import { diamondFactoryAbi } from '../../contracts'
 import { utils, constants } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
-import InputField from '../common/InputField.jsx';
-import BuyTokenModalContent from '../marketplace/BuyTokenModalContent.jsx';
+import InputField from '../common/InputField';
+import BuyTokenModalContent from '../marketplace/BuyTokenModalContent';
 import withReactContent from 'sweetalert2-react-content';
 const rSwal = withReactContent(Swal);
 

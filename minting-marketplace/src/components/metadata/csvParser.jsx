@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import InputField from '../common/InputField.jsx'
-//import InputSelect from '../common/InputSelect.jsx'
+import InputField from '../common/InputField'
+//import InputSelect from '../common/InputSelect'
 
 const Row = ({data}) => {
 	return <details className='row w-100 px-0 mx-0' style={{position: 'relative'}}>
