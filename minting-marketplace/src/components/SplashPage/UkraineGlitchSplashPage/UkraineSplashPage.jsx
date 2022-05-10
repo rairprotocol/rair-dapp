@@ -208,14 +208,9 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const { currentChain, minterInstance } = useSelector((store) => store.contractStore);
   const carousel_match = window.matchMedia("(min-width: 900px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
-  const [openCheckList, setOpenCheckList] = useState(false);
   const [purchaseList, setPurshaseList] = useState(true);
   const ukraineglitchChainId = '0x1'
   const dispatch = useDispatch()
-
-  const toggleCheckList = () => {
-      setOpenCheckList(prev => !prev)
-  }
 
   const togglePurchaseList = () => {
       setPurshaseList(prev => !prev);
@@ -257,7 +252,6 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
           togglePurchaseList={togglePurchaseList}
           toggleCheckList={toggleCheckList}
         />
-        <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
         <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
         <PurchaseChecklist
           toggleCheckList={toggleCheckList}
