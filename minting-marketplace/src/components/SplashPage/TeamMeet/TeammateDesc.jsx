@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState } from 'react';
 
 const TeammateDesc = ({ desc, primaryColor }) => {

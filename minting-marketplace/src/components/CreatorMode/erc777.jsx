@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {useState, useEffect, useCallback} from 'react'
 import * as ethers from 'ethers'
 import { useSelector } from 'react-redux';

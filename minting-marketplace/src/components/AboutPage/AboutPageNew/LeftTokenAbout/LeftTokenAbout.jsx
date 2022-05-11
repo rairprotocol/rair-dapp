@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import DiscordIcon from './../../../SplashPage/images/discord-icon.png';
 

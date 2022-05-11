@@ -1,3 +1,4 @@
+//@ts-nocheck
 // import { useEffect, useState } from 'react';
 import VideoItem from './videoItem';
 // import InputField from '../common/InputField';

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo } from "react";
 import cl from "./Status.module.css";
 

@@ -1,3 +1,4 @@
+//@ts-nocheck
 const csvParser = (data, resultReceiver, searchColumns, delimiter = ',') => {
 	const reader = new FileReader();
 	reader.onload = function (e) {

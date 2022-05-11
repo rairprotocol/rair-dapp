@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo } from "react";
 
 const CurrentTokensComponent = ({

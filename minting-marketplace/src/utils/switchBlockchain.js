@@ -1,3 +1,4 @@
+//@ts-nocheck
 import chainData from './blockchainData';
 
 const web3Switch = async (chainId) => {

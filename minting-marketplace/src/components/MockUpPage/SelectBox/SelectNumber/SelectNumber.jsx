@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { CurrentTokens } from "./CurrentTokens/CurrentTokens";

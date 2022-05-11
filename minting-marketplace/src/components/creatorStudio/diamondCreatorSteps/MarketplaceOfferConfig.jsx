@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
 import { utils /*, BigNumber*/ } from 'ethers';

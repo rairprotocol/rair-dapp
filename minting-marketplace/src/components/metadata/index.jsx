@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useEffect } from 'react'
 //import 'antd/dist/antd.css';
 //import { ContentStep, ContentSteps, ContentButtons, Button } from './styles';

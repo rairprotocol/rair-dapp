@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect } from 'react';
 
 const BatchRow = ({index, deleter, array}) => {

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import reducers from './reducers';
 
 export { getVideos, refreshAction } from './actions';

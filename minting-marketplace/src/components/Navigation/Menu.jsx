@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import "./Menu.css";
 import { useDispatch, useSelector } from 'react-redux';

@@ -1,3 +1,4 @@
+//@ts-nocheck
 // import { useState } from 'react';
 import VideoBg_1 from './../../assets/video-bg_1.png';
 import VideoBg_2 from './../../assets/video-bg_2.png';

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import UnlockVideoItem from '../../UnlockVideos/UnlockVideoItem';
 import "./StaticTiles.css"

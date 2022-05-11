@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect } from 'react';
 import InputField from '../common/InputField';
 import Swal from 'sweetalert2';

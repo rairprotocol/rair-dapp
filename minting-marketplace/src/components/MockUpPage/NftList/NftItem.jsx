@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useCallback, useEffect, memo } from "react";
 import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";

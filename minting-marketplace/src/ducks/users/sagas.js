@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { put, call, takeLatest } from "redux-saga/effects";
 import * as types from "./types";
 

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import * as colorTypes from "./../../../ducks/colors/types";
 import { OnboardingButton } from './../../common/OnboardingButton';

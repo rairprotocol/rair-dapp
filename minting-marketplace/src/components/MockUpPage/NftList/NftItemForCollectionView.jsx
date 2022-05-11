@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, memo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { utils } from "ethers";

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, /*useCallback, useEffect*/ } from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";

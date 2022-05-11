@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
 import { List, ListProfileItem, ListProfileLoading, ProfileButtonBack } from './../NavigationItems/NavigationItems';
 import MobileEditProfile from './MobileEditProfile';

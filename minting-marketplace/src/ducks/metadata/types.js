@@ -1,2 +1,3 @@
+//@ts-nocheck
 export const SHOW_SIDEBAR_TRUE = 'SHOW_SIDEBAR_TRUE'
 export const SHOW_SIDEBAR_FALSE = 'SHOW_SIDEBAR_FALSE'

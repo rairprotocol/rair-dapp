@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import Eth_icon from './../../assets/eth-icon.png';
 import Space_icon from './../../assets/space-icon.png';

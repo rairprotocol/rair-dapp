@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useEffect, useCallback } from "react";
 import InputField from "../common/InputField";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";

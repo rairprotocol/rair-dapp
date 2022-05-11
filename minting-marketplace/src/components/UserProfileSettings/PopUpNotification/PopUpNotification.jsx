@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Popup } from 'reactjs-popup';

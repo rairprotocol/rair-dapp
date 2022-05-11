@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect, useCallback } from "react";
 import { withSentryRouting } from "@sentry/react";
 import { rFetch } from "../../utils/rFetch";

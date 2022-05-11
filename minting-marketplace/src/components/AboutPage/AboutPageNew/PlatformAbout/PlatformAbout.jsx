@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import MuiAccordion from '@mui/material/Accordion';

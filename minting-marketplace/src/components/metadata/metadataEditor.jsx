@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {useState, useEffect, useCallback} from 'react';
 import InputField from '../common/InputField';
 import { Link, useParams } from "react-router-dom";

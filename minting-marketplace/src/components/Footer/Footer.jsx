@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react'
 import { NavLink, /*useParams*/ } from 'react-router-dom';
 import DiscordIcon from './../../images/discord.png'

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useSelector, useStore, Provider } from 'react-redux';
 import BuyTokenModalContent from './BuyTokenModalContent';
 import Swal from 'sweetalert2';

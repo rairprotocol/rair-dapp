@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";

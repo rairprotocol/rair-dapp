@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useEffect } from 'react';
 import Nuts from '../images/nuts-main.png';
 import Metamask from "../images/metamask_logo.png";

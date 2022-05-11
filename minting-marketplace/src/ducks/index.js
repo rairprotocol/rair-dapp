@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 //REDUCERS

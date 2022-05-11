@@ -1,3 +1,4 @@
+//@ts-nocheck
 import BinanceDiamond from '../images/binance-diamond.svg';
 import MaticLogo from '../images/polygon-matic.svg';
 import EthereumLogo from '../images/ethereum-logo.svg';

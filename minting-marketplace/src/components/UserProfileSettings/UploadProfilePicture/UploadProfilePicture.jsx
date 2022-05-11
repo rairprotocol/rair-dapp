@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Edit } from "./Edit/Edit";
 import { Profile } from "./Profile/Profile";

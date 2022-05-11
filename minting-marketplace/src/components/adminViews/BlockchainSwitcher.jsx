@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as contractTypes from '../../ducks/contracts/types';

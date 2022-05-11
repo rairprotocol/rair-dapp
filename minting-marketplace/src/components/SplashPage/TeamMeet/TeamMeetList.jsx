@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import Teammate_1 from '../images/mrlee.jpeg';
 import Teammate_2 from '../images/foundation.png';

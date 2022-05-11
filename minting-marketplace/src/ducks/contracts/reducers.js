@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as types from './types';
 
 import * as ethers from 'ethers'

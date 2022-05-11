@@ -1,3 +1,4 @@
+//@ts-nocheck
 import MetaMaskOnboarding from "@metamask/onboarding";
 // import Swal from "sweetalert2";
 import React, { useState, useEffect, useRef, useCallback } from "react";

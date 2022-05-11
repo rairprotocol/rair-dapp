@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useState } from 'react'
 import { ImageUpload } from '../../UserProfileSettings/UploadProfilePicture/ImageUpload/ImageUpload';
 import { useForm } from 'react-hook-form';

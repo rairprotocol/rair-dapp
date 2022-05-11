@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from "react-router-dom";
 import Swal from 'sweetalert2'

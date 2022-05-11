@@ -1,3 +1,4 @@
+//@ts-nocheck
 import './Carousel.css'
 import Carousel from "react-multi-carousel"
 

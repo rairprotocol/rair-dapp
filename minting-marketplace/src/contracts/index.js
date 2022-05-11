@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as MinterMarketplace from './Minter_Marketplace.json';
 import * as Factory from './RAIR_Token_Factory.json';
 import * as ERC777 from './RAIR777.json';

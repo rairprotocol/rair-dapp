@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo, useCallback } from "react";
 import { ImageUpload } from "../ImageUpload/ImageUpload";
 import { Name } from "../Name/Name";

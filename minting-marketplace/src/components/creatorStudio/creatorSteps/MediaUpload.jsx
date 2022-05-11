@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useEffect, useState, useCallback } from 'react';
 import { rFetch } from '../../../utils/rFetch';
 import { useSelector } from 'react-redux';

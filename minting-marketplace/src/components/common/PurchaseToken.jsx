@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState } from 'react';
 import { useSelector, Provider, useStore } from 'react-redux';
 

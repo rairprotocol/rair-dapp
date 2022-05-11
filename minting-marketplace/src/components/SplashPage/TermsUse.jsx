@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo, useEffect } from "react";
 import cl from "./TermsUse.module.css";
 

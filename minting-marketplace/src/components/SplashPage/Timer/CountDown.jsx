@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo, useCallback, useEffect, useState } from "react";
 import './Countdown.css';
 import moment from 'moment-timezone';

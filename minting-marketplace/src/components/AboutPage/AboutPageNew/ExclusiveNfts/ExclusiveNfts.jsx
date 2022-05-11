@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import NftImage from './../../assets/grayman-matrix.png';

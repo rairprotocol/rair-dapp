@@ -1,3 +1,4 @@
+//@ts-nocheck
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert } from './styles'
 

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo } from "react";
 import cl from "./Timeline.module.css";
 import pic1 from "./img/pic1.png";

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as types from './types';
 
 import headerLogoBlack from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';

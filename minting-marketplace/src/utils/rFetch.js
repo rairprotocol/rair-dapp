@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 import jsonwebtoken from 'jsonwebtoken';

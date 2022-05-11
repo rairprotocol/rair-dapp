@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react'
 import './NFTImages.css';
 import MobileCarouselNfts from '../../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';

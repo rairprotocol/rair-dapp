@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState } from "react";
 import Modal from "../../modal";
 // import BlockMinMax from "../BlockMinMax/BlockMinMax";

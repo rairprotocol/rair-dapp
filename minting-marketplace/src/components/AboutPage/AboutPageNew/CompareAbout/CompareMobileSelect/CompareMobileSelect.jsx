@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import RairLogo from "./../../../assets/rairLogo_blue.png";
 import OpenSea from "./../../../assets/openSea-logo.png";

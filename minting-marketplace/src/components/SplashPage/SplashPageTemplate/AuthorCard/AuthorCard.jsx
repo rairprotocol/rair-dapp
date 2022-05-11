@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import ButtonHelp from "../../PurchaseChecklist/ButtonHelp";
 // import DocumentIcon from "../../../../images/documentIcon.svg";

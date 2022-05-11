@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { put, takeLatest } from "redux-saga/effects";
 import * as types from "./types";
 import * as ethers from "ethers";

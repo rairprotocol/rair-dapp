@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo } from "react";
 // import firstPict from "../assets/Graphics-WEB-2021-01.png";
 // import secondPict from "../assets/Graphics-WEB-2021-02.png";

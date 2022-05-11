@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useStore, Provider } from 'react-redux';
 import Swal from 'sweetalert2';

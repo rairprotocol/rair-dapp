@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react'
 
 const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {

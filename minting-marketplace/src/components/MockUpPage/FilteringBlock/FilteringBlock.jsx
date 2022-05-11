@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
 import "./FilteringBlock.css";
 import ModalBlockchain from "./portal/ModalBlockchain/ModalBlockchain";

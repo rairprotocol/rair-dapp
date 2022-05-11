@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";

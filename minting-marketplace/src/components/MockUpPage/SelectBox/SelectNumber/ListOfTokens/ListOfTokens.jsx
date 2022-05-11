@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useRef, memo, useCallback, useState, useMemo } from "react";
 import { useEffect } from "react";
 import { CurrentTokens } from "../CurrentTokens/CurrentTokens";

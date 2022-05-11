@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {useState, useEffect, useCallback} from 'react';
 import {rFetch} from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';

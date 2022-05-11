@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState } from 'react'
 import InputField from '../common/InputField'
 //import InputSelect from '../common/InputSelect'
