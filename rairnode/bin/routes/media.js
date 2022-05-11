@@ -18,8 +18,8 @@ const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.j
 const {
   generateThumbnails, getMediaData, convertToHLS, encryptFolderContents,
 } = require('../utils/ffmpegUtils.js');
-const { vaultKeyManager } = require('../vault/vaultKeyManager');
-const { vaultAppRoleTokenManager } = require('../vault/vaultAppRoleTokenManager');
+const { vaultKeyManager } = require('../shared_backend_code_generated/vault/vaultKeyManager');
+const { vaultAppRoleTokenManager } = require('../shared_backend_code_generated/vault/vaultAppRoleTokenManager');
 
 module.exports = (context) => {
   const router = express.Router();

@@ -1,5 +1,5 @@
-const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
-const { appSecretManager } = require('./vault/appSecretManager');
+const { vaultAppRoleTokenManager } = require('./shared_backend_code_generated/vault/vaultAppRoleTokenManager');
+const { appSecretManager } = require('./shared_backend_code_generated/vault/appSecretManager');
 
 const port = process.env.PORT;
 
@@ -26,9 +26,9 @@ const config = require('./config');
 const gcp = require('./integrations/gcp');
 const {
   getMongoConnectionStringURI
-} = require('./utils/mongoUtils');
+} = require('./shared_backend_code_generated/mongo/mongoUtils');
 
-const mongoConfig = require('./config/mongoConfig');
+const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
 
 async function main() {
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];

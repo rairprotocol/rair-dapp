@@ -9,13 +9,6 @@ const execPromise = (command, options = {}) => new Promise((resolve, reject) => 
   });
 });
 
-const executePromisesSequentially = ({items, action}) => {
-  return items.reduce((p, item) => {
-     return p.then(() => action(item));
-  }, Promise.resolve()); // initial
-};
-
 module.exports = {
   execPromise,
-  executePromisesSequentially
 }

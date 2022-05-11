@@ -2,11 +2,11 @@ const streamDecrypter = require('./stream-decrypter');
 const mongoose = require('mongoose');
 const HLSServer = require('@rair/hls-server');
 const log = require('./utils/logger')(module);
-const { vaultKeyManager } = require('./vault/vaultKeyManager');
-const { vaultAppRoleTokenManager } = require('./vault/vaultAppRoleTokenManager');
+const { vaultKeyManager } = require('./shared_backend_code_generated/vault/vaultKeyManager');
+const { vaultAppRoleTokenManager } = require('./shared_backend_code_generated/vault/vaultAppRoleTokenManager');
 const {
   getMongoConnectionStringURI
-} = require('./utils/mongoUtils');
+} = require('./shared_backend_code_generated/mongo/mongoUtils');
 
 module.exports = async () => {
   const _mongoose = await mongoose.connect(getMongoConnectionStringURI(), { useNewUrlParser: true, useUnifiedTopology: true })
