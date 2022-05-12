@@ -1,13 +1,14 @@
+//@ts-nocheck
 import {useState, useEffect, useCallback} from 'react';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import chainData from '../../../utils/blockchainData';
-import WorkflowContext from '../../../contexts/CreatorWorkflowContext.js';
-import FixedBottomNavigation from '../FixedBottomNavigation.jsx';
-import CustomFeeRow from '../common/customFeeRow.jsx';
+import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
+import FixedBottomNavigation from '../FixedBottomNavigation';
+import CustomFeeRow from '../common/customFeeRow';
 import {utils} from 'ethers';
-import InputField from '../../common/InputField.jsx';
-import { metamaskCall } from '../../../utils/metamaskUtils.js'; 
+import InputField from '../../common/InputField';
+import { metamaskCall } from '../../../utils/metamaskUtils'; 
 
 const CustomizeFees = ({contractData, correctMinterInstance, setStepNumber, steps, stepNumber, gotoNextStep, goBack, simpleMode}) => {
 	const { textColor, primaryColor } = useSelector(store => store.colorStore);

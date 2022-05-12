@@ -1,8 +1,9 @@
+//@ts-nocheck
 import { useState, useEffect } from 'react';
-import InputField from '../../common/InputField.jsx';
+import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
 import { utils, BigNumber } from 'ethers';
-import { validateInteger } from '../../../utils/metamaskUtils.js';
+import { validateInteger } from '../../../utils/metamaskUtils';
 
 const CustomFeeRow = ({
 	index,
