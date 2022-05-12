@@ -926,3 +926,5 @@
 // }
 
 // export default AboutPage;
+// Used the export {} line to mark it as an external module.
+export {};
