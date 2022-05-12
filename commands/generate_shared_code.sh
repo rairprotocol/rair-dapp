@@ -11,22 +11,12 @@ DIR=$(dirname $0)
 
 SHARED_BACKEND_CODE_SOURCE_DIR=$DIR/../shared_backend_code_source/
 
-###############################################################
-###############################################################
-# Start Rairnode
+function prepend_warning_to_all_files_in_dir {
+  # extract args from function call
+  DIRECTORY_TO_ACT_ON=$1
 
-# Define destination folder
-RAIRNODE_DESTINATION_DIR=$DIR/../rairnode/bin/shared_backend_code_generated/
-
-echo "Removing existing generated folder..."
-rm -rf $RAIRNODE_DESTINATION_DIR
-
-echo "Copying all files to Rairnode destination..."
-# Copy to destination folder
-cp -r $SHARED_BACKEND_CODE_SOURCE_DIR $RAIRNODE_DESTINATION_DIR
-
-# Modify each file in destination with warning at the top of the file
-find $RAIRNODE_DESTINATION_DIR -type f -exec sh -c '
+  # find and modify all files in folder
+  find $DIRECTORY_TO_ACT_ON -type f -exec sh -c '
 echo - Adding warning header to $0
 cat << EOF > $0
 ////////////////////////////////////////////////////////////
@@ -44,8 +34,33 @@ cat << EOF > $0
 $(cat $0)
 EOF
 ' {} \;
+}
+
+function copy_shared_code {
+  DESTINATION_DIR=$1
+
+  echo "Removing existing generated folder..."
+  rm -rf $DESTINATION_DIR
+
+  echo "Copying all files to Rairnode destination..."
+  # Copy to destination folder
+  cp -r $SHARED_BACKEND_CODE_SOURCE_DIR $DESTINATION_DIR
+
+  prepend_warning_to_all_files_in_dir $DESTINATION_DIR
+}
+
+###############################################################
+# Start Rairnode
+RAIRNODE_DESTINATION_DIR=$DIR/../rairnode/bin/shared_backend_code_generated/
+copy_shared_code $RAIRNODE_DESTINATION_DIR
 # End Rairnode
 ###############################################################
+
+###############################################################
+# Start Blockchain network
+BLOCKCHAIN_NETWORK_DESTINATION_DIR=$DIR/../blockchain-networks-service/bin/shared_backend_code_generated/
+copy_shared_code $BLOCKCHAIN_NETWORK_DESTINATION_DIR
+# End Blockchain network
 ###############################################################
 
 # Copy this pattern for each shared code destination desitnation
