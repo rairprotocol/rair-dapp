@@ -17,6 +17,9 @@ variable "applications" {
   default = {
     rairnode: {
       vault_secrets_dirname: "rairnode"
+    },
+    blockchain-network: {
+      vault_secrets_dirname: "blockchain-network"
     }
   }
 }
