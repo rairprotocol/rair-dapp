@@ -1,3 +1,20 @@
+.share-button {
+    font-size: 20px;
+    padding: 10px 53px;
+    border-radius: 16px;
+    border: 1px solid #D37AD6;
+    transition: .3s all ease;
+    color: #fff;
+}
+
+.share-button:hover {
+    background:  var(--stimorol-hover) !important;
+}
+
+.share-button:focus {
+    background:  var(--stimorol-click) !important;
+}
+
 .share-pop-up {
     position: absolute;
     width: 164px;

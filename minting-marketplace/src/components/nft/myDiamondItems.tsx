@@ -14,23 +14,31 @@ const TokenLayout = ({item, openModal, setSelectedData}) => {
 				openModal();
 				setSelectedData(item);
 			}}
-			style={{ width: "291px", height: "291px" }}
-			className="p-1 my-1 col-2" >
-		<div
-			className="w-100 bg-my-items p-2"
 			style={{
-				maxWidth: "291px",
-				height: "291px",
 				cursor: "pointer",
 				backgroundImage: `url(${
 					item?.metadata?.image || defaultImg
 				})`,
 				backgroundColor: `var(--${primaryColor}-transparent)`,
-				overflow: "hidden",
+				backgroundSize: "cover",
+				backgroundRepeat: "no-repeat",
+				// overflow: "hidden",
 				position: 'relative'
-			}} >
+			}}
+			className="m-1 my-1 col-2 my-item-element" >
+		<div
+			className="w-100 bg-my-items p-2"
+			 >
 			<div style={{
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+				background: "var(--stimorol)",
 				position: 'absolute',
+				width: "35px",
+				height: "35px",
+				paddingTop: "10px",
+				borderRadius: "10px",
 				top: 10,
 				left: 10
 			}}>
@@ -48,7 +56,7 @@ const TokenLayout = ({item, openModal, setSelectedData}) => {
 					<br />
 				</span>
 				<small className="description">
-					{item.contract}
+					{item.contract.slice(0, 5) + "...." + item.contract.slice(item.contract.length - 4)}
 				</small>
 				<div
 					className="description-small"
@@ -136,7 +144,7 @@ const MyDiamondItems = (props) => {
 
 	useEffect(fetchDiamondData, [fetchDiamondData])
 
-	return <div className='row'>
+	return <div className='my-items-product-wrapper row'>
 		<h5>{status}</h5>
 		{deploymentAddresses.map((item, index) => {
 			return <ItemsForContract key={index} item={item} {...props} />

@@ -13,7 +13,7 @@ const TitleCollection = ({
   someUsersData,
   selectedData,
 }) => {
-  const { primaryColor } = useSelector(store => store.colorStore)
+  const { primaryColor } = useSelector(store => store.colorStore);
 
   const { tokenId } = useParams();
   const [open, setOpen] = useState(false);
@@ -37,9 +37,11 @@ const TitleCollection = ({
           <h2>{title === "none" ? `#${tokenId}` : title}</h2>
           <div>
             <button
-              className="block-btn-share"
               onClick={handleClickOpen}
-              style={{ color: `${primaryColor === "rhyno" ? "black" : "white"}` }}
+              className="share-button"
+              style={{
+                background: `${primaryColor === "rhyno" ? "var(--stimorol)" : "none"}`
+              }}
             >
               Share
             </button>
@@ -75,9 +77,11 @@ const TitleCollection = ({
           <h2>{title === "none" ? `#${tokenId}` : title}</h2>
           <div>
             <button
-              className="block-btn-share"
               onClick={handleClickOpen}
-              style={{ color: `${primaryColor === "rhyno" ? "black" : "white"}` }}
+              className="share-button"
+              style={{
+                background: `${primaryColor === "rhyno" ? "var(--stimorol)" : "none"}`
+              }}
             >
               Share
             </button>

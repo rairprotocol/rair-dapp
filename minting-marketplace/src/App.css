@@ -519,7 +519,7 @@ a:hover {
     width: 291px;
 }
 
-.description-wrapper-video {
+/* .description-wrapper-video {
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     background-color: rgba(34, 32, 33, 0.5);
@@ -546,7 +546,6 @@ a:hover {
     background-color: rgba(34, 32, 33, 0.5);
     color: white;
     position: relative;
-    /* top: -4.5rem; */
     top: -5.5rem;
     height: 87px;
     padding: 8px 0px 8px 16px;
@@ -564,19 +563,13 @@ a:hover {
 .description-wrapper:not(:hover),
 .description-wrapper-video:not(:hover) {
     transition-duration: 0.5s;
-}
+} */
 
-.description-title {
+/* .description-title {
     font-weight: 700;
     font-size: 16px;
     line-height: 28px;
-}
-
-.description {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 28px;
-}
+} */
 
 
 /* for videoList input */
@@ -595,7 +588,7 @@ a:hover {
 }
 
 .input-search-wrapper {
-    max-width: 86%;
+    /* max-width: 86%; */
     display: flex;
 }
 
@@ -756,12 +749,6 @@ i.fas-custom {
     z-index: 1; */
 }
 
-.blockchain-img {
-    width: 24px;
-    transform: scale(1);
-    margin-right: 8px;
-}
-
 .description-big {
     display: none;
     cursor: pointer;
@@ -777,18 +764,7 @@ i.fas-custom {
     color: #d779c6;
 }
 
-.pic-description-wrapper:hover .description-big {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    top: 107px;
-    width: 203px;
-    left: 67%;
-    margin-left: -150px;
-}
-
-.pic-description-wrapper:hover {
+/* .pic-description-wrapper:hover {
     justify-content: flex-start;
     transition-duration: 0.5s;
     z-index: 1;
@@ -813,15 +789,15 @@ i.fas-custom {
     transform: scale(2);
     margin-top: -20px;
     padding-bottom: 16px;
-}
+} */
 
 .description-small {
     display: block;
 }
 
-.pic-description-wrapper:hover .description-small {
+/* .pic-description-wrapper:hover .description-small {
     display: none;
-}
+} */
 
 
 /* drop-down */
@@ -1004,19 +980,6 @@ i.fas-custom {
     /* background-blend-mode: overlay; */
 }
 
-.my-items-description-wrapper {
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-    background-color: rgba(34, 32, 33, 0.5);
-    color: white;
-    position: relative;
-    top: 212px;
-    left: -4px;
-    height: 72px;
-    width: 292px;
-    padding: 8px 0px 8px 16px;
-}
-
 
 /* .my-items-description-wrapper:hover{
   height: 18rem;
@@ -1030,14 +993,6 @@ i.fas-custom {
   transition-duration: 0.5s;
 } */
 
-.my-items-pic-description-wrapper {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-content: flex-start;
-}
 
 .my-items-blockchain-img {
     width: 25px;

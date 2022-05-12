@@ -11,6 +11,23 @@
     background-repeat: no-repeat;
 }
 
+.nft-item-collection {
+    width: 291px;
+    height: 291px;
+    border: none;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+#nft-data-page-wrapper .single-token-block-img {
+    margin: auto;
+    width: 604px;
+    height: 45rem;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 #nft-data-page-wrapper .single-token-block-video {
     width: 600px;
     height: 600px;
@@ -18,14 +35,20 @@
 }
 
 #nft-data-page-wrapper .nft-data-content {
-    max-width: 1600px;
-    margin: auto;
+    max-width: 85vw;
     border-radius: 16px;
     padding: 24px 0;
 }
 
 .nft-collection {
     padding: 0 10px;
+}
+
+.brief-info-nftItem {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nft-single-price-range {
@@ -93,9 +116,379 @@
     z-index: 1;
 }
 
+.text-start.video-wrapper.nft-item-collection .description-collectionItem-hover {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: blue;
+    width: 100%;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    transition: 0.3s;
+}
+
+.text-start.video-wrapper.nft-item-collection .description-collectionItem-hover:hover {
+    height: 100%;
+    transition: all 1s ease;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.nft-item-collection .description-wrapper {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    background-color: rgba(34, 32, 33, 0.5);
+    backdrop-filter: blur(2px);
+    color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 87px;
+    width: 100%;
+    padding: 10px 10px;
+}
+
+.nft-item-collection .description-wrapper:hover {
+    height: 100%;
+    /* top: -17.35rem; */
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    transition-duration: 0.5s;
+}
+
+.nft-item-collection .description-wrapper:not(:hover),
+.nft-item-collection .description-wrapper-video:not(:hover) {
+    transition-duration: 0.5s;
+}
+
+.nft-item-collection .description-title {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 28px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.nft-item-collection .collection-block-price {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.nft-item-collection .description-wrapper:hover .collection-block-price {
+    display: none;
+}
+
+.nft-item-collection .collection-block-price img {
+    width: 16px;
+    height: auto;
+    margin-right: 8px;
+}
+
+.description-wrapper .collection-block-user-creator {
+    display: flex;
+    margin-top: 5px;
+}
+
+.description-wrapper .collection-block-user-creator h5 {
+    font-size: 12px;
+    margin-left: 6px;
+    margin-top: 2px;
+}
+
+.description-wrapper .collection-block-user-creator img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+
+/* hover effect for description nft*/
+
+.description-wrapper-video {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    background-color: rgba(34, 32, 33, 0.5);
+    color: white;
+    position: relative;
+    top: -3.7rem;
+    height: 59px;
+    padding: 0px 0px 8px 16px;
+}
+
+.description-wrapper-video:hover {
+    padding-top: 1rem;
+    height: 17.35rem;
+    top: -17.35rem;
+    margin-bottom: -16.35rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    transition-duration: 0.5s;
+}
+
+/* .description-wrapper {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    background-color: rgba(34, 32, 33, 0.5);
+    backdrop-filter: blur(2px);
+    color: white;
+    position: relative;
+    height: 87px;
+    padding: 8px 0px 8px 16px;
+}
+
+.description-wrapper:hover {
+    height: 17.35rem;
+    top: -17.35rem;
+    margin-bottom: -16.35rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    transition-duration: 0.5s;
+}
+
+.description-wrapper:not(:hover),
+.description-wrapper-video:not(:hover) {
+    transition-duration: 0.5s;
+} */
+
+.description {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 28px;
+}
+
+.pic-description-wrapper:hover .description-big {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    left: 0;
+}
+
+.pic-description-wrapper:hover .description-big .container-nft-fullPrice {
+   
+}
+
+.pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+    text-align: center;
+    font-size: 24px;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.pic-description-wrapper:hover {
+    justify-content: flex-start;
+    transition-duration: 0.5s;
+    z-index: 1;
+}
+/* 
+.pic-description-wrapper:hover .description-price {
+    font-size: 26px;
+    text-align: center;
+    line-height: 1.1;
+} */
+
+.pic-description-wrapper:hover .description-price-unlockables-page {
+    font-size: 17px;
+    text-align: center;
+    line-height: 1.1;
+}
+
+.pic-description-wrapper:hover .description-more {
+    margin-top: 2vw;
+}
+
+.pic-description-wrapper:hover .blockchain-img {
+    /* transform: scale(2); */
+    /* margin-top: -20px; */
+    padding-bottom: 10px;
+}
+
+.blockchain-img {
+    width: auto;
+    height: 50px;
+    /* transform: scale(1); */
+    /* margin-right: 8px; */
+}
+
+.description-small {
+    display: block;
+}
+
+.pic-description-wrapper:hover .description-small {
+    display: none;
+}
+
+@media screen and (max-width: 1500px) {
+    .nft-item-collection {
+        height: 20.5vw;
+        width: 20.5vw;
+    }
+
+    .nft-item-collection.standartSize {
+        width: 291px;
+        height: 291px;
+    }
+
+    .list-button-wrapper {
+        margin-left: 1.5vw;
+    }
+
+    .col-6.text-left.main {
+        margin-left: 3vw;
+    }
+
+    .container-search, .category-wrapper {
+        padding-left: 1.5vw;
+    }
+}
+
 @media screen and (max-width: 1230px) {
     .nftlist-unlockable-videos {
         justify-content: center;
+    }
+
+    .list-button-wrapper {
+        margin-left: 0vw;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .list-button-wrapper {
+        width: 95vw;
+        margin-left: -1rem;
+    }
+
+    .nft-item-collection {
+        height: 23vw;
+        width: 23vw;
+    }
+
+    .col.description-wrapper.pic-description-wrapper.wrapper-for-collection-view {
+        display: flex;
+        justify-content: center;
+    }
+
+    .pic-description-wrapper:hover .blockchain-img {
+        margin-top: -40px;
+    }
+
+    .pic-description-wrapper:hover .description-big {
+        top: 50%;
+    }
+
+    .pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+        font-size: 20px;
+    }
+
+    .blockchain-img {
+        height: 45px;
+    }
+
+    .description-wrapper:hover {
+        height: calc(22vw - 10px);
+    }
+
+    .description-title,
+    .description-small .description {
+        /* font-size: calc(9px + .3vw); */
+        text-align: center;
+        line-height: 14px;
+    }
+
+    .pic-description-wrapper:hover .description-more {
+        margin-top: 20px;
+    }
+
+    .description-wrapper:hover .blockchain-img {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .blockchain-img {
+
+    }
+
+    .pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+        font-size: 16px;
+    }
+
+    .description-more {
+        font-size: 14px;
+    }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1200px) {
+    .wrapper-collection .list-button-wrapper {
+        margin-left: -2.5rem
+    }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1200px) {
+    .pic-description-wrapper:hover .description-price-unlockables-page {
+        font-size: calc(9px + .3vw);
+        word-wrap: break-word;
+        line-height: 20px;
+        text-align: center;
+    }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1077px) {
+    .list-button-wrapper {
+        width: 95vw;
+        margin-left: 1rem;
+    }
+
+    .nft-item-collection .description-wrapper:not(:hover) .brief-info-nftItem {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nft-item-collection .description-wrapper:not(:hover) {
+        padding: 0px;
+        height: 90px;
+    }
+
+    .nft-item-collection .description-wrapper:not(:hover) .description-item-name {
+        align-items: center !important;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    #nft-data-page-wrapper .nft-data-content {
+        max-width: 100%;
+    }
+
+    .blockchain-img {
+        height: 40px;
+    }
+
+    .pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+        font-size: 16px;
+    }
+
+    .description-more {
+        font-size: 14px;
+    }
+
+    .nft-item-collection .description-wrapper {
+        padding: 5px 10px;
+    }
+
+    .pic-description-wrapper:hover .blockchain-img {
+        padding-bottom: 18px;
+    }
+
+    .pic-description-wrapper:hover .description-more {
+        margin-top: 12px;
     }
 }
 
@@ -108,15 +501,84 @@
 }
 
 @media screen and (max-width: 900px) {
+    .list-button-wrapper {
+        width: 100%;
+        margin-left: 0rem;
+        justify-content: center;
+    }
+
+    .nft-item-collection {
+        height: calc(10vw + 240px);
+        width: calc(10vw + 240px);
+    }
+
     .nftlist-unlockable-videos .nft-unlockable-videoItem {
         cursor: pointer;
         display: flex;
         border-radius: 16px;
         min-width: 80vw;
     }
+
+    .description-wrapper {
+        height: 10vw;
+    }
+
+    .col.description-wrapper.pic-description-wrapper.wrapper-for-collection-view {
+        display: flex;
+        justify-content: center;
+    }
+
+    .description-title {
+        text-align: center;
+    }
+
+    .description-wrapper:hover .blockchain-img {
+        margin-right: 0;
+    }
+
+    .blockchain-img {
+        height: 50px;
+    }
+
+    .pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+        font-size: 24px;
+    }
+
+    .description-more {
+        font-size: 16px;
+    }
+
+    .nft-item-collection .description-wrapper {
+        padding: 10px 10px;
+    }
+
+    .pic-description-wrapper:hover .blockchain-img {
+        padding-bottom: 10px;
+    }
+
+    .pic-description-wrapper:hover .description-more {
+        margin-top: 12px;
+    }
+
+    .pic-description-wrapper:hover .description-big {
+        top: 40%;
+        width: 98%;
+    }
+
+    .pic-description-wrapper:hover .description-more {
+        margin-top: 60px;
+    }
 }
 
+@media screen and (max-width: 835px) {
+    .description-wrapper:hover {
+        /* top: -39vw; */
+    }
+}
+
+
 @media screen and (max-width: 767px) {
+
     #nft-data-page-wrapper .single-token-block-img {
         width: 100%;
         height: 400px;
@@ -134,6 +596,12 @@
 
     #nft-data-page-wrapper .nft-data-content {
         padding: 30px 15px;
+    }
+}
+
+@media screen and (max-width: 720px) {
+    .description-wrapper:hover {
+        /* top: -43.5vw; */
     }
 }
 
@@ -156,11 +624,56 @@
     .nft-unlockable-videoItem .nft-unlockable-contentItem p {
         font-size: 16px;
     }
-    
+
     .nft-unlockable-videoItem .nft-unlockable-imgContent p {
         font-size: 14px;
     }
 
+}
+
+@media screen and (min-width: 550px) and (max-width: 670px) {
+    .pic-description-wrapper:hover .description-price-unlockables-page {
+        font-size: calc(10px + .4vw);
+        word-wrap: break-word;
+        line-height: 20px;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .nft-item-collection {
+        height: calc(10vw + 200px);
+        width: calc(10vw + 200px);
+    }
+
+    .description-wrapper:hover {
+        /* height: calc(10vw + 200px); */
+        /* top: -40vw; */
+    }
+
+
+    .pic-description-wrapper:hover .description-more {
+        margin-top: 25px;
+    }
+
+    .description-title,
+    .description-small .description {
+        font-size: calc(10px + .3vw);
+        text-align: center;
+    }
+
+    .description-small .description {
+        line-height: 10px;
+    }
+
+    .pic-description-wrapper {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 620px) {
+    .description-wrapper:hover {
+        /* top: -42vw; */
+    }
 }
 
 @media screen and (max-width: 600px) {
@@ -172,9 +685,105 @@
     .nft-unlockable-videoItem .nft-unlockable-contentItem p {
         font-size: 14px;
     }
-    
+
     .nft-unlockable-videoItem .nft-unlockable-imgContent p {
         font-size: 12px;
+    }
+
+    .pic-description-wrapper:hover .description-big {
+        width: 97%;
+    }
+
+    .pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+        font-size: 20px;
+    }
+    
+    .pic-description-wrapper:hover .blockchain-img {
+        margin-top: -30px;
+    }
+}
+
+@media screen and (max-width: 585px) {
+    .description-wrapper:hover {
+        /* top: -44vw; */
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .nft-item-collection {
+        height: 80vw;
+        width: 80vw;
+    }
+
+    .description-wrapper {
+        /* top: -4.5rem; */
+        /* top: -15vw; */
+        height: 15vw;
+    }
+
+    .description-wrapper:hover {
+        /* height: 100%; */
+        /* top: -77vw; */
+        /* margin-bottom: -16.35rem; */
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        transition-duration: 0.5s;
+    }
+
+    .description-wrapper:hover .blockchain-img {
+        margin-right: 0;
+    }
+
+    .pic-description-wrapper:hover {
+        justify-content: center;
+    }
+
+    .description-title {
+        font-size: calc(12px + .5vw);
+        text-align: center;
+    }
+
+    .pic-description-wrapper:hover .description-big {
+        width: 98%;
+    }
+
+    .pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+        font-size: 24px;
+    }
+    
+    .pic-description-wrapper:hover .blockchain-img {
+        margin-top: -30px;
+    }
+
+    .pic-description-wrapper:hover .description-more {
+        margin-top: 50px;
+    }
+
+    .pic-description-wrapper .description-big .blockchain-img {
+        height: 70px;
+    }
+
+    .description-more {
+        font-size: 18px;
+    }
+
+    .nft-item-collection .description-title {
+        font-size: 18px;
+    }
+
+    .description-wrapper .collection-block-user-creator img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .description-wrapper .collection-block-user-creator h5 {
+        font-size: 15px;
+        margin-left: 10px;
+        margin-top: 5px;
+    }
+
+    .nft-item-collection .description-wrapper {
+        padding: 15px;
     }
 }
 
@@ -191,5 +800,80 @@
     .nft-collection .react-player__preview {
         width: 100% !important;
         height: 250px !important;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .description-title {
+        /* font-size: calc(12px - .2vw); */
+    }
+
+    .description-small .description {
+        /* font-size: calc(12px - .2vw); */
+    }
+
+    .description-wrapper {
+        /* top: -20vw; */
+        /* height: 20vw; */
+    }
+
+    .description-wrapper:hover .description-title,
+    .description-wrapper:hover .description-small .description {
+        font-size: calc(12px + .2vw);
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .nft-item-collection .description-title {
+        font-size: 14px;
+    }
+
+    .description-wrapper .collection-block-user-creator img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    .pic-description-wrapper:hover .description-price-unlockables-page {
+        font-size: calc(14px - .2vw);
+        line-height: 20px;
+        word-break: break-all;
+    }
+
+    .pic-description-wrapper:hover .description-more {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+    .pic-description-wrapper .description-big .blockchain-img {
+        height: 35px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .pic-description-wrapper .description-big .container-nft-fullPrice, .description.description-price {
+        font-size: 18px;
+    }
+
+    .pic-description-wrapper:hover .description-big {
+        padding: 0 10px;
+        margin-top: 5px;
+    }
+
+    .nft-item-collection .description-wrapper:not(:hover) .brief-info-nftItem {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nft-item-collection .description-wrapper:not(:hover) {
+        padding: 0px;
+        height: 90px;
+    }
+
+    .nft-item-collection .description-wrapper:not(:hover) .description-item-name {
+        align-items: center !important;
     }
 }

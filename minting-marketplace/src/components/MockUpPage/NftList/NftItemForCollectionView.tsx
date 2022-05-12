@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { utils } from "ethers";
 import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
+import defaultImage from "./../assets/defultUser.png";
 import ReactPlayer from "react-player";
 
 const NftItemForCollectionViewComponent = ({
@@ -34,6 +35,9 @@ const NftItemForCollectionViewComponent = ({
   tokenData,
   totalCount,
   product,
+  someUsersData,
+  userName,
+  tokenDataLength
 }) => {
   const params = useParams();
   const history = useHistory();
@@ -92,137 +96,204 @@ const NftItemForCollectionViewComponent = ({
           .formatEther(
             samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
           )
-          .toString()} ${chainDataFront[blockchain]?.name}`;
+          .toString().slice(0, 4)} ${chainDataFront[blockchain]?.name}`;
       }
       // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
 
-      if(maxPriceF && minPriceF && maxPriceF !== Infinity  &&  minPriceF !== Infinity){
+      if (maxPriceF && minPriceF && maxPriceF !== Infinity && minPriceF !== Infinity) {
         return `${utils
           .formatEther(
             minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
           )
-          .toString()} 
+          .toString().slice(0, 4)} 
           – 
           ${utils
             .formatEther(
               maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
             )
-            .toString()} 
-          ${chainDataFront[blockchain]?.name}`;
+            .toString().slice(0, 5)} 
+          ${chainDataFront[blockchain]?.name}`
       }
-      
+
     }
   }
 
+  function fullPrice() {
+    let maxPriceF = maxPrice;
+    let minPriceF = minPrice;
+
+    if (maxPrice && minPrice) {
+      if (maxPrice === minPrice) {
+        const samePrice = maxPrice;
+        // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
+        return `${utils
+          .formatEther(
+            samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
+          )} ${chainDataFront[blockchain]?.name}`;
+      }
+      // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
+
+      if (maxPriceF && minPriceF && maxPriceF !== Infinity && minPriceF !== Infinity) {
+        return `${utils
+          .formatEther(
+            minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
+          )} 
+          – 
+          ${utils
+            .formatEther(
+              maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
+            )} 
+          ${chainDataFront[blockchain]?.name}`
+      }
+
+    }
+  }
+
+  let className = "col-12 p-1 col-sm-6 col-md-4 col-lg-3 text-start video-wrapper nft-item-collection";
+
+  if (tokenDataLength < 4) {
+    className += " standartSize";
+  }
+
   return (
-    <div>
+
+    <div className={className}>
       <div
-        className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
+        onClick={() => {
+          if (!metadata?.animation_url) RedirectToMockUp();
+        }}
+        className="col-12 rounded"
         style={{
-          height: "291px",
-          width: "291px",
-          border: "none",
-          backgroundColor: "transparent",
-          overflow: "hidden",
+          top: 0,
+          position: "relative",
+          height: "100%",
+          cursor: "pointer",
         }}
       >
-        <div
-          onClick={() => {
-            if (!metaDataProducts?.metadata?.animation_url) RedirectToMockUp();
-          }}
-          className="col-12 rounded"
-          style={{
-            top: 0,
-            position: "relative",
-            height: "96%",
-            cursor: "pointer",
-          }}
-        >
-          {metaDataProducts?.metadata?.animation_url && (
-            <div onClick={handlePlaying} className="btn-play">
-              {playing ? (
-                <div>
-                  <i className="fas fa-pause"></i>
-                </div>
-              ) : (
-                <div>
-                  <i className="fas fa-play"></i>
-                </div>
-              )}
-            </div>
-          )}
-          {metaDataProducts?.metadata?.animation_url ? (
-            <div
-              style={{
-                borderRadius: "16px",
-                overflow: "hidden",
-              }}
-            >
-              <ReactPlayer
-                alt="thumbnail"
-                url={`${metaDataProducts.metadata?.animation_url}`}
-                light={
-                  metaDataProducts.metadata?.image
-                    ? metaDataProducts.metadata?.image
-                    : pict
-                }
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                }}
-                autoPlay={false}
-                className="col-12 h-100 w-100"
-                onReady={handlePlaying}
-                playing={playing}
-                onEnded={handlePlaying}
-              />
-            </div>
-          ) : (
-            <img
+        {metadata?.animation_url && (
+          <div onClick={handlePlaying} className="btn-play">
+            {playing ? (
+              <div>
+                <i className="fas fa-pause"></i>
+              </div>
+            ) : (
+              <div>
+                <i className="fas fa-play"></i>
+              </div>
+            )}
+          </div>
+        )}
+        {metadata?.animation_url ? (
+          <div
+            style={{
+              borderRadius: "16px",
+              overflow: "hidden",
+            }}
+          >
+            <ReactPlayer
               alt="thumbnail"
-              src={
-                // metaDataProducts?.metadata?.image
+              url={`${metadata?.animation_url}`}
+              light={
                 metadata?.image
-                  ? // ? metaDataProducts?.metadata?.image
-                    metadata?.image
+                  ? metadata?.image
                   : pict
               }
               style={{
                 position: "absolute",
                 bottom: 0,
                 borderRadius: "16px",
-                objectFit: "contain",
+                overflow: "hidden",
               }}
+              autoPlay={false}
               className="col-12 h-100 w-100"
+              onReady={handlePlaying}
+              playing={playing}
+              onEnded={handlePlaying}
             />
-          )}
-          {<SvgKey />}
-          {offer === 0 ? (
-            <SvgKey color={"#E4476D"} />
-          ) : offer === 1 ? (
-            <SvgKey color={"#CCA541"} />
-          ) : (
-            <SvgKey color={"silver"} />
-          )}
-        </div>
-        <div className="col description-wrapper pic-description-wrapper wrapper-for-collection-view">
-          <span className="description-title">
-            {metadata?.name === "none" ? contract : metadata?.name}
+          </div>
+        ) : (
+          <img
+            alt="thumbnail"
+            src={
+              // metaDataProducts?.metadata?.image
+              metadata?.image
+                ? // ? metaDataProducts?.metadata?.image
+                metadata?.image
+                : pict
+            }
+            style={{
+              position: "absolute",
+              bottom: 0,
+              borderRadius: "16px",
+              objectFit: "contain",
+            }}
+            className="col-12 h-100 w-100"
+          />
+        )}
+        {<SvgKey />}
+        {offer === 0 ? (
+          <SvgKey color={"#E4476D"} />
+        ) : offer === 1 ? (
+          <SvgKey color={"#CCA541"} />
+        ) : (
+          <SvgKey color={"silver"} />
+        )}
 
-            {/* {contract} */}
-            {/* {contract.slice(0, 14)} */}
-            {/* {contract.length > 12 ? "..." : ""} */}
-            <br />
-          </span>
-          {/* <span className="description"> */}
-          {/* {ownerAddress} */}
-          {/* {ownerAddress.slice(0, 7)} */}
-          {/* {ownerAddress.length > 10 ? "..." : ""} */}
-          {/* <br></br> */}
-          {/* </span> */}
-          <div
+        {/* <div className="description-collectionItem-hover">
+            {metadata?.name === "none" ? contract : metadata?.name}
+          </div> */}
+        <div className="col description-wrapper pic-description-wrapper wrapper-for-collection-view">
+          <div className="description-title">
+            <div className="description-item-name"
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start"
+              }}
+            >
+              {/* {"#" + index} */}
+              {metadata?.name === "none" ? "#" + index : metadata?.name}
+              <div
+                className="brief-infor-nftItem"
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}
+              >
+                {/* {metadata?.name === "none" ? contract : metadata?.name} */}
+                <div>
+                  {
+                    someUsersData ? <div className="collection-block-user-creator">
+                      <img
+                        src={someUsersData.avatar ? someUsersData.avatar : defaultImage}
+                        alt="user"
+                      />
+                      <h5 style={{ wordBreak: "break-all" }}>
+                        {someUsersData.nickName ? someUsersData.nickName : userName.slice(0, 5) + "...." + userName.slice(userName.length - 4)}
+                      </h5>
+                    </div> : <div className="collection-block-user-creator">
+                      <img
+                        src={defaultImage}
+                        alt="user"
+                      />
+                      <h5 style={{ wordBreak: "break-all" }}>
+                        {userName && userName.slice(0, 5) + "...." + userName.slice(userName.length - 4)}
+                      </h5>
+                    </div>
+                  }
+                </div>
+                <div className="collection-block-price">
+                  <img src={chainDataFront[blockchain]?.image} alt="blockchain" />
+                  {checkPrice()}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* <div
             className="description-small"
             style={{
               paddingRight: "16px",
@@ -236,7 +307,6 @@ const NftItemForCollectionViewComponent = ({
               alt=""
             />
             <span className="description ">
-              {/* {minPrice} {chainDataFront[blockchain]?.name}{" "} */}
               {utils
                 .formatEther(
                   minPrice !== Infinity && minPrice !== undefined ? minPrice : 0
@@ -244,17 +314,17 @@ const NftItemForCollectionViewComponent = ({
                 .toString()}{" "}
               {chainDataFront[blockchain]?.name}
             </span>
-          </div>
+          </div> */}
           <div onClick={RedirectToMockUp} className="description-big">
-            <img
-              className="blockchain-img"
-              src={`${chainDataFront[blockchain]?.image}`}
-              alt=""
-            />
+            <div>
+              <img
+                className="blockchain-img"
+                src={`${chainDataFront[blockchain]?.image}`}
+                alt=""
+              />
+            </div>
             <span className="description description-price description-price-unlockables-page">
-              {checkPrice()}
-              {/* {minPrice} - {maxPrice} {chainDataFront[blockchain]?.name} */}
-              {/* {minPrice} - {maxPrice} ETH{" "} */}
+              {fullPrice()}
             </span>
             <span className="description-more">View item</span>
           </div>

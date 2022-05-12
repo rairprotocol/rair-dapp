@@ -17,6 +17,7 @@ import InputField from "../common/InputField";
 import FilteringBlock from "../MockUpPage/FilteringBlock/FilteringBlock";
 import ModalItem from "../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem";
 import chainDataFront from "../MockUpPage/utils/blockchainDataFront";
+import './MyItems.css';
 
 const MyItems = (props) => {
   const dispatch = useDispatch();
@@ -115,22 +116,22 @@ const MyItems = (props) => {
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
-              width: "100%",
             }}
             customClass="form-control input-styled my-items-search"
           />
           <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
           <FilteringBlock
+            primaryColor={primaryColor}
             setSortItem={setSortItem}
             sortItem={sortItem}
             isFilterShow={false}
           />
         </div>
       </div>
-      <div className="my-items-product-wrapper row px-0 mx-0">
+      <div className="my-items-product-wrapper row">
         {filteredData.length > 0 ? (
           filteredData.map((item, index) => {
-          // tokens.map((item, index) => {
+            // tokens.map((item, index) => {
             return (
               <div
                 onClick={() => {
@@ -138,23 +139,19 @@ const MyItems = (props) => {
                   setSelectedData(item);
                 }}
                 key={index}
-                style={{ width: "291px", height: "291px" }}
-                className="p-1 my-1 col-2"
+                className="m-1 my-1 col-2 my-item-element"
+                style={{
+                  //   border: `solid 1px ${textColor}`,
+                  backgroundImage: `url(${
+                    // chainData[item?.blockchain]?.image
+                    item.metadata.image || defaultImg
+                    })`,
+                  backgroundColor: `var(--${primaryColor}-transparent)`,
+                  // overflow: "hidden",
+                }}
               >
                 <div
-                  className="w-100 bg-my-items p-2"
-                  style={{
-                    maxWidth: "291px",
-                    height: "291px",
-                    cursor: "pointer",
-                    //   border: `solid 1px ${textColor}`,
-                    backgroundImage: `url(${
-                      // chainData[item?.blockchain]?.image
-                      item.metadata.image || defaultImg
-                    })`,
-                    backgroundColor: `var(--${primaryColor}-transparent)`,
-                    overflow: "hidden",
-                  }}
+                  className="w-100 bg-my-items"
                 >
                   {/* <small style={{ fontSize: "0.7rem" }}>
                       {item.contract}:{item.uniqueIndexInContract}
@@ -162,11 +159,14 @@ const MyItems = (props) => {
                   {/* <br /> */}
 
                   <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
-                    <span className="description-title">
-                      {item.metadata ? (
-                        <>
-                          {/* <div className="w-100"> */}
-                          {/* <img
+                    <div className="container-blue-description"
+                      style={{ color: "#fff" }}
+                    >
+                      <span className="description-title">
+                        {item.metadata ? (
+                          <>
+                            {/* <div className="w-100"> */}
+                            {/* <img
                             alt="NFT"
                             src={item.metadata.image}
                             style={{
@@ -175,47 +175,48 @@ const MyItems = (props) => {
                               maxHeight: "30vh",
                             }}
                           /> */}
-                          {/* </div> */}
-                          <span>{item.title}</span>
-                          {/* <small>{item.user}</small> */}
-                          {/* <br /> */}
-                          {/* <small>{item.metadata.description}</small> */}
-                          {/* <br /> */}
-                          {/* <small>
+                            {/* </div> */}
+                            <span>{item.title}</span>
+                            {/* <small>{item.user}</small> */}
+                            {/* <br /> */}
+                            {/* <small>{item.metadata.description}</small> */}
+                            {/* <br /> */}
+                            {/* <small>
                           {item.metadata.attributes.length} attributes!
                         </small> */}
-                        </>
-                      ) : (
-                        <b> No metadata available </b>
-                      )}
-                      {/* {collectionName} */}
-                      {/* {collectionName.slice(0, 14)} */}
-                      {/* {collectionName.length > 12 ? "..." : ""} */}
-                      <br />
-                    </span>
-                    {/* <small className="description">
+                          </>
+                        ) : (
+                          <b> No metadata available </b>
+                        )}
+                        {/* {collectionName} */}
+                        {/* {collectionName.slice(0, 14)} */}
+                        {/* {collectionName.length > 12 ? "..." : ""} */}
+                        <br />
+                      </span>
+                      {/* <small className="description">
                         {item.user.slice(0, 12)}
                         {item.user.length > 10 ? "..." : ""}
                       </small> */}
-                    <small className="description">
-                      {item.contract}
-                      {/* {item.contract.length > 10 ? "..." : ""} */}
-                    </small>
-                    <div
-                      className="description-small"
-                      style={{
-                        paddingRight: "16px",
-                        position: "relative",
-                        right: "-227px",
-                        top: "-48px",
-                      }}
-                    >
-                      <img
-                        className="my-items-blockchain-img"
-                        src={`${chainDataFront[item?.blockchain]?.image}`}
-                        alt=""
-                      />
-                      {/* <span className="description ">{minPrice} ETH </span> */}
+                      <div className="container-blockchain-info">
+                        <small className="description">
+                          {/* {item.contract} */}
+                          {item.contract.slice(0, 5) + "...." + item.contract.slice(item.contract.length - 4)}
+                          {/* {item.contract.length > 10 ? "..." : ""} */}
+                        </small>
+                        <div
+                          className="description-small"
+                          style={{
+
+                          }}
+                        >
+                          <img
+                            className="my-items-blockchain-img"
+                            src={`${chainDataFront[item?.blockchain]?.image}`}
+                            alt=""
+                          />
+                          {/* <span className="description ">{minPrice} ETH </span> */}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   {/* <br />
@@ -247,7 +248,10 @@ const MyItems = (props) => {
       ) : (
         <></>
       )}
-      <MyDiamondItems {...{openModal, setSelectedData}}/>
+      <div className="container-diamond-items">
+        <h3>Diamond Items <i className='fas h5 fa-gem' /></h3>
+        <MyDiamondItems {...{ openModal, setSelectedData }} />
+      </div>
     </div>
   );
 };

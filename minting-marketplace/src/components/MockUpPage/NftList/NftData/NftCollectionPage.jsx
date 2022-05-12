@@ -99,6 +99,7 @@ const NftCollectionPageComponent = ({
         justifyContent: "center",
         // alignItems: "flex-start",
         marginBottom: "66px",
+        // overflow: "hidden"
       }}
     >
       <BreadcrumbsView />
@@ -126,39 +127,41 @@ const NftCollectionPageComponent = ({
       <div className={"list-button-wrapper"}>
         {tokenDataFiltered.length > 0
           ? tokenDataFiltered.map((token, index) => {
-              if (token.cover !== "none") {
-                return (
-                  <NftItemForCollectionView
-                    key={`${token.id + "-" + token.productId + index}`}
-                    pict={token.cover ? token.cover : defaultImg}
-                    metadata={token.metadata}
-                    contract={token.contract}
-                    token={token.token}
-                    handleClickToken={handleClickToken}
-                    setSelectedToken={setSelectedToken}
-                    selectedToken={selectedToken}
-                    offerPrice={offerPrice}
-                    ownerAddress={token.ownerAddress}
-                    blockchain={blockchain}
-                    currentUser={currentUser}
-                    offerData={offerData}
-                    primaryColor={primaryColor}
-                    productsFromOffer={productsFromOffer}
-                    selectedData={selectedData}
-                    textColor={textColor}
-                    tokenData={tokenData}
-                    totalCount={totalCount}
-                    product={product}
-                    index={token.token}
-                    offer={token.offer}
-                  />
-                );
-              } else {
-                return null;
-              }
-            })
+            if (token.cover !== "none") {
+              return (
+                <NftItemForCollectionView
+                  key={`${token.id + "-" + token.productId + index}`}
+                  pict={token.cover ? token.cover : defaultImg}
+                  metadata={token.metadata}
+                  contract={token.contract}
+                  token={token.token}
+                  handleClickToken={handleClickToken}
+                  setSelectedToken={setSelectedToken}
+                  selectedToken={selectedToken}
+                  offerPrice={offerPrice}
+                  ownerAddress={token.ownerAddress}
+                  blockchain={blockchain}
+                  currentUser={currentUser}
+                  offerData={offerData}
+                  primaryColor={primaryColor}
+                  productsFromOffer={productsFromOffer}
+                  selectedData={selectedData}
+                  textColor={textColor}
+                  tokenData={tokenData}
+                  totalCount={totalCount}
+                  product={product}
+                  index={token.token}
+                  offer={token.offer}
+                  someUsersData={someUsersData}
+                  userName={offerAllData?.owner}
+                />
+              );
+            } else {
+              return null;
+            }
+          })
           : tokenData.length > 0
-          ? tokenData.map((token, index) => {
+            ? tokenData.map((token, index) => {
               if (token.cover !== "none") {
                 return (
                   <NftItemForCollectionView
@@ -184,13 +187,16 @@ const NftCollectionPageComponent = ({
                     product={product}
                     index={index}
                     offer={token.offer}
+                    someUsersData={someUsersData}
+                    userName={offerAllData?.owner}
+                    tokenDataLength={tokenData.length}
                   />
                 );
               } else {
                 return null;
               }
             })
-          : Array.from(new Array(10)).map((item, index) => {
+            : Array.from(new Array(10)).map((item, index) => {
               return (
                 <Skeleton
                   key={index}
@@ -217,14 +223,14 @@ const NftCollectionPageComponent = ({
         {tokenDataFiltered.length
           ? null
           : showToken <= totalCount && (
-              <CustomButton
-                onClick={loadToken}
-                width="232px"
-                height="48px"
-                margin="20px 0 0 0"
-                text="Show more"
-              />
-            )}
+            <CustomButton
+              onClick={loadToken}
+              width="232px"
+              height="48px"
+              margin="20px 0 0 0"
+              text="Show more"
+            />
+          )}
       </div>
       <CollectionInfo
         offerData={offerDataCol}

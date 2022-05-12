@@ -31,7 +31,7 @@ const ModalItem = ({
         </div>
         <div className="modal-main-content">
           <div
-            className="w-100 bg-my-items p-2"
+            className="bg-my-items p-2"
             style={{
               backgroundImage: `url(${selectedData?.metadata.image || defaultImg
                 })`,

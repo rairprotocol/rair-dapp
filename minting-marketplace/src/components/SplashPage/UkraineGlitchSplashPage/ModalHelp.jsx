@@ -1,17 +1,25 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 const ModalHelp = ({
     openCheckList,
     purchaseList,
     togglePurchaseList,
-    toggleCheckList
+    toggleCheckList,
+    backgroundColor
 }) => {
+    const { primaryColor } = useSelector(store => store.colorStore)
 
     const dappUrl = window.location.host;
     const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
 
     return (
-        <div style={{ display: `${openCheckList ? "block" : "none"}` }} className="tutorial-checklist">
+        <div style={{
+            display: `${openCheckList ? "block" : "none"}`,
+            color: "white",
+            background: `${primaryColor === "charcoal" ? backgroundColor.darkTheme : backgroundColor.lightTheme}`
+        }}
+            className="tutorial-checklist">
             <h5>UkraineGlitch purchase checklist</h5>
             <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
                 <i className={`fas fa-chevron-${purchaseList ? "down" : "up"}`}></i>

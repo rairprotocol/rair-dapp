@@ -105,7 +105,6 @@ const FilteringBlock = ({
             <div
               style={{
                 backgroundColor: `var(--${primaryColor})`,
-                color: `var(--${textColor})`,
                 zIndex: 100,
               }}
               className="select-filters-popup"

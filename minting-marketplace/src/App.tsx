@@ -398,6 +398,7 @@ function App({ sentryHistory }) {
 						backgroundImage: `url(${backgroundImage})`,
 						backgroundPosition: 'center top',
 						backgroundRepeat: 'no-repeat',
+						overflow: "hidden"
 					}}
 					className="App p-0 container-fluid">
 					{carousel && <UserProfileSettings

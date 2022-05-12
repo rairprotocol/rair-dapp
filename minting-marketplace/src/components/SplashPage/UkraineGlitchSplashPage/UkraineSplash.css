@@ -1,7 +1,7 @@
 /* use .wrapper-splash-page.ukraineglitch selector to override any general styling*/
 
 .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper .join-pic-main img,
-.wrapper-splash-page.ukraineglitch .list-of-greymans-pic .join-pic img{
+.wrapper-splash-page.ukraineglitch .list-of-greymans-pic .join-pic img {
     border-radius: 16px;
 }
 
@@ -19,7 +19,7 @@
     max-width: 1600px;
 }
 
-.btn-help{
+/* .btn-help {
     position: absolute;
     top: 20px;
     right: 5vw;
@@ -30,7 +30,7 @@
     border-radius: 16px;
     background: #FFD505;
     cursor: pointer;
-}
+} */
 
 @media screen and (max-width: 1320px) {
     .wrapper-splash-page.ukraineglitch .main-greyman-pic-wrapper {
@@ -84,9 +84,16 @@
     }
 }
 
+/* @media screen and (min-width: 600px) and (max-width: 1100px) {
+    .btn-help {
+        height: 30px;
+        width: 150px;
+        top: 10px;
+        left: 40px;
+    }
+} */
 
-
-@media screen and (max-width: 900px)  {
+@media screen and (max-width: 900px) {
 
     .wrapper-splash-page.ukraineglitch .template-author-card {
         background-size: 45vw auto;
@@ -106,7 +113,7 @@
 
 @media screen and (max-width: 600px) {
 
-    .wrapper-splash-page.ukraineglitch .template-author-card .text-splash .title-splash h3.text-gradient-template{
+    .wrapper-splash-page.ukraineglitch .template-author-card .text-splash .title-splash h3.text-gradient-template {
         margin-bottom: 50vw;
         font-size: 10vw !important;
         height: 10vw;

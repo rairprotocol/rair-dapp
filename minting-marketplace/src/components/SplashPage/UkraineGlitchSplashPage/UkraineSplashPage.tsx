@@ -213,8 +213,6 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   const ukraineglitchChainId = '0x1'
   const dispatch = useDispatch()
 
-
-
   const togglePurchaseList = () => {
       setPurshaseList(prev => !prev);
   }
@@ -254,14 +252,15 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
           purchaseList={purchaseList}
           togglePurchaseList={togglePurchaseList}
           toggleCheckList={toggleCheckList}
+          backgroundColor={{ darkTheme: "rgb(3, 91, 188)", lightTheme: "rgb(3, 91, 188)" }}
         />
         <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
-        <PurchaseChecklist
+        {/* <PurchaseChecklist
           toggleCheckList={toggleCheckList}
           openCheckList={openCheckList}
           nameSplash={"UkraineGlitch"}
           backgroundColor={{ darkTheme: "rgb(3, 91, 188)", lightTheme: "rgb(3, 91, 188)" }}
-        />
+        /> */}
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
         <TokenLeftTemplate
           counterData={splashData.counterData}

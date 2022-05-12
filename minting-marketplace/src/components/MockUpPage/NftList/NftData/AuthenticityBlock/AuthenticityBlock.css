@@ -3,7 +3,7 @@
 }
 
 .block-authenticity .table-authenticity {
-    max-width: 1600px;
+    max-width: 85vw;
     overflow: hidden;
 }
 
@@ -41,4 +41,10 @@
 .authenticity-box .link-block {
     display: flex;
     align-items: baseline
+}
+
+@media screen and (max-width: 1000px) {
+    .block-authenticity .table-authenticity {
+        max-width:  100%;
+    }
 }
