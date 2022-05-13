@@ -20,7 +20,9 @@ const getMongoConnectionStringURI = () => {
     !passwordSecrets['data']['username'] || 
     !passwordSecrets['data']['password']
   ) {
-    throw new Error('Could find vault secrets during Mongo connection string generation process')
+    const errMessage = 'Could find vault secrets during Mongo connection string generation process';
+    console.log(errMessage);
+    throw new Error(errMessage)
   }
 
   const username = passwordSecrets['data']['username'];
@@ -31,7 +33,9 @@ const getMongoConnectionStringURI = () => {
     !mongoConfig.MONGO_DB_HOSTNAME ||
     !mongoConfig.MONGO_DB_NAME
   ) {
-    throw new Error('Could not find mongo env variables during Mongo connection string generation process')
+    const errMessage = 'Could not find mongo env variables during Mongo connection string generation process';
+    console.log(errMessage);
+    throw new Error(errMessage);
   }
 
   const databaseName = mongoConfig.MONGO_DB_NAME

@@ -43,7 +43,9 @@ class VaultKeyManager {
       });
       return res;
     } catch (err) {
-      throw err;
+      const errMessage = "Error writing secrets to Vault"
+      console.log(errMessage);
+      throw new Error(errMessage);
     }
   }
 
@@ -66,7 +68,9 @@ class VaultKeyManager {
       });
       return res;
     } catch(err) {
-      throw new Error('Error writing key to vault');
+      const errMessage = 'Error writing key to vault';
+      console.log(errMessage);
+      throw new Error(errMessage);
     }    
   }
 
@@ -89,7 +93,9 @@ class VaultKeyManager {
       const { data } = res.data.data;
       return data;
     } catch(err) {
-      throw new Error('Error reading key from Vault');
+      const errMessage = 'Error reading key from Vault';
+      console.log(errMessage);
+      throw new Error(errMessage);
     }
   }
 }

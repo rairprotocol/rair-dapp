@@ -26,7 +26,9 @@ const getSecret = async ({appName, secretName, vaultToken}) => {
 
   // basic / non-success error handling
   if(res.status !== 200) {
-    throw new Error('Vault received non 200 code while trying to retrieve secret!')
+    const errMessage = 'Vault received non 200 code while trying to retrieve secret!';
+    console.log(errMessage);
+    throw new Error(errMessage);
   }
 
   // Data comes back in this format
@@ -71,7 +73,9 @@ class AppSecretManager {
       // return after all secrets have been retreived sequentially
       return this.secretMap;
     } catch (err) {
-      console.log('Error retrieving secrets');
+      const errMessage = 'Error retrieving secrets';
+      console.log(errMessage);
+      throw new Error(errMessage);
     }
   }
 }

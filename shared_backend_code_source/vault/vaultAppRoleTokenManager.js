@@ -26,8 +26,10 @@ class VaultAppRoleTokenManager {
           console.log('Initial app role login suceeded');
           resolve();
         })
-        .catch((err) => {
-          reject(err);
+        .catch(() => {
+          const errMessage = "Initial app role login failed!";
+          console.log(errMessage);
+          reject(new Error(errMessage));
         });
     });
   }
@@ -58,7 +60,9 @@ class VaultAppRoleTokenManager {
       const res = await axios(axiosParams);
 
       if (res.status !== 200) {
-        throw new Error('Error getting token! Received non 200 code from App Role Login url');
+        const errMessage = 'Error getting token! Received non 200 code from App Role Login url';
+        console.log(errMessage);
+        throw new Error(errMessage);
       }
 
       // pull from API response
@@ -72,7 +76,9 @@ class VaultAppRoleTokenManager {
         leaseDurationSeconds: auth.lease_duration,
       });
     } catch (err) {
-      throw err;
+      const errMessage = "VaultAppRoleTokenManager getTokenWithAppRoleCreds failed";
+      console.log(errMessage);
+      throw new Error(errMessage);
     }
   }
 
@@ -103,7 +109,11 @@ class VaultAppRoleTokenManager {
   async renewToken() {
     try {
       // make call to get new token using existing token
-      if (this.token === null) throw new Error('Existing token is null!');
+      if (this.token === null) {
+        const errMessage = 'Existing token is null!';
+        console.log(errMessage);
+        throw new Error(errMessage);
+      }
 
       const res = await axios({
         method: 'POST',
@@ -119,7 +129,9 @@ class VaultAppRoleTokenManager {
       });
 
       if (res.status !== 200) {
-        throw new Error('Error renewing token, received non 200 code trying to renew self.');
+        const errMessage = 'Error renewing token, received non 200 code trying to renew self.';
+        console.log(errMessage);
+        throw new Error(errMessage);
       }
 
       const { auth } = res.data;
@@ -130,7 +142,9 @@ class VaultAppRoleTokenManager {
       });
 
     } catch(err) {
-      throw new Error('Error renewing token in Vault App Role token manager')
+      const errMessage = 'Error renewing token in Vault App Role token manager';
+      console.log(errMessage);
+      throw new Error(errMessage);
     }
   }
 }
