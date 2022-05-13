@@ -79,7 +79,10 @@ const CurrentTokensComponent = ({
                 <div
                   className={`select-number-box ${
                     selectedItem === el.token ? "selected-box" : ""
+                  } ${
+                    el.sold ? "sold-token" : el.isMinted ? "sold-token" : ""
                   }`}
+                  data-title={` #${el.token}`}
                   style={{
                     background: `${
                       primaryColor === "rhyno" ? "#A7A6A6" : "grey"
@@ -89,7 +92,7 @@ const CurrentTokensComponent = ({
                   key={el.id}
                   onClick={() => onClickItem(el.token)}
                 >
-                  {el.token}
+                  {el.sold ? "Sold" : el.isMinted ? `Sold` : el.token}
                 </div>
               );
             })}

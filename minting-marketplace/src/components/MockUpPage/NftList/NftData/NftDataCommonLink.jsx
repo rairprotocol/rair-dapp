@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { NftCollectionPage } from "./NftCollectionPage";
-import NftDataPageTest from "./NftDataPageTest";
+import NftDataPageMain from "./NftDataPageMain";
 import NftUnlockablesPage from "./NftUnlockablesPage";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -263,7 +263,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     );
   } else {
     return (
-      <NftDataPageTest
+      <NftDataPageMain
         userData={userData}
         blockchain={blockchain}
         contract={contract}

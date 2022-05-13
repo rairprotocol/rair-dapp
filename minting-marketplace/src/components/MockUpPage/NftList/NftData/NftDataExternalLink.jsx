@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import NftDataPageTest from "./NftDataPageTest";
+import NftDataPageMain from "./NftDataPageMain";
 
 const NftDataExternalLink = () => {
   const [data, setData] = useState();
@@ -111,7 +111,7 @@ const NftDataExternalLink = () => {
   }, [getData, getProductsFromOffer, getInfoFromUser]);
 
   return (
-    <NftDataPageTest
+    <NftDataPageMain
       blockchain={neededBlockchain}
       contract={neededContract}
       currentUser={currentUserAddress}

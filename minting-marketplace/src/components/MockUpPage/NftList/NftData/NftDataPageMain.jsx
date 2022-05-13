@@ -26,7 +26,7 @@ import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import NftListUnlockablesVideos from "./NftListUnlockablesVideos";
 
-const NftDataPageTest = ({
+const NftDataPageMain = ({
   blockchain,
   contract,
   currentUser,
@@ -300,7 +300,7 @@ const NftDataPageTest = ({
 
   function checkOwner() {
     let price = offerData?.price || minPrice;
-    if (currentUser === tokenData[selectedToken]?.ownerAddress) {
+    if (currentUser === tokenData[selectedToken]?.ownerAddress && tokenData[selectedToken]?.isMinted) {
       return (
         <button
           className="nft-btn-sell"
@@ -311,30 +311,42 @@ const NftDataPageTest = ({
           Sell
         </button>
       );
-    } else
-      return (
+    } else if (tokenData[selectedToken]?.isMinted) {
+      return(
         <button
-          className="btn rounded-rair btn-stimorol nft-btn-stimorol"
-          disabled={!offerData?.offerPool}
-          onClick={
-            window?.ethereum?.chainId === blockchain
-              ? buyContract
-              : () => CheckEthereumChain()
-          }
-          // onClick={() => buyContract()}
-          // onClick={() => alert("Coming soon")}
-          style={{
-            color: `var(--${textColor})`,
-          }}
-        >
-          {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
-          Purchase •{" "}
-          {utils
-            .formatEther(price !== Infinity && price !== undefined ? price : 0)
-            .toString()}{" "}
-          {chainData[blockchain]?.symbol}
-        </button>
-      );
+        className="nft-btn-sell"
+        disabled
+        style={{
+          color: `var(--${textColor})`,
+        }}
+      >
+        Already sold
+      </button>
+      )
+    }
+    return (
+      <button
+        className="btn rounded-rair btn-stimorol nft-btn-stimorol"
+        disabled={!offerData?.offerPool}
+        onClick={
+          window?.ethereum?.chainId === blockchain
+            ? buyContract
+            : () => CheckEthereumChain()
+        }
+        // onClick={() => buyContract()}
+        // onClick={() => alert("Coming soon")}
+        style={{
+          color: `var(--${textColor})`,
+        }}
+      >
+        {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
+        Purchase •{" "}
+        {utils
+          .formatEther(price !== Infinity && price !== undefined ? price : 0)
+          .toString()}{" "}
+        {chainData[blockchain]?.symbol}
+      </button>
+    );
   }
   // function checkDataOfProperty() {
   //   if ( selectedData === 'object' && selectedData !== null) {
@@ -449,7 +461,9 @@ const NftDataPageTest = ({
           <div
             className="nft-collection"
             style={{
-              background: `${primaryColor === "rhyno" ? "rgb(191 191 191)" : "#383637"}`,
+              background: `${
+                primaryColor === "rhyno" ? "rgb(191 191 191)" : "#383637"
+              }`,
             }}
           >
             {selectedData?.animation_url ? (
@@ -555,6 +569,7 @@ const NftDataPageTest = ({
                           value: p.metadata.name,
                           id: p._id,
                           token: p.token,
+                          sold: p.isMinted,
                         };
                       })
                     }
@@ -789,4 +804,4 @@ const NftDataPageTest = ({
   );
 };
 
-export default NftDataPageTest;
+export default NftDataPageMain;

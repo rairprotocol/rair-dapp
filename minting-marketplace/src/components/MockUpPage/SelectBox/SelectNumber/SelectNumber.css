@@ -42,7 +42,22 @@
     max-height: 456px;
     z-index: 2;
 }
-
+.select-number-box.sold-token{
+    background: rgba(113, 36, 255, 0.796) !important;
+}
+.select-number-box.sold-token:hover::after { 
+    content: attr(data-title);
+    /* font-size: small; */
+    position: relative;
+    top: -56px;
+    left: -5px;
+    background: darkgrey;
+    width: 72px;
+    display: inline-block;
+    height: 25px;
+    border: 1px solid cornflowerblue;
+    border-radius: 16px;
+}
 .select-number-popup .select-number-title {
     top: 10px;
     font-size: 20px;
@@ -61,6 +76,8 @@
     height: 32px;
     padding: 4px;
     transition: all .1s ease;
+
+    margin-top: 20px;
 }
 
 .select-number-popup .selected-box {
