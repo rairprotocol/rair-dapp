@@ -33,4 +33,7 @@ module "vault_config" {
   rairnode_app_role_authorized_login_cidr_ranges = [
     "0.0.0.0/0"
   ]
+  blockchain_network_app_role_authorized_login_cidr_ranges = [
+    "0.0.0.0/0"
+  ]
 }
