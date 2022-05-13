@@ -19,7 +19,7 @@ module "mongo_shared" {
 }
 
 locals {
-  project_id = module.mongo_shared.mongo_project_id_map.dev.project_id
+  project_id = module.mongo_shared.mongo_project_id_map.prod.project_id
 }
 
 # common resources used in all mongo projects

@@ -14,6 +14,10 @@ terraform {
   }
 }
 
+locals {
+  project_id = module.mongo_shared.mongo_project_id_map.staging.project_id
+}
+
 module "mongo_shared" {
   source = "../../shared/mongo"
 }
@@ -25,5 +29,5 @@ module "mongo_common" {
   # replace this entry with a real db output variable later
   primary_db_name = "primary"
   
-  project_id = module.mongo_shared.mongo_project_id_map.staging.project_id
+  project_id = local.project_id
 }
