@@ -81,6 +81,16 @@ spec:
                 secretKeyRef:
                   name: moralis-master-key-main
                   key: MORALIS_MASTER_KEY_MAIN
+            - name: APP_ROLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-role-id
+                  key: APP_ROLE_ID
+            - name: APP_ROLE_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-role-secret-id
+                  key: APP_ROLE_SECRET_ID
             - name: MORALIS_MASTER_KEY_TEST
               valueFrom:
                 secretKeyRef:
