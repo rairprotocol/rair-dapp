@@ -100,8 +100,6 @@ class VaultKeyManager {
   }
 }
 
-const vaultKeyManager = new VaultKeyManager();
-
 module.exports = {
-  vaultKeyManager,
+  VaultKeyManager,
 };

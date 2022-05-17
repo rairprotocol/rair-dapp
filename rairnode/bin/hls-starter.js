@@ -2,14 +2,19 @@ const streamDecrypter = require('./stream-decrypter');
 const mongoose = require('mongoose');
 const HLSServer = require('@rair/hls-server');
 const log = require('./utils/logger')(module);
-const { vaultKeyManager } = require('./shared_backend_code_generated/vault/vaultKeyManager');
-const { vaultAppRoleTokenManager } = require('./shared_backend_code_generated/vault/vaultAppRoleTokenManager');
+
+const {
+  vaultKeyManager,
+  vaultAppRoleTokenManager,
+  appSecretManager
+} = require('./vault');
+
 const {
   getMongoConnectionStringURI
 } = require('./shared_backend_code_generated/mongo/mongoUtils');
 
 module.exports = async () => {
-  const _mongoose = await mongoose.connect(getMongoConnectionStringURI(), { useNewUrlParser: true, useUnifiedTopology: true })
+  const _mongoose = await mongoose.connect(getMongoConnectionStringURI({appSecretManager}), { useNewUrlParser: true, useUnifiedTopology: true })
     .then((c) => {
       if (process.env.PRODUCTION === 'true') {
         log.info('DB Connected!');

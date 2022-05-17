@@ -1,5 +1,7 @@
-const { vaultAppRoleTokenManager } = require('./shared_backend_code_generated/vault/vaultAppRoleTokenManager');
-const { appSecretManager } = require('./shared_backend_code_generated/vault/appSecretManager');
+const {
+  appSecretManager,
+  vaultAppRoleTokenManager
+} = require('./vault');
 
 const port = process.env.PORT;
 
@@ -48,7 +50,7 @@ async function main() {
     }
   }
 
-  const _mongoose = await mongoose.connect(getMongoConnectionStringURI(), {
+  const _mongoose = await mongoose.connect(getMongoConnectionStringURI({appSecretManager}), {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -183,7 +185,6 @@ async function main() {
 
     await appSecretManager.getAppSecrets({
       vaultToken: vaultAppRoleTokenManager.getToken(),
-      appName: "rairnode",
       listOfSecretsToFetch: [
         mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY
       ]

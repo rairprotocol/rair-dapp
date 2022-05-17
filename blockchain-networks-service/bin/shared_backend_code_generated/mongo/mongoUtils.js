@@ -10,10 +10,11 @@
 // 
 ////////////////////////////////////////////////////////////
 
-const { appSecretManager } = require('../vault/appSecretManager');
 const mongoConfig = require('../config/mongoConfig');
 
-const getMongoConnectionStringURI = () => {
+const getMongoConnectionStringURI = ({
+  appSecretManager
+}) => {
   // Check if we're using new Mongo URI system
   if(mongoConfig.GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL !== 'true') {
     // If we're running locally, use the original url pattern

@@ -46,22 +46,23 @@ const getSecret = async ({appName, secretName, vaultToken}) => {
 }
 
 class AppSecretManager {
-  constructor() {
+  constructor({appName}) {
     // initialize with a null map
     this.secretMap = new Map();
+    this.appName = appName;
   }
 
   getSecretFromMemory(secretKey) {
     return this.secretMap.get(secretKey);
   }
 
-  async getAppSecrets({vaultToken, appName, listOfSecretsToFetch}) {
+  async getAppSecrets({vaultToken, listOfSecretsToFetch}) {
     try {
       await executePromisesSequentially({
         items: listOfSecretsToFetch,
         action: async (secretName) => {
           const secretData = await getSecret({
-            appName,
+            appName: this.appName,
             secretName,
             vaultToken
           });
@@ -80,9 +81,6 @@ class AppSecretManager {
   }
 }
 
-// instantiate a singleton instance of this class to use across the app
-const appSecretManager = new AppSecretManager();
-
 module.exports = {
-  appSecretManager
+  AppSecretManager
 }

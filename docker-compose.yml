@@ -58,6 +58,9 @@ services:
       ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
+      VAULT_URL: ${VAULT_URL}
+      VAULT_RAIRNODE_APP_ROLE_ID: ${VAULT_RAIRNODE_APP_ROLE_ID}
+      VAULT_RAIRNODE_APP_ROLE_SECRET_ID: ${VAULT_RAIRNODE_APP_ROLE_SECRET_ID}
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}
       SESSION_SECRET: ${session_secret}
@@ -98,6 +101,9 @@ services:
       IPFS_API: ${ipfs_api}
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
+      VAULT_URL: ${VAULT_URL}
+      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID}
+      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID}
       TEST_BSCSCAN_GATEWAY: ${test_bscscan_gateway}
       TEST_POLYGONSCAN_GATEWAY: ${test_polygonscan_gateway}
       TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}

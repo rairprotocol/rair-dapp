@@ -19,10 +19,11 @@ const {
 } = require('./vaultUtils');
 
 class VaultAppRoleTokenManager {
-  constructor() {
+  constructor({appName}) {
     // token that we pulled from Vault App role login
     this.token = null;
     this.authData = null;
+    this.appName = appName;
 
     // setTimeout object reference
     this.tokenRenewalTimeout = null;
@@ -65,8 +66,8 @@ class VaultAppRoleTokenManager {
           'X-Vault-Namespace': getVaultNamespace(),
         },
         data: {
-          role_id: getAppRoleIDFromEnv(),
-          secret_id: getAppRoleSecretIDFromEnv(),
+          role_id: getAppRoleIDFromEnv({appName: this.appName}),
+          secret_id: getAppRoleSecretIDFromEnv({appName: this.appName}),
         },
       };
       const res = await axios(axiosParams);
@@ -103,7 +104,12 @@ class VaultAppRoleTokenManager {
     const halfOfLeaseDuration = (leaseDurationSeconds / 2) * 1000;
 
     this.tokenRenewalTimeout = setTimeout(() => {
-      this.renewToken();
+      try {
+        this.renewToken();
+      } catch(err) {
+        // TODO: VAULT UTILS remove this try/catch block
+        console.log('Error renewing token');
+      }
     }, halfOfLeaseDuration);
   }
 
@@ -121,7 +127,7 @@ class VaultAppRoleTokenManager {
   async renewToken() {
     try {
       // make call to get new token using existing token
-      if (this.token === null) {
+      if (this.getToken() === null) {
         const errMessage = 'Existing token is null!';
         console.log(errMessage);
         throw new Error(errMessage);
@@ -161,10 +167,6 @@ class VaultAppRoleTokenManager {
   }
 }
 
-// instantiate one class and export it
-// we only want one instance of this in the app
-const vaultAppRoleTokenManager = new VaultAppRoleTokenManager();
-
 module.exports = {
-  vaultAppRoleTokenManager,
+  VaultAppRoleTokenManager,
 };
