@@ -36,8 +36,8 @@ locals {
       comment: "Allows access to db from kubernetes_primary_cluster subnet cidr range."
     },
     {
-      cidr_block: module.vpc_cidr_ranges.network_cidr_blocks.public,
-      comment: "Allows access from Dev computers directly to DB (Tailscale/public subnet)"
+      cidr_block: module.vpc_cidr_ranges.network_cidr_blocks.vpn,
+      comment: "Allows access from Dev computers directly to DB (Tailscale vpn subnet)"
     }
   ]
 }

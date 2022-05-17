@@ -29,7 +29,7 @@ resource "google_compute_instance_template" "tailsacle_relay" {
 
   network_interface {
     network = google_compute_network.primary.id
-    subnetwork = google_compute_subnetwork.public.id
+    subnetwork = google_compute_subnetwork.vpn.id
     stack_type = "IPV4_ONLY"
 
 
@@ -126,7 +126,7 @@ resource "google_compute_router_nat" "nat" {
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
 
   subnetwork {
-    name = google_compute_subnetwork.public.name
+    name = google_compute_subnetwork.vpn.name
     source_ip_ranges_to_nat = ["PRIMARY_IP_RANGE"]
   }
 }
