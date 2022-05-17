@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { /*useEffect,*/ useState } from 'react'
 import { getRandomValues } from '../../utils/getRandomValues'
 
@@ -28,7 +27,25 @@ import { getRandomValues } from '../../utils/getRandomValues'
 			!---		so pass ['files',0] to that prop!							 ---!
 **/
 
-const InputField = ({
+type TInputFieldProps<T extends any = any> = {
+	getter?: HTMLInputElement['value'];
+	setter: (value: T) => void;
+	setterField?: Array<string>;
+	customCSS?: { [key: string]: string };
+	customClass?: string;
+	labelCSS?: { [key: string]: string };
+	labelClass?: string;
+	placeholder?: string;
+	type?: string;
+	label?: string;
+	required?: boolean;
+	disabled?: boolean;
+	min?: number;
+	max?: number;
+	maxLength?: number;
+  };
+
+const InputField = <T extends any = any>({
 	getter,
 	setter,
 	setterField = ['value'],
@@ -41,32 +58,31 @@ const InputField = ({
 	label,
 	required,
 	disabled,
-	requiredColor,
 	min,
 	max,
 	maxLength
-}) => {
+}: TInputFieldProps<T>) => {
 	
-	const [id,] = useState(getRandomValues)
+	const [id,] = useState<number | null>(getRandomValues)
 
 	return <>
 		{label &&
 			<label
-				htmlFor={id}
+				htmlFor={id?.toString()}
 				style={{
 					...labelCSS,
-					color: (required ? `${requiredColor}!important` : labelCSS.color)
+					color: labelCSS.color
 				}}
 				className={labelClass}>
 				{label + (required ? '*' : '')}
 			</label>}
 		<input
 			type={type}
-			id={id}
+			id={id?.toString()}
 			onChange={e => setter(setterField.reduce((start, piece) => { return start[piece] }, e.target))}
 			value={getter}
 			disabled={disabled}
-			style={{ ...customCSS, ':required': { color: requiredColor } }}
+			style={{ ...customCSS }}
 			className={customClass}
 			required={required ? required : false}
 			min={min}
