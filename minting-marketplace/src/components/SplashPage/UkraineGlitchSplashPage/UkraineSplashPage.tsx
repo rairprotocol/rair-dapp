@@ -219,10 +219,6 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
 
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
 
-  const toggleCheckList = () => {
-    setOpenCheckList(prev => !prev)
-  }
-
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
       if (currentChain === splashData.purchaseButton.requiredBlockchain) {
