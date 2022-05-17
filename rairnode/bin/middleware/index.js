@@ -3,6 +3,8 @@ const validation = require('./validation');
 const isOwner = require('./isOwner');
 const formDataHandler = require('./formDataHandler');
 const streamVerification = require('./streamVerification');
+const assignUser = require('./assignUser');
+const isAdmin = require('./isAdmin');
 
 module.exports = {
   JWTVerification,
@@ -10,4 +12,6 @@ module.exports = {
   isOwner,
   formDataHandler,
   streamVerification,
+  assignUser,
+  isAdmin,
 };

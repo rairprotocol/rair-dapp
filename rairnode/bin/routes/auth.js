@@ -124,16 +124,16 @@ module.exports = (context) => {
       let ownsTheAdminToken;
       const ownsTheAccessTokens = [];
       const file = await context.db.File.findOne({ _id: mediaId });
+
       if (!file) {
         return res.status(400).send({ success: false, message: 'No file found' });
       }
-      const offers = await context.db.Offer.find({
-        offerIndex: {
-          $in: file.offer,
-        },
-        contract: file.contract,
-      });
+
       const contract = await context.db.Contract.findOne(file.contract);
+      const offers = await context.db.Offer.find(_.assign(
+        { contract: file.contract },
+        contract.diamond ? { diamondRangeIndex: { $in: file.offer } } : { offerIndex: { $in: file.offer } }));
+
       if (ethAddres) {
         // verify the user have needed tokens
 

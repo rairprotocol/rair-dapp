@@ -1,27 +1,22 @@
 const express = require('express');
+const fs = require('fs');
+const _ = require('lodash');
 const {
   retrieveMediaInfo, addPin, removePin, addFolder,
 } = require('../integrations/ipfsService')();
-const crypto = require('crypto');
-const path = require('path');
-const fs = require('fs');
-const readdirp = require('readdirp');
-const _ = require('lodash');
-const StartHLS = require('../hls-starter.js');
-const upload = require('../Multer/Config.js');
+const upload = require('../Multer/Config');
 const {
-  JWTVerification, validation, isOwner, formDataHandler,
+  JWTVerification, validation, isOwner, formDataHandler, assignUser, isAdmin,
 } = require('../middleware');
 const log = require('../utils/logger')(module);
-// const { execPromise } = require('../utils/helpers');
-const { checkBalanceSingle } = require('../integrations/ethers/tokenValidation.js');
 const {
   generateThumbnails, getMediaData, convertToHLS, encryptFolderContents,
-} = require('../utils/ffmpegUtils.js');
+} = require('../utils/ffmpegUtils');
 const {
   vaultKeyManager,
-  vaultAppRoleTokenManager
+  vaultAppRoleTokenManager,
 } = require('../vault');
+const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -31,7 +26,7 @@ module.exports = (context) => {
    *
    * /api/media/add/{mediaId}:
    *   post:
-   *     description: Register a new piece of media. Optionally provide a decrypt key. Also pins the content in the provided IPFS store
+   *     description: Register a new piece of media.Optionally provide a decrypt key. Also pins the content in the provided IPFS store
    *     produces:
    *       - application/json
    *     parameters:
@@ -117,7 +112,7 @@ module.exports = (context) => {
    *         schema:
    *           type: object
    */
-  router.get('/list', /* JWTVerification(context), */ validation('filterAndSort', 'query'), async (req, res, next) => {
+  router.get('/list', assignUser(context), validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
       const {
         pageNum = '1', itemsPerPage = '20', blockchain = '', category = '',
@@ -125,6 +120,8 @@ module.exports = (context) => {
       const searchQuery = {};
       const pageSize = parseInt(itemsPerPage, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+      let adminNFT = null;
+      let isAdminNFTValid = false;
 
       const foundCategory = await context.db.Category.findOne({ name: category });
 
@@ -139,23 +136,100 @@ module.exports = (context) => {
         searchQuery.contract = { $in: arrayOfContracts };
       }
 
-      const data = await context.db.File.find(searchQuery, { key: 0 })
+      let data = await context.db.File.find(searchQuery, { key: 0 })
         .sort({ title: 1 })
         .skip(skip)
         .limit(pageSize);
 
-      // const { adminNFT: author } = req.user;
-      // const reg = new RegExp(/^0x\w{40}:\w+$/);
+      if (req.user) {
+        adminNFT = req.user.adminNFT;
+        const reg = /^0x\w{40}:\w+$/;
+        isAdminNFTValid = reg.test(adminNFT);
+      }
+
+      // verify the user have needed tokens for unlock the files
+      data = await Promise.all(_.map(data, async (file) => {
+        const clonedFile = _.assign({}, file.toObject());
+        let ownsTheAdminToken;
+        const ownsTheAccessTokens = [];
+
+        if (clonedFile.demo) {
+          clonedFile.isUnlocked = true;
+          return clonedFile;
+        }
+
+        // clonedFile.isUnlocked = (isAdminNFTValid && adminNFT === clonedFile.author); // TODO: use that functionality instead of calling blockchain when storing of adminNFT will work properly
+
+        // if (!clonedFile.isUnlocked && !!req.user) { // TODO: use that functionality instead of calling blockchain when resale of tokens functionality will be working and new owner of token will be changing properly
+        //   const foundContract = await context.db.Contract.findById(file.contract);
+        //
+        //   let options = {
+        //     ownerAddress: req.user.publicAddress,
+        //     contract: foundContract._id,
+        //     offer: { $in: file.offer },
+        //   };
+        //
+        //   if (!foundContract.diamond) {
+        //     const offerPool = await context.db.OfferPool.findOne({
+        //       contract: foundContract._id,
+        //       product: file.product,
+        //     });
+        //
+        //     if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+        //
+        //     options = _.assign(options, { offerPool: offerPool.marketplaceCatalogIndex });
+        //   }
+        //
+        //   const countOfTokens = await context.db.MintedToken.countDocuments(options);
+        //
+        //   if (countOfTokens > 0) clonedFile.isUnlocked = true;
+        // }
+
+        if (req.user) {
+          // verify the account holds the required NFT
+          if (typeof file.author === 'string' && file.author.length > 0) {
+            const [contractAddress, tokenId] = file.author.split(':');
+            // Verifying account has token
+            try {
+              ownsTheAdminToken = await checkBalanceSingle(req.user.publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
+              clonedFile.isUnlocked = ownsTheAdminToken;
+            } catch (e) {
+              log.error(`Could not verify account: ${e}`);
+              clonedFile.isUnlocked = false;
+            }
+          }
+
+          if (!ownsTheAdminToken) {
+            const contract = await context.db.Contract.findOne(file.contract);
+            const offers = await context.db.Offer.find(_.assign(
+              { contract: file.contract },
+              contract.diamond ? { diamondRangeIndex: { $in: file.offer } } : { offerIndex: { $in: file.offer } },
+            ));
+
+            // verify the user have needed tokens
+            for await (const offer of offers) {
+              ownsTheAccessTokens.push(await checkBalanceProduct(
+                req.user.publicAddress,
+                contract.blockchain,
+                contract.contractAddress,
+                offer.product,
+                offer.range[0],
+                offer.range[1],
+              ));
+              if (ownsTheAccessTokens.includes(true)) {
+                clonedFile.isUnlocked = true;
+                break;
+              }
+            }
+          }
+        }
+
+        return clonedFile;
+      }));
 
       const list = _.chain(data)
-        // .map(file => {
-        //   const clonedFile = _.assign({}, file.toObject());
-        //
-        //   clonedFile.isOwner = !!(author && reg.test(author) && author === clonedFile.author);
-        //
-        //   return clonedFile;
-        // })
         .reduce((result, value) => {
+          // eslint-disable-next-line no-param-reassign
           result[value._id] = value;
           return result;
         }, {})
@@ -164,17 +238,17 @@ module.exports = (context) => {
       return res.json({ success: true, list });
     } catch (e) {
       log.error(e);
-      next(e.message);
+      return next(e.message);
     }
   });
 
-  router.post('/upload', upload.single('video'), JWTVerification(context), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
+  router.post('/upload', JWTVerification(context), isAdmin, upload.single('video'), validation('uploadVideoFile', 'file'), formDataHandler, validation('uploadVideo'), async (req, res, next) => {
     // Get video information from the request's body
     const {
       title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs',
     } = req.body;
     // Get the user information
-    const { adminNFT: author, adminRights, publicAddress } = req.user;
+    const { adminNFT: author } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
     const { db, config } = context;
@@ -182,24 +256,16 @@ module.exports = (context) => {
     let defaultGateway = '';
     let storageLink = '';
 
-    if (!adminRights) {
-      if (req.file) {
-        fs.rm(req.file.destination, { recursive: true }, (err) => {
-          log.info(`User ${publicAddress} don\'t have permission to upload the files.`);
-
-          if (err) log.error(err);
-        });
-      }
-      return res.status(403).send({ success: false, message: 'You don\'t have permission to upload the files.' });
-    }
-
     const foundContract = await db.Contract.findById(contract);
 
     if (!foundContract) {
       return res.status(404).send({ success: false, message: `Contract ${contract} not found.` });
     }
 
-    const foundProduct = await db.Product.findOne({ contract: foundContract._id, collectionIndexInContract: product });
+    const foundProduct = await db.Product.findOne({
+      contract: foundContract._id,
+      collectionIndexInContract: product,
+    });
 
     if (!foundProduct) {
       return res.status(404).send({ success: false, message: `Product ${product} not found.` });
@@ -212,7 +278,10 @@ module.exports = (context) => {
     }
 
     // Diamond contracts have no offerPools
-    const foundOfferPool = await db.OfferPool.findOne({ contract: foundContract._id, product: foundProduct.collectionIndexInContract });
+    const foundOfferPool = await db.OfferPool.findOne({
+      contract: foundContract._id,
+      product: foundProduct.collectionIndexInContract,
+    });
 
     if (demo === 'false') {
       let foundOffers;
@@ -226,6 +295,8 @@ module.exports = (context) => {
         if (!_.includes(foundOffers, item)) {
           return res.status(404).send({ success: false, message: `Offer ${item} not found.` });
         }
+
+        return true;
       });
     }
 
@@ -296,14 +367,31 @@ module.exports = (context) => {
           case 'ipfs':
             cid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
             defaultGateway = `${config.pinata.gateway}/${cid}`;
-            const gateway = {
-              ipfs: `${config.ipfs.gateway}/${cid}`,
-              pinata: `${config.pinata.gateway}/${cid}`,
-            };
-            storageLink = _.get(gateway, config.ipfsService, defaultGateway);
+            storageLink = _.get(
+              {
+                ipfs: `${config.ipfs.gateway}/${cid}`,
+                pinata: `${config.pinata.gateway}/${cid}`,
+              },
+              config.ipfsService,
+              defaultGateway,
+            );
             break;
           case 'gcp':
-            cid = await context.gcp.uploadFolder(config.gcp.videoBucketName, req.file.destination, socketInstance);
+            cid = await context.gcp.uploadFolder(
+              config.gcp.videoBucketName,
+              req.file.destination,
+              socketInstance,
+            );
+            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
+            storageLink = defaultGateway;
+            break;
+          default:
+            // gcp -> default
+            cid = await context.gcp.uploadFolder(
+              config.gcp.videoBucketName,
+              req.file.destination,
+              socketInstance,
+            );
             defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
             storageLink = defaultGateway;
             break;
@@ -382,13 +470,13 @@ module.exports = (context) => {
       } catch (e) {
         if (req.file.destination) {
           fs.rm(req.file.destination, { recursive: true }, (err) => {
-            log.error('An error has occurred encoding the file', e);
-
             if (err) log.error(err);
           });
-        } else {
-          log.error(e);
         }
+
+        log.error('An error has occurred encoding the file', e);
+
+        return next(new Error('An error has occurred encoding the file.'));
       }
     } else {
       return res.status(400).send({ success: false, message: 'File not provided.' });

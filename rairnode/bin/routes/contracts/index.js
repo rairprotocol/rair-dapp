@@ -1,6 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
-const { JWTVerification, validation } = require('../../middleware');
+const { JWTVerification, validation, isAdmin } = require('../../middleware');
 const { importContractData } = require('../../integrations/ethers/importContractData');
 const log = require('../../utils/logger')(module);
 const contractRoutes = require('./contract');
@@ -182,15 +182,8 @@ module.exports = (context) => {
     }
   });
 
-  router.get('/import/network/:networkId/:contractAddress/', JWTVerification(context), async (req, res, next) => {
+  router.get('/import/network/:networkId/:contractAddress/', JWTVerification(context), isAdmin, async (req, res, next) => {
     try {
-      // MB TODO: only or admins -> &&
-      if (!req.user || !req.user.adminRights) {
-        return res.json({
-          success: false,
-          result: 'Unauthorized request',
-        });
-      }
       const { networkId, contractAddress } = req.params;
       const {
         success,
