@@ -147,9 +147,8 @@ const CustomizeFees = ({contractData, correctMinterInstance, setStepNumber, step
 					/>
 				</div>
 				<button
-					disabled={!utils.isAddress(resaleAddress)}
+					disabled={!utils.isAddress(resaleAddress) || approving}
 					className='btn col-12 btn-stimorol'
-					disabled={approving}
 					onClick={async () => {
 						setApproving(true);
 						Swal.fire({
