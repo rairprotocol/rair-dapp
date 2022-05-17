@@ -32,20 +32,20 @@ const SelectNumber = ({
     handleIsOpen();
   };
 
-  const handleClickOutSideNumberItem = useCallback(
-    (e) => {
-      if (!numberRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    },
-    [numberRef, setIsOpen]
-  );
+  // const handleClickOutSideNumberItem = useCallback(
+  //   (e) => {
+  //     if (!numberRef.current.contains(e.target)) {
+  //       setIsOpen(false);
+  //     }
+  //   },
+  //   [numberRef, setIsOpen]
+  // );
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutSideNumberItem);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutSideNumberItem);
-  }, [handleClickOutSideNumberItem]);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutSideNumberItem);
+  //   return () =>
+  //     document.removeEventListener("mousedown", handleClickOutSideNumberItem);
+  // }, [handleClickOutSideNumberItem]);
 
     return totalCount < 100 ? (
       <CurrentTokens

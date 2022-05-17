@@ -18,7 +18,7 @@ const ListOfTokensComponent = ({
   selectedItem,
   setIsOpen,
   totalCount,
-}) => {
+}) => { 
   const [tokenData, setTokenData] = useState([]);
   const [productTokenNumbers, setProductTokenNumbers] = useState([]);
   const rootRef = useRef();
@@ -26,6 +26,8 @@ const ListOfTokensComponent = ({
   const limit = 100;
   const [isOpens, setIsOpens] = useState(false);
   const [isBack /*setIsBack*/] = useState(true);
+
+  const [open, setOpen] = useState(true);
 
   const getNumberFromStr = (str) => {
     const newStr = str.replace(" -", "");
@@ -48,9 +50,11 @@ const ListOfTokensComponent = ({
       ).json();
 
       setTokenData(responseAllProduct.result.tokens);
-      setSelectedToken(indexes[0]);
+      setSelectedToken(Number(indexes[0]));
+      onClickItem(Number(indexes[0]));
+      handleIsOpen(true)
     },
-    [blockchain, contract, product, setSelectedToken]
+    [blockchain, contract, handleIsOpen, onClickItem, product, setSelectedToken]
   );
 
   useEffect(() => {
@@ -98,7 +102,7 @@ const ListOfTokensComponent = ({
     return [];
   }, [totalCount]);
 
-  return !isOpens ? (
+  return  !open ? ( !isOpens ? (
     <div ref={numberRef} className="select-box--box">
       <div className="select-box--container">
         <div ref={appRef} className="select-box--selected-item">
@@ -161,7 +165,8 @@ const ListOfTokensComponent = ({
       handleIsOpen={handleIsOpen}
       onClickItem={onClickItem}
     />
-  );
+  ) 
+  ) : <div style={{cursor: 'pointer'}} className="nft-single-price-range" ref={rootRef} onClick={() => setOpen(false)} >Selected now : {Number(selectedToken)}</div>;
 };
 
 export const ListOfTokens = memo(ListOfTokensComponent);

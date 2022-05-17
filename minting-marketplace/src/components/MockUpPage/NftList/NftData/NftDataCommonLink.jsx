@@ -23,7 +23,6 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   const [someUsersData, setSomeUsersData] = useState();
   const [dataForUser, setDataForUser] = useState();
 
-  
   const dispatch = useDispatch();
 
   const { currentUserAddress } = useSelector((store) => store.contractStore);
@@ -41,15 +40,28 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   const getAllProduct = useCallback(
     async (fromToken, toToken) => {
       setIsLoading(true);
-
-      const responseAllProduct = await (
-        await fetch(
-          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`,
-          {
-            method: "GET",
-          }
-        )
-      ).json();
+      let responseAllProduct;
+      if (tokenId > 15) {
+        responseAllProduct = await (
+          await fetch(
+            `/api/nft/network/${blockchain}/${contract}/${product}
+            
+            `,
+            {
+              method: "GET",
+            }
+          )
+        ).json();
+      } else if (tokenId <= 15) {
+        responseAllProduct = await (
+          await fetch(
+            `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`,
+            {
+              method: "GET",
+            }
+          )
+        ).json();
+      }
 
       setIsLoading(false);
 
@@ -125,11 +137,10 @@ const NftDataCommonLinkComponent = ({ userData }) => {
           return p.price;
         })
       );
-      
+
       setOwnerInfo(response.product);
       setOfferDataInfo(response.product.offers);
       setCollectionName(response.product.name);
-      
     } else if (
       response?.message === "jwt expired" ||
       response?.message === "jwt malformed"
@@ -144,11 +155,11 @@ const NftDataCommonLinkComponent = ({ userData }) => {
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if(neededUserAddress){
-      const result = await fetch(`/api/users/${neededUserAddress}`).then((blob) =>
-      blob.json()
-    );
-    setSomeUsersData(result.user);
+    if (neededUserAddress) {
+      const result = await fetch(`/api/users/${neededUserAddress}`).then(
+        (blob) => blob.json()
+      );
+      setSomeUsersData(result.user);
     }
   }, [neededUserAddress]);
 
@@ -199,12 +210,14 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     getProductsFromOffer();
   }, [getAllProduct, getParticularOffer, getProductsFromOffer, showToken]);
 
+  // TODO:for feature - get automatically all blockchains
   //   const getBlockchains = async () => {
   //     var res = await (await fetch('/api/blockchains')).json();
-  // console.log(res, 'res');
+  //      console.log(res, 'res');
 
   //   }
   //   getBlockchains();
+
   if (params.tokens === "collection") {
     return (
       <NftCollectionPage

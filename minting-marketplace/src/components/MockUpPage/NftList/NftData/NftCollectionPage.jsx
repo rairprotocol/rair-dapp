@@ -49,8 +49,8 @@ const NftCollectionPageComponent = ({
   const [show, setShow] = useState(true);
 
   const loadToken = useCallback(() => {
-    getAllProduct(0, showToken);
     setShowToken(showToken * 2);
+    getAllProduct(0, showToken);
   }, [getAllProduct, setShowToken, showToken]);
 
   useEffect(() => {
