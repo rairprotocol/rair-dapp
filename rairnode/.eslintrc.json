@@ -1,5 +1,6 @@
 {
   "env": {
+    "es2020": true,
     "node": true,
     "es6": true
   },
@@ -10,6 +11,7 @@
     "ecmaVersion": "latest"
   },
   "rules": {
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": 0,
+    "object-curly-newline":"off"
   }
 }

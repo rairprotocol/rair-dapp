@@ -184,6 +184,7 @@ module.exports = (context) => {
 
   router.get('/import/network/:networkId/:contractAddress/', JWTVerification(context), async (req, res, next) => {
     try {
+      // MB TODO: only or admins -> &&
       if (!req.user || !req.user.adminRights) {
         return res.json({
           success: false,

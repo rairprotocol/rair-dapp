@@ -1,8 +1,7 @@
 const Joi = require('joi');
 
 module.exports = Joi.object({
-  contract: Joi.string()
-    .required(),
+  contract: Joi.string().required(),
   token: Joi.string().required(),
-  product: Joi.number().required(),
+  product: Joi.string().required(),
 });

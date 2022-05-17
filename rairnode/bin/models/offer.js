@@ -2,25 +2,28 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const Offer = new Schema({
-  offerIndex: { type: Number },
-  contract: { type: Schema.ObjectId, required: true },
-  product: { type: Number, required: true },
-  offerPool: { type: Number },
-  copies: { type: Number },
-  soldCopies: { type: Number, default: 0 },
-  sold: { type: Boolean, default: false },
-  price: { type: Number, required: true },
-  range: { type: [Number], required: true },
-  offerName: { type: String, default: 'Default', trim: true },
-  creationDate: { type: Date, default: Date.now },
-  diamond: { type: Boolean, required: true, default: false },
-  diamondRangeIndex: { type: Number, required: false },
-  transactionHash: { type: String, required: false },
-}, { versionKey: false });
+const Offer = new Schema(
+  {
+    offerIndex: { type: String },
+    contract: { type: Schema.ObjectId, required: true },
+    product: { type: String, required: true },
+    offerPool: { type: String },
+    copies: { type: Number },
+    soldCopies: { type: Number, default: 0 },
+    sold: { type: Boolean, default: false },
+    price: { type: Number, required: true },
+    range: { type: [String], required: true },
+    offerName: { type: String, default: 'Default', trim: true },
+    creationDate: { type: Date, default: Date.now },
+    diamond: { type: Boolean, required: true, default: false },
+    diamondRangeIndex: { type: String, required: false },
+    transactionHash: { type: String, required: false },
+  },
+  { versionKey: false },
+);
 
 Offer.pre('save', function (next) {
-  this.copies = (this.range[1] - this.range[0]) + 1;
+  this.copies = this.range[1] - this.range[0] + 1;
   if (!this.diamond && this.offerPool === undefined) {
     throw new Error('OfferPool is required in classic contracts');
   }
@@ -32,8 +35,11 @@ Offer.pre('save', function (next) {
 
 Offer.pre('insertMany', async (next, offers) => {
   if (Array.isArray(offers) && offers.length) {
+    //  MB Check: string is array... and why only on insertmany
     offers = offers.map((offer) => {
-      offer.copies = (offer.range[1] - offer.range[0]) + 1;
+      offer.copies = Number(
+        BigInt(offer.range[1]) - BigInt(offer.range[0]) + 1n,
+      );
       return offer;
     });
   }

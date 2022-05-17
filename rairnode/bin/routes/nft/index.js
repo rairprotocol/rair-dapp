@@ -22,7 +22,7 @@ module.exports = context => {
     try {
       const { contract, product, updateMeta = 'false' } = req.body;
       const { user } = req;
-      const prod = Number(product);
+      const prod = product;
       const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'artist'];
       const optionalFields = ['image', 'animation_url'];
       const roadToFile = `${ req.file.destination }${ req.file.filename }`;
@@ -115,7 +115,7 @@ module.exports = context => {
         .on('end', () => {
           _.forEach(offers, offer => {
             _.forEach(records, record => {
-              const token = Number(record.nftid);
+              const token = record.nftid;
 
               if (_.inRange(token, offer.range[0], (offer.range[1] + 1))) {
                 const address = !!record.publicaddress ? record.publicaddress : '0xooooooooooooooooooooooooooooooooooo' + token;

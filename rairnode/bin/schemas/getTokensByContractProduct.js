@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 module.exports = Joi.object({
-  fromToken: Joi.number(),
-  toToken: Joi.number(),
+  fromToken: Joi.string(),
+  toToken: Joi.string(),
   limit: Joi.number(),
 });

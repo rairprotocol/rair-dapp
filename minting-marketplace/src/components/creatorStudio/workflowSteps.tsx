@@ -202,7 +202,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
 		}
 		if (response2.contract) {
 			response2.contract.product = (response2?.contract?.products?.filter(
-				(i) => i?.collectionIndexInContract === Number(collectionIndex)
+				(i) => i?.collectionIndexInContract === collectionIndex
 			))[0];
 			delete response2.contract.products;
 			if (response2.contract.blockchain === currentChain) {

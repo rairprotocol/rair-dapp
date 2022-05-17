@@ -9,8 +9,7 @@ module.exports = (context) => {
   router.get('/:contractId/:productIndex', async (req, res, next) => {
     try {
       const { contractId, productIndex } = req.params;
-      const productInd = Number(productIndex);
-
+      const productInd = productIndex; //  Number(productIndex);
       const [contract] = await context.db.Contract.aggregate([
         { $match: { _id: ObjectId(contractId) } },
         {
@@ -26,16 +25,10 @@ module.exports = (context) => {
                   $expr: {
                     $and: [
                       {
-                        $eq: [
-                          '$contract',
-                          '$$contr',
-                        ],
+                        $eq: ['$contract', '$$contr'],
                       },
                       {
-                        $eq: [
-                          '$collectionIndexInContract',
-                          '$$productInd',
-                        ],
+                        $eq: ['$collectionIndexInContract', '$$productInd'],
                       },
                     ],
                   },
@@ -59,16 +52,10 @@ module.exports = (context) => {
                   $expr: {
                     $and: [
                       {
-                        $eq: [
-                          '$contract',
-                          '$$contr',
-                        ],
+                        $eq: ['$contract', '$$contr'],
                       },
                       {
-                        $eq: [
-                          '$product',
-                          '$$prod',
-                        ],
+                        $eq: ['$product', '$$prod'],
                       },
                     ],
                   },
@@ -92,16 +79,10 @@ module.exports = (context) => {
                   $expr: {
                     $and: [
                       {
-                        $eq: [
-                          '$contract',
-                          '$$contr',
-                        ],
+                        $eq: ['$contract', '$$contr'],
                       },
                       {
-                        $eq: [
-                          '$product',
-                          '$$productIndex',
-                        ],
+                        $eq: ['$product', '$$productIndex'],
                       },
                     ],
                   },
@@ -114,23 +95,42 @@ module.exports = (context) => {
       ]);
 
       if (_.isEmpty(contract)) {
-        return res.status(404).send({ success: false, message: 'Product or contract not found.' });
+        return res
+          .status(404)
+          .send({ success: false, message: 'Product or contract not found.' });
       }
 
-      const offers = await context.db.Offer.find({ contract: contract._id, product: productInd }).distinct('diamondRangeIndex');
-
-      const options = _.assign({
+      const offers = await context.db.Offer.find({
         contract: contract._id,
-      }, contract.diamond ? { offer: { $in: offers } } : { offerPool: contract.offerPools.marketplaceCatalogIndex });
+        product: productInd,
+      }).distinct('diamondRangeIndex');
+
+      const options = _.assign(
+        {
+          contract: contract._id,
+        },
+        contract.diamond
+          ? { offer: { $in: offers } }
+          : { offerPool: contract.offerPools.marketplaceCatalogIndex },
+      );
 
       const tokens = await context.db.MintedToken.find(options);
       const totalCount = await context.db.MintedToken.countDocuments(options);
 
       if (_.isEmpty(tokens)) {
-        return res.status(404).send({ success: false, message: 'Tokens not found.' });
+        return res
+          .status(404)
+          .send({ success: false, message: 'Tokens not found.' });
       }
 
-      res.json({ success: true, result: { contract: _.omit(contract, ['offerPools']), tokens, totalCount } });
+      res.json({
+        success: true,
+        result: {
+          contract: _.omit(contract, ['offerPools']),
+          tokens,
+          totalCount,
+        },
+      });
     } catch (e) {
       next(e);
     }

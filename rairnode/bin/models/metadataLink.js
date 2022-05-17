@@ -7,8 +7,8 @@ const MetadataLink = new Schema({
   metadata: { type: Schema.Types.ObjectId, ref: 'TokenMetadata' },
   uri: { type: String, required: false },
   contract: { type: Schema.Types.ObjectId, ref: 'Contract' },
-  collectionIndex: { type: Number, required: false },
-  tokenIndex: { type: Number, required: false },
+  collectionIndex: { type: String, required: false },
+  tokenIndex: { type: String, required: false },
   appendTokenIndex: { type: Boolean, required: true, default: true },
 });
 
