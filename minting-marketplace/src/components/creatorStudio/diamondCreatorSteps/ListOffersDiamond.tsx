@@ -65,8 +65,7 @@ const ListOffers = ({contractData, setStepNumber, steps, simpleMode, stepNumber,
 				collectionIndex,
 				offerList.filter(item => !item._id).map(item => {
 					return {
-						rangeStart: item.range[0],
-						rangeEnd: item.range[1],
+						rangeLength: item.range[1] - item.range[0] + 1,
 						tokensAllowed: item.tokensAllowed,
 						lockedTokens: item.lockedTokens,
 						price: item.price,

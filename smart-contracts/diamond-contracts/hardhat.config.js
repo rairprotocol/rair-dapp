@@ -48,6 +48,14 @@ module.exports = {
 					runs: 200
 				}
 			}
+		},{
+			version: "0.8.13",
+			settings: {
+				optimizer: {
+					enabled: true,
+					runs: 200
+				}
+			}
 		}],
 	},
 	contractSizer: {
@@ -63,15 +71,21 @@ module.exports = {
 		coinmarketcap: process.env.COINMARKETCAP || undefined
 	},
 	etherscan: {
-		apiKey: process.env.POLYGONSCAN_API_KEY /*{
+		apiKey: {
+			mainnet: process.env.ETHERSCAN_API_KEY,
+			goerli: process.env.ETHERSCAN_API_KEY,
+
+			polygon: process.env.POLYGONSCAN_API_KEY,
+			polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+
+			bsc: process.env.BSCSCAN_API_KEY,
+			bscTestnet: process.env.BSCSCAN_API_KEY,
+		}
+		/*{
 			mainnet: process.env.ETHERSCAN_API_KEY,
 			ropsten: process.env.ETHERSCAN_API_KEY,
 			rinkeby: process.env.ETHERSCAN_API_KEY,
-			goerli: process.env.ETHERSCAN_API_KEY,
 			kovan: process.env.ETHERSCAN_API_KEY,
-			// binance smart chain
-			bsc: "YOUR_BSCSCAN_API_KEY",
-			bscTestnet: "YOUR_BSCSCAN_API_KEY",
 			// huobi eco chain
 			heco: "YOUR_HECOINFO_API_KEY",
 			hecoTestnet: "YOUR_HECOINFO_API_KEY",

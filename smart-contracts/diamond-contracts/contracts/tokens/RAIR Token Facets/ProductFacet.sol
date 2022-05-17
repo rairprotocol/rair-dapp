@@ -152,7 +152,7 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 	/// @notice	Loops through a range of tokens inside a collection and returns the first token without an owner
 	/// @dev	Uses a loop, do not call this from a non-view function!
 	/// @dev 	This functions require that the collection exist to properly work 
-	/// @param	collectionID	Index of the collection that we want to loop
+	/// @param	collectionId	Index of the collection that we want to loop
 	/// @param	startingIndex	Index of the starting token of the product
 	/// @param	endingIndex		Index of the last token of the product 
 	/// @return nextIndex		With the next starting point available for new products
@@ -194,7 +194,7 @@ contract RAIRProductFacet is AccessControlAppStorageEnumerable721 {
 
 	/// @notice	Returns the number of tokens inside a product
 	/// @param	productIndex 	Product index to verify
-	/// @return lenght with the total of minted tokens
+	/// @return length  	 	Number of tokens already minted
 	function mintedTokensInProduct(uint productIndex) public view returns (uint length) {
 		length = s.tokensByProduct[productIndex].length;
 	}

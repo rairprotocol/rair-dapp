@@ -4,17 +4,28 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
 	const {deploy} = deployments;
 	const [deployerAddress] = await getUnnamedAccounts();
 
-	let erc721FacetDeployment = await deploy('ERC721Facet', { from: deployerAddress });
-	console.log('ERC721 Facet deployed at', erc721FacetDeployment.receipt.contractAddress);
+	let facets = [
+		"ERC721Facet",
+		"RAIRMetadataFacet",
+		"RAIRProductFacet",
+		"RAIRRangesFacet"
+	]
 
-	let metadataFacetDeployment = await deploy('RAIRMetadataFacet', { from: deployerAddress });
-	console.log('Metadata Facet deployed at', metadataFacetDeployment.receipt.contractAddress);
-
-	let productFacetDeployment = await deploy('RAIRProductFacet', { from: deployerAddress });
-	console.log('Product Facet deployed at', productFacetDeployment.receipt.contractAddress);
-
-	let rangesFacetDeployment = await deploy('RAIRRangesFacet', { from: deployerAddress });
-	console.log('Ranges Facet deployed at', rangesFacetDeployment.receipt.contractAddress);
+	for await (let facet of facets) {
+		let deployment = await deploy(facet, { from: deployerAddress });
+		console.log(`${facet} deployed at ${deployment.receipt.contractAddress}`);
+		if (deployment.newlyDeployed) {
+			try {
+				await hre.run("verify:verify", {
+					address: deployment.receipt.contractAddress,
+					constructorArguments: [],
+					waitConfirmations: 6
+				});
+			} catch (err) {
+				console.error(err);
+			}
+		}
+	}
 };
 
 module.exports.tags = ['TokenFacets'];

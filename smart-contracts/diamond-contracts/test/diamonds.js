@@ -679,44 +679,42 @@ describe("Diamonds", function () {
 		it ("Shouldn't create offers for invalid products", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
 			// createRange(uint productId, uint rangeStart, uint rangeEnd, uint price, uint tokensAllowed, uint lockedTokens, string calldata name)
-			await expect(rangesFacet.createRange(2, 0, 10, 1000, 950, 50, 'First First First'))
+			await expect(rangesFacet.createRange(2, 11, 1000, 950, 50, 'First First First'))
 				.to.be.revertedWith('RAIR ERC721 Ranges: Collection does not exist');
 		});
 
 		it ("Shouldn't create ranges with invalid information", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
-			await expect(rangesFacet.createRange(0, 10, 0, 1000, 950, 50, 'First First First'))
-				.to.be.revertedWith('RAIR ERC721: Invalid starting or ending token');
-			await expect(rangesFacet.createRange(0, 0, 10, 1000, 950, 50, 'First First First'))
+			await expect(rangesFacet.createRange(0, 11, 1000, 950, 50, 'First First First'))
 				.to.be.revertedWith("RAIR ERC721: Allowed tokens should be less than range's length");
-			await expect(rangesFacet.createRange(0, 0, 10, 1000, 9, 50, 'First First First'))
+			await expect(rangesFacet.createRange(0, 11, 1000, 9, 50, 'First First First'))
 				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than range's length");
 		});
 
 		it ("Shouldn't create ranges worth less than 100wei", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
-			await expect(rangesFacet.createRange(0, 0, 10, 0, 9, 5, 'First First First'))
+			await expect(rangesFacet.createRange(0, 11, 0, 9, 5, 'First First First'))
 				.to.be.revertedWith("RAIR ERC721: Minimum price allowed is 100 wei");
-			await expect(rangesFacet.createRange(0, 0, 10, 1, 9, 5, 'First First First'))
+			await expect(rangesFacet.createRange(0, 11, 1, 9, 5, 'First First First'))
 				.to.be.revertedWith("RAIR ERC721: Minimum price allowed is 100 wei");
-			await expect(rangesFacet.createRange(0, 0, 10, 99, 9, 5, 'First First First'))
+			await expect(rangesFacet.createRange(0, 11, 99, 9, 5, 'First First First'))
 				.to.be.revertedWith("RAIR ERC721: Minimum price allowed is 100 wei");
 		});
 
 		it ("Should create ranges", async () => {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', firstDeploymentAddress);
-			await expect(await rangesFacet.createRange(0, 0, 10, 100, 9, 5, 'First First First'))
+			await expect(await rangesFacet.createRange(0, 11, 100, 9, 5, 'First First First'))
 				.to.emit(rangesFacet, 'CreatedRange')
 				.withArgs(0, 0, 10, 100, 9, 5, 'First First First', 0)
 				.to.emit(rangesFacet, 'TradingLocked')
 				.withArgs(0, 0, 10, 5);
-				//Index, From, To, Tokens to Locked
-			await expect(await rangesFacet.createRange(1, 0, 25, 100000, 26, 0, 'First Second First'))
+			//Index, From, To, Tokens to Locked
+			await expect(await rangesFacet.createRange(1, 26, 100000, 26, 0, 'First Second First'))
 				.to.emit(rangesFacet, 'CreatedRange')
 				.withArgs(1, 0, 25, 100000, 26, 0, 'First Second First', 1)
 				.to.emit(rangesFacet, 'TradingUnlocked')
 				.withArgs(1, 0, 25);
-			await expect(await rangesFacet.createRange(1, 26, 49, 200000, 24, 0, 'First Second Second'))
+			await expect(await rangesFacet.createRange(1, 24, 200000, 24, 0, 'First Second Second'))
 				.to.emit(rangesFacet, 'CreatedRange')
 				.withArgs(1, 26, 49, 200000, 24, 0, 'First Second Second', 2)
 				.to.emit(rangesFacet, 'TradingUnlocked')
@@ -727,17 +725,15 @@ describe("Diamonds", function () {
 			let rangesFacet = await ethers.getContractAt('RAIRRangesFacet', secondDeploymentAddress);
 			await expect(await rangesFacet.createRangeBatch(0, [
 				{
-					rangeStart: 0,
-					rangeEnd: 10,
+					rangeLength: 11,
 					price: 2000,
-					tokensAllowed: 9 ,
+					tokensAllowed: 9,
 					lockedTokens: 1,
 					name: 'Second First First'
 				}, {
-					rangeStart: 11,
-					rangeEnd: 99,
+					rangeLength: 89,
 					price: 3500,
-					tokensAllowed: 50 ,
+					tokensAllowed: 50,
 					lockedTokens: 10,
 					name: 'Second First Second'
 				}
@@ -753,15 +749,13 @@ describe("Diamonds", function () {
 
 			await expect(await rangesFacet.createRangeBatch(1, [
 				{
-					rangeStart: 0,
-					rangeEnd: 100,
+					rangeLength: 101,
 					price: 20000,
 					tokensAllowed: 5,
 					lockedTokens: 5,
 					name: 'Second Second First'
 				}, {
-					rangeStart: 101,
-					rangeEnd: 250,
+					rangeLength: 150,
 					price: 35000,
 					tokensAllowed: 50 ,
 					lockedTokens: 10,

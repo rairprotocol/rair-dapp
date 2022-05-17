@@ -12,7 +12,7 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	
 	/// @notice This event stores in the blockchain when a new token is indexed as accepted 
     /// @param 	contractAddress contains the address of the tokens contract 
-    /// @param 	pricetoDeploy contains the deployment cost for the token
+    /// @param 	priceToDeploy contains the deployment cost for the token
     /// @param 	responsible address of the person that implement the new token
 	event AcceptedToken(address contractAddress, uint priceToDeploy, address responsible);
 	/// @notice This event stores in the blockchain when a token is revoked
@@ -54,8 +54,8 @@ contract TokensFacet is AccessControlAppStorageEnumerable {
 	}
 
 	/// @notice	Returns the number of required tokens, given an erc777 address
-	/// @param 	erc777 Contains the facet addresses and function selectors
-	/// @return uint  Shows the price of deployment for the token
+	/// @param 	erc777 	Contains the facet addresses and function selectors
+	/// @return price 	Shows the price of deployment for the token
 	function getDeploymentCost(address erc777) public view returns (uint price) {
 		price = s.deploymentCostForToken[erc777];
 	}

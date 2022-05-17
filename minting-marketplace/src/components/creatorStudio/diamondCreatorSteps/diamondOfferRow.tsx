@@ -33,7 +33,7 @@ const DiamondOfferRow = ({
 	const [endingToken, setEndingToken] = useState(range?.at(1));
 	const [individualPrice, setIndividualPrice] = useState(price);
 	const [allowedTokenCount, setAllowedTokenCount] = useState(copies);
-	const [lockedTokenCount, setLockedTokenCount] = useState(lockedTokens);
+	const [lockedTokenCount, setLockedTokenCount] = useState(lockedTokens || 0);
 	const [valuesChanged, setValuesChanged] = useState(false);
 
 	const randColor = colors[index];

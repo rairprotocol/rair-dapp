@@ -65,7 +65,7 @@ library LibAppStorage721 {
 	}
 }
 
-/// @title  This is contract to manage the access control of the RAIT token facet
+/// @title  This is contract to manage the access control of the RAIR token facet
 /// @notice You can use this contract to administrate roles of the app market
 /// @author Juan M. Sanchez M.
 /// @dev 	Notice that this contract is inheriting from Context
@@ -185,6 +185,19 @@ contract AccessControlAppStorageEnumerable721 is Context {
 			s._roles[role].members[account] = false;
 			emit RoleRevoked(role, account, _msgSender());
 			s._roleMembers[role].remove(account);
+		}
+	}
+
+	/// @notice Allow us to grant a new role to an account
+	/// @dev 	Notice that this function override the behavior of
+	/// @dev 	the _grantRole function inherited from AccessControlEnumerable
+	/// @param 	role Contains the facet addresses and function selectors
+    /// @param 	account Contains the facet addresses and function selectors
+	function _grantRole(bytes32 role, address account) internal {
+		if (!hasRole(role, account)) {
+			s._roles[role].members[account] = true;
+			emit RoleGranted(role, account, _msgSender());
+			s._roleMembers[role].add(account);
 		}
 	}
 }

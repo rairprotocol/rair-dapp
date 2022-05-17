@@ -279,28 +279,6 @@ const WorkflowSteps = ({ sentryHistory }) => {
 		}
 	}, [contractData, diamondMarketplaceInstance, minterInstance])
 
-	useEffect(() => {
-		if (diamondMarketplaceInstance) {
-			diamondMarketplaceInstance.on("AddedMintingOffer", fetchData);
-			diamondMarketplaceInstance.on("UpdatedMintingOffer", fetchData);
-			return () => {
-				diamondMarketplaceInstance.off("AddedMintingOffer", fetchData);
-				diamondMarketplaceInstance.on("UpdatedMintingOffer", fetchData);
-			};
-		}
-	}, [diamondMarketplaceInstance, fetchData]);
-
-	useEffect(() => {
-		if (contractData?.instance && contractData.diamond) {
-			contractData.instance.on("CreatedRange", fetchData);
-			contractData.instance.on("RoleGranted", fetchData);
-			return () => {
-				contractData.instance.off("CreatedRange", fetchData);
-				contractData.instance.off("RoleGranted", fetchData);
-			};
-		}
-	}, [contractData, fetchData, forceFetchData]);
-
 	/*const fetchMintingStatus = useCallback(async () => {
 		if (!tokenInstance || !onMyChain) {
 			return;

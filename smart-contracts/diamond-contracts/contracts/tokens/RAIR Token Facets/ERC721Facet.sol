@@ -38,9 +38,9 @@ contract ERC721Facet is AccessControlAppStorageEnumerable721 {
 	/// @param 	tokenId Contains the id of the transfered token
 	event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
 	/// @notice This event stores in the blockchain when a owner is approved to move all the tokens
-    /// @param  owner Contains the address of the owner of the tokens
-	/// @param  operator Contains the address of the user approved for move all the tokens
-	/// @param	approved 
+    /// @param  owner 		Contains the address of the owner of the tokens
+	/// @param  operator 	Contains the address of the user approved for move all the tokens
+	/// @param	approved 	Boolean flag to approve or disapprove the operator
 	event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 	
 	/// @notice This function allow us to check the name of the token

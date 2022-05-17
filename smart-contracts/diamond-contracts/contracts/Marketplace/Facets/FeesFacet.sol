@@ -42,8 +42,8 @@ contract FeesFacet is AccessControlAppStorageEnumerableMarket {
 	}
 
 	/// @notice Allow us to check the value of the fee for the current node
-	/// @return decimals containt the current decimals that use the fee
-	/// @return nodefee  which has the value of the fee 
+	/// @return decimals 	Number of decimal spaces in the resulting node fee
+	/// @return nodeFee 	Percentage of any minting offer that belongs to the node address
 	function getNodeFee() public view returns (uint16 decimals, uint nodeFee) {
 		return (s.decimals, s.nodeFee);
 	}

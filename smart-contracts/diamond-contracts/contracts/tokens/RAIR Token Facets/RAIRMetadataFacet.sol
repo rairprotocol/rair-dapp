@@ -72,9 +72,9 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @notice	Gives an individual token an unique URI
 	/// @dev 	This function is only available to an account with a `CREATOR` role
 	/// @dev	Emits an event so there's provenance
-	/// @param	productId	Token Index that will be given an URI
-	/// @param	newURI		New URI to be given
-	/// @param	appendTokenIndexToProductURI 
+	/// @param	productId						Token Index that will be given an URI
+	/// @param	newURI							New URI to be given
+	/// @param	appendTokenIndexToProductURI 	If true, it will append the token index to the URI
 	function setProductURI(uint productId, string calldata newURI, bool appendTokenIndexToProductURI) public onlyRole(CREATOR) {
 		s.productURI[productId] = newURI;
 		s.appendTokenIndexToProductURI[productId] = appendTokenIndexToProductURI;
