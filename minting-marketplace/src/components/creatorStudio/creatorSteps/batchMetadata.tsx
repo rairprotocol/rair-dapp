@@ -10,8 +10,8 @@ import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import csvParser from '../../../utils/csvParser';
 import Dropzone from 'react-dropzone'
 import Swal from 'sweetalert2';
-import InputField from '../../common/InputField';
-import { metamaskCall } from '../../../utils/metamaskUtils';
+import blockchainData from '../../../utils/blockchainData';
+import BlockchainURIManager from '../common/blockchainURIManager'
 
 const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack, simpleMode}) => {
 	const { address, collectionIndex } = useParams();
@@ -20,9 +20,6 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 	const [metadata, setMetadata] = useState();
 	const [headers, setHeaders] = useState();
 	const [metadataExists, setMetadataExists] = useState(false);
-	const [metadataURI, setMetadataURI] = useState('');
-	const [contractURI, setContractURI] = useState('');
-	const [includeNumber, setIncludeNumber] = useState(true);
 
 	const onImageDrop = useCallback(acceptedFiles => {
 		csvParser(acceptedFiles[0], console.log)
@@ -212,117 +209,18 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 				<tfoot />
 			</table>
 		</div>}
-		{!simpleMode && contractData.instance && <>
-			<hr />
-			<div className='col-12 col-md-9'>
-				<InputField
-					customClass='form-control'
-					getter={metadataURI}
-					setter={setMetadataURI}
-					label='Metadata URI'
+		{!simpleMode && <>
+			{!contractData.instance ? <>
+				Connect to {blockchainData[contractData.blockchain].name} for more options
+			</> : <>
+				<BlockchainURIManager
+					{...{
+						contractData,
+						address,
+						collectionIndex
+					}}
 				/>
-			</div>
-			<div className='col-12 col-md-3 pt-4'>
-				<button disabled={!contractData.diamond} onClick={() => setIncludeNumber(!includeNumber)} className={`btn btn-${includeNumber ? 'royal-ice' : 'warning'}`}>
-					{!includeNumber && "Don't " }Include token ID {!contractData.diamond && <>( Diamonds Only )</>}
-				</button>
-			</div>
-			<br />
-			<div className='col-5'>
-				<button onClick={async () => {
-					let args = [contractData.product.collectionIndexInContract, metadataURI];
-					if (contractData.diamond) {
-						args.push(includeNumber);
-					}
-					Swal.fire({
-						title: 'Sending metadata URI...',
-						html: 'Please wait...',
-						icon: 'info',
-						showConfirmButton: false
-					});
-					let params = [contractData.product.collectionIndexInContract, metadataURI];
-					if (contractData.diamond) {
-						params.push(includeNumber);
-					}
-					if (await metamaskCall(contractData.instance.setProductURI(...params))) {
-						Swal.fire({
-							title: 'Success!',
-							html: `Metadata URI has been set for all tokens in product #${contractData.product.collectionIndexInContract}`,
-							icon: 'success',
-							showConfirmButton: true
-						});
-					}
-				}} className='btn btn-stimorol'>
-					{metadataURI === '' ? 'Uns' : 'S'}et Metadata URI for all tokens in {contractData.product.name}
-				</button>
-			</div>
-			<div className='col-2 pt-3'>
-				...or...
-			</div>
-			<div className='col-5 mb-3'>
-				<button onClick={async () => {
-					let args = [metadataURI];
-					if (contractData.diamond) {
-						args.push(includeNumber);
-					}
-					Swal.fire({
-						title: 'Sending metadata URI...',
-						html: 'Please wait...',
-						icon: 'info',
-						showConfirmButton: false
-					});
-					if (await metamaskCall(
-						contractData.instance.setBaseURI(...args)
-					)) {
-						Swal.fire({
-							title: 'Success!',
-							html: 'Metadata URI has been set for the entire contract',
-							icon: 'success',
-							showConfirmButton: true
-						});
-					}
-				}} className='btn btn-stimorol'>
-					{metadataURI === '' ? 'Uns' : 'S'}et Metadata URI for all tokens in the contract
-				</button>
-			</div>
-			<hr />
-			<div className='col-12 col-md-3 pt-4'>
-				<button onClick={async () => {
-						setContractURI(await metamaskCall(contractData.instance.contractURI()));
-					}} className='btn btn-royal-ice'>
-						Read Contract URI
-				</button>
-			</div>
-			<div className='col-12 col-md-6'>
-				<InputField
-					customClass='form-control w-100'
-					getter={contractURI}
-					setter={setContractURI}
-					label='Contract URI'
-				/>
-			</div>
-			<div className='col-12 col-md-3 pt-4'>
-				<button onClick={async () => {
-						Swal.fire({
-							title: 'Updating Contract URI...',
-							html: 'Please wait...',
-							icon: 'info',
-							showConfirmButton: false
-						});
-						if (await metamaskCall(
-							contractData.instance.setContractURI(contractURI)
-						)) {
-							Swal.fire({
-								title: 'Success!',
-								html: 'Contract URI has been set',
-								icon: 'success',
-								showConfirmButton: true
-							});
-						}
-					}} className='btn btn-stimorol'>
-						{contractURI === '' ? 'Uns' : 'S'}et Contract URI for OpenSea
-				</button>
-			</div>
+			</>}
 		</>}
 		<FixedBottomNavigation
 			backwardFunction={goBack}
