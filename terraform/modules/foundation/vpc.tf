@@ -13,27 +13,27 @@ module "vpc_cidr_ranges" {
   networks = [
     {
       name     = "public"
-      new_bits = 8
+      new_bits = 10
     },
     {
       name = "kubernetes_primary_cluster",
-      new_bits = 2
+      new_bits = 4
     },
     {
       name = "kubernetes_pod_cluster_secondary_range",
-      new_bits = 4
+      new_bits = 6
     },
     {
       name = "kubernetes_services_secondary_range",
-      new_bits = 4
+      new_bits = 6
     },
     {
       name = "kubernetes_control_plane_range",
-      new_bits = 12
+      new_bits = 14
     },
     {
       name = "mongo_primary_cluster_range",
-      new_bits = 2
+      new_bits = 4
     }
   ]
 }
