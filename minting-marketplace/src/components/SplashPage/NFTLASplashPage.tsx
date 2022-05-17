@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState, useEffect } from "react";
+import React, { useState /*, useEffect*/ } from "react";
 import { useSelector } from "react-redux";
 import "./SplashPageTemplate/AuthorCard/AuthorCard.css";
 import "./../AboutPage/AboutPageNew/AboutPageNew.css";
@@ -18,7 +18,7 @@ import NFTfavicon from './images/NFT_favicon.ico';
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
 import AuthorCard from "./SplashPageTemplate/AuthorCard/AuthorCard";
-import setTitle from '../../utils/setTitle';
+// import setTitle from '../../utils/setTitle';
 import NotCommercialTemplate from "./NotCommercial/NotCommercialTemplate";
 import CarouselModule from "./SplashPageTemplate/Carousel/Carousel";
 import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayerModule";

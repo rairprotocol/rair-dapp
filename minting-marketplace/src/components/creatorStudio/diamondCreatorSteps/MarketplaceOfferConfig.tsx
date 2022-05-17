@@ -3,7 +3,7 @@ import {useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
 import { utils /*, BigNumber*/ } from 'ethers';
 import { useSelector } from 'react-redux';
-import DiamondCustomPaymentRow from './diamondCustomPaymentRow'
+// import DiamondCustomPaymentRow from './diamondCustomPaymentRow'
 import CustomFeeRow from '../common/customFeeRow'
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../../utils/metamaskUtils';

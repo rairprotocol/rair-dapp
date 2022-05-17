@@ -33,7 +33,7 @@ import DiscordIcon from '../images/discord-icon.png';
 /* importing Components*/
 import TeamMeet from "../TeamMeet/TeamMeetList";
 import AuthorCard from "../SplashPageTemplate/AuthorCard/AuthorCard";
-import setTitle from "../../../utils/setTitle";
+// import setTitle from "../../../utils/setTitle";
 import NotCommercialTemplate from "../NotCommercial/NotCommercialTemplate";
 import CarouselModule from "../SplashPageTemplate/Carousel/Carousel";
 import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModule";
@@ -48,7 +48,7 @@ import Swal from 'sweetalert2';
 import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from "./ModalHelp";
-import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
+// import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID

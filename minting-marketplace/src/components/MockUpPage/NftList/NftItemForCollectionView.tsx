@@ -41,7 +41,7 @@ const NftItemForCollectionViewComponent = ({
 }) => {
   const params = useParams();
   const history = useHistory();
-  const [metaDataProducts /*setMetaDataProducts*/] = useState();
+  // const [metaDataProducts /*setMetaDataProducts*/] = useState();
   const [playing, setPlaying] = useState(false);
   const handlePlaying = () => {
     setPlaying((prev) => !prev);

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState, /*useCallback, */ useEffect } from "react";
+import React, { useState, /*useCallback, useEffect */  } from "react";
 import { useSelector } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
@@ -19,7 +19,7 @@ import SXSW3 from "./images/SxSW-IMSV-ATX-2022-Concept03.jpg";
 import TeamMeet from "./TeamMeet/TeamMeetList";
 import AuthorBlock from "./AuthorBlock/AuthorBlock";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
-import setTitle from "../../utils/setTitle";
+// import setTitle from "../../utils/setTitle";
 
 //Google Analytics
 // import ReactGA from 'react-ga';

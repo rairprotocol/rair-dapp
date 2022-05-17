@@ -31,7 +31,7 @@ import Swal from "sweetalert2";
 import NotCommercial from "./NotCommercial/NotCommercial";
 import MobileCarouselNfts from "../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts";
 import StandaloneVideoPlayer from "../video/videoPlayerGenerall";
-import setTitle from './../../utils/setTitle';
+// import setTitle from './../../utils/setTitle';
 import { Countdown } from "./Timer/CountDown";
 import PurchaseTokenButton from "../common/PurchaseToken";
 
