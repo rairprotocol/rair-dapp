@@ -2,7 +2,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import {rFetch} from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
-
+import {BigNumber} from 'ethers';
 import MinterMarketplaceItem from './MinterMarketplaceItem';
 
 
@@ -16,6 +16,11 @@ const MinterMarketplace = () => {
 			let offerArray = [];
 			aux.contracts.forEach(contract => {
 				contract.products.offers.forEach(offer => {
+					for (let field of Object.keys(offer)) {
+						if (offer[field]['$numberDecimal']) {
+							offer[field] = BigNumber.from(offer[field]['$numberDecimal']).toString();
+						}
+					}
 					if (!offer.sold) {
 						offerArray.push({
 							blockchain: contract.blockchain,
