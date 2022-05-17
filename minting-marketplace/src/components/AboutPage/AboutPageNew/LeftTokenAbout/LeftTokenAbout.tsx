@@ -32,7 +32,7 @@ const LeftTokenAbout = ({ primaryColor }) => {
                         </li>
                         <li>
                             <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#fff"}` }}>
-                                Feature complete plaform: minting, streaming, royalties & metadata
+                                Feature complete platform: minting, streaming, royalties & metadata
                             </p>
                         </li>
                     </ul>
