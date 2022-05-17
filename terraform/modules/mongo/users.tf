@@ -1,7 +1,7 @@
 resource "mongodbatlas_database_user" "rairnode" {
   auth_database_name = module.mongo_shared.mongo_external_db_name
   project_id   = var.project_id
-  username = local.applications.rairnode.name
+  username = "${local.applications.rairnode.name}-x509-auth-user"
   x509_type =  module.mongo_shared.X509Type.MANAGED
 
   roles {
@@ -37,7 +37,7 @@ resource "mongodbatlas_database_user" "blockchain_network" {
 resource "mongodbatlas_database_user" "rairnode_password_option" {
   auth_database_name = local.mongo_admin_db_name
   project_id   = var.project_id
-  username = "${local.applications.rairnode.name}-password-option"
+  username = local.applications.rairnode.name
 
   roles {
     role_name = mongodbatlas_custom_db_role.read_write_primary_db.role_name
