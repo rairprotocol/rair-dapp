@@ -233,10 +233,11 @@ const NftCollectionPageComponent = ({
           )}
       </div>
       <CollectionInfo
-        offerData={offerDataCol}
-        defaultImg={defaultImg}
         blockchain={blockchain}
+        defaultImg={defaultImg}
+        offerData={offerDataCol}
         openTitle={true}
+        someUsersData={someUsersData}
       />
       <AuthenticityBlock
         collectionToken={tokenData[0]?.authenticityLink}

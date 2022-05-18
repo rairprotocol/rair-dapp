@@ -287,6 +287,10 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         offerPrice={offerPrice}
         primaryColor={primaryColor}
         productsFromOffer={productsFromOffer}
+
+        setTokenData={setTokenData}
+        getAllProduct={getAllProduct}
+        
         setSelectedToken={setSelectedToken}
         someUsersData={someUsersData}
         selectedData={selectedData}

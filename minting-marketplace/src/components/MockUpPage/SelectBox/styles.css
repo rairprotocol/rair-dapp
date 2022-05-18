@@ -34,7 +34,7 @@
 
 .select-box--selected-item {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     position: relative;
     height: 100%;
     width: 100%;
@@ -89,6 +89,12 @@
     padding: 10px 5px;
 }
 
+.item-rank-wrapper{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: start;
+}
 .serial-box:hover {
     background-color: #AF6FD8;
 }

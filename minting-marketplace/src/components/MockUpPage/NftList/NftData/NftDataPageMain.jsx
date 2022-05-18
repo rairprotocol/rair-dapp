@@ -47,11 +47,14 @@ const NftDataPageMain = ({
   userData,
   someUsersData,
   ownerInfo,
+  setTokenData,
+  getAllProduct,
 }) => {
   const history = useHistory();
 
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
+  const [offersIndexesData, setOffersIndexesData] = useState();
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -300,7 +303,10 @@ const NftDataPageMain = ({
 
   function checkOwner() {
     let price = offerData?.price || minPrice;
-    if (currentUser === tokenData[selectedToken]?.ownerAddress && tokenData[selectedToken]?.isMinted) {
+    if (
+      currentUser === tokenData[selectedToken]?.ownerAddress &&
+      tokenData[selectedToken]?.isMinted
+    ) {
       return (
         <button
           className="nft-btn-sell"
@@ -312,17 +318,17 @@ const NftDataPageMain = ({
         </button>
       );
     } else if (tokenData[selectedToken]?.isMinted) {
-      return(
+      return (
         <button
-        className="nft-btn-sell"
-        disabled
-        style={{
-          color: `var(--${textColor})`,
-        }}
-      >
-        Already sold
-      </button>
-      )
+          className="nft-btn-sell"
+          disabled
+          style={{
+            color: `var(--${textColor})`,
+          }}
+        >
+          Already sold
+        </button>
+      );
     }
     return (
       <button
@@ -446,6 +452,43 @@ const NftDataPageMain = ({
     window.scroll(0, 0);
   }, []);
 
+  useEffect(() => {
+    if (offerDataInfo !== undefined && offerDataInfo.length) {
+      const first = offerDataInfo.map((r) => {
+        return {
+          copies: r.copies,
+          soldCopies: r.soldCopies,
+          offerIndex: r.offerIndex,
+          range: r.range,
+        };
+      });
+      setOffersIndexesData(
+        first.map((e, index) => {
+          return {
+            pkey:
+              e.offerIndex === 0 ? (
+                <i style={{ color: `red` }} className="fas fa-key" />
+              ) : e.offerIndex === 1 ? (
+                `🔑`
+              ) : (
+                <i style={{ color: `silver` }} className="fas fa-key" />
+              ),
+            value:
+              e.offerIndex === 0
+                ? "Ultra Rair"
+                : e.offerIndex === 1
+                ? "Rair"
+                : "Common",
+            id: index,
+            copies: e.copies,
+            soldCopies: e.soldCopies,
+            range: e.range,
+          };
+        })
+      );
+    }
+  }, [offerDataInfo]);
+
   return (
     <div id="nft-data-page-wrapper">
       <BreadcrumbsView />
@@ -530,23 +573,11 @@ const NftDataPageMain = ({
               <div>
                 <ItemRank
                   primaryColor={primaryColor}
-                  items={[
-                    {
-                      pkey: (
-                        <i style={{ color: `red` }} className="fas fa-key" />
-                      ),
-                      value: "Rair",
-                      id: 1,
-                    },
-                    { pkey: `🔑`, value: "Ultra Rair", id: 2 },
-                    {
-                      pkey: (
-                        <i style={{ color: `silver` }} className="fas fa-key" />
-                      ),
-                      value: "Common",
-                      id: 3,
-                    },
-                  ]}
+                  items={offersIndexesData}
+                  getAllProduct={getAllProduct}
+                  setSelectedToken={setSelectedToken}
+                  handleClickToken={handleClickToken}
+
                 />
               </div>
             </div>
@@ -775,6 +806,7 @@ const NftDataPageMain = ({
               </AccordionItemHeading>
               <AccordionItemPanel>
                 <CollectionInfo
+                  someUsersData={someUsersData}
                   offerData={offerDataInfo}
                   blockchain={blockchain}
                 />
