@@ -82,23 +82,24 @@ locals {
     ETHEREUM_MAINNET_FACTORY_ADDRESS: "0xC9eF9902fa24923A17326aDdb7da0E67fF46692a",
     ETHEREUM_MAINNET_MINTER_ADDRESS: "0x0Ce668D271b8016a785Bf146e58739F432300B12",
     SYNC_CONTRACT_REPEAT_EVERY: "5",
-    SYNC_CONTRACT_TASK_INTERVAL: "5"
-    IPFS_SERVICE: ${ipfs_service}
-    IPFS_GATEWAY: ${ipfs_gateway}
-    IPFS_API: ${ipfs_api}
-    MONGO_LOG_COLLECTION: ${mongo_log_collection}
-    LOG_LEVEL: ${log_level}
-    TEST_BSCSCAN_GATEWAY: ${test_bscscan_gateway}
-    TEST_POLYGONSCAN_GATEWAY: ${test_polygonscan_gateway}
-    TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
-    POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
-    ETHERSCAN_GATEWAY: ${etherscan_gateway}
-    BSCSCAN_GATEWAY: ${bscscan_gateway}
-    MORALIS_SERVER_TEST: ${moralis_server_test}
-    MORALIS_SERVER_MAIN: ${moralis_server_main}
-    MORALIS_API_KEY_TEST: ${moralis_api_key_test}
-    MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
-    MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
-    MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
+    SYNC_CONTRACT_TASK_INTERVAL: "5",
+    IPFS_SERVICE: "",
+    IPFS_GATEWAY: "",
+    IPFS_API: "",
+    MONGO_LOG_COLLECTION: "",
+    LOG_LEVEL: "",
+    TEST_BSCSCAN_GATEWAY: "",
+    TEST_POLYGONSCAN_GATEWAY: "",
+    TEST_ETHERSCAN_GATEWAY: "",
+    POLYGONSCAN_GATEWAY: "",
+    ETHERSCAN_GATEWAY: "",
+    BSCSCAN_GATEWAY: "",
+    MORALIS_SERVER_TEST: "",
+    MORALIS_SERVER_MAIN: "",
+    MORALIS_API_KEY_TEST: "",
+    MORALIS_API_KEY_MAIN: "",
+    MORALIS_MASTER_KEY_TEST: "",
+    MORALIS_MASTER_KEY_MAIN: "",
+    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: "false"
   }
 }

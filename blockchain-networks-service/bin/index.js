@@ -10,10 +10,16 @@ const morgan = require('morgan');
 const _ = require('lodash');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
+const { getMongoConnectionStringURI } = require('./shared_backend_code_generated/mongo/mongoUtils');
+const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
+const {
+  appSecretManager,
+  vaultAppRoleTokenManager
+} = require('./vault');
 
 const config = require('./config');
 
-const connectionString = process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL;
+const connectionString = getMongoConnectionStringURI({appSecretManager})
 
 async function main() {
   const _mongoose = await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -82,6 +88,21 @@ async function main() {
 }
 
 (async () => {
+
+  try {
+    // Login with vault app role creds first
+    await vaultAppRoleTokenManager.initialLogin();
+
+    await appSecretManager.getAppSecrets({
+      vaultToken: vaultAppRoleTokenManager.getToken(),
+      listOfSecretsToFetch: [
+        mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY
+      ]
+    });
+  } catch(err) {
+    console.log('Error initializing vault integration on app boot')
+  }
+
   await main();
 })().catch(e => {
   log.error(e);

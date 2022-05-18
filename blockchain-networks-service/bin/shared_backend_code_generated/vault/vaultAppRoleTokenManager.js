@@ -27,9 +27,6 @@ class VaultAppRoleTokenManager {
 
     // setTimeout object reference
     this.tokenRenewalTimeout = null;
-
-    // fire the initial call to get token
-    // when class is fisrt instantiated
   }
 
   initialLogin() {
@@ -71,7 +68,6 @@ class VaultAppRoleTokenManager {
         },
       };
       const res = await axios(axiosParams);
-
       if (res.status !== 200) {
         const errMessage = 'Error getting token! Received non 200 code from App Role Login url';
         console.log(errMessage);
@@ -108,6 +104,7 @@ class VaultAppRoleTokenManager {
         this.renewToken();
       } catch(err) {
         // TODO: VAULT UTILS remove this try/catch block
+        // https://rairtech.atlassian.net/browse/RAIR-3285
         console.log('Error renewing token');
       }
     }, halfOfLeaseDuration);
