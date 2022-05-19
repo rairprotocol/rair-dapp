@@ -95,6 +95,7 @@ import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/U
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import MetaTags from './components/SeoTags/MetaTags';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
+import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
 
 
 const gAppName = process.env.REACT_APP_GA_NAME
@@ -594,6 +595,10 @@ function App({ sentryHistory }) {
 											{
 												path: '/immersiverse-splash',
 												content: ImmersiVerseSplashPage
+											},
+											{
+												path: '/video-tiles-test',
+												content: VideoTilesTest
 											},
 											{
 												path: '/nftla-splash',

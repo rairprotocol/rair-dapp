@@ -13,7 +13,7 @@ import NFTLA_Video from "./images/NFT-LA-RAIR-2021.mp4"
 import DocumentIcon from "../../images/documentIcon.svg";
 import DiscordIcon from './images/discord-icon.png';
 import NFTfavicon from './images/NFT_favicon.ico';
-
+ 
 
 /* importing Components*/
 import TeamMeet from "./TeamMeet/TeamMeetList";
@@ -25,6 +25,7 @@ import VideoPlayerModule from "./SplashPageTemplate/VideoPlayer/VideoPlayerModul
 import StaticTiles from "./SplashPageTemplate/VideoTiles/StaticTiles";
 import UnlockableVideo from "./images/white_pixel.png";
 import MetaTags from "../SeoTags/MetaTags";
+import VideoTiles from "./SplashPageTemplate/VideoTiles/VideoTiles";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -80,33 +81,37 @@ const splashData = {
     videoModuleDescription: "Want to learn more about the project? Only NFT owners get access to exclusive streaming content. Connect with Metamask and get yours today!",
     videoModuleTitle: "Preview",
   },
-  tilesTitle: "Unlockable Conference Videos Coming Soon!",
-  videoArr: [
+  videoTilesTitle: "NFTLA",
+  videoArr:[
     {
-        typeVideo: "NFTLA-EXCLUSIVE-1",
-        unlockVideoName: "Welcome to NFTLA",
-        timeVideo: "00:00:00",
-        locked: true
+        videoName: "Welcome to NFTLA",
+        videoType: "NFTLA-EXCLUSIVE-1",
+        videoTime: "00:00:00",
+        videoSRC: NFTLA_Video,
     },
     {
-        typeVideo: "NFTLA-EXCLUSIVE-2",
-        unlockVideoName: "Speaker: Bun B",
-        timeVideo: "00:00:00",
-        locked: false
+        videoName: "Ukraine Glitch",
+        videoType: "UKR-EXCLUSIVE-1",
+        videoTime: "00:00:00",
+        videoSRC: null,
+        baseURL: 'https://storage.googleapis.com/rair-videos/',
+        mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
     },
     {
-        typeVideo: "NFTLA-EXCLUSIVE-3",
-        unlockVideoName: "Speaker: Dr. Peace Uche",
-        timeVideo: "00:00:00",
-        locked: false
+        videoName: "Greyman",
+        videoType: "NFTLA-EXCLUSIVE-3",
+        videoTime: "00:00:00",
+        videoSRC: null,
+        baseURL: 'https://storage.googleapis.com/rair-videos/',
+        mediaId: 'QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8J',
     },
     {
-        typeVideo: "NFTLA-EXCLUSIVE-4",
-        unlockVideoName: "Closing Cermonies",
-        timeVideo: "00:00:00",
-        locked: true
+        videoName: "No Video",
+        videoType: "NFTLA-EXCLUSIVE-4",
+        videoTime: "00:00:00",
+        videoSRC: null,
     }
- ]
+  ],
 }
 
 
@@ -128,7 +133,7 @@ const NFTLASplashPage = ({ loginDone }) => {
         <AuthorCard splashData={splashData} />
         <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData} />
         <VideoPlayerModule backgroundImage={splashData.backgroundImage} videoData={splashData.videoData} />
-        <StaticTiles videoArr={splashData.videoArr} title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo} />
+        <VideoTiles title={splashData.videoTilesTitle} videoArr={splashData.videoArr} primaryColor={primaryColor}/>
         <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName} />
       </div>
