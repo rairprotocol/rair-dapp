@@ -3,34 +3,34 @@ import React from 'react';
 import UnlockVideoItem from '../../UnlockVideos/UnlockVideoItem';
 import "./StaticTiles.css"
 
-const videoArr = [
-    {
-        typeVideo: "NFTLA-EXCLUSIVE-1",
-        unlockVideoName: "Welcome to NFTLA",
-        timeVideo: "00:00:00",
-        locked: true
-    },
-    {
-        typeVideo: "NFTLA-EXCLUSIVE-2",
-        unlockVideoName: "Speaker: Bun B",
-        timeVideo: "00:00:00",
-        locked: false
-    },
-    {
-        typeVideo: "NFTLA-EXCLUSIVE-3",
-        unlockVideoName: "Speaker: Dr. Peace Uche",
-        timeVideo: "00:00:00",
-        locked: false
-    },
-    {
-        typeVideo: "NFTLA-EXCLUSIVE-4",
-        unlockVideoName: "Closing Cermonies",
-        timeVideo: "00:00:00",
-        locked: true
-    }
-]
+// const videoArr = [
+//     {
+//         typeVideo: "NFTLA-EXCLUSIVE-1",
+//         unlockVideoName: "Welcome to NFTLA",
+//         timeVideo: "00:00:00",
+//         locked: true
+//     },
+//     {
+//         typeVideo: "NFTLA-EXCLUSIVE-2",
+//         unlockVideoName: "Speaker: Bun B",
+//         timeVideo: "00:00:00",
+//         locked: false
+//     },
+//     {
+//         typeVideo: "NFTLA-EXCLUSIVE-3",
+//         unlockVideoName: "Speaker: Dr. Peace Uche",
+//         timeVideo: "00:00:00",
+//         locked: false
+//     },
+//     {
+//         typeVideo: "NFTLA-EXCLUSIVE-4",
+//         unlockVideoName: "Closing Cermonies",
+//         timeVideo: "00:00:00",
+//         locked: true
+//     }
+// ]
 
-const StaticTiles = ({ title, UnlockableVideo, primaryColor }) => {
+const StaticTiles = ({ videoArr, title, UnlockableVideo, primaryColor }) => {
     return (
         <div 
             className="unlockble-video"

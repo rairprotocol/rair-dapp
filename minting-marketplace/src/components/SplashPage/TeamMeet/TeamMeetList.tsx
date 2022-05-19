@@ -7,6 +7,7 @@ import Teammate_4 from '../images/rair-block.png';
 import Teammate_5 from '../images/movementontheground.png';
 import Teammate_6 from '../images/immersiverse_logo.png';
 import Teammate_7 from '../images/UkrainianAmericanCons/15724868_10208080805993720_1581371147497725224_o.jpeg';
+import Teammate_8 from '../images/slidelock_team.png';
 import Teammate_VV from '../images/vv_Rair_logo.png'
 import NFTLA_ICON from '../images/NFTLA_icon.png'
 // import TCC_ICON from '../images/TCC_icon.png'
@@ -700,6 +701,52 @@ const teamNutArray = [
     }
 ];
 
+const teamSlideLockArray = [
+    {   
+        chain: '',
+        nameTeammate: "Slidelock",
+        imageUrl: Teammate_8,
+        aboutTeammate: [
+            "Slidelock provides encrypted data streams for sharing important internal documentation securely. Slidelock utilizes the Ethereum ecoystem to provide encrypted streaming access. Metamask for distributed authentication. Polygon NFTs for low cost credentialing. Ethereum NFTs for high value credentialing. "
+        ],
+        socials: [
+            {
+                classIcon: 'fab fa-facebook',
+                link: '',
+            },
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: '',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+    {
+        chain: `0x7849194dD593d6c3aeD24035D70B5394a1C90F8F`,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
 const NutsTeamComponent = ({ primaryColor }) => {
     return (
         <>
@@ -777,6 +824,27 @@ const VaporVerseComponent = ({ primaryColor }) => {
         </div>
     )
 }
+
+const SlideLockComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamSlideLockArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
 
 const GreyManTeamComponent = ({ primaryColor }) => {
     return (
@@ -887,6 +955,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                     arraySplash === "vaporverse" && <h3> mak0r </h3>
                 }
                 {
+                    arraySplash === "slidelock" && <h3> Meet the <span style={{color:"#57B69C"}}>Team</span></h3>
+                }
+                {
                     arraySplash === "nipsey" && <h3>Meet the <span className="text-gradient">Team</span></h3>
                 }
                 {
@@ -914,6 +985,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                 }
                 {
                     arraySplash === "vaporverse" &&  <VaporVerseComponent />
+                }
+                {
+                    arraySplash === "slidelock" &&  <SlideLockComponent />
                 }
                 {
                     arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />

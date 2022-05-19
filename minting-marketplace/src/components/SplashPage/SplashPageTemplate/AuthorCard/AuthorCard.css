@@ -157,6 +157,12 @@
     z-index: 10;
 }
 
+.template-author-card .text-splash .title-splash img.author-card-title-image {
+    font-size: 5vw;
+    font-weight: 700;
+    z-index: 10;
+}
+
 
 .template-author-card .text-splash .text-description {
     width: 50%;
@@ -309,7 +315,7 @@
     .template-author-card .text-splash {
         text-align: center;
         padding-left: 0vw;
-
+        
     }
 
     .template-author-card .text-splash .title-splash {

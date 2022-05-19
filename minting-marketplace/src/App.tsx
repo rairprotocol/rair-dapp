@@ -94,6 +94,7 @@ import MenuNavigation from './components/Navigation/Menu';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import MetaTags from './components/SeoTags/MetaTags';
+import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 
 
 const gAppName = process.env.REACT_APP_GA_NAME
@@ -621,6 +622,10 @@ function App({ sentryHistory }) {
 											{
 												path: '/about-page',
 												content: AboutPageNew
+											},
+                      {
+												path: '/slidelock',
+												content: SlideLock
 											},
 										].map((item, index) => {
 											// If the path is set as the Home Page, render it as the default path (/)

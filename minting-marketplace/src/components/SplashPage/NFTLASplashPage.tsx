@@ -80,7 +80,33 @@ const splashData = {
     videoModuleDescription: "Want to learn more about the project? Only NFT owners get access to exclusive streaming content. Connect with Metamask and get yours today!",
     videoModuleTitle: "Preview",
   },
-  tilesTitle: "Unlockable Conference Videos Coming Soon!"
+  tilesTitle: "Unlockable Conference Videos Coming Soon!",
+  videoArr: [
+    {
+        typeVideo: "NFTLA-EXCLUSIVE-1",
+        unlockVideoName: "Welcome to NFTLA",
+        timeVideo: "00:00:00",
+        locked: true
+    },
+    {
+        typeVideo: "NFTLA-EXCLUSIVE-2",
+        unlockVideoName: "Speaker: Bun B",
+        timeVideo: "00:00:00",
+        locked: false
+    },
+    {
+        typeVideo: "NFTLA-EXCLUSIVE-3",
+        unlockVideoName: "Speaker: Dr. Peace Uche",
+        timeVideo: "00:00:00",
+        locked: false
+    },
+    {
+        typeVideo: "NFTLA-EXCLUSIVE-4",
+        unlockVideoName: "Closing Cermonies",
+        timeVideo: "00:00:00",
+        locked: true
+    }
+ ]
 }
 
 
@@ -102,7 +128,7 @@ const NFTLASplashPage = ({ loginDone }) => {
         <AuthorCard splashData={splashData} />
         <CarouselModule carousel={!carousel} carouselTitle={splashData.carouselTitle} carouselData={splashData.carouselData} />
         <VideoPlayerModule backgroundImage={splashData.backgroundImage} videoData={splashData.videoData} />
-        <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo} />
+        <StaticTiles videoArr={splashData.videoArr} title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo} />
         <TeamMeet primaryColor={primaryColor} arraySplash={"NFTLA"} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={splashData.NFTName} />
       </div>

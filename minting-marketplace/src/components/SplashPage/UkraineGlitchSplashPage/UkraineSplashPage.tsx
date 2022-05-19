@@ -45,7 +45,7 @@ import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import Swal from 'sweetalert2';
-import MetaTags from './../../SeoTags/MetaTags'
+// import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from "../SplashPageTemplate/ModalHelp";
 // import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
@@ -241,7 +241,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
 
   return (
     <div className="wrapper-splash-page ukraineglitch">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      {/* <MetaTags seoMetaTags={splashData.seoInformation} /> */}
       <div className="template-home-splash-page">
         <ModalHelp 
           openCheckList={openCheckList}
