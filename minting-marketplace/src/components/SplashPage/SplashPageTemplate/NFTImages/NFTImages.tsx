@@ -13,16 +13,18 @@ const NFTImages = ({
     linkComing,
     titleNft,
     colorText,
-    carousel
+    carousel,
+    noTitle,
 }) => {
     return (
         <>
             <div className="exclusive-nfts">
                 <div className="title-nft">
-                    <h3>Only <span
+                    {noTitle || <h3>Only <span
                         className={colorText ? "" : "text-gradient"}
                         style={{ color: `${colorText && colorText}` }}
                     >{amountTokens ? amountTokens : 1000}</span> {titleNft ? titleNft : "originals will ever be minted"}</h3>
+                    }
                 </div>
                 {
                     carousel ? <div className="main-greyman-pic-wrapper">

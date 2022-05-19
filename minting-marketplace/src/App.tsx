@@ -92,6 +92,7 @@ import AlertMetamask from './components/AlertMetamask/index';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage';
 import MenuNavigation from './components/Navigation/Menu';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
+import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import MetaTags from './components/SeoTags/MetaTags';
 
 
@@ -587,58 +588,56 @@ function App({ sentryHistory }) {
 										This needs a different map because the requirements for rendering are more
 										complex than just a boolean
 									*/}
-                  {[
-                    {
-                      path: "/immersiverse-splash",
-                      content: ImmersiVerseSplashPage,
-                    },
-                    {
-                      path: "/nftla-splash",
-                      content: NFTLASplashPage,
-                    },
-                    {
-                      path: "/ukraineglitch",
-                      content: UkraineSplashPage,
-                    },
-                    {
-                      path: "/greyman-splash",
-                      content: GreymanSplashPage,
-                    },
-                    {
-                      path: "/nutcrackers-splash",
-                      content: Nutcrackers,
-                    },
-                    {
-                      path: "/nipsey-splash",
-                      content: SplashPage,
-                    },
-                    {
-                      path: "/about-page",
-                      content: AboutPageNew,
-                    },
-                  ].map((item, index) => {
-                    // If the path is set as the Home Page, render it as the default path (/)
-                    let isHome = item.path === process.env.REACT_APP_HOME_PAGE;
+									{
+										[
+											{
+												path: '/immersiverse-splash',
+												content: ImmersiVerseSplashPage
+											},
+											{
+												path: '/nftla-splash',
+												content: NFTLASplashPage
+											},
+											{
+												path: '/ukraineglitch',
+												content: UkraineSplashPage
+											},
+											{
+												path: '/vaporverse-splash',
+												content: VaporverseSplashPage
+											},
+											{
+												path: '/greyman-splash',
+												content: GreymanSplashPage
+											},
+											{
+												path: '/nutcrackers-splash',
+												content: Nutcrackers
+											},
+											{
+												path: '/nipsey-splash',
+												content: SplashPage
+											},
+											{
+												path: '/about-page',
+												content: AboutPageNew
+											},
+										].map((item, index) => {
+											// If the path is set as the Home Page, render it as the default path (/)
+											let isHome = item.path === process.env.REACT_APP_HOME_PAGE;
 
-                    if (process.env.REACT_APP_HOME_PAGE !== "/" && !isHome) {
-                      return undefined;
-                    }
+											if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
+												return undefined;
+											}
 
-                    return (
-                      <SentryRoute
-                        key={index}
-                        exact
-                        path={isHome ? "/" : item.path}
-                      >
-                        <item.content
-                          {...{ connectUserData }}
-                          loginDone={loginDone}
-                        />
-                      </SentryRoute>
-                    );
-                  })}
-                  {[
-                    /*
+											return <SentryRoute key={index} exact path={isHome ? '/' : item.path}>
+												<item.content {...{ connectUserData }} loginDone={loginDone} />
+											</SentryRoute>
+										})
+									}
+									{[
+
+										/*
 											If the home page isn't the default '/', it won't show the
 												'Digital Ownership Encryption' message
 										*/

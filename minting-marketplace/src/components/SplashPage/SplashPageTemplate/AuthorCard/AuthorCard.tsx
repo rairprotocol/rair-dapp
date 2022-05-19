@@ -18,7 +18,7 @@ const AuthorCardButton = ({ buttonData }) => {
           background: buttonColor,
         }}
       >
-        <img className="metamask-logo" src={buttonImg} alt="form-logo" />{" "}
+        {buttonImg && <img className="metamask-logo" src={buttonImg} alt="form-logo" />}{" "}
         {buttonLabel}
       </button>
     </div>
@@ -31,8 +31,10 @@ const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
     titleColor,
     description,
     backgroundImage,
+    cardFooter,
     button1,
     button2,
+    button3,
     purchaseButton,
     buttonLabel,
     buttonBackgroundHelp
@@ -62,7 +64,6 @@ const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
             >
               {title}
             </h3>
-
           </div>
           <div className="text-description">{description}</div>
           <div className="button-wrapper">
@@ -71,10 +72,16 @@ const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
                 {...{ ...purchaseButton, connectUserData, buttonLabel }}
               />
             )}
-            {button1 && <AuthorCardButton buttonData={button1} />}
-            {button2 && <AuthorCardButton buttonData={button2} />}
+            <div className="button-row-0">
+              {button1 && <AuthorCardButton buttonData={button1} />}
+            </div>
+            <div className="button-row-1">
+              {button2 && <AuthorCardButton buttonData={button2} />}
+              {button3 && <AuthorCardButton buttonData={button3} />}
+            </div>
           </div>
         </div>
+        {cardFooter && <div className="card-footer">{cardFooter}</div>}
       </div>
     </div>
   );

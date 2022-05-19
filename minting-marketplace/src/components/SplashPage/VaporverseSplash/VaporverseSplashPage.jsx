@@ -1,14 +1,22 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../SplashPageTemplate/AuthorCard/AuthorCard.css";
 import "../../AboutPage/AboutPageNew/AboutPageNew.css";
-import "./UkraineSplash.css";
+import "./VaporverseSplash.css";
 
 /* importing images*/
-import UKR_rounded from '../images/UkraineGlitchNFTExamples/rounded_corners.png';
-import UKR4 from '../images/UkraineGlitchNFTExamples/4.jpg'
-import UKR5 from '../images/UkraineGlitchNFTExamples/5.gif'
+import vaporverse_background from '../images/vaporverse_authorcard_background.png';
+import VV0 from '../images/vv_NFT_0.png';
+import VV1 from '../images/vv_NFT_1.png';
+import VV2 from '../images/vv_NFT_2.png';
+import VV3 from '../images/vv_NFT_3.png';
+import VV4 from '../images/vv_NFT_4.png';
+
+import VV_warning_1 from '../images/vv_warning_1.png';
+import VV_warning_2 from '../images/vv_warning_2.png';
+import VV_test_transmission from '../images/vv_test_transmission.png';
+
+
 import UKR126 from '../images/UkraineGlitchNFTExamples/126.jpg'
 // import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg'
 import UKR497 from '../images/UkraineGlitchNFTExamples/497.jpg'
@@ -19,8 +27,7 @@ import UKR1294 from '../images/UkraineGlitchNFTExamples/1294.jpg'
 // import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg'
 // import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
 // import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
-import UKR1989 from '../images/UkraineGlitchNFTExamples/1989.jpg'
-import videoBackground from '../images/metamask-vid-final.png'
+import videoBackground from '../images/vaporverse_video_background.png';
 import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
 import faviconUkraine from './../images/favicons/favicon-ukraine.ico'
 
@@ -33,7 +40,7 @@ import DiscordIcon from '../images/discord-icon.png';
 /* importing Components*/
 import TeamMeet from "../TeamMeet/TeamMeetList";
 import AuthorCard from "../SplashPageTemplate/AuthorCard/AuthorCard";
-// import setTitle from "../../../utils/setTitle";
+import setTitle from "../../../utils/setTitle";
 import NotCommercialTemplate from "../NotCommercial/NotCommercialTemplate";
 import CarouselModule from "../SplashPageTemplate/Carousel/Carousel";
 import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModule";
@@ -45,10 +52,10 @@ import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
 
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import Swal from 'sweetalert2';
-import MetaTags from './../../SeoTags/MetaTags'
+import MetaTags from '../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from "../SplashPageTemplate/ModalHelp";
-// import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
+import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -68,75 +75,46 @@ const testContract = {
 };
 
 const splashData = {
-  title: "#UkraineGlitch",
-  titleColor: "#FFD505",
-  description: [
-    "1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ",
-    <br />,
-    <br />,
-    "100% of proceeds fund tactical first aid supplies and Ukrainian developers",
-  ],
+  title: null,
+  titleColor: "rgb(234,51,127)",
+  description: null,
+  cardFooter: "/utility drop for OG degens /mintpass to vaporverse",
   seoInformation: {
     title: "Слава Україні!",
     contentName: "author",
     content: "#UkraineGlitch",
     description: "1991 Generative Abstract Glitch Art pieces to aid Ukraine",
     favicon: faviconUkraine,
-    image: UKR_rounded
+    image: vaporverse_background
   },
   buttonLabel: "Mint for .1991 Eth",
-  buttonBackgroundHelp: "rgb(3, 91, 188)",
-  backgroundImage: UKR_rounded,
-  purchaseButton: {
-    // Reusable component
-    buttonComponent: PurchaseTokenButton,
-    // OPTIONAL: Image on the purchase button
-    img: MetaMaskIcon,
-    // Contract address
-    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true' ? testContract : mainContract),
-    // Custom style for the button
-    customStyle: {
-      backgroundColor: "#035BBC"
-    },
-    presaleMessage: 'By accepting these terms, I agree to glitch the flag and support the country in distress.',
-    // Custom class for the div surrounding the button
-    customWrapperClassName: 'btn-submit-with-form',
-    blockchainOnly: true,
-    // Custom function that will be called if the minting is a success
-    // First parameter will be the minted token's number
-    customSuccessAction: async (nextToken) => {
-      let tokenMetadata = await rFetch(`/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`);
-      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
-        Swal.fire({
-          imageUrl: tokenMetadata.result.metadata.image,
-          imageHeight: "auto",
-          imageWidth: "65%",
-          imageAlt: "Your NFT's image",
-          title: `You own #${nextToken}!`,
-          icon: "success"
-        });
-      } else {
-        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
-      }
-    }
+  buttonBackgroundHelp: null,
+  backgroundImage: vaporverse_background,
+  purchaseButton: null,
+  button1: {
+    buttonColor: "rgb(234,51,127)",
+    buttonLabel: "premint.xyz",
+    buttonImg: null,
+    buttonLink: "https://www.premint.xyz/vaporversexyz/",
   },
-
-  // button1: {
-  //   buttonColor: "#035BBC",
-  //   buttonLabel: "Mint for .1 ETH",
-  //   buttonImg: MetaMaskIcon,
-  //   buttonLink: "https://placekitten.com/200/300",
-  // },
 
   button2: {
-    buttonColor: "#FFD505",
-    buttonLabel: "Join Our Discord",
-    buttonImg: DiscordIcon,
-    buttonLink: "https://discord.com/invite/y98EMXRsCE",
+    buttonColor: "rgb(189,52,183)",
+    buttonLabel: "discord",
+    buttonImg: null,
+    buttonLink: "https://discord.gg/pSTbf2yz7V",
   },
+
+  button3: {
+    buttonColor: "rgb(189,52,183)",
+    buttonLabel: "twitter",
+    buttonImg: null,
+    buttonLink: "https://twitter.com/rairtech",
+  },
+
   exclusiveNft: {
-    title: "NFTs",
-    titleColor: "rgb(3, 91, 188)",
+    title: "",
+    titleColor: "rgb(189,52,183)",
   },
   carouselTitle: "Our Developers",
   carouselData: [
@@ -162,13 +140,13 @@ const splashData = {
   videoData: {
     video: null,
     videoTitle: "Watch the Transformation",
-    videoModuleDescription: "Flag owners sign in with metamask to watch",
-    videoModuleTitle: "For Supporters Only",
+    videoModuleDescription: null,
+    videoModuleTitle: "loading... test comms",
     baseURL: 'https://storage.googleapis.com/rair-videos/',
     mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
   },
   tilesTitle: null,
-  NFTName: "#ukraineglitch",
+  NFTName: "NFT",
   counterData: {
     titleColor: "#FFD505",
     title1: "#ukraineglitch",
@@ -202,22 +180,38 @@ const splashData = {
   }
 }
 
-const UkraineSplashPage = ({ loginDone, connectUserData }) => {
+
+const Text = ({text}) => {return(<>{text}</>)}
+
+const InfoBlock = ({infoArray, style, subclass}) => {
+  return (
+    <div style={style} className={`info-block ${subclass}`}>
+      {infoArray?.map((info, index) => {return (<>{info}<br/></>)})}
+    </div>
+  )
+}
+
+const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
   const [openCheckList, setOpenCheckList] = useState(false);
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
   const { currentChain, minterInstance } = useSelector((store) => store.contractStore);
-  const carousel_match = window.matchMedia("(min-width: 900px)");
+  const carousel_match = window.matchMedia("(min-width: 630px)");
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurshaseList] = useState(true);
   const ukraineglitchChainId = '0x1'
   const dispatch = useDispatch()
+
 
   const togglePurchaseList = () => {
       setPurshaseList(prev => !prev);
   }
 
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
+
+  const toggleCheckList = () => {
+    setOpenCheckList(prev => !prev)
+  }
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
@@ -240,7 +234,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   }, []);
 
   return (
-    <div className="wrapper-splash-page ukraineglitch">
+    <div className="wrapper-splash-page vaporverse">
       <MetaTags seoMetaTags={splashData.seoInformation} />
       <div className="template-home-splash-page">
         <ModalHelp 
@@ -248,44 +242,110 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
           purchaseList={purchaseList}
           togglePurchaseList={togglePurchaseList}
           toggleCheckList={toggleCheckList}
-          backgroundColor={{ darkTheme: "rgb(3, 91, 188)", lightTheme: "rgb(3, 91, 188)" }}
+          backgroundColor={{darkTheme:"rgb(189,52,183)", lightTheme:"rgb(189,52,183)"}}
         />
         <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
-        {/* <PurchaseChecklist
+        <PurchaseChecklist
           toggleCheckList={toggleCheckList}
           openCheckList={openCheckList}
           nameSplash={"UkraineGlitch"}
           backgroundColor={{ darkTheme: "rgb(3, 91, 188)", lightTheme: "rgb(3, 91, 188)" }}
-        /> */}
-        {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
-        <TokenLeftTemplate
-          counterData={splashData.counterData}
-          copies={splashData.counterData.nftCount}
-          soldCopies={soldCopies}
-          primaryColor={primaryColor}
-          loginDone={loginDone}
-          nftTitle="NFTs Left"
         />
+
+        <div style={{ height: "5vw" }} />
+
+        <div style={{display: "flex", width:"100%"}}>
+          <InfoBlock subclass="info-block-col" infoArray={[
+            <>must own</>,
+            <>/heavencomputer</>,
+            <>/bastardganpunksv1/v2</>,
+            <>/glitchpixx</>,
+            <div style={{color: "RGB(189,52,182)"}}>---Discord4FullList---</div>,
+            <div style={{height: "12px", width: "100%", backgroundColor: "RGB(198,212,131)"}}></div>,
+          ]}/>
+          <InfoBlock subclass="info-block-col" infoArray={[
+            <></>,
+            <>/snapshot date 8/19/2022</>,
+            <>/1:1 polygon claim token</>,
+            <>/convert to ETH @ ETH2.0 launch 2 save treees</>,
+            <br/>,
+            <div style={{height: "12px", width: "100%", backgroundColor: "white"}}></div>,
+          ]}/>
+        </div>
+
+        <div style={{ height: "3vw" }} />
+
+        <InfoBlock style={{color: "RGB(213,233,216)"}} infoArray={[
+          "mkdir vap0rverse",
+          "rmdir vaporverse",
+          "//N0stalgia. A permutation. A remix. Warm feelings. The click of high heels on smooth tile.",
+          "//Whispers. Whitelist on aisle 8. Tag 3 frens 4 brainchip pass. Give your grankids +80 dopamine for life.",
+          "//All is claim. Claim your pass. NO BOOMER PUNKS",
+          "time 2 go 2 skool...",
+          ].map(text => <Text text={text}/>)}/>
+        
+        <div style={{ height: "5vw" }} />
+
+        <div style={{display: "flex", width: "100%", justifyContent: "space-evenly"}}>
+          <InfoBlock 
+            style={{display: "flex", flexDirection: "column", alignItems: "center"}}
+            infoArray={[
+              <img style={{width: "90%"}} src={VV_warning_2}/>,
+              <div style={{textAlign: "center", width: "75%", color:"RGB(117, 251, 81)"}}> //clean safe only challenge </div>
+            ]}
+          />
+          <InfoBlock 
+            style={{display: "flex", flexDirection: "column", alignItems: "center"}}
+            infoArray={[
+              <img style={{width: "90%"}} src={VV_warning_1}/>,
+              <div style={{textAlign: "center", width: "75%", color:"RGB(234, 51, 35)"}}> //dirty do not sign will steal yur eth</div>
+            ]}
+          />
+        </div>
+
+        <InfoBlock infoArray={[
+          "//transmission failed??",
+          "goto metamask",
+          "goto opensea",
+          "goto looksrare",
+          "//buy supported degens",
+          "loading....",
+          ].map(text => <Text text={text}/>)}/>
+
+        <div style={{ height: "5vw" }} />
+
+        <img style={{width: "100%"}} src={VV_test_transmission}/>
+
+        <div style={{ height: "7vw" }} />
+
+        <InfoBlock infoArray={[
+          "//join lore",
+          "//moar streaming vapor",
+          "awaits...."
+        ].map(text => <Text text={text}/>)}/>
+
+        <div style={{ height: "5vw" }} />
+        <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
         <NFTImages
-          NftImage={UKR5}
-          Nft_1={UKR497}
-          Nft_2={UKR1989}
-          Nft_3={UKR4}
-          Nft_4={UKR126}
-          amountTokens={splashData.counterData.nftCount}
-          titleNft={splashData.exclusiveNft.title}
-          colorText={splashData.exclusiveNft.titleColor}
+          NftImage={VV0}
+          Nft_1={VV1}
+          Nft_2={VV2}
+          Nft_3={VV3}
+          Nft_4={VV4}
+          noTitle={true}
           carousel={carousel}
         />
-        {/* <div style={{ height: "108px" }} /> */}
-        <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
-        {/* <StaticTiles title={splashData.tilesTitle} primaryColor={primaryColor} UnlockableVideo={UnlockableVideo}/> */}
-        <CarouselModule
-          carousel={!carousel}
-          carouselTitle={splashData.carouselTitle}
-          carouselData={splashData.carouselData}
-        />
-        <TeamMeet primaryColor={primaryColor} arraySplash={"ukraine"} />
+
+
+        <div style={{display: "flex", flexDirection:"column"}}>
+          <div className="vv_footer1"> RAIR tokens later </div>
+          <br/>
+          <div className="vv_footer2"> !NO BOOMER PUNKS! </div>
+        </div>
+
+        <div style={{ height: "10vw" }} />
+
+        <TeamMeet primaryColor={primaryColor} arraySplash={"vaporverse"} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}
@@ -295,4 +355,4 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   );
 };
 
-export default UkraineSplashPage;
+export default VaporverseSplashPage;

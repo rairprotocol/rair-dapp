@@ -17,7 +17,7 @@ const ModalHelp = ({
         <div style={{
             display: `${openCheckList ? "block" : "none"}`,
             color: "white",
-            background: `${primaryColor === "charcoal" ? backgroundColor.darkTheme : backgroundColor.lightTheme}`
+            background: `${primaryColor === "charcoal" ? backgroundColor?.darkTheme : backgroundColor?.lightTheme}`
         }}
             className="tutorial-checklist">
             <h5>UkraineGlitch purchase checklist</h5>

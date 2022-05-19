@@ -7,6 +7,7 @@ import Teammate_4 from '../images/rair-block.png';
 import Teammate_5 from '../images/movementontheground.png';
 import Teammate_6 from '../images/immersiverse_logo.png';
 import Teammate_7 from '../images/UkrainianAmericanCons/15724868_10208080805993720_1581371147497725224_o.jpeg';
+import Teammate_VV from '../images/vv_Rair_logo.png'
 import NFTLA_ICON from '../images/NFTLA_icon.png'
 // import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
@@ -544,6 +545,30 @@ const teamUkraineArray = [
     }
 ];
 
+const teamVaporVerseArray = [
+    {
+        chain: null,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_VV,
+        aboutTeammate: [
+            `
+            //actual Delaware C Corporation
+            //real doxxed team
+            //real programmers that make kubernetes and shit
+            //AND BLOCKCHAIN AND SHIT EIP2981 EIP 2535 
+            //CRAZY ADVANCED ROYALTIES
+            //Our METADATA will blow your mind `
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
 const teamNFTLAarray = [
     {   
         chain: '',
@@ -733,6 +758,26 @@ const UkraineGlitchComponent = ({ primaryColor }) => {
     )
 }
 
+const VaporVerseComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamVaporVerseArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
 const GreyManTeamComponent = ({ primaryColor }) => {
     return (
         <div className="splash-team-greyman">
@@ -839,6 +884,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                     arraySplash === "ukraine" && <h3> About the <span style={{color:"#035BBC"}}>Cause</span></h3>
                 }
                 {
+                    arraySplash === "vaporverse" && <h3> mak0r </h3>
+                }
+                {
                     arraySplash === "nipsey" && <h3>Meet the <span className="text-gradient">Team</span></h3>
                 }
                 {
@@ -863,6 +911,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
             <div className="meet-team">
                 {
                     arraySplash === "ukraine" &&  <UkraineGlitchComponent />
+                }
+                {
+                    arraySplash === "vaporverse" &&  <VaporVerseComponent />
                 }
                 {
                     arraySplash === "greyman" && <GreyManTeamComponent primaryColor={primaryColor} />
