@@ -71,7 +71,8 @@ class VaultAppRoleTokenManager {
       if (res.status !== 200) {
         const errMessage = 'Error getting token! Received non 200 code from App Role Login url';
         console.log(errMessage);
-        throw new Error(errMessage);
+        // TODO: put this error back in when it's time to go live
+        // throw new Error(errMessage);
       }
 
       // pull from API response
@@ -87,7 +88,8 @@ class VaultAppRoleTokenManager {
     } catch (err) {
       const errMessage = "VaultAppRoleTokenManager getTokenWithAppRoleCreds failed";
       console.log(errMessage);
-      throw new Error(errMessage);
+      // TODO: put this error back in when it's time to go live
+      // throw new Error(errMessage);
     }
   }
 
@@ -127,7 +129,8 @@ class VaultAppRoleTokenManager {
       if (this.getToken() === null) {
         const errMessage = 'Existing token is null!';
         console.log(errMessage);
-        throw new Error(errMessage);
+        // TODO: put this error back in when it's time to go live
+        // throw new Error(errMessage);
       }
 
       const res = await axios({
@@ -146,7 +149,8 @@ class VaultAppRoleTokenManager {
       if (res.status !== 200) {
         const errMessage = 'Error renewing token, received non 200 code trying to renew self.';
         console.log(errMessage);
-        throw new Error(errMessage);
+        // TODO: put this error back in when it's time to go live
+        // throw new Error(errMessage);
       }
 
       const { auth } = res.data;
@@ -159,7 +163,8 @@ class VaultAppRoleTokenManager {
     } catch(err) {
       const errMessage = 'Error renewing token in Vault App Role token manager';
       console.log(errMessage);
-      throw new Error(errMessage);
+      // TODO: put this error back in when it's time to go live
+      // throw new Error(errMessage);
     }
   }
 }
