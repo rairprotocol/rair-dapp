@@ -28,9 +28,9 @@ import { getRandomValues } from '../../utils/getRandomValues'
 **/
 
 type TInputFieldProps<T extends any = any> = {
-	getter?: HTMLInputElement['value'];
+	getter?: HTMLInputElement['value']| number;
 	setter: (value: T) => void;
-	setterField?: Array<string>;
+	setterField?: Array<string | number>;
 	customCSS?: { [key: string]: string };
 	customClass?: string;
 	labelCSS?: { [key: string]: string };
@@ -43,6 +43,7 @@ type TInputFieldProps<T extends any = any> = {
 	min?: number;
 	max?: number;
 	maxLength?: number;
+	id?: string;
   };
 
 const InputField = <T extends any = any>({
@@ -79,7 +80,7 @@ const InputField = <T extends any = any>({
 		<input
 			type={type}
 			id={id?.toString()}
-			onChange={e => setter(setterField.reduce((start, piece) => { return start[piece] }, e.target))}
+			onChange={e => setter(setterField.reduce((start, piece) => { return start[piece] }, e.target) as T)}
 			value={getter}
 			disabled={disabled}
 			style={{ ...customCSS }}
