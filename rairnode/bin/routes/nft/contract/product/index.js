@@ -62,6 +62,7 @@ module.exports = (context) => {
               : { $gt: firstToken },
         })
           .sort([['token', 1]])
+          .collation({ locale: 'en_US', numericOrdering: true })
           .limit(numberOfTokens);
         return res.json({ success: true, result: { totalCount, tokens } });
       } catch (err) {
@@ -111,6 +112,7 @@ module.exports = (context) => {
 
       const tokens = await context.db.MintedToken.find(options)
         .sort([['token', 1]])
+        .collation({ locale: 'en_US', numericOrdering: true })
         .distinct('token');
 
       return res.json({ success: true, tokens });
