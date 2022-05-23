@@ -90,26 +90,28 @@ const splashData = {
         videoSRC: NFTLA_Video,
     },
     {
-        videoName: "Ukraine Glitch",
-        videoType: "UKR-EXCLUSIVE-1",
-        videoTime: "00:00:00",
+        videoName: "NFTs and Hollywood",
+        videoType: "NFTLA-EXCLUSIVE-2",
+        videoTime: "02:21.38",
         videoSRC: null,
         baseURL: 'https://storage.googleapis.com/rair-videos/',
-        mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
+        mediaId: 'YOyAaCOt8xrOt-NcvffXR7g0ibX5kJ2w21yGHR1XKOPMEY',
     },
     {
-        videoName: "Greyman",
+        videoName: "Orange Comet",
         videoType: "NFTLA-EXCLUSIVE-3",
-        videoTime: "00:00:00",
+        videoTime: "32:00.58",
         videoSRC: null,
         baseURL: 'https://storage.googleapis.com/rair-videos/',
-        mediaId: 'QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8J',
+        mediaId: 'Zosxmne0LRAu2TxEMU5A0WMg8-msfHqvxGws9osGnu4yxL',
     },
     {
-        videoName: "No Video",
+        videoName: "Web 3 Convergence",
         videoType: "NFTLA-EXCLUSIVE-4",
-        videoTime: "00:00:00",
+        videoTime: "30:46.31",
         videoSRC: null,
+        baseURL: 'https://storage.googleapis.com/rair-videos/',
+        mediaId: 'pZJJmq9rR6HC1jPxy-RpVvutfTYMtyAGRb2DDnMdTTIlhA'
     }
   ],
 }

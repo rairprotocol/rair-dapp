@@ -32,11 +32,11 @@ locals {
     BINANCE_MAINNET_RPC: "https://bsc-dataseed.binance.org/",
     MONGO_LOG_COLLECTION: "Log",
     LOG_LEVEL: "debug",
-    MORALIS_SERVER_TEST: https://ldz2lkdhowt1.usemoralis.com:2053/server
-    MORALIS_SERVER_MAIN: https://y14jhwis7uao.moralishost.com:2053/server
-    MORALIS_API_KEY_TEST: 1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn
-    MORALIS_MASTER_KEY_TEST: P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5
-    MORALIS_MASTER_KEY_TEST: P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5
+    MORALIS_SERVER_TEST: "https://ldz2lkdhowt1.usemoralis.com:2053/server",
+    MORALIS_SERVER_MAIN: "https://y14jhwis7uao.moralishost.com:2053/server",
+    MORALIS_API_KEY_TEST: "1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn",
+    MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
+    MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
     REDIS_HOST: "rair-redis",
     REDIS_PORT: "6379",
     SESSION_SECRET: "testsecret",
