@@ -121,7 +121,7 @@ module.exports = (context) => {
             _.forEach(records, (record) => {
               const token = record.nftid;
 
-              if (_.inRange(token, offer.range[0], (offer.range[1] + 1))) {
+              if ( BigInt(token)>=BigInt(offer.range[0]) && BigInt(token)<=BigInt(offer.range[1])){
                 const address = record.publicaddress ? record.publicaddress : `0xooooooooooooooooooooooooooooooooooo${token}`;
                 const sanitizedOwnerAddress = address.toLowerCase();
                 const attributes = _.chain(record)
@@ -153,7 +153,9 @@ module.exports = (context) => {
                     ...mainFields,
                     ownerAddress: sanitizedOwnerAddress,
                     offer: offerIndex,
-                    uniqueIndexInContract: (foundProduct.firstTokenIndex + token),
+                    uniqueIndexInContract:  (
+                      BigInt(foundProduct.firstTokenIndex) + BigInt(token)
+                    ).toString(),
                     isMinted: false,
                     metadata: {
                       name: context.textPurify.sanitize(record.name),
