@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const _ = require('lodash');
+const log = require('../utils/logger')(module);
 
 module.exports = (context) => async (req, res, next) => {
   try {
@@ -19,6 +19,10 @@ module.exports = (context) => async (req, res, next) => {
 
     return next();
   } catch (err) {
-    return next(err);
+    log.warn(err);
+
+    req.user = null;
+
+    return next();
   }
 };
