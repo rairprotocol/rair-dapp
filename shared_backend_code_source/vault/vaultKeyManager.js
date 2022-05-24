@@ -5,6 +5,10 @@ const {
 } = require('./vaultUtils');
 
 class VaultKeyManager {
+  constructor({preventThrowingErrors}) {
+    this.preventThrowingErrors = preventThrowingErrors;
+  }
+
   getKVProviderName() {
     return "key_storage"
   }
@@ -45,7 +49,9 @@ class VaultKeyManager {
     } catch (err) {
       const errMessage = "Error writing secrets to Vault"
       console.log(errMessage);
-      throw new Error(errMessage);
+      if(!this.preventThrowingErrors) {
+        throw new Error(errMessage);
+      }
     }
   }
 
@@ -70,7 +76,9 @@ class VaultKeyManager {
     } catch(err) {
       const errMessage = 'Error writing key to vault';
       console.log(errMessage);
-      throw new Error(errMessage);
+      if(!this.preventThrowingErrors) {
+        throw new Error(errMessage);
+      }
     }    
   }
 
@@ -95,7 +103,9 @@ class VaultKeyManager {
     } catch(err) {
       const errMessage = 'Error reading key from Vault';
       console.log(errMessage);
-      throw new Error(errMessage);
+      if(!this.preventThrowingErrors) {
+        throw new Error(errMessage);
+      }
     }
   }
 }

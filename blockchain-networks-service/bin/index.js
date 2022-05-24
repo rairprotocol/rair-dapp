@@ -89,19 +89,16 @@ async function main() {
 
 (async () => {
 
-  try {
-    // Login with vault app role creds first
-    await vaultAppRoleTokenManager.initialLogin();
+  // Login with vault app role creds first
+  await vaultAppRoleTokenManager.initialLogin();
 
-    await appSecretManager.getAppSecrets({
-      vaultToken: vaultAppRoleTokenManager.getToken(),
-      listOfSecretsToFetch: [
-        mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY
-      ]
-    });
-  } catch(err) {
-    console.log('Error initializing vault integration on app boot')
-  }
+  // Get app secrets from Vault
+  await appSecretManager.getAppSecrets({
+    vaultToken: vaultAppRoleTokenManager.getToken(),
+    listOfSecretsToFetch: [
+      mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY
+    ]
+  });
 
   await main();
 })().catch(e => {

@@ -5,9 +5,17 @@ const { VaultKeyManager }          = require('./shared_backend_code_generated/va
 
 const appName = applicationConfig.rairnode.name;
 
-const vaultAppRoleTokenManager = new VaultAppRoleTokenManager({appName});
-const appSecretManager = new AppSecretManager({appName})
-const vaultKeyManager = new VaultKeyManager();
+const vaultAppRoleTokenManager = new VaultAppRoleTokenManager({
+  appName,
+  preventThrowingErrors: true
+});
+const appSecretManager = new AppSecretManager({
+  appName,
+  preventThrowingErrors: true
+})
+const vaultKeyManager = new VaultKeyManager({
+  preventThrowingErrors: true
+});
 
 module.exports = {
   vaultAppRoleTokenManager,

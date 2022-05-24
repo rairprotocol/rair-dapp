@@ -19,11 +19,13 @@ const {
 } = require('./vaultUtils');
 
 class VaultAppRoleTokenManager {
-  constructor({appName}) {
+  constructor({appName, preventThrowingErrors}) {
     // token that we pulled from Vault App role login
     this.token = null;
     this.authData = null;
     this.appName = appName;
+
+    this.preventThrowingErrors = preventThrowingErrors;
 
     // setTimeout object reference
     this.tokenRenewalTimeout = null;
@@ -71,8 +73,9 @@ class VaultAppRoleTokenManager {
       if (res.status !== 200) {
         const errMessage = 'Error getting token! Received non 200 code from App Role Login url';
         console.log(errMessage);
-        // TODO: put this error back in when it's time to go live
-        // throw new Error(errMessage);
+        if(!this.preventThrowingErrors) {
+          throw new Error(errMessage);
+        }
       }
 
       // pull from API response
@@ -88,8 +91,9 @@ class VaultAppRoleTokenManager {
     } catch (err) {
       const errMessage = "VaultAppRoleTokenManager getTokenWithAppRoleCreds failed";
       console.log(errMessage);
-      // TODO: put this error back in when it's time to go live
-      // throw new Error(errMessage);
+      if(!this.preventThrowingErrors) {
+        throw new Error(errMessage);
+      }
     }
   }
 
@@ -107,7 +111,11 @@ class VaultAppRoleTokenManager {
       } catch(err) {
         // TODO: VAULT UTILS remove this try/catch block
         // https://rairtech.atlassian.net/browse/RAIR-3285
-        console.log('Error renewing token');
+        const errMessage = 'Error renewing token';
+        console.log(errMessage);
+        if(!this.preventThrowingErrors) {
+          throw new Error(errMessage);
+        }
       }
     }, halfOfLeaseDuration);
   }
@@ -129,8 +137,9 @@ class VaultAppRoleTokenManager {
       if (this.getToken() === null) {
         const errMessage = 'Existing token is null!';
         console.log(errMessage);
-        // TODO: put this error back in when it's time to go live
-        // throw new Error(errMessage);
+        if(!this.preventThrowingErrors) {
+          throw new Error(errMessage);
+        }
       }
 
       const res = await axios({
@@ -149,8 +158,9 @@ class VaultAppRoleTokenManager {
       if (res.status !== 200) {
         const errMessage = 'Error renewing token, received non 200 code trying to renew self.';
         console.log(errMessage);
-        // TODO: put this error back in when it's time to go live
-        // throw new Error(errMessage);
+        if(!this.preventThrowingErrors) {
+          throw new Error(errMessage);
+        }
       }
 
       const { auth } = res.data;
@@ -163,8 +173,9 @@ class VaultAppRoleTokenManager {
     } catch(err) {
       const errMessage = 'Error renewing token in Vault App Role token manager';
       console.log(errMessage);
-      // TODO: put this error back in when it's time to go live
-      // throw new Error(errMessage);
+      if(!this.preventThrowingErrors) {
+        throw new Error(errMessage);
+      }
     }
   }
 }

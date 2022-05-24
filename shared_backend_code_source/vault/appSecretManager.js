@@ -9,7 +9,7 @@ const {
   executePromisesSequentially
 } = require('../utils/helpers');
 
-const getSecret = async ({appName, secretName, vaultToken}) => {
+const getSecret = async ({appName, secretName, vaultToken, preventThrowingErrors}) => {
   // Define params
   const axiosParams = {
     method: "GET",
@@ -28,7 +28,9 @@ const getSecret = async ({appName, secretName, vaultToken}) => {
   if(res.status !== 200) {
     const errMessage = 'Vault received non 200 code while trying to retrieve secret!';
     console.log(errMessage);
-    throw new Error(errMessage);
+    if(!preventThrowingErrors) {
+      throw new Error(errMessage);
+    }
   }
 
   // Data comes back in this format
@@ -46,10 +48,11 @@ const getSecret = async ({appName, secretName, vaultToken}) => {
 }
 
 class AppSecretManager {
-  constructor({appName}) {
+  constructor({appName, preventThrowingErrors}) {
     // initialize with a null map
     this.secretMap = new Map();
     this.appName = appName;
+    this.preventThrowingErrors = preventThrowingErrors;
   }
 
   getSecretFromMemory(secretKey) {
@@ -64,7 +67,8 @@ class AppSecretManager {
           const secretData = await getSecret({
             appName: this.appName,
             secretName,
-            vaultToken
+            vaultToken,
+            preventThrowingErrors: this.preventThrowingErrors
           });
           // Save secret into map on class
           this.secretMap.set(secretName, secretData);
@@ -76,7 +80,9 @@ class AppSecretManager {
     } catch (err) {
       const errMessage = 'Error retrieving secrets';
       console.log(errMessage);
-      throw new Error(errMessage);
+      if(!this.preventThrowingErrors) {
+        throw new Error(errMessage);
+      }
     }
   }
 }

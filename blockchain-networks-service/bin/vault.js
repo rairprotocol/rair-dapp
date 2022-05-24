@@ -4,8 +4,15 @@ const { AppSecretManager }         = require('./shared_backend_code_generated/va
 
 const appName = applicationConfig["blockchain-network"].name;
 
-const vaultAppRoleTokenManager = new VaultAppRoleTokenManager({appName});
-const appSecretManager = new AppSecretManager({appName})
+const vaultAppRoleTokenManager = new VaultAppRoleTokenManager({
+  appName,
+  preventThrowingErrors: true
+});
+
+const appSecretManager = new AppSecretManager({
+  appName,
+  preventThrowingErrors: true
+})
 
 module.exports = {
   vaultAppRoleTokenManager,
