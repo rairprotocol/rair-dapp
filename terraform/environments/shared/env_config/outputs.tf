@@ -32,3 +32,23 @@ output "jenkins_internal_load_balancer_name" {
 output "rair_internal_load_balancer_name" {
   value = "rair-internal-load-balancer"
 }
+
+output "users" {
+  value = {
+    brian: {
+      email: "brian@rair.tech"
+    },
+    chris: {
+      email: "chris@rair.tech"
+    },
+    zeph: {
+      email: "zeph@rair.tech"
+    },
+    garrett: {
+      email: "garrett@rair.tech"
+    },
+    ramki: {
+      email: "ramki@rair.tech"
+    }
+  }
+}

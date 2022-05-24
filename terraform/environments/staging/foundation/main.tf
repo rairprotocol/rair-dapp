@@ -32,6 +32,20 @@ module "foundation" {
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
   jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
   rair_internal_load_balancer_name = module.config.rair_internal_load_balancer_name
+  account_users = [
+    {
+      email: module.config.users.brian.email,
+      role: "roles/editor"
+    },
+    {
+      email: module.config.users.zeph.email,
+      role: "roles/editor"
+    },
+    {
+      email: module.config.users.ramki.email,
+      role: "roles/viewer"
+    }
+  ]
 }
 
 output "complete_output" {

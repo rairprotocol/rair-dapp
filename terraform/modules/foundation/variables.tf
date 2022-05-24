@@ -25,3 +25,12 @@ variable "jenkins_internal_load_balancer_name" {
 variable "rair_internal_load_balancer_name" {
   type = string
 }
+
+variable "account_users" {
+  default = []
+  
+  type = list(object({
+    email: string,
+    role: string
+  }))
+}

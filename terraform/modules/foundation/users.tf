@@ -10,3 +10,11 @@ locals {
     }
   }
 }
+
+# adds members to project according to var.account_users array
+resource "google_project_iam_member" "project_member" {
+  count = length(var.account_users)
+  project = var.gcp_project_id
+  role    = var.account_users[count.index].role
+  member  = "user:${var.account_users[count.index].email}"
+}
