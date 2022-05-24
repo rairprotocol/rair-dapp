@@ -1,6 +1,8 @@
 //@ts-nocheck
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { SvgKey } from '../MockUpPage/NftList/SvgKey';
+import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 
 const VideoItem = ({mediaList, item}) => {
 	const history = useHistory();
@@ -24,9 +26,12 @@ const VideoItem = ({mediaList, item}) => {
 				src={`${mediaList[item].animatedThumbnail}`}
 				style={{position: 'absolute', display: hovering ? 'block' : 'none', bottom: 0, borderRadius: '16px', objectFit: 'contain', background: 'black'}}
 				className='col-12  h-100 w-100' />
-			<div className='rounded-rair' style={{backgroundColor: 'var(--charcoal)', color: 'white', position: 'absolute', top: 15, right: 15, minWidth: '107px', height: '25px', textAlign: "center", borderRadius: '10px'}}>
+			<div className='rounded-rair' style={{backgroundColor: 'var(--charcoal)', color: 'white', position: 'absolute', top: 233, right: 15, minWidth: '107px', height: '25px', textAlign: "center", borderRadius: '10px'}}>
 				{mediaList[item].duration}
 			</div>
+			{ mediaList[item]?.isUnlocked ? 
+				<SvgKey color={'#4E4D4D'} bgColor={'white'} /> :
+				<SvgLock color={'white'} />}
 		</div>
 		<div className='col description-wrapper-video'>
 		<span className='description-title'>

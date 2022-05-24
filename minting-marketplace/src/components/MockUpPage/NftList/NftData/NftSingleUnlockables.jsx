@@ -6,11 +6,11 @@ const NftSingleUnlockables = ({
   productsFromOffer,
   // tokenData,
   setTokenDataFiltered,
-  primaryColor
+  primaryColor,
 }) => {
   // const history = useHistory();
   const [sections, setSections] = useState(null);
-  const rarity = ["Ultra Rair", "Rair", "Common"];
+  const rarity = ["Unlock Ultra Rair", "Unlock Rair", "Unlock Common"];
 
   useEffect(() => {
     const result = productsFromOffer.reduce((acc, item) => {
@@ -36,140 +36,170 @@ const NftSingleUnlockables = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        maxWidth: "1600px"
+        maxWidth: "1600px",
       }}
     >
       {sections &&
         Object.entries(sections).map(([key, item]) => {
           return (
-            <div
-              key={key}
-              style={{ width: "100%" }}
-            >
+            <div key={key} style={{ width: "100%" }}>
               <NftDifferentRarity
                 setTokenDataFiltered={setTokenDataFiltered}
                 title={rarity[key]}
               />
-              {item.map((v) => {
-                return (
-                  <div
-                    key={v._id}
-                    style={{
-                      margin: "1rem",
-                    }}
-                  >
+              <div
+                className="video-wrapper"
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignContent: "center",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {item.map((v) => {
+                  return (
                     <div
-                      // onClick={
-                      // () => history.push(`/watch/${v._id}/${v.mainManifest}`)
-                      // history.push(
-                      // `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
-                      // )
-                      // }
+                      key={v._id}
                       style={{
-                        display: "flex",
-                        borderRadius: "16px",
-                        minWidth: "592px",
-                        backgroundColor: `${primaryColor === "rhyno" ? "rgb(167, 166, 166)" : "#4E4D4DCC"}`,
+                        margin: "1rem",
                       }}
                     >
                       <div
+                        // onClick={
+                        // () => history.push(`/watch/${v._id}/${v.mainManifest}`)
+                        // history.push(
+                        // `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
+                        // )
+                        // }
                         style={{
-                          position: "relative",
+                          display: "flex",
+                          borderRadius: "16px",
+                          minWidth: "592px",
+                          backgroundColor: `${
+                            primaryColor === "rhyno"
+                              ? "rgb(167, 166, 166)"
+                              : "#4E4D4DCC"
+                          }`,
                         }}
                       >
                         <div
                           style={{
-                            width: "32px",
-                            height: "32px",
-                            background: "#CCA541",
-                            borderRadius: "50%",
-                            position: "absolute",
-                            top: "35%",
-                            left: "50%",
-                            transform: "translate(-50%, -35%)",
-                            zIndex: "1",
+                            position: "relative",
                           }}
                         >
-                          <i
+                          <div
                             style={{
-                              paddingLeft: "1px",
-                              paddingTop: "8px",
-                            }}
-                            className="fa fa-lock"
-                            aria-hidden="true"
-                          ></i>
-                          <p
-                            style={v.description.length > 20 ? {
-                              textAlign: "center",
-                              marginLeft: "-5.8rem",
-                              marginTop: "9px",
-                              width: "220px",
-                              height: '50px',
-                              wordBreak: 'break-all',
-                              overflow: 'auto',
-                              color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
-                            } : {
-                              textAlign: "center",
-                              marginLeft: "-85px",
-                              marginTop: "9px",
-                              width: "200px",
-                              color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
+                              width: "32px",
+                              height: "32px",
+                              // background: "#CCA541",
+                              border: "1px solid #E882D5",
+                              borderRadius: "50%",
+                              position: "absolute",
+                              top: "35%",
+                              left: "50%",
+                              transform: "translate(-50%, -35%)",
+                              zIndex: "1",
                             }}
                           >
-                            {v.description}
-                          </p>
+                            <i
+                              style={{
+                                paddingLeft: "0",
+                                paddingTop: "7px",
+                              }}
+                              className="fa fa-lock"
+                              aria-hidden="true"
+                            ></i>
+                            <p
+                              style={
+                                v.description.length > 20
+                                  ? {
+                                      textAlign: "center",
+                                      marginLeft: "-5.8rem",
+                                      marginTop: "9px",
+                                      width: "220px",
+                                      height: "50px",
+                                      wordBreak: "break-all",
+                                      overflow: "auto",
+                                      color: `${
+                                        primaryColor === "rhyno"
+                                          ? "black"
+                                          : "#A7A6A6"
+                                      }`,
+                                    }
+                                  : {
+                                      textAlign: "center",
+                                      marginLeft: "-85px",
+                                      marginTop: "9px",
+                                      width: "200px",
+                                      color: `${
+                                        primaryColor === "rhyno"
+                                          ? "black"
+                                          : "#A7A6A6"
+                                      }`,
+                                    }
+                              }
+                            >
+                              {v.description}
+                            </p>
+                          </div>
+                          <img
+                            style={{
+                              width: "230px",
+                              opacity: "0.4",
+                              height: "135px",
+                              filter: "blur(3px)",
+                              borderTopLeftRadius: "16px",
+                              borderBottomLeftRadius: "16px",
+                            }}
+                            src={`${v?.staticThumbnail}`}
+                            // src={selectedData?.image}
+                            alt=""
+                          />
                         </div>
-                        <img
+                        <div
                           style={{
-                            width: "230px",
-                            opacity: "0.4",
-                            height: "135px",
-                            filter: "blur(3px)",
-                            borderTopLeftRadius: "16px",
-                            borderBottomLeftRadius: "16px",
+                            // borderLeft: "4px solid #CCA541",
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "inher",
+                            justifyContent: "center",
+                            alignItems: "flex-start",
+                            paddingLeft: "24px",
                           }}
-                          src={`${v?.staticThumbnail}`}
-                          // src={selectedData?.image}
-                          alt=""
-                        />
-                      </div>
-                      <div
-                        style={{
-                          borderLeft: "4px solid #CCA541",
-                          display: "flex",
-                          flexDirection: "column",
-                          width: "inher",
-                          justifyContent: "center",
-                          alignItems: "flex-start",
-                          paddingLeft: "24px",
-                        }}
-                      >
-                        <div>
-                          {" "}
-                          <p style={{
-                            fontSize: 20,
-                            color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`
-                          }}
-                          >
-                            {v?.title}
-                            {/* Video {selectedData?.name} */}
-                          </p>{" "}
-                        </div>
-                        <div>
-                          <p
-                            style={{
-                              fontSize: 20,
-                              color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
-                            }}
-                          >
-                            {v?.duration}
-                          </p>
+                        >
+                          <div>
+                            {" "}
+                            <p
+                              style={{
+                                fontSize: 20,
+                                color: `${
+                                  primaryColor === "rhyno" ? "black" : "#A7A6A6"
+                                }`,
+                              }}
+                            >
+                              {v?.title}
+                              {/* Video {selectedData?.name} */}
+                            </p>{" "}
+                          </div>
+                          <div>
+                            <p
+                              style={{
+                                fontSize: 20,
+                                color: `${
+                                  primaryColor === "rhyno" ? "black" : "#A7A6A6"
+                                }`,
+                              }}
+                            >
+                              {v?.duration}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           );
         })}

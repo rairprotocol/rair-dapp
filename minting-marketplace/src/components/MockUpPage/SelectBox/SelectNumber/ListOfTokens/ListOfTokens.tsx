@@ -50,12 +50,17 @@ const ListOfTokensComponent = ({
       ).json();
 
       setTokenData(responseAllProduct.result.tokens);
-      setSelectedToken(Number(indexes[0]));
-      onClickItem(Number(indexes[0]));
+      setSelectedToken(indexes[0]);
+      // setSelectedToken(Number(indexes[0]));
+      onClickItem(indexes[0]);
+      // onClickItem(Number(indexes[0]));
       handleIsOpen(true)
     },
     [blockchain, contract, handleIsOpen, onClickItem, product, setSelectedToken]
   );
+
+// console.log(tokenData, 'tokenData');
+// console.log(productTokenNumbers, 'productTokenNumbers');
 
   useEffect(() => {
     let isDestroyed = false;

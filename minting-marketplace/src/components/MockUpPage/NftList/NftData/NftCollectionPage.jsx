@@ -243,6 +243,7 @@ const NftCollectionPageComponent = ({
         collectionToken={tokenData[0]?.authenticityLink}
         title={true}
         ownerInfo={offerAllData}
+        tokenData={tokenData}
       />
     </div>
   );

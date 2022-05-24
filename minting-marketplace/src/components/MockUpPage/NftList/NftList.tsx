@@ -47,7 +47,6 @@ const NftListComponent = ({
         filteredData
           ? filteredData.map((contractData, index) => {
               if (contractData.cover !== "none") {
-                // console.log(contractData.blockchain);
                 return (
                   <NftItem
                     key={`${

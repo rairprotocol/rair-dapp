@@ -217,6 +217,10 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
       setPurshaseList(prev => !prev);
   }
 
+  const toggleCheckList = () => {
+    setOpenCheckList(prev => !prev);
+  }
+
   window.addEventListener("resize", () => setCarousel(carousel_match.matches));
 
   const getAllProduct = useCallback(async () => {

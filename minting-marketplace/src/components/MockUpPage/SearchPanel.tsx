@@ -1,13 +1,16 @@
 //@ts-nocheck
 import React, { useState, useEffect, useCallback } from "react";
-import InputField from "../common/InputField";
+import { useDispatch, useSelector } from "react-redux";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import InputField from "../common/InputField";
 import { NftList } from "./NftList/NftList";
 import VideoList from "../video/videoList";
 import FilteringBlock from "./FilteringBlock/FilteringBlock";
 import axios from "axios";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
+  const dispatch = useDispatch();
+  const { currentPage } = useSelector((store) => store.getPageStore);
   const [titleSearch, setTitleSearch] = useState("");
   const [sortItem, setSortItem] = useState("");
   const [mediaList, setMediaList] = useState();
@@ -15,7 +18,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   // const [dataAll, setAllData] = useState();
   const [totalPage, setTotalPages] = useState([10]);
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [blockchain, setBlockchain] = useState();
   const [category, setCategory] = useState();
   const [isShow, setIsShow] = useState(false);
@@ -24,9 +27,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   // const [totalCountAll, setTotalCountAll] = useState();
   const [filterCategoriesText, setFilterCategoriesText] = useState("");
   const [click, setClick] = useState(null);
-
-  // console.log(dataAll, 'dataAll from all');
-  // console.log(titleSearch, "titleSearch");
 
   let pagesArray = [];
   for (let i = 0; i < totalPage; i++) {
@@ -134,13 +134,16 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   };
 
   const changePage = (currentPage) => {
-    setCurrentPage(currentPage);
+    dispatch({ type: "GET_CURRENT_PAGE_START", payload: currentPage });
+    // setCurrentPage(currentPage);
     window.scrollTo(0, 0);
   };
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [blockchain, category]);
+    if (blockchain || category) {
+      dispatch({ type: "GET_CURRENT_PAGE_END" });
+    }
+  }, [blockchain, category, dispatch]);
 
   const updateList = async () => {
     let response = await (
@@ -191,11 +194,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     setBlockchain(null);
     setClick(null);
     setIsShow(false);
+    dispatch({ type: "GET_CURRENT_PAGE_END" });
   };
   const clearCategoriesFilter = () => {
     setCategory(null);
     setClick(null);
     setIsShowCategories(false);
+    dispatch({ type: "GET_CURRENT_PAGE_END" });
   };
   return (
     <div className="input-search-wrapper list-button-wrapper">

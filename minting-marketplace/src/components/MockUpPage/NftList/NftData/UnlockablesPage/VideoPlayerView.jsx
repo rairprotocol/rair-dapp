@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import cl from "./VideoPlayerView.module.css";
 import playImages from "../../../../SplashPage/images/playImg.png";
-// import { useHistory } from "react-router-dom";
 import NftVideoplayer from "../NftVideoplayer/NftVideoplayer";
 
 function VideoPlayerView({ productsFromOffer, primaryColor }) {
   const [selectVideo, setSelectVideo] = useState(productsFromOffer[0]);
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
-  // const history = useHistory();
 
   const colorRarity = [`#E4476D`, "gold", "silver"];
 
-  // console.log(productsFromOffer, "productsFromOffer");
-  // console.log(selectVideo, "selectVideo");
   return (
     <div 
     className={cl.VideoPlayerViewWrapper}

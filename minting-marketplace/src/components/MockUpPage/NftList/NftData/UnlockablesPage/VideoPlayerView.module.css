@@ -69,7 +69,8 @@
     border-radius: 10px;
 }
 .SingleVideoWrapper{
-padding: 24px 209px 16px 249px;
+/* padding: 24px 209px 16px 249px; */
+margin: auto;
 }
 .SingleVideo{
     width: 40vw;

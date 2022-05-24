@@ -8,6 +8,7 @@ import videosStore from './videos';
 import contractStore from './contracts';
 import colorStore from './colors';
 import metadataStore from './metadata';
+import getPageStore from './pages';
 import {createReduxEnhancer} from "@sentry/react";
 
 const reducers = combineReducers({
@@ -16,7 +17,8 @@ const reducers = combineReducers({
     videosStore,
     contractStore,
     colorStore,
-    metadataStore
+    metadataStore,
+    getPageStore
 });
 
 const sentryReduxEnhancer = createReduxEnhancer({

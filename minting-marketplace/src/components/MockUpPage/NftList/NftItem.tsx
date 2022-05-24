@@ -27,6 +27,26 @@ const NftItemComponent = ({
   const [playing, setPlaying] = useState(false);
   const [accountData, setAccountData] = useState(null);
 
+  const [isFileUrl, setIsFileUrl] = useState();
+
+  const checkUrl =  useCallback(() => {
+    if(metaDataProducts && metaDataProducts.metadata && metaDataProducts.metadata.animation_url){
+
+      let fileUrl = metaDataProducts.metadata?.animation_url,
+      parts,
+      ext =
+        (parts = fileUrl.split("/").pop().split(".")).length > 1
+          ? parts.pop()
+          : "";
+    setIsFileUrl(ext);
+    }
+    
+  }, [metaDataProducts,setIsFileUrl]);
+
+  useEffect(() =>{
+    checkUrl()
+  }, [checkUrl])
+
   const getInfoFromUser = useCallback(async () => {
     // find user
     if (ownerCollectionUser) {
@@ -138,6 +158,9 @@ const NftItemComponent = ({
           }}
         >
           {metaDataProducts?.metadata?.animation_url && (
+          isFileUrl  === 'gif' ? 
+            <></> 
+            :
             <div onClick={handlePlaying} className="btn-play">
               {playing ? (
                 <div>
@@ -151,6 +174,15 @@ const NftItemComponent = ({
             </div>
           )}
           {metaDataProducts?.metadata?.animation_url ? (
+          isFileUrl  === 'gif' 
+          ?
+          <img
+          alt="thumbnail"
+          src={metaDataProducts?.metadata?.animation_url ? metaDataProducts?.metadata?.animation_url : pict}
+          style={{ position: "absolute", bottom: 0, borderRadius: "16px", objectFit: "contain" }}
+          className="col-12 h-100 w-100"
+        />
+          :
             <div
               style={{
                 borderRadius: "16px",
@@ -186,7 +218,7 @@ const NftItemComponent = ({
               className="col-12 h-100 w-100"
             />
           )}
-          {<SvgKey color={'white'} />}
+          {<SvgKey color={'white'} bgColor={'rgba(34, 32, 33, 0.5)'} />}
           <div className="col description-wrapper pic-description-wrapper">
             <div className="description-title">
               <div className="description-item-name"
@@ -210,8 +242,7 @@ const NftItemComponent = ({
                           alt="user"
                         />
                         <h5 style={{ wordBreak: "break-all" }}>
-                          {accountData.nickName ? accountData.nickName :
-                            ownerCollectionUser.slice(0, 5) + "...." + ownerCollectionUser.slice(ownerCollectionUser.length - 4)}
+                          {accountData.nickName ? accountData.nickName.length > 16 ? accountData.nickName.slice(0, 5)+ "..." + accountData.nickName.slice(accountData.nickName.length - 4) : accountData.nickName : ownerCollectionUser.slice(0, 5) + "..." + ownerCollectionUser.slice(ownerCollectionUser.length - 4)}
                         </h5>
                       </div> : <div className="collection-block-user-creator">
                         <img

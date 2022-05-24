@@ -61,7 +61,8 @@ const ItemRank = ({
     // props.selectItem(item.id);
     setSelectedItem(item);
     setShowItems(false);
-    getAllProduct(item.range[0], item.range[1])
+    getAllProduct(item.range[0], item.range[1]);
+    // getAllProduct(Number(item.range[0]), Number(item.range[1]))
     // setSelectedToken(item.range[0])
     // handleClickToken(item.range[0])
 
@@ -139,7 +140,8 @@ const ItemRank = ({
               <div
                 key={item.id}
                 onClick={() => {
-                  onSelectItem(item);
+                  //TODO: just now need to off 
+                  // onSelectItem(item);
                   // props.handleClickToken(item.token)
                 }}
                 className={`item-rank-wrapper ${selectedItem === item ? "selected" : ""}`}

@@ -17,25 +17,25 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered }) => {
   }, [params.product, params.contract, params.blockchain]);
 
   const colorRarity =
-    title === "Ultra Rair" ? `#E4476D` : title === "Rair" ? "gold" : "silver";
+    title === "Unlock Ultra Rair" ? `#E4476D` : title === "Unlock Rair" ? "gold" : "silver";
   const sortedClick = () => {
     switch (title) {
-      case "Ultra Rair":
-        const firstTokenFromUltra = allTokenData.filter((e) => e.offer === 0);
+      case "Unlock Ultra Rair":
+        const firstTokenFromUltra = allTokenData.filter((e) => e.offer === '0');
         setTokenDataFiltered(firstTokenFromUltra);
         history.push(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${firstTokenFromUltra[0].token}`
         );
         break;
-      case "Rair":
-        const secondTokenFromUltra = allTokenData.filter((e) => e.offer === 1);
+      case "Unlock Rair":
+        const secondTokenFromUltra = allTokenData.filter((e) => e.offer === '1');
         setTokenDataFiltered(secondTokenFromUltra);
         history.push(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${secondTokenFromUltra[0].token}`
         );
         break;
       default:
-        const thirdTokenFromUltra = allTokenData.filter((e) => e.offer === 2);
+        const thirdTokenFromUltra = allTokenData.filter((e) => e.offer === '2');
         setTokenDataFiltered(thirdTokenFromUltra);
         history.push(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${thirdTokenFromUltra[0].token}`

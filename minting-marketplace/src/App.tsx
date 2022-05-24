@@ -239,7 +239,8 @@ function App({ sentryHistory }) {
 
 	const goHome = () => {
 		sentryHistory.push(`/`);
-		setShowAlert(false)
+		setShowAlert(false);
+		dispatch({ type: "GET_CURRENT_PAGE_END" });
 	};
 
 	const openAboutPage = useCallback(() => {

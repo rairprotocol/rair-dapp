@@ -10,8 +10,8 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
+// import chainDataFront from "../../utils/blockchainDataFront";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
-import chainDataFront from "../../utils/blockchainDataFront";
 import ItemRank from "../../SelectBox/ItemRank";
 import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
 import ReactPlayer from "react-player";
@@ -125,7 +125,9 @@ const NftDataPageMain = ({
         .formatEther(
           samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
         )
-        .toString()} ${chainDataFront[blockchain]?.name}`;
+        .toString()} 
+         
+        `;
     }
     return `${minPrice} – ${maxPrice} 
     `;
@@ -466,17 +468,17 @@ const NftDataPageMain = ({
         first.map((e, index) => {
           return {
             pkey:
-              e.offerIndex === 0 ? (
+              e.offerIndex === "0" ? (
                 <i style={{ color: `red` }} className="fas fa-key" />
-              ) : e.offerIndex === 1 ? (
+              ) : e.offerIndex === "1" ? (
                 `🔑`
               ) : (
                 <i style={{ color: `silver` }} className="fas fa-key" />
               ),
             value:
-              e.offerIndex === 0
+              e.offerIndex === "0"
                 ? "Ultra Rair"
-                : e.offerIndex === 1
+                : e.offerIndex === "1"
                 ? "Rair"
                 : "Common",
             id: index,
@@ -546,7 +548,11 @@ const NftDataPageMain = ({
               <div className="nft-single-price-range">
                 <img
                   style={{ width: "24px", transform: "scale(1.2)" }}
-                  src={`${chainDataFront[data?.contract.blockchain]?.image}`}
+                  src={`${
+                    data
+                      ? chainData[data?.contract.blockchain]?.image
+                      : chainData[blockchain]?.image
+                  }`}
                   alt=""
                 />
                 <span
@@ -563,8 +569,9 @@ const NftDataPageMain = ({
                     color: "#E882D5",
                   }}
                 >
-                  {/* {data?.contract.blockchain || ""} */}
-                  {chainDataFront[data?.contract.blockchain]?.name || ""}
+                  {data
+                    ? chainData[data?.contract.blockchain]?.symbol
+                    : chainData[blockchain]?.symbol}
                 </span>
               </div>
             </div>
@@ -577,7 +584,6 @@ const NftDataPageMain = ({
                   getAllProduct={getAllProduct}
                   setSelectedToken={setSelectedToken}
                   handleClickToken={handleClickToken}
-
                 />
               </div>
             </div>
@@ -627,9 +633,9 @@ const NftDataPageMain = ({
                 <AccordionItemButton>Description</AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel>
-                {selectedData.artist === "none" &&
-                selectedData.description === "none" &&
-                selectedData.external_url === "none" ? (
+                {selectedData?.artist === "none" &&
+                selectedData?.description === "none" &&
+                selectedData?.external_url === "none" ? (
                   <div className=" custom-desc-to-offer-wrapper">
                     <div className="my-2 px-4 custom-desc-to-offer">
                       <span>Created by </span>
@@ -823,6 +829,7 @@ const NftDataPageMain = ({
                   ownerInfo={ownerInfo}
                   tokenData={tokenData}
                   selectedToken={selectedToken}
+                  selectedData={selectedData}
                 />
               </AccordionItemPanel>
             </AccordionItem>

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState, memo } from "react";
+import React, { useState, memo, useCallback, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { utils } from "ethers";
 import { SvgKey } from "./SvgKey";
@@ -46,6 +46,25 @@ const NftItemForCollectionViewComponent = ({
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
+
+  const [isFileUrl, setIsFileUrl] = useState();
+
+  const checkUrl = useCallback(() => {
+    if (selectedData.animation_url) {
+      let fileUrl = selectedData?.animation_url,
+        parts,
+        ext =
+          (parts = fileUrl.split("/").pop().split(".")).length > 1
+            ? parts.pop()
+            : "";
+      setIsFileUrl(ext);
+    }
+
+  }, [selectedData.animation_url, setIsFileUrl]);
+
+  useEffect(() => {
+    checkUrl()
+  }, [checkUrl])
 
   function RedirectToMockUp() {
     redirection();
@@ -171,46 +190,65 @@ const NftItemForCollectionViewComponent = ({
         }}
       >
         {metadata?.animation_url && (
-          <div onClick={handlePlaying} className="btn-play">
-            {playing ? (
-              <div>
-                <i className="fas fa-pause"></i>
-              </div>
-            ) : (
-              <div>
-                <i className="fas fa-play"></i>
-              </div>
-            )}
-          </div>
+          isFileUrl === 'gif' ? <></> :
+            <div onClick={handlePlaying} className="btn-play">
+              {playing ? (
+                <div>
+                  <i className="fas fa-pause"></i>
+                </div>
+              ) : (
+                <div>
+                  <i className="fas fa-play"></i>
+                </div>
+              )}
+            </div>
         )}
         {metadata?.animation_url ? (
-          <div
-            style={{
-              borderRadius: "16px",
-              overflow: "hidden",
-            }}
-          >
-            <ReactPlayer
+          isFileUrl === 'gif' ?
+            <img
               alt="thumbnail"
-              url={`${metadata?.animation_url}`}
-              light={
-                metadata?.image
-                  ? metadata?.image
+              src={
+                metadata?.animation_url
+                  ?
+                  metadata?.animation_url
                   : pict
               }
               style={{
                 position: "absolute",
                 bottom: 0,
                 borderRadius: "16px",
+                objectFit: "contain",
+              }}
+              className="col-12 h-100 w-100"
+            />
+            :
+            <div
+              style={{
+                borderRadius: "16px",
                 overflow: "hidden",
               }}
-              autoPlay={false}
-              className="col-12 h-100 w-100"
-              onReady={handlePlaying}
-              playing={playing}
-              onEnded={handlePlaying}
-            />
-          </div>
+            >
+              <ReactPlayer
+                alt="thumbnail"
+                url={`${metadata?.animation_url}`}
+                light={
+                  metadata?.image
+                    ? metadata?.image
+                    : pict
+                }
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                }}
+                autoPlay={false}
+                className="col-12 h-100 w-100"
+                onReady={handlePlaying}
+                playing={playing}
+                onEnded={handlePlaying}
+              />
+            </div>
         ) : (
           <img
             alt="thumbnail"
@@ -230,13 +268,12 @@ const NftItemForCollectionViewComponent = ({
             className="col-12 h-100 w-100"
           />
         )}
-        {<SvgKey />}
-        {offer === 0 ? (
-          <SvgKey color={"#E4476D"} />
-        ) : offer === 1 ? (
-          <SvgKey color={"#CCA541"} />
+        {offer === "0" ? (
+          <SvgKey color={"#E4476D"} bgColor={'rgba(34, 32, 33, 0.5)'} />
+        ) : offer === "1" ? (
+          <SvgKey color={"#CCA541"} bgColor={'rgba(34, 32, 33, 0.5)'} />
         ) : (
-          <SvgKey color={"silver"} />
+          <SvgKey color={"silver"} bgColor={'rgba(34, 32, 33, 0.5)'} />
         )}
 
         {/* <div className="description-collectionItem-hover">
@@ -272,7 +309,8 @@ const NftItemForCollectionViewComponent = ({
                         alt="user"
                       />
                       <h5 style={{ wordBreak: "break-all" }}>
-                        {someUsersData.nickName ? someUsersData.nickName : userName.slice(0, 5) + "...." + userName.slice(userName.length - 4)}
+                        {someUsersData.nickName ? someUsersData.nickName.length > 16 ? someUsersData.nickName.slice(0, 5) + "..." + someUsersData.nickName.slice(someUsersData.nickName.length - 4) :
+                          someUsersData.nickName : userName.slice(0, 5) + "...." + userName.slice(userName.length - 4)}
                       </h5>
                     </div> : <div className="collection-block-user-creator">
                       <img

@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React from "react";
 
-export const SvgKey = ({color}) => (
+export const SvgKey = ({color, bgColor}) => (
   <div
     style={{
       width: "32px",
@@ -12,7 +12,7 @@ export const SvgKey = ({color}) => (
       position: "absolute",
       top: "16px",
       right: "16px",
-      background: "rgba(34, 32, 33, 0.5)",
+      background: bgColor,
       borderRadius: "12px",
     }}
   >

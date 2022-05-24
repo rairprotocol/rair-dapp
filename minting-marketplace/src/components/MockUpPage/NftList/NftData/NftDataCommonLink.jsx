@@ -33,6 +33,10 @@ const NftDataCommonLinkComponent = ({ userData }) => {
 
   const { contract, product, tokenId, blockchain } = params;
 
+  // console.log(tokenData, 'tokenData');
+
+
+
   useEffect(() => {
     dispatch({ type: "SET_REAL_CHAIN", payload: blockchain });
   }, [blockchain, dispatch]);

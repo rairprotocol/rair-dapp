@@ -61,17 +61,17 @@ const CollectionInfo = ({
                       <div className="item-name-text">{token.offerName}</div>
                     </div>
                     <div className="item-rank">
-                      {token.offerIndex === 0 ? (
+                      {token.offerIndex === '0' ? (
                         <i style={{ color: `red` }} className="fas fa-key" />
-                      ) : token.offerIndex === 1 ? (
+                      ) : token.offerIndex === '1' ? (
                         `🔑`
                       ) : (
                         <i style={{ color: `silver` }} className="fas fa-key" />
                       )}{" "}
                       &nbsp;
-                      {token.offerIndex === 0 && "Ultra Rair"}
-                      {token.offerIndex === 1 && "Rair"}
-                      {token.offerIndex >= 2 && "Common"}
+                      {token.offerIndex === '0' && "Ultra Rair"}
+                      {token.offerIndex === '1' && "Rair"}
+                      {token.offerIndex >= '2' && "Common"}
                     </div>
                     <div className="item-availa">
                       <p>

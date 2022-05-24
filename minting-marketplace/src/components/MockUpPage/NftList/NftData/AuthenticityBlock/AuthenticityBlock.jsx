@@ -11,7 +11,9 @@ const AuthenticityBlock = ({
   selectedToken,
   title,
   collectionToken,
+  selectedData
 }) => {
+
   const { primaryColor } = useSelector(store => store.colorStore);
 
   const [authCollection, setAuthCollection] = useState(false);
@@ -32,12 +34,12 @@ const AuthenticityBlock = ({
   }, [collectionToken]);
 
   const initialIpfsLink = useCallback(() => {
-    if (ownerInfo && ownerInfo.cover) {
-      setIpfsLink(ownerInfo.cover);
+    if (selectedData && selectedData.image) {
+      setIpfsLink(selectedData.image);
     } else {
-      return defaultImg;
+      setIpfsLink(defaultImg);
     }
-  }, [ownerInfo]);
+  }, [selectedData]);
 
   useEffect(() => {
     generateUrlColection();
@@ -58,25 +60,27 @@ const AuthenticityBlock = ({
         {tokenData && (
           <>
             {tokenData.map((el, index) => {
-              if (Number(el.token) === Number(selectedToken)) {
+              if (Number(el.token) === Number(selectedToken) && el.authenticityLink !== "none") {
                 return (
                   <div key={index} className="authenticity-box">
-                    <a
-                      className="nftDataPageTest-a-hover"
-                      href={el.authenticityLink}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <div className="link-block">
-                        <span>
-                          <i className="fas fa-external-link-alt"></i>
-                        </span>
-                        Etherscan transaction
-                      </div>
-                      <div className="block-arrow">
-                        <i className="fas fa-arrow-right"></i>
-                      </div>
-                    </a>
+                    {
+                      el.authenticityLink !== "none" && <a
+                        className="nftDataPageTest-a-hover"
+                        href={el.authenticityLink}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <div className="link-block">
+                          <span>
+                            <i className="fas fa-external-link-alt"></i>
+                          </span>
+                          Etherscan transaction
+                        </div>
+                        <div className="block-arrow">
+                          <i className="fas fa-arrow-right"></i>
+                        </div>
+                      </a>
+                    }
                   </div>
                 );
               }

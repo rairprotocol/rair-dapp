@@ -1030,6 +1030,10 @@ padding-left: 1rem;
 .search-panel-empty-text{
     cursor: default;
 }
+
+.fa-lock::before{
+    color: white;
+}
 /* Modal Item */
 
 .iDawfU.active .modal-content {
@@ -1221,6 +1225,9 @@ button.metamask-on-boarding:hover {
     .col-12.pt-2.mb-4 {
         margin-right: 150px;
     }
+    i.fas-custom {
+        left: 3vw !important;
+    }
 }
 
 @media screen and (max-width: 900px) and (min-width: 768px) {
@@ -1230,6 +1237,9 @@ button.metamask-on-boarding:hover {
 
     .wrapper-collection {
         margin-left: 3vw;
+    }
+    i.fas-custom {
+        left: 3vw !important;
     }
 }
 
@@ -1242,6 +1252,9 @@ button.metamask-on-boarding:hover {
     .wrapper-collection {
         margin-left: 3vw;
     }
+    i.fas-custom {
+        left: 3vw !important;
+    }
 }
 
 @media screen and (max-width: 1077px) and (min-width: 1001px) {
@@ -1249,9 +1262,15 @@ button.metamask-on-boarding:hover {
         max-width: 100%;
         margin-left: 5vw;
     }
+    i.fas-custom {
+        left: 3vw !important;
+    }
 }
 
 @media screen and (max-width: 1200px) and (min-width: 1078px) {
+    i.fas-custom {
+        left: 3vw !important;
+    }
     #nft-data-page-wrapper {
         max-width: 100%;
         margin-left: 0px;
@@ -1259,6 +1278,9 @@ button.metamask-on-boarding:hover {
 }
 
 @media screen and (max-width: 1500px) and (min-width: 1201px) {
+    i.fas-custom {
+        left: 3vw !important;
+    }
     #nft-data-page-wrapper {
         max-width: 1200;
     }

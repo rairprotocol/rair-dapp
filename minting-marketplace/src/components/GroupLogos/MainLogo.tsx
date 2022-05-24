@@ -8,7 +8,12 @@ const MainLogo = ({ goHome, sentryHistory, headerLogo /*, headerLogoBlack, heade
 
     return (
         <>
-            {sentryHistory.location.pathname === "/about-page" ? <div></div>
+            {sentryHistory.location.pathname === "/about-page" ? <img
+                    onClick={() => goHome()}
+                    alt='Header Logo'
+                    src={headerLogo}
+                    className='h-100 header_logo'
+                />
                 : <img
                     onClick={() => goHome()}
                     alt='Header Logo'
