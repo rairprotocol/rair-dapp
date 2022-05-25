@@ -50,6 +50,7 @@ const TitleCollection = ({
               selectedValue={selectedValue}
               open={open}
               onClose={handleClose}
+              selectedData={selectedData}
             />
           </div>
         </div>
@@ -66,7 +67,9 @@ const TitleCollection = ({
           </h5>
         </div>
         <div className="block-collection-desc">
-          {selectedData && selectedData.description}
+          {selectedData && selectedData.description === 'none' 
+          ? '' 
+          : selectedData.description}
         </div>
       </div>
     );
@@ -90,6 +93,7 @@ const TitleCollection = ({
               selectedValue={selectedValue}
               open={open}
               onClose={handleClose}
+              selectedData={selectedData}
             />
           </div>
         </div>
@@ -103,8 +107,10 @@ const TitleCollection = ({
           </h5>
         </div>
         <div className="block-collection-desc">
-          {selectedData && selectedData.description}
-        </div>
+        {selectedData && selectedData.description === 'none' 
+          ? `` 
+          : selectedData.description}        
+          </div>
       </div>
     );
   }

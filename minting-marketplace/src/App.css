@@ -1439,3 +1439,16 @@ body::-webkit-scrollbar-thumb:active {
     }
     
 }
+
+.vjs-has-started {
+    border-radius: 16px !important;
+} 
+.vjs-control-bar {
+    border-radius: 16px !important;
+}
+.video-js {
+    border-radius: 16px !important;
+} 
+.vjs-tech {
+    border-radius: 16px !important;
+}

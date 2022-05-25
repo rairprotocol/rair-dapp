@@ -25,7 +25,6 @@ import CustomButton from "../../utils/button/CustomButton";
 import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import NftListUnlockablesVideos from "./NftListUnlockablesVideos";
-
 const NftDataPageMain = ({
   blockchain,
   contract,
@@ -636,33 +635,35 @@ const NftDataPageMain = ({
                 {selectedData?.artist === "none" &&
                 selectedData?.description === "none" &&
                 selectedData?.external_url === "none" ? (
-                  <div className=" custom-desc-to-offer-wrapper">
-                    <div className="my-2 px-4 custom-desc-to-offer">
+                  <div className=" custom-desc-to-offer-wrapper" style={{color: `#A7A6A6`, textAlign: 'left'}}>
+                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
                       <span>Created by </span>
                       <strong>
                         {someUsersData !== null
                           ? someUsersData?.nickName
                           : ownerInfo?.owner}
                       </strong>
-                    </div>
+                    {/* </div> */}
                   </div>
                 ) : (
                   <div className=" custom-desc-to-offer-wrapper">
-                    <div className="my-2 px-4 custom-desc-to-offer">
-                      {toUpper(selectedData?.artist)}
-                    </div>
-                    <div className="my-2 px-4 custom-desc-to-offer">
-                      {selectedData?.description}
-                    </div>
-                    <div className="my-2 px-4 custom-desc-to-offer">
-                      <a
+                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
+                      <p style={{color: `#A7A6A6`, textAlign: 'left'}}>
+                      {/* {selectedData?.artist? `${toUpper(selectedData?.artist)}#` :'' }  */}
+                      { selectedData?.description }
+                      </p>
+                    {/* </div> */}
+                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
+                    {/* </div> */}
+                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
+                      {/* <a
                         target="_blank"
                         rel="noreferrer"
                         href={selectedData?.external_url}
                       >
                         {selectedData?.external_url}
-                      </a>
-                    </div>
+                      </a> */}
+                    {/* </div> */}
                   </div>
                 )}
               </AccordionItemPanel>
@@ -681,32 +682,32 @@ const NftDataPageMain = ({
                     selectedData?.attributes.length > 0 ? (
                       selectedData?.attributes.map((item, index) => {
                         if (
-                          item.trait_type === "External URL" &&
-                          "external_url"
+                          item.trait_type === "External URL" ||
+                          item.trait_type === "external_url"
                         ) {
-                          return (
-                            <div
-                              key={index}
-                              className="col-4 my-2 p-1 custom-desc-to-offer"
-                              style={{
-                                cursor: "default",
-                                color: textColor,
-                                textAlign: "center",
-                              }}
-                            >
-                              <span>{item?.trait_type}:</span>
-                              <br />
-                              <a
-                                className="custom-offer-pic-link"
-                                style={{ color: textColor }}
-                                href={item?.value}
-                              >
-                                {item?.value.length > 15 ? "..." : ""}
-                                {item?.value.substr(
-                                  item?.value.indexOf("\n") + 19
-                                )}
-                              </a>
-                            </div>
+                          return (null
+                            // <div
+                            //   key={index}
+                            //   className="col-4 my-2 p-1 custom-desc-to-offer"
+                            //   style={{
+                            //     cursor: "default",
+                            //     color: textColor,
+                            //     textAlign: "center",
+                            //   }}
+                            // >
+                            //   <span>{item?.trait_type}:</span>
+                            //   <br />
+                            //   <a
+                            //     className="custom-offer-pic-link"
+                            //     style={{ color: textColor }}
+                            //     href={item?.value}
+                            //   >
+                            //     {item?.value.length > 15 ? "..." : ""}
+                            //     {item?.value.substr(
+                            //       item?.value.indexOf("\n") + 19
+                            //     )}
+                            //   </a>
+                            // </div>
                           );
                         }
                         if (
@@ -716,7 +717,7 @@ const NftDataPageMain = ({
                           return (
                             <div
                               key={index}
-                              className="col-4 my-2 p-1 custom-desc-to-offer"
+                              className="col-1 m-1 p-1 px-4 custom-desc-to-offer"
                               style={{
                                 display: "flex",
                                 flexDirection: "column",
@@ -746,22 +747,34 @@ const NftDataPageMain = ({
                         return (
                           <div
                             key={index}
-                            className="col-4 my-2 p-1 custom-desc-to-offer"
+                            className="col-1 m-1 p-1 custom-desc-to-offer d-flex flex-column justify-content-center"
+                            style={{width: '157px'}}
                           >
-                            <div className="custom-desc-item">
-                              <span>{item?.trait_type}:</span>
-                              <span style={{ color: textColor }}>
-                                {item?.value}
-                              </span>
+                            <div className='custom-desc-item'>
+                                <span className="rtl-overlow-elipsis" title={toUpper(item?.trait_type.toString().toLowerCase())}>
+                                    {`${item?.trait_type.toUpperCase()} `}
+                                </span>
                             </div>
-                            <div className="custom-offer-percents">
-                              <span
-                                style={{
-                                  color: percentToRGB(percent),
-                                }}
-                              >
-                                {percent}%
-                              </span>
+                            <div className='custom-offer-percents'>
+                                {/* <span className="rtl-overlow-elipsis" title={toUpper(item?.value.toString().toLowerCase())} */}
+                                {/* > */}
+                                  {/* <span className="rtl-overlow-elipsis">  */}
+                                      <span className="text-bold rtl-overlow-elipsis" 
+                                      title={toUpper(item?.value.toString().toLowerCase())}>
+                                      <span 
+                                        style={{
+                                          color: percentToRGB(percent),fontSize: '12px',
+                                        }}
+                                        >
+                                          {percent}%
+                                      </span>
+                                      :{`${toUpper(item?.value.toString().toLowerCase())} `}
+
+                                      </span> 
+
+                                      {/* </span> */}
+                                {/* </span> */}
+
                             </div>
                           </div>
                         );

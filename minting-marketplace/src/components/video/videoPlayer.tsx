@@ -78,7 +78,7 @@ const VideoPlayer = () => {
 	<div className='video-btn-back'>
 		<button onClick={() => btnGoBack()}>back</button>
 	</div>
-		<div className="col-12 row mx-0 bg-secondary h1" style={{ minHeight: '50vh' }}>
+		<div className="col-12 row mx-0 h1" style={{ minHeight: '50vh' }}>
 			<video id={'vjs-' + videoName}
 				className="video-js vjs-16-9"
 				controls

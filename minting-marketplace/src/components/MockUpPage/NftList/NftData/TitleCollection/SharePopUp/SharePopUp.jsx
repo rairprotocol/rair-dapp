@@ -11,7 +11,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import { useSelector } from "react-redux";
 import "./SharePopUp.css";
 
-const SharePopUp = ({ onClose, selectedValue, open, primaryColor }) => {
+const SharePopUp = ({ onClose, selectedValue, open, primaryColor, selectedData }) => {
     const [copySuccess, setCopySuccess] = useState('Copy link');
     const currentUrl = document.location.href;
     const { headerLogo } = useSelector(store => store.colorStore);
@@ -21,24 +21,28 @@ const SharePopUp = ({ onClose, selectedValue, open, primaryColor }) => {
     };
 
 
-    function copyStringToClipboard(str) {
-        var el = document.createElement('textarea');
-        el.value = str;
-        el.setAttribute('readonly', '');
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-
-        setCopySuccess("Copies");
-    }
+    // function copyStringToClipboard(str) {
+    //     var el = document.createElement('textarea');
+    //     el.value = str;
+    //     el.setAttribute('readonly', '');
+    //     document.body.appendChild(el);
+    //     el.select();
+    //     document.execCommand('copy');
+    //     document.body.removeChild(el);
+    //     setCopySuccess("Copies");
+    // }
 
     const closePopUp = () => {
-        copyStringToClipboard(currentUrl);
-        console.log(currentUrl)
+        // copyStringToClipboard(currentUrl);
+        // console.log(currentUrl)
         setTimeout(() => {
             handleClose()
         }, 1000)
+    }
+
+    const handleCopy = async () => {
+        window.navigator.clipboard.writeText(selectedData.external_url)
+        closePopUp()
     }
 
     return (
@@ -51,7 +55,7 @@ const SharePopUp = ({ onClose, selectedValue, open, primaryColor }) => {
                 Share
             </DialogTitle>
             <List style={{ background: `${primaryColor === "rhyno" ? "#e3e4e6" : "rgb(56, 54, 55)"}` }} sx={{ pt: 0 }}>
-                <ListItem onClick={closePopUp} autoFocus button>
+                <ListItem onClick={handleCopy} autoFocus button>
                     <ListItemAvatar>
                         <img style={{ width: 30, height: "auto", marginLeft: "10px" }} src={headerLogo} alt="rair tech" />
                     </ListItemAvatar>
