@@ -4,19 +4,15 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import './index.css';
 import App from './App';
-import rootSaga from "./ducks/sagas"; // saga
-import configureStore from "./ducks";
 
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
 import { createBrowserHistory } from "history";
 import { HelmetProvider } from "react-helmet-async";
+import store from "./ducks";
 
 const sentryHistory = createBrowserHistory();
-
-const { store, sagaMiddleware } = configureStore();
-sagaMiddleware.run(rootSaga);
 
 if (process.env.REACT_APP_SENTRY_ENABLED) {
   Sentry.init({
@@ -28,7 +24,7 @@ if (process.env.REACT_APP_SENTRY_ENABLED) {
           Sentry.reactRouterV5Instrumentation(sentryHistory),
       }),
     ],
-    tracesSampleRate: process.env.REACT_APP_SENTRY_IO_TRACE_RATE,
+    tracesSampleRate: process.env.REACT_APP_SENTRY_IO_TRACE_RATE
   });
 }
 

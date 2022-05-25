@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 //REDUCERS
@@ -10,6 +9,7 @@ import colorStore from './colors';
 import metadataStore from './metadata';
 import getPageStore from './pages';
 import {createReduxEnhancer} from "@sentry/react";
+import rootSaga from './sagas';
 
 const reducers = combineReducers({
     accessStore,
@@ -27,9 +27,10 @@ const sentryReduxEnhancer = createReduxEnhancer({
 
 const sagaMiddleware = createSagaMiddleware();
 
-const exp = () => {
-    const store = createStore(reducers, undefined, compose(sentryReduxEnhancer, applyMiddleware(sagaMiddleware)));
-    return { store, sagaMiddleware };
-};
+const store = createStore(reducers, undefined, compose(sentryReduxEnhancer, applyMiddleware(sagaMiddleware)));
+sagaMiddleware.run(rootSaga);
 
-export default exp;
+export type RootState = ReturnType<typeof reducers>;
+export type AppDispatch = typeof store.dispatch;
+
+export default store;
