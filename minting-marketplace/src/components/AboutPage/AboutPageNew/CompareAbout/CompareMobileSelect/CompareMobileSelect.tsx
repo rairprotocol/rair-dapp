@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React from 'react';
 import RairLogo from "./../../../assets/rairLogo_blue.png";
 import OpenSea from "./../../../assets/openSea-logo.png";
@@ -7,8 +7,9 @@ import OneOf from "./../../../assets/oneOf-logo.png";
 import Dapper from "./../../../assets/dapper-logo.png";
 import MinTable from "./../../../assets/mintable-logo.png";
 import Curios from "./../../../assets/curios.png";
+import { ICompareMobileSelect } from '../../aboutPage.types';
 
-const CompareMobileSelect = ({ categories }) => {
+const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({ categories }) => {
     return (
         <div className="compare-select-mobile-container">
             {

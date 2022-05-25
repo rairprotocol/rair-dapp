@@ -1,7 +1,8 @@
-//@ts-nocheck
-import React from 'react'
 
-const RoadMap = ({ primaryColor }) => {
+import React from 'react'
+import { IRoadMap } from '../aboutPage.types'
+
+const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
     return (
         <div className="about-roadmap">
             <div className="about-road-title">2022 Roadmap</div>

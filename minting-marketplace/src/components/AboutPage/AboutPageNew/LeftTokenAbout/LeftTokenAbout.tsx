@@ -1,8 +1,9 @@
-//@ts-nocheck
+
 import React from 'react';
+import { ILeftTokenAbout } from '../aboutPage.types';
 import DiscordIcon from './../../../SplashPage/images/discord-icon.png';
 
-const LeftTokenAbout = ({ primaryColor }) => {
+const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
     return (
         <div className="left-tokens about-page">
             <div className="block-left-tokens">

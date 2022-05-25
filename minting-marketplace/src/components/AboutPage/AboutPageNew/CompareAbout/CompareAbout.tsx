@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React, { useState } from "react";
 
 // imports image logos
@@ -17,7 +17,7 @@ import Select from '@mui/material/Select';
 import CompareMobileSelect from "./CompareMobileSelect/CompareMobileSelect";
 
 const CompareAbout = () => {
-  const [categories, setCategories] = useState(10);
+  const [categories, setCategories] = useState<number>(10);
 
   const handleChange = (event) => {
     setCategories(event.target.value);

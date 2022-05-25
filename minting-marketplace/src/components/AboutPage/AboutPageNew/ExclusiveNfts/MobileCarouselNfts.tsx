@@ -1,13 +1,14 @@
-//@ts-nocheck
+
 import React from 'react';
 import Carousel from 'react-multi-carousel';
 import "react-multi-carousel/lib/styles.css";
+import { IMobileCarouselNfts } from '../aboutPage.types';
 
-const MobileCarouselNfts = (props) => {
+const MobileCarouselNfts: React.FC<IMobileCarouselNfts> = (props) => {
     const { children, screen } = props;
     const responsive = {
         mobile: {
-            breakpoint: { max: screen ? screen : "750", min: 0 },
+            breakpoint: { max: screen ? screen : 750, min: 0 },
             items: 1,
         },
     };

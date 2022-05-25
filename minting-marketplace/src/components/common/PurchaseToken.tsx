@@ -253,7 +253,7 @@ const Agreements = ({
 	</div>
 }
 
-const PurchaseTokenButton = ({
+const PurchaseTokenButton: React.FC<any> = ({
 	customStyle,
 	customWrapperClassName,
 	img,

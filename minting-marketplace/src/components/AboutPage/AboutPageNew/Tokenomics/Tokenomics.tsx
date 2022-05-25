@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React from 'react';
 import Eth_icon from './../../assets/eth-icon.png';
 import Space_icon from './../../assets/space-icon.png';
@@ -7,8 +7,9 @@ import Matic_icon from './../../assets/matic-icon.png';
 import Binance_icon from './../../assets/binance-icon.png';
 import Arb_icon from './../../assets/arb-icon.png';
 import Kit_icon from './../../assets/kat-icon.png';
+import { ITokenomics } from '../aboutPage.types';
 
-const Tokenomics = ({ Metamask }) => {
+const Tokenomics: React.FC<ITokenomics> = ({ Metamask }) => {
     return (
         <div className="about-tokenomics">
             <div className="about-tokenomics-title">

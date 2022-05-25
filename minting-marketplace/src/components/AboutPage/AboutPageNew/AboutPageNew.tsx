@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React, { useEffect } from "react";
 import "./AboutPageNew.css";
 
@@ -24,17 +24,20 @@ import { useLocation /*useHistory*/ } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import PurchaseTokenButton from "../../common/PurchaseToken";
-import FaviconRair from './../assets/rair_favicon.ico';
+import FaviconRair from '../assets/rair_favicon.ico';
 import MetaTags from "../../SeoTags/MetaTags";
+import { IAboutPageNew } from "./aboutPage.types";
+import { RootState } from "../../../ducks";
+import { ColorStoreType } from "../../../ducks/colors/colorStore.types";
 
-const AboutPageNew = ({
+const AboutPageNew: React.FC<IAboutPageNew> = ({
   headerLogoBlack,
   headerLogoWhite,
   connectUserData,
 }) => {
   const { pathname } = useLocation();
   // const history = useHistory();
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { primaryColor } = useSelector<RootState, ColorStoreType >((store) => store.colorStore);
 
   const termsText =
     "I understand this a test NFT designed to unlock RAIR streams";

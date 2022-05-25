@@ -1,7 +1,8 @@
-//@ts-nocheck
-import React from 'react'
 
-const RairOffer = ({ primaryColor }) => {
+import React from 'react'
+import { IRairOffer } from '../aboutPage.types'
+
+const RairOffer: React.FC<IRairOffer> = ({ primaryColor }) => {
     return (
         <div className="about-rair-offer">
             <div className="rair-offer-title">

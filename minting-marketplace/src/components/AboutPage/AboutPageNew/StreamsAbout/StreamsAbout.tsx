@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 // import { useState } from 'react';
 import VideoBg_1 from './../../assets/video-bg_1.png';
 import VideoBg_2 from './../../assets/video-bg_2.png';
@@ -10,15 +10,18 @@ import { useSelector, Provider, useStore } from 'react-redux';
 import StandaloneVideoPlayer from "../../../video/videoPlayerGenerall";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { IStreamsAbout } from '../aboutPage.types';
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 
 const reactSwal = withReactContent(Swal);
 
-const StreamsAbout = ({ Metamask, purchaseButton }) => {
+const StreamsAbout: React.FC<IStreamsAbout> = ({ Metamask, purchaseButton }) => {
 
     // const [showVideo, setShowVideo] = useState(false);
 
     // const { currentUserAddress } = useSelector(store => store.contractStore);
-    const { primaryColor, textColor } = useSelector(store => store.colorStore);
+    const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
 
     const store = useStore();
 
@@ -31,7 +34,7 @@ const StreamsAbout = ({ Metamask, purchaseButton }) => {
                 />
             </Provider>,
             width: '90vw',
-            height: '90vh',
+            // height: '90vh',
             customClass: {
                 popup: `bg-${primaryColor}`,
                 title: `text-${textColor}`,

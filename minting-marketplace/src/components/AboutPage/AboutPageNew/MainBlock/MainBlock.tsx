@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import React, { useState, /*useCallback, useEffect*/ } from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
@@ -8,6 +8,9 @@ import Swal from "sweetalert2";
 // import { erc721Abi } from "../../../../contracts";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
 import { diamondFactoryAbi } from "../../../../contracts/index";
+import { IMainBlock } from "../aboutPage.types";
+import { RootState } from "../../../../ducks";
+import { ContractsInitialType } from "../../../../ducks/contracts/contracts.types";
 
 const customStyles = {
   overlay: {
@@ -33,11 +36,11 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData, purchaseButton }) => {
+const MainBlock: React.FC<IMainBlock> = ({ Metamask, primaryColor, termsText, connectUserData, purchaseButton }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState({ policy: false, use: false });
 
-  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } = useSelector(
+  const { diamondMarketplaceInstance, contractCreator, currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
 
@@ -80,7 +83,7 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData, purchas
       });
       return;
     }
-    let watchTokenOffer = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
+    let watchTokenOffer: any = await metamaskCall(diamondMarketplaceInstance.getOfferInfo(offerIndexInMarketplace));
     if (!watchTokenOffer) {
       Swal.fire({
         title: "An error has ocurred",
@@ -90,8 +93,8 @@ const MainBlock = ({ Metamask, primaryColor, termsText, connectUserData, purchas
       return;
     }
     if (watchTokenOffer) {
-      let instance = contractCreator(aboutPageAddress, diamondFactoryAbi);
-      let nextToken = await metamaskCall(instance.getNextSequentialIndex(
+      let instance = contractCreator?.(aboutPageAddress, diamondFactoryAbi);
+      let nextToken = await metamaskCall(instance?.getNextSequentialIndex(
         watchTokenOffer.productIndex,
         watchTokenOffer.rangeData.rangeStart,
         watchTokenOffer.rangeData.rangeEnd

@@ -1,12 +1,13 @@
-//@ts-nocheck
+
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { AccordionProps, AccordionSummaryProps } from "@mui/material";
 // import Typography from '@mui/material/Typography';
 
-const Accordion = styled((props) => (
+const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -18,7 +19,7 @@ const Accordion = styled((props) => (
     },
 }));
 
-const AccordionSummary = styled((props) => (
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
     <MuiAccordionSummary
         // expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
         {...props}
@@ -35,7 +36,7 @@ const AccordionSummary = styled((props) => (
 }));
 
 const PlatformAbout = () => {
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = React.useState<boolean | string>(false);
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
