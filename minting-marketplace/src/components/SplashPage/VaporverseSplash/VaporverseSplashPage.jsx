@@ -213,20 +213,20 @@ const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
     setOpenCheckList(prev => !prev)
   }
 
-  const getAllProduct = useCallback(async () => {
-    if (loginDone) {
-      if (currentChain === splashData.purchaseButton.requiredBlockchain) {
-        setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
-      } else {
-        setSoldCopies();
-      }
-    }
+  // const getAllProduct = useCallback(async () => {
+  //   if (loginDone) {
+  //     if (currentChain === splashData.purchaseButton.requiredBlockchain) {
+  //       setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
+  //     } else {
+  //       setSoldCopies();
+  //     }
+  //   }
 
-  }, [setSoldCopies, loginDone, currentChain, minterInstance]);
+  // }, [setSoldCopies, loginDone, currentChain, minterInstance]);
 
-  useEffect(() => {
-    getAllProduct()
-  }, [getAllProduct])
+  // useEffect(() => {
+  //   getAllProduct()
+  // }, [getAllProduct])
 
   useEffect(() => {
     dispatch({type: 'SET_REAL_CHAIN', payload: ukraineglitchChainId})

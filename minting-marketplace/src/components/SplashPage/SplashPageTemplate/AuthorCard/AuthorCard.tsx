@@ -18,7 +18,7 @@ const AuthorCardButton = ({ buttonData }) => {
           background: buttonColor,
         }}
       >
-        <img className="metamask-logo" src={buttonImg} alt="form-logo" />{" "}
+        {buttonImg && <img className="metamask-logo" src={buttonImg} alt="form-logo" />}{" "}
         {buttonLabel}
       </button>
     </div>
