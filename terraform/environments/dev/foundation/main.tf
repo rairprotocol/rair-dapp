@@ -39,6 +39,10 @@ module "foundation" {
       role: "roles/viewer"
     }
   ]
+  secret_adder_role_users = [
+    module.config.users.brian.email,
+    module.config.users.zeph.email
+  ]
 }
 
 module "hcp_cloud" {

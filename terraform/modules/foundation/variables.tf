@@ -34,3 +34,8 @@ variable "account_users" {
     role: string
   }))
 }
+
+variable "secret_adder_role_users" {
+  default = []
+  type = list(string)
+}
