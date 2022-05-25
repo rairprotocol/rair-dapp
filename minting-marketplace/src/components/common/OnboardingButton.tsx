@@ -1,4 +1,3 @@
-//@ts-nocheck
 import MetaMaskOnboarding from "@metamask/onboarding";
 // import Swal from "sweetalert2";
 import React, { useState, useEffect, useRef, useCallback } from "react";
@@ -8,11 +7,11 @@ const CONNECT_TEXT = "Connect Wallet";
 const CONNECTED_TEXT = "Connected";
 
 export function OnboardingButton() {
-  const [buttonText, setButtonText] = useState(ONBOARD_TEXT);
-  const [isDisabled, setDisabled] = useState(false);
-  const [accounts, setAccounts] = useState([]);
-  const [showButtonPhone, setShowButtonPhone] = useState();
-  const onboarding = useRef();
+  const [buttonText, setButtonText] = useState<string>(ONBOARD_TEXT);
+  const [isDisabled, setDisabled] = useState<boolean>(false);
+  const [accounts, setAccounts] = useState<Array<string>>([]);
+  const [showButtonPhone, setShowButtonPhone] = useState<boolean>();
+  const onboarding = useRef<MetaMaskOnboarding>();
 
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
@@ -44,7 +43,7 @@ export function OnboardingButton() {
       if (accounts.length > 0) {
         setButtonText(CONNECTED_TEXT);
         setDisabled(true);
-        onboarding.current.stopOnboarding();
+        onboarding?.current?.stopOnboarding();
       } else {
         setButtonText(CONNECT_TEXT);
         setDisabled(false);
@@ -71,9 +70,9 @@ export function OnboardingButton() {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       window.ethereum
         .request({ method: "eth_requestAccounts" })
-        .then((newAccounts) => setAccounts(newAccounts));
+        .then((newAccounts: Array<string>) => setAccounts(newAccounts));
     } else {
-      onboarding.current.startOnboarding();
+      onboarding?.current?.startOnboarding();
     }
   };
   return showButtonPhone ? (
