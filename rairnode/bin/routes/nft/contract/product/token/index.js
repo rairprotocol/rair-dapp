@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const fs = require('fs').promises;
-const { JWTVerification, validation } = require('../../../../../middleware');
+const { JWTVerification, validation, dataTransform } = require('../../../../../middleware');
 // eslint-disable-next-line operator-linebreak
 const { addMetadata, addPin, removePin, addFile } =
   require('../../../../../integrations/ipfsService')();
@@ -44,12 +44,13 @@ module.exports = (context) => {
     '/',
     JWTVerification(context),
     upload.array('files', 2),
+    dataTransform(['attributes']),
     validation('updateTokenMetadata'),
     async (req, res, next) => {
       try {
         const { contract, offers, offerPool, token } = req;
         const { user } = req;
-        let fieldsForUpdate = _.pick(req.body, [
+        const fieldsForUpdate = _.pick(req.body, [
           'name',
           'description',
           'artist',
@@ -128,9 +129,12 @@ module.exports = (context) => {
                 log.info(`File ${file.filename} has added to ipfs.`);
 
                 file.link = `${context.config.pinata.gateway}/${cid}/${file.filename}`;
+
                 return file;
               } catch (err) {
                 log.error(err);
+
+                return err;
               }
             }),
           );

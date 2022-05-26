@@ -5,6 +5,7 @@ const formDataHandler = require('./formDataHandler');
 const streamVerification = require('./streamVerification');
 const assignUser = require('./assignUser');
 const isAdmin = require('./isAdmin');
+const dataTransform = require('./dataTransform');
 
 module.exports = {
   JWTVerification,
@@ -14,4 +15,5 @@ module.exports = {
   streamVerification,
   assignUser,
   isAdmin,
+  dataTransform,
 };

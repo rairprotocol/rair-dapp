@@ -86,7 +86,7 @@ For correct work of sessions we need to set
             * [x] /:product - GET - get tokens for the product, [see details here](readme/get_all_minted_tokens_from_product.md)
                 * [x] /tokenNumbers - GET - Get list of token numbers, [see details here](readme/get_all_minted_token_numbers_from_product.md)
                 * [x] /token/:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index.md)
-                    * [x] / - POST - Update specific token by contract, product and internal ID, [see details here](readme/update_token_metadata.md)
+                    * [x] / - POST - Update specific token metadata by contract, product and internal ID, [see details here](readme/update_token_metadata.md)
                     * [x] /pinning - GET - Pin token metadata to IPFS cloud, [see details here](readme/pin_token_metadata_to_ipfs.md)
                 * [x] /files - GET - get files for specific product, [see details here](readme/get_files_by_product.md)
                     * [x] /:token - GET - get files by NFT token, [see details here](readme/get_files_by_nft.md)
