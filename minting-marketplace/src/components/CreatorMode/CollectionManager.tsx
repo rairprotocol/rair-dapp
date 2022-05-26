@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react'
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
@@ -6,6 +5,9 @@ import { Link } from 'react-router-dom';
 import CustomPayRate from '../whitelabel/customizePayRate';
 import { utils } from 'ethers';
 import { metamaskCall } from '../../utils/metamaskUtils';
+import { IExistingLock, IProductManager, IRangeManager, IRangesType } from './creatorMode.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 // const LockManager = ({ index, array, deleter, disabled, locker, productIndex }) => {
 
@@ -43,14 +45,14 @@ import { metamaskCall } from '../../utils/metamaskUtils';
 // 	</tr>
 // }
 
-const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker, productIndex, updater, offerIndex }) => {
+const RangeManager: React.FC<IRangeManager> = ({ disabled, index, array, deleter, sync, hardLimit, locker, productIndex, updater, offerIndex }) => {
 
-	const [endingRange, setEndingRange] = useState(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
-	const [rangeName, setRangeName] = useState(array[index].name);
-	const [rangePrice, setRangePrice] = useState(array[index].price);
+	const [endingRange, setEndingRange] = useState<number>(disabled ? array[index].endingToken : (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
+	const [rangeName, setRangeName] = useState<string>(array[index].name);
+	const [rangePrice, setRangePrice] = useState<string>(array[index].price);
 	const syncOutside = useCallback(sync, [sync]);
 	const rangeInit = ((index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1));
-	const [locked, setLocked] = useState(0);
+	const [locked, setLocked] = useState<number>(0);
 
 	useEffect(() => {
 		let aux = array[index].endingToken !== endingRange;
@@ -122,7 +124,7 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 			</button>
 		</th>
 		<th>
-			<input className='form-control' type='number' value={locked} onChange={e => setLocked(e.target.value)} />
+			<input className='form-control' type='number' value={locked} onChange={e => setLocked(+e.target.value)} />
 		</th>
 		<th>
 			<button
@@ -148,14 +150,14 @@ const RangeManager = ({ disabled, index, array, deleter, sync, hardLimit, locker
 	</>
 }
 
-const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress }) => {
+const ProductManager: React.FC<IProductManager> = ({ productIndex, productInfo, tokenInstance, tokenAddress }) => {
 
-	const { minterInstance } = useSelector(state => state.contractStore);
+	const  { minterInstance } = useSelector<RootState, ContractsInitialType>(state => state.contractStore);
 
-	const [ranges, setRanges] = useState([]);
-	const [/*locks*/, setLocks] = useState([]);
-	const [forceSync, setForceSync] = useState(false);
-	const [offerIndex, setOfferIndex] = useState();
+	const [ranges, setRanges] = useState<IRangesType[]>([]);
+	const [/*locks*/, setLocks] = useState<IExistingLock[]>([]);
+	const [forceSync, setForceSync] = useState<boolean>(false);
+	const [offerIndex, setOfferIndex] = useState<string>("");
 
 	const deleter = index => {
 		let aux = [...ranges];
@@ -169,9 +171,9 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		setLocks(aux);
 	}*/
 
-	const locker = async (productIndex, startingToken, endingToken, lockedTokens) => {
+	const locker = async (productIndex: number, startingToken: number, endingToken: number, lockedTokens: number) => {
 		Swal.fire({title: 'Locking tokens', html: 'Please wait', icon: 'info', showConfirmButton: false});
-		if (await metamaskCall(tokenInstance.createRangeLock(productIndex, startingToken, endingToken, lockedTokens))) {
+		if (await metamaskCall(tokenInstance?.createRangeLock(productIndex, startingToken, endingToken, lockedTokens))) {
 			Swal.fire('Success', 'Tokens locked', 'success');
 		}
 	}
@@ -179,14 +181,14 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 	const refresher = useCallback(async () => {
 		try {
 			// Marketplace Ranges
-			let offerIndex = (await minterInstance.contractToOfferRange(tokenInstance.address, productIndex)).toString();
+			let offerIndex = (await minterInstance?.contractToOfferRange(tokenInstance?.address, productIndex)).toString();
 			if (offerIndex) {
 				setOfferIndex(offerIndex);
 			}
-			let offerData = await minterInstance.getOfferInfo(offerIndex);
-			let existingRanges = [];
-			for await (let rangeIndex of [...Array.apply(null, { length: offerData.availableRanges.toString() }).keys()]) {
-				let rangeInfo = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
+			let offerData = await minterInstance?.getOfferInfo(offerIndex);
+			let existingRanges: IRangesType[] = [];
+			for await (let rangeIndex of [...Array.apply<null, any, unknown[]>(null, { length: offerData.availableRanges.toString() }).keys()]) {
+				let rangeInfo = await minterInstance?.getOfferRangeInfo(offerIndex, rangeIndex);
 				if (Number(rangeInfo.collectionIndex.toString()) === productIndex) {
 					existingRanges.push({
 						offerIndex,
@@ -198,15 +200,15 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 				}
 			}
 			setRanges(existingRanges);
-
+			// <null, any, unknown[]>
 		} catch (err) {
 			console.error(err);
 		}
 
 		try {// Lock Ranges
-			let existingLocks = [];
+			let existingLocks: IExistingLock[] = [];
 			for await (let lockIndex of productInfo.locks) {
-				let lockInfo = await tokenInstance.getLockedRange(lockIndex);
+				let lockInfo = await tokenInstance?.getLockedRange(lockIndex);
 				if (Number(lockInfo.productIndex.toString()) === productIndex) {
 					existingLocks.push({
 						startingToken: lockInfo.startingToken.toString(),
@@ -218,7 +220,8 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			}
 			setLocks(existingLocks);
 		} catch (err) {
-			console.error(err?.data?.message);
+			const error = err as any;
+			console.error(error?.data?.message);
 		}
 	}, [minterInstance, productIndex, productInfo.locks, tokenInstance])
 
@@ -226,13 +229,13 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 		return !item.disabled;
 	}
 
-	const updater = async (offerIndex, rangeIndex, startToken, endToken, price, name) => {
+	const updater = async (offerIndex: string | undefined, rangeIndex: number, startToken: number, endToken: number, price: string, name: string) => {
 		if (!offerIndex || !rangeIndex === undefined || startToken === undefined || !endToken || !price || !name) {
 			console.error('Update Rejected');
 			return;
 		}
 		Swal.fire({title: 'Updating', html: 'Please wait', icon: 'info', showConfirmButton: false});
-		if (await metamaskCall(minterInstance.updateOfferRange(offerIndex, rangeIndex, startToken, endToken, price, name))) {
+		if (await metamaskCall(minterInstance?.updateOfferRange(offerIndex, rangeIndex, startToken, endToken, price, name))) {
 			Swal.fire('Success', 'Offer updated', 'success');
 		}
 	} 
@@ -242,7 +245,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			minterInstance.on('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', refresher)
 		}
 		return () => {
-			minterInstance.off('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', refresher);
+			minterInstance?.off('AppendedRange(address,uint256,uint256,uint256,uint256,uint256,uint256,string)', refresher);
 		}
 	},[minterInstance, refresher]);
 
@@ -256,14 +259,14 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 			className='btn btn-warning'
 			id={`metadata_${productIndex + 1}`}
 			style={{position: 'absolute', top: 0, right: 0}}
-			to={`/metadata/${window.ethereum.chainId}/${tokenInstance.address}/${productIndex}`}>
+			to={`/metadata/${window.ethereum.chainId}/${tokenInstance?.address}/${productIndex}`}>
 			Edit Metadata!
 		</Link>
 		<summary>
 			Product #{productIndex + 1}: {productInfo.name}
 		</summary>
 		{offerIndex && <CustomPayRate
-			address={tokenInstance.address}
+			address={tokenInstance?.address}
 			blockchain={window.ethereum.chainId}
 			catalogIndex={offerIndex}
 			customStyle={{position: 'absolute', top: 0, left: 0}}
@@ -284,7 +287,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 						aux.push({
 							endingToken: aux.length === 0 ? 0 : (Number(aux[aux.length - 1].endingToken) + 1),
 							name: '',
-							price: 0
+							price: String(0)
 						});
 						setRanges(aux);
 					}}
@@ -327,7 +330,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 								array={array}
 								deleter={deleter}
 								sync={() => { setForceSync(!forceSync) }}
-								hardLimit={productInfo.endingToken - productInfo.startingToken}
+								hardLimit={+productInfo.endingToken - +productInfo.startingToken}
 								locker={locker}
 								productIndex={productIndex}
 							/>
@@ -338,8 +341,8 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 					try {
 						if (ranges.length > 0 && ranges[0].disabled) {
 							Swal.fire({title: 'Appending offers', html: 'Please wait', icon: 'info', showConfirmButton: false});
-							if (await metamaskCall(minterInstance.appendOfferRangeBatch(
-								await minterInstance.contractToOfferRange(tokenInstance.address, productIndex),
+							if (await metamaskCall(minterInstance?.appendOfferRangeBatch(
+								await minterInstance?.contractToOfferRange(tokenInstance?.address, productIndex),
 								ranges.filter(notDisabled).map((item, index, array) => {
 									if (index === 0) {
 										let i = 0;
@@ -359,7 +362,7 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 							}
 						} else {
 							Swal.fire({title: 'Creating offer', html: 'Please wait', icon: 'info', showConfirmButton: false});
-							if (await minterInstance.addOffer(
+							if (await minterInstance?.addOffer(
 								tokenAddress,
 								productIndex,
 								ranges.map((item, index, array) => (index === 0) ? 0 : (Number(array[index - 1].endingToken) + 1)),
@@ -371,8 +374,9 @@ const ProductManager = ({ productIndex, productInfo, tokenInstance, tokenAddress
 							}
 						}
 					} catch (err) {
+						const error = err as any;
 						console.error(err);
-						Swal.fire('Error', err?.data?.message, 'error');
+						Swal.fire('Error', error?.data?.message, 'error');
 					}
 				}} disabled={!ranges.filter(item => !item.disabled).length} className='btn btn-warning'>
 					{ranges.length > 0 && ranges[0].disabled ? `Append ${ranges.filter(item => !item.disabled).length} ranges to the marketplace` : `Create offer with ${ranges.length} ranges on the marketplace`}

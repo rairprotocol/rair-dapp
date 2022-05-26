@@ -1,11 +1,11 @@
 //@ts-nocheck
 import * as types from './types';
-
+import { ContractAddressesType, ContractsInitialType } from './contracts.types';
 import * as ethers from 'ethers'
 
 import { minterAbi, factoryAbi, erc777Abi, diamondFactoryAbi, diamondMarketplaceAbi } from '../../contracts';
 
-const contractAddresses = {
+const contractAddresses: ContractAddressesType = {
 	'0x38': { // Binance Mainnet
 		factory: '0xc76c3ebEA0aC6aC78d9c0b324f72CA59da36B9df',
 		erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
@@ -63,7 +63,7 @@ const InitialState = {
 	realChain: undefined
 };
 
-export default function userStore(state = InitialState, action) {
+export default function userStore(state: ContractsInitialType = InitialState, action: any): ContractsInitialType {
 	switch (action.type) {
 		case types.SET_CHAIN_ID:
 			if (contractAddresses[action.payload] !== undefined) {
