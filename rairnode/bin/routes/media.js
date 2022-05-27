@@ -16,7 +16,7 @@ const {
   vaultKeyManager,
   vaultAppRoleTokenManager,
 } = require('../vault');
-const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation');
+const { verifyAccessRightsToFile } = require('../utils/helpers');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -112,7 +112,7 @@ module.exports = (context) => {
    *         schema:
    *           type: object
    */
-  router.get('/list', assignUser(context), validation('filterAndSort', 'query'), async (req, res, next) => {
+  router.get('/list', assignUser, validation('filterAndSort', 'query'), async (req, res, next) => {
     try {
       const {
         pageNum = '1', itemsPerPage = '20', blockchain = '', category = '',
@@ -120,8 +120,6 @@ module.exports = (context) => {
       const searchQuery = {};
       const pageSize = parseInt(itemsPerPage, 10);
       const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-      let adminNFT = null;
-      let isAdminNFTValid = false;
 
       const foundCategory = await context.db.Category.findOne({ name: category });
 
@@ -141,91 +139,8 @@ module.exports = (context) => {
         .skip(skip)
         .limit(pageSize);
 
-      if (req.user) {
-        adminNFT = req.user.adminNFT;
-        const reg = /^0x\w{40}:\w+$/;
-        isAdminNFTValid = reg.test(adminNFT);
-      }
-
       // verify the user have needed tokens for unlock the files
-      data = await Promise.all(_.map(data, async (file) => {
-        const clonedFile = _.assign({}, file.toObject());
-        let ownsTheAdminToken;
-        const ownsTheAccessTokens = [];
-
-        if (clonedFile.demo) {
-          clonedFile.isUnlocked = true;
-          return clonedFile;
-        }
-
-        // clonedFile.isUnlocked = (isAdminNFTValid && adminNFT === clonedFile.author); // TODO: use that functionality instead of calling blockchain when storing of adminNFT will work properly
-
-        // if (!clonedFile.isUnlocked && !!req.user) { // TODO: use that functionality instead of calling blockchain when resale of tokens functionality will be working and new owner of token will be changing properly
-        //   const foundContract = await context.db.Contract.findById(file.contract);
-        //
-        //   let options = {
-        //     ownerAddress: req.user.publicAddress,
-        //     contract: foundContract._id,
-        //     offer: { $in: file.offer },
-        //   };
-        //
-        //   if (!foundContract.diamond) {
-        //     const offerPool = await context.db.OfferPool.findOne({
-        //       contract: foundContract._id,
-        //       product: file.product,
-        //     });
-        //
-        //     if (_.isEmpty(offerPool)) return res.status(404).send({ success: false, message: 'OfferPools not found.' });
-        //
-        //     options = _.assign(options, { offerPool: offerPool.marketplaceCatalogIndex });
-        //   }
-        //
-        //   const countOfTokens = await context.db.MintedToken.countDocuments(options);
-        //
-        //   if (countOfTokens > 0) clonedFile.isUnlocked = true;
-        // }
-
-        if (req.user) {
-          // verify the account holds the required NFT
-          if (typeof file.author === 'string' && file.author.length > 0) {
-            const [contractAddress, tokenId] = file.author.split(':');
-            // Verifying account has token
-            try {
-              ownsTheAdminToken = await checkBalanceSingle(req.user.publicAddress, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-              clonedFile.isUnlocked = ownsTheAdminToken;
-            } catch (e) {
-              log.error(`Could not verify account: ${e}`);
-              clonedFile.isUnlocked = false;
-            }
-          }
-
-          if (!ownsTheAdminToken) {
-            const contract = await context.db.Contract.findOne(file.contract);
-            const offers = await context.db.Offer.find(_.assign(
-              { contract: file.contract },
-              contract.diamond ? { diamondRangeIndex: { $in: file.offer } } : { offerIndex: { $in: file.offer } },
-            ));
-
-            // verify the user have needed tokens
-            for await (const offer of offers) {
-              ownsTheAccessTokens.push(await checkBalanceProduct(
-                req.user.publicAddress,
-                contract.blockchain,
-                contract.contractAddress,
-                offer.product,
-                offer.range[0],
-                offer.range[1],
-              ));
-              if (ownsTheAccessTokens.includes(true)) {
-                clonedFile.isUnlocked = true;
-                break;
-              }
-            }
-          }
-        }
-
-        return clonedFile;
-      }));
+      data = await verifyAccessRightsToFile(req.user, data);
 
       const list = _.chain(data)
         .reduce((result, value) => {

@@ -1,6 +1,8 @@
 const express = require('express');
 const _ = require('lodash');
-const { validation } = require('../../../../middleware');
+const { validation, assignUser } = require('../../../../middleware');
+const { verifyAccessRightsToFile } = require('../../../../utils/helpers');
+const tokenRoutes = require('./token');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -66,9 +68,9 @@ module.exports = (context) => {
           .limit(numberOfTokens);
         return res.json({ success: true, result: { totalCount, tokens } });
       } catch (err) {
-        next(err);
+        return next(err);
       }
-    }
+    },
   );
 
   router.get('/tokenNumbers', async (req, res, next) => {
@@ -117,7 +119,7 @@ module.exports = (context) => {
 
       return res.json({ success: true, tokens });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   });
 
@@ -208,21 +210,24 @@ module.exports = (context) => {
 
       const files = await context.db.MintedToken.aggregate(options);
 
-      res.json({ success: true, files });
+      return res.json({ success: true, files });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   });
 
   // Get list of files for specific product
-  router.get('/files/', async (req, res, next) => {
+  router.get('/files', assignUser, async (req, res, next) => {
     try {
       const { contract, product } = req;
 
-      const files = await context.db.File.find({
+      let files = await context.db.File.find({
         contract: contract._id,
         product,
       });
+
+      // verify the user have needed tokens for unlock the files
+      files = await verifyAccessRightsToFile(req.user, files);
 
       res.json({ success: true, files });
     } catch (err) {
@@ -295,9 +300,9 @@ module.exports = (context) => {
           .send({ success: false, message: 'Locks not found.' });
       }
 
-      res.json({ success: true, locks });
+      return res.json({ success: true, locks });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   });
 
@@ -337,7 +342,7 @@ module.exports = (context) => {
         return next(e);
       }
     },
-    require('./token')(context)
+    tokenRoutes(context),
   );
 
   return router;

@@ -6,6 +6,19 @@ Get all files which belong particular product
 
 **Method** : `GET`
 
+**Headers:**
+
+```json
+{
+  "x-rair-token": {
+    "required": false,
+    "content": {
+      "type": "string"
+    }
+  }
+}
+```
+
 **Parameters:**
 
 ```json
