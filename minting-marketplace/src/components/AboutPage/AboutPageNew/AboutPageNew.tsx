@@ -5,6 +5,7 @@ import "./AboutPageNew.css";
 // import images
 import RairLogo from "../assets/rairLogo_blue.png";
 import Metamask from "../assets/metamask_logo.png";
+import FaviconRair from "../assets/rair_favicon.ico";
 
 //import utils
 import setDocumentTitle from "./../../../utils/setTitle";
@@ -24,7 +25,6 @@ import { useLocation /*useHistory*/ } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import PurchaseTokenButton from "../../common/PurchaseToken";
-import FaviconRair from '../assets/rair_favicon.ico';
 import MetaTags from "../../SeoTags/MetaTags";
 import { IAboutPageNew } from "./aboutPage.types";
 import { RootState } from "../../../ducks";

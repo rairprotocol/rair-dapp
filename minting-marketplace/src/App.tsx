@@ -94,6 +94,7 @@ import MenuNavigation from './components/Navigation/Menu';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import MetaTags from './components/SeoTags/MetaTags';
+import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
 
@@ -101,12 +102,12 @@ import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTile
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
 const analytics = Analytics({
-	app: gAppName,
-	plugins: [
-		googleAnalytics({
-			trackingId: gUaNumber
-		})
-	]
+  app: gAppName,
+  plugins: [
+    googleAnalytics({
+      trackingId: gUaNumber
+    })
+  ]
 })
 /* Track a page view */
 analytics.page()
@@ -114,10 +115,10 @@ analytics.page()
 const SentryRoute = Sentry.withSentryRouting(Route);
 
 const ErrorFallback = () => {
-	return <div className="not-found-page">
-		<h3><span className="text-404">Sorry!</span></h3>
-		<p>An error has ocurred</p>
-	</div>
+  return <div className="not-found-page">
+    <h3><span className="text-404">Sorry!</span></h3>
+    <p>An error has ocurred</p>
+  </div>
 };
 
 function App({ sentryHistory }) {
@@ -130,7 +131,7 @@ function App({ sentryHistory }) {
 	const [showAlert, setShowAlert] = useState(true);
 	const { currentChain, realChain } = useSelector(store => store.contractStore);
 	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
-	const carousel_match = window.matchMedia('(min-width: 600px)')
+	const carousel_match = window.matchMedia('(min-width: 900px)')
 	const [carousel, setCarousel] = useState(carousel_match.matches)
 
 	const seoInformation = {
@@ -389,162 +390,111 @@ function App({ sentryHistory }) {
 
 	return (
     <Sentry.ErrorBoundary fallback={ErrorFallback}>
-      {selectedChain && showAlert ? (
-        <AlertMetamask
-          selectedChain={selectedChain}
-          realNameChain={realNameChain}
-          setShowAlert={setShowAlert}
-        />
-      ) : null}
+      {selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
       <Router history={sentryHistory}>
         <div
           style={{
             ...backgroundImageEffect,
-            backgroundSize: "100vw 100vh",
-            minHeight: "90vh",
-            position: "relative",
+            backgroundSize: '100vw 100vh',
+            minHeight: '90vh',
+            position: 'relative',
             backgroundColor: `var(--${primaryColor})`,
             color: textColor,
             backgroundImage: `url(${backgroundImage})`,
-            backgroundPosition: "center top",
-            backgroundRepeat: "no-repeat",
-            overflow: "hidden",
+            backgroundPosition: 'center top',
+            backgroundRepeat: 'no-repeat',
+            overflow: "hidden"
           }}
-          className="App p-0 container-fluid"
-        >
-          {carousel && (
-            <UserProfileSettings
+          className="App p-0 container-fluid">
+          {/* {carousel && <UserProfileSettings
+						userData={userData}
+						errorAuth={errorAuth}
+						adminAccess={adminRights}
+						primaryColor={primaryColor}
+						currentUserAddress={currentUserAddress}
+						loginDone={loginDone}
+						setLoginDone={setLoginDone}
+					/>} */}
+          <div className='row w-100 m-0 p-0'>
+            {carousel ? <MainHeader
+              goHome={goHome}
+              headerLogo={headerLogo}
+              loginDone={loginDone}
+              startedLogin={startedLogin}
+              renderBtnConnect={renderBtnConnect}
+              connectUserData={connectUserData}
+              primaryColor={primaryColor}
+              setLoginDone={setLoginDone}
               userData={userData}
               errorAuth={errorAuth}
-              adminAccess={adminRights}
-              primaryColor={primaryColor}
+              adminRights={adminRights}
               currentUserAddress={currentUserAddress}
+              sentryHistory={sentryHistory}
+              headerLogoBlack={headerLogoBlack}
+              headerLogoWhite={headerLogoWhite}
+              programmaticProvider={programmaticProvider}
+            /> : <MenuNavigation
+              adminRights={adminRights}
+              primaryColor={primaryColor}
+              headerLogo={headerLogo}
+              startedLogin={startedLogin}
+              connectUserData={connectUserData}
+              renderBtnConnect={renderBtnConnect}
               loginDone={loginDone}
               setLoginDone={setLoginDone}
-            />
-          )}
-          <div className="row w-100 m-0 p-0">
+              currentUserAddress={currentUserAddress}
+              creatorViewsDisabled={creatorViewsDisabled}
+            />}
+
             {/*
 							Left sidebar, includes the RAIR logo and the admin sidebar
 						*/}
-            {carousel ? (
-              <div className="col-1">
-                <div className="col-12 pt-2 mb-4" style={{ height: "100px" }}>
-                  <MainLogo
-                    goHome={goHome}
-                    sentryHistory={sentryHistory}
-                    headerLogoWhite={headerLogoWhite}
-                    headerLogoBlack={headerLogoBlack}
-                    headerLogo={headerLogo}
-                    primaryColor={primaryColor}
-                  />
-                </div>
-                {!loginDone ? (
-                  <div className="btn-connect-wallet-wrapper">
-                    <button
-                      disabled={
-                        !window.ethereum &&
-                        !programmaticProvider &&
-                        !startedLogin
-                      }
-                      className={`btn btn-${primaryColor} btn-connect-wallet`}
-                      onClick={connectUserData}
-                    >
-                      {startedLogin ? "Please wait..." : "Connect Wallet"}
-                      {/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-                    </button>
-                    {renderBtnConnect ? <OnboardingButton /> : <></>}
-                  </div>
-                ) : (
-                  adminRights === true &&
-                  !creatorViewsDisabled &&
-                  [
-                    {
-                      name: <i className="fas fa-photo-video" />,
-                      route: "/all",
-                      disabled: !loginDone,
-                    },
-                    { name: <i className="fas fa-key" />, route: "/my-nft" },
-                    {
-                      name: <i className="fa fa-id-card" aria-hidden="true" />,
-                      route: "/new-factory",
-                      disabled: !loginDone,
-                    },
-                    {
-                      name: (
-                        <i className="fa fa-shopping-cart" aria-hidden="true" />
-                      ),
-                      route: "/on-sale",
-                      disabled: !loginDone,
-                    },
-                    {
-                      name: (
-                        <i className="fa fa-user-secret" aria-hidden="true" />
-                      ),
-                      route: "/admin",
-                      disabled: !loginDone,
-                    },
-                    {
-                      name: <i className="fas fa-city" />,
-                      route: "/factory",
-                      disabled: factoryInstance === undefined,
-                    },
-                    {
-                      name: <i className="fas fa-shopping-basket" />,
-                      route: "/minter",
-                      disabled: minterInstance === undefined,
-                    },
-                    {
-                      name: <i className="fas fa-gem" />,
-                      route: "/diamondMinter",
-                      disabled: diamondMarketplaceInstance === undefined,
-                    },
-                    {
-                      name: <i className="fas fa-exchange" />,
-                      route: "/admin/transferNFTs",
-                      disabled: !loginDone,
-                    },
-                    {
-                      name: <i className="fas fa-file-import" />,
-                      route: "/importExternalContracts",
-                      disabled: !loginDone,
-                    },
-                  ].map((item, index) => {
-                    if (!item.disabled) {
-                      return (
-                        <div
-                          key={index}
-                          className={`col-12 py-3 rounded btn-${primaryColor}`}
-                        >
-                          <NavLink
-                            activeClassName={`active-${primaryColor}`}
-                            className="py-3"
-                            to={item.route}
-                            style={{ color: "inherit", textDecoration: "none" }}
-                          >
-                            {item.name}
-                          </NavLink>
-                        </div>
-                      );
-                    }
-                    return <div key={index}></div>;
-                  })
-                )}
+            {carousel ? <div className='col-1'
+            >
+
+              <div>
+
               </div>
-            ) : (
-              <MenuNavigation
-                adminRights={adminRights}
-                primaryColor={primaryColor}
-                headerLogo={headerLogo}
-                startedLogin={startedLogin}
-                connectUserData={connectUserData}
-                renderBtnConnect={renderBtnConnect}
-                loginDone={loginDone}
-                setLoginDone={setLoginDone}
-                currentUserAddress={currentUserAddress}
-                creatorViewsDisabled={creatorViewsDisabled}
-              />
-            )}
+              {
+                // !loginDone ?
+                // 	<div className='btn-connect-wallet-wrapper'>
+                // 		<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
+                // 			className={`btn btn-${primaryColor} btn-connect-wallet`}
+                // 			onClick={connectUserData}>
+                // 			{startedLogin ? 'Please wait...' : 'Connect Wallet'}
+                // 			{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
+                // 		</button>
+                // 		{renderBtnConnect ?
+                // 			<OnboardingButton />
+                // 			:
+                // 			<></>
+                // 		}
+                // 	</div>
+                // 	:
+                // 	adminRights === true && !creatorViewsDisabled && [
+                // 		{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
+                // 		{ name: <i className="fas fa-key" />, route: '/my-nft' },
+                // 		{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+                // 		{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+                // 		{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+                // 		{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+                // 		{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+                // 		{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
+                // 		{ name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone },
+                // 		{ name: <i className="fas fa-file-import" />, route: '/importExternalContracts', disabled: !loginDone }
+                // 	].map((item, index) => {
+                // 		if (!item.disabled) {
+                // 			return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
+                // 				<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
+                // 					{item.name}
+                // 				</NavLink>
+                // 			</div>
+                // 		}
+                // 		return <div key={index}></div>
+                // 	})
+              }
+            </div> : <></>
+            }
 
             {/*
 							Main body, the header, router and footer are here
@@ -591,67 +541,67 @@ function App({ sentryHistory }) {
 										This needs a different map because the requirements for rendering are more
 										complex than just a boolean
 									*/}
-									{
-										[
-											{
-												path: '/immersiverse-splash',
-												content: ImmersiVerseSplashPage
-											},
-											{
-												path: '/video-tiles-test',
-												content: VideoTilesTest
-											},
-											{
-												path: '/nftla-splash',
-												content: NFTLASplashPage
-											},
-											{
-												path: '/ukraineglitch',
-												content: UkraineSplashPage
-											},
-											{
-												path: '/vaporverse-splash',
-												content: VaporverseSplashPage
-											},
-											{
-												path: '/greyman-splash',
-												content: GreymanSplashPage
-											},
-											{
-												path: '/nutcrackers-splash',
-												content: Nutcrackers
-											},
-											{
-												path: '/nipsey-splash',
-												content: SplashPage
-											},
-											{
-												path: '/about-page',
-												content: AboutPageNew
-											},
+                  {
+                    [
                       {
-												path: '/slidelock',
-												content: SlideLock
-											},
-										].map((item, index) => {
-											// If the path is set as the Home Page, render it as the default path (/)
-											let isHome = item.path === process.env.REACT_APP_HOME_PAGE;
+                        path: '/immersiverse-splash',
+                        content: ImmersiVerseSplashPage
+                      },
+                      {
+                        path: '/video-tiles-test',
+                        content: VideoTilesTest
+                      },
+                      {
+                        path: '/nftla-splash',
+                        content: NFTLASplashPage
+                      },
+                      {
+                        path: '/ukraineglitch',
+                        content: UkraineSplashPage
+                      },
+                      {
+                        path: '/vaporverse-splash',
+                        content: VaporverseSplashPage
+                      },
+                      {
+                        path: '/greyman-splash',
+                        content: GreymanSplashPage
+                      },
+                      {
+                        path: '/nutcrackers-splash',
+                        content: Nutcrackers
+                      },
+                      {
+                        path: '/nipsey-splash',
+                        content: SplashPage
+                      },
+                      {
+                        path: '/about-page',
+                        content: AboutPageNew
+                      },
+                      {
+                        path: '/slidelock',
+                        content: SlideLock
+                      },
+                    ].map((item, index) => {
+                      // If the path is set as the Home Page, render it as the default path (/)
+                      let isHome = item.path === process.env.REACT_APP_HOME_PAGE;
 
-											if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
-												return undefined;
-											}
+                      if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
+                        return undefined;
+                      }
 
-											return <SentryRoute key={index} exact path={isHome ? '/' : item.path}>
-												<item.content {...{ connectUserData }} loginDone={loginDone} />
-											</SentryRoute>
-										})
-									}
-									{[
+                      return <SentryRoute key={index} exact path={isHome ? '/' : item.path}>
+                        <item.content {...{ connectUserData }} loginDone={loginDone} />
+                      </SentryRoute>
+                    })
+                  }
+                  {[
 
-										/*
-											If the home page isn't the default '/', it won't show the
-												'Digital Ownership Encryption' message
-										*/
+                    /*
+                      If the home page isn't the default '/', it won't show the
+                        'Digital Ownership Encryption' message
+                    */
                     {
                       path: "/",
                       content: (
@@ -807,8 +757,8 @@ function App({ sentryHistory }) {
                     },
 
                     /*
-											Public Facing Routes
-										*/
+                      Public Facing Routes
+                    */
                     {
                       path: "/all",
                       content: <MockUpPage />,
@@ -850,8 +800,8 @@ function App({ sentryHistory }) {
                     },
 
                     /*
-											3 Tab Marketplace?
-										*/
+                      3 Tab Marketplace?
+                    */
                     {
                       path: "/:tokens/:blockchain/:contract/:product/:tokenId",
                       content: <NftDataCommonLink userData={userData} />,

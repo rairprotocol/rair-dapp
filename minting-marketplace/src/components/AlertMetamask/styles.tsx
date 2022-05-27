@@ -4,6 +4,7 @@ import styled from 'styled-components';
 export const Alert = styled.div`
     width: 100%;
     height: 50px;
+    position: fixed;
     display: flex;
     align-items: center;
     text-align: center;

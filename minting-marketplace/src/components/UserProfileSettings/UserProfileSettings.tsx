@@ -21,11 +21,10 @@ const UserProfileSettings = ({
   return (
     <div
       style={{
-        position: "absolute",
+        // position: "absolute",
         display: "flex",
         alignContent: "center",
-        top: "1rem",
-        right: "3rem",
+        marginRight: "16px"
       }}
     >
       <div

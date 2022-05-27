@@ -482,7 +482,7 @@ a:hover {
     letter-spacing: 1px;
     margin: 0 auto;
     padding: 1px;
-    position: absolute;
+    /* position: absolute; */
     right: 100px;
     top: 16px;
     width: 150px;
@@ -896,7 +896,7 @@ i.fas-custom {
 }
 
 .main-wrapper {
-    padding: 0 0 0 0;
+    padding: 40px 0 0 0;
 }
 
 .col-12 .rounded .react-player__play-icon {
@@ -1109,20 +1109,24 @@ justify-content: flex-end;
 }
 
 button.metamask-on-boarding {
-    background-image: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+    /* background-image: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%); */
+    background: #BB73D7;
     display: flex;
-    padding-left: 10px;
-    padding-right: 10px;
-    width: max-content;
-    height: auto;
-    position: absolute;
-    top: 0;
-    right: 10rem;
-    opacity: 0.9;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 16px;
+    color: white;
+    transition: all .2s ease;
+    font-weight: 700;
 }
 
 button.metamask-on-boarding:hover {
     background-image: linear-gradient(305deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
+}
+
+button.metamask-on-boarding:focus {
+    border-color: var(--charcoal-60);
+    box-shadow: 0 0 0 0.25rem var(--charcoal-20);
 }
 
 .btn-change-theme {

@@ -3,6 +3,7 @@ import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Edit } from "./Edit/Edit";
 import { Profile } from "./Profile/Profile";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const UploadProfilePicture = ({
   setOpenModalPic,
@@ -17,6 +18,7 @@ const UploadProfilePicture = ({
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
   const [active, setActive] = useState("edit");
+  const { primaryColor } = useSelector(store => store.colorStore);
 
   const [, /*updateUsr*/ setUpdateUsr] = useState({});
 
@@ -46,8 +48,8 @@ const UploadProfilePicture = ({
       setImagePreviewUrl(res.user.avatar);
     }
 
-    if(!res.success){
-			Swal.fire('Info', `${res.message}`, 'question');
+    if (!res.success) {
+      Swal.fire('Info', `${res.message}`, 'question');
     }
   }, [
     name,
@@ -122,6 +124,7 @@ const UploadProfilePicture = ({
           onSubmit={handleSubmit}
           setOpenModalPic={setOpenModalPic}
           setTriggerState={setTriggerState}
+          primaryColor={primaryColor}
         />
       ) : (
         <Profile

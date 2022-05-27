@@ -1,0 +1,157 @@
+.col-12.header-master {
+    display: flex;
+    filter: drop-shadow(1px 0.5px 3px black);
+    padding: 10px 88px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+}
+
+.header-master .main-search {
+    position: relative;
+}
+
+.header-master .main-search i.fas.fa-search {
+    position: absolute;
+    left: 1vw;
+    top: 32%;
+    color: #E882D5;
+    font-weight: normal;
+}
+
+.header-master .main-search i.fas.fa-times {
+    color: #E882D5;
+    position: absolute;
+    right: 10px;
+    top: 30%;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.header-master .main-search input {
+    background: none;
+    border-radius: 12px;
+    width: 40vw;
+    padding: 8px 20px 8px 50px;
+    border: 1px solid #4E4D4D;
+    color: white;
+    transition: all .1s ease;
+}
+
+.header-master .main-search input.input-search-black:hover,
+.header-master .main-search input.input-search-black:focus {
+    background: rgb(76, 80, 92);
+}
+
+.header-master .main-search input:focus {
+    outline: none;
+    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+}
+
+.header-master .box-header-info {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.header-master .box-connect-btn {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.header-master .social-media {
+    display: flex;
+}
+
+.header-master button.btn-connect-wallet {
+    border-radius: 12px;
+    width: 200px;
+    height: 45px;
+    background: #BB73D7;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+}
+
+.header-master .social-media .box-social {
+    transition: all .2s ease;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-right: 9px;
+}
+
+.header-master .social-media .box-social a {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-master .social-media .box-social:last-child {
+    margin-right: 28px;
+}
+
+.header-master .social-media .box-social:hover {
+    background: #4561ed !important;
+    border: 1px solid #4561ed !important;
+}
+
+.header-master .social-media .box-social:first-child:hover {
+    background: #1d9bf0 !important;
+    border: 1px solid #1d9bf0 !important;
+}
+
+@media screen and (max-width: 1250px) {
+    .col-12.header-master {
+        padding: 10px 40px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    button.metamask-on-boarding {
+        background: #BB73D7;
+        display: flex;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 16px;
+        color: white;
+        font-size: 14px;
+        transition: all .2s ease;
+        font-weight: 700;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .header-master button.btn-connect-wallet {
+        width: 150px;
+        height: 35px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .header-master .social-media .box-social:last-child {
+        margin-right: 15px;
+    }
+
+    .col-12.header-master {
+        padding: 10px 20px;
+    }
+}
+
+/* @media screen and (max-width: 800px) {
+    .col-12.header-master {
+        padding: 10px 20px;
+    }
+} */

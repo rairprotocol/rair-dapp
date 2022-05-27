@@ -46,8 +46,8 @@ const PopUpSettings = ({
     // console.log(userData.avatar, 'userData from UserProfileSettings');
     // console.log(userData.nickName, 'userData from UserProfileSettings');
     // console.log(userData.email, 'userData from UserProfileSettings');
-  },[userData])
- 
+  }, [userData])
+
 
   const cutUserAddress = () => {
     if (userName) {
@@ -143,9 +143,8 @@ const PopUpSettings = ({
           justifyContent: "space-around",
           alignContent: "center",
           flexDirection: "row",
-          backgroundColor: `${
-            primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
-          }`,
+          backgroundColor: `${primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
+            }`,
         }}
       >
         <img
@@ -192,23 +191,46 @@ const PopUpSettings = ({
         <div
           ref={settingBlockRef}
           className="user-popup"
-          style={{ background: "#383637", borderRadius: 16 }}
+          style={{
+            background: primaryColor === "rhyno" ? "#c0c0c0" : "#383637", borderRadius: 16,
+            filter: "drop-shadow(0.4px 0.5px 1px black)"
+          }}
         >
           {!next ? (
             <div>
               <ul className="list-popup">
-                <li onClick={handlePopUp}>
+                <li
+                  onClick={handlePopUp}
+                  style={{
+                    color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                  }}
+                >
                   <i className="fas fa-cog"></i>Profile settings
                 </li>
-                <li onClick={pushToMyItems}>
+                <li
+                  onClick={pushToMyItems}
+                  style={{
+                    color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                  }}
+                >
                   <i className="fas fa-boxes"></i>My items
                 </li>
                 {process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== "true" && (
-                  <li onClick={pushToFactory}>
+                  <li
+                    onClick={pushToFactory}
+                    style={{
+                      color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                    }}
+                  >
                     <i className="fas fa-hammer"></i>Factory
                   </li>
                 )}
-                <li onClick={logout}>
+                <li
+                  onClick={logout}
+                  style={{
+                    color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                  }}
+                >
                   <i className="fas fa-sign-out-alt"></i>Logout
                 </li>
               </ul>
@@ -219,7 +241,11 @@ const PopUpSettings = ({
                 <div className="btn-back" onClick={handlePopUp}>
                   <i className="fas fa-chevron-left"></i>
                 </div>
-                <div className="profile-title">Profile settings</div>
+                <div className="profile-title"
+                  style={{
+                    color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                  }}
+                >Profile settings</div>
                 <div></div>
               </div>
               <div className="profile-info">
@@ -245,13 +271,20 @@ const PopUpSettings = ({
                 </div>
                 <div className="profile-form">
                   <div>
-                    <label>Name</label>
+                    <label
+                      style={{
+                        color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "#A7A6A6"
+                      }}
+                    >Name</label>
                     <div
-                      className={`profile-input ${
-                        userName.length > 13 && " deff"
-                      }`}
+                      className={`profile-input ${userName.length > 13 && " deff"
+                        }`}
                     >
-                      <span>
+                      <span
+                        style={{
+                          color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                        }}
+                      >
                         {userName ? userName : currentUserAddress}
                         {/* {userName
                           ? userName 
@@ -266,10 +299,18 @@ const PopUpSettings = ({
                       </span>
                     </div>
 
-                    <label>Email</label>
+                    <label
+                      style={{
+                        color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "#A7A6A6"
+                      }}
+                    >Email</label>
                     <div className="profile-input">
                       {/* <input type="text" placeholder="Enter your email" /> */}
-                      <span>{userEmail ? userEmail : "email@example.com"}</span>
+                      <span
+                        style={{
+                          color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                        }}
+                      >{userEmail ? userEmail : "email@example.com"}</span>
                     </div>
                   </div>
                 </div>
@@ -278,6 +319,9 @@ const PopUpSettings = ({
                     <span
                       className="profile-input-edit"
                       onClick={() => setOpenModalPic(true)}
+                      style={{
+                        color: primaryColor === "rhyno" ? "rgb(41, 41, 41)" : "white"
+                      }}
                     >
                       Edit
                     </span>

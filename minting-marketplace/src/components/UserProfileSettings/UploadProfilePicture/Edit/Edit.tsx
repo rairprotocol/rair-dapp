@@ -15,7 +15,8 @@ const EditComponent = ({
   status,
   setFile,
   setOpenModalPic,
-  setTriggerState
+  setTriggerState,
+  primaryColor
 }) => {
   
   const photoUpload = useCallback(
@@ -38,7 +39,12 @@ const EditComponent = ({
   }
 
   return (
-    <div className={cl.card}>
+    <div 
+    className={cl.card}
+    style={{
+      background: primaryColor === "rhyno" ? "grey" :"#383637" 
+    }}
+    >
       <form onSubmit={onSubmit}>
         <h1> </h1>
         <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />

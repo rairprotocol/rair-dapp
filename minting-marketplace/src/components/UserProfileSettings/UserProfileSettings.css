@@ -8,8 +8,8 @@
 
 .popup-content.popup-settings-block-content {
     position: absolute !important;
-    right: 40px;
-    top: 50px;
+    right: 50px;
+    top: 85px;
 }
 
 .user-block {
@@ -123,7 +123,7 @@
 
 .list-popup  li{
     padding: 12px 108px 12px 12px;
-    color: #fff;
+    /* color: #fff; */
     cursor: pointer;
 }
 
@@ -218,14 +218,12 @@
 .profile-input span {
     background: none;
     color: #fff;
-    outline: none;
     padding: 5px;
     padding-left: 12px;
     width: 100%;
     z-index: 1;
-    background: #383637;
+    border: 1px solid #E882D5;
     border-radius: 12px;
-    border: none;
     display: inline-block;
     /* border-image: -webkit-linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
     border-width: 1px;
@@ -234,11 +232,11 @@
 .profile-input.deff{
     font-size: x-small;
 }
-.profile-input-edit{
-    padding: 6px 9px !important;
+span.profile-input-edit{
+    padding: 6px 9px;
 }
-.profile-input-edit:hover{
-    background: #410c37;
+span.profile-input-edit:hover{
+    background: #E882D5;
     cursor: pointer;
 }
 
@@ -246,7 +244,6 @@
     text-align: start;
     padding: 1px;
     border-radius: 12px;
-    background: linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%);
 }
 .user-edit{
     display: flex;
