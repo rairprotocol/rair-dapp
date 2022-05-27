@@ -1,5 +1,4 @@
-//@ts-nocheck
-const setTitle = (title) => {
+const setTitle = (title: string) => {
 	document.title = `${title}`
 }
 
