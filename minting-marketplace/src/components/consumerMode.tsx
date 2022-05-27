@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux';
 import setTitle from '../utils/setTitle';
@@ -7,32 +7,35 @@ import * as ethers from 'ethers'
 import {erc721Abi} from '../contracts';
 
 import ERC721Consumer from './ConsumerMode/ERC721Consumer';
+import { RootState } from '../ducks';
+import { ContractsInitialType } from '../ducks/contracts/contracts.types';
+import { IConsumerMode, TOfferDataType } from './creatorAndConsumerModes.types';
 
-const ConsumerMode = ({ addresses }) => {
+const ConsumerMode: React.FC<IConsumerMode> = ({ addresses }) => {
 
-	const [offerCount, setOfferCount] = useState();
-	const [/*treasuryAddress*/, setTreasuryAddress] = useState();
-	const [salesCount, setSalesCount] = useState();
-	const [collectionsData, setCollectionsData] = useState();
-	const [refetchingFlag, setRefetchingFlag] = useState(false);
+	const [offerCount, setOfferCount] = useState<string>();
+	const [/*treasuryAddress*/, setTreasuryAddress] = useState<string>();
+	const [salesCount, setSalesCount] = useState<string>();
+	const [collectionsData, setCollectionsData] = useState<TOfferDataType>();
+	const [refetchingFlag, setRefetchingFlag] = useState<boolean>(false);
 
-	const { minterInstance, programmaticProvider } = useSelector(state => state.contractStore);
+	const { minterInstance, programmaticProvider } = useSelector<RootState, ContractsInitialType>(state => state.contractStore);
 
 	const fetchData = useCallback(async () => {
 		setRefetchingFlag(true);
-		let signer = programmaticProvider;
+		let signer: ethers.providers.JsonRpcSigner | ethers.Wallet | undefined = programmaticProvider;
 		if (window.ethereum) {
 			let provider = new ethers.providers.Web3Provider(window.ethereum);
 			signer = provider.getSigner(0);
 		}
-		let aux = (await minterInstance.getOfferCount()).toString();
-		setSalesCount((await minterInstance.openSales()).toString());
+		let aux = (await minterInstance?.getOfferCount()).toString();
+		setSalesCount((await minterInstance?.openSales()).toString());
 		setOfferCount(aux);
-		setTreasuryAddress(await minterInstance.treasury());
+		setTreasuryAddress(await minterInstance?.treasury());
 
-		let offerData = [];
-		for await (let index of [...Array.apply(null, { length: aux }).keys()]) {
-			let data = await minterInstance.getOfferInfo(index);
+		let offerData: TOfferDataType = [];
+		for await (let index of [...Array.apply<null, any, unknown[]>(null, { length: aux }).keys()]) {
+			let data = await minterInstance?.getOfferInfo(index);
 			offerData.push({
 				contractAddress: data.contractAddress,
 				productIndex: data.productIndex.toString(),

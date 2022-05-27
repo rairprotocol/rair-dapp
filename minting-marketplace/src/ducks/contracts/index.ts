@@ -4,6 +4,10 @@ import { ContractAddressesType, ContractsInitialType } from './contracts.types';
 import * as ethers from 'ethers'
 
 import { minterAbi, factoryAbi, erc777Abi, diamondFactoryAbi, diamondMarketplaceAbi } from '../../contracts';
+import {
+	ContractAddressesType,
+	ContractsInitialType,
+  } from "./contracts.types";
 
 const contractAddresses: ContractAddressesType = {
 	'0x38': { // Binance Mainnet
