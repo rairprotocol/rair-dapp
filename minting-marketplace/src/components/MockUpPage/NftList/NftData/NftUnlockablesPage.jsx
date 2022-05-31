@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CustomButton from "../../utils/button/CustomButton";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";
 import NftSingleUnlockables from "./NftSingleUnlockables";
@@ -24,6 +24,8 @@ const NftUnlockablesPage = ({
   offerPrice,
   setTokenDataFiltered,
 }) => {
+  const [selectVideo, setSelectVideo] = useState(productsFromOffer[0]);
+
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -47,6 +49,8 @@ const NftUnlockablesPage = ({
         <VideoPlayerView
           productsFromOffer={productsFromOffer}
           primaryColor={primaryColor}
+          selectVideo={selectVideo}
+          setSelectVideo={setSelectVideo}
         />
         <div style={{ maxWidth: "1600px", margin: "auto" }} className="">
           <NftSingleUnlockables
@@ -55,6 +59,7 @@ const NftUnlockablesPage = ({
             product={product}
             productsFromOffer={productsFromOffer}
             selectedData={selectedData}
+            setSelectVideo={setSelectVideo}
             selectedToken={selectedToken}
             tokenData={tokenData}
             setTokenDataFiltered={setTokenDataFiltered}

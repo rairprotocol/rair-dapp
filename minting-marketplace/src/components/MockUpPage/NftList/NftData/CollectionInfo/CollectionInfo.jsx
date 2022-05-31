@@ -75,7 +75,7 @@ const CollectionInfo = ({
                     </div>
                     <div className="item-availa">
                       <p>
-                        {token.soldCopies} / {token.copies}
+                        {token.copies - token.soldCopies} / {token.copies}
                       </p>
                     </div>
                     <div className="item-price">

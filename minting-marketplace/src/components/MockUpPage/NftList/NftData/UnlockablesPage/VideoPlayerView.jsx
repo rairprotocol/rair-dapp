@@ -3,18 +3,24 @@ import cl from "./VideoPlayerView.module.css";
 import playImages from "../../../../SplashPage/images/playImg.png";
 import NftVideoplayer from "../NftVideoplayer/NftVideoplayer";
 
-function VideoPlayerView({ productsFromOffer, primaryColor }) {
-  const [selectVideo, setSelectVideo] = useState(productsFromOffer[0]);
+function VideoPlayerView({
+  productsFromOffer,
+  primaryColor,
+  selectVideo,
+  setSelectVideo,
+}) {
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
 
   const colorRarity = [`#E4476D`, "gold", "silver"];
 
   return (
-    <div 
-    className={cl.VideoPlayerViewWrapper}
-    style={{
-      background: `${primaryColor === "rhyno" ? "rgb(189,189,189)" : "#383637"}`
-    }}
+    <div
+      className={cl.VideoPlayerViewWrapper}
+      style={{
+        background: `${
+          primaryColor === "rhyno" ? "rgb(189,189,189)" : "#383637"
+        }`,
+      }}
     >
       <div className={cl.ListOfVideosWrapper}>
         {productsFromOffer?.length &&
@@ -26,8 +32,8 @@ function VideoPlayerView({ productsFromOffer, primaryColor }) {
                   setSelectVideo(data);
                   setOpenVideoplayer(false);
                 }}
-                style={{ 
-                  backgroundImage: `url(${data?.staticThumbnail})`, 
+                style={{
+                  backgroundImage: `url(${data?.staticThumbnail})`,
                 }}
                 className={cl.ListOfVideosOneVideo}
               >

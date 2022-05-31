@@ -22,6 +22,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [someUsersData, setSomeUsersData] = useState();
   const [dataForUser, setDataForUser] = useState();
+  const [userToken, setUserToken] = useState();
 
   const dispatch = useDispatch();
 
@@ -35,11 +36,19 @@ const NftDataCommonLinkComponent = ({ userData }) => {
 
   // console.log(tokenData, 'tokenData');
 
-
+  const checkUserConnect = useCallback(() => {
+    if(currentUserAddress){
+      setUserToken(localStorage.getItem("token"));
+    }
+  },[currentUserAddress]);
 
   useEffect(() => {
     dispatch({ type: "SET_REAL_CHAIN", payload: blockchain });
   }, [blockchain, dispatch]);
+
+  useEffect(() => {
+    checkUserConnect()
+  }, [checkUserConnect]);
 
   const getAllProduct = useCallback(
     async (fromToken, toToken) => {
@@ -172,20 +181,39 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   }, [getInfoFromUser]);
 
   const getProductsFromOffer = useCallback(async () => {
-    const response = await (
-      await fetch(
-        // `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
-        `/api/nft/network/${blockchain}/${contract}/${product}/files`,
-        {
-          method: "GET",
-        }
-      )
-    ).json();
-
-    setProductsFromOffer(response.files);
-    setSelectedOfferIndex(tokenData[tokenId]?.offer);
+    if(userToken){
+      const responseIfUserConnect = await (
+        await fetch(
+          // `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
+          `/api/nft/network/${blockchain}/${contract}/${product}/files`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "X-rair-token": userToken,
+            },
+          }
+        )
+        
+      ).json();
+      setProductsFromOffer(responseIfUserConnect.files);
+      setSelectedOfferIndex(tokenData[tokenId]?.offer);
+    } else {
+      const response = await (
+        await fetch(
+          // `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
+          `/api/nft/network/${blockchain}/${contract}/${product}/files`,
+          {
+            method: "GET",
+          }
+        )
+      ).json();
+      
+      setProductsFromOffer(response.files);
+      setSelectedOfferIndex(tokenData[tokenId]?.offer);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, contract, product, tokenId]);
+  }, [blockchain, contract, product, tokenId, userToken]);
 
   const onSelect = useCallback(
     (id) => {
