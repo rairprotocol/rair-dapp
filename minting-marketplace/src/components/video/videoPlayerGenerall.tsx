@@ -1,15 +1,18 @@
-//@ts-nocheck
+
 import { useEffect, useState, useCallback } from "react";
 // import { useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import videojs from "video.js";
 import Swal from "sweetalert2";
 import setDocumentTitle from "../../utils/setTitle";
+import { IVideoPlayer } from "./video.types";
+import { RootState } from "../../ducks";
+import { ContractsInitialType } from "../../ducks/contracts/contracts.types";
 
-const VideoPlayer = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
-  const { programmaticProvider } = useSelector((state) => state.contractStore);
+const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
+  const { programmaticProvider } = useSelector<RootState, ContractsInitialType>((state) => state.contractStore);
   const [videoName] = useState(Math.round(Math.random() * 10000));
-  const [mediaAddress, setMediaAddress] = useState(
+  const [mediaAddress, setMediaAddress] = useState<string>(
     `${baseURL}${mediaId}`
   );
 
@@ -73,7 +76,7 @@ const VideoPlayer = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
   useEffect(() => {
     requestChallenge();
     return () => {
-      setMediaAddress();
+      setMediaAddress("");
     };
   }, [requestChallenge]);
 

@@ -1,10 +1,11 @@
-//@ts-nocheck
+
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { IVideoItem } from './video.types';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 
-const VideoItem = ({mediaList, item}) => {
+const VideoItem: React.FC<IVideoItem> = ({mediaList, item}) => {
 	const history = useHistory();
 	const [hovering, setHovering] = useState(false);
 	return <button

@@ -1,4 +1,4 @@
-export type ColorChoice = 'charcoal' | 'rhyno';
+export type ColorChoice = "charcoal" | "rhyno";
 type BackgroundBlendModeType =
   | "difference"
   | "exclusion"
@@ -31,3 +31,4 @@ export type ColorStoreType = {
 export type SchemaType = {
   [key: string]: ColorStoreType;
 };
+

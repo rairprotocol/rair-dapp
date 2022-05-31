@@ -1,10 +1,11 @@
-//@ts-nocheck
+
 // import { useEffect, useState } from 'react';
+import { IVideoList } from './video.types';
 import VideoItem from './videoItem';
 // import InputField from '../common/InputField';
 // import setDocumentTitle from '../../utils/setTitle';
 
-const VideoList = ({mediaList, titleSearch,  primaryColor}) => {
+const VideoList: React.FC<IVideoList> = ({mediaList, titleSearch,  primaryColor}) => {
 	// const [mediaList, setMediaList] = useState();
 	// const [titleSearch, setTitleSearch] = useState('');
 	// const updateList = async () => {

@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -6,15 +6,18 @@ import videojs from 'video.js';
 import Swal from 'sweetalert2';
 import setDocumentTitle from '../../utils/setTitle';
 import { getRandomValues } from '../../utils/getRandomValues';
+import { VideoPlayerParams } from './video.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 const VideoPlayer = () => {
-	const params = useParams();
+	const params = useParams<VideoPlayerParams>();
 	const history = useHistory();
 
-	const { programmaticProvider } = useSelector(state => state.contractStore);
+	const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(state => state.contractStore);
 
 	const [videoName,] = useState(getRandomValues);
-	const [mediaAddress, setMediaAddress] = useState(getRandomValues);
+	const [mediaAddress, setMediaAddress] = useState<string | null>(String(getRandomValues()));
 
 	const btnGoBack = () => {
 		history.goBack();
@@ -60,7 +63,7 @@ const VideoPlayer = () => {
 	useEffect(() => {
 		requestChallenge();
 		return () => {
-			setMediaAddress();
+			setMediaAddress("");
 		};
 	}, [requestChallenge])
 
@@ -87,7 +90,7 @@ const VideoPlayer = () => {
 				//poster={ video && ('/thumbnails/' + video.thumbnail + '.png') }
 				data-setup="{}">
 				<source
-					src={mediaAddress}
+					src={mediaAddress!== null ? mediaAddress : ""}
 					type="application/x-mpegURL" />
 			</video>
 		</div>
