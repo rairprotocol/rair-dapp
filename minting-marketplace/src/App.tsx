@@ -8,7 +8,6 @@ import './App.css';
 
 // React Redux types
 import * as contractTypes from './ducks/contracts/types';
-import * as userTypes from './ducks/users/types';
 import * as authTypes from './ducks/auth/types';
 import * as Sentry from '@sentry/react';
 // import * as ethers from 'ethers';
@@ -92,6 +91,7 @@ import MetaTags from './components/SeoTags/MetaTags';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
+import { setAdminRights } from './ducks/users/actions';
 
 
 const gAppName = process.env.REACT_APP_GA_NAME
@@ -117,273 +117,273 @@ const ErrorFallback = () => {
 };
 
 function App({ sentryHistory }) {
-  const dispatch = useDispatch()
-  const [userData, setUserData] = useState();
-  const [startedLogin, setStartedLogin] = useState(false);
-  const [loginDone, setLoginDone] = useState(false);
-  const [errorAuth, /*setErrorAuth*/] = useState('');
-  const [renderBtnConnect, setRenderBtnConnect] = useState(false);
-  const [showAlert, setShowAlert] = useState(true);
-  const { currentChain, realChain } = useSelector(store => store.contractStore);
-  const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
-  const carousel_match = window.matchMedia('(min-width: 900px)')
-  const [carousel, setCarousel] = useState(carousel_match.matches)
+	const dispatch = useDispatch()
+	const [userData, setUserData] = useState();
+	const [startedLogin, setStartedLogin] = useState(false);
+	const [loginDone, setLoginDone] = useState(false);
+	const [errorAuth, /*setErrorAuth*/] = useState('');
+	const [renderBtnConnect, setRenderBtnConnect] = useState(false);
+	const [showAlert, setShowAlert] = useState(true);
+	const { currentChain, realChain } = useSelector(store => store.contractStore);
+	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
+	const carousel_match = window.matchMedia('(min-width: 900px)')
+	const [carousel, setCarousel] = useState(carousel_match.matches)
 
-  const seoInformation = {
-    title: "Rair Tech Marketplace",
-    contentName: "author",
-    content: "Digital Ownership Encryption",
-    description: "RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content",
-    favicon: RairFavicon,
-    faviconMobile: RairFavicon
-  }
+	const seoInformation = {
+		title: "Rair Tech Marketplace",
+		contentName: "author",
+		content: "Digital Ownership Encryption",
+		description: "RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content",
+		favicon: RairFavicon,
+		faviconMobile: RairFavicon
+	}
 
-  // Redux
-  const {
-    currentUserAddress,
-    minterInstance,
-    factoryInstance,
-    programmaticProvider,
-    diamondMarketplaceInstance
-  } = useSelector(store => store.contractStore);
-  const {
-    primaryColor,
-    headerLogo,
-    textColor,
-    backgroundImage,
-    backgroundImageEffect
-  } = useSelector(store => store.colorStore);
-  const { token } = useSelector(store => store.accessStore);
-  const { adminRights } = useSelector(store => store.userStore);
+	// Redux
+	const {
+		currentUserAddress,
+		minterInstance,
+		factoryInstance,
+		programmaticProvider,
+		diamondMarketplaceInstance
+	} = useSelector(store => store.contractStore);
+	const {
+		primaryColor,
+		headerLogo,
+		textColor,
+		backgroundImage,
+		backgroundImageEffect
+	} = useSelector(store => store.colorStore);
+	const { token } = useSelector(store => store.accessStore);
+	const { adminRights } = useSelector(store => store.userStore);
 
-  const connectUserData = useCallback(async () => {
-    setStartedLogin(true);
-    let currentUser;
-    let dispatchStack = [];
-    if (window.ethereum) {
-      let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] })
-      dispatchStack.push({
-        type: contractTypes.SET_CHAIN_ID,
-        payload: window.ethereum.chainId?.toLowerCase()
-      });
-      currentUser = accounts[0];
-    } else if (programmaticProvider) {
-      dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
-      dispatchStack.push({
-        type: contractTypes.SET_CHAIN_ID,
-        payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
-      });
-      currentUser = programmaticProvider.address;
-    }
+	const connectUserData = useCallback(async () => {
+		setStartedLogin(true);
+		let currentUser;
+		let dispatchStack = [];
+		if (window.ethereum) {
+			let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+			dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] })
+			dispatchStack.push({
+				type: contractTypes.SET_CHAIN_ID,
+				payload: window.ethereum.chainId?.toLowerCase()
+			});
+			currentUser = accounts[0];
+		} else if (programmaticProvider) {
+			dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
+			dispatchStack.push({
+				type: contractTypes.SET_CHAIN_ID,
+				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
+			});
+			currentUser = programmaticProvider.address;
+		}
 
-    if (!currentUser && currentUser !== undefined) {
-      Swal.fire('Error', 'No user address found', 'error');
-      setStartedLogin(false);
-      return;
-    }
+		if (!currentUser && currentUser !== undefined) {
+			Swal.fire('Error', 'No user address found', 'error');
+			setStartedLogin(false);
+			return;
+		}
 
-    try {
-      // Check if user exists in DB
-      const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
-      if (!success || !user) {
-        // If the user doesn't exist, send a request to register him using a TEMP adminNFT
-        console.log('Address is not registered!');
-        const userCreation = await fetch('/api/users', {
-          method: 'POST',
-          body: JSON.stringify({ publicAddress: currentUser, adminNFT: 'temp' }),
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        });
-        console.log('User Created', userCreation);
-        setUserData(userCreation);
-      } else {
-        setUserData(user);
-      }
+		try {
+			// Check if user exists in DB
+			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
+			if (!success || !user) {
+				// If the user doesn't exist, send a request to register him using a TEMP adminNFT
+				console.log('Address is not registered!');
+				const userCreation = await fetch('/api/users', {
+					method: 'POST',
+					body: JSON.stringify({ publicAddress: currentUser, adminNFT: 'temp' }),
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					}
+				});
+				console.log('User Created', userCreation);
+				setUserData(userCreation);
+			} else {
+				setUserData(user);
+			}
 
-      // Authorize user and get JWT token
-      if (adminRights === null || adminRights === undefined || !localStorage.token || !isTokenValid(localStorage.token)) {
-        dispatchStack.push({ type: authTypes.GET_TOKEN_START });
-        let token = await getJWT(programmaticProvider, currentUser);
+			// Authorize user and get JWT token
+			if (adminRights === null || adminRights === undefined || !localStorage.token || !isTokenValid(localStorage.token)) {
+				dispatchStack.push({ type: authTypes.GET_TOKEN_START });
+				let token = await getJWT(programmaticProvider, currentUser);
 
-        if (!success) {
-          setStartedLogin(false);
-          setLoginDone(false);
-          dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
-          dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-          localStorage.setItem('token', token);
-        } else {
-          const decoded = jsonwebtoken.decode(token);
-          dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: decoded.adminRights });
-          dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-          localStorage.setItem('token', token);
-        }
-      }
+				if (!success) {
+					setStartedLogin(false);
+					setLoginDone(false);
+					dispatchStack.push(setAdminRights(false));
+					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+					localStorage.setItem('token', token);
+				} else {
+					const decoded = jsonwebtoken.decode(token);
+					dispatchStack.push(setAdminRights(decoded.adminRights));
+					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+					localStorage.setItem('token', token);
+				}
+			}
 
-      setStartedLogin(false);
-      dispatchStack.forEach(dispatchItem => {
-        dispatch(dispatchItem);
-      })
-      setLoginDone(true);
-    } catch (err) {
-      console.log('Error', err);
-      setStartedLogin(false);
-    }
-  }, [programmaticProvider, adminRights, dispatch]);
+			setStartedLogin(false);
+			dispatchStack.forEach(dispatchItem => {
+				dispatch(dispatchItem);
+			})
+			setLoginDone(true);
+		} catch (err) {
+			console.log('Error', err);
+			setStartedLogin(false);
+		}
+	}, [programmaticProvider, adminRights, dispatch]);
 
-  const goHome = () => {
-    sentryHistory.push(`/`);
-    setShowAlert(false);
-    dispatch({ type: "GET_CURRENT_PAGE_END" });
-  };
+	const goHome = () => {
+		sentryHistory.push(`/`);
+		setShowAlert(false);
+		dispatch({ type: "GET_CURRENT_PAGE_END" });
+	};
 
-  const openAboutPage = useCallback(() => {
-    sentryHistory.push(`/about-page`);
-    window.scrollTo(0, 0);
-  }, [sentryHistory]);
+	const openAboutPage = useCallback(() => {
+		sentryHistory.push(`/about-page`);
+		window.scrollTo(0, 0);
+	}, [sentryHistory]);
 
-  const btnCheck = useCallback(() => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      setRenderBtnConnect(false);
-    } else {
-      setRenderBtnConnect(true);
-    }
-  }, [setRenderBtnConnect]);
+	const btnCheck = useCallback(() => {
+		if (window.ethereum && window.ethereum.isMetaMask) {
+			setRenderBtnConnect(false);
+		} else {
+			setRenderBtnConnect(true);
+		}
+	}, [setRenderBtnConnect]);
 
-  useEffect(() => {
-    if (window.ethereum) {
-      window.ethereum.on('chainChanged', async (chainId) => {
-        dispatch({ type: contractTypes.SET_CHAIN_ID, payload: chainId });
-      });
-    }
-  }, [dispatch]);
+	useEffect(() => {
+		if (window.ethereum) {
+			window.ethereum.on('chainChanged', async (chainId) => {
+				dispatch({ type: contractTypes.SET_CHAIN_ID, payload: chainId });
+			});
+		}
+	}, [dispatch]);
 
-  // gtag 
+	// gtag 
+	
+	useEffect(() => {
+		gtag('event', 'page_view', {page_title: window.location.pathname, page_location: window.location.href});
+	} , []);
 
-  useEffect(() => {
-    gtag('event', 'page_view', { page_title: window.location.pathname, page_location: window.location.href });
-  }, []);
+	useEffect(() => {
+		// setTitle('Welcome');
+		if (process.env.NODE_ENV === 'development') {
+			window.gotoRouteBackdoor = sentryHistory.push;
+			window.adminAccessBackdoor = (boolean) => {
+				dispatch(setAdminRights(boolean));
+			};
+		}
+	}, [dispatch, sentryHistory.push]);
 
-  useEffect(() => {
-    // setTitle('Welcome');
-    if (process.env.NODE_ENV === 'development') {
-      window.gotoRouteBackdoor = sentryHistory.push;
-      window.adminAccessBackdoor = (boolean) => {
-        dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
-      };
-    }
-  }, [dispatch, sentryHistory.push]);
+	useEffect(() => {
+		btnCheck();
+	}, [btnCheck]);
 
-  useEffect(() => {
-    btnCheck();
-  }, [btnCheck]);
+	useEffect(() => {
+		window.addEventListener("resize", () => setCarousel(carousel_match.matches));
+		return () => window.removeEventListener("resize", () => setCarousel(carousel_match.matches));
+	}, [carousel_match.matches])
 
-  useEffect(() => {
-    window.addEventListener("resize", () => setCarousel(carousel_match.matches));
-    return () => window.removeEventListener("resize", () => setCarousel(carousel_match.matches));
-  }, [carousel_match.matches])
+	// const checkToken = useCallback(() => {
+	//  btnCheck()
+	//  const token = localStorage.getItem('token');
+	//  if (!isTokenValid(token)) {
+	//    connectUserData()
+	//    dispatch({ type: authTypes.GET_TOKEN_START });
+	//    dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+	//  }
+	// }, [ connectUserData, dispatch ])
 
-  // const checkToken = useCallback(() => {
-  //  btnCheck()
-  //  const token = localStorage.getItem('token');
-  //  if (!isTokenValid(token)) {
-  //    connectUserData()
-  //    dispatch({ type: authTypes.GET_TOKEN_START });
-  //    dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-  //  }
-  // }, [ connectUserData, dispatch ])
+	useEffect(() => {
+		let timeout;
+		if (token) {
+			const decoded = jsonwebtoken.decode(token);
 
-  useEffect(() => {
-    let timeout;
-    if (token) {
-      const decoded = jsonwebtoken.decode(token);
+			if (decoded?.exp) {
 
-      if (decoded?.exp) {
+				timeout = setTimeout(() => {
+					connectUserData();
+				}, decoded.exp * 1000);
+			}
+		}
+		return () => {
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+		};
+	}, [token, connectUserData]);
 
-        timeout = setTimeout(() => {
-          connectUserData();
-        }, decoded.exp * 1000);
-      }
-    }
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
-  }, [token, connectUserData]);
+	useEffect(() => {
+		if (localStorage.token && isTokenValid(localStorage.token)) {
+			if (window.ethereum) {
+				connectUserData();
+				dispatch({ type: authTypes.GET_TOKEN_START });
+				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+			} else {
+				// If the token exists but Metamask is not enabled, delete the JWT so the user has to sign in again
+				localStorage.removeItem("token");
+			}
+		}
+	}, [connectUserData, dispatch, token]);
 
-  useEffect(() => {
-    if (localStorage.token && isTokenValid(localStorage.token)) {
-      if (window.ethereum) {
-        connectUserData();
-        dispatch({ type: authTypes.GET_TOKEN_START });
-        dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-      } else {
-        // If the token exists but Metamask is not enabled, delete the JWT so the user has to sign in again
-        localStorage.removeItem("token");
-      }
-    }
-  }, [connectUserData, dispatch, token]);
+	// useEffect(() => {
+	//  checkToken();
+	// }, [checkToken, token])
 
-  // useEffect(() => {
-  //  checkToken();
-  // }, [checkToken, token])
+	useEffect(() => {
+		if (primaryColor === 'charcoal') {
+			(function () {
+				let angle = 0;
+				let p = document.querySelector('p');
+				if (p) {
+					let text = p.textContent.split('');
+					var len = text.length;
+					var phaseJump = 360 / len;
+					var spans;
+					p.innerHTML = text
+						.map(function (char) {
+							return '<span>' + char + '</span>';
+						})
+						.join('');
 
-  useEffect(() => {
-    if (primaryColor === 'charcoal') {
-      (function () {
-        let angle = 0;
-        let p = document.querySelector('p');
-        if (p) {
-          let text = p.textContent.split('');
-          var len = text.length;
-          var phaseJump = 360 / len;
-          var spans;
-          p.innerHTML = text
-            .map(function (char) {
-              return '<span>' + char + '</span>';
-            })
-            .join('');
+					spans = p.children;
+				} else console.log('kik');
 
-          spans = p.children;
-        } else console.log('kik');
+				// function wheee() {
+				//   for (var i = 0; i < len; i++) {
+				//     spans[i].style.color =
+				//       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+				//   }
+				//   angle+=5;
+				// //   requestAnimationFrame(wheee);
+				// };
+				// setInterval(wheee, 100);
 
-        // function wheee() {
-        //   for (var i = 0; i < len; i++) {
-        //     spans[i].style.color =
-        //       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-        //   }
-        //   angle+=5;
-        // //   requestAnimationFrame(wheee);
-        // };
-        // setInterval(wheee, 100);
+				(function wheee() {
+					for (var i = 0; i < len; i++) {
+						spans[i].style.color =
+							'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+					}
+					angle++;
+					requestAnimationFrame(wheee);
+				})();
+			})();
+		}
+	}, [primaryColor]);
 
-        (function wheee() {
-          for (var i = 0; i < len; i++) {
-            spans[i].style.color =
-              'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
-          }
-          angle++;
-          requestAnimationFrame(wheee);
-        })();
-      })();
-    }
-  }, [primaryColor]);
+	useEffect(() => {
+		if (!selectedChain) return
 
-  useEffect(() => {
-    if (!selectedChain) return
+		if (!showAlert) {
+			setShowAlert(true)
+		}
+		//eslint-disable-next-line
+	}, [selectedChain]);
 
-    if (!showAlert) {
-      setShowAlert(true)
-    }
-    //eslint-disable-next-line
-  }, [selectedChain]);
+	let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
 
-  let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
-
-  return (
+	return (
     <Sentry.ErrorBoundary fallback={ErrorFallback}>
       {selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
       <Router history={sentryHistory}>

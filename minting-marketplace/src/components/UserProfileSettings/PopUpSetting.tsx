@@ -8,8 +8,8 @@ import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 // React Redux types
 import * as authTypes from "../../ducks/auth/types";
-import * as userTypes from "../../ducks/users/types";
 import * as contractTypes from "../../ducks/contracts/types";
+import { setAdminRights } from "../../ducks/users/actions";
 
 const PopUpSettings = ({
   currentUserAddress,
@@ -85,7 +85,7 @@ const PopUpSettings = ({
   const logout = () => {
     dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
     dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: undefined });
-    dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
+    dispatch(setAdminRights(false));
     localStorage.removeItem("token");
     setLoginDone(false);
     history.push("/");
