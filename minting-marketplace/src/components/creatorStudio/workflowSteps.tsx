@@ -239,6 +239,11 @@ const WorkflowSteps = ({ sentryHistory }) => {
 				}
 			}
 			if (response2?.contract?.product?.offers) {
+				response2.contract.product.offers = response2.contract.product.offers.sort((a, b) => {
+					return a.diamondRangeIndex < b.diamondRangeIndex ? -1 : 1;
+				})
+			}
+			if (response2?.contract?.product?.offers) {
 				let response5 = await rFetch(`/api/nft/network/${response2.contract.blockchain}/${address.toLowerCase()}/${collectionIndex}`);
 				if (response5.success) {
 					response2.contract.nfts = response5.result;		
