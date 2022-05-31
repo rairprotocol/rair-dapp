@@ -31,12 +31,14 @@ const InitialState = schemes[localStorage.colorScheme ? localStorage.colorScheme
 export default function colorStore(state = InitialState, action) {
 	switch (action.type) {
 		case types.SET_COLOR_SCHEME:
-			localStorage.setItem('colorScheme', action.payload);
+			localStorage.setItem('colorScheme', action.colorScheme);
 			return {
 				...state,
-				...(schemes[action.payload])
+				...(schemes[action.colorScheme])
 			};
 		default:
 			return state;
 	}
 }
+
+export const setColorScheme = (colorScheme) => ({ type: types.SET_COLOR_SCHEME, colorScheme } as const);

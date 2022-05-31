@@ -1,10 +1,10 @@
 //@ts-nocheck
 import React from 'react';
-import * as colorTypes from "./../../../ducks/colors/types";
 import { OnboardingButton } from './../../common/OnboardingButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItem } from './../NavigationItems/NavigationItems';
 import { NavLink } from 'react-router-dom';
+import { setColorScheme } from '../../../ducks/colors';
 
 const MobileListMenu = ({
     primaryColor,
@@ -81,10 +81,7 @@ const MobileListMenu = ({
                         fontSize: 18,
                     }}
                     onClick={(e) => {
-                        dispatch({
-                            type: colorTypes.SET_COLOR_SCHEME,
-                            payload: primaryColor === "rhyno" ? "charcoal" : "rhyno",
-                        });
+                        dispatch(setColorScheme(primaryColor === "rhyno" ? "charcoal" : "rhyno"));
                     }}
                 >
                     {primaryColor === "rhyno" ? (

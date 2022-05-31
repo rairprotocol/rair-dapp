@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import "./UserProfileSettings.css";
 
 // React Redux types
-import * as colorTypes from "../../ducks/colors/types";
 import PopUpSettings from "./PopUpSetting";
 import PopUpNotification from "./PopUpNotification/PopUpNotification";
+import { setColorScheme } from "../../ducks/colors";
 
 const UserProfileSettings = ({
   loginDone,
@@ -71,10 +71,7 @@ const UserProfileSettings = ({
             fontSize: 18,
           }}
           onClick={(e) => {
-            dispatch({
-              type: colorTypes.SET_COLOR_SCHEME,
-              payload: primaryColor === "rhyno" ? "charcoal" : "rhyno",
-            });
+            dispatch(setColorScheme(primaryColor === "rhyno" ? "charcoal" : "rhyno"));
           }}
         >
           {primaryColor === "rhyno" ? (
