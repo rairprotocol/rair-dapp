@@ -8,7 +8,12 @@ import InputSelect from "../../common/InputSelect";
 import io from "socket.io-client";
 import "./videoUpload.css";
 import { getRandomValues } from "../../../utils/getRandomValues";
-// const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
+const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
+
+//TODO: alternative env 
+// const hostname = window.location.hostname;
+// console.log(hostname, 'hostname');
+
 
 // Admin view to upload media to the server
 const FileUpload = ({ address, primaryColor, textColor }) => {
@@ -47,9 +52,9 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 	const [categoryArray, setCategoryArray] = useState([]);
 	const getCategories = useCallback(async () => {
-		const {success, categories} = await rFetch('/api/categories');
+		const { success, categories } = await rFetch('/api/categories');
 		if (success) {
-			setCategoryArray(categories.map(item => {return {label: item.name, value: item.name}}));
+			setCategoryArray(categories.map(item => { return { label: item.name, value: item.name } }));
 		}
 	}, [])
 
@@ -57,8 +62,8 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		getCategories();
 	}, [getCategories])
 
-	const getContract = async () => {
-		const {success, contracts} = await rFetch("/api/contracts");
+	const getContract = useCallback(async () => {
+		const { success, contracts } = await rFetch("/api/contracts");
 
 		if (success) {
 			const contractData = contracts.map((item) => ({
@@ -69,10 +74,10 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 			}));
 			setContractOptions(contractData);
 		}
-	};
+	}, [setContractOptions]);
 
 	const getProduct = useCallback(async () => {
-		const {success, products} = await rFetch(`api/contracts/network/${networkId}/${contract}/products`);
+		const { success, products } = await rFetch(`api/contracts/network/${networkId}/${contract}/products`);
 
 		if (success) {
 			const names = products.map((product) => ({
@@ -134,8 +139,8 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		await getContract();
 		const sessionId = getRandomValues().toString(36).substr(2, 9);
 		setThisSessionId(sessionId);
-		// const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
-		const so = io(`http://localhost:5000`, { transports: ["websocket"] });
+		const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
+		// const so = io(`http://localhost:5000`, { transports: ["websocket"] });
 
 		setSocket(so);
 		// so.on("connect", data => {
@@ -148,10 +153,10 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 			so.emit("end", sessionId);
 		};
 	}, []);
+
 	if (socket) {
 		socket.removeListener("uploadProgress");
 		socket.on("uploadProgress", (data) => {
-			
 			if (data.part) {
 				setPart(
 					getRandomValues() / 10
@@ -171,6 +176,21 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 			if (data.last) {
 				socket.emit("end", thisSessionId);
 				Swal.fire("Success", "Your file is being processed", "success");
+				setUploading(false);
+				setStatus(0);
+				setTitle("");
+				setDescription("");
+				setVideo(undefined);
+				setOffersIndex([]);
+				setCollectionIndex({});
+				setCategory("null");
+				setStorage('null');
+				setContractOptions([]);
+				setProductOptions();
+				setOffersOptions();
+				getContract();
+				document.getElementById("media_id").value = "";
+				setMessage(0);
 			}
 		});
 	}
@@ -213,15 +233,16 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 
 	const handleOffer = (value) => {
 		setOffer(value);
-
 		offersData.forEach((offer) => {
 			if (value === offer.offerName) {
-				setOffersIndex((prev) => [...prev, offer.offerIndex]);
+				offer.diamondRangeIndex
+					?
+					setOffersIndex((prev) => [...prev, offer.diamondRangeIndex])
+					:
+					setOffersIndex((prev) => [...prev, offer.offerIndex]);
 			}
 		});
 	};
-
-	// console.log(selectsData)
 
 	let reusableStyle = {
 		backgroundColor: `var(--${primaryColor})`,
@@ -294,8 +315,8 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						setter={setStorage}
 						placeholder="Select a storage method"
 						options={[
-							{label: 'Google Cloud', value: 'gcp'},
-							{label: 'IPFS', value: 'ipfs'}
+							{ label: 'Google Cloud', value: 'gcp' },
+							{ label: 'IPFS', value: 'ipfs' }
 						]}
 					/>
 				</div>
@@ -308,11 +329,11 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						getter={contract}
 						setter={e => {
 							contractOptions.forEach((el) => {
-								if(el.value === e){
+								if (el.value === e) {
 									setNetworkId(el.blockchain)
 									setContractID(el._id)
-							}
-						} )
+								}
+							})
 							setContract(e);
 							setProduct("null");
 							setProductOptions([]);
@@ -390,7 +411,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						if (video && title && currentToken) {
 							setVPV(URL.createObjectURL(video));
 							let formData = new FormData();
-
 							formData.append("video", video);
 							formData.append("title", title);
 							formData.append("description", description);
@@ -408,17 +428,24 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 								},
 								body: formData,
 							})
-								.then((blob) => blob.json())
+								.then((blob) => { blob.json() })
 								.then((response) => {
-									setUploading(false);
-									setTitle("");
-									// setAuthor("");
-									setDescription("");
-									setVideo(undefined);
-									setOffersIndex([]);
-									setCollectionIndex({});
-									// Swal.fire('Success','Your file is being processed','success');
-								})
+									// TODO: in time of uploading 
+									// setUploading(false);
+									// setTitle("");
+									// setDescription("");
+									// setVideo(undefined);
+									// setOffersIndex([]);
+									// setCollectionIndex({});
+									// setCategory("null");
+									// setStorage('null');
+									// setContractOptions([]);
+									// setProductOptions();
+									// setOffersOptions();
+									// getContract();
+									// 	// setAuthor("");
+								}
+								)
 								.catch((e) => {
 									console.error(e);
 									Swal.fire("Error", e, "error");
@@ -493,10 +520,10 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 										.then((e) => {
 											fetch(
 												"/api/auth/new_admin/" +
-													response.message.challenge +
-													"/" +
-													e +
-													"/",
+												response.message.challenge +
+												"/" +
+												e +
+												"/",
 												{
 													method: "POST",
 													body: JSON.stringify({

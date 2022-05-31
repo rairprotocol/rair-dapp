@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### Development Server
+In this directory, run:
+```sh
+cp .env.example .env
+```
+
+To run the development server:
+```sh
+yarn
+yarn start
+```
+
 ## Available Scripts
 
 In the project directory, you can run:

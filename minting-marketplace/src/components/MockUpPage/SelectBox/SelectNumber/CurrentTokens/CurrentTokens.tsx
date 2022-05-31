@@ -89,7 +89,7 @@ const CurrentTokensComponent = ({
                     }`,
                     color: `${primaryColor === "rhyno" ? "#fff" : "A7A6A6"}`,
                   }}
-                  key={el ? el._id : el.id}
+                  key={el._id ? el._id : el.id}
                   onClick={() => onClickItem(el.token)}
                 >
                   {el.sold ? "Sold" : el.isMinted ? `Sold` : el.token}
