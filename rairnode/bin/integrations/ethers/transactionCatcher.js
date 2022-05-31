@@ -15,7 +15,8 @@ const {
 	metadataForToken,
 	metadataForProduct,
 	updateOfferClassic,
-	updateDiamondRange
+	updateDiamondRange,
+	metadataForContract
 } = require('../../utils/eventCatcherUtils.js');
 
 const fetch = require('node-fetch');
@@ -43,34 +44,6 @@ const ignoredEvents = [
 
 const findContractFromAddress = async (address, network, transactionReceipt, dbModels) => {
 	return await dbModels.Contract.findOne({contractAddress: address.toLowerCase(), blockchain: network});
-}
-
-const metadataForContract = async (
-	dbModels,
-	chainId,
-	transactionReceipt,
-	diamondEvent,
-	newURI,
-	appendTokenIndex = true // Assume it's true for the classic contracts that don't have the append index feature
-) => {
-	//{"indexed":false,"internalType":"string","name":"newURI","type":"string"},	
-	//{"indexed":false,"internalType":"bool","name":"appendTokenIndex","type":"bool"}
-
-	/*
-		{
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "newURI",
-          "type": "string"
-        }
-      ],
-      "name": "BaseURIChanged",
-      "type": "event"
-    },
-	*/
 }
 
 // Events from this list will be stored on the database

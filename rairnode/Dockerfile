@@ -1,15 +1,14 @@
-#FROM node:latest
-
 FROM node:latest
 
 #version management
 COPY VERSION /
 
-#install rairnode
+#install dependencies
 WORKDIR /usr/local/src
-COPY . /usr/local/src
-
+COPY package.json .
 RUN npm install
+
+COPY . /usr/local/src
 
 EXPOSE 3000
 EXPOSE 5000

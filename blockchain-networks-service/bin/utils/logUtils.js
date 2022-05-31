@@ -14,7 +14,8 @@ const {
 	metadataForToken,
 	metadataForProduct,
 	updateOfferClassic,
-	updateDiamondRange
+	updateDiamondRange,
+	metadataForContract
 } = require('./eventCatcherUtils');
 
 const ethers = require('ethers');
@@ -33,36 +34,7 @@ const findContractFromAddress = async (address, network, transactionReceipt, dbM
 	return await dbModels.Contract.findOne({contractAddress: address.toLowerCase(), blockchain: network});
 }
 
-const metadataForContract = async (
-	dbModels,
-	chainId,
-	transactionReceipt,
-	diamondEvent,
-	newURI,
-	appendTokenIndex = true // Assume it's true for the classic contracts that don't have the append index feature
-) => {
 
-	let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
-	
-	//{"indexed":false,"internalType":"string","name":"newURI","type":"string"},	
-	//{"indexed":false,"internalType":"bool","name":"appendTokenIndex","type":"bool"}
-
-	/*
-		{
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "newURI",
-          "type": "string"
-        }
-      ],
-      "name": "BaseURIChanged",
-      "type": "event"
-    },
-	*/
-}
 
 // Events from this list will be stored on the database
 const insertionMapping = {

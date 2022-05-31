@@ -1,25 +1,27 @@
 const log = require('./logger')(module);
 const fetch = require('node-fetch');
+const { addMetadata, addPin } = require('../integrations/ipfsService')();
 
+// Utility used on most of the functions to find the contract address
 const findContractFromAddress = async (address, network, transactionReceipt, dbModels) => {
-	let contract = await dbModels.Contract.findOne({contractAddress: address.toLowerCase(), blockchain: network});
+	const contract = await dbModels.Contract.findOne({ contractAddress: address.toLowerCase(), blockchain: network });
 	if (contract === null) {
 		console.error(`[${network}] Error parsing tx ${transactionReceipt.transactionHash}, couldn't find a contract entry for address ${address}`);
 		return;
 	}
 	return contract;
-}
+};
 
+// Error handler in case a duplicate key error is encountered
 const handleDuplicateKey = (err) => {
 	if (err.code === 11000) {
-		console.error(`Duplicate keys found!`, err.keyValue);
+		console.error(`Duplicate keys found! ${err.keyValue.toString()}`);
 	} else {
 		throw err;
 	}
-}
+};
 
-//event NewContractDeployed(address owner, uint id, address token);
-
+// Insert NFT data from a diamond contract
 const insertTokenDiamond = async (
 	dbModels,
 	chainId,
@@ -28,58 +30,66 @@ const insertTokenDiamond = async (
 	erc721Address,
 	rangeIndex,
 	tokenIndex,
-	buyer
+	buyer,
 ) => {
-	let forbiddenContract = await dbModels.SyncRestriction.findOne({
+
+	// Check if the contract is restricted
+	const restrictedContract = await dbModels.SyncRestriction.findOne({
 		blockchain: chainId,
 		contractAddress: erc721Address.toLowerCase(),
-		tokens: false
+		tokens: false,
 	}).distinct('contractAddress');
 
-	if (forbiddenContract?.length > 0) {
+	if (restrictedContract?.length > 0) {
 		log.error(`[${chainId}] Minted token from ${erc721Address} won't be stored!`);
 		return undefined;
 	}
-	
-	let contract = await findContractFromAddress(erc721Address.toLowerCase(), chainId, transactionReceipt, dbModels);
+
+	// Find the contract data in the DB
+	const contract = await findContractFromAddress(erc721Address.toLowerCase(), chainId, transactionReceipt, dbModels);
 
 	if (!contract) {
 		return undefined;
 	}
 
-	let foundLock = await dbModels.LockedTokens.findOne({
+	// Find the token lock data
+	const foundLock = await dbModels.LockedTokens.findOne({
 		contract: contract._id,
-		lockIndex: rangeIndex // For diamonds, lock index = range index = offer index
+		lockIndex: rangeIndex, // For diamonds, lock index = range index = offer index
 	});
 
 	if (foundLock === null) {
-		//console.log(`[${chainId}] Couldn't find a lock for diamond mint ${erc721Address}:${tokenIndex}`);
+		// console.log(`[${chainId}] Couldn't find a lock for diamond mint ${erc721Address}:${tokenIndex}`);
 		return undefined;
 	}
 
-	let product = await dbModels.Product.findOne({
+	// Find product
+	const product = await dbModels.Product.findOne({
 		contract: contract._id,
-		collectionIndexInContract: foundLock.product
+		collectionIndexInContract: foundLock.product,
 	});
 
-	let foundOffer = await dbModels.Offer.findOne({
+	// Find offer
+	const foundOffer = await dbModels.Offer.findOne({
 		contract: contract._id,
 	});
 
+	// Find token
 	let foundToken = await dbModels.MintedToken.findOne({
 		contract: contract._id,
-		token: tokenIndex
-	})
+		token: tokenIndex,
+	});
 
+	// If token doesn't exist, create a new entry
 	if (foundToken === null) {
 		foundToken = new dbModels.MintedToken({});
 	}
 
-	// 3 possible sources of metadata
+	// 4 possible sources of metadata
 	// 1.- Direct metadata on the token
 	let foundMetadata = await dbModels.MetadataLink.findOne({
 		contract: contract._id,
-		tokenIndex: tokenIndex
+		tokenIndex,
 	}).populate('metadata');
 
 	if (foundMetadata === null) {
@@ -87,28 +97,32 @@ const insertTokenDiamond = async (
 		foundMetadata = await dbModels.MetadataLink.findOne({
 			contract: contract._id,
 			tokenIndex: { $exists: false },
-			collectionIndex: foundLock.product
+			collectionIndex: foundLock.product,
 		}).populate('metadata');
 
 		if (foundMetadata === null) {
-			// Last try
 			// 3.- Contract wide metadata
 			foundMetadata = await dbModels.MetadataLink.findOne({
 				contract: contract._id,
 				tokenIndex: { $exists: false },
-				collectionIndex: { $exists: false }
+				collectionIndex: { $exists: false },
 			}).populate('metadata');
 		}
 	}
 
-	// If metadata exists, set it as the token's metadata
 	if (foundMetadata !== null) {
-		//console.log(`[${contract.address}:${tokenIndex.toString()}] - Found metadata!`);
-		//console.log('will set', foundToken, 'with', foundMetadata.metadata);
-		foundToken.metadata = {...foundMetadata.metadata};
+		// If metadata exists, set it as the token's metadata
+		foundToken.metadata = { ...foundMetadata.metadata };
 		foundToken.metadataURI = foundMetadata.uri;
+	} else if (foundToken?.metadata?.name !== 'none' && foundToken.metadataURI === 'none') {
+		// If metadata from the blockchain doesn't exist but the database has metadata, pin it and set it.
+		const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
+		await addPin(CID, `metadata_${ foundToken.metadata.name }`);
+		foundToken.metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
+		foundToken.isMetadataPinned = true;
 	}
 
+	// Set all the properties of the minted token
 	foundToken.token = tokenIndex;
 	foundToken.uniqueIndexInContract = tokenIndex.add(product.firstTokenIndex);
 	foundToken.ownerAddress = buyer;
@@ -116,20 +130,23 @@ const insertTokenDiamond = async (
 	foundToken.contract = contract._id;
 	foundToken.isMinted = true;
 
+	// Decrease the amount of copies in the offer
 	if (foundOffer) {
 		foundOffer.soldCopies += 1;
 		foundOffer.save().catch(handleDuplicateKey);
 	}
 
+	// Decrease the amount of copies in the product
 	if (product) {
 		product.soldCopies += 1;
 		product.save().catch(handleDuplicateKey);
 	}
 
+	// Save the token data
 	foundToken?.save().catch(handleDuplicateKey);
 
 	return foundToken;
-}
+};
 
 module.exports = {
 	updateDiamondRange: async (
@@ -141,20 +158,19 @@ module.exports = {
 		name,
 		price,
 		tokensAllowed,
-		lockedTokens
+		lockedTokens,
 	) => {
-
-		let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
+		const contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
 
 		if (!contract) {
 			return;
 		}
 
-		let foundOffer = await dbModels.Offer.findOne({
+		const foundOffer = await dbModels.Offer.findOne({
 			contract: contract._id,
 			diamond: diamondEvent,
 			offerPool: undefined,
-			diamondRangeIndex: rangeIndex
+			diamondRangeIndex: rangeIndex,
 		});
 		if (!foundOffer) {
 			return;
@@ -164,12 +180,12 @@ module.exports = {
 		foundOffer.price = price;
 		foundOffer.offerName = name;
 
-		let updatedOffer = await foundOffer.save().catch(handleDuplicateKey);
+		const updatedOffer = await foundOffer.save().catch(handleDuplicateKey);
 
-		let foundLock = await dbModels.LockedTokens.findOne({
+		const foundLock = await dbModels.LockedTokens.findOne({
 			contract: contract._id,
 			lockIndex: rangeIndex,
-			product: updatedOffer.product
+			product: updatedOffer.product,
 		});
 
 		if (foundLock) {
@@ -189,19 +205,19 @@ module.exports = {
 		rangeIndex,
 		tokens,
 		price,
-		name
+		name,
 	) => {
-		let contract = await findContractFromAddress(contractAddress, chainId, transactionReceipt, dbModels);
+		const contract = await findContractFromAddress(contractAddress, chainId, transactionReceipt, dbModels);
 
 		if (!contract) {
 			return;
 		}
 
-		let foundOffer = await dbModels.Offer.findOne({
+		const foundOffer = await dbModels.Offer.findOne({
 			contract: contract._id,
 			diamond: false,
 			offerPool: offerIndex,
-			offerIndex: rangeIndex
+			offerIndex: rangeIndex,
 		});
 		if (!foundOffer) {
 			return;
@@ -220,19 +236,19 @@ module.exports = {
 		deployerAddress,
 		deploymentIndex,
 		deploymentAddress,
-		deploymentName = "UNKNOWN"
+		deploymentName = 'UNKNOWN',
 	) => {
-		let transactionHash = transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash
-		
-		let contract = new dbModels.Contract({
+		const transactionHash = transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash;
+
+		const contract = new dbModels.Contract({
 			diamond: diamondEvent,
 			transactionHash,
 			title: deploymentName,
 			user: deployerAddress,
 			blockchain: chainId,
 			contractAddress: deploymentAddress.toLowerCase(),
-			lastSyncedBlock: transactionReceipt.blockNumber,
-			external: false
+			lastSyncedBlock: 0,
+			external: false,
 		}).save().catch(handleDuplicateKey);
 
 		return [contract];
@@ -245,15 +261,15 @@ module.exports = {
 		collectionIndex,
 		collectionName,
 		startingToken,
-		collectionLength
+		collectionLength,
 	) => {
-		let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
-		
+		const contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
+
 		if (!contract) {
 			return;
 		}
 
-		let product = new dbModels.Product({
+		const product = new dbModels.Product({
 			name: collectionName,
 			collectionIndexInContract: collectionIndex,
 			contract: contract._id,
@@ -274,7 +290,7 @@ module.exports = {
 		contractAddress,
 		catalogIndex,
 		rangeIndex,
-		tokenIndex
+		tokenIndex,
 	) => {
 		if (diamondEvent) {
 			// This is a special case of a token minted before the events were renamed
@@ -293,36 +309,36 @@ module.exports = {
 			);
 		}
 
-		let forbiddenContract = await dbModels.SyncRestriction.findOne({
+		const forbiddenContract = await dbModels.SyncRestriction.findOne({
 			blockchain: chainId,
 			contractAddress: contractAddress.toLowerCase(),
-			tokens: false
+			tokens: false,
 		}).distinct('contractAddress');
 
 		if (forbiddenContract?.length > 0) {
 			log.error(`Minted token from ${contractAddress} can't be stored!`);
 			return [undefined];
 		}
-		
-		let contract = await findContractFromAddress(contractAddress.toLowerCase(), chainId, transactionReceipt, dbModels);
+
+		const contract = await findContractFromAddress(contractAddress.toLowerCase(), chainId, transactionReceipt, dbModels);
 
 		if (!contract) {
 			return;
 		}
 
-		let offerPool = await dbModels.OfferPool.findOne({
+		const offerPool = await dbModels.OfferPool.findOne({
 			contract: contract._id,
-			marketplaceCatalogIndex: catalogIndex
+			marketplaceCatalogIndex: catalogIndex,
 		});
 
 		if (offerPool === null) {
-			log.error("Couldn't find offer pool")
+			log.error("Couldn't find offer pool");
 			return [undefined];
 		}
 
-		let product = await dbModels.Product.findOne({
+		const product = await dbModels.Product.findOne({
 			contract: contract._id,
-			collectionIndexInContract: offerPool.product
+			collectionIndexInContract: offerPool.product,
 		});
 
 		if (!product) {
@@ -330,25 +346,23 @@ module.exports = {
 			return [undefined];
 		}
 
-		let offers = await dbModels.Offer.find({
+		const offers = await dbModels.Offer.find({
 			contract: contract._id,
-			offerPool: offerPool.marketplaceCatalogIndex
+			offerPool: offerPool.marketplaceCatalogIndex,
 		});
 
-		let [foundOffer] = offers.filter(item => {
-			return tokenIndex >= item.range[0] && tokenIndex <= item.range[1]
-		});
+		const [foundOffer] = offers.filter((item) => tokenIndex >= item.range[0] && tokenIndex <= item.range[1]);
 
 		if (!foundOffer) {
-			log.error(`Couldn't find offer!`);
+			log.error('Couldn\'t find offer!');
 			return [undefined];
 		}
 
 		let foundToken = await dbModels.MintedToken.findOne({
 			contract: contract._id,
 			offerPool: offerPool.marketplaceCatalogIndex,
-			token: tokenIndex
-		})
+			token: tokenIndex,
+		});
 
 		if (foundToken === null) {
 			foundToken = new dbModels.MintedToken({});
@@ -359,7 +373,7 @@ module.exports = {
 		// 1.- Direct metadata on the token
 		let foundMetadata = await dbModels.MetadataLink.findOne({
 			contract: contract._id,
-			tokenIndex: tokenIndex
+			tokenIndex,
 		}).populate('metadata');
 
 		if (foundMetadata === null) {
@@ -367,7 +381,7 @@ module.exports = {
 			foundMetadata = await dbModels.MetadataLink.findOne({
 				contract: contract._id,
 				tokenIndex: { $exists: false },
-				collectionIndex: product.collectionIndexInContract
+				collectionIndex: product.collectionIndexInContract,
 			}).populate('metadata');
 
 			if (foundMetadata === null) {
@@ -376,16 +390,16 @@ module.exports = {
 				foundMetadata = await dbModels.MetadataLink.findOne({
 					contract: contract._id,
 					tokenIndex: { $exists: false },
-					collectionIndex: { $exists: false }
+					collectionIndex: { $exists: false },
 				}).populate('metadata');
 			}
 		}
 
 		// If metadata exists, set it as the token's metadata
 		if (foundMetadata !== null) {
-			//console.log(`[${contract.contractAddress}:${tokenIndex.toString()}] - Found metadata!`);
-			//console.log('will set', foundToken, 'with', foundMetadata.metadata);
-			foundToken.metadata = {...foundMetadata.metadata};
+			// console.log(`[${contract.contractAddress}:${tokenIndex.toString()}] - Found metadata!`);
+			// console.log('will set', foundToken, 'with', foundMetadata.metadata);
+			foundToken.metadata = { ...foundMetadata.metadata };
 			foundToken.metadataURI = foundMetadata.uri;
 		}
 
@@ -415,21 +429,21 @@ module.exports = {
 		contractAddress,
 		productIndex,
 		rangesCreated,
-		catalogIndex
+		catalogIndex,
 	) => {
-		let contract = await findContractFromAddress(contractAddress, chainId, transactionReceipt, dbModels);
-		
+		const contract = await findContractFromAddress(contractAddress, chainId, transactionReceipt, dbModels);
+
 		if (!contract) {
 			return;
 		}
 
-		let offerPool = new dbModels.OfferPool({
+		const offerPool = new dbModels.OfferPool({
 			marketplaceCatalogIndex: catalogIndex,
 			contract: contract._id,
 			product: productIndex,
 			rangeNumber: rangesCreated,
 			minterAddress: transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address,
-			transactionHash: transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash
+			transactionHash: transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash,
 		}).save().catch(handleDuplicateKey);
 
 		return [offerPool];
@@ -448,31 +462,24 @@ module.exports = {
 		price,
 		name,
 	) => {
-		let contract = await findContractFromAddress(contractAddress, chainId, transactionReceipt, dbModels);
-		
+		const contract = await findContractFromAddress(contractAddress, chainId, transactionReceipt, dbModels);
+
 		if (!contract) {
 			return;
 		}
 
-		//console.log('Inserting classic offer', transactionReceipt);
-
-		if ((transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash) === undefined) {
-			console.log('Error!', transactionReceipt);
-			return;
-		}
-
-		let offer = new dbModels.Offer({
+		const offer = new dbModels.Offer({
 			offerIndex: rangeIndex,
 			contract: contract._id,
 			product: productIndex,
 			offerPool: offerIndex,
 			copies: endToken.sub(startToken),
-			price: price,
+			price,
 			range: [startToken.toString(), endToken.toString()],
 			offerName: name,
-			transactionHash: transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash
+			transactionHash: transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash,
 		}).save().catch(handleDuplicateKey);
-		
+
 		return [offer];
 	},
 	insertDiamondOffer: async (
@@ -487,18 +494,18 @@ module.exports = {
 		feeSplitsLength,
 		offerIndex,
 	) => {
-		let contract = await findContractFromAddress(erc721Address, chainId, transactionReceipt, dbModels);
-		
+		const contract = await findContractFromAddress(erc721Address, chainId, transactionReceipt, dbModels);
+
 		if (!contract) {
 			return;
 		}
 
-		let foundOffer = await dbModels.Offer.findOneAndUpdate({
+		const foundOffer = await dbModels.Offer.findOneAndUpdate({
 			contract: contract._id,
 			offerName: rangeName,
-			price: price,
-			offerIndex: {'$exists': false}
-		}, { offerIndex: offerIndex	});
+			price,
+			offerIndex: { $exists: false },
+		}, { offerIndex	});
 
 		return foundOffer;
 	},
@@ -512,23 +519,23 @@ module.exports = {
 		endingToken,
 		tokensLocked,
 		productName,
-		lockIndex
+		lockIndex,
 	) => {
-		let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
-		
+		const contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
+
 		if (!contract) {
 			return;
 		}
-		
-		let lockedTokens = new dbModels.LockedTokens({
-			lockIndex: lockIndex,
+
+		const lockedTokens = new dbModels.LockedTokens({
+			lockIndex,
 			contract: contract._id,
 			product: productIndex,
 			range: [startingToken, endingToken],
 			lockedTokens: tokensLocked,
-			isLocked: true
+			isLocked: true,
 		}).save().catch(handleDuplicateKey);
-		
+
 		return [lockedTokens];
 	},
 	insertDiamondRange: async (
@@ -543,42 +550,35 @@ module.exports = {
 		tokensAllowed, // Unused on the processing
 		lockedTokens,
 		name,
-		rangeIndex
+		rangeIndex,
 	) => {
-		let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
-		
+		const contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
 		if (!contract) {
 			return;
 		}
-		//console.log('Inserting DIAMOND offer', transactionReceipt);
-
-		if ((transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash) === undefined) {
-			console.log('Error d!', transactionReceipt);
-			return;
-		}
-		let offer = new dbModels.Offer({
-			//offerIndex: undefined, // Offer is not defined yet
+		const offer = new dbModels.Offer({
+			// offerIndex: undefined, // Offer is not defined yet
 			contract: contract._id,
 			product: productIndex,
-			//offerPool: undefined, // Diamond contracts have no offer pools
+			// offerPool: undefined, // Diamond contracts have no offer pools
 			copies: end.sub(start),
-			price: price,
+			price,
 			range: [start, end],
 			offerName: name,
 			diamond: true,
 			diamondRangeIndex: rangeIndex,
-			transactionHash: transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash
+			transactionHash: transactionReceipt.transactionHash ? transactionReceipt.transactionHash : transactionReceipt.hash,
 		}).save().catch(handleDuplicateKey);
 
 		// Locks are always made on Diamond Contracts, they're part of the range event
-		let tokenLock = new dbModels.LockedTokens({
+		const tokenLock = new dbModels.LockedTokens({
 			lockIndex: rangeIndex,
 			contract: contract._id,
 			product: productIndex,
 			// Substract 1 because lockedTokens includes the start token
 			range: [start, start.add(lockedTokens).sub(1)],
-			lockedTokens: lockedTokens,
-			isLocked: true
+			lockedTokens,
+			isLocked: true,
 		}).save().catch(handleDuplicateKey);
 
 		return offer;
@@ -589,9 +589,9 @@ module.exports = {
 		transactionReceipt,
 		diamondEvent,
 		tokenId,
-		newURI
+		newURI,
 	) => {
-		let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
+		const contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
 
 		if (!contract) {
 			return;
@@ -603,13 +603,13 @@ module.exports = {
 			fetchedMetadata = await (await fetch(newURI)).json();
 		}
 
-		let databaseMetadata = await (new dbModels.TokenMetadata(fetchedMetadata)).save().catch(handleDuplicateKey);
+		const databaseMetadata = await (new dbModels.TokenMetadata(fetchedMetadata)).save().catch(handleDuplicateKey);
 
-		let foundToken = await dbModels.MintedToken.findOne({
+		const foundToken = await dbModels.MintedToken.findOne({
 			contract: contract._id,
-			uniqueIndexInContract: tokenId.toString()
+			uniqueIndexInContract: tokenId.toString(),
 		});
-	
+
 		// The token exists, update the metadata for that token
 		if (foundToken) {
 			foundToken.metadata = fetchedMetadata;
@@ -618,7 +618,7 @@ module.exports = {
 			await foundToken.save().catch(handleDuplicateKey);
 		}
 
-		let link = await (new dbModels.MetadataLink({
+		const link = await (new dbModels.MetadataLink({
 			sourceURI: newURI,
 			metadata: databaseMetadata._id,
 			uri: newURI,
@@ -635,8 +635,88 @@ module.exports = {
 		diamondEvent,
 		productId,
 		newURI,
-		appendTokenIndex = true
+		appendTokenIndex = true,
 	) => {
+		const contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
+
+		if (!contract) {
+			return;
+		}
+
+		// Parse metadata
+		let fetchedMetadata = {};
+		let databaseMetadata;
+
+		if (appendTokenIndex === false) {
+			if (newURI !== '') {
+				fetchedMetadata = await (await fetch(newURI)).json();
+			}
+			databaseMetadata = await (new dbModels.TokenMetadata(fetchedMetadata)).save().catch(handleDuplicateKey);
+		}
+
+		// Find tokens with Unique URIs set
+		const uniqueURIdToken = await dbModels.MetadataLink.find({
+			contract: contract._id,
+			tokenIndex: { $exists: true },
+		}).distinct('tokenIndex');
+
+		// Find the offers tied to that product
+		const foundOffers = await dbModels.Offer.find({
+			contract: contract._id,
+			product: productId,
+		}).distinct('offerIndex');
+
+		// Update all tokens that have no unique URI set
+		if (appendTokenIndex) {
+			// Have to fetch the URL for each token
+			const foundTokensToUpdate = await dbModels.MintedToken.find({
+				contract: contract._id,
+				offerIndex: { $in: foundOffers },
+				uniqueIndexInContract: { $in: uniqueURIdToken },
+			});
+			for await (const token of foundTokensToUpdate) {
+				if (newURI !== '') {
+					token.metadata = await (await fetch(`${newURI}${token.token}`));
+					token.metadataURI = `${newURI}${token.token}`;
+				} else {
+					token.metadata = databaseMetadata;
+					token.metadataURI = '';
+				}
+				await token.save().catch(handleDuplicateKey);
+			}
+		} else {
+			// Can update all tokens in batch
+			await dbModels.MintedToken.updateMany({
+				contract: contract._id,
+				offerIndex: { $in: foundOffers },
+				uniqueIndexInContract: { $nin: uniqueURIdToken },
+			}, {
+				$set: { metadata: fetchedMetadata },
+			});
+		}
+
+		// Create link for future minted tokens
+		const link = (new dbModels.MetadataLink({
+			sourceURI: newURI,
+			metadata: appendTokenIndex ? undefined : databaseMetadata._id,
+			uri: newURI,
+			contract: contract._id,
+			collectionIndex: productId,
+			appendTokenIndex,
+		})).save().catch(handleDuplicateKey);
+
+		return link;
+	},
+	metadataForContract: async (
+		dbModels,
+		chainId,
+		transactionReceipt,
+		diamondEvent,
+		newURI,
+		appendTokenIndex = true // Assume it's true for the classic contracts that don't have the append index feature
+	) => {
+        console.log('METADATA FOR CONTRACT =++++++++ >')
+
 		let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
 		
 		if (!contract) {
@@ -655,26 +735,35 @@ module.exports = {
 		}
 
 		// Find tokens with Unique URIs set
-		let uniqueURIdToken = await dbModels.MetadataLink.find({
+		const uniqueURIdToken = await dbModels.MetadataLink.find({
 			contract: contract._id,
-			tokenIndex: {$exists: true}
+			tokenIndex: { $exists: true },
 		}).distinct('tokenIndex');
 
-		// Find the offers tied to that product
-		let foundOffers = await dbModels.Offer.find({
+		// Find products with common URIs set
+		const commonURIProducts = await dbModels.MetadataLink.find({
 			contract: contract._id,
-			product: productId
-		}).distinct('offerIndex');
+			collectionIndex: { $exists: true },
+		}).distinct('tokenIndex');
+
+		let foundOffers = [];
+		if (commonURIProducts.length > 0) {
+			// Find the offers tied to the products with common URIs
+			foundOffers = await dbModels.Offer.find({
+				contract: contract._id,
+				product: {$nin: commonURIProducts}
+			}).distinct('offerIndex');
+		}
 
 		// Update all tokens that have no unique URI set
 		if (appendTokenIndex) {
 			// Have to fetch the URL for each token
-			let foundTokensToUpdate = await dbModels.MintedToken.find({
+			const foundTokensToUpdate = await dbModels.MintedToken.find({
 				contract: contract._id,
 				offerIndex: { $in: foundOffers },
-				uniqueIndexInContract: { $in: uniqueURIdToken }
+				uniqueIndexInContract: { $in: uniqueURIdToken },
 			});
-			for await (let token of foundTokensToUpdate) {
+			for await (const token of foundTokensToUpdate) {
 				if (newURI !== '') {
 					token.metadata = await (await fetch(`${newURI}${token.token}`));
 					token.metadataURI = `${newURI}${token.token}`;
@@ -689,22 +778,21 @@ module.exports = {
 			await dbModels.MintedToken.updateMany({
 				contract: contract._id,
 				offerIndex: { $in: foundOffers },
-				uniqueIndexInContract: { $nin: uniqueURIdToken }
-			} , {
-				$set: { metadata: fetchedMetadata }
+				uniqueIndexInContract: { $nin: uniqueURIdToken },
+			}, {
+				$set: { metadata: fetchedMetadata },
 			});
 		}
 
 		// Create link for future minted tokens
-		let link = (new dbModels.MetadataLink({
+		const link = (new dbModels.MetadataLink({
 			sourceURI: newURI,
 			metadata: appendTokenIndex ? undefined : databaseMetadata._id,
 			uri: newURI,
 			contract: contract._id,
-			collectionIndex: productId,
-			appendTokenIndex
+			appendTokenIndex,
 		})).save().catch(handleDuplicateKey);
 
 		return link;
 	}
-}
+};
