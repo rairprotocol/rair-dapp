@@ -42,7 +42,7 @@ const EditComponent = ({
     <div 
     className={cl.card}
     style={{
-      background: primaryColor === "rhyno" ? "grey" :"#383637" 
+      background: primaryColor === "rhyno" ? "rgb(192, 192, 192)" :"#383637" 
     }}
     >
       <form onSubmit={onSubmit}>

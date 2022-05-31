@@ -2,7 +2,7 @@
 import React, { memo } from "react";
 import cl from "./Profile.module.css";
 
-const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic, setTriggerState }) => {
+const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic, setTriggerState, primaryColor }) => {
 
   const onCloseEditProfile = () => {
     setTriggerState(false);
@@ -10,7 +10,12 @@ const ProfileComponent = ({ onSubmit, src, name, status, setOpenModalPic, setTri
   }
 
   return (
-    <div className={cl.card}>
+    <div
+      style={{
+        background: primaryColor === "rhyno" ? "rgb(192, 192, 192)" : "#383637"
+      }}
+      className={cl.card}
+    >
       <form onSubmit={onSubmit}>
         <h1> </h1>
         <label className={`${cl.customFileUpload} ${"fas"}`}>

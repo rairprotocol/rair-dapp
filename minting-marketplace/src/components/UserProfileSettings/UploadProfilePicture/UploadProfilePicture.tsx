@@ -134,6 +134,7 @@ const UploadProfilePicture = ({
           name={name}
           status={status}
           setTriggerState={setTriggerState}
+          primaryColor={primaryColor}
         />
       )}
     </div>

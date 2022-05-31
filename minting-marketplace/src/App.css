@@ -173,6 +173,10 @@ a:hover {
     color: #61dafb;
 }
 
+.col-1.hidden-block {
+    width: 5%;
+}
+
 .title {
     font-size: larger;
     background: var(--stimorol);
@@ -1279,6 +1283,7 @@ button.metamask-on-boarding:focus {
         max-width: 100%;
         margin-left: 0px;
     }
+    
 }
 
 @media screen and (max-width: 1500px) and (min-width: 1201px) {
@@ -1390,6 +1395,12 @@ body::-webkit-scrollbar-thumb:active {
 
 .video-btn-back button:hover {
     background: #AF6FD8;
+}
+
+@media screen and (max-width: 1077px) {
+    .col-1.hidden-block {
+        width: 0px;
+    }
 }
 
 @media screen and (max-width: 767px) {

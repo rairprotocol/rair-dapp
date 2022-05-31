@@ -40,6 +40,12 @@
     transition: all .1s ease;
 }
 
+.header-master .container-admin-panel {
+    position: absolute;
+    width: 5vw;
+    top: 80px;
+}
+
 .header-master .main-search input.input-search-black:hover,
 .header-master .main-search input.input-search-black:focus {
     background: rgb(76, 80, 92);
@@ -76,6 +82,26 @@
     color: white;
 }
 
+.header-master .admin-panel-btn {
+    margin-right: 10px;
+    transition: all .2s ease;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background: black;
+    border: 1px solid #000;
+
+}
+
+.header-master .admin-panel-btn:hover {
+    color: grey;
+}
+
 .header-master .social-media .box-social {
     transition: all .2s ease;
     cursor: pointer;
@@ -109,6 +135,23 @@
 .header-master .social-media .box-social:first-child:hover {
     background: #1d9bf0 !important;
     border: 1px solid #1d9bf0 !important;
+}
+
+.popup-content.popup-admin-panel-content {
+    position: absolute !important;
+    top: 90px;
+    right: 80px;
+    filter: drop-shadow(black 0.4px 0.5px 1px);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.container-admin-panel .col-12.py-3 {
+    text-align: center;
+    width: 70px;
+}
+
+.container-admin-panel .col-12.py-3 a {
 }
 
 @media screen and (max-width: 1250px) {

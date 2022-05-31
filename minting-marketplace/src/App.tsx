@@ -59,8 +59,6 @@ import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
 
 import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
 
-import { OnboardingButton } from './components/common/OnboardingButton';
-
 import RairProduct from './components/nft/rairCollection';
 //Google Analytics
 // import ReactGA from 'react-ga';
@@ -72,8 +70,6 @@ import ThankYouPage from './components/ThankYouPage';
 import Token from './components/nft/Token';
 import { TermsUse } from './components/SplashPage/TermsUse';
 
-import UserProfileSettings from './components/UserProfileSettings/UserProfileSettings';
-
 import VideoPlayer from './components/video/videoPlayer';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps';
@@ -84,7 +80,6 @@ import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
 import headerLogoWhite from './images/rairTechLogoWhite.png';
 import headerLogoBlack from './images/rairTechLogoBlack.png';
 import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico'
-import MainLogo from './components/GroupLogos/MainLogo';
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 import { detectBlockchain } from './utils/blockchainData';
@@ -122,277 +117,278 @@ const ErrorFallback = () => {
 };
 
 function App({ sentryHistory }) {
-	const dispatch = useDispatch()
-	const [userData, setUserData] = useState();
-	const [startedLogin, setStartedLogin] = useState(false);
-	const [loginDone, setLoginDone] = useState(false);
-	const [errorAuth, /*setErrorAuth*/] = useState('');
-	const [renderBtnConnect, setRenderBtnConnect] = useState(false);
-	const [showAlert, setShowAlert] = useState(true);
-	const { currentChain, realChain } = useSelector(store => store.contractStore);
-	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
-	const carousel_match = window.matchMedia('(min-width: 900px)')
-	const [carousel, setCarousel] = useState(carousel_match.matches)
+  const dispatch = useDispatch()
+  const [userData, setUserData] = useState();
+  const [startedLogin, setStartedLogin] = useState(false);
+  const [loginDone, setLoginDone] = useState(false);
+  const [errorAuth, /*setErrorAuth*/] = useState('');
+  const [renderBtnConnect, setRenderBtnConnect] = useState(false);
+  const [showAlert, setShowAlert] = useState(true);
+  const { currentChain, realChain } = useSelector(store => store.contractStore);
+  const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
+  const carousel_match = window.matchMedia('(min-width: 900px)')
+  const [carousel, setCarousel] = useState(carousel_match.matches)
 
-	const seoInformation = {
-		title: "Rair Tech Marketplace",
-		contentName: "author",
-		content: "Digital Ownership Encryption",
-		description: "RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content",
-		favicon: RairFavicon,
-		faviconMobile: RairFavicon
-	}
+  const seoInformation = {
+    title: "Rair Tech Marketplace",
+    contentName: "author",
+    content: "Digital Ownership Encryption",
+    description: "RAIR is a Blockchain-based digital rights management platform that uses NFTs to gate access to streaming content",
+    favicon: RairFavicon,
+    faviconMobile: RairFavicon
+  }
 
-	// Redux
-	const {
-		currentUserAddress,
-		minterInstance,
-		factoryInstance,
-		programmaticProvider,
-		diamondMarketplaceInstance
-	} = useSelector(store => store.contractStore);
-	const {
-		primaryColor,
-		headerLogo,
-		textColor,
-		backgroundImage,
-		backgroundImageEffect
-	} = useSelector(store => store.colorStore);
-	const { token } = useSelector(store => store.accessStore);
-	const { adminRights } = useSelector(store => store.userStore);
+  // Redux
+  const {
+    currentUserAddress,
+    minterInstance,
+    factoryInstance,
+    programmaticProvider,
+    diamondMarketplaceInstance
+  } = useSelector(store => store.contractStore);
+  const {
+    primaryColor,
+    headerLogo,
+    textColor,
+    backgroundImage,
+    backgroundImageEffect
+  } = useSelector(store => store.colorStore);
+  const { token } = useSelector(store => store.accessStore);
+  const { adminRights } = useSelector(store => store.userStore);
 
-	const connectUserData = useCallback(async () => {
-		setStartedLogin(true);
-		let currentUser;
-		let dispatchStack = [];
-		if (window.ethereum) {
-			let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-			dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] })
-			dispatchStack.push({
-				type: contractTypes.SET_CHAIN_ID,
-				payload: window.ethereum.chainId?.toLowerCase()
-			});
-			currentUser = accounts[0];
-		} else if (programmaticProvider) {
-			dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
-			dispatchStack.push({
-				type: contractTypes.SET_CHAIN_ID,
-				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
-			});
-			currentUser = programmaticProvider.address;
-		}
+  const connectUserData = useCallback(async () => {
+    setStartedLogin(true);
+    let currentUser;
+    let dispatchStack = [];
+    if (window.ethereum) {
+      let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] })
+      dispatchStack.push({
+        type: contractTypes.SET_CHAIN_ID,
+        payload: window.ethereum.chainId?.toLowerCase()
+      });
+      currentUser = accounts[0];
+    } else if (programmaticProvider) {
+      dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
+      dispatchStack.push({
+        type: contractTypes.SET_CHAIN_ID,
+        payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
+      });
+      currentUser = programmaticProvider.address;
+    }
 
-		if (!currentUser && currentUser !== undefined) {
-			Swal.fire('Error', 'No user address found', 'error');
-			setStartedLogin(false);
-			return;
-		}
+    if (!currentUser && currentUser !== undefined) {
+      Swal.fire('Error', 'No user address found', 'error');
+      setStartedLogin(false);
+      return;
+    }
 
-		try {
-			// Check if user exists in DB
-			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
-			if (!success || !user) {
-				// If the user doesn't exist, send a request to register him using a TEMP adminNFT
-				console.log('Address is not registered!');
-				const userCreation = await fetch('/api/users', {
-					method: 'POST',
-					body: JSON.stringify({ publicAddress: currentUser, adminNFT: 'temp' }),
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json'
-					}
-				});
-				console.log('User Created', userCreation);
-				setUserData(userCreation);
-			} else {
-				setUserData(user);
-			}
+    try {
+      // Check if user exists in DB
+      const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
+      if (!success || !user) {
+        // If the user doesn't exist, send a request to register him using a TEMP adminNFT
+        console.log('Address is not registered!');
+        const userCreation = await fetch('/api/users', {
+          method: 'POST',
+          body: JSON.stringify({ publicAddress: currentUser, adminNFT: 'temp' }),
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log('User Created', userCreation);
+        setUserData(userCreation);
+      } else {
+        setUserData(user);
+      }
 
-			// Authorize user and get JWT token
-			if (adminRights === null || adminRights === undefined || !localStorage.token || !isTokenValid(localStorage.token)) {
-				dispatchStack.push({ type: authTypes.GET_TOKEN_START });
-				let token = await getJWT(programmaticProvider, currentUser);
+      // Authorize user and get JWT token
+      if (adminRights === null || adminRights === undefined || !localStorage.token || !isTokenValid(localStorage.token)) {
+        dispatchStack.push({ type: authTypes.GET_TOKEN_START });
+        let token = await getJWT(programmaticProvider, currentUser);
 
-				if (!success) {
-					setStartedLogin(false);
-					setLoginDone(false);
-					dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
-					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-					localStorage.setItem('token', token);
-				} else {
-					const decoded = jsonwebtoken.decode(token);
-					dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: decoded.adminRights });
-					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-					localStorage.setItem('token', token);
-				}
-			}
+        if (!success) {
+          setStartedLogin(false);
+          setLoginDone(false);
+          dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: false });
+          dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+          localStorage.setItem('token', token);
+        } else {
+          const decoded = jsonwebtoken.decode(token);
+          dispatchStack.push({ type: userTypes.SET_ADMIN_RIGHTS, payload: decoded.adminRights });
+          dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+          localStorage.setItem('token', token);
+        }
+      }
 
-			setStartedLogin(false);
-			dispatchStack.forEach(dispatchItem => {
-				dispatch(dispatchItem);
-			})
-			setLoginDone(true);
-		} catch (err) {
-			console.log('Error', err);
-			setStartedLogin(false);
-		}
-	}, [programmaticProvider, adminRights, dispatch]);
+      setStartedLogin(false);
+      dispatchStack.forEach(dispatchItem => {
+        dispatch(dispatchItem);
+      })
+      setLoginDone(true);
+    } catch (err) {
+      console.log('Error', err);
+      setStartedLogin(false);
+    }
+  }, [programmaticProvider, adminRights, dispatch]);
 
-	const goHome = () => {
-		sentryHistory.push(`/`);
-		setShowAlert(false);
-		dispatch({ type: "GET_CURRENT_PAGE_END" });
-	};
+  const goHome = () => {
+    sentryHistory.push(`/`);
+    setShowAlert(false);
+    dispatch({ type: "GET_CURRENT_PAGE_END" });
+  };
 
-	const openAboutPage = useCallback(() => {
-		sentryHistory.push(`/about-page`);
-		window.scrollTo(0, 0);
-	}, [sentryHistory]);
+  const openAboutPage = useCallback(() => {
+    sentryHistory.push(`/about-page`);
+    window.scrollTo(0, 0);
+  }, [sentryHistory]);
 
-	const btnCheck = useCallback(() => {
-		if (window.ethereum && window.ethereum.isMetaMask) {
-			setRenderBtnConnect(false);
-		} else {
-			setRenderBtnConnect(true);
-		}
-	}, [setRenderBtnConnect]);
+  const btnCheck = useCallback(() => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      setRenderBtnConnect(false);
+    } else {
+      setRenderBtnConnect(true);
+    }
+  }, [setRenderBtnConnect]);
 
-	useEffect(() => {
-		if (window.ethereum) {
-			window.ethereum.on('chainChanged', async (chainId) => {
-				dispatch({ type: contractTypes.SET_CHAIN_ID, payload: chainId });
-			});
-		}
-	}, [dispatch]);
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on('chainChanged', async (chainId) => {
+        dispatch({ type: contractTypes.SET_CHAIN_ID, payload: chainId });
+      });
+    }
+  }, [dispatch]);
 
-	// gtag 
-	
-	useEffect(() => {
-		gtag('event', 'page_view', {page_title: window.location.pathname, page_location: window.location.href});
-	} , []);
+  // gtag 
 
-	useEffect(() => {
-		// setTitle('Welcome');
-		if (process.env.NODE_ENV === 'development') {
-			window.gotoRouteBackdoor = sentryHistory.push;
-			window.adminAccessBackdoor = (boolean) => {
-				dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
-			};
-		}
-	}, [dispatch, sentryHistory.push]);
+  useEffect(() => {
+    gtag('event', 'page_view', { page_title: window.location.pathname, page_location: window.location.href });
+  }, []);
 
-	useEffect(() => {
-		btnCheck();
-	}, [btnCheck]);
+  useEffect(() => {
+    // setTitle('Welcome');
+    if (process.env.NODE_ENV === 'development') {
+      window.gotoRouteBackdoor = sentryHistory.push;
+      window.adminAccessBackdoor = (boolean) => {
+        dispatch({ type: userTypes.SET_ADMIN_RIGHTS, payload: boolean });
+      };
+    }
+  }, [dispatch, sentryHistory.push]);
 
-	useEffect(() => {
-		window.addEventListener("resize", () => setCarousel(carousel_match.matches));
-		return () => window.removeEventListener("resize", () => setCarousel(carousel_match.matches));
-	}, [carousel_match.matches])
+  useEffect(() => {
+    btnCheck();
+  }, [btnCheck]);
 
-	// const checkToken = useCallback(() => {
-	//  btnCheck()
-	//  const token = localStorage.getItem('token');
-	//  if (!isTokenValid(token)) {
-	//    connectUserData()
-	//    dispatch({ type: authTypes.GET_TOKEN_START });
-	//    dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
-	//  }
-	// }, [ connectUserData, dispatch ])
+  useEffect(() => {
+    window.addEventListener("resize", () => setCarousel(carousel_match.matches));
+    return () => window.removeEventListener("resize", () => setCarousel(carousel_match.matches));
+  }, [carousel_match.matches])
 
-	useEffect(() => {
-		let timeout;
-		if (token) {
-			const decoded = jsonwebtoken.decode(token);
+  // const checkToken = useCallback(() => {
+  //  btnCheck()
+  //  const token = localStorage.getItem('token');
+  //  if (!isTokenValid(token)) {
+  //    connectUserData()
+  //    dispatch({ type: authTypes.GET_TOKEN_START });
+  //    dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token })
+  //  }
+  // }, [ connectUserData, dispatch ])
 
-			if (decoded?.exp) {
+  useEffect(() => {
+    let timeout;
+    if (token) {
+      const decoded = jsonwebtoken.decode(token);
 
-				timeout = setTimeout(() => {
-					connectUserData();
-				}, decoded.exp * 1000);
-			}
-		}
-		return () => {
-			if (timeout) {
-				clearTimeout(timeout);
-			}
-		};
-	}, [token, connectUserData]);
+      if (decoded?.exp) {
 
-	useEffect(() => {
-		if (localStorage.token && isTokenValid(localStorage.token)) {
-			if (window.ethereum) {
-				connectUserData();
-				dispatch({ type: authTypes.GET_TOKEN_START });
-				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
-			} else {
-				// If the token exists but Metamask is not enabled, delete the JWT so the user has to sign in again
-				localStorage.removeItem("token");
-			}
-		}
-	}, [connectUserData, dispatch, token]);
+        timeout = setTimeout(() => {
+          connectUserData();
+        }, decoded.exp * 1000);
+      }
+    }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [token, connectUserData]);
 
-	// useEffect(() => {
-	//  checkToken();
-	// }, [checkToken, token])
+  useEffect(() => {
+    if (localStorage.token && isTokenValid(localStorage.token)) {
+      if (window.ethereum) {
+        connectUserData();
+        dispatch({ type: authTypes.GET_TOKEN_START });
+        dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+      } else {
+        // If the token exists but Metamask is not enabled, delete the JWT so the user has to sign in again
+        localStorage.removeItem("token");
+      }
+    }
+  }, [connectUserData, dispatch, token]);
 
-	useEffect(() => {
-		if (primaryColor === 'charcoal') {
-			(function () {
-				let angle = 0;
-				let p = document.querySelector('p');
-				if (p) {
-					let text = p.textContent.split('');
-					var len = text.length;
-					var phaseJump = 360 / len;
-					var spans;
-					p.innerHTML = text
-						.map(function (char) {
-							return '<span>' + char + '</span>';
-						})
-						.join('');
+  // useEffect(() => {
+  //  checkToken();
+  // }, [checkToken, token])
 
-					spans = p.children;
-				} else console.log('kik');
+  useEffect(() => {
+    if (primaryColor === 'charcoal') {
+      (function () {
+        let angle = 0;
+        let p = document.querySelector('p');
+        if (p) {
+          let text = p.textContent.split('');
+          var len = text.length;
+          var phaseJump = 360 / len;
+          var spans;
+          p.innerHTML = text
+            .map(function (char) {
+              return '<span>' + char + '</span>';
+            })
+            .join('');
 
-				// function wheee() {
-				//   for (var i = 0; i < len; i++) {
-				//     spans[i].style.color =
-				//       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
-				//   }
-				//   angle+=5;
-				// //   requestAnimationFrame(wheee);
-				// };
-				// setInterval(wheee, 100);
+          spans = p.children;
+        } else console.log('kik');
 
-				(function wheee() {
-					for (var i = 0; i < len; i++) {
-						spans[i].style.color =
-							'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
-					}
-					angle++;
-					requestAnimationFrame(wheee);
-				})();
-			})();
-		}
-	}, [primaryColor]);
+        // function wheee() {
+        //   for (var i = 0; i < len; i++) {
+        //     spans[i].style.color =
+        //       "hsl(" + (angle + Math.floor(i * phaseJump)) + ", 55%, 70%)";
+        //   }
+        //   angle+=5;
+        // //   requestAnimationFrame(wheee);
+        // };
+        // setInterval(wheee, 100);
 
-	useEffect(() => {
-		if (!selectedChain) return
+        (function wheee() {
+          for (var i = 0; i < len; i++) {
+            spans[i].style.color =
+              'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+          }
+          angle++;
+          requestAnimationFrame(wheee);
+        })();
+      })();
+    }
+  }, [primaryColor]);
 
-		if (!showAlert) {
-			setShowAlert(true)
-		}
-		//eslint-disable-next-line
-	}, [selectedChain]);
+  useEffect(() => {
+    if (!selectedChain) return
 
-	let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
+    if (!showAlert) {
+      setShowAlert(true)
+    }
+    //eslint-disable-next-line
+  }, [selectedChain]);
 
-	return (
+  let creatorViewsDisabled = process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
+
+  return (
     <Sentry.ErrorBoundary fallback={ErrorFallback}>
       {selectedChain && showAlert ? <AlertMetamask selectedChain={selectedChain} realNameChain={realNameChain} setShowAlert={setShowAlert} /> : null}
       <Router history={sentryHistory}>
         <div
+          className="App p-0 container-fluid"
           style={{
             ...backgroundImageEffect,
             backgroundSize: '100vw 100vh',
@@ -405,34 +401,21 @@ function App({ sentryHistory }) {
             backgroundRepeat: 'no-repeat',
             overflow: "hidden"
           }}
-          className="App p-0 container-fluid">
-          {/* {carousel && <UserProfileSettings
-						userData={userData}
-						errorAuth={errorAuth}
-						adminAccess={adminRights}
-						primaryColor={primaryColor}
-						currentUserAddress={currentUserAddress}
-						loginDone={loginDone}
-						setLoginDone={setLoginDone}
-					/>} */}
+        >
           <div className='row w-100 m-0 p-0'>
             {carousel ? <MainHeader
               goHome={goHome}
-              headerLogo={headerLogo}
               loginDone={loginDone}
               startedLogin={startedLogin}
               renderBtnConnect={renderBtnConnect}
               connectUserData={connectUserData}
-              primaryColor={primaryColor}
               setLoginDone={setLoginDone}
               userData={userData}
               errorAuth={errorAuth}
-              adminRights={adminRights}
-              currentUserAddress={currentUserAddress}
               sentryHistory={sentryHistory}
-              headerLogoBlack={headerLogoBlack}
-              headerLogoWhite={headerLogoWhite}
-              programmaticProvider={programmaticProvider}
+              creatorViewsDisabled={creatorViewsDisabled}
+              showAlert={showAlert}
+              selectedChain={selectedChain}
             /> : <MenuNavigation
               adminRights={adminRights}
               primaryColor={primaryColor}
@@ -449,57 +432,21 @@ function App({ sentryHistory }) {
             {/*
 							Left sidebar, includes the RAIR logo and the admin sidebar
 						*/}
-            {carousel ? <div className='col-1'
+            {carousel ? <div className='col-1 hidden-block'
             >
 
               <div>
 
               </div>
-              {
-                // !loginDone ?
-                // 	<div className='btn-connect-wallet-wrapper'>
-                // 		<button disabled={!window.ethereum && !programmaticProvider && !startedLogin}
-                // 			className={`btn btn-${primaryColor} btn-connect-wallet`}
-                // 			onClick={connectUserData}>
-                // 			{startedLogin ? 'Please wait...' : 'Connect Wallet'}
-                // 			{/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
-                // 		</button>
-                // 		{renderBtnConnect ?
-                // 			<OnboardingButton />
-                // 			:
-                // 			<></>
-                // 		}
-                // 	</div>
-                // 	:
-                // 	adminRights === true && !creatorViewsDisabled && [
-                // 		{ name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
-                // 		{ name: <i className="fas fa-key" />, route: '/my-nft' },
-                // 		{ name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
-                // 		{ name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
-                // 		{ name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
-                // 		{ name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
-                // 		{ name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
-                // 		{ name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
-                // 		{ name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone },
-                // 		{ name: <i className="fas fa-file-import" />, route: '/importExternalContracts', disabled: !loginDone }
-                // 	].map((item, index) => {
-                // 		if (!item.disabled) {
-                // 			return <div key={index} className={`col-12 py-3 rounded btn-${primaryColor}`}>
-                // 				<NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}>
-                // 					{item.name}
-                // 				</NavLink>
-                // 			</div>
-                // 		}
-                // 		return <div key={index}></div>
-                // 	})
-              }
             </div> : <></>
             }
 
             {/*
 							Main body, the header, router and footer are here
 						*/}
-            <div className={`col-12 col-md-${adminRights ? "11" : "11"}`}>
+            <div className={`col-12 col-md-${adminRights ? "11" : "11"}`}
+              style={{ marginTop: 40 }}
+            >
               <div
                 className="col-12 blockchain-switcher"
                 style={{ height: "10vh" }}

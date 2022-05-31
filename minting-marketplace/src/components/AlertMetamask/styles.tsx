@@ -10,6 +10,7 @@ export const Alert = styled.div`
     text-align: center;
     justify-content: center;
     background: var(--yellow-alert);
+    z-index: 101;
 
     @media (max-width: 500px) {
         height: 100px;

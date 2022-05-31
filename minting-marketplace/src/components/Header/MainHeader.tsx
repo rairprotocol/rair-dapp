@@ -1,14 +1,35 @@
 //@ts-nocheck
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { OnboardingButton } from './../common/OnboardingButton';
 import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import MainLogo from '../GroupLogos/MainLogo';
 import DiscordIcon from './DiscordIcon';
-import "./Header.css";
 
-const MainHeader = ({ goHome, headerLogo, loginDone, startedLogin, renderBtnConnect, connectUserData, primaryColor, setLoginDone, userData, errorAuth, adminRights, currentUserAddress, sentryHistory, headerLogoWhite, headerLogoBlack, programmaticProvider
+//images
+import headerLogoWhite from './../../images/rairTechLogoWhite.png';
+import headerLogoBlack from './../../images/rairTechLogoBlack.png';
+
+//styles
+import "./Header.css";
+import { NavLink } from 'react-router-dom';
+import Popup from 'reactjs-popup';
+
+const MainHeader = ({ goHome, loginDone, startedLogin, renderBtnConnect, connectUserData, setLoginDone, userData, errorAuth, sentryHistory, creatorViewsDisabled, selectedChain, showAlert
 }) => {
+    const { primaryColor, headerLogo } = useSelector(store => store.colorStore);
+    const { adminRights } = useSelector(store => store.userStore);
+    const {
+        currentUserAddress,
+        programmaticProvider,
+        minterInstance,
+        diamondMarketplaceInstance,
+        factoryInstance
+    } = useSelector(store => store.contractStore);
+
     const [textSearch, setTextSearch] = useState('');
+    const [adminPanel, setAdminPanel] = useState(false);
+
 
     const handleChangeText = (e) => {
         setTextSearch(e.target.value);
@@ -22,6 +43,7 @@ const MainHeader = ({ goHome, headerLogo, loginDone, startedLogin, renderBtnConn
         <div className="col-12 header-master"
             style={{
                 background: `${primaryColor === "rhyno" ? "#C4C4C4" : "#383637"}`,
+                marginTop: `${showAlert && selectedChain ? "50px" : ""}`
             }}>
             <div>
                 <MainLogo
@@ -60,7 +82,7 @@ const MainHeader = ({ goHome, headerLogo, loginDone, startedLogin, renderBtnConn
                         {renderBtnConnect ?
                             <OnboardingButton />
                             :
-                            <button 
+                            <button
                                 disabled={!window.ethereum && !programmaticProvider && !startedLogin}
                                 className={`btn btn-${primaryColor} btn-connect-wallet`}
                                 onClick={connectUserData}>
@@ -72,6 +94,11 @@ const MainHeader = ({ goHome, headerLogo, loginDone, startedLogin, renderBtnConn
                 }
                 <div
                     className="box-connect-btn">
+                        {
+                            adminRights && <div onClick={() => setAdminPanel(prev => !prev)} className="admin-panel-btn">
+                                <i className="fa fa-user-secret" aria-hidden="true" />
+                            </div>
+                        }
                     <UserProfileSettings
                         userData={userData}
                         errorAuth={errorAuth}
@@ -82,7 +109,6 @@ const MainHeader = ({ goHome, headerLogo, loginDone, startedLogin, renderBtnConn
                         setLoginDone={setLoginDone}
                     />
                     <div className="social-media">
-
                         <div className="box-social"
                             style={{
                                 border: `1px solid ${primaryColor === "rhyno" ? "#9867D9" : "#fff"}`,
@@ -111,7 +137,40 @@ const MainHeader = ({ goHome, headerLogo, loginDone, startedLogin, renderBtnConn
                                 <DiscordIcon width="71px" height="55px" color={primaryColor === "rhyno" ? "#9867D9" : "#fff"} />
                             </a>
                         </div>
-
+                        <Popup
+                            className="popup-admin-panel"
+                            open={adminPanel}
+                            closeOnDocumentClick
+                            onClose={() => setAdminPanel(false)}
+                        >
+                            <div className="container-admin-panel">
+                                {
+                                    adminPanel && adminRights === true && !creatorViewsDisabled && [
+                                        { name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
+                                        { name: <i className="fas fa-key" />, route: '/my-nft' },
+                                        { name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
+                                        { name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
+                                        { name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
+                                        { name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
+                                        { name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
+                                        { name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
+                                        { name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone },
+                                        { name: <i className="fas fa-file-import" />, route: '/importExternalContracts', disabled: !loginDone }
+                                    ].map((item, index) => {
+                                        if (!item.disabled) {
+                                            return <div key={index} className={`col-12 py-3 btn-${primaryColor}`}>
+                                                <NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}
+                                                onClick={() => {setAdminPanel(false)}}
+                                                >
+                                                    {item.name}
+                                                </NavLink>
+                                            </div>
+                                        }
+                                        return <div key={index}></div>
+                                    })
+                                }
+                            </div>
+                        </Popup>
                     </div>
                 </div>
             </div>

@@ -21,7 +21,9 @@
     
     background-size: 40%, 80%;
     animation: open .5s;
-    position: relative;
+    position: absolute;
+    top: 30px;
+    right: -110px;
     z-index: 12;
 }
 
@@ -141,4 +143,10 @@
 
 .card button:focus {
     outline: none;
+}
+
+@media screen and (max-width: 1250px) and (min-width: 900px) {
+    .card {
+        right: -50px;
+    }
 }
