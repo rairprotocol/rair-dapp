@@ -2,6 +2,7 @@
 import { put, call, takeLatest } from "redux-saga/effects";
 import * as types from "./types";
 import { headers } from "../../utils/headers";
+import { getListVideosError, getVideoListComplete } from "./actions";
 
 export function* getVideos() {
     try {
@@ -13,35 +14,23 @@ export function* getVideos() {
             "GET"
         );
         if (videos !== undefined && videos.status === 200) {
-            yield put({
-                type: types.GET_LIST_VIDEOS_COMPLETE,
-                payload: videos.data.list,
-            });
+            yield put(getVideoListComplete(videos.data.list));
         }
     } catch (error) {
         if (error.response !== undefined) {
             if (error.response.status === 404) {
                 const errorDirec = "This address does not exist";
-                yield put({
-                    type: types.GET_LIST_VIDEOS_ERROR,
-                    error: errorDirec,
-                });
+                yield put(getListVideosError(errorDirec));
             } else if (error.response.status === 500) {
                 const errorServer =
                     "Sorry. an internal server problem has occurred";
-                yield put({
-                    type: types.GET_LIST_VIDEOS_ERROR,
-                    error: errorServer,
-                });
+                yield put(getListVideosError(errorServer));
             } else {
-                yield put({
-                    type: types.GET_LIST_VIDEOS_ERROR,
-                    error: error.response.data.message,
-                });
+                yield put(getListVideosError(error.response.data.message));
             }
         } else {
             const errorConex = "Connection error!";
-            yield put({ type: types.GET_LIST_VIDEOS_ERROR, error: errorConex });
+            yield put(getListVideosError(errorConex));
         }
     }
 }

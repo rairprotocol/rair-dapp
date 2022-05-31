@@ -17,7 +17,7 @@ export default function videosStore(state = InitialState, action) {
         case types.GET_LIST_VIDEOS_COMPLETE:
             return {
                 ...state,
-                videos: action.payload
+                videos: action.videoList
             };
         case types.GET_LIST_VIDEOS_ERROR:
             return {

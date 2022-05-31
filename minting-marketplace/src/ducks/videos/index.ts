@@ -1,6 +1,6 @@
 //@ts-nocheck
 import reducers from './reducers';
 
-export { getVideos, refreshAction } from './actions';
+export { getListVideosError, getVideos, refreshAction, getVideoListComplete  } from './actions';
 
 export default reducers;
