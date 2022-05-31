@@ -12,14 +12,16 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
 	]
 
 	for await (let facet of facets) {
-		let deployment = await deploy(facet, { from: deployerAddress });
+		let deployment = await deploy(facet, {
+			from: deployerAddress,
+			waitConfirmations: 6
+		});
 		console.log(`${facet} deployed at ${deployment.receipt.contractAddress}`);
 		if (deployment.newlyDeployed) {
 			try {
 				await hre.run("verify:verify", {
 					address: deployment.receipt.contractAddress,
-					constructorArguments: [],
-					waitConfirmations: 6
+					constructorArguments: []
 				});
 			} catch (err) {
 				console.error(err);
