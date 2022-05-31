@@ -1,6 +1,7 @@
-//@ts-nocheck
+
 import {useState} from 'react'
 import { getRandomValues } from '../../utils/getRandomValues'
+import { InputSelectProps } from './commonTypes/InputSelectTypes.types'
 
 /***
 	InputSelect
@@ -25,7 +26,7 @@ import { getRandomValues } from '../../utils/getRandomValues'
 			!--- 'null' as a string, not the actual JS null --!
 **/
 
-const InputSelect = ({
+const InputSelect: React.FC<InputSelectProps> = ({
 		getter,
 		setter,
 		options,
@@ -43,14 +44,14 @@ const InputSelect = ({
 		requiredColor
 	}) => {
 
-	const [id,] = useState(getRandomValues)
+	const [id,] = useState(getRandomValues())
 	return <>
-	{label && <label htmlFor={id} style={{...labelCSS, color: (required ? `${requiredColor}!important` : labelCSS.color)}} className={labelClass}>
+	{label && <label htmlFor={String(id)} style={{...labelCSS, color: (required ? `${requiredColor}!important` : labelCSS.color)}} className={labelClass}>
 			 {label + (required ? '*' : '')}
 		</label>}
 	<select
 		disabled={disabled}
-		id={id}
+		id={String(id)}
 		onChange={e => setter(e.target.value)}
     	value={getter}
 		style={{...customCSS, width: '100%', color: (required ? requiredColor : customCSS.color)}}

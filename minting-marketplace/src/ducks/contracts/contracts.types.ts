@@ -46,13 +46,4 @@ export type ContractAddressesType = {
   [key: string]: ContractContents;
 };
 
-export enum BlockchainData {
-    BinanceMainnet = '0x38',
-    BinanceTestnet = '0x61',
-    EthereumGoerli = '0x5',
-    MaticMumbai = '0x13881',
-    MaticMainnet = '0x89',
-    EthereumMainnet = '0x1'
-}
-
-export type BlockchainType = BlockchainData.BinanceMainnet | BlockchainData.BinanceTestnet | BlockchainData.EthereumGoerli | BlockchainData.EthereumMainnet | BlockchainData.MaticMainnet | BlockchainData.MaticMumbai;
+export type BlockchainType = '0x38' | '0x61' | '0x5' | '0x13881' | '0x89' | '0x1';
