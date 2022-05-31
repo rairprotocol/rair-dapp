@@ -4,6 +4,7 @@ import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageMain from "./NftDataPageMain";
 import NftUnlockablesPage from "./NftUnlockablesPage";
 import { useDispatch, useSelector } from "react-redux";
+import { setRealChain } from "../../../../ducks/contracts";
 
 const NftDataCommonLinkComponent = ({ userData }) => {
   const [collectionName, setCollectionName] = useState();
@@ -43,7 +44,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   },[currentUserAddress]);
 
   useEffect(() => {
-    dispatch({ type: "SET_REAL_CHAIN", payload: blockchain });
+    dispatch(setRealChain(blockchain));
   }, [blockchain, dispatch]);
 
   useEffect(() => {

@@ -22,6 +22,7 @@ import { rFetch } from '../../../utils/rFetch';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import Swal from 'sweetalert2';
 import PurchaseTokenButton from "../../common/PurchaseToken";
+import { setRealChain } from '../../../ducks/contracts';
 
 const Nutcrackers = ({ connectUserData }) => {
     const dispatch = useDispatch();
@@ -77,7 +78,7 @@ const Nutcrackers = ({ connectUserData }) => {
     }
 
     useEffect(() => {
-        dispatch({ type: 'SET_REAL_CHAIN', payload: '0x89' })
+        dispatch(setRealChain('0x89'))
         //eslint-disable-next-line
     }, []);
 

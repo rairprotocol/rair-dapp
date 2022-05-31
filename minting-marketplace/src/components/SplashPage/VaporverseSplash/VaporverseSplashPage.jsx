@@ -56,6 +56,7 @@ import MetaTags from '../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from "../SplashPageTemplate/ModalHelp";
 import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
+import { setRealChain } from "../../../ducks/contracts";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -229,7 +230,7 @@ const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
   // }, [getAllProduct])
 
   useEffect(() => {
-    dispatch({type: 'SET_REAL_CHAIN', payload: ukraineglitchChainId})
+    dispatch(setRealChain(ukraineglitchChainId))
     //eslint-disable-next-line
   }, []);
 

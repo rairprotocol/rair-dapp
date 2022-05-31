@@ -3,11 +3,11 @@ import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import "./Menu.css";
 import { useDispatch, useSelector } from 'react-redux';
 import * as authTypes from "../../ducks/auth/types";
-import * as contractTypes from "../../ducks/contracts/types";
 import { Nav } from './NavigationItems/NavigationItems';
 import { NavLink } from 'react-router-dom';
 import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
 import MobileListMenu from './MenuComponents/MobileListMenu';
+import { setUserAddress } from '../../ducks/contracts';
 
 const MenuNavigation = ({
     headerLogo,
@@ -38,7 +38,7 @@ const MenuNavigation = ({
 
     const logout = () => {
         dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
-        dispatch({ type: contractTypes.SET_USER_ADDRESS, payload: undefined });
+        dispatch(setUserAddress(undefined));
         localStorage.removeItem("token");
         setLoginDone(false);
         toggleMenu();

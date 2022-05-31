@@ -48,6 +48,7 @@ import Swal from 'sweetalert2';
 // import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from "../SplashPageTemplate/ModalHelp";
+import { setRealChain } from "../../../ducks/contracts";
 // import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics
@@ -239,7 +240,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
   }, [getAllProduct])
 
   useEffect(() => {
-    dispatch({type: 'SET_REAL_CHAIN', payload: ukraineglitchChainId})
+    dispatch(setRealChain(ukraineglitchChainId))
     //eslint-disable-next-line
   }, []);
 

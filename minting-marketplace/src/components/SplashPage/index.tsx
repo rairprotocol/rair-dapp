@@ -43,6 +43,7 @@ import RoadMap from "./Roadmap/RoadMap";
 import NipseyRelease from "./NipseyRelease/NipseyRelease";
 import { Countdown } from "./Timer/CountDown";
 import { useHistory } from "react-router-dom";
+import { setRealChain } from "../../ducks/contracts";
 
 const customStyles = {
   overlay: {
@@ -99,7 +100,7 @@ const SplashPage = () => {
   }
 
   useEffect(() => {
-    dispatch({ type: 'SET_REAL_CHAIN', payload: '0x1' })
+    dispatch(setRealChain('0x1'))
     //eslint-disable-next-line
   }, []);
 

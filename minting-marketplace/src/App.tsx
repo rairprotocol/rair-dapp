@@ -7,7 +7,6 @@ import { getJWT, isTokenValid } from './utils/rFetch';
 import './App.css';
 
 // React Redux types
-import * as contractTypes from './ducks/contracts/types';
 import * as authTypes from './ducks/auth/types';
 import * as Sentry from '@sentry/react';
 // import * as ethers from 'ethers';
@@ -91,6 +90,7 @@ import MetaTags from './components/SeoTags/MetaTags';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
+import { setChainId, setUserAddress } from './ducks/contracts';
 import { setAdminRights } from './ducks/users/actions';
 
 
@@ -162,18 +162,12 @@ function App({ sentryHistory }) {
 		let dispatchStack = [];
 		if (window.ethereum) {
 			let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-			dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: accounts[0] })
-			dispatchStack.push({
-				type: contractTypes.SET_CHAIN_ID,
-				payload: window.ethereum.chainId?.toLowerCase()
-			});
+			dispatchStack.push(setUserAddress(accounts[0]))
+			dispatchStack.push(setChainId(window.ethereum.chainId?.toLowerCase()));
 			currentUser = accounts[0];
 		} else if (programmaticProvider) {
-			dispatchStack.push({ type: contractTypes.SET_USER_ADDRESS, payload: programmaticProvider.address });
-			dispatchStack.push({
-				type: contractTypes.SET_CHAIN_ID,
-				payload: `0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`
-			});
+			dispatchStack.push(setUserAddress(programmaticProvider.address));
+			dispatchStack.push(setChainId(`0x${programmaticProvider.provider._network.chainId?.toString(16)?.toLowerCase()}`));
 			currentUser = programmaticProvider.address;
 		}
 
@@ -255,7 +249,7 @@ function App({ sentryHistory }) {
 	useEffect(() => {
 		if (window.ethereum) {
 			window.ethereum.on('chainChanged', async (chainId) => {
-				dispatch({ type: contractTypes.SET_CHAIN_ID, payload: chainId });
+				dispatch(setChainId(chainId));
 			});
 		}
 	}, [dispatch]);

@@ -1,10 +1,10 @@
 //@ts-nocheck
 import {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as contractTypes from '../../ducks/contracts/types';
 import * as ethers from 'ethers'
 import Swal from 'sweetalert2';
 import InputField from '../common/InputField';
+import { setChainId, setProgrammaticProvider } from '../../ducks/contracts';
 
 const binanceTestnetData = {
 	chainId: '0x61',
@@ -95,14 +95,8 @@ const BlockChainSwitcher = () => {
 			}
 			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], networkData);
 			let currentWallet = await new ethers.Wallet(UNSAFE_PrivateKey, provider);
-			await dispatch({
-				type: contractTypes.SET_PROGRAMMATIC_PROVIDER,
-				payload: currentWallet
-			});
-			dispatch({
-				type: contractTypes.SET_CHAIN_ID,
-				payload: chainId
-			});
+			await dispatch(setProgrammaticProvider(currentWallet));
+			dispatch(setChainId(chainId));
 		} catch (err) {
 			console.error(err);
 			Swal.fire('Error', err, 'error');
@@ -171,10 +165,7 @@ const BlockChainSwitcher = () => {
 				disabled={currentChain === item.chainData.chainId?.toLowerCase()}
 				onClick={async e => {
 					await switchEthereumChain(item.chainData);
-					dispatch({
-						type: contractTypes.SET_CHAIN_ID,
-						payload: undefined
-					});
+					dispatch(setChainId(undefined));
 				}}>
 				{item.chainData.chainName}
 			</button>
