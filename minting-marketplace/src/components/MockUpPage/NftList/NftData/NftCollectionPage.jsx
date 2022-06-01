@@ -13,6 +13,7 @@ import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
 // import styles
 import "./../../GeneralCollectionStyles.css";
 import CustomButton from "../../utils/button/CustomButton";
+import { setShowSidebarTrue } from "../../../../ducks/metadata";
 
 const NftCollectionPageComponent = ({
   blockchain,
@@ -55,9 +56,7 @@ const NftCollectionPageComponent = ({
 
   useEffect(() => {
     setDocumentTitle("Collection");
-    dispatch({
-      type: "SHOW_SIDEBAR_TRUE",
-    });
+    dispatch(setShowSidebarTrue());
   }, [dispatch]);
 
   useEffect(() => {

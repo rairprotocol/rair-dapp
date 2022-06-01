@@ -25,6 +25,8 @@ import CustomButton from "../../utils/button/CustomButton";
 import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import NftListUnlockablesVideos from "./NftListUnlockablesVideos";
+import { setShowSidebarTrue } from "../../../../ducks/metadata";
+
 const NftDataPageMain = ({
   blockchain,
   contract,
@@ -61,9 +63,7 @@ const NftDataPageMain = ({
   const dispatch = useDispatch();
   useEffect(() => {
     setDocumentTitle("Single Token");
-    dispatch({
-      type: "SHOW_SIDEBAR_TRUE",
-    });
+    dispatch(setShowSidebarTrue());
   }, [dispatch]);
 
   function randomInteger(min, max) {

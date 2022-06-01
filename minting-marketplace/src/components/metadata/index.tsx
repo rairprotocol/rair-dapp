@@ -7,6 +7,7 @@ import StepTwo from './Steps/stepTwo'
 import StepThree from './Steps/stepThree'
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
+import { setShowSidebarFalse } from '../../ducks/metadata';
 
 const { Step } = ContentSteps;
 
@@ -17,10 +18,8 @@ const FormMetadata = () => {
     console.log(location.pathname.split('/'));
 
     useEffect(() => {
-        dispatch({
-            type: 'SHOW_SIDEBAR_FALSE'
-        })
-    }, []);
+        dispatch(setShowSidebarFalse())
+    }, [dispatch]);
 
     const next = () => {
         setCurrent(current + 1);

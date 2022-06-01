@@ -5,6 +5,7 @@ import SearchPanel from "./SearchPanel";
 // import setDocumentTitle from "../../utils/setTitle";
 import MetaTags from "../SeoTags/MetaTags";
 import RairFavicon from './assets/rair_favicon.ico'
+import { setShowSidebarTrue } from "../../ducks/metadata";
 
 const MockUpPage = ({ item }) => {
   const seoInformation = {
@@ -20,9 +21,7 @@ const MockUpPage = ({ item }) => {
   const { primaryColor, textColor } = useSelector(store => store.colorStore);
   useEffect(() => {
     // setDocumentTitle(`All`);
-    dispatch({
-      type: "SHOW_SIDEBAR_TRUE",
-    });
+    dispatch(setShowSidebarTrue());
   }, [dispatch]);
   return (
     <div className={"mock-up-page-wrapper"}>

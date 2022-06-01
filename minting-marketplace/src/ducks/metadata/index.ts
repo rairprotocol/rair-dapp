@@ -22,3 +22,7 @@ export default function metadataStore(state = InitialState, action) {
 			return state;
 	}
 }
+
+export const setShowSidebarTrue = () => ({ type: types.SHOW_SIDEBAR_TRUE } as const);
+
+export const setShowSidebarFalse = () => ({ type: types.SHOW_SIDEBAR_FALSE } as const);

@@ -5,6 +5,7 @@ import NftSingleUnlockables from "./NftSingleUnlockables";
 import VideoPlayerView from "./UnlockablesPage/VideoPlayerView";
 import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
+import { setShowSidebarTrue } from "../../../../ducks/metadata";
 const NftUnlockablesPage = ({
   blockchain,
   contract,
@@ -30,9 +31,7 @@ const NftUnlockablesPage = ({
   
   useEffect(() => {
     setDocumentTitle("Unlockables");
-    dispatch({
-      type: "SHOW_SIDEBAR_TRUE",
-    });
+    dispatch(setShowSidebarTrue());
   }, [dispatch]);
 
   useEffect(() => {
