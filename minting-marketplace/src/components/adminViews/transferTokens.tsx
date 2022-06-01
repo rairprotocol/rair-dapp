@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import { useState, useEffect, useCallback } from 'react';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
@@ -9,31 +9,36 @@ import { web3Switch } from '../../utils/switchBlockchain';
 import { erc721Abi, diamondFactoryAbi } from '../../contracts';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { BlockchainInfoType, ContractDataType, ContractsResponseType, MintedTokenType } from './adminView.types';
+import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
+import { ethers } from 'ethers';
 
 const TransferTokens = () => {
-	const { currentChain, currentUserAddress, contractCreator } = useSelector(store => store.contractStore);
+	const { currentChain, currentUserAddress, contractCreator } = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
 
-	const [traderRole, setTraderRole] = useState();
-	const [manualAddress, setManualAddress] = useState(false);
-	const [manualDiamond, setManualDiamond] = useState(false);
+	const [traderRole, setTraderRole] = useState<boolean | undefined>();
+	const [manualAddress, setManualAddress] = useState<boolean>(false);
+	const [manualDiamond, setManualDiamond] = useState<boolean>(false);
 
-	const [contractData, setContractData] = useState();
+	const [contractData, setContractData] = useState<ContractDataType | undefined>();
 
-	const [userContracts, setUserContracts] = useState([]);
-	const [selectedContract, setSelectedContract] = useState('null');
+	const [userContracts, setUserContracts] = useState<OptionsType[]>([]);
+	const [selectedContract, setSelectedContract] = useState<string>('null');
 
-	const [contractProducts, setContractProducts] = useState([]);
-	const [selectedProduct, setSelectedProducts] = useState('null');
+	const [contractProducts, setContractProducts] = useState<OptionsType[]>([]);
+	const [selectedProduct, setSelectedProducts] = useState<string>('null');
 
-	const [ownedTokens, setOwnedTokens] = useState([]);
-	const [tokenId, setTokenId] = useState(0);
-	const [targetAddress, setTargetAddress] = useState('');
+	const [ownedTokens, setOwnedTokens] = useState<MintedTokenType[]>([]);
+	const [tokenId, setTokenId] = useState<number>(0);
+	const [targetAddress, setTargetAddress] = useState<string>('');
 
-	const [contractBlockchain, setContractBlockchain] = useState();
-	const [contractInstance, setContractInstance] = useState();
+	const [contractBlockchain, setContractBlockchain] = useState<BlockchainInfoType | undefined>();
+	const [contractInstance, setContractInstance] = useState<ethers.Contract | undefined>();
 
 	const getUserContracts = useCallback(async () => {
-		let response = await rFetch('/api/contracts');
+		let response: ContractsResponseType = await rFetch('/api/contracts');
 		if (response.success) {
 			setUserContracts(response.contracts.map(item => {
 				return {
@@ -44,13 +49,16 @@ const TransferTokens = () => {
 		}
 	}, [setUserContracts]);
 
-	useEffect(getUserContracts, [getUserContracts]);
+	useEffect(() => {
+		getUserContracts()
+	}, [getUserContracts]);
 
 	const connectAddressManual = async () => {
+		if(currentChain === undefined) return;
 		if (selectedContract === "") return;
 		let instance;
 		try {
-			instance = contractCreator(selectedContract, manualDiamond ? diamondFactoryAbi : erc721Abi);
+			instance = contractCreator?.(selectedContract, manualDiamond ? diamondFactoryAbi : erc721Abi);
 		} catch (err) {
 			console.error("Can't connect to address");
 		}
@@ -84,13 +92,13 @@ const TransferTokens = () => {
 	}
 
 	const getContractData = useCallback(async () => {
-		setContractInstance();
+		setContractInstance(undefined);
 		setSelectedProducts('null');
 		setContractProducts([]);
-		setContractBlockchain();
-		setTraderRole();
+		setContractBlockchain(undefined);
+		setTraderRole(undefined);
 		setOwnedTokens([]);
-		setContractData();
+		setContractData(undefined);
 		if (manualAddress) {
 			return;
 		}
@@ -111,13 +119,15 @@ const TransferTokens = () => {
 			let [,,selectedBlockchain,contractAddress] = selectedContract.split('/');
 			setContractBlockchain(blockchainData[selectedBlockchain]);
 			if (selectedBlockchain === currentChain) {
-				let instance = contractCreator(contractAddress, response1.contract.diamond ? diamondFactoryAbi : erc721Abi);
+				let instance = contractCreator?.(contractAddress, response1.contract.diamond ? diamondFactoryAbi : erc721Abi);
 				setContractInstance(instance);
 			}
 		}
 	}, [selectedContract, currentChain, contractCreator, manualAddress]);
 
-	useEffect(getContractData, [getContractData]);
+	useEffect(() => {
+		getContractData()
+	}, [getContractData]);
 
 	const getProductNFTs = useCallback(async () => {
 		if (manualAddress) {
@@ -131,7 +141,9 @@ const TransferTokens = () => {
 		}
 	}, [manualAddress, selectedProduct, selectedContract])
 
-	useEffect(getProductNFTs, [getProductNFTs]);
+	useEffect( () => {
+		getProductNFTs()
+	}, [getProductNFTs]);
 
 	const hasTraderRole = useCallback(async () => {
 		if (contractInstance) {
@@ -145,20 +157,22 @@ const TransferTokens = () => {
 		}
 	}, [contractInstance, currentUserAddress]);
 
-	useEffect(hasTraderRole, [hasTraderRole]);
+	useEffect( () => {
+		hasTraderRole()
+	}, [hasTraderRole]);
 
 	return <div className='col-12 row'>
 		<button onClick={() => {
 			setManualAddress(false)
 			setSelectedContract("null");
-			setContractData();
+			setContractData(undefined);
 		}} className='btn col-6 btn-royal-ice'>
 			Database
 		</button>
 		<button onClick={() => {
 			setManualAddress(true)
 			setSelectedContract("");
-			setContractData();
+			setContractData(undefined);
 		}} className='btn col-6 btn-stimorol'>
 			Blockchain
 		</button>
@@ -198,7 +212,7 @@ const TransferTokens = () => {
 				</button>
 			</div>
 			<div className='col-12'>
-				<button disabled={selectedContract === "" || (contractData && contractData.address === selectedContract)} onClick={connectAddressManual} className='btn btn-success'>
+				<button disabled={selectedContract === "" || (contractData && contractData.contractAddress === selectedContract)} onClick={connectAddressManual} className='btn btn-success'>
 					Connect to address!
 				</button>
 			</div>
@@ -260,7 +274,7 @@ const TransferTokens = () => {
 			<div className='col-12 col-md-6'>
 				{contractInstance &&
 					<button
-						disabled={currentChain !== contractBlockchain.chainId || traderRole !== false}
+						disabled={currentChain !== contractBlockchain?.chainId || traderRole !== false}
 						className='btn btn-royal-ice'
 						onClick={async () => {
 							Swal.fire({
@@ -291,7 +305,7 @@ const TransferTokens = () => {
 			<div className='col-12 col-md-12'>
 				{contractInstance &&
 					<button
-						disabled={currentChain !== contractBlockchain.chainId || !traderRole || targetAddress === ''}
+						disabled={currentChain !== contractBlockchain?.chainId || !traderRole || targetAddress === ''}
 						className='btn btn-royal-ice'
 						onClick={async () => {
 							Swal.fire({

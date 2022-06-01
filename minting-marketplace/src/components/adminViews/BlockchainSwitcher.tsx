@@ -1,12 +1,15 @@
-//@ts-nocheck
+
 import {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ethers from 'ethers'
 import Swal from 'sweetalert2';
 import InputField from '../common/InputField';
+import { BlockchainInfo, ChainDataType, MetamaskError } from './adminView.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { setChainId, setProgrammaticProvider } from '../../ducks/contracts';
 
-const binanceTestnetData = {
+const binanceTestnetData: ChainDataType = {
 	chainId: '0x61',
 	chainName: 'Binance Testnet',
 	nativeCurrency:
@@ -19,7 +22,7 @@ const binanceTestnetData = {
 	blockExplorerUrls: ['https://testnet.bscscan.com']
 }
 
-const binanceMainnetData = {
+const binanceMainnetData: ChainDataType = {
 	chainId: '0x38',
 	chainName: 'Binance Mainnet',
 	nativeCurrency:
@@ -32,7 +35,7 @@ const binanceMainnetData = {
 	blockExplorerUrls: ['https://bscscan.com']
 }
 
-const klaytnBaobabData = {
+const klaytnBaobabData: ChainDataType = {
 	chainId: '0x3e9',
 	chainName: 'Klaytn Baobab',
 	nativeCurrency:
@@ -45,7 +48,7 @@ const klaytnBaobabData = {
 	blockExplorerUrls: ['https://baobab.scope.klaytn.com/']
 }
 
-const polygonMumbaiData = {
+const polygonMumbaiData: ChainDataType = {
 	chainId: '0x13881',
 	chainName: 'Matic Testnet Mumbai',
 	nativeCurrency:
@@ -58,7 +61,7 @@ const polygonMumbaiData = {
 	blockExplorerUrls: ['https://matic.network/']
 }
 
-const maticMainnetData = {
+const maticMainnetData: ChainDataType = {
 	chainId: '0x89', // 0x89
 	chainName: 'Matic(Polygon) Mainnet',
 	nativeCurrency:
@@ -71,7 +74,7 @@ const maticMainnetData = {
 	blockExplorerUrls: ['https://polygonscan.com']
 }
 
-const blockchains = [
+const blockchains: BlockchainInfo[] = [
 	{chainData: binanceTestnetData, bootstrapColor: 'warning'},
 	{chainData: binanceMainnetData, bootstrapColor: 'warning'},
 	{chainData: klaytnBaobabData, bootstrapColor: 'light'},
@@ -85,33 +88,35 @@ const BlockChainSwitcher = () => {
 	
 	const [UNSAFE_PrivateKey, setUNSAFE_PrivateKey] = useState('');
 
-	const {currentChain} = useSelector(state => state.contractStore);
+	const {currentChain} = useSelector<RootState, ContractsInitialType>(state => state.contractStore);
 	const dispatch = useDispatch();
 
-	const connectProgrammatically = async ({rpcUrls, chainId, chainName, nativeCurrency}) => {
+	const connectProgrammatically = async ({rpcUrls, chainId, chainName, nativeCurrency}: ChainDataType) => {
 		try {
 			let networkData = {
-				chainId: Number(chainId), symbol: nativeCurrency.symbol, name: chainName, timeout: 1000000
+				chainId: Number(chainId), symbol: nativeCurrency?.symbol, name: chainName, timeout: 1000000
 			}
-			let provider = new ethers.providers.JsonRpcProvider(rpcUrls[0], networkData);
+			let provider = new ethers.providers.JsonRpcProvider(rpcUrls?.[0], networkData);
 			let currentWallet = await new ethers.Wallet(UNSAFE_PrivateKey, provider);
 			await dispatch(setProgrammaticProvider(currentWallet));
 			dispatch(setChainId(chainId));
 		} catch (err) {
-			console.error(err);
-			Swal.fire('Error', err, 'error');
+			const error = err as Error;
+			console.error(error);
+			Swal.fire('Error', error.message, 'error');
 		}
 	}
 
-	const switchEthereumChain = async (chainData) => {
+	const switchEthereumChain = async (chainData: ChainDataType) => {
 		try {
 			await window.ethereum.request({
 				method: 'wallet_switchEthereumChain',
 				params: [{ chainId: chainData.chainId }],
 			});
 		} catch (switchError) {
+			const metamaskError = switchError as MetamaskError;
 			// This error code indicates that the chain has not been added to MetaMask.
-			if (switchError.code === 4902) {
+			if (metamaskError.code === 4902) {
 				try {
 					await window.ethereum.request({
 						method: 'wallet_addEthereumChain',
@@ -145,7 +150,7 @@ const BlockChainSwitcher = () => {
 						}
 						return <button
 							key={index}
-							id={`connect_${item.chainData.nativeCurrency.symbol}`}
+							id={`connect_${item.chainData.nativeCurrency?.symbol}`}
 							className={`btn btn-${item.bootstrapColor}`}
 							disabled={currentChain === item.chainData.chainId?.toLowerCase() || UNSAFE_PrivateKey.length !== 64}
 							onClick={async e => {

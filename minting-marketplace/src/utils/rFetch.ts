@@ -146,7 +146,7 @@ const getJWT = async (signer, userAddress) => {
 // 	}
 // }
 
-const rFetch = async (route, options, retryOptions = undefined, showErrorMessages = true) => {
+const rFetch = async (route, options?, retryOptions = undefined, showErrorMessages = true) => {
 	let request = await fetch(route, {
 		...options,
 		headers: {

@@ -1,16 +1,17 @@
-//@ts-nocheck
+
 import { useState } from 'react';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 import { rFetch } from '../../utils/rFetch';
 import { utils } from "ethers";
 import blockchainData from '../../utils/blockchainData';
+import { TExternalContractType } from './adminView.types';
 
 const ImportExternalContract = () => {
-	const [selectedContract, setSelectedContract] = useState('');
-	const [resultData, setResultData] = useState();
-	const [selectedBlockchain, setSelectedBlockchain] = useState('null');
-	const [sendingData, setSendingData] = useState(false);
+	const [selectedContract, setSelectedContract] = useState<string>('');
+	const [resultData, setResultData] = useState<TExternalContractType>();
+	const [selectedBlockchain, setSelectedBlockchain] = useState<string>('null');
+	const [sendingData, setSendingData] = useState<boolean>(false);
 
 	const blockchainOptions = Object.keys(blockchainData).map(blockchainId => {
 		return {
