@@ -55,7 +55,7 @@ const handleError = (errorMessage, defaultError = undefined) => {
 	return false;
 }
 
-const metamaskCall = async (transaction, fallbackFailureMessage: string | undefined = undefined) => {
+const metamaskCall = async (transaction, fallbackFailureMessage: string | undefined = undefined): any => {
 	let paramsValidation = undefined;
 	try {
 		paramsValidation = await transaction;

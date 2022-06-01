@@ -59,7 +59,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
     setDocumentTitle(`About Page`);
   }, []);
 
-  const switchToNetwork = "0x38";
+  const switchToNetwork = '0x38';
   const aboutPageAddress = "0xb6163454da87e9f3fd63683c5d476f7d067f75a2".toLowerCase();
   const offerIndexInMarketplace = 1;
 

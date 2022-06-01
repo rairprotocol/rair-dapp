@@ -46,4 +46,4 @@ export type ContractAddressesType = {
   [key: string]: ContractContents;
 };
 
-export type BlockchainType = '0x38' | '0x61' | '0x5' | '0x13881' | '0x89' | '0x1';
+export type BlockchainType = '0x38' | '0x61' | '0x5' | '0x13881' | '0x89' | '0x1' | '0x3e9';

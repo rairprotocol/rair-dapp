@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import { useState } from 'react';
 import { useSelector, Provider, useStore } from 'react-redux';
 
@@ -11,15 +11,21 @@ import {rFetch} from '../../utils/rFetch';
 import {metamaskCall} from '../../utils/metamaskUtils';
 import {erc721Abi, diamondFactoryAbi} from '../../contracts';
 import { getRandomValues } from '../../utils/getRandomValues';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { IAgreementsPropsType, IPurchaseTokenButtonProps, IRangeDataType } from './commonTypes/PurchaseTokenTypes.types';
+import { ethers } from "ethers";
 
 const reactSwal = withReactContent(Swal);
 
-const queryRangeDataFromBlockchain = async (marketplaceInstance, offerIndex, diamond) => {
+const queryRangeDataFromBlockchain = async (marketplaceInstance: ethers.Contract | undefined, offerIndex: number[], diamond: boolean): Promise<undefined | IRangeDataType> => {
 	let minterOfferPool;
 	if (!diamond) {
-		minterOfferPool = await metamaskCall(marketplaceInstance.getOfferInfo(offerIndex[0]));
+		minterOfferPool = await metamaskCall(marketplaceInstance?.getOfferInfo(offerIndex[0]));
 	}
-	let minterOffer = await metamaskCall(marketplaceInstance[diamond ? 'getOfferInfo' : 'getOfferRangeInfo'](...offerIndex));
+	let minterOffer = await metamaskCall(marketplaceInstance?.[diamond ? 'getOfferInfo' : 'getOfferRangeInfo'](...offerIndex));
+	
 	if (minterOffer) {
 		return {
 			start: diamond ? minterOffer.rangeData.rangeStart.toString() : minterOffer.tokenStart.toString(),
@@ -30,9 +36,9 @@ const queryRangeDataFromBlockchain = async (marketplaceInstance, offerIndex, dia
 	}
 }
 
-const queryRangeDataFromDatabase = async (contractInstance, network, offerIndex, diamond = false) => {
+const queryRangeDataFromDatabase = async (contractInstance: ethers.Contract | undefined, network: string, offerIndex: number[], diamond: boolean = false): Promise<undefined | IRangeDataType> => {
 	let { success, products } = await rFetch(
-		`/api/contracts/network/${network}/${contractInstance.address}/products/offers`,
+		`/api/contracts/network/${network}/${contractInstance?.address}/products/offers`,
 		undefined,
 		undefined,
 		false // disables error messages for this rFetch call, because if this fails, the blockchain query starts
@@ -57,17 +63,17 @@ const queryRangeDataFromDatabase = async (contractInstance, network, offerIndex,
 	}
 }
 
-const getNextSequentialIndex = async (contractInstance, start, end, product, diamond) => {
-	return await contractInstance.getNextSequentialIndex(product, start, end);
+const getNextSequentialIndex = async (contractInstance: ethers.Contract | undefined, start: string, end:  string, product: string, diamond: boolean) => {
+	return await contractInstance?.getNextSequentialIndex(product, start, end);
 }
 
 const purchaseFunction = async (
-	minterInstance,
-	contractAddress,
-	offerIndex,
-	nextToken,
-	price,
-	diamond = false
+	minterInstance: ethers.Contract | undefined,
+	contractAddress: ethers.Contract | undefined,
+	offerIndex: number[],
+	nextToken: number,
+	price: string,
+	diamond: boolean = false
 ) => {
 	if (!minterInstance) {
 		Swal.fire({
@@ -77,7 +83,7 @@ const purchaseFunction = async (
 		});
 		return;
 	}
-	let args = [offerIndex[0]];
+	let args: any[] = [offerIndex[0]];
 	if (!diamond) {
 		args.push(offerIndex[1])
 	}
@@ -90,7 +96,7 @@ const purchaseFunction = async (
 		)
 }
 
-const Agreements = ({
+const Agreements: React.FC<IAgreementsPropsType> = ({
 	presaleMessage,
 	contractAddress,
 	requiredBlockchain,
@@ -101,10 +107,10 @@ const Agreements = ({
 	blockchainOnly,
 	databaseOnly
 }) => {
-	const [privacyPolicy, setPrivacyPolicy] = useState(false);	
-	const [termsOfUse, setTermsOfUse] = useState(false);
-	const [buyingToken, setBuyingToken] = useState(false);
-	const [buttonMessage, setButtonMessage] = useState();
+	const [privacyPolicy, setPrivacyPolicy] = useState<boolean>(false);	
+	const [termsOfUse, setTermsOfUse] = useState<boolean>(false);
+	const [buyingToken, setBuyingToken] = useState<boolean>(false);
+	const [buttonMessage, setButtonMessage] = useState<string>("");
 
 	const {
 		currentChain,
@@ -112,8 +118,8 @@ const Agreements = ({
 		minterInstance,
 		diamondMarketplaceInstance,
 		contractCreator
-	} = useSelector(store => store.contractStore);
-	const { textColor } = useSelector(store => store.colorStore);
+	} = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
+	const { textColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
 
 	return <div className={`text-${textColor}`}>
 		<div className={`py-4 w-100 row`}>
@@ -136,7 +142,7 @@ const Agreements = ({
 					return <div key={index} className='my-2 w-100 px-0 mx-0 row'>
 						<label
 							className='h5 col-10 col-md-11 col-lg-10 col-xl-9 ps-md-5'
-							htmlFor={id}
+							htmlFor={String(id)}
 						>
 							{item.label}
 							{" "}
@@ -152,7 +158,7 @@ const Agreements = ({
 						{item.setter && <div className='col-2 col-xl-3 col-sm-1 text-end text-md-center text-xl-start p-0'>
 							<button
 								className={`btn btn-${item.getter ? 'royal-ice' : 'secondary'} rounded-rair`}
-								id={id}
+								id={String(id)}
 								onClick={() => item.setter(!item.getter)}
 								>
 								<i className={`fas fa-check`} style={{color: item.getter ? 'inherit' : 'transparent'}} />
@@ -168,7 +174,7 @@ const Agreements = ({
 		</div>
 		<div className="w-100">
 			<button
-				disabled={buyingToken || (currentUserAddress && (!privacyPolicy || !termsOfUse))}
+				disabled={buyingToken || Boolean((currentUserAddress && (!privacyPolicy || !termsOfUse)))}
 				className='btn my-4 btn-stimorol rounded-rair col-12 col-sm-8 col-md-4'
 				onClick={async () => {
 					setBuyingToken(true);
@@ -188,7 +194,7 @@ const Agreements = ({
 
 					setButtonMessage("Connecting to contract...");
 					// Create the instance of the function
-					let contractInstance = contractCreator(contractAddress, diamond ? erc721Abi : diamondFactoryAbi);
+					let contractInstance = contractCreator?.(contractAddress, diamond ? erc721Abi : diamondFactoryAbi);
 
 					setButtonMessage("Querying next mintable NFT...");
 					
@@ -214,7 +220,7 @@ const Agreements = ({
 
 					setButtonMessage(`Minting token #${nextToken.toString()}`)
 
-					if ((await contractInstance.provider.getBalance(currentUserAddress)).lt(price)) {
+					if ((await contractInstance?.provider.getBalance(currentUserAddress))?.lt(price)) {
 						Swal.fire("Error", "Insufficient funds!", 'error');
 						return;
 					}
@@ -253,7 +259,7 @@ const Agreements = ({
 	</div>
 }
 
-const PurchaseTokenButton: React.FC<any> = ({
+const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
 	customStyle,
 	customWrapperClassName,
 	img,
@@ -269,7 +275,7 @@ const PurchaseTokenButton: React.FC<any> = ({
 	databaseOnly
 }) => {
 	const store = useStore();
-	const { primaryColor, textColor } = useSelector(store => store.colorStore);
+	const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
 
 	const fireAgreementModal = () => {
 		reactSwal.fire({
