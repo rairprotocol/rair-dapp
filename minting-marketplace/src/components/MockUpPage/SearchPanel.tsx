@@ -7,6 +7,7 @@ import { NftList } from "./NftList/NftList";
 import VideoList from "../video/videoList";
 import FilteringBlock from "./FilteringBlock/FilteringBlock";
 import axios from "axios";
+import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
   const dispatch = useDispatch();
@@ -134,14 +135,14 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   };
 
   const changePage = (currentPage) => {
-    dispatch({ type: "GET_CURRENT_PAGE_START", payload: currentPage });
+    dispatch(getCurrentPage(currentPage));
     // setCurrentPage(currentPage);
     window.scrollTo(0, 0);
   };
 
   useEffect(() => {
     if (blockchain || category) {
-      dispatch({ type: "GET_CURRENT_PAGE_END" });
+      dispatch(getCurrentPageEnd());
     }
   }, [blockchain, category, dispatch]);
 
@@ -194,13 +195,13 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     setBlockchain(null);
     setClick(null);
     setIsShow(false);
-    dispatch({ type: "GET_CURRENT_PAGE_END" });
+    dispatch(getCurrentPageEnd());
   };
   const clearCategoriesFilter = () => {
     setCategory(null);
     setClick(null);
     setIsShowCategories(false);
-    dispatch({ type: "GET_CURRENT_PAGE_END" });
+    dispatch(getCurrentPageEnd());
   };
   return (
     <div className="input-search-wrapper list-button-wrapper">

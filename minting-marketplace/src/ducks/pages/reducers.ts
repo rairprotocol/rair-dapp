@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as types from './types';
 
 const InitialState = {
@@ -10,7 +11,7 @@ export default function getPageStore(state = InitialState, action) {
         case types.GET_CURRENT_PAGE_START:
             return {
                 ...state,
-                currentPage: action.payload,
+                currentPage: action.currentPage,
                 loading: true,
             }
         case types.GET_CURRENT_PAGE_COMPLETE:

@@ -90,6 +90,7 @@ import MetaTags from './components/SeoTags/MetaTags';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
+import { getCurrentPageEnd } from './ducks/pages';
 import { setChainId, setUserAddress } from './ducks/contracts';
 import { setAdminRights } from './ducks/users/actions';
 
@@ -230,7 +231,7 @@ function App({ sentryHistory }) {
 	const goHome = () => {
 		sentryHistory.push(`/`);
 		setShowAlert(false);
-		dispatch({ type: "GET_CURRENT_PAGE_END" });
+		dispatch(getCurrentPageEnd());
 	};
 
 	const openAboutPage = useCallback(() => {
