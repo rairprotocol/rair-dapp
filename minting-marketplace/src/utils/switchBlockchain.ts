@@ -1,13 +1,12 @@
-//@ts-nocheck
-import chainData from './blockchainData';
+import chainData from "./blockchainData";
 
-const web3Switch = async (chainId) => {
+const web3Switch = async (chainId: BlockchainType ) => {
 	try {
 		await window.ethereum.request({
 			method: 'wallet_switchEthereumChain',
 			params: [{ chainId: chainData[chainId]?.chainId }],
 		});
-	} catch (switchError) {
+	} catch (switchError: any) {
 		// This error code indicates that the chain has not been added to MetaMask.
 		if (switchError.code === 4902) {
 			try {
@@ -24,7 +23,9 @@ const web3Switch = async (chainId) => {
 	}
 }
 
-const programmaticSwitch = async (chainId) => {
+	// empty function doesn't do anything.
+
+const programmaticSwitch = async (chainId: BlockchainType) => {
 
 }
 
