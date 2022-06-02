@@ -11,13 +11,13 @@ import setDocumentTitle from "../../utils/setTitle";
 import MyDiamondItems from './myDiamondItems';
 
 // React Redux types
-import * as authTypes from "../../ducks/auth/types";
 
 import InputField from "../common/InputField";
 import FilteringBlock from "../MockUpPage/FilteringBlock/FilteringBlock";
 import ModalItem from "../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem";
 import chainDataFront from "../MockUpPage/utils/blockchainDataFront";
 import './MyItems.css';
+import { getTokenError } from "../../ducks/auth/actions";
 
 const MyItems = (props) => {
   const dispatch = useDispatch();
@@ -56,7 +56,7 @@ const MyItems = (props) => {
     }
 
     if (response.error && response.message) {
-      dispatch({ type: authTypes.GET_TOKEN_ERROR, error: response.error });
+      dispatch(getTokenError(response.error));
     }
   }, [dispatch]);
 

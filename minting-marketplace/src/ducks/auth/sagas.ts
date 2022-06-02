@@ -2,38 +2,27 @@
 import { put, takeLatest } from "redux-saga/effects";
 import * as types from "./types";
 import * as ethers from "ethers";
+import { getProviderComplete, getProviderError } from './actions';
 
 export function* getProvider() {
     try {
         let provider = new ethers.providers.Web3Provider(window.ethereum);
-        yield put({
-            type: types.GET_PROVIDER_COMPLETE,
-            payload: provider
-        });
+        yield put(getProviderComplete(provider));
     } catch (error) {
         if (error.response !== undefined) {
             if (error.response.status === 404) {
                 const errorDirec = "This address does not exist";
-                yield put({
-                    type: types.GET_PROVIDER_ERROR,
-                    error: errorDirec,
-                });
+                yield put(getProviderError(errorDirec));
             } else if (error.response.status === 500) {
                 const errorServer =
                     "Sorry. an internal server problem has occurred";
-                yield put({
-                    type: types.GET_PROVIDER_ERROR,
-                    error: errorServer,
-                });
+                yield put(getProviderError(errorServer));
             } else {
-                yield put({
-                    type: types.GET_PROVIDER_ERROR,
-                    error: error.response.data.message,
-                });
+                yield put(getProviderError(error.response.data.message));
             }
         } else {
             const errorConex = "Connection error!";
-            yield put({ type: types.GET_PROVIDER_ERROR, error: errorConex });
+            yield put(getProviderError(errorConex));
         }
     }
 }

@@ -18,7 +18,7 @@ export default function accessStore(state = InitialState, action) {
         case types.GET_PROVIDER_COMPLETE:
             return {
                 ...state,
-                provider: action.payload
+                provider: action.provider
             }
         case types.GET_PROVIDER_ERROR:
             return {
@@ -33,7 +33,7 @@ export default function accessStore(state = InitialState, action) {
         case types.GET_TOKEN_COMPLETE:
             return {
                 ...state,
-                token: action.payload
+                token: action.token
             }
         case types.GET_TOKEN_ERROR:
             return {
@@ -43,7 +43,7 @@ export default function accessStore(state = InitialState, action) {
         case types.GET_PUBLIC_ADDRESS_COMPLETE:
             return {
                 ...state,
-                publicAddress: action.payload
+                publicAddress: action.publicAddress
             }
         default:
             return state;

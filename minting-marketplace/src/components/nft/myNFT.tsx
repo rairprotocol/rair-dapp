@@ -5,9 +5,9 @@ import { rFetch } from "../../utils/rFetch";
 import { Link } from "react-router-dom";
 
 // React Redux types
-import * as authTypes from "../../ducks/auth/types";
 
 import chainData from "../../utils/blockchainData";
+import { getTokenError } from "../../ducks/auth/actions";
 
 const MyNFTs = () => {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ const MyNFTs = () => {
     }
 
     if (response.error && response.message) {
-      dispatch({ type: authTypes.GET_TOKEN_ERROR, error: response.error });
+      dispatch(getTokenError(response.error));
     }
   }, [dispatch]);
 

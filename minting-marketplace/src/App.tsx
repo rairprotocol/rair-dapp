@@ -7,7 +7,6 @@ import { getJWT, isTokenValid } from './utils/rFetch';
 import './App.css';
 
 // React Redux types
-import * as authTypes from './ducks/auth/types';
 import * as Sentry from '@sentry/react';
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
@@ -90,6 +89,7 @@ import MetaTags from './components/SeoTags/MetaTags';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
+import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
 import { getCurrentPageEnd } from './ducks/pages';
 import { setChainId, setUserAddress } from './ducks/contracts';
 import { setAdminRights } from './ducks/users/actions';
@@ -200,19 +200,19 @@ function App({ sentryHistory }) {
 
 			// Authorize user and get JWT token
 			if (adminRights === null || adminRights === undefined || !localStorage.token || !isTokenValid(localStorage.token)) {
-				dispatchStack.push({ type: authTypes.GET_TOKEN_START });
+				dispatchStack.push(getTokenStart());
 				let token = await getJWT(programmaticProvider, currentUser);
 
 				if (!success) {
 					setStartedLogin(false);
 					setLoginDone(false);
 					dispatchStack.push(setAdminRights(false));
-					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+					dispatchStack.push(getTokenComplete(token));
 					localStorage.setItem('token', token);
 				} else {
 					const decoded = jsonwebtoken.decode(token);
 					dispatchStack.push(setAdminRights(decoded.adminRights));
-					dispatchStack.push({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+					dispatchStack.push(getTokenComplete(token));
 					localStorage.setItem('token', token);
 				}
 			}
@@ -313,8 +313,8 @@ function App({ sentryHistory }) {
 		if (localStorage.token && isTokenValid(localStorage.token)) {
 			if (window.ethereum) {
 				connectUserData();
-				dispatch({ type: authTypes.GET_TOKEN_START });
-				dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: token });
+				dispatch(getTokenStart());
+				dispatch(getTokenComplete(token));
 			} else {
 				// If the token exists but Metamask is not enabled, delete the JWT so the user has to sign in again
 				localStorage.removeItem("token");

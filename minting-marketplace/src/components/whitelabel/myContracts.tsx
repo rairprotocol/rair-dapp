@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
 // React Redux types
-import * as authTypes from '../../ducks/auth/types'
 
 import DeployContracts from './DeployContracts';
 import setDocumentTitle from '../../utils/setTitle';
@@ -11,6 +10,7 @@ import Contract from './Contract';
 import { rFetch } from '../../utils/rFetch';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { getTokenError } from '../../ducks/auth/actions';
 
 const Factory = () => {
 	const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const Factory = () => {
 		}
 
 		if (response.error && response.message) {
-			dispatch({ type: authTypes.GET_TOKEN_ERROR, error: response.error })
+			dispatch(getTokenError(response.error))
 		}
 	}, [programmaticProvider, dispatch])
 

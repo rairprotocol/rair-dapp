@@ -7,7 +7,7 @@ import defaultPictures from "./images/defaultUserPictures.png";
 import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 // React Redux types
-import * as authTypes from "../../ducks/auth/types";
+import { getTokenComplete } from "../../ducks/auth/actions";
 import { setUserAddress } from "../../ducks/contracts";
 import { setAdminRights } from "../../ducks/users/actions";
 
@@ -83,7 +83,7 @@ const PopUpSettings = ({
   }, [setOpenModal]);
 
   const logout = () => {
-    dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
+    dispatch(getTokenComplete(null));
     dispatch(setUserAddress(undefined));
     dispatch(setAdminRights(false));
     localStorage.removeItem("token");

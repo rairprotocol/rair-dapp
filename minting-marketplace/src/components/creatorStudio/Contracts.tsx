@@ -7,8 +7,8 @@ import { NavLink } from 'react-router-dom';
 import NavigatorFactory from './NavigatorFactory';
 
 // React Redux types
-import * as authTypes from '../../ducks/auth/types'
 import setDocumentTitle from '../../utils/setTitle';
+import { getTokenError } from '../../ducks/auth/actions';
 
 const Contracts = () => {
 	const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const Contracts = () => {
 			);
 		}
 		if (response.error && response.message) {
-			dispatch({ type: authTypes.GET_TOKEN_ERROR, error: response.error })
+			dispatch(getTokenError(response.error))
 		}
 	}, [programmaticProvider, dispatch])
 

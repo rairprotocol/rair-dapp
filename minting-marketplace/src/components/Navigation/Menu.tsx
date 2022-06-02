@@ -2,11 +2,11 @@
 import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import "./Menu.css";
 import { useDispatch, useSelector } from 'react-redux';
-import * as authTypes from "../../ducks/auth/types";
 import { Nav } from './NavigationItems/NavigationItems';
 import { NavLink } from 'react-router-dom';
 import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
 import MobileListMenu from './MenuComponents/MobileListMenu';
+import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts';
 
 const MenuNavigation = ({
@@ -37,7 +37,7 @@ const MenuNavigation = ({
     }, [setOpenProfile])
 
     const logout = () => {
-        dispatch({ type: authTypes.GET_TOKEN_COMPLETE, payload: null });
+        dispatch(getTokenComplete(null));
         dispatch(setUserAddress(undefined));
         localStorage.removeItem("token");
         setLoginDone(false);
