@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom'
 import MetamaskLogo from '../../images/metamask-fox.svg';
 import headerLogo from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
 import './Layout.css'
+import { ILayout } from './layout.types';
 
-const Layout = (props) => {
+const Layout: React.FC<ILayout> = (props) => {
     const {
         userData,
         account,
@@ -39,11 +40,11 @@ const Layout = (props) => {
         >
             <div className='rounded menu'>
                 <div className='col-12 pt-2 mb-4' style={{ height: '8vh', marginTop: '30px' }}>
-                    <img src={headerLogo} className='h-100' />
+                    <img src={headerLogo} className='h-100' alt="header logo" />
                 </div>
                 {(!userData && account) ?
                     <button className='btn btn-light' onClick={connectUserData}>
-                        Connect <img src={MetamaskLogo} />
+                        Connect <img src={MetamaskLogo} alt="metamask logo" />
                     </button> :
                     <div className='menu'>
                         {items.map((item, index) => (

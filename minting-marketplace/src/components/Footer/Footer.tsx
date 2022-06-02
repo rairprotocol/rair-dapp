@@ -1,9 +1,10 @@
-//@ts-nocheck
+
 import React from 'react'
 import { NavLink, /*useParams*/ } from 'react-router-dom';
 import DiscordIcon from './../../images/discord.png'
+import { IFooter } from './footer.types';
 
-const Footer = ({ primaryColor, /*openAboutPage,*/ sentryHistory }) => {
+const Footer: React.FC<IFooter> = ({ primaryColor, /*openAboutPage,*/ sentryHistory }) => {
     // const params = useParams();
 
     return (

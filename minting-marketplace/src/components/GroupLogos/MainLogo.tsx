@@ -1,9 +1,10 @@
-//@ts-nocheck
+
 import React from 'react';
+import { IMainLogo } from './mainLogo.types';
 // import { useEffect } from 'react';
 // import { useParams } from 'react-router-dom';
 
-const MainLogo = ({ goHome, sentryHistory, headerLogo, headerLogoBlack, headerLogoWhite, primaryColor }) => {
+const MainLogo: React.FC<IMainLogo> = ({ goHome, sentryHistory, headerLogo, headerLogoBlack, headerLogoWhite, primaryColor }) => {
     // const params = useParams();
 
     return (
