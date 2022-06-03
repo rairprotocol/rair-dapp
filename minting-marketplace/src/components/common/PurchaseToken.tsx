@@ -248,7 +248,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 				{' '}
 				{currentUserAddress ?
 					currentChain !== requiredBlockchain ?
-						`Switch to ${blockchainData[requiredBlockchain].name}`
+						`Switch to ${blockchainData[requiredBlockchain]?.name}`
 						:
 						(buttonMessage || "Purchase")
 					:

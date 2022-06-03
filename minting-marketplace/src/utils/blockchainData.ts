@@ -1,9 +1,9 @@
-//@ts-nocheck
 import BinanceDiamond from '../images/binance-diamond.svg';
 import MaticLogo from '../images/polygon-matic.svg';
 import EthereumLogo from '../images/ethereum-logo.svg';
+import { TChainData } from './utilsTypes';
 
-const chainData = {
+const chainData: TChainData = {
 	'0x38': {
 		image: BinanceDiamond,
 		name: 'Binance Mainnet',
@@ -103,8 +103,8 @@ const chainData = {
 
 export default chainData;
 
-export const detectBlockchain = (currentChain, realChain) => {
-	if(realChain !== undefined && chainData[currentChain]?.chainId !== realChain){
+export const detectBlockchain = (currentChain: BlockchainType | undefined, realChain: BlockchainType | undefined) => {
+	if(realChain !== undefined && currentChain && chainData && chainData[currentChain]?.chainId !== realChain){
 		return {
 			selectedChain: chainData[currentChain]?.name,
 			realNameChain: chainData[realChain]?.name
