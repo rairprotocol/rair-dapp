@@ -1137,6 +1137,13 @@ button.metamask-on-boarding:focus {
     color: #9867D9;
     transition: all .3s ease;
     border: solid 1px #9867D9;
+    border-radius: 12px;
+    width: 32px;
+    height: 32px;
+    font-size: 18;
+    display: flex;
+    justify-content: center;
+    align-items: center
 }
 
 .btn-change-theme:hover {

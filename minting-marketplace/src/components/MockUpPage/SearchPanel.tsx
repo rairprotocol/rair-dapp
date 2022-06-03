@@ -7,6 +7,7 @@ import { NftList } from "./NftList/NftList";
 import VideoList from "../video/videoList";
 import FilteringBlock from "./FilteringBlock/FilteringBlock";
 import axios from "axios";
+import PaginationBox from "./PaginationBox/PaginationBox";
 import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
@@ -17,7 +18,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   const [mediaList, setMediaList] = useState();
   const [data, setData] = useState();
   // const [dataAll, setAllData] = useState();
-  const [totalPage, setTotalPages] = useState([10]);
+  const [totalPage, setTotalPages] = useState(null);
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   // const [currentPage, setCurrentPage] = useState(1);
   const [blockchain, setBlockchain] = useState();
@@ -69,7 +70,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     setData(covers);
     // setTotalCountAll(responseContract.data.totalNumber);
 
-    const totalCount = responseContract.data.totalNumber;    
+    const totalCount = responseContract.data.totalNumber;
     setTotalPages(getPagesCount(totalCount, itemsPerPage));
   }, [currentPage, itemsPerPage, blockchain, category]);
 
@@ -212,9 +213,8 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${
-              primaryColor === "rhyno" ? "default" : "dark"
-            }`}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
+              }`}
             className="category-button-nft category-button"
           >
             NFT
@@ -228,9 +228,8 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
             }}
-            selectedClassName={`search-tab-selected-${
-              primaryColor === "rhyno" ? "default" : "dark"
-            }`}
+            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
+              }`}
             className="category-button-videos category-button"
           >
             Unlockables
@@ -307,27 +306,17 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             textColor={textColor}
             handleClick={handleClick}
             data={data}
-            // dataAll={dataAll}
+            pagesArray={pagesArray}
+            changePage={changePage}
+            currentPage={currentPage}
+          // dataAll={dataAll}
           />
-          <div className="pagination__wrapper">
-            {pagesArray && pagesArray.length > 0 ? (
-              pagesArray.map((p) => (
-                <span
-                  key={p}
-                  onClick={() => changePage(p)}
-                  className={
-                    currentPage === p
-                      ? "pagination__page pagination__page__current"
-                      : "pagination__page"
-                  }
-                >
-                  {p}
-                </span>
-              ))
-            ) : (
-              <h1 className="search-panel-empty-text">No items to display</h1>
-            )}
-          </div>
+          <PaginationBox
+            primaryColor={primaryColor}
+            pagesArray={pagesArray}
+            changePage={changePage}
+            currentPage={currentPage}
+          />
         </TabPanel>
         <TabPanel>
           <VideoList mediaList={mediaList} titleSearch={titleSearch} />

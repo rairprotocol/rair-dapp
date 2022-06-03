@@ -64,11 +64,7 @@ const UserProfileSettings = ({
           className="btn-change-theme"
           style={{
             backgroundColor:
-              primaryColor === "charcoal" ? "#222021" : "#D3D2D3",
-            borderRadius: "12px",
-            width: 32,
-            height: 32,
-            fontSize: 18,
+              primaryColor === "charcoal" ? "#222021" : "#D3D2D3"
           }}
           onClick={(e) => {
             dispatch(setColorScheme(primaryColor === "rhyno" ? "charcoal" : "rhyno"));
