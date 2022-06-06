@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Metamask from "../../images/metamask_logo.png";
 import Modal from "react-modal";
 import VideoPlayerBySignature from "../VideoPlayer/VideoPlayerBySignature ";

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, useState } from "react";
 import CustomButton from "../../utils/button/CustomButton";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";

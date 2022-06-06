@@ -1,3 +1,4 @@
+//@ts-nocheck
 import VideoTilesItem from './VideoTilesItem';
 import "./VideoTiles.css";
 

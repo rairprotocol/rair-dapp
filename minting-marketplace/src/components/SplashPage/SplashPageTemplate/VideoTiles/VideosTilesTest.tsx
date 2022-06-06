@@ -1,3 +1,4 @@
+//@ts-nocheck
 //test page for video tiles
 
 import NFTLA_Video from "../../images/NFT-LA-RAIR-2021.mp4"

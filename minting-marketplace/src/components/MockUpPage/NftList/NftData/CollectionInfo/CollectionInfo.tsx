@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import "./CollectionInfo.css";
 import { utils } from "ethers";

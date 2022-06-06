@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {

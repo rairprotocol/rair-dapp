@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState } from "react";
 import cl from "./VideoPlayerView.module.css";
 import playImages from "../../../../SplashPage/images/playImg.png";

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useCallback, useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { memo, useEffect, useCallback, useState } from "react";
 import { NftItemForCollectionView } from "../NftItemForCollectionView";
 import { BreadcrumbsView } from "../Breadcrumbs/Breadcrumbs";

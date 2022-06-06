@@ -1,3 +1,4 @@
+//@ts-nocheck
 import playIcon from "../../images/playImg.png";
 import Modal from "react-modal";
 import VideoPlayerBySignature from "./VideoPlayerBySignature ";
