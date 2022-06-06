@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 import React, { useState, useCallback, useEffect, Suspense } from 'react'
 import "./Menu.css";
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,8 @@ import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
 import MobileListMenu from './MenuComponents/MobileListMenu';
 import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts';
+import axios from 'axios';
+import { TUserResponse } from '../../axios.responseTypes';
 
 const MenuNavigation = ({
     headerLogo,
@@ -47,14 +49,13 @@ const MenuNavigation = ({
     const getInfoFromUser = useCallback(async () => {
         // find user
         if (currentUserAddress) {
-            const result = await fetch(`/api/users/${currentUserAddress}`).then(
-                (blob) => {
+            const result = await axios.get<TUserResponse>(`/api/users/${currentUserAddress}`).then(
+                (res) => {
                     setUserData(null);
                     setLoading(true);
-                    return blob.json();
+                    return res.data;
                 }
             );
-
             if (result.success) {
                 setLoading(false);
                 setUserData(result.user);

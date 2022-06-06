@@ -6,9 +6,10 @@ import InputField from "../common/InputField";
 import { NftList } from "./NftList/NftList";
 import VideoList from "../video/videoList";
 import FilteringBlock from "./FilteringBlock/FilteringBlock";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import PaginationBox from "./PaginationBox/PaginationBox";
 import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages";
+import { TGetFullContracts, TMediaList } from "../../axios.responseTypes";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   }
 
   const getContract = useCallback(async () => {
-    const responseContract = await axios.get("/api/contracts/full", {
+    const responseContract = await axios.get<TGetFullContracts>("/api/contracts/full", {
       headers: {
         Accept: "application/json",
         "X-rair-token": localStorage.token,
@@ -148,22 +149,27 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   }, [blockchain, category, dispatch]);
 
   const updateList = async () => {
-    let response = await (
-      await fetch("/api/media/list", {
+    try {
+      let response = await axios.get<TMediaList>("/api/media/list", {
         headers: {
           "x-rair-token": localStorage.token,
         },
-      })
-    ).json();
-    if (response.success) {
-      setMediaList(response.list);
-    } else if (
-      response?.message === "jwt expired" ||
-      response?.message === "jwt malformed"
-    ) {
-      localStorage.removeItem("token");
-    } else {
-      console.log(response?.message);
+      });
+      const { success, list } = response.data;
+      if (success) {
+        setMediaList(list);
+      }
+    } catch (err) {
+      const error = err as AxiosError;
+      if (
+        error?.message === "jwt expired" ||
+        error?.message === "jwt malformed"
+      ) {
+        localStorage.removeItem("token");
+      }
+       else {
+        console.log(error?.message);
+      }
     }
   };
 
