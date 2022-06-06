@@ -9,6 +9,8 @@ import { getRandomValues } from '../../utils/getRandomValues';
 import { VideoPlayerParams } from './video.types';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import axios, { AxiosError } from 'axios';
+import { TAuthGetChallengeResponse, TOnlySuccessResponse } from '../../axios.responseTypes';
 
 const VideoPlayer = () => {
 	const params = useParams<VideoPlayerParams>();
@@ -28,16 +30,18 @@ const VideoPlayer = () => {
 		let parsedResponse;
 		if (window.ethereum) {
 			let [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
-			let response = await (await fetch('/api/auth/get_challenge/' + account)).json()
-			parsedResponse = JSON.parse(response.response);
+			let getChallengeResponse = await axios.get<TAuthGetChallengeResponse>('/api/auth/get_challenge/' + account);
+			const { response } = getChallengeResponse.data;
+			parsedResponse = JSON.parse(response);
 			signature = await window.ethereum.request({
 				method: 'eth_signTypedData_v4',
-				params: [account, response.response],
+				params: [account, response],
 				from: account
 			});
 		} else if (programmaticProvider) {
-			let response = await (await fetch('/api/auth/get_challenge/' + programmaticProvider.address)).json()
-			parsedResponse = JSON.parse(response.response);
+			let responseWithProgrammaticProvider = await axios.get<TAuthGetChallengeResponse>('/api/auth/get_challenge/' + programmaticProvider.address);
+			const { response } = responseWithProgrammaticProvider.data;
+			parsedResponse = JSON.parse(response);
 			// EIP712Domain is added automatically by Ethers.js!
 			let { EIP712Domain, ...revisedTypes } = parsedResponse.types;
 			signature = await programmaticProvider._signTypedData(
@@ -48,16 +52,20 @@ const VideoPlayer = () => {
 			Swal.fire('Error', 'Unable to decrypt videos', 'error');
 			return;
 		}
-		let streamAddress = await (await fetch('/api/auth/get_token/' + parsedResponse.message.challenge + '/' + signature + '/' + params.videoId)).json();
-		if (streamAddress.success) {
-			await setMediaAddress('/stream/' + params.videoId + '/' + params.mainManifest);
-			setTimeout(() => {
-				videojs('vjs-' + videoName);
-			}, 1000);
-		} else {
-			console.error(streamAddress);
-			Swal.fire('NFT required to view this content');
+
+		try {
+			let streamAddress = await axios.get<TOnlySuccessResponse>('/api/auth/get_token/' + parsedResponse.message.challenge + '/' + signature + '/' + params.videoId);
+			if (streamAddress.data.success) {
+				await setMediaAddress('/stream/' + params.videoId + '/' + params.mainManifest);
+				setTimeout(() => {
+					videojs('vjs-' + videoName);
+				}, 1000);
 		}
+	 } catch (err) {
+           const error = err as AxiosError;
+		   console.error(error.message);
+		   Swal.fire('NFT required to view this content');
+		}	
 	}, [params.mainManifest, params.videoId, videoName, programmaticProvider])
 
 	useEffect(() => {
@@ -73,7 +81,7 @@ const VideoPlayer = () => {
 
 	useEffect(() => {
 		return () => {
-			fetch('/api/auth/stream/out');
+			axios.get<TOnlySuccessResponse>('/api/auth/stream/out');
 		}
 	}, [videoName]);
 
