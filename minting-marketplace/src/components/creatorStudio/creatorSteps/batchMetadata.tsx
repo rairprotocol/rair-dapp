@@ -100,16 +100,6 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 	</div>
 
 	return <>
-		<div className='col-6 text-end'>
-			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractData.blockchain}/${address}/collection/${collectionIndex}/metadata/batch`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Batch
-			</NavLink>
-		</div>
-		<div className='col-6 text-start mb-3'>
-			<NavLink activeClassName={`btn-stimorol`} to={`/creator/contract/${contractData.blockchain}/${address}/collection/${collectionIndex}/metadata/single`} className={`btn btn-${primaryColor} rounded-rair col-8`}>
-				Single
-			</NavLink>
-		</div>
 		<small className='w-100 text-center'>
 			Please, download our prebuilt CSV template for metadata uploading.
 		</small>

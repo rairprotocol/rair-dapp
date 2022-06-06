@@ -150,17 +150,17 @@ const insertTokenDiamond = async (
 	// Decrease the amount of copies in the offer
 	if (foundOffer) {
 		foundOffer.soldCopies += 1;
-		foundOffer.save().catch(handleDuplicateKey);
+		await foundOffer.save().catch(handleDuplicateKey);
 	}
 
 	// Decrease the amount of copies in the product
 	if (product) {
 		product.soldCopies += 1;
-		product.save().catch(handleDuplicateKey);
+		await product.save().catch(handleDuplicateKey);
 	}
 
 	// Save the token data
-	foundToken?.save().catch(handleDuplicateKey);
+	await foundToken.save().catch(handleDuplicateKey);
 
 	return foundToken;
 };
