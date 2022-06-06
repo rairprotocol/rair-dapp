@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 import jsonwebtoken from 'jsonwebtoken';
 import axios from 'axios';
+import { TAuthenticationType, TAuthGetChallengeResponse, TUserResponse } from '../axios.responseTypes';
 // import { useSelector } from 'react-redux'
 
 const signIn = async (provider) => {
@@ -49,7 +50,7 @@ const signIn = async (provider) => {
     }
     */
 
-    const responseData = await axios.get(`/api/users/${currentUser}`);
+    const responseData = await axios.get<TUserResponse>(`/api/users/${currentUser}`);
 
     const { success } = responseData.data;
     if (!success) {
@@ -72,7 +73,7 @@ const signIn = async (provider) => {
 
 const getJWT = async (signer, userAddress) => {
     try {
-        const responseData = await axios.get(`/api/auth/get_challenge/${ userAddress }`);
+        const responseData = await axios.get<TAuthGetChallengeResponse>(`/api/auth/get_challenge/${ userAddress }`);
 
         const { response } = responseData.data;
         let ethResponse;
@@ -98,7 +99,7 @@ const getJWT = async (signer, userAddress) => {
         }
 
         if (userAddress) {
-            const responseUserdata = await axios.get(`/api/auth/authentication/${ JSON.parse(response).message.challenge }/${ ethResponse }/`);
+            const responseUserdata = await axios.get<TAuthenticationType>(`/api/auth/authentication/${ JSON.parse(response).message.challenge }/${ ethResponse }/`);
 
             const { success, token } = responseUserdata.data;
 

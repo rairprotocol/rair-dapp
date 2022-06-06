@@ -4,14 +4,14 @@ import * as types from "./types";
 import axios, { AxiosResponse, AxiosError } from "axios";
 
 export type UserType = {
-  adminNFT: string;
+  adminNFT?: string;
   avatar: string | null;
   creationDate: string;
   email: string | null;
   firstName: string | null;
   lastName: string | null;
   nickName: string | null;
-  nonce: string;
+  nonce?: string;
   publicAddress: string;
   _id: string;
 };

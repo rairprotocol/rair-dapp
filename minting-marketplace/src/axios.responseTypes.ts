@@ -1,3 +1,10 @@
+import { UserType } from "./ducks/users/sagas";
+
+export type TUserResponse = {
+    success: boolean;
+    user: UserType | null;
+   }
+
 export type TAuthenticationType = {
     success: boolean;
     token: string;
