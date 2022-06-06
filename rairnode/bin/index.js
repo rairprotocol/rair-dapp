@@ -32,6 +32,9 @@ const gcp = require('./integrations/gcp');
 const {
   getMongoConnectionStringURI,
 } = require('./shared_backend_code_generated/mongo/mongoUtils');
+const {
+  mongoConnectionManager
+} = require('./mongooseConnect');
 
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
 
@@ -52,24 +55,28 @@ async function main() {
       fs.mkdirSync(folder);
     }
   });
+  
+  // const mongoConnectionString = await getMongoConnectionStringURI({ appSecretManager });
+
+  const _mongoose = await mongoConnectionManager.getMongooseConnection({});
 
   // Connecting to Mongo DB instance
-  await mongoose.connect(getMongoConnectionStringURI({ appSecretManager }), {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-    .then((c) => {
-      if (process.env.PRODUCTION === 'true') {
-        log.info('DB Connected!');
-      } else {
-        log.info('Development DB Connected!');
-      }
-      return c;
-    })
-    .catch((e) => {
-      log.error('DB Not Connected!');
-      log.error(`Reason: ${e.message}`);
-    });
+  // await mongoose.connect(mongoConnectionString, {
+  //   useNewUrlParser: true,
+  //   useUnifiedTopology: true,
+  // })
+  //   .then((c) => {
+  //     if (process.env.PRODUCTION === 'true') {
+  //       log.info('DB Connected!');
+  //     } else {
+  //       log.info('Development DB Connected!');
+  //     }
+  //     return c;
+  //   })
+  //   .catch((e) => {
+  //     log.error('DB Not Connected!');
+  //     log.error(`Reason: ${e.message}`);
+  //   });
 
   mongoose.set('useFindAndModify', false);
 
@@ -171,7 +178,8 @@ async function main() {
     vaultToken: vaultAppRoleTokenManager.getToken(),
     listOfSecretsToFetch: [
       mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY,
-    ],
+      mongoConfig.VAULT_MONGO_x509_SECRET_KEY
+    ]
   });
 
   // fire up the rest of the app

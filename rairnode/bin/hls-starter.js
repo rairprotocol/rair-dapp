@@ -6,27 +6,14 @@ const log = require('./utils/logger')(module);
 const {
   vaultKeyManager,
   vaultAppRoleTokenManager,
-  appSecretManager
 } = require('./vault');
 
 const {
-  getMongoConnectionStringURI
-} = require('./shared_backend_code_generated/mongo/mongoUtils');
+  mongoConnectionManager
+} = require('./mongooseConnect');
 
 module.exports = async () => {
-  const _mongoose = await mongoose.connect(getMongoConnectionStringURI({appSecretManager}), { useNewUrlParser: true, useUnifiedTopology: true })
-    .then((c) => {
-      if (process.env.PRODUCTION === 'true') {
-        log.info('DB Connected!');
-      } else {
-        log.info('Development DB Connected!');
-      }
-      return c;
-    })
-    .catch((e) => {
-      log.error('DB Not Connected!');
-      log.error(`Reason: ${e.message}`);
-    });
+  const _mongoose = await mongoConnectionManager.getMongooseConnection({});
 
   const File = _mongoose.model('File', require('./models/file'), 'File');
 

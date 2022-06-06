@@ -31,6 +31,7 @@ services:
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${rairnode_generate_mongo_uri_with_vault_credential_util}
+      USE_X509_CERT_AUTH: ${VAULT_RAIRNODE_use_x509_cert_auth}
       MONGO_DB_HOSTNAME: ${mongo_db_hostname}
       MONGO_DB_NAME: ${mongo_db_name}
       JWT_SECRET: ${jwt_secret}
@@ -80,6 +81,7 @@ services:
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${blockchain_network_generate_mongo_uri_with_vault_credential_util}
+      USE_X509_CERT_AUTH: ${VAULT_BLOCKCHAIN_NETWORK_use_x509_cert_auth}
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       PINATA_GATEWAY: ${pinata_gateway}

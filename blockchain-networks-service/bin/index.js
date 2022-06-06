@@ -19,9 +19,11 @@ const {
 
 const config = require('./config');
 
-const connectionString = getMongoConnectionStringURI({appSecretManager})
-
 async function main() {
+  const connectionString = await getMongoConnectionStringURI({appSecretManager});
+
+  console.log('mongo connection string index', connectionString);
+
   const _mongoose = await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((c) => {
       if (process.env.PRODUCTION === 'true') {

@@ -10,7 +10,27 @@ const {
 } = require('../utils/helpers');
 
 const getSecret = async ({appName, secretName, vaultToken, preventThrowingErrors}) => {
-  // Define params
+
+  // catch any errors if we did not send a param through here
+  if(!appName) {
+    console.log('appName is falsy');
+    if(!preventThrowingErrors) {
+      throw new Error('appName is falsy');
+    }
+  }
+  if(!secretName) {
+    console.log('secretName is falsy')
+    if(!preventThrowingErrors) {
+      throw new Error('secretName is falsy');
+    }
+  }
+  if(!vaultToken) {
+    console.log('vaultToken is falsy')
+    if(!preventThrowingErrors) {
+      throw new Error('vaultToken is falsy');
+    }
+  }
+
   const axiosParams = {
     method: "GET",
     url: `${getVaultUrl()}/v1/${getVaultAppSecretKVLocation()}/data/${appName}/${secretName}`,
@@ -56,6 +76,7 @@ class AppSecretManager {
   }
 
   getSecretFromMemory(secretKey) {
+    console.log('Get secret from memory:', secretKey);
     return this.secretMap.get(secretKey);
   }
 
@@ -64,6 +85,7 @@ class AppSecretManager {
       await executePromisesSequentially({
         items: listOfSecretsToFetch,
         action: async (secretName) => {
+          console.log('Get secret from vault:', secretName)
           const secretData = await getSecret({
             appName: this.appName,
             secretName,
