@@ -1,4 +1,3 @@
-import { BlockchainType } from "../../ducks/contracts/contracts.types";
 
 export type NativeCurrencyType = {
     name: string;

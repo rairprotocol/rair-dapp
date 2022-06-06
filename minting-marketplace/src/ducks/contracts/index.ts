@@ -1,4 +1,4 @@
-import { ContractAddressesType, ContractsInitialType, BlockchainType } from './contracts.types';
+import { ContractAddressesType, ContractsInitialType } from './contracts.types';
 import * as types from './types';
 import * as ethers from 'ethers'
 

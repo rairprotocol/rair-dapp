@@ -1,4 +1,3 @@
-import { BlockchainType } from "../../ducks/contracts/contracts.types";
 
 export type TBatchRowPropsType = {
   index: number;

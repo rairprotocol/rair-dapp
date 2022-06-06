@@ -1,5 +1,3 @@
-import { BlockchainType } from "../../ducks/contracts/contracts.types";
-
 export interface ILayout {
     userData: any;
     account: any;

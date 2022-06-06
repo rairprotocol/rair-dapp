@@ -1,5 +1,4 @@
 import { CSSProperties } from "react";
-import { BlockchainType } from "../../../ducks/contracts/contracts.types";
 
 export interface IAgreementsPropsType {
     presaleMessage: string | React.ReactNode;
