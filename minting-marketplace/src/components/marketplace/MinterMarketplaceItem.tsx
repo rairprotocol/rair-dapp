@@ -1,16 +1,23 @@
-//@ts-nocheck
+
 import { useSelector, useStore, Provider } from 'react-redux';
 import BuyTokenModalContent from './BuyTokenModalContent';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import chainData from '../../utils/blockchainData';
+import { TMinterMarketplaceItemType } from './marketplace.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ethers } from 'ethers';
 const rSwal = withReactContent(Swal);
 
-const MinterMarketplaceItem = ({item, index, colWidth}) => {
+const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({item, index, colWidth}) => {
 
-	const {primaryColor, secondaryColor, textColor} = useSelector(state => state.colorStore)
-	const {programmaticProvider} = useSelector(state => state.contractStore);
+	const {primaryColor, secondaryColor, textColor} = useSelector<RootState, ColorStoreType>(state => state.colorStore)
+	const {programmaticProvider} = useSelector<RootState, ContractsInitialType>(state => state.contractStore);
 	const store = useStore();
+
+	const programmaticProviderExtended = programmaticProvider as ethers.providers.JsonRpcSigner | undefined; 
 
 	return <div key={index} className={`col-${colWidth ? colWidth : 4} p-2`}>
 		<div style={{
@@ -26,7 +33,7 @@ const MinterMarketplaceItem = ({item, index, colWidth}) => {
 			<br/>
 			<b>{item.offerName}</b>
 			<br/>
-			{item.range[1] - item.range[0] - item.soldCopies + 1} tokens up for sale <br/>
+			{Number(item.range[1]) - Number(item.range[0]) - item.soldCopies + 1} tokens up for sale <br/>
 				for {item.price} {chainData[item.blockchain]?.name} wei <br/>
 			<small>{/*item.totalCopies*/}</small>
 			<br/>
@@ -34,7 +41,7 @@ const MinterMarketplaceItem = ({item, index, colWidth}) => {
 				let onMyChain = window.ethereum ?
 					chainData[item.blockchain]?.chainId === window.ethereum.chainId
 					:
-					chainData[item.blockchain]?.chainId === `0x${programmaticProvider.provider._network.chainId.toString(16)}`;
+					chainData[item.blockchain]?.chainId === `0x${programmaticProviderExtended?.provider._network.chainId.toString(16)}`;
 				if (!onMyChain) {
 					if (window.ethereum) {
 						await window.ethereum.request({
@@ -70,7 +77,7 @@ const MinterMarketplaceItem = ({item, index, colWidth}) => {
 				{(window.ethereum ?
 					chainData[item.blockchain]?.chainId === window.ethereum.chainId
 					:
-					chainData[item.blockchain]?.chainId === `0x${programmaticProvider.provider._network.chainId.toString(16)}`) ?
+					chainData[item.blockchain]?.chainId === `0x${programmaticProviderExtended?.provider._network.chainId.toString(16)}`) ?
 					<>Buy</> :
 					<>Switch to <b>{chainData[item.blockchain]?.name}</b></>
 				}

@@ -1,24 +1,25 @@
-//@ts-nocheck
-import { useState, useEffect } from 'react';
 
-const BatchRow = ({index, deleter, array}) => {
+import { useState, useEffect, ChangeEvent } from 'react';
+import { TBatchRowPropsType } from './marketplace.types';
 
-	const [address, setAddress] = useState();
-	const [token, setToken] = useState();
+const BatchRow: React.FC<TBatchRowPropsType> = ({index, deleter, array}) => {
+
+	const [address, setAddress] = useState<string>();
+	const [token, setToken] = useState<number>();
 
 	useEffect(() => {
 		setAddress(array[index]['Public Address']);
 		setToken(array[index]['NFTID']);
 	}, [index, array])
 
-	const addressChange = (e) => {
+	const addressChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setAddress(e.target.value);
 		array[index]['Public Address'] = e.target.value;
 	}
 
-	const tokenChange = (e) => {
-		setToken(e.target.value);
-		array[index]['NFTID'] = e.target.value;
+	const tokenChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setToken(+e.target.value);
+		array[index]['NFTID'] = +e.target.value;
 	}
 
 	return <div className='col-12 row px-0 mx-0'>

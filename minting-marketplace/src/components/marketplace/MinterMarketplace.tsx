@@ -1,19 +1,20 @@
-//@ts-nocheck
+
 import {useState, useEffect, useCallback} from 'react';
 import {rFetch} from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 import {BigNumber} from 'ethers';
 import MinterMarketplaceItem from './MinterMarketplaceItem';
+import { TOfferData } from './marketplace.types';
 
 
 const MinterMarketplace = () => {
 
-	const [offerData, setOfferData] = useState([]);
+	const [offerData, setOfferData] = useState<TOfferData[]>([]);
 
 	const fetchData = useCallback(async () => {
 		let aux = await rFetch('/api/contracts/full');
 		if (aux.success) {
-			let offerArray = [];
+			let offerArray: TOfferData[] = [];
 			aux.contracts.forEach(contract => {
 				contract.products.offers.forEach(offer => {
 					for (let field of Object.keys(offer)) {
@@ -45,7 +46,7 @@ const MinterMarketplace = () => {
 	useEffect(() => {
 		setDocumentTitle(`Minter Marketplace`);
 	}, [])
-	
+
 	return <div className='row px-0 mx-0 w-100'>
 		{offerData.map((item, index) => {
 			return <MinterMarketplaceItem item={item} index={index} key={index} />

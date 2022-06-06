@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import { useState, useEffect } from 'react';
 import InputField from '../common/InputField';
 import Swal from 'sweetalert2';
@@ -8,33 +8,38 @@ import {minterAbi} from '../../contracts';
 // import { CSVReader } from 'react-papaparse'
 import csvParser from '../../utils/csvParser';
 import { metamaskCall } from '../../utils/metamaskUtils';
-import {utils} from 'ethers';
+import {ethers, utils} from 'ethers';
+import { TBatchMintDataType, TBuyTokenModalContentType } from './marketplace.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 
-const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName, minterAddress, diamonds, buyTokenFunction, buyTokenBatchFunction}) => {
-	const [tokenIndex, setTokenIndex] = useState(start);
-	const [rows, setRows] = useState([]);
+const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({blockchain, start, end, price, offerIndex, rangeIndex, offerName, minterAddress, diamonds, buyTokenFunction, buyTokenBatchFunction}) => {
+	const [tokenIndex, setTokenIndex] = useState<string>(start);
+	const [rows, setRows] = useState<TBatchMintDataType>([]);
 
-	const [batchMode, setBatchMode] = useState(false);
-	const [minterInstance, setMinterInstance] = useState();
-	const [batchPage, setBatchPage] = useState(0);
+	const [batchMode, setBatchMode] = useState<boolean>(false);
+	const [minterInstance, setMinterInstance] = useState<ethers.Contract | undefined>();
+	const [batchPage, setBatchPage] = useState<number>(0);
 
-	const {contractCreator} = useSelector(state => state.contractStore)
+	const {contractCreator} = useSelector<RootState, ContractsInitialType>(state => state.contractStore)
 
 	const rowsLimit = 100;
 
+	console.log("inside BuyTokenModalContent");
+
 	useEffect(() => {
 		if (minterAddress) {
-			setMinterInstance(contractCreator(minterAddress, minterAbi));
+			setMinterInstance(contractCreator?.(minterAddress, minterAbi));
 		}
 	}, [minterAddress, contractCreator])
 
-	const batchMint = async (data) => {
+	const batchMint = async (data: TBatchMintDataType) => {
 		let addresses = data.map(i => i['Public Address']);
 		let tokens = data.map(i => i['NFTID']);
 		if (
 			await metamaskCall(
-				minterInstance.buyTokenBatch(
+				minterInstance?.buyTokenBatch(
 					offerIndex,
 					rangeIndex,
 					tokens,
@@ -46,7 +51,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 		}
 	}
 
-	const readCSVData = (data) => {
+	const readCSVData = (data: File) => {
 		if (!data) {
 			return;
 		}
@@ -55,19 +60,19 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 	}
 
 	const addRow = () => {
-		if (rows.length > end - start) {
+		if (rows.length > (Number(end) - Number(start))) {
 			return;
 		}
-		let aux = [...rows];
+		let aux: TBatchMintDataType = [...rows];
 		aux.push({
 			'Public Address': '',
-			'NFTID': aux.length ? Number(aux[aux.length - 1].token) + 1 : Number(start)
+			'NFTID': aux.length ? Number(aux[aux.length - 1].NFTID) + 1 : Number(start)
 		})
 		setRows(aux);
 	}
 
-	const deleteRow = (index) => {
-		let aux = [...rows];
+	const deleteRow = (index: number) => {
+		let aux: TBatchMintDataType = [...rows];
 		aux.splice(index, 1);
 		setRows(aux);
 	}
@@ -106,21 +111,21 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 						labelClass='w-100 text-start'
 						getter={tokenIndex}
 						setter={setTokenIndex}
-						max={end}
-						min={start}
+						max={+end}
+						min={+start}
 					/>
 					<div className='col-2' />
 					<button disabled={!minterInstance} onClick={async e => {
 						let result;
 						if (diamonds) {
-							result = await buyTokenFunction(
-								offerIndex,
-								tokenIndex,
+							result = await buyTokenFunction?.(
+								+offerIndex,
+								+tokenIndex,
 								price
 							)
 						} else {
 							result = await metamaskCall(
-								minterInstance.buyToken(
+								minterInstance?.buyToken(
 									offerIndex,
 									rangeIndex,
 									tokenIndex,
@@ -140,7 +145,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 					<button disabled className='btn col-12'>
 						Offer: <b>{offerName}</b>
 					</button>
-					<button disabled={rows.length > end - start} onClick={addRow} className='col-2 btn btn-royal-ice'>
+					<button disabled={rows.length > (Number(end) - Number(start))} onClick={addRow} className='col-2 btn btn-royal-ice'>
 						Add <i className='fas fa-plus' />
 					</button>
 					<div className='col'>
@@ -156,7 +161,7 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 							<i className='fas fa-minus' />
 						</button>
 						<div className='col-12 col-md-6' >
-							Page: {batchPage} of {Number.parseInt((rows.length - 2) / rowsLimit)}
+							Page: {batchPage} of {Number((rows.length - 2) / rowsLimit)}
 						</div>
 						<button disabled={batchPage + 1 >= ((rows.length - 2) / rowsLimit)} onClick={() => setBatchPage(batchPage + 1)} className='btn col-12 col-md-3 btn-royal-ice'>
 							<i className='fas fa-plus' />
@@ -175,8 +180,8 @@ const BuyTokenModalContent = ({blockchain, start, end, price, offerIndex, rangeI
 					</div>
 					<button onClick={e => {
 						if (diamonds) {
-							buyTokenBatchFunction(
-								offerIndex,
+							buyTokenBatchFunction?.(
+								+offerIndex,
 								paginatedRows.map(item => item['NFTID']),
 								paginatedRows.map(item => item['Public Address']),
 								price

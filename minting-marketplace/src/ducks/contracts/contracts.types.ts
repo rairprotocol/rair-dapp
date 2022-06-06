@@ -24,7 +24,7 @@ export type ContractsInitialType = {
   erc777Instance: ethers.Contract | undefined;
   diamondFactoryInstance: ethers.Contract | undefined;
   diamondMarketplaceInstance: ethers.Contract | undefined;
-  currentChain: string | undefined;
+  currentChain: BlockchainType | undefined;
   currentUserAddress: string | undefined;
   programmaticProvider: ethers.Wallet | undefined;
   contractCreator:

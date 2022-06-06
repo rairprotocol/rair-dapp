@@ -172,7 +172,7 @@ export const setProgrammaticProvider = (programmaticProvider: any) => ({
   programmaticProvider,
 } as const);
 
-export const setRealChain = (realChain: BlockchainType) => ({
+export const setRealChain = (realChain: BlockchainType | undefined) => ({
   type: types.SET_REAL_CHAIN,
   realChain,
 } as const);
