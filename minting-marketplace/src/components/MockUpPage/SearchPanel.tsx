@@ -1,9 +1,10 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import InputField from "../common/InputField";
+// import { useHistory } from "react-router-dom";
 import { NftList } from "./NftList/NftList";
+import InputField from "../common/InputField";
 import VideoList from "../video/videoList";
 import FilteringBlock from "./FilteringBlock/FilteringBlock";
 import axios, { AxiosError } from "axios";
@@ -14,22 +15,27 @@ import { TGetFullContracts, TMediaList } from "../../axios.responseTypes";
 const SearchPanel = ({ primaryColor, textColor }) => {
   const dispatch = useDispatch();
   const { currentPage } = useSelector((store) => store.getPageStore);
+  // const { dataAll } = useSelector((store) => store.allInformationFromSearch);
   const [titleSearch, setTitleSearch] = useState("");
+  // const [titleSearchDemo, setTitleSearchDemo] = useState("");
   const [sortItem, setSortItem] = useState("");
   const [mediaList, setMediaList] = useState();
   const [data, setData] = useState();
   // const [dataAll, setAllData] = useState();
   const [totalPage, setTotalPages] = useState(null);
   const [itemsPerPage /*setItemsPerPage*/] = useState(20);
-  // const [currentPage, setCurrentPage] = useState(1);
   const [blockchain, setBlockchain] = useState();
   const [category, setCategory] = useState();
   const [isShow, setIsShow] = useState(false);
   const [isShowCategories, setIsShowCategories] = useState(false);
   const [filterText, setFilterText] = useState("");
-  // const [totalCountAll, setTotalCountAll] = useState();
   const [filterCategoriesText, setFilterCategoriesText] = useState("");
   const [click, setClick] = useState(null);
+  // const [exactlyContract, setExactlyContract] = useState();
+  // const [totalCountAll, setTotalCountAll] = useState();
+  // const [currentPage, setCurrentPage] = useState(1);
+
+  // const history = useHistory();
 
   let pagesArray = [];
   for (let i = 0; i < totalPage; i++) {
@@ -50,7 +56,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
       },
     });
 
-    const covers = responseContract.data.contracts.map((item) => ({
+    const covers = responseContract.data.contracts.map((item: Object) => ({
       id: item._id,
       productId: item.products?._id ?? "wut",
       blockchain: item.blockchain,
@@ -75,64 +81,69 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     setTotalPages(getPagesCount(totalCount, itemsPerPage));
   }, [currentPage, itemsPerPage, blockchain, category]);
 
-  // TODO: for search for the future
-
   // const getAllContract = useCallback(async () => {
-  // const responseContract = await axios.post("/api/search", {
-  // headers: {
-  //   Accept: "application/json",
-  //   "X-rair-token": localStorage.token,
-  // },
-  // body: {
-  // searchString: 'ddsx',
-  // searchBy: 'products',
-  // }
-  // params: {
-  // searchString: 'ddsx',
-  //   pageNum: currentPage,
-  //   blockchain: blockchain,
-  //   category: category,
-  // },
-  // });
+  //   if (titleSearchDemo) {
+  //     const titleSearchDemoEncoded = encodeURIComponent(titleSearchDemo);
+  //     const responseContract = await axios.get(`/api/search/${titleSearchDemoEncoded}`, {
+  //       // headers: {
+  //       //   Accept: "application/json",
+  //       //   "X-rair-token": localStorage.token,
+  //       // },
+  //       // body: {
+  //       // searchString: 'ddsx',
+  //       // searchBy: 'products',
+  //       // }
+  //       // params: {
+  //       // searchString: 'ddsx',
+  //       //   pageNum: currentPage,
+  //       //   blockchain: blockchain,
+  //       //   category: category,
+  //       // },
+  //     });
+  //     setAllData(responseContract?.data?.data);
+  //   }
+  // }, [titleSearchDemo]);
 
-  // if(totalCountAll){
-  //   const responseContract = await axios.get("/api/contracts/full", {
-  //     headers: {
-  //       Accept: "application/json",
-  //       "X-rair-token": localStorage.token,
-  //     },
-  //     params: {
-  //       itemsPerPage: totalCountAll,
-  //     //   pageNum: currentPage,
-  //     //   blockchain: blockchain,
-  //     //   category: category,
-  //     },
-  //   });
+  // useEffect(()=> {
+  //   // if(titleSearchDemo.length > 0 ){
+  //     dispatch({ type: "GET_DATA_ALL_START", payload: titleSearchDemo });
+  //   // }
+  // },[dispatch, titleSearchDemo])
 
-  //   const covers = responseContract.data.contracts.map((item) => ({
-  //     id: item._id,
-  //     productId: item.products?._id ?? "wut",
-  //     blockchain: item.blockchain,
-  //     collectionIndexInContract: item.products.collectionIndexInContract,
-  //     contract: item.contractAddress,
-  //     cover: item.products.cover,
-  //     title: item.title,
-  //     name: item.products.name,
-  //     user: item.user,
-  //     copiesProduct: item.products.copies,
-  //     offerData: item.products.offers.map((elem) => ({
-  //       price: elem.price,
-  //       offerName: elem.offerName,
-  //       offerIndex: elem.offerIndex,
-  //       productNumber: elem.product,
-  //     })),
-  //   }));
-  // setAllData(responseContract);
-  // }
-  // }, [totalCountAll]);
-  // }, []);
+  // const goToExactlyContract = useCallback(async (addressId: String, collectionIndexInContract: String) => {
+  //   if (dataAll) {
+  //     const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
+  //     const exactlyContractData = {
+  //       blockchain: response.data.contract.blockchain,
+  //       contractAddress: response.data.contract.contractAddress,
+  //       indexInContract: collectionIndexInContract,
+  //     };
+  //     history.push(
+  //       `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
+  //     )
+  //   }
+  // }, [dataAll, history]);
 
-  const getPagesCount = (totalCount, itemsPerPage) => {
+  // const goToExactlyToken = useCallback(async (addressId: String, token: String) => {
+  //   if (dataAll) {
+  //     const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
+  //     // TODO: expression to truncate a string to character #
+  //     // const truncatedValue = token.replace(/^[^#]*#([\s\S]*)$/, '$1');
+  //     const exactlyTokenData = {
+  //       blockchain: response.data.contract.blockchain,
+  //       contractAddress: response.data.contract.contractAddress,
+  //     };
+  //     history.push(
+  //       `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
+  //     )
+  //   }
+  // }, [dataAll, history]);
+
+  // useEffect(() => {
+  //   getAllContract();
+  // }, [getAllContract]);
+
+  const getPagesCount = (totalCount: Number, itemsPerPage: Number) => {
     return Math.ceil(totalCount / itemsPerPage);
   };
 
@@ -173,10 +184,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     }
   };
 
-  // useEffect(() => {
-  //   getAllContract();
-  // }, [getAllContract]);
-
   useEffect(() => {
     getContract();
   }, [currentPage, getContract]);
@@ -204,6 +211,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     setIsShow(false);
     dispatch(getCurrentPageEnd());
   };
+
   const clearCategoriesFilter = () => {
     setCategory(null);
     setClick(null);
@@ -225,7 +233,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
           >
             NFT
           </Tab>
-
           <Tab
             onClick={() => {
               updateList();
@@ -304,7 +311,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
               <></>
             )}
           </div>
-
           <NftList
             sortItem={sortItem}
             titleSearch={titleSearch}
@@ -312,9 +318,6 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             textColor={textColor}
             handleClick={handleClick}
             data={data}
-            pagesArray={pagesArray}
-            changePage={changePage}
-            currentPage={currentPage}
           // dataAll={dataAll}
           />
           <PaginationBox

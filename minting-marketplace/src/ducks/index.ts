@@ -10,6 +10,7 @@ import metadataStore from './metadata';
 import getPageStore from './pages';
 import {createReduxEnhancer} from "@sentry/react";
 import rootSaga from './sagas';
+import allInformationFromSearch from './search/reducers'
 
 const reducers = combineReducers({
     accessStore,
@@ -18,7 +19,8 @@ const reducers = combineReducers({
     contractStore,
     colorStore,
     metadataStore,
-    getPageStore
+    getPageStore,
+    allInformationFromSearch
 });
 
 const sentryReduxEnhancer = createReduxEnhancer({

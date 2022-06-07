@@ -6,11 +6,13 @@ import Swal from "sweetalert2";
 import NftDataPageMain from "./NftDataPageMain";
 
 const NftDataExternalLink = () => {
-  const [data, setData] = useState();
-  const [offerPrice, setOfferPrice] = useState();
-
   const { currentUserAddress } = useSelector((store) => store.contractStore);
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+
+  const [data, setData] = useState();
+  const [dataForUser, setDataForUser] = useState();
+  const [offer, setOffer] = useState([]);
+  const [offerPrice, setOfferPrice] = useState();
   const [totalCount, setTotalCount] = useState();
   const [tokenData, setTokenData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
@@ -18,10 +20,9 @@ const NftDataExternalLink = () => {
   const [neededBlockchain, setNeededBlockchain] = useState();
   const [neededContract, setNeededContract] = useState();
   const [productsFromOffer, setProductsFromOffer] = useState([]);
-  // const [/*selectedContract*/, setSelectedContract] = useState();
   const [someUsersData, setSomeUsersData] = useState();
-  const [dataForUser, setDataForUser] = useState();
   const [selectedIndexInContract, setSelectedIndexInContract] = useState();
+  // const [/*selectedContract*/, setSelectedContract] = useState();
 
   const history = useHistory();
   const params = useParams();
@@ -45,7 +46,7 @@ const NftDataExternalLink = () => {
         );
         setTotalCount(response.result.totalCount);
         setTokenData(response.result.tokens);
-
+        setOffer(response.result.contract.products.offers)
         if (response.result.tokens.length >= Number(token)) {
           setSelectedData(response.result?.tokens[token]?.metadata);
         }
@@ -61,11 +62,6 @@ const NftDataExternalLink = () => {
   }, [contractId, product, token]);
 
   const getProductsFromOffer = useCallback(async () => {
-    // console.log(neededBlockchain, 'neededBlockchain');
-    // console.log(neededContract, 'neededContract');
-    // console.log(selectedIndexInContract, "selectedIndexInContract");
-    // console.log(neededBlockchain && selectedIndexInContract &&neededContract  , 'dfd');
-
     if (neededBlockchain && neededContract) {
       const response = await (
         await fetch(
@@ -120,13 +116,14 @@ const NftDataExternalLink = () => {
       handleClickToken={handleClickToken}
       onSelect={onSelect}
       offerPrice={offerPrice}
-      setSelectedToken={setSelectedToken}
+      offerDataInfo={offer}
       tokenData={tokenData}
       totalCount={totalCount}
       textColor={textColor}
       selectedData={selectedData}
       selectedToken={selectedToken}
       someUsersData={someUsersData}
+      setSelectedToken={setSelectedToken}
       primaryColor={primaryColor}
       productsFromOffer={productsFromOffer}
       product={product}

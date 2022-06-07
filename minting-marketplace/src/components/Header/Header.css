@@ -38,6 +38,7 @@
     border: 1px solid #4E4D4D;
     color: white;
     transition: all .1s ease;
+    position: relative;
 }
 
 .header-master .container-admin-panel {

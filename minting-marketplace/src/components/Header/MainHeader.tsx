@@ -1,10 +1,14 @@
 //@ts-nocheck
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
 import { OnboardingButton } from './../common/OnboardingButton';
+// import { getDataAllClear } from '../../ducks/search';
 import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
+import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
 import MainLogo from '../GroupLogos/MainLogo';
 import DiscordIcon from './DiscordIcon';
+import axios from 'axios';
 
 //images
 import headerLogoWhite from './../../images/rairTechLogoWhite.png';
@@ -15,9 +19,24 @@ import "./Header.css";
 import { NavLink } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
-const MainHeader = ({ goHome, loginDone, startedLogin, renderBtnConnect, connectUserData, setLoginDone, userData, errorAuth, sentryHistory, creatorViewsDisabled, selectedChain, showAlert
+const MainHeader = ({
+    goHome,
+    loginDone,
+    startedLogin,
+    renderBtnConnect,
+    connectUserData,
+    setLoginDone,
+    userData,
+    errorAuth,
+    sentryHistory,
+    creatorViewsDisabled,
+    selectedChain,
+    showAlert
 }) => {
+    const dispatch = useDispatch();
+    const history = useHistory();
     const { primaryColor, headerLogo } = useSelector(store => store.colorStore);
+    const { dataAll, message } = useSelector((store) => store.allInformationFromSearch);
     const { adminRights } = useSelector(store => store.userStore);
     const {
         currentUserAddress,
@@ -30,6 +49,59 @@ const MainHeader = ({ goHome, loginDone, startedLogin, renderBtnConnect, connect
     const [textSearch, setTextSearch] = useState('');
     const [adminPanel, setAdminPanel] = useState(false);
 
+    const goToExactlyContract = useCallback(async (addressId: String, collectionIndexInContract: String) => {
+        if (dataAll) {
+            const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
+            const exactlyContractData = {
+                blockchain: response.data.contract.blockchain,
+                contractAddress: response.data.contract.contractAddress,
+                indexInContract: collectionIndexInContract,
+            };
+            history.push(
+                `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
+            )
+            setTextSearch('');
+            dispatch({ type: "GET_DATA_ALL_CLEAR" });
+            // dispatch(getDataAllClear());
+        }
+    }, [dataAll, dispatch, history]);
+
+    const goToExactlyToken = useCallback(async (addressId: String, token: String) => {
+        if (dataAll) {
+            const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
+            // TODO: expression to truncate a string to character #
+            // const truncatedValue = token.replace(/^[^#]*#([\s\S]*)$/, '$1');
+            const exactlyTokenData = {
+                blockchain: response.data.contract.blockchain,
+                contractAddress: response.data.contract.contractAddress,
+            };
+            history.push(
+                `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
+            )
+            setTextSearch('');
+            dispatch({ type: "GET_DATA_ALL_CLEAR" });
+            // dispatch(getDataAllClear());
+        }
+    }, [dataAll, dispatch, history]);
+
+    const Highlight = (props) => {
+        const { filter, str } = props
+        if (!filter) return str
+        const regexp = new RegExp(filter, 'ig')
+        const matchValue = str.match(regexp)
+        if (matchValue) {
+            // console.log('matchValue', matchValue)
+            // console.log('str.split(regexp)', str.split(regexp))
+            return str.split(regexp).map((s, index, array) => {
+                if (index < array.length - 1) {
+                    const c = matchValue.shift()
+                    return <React.Fragment key={index}>{s}<span className={'highlight'}>{c}</span></React.Fragment>
+                }
+                return s
+            })
+        }
+        return str
+    }
 
     const handleChangeText = (e) => {
         setTextSearch(e.target.value);
@@ -38,6 +110,12 @@ const MainHeader = ({ goHome, loginDone, startedLogin, renderBtnConnect, connect
     const handleClearText = () => {
         setTextSearch('');
     }
+
+    useEffect(() => {
+        if (textSearch.length > 0) {
+            dispatch({ type: "GET_DATA_ALL_START", payload: textSearch });
+        }
+    }, [dispatch, textSearch])
 
     return (
         <div className="col-12 header-master"
@@ -63,6 +141,68 @@ const MainHeader = ({ goHome, loginDone, startedLogin, renderBtnConnect, connect
                     onChange={handleChangeText}
                     value={textSearch}
                 />
+                <div className={`search-holder-wrapper ${primaryColor === 'rhyno' ? 'rhyno' : ''}`}>
+                    <div className='search-holder'>
+                        {textSearch &&
+                            <>
+                                {
+                                    dataAll?.products.length > 0 ?
+                                        <div className="data-find-wrapper">
+                                            <h5>Products</h5>
+                                            {dataAll?.products.map((item: Object, index: Number) =>
+                                                <div key={index + Math.random()} className="data-find">
+                                                    <img className="data-find-img" src={item.cover} alt={item.name} />
+                                                    <p onClick={() => goToExactlyContract(item.contract, item.collectionIndexInContract)}>
+                                                        <Highlight filter={textSearch} str={item.name} />
+                                                        {/* {console.log(item, 'i - products')} */}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        : <></>
+                                }
+                                {
+                                    dataAll?.tokens.length > 0 ?
+                                        <div className="data-find-wrapper">
+                                            <h5>Tokens</h5>
+                                            {dataAll?.tokens.map((item: Object, index: Number) =>
+                                                <div key={index + Math.random()} className="data-find">
+                                                    <ImageCustomForSearch item={item} />
+                                                    <p onClick={() => goToExactlyToken(item.contract, item.uniqueIndexInContract)}>
+                                                        <Highlight filter={textSearch} str={item.metadata.name} />
+                                                        {/* {console.log(item, 'i - tokens')} */}
+                                                    </p>
+                                                    <div className="desc-wrapper">
+                                                        {/* <p>({item.metadata.description})</p> */}
+                                                        <p>
+                                                            <Highlight filter={textSearch} str={item.metadata.description} />
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        : <></>
+                                }
+                                {
+                                    dataAll?.users.length > 0 ?
+                                        <div className="data-find-wrapper">
+                                            <h5>Users</h5>
+                                            {dataAll?.users.map((item: Object, index: Number) =>
+                                                <div key={index + Math.random()} className="data-find">
+                                                    <img className="data-find-img" src={item.avatar} alt={item.nickName} />
+                                                    <p>
+                                                        <Highlight filter={textSearch} str={item.nickName} />
+                                                        {/* {console.log(index + Math.random(), 'i - users')} */}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        : <></>
+                                }
+                            </>
+                        } {textSearch !== '' && message === 'Nothing' ? <span className='data-nothing-find'>No items found</span> : <></>}
+                    </div>
+                </div>
                 {
                     textSearch && textSearch.length > 0 && <i
                         onClick={handleClearText}
@@ -94,11 +234,11 @@ const MainHeader = ({ goHome, loginDone, startedLogin, renderBtnConnect, connect
                 }
                 <div
                     className="box-connect-btn">
-                        {
-                            adminRights && <div onClick={() => setAdminPanel(prev => !prev)} className="admin-panel-btn">
-                                <i className="fa fa-user-secret" aria-hidden="true" />
-                            </div>
-                        }
+                    {
+                        adminRights && <div onClick={() => setAdminPanel(prev => !prev)} className="admin-panel-btn">
+                            <i className="fa fa-user-secret" aria-hidden="true" />
+                        </div>
+                    }
                     <UserProfileSettings
                         userData={userData}
                         errorAuth={errorAuth}
@@ -160,7 +300,7 @@ const MainHeader = ({ goHome, loginDone, startedLogin, renderBtnConnect, connect
                                         if (!item.disabled) {
                                             return <div key={index} className={`col-12 py-3 btn-${primaryColor}`}>
                                                 <NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}
-                                                onClick={() => {setAdminPanel(false)}}
+                                                    onClick={() => { setAdminPanel(false) }}
                                                 >
                                                     {item.name}
                                                 </NavLink>

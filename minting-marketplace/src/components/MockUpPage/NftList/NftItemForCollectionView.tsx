@@ -50,7 +50,7 @@ const NftItemForCollectionViewComponent = ({
   const [isFileUrl, setIsFileUrl] = useState();
 
   const checkUrl = useCallback(() => {
-    if (selectedData.animation_url) {
+    if (selectedData?.animation_url) {
       let fileUrl = selectedData?.animation_url,
         parts,
         ext =
@@ -60,7 +60,7 @@ const NftItemForCollectionViewComponent = ({
       setIsFileUrl(ext);
     }
 
-  }, [selectedData.animation_url, setIsFileUrl]);
+  }, [selectedData?.animation_url, setIsFileUrl]);
 
   useEffect(() => {
     checkUrl()
