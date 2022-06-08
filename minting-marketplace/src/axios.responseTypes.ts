@@ -12,12 +12,12 @@ type TNftItemResult = {
   tokens: TTokenData[];
 }
 
-type TAttributes = {
+export type TAttributes = {
     trait_type: string;
     value: string;
 }
 
-type TMetadataType = {
+export type TMetadataType = {
   artist: string;
   attributes: TAttributes[];
   description: string;
@@ -26,7 +26,7 @@ type TMetadataType = {
   name: string;
 }
 
-type TTokenData = {
+export type TTokenData = {
   authenticityLink: string;
   contract: string;
   creationDate: string;
