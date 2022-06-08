@@ -14,6 +14,9 @@ import {
     ProfileButtonBack,
     TitleEditProfile
 } from '../NavigationItems/NavigationItems'
+import axios, { AxiosError } from 'axios';
+import Swal from 'sweetalert2';
+import { TUserResponse } from '../../../axios.responseTypes';
 
 const MobileEditProfile = ({
     toggleEditMode,
@@ -56,25 +59,26 @@ const MobileEditProfile = ({
         if (file) {
             formData.append("file", file);
         }
-        const res = await fetch(`/api/users/${currentUserAddress.toLowerCase()}`, {
-            method: "POST",
-            headers: {
-                Accept: "multipart/form-data",
-                "X-rair-token": localStorage.token,
-            },
-            body: formData,
-        }).then((data) => {
-            return data.json()
-        });
-
-        if (res.success) {
-            setUserData(res.user);
-
-            if (res.user.avatar) {
-                setImagePreviewUrl(res.user.avatar);
+        try {
+            const profileEditResponse = await axios.post<TUserResponse>(`/api/users/${currentUserAddress.toLowerCase()}`, formData, {
+                headers: {
+                    Accept: "multipart/form-data",
+                    "X-rair-token": localStorage.token,
+                },
+            });
+            const { user, success } = profileEditResponse.data;
+            if (success && user) {
+                setUserData(user);
+    
+                if (user.avatar) {
+                    setImagePreviewUrl(user.avatar);
+                }
+                setLoading(false);
+                setStatus(true);
             }
-            setLoading(false);
-            setStatus(true);
+        } catch (err) {
+            const error = err as AxiosError;
+            Swal.fire('Info', `${error.message}`, 'question');
         }
     }, [
         file,

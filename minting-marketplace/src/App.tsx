@@ -93,6 +93,9 @@ import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
 import { getCurrentPageEnd } from './ducks/pages';
 import { setChainId, setUserAddress } from './ducks/contracts';
 import { setAdminRights } from './ducks/users/actions';
+import axios from 'axios';
+import { TUserResponse } from './axios.responseTypes';
+
 
 
 const gAppName = process.env.REACT_APP_GA_NAME
@@ -180,20 +183,19 @@ function App({ sentryHistory }) {
 
 		try {
 			// Check if user exists in DB
-			const { success, user } = await (await fetch(`/api/users/${currentUser}`)).json();
+			const userData = await axios.get<TUserResponse>(`/api/users/${currentUser}`);
+      const { success, user } = userData.data;
 			if (!success || !user) {
 				// If the user doesn't exist, send a request to register him using a TEMP adminNFT
 				console.log('Address is not registered!');
-				const userCreation = await fetch('/api/users', {
-					method: 'POST',
-					body: JSON.stringify({ publicAddress: currentUser, adminNFT: 'temp' }),
-					headers: {
+        const userCreation = await axios.post<TUserResponse>('/api/users',  JSON.stringify({ publicAddress: currentUser, adminNFT: 'temp' }), {
+          headers: {
 						Accept: 'application/json',
 						'Content-Type': 'application/json'
 					}
-				});
-				console.log('User Created', userCreation);
-				setUserData(userCreation);
+        });
+        const { user } = userCreation.data;
+				setUserData(user);
 			} else {
 				setUserData(user);
 			}

@@ -1,9 +1,11 @@
-//@ts-nocheck
+// @ts-nocheck
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Edit } from "./Edit/Edit";
 import { Profile } from "./Profile/Profile";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import axios, { AxiosError } from "axios";
+import { TUserResponse } from "../../../axios.responseTypes";
 
 const UploadProfilePicture = ({
   setOpenModalPic,
@@ -29,27 +31,25 @@ const UploadProfilePicture = ({
     if (file) {
       formData.append("file", file);
     }
-    const res = await fetch(`/api/users/${currentUserAddress.toLowerCase()}`, {
-      method: "POST",
-      headers: {
-        Accept: "multipart/form-data",
-        "X-rair-token": localStorage.token,
-      },
-      body: formData,
-    }).then((blob) => blob.json());
-    setUpdateUsr(res);
-
-    if (res.success) {
-      setUserName(res.user.nickName);
-      setUserEmail(res.user.email);
+    try {
+      const profileUpdateResponse = await axios.post<TUserResponse>(`/api/users/${currentUserAddress.toLowerCase()}`, formData, {
+        headers: {
+          Accept: "multipart/form-data",
+          "X-rair-token": localStorage.token,
+        }
+      });
+      const { user, success } = profileUpdateResponse.data
+      setUpdateUsr(user);
+      if(success) {
+        setUserName(user.nickName);
+        setUserEmail(user.email);
+      }
+      if (user?.avatar) {
+      setImagePreviewUrl(user.avatar);
     }
-
-    if (res?.user?.avatar) {
-      setImagePreviewUrl(res.user.avatar);
-    }
-
-    if (!res.success) {
-      Swal.fire('Info', `${res.message}`, 'question');
+    } catch (err) {
+      const error = err as AxiosError;
+      Swal.fire('Info', `${error.message}`, 'question');
     }
   }, [
     name,
