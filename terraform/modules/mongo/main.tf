@@ -10,7 +10,7 @@ terraform {
 locals {
   mongo_admin_db_name = module.mongo_shared.mongo_admin_db_name
   applications = {
-    blockchain-network: {
+    "blockchain-network": {
       name: "blockchain-network"
     },
     rairnode: {
