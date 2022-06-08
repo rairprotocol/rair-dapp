@@ -132,7 +132,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
 
     setOfferPrice(
       response?.data.product.offers.map((p) => {
-        return p.price;
+        return p.price.toString();
       })
     );
 
