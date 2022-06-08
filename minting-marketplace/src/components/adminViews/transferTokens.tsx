@@ -11,9 +11,10 @@ import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { BlockchainInfoType, ContractDataType, ContractsResponseType, MintedTokenType } from './adminView.types';
+import { BlockchainInfoType, ContractDataType, ContractsResponseType } from './adminView.types';
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import { ethers } from 'ethers';
+import { TTokenData } from '../../axios.responseTypes';
 
 const TransferTokens = () => {
 	const { currentChain, currentUserAddress, contractCreator } = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
@@ -30,7 +31,7 @@ const TransferTokens = () => {
 	const [contractProducts, setContractProducts] = useState<OptionsType[]>([]);
 	const [selectedProduct, setSelectedProducts] = useState<string>('null');
 
-	const [ownedTokens, setOwnedTokens] = useState<MintedTokenType[]>([]);
+	const [ownedTokens, setOwnedTokens] = useState<TTokenData[]>([]);
 	const [tokenId, setTokenId] = useState<number>(0);
 	const [targetAddress, setTargetAddress] = useState<string>('');
 
@@ -232,7 +233,7 @@ const TransferTokens = () => {
 						return <button
 							className={`btn btn-primary mx-2`}
 							onClick={() => {
-								setTokenId(item.uniqueIndexInContract)
+								setTokenId(+item.uniqueIndexInContract)
 							}} key={index}>
 							#{item.uniqueIndexInContract}
 						</button>

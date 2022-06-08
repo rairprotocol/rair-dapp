@@ -1,3 +1,4 @@
+import { TTokenData } from "../../axios.responseTypes";
 
 export type NativeCurrencyType = {
     name: string;
@@ -22,59 +23,10 @@ export type NativeCurrencyType = {
     code: number;
     message: string;
   };
-
-  export type OfferPoolType = {
-    contract: string;
-    creationDate: string;
-    marketplaceCatalogIndex: number;
-    minterAddress: string;
-    product: number;
-    rangeNumber: number;
-    transactionHash: string;
-    _id: string;
-  };
-  
-  export type ProductsType = {
-    _id: string;
-    collectionIndexInContract: number;
-    contract: string;
-    copies: number;
-    cover: string;
-    creationDate: string;
-    firstTokenIndex: number;
-    name: string;
-    offers: OffersType;
-    royalty: number;
-    sold: boolean;
-    soldCopies: number;
-    diamond: boolean;
-    offerPool: OfferPoolType;
-    transactionHash: string;
-  };
-  
-  export type OfferType = {
-    contract: string;
-    copies: number;
-    creationDate: string;
-    diamond: boolean;
-    offerIndex: number;
-    offerName: string;
-    offerPool: number;
-    price: number;
-    product: number;
-    range: number[];
-    sold: boolean;
-    soldCopies: number;
-    transactionHash: string;
-    _id: string;
-  };
-  
-  export type OffersType = OfferType[];
   
   export type ContractsResponseType = {
     contracts: ContractType[];
     success: boolean;
-    // totalNumber: number;
   };
   
   export type UsersContractsType = {
@@ -119,25 +71,10 @@ export type NativeCurrencyType = {
     success: boolean;
     result: {
       totalCount: number;
-      tokens: MintedTokenType[];
+      tokens: TTokenData[];
     };
   };
   
-  export type MintedTokenType = {
-    _id: string;
-    contract: string;
-    creationDate: string;
-    authenticityLink: string;
-    metadata: {};
-    offer: number;
-    offerPool: number;
-    ownerAddress: string;
-    token: number;
-    uniqueIndexInContract: number;
-    isMinted: boolean;
-    metadataURI: string;
-  };
-
   export type TContractSchema = {
     blockchain: BlockchainType;
     contractAddress: string;

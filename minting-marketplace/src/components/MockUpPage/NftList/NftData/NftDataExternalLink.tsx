@@ -4,6 +4,8 @@ import { useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import NftDataPageMain from "./NftDataPageMain";
+import axios, { AxiosError } from "axios";
+import { TNFTDataExternalLinkContractProduct, TNftFilesResponse, TUserResponse } from "../../../../axios.responseTypes";
 
 const NftDataExternalLink = () => {
   const { currentUserAddress } = useSelector((store) => store.contractStore);
@@ -30,48 +32,45 @@ const NftDataExternalLink = () => {
 
   const getData = useCallback(async () => {
     if (contractId && product) {
-      const response = await (
-        await fetch(`/api/${contractId}/${product}`, {
-          method: "GET",
-        })
-      ).json();
-      if (response.success) {
-        setData(response.result);
-        setDataForUser(response.result.contract);
-        setNeededContract(response.result.contract.contractAddress);
-        setNeededBlockchain(response.result.contract.blockchain);
-        // setSelectedContract(response.result.contract.products.contract);
-        setSelectedIndexInContract(
-          response.result.contract.products.collectionIndexInContract
-        );
-        setTotalCount(response.result.totalCount);
-        setTokenData(response.result.tokens);
-        setOffer(response.result.contract.products.offers)
-        if (response.result.tokens.length >= Number(token)) {
-          setSelectedData(response.result?.tokens[token]?.metadata);
-        }
 
-        setSelectedToken(token);
-        setOfferPrice(
-          response.result.contract.products.offers.map((p) => p.price)
-        );
-      } else {
-        Swal.fire("Error", `${response.message}`, "error");
+      try {
+        const response = await axios.get<TNFTDataExternalLinkContractProduct>(`/api/${contractId}/${product}`);
+        const { success, result } = response.data;
+        if (success) {
+          setData(result);
+          setDataForUser(result.contract);
+          setNeededContract(result.contract.contractAddress);
+          setNeededBlockchain(result.contract.blockchain);
+          // setSelectedContract(response.result.contract.products.contract);
+          setSelectedIndexInContract(
+            result.contract.products.collectionIndexInContract
+          );
+          setTotalCount(result.totalCount);
+          setTokenData(result.tokens);
+  
+          if (result.tokens.length >= Number(token)) {
+            setSelectedData(result?.tokens[token]?.metadata);
+          }
+  
+          setSelectedToken(token);
+          setOfferPrice(
+            result.contract.products.offers.map((p) => p.price)
+          );
+        }
+      } catch (err) {
+        const error = err as AxiosError;
+        Swal.fire("Error", `${error.message}`, "error");
       }
+      
     } else return null;
   }, [contractId, product, token]);
 
   const getProductsFromOffer = useCallback(async () => {
     if (neededBlockchain && neededContract) {
-      const response = await (
-        await fetch(
-          `/api/nft/network/${neededBlockchain}/${neededContract}/${selectedIndexInContract}/files`,
-          {
-            method: "GET",
-          }
-        )
-      ).json();
-      setProductsFromOffer(response.files);
+      const response = await axios.get<TNftFilesResponse>(
+          `/api/nft/network/${neededBlockchain}/${neededContract}/${selectedIndexInContract}/files`
+        );
+      setProductsFromOffer(response.data.files);
     }
   }, [neededContract, selectedIndexInContract, neededBlockchain]);
 
@@ -94,8 +93,8 @@ const NftDataExternalLink = () => {
 
   const getInfoFromUser = useCallback(async () => {
     if (neededUserAddress) {
-      const result = await fetch(`/api/users/${neededUserAddress}`).then(
-        (blob) => blob.json()
+      const result = await axios.get<TUserResponse>(`/api/users/${neededUserAddress}`).then(
+        (res) => res.data
       );
       setSomeUsersData(result.user);
     }

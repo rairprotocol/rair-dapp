@@ -1,5 +1,6 @@
-import { MediaListResponseType } from "./components/video/video.types";
+import { TOfferType } from "./components/marketplace/marketplace.types";
 import { UserType } from "./ducks/users/sagas";
+import { MediaListResponseType } from "./components/video/video.types";
 
 export type TUserResponse = {
  success: boolean;
@@ -142,7 +143,7 @@ export type TContract = {
   diamond: boolean;
   external: boolean;
   lastSyncedBlock: string;
-  offerPool: TOfferPool;
+  offerPool?: TOfferPool;
   products: TProducts;
   title: string;
   transactionHash?: string;
@@ -150,23 +151,6 @@ export type TContract = {
   _id: string;
 
 }
-
-export type TOffers = {
-  contract: string;
-  copies: number;
-  creationDate: string;
-  diamond: boolean;
-  offerIndex: string;
-  offerName: string;
-  offerPool: string;
-  price: number;
-  product: string;
-  range: string[];
-  sold: boolean;
-  soldCopies: number;
-  transactionHash: string;
-  _id: string;
-  };
 
   export type TProducts = {
     collectionIndexInContract: string;
@@ -177,12 +161,14 @@ export type TOffers = {
     diamond: boolean;
     firstTokenIndex: string;
     name: string;
-    offers: TOffers[];
+    offers: TOfferType[];
     royalty: number;
     sold: boolean;
     soldCopies: number;
     transactionHash: string;
     _id: string;
+    // offerPool?: OfferPoolType;
+    //owner?: string;
   }
 
   export type TOfferPool = {
@@ -207,6 +193,17 @@ export type TAuthGetChallengeResponse = {
 
 export type TOnlySuccessResponse = {
     success: boolean;
+}
+
+export type TNftDataExternalLinkResultType = {
+    contract: TContract;
+    tokens: TTokenData[];
+    totalCount: number;
+}
+
+export type TNFTDataExternalLinkContractProduct = {
+    success: boolean;
+    result: TNftDataExternalLinkResultType;
 }
 
 export type TProductResponseType = {
