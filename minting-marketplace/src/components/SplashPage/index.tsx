@@ -44,6 +44,8 @@ import NipseyRelease from "./NipseyRelease/NipseyRelease";
 import { Countdown } from "./Timer/CountDown";
 import { useHistory } from "react-router-dom";
 import { setRealChain } from "../../ducks/contracts";
+import axios from "axios";
+import { TProductResponseType } from "../../axios.responseTypes";
 
 const customStyles = {
   overlay: {
@@ -163,16 +165,12 @@ const SplashPage = () => {
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   const getAllProduct = useCallback(async () => {
-    const responseAllProduct = await (
-      await fetch(`/api/nft/network/0x5/0xcb0252eed5056de450df4d8d291b4c5e8af1d9a6/0/offers`, {
-        method: "GET",
-      })
-    ).json();
+    const responseAllProduct = await axios.get<TProductResponseType>(`/api/nft/network/0x5/0xcb0252eed5056de450df4d8d291b4c5e8af1d9a6/0/offers`);
+    const { product } = responseAllProduct.data;
 
-
-    if (responseAllProduct.product && responseAllProduct.product.copies && responseAllProduct.product.soldCopies) {
-      setCopies(responseAllProduct.product.copies);
-      setDataNipsey(responseAllProduct.product.soldCopies);
+    if (product && product.copies && product.soldCopies) {
+      setCopies(product.copies);
+      setDataNipsey(product.soldCopies);
     } else {
       setCopies(0);
       setDataNipsey(0);

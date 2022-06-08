@@ -208,3 +208,8 @@ export type TAuthGetChallengeResponse = {
 export type TOnlySuccessResponse = {
     success: boolean;
 }
+
+export type TProductResponseType = {
+  success: boolean;
+  product: TProducts;
+}

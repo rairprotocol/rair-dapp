@@ -8,6 +8,8 @@ import setDocumentTitle from "../../utils/setTitle";
 import { IVideoPlayer } from "./video.types";
 import { RootState } from "../../ducks";
 import { ContractsInitialType } from "../../ducks/contracts/contracts.types";
+import axios from "axios";
+import { TAuthGetChallengeResponse, TOnlySuccessResponse } from "../../axios.responseTypes";
 
 const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>((state) => state.contractStore);
@@ -15,6 +17,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
   const [mediaAddress, setMediaAddress] = useState<string>(
     `${baseURL}${mediaId}`
   );
+  console.log(" inside video player general page ");
 
   //https://storage.googleapis.com/rair-videos/
   //https://rair.mypinata.cloud/ipfs/
@@ -26,20 +29,16 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
       let [account] = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      let response = await (
-        await fetch("/api/auth/get_challenge/" + account)
-      ).json();
-      parsedResponse = JSON.parse(response.response);
+      let response = await axios.get<TAuthGetChallengeResponse>("/api/auth/get_challenge/" + account);
+      parsedResponse = JSON.parse(response.data.response);
       signature = await window.ethereum.request({
         method: "eth_signTypedData_v4",
-        params: [account, response.response],
+        params: [account, response.data.response],
         from: account,
       });
     } else if (programmaticProvider) {
-      let response = await (
-        await fetch("/api/auth/get_challenge/" + programmaticProvider.address)
-      ).json();
-      parsedResponse = JSON.parse(response.response);
+      let response = await axios.get<TAuthGetChallengeResponse>("/api/auth/get_challenge/" + programmaticProvider.address);
+      parsedResponse = JSON.parse(response.data.response);
       let { EIP712Domain, ...revisedTypes } = parsedResponse.types;
       signature = await programmaticProvider._signTypedData(
         parsedResponse.domain,
@@ -50,17 +49,15 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
       Swal.fire("Error", "Unable to decrypt videos", "error");
       return;
     }
-    let streamAddress = await (
-      await fetch(
+    let streamAddress = await axios.get<TOnlySuccessResponse>(
         "/api/auth/get_token/" +
           parsedResponse.message.challenge +
           "/" +
           signature +
           "/" +
           mediaId
-      )
-    ).json();
-    if (streamAddress.success) {
+      );
+    if (streamAddress.data.success) {
       await setMediaAddress(
         "/stream/" + mediaId + "/" + mainManifest
       );
@@ -86,7 +83,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
 
   useEffect(() => {
     return () => {
-      fetch('/api/auth/stream/out');
+      axios.get('/api/auth/stream/out');
     }
   }, [videoName]);
 
