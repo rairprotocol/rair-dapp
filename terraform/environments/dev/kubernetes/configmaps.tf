@@ -41,9 +41,10 @@ locals {
     REDIS_PORT: "6379",
     SESSION_SECRET: "testsecret",
     SESSION_TTL: "12"
-    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: "false"
+    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
     MONGO_DB_HOSTNAME: "primary-pri.ahxui.mongodb.net"
-    MONGO_DB_NAME: "test"
+    MONGO_DB_NAME: "test",
+    USE_X509_CERT_AUTH: true
   }
 
   minting_network_configmap = {
@@ -100,6 +101,9 @@ locals {
     MORALIS_API_KEY_MAIN: "",
     MORALIS_MASTER_KEY_TEST: "",
     MORALIS_MASTER_KEY_MAIN: "",
-    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: "false"
+    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true,
+    MONGO_DB_HOSTNAME: "primary-pri.ahxui.mongodb.net",
+    MONGO_DB_NAME: "test",
+    USE_X509_CERT_AUTH: true
   }
 }
