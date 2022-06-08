@@ -6,8 +6,11 @@ import NftDataPageMain from "./NftDataPageMain";
 import NftUnlockablesPage from "./NftUnlockablesPage";
 import { useDispatch, useSelector } from "react-redux";
 import { setRealChain } from "../../../../ducks/contracts";
+import axios, { AxiosError } from "axios";
+import { IOffersResponseType, TNftFilesResponse, TNftItemResponse, TUserResponse } from "../../../../axios.responseTypes";
 
 const NftDataCommonLinkComponent = ({ userData }) => {
+
   const [collectionName, setCollectionName] = useState();
   const [tokenData, setTokenData] = useState([]);
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
@@ -57,34 +60,18 @@ const NftDataCommonLinkComponent = ({ userData }) => {
       setIsLoading(true);
       let responseAllProduct;
       if (tokenId > 15) {
-        responseAllProduct = await (
-          await fetch(
-            `/api/nft/network/${blockchain}/${contract}/${product}
-            
-            `,
-            {
-              method: "GET",
-            }
-          )
-        ).json();
+        responseAllProduct = await axios.get(
+            `/api/nft/network/${blockchain}/${contract}/${product}`);
       } else if (tokenId <= 15) {
-        responseAllProduct = await (
-          await fetch(
-            `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`,
-            {
-              method: "GET",
-            }
-          )
-        ).json();
+        responseAllProduct = await axios.get<TNftItemResponse>(`/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`);
       }
-
       setIsLoading(false);
 
-      setTokenData(responseAllProduct.result.tokens);
-      setTotalCount(responseAllProduct.result.totalCount);
+      setTokenData(responseAllProduct.data.result.tokens);
+      setTotalCount(responseAllProduct.data.result.totalCount);
 
-      if (responseAllProduct.result.tokens.length >= Number(tokenId)) {
-        setSelectedData(responseAllProduct.result?.tokens[tokenId]?.metadata);
+      if (responseAllProduct.data.result.tokens.length >= Number(tokenId)) {
+        setSelectedData(responseAllProduct.data.result?.tokens[tokenId]?.metadata);
       }
 
       setSelectedToken(tokenId);
@@ -129,41 +116,41 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   // ---- return only offers for particular contract with x-token END ----
 
   const getParticularOffer = useCallback(async () => {
-    let response = await (
-      await fetch(
-        `/api/nft/network/${blockchain}/${contract}/${product}/offers`,
-        {
-          method: "GET",
-        }
+  try {
+    let response = await axios.get<IOffersResponseType>(
+      `/api/nft/network/${blockchain}/${contract}/${product}/offers`
+    );
+ 
+  if (response.data.success) {
+    setDataForUser(response.data.product);
+    setOfferData(
+      response.data.product.offers.find(
+        (neededOfferIndex) =>
+          neededOfferIndex.offerIndex === selectedOfferIndex
       )
-    ).json();
+    );
 
-    if (response.success) {
-      setDataForUser(response.product);
-      setOfferData(
-        response.product.offers.find(
-          (neededOfferIndex) =>
-            neededOfferIndex.offerIndex === selectedOfferIndex
-        )
-      );
+    setOfferPrice(
+      response?.data.product.offers.map((p) => {
+        return p.price;
+      })
+    );
 
-      setOfferPrice(
-        response?.product.offers.map((p) => {
-          return p.price;
-        })
-      );
-
-      setOwnerInfo(response.product);
-      setOfferDataInfo(response.product.offers);
-      setCollectionName(response.product.name);
-    } else if (
-      response?.message === "jwt expired" ||
-      response?.message === "jwt malformed"
+    setOwnerInfo(response.data.product);
+    setOfferDataInfo(response.data.product.offers);
+    setCollectionName(response.data.product.name);
+  }
+  } catch (err) {
+    const error = err as AxiosError;
+    if (
+      error?.message === "jwt expired" ||
+      error?.message === "jwt malformed"
     ) {
       localStorage.removeItem("token");
     } else {
-      console.log(response?.message);
+      console.log(error?.message);
     }
+  }
   }, [product, contract, selectedOfferIndex, blockchain]);
 
   const neededUserAddress = dataForUser?.owner;
@@ -171,8 +158,8 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   const getInfoFromUser = useCallback(async () => {
     // find user
     if (neededUserAddress) {
-      const result = await fetch(`/api/users/${neededUserAddress}`).then(
-        (blob) => blob.json()
+      const result = await axios.get<TUserResponse>(`/api/users/${neededUserAddress}`).then(
+        (res) => res.data
       );
       setSomeUsersData(result.user);
     }
@@ -184,34 +171,25 @@ const NftDataCommonLinkComponent = ({ userData }) => {
 
   const getProductsFromOffer = useCallback(async () => {
     if(userToken){
-      const responseIfUserConnect = await (
-        await fetch(
+      const responseIfUserConnect = await axios.get<TNftFilesResponse>(
           // `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
           `/api/nft/network/${blockchain}/${contract}/${product}/files`,
           {
-            method: "GET",
             headers: {
               Accept: "application/json",
               "X-rair-token": userToken,
             },
           }
-        )
-        
-      ).json();
-      setProductsFromOffer(responseIfUserConnect.files);
+        );
+      setProductsFromOffer(responseIfUserConnect.data.files);
       setSelectedOfferIndex(tokenData[tokenId]?.offer);
     } else {
-      const response = await (
-        await fetch(
+      const response = await axios.get<TNftFilesResponse>(
           // `/api/nft/network/${blockchain}/${contract}/${product}/files/${tokenId}`,
-          `/api/nft/network/${blockchain}/${contract}/${product}/files`,
-          {
-            method: "GET",
-          }
-        )
-      ).json();
+          `/api/nft/network/${blockchain}/${contract}/${product}/files`
+        );
       
-      setProductsFromOffer(response.files);
+      setProductsFromOffer(response.data.files);
       setSelectedOfferIndex(tokenData[tokenId]?.offer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

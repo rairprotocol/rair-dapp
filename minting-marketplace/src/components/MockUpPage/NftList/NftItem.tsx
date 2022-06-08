@@ -5,6 +5,8 @@ import { SvgKey } from "./SvgKey";
 import chainDataFront from "../utils/blockchainDataFront";
 import ReactPlayer from "react-player";
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png'
+import axios from "axios";
+import { TNftItemResponse, TUserResponse } from "../../../axios.responseTypes";
 // import { utils } from "ethers";
 
 // import Swal from 'sweetalert2';
@@ -50,8 +52,8 @@ const NftItemComponent = ({
   const getInfoFromUser = useCallback(async () => {
     // find user
     if (ownerCollectionUser) {
-      const result = await fetch(`/api/users/${ownerCollectionUser}`).then((res) =>
-        res.json()
+      const result = await axios.get<TUserResponse>(`/api/users/${ownerCollectionUser}`).then((res) =>
+        res.data
       );
 
       setAccountData(result.user);
@@ -62,15 +64,10 @@ const NftItemComponent = ({
     setPlaying((prev) => !prev);
   };
   const getProductAsync = useCallback(async () => {
-    const responseProductMetadata = await (
-      await fetch(`/api/nft/network/${blockchain}/${contractName}/${collectionIndexInContract}`, {
-        method: "GET",
-      })
-    ).json();
-    if (responseProductMetadata.result.tokens.length > 0) {
-      setMetaDataProducts(responseProductMetadata.result?.tokens[0]);
+    const responseProductMetadata = await axios.get<TNftItemResponse>(`/api/nft/network/${blockchain}/${contractName}/${collectionIndexInContract}`);
+    if (responseProductMetadata.data.result.tokens.length > 0) {
+      setMetaDataProducts(responseProductMetadata.data.result?.tokens[0]);
     }
-    // }
   }, [collectionIndexInContract, contractName, blockchain]);
 
 
