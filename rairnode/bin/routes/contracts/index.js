@@ -1,33 +1,48 @@
 const express = require('express');
 const _ = require('lodash');
 const { JWTVerification, validation, isAdmin } = require('../../middleware');
-const { importContractData } = require('../../integrations/ethers/importContractData');
+const {
+  importContractData,
+} = require('../../integrations/ethers/importContractData');
 const log = require('../../utils/logger')(module);
 const contractRoutes = require('./contract');
 
 module.exports = (context) => {
   const router = express.Router();
 
-  async function getUser(user, res, next) {
+  async function getContractsByUser(user, res, next) {
     // Contex is part of global scope
     try {
-      const contracts = await context.db.Contract.find({ user }, {
-        _id: 1, title: 1, blockchain: 1, diamond: 1,
-      });
+      const contracts = await context.db.Contract.find(
+        { user },
+        {
+          _id: 1,
+          contractAddress: 1,
+          title: 1,
+          blockchain: 1,
+          diamond: 1,
+        },
+      );
       res.json({ success: true, contracts });
     } catch (e) {
       next(e);
     }
   }
-    // Get list of contracts with all products and offers
-    router.get('/full', validation('filterAndSort', 'query'), async (req, res, next) => {
+  // Get list of contracts with all products and offers
+  router.get(
+    '/full',
+    validation('filterAndSort', 'query'),
+    async (req, res, next) => {
       try {
         const {
-          pageNum = '1', itemsPerPage = '20', blockchain = '', category = '',
+          pageNum = '1',
+          itemsPerPage = '20',
+          blockchain = '',
+          category = '',
         } = req.query;
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
-  
+
         const lookupProduct = {
           $lookup: {
             from: 'Product',
@@ -40,10 +55,7 @@ module.exports = (context) => {
                   $expr: {
                     $and: [
                       {
-                        $eq: [
-                          '$contract',
-                          '$$contr',
-                        ],
+                        $eq: ['$contract', '$$contr'],
                       },
                     ],
                   },
@@ -53,14 +65,18 @@ module.exports = (context) => {
             as: 'products',
           },
         };
-  
-        const foundCategory = await context.db.Category.findOne({ name: category });
-  
+
+        const foundCategory = await context.db.Category.findOne({
+          name: category,
+        });
+
         if (foundCategory) {
           _.set(lookupProduct, '$lookup.let.categoryF', foundCategory._id);
-          _.set(lookupProduct, '$lookup.pipeline[0].$match.$expr.$and[1]', { $eq: ['$category', '$$categoryF'] });
+          _.set(lookupProduct, '$lookup.pipeline[0].$match.$expr.$and[1]', {
+            $eq: ['$category', '$$categoryF'],
+          });
         }
-  
+
         const options = [
           lookupProduct,
           { $unwind: '$products' },
@@ -77,16 +93,10 @@ module.exports = (context) => {
                     $expr: {
                       $and: [
                         {
-                          $eq: [
-                            '$contract',
-                            '$$contr',
-                          ],
+                          $eq: ['$contract', '$$contr'],
                         },
                         {
-                          $eq: [
-                            '$product',
-                            '$$prod',
-                          ],
+                          $eq: ['$product', '$$prod'],
                         },
                       ],
                     },
@@ -115,16 +125,10 @@ module.exports = (context) => {
                     $expr: {
                       $and: [
                         {
-                          $eq: [
-                            '$contract',
-                            '$$contractL',
-                          ],
+                          $eq: ['$contract', '$$contractL'],
                         },
                         {
-                          $eq: [
-                            '$product',
-                            '$$prod',
-                          ],
+                          $eq: ['$product', '$$prod'],
                         },
                       ],
                     },
@@ -138,50 +142,72 @@ module.exports = (context) => {
             $match: {
               $or: [
                 { diamond: true, 'products.offers': { $not: { $size: 0 } } },
-                { diamond: { $in: [false, undefined] }, offerPool: { $ne: null }, 'products.offers': { $not: { $size: 0 } } },
+                {
+                  diamond: { $in: [false, undefined] },
+                  offerPool: { $ne: null },
+                  'products.offers': { $not: { $size: 0 } },
+                },
               ],
             },
           },
         ];
-  
-        const foundBlockchain = await context.db.Blockchain.findOne({ hash: blockchain });
-  
+
+        const foundBlockchain = await context.db.Blockchain.findOne({
+          hash: blockchain,
+        });
+
         if (foundBlockchain) {
           options.unshift({ $match: { blockchain } });
         }
-  
-        const totalNumber = _.chain(await context.db.Contract.aggregate(options).count('contracts'))
+
+        const totalNumber = _.chain(
+          await context.db.Contract.aggregate(options).count('contracts'),
+        )
           .head()
           .get('contracts', 0)
           .value();
-  
+
         const contracts = await context.db.Contract.aggregate(options)
           .sort({ 'products.name': 1 })
           .skip(skip)
           .limit(pageSize);
-  
+
         res.json({ success: true, contracts, totalNumber });
       } catch (e) {
         next(e);
       }
-    });
+    },
+  );
   // Get list of contracts for current user
   router.get('/', JWTVerification(context), async (req, res, next) => {
     const { publicAddress: user } = req.user;
-    await getUser(user, res, next);
+    await getContractsByUser(user, res, next);
   });
   // Get list of contracts for specific user
-  router.get('byUser/:userId', JWTVerification(context), async (req, res, next) => {
-    const { publicAddress: user } = req.params.userId;
-    await getUser(user, res, next);
-  });
+  router.get(
+    'byUser/:userId',
+    JWTVerification(context),
+    async (req, res, next) => {
+      const userFound = await context.db.User.findOne({
+        _id: req.params.userId,
+      });
+      const { publicAddress: user } = userFound;
+      await getContractsByUser(user, res, next);
+    },
+  );
 
   // Get specific contract by ID
   router.get('/singleContract/:contractId', async (req, res, next) => {
     try {
-      const contract = await context.db.Contract.findById(req.params.contractId, {
-        _id: 1, contractAddress: 1, title: 1, blockchain: 1,
-      });
+      const contract = await context.db.Contract.findById(
+        req.params.contractId,
+        {
+          _id: 1,
+          contractAddress: 1,
+          title: 1,
+          blockchain: 1,
+        },
+      );
 
       res.json({ success: true, contract });
     } catch (e) {
@@ -189,33 +215,48 @@ module.exports = (context) => {
     }
   });
 
-  router.get('/import/network/:networkId/:contractAddress/', JWTVerification(context), isAdmin, async (req, res, next) => {
-    try {
-      const { networkId, contractAddress } = req.params;
-      const {
-        success,
-        result,
-        message,
-      } = await importContractData(networkId, contractAddress, req.user, context.db);
-      return res.json({ success, result, message });
-    } catch (err) {
-      log.error(err);
-      return next(err);
-    }
-  });
+  router.get(
+    '/import/network/:networkId/:contractAddress/',
+    JWTVerification(context),
+    isAdmin,
+    async (req, res, next) => {
+      try {
+        const { networkId, contractAddress } = req.params;
+        const { success, result, message } = await importContractData(
+          networkId,
+          contractAddress,
+          req.user,
+          context.db,
+        );
+        return res.json({ success, result, message });
+      } catch (err) {
+        log.error(err);
+        return next(err);
+      }
+    },
+  );
 
-  router.use('/network/:networkId/:contractAddress', JWTVerification(context), validation('singleContract', 'params'), async (req, res, next) => {
-    const contract = await context.db.Contract.findOne({
-      contractAddress: req.params.contractAddress.toLowerCase(),
-      blockchain: req.params.networkId,
-    });
+  router.use(
+    '/network/:networkId/:contractAddress',
+    JWTVerification(context),
+    validation('singleContract', 'params'),
+    async (req, res, next) => {
+      const contract = await context.db.Contract.findOne({
+        contractAddress: req.params.contractAddress.toLowerCase(),
+        blockchain: req.params.networkId,
+      });
 
-    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+      if (_.isEmpty(contract))
+        return res
+          .status(404)
+          .send({ success: false, message: 'Contract not found.' });
 
-    req.contract = contract;
+      req.contract = contract;
 
-    return next();
-  }, contractRoutes(context));
+      return next();
+    },
+    contractRoutes(context),
+  );
 
   return router;
 };
