@@ -7,7 +7,7 @@ export type TUserResponse = {
  user: UserType | null;
 }
 
-type TNftItemResult = {
+export type TNftItemResult = {
   totalCount: number;
   tokens: TTokenData[];
 }
@@ -17,13 +17,16 @@ export type TAttributes = {
     value: string;
 }
 
-export type TMetadataType = {
-  artist: string;
+export type TCheckMetadataOnBlockchain = {
   attributes: TAttributes[];
-  description: string;
-  external_url: string;
   image: string;
   name: string;
+}
+
+export type TMetadataType = TCheckMetadataOnBlockchain & {
+  artist: string;
+  description: string;
+  external_url: string;
 }
 
 export type TTokenData = {
@@ -43,7 +46,7 @@ export type TTokenData = {
 }
 
 export type TNftItemResponse = {
-  success: true;
+  success: boolean;
   result: TNftItemResult;
 }
 

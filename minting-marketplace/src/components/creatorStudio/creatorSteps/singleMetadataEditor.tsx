@@ -14,6 +14,8 @@ import { metamaskCall } from "../../../utils/metamaskUtils";
 import Swal from "sweetalert2";
 import Dropzone from "react-dropzone";
 import { BigNumber } from 'ethers';
+import axios from "axios";
+import { TMetadataType } from "../../../axios.responseTypes";
 
 const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, gotoNextStep, simpleMode}) => {
 	const [nftMapping, setNFTMapping] = useState([]);
@@ -372,11 +374,11 @@ const SingleMetadataEditor = ({contractData, setStepNumber, steps, stepNumber, g
 									)
 								);
 								if (URI) {
-									let data = await (await fetch(URI)).json();
-									setNFTImage(data.image);
-									setNFTTitle(data.name);
-									setNFTDescription(data.description);
-									setPropertiesArray(data.attributes);
+									let data = await axios.get<TMetadataType>(URI);
+									setNFTImage(data.data.image);
+									setNFTTitle(data.data.name);
+									setNFTDescription(data.data.description);
+									setPropertiesArray(data.data.attributes);
 									setMetadataURI(URI);
 								}
 							}}

@@ -12,6 +12,7 @@ import Dropzone from 'react-dropzone'
 import Swal from 'sweetalert2';
 import blockchainData from '../../../utils/blockchainData';
 import BlockchainURIManager from '../common/blockchainURIManager'
+import axios from 'axios';
 
 const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, gotoNextStep, goBack, simpleMode}) => {
 	const { address, collectionIndex } = useParams();
@@ -70,8 +71,8 @@ const BatchMetadataParser = ({ contractData, setStepNumber, steps, stepNumber, g
 	}
 
 	const downloadTemplateCSV = () => {
-		fetch('/api/nft/csv/sample')
-			.then((response) => response.blob())
+		axios.get('/api/nft/csv/sample', { responseType: "blob" })
+			.then(response => response.data)
 			.then((blob) => {
 				// Create blob link to download
 				const url = window.URL.createObjectURL(

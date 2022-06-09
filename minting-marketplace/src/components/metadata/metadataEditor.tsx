@@ -10,6 +10,8 @@ import chainData from '../../utils/blockchainData';
 import swal from 'sweetalert2';
 
 import MetadataSender from './metadataSender';
+import axios from 'axios';
+import { TCheckMetadataOnBlockchain, TNftItemResponse } from '../../axios.responseTypes';
 
 /*
 	"metadata": {
@@ -142,7 +144,7 @@ const MetadataEditor = (props) => {
 	const [openSeaContractURI, setOpenSeaContractURI] = useState('');
 	
 	const params = useParams();
-
+	
 	const {contractCreator} = useSelector(state => state.contractStore);
 
 	const fetchContractData = useCallback(async () => {
@@ -168,11 +170,12 @@ const MetadataEditor = (props) => {
 			}
 		}
 
-		let nftResponse = await (await fetch(`/api/nft/network/${params.blockchain}/${params.contract.toLowerCase()}/${params.product}`)).json()
+		let nftResponse = await axios.get<TNftItemResponse>(`/api/nft/network/${params.blockchain}/${params.contract.toLowerCase()}/${params.product}`);
+		const { success, result } = nftResponse.data;
 		let sortedMetadataArray = [];
 		let sortedURIArray = [];
-		if (nftResponse?.success && nftResponse?.result?.totalCount) {
-			for await (let token of nftResponse?.result?.tokens) {
+		if (success && result?.totalCount) {
+			for await (let token of result?.tokens) {
 				sortedMetadataArray[token.token] = token.metadata;
 				sortedURIArray[token.token] = token.metadataURI;
 			}
@@ -370,7 +373,7 @@ const MetadataEditor = (props) => {
 						console.log('Found URI:', metadataLink);
 					}
 					swal.fire('Fetching Metadata from URL...');
-					let metadataData = await fetch(metadataLink).then(blob => blob.json());
+					let metadataData = await axios.get<TCheckMetadataOnBlockchain>(metadataLink).then(res => res.data);
 					let workaroundToDisplayMetadata = [...existingMetadataArray];
 					workaroundToDisplayMetadata[tokenNumber] = metadataData;
 					swal.close();

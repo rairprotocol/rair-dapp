@@ -26,8 +26,6 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({blockchain, 
 
 	const rowsLimit = 100;
 
-	console.log("inside BuyTokenModalContent");
-
 	useEffect(() => {
 		if (minterAddress) {
 			setMinterInstance(contractCreator?.(minterAddress, minterAbi));
