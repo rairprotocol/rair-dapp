@@ -8,6 +8,9 @@ import InputSelect from "../../common/InputSelect";
 import io from "socket.io-client";
 import "./videoUpload.css";
 import { getRandomValues } from "../../../utils/getRandomValues";
+import axios from "axios";
+import { TAuthGetChallengeResponse, TUploadSocket } from "../../../axios.responseTypes";
+import { useSelector } from "react-redux";
 const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 //TODO: alternative env 
@@ -57,6 +60,8 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 			setCategoryArray(categories.map(item => { return { label: item.name, value: item.name } }));
 		}
 	}, [])
+
+	const currentUserAddress = useSelector<RootState, string>(state => state.contractStore.currentUserAddress);
 
 	useEffect(() => {
 		getCategories();
@@ -420,15 +425,13 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 							formData.append("product", collectionIndex);
 							formData.append("offer", JSON.stringify(offersIndex));
 							setUploading(true);
-							fetch(`/api/media/upload?socketSessionId=${thisSessionId}`, {
-								method: "POST",
+							axios.post<TUploadSocket>(`/api/media/upload?socketSessionId=${thisSessionId}`, formData, {
 								headers: {
 									Accept: "application/json",
 									"X-rair-token": currentToken,
-								},
-								body: formData,
+								}
 							})
-								.then((blob) => { blob.json() })
+								.then((res) => res.data)
 								.then((response) => {
 									// TODO: in time of uploading 
 									// setUploading(false);
@@ -508,40 +511,40 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 					className="btn py-1 my-2 col-8 btn-primary btn-submit-custom"
 					onClick={(e) => {
 						if (adminNFT) {
-							fetch("/api/auth/get_challenge/" + address)
-								.then((blob) => blob.json())
-								.then((response) => {
+							axios.get<TAuthGetChallengeResponse>("/api/auth/get_challenge/" + currentUserAddress)
+								.then((res) => res.data)
+								.then(({success, response }) => {
 									window.ethereum
 										.request({
 											method: "eth_signTypedData_v4",
-											params: [address, JSON.stringify(response)],
-											from: address,
+											params: [currentUserAddress, JSON.stringify(response)],
+											from: currentUserAddress,
 										})
 										.then((e) => {
-											fetch(
+									console.log("inside post method");
+
+											axios.post(
 												"/api/auth/new_admin/" +
-												response.message.challenge +
+												JSON.parse(response).message.challenge +
 												"/" +
 												e +
-												"/",
+												"/", JSON.stringify({
+													adminNFT,
+												}),
 												{
-													method: "POST",
-													body: JSON.stringify({
-														adminNFT,
-													}),
 													headers: {
 														Accept: "application/json",
 														"Content-Type": "application/json",
 													},
 												}
 											)
-												.then((blob) => blob.json())
-												.then((response) => {
+												.then((res) => res.data)
+												.then(({success, response }) => {
 													setAdminNFT("");
 													Swal.fire(
-														response.ok ? "Success" : "Error",
+														success ? "Success" : "Error",
 														response.message,
-														response.ok ? "success" : "error"
+														success ? "success" : "error"
 													);
 												})
 												.catch((e) => {

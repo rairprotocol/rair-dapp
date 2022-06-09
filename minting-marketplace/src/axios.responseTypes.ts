@@ -50,7 +50,7 @@ export type TNftItemResponse = {
   result: TNftItemResult;
 }
 
-type TFileKeyType = {
+export type TFileKeyType = {
   key: {
     data: number[];
     type: string;
@@ -196,6 +196,11 @@ export type TAuthGetChallengeResponse = {
 
 export type TOnlySuccessResponse = {
     success: boolean;
+}
+
+export type TUploadSocket = {
+    success: boolean;
+    result: string;
 }
 
 export type TNftDataExternalLinkResultType = {
