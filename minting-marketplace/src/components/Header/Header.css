@@ -52,6 +52,10 @@
     background: rgb(76, 80, 92);
 }
 
+.header-master .main-search.hidden {
+    display: none;
+}
+
 .header-master .main-search input:focus {
     outline: none;
     box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;

@@ -1,14 +1,18 @@
 //@ts-nocheck
+
+//tools
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
-import { OnboardingButton } from './../common/OnboardingButton';
-// import { getDataAllClear } from '../../ducks/search';
+import axios from 'axios';
+
+//imports components
 import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
+import { OnboardingButton } from './../common/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
 import DiscordIcon from './DiscordIcon';
-import axios from 'axios';
+import AdminPanel from './AdminPanel/AdminPanel';
 
 //images
 import headerLogoWhite from './../../images/rairTechLogoWhite.png';
@@ -16,8 +20,6 @@ import headerLogoBlack from './../../images/rairTechLogoBlack.png';
 
 //styles
 import "./Header.css";
-import { NavLink } from 'react-router-dom';
-import Popup from 'reactjs-popup';
 
 const MainHeader = ({
     goHome,
@@ -41,13 +43,32 @@ const MainHeader = ({
     const {
         currentUserAddress,
         programmaticProvider,
-        minterInstance,
-        diamondMarketplaceInstance,
-        factoryInstance
     } = useSelector(store => store.contractStore);
-
+    const [hiddenHeader, setHiddenHeader] = useState(false);
     const [textSearch, setTextSearch] = useState('');
     const [adminPanel, setAdminPanel] = useState(false);
+
+    const splashPages = [
+        '/immersiverse-splash',
+        '/video-tiles-test',
+        '/nftla-splash',
+        '/ukraineglitch',
+        '/vaporverse-splash',
+        '/greyman-splash',
+        '/nutcrackers-splash',
+        '/nipsey-splash',
+        '/about-page',
+        '/slidelock'
+    ];
+
+    const handleHiddinHeader = (param) => {
+        setHiddenHeader(false);
+        for (const el of splashPages) {
+            if (param === el) {
+                setHiddenHeader(true);
+            }
+        }
+    }
 
     const goToExactlyContract = useCallback(async (addressId: String, collectionIndexInContract: String) => {
         if (dataAll) {
@@ -62,15 +83,12 @@ const MainHeader = ({
             )
             setTextSearch('');
             dispatch({ type: "GET_DATA_ALL_CLEAR" });
-            // dispatch(getDataAllClear());
         }
     }, [dataAll, dispatch, history]);
 
     const goToExactlyToken = useCallback(async (addressId: String, token: String) => {
         if (dataAll) {
             const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
-            // TODO: expression to truncate a string to character #
-            // const truncatedValue = token.replace(/^[^#]*#([\s\S]*)$/, '$1');
             const exactlyTokenData = {
                 blockchain: response.data.contract.blockchain,
                 contractAddress: response.data.contract.contractAddress,
@@ -80,7 +98,6 @@ const MainHeader = ({
             )
             setTextSearch('');
             dispatch({ type: "GET_DATA_ALL_CLEAR" });
-            // dispatch(getDataAllClear());
         }
     }, [dataAll, dispatch, history]);
 
@@ -90,8 +107,6 @@ const MainHeader = ({
         const regexp = new RegExp(filter, 'ig')
         const matchValue = str.match(regexp)
         if (matchValue) {
-            // console.log('matchValue', matchValue)
-            // console.log('str.split(regexp)', str.split(regexp))
             return str.split(regexp).map((s, index, array) => {
                 if (index < array.length - 1) {
                     const c = matchValue.shift()
@@ -115,7 +130,11 @@ const MainHeader = ({
         if (textSearch.length > 0) {
             dispatch({ type: "GET_DATA_ALL_START", payload: textSearch });
         }
-    }, [dispatch, textSearch])
+    }, [dispatch, textSearch]);
+
+    useEffect(() => {
+        handleHiddinHeader(sentryHistory.location.pathname)
+    }, [sentryHistory.location.pathname])
 
     return (
         <div className="col-12 header-master"
@@ -133,7 +152,7 @@ const MainHeader = ({
                     primaryColor={primaryColor}
                 />
             </div>
-            <div className="main-search">
+            <div className={`main-search ${hiddenHeader ? "hidden" : ""}`}>
                 <input
                     className={primaryColor === "rhyno" ? "" : "input-search-black"}
                     type="text"
@@ -154,7 +173,6 @@ const MainHeader = ({
                                                     <img className="data-find-img" src={item.cover} alt={item.name} />
                                                     <p onClick={() => goToExactlyContract(item.contract, item.collectionIndexInContract)}>
                                                         <Highlight filter={textSearch} str={item.name} />
-                                                        {/* {console.log(item, 'i - products')} */}
                                                     </p>
                                                 </div>
                                             )}
@@ -170,10 +188,8 @@ const MainHeader = ({
                                                     <ImageCustomForSearch item={item} />
                                                     <p onClick={() => goToExactlyToken(item.contract, item.uniqueIndexInContract)}>
                                                         <Highlight filter={textSearch} str={item.metadata.name} />
-                                                        {/* {console.log(item, 'i - tokens')} */}
                                                     </p>
                                                     <div className="desc-wrapper">
-                                                        {/* <p>({item.metadata.description})</p> */}
                                                         <p>
                                                             <Highlight filter={textSearch} str={item.metadata.description} />
                                                         </p>
@@ -192,7 +208,6 @@ const MainHeader = ({
                                                     <img className="data-find-img" src={item.avatar} alt={item.nickName} />
                                                     <p>
                                                         <Highlight filter={textSearch} str={item.nickName} />
-                                                        {/* {console.log(index + Math.random(), 'i - users')} */}
                                                     </p>
                                                 </div>
                                             )}
@@ -227,7 +242,6 @@ const MainHeader = ({
                                 className={`btn btn-${primaryColor} btn-connect-wallet`}
                                 onClick={connectUserData}>
                                 {startedLogin ? 'Please wait...' : 'Connect'}
-                                {/* <img alt='Metamask Logo' src={MetamaskLogo}/> */}
                             </button>
                         }
                     </div>
@@ -277,40 +291,11 @@ const MainHeader = ({
                                 <DiscordIcon width="71px" height="55px" color={primaryColor === "rhyno" ? "#9867D9" : "#fff"} />
                             </a>
                         </div>
-                        <Popup
-                            className="popup-admin-panel"
-                            open={adminPanel}
-                            closeOnDocumentClick
-                            onClose={() => setAdminPanel(false)}
-                        >
-                            <div className="container-admin-panel">
-                                {
-                                    adminPanel && adminRights === true && !creatorViewsDisabled && [
-                                        { name: <i className="fas fa-photo-video" />, route: '/all', disabled: !loginDone },
-                                        { name: <i className="fas fa-key" />, route: '/my-nft' },
-                                        { name: <i className="fa fa-id-card" aria-hidden="true" />, route: '/new-factory', disabled: !loginDone },
-                                        { name: <i className="fa fa-shopping-cart" aria-hidden="true" />, route: '/on-sale', disabled: !loginDone },
-                                        { name: <i className="fa fa-user-secret" aria-hidden="true" />, route: '/admin', disabled: !loginDone },
-                                        { name: <i className="fas fa-city" />, route: '/factory', disabled: factoryInstance === undefined },
-                                        { name: <i className="fas fa-shopping-basket" />, route: '/minter', disabled: minterInstance === undefined },
-                                        { name: <i className="fas fa-gem" />, route: '/diamondMinter', disabled: diamondMarketplaceInstance === undefined },
-                                        { name: <i className="fas fa-exchange" />, route: '/admin/transferNFTs', disabled: !loginDone },
-                                        { name: <i className="fas fa-file-import" />, route: '/importExternalContracts', disabled: !loginDone }
-                                    ].map((item, index) => {
-                                        if (!item.disabled) {
-                                            return <div key={index} className={`col-12 py-3 btn-${primaryColor}`}>
-                                                <NavLink activeClassName={`active-${primaryColor}`} className='py-3' to={item.route} style={{ color: 'inherit', textDecoration: 'none' }}
-                                                    onClick={() => { setAdminPanel(false) }}
-                                                >
-                                                    {item.name}
-                                                </NavLink>
-                                            </div>
-                                        }
-                                        return <div key={index}></div>
-                                    })
-                                }
-                            </div>
-                        </Popup>
+                        <AdminPanel
+                            loginDone={loginDone}
+                            creatorViewsDisabled={creatorViewsDisabled}
+                            adminPanel={adminPanel}
+                        />
                     </div>
                 </div>
             </div>

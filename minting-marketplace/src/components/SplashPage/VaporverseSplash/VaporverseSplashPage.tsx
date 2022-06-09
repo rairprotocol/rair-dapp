@@ -16,6 +16,7 @@ import VV4 from '../images/vv_NFT_4.png';
 import VV_warning_1 from '../images/vv_warning_1.png';
 import VV_warning_2 from '../images/vv_warning_2.png';
 import VV_test_transmission from '../images/vv_test_transmission.png';
+import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
 
 
 import UKR126 from '../images/UkraineGlitchNFTExamples/126.jpg'
@@ -82,11 +83,11 @@ const splashData = {
   description: null,
   cardFooter: "/utility drop for OG degens /mintpass to vaporverse",
   seoInformation: {
-    title: "Слава Україні!",
+    title: "Vaporverse",
     contentName: "author",
-    content: "#UkraineGlitch",
-    description: "1991 Generative Abstract Glitch Art pieces to aid Ukraine",
-    favicon: faviconUkraine,
+    content: "Vaporverse",
+    description: "Utility drop for OG degens /mintpass to vaporverse",
+    favicon: favion_Vaporverse,
     image: vaporverse_background
   },
   buttonLabel: "Mint for .1991 Eth",
