@@ -55,7 +55,7 @@ async function main() {
       fs.mkdirSync(folder);
     }
   });
-  
+
   // const mongoConnectionString = await getMongoConnectionStringURI({ appSecretManager });
 
   const _mongoose = await mongoConnectionManager.getMongooseConnection({});
@@ -135,7 +135,8 @@ async function main() {
   app.use('/stream', streamRoute(context));
   app.use('/api', apiV1Routes(context));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use((err, req, res) => {
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, req, res, next) => {
     log.error(err);
     res.status(500).json({ success: false, error: true, message: err.message });
   });
