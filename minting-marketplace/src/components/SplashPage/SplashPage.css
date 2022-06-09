@@ -1098,6 +1098,7 @@
     background-color: #4E4D4DCC;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
 }
 
 .video-locked .block-with-video {
@@ -1135,6 +1136,13 @@
     height: 135px;
     filter: blur(3px);
     z-index: 1;
+}
+
+.video-locked img.block-img-bg.static{
+    width: 118.13px;
+    height: 80px;
+    opacity: 1;
+    filter: none;
 }
 
 

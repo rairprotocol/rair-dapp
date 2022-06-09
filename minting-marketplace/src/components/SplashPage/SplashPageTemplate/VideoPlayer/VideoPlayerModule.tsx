@@ -3,7 +3,7 @@ import "./VideoPlayer.css"
 import ShowVideoToLoggedInUsers from "./ShowVideoToLoggedInUsers";
 
 const VideoPlayerModule = ({backgroundImage, videoData}) => {
-    const {videoTitle, videoModuleDescription, videoModuleTitle, video, baseURL, mediaId} = videoData
+    const {videoTitle, videoModuleDescription, videoModuleTitle, video, baseURL, mediaId, demo} = videoData
     return (
       <div className="video-module-wrapper">
           <h3
@@ -18,7 +18,8 @@ const VideoPlayerModule = ({backgroundImage, videoData}) => {
                 video,
                 baseURL,
                 mediaId,
-                videoTitle
+                videoTitle,
+                demo
               }}/>
           </div>
           <div className="video-module-desc-wrapper">
