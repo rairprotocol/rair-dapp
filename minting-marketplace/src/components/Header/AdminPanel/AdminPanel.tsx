@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
-const AdminPanel = ({ loginDone, creatorViewsDisabled, adminPanel }) => {
+const AdminPanel = ({ loginDone, creatorViewsDisabled, adminPanel, setAdminPanel }) => {
     const {
         minterInstance,
         diamondMarketplaceInstance,
         factoryInstance
     } = useSelector(store => store.contractStore);
     const { adminRights } = useSelector(store => store.userStore);
+    const { primaryColor } = useSelector(store => store.colorStore);
 
     return (
         <>

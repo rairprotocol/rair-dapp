@@ -295,6 +295,7 @@ const MainHeader = ({
                             loginDone={loginDone}
                             creatorViewsDisabled={creatorViewsDisabled}
                             adminPanel={adminPanel}
+                            setAdminPanel={setAdminPanel}
                         />
                     </div>
                 </div>
