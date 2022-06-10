@@ -13,3 +13,7 @@ resource "cloudflare_zone" "cryptogreyman_com" {
 resource "cloudflare_zone" "ukraineglitch_com" {
   zone = "ukraineglitch.com"
 }
+
+resource "cloudflare_zone" "vaporverse_xyz" {
+  zone = "ukraineglitch.com"
+}
