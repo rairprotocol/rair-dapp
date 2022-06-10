@@ -296,7 +296,7 @@ const PurchaseTokenButton: React.FC<IPurchaseTokenButtonProps> = ({
 				/>
 			</Provider>,
 			showConfirmButton: false,
-			width: '80vw',
+			width: '90vw',
 			customClass: {
                 popup: `bg-${primaryColor} rounded-rair`,
                 title: `text-${textColor}`,
