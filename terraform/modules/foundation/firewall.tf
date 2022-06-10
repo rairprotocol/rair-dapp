@@ -46,3 +46,32 @@ resource "google_compute_firewall" "tailscale_relay_ssh_ingress" {
     local.google_browswer_ssh_access_cidr_ranges
   )
 }
+
+
+# Allow traffic from VPN subnet ingress into GKE cluster
+# targeting by tag assigned to node pool
+
+resource "google_compute_firewall" "tailscale_relay_ingress_to_gke" {
+  name        = "tailscale-relay-gke-ingress"
+  network = google_compute_network.primary.id
+  description = "tailscale-relay-gke-ingress"
+
+  allow {
+    # allow all protocols and ports
+    protocol  = "0"
+  }
+
+  direction = "INGRESS"
+
+  target_tags = [
+    local.public_node_pool_network_tag
+  ]
+
+  source_tags = [
+    local.tailscale_relay_vm_instance_tag
+  ]
+
+  source_ranges = [
+    module.vpc_cidr_ranges.network_cidr_blocks.vpn
+  ]
+}
