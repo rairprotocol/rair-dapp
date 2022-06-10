@@ -1,38 +1,21 @@
-version: '3'
+version: '3.9'
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: rair-nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/error.log:/etc/nginx/error_log.log
-      - ./nginx/cache/:/etc/nginx/cache
-    #  - /etc/letsencrypt/:/etc/letsencrypt/
-    ports:
-      - 80:80
-      - 443:443
-    environment:
-      - ENV=development
-      - APPLICATION_URL=http://minter-network
-    networks:
-      - rair-local
-    depends_on:
-      - minting-network
-
   rairnode:
     container_name: 'rairnode'
-    image: rairtechinc/rairservernode:dev_latest
+    build:
+      context: rairnode/
+      dockerfile: Dockerfile
     volumes:
-      - ./demo-decrypt-node/db:/usr/local/src/db
-      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+      - ./rairnode/db:/usr/local/src/db
+      - ./rairnode/bin/Videos:/usr/local/src/bin/Videos
     environment:
       PRODUCTION: "true"
-      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI:  {db}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${rairnode_generate_mongo_uri_with_vault_credential_util}
       USE_X509_CERT_AUTH: ${VAULT_RAIRNODE_use_x509_cert_auth}
-      MONGO_DB_HOSTNAME: ${mongo_db_hostname}
+      MONGO_DB_HOSTNAME: ${RAIRNODE_mongo_db_hostname}
       MONGO_DB_NAME: ${mongo_db_name}
       JWT_SECRET: ${jwt_secret}
       PINATA_KEY: ${pinata_key}
@@ -62,6 +45,10 @@ services:
       VAULT_URL: ${VAULT_URL}
       VAULT_RAIRNODE_APP_ROLE_ID: ${VAULT_RAIRNODE_APP_ROLE_ID}
       VAULT_RAIRNODE_APP_ROLE_SECRET_ID: ${VAULT_RAIRNODE_APP_ROLE_SECRET_ID}
+      MORALIS_SERVER_TEST: ${moralis_server_test}
+      MORALIS_SERVER_MAIN: ${moralis_server_main}
+      MORALIS_API_KEY_TEST: ${moralis_api_key_test}
+      MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
       REDIS_HOST: ${redisthhost}
       REDIS_PORT: ${redisport}
       SESSION_SECRET: ${session_secret}
@@ -69,6 +56,8 @@ services:
     ports:
       - 3000:3000
       - 5000:5000
+    depends_on:
+      - rair-redis
     networks:
       - rair-local
   blockchain-networks:
@@ -78,8 +67,10 @@ services:
       dockerfile: Dockerfile
     environment:
       PRODUCTION: "true"
-      MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
+      MONGO_URI: ${db}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      MONGO_DB_HOSTNAME: ${BLOCKCHAIN_NETWORK_mongo_db_hostname}
+      MONGO_DB_NAME: ${mongo_db_name}
       GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${blockchain_network_generate_mongo_uri_with_vault_credential_util}
       USE_X509_CERT_AUTH: ${VAULT_BLOCKCHAIN_NETWORK_use_x509_cert_auth}
       PINATA_KEY: ${pinata_key}
@@ -87,8 +78,10 @@ services:
       PINATA_GATEWAY: ${pinata_gateway}
       INFURA_PROJECT_ID: ${infura_project_id}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}
-      BINANCE_FACTORY_ADDRESS: ${binance_factory_addres}
-      BINANCE_MINTER_ADDRESS: ${binance_minter_address}
+      BINANCE_TESTNET_FACTORY_ADDRESS: ${binance_testnet_factory_addres}
+      BINANCE_TESTNET_MINTER_ADDRESS: ${binance_testnet_minter_address}
+      BINANCE_MAINNET_FACTORY_ADDRESS: ${binance_mainnet_factory_addres}
+      BINANCE_MAINNET_MINTER_ADDRESS: ${binance_mainnet_minter_address}
       GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
       GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
       MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
@@ -112,6 +105,7 @@ services:
       TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
       POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
       ETHERSCAN_GATEWAY: ${etherscan_gateway}
+      BSCSCAN_GATEWAY: ${bscscan_gateway}
       MORALIS_SERVER_TEST: ${moralis_server_test}
       MORALIS_SERVER_MAIN: ${moralis_server_main}
       MORALIS_API_KEY_TEST: ${moralis_api_key_test}
@@ -122,6 +116,7 @@ services:
       - 5001:5001
     networks:
       - rair-local
+
   rair-redis:
     container_name: "rair-redis"
     image: redis
@@ -131,26 +126,21 @@ services:
       - 6379:6379
     networks:
       - rair-local
-  rairfront:
-    container_name: 'rairfront'
-    image: rairtechinc/rairfront:dev_latest
-    ports:
-      - 8080:80
-    networks:
-      - rair-local
-
   minting-network:
     container_name: minting-network
-    image: rairtechinc/minting-network:dev_latest
+    build:
+      context: minting-marketplace
+      dockerfile: Dockerfile
     environment:
       REACT_APP_SENTRY_ENABLED: ${sentry_enabled}
       REACT_APP_SENTRY_IO_ENDPOINT: ${sentry_endpoint}
       REACT_APP_SENTRY_IO_TRACE_RATE: ${sentry_trace_rate}
       REACT_APP_SENTRY_RELEASE: ${sentry_release}
-    expose:
-      - "80"
+      REACT_APP_GOOGLE_ANALYTICS: ${react-app-google-analytics}
+      REACT_APP_GA_NAME: ${react-app-ga-name}
+      REACT_APP_DISABLE_CREATOR_VIEWS: ${react-app-disable-creator-views}
     ports:
-      - 3001:3001
+      - 80:3001
     networks:
       - rair-local
 networks:

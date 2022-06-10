@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-env
+data:
+  IP_NAME: vaporverse-ip
+  HOSTNAME: vaporverse.xyz
