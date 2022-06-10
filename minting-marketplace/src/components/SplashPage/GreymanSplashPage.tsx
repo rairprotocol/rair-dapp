@@ -96,6 +96,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
   const [openCheckList, setOpenCheckList] = useState(false);
+  const [processDone, setProcessDone] = useState(false);
 
   const [active, setActive] = useState({ policy: false, use: false });
   const GraymanSplashPageTESTNET = "0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6";
@@ -238,7 +239,10 @@ const SplashPage = ({ loginDone, connectUserData }) => {
           />
           <div className="video-grey-man-metamask-logo-wrapper">
             <button
-              style={{ border: "none", background: "none" }}
+              style={{
+                border: "none", background: "none",
+                display: `${processDone ? "none" : "block"}`
+              }}
               className="video-grey-man-metamask-logo metamask-logo"
               onClick={() => openVideo()}
             >
@@ -260,6 +264,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
             </h2>
             {/* <button onClick={closeModal}>close</button> */}
             <StandaloneVideoPlayer
+              setProcessDone={setProcessDone}
               baseURL={"https://storage.googleapis.com/rair-videos/"}
               mediaId={"QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8"}
             />
@@ -276,7 +281,10 @@ const SplashPage = ({ loginDone, connectUserData }) => {
           />
           <div className="video-grey-man-metamask-logo-wrapper">
             <button
-              style={{ border: "none", background: "none" }}
+              style={{
+                border: "none", background: "none",
+                display: `${processDone ? "none" : "block"}`
+              }}
               className="video-grey-man-metamask-logo metamask-logo"
               onClick={() => openVideo()}
             >
@@ -298,6 +306,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
             </h2>
             {/* <button onClick={closeModal}>close</button> */}
             <StandaloneVideoPlayer
+              setProcessDone={setProcessDone}
               baseURL={"https://storage.googleapis.com/rair-videos/"}
               mediaId={"QmU8iCk2eE2V9BV6Bo6QiXEgQqER1zf4fnsnStNxH77KH8"}
             />
@@ -352,7 +361,7 @@ const SplashPage = ({ loginDone, connectUserData }) => {
           openCheckList={openCheckList}
           toggleCheckList={toggleCheckList}
           nameSplash={"Cryptogreyman"}
-          backgroundColor={{darkTheme: "#676767", lightTheme: "#818181"}}
+          backgroundColor={{ darkTheme: "#676767", lightTheme: "#818181" }}
         />
         <AuthorBlock mainClass="greyman-page-author">
           <ButtonHelp backgroundButton={"var(--stimorol)"} toggleCheckList={toggleCheckList} />

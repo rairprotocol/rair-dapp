@@ -57,9 +57,7 @@ const VideoPlayer = () => {
 			let streamAddress = await axios.get<TOnlySuccessResponse>('/api/auth/get_token/' + parsedResponse.message.challenge + '/' + signature + '/' + params.videoId);
 			if (streamAddress.data.success) {
 				await setMediaAddress('/stream/' + params.videoId + '/' + params.mainManifest);
-				setTimeout(() => {
 					videojs('vjs-' + videoName);
-				}, 1000);
 		}
 	 } catch (err) {
            const error = err as AxiosError;

@@ -3,6 +3,7 @@ export interface IVideoPlayer {
   mediaId: number;
   mainManifest?: string;
   baseURL: string;
+  setProcessDone?: (value: boolean) => void;
 }
 
 export type VideoPlayerParams = {

@@ -13,6 +13,7 @@ import withReactContent from 'sweetalert2-react-content';
 import { IStreamsAbout } from '../aboutPage.types';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { useState } from 'react';
 
 const reactSwal = withReactContent(Swal);
 
@@ -22,6 +23,9 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({ Metamask, purchaseButton }) => 
 
     // const { currentUserAddress } = useSelector(store => store.contractStore);
     const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
+    const [process, setProcessDone] = useState(false);
+    const urlVideo = "https://storage.googleapis.com/rair-videos/";
+    const mediaIdVideo = "pxlXm5vHD6KE3nVarq5HygBuKA54wqWsBoYf4vci_hp0Tc";
 
     const store = useStore();
 
@@ -30,7 +34,7 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({ Metamask, purchaseButton }) => 
             title: 'How RAIR works',
             html: <Provider store={store}>
                 <StandaloneVideoPlayer
-                    {...{baseURL, mediaId}}
+                    {...{ baseURL, mediaId, setProcessDone }}
                 />
             </Provider>,
             width: '90vw',
@@ -41,6 +45,12 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({ Metamask, purchaseButton }) => 
             },
             showConfirmButton: false
         })
+    }
+
+    const handleOpenVideo = (baseURL, mediaId) => {
+        if (!process) {
+            openVideo(baseURL, mediaId)
+        }
     }
 
     return (
@@ -96,12 +106,12 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({ Metamask, purchaseButton }) => 
                         <div className="block-videos">
                             <div className="box-video">
                                 <div
-                                    onClick={() => openVideo(
-                                        "https://storage.googleapis.com/rair-videos/",
-                                        "pxlXm5vHD6KE3nVarq5HygBuKA54wqWsBoYf4vci_hp0Tc"
-                                    )}
+                                    onClick={() => handleOpenVideo(urlVideo, mediaIdVideo)}
                                     className="video-locked"
-                                    style={{ background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}` }}
+                                    style={{
+                                        background: `${primaryColor === "rhyno" ? "#fff" : "#4E4D4DCC"}`,
+                                        cursor: `${process ? "default" : "pointer"}`
+                                    }}
                                 >
                                     <div style={{ position: "relative" }}>
                                         <div className="video-icon">

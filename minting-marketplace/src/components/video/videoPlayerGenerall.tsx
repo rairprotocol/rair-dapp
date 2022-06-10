@@ -11,7 +11,7 @@ import { ContractsInitialType } from "../../ducks/contracts/contracts.types";
 import axios from "axios";
 import { TAuthGetChallengeResponse, TOnlySuccessResponse } from "../../axios.responseTypes";
 
-const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3u8", baseURL}) => {
+const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3u8", baseURL, setProcessDone = () => false}) => {
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>((state) => state.contractStore);
   const [videoName] = useState(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState<string>(
@@ -23,6 +23,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
   //https://rair.mypinata.cloud/ipfs/
 
   const requestChallenge = useCallback(async () => {
+    setProcessDone(true);
     let signature;
     let parsedResponse;
     if (window.ethereum) {
@@ -64,9 +65,11 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
       setTimeout(() => {
         videojs("vjs-" + videoName);
       }, 1000);
+      setProcessDone(false)
     } else {
       console.error(streamAddress);
       Swal.fire("NFT required to view this content");
+      setProcessDone(false)
     }
   }, [programmaticProvider, mediaId, mainManifest, videoName]);
 
