@@ -3,7 +3,7 @@ import React, { useState, memo, useCallback, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { utils } from "ethers";
 import { SvgKey } from "./SvgKey";
-import chainDataFront from "../utils/blockchainDataFront";
+import chainData from "../../../utils/blockchainData";
 import defaultImage from "./../assets/defultUser.png";
 import ReactPlayer from "react-player";
 
@@ -115,7 +115,7 @@ const NftItemForCollectionViewComponent = ({
           .formatEther(
             samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
           )
-          .toString().slice(0, 4)} ${chainDataFront[blockchain]?.name}`;
+          .toString().slice(0, 4)} ${chainData[blockchain]?.symbol}`;
       }
       // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
 
@@ -131,7 +131,7 @@ const NftItemForCollectionViewComponent = ({
               maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
             )
             .toString().slice(0, 5)} 
-          ${chainDataFront[blockchain]?.name}`
+          ${chainData[blockchain]?.symbol}`
       }
 
     }
@@ -148,7 +148,7 @@ const NftItemForCollectionViewComponent = ({
         return `${utils
           .formatEther(
             samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-          )} ${chainDataFront[blockchain]?.name}`;
+          )} ${chainData[blockchain]?.symbol}`;
       }
       // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
 
@@ -162,7 +162,7 @@ const NftItemForCollectionViewComponent = ({
             .formatEther(
               maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
             )} 
-          ${chainDataFront[blockchain]?.name}`
+          ${chainData[blockchain]?.symbol}`
       }
 
     }
@@ -324,7 +324,7 @@ const NftItemForCollectionViewComponent = ({
                   }
                 </div>
                 <div className="collection-block-price">
-                  <img src={chainDataFront[blockchain]?.image} alt="blockchain" />
+                  <img src={chainData[blockchain]?.image} alt="blockchain" />
                   {checkPrice()}
                 </div>
               </div>
@@ -357,7 +357,7 @@ const NftItemForCollectionViewComponent = ({
             <div>
               <img
                 className="blockchain-img"
-                src={`${chainDataFront[blockchain]?.image}`}
+                src={`${chainData[blockchain]?.image}`}
                 alt=""
               />
             </div>

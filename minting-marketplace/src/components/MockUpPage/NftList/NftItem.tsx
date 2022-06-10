@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, memo } from "react";
 import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
-import chainDataFront from "../utils/blockchainDataFront";
+import chainData from "../../../utils/blockchainData";
 import ReactPlayer from "react-player";
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png'
 import axios from "axios";
@@ -121,7 +121,7 @@ const NftItemComponent = ({
   function ch() {
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
-      return `${samePrice ? samePrice : samePrice} ${chainDataFront[blockchain]?.name}`
+      return `${samePrice ? samePrice : samePrice} ${chainData[blockchain]?.symbol}`
     }
     return <div className="container-nft-fullPrice">
       <div className="nft-item-fullPrice">
@@ -131,7 +131,7 @@ const NftItemComponent = ({
         }
       </div>
       <div className="nft-item-blockchainName">
-        {`${chainDataFront[blockchain]?.name}`}
+        {`${chainData[blockchain]?.symbol}`}
       </div>
     </div>
   }
@@ -263,10 +263,10 @@ const NftItemComponent = ({
                   <div className="collection-block-price">
                     <img
                       className="blockchain-img"
-                      src={`${chainDataFront[blockchain]?.image}`}
+                      src={`${chainData[blockchain]?.image}`}
                       alt=""
                     />
-                    <span className="description">{minPrice.toString().length > 5 ? minPrice.toString().slice(0, 5) : minPrice} {chainDataFront[blockchain]?.name} </span>
+                    <span className="description">{minPrice.toString().length > 5 ? minPrice.toString().slice(0, 5) : minPrice} {chainData[blockchain]?.symbol}</span>
                   </div>
                 </div>
               </div>
@@ -287,7 +287,7 @@ const NftItemComponent = ({
             <div onClick={RedirectToMockUp} className="description-big">
               <img
                 className="blockchain-img"
-                src={`${chainDataFront[blockchain]?.image}`}
+                src={`${chainData[blockchain]?.image}`}
                 alt=""
               />
               <span className="description description-price">

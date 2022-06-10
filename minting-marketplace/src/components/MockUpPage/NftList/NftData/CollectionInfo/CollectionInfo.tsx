@@ -2,7 +2,7 @@
 import React from "react";
 import "./CollectionInfo.css";
 import { utils } from "ethers";
-import chainDataFront from "./../../../utils/blockchainDataFront";
+import chainData from "./../../../../../utils/blockchainData";
 import { useSelector } from "react-redux";
 import { BlockItemCollection, CollectionInfoBody } from "./CollectionInfoItems";
 
@@ -81,7 +81,7 @@ const CollectionInfo = ({
                     </div>
                     <div className="item-price">
                       <img
-                        src={chainDataFront[blockchain]?.image}
+                        src={chainData[blockchain]?.image}
                         alt="blockchain"
                       />
                       {utils
@@ -91,7 +91,7 @@ const CollectionInfo = ({
                             : 0
                         )
                         .toString()}{" "}
-                      {chainDataFront[blockchain]?.name}
+                      {chainData[blockchain]?.symbol}
                       {/* {token.price} */}
                     </div>
                   </BlockItemCollection>

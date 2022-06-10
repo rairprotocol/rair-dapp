@@ -15,7 +15,7 @@ import MyDiamondItems from './myDiamondItems';
 import InputField from "../common/InputField";
 import FilteringBlock from "../MockUpPage/FilteringBlock/FilteringBlock";
 import ModalItem from "../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem";
-import chainDataFront from "../MockUpPage/utils/blockchainDataFront";
+import chainData from "../../utils/blockchainData";
 import './MyItems.css';
 import { getTokenError } from "../../ducks/auth/actions";
 
@@ -211,7 +211,7 @@ const MyItems = (props) => {
                         >
                           <img
                             className="my-items-blockchain-img"
-                            src={`${chainDataFront[item?.blockchain]?.image}`}
+                            src={`${chainData[item?.blockchain]?.image}`}
                             alt=""
                           />
                           {/* <span className="description ">{minPrice} ETH </span> */}

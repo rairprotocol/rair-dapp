@@ -11,7 +11,6 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-// import chainDataFront from "../../utils/blockchainDataFront";
 import { metamaskCall } from "../../../../utils/metamaskUtils";
 import ItemRank from "../../SelectBox/ItemRank";
 import SelectNumber from "../../SelectBox/SelectNumber/SelectNumber";
