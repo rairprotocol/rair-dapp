@@ -185,7 +185,8 @@ export type TContract = {
   }
 
 export type TAuthenticationType = {
-    token: string;
+  success: boolean;
+  token: string;
 }
 
 export type TAuthGetChallengeResponse = {

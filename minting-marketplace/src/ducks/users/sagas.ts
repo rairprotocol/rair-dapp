@@ -2,6 +2,7 @@ import { getUserComplete, getUserError } from "./actions";
 import { put, call, takeLatest } from "redux-saga/effects";
 import * as types from "./types";
 import axios, { AxiosResponse, AxiosError } from "axios";
+import { TUserResponse } from "../../axios.responseTypes";
 
 export type UserType = {
   adminNFT?: string;
@@ -25,12 +26,12 @@ export type Params = { publicAddress: string, type: string }
 
 export function* getUser({ publicAddress }: Params) {
   try {
-    const response: AxiosResponse = yield call(
+    const response: AxiosResponse<TUserResponse> = yield call(
       axios.get,
       `/api/users/${publicAddress}`
     );
 
-    if (response.data.user !== undefined && response.status === 200) {
+    if (response.data.user !== null && response.status === 200) {
       yield put(getUserComplete(response.data.user));
     }
   } catch (error) {

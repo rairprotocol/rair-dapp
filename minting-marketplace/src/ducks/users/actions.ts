@@ -9,7 +9,7 @@ const setAdminRights = (adminRights: boolean | undefined) => ({
   type: types.SET_ADMIN_RIGHTS,
   adminRights,
 } as const);
-const getUserComplete = (userRd: UserType) => ({
+const getUserComplete = (userRd: UserType | null) => ({
   type: types.GET_USER_COMPLETE,
   userRd,
 } as const);
