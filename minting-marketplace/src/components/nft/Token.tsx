@@ -12,6 +12,8 @@ import { rFetch } from "../../utils/rFetch";
 import MinterMarketplaceItem from "../marketplace/MinterMarketplaceItem";
 
 import * as ERC721Token from "../../contracts/RAIR_ERC721.json";
+import axios from "axios";
+import { TMetadataType, TTokenResponseData } from "../../axios.responseTypes";
 const erc721Abi = ERC721Token.default.abi;
 
 const Token = (props) => {
@@ -36,6 +38,9 @@ const Token = (props) => {
             i.firstTokenIndex <= params.identifier &&
             i.firstTokenIndex + i.copies >= params.identifier
         );
+        if(!product) {
+          return;
+        }
         setProductIndex(product.collectionIndexInContract);
         setMarketData(
           product.offers.map((offer) => {
@@ -60,15 +65,14 @@ const Token = (props) => {
   }, [fetchData]);
 
   const getData = useCallback(async () => {
-    let aux = await (
-      await fetch(
+    let aux = await axios.get<TTokenResponseData>(
         `/api/nft/network/${params.blockchain}/${params.contract.toLowerCase()}/token/${
           params.identifier
         }`
-      )
-    ).json();
-    if (aux?.result) {
-      setMetadata(aux.result.metadata);
+      );
+      const { result } = aux.data;
+    if (result) {
+      setMetadata(result.metadata);
       return;
     }
     try {
@@ -81,9 +85,7 @@ const Token = (props) => {
       } catch (err) {
         setOwner("No one!");
       }
-      let meta = await (
-        await fetch(await instance.tokenURI(params.identifier))
-      ).json();
+      let meta = await (await axios.get<TMetadataType>(await instance.tokenURI(params.identifier))).data;
       setMetadata(meta);
     } catch (err) {
       console.error(err);

@@ -3,6 +3,8 @@ import React, { useRef, memo, useCallback, useState, useMemo } from "react";
 import { useEffect } from "react";
 import { CurrentTokens } from "../CurrentTokens/CurrentTokens";
 import "../../styles.css";
+import { TNftItemResponse } from "../../../../../axios.responseTypes";
+import axios from "axios";
 
 const ListOfTokensComponent = ({
   blockchain,
@@ -40,16 +42,10 @@ const ListOfTokensComponent = ({
   const getPaginationData = useCallback(
     async (target) => {
       const indexes = getNumberFromStr(target.innerText);
-      const responseAllProduct = await (
-        await fetch(
-          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`,
-          {
-            method: "GET",
-          }
-        )
-      ).json();
-
-      setTokenData(responseAllProduct.result.tokens);
+      const responseAllProduct = await axios.get<TNftItemResponse>(
+          `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`);
+      const { result } = responseAllProduct.data;
+      setTokenData(result.tokens);
       setSelectedToken(indexes[0]);
       // setSelectedToken(Number(indexes[0]));
       onClickItem(indexes[0]);

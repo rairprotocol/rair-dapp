@@ -22,7 +22,6 @@ export type TCheckMetadataOnBlockchain = {
   image: string;
   name: string;
 }
-
 export type TMetadataType = TCheckMetadataOnBlockchain & {
   artist: string;
   description: string;
@@ -196,6 +195,11 @@ export type TAuthGetChallengeResponse = {
 
 export type TOnlySuccessResponse = {
     success: boolean;
+}
+
+export type TTokenResponseData = {
+  success: boolean;
+  result: TTokenData;
 }
 
 export type TUploadSocket = {
