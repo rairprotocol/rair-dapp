@@ -1,6 +1,8 @@
 //@ts-nocheck
+import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { TMetadataType } from '../../axios.responseTypes';
 import { diamondFactoryAbi } from '../../contracts'
 import blockchainData from '../../utils/blockchainData';
 
@@ -96,7 +98,7 @@ const ItemsForContract = ({item, openModal, setSelectedData}) => {
 			let tokenURI = await instance.tokenURI(index);
 			let metadata;
 			if (tokenURI !== '') {
-				metadata = await (await fetch(tokenURI)).json();
+				metadata = await (await axios.get<TMetadataType>(tokenURI)).data;
 			}
 			tokenData.push({
 				token: index.toString(),

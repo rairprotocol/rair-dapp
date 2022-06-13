@@ -131,19 +131,19 @@ const ShowVideoToLoggedInUsers = ({ backgroundImage, video, videoTitle, baseURL,
         <>
           <div
             onClick={() => reactSwal.fire({
-              title: videoTitle,
-              html: <Provider store={store}>
-                <StandaloneVideoPlayer
-                  {...{ baseURL, mediaId }}
-                />
-              </Provider>,
-              width: '90vw',
-              height: '90vh',
-              customClass: {
-                popup: `bg-${primaryColor}`,
-                title: `text-${textColor}`,
-              },
-              showConfirmButton: false
+                title: videoTitle,
+                html: <Provider store={store}>
+                    <StandaloneVideoPlayer
+                        {...{baseURL, mediaId}}
+                    />
+                </Provider>,
+                width: '90vw',
+                // height: '90vh',
+                customClass: {
+                    popup: `bg-${primaryColor}`,
+                    title: `text-${textColor}`,
+                },
+                showConfirmButton: false
             })}
             className="video-module-background"
             style={{ backgroundImage: 'url(' + backgroundImage + ')', }}

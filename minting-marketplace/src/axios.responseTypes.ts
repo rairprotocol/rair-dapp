@@ -12,9 +12,9 @@ export type TNftItemResult = {
   tokens: TTokenData[];
 }
 
-export type TAttributes = {
-    trait_type: string;
-    value: string;
+type TAttributes = {
+  trait_type: string;
+  value: string;
 }
 
 export type TCheckMetadataOnBlockchain = {
