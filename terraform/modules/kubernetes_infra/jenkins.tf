@@ -3,7 +3,8 @@ locals {
   jenkins_image = "jenkins/jenkins:latest"
   jenkins_persistent_storage_name = "${local.jenkins_namespace}-persistent-storage"
   jenkins_persistent_volume_claim_name = "${local.jenkins_namespace}-claim"
-  jenkins_default_port = 8080
+  jenkins_internal_port = 8080
+  jenkins_external_port = 80
 }
 
 resource "kubernetes_persistent_volume_claim" "claim" {
@@ -38,7 +39,7 @@ resource "kubernetes_deployment" "jenkins" {
   }
 
   spec {
-    
+
     replicas = 1
 
     selector {
@@ -64,7 +65,7 @@ resource "kubernetes_deployment" "jenkins" {
           image = local.jenkins_image
           name  = local.jenkins_namespace
           port {
-            container_port = "${local.jenkins_default_port}"
+            container_port = local.jenkins_internal_port
           }
           volume_mount {
             name       = local.jenkins_persistent_storage_name
@@ -85,10 +86,6 @@ resource "kubernetes_deployment" "jenkins" {
 resource "kubernetes_service" "jenkins_service" {
   metadata {
     name      = local.jenkins_namespace
-    labels = {
-      managedby = "terraform"
-      service   = local.jenkins_namespace
-    }
     annotations = {
       "networking.gke.io/load-balancer-type" = "Internal"
     }
@@ -99,9 +96,9 @@ resource "kubernetes_service" "jenkins_service" {
       app = local.jenkins_namespace
     }
     port {
-      port        = 80
-      target_port = local.jenkins_default_port
-      name = "http"
+      port        = local.jenkins_external_port
+      target_port = local.jenkins_internal_port
+      name = local.jenkins_namespace
     }
     type = "LoadBalancer"
   }
