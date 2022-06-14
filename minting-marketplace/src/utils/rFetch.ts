@@ -1,4 +1,3 @@
-//@ts-nocheck
 import Swal from 'sweetalert2';
 import * as ethers from 'ethers';
 import jsonwebtoken from 'jsonwebtoken';
@@ -6,11 +5,11 @@ import axios from 'axios';
 import { TAuthenticationType, TAuthGetChallengeResponse, TUserResponse } from '../axios.responseTypes';
 // import { useSelector } from 'react-redux'
 
-const signIn = async (provider) => {
-    let currentUser = provider?.address;
+const signIn = async (provider: ethers.providers.StaticJsonRpcProvider) => {
+    let currentUser = provider?.getSigner()._address;
     if (window.ethereum) {
         let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-        currentUser = accounts[0];
+        currentUser = accounts && accounts[0];
     }
     if (!currentUser) {
         console.error('No address');
@@ -57,13 +56,13 @@ const signIn = async (provider) => {
         return;
     }
     if (!localStorage.token) {
-        let signer = provider;
+        let signer = provider.getSigner()
         if (window.ethereum) {
-            signer = new ethers.providers.Web3Provider(window.ethereum);
+            provider = new ethers.providers.Web3Provider(window.ethereum);
             // signer = ethProvider.getSigner();
         }
-        let token = await getJWT(signer, currentUser);
-        if (token) {
+        let token = await getJWT(signer, currentUser) 
+        if (typeof(token) === 'string') {
             localStorage.setItem('token', token);
             return true;
         }
@@ -71,7 +70,7 @@ const signIn = async (provider) => {
     return false;
 }
 
-const getJWT = async (signer, userAddress) => {
+const getJWT = async (signer: ethers.providers.JsonRpcSigner, userAddress: string | undefined) => {
     try {
         const responseData = await axios.get<TAuthGetChallengeResponse>(`/api/auth/get_challenge/${ userAddress }`);
 
@@ -150,7 +149,7 @@ const getJWT = async (signer, userAddress) => {
 //  }
 // }
 
-const rFetch = async (route, options?, retryOptions = undefined, showErrorMessages = true) => {
+const rFetch = async (route: string , options?: RequestInit, retryOptions: any = undefined, showErrorMessages = true) => {
 	let request = await fetch(route, {
 		...options,
 		headers: {
@@ -179,7 +178,7 @@ const rFetch = async (route, options?, retryOptions = undefined, showErrorMessag
 	return request;
 }
 
-const isTokenValid = (token) => {
+const isTokenValid = (token: string | undefined) => {
     if (!token) {
         return "no token";
     }
@@ -188,7 +187,7 @@ const isTokenValid = (token) => {
     if (!decoded) {
         return false;
     }
-    if (decoded.exp * 1000 > new Date()) {
+    if (typeof(decoded) !== 'string' && decoded.exp !== undefined &&  decoded?.exp * 1000 > ( new Date() as unknown as number)) {
         return true
     };
     return false;
