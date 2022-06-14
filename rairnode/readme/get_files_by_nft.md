@@ -81,6 +81,7 @@ Returns a list of the files information
       "uri": "http://rairipfs:8080/ipfs/QmfUHHWHaT1jCuiMcJGZJG4pdo4A6ddoaZKPz6rbCDeNMA",
       "mainManifest": "stream.m3u8",
       "author": "author NFT",
+      "authorPublicAddress": "author address",
       "encryptionType": "aes-128-cbc",
       "title": "M89",
       "thumbnail": "1628777087428-545316449",

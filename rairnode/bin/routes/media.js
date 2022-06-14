@@ -163,7 +163,7 @@ module.exports = (context) => {
       title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs',
     } = req.body;
     // Get the user information
-    const { adminNFT: author } = req.user;
+    const { adminNFT: author, publicAddress } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
     const { db, config } = context;
@@ -321,6 +321,7 @@ module.exports = (context) => {
         const meta = {
           mainManifest: 'stream.m3u8',
           author,
+          authorPublicAddress: publicAddress,
           encryptionType: 'aes-256-gcm',
           title: context.textPurify.sanitize(title),
           contract: foundContract._id,

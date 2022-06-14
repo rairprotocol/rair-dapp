@@ -8,6 +8,7 @@ const File = new Schema(
     // Video Data
     _id: { type: String, required: true },
     author: { type: String, required: true },
+    authorPublicAddress: { type: String, required: true },
     title: { type: String, required: true, trim: true },
     description: { type: String },
     // Encryption data

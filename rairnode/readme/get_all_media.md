@@ -89,6 +89,7 @@ Returns a list of the currently registered media
             },
             "mainManifest": "stream.m3u8",
             "author": "author NFT",
+            "authorPublicAddress": "author address",
             "encryptionType": "aes-128-cbc",
             "title": "M01",
             "thumbnail": "1624271911556-887258899",
