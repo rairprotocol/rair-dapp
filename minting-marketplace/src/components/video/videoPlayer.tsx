@@ -29,14 +29,15 @@ const VideoPlayer = () => {
 		let signature;
 		let parsedResponse;
 		if (window.ethereum) {
-			let [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
-			let getChallengeResponse = await axios.get<TAuthGetChallengeResponse>('/api/auth/get_challenge/' + account);
+			let account = await window.ethereum.request({ method: 'eth_requestAccounts' })
+			let getChallengeResponse = await axios.get<TAuthGetChallengeResponse>(
+				'/api/auth/get_challenge/' + ( account &&  account[0]));
 			const { response } = getChallengeResponse.data;
 			parsedResponse = JSON.parse(response);
 			signature = await window.ethereum.request({
 				method: 'eth_signTypedData_v4',
-				params: [account, response],
-				from: account
+				params: [account && account[0], response],
+				from: account && account[0]
 			});
 		} else if (programmaticProvider) {
 			let responseWithProgrammaticProvider = await axios.get<TAuthGetChallengeResponse>('/api/auth/get_challenge/' + programmaticProvider.address);

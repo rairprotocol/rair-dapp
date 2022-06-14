@@ -27,7 +27,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
     let signature;
     let parsedResponse;
     if (window.ethereum) {
-      let [account] = await window.ethereum.request({
+      let account = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
       let response = await axios.get<TAuthGetChallengeResponse>("/api/auth/get_challenge/" + account);

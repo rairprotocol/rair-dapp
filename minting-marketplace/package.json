@@ -8,6 +8,7 @@
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.8.1",
         "@metamask/onboarding": "^1.0.1",
+        "@metamask/providers": "^8.1.1",
         "@mui/icons-material": "^5.3.1",
         "@mui/material": "^5.5.2",
         "@sentry/react": "^6.19.7",

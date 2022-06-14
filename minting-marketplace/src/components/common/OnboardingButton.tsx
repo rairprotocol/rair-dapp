@@ -1,4 +1,5 @@
 import MetaMaskOnboarding from "@metamask/onboarding";
+import { Maybe } from "@metamask/providers/dist/utils";
 // import Swal from "sweetalert2";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
@@ -9,7 +10,7 @@ const CONNECTED_TEXT = "Connected";
 export function OnboardingButton() {
   const [buttonText, setButtonText] = useState<string>(ONBOARD_TEXT);
   const [isDisabled, setDisabled] = useState<boolean>(false);
-  const [accounts, setAccounts] = useState<Array<string>>([]);
+  const [accounts, setAccounts] = useState<Maybe<unknown>>([]);
   const [showButtonPhone, setShowButtonPhone] = useState<boolean>();
   const onboarding = useRef<MetaMaskOnboarding>();
 
@@ -40,7 +41,7 @@ export function OnboardingButton() {
 
   useEffect(() => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      if (accounts.length > 0) {
+      if (Array.isArray(accounts) && accounts.length > 0) {
         setButtonText(CONNECTED_TEXT);
         setDisabled(true);
         onboarding?.current?.stopOnboarding();
@@ -70,7 +71,7 @@ export function OnboardingButton() {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       window.ethereum
         .request({ method: "eth_requestAccounts" })
-        .then((newAccounts: Array<string>) => setAccounts(newAccounts));
+        .then((newAccounts) => setAccounts(newAccounts));
     } else {
       onboarding?.current?.startOnboarding();
     }
