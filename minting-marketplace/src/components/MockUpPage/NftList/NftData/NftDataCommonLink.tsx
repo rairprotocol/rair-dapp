@@ -5,7 +5,7 @@ import { NftCollectionPage } from "./NftCollectionPage";
 import NftDataPageMain from "./NftDataPageMain";
 import NftUnlockablesPage from "./NftUnlockablesPage";
 import { useDispatch, useSelector } from "react-redux";
-import { setRealChain } from "../../../../ducks/contracts";
+import { setRealChain } from "../../../../ducks/contracts/actions";
 import axios, { AxiosError } from "axios";
 import { IOffersResponseType, TNftFilesResponse, TNftItemResponse, TUserResponse } from "../../../../axios.responseTypes";
 

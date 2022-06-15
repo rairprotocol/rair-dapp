@@ -91,7 +91,7 @@ import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
 import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
 import { getCurrentPageEnd } from './ducks/pages';
-import { setChainId, setUserAddress } from './ducks/contracts';
+import { setChainId, setUserAddress } from './ducks/contracts/actions';
 import { setAdminRights } from './ducks/users/actions';
 import axios from 'axios';
 import { TUserResponse } from './axios.responseTypes';

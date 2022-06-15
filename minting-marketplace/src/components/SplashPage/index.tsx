@@ -43,7 +43,7 @@ import RoadMap from "./Roadmap/RoadMap";
 import NipseyRelease from "./NipseyRelease/NipseyRelease";
 import { Countdown } from "./Timer/CountDown";
 import { useHistory } from "react-router-dom";
-import { setRealChain } from "../../ducks/contracts";
+import { setRealChain } from "../../ducks/contracts/actions";
 import axios from "axios";
 import { TProductResponseType } from "../../axios.responseTypes";
 

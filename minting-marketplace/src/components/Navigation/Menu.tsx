@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
 import MobileListMenu from './MenuComponents/MobileListMenu';
 import { getTokenComplete } from '../../ducks/auth/actions';
-import { setUserAddress } from '../../ducks/contracts';
+import { setUserAddress } from '../../ducks/contracts/actions';
 import axios from 'axios';
 import { TUserResponse } from '../../axios.responseTypes';
 

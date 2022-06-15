@@ -7,7 +7,7 @@ import InputField from '../common/InputField';
 import { BlockchainInfo, ChainDataType, MetamaskError } from './adminView.types';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
-import { setChainId, setProgrammaticProvider } from '../../ducks/contracts';
+import { setChainId, setProgrammaticProvider } from '../../ducks/contracts/actions';
 
 const binanceTestnetData: ChainDataType = {
 	chainId: '0x61',

@@ -1,13 +1,14 @@
-//@ts-nocheck
-import * as types from './types';
 
-const InitialState = {
-    videos: [],
+import * as types from './types';
+import { TVideosActions, TVideosInitialState } from './videosDucks.types';
+
+const InitialState: TVideosInitialState = {
+    videos: null,
     error: null,
     refresh: false,
 };
 
-export default function videosStore(state = InitialState, action) {
+export default function videosStore(state: TVideosInitialState = InitialState, action: TVideosActions): TVideosInitialState {
     switch (action.type) {
         case types.GET_LIST_VIDEOS_START:
             return {

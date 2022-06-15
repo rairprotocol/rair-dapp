@@ -8,7 +8,7 @@ import UploadProfilePicture from "./UploadProfilePicture/UploadProfilePicture";
 
 // React Redux types
 import { getTokenComplete } from "../../ducks/auth/actions";
-import { setUserAddress } from "../../ducks/contracts";
+import { setUserAddress } from "../../ducks/contracts/actions";
 import { setAdminRights } from "../../ducks/users/actions";
 
 const PopUpSettings = ({

@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { setChainId, setProgrammaticProvider, setRealChain, setUserAddress } from "./actions";
 
 type AbiInputs = {
   indexed?: boolean;
@@ -46,3 +47,13 @@ export type ContractAddressesType = {
   [key: string]: ContractContents;
 };
 
+export type SetChainId = ReturnType<typeof setChainId>;
+export type SetUserAddress = ReturnType<typeof setUserAddress>;
+export type SetProgrammaticProvider = ReturnType<typeof setProgrammaticProvider>;
+export type SetRealChain = ReturnType<typeof setRealChain>;
+
+export type ContractsActionsType =
+  | SetChainId
+  | SetUserAddress
+  | SetProgrammaticProvider
+  | SetRealChain;

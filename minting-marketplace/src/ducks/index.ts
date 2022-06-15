@@ -3,8 +3,8 @@ import createSagaMiddleware from 'redux-saga';
 //REDUCERS
 import accessStore from './auth';
 import userStore from './users';
-import videosStore from './videos';
-import contractStore from './contracts';
+import videosStore from './videos/reducers';
+import contractStore from './contracts/reducer';
 import colorStore from './colors';
 import metadataStore from './metadata';
 import getPageStore from './pages';

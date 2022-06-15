@@ -1,4 +1,4 @@
-import { ContractAddressesType, ContractsInitialType } from './contracts.types';
+import { ContractAddressesType, ContractsActionsType, ContractsInitialType } from './contracts.types';
 import * as types from './types';
 import * as ethers from 'ethers'
 
@@ -49,7 +49,7 @@ const contractAddresses: ContractAddressesType = {
 	}
 }
 
-const InitialState = {
+const InitialState: ContractsInitialType = {
 	minterInstance: undefined,
 	factoryInstance: undefined,
 	erc777Instance: undefined,
@@ -157,36 +157,4 @@ export default function userStore(state: ContractsInitialType = InitialState, ac
 			return state;
 	}
 }
-
-export const setChainId = (currentChain: BlockchainType | undefined) =>
-  ({
-    type: types.SET_CHAIN_ID,
-    currentChain,
-  } as const);
-
-export const setUserAddress = (currentUserAddress: string | undefined) =>
-  ({ type: types.SET_USER_ADDRESS, currentUserAddress } as const);
-
-export const setProgrammaticProvider = (programmaticProvider: any) => ({
-  type: types.SET_PROGRAMMATIC_PROVIDER,
-  programmaticProvider,
-} as const);
-
-export const setRealChain = (realChain: BlockchainType | undefined) => ({
-  type: types.SET_REAL_CHAIN,
-  realChain,
-} as const);
-
-export type SetChainId = ReturnType<typeof setChainId>;
-export type SetUserAddress = ReturnType<typeof setUserAddress>;
-export type SetProgrammaticProvider = ReturnType<
-  typeof setProgrammaticProvider
->;
-export type SetRealChain = ReturnType<typeof setRealChain>;
-
-export type ContractsActionsType =
-  | SetChainId
-  | SetUserAddress
-  | SetProgrammaticProvider
-  | SetRealChain;
 

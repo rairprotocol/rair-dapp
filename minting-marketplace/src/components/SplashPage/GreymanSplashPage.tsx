@@ -38,7 +38,7 @@ import PurchaseTokenButton from "../common/PurchaseToken";
 //Google Analytics
 import ReactGA from 'react-ga';
 import MetaTags from "../SeoTags/MetaTags";
-import { setRealChain } from "../../ducks/contracts";
+import { setRealChain } from "../../ducks/contracts/actions";
 
 // Google Analytics
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID

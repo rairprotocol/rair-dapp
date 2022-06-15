@@ -48,7 +48,7 @@ import Swal from 'sweetalert2';
 import MetaTags from './../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from "../SplashPageTemplate/ModalHelp";
-import { setRealChain } from "../../../ducks/contracts";
+import { setRealChain } from "../../../ducks/contracts/actions";
 // import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics

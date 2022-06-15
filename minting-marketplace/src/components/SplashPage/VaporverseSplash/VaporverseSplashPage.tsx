@@ -58,7 +58,7 @@ import MetaTags from '../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from "../SplashPageTemplate/ModalHelp";
 import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
-import { setRealChain } from "../../../ducks/contracts";
+import { setRealChain } from "../../../ducks/contracts/actions";
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID

@@ -22,7 +22,7 @@ import { rFetch } from '../../../utils/rFetch';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import Swal from 'sweetalert2';
 import PurchaseTokenButton from "../../common/PurchaseToken";
-import { setRealChain } from '../../../ducks/contracts';
+import { setRealChain } from '../../../ducks/contracts/actions';
 
 const Nutcrackers = ({ connectUserData }) => {
     const dispatch = useDispatch();
