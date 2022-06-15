@@ -1,14 +1,14 @@
-//@ts-nocheck
+import { TAuthActionsType, TAuthInitialState } from './auth.types';
 import * as types from './types';
 
-const InitialState = {
+const InitialState: TAuthInitialState = {
     error: null,
     provider: null,
     token: null,
     publicAddress: null
 };
 
-export default function accessStore(state = InitialState, action) {
+export default function accessStore(state: TAuthInitialState = InitialState, action: TAuthActionsType) {
     switch (action.type) {
         case types.GET_PROVIDER_START:
             return {
@@ -38,7 +38,8 @@ export default function accessStore(state = InitialState, action) {
         case types.GET_TOKEN_ERROR:
             return {
                 ...state,
-                token: action.error
+                token: null,
+                error: action.error
             }
         case types.GET_PUBLIC_ADDRESS_COMPLETE:
             return {

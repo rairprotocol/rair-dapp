@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { put, takeLatest } from "redux-saga/effects";
 import * as types from "./types";
 import * as ethers from "ethers";
@@ -8,7 +7,7 @@ export function* getProvider() {
     try {
         let provider = new ethers.providers.Web3Provider(window.ethereum);
         yield put(getProviderComplete(provider));
-    } catch (error) {
+    } catch (error: any) {
         if (error.response !== undefined) {
             if (error.response.status === 404) {
                 const errorDirec = "This address does not exist";

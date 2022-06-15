@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 //REDUCERS
-import accessStore from './auth';
+import accessStore from './auth/reducers';
 import userStore from './users';
 import videosStore from './videos/reducers';
 import contractStore from './contracts/reducer';
