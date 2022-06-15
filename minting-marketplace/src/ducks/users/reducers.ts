@@ -1,19 +1,13 @@
-import { UserReducerActionTypes } from './actions';
 import * as types from './types';
+import { TUsersInitialState, UserReducerActionTypes } from './users.types';
 
-export type InitialUsersStateType = {
-    userRd: null,
-    error: null,
-    adminRights: undefined
-}
-
-const InitialState: InitialUsersStateType = {
+const InitialState: TUsersInitialState = {
     userRd: null,
     error: null,
     adminRights: undefined
 };
 
-export default function userStore(state: InitialUsersStateType = InitialState, action: UserReducerActionTypes) {
+export default function userStore(state: TUsersInitialState = InitialState, action: UserReducerActionTypes): TUsersInitialState {
     switch (action.type) {
         case types.GET_USER_START:
             return {

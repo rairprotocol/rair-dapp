@@ -4,24 +4,6 @@ import * as types from "./types";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { TUserResponse } from "../../axios.responseTypes";
 
-export type UserType = {
-  adminNFT?: string;
-  avatar: string | null;
-  creationDate: string;
-  email: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  nickName: string | null;
-  nonce?: string;
-  publicAddress: string;
-  _id: string;
-};
-
-export type UserResponseType = {
-  succes: boolean;
-  user: UserType;
-};
-
 export type Params = { publicAddress: string, type: string }
 
 export function* getUser({ publicAddress }: Params) {

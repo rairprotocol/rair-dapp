@@ -1,6 +1,6 @@
 import { TOfferType } from "./components/marketplace/marketplace.types";
-import { UserType } from "./ducks/users/sagas";
 import { MediaListResponseType } from "./components/video/video.types";
+import { UserType } from "./ducks/users/users.types";
 
 export type TUserResponse = {
  success: boolean;

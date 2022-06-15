@@ -6,7 +6,7 @@ import NftSingleUnlockables from "./NftSingleUnlockables";
 import VideoPlayerView from "./UnlockablesPage/VideoPlayerView";
 import { useDispatch } from "react-redux";
 import setDocumentTitle from "../../../../utils/setTitle";
-import { setShowSidebarTrue } from "../../../../ducks/metadata";
+import { setShowSidebarTrue } from "../../../../ducks/metadata/actions";
 const NftUnlockablesPage = ({
   blockchain,
   contract,

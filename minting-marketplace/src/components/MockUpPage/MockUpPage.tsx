@@ -5,7 +5,7 @@ import SearchPanel from "./SearchPanel";
 // import setDocumentTitle from "../../utils/setTitle";
 import MetaTags from "../SeoTags/MetaTags";
 import RairFavicon from './assets/rair_favicon.ico'
-import { setShowSidebarTrue } from "../../ducks/metadata";
+import { setShowSidebarTrue } from "../../ducks/metadata/actions";
 
 const MockUpPage = ({ item }) => {
   const seoInformation = {

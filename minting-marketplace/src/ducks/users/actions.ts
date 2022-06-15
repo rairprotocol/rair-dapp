@@ -1,7 +1,7 @@
-import { UserType } from "./sagas";
 import * as types from "./types";
+import { UserType } from "./users.types";
 
-const getUser = () => ({
+const getUserStart = () => ({
   type: types.GET_USER_START
 } as const);
 
@@ -18,15 +18,4 @@ const getUserError = (error: string) => ({
   error,
 } as const);
 
-export { getUser, setAdminRights, getUserComplete, getUserError };
-
-export type GetUsersType = ReturnType<typeof getUser>;
-export type SetAdminRights = ReturnType<typeof setAdminRights>;
-export type GetUserComplete = ReturnType<typeof getUserComplete>;
-export type GetUserError = ReturnType<typeof getUserError>;
-
-export type UserReducerActionTypes =
-  | GetUsersType
-  | SetAdminRights
-  | GetUserComplete
-  | GetUserError;
+export { getUserStart, setAdminRights, getUserComplete, getUserError };

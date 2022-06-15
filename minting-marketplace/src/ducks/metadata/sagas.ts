@@ -1,7 +1,8 @@
-// @ts-nocheck
 import axios, { AxiosError } from "axios";
 import { put, takeLatest } from "redux-saga/effects";
 import { token } from "../../utils/getToken";
+import { updateTokenMetadataError } from "./actions";
+import { TUpdateTokenMetadata } from "./metadata.types";
 import * as types from "./types";
 
 export function* updateTokenMetadata({url, formData}) {
@@ -19,35 +20,26 @@ export function* updateTokenMetadata({url, formData}) {
             console.log(error);
         })
         
-    } catch (error) {
-        const errors = error as AxiosError;
-        if (errors.response !== undefined) {
-            if (errors.response.status === 404) {
+    } catch (errors) {
+        const error = errors as AxiosError;
+        if (error.response !== undefined) {
+            if (error.response.status === 404) {
                 const errorDirec = "This address does not exist";
-                yield put({
-                    type: types.UPDATE_TOKEN_METADATA_ERROR,
-                    error: errorDirec,
-                });
-            } else if (errors.response.status === 500) {
+                yield put(updateTokenMetadataError(errorDirec));
+            } else if (error.response.status === 500) {
                 const errorServer =
                     "Sorry. an internal server problem has occurred";
-                yield put({
-                    type: types.UPDATE_TOKEN_METADATA_ERROR,
-                    error: errorServer,
-                });
+                yield put(updateTokenMetadataError(errorServer));
             } else {
-                yield put({
-                    type: types.UPDATE_TOKEN_METADATA_ERROR,
-                    error: errors.response.data.message,
-                });
+                yield put(updateTokenMetadataError(error.response.data.message));
             }
         } else {
             const errorConex = "Connection error!";
-            yield put({ type: types.UPDATE_TOKEN_METADATA_ERROR, error: errorConex });
+            yield put(updateTokenMetadataError(errorConex));
         }
     }
 }
 
 export function* sagaMetadata() {
-    yield takeLatest(types.UPDATE_TOKEN_METADATA, updateTokenMetadata);
+    yield takeLatest<TUpdateTokenMetadata>(types.UPDATE_TOKEN_METADATA, updateTokenMetadata);
 }

@@ -25,7 +25,7 @@ import CustomButton from "../../utils/button/CustomButton";
 import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import NftListUnlockablesVideos from "./NftListUnlockablesVideos";
-import { setShowSidebarTrue } from "../../../../ducks/metadata";
+import { setShowSidebarTrue } from "../../../../ducks/metadata/actions";
 
 const NftDataPageMain = ({
   blockchain,

@@ -14,7 +14,7 @@ import AuthenticityBlock from "./AuthenticityBlock/AuthenticityBlock";
 // import styles
 import "./../../GeneralCollectionStyles.css";
 import CustomButton from "../../utils/button/CustomButton";
-import { setShowSidebarTrue } from "../../../../ducks/metadata";
+import { setShowSidebarTrue } from "../../../../ducks/metadata/actions";
 
 const NftCollectionPageComponent = ({
   blockchain,
