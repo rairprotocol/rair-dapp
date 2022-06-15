@@ -5,7 +5,7 @@ const { JWTVerification } = require('../middleware');
 module.exports = (context) => {
   const router = express.Router();
 
-  router.post('/:network/:hash', JWTVerification(context), async (req, res, next) => {
+  router.post('/:network/:hash', JWTVerification, async (req, res, next) => {
     try {
       const { network, hash } = req.params;
       if (!network || !hash) {

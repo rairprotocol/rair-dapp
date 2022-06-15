@@ -47,7 +47,7 @@ module.exports = (context) => {
 
   // Update specific user fields
   // MB: TODO: validate then upload
-  router.post('/:publicAddress', upload.single('file'), JWTVerification(context), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
+  router.post('/:publicAddress', upload.single('file'), JWTVerification, validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
       const foundUser = await context.db.User.findOne({ publicAddress });

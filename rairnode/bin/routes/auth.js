@@ -337,7 +337,7 @@ module.exports = (context) => {
     }
   });
 
-  router.get('/user_info', JWTVerification(context), async (req, res, next) => {
+  router.get('/user_info', JWTVerification, async (req, res, next) => {
     const user = _.chain(req.user)
       .assign({})
       .omit(['nonce', 'adminNFT'])

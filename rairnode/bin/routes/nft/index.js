@@ -18,7 +18,7 @@ module.exports = (context) => {
   const router = express.Router();
 
   // Create bunch of lazy minted tokens from csv file
-  router.post('/', JWTVerification(context), isAdmin, upload.single('csv'), async (req, res, next) => {
+  router.post('/', JWTVerification, isAdmin, upload.single('csv'), async (req, res, next) => {
     try {
       const { contract, product, updateMeta = 'false' } = req.body;
       const { user } = req;
@@ -239,7 +239,7 @@ module.exports = (context) => {
   });
 
   // Get all tokens which belongs to current user
-  router.get('/', JWTVerification(context), async (req, res, next) => {
+  router.get('/', JWTVerification, async (req, res, next) => {
     try {
       const { publicAddress: ownerAddress } = req.user;
       const result = await context.db.MintedToken.find({ ownerAddress });
