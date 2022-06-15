@@ -55,7 +55,7 @@ const handleError = (errorMessage, defaultError = undefined) => {
 	return false;
 }
 
-const metamaskCall = async (transaction, fallbackFailureMessage: string | undefined = undefined): any => {
+const metamaskCall = async (transaction, fallbackFailureMessage: string | undefined = undefined, gotoNextStep: any | undefined = undefined): any => {
 	let paramsValidation = undefined;
 	try {
 		paramsValidation = await transaction;
@@ -67,23 +67,34 @@ const metamaskCall = async (transaction, fallbackFailureMessage: string | undefi
 		let transactionReceipt;
 		try {
 			transactionReceipt = await (paramsValidation).wait(confirmationsRequired);
+			console.log(transactionReceipt);
+
 		} catch (errorMessage) {
 			return handleError(errorMessage, fallbackFailureMessage);
 		}
 		if (transactionReceipt) {
-			handleReceipt(transactionReceipt)
+
+			handleReceipt(transactionReceipt, gotoNextStep)
 		}
 		return true;
 	}
 	return paramsValidation;
 }
 
-const handleReceipt = async (transactionReceipt) => {
+const handleReceipt = async (transactionReceipt, gotoNextStep) => {
 	//console.log('Handling Receipt', transactionReceipt);
 	// Use window.ethereum.chainId because switching networks on Metamask cancels all transactions
-	await rFetch(`/api/transaction/${window.ethereum.chainId}/${transactionReceipt.transactionHash}`, {
-		method: 'POST'
-	});
+	try {
+		await rFetch(`/api/transaction/${window.ethereum.chainId}/${transactionReceipt.transactionHash}`, {
+			method: 'POST'
+		});
+		gotoNextStep && gotoNextStep()
+	} catch (error) {
+		console.log(error);
+	}
+
+
+
 }
 
 const validateInteger = (number) => {

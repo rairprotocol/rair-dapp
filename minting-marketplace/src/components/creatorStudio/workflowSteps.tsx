@@ -174,6 +174,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
 			programmaticProvider?.provider?._network?.chainId;
 
 	const fetchData = useCallback(async () => {
+		
 		if (!address) {
 			return;
 		}
@@ -315,7 +316,9 @@ const WorkflowSteps = ({ sentryHistory }) => {
 		}
 	}, [address, onMyChain, contractCreator]);
 
-	useEffect(fetchData, [fetchData, forceFetchData]);
+	useEffect(() => {
+		fetchData();
+	}, [forceFetchData]);
 
 	const goBack = useCallback(() => {
 		history.push(steps[currentStep - 1].populatedPath);
@@ -445,11 +448,12 @@ const WorkflowSteps = ({ sentryHistory }) => {
 			<Router history={sentryHistory}>
 				<Switch>
 					{steps.map((item, index) => {
+						
 						return (
 							<SentryRoute
 								key={index}
 								path={item.path}
-								render={() => <item.component stepNumber={index} />}
+								render={() => <item.component setContractData={setContractData} stepNumber={index} />}
 							/>
 						);
 					})}

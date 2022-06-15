@@ -121,7 +121,8 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				offerList.map((item) => item.price),
 				offerList.map((item) => item.name),
 				process.env.REACT_APP_NODE_ADDRESS
-			)
+			),
+			gotoNextStep()
 		)) {
 			Swal.fire({
 				title: 'Success!',
@@ -130,7 +131,6 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				showConfirmButton: true
 			});
 			forceRefetch();
-			gotoNextStep();
 		}
 	}
 
@@ -149,7 +149,8 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 					filteredList.map((item) => item.ends),
 					filteredList.map((item) => item.price),
 					filteredList.map((item) => item.name)
-				)
+				),
+				gotoNextStep()
 			)
 		) {
 			Swal.fire({
@@ -159,7 +160,7 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 				showConfirmButton: true
 			});
 			forceRefetch();
-			gotoNextStep();
+			// gotoNextStep();
 		}
 	}
 
