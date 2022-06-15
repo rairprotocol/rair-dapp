@@ -10,6 +10,7 @@ import Teammate_7 from '../images/UkrainianAmericanCons/15724868_102080808059937
 import Teammate_8 from '../images/slidelock_team.png';
 import Teammate_VV from '../images/vv_Rair_logo.png'
 import NFTLA_ICON from '../images/NFTLA_icon.png'
+import NFTNYC_LOGO from '../images/nftnyc_logo.png'
 // import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
 import Teammate from './Teammate';
@@ -500,6 +501,48 @@ const teamGreymanArray = [
     }
 ];
 
+const teamNFTNYCArray = [
+    {   
+        chain: null,
+        nameTeammate: "NFTNYC",
+        imageUrl: NFTNYC_LOGO,
+        aboutTeammate: [
+            "NFT | LA is an integrated conference experience: an epic IRL conference fused with an immersive Metaverse integrations and L.A's robust nightlife scene. Explore the city of angels and journey into its new role as a global conduit for the adoption of web3 in of sports, music, art, and entertainment."
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://www.nft.nyc/',
+                classLink: "arrrow-right"
+            }
+        ]
+    },
+    {
+        chain: `0x7849194dD593d6c3aeD24035D70B5394a1C90F8F`,
+        nameTeammate: "RAIR Technologies",
+        imageUrl: Teammate_4,
+        aboutTeammate: [
+            ` RAIR is a blockchain-based digital rights management platform that
+        uses NFTs to gate access to streaming content.Data monopolies like Amazon,
+        YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics,
+        and can change their terms of service at any time locking out creators
+        and users alike.  DIY distribution meanwhile offers no protection, and cannot
+        help package works into a scarce, valuable, tradeable framework.`,
+
+            `RAIR, through its decentralized key management node system, empowers
+        anyone to create unique, controllable, and transferable digital assets
+        tied to the actual underlying content.`
+        ],
+        socials: [
+            {
+                classIcon: 'fas fa-arrow-right',
+                link: 'https://rair.tech',
+                classLink: "arrrow-right"
+            }
+        ]
+    }
+];
+
 const teamUkraineArray = [
     {   
         chain: '0xFC9E791955AeDB8dbAd1Be054f82720c8bDbf582',
@@ -805,6 +848,26 @@ const UkraineGlitchComponent = ({ primaryColor }) => {
     )
 }
 
+const NFTNYCTeamComponent = ({ primaryColor }) => {
+    return (
+        <div className="splash-team-greyman">
+            {
+                teamNFTNYCArray.map((t, index) => {
+                    return <Teammate
+                        key={index + t.nameTeammate}
+                        name={t.nameTeammate}
+                        chain={t.chain}
+                        desc={t.aboutTeammate}
+                        socials={t.socials}
+                        primaryColor={primaryColor}
+                        url={t.imageUrl}
+                    />
+                })
+            }
+        </div>
+    )
+}
+
 const VaporVerseComponent = ({ primaryColor }) => {
     return (
         <div className="splash-team-greyman">
@@ -949,6 +1012,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
         <div className="splash-team">
             <div className="title-team">
                 {
+                    arraySplash === "nftnyc" && <h3> About </h3>
+                }
+                {
                     arraySplash === "ukraine" && <h3> About the <span style={{color:"#035BBC"}}>Cause</span></h3>
                 }
                 {
@@ -980,6 +1046,7 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
                 }
             </div>
             <div className="meet-team">
+                {   arraySplash === "nftnyc" && <NFTNYCTeamComponent primaryColor={primaryColor} />}
                 {
                     arraySplash === "ukraine" &&  <UkraineGlitchComponent />
                 }
