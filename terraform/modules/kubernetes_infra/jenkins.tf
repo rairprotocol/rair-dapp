@@ -100,6 +100,11 @@ resource "kubernetes_service" "jenkins_service" {
       target_port = local.jenkins_internal_port
       name = local.jenkins_namespace
     }
+    port {
+      port        = 50000
+      target_port = 50000
+      name = "jnlp"
+    }
     type = "LoadBalancer"
   }
 }
