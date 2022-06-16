@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 //tools
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
@@ -20,6 +20,7 @@ import headerLogoBlack from './../../images/rairTechLogoBlack.png';
 
 //styles
 import "./Header.css";
+import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
 
 const MainHeader = ({
     goHome,
@@ -38,17 +39,18 @@ const MainHeader = ({
     const dispatch = useDispatch();
     const history = useHistory();
     const { primaryColor, headerLogo } = useSelector(store => store.colorStore);
-    const { dataAll, message } = useSelector((store) => store.allInformationFromSearch);
+    const { dataAll, message, titleSearchDemo } = useSelector((store) => store.allInformationFromSearch);
     const { adminRights } = useSelector(store => store.userStore);
     const {
         currentUserAddress,
         programmaticProvider,
     } = useSelector(store => store.contractStore);
     const [hiddenHeader, setHiddenHeader] = useState(false);
-    const [textSearch, setTextSearch] = useState('');
+    const [textSearch, setTextSearch] = useState(titleSearchDemo);
     const [adminPanel, setAdminPanel] = useState(false);
 
-    const splashPages = [
+    const splashPages = useMemo(() => {
+    return [
         '/immersiverse-splash',
         '/video-tiles-test',
         '/nftla-splash',
@@ -59,16 +61,17 @@ const MainHeader = ({
         '/nipsey-splash',
         '/about-page',
         '/slidelock'
-    ];
+    ]
+}, []);
 
-    const handleHiddinHeader = (param) => {
+    const handleHiddinHeader = useCallback((param) => {
         setHiddenHeader(false);
         for (const el of splashPages) {
             if (param === el) {
                 setHiddenHeader(true);
             }
         }
-    }
+    },[splashPages]);
 
     const goToExactlyContract = useCallback(async (addressId: String, collectionIndexInContract: String) => {
         if (dataAll) {
@@ -82,7 +85,7 @@ const MainHeader = ({
                 `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
             )
             setTextSearch('');
-            dispatch({ type: "GET_DATA_ALL_CLEAR" });
+            dispatch(getDataAllClear());
         }
     }, [dataAll, dispatch, history]);
 
@@ -97,7 +100,7 @@ const MainHeader = ({
                 `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
             )
             setTextSearch('');
-            dispatch({ type: "GET_DATA_ALL_CLEAR" });
+            dispatch(getDataAllClear());
         }
     }, [dataAll, dispatch, history]);
 
@@ -128,13 +131,13 @@ const MainHeader = ({
 
     useEffect(() => {
         if (textSearch.length > 0) {
-            dispatch({ type: "GET_DATA_ALL_START", payload: textSearch });
+            dispatch(getDataAllStart(textSearch));
         }
     }, [dispatch, textSearch]);
 
     useEffect(() => {
         handleHiddinHeader(sentryHistory.location.pathname)
-    }, [sentryHistory.location.pathname])
+    }, [sentryHistory.location.pathname, handleHiddinHeader])
 
     return (
         <div className="col-12 header-master"

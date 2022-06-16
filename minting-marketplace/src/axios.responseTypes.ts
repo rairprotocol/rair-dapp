@@ -18,14 +18,14 @@ type TAttributes = {
 }
 
 export type TCheckMetadataOnBlockchain = {
-  attributes: TAttributes[];
+  attributes?: TAttributes[];
   image: string;
   name: string;
 }
 export type TMetadataType = TCheckMetadataOnBlockchain & {
   artist: string;
   description: string;
-  external_url: string;
+  external_url?: string;
 }
 
 export type TTokenData = {

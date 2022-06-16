@@ -5,7 +5,7 @@ import headerLogoWhite from '../../images/RAIR-Tech-Logo-POWERED BY-WHITE-2021.p
 
 import bgLogoBlack from '../../images/BlackBg.png';
 import bgLogoWhite from '../../images/ClayBg.png';
-import { ColorStoreType, SchemaType, ColorChoice } from './colorStore.types';
+import { ColorStoreType, SchemaType, ColorStoreActionsType } from './colorStore.types';
 
 const schemes: SchemaType = {
 	'rhyno': {
@@ -40,10 +40,3 @@ export default function colorStore(state: ColorStoreType = InitialColorScheme, a
 			return state;
 	}
 }
-
-export const setColorScheme = (colorScheme: ColorChoice) =>
-  ({ type: types.SET_COLOR_SCHEME, colorScheme } as const);
-
-export type SetColorSchemeType = ReturnType<typeof setColorScheme>;
-
-export type ColorStoreActionsType = SetColorSchemeType;

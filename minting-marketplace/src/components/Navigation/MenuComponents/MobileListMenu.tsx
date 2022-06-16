@@ -4,7 +4,7 @@ import { OnboardingButton } from './../../common/OnboardingButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItem } from './../NavigationItems/NavigationItems';
 import { NavLink } from 'react-router-dom';
-import { setColorScheme } from '../../../ducks/colors';
+import { setColorScheme } from '../../../ducks/colors/actions';
 
 const MobileListMenu = ({
     primaryColor,

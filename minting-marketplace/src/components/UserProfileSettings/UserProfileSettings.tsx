@@ -6,7 +6,7 @@ import "./UserProfileSettings.css";
 // React Redux types
 import PopUpSettings from "./PopUpSetting";
 import PopUpNotification from "./PopUpNotification/PopUpNotification";
-import { setColorScheme } from "../../ducks/colors";
+import { setColorScheme } from "../../ducks/colors/actions";
 
 const UserProfileSettings = ({
   loginDone,

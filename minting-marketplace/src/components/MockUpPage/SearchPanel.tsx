@@ -9,7 +9,7 @@ import VideoList from "../video/videoList";
 import FilteringBlock from "./FilteringBlock/FilteringBlock";
 import axios, { AxiosError } from "axios";
 import PaginationBox from "./PaginationBox/PaginationBox";
-import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages";
+import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages/actions";
 import { TGetFullContracts, TMediaList } from "../../axios.responseTypes";
 
 const SearchPanel = ({ primaryColor, textColor }) => {
@@ -106,7 +106,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
 
   // useEffect(()=> {
   //   // if(titleSearchDemo.length > 0 ){
-  //     dispatch({ type: "GET_DATA_ALL_START", payload: titleSearchDemo });
+  //     dispatch(getDataAllStart(titleSearchDemo));
   //   // }
   // },[dispatch, titleSearchDemo])
 

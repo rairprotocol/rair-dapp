@@ -1,3 +1,5 @@
+import { setColorScheme } from "./actions";
+
 export type ColorChoice = "charcoal" | "rhyno";
 type BackgroundBlendModeType =
   | "difference"
@@ -31,4 +33,8 @@ export type ColorStoreType = {
 export type SchemaType = {
   [key: string]: ColorStoreType;
 };
+
+export type SetColorSchemeType = ReturnType<typeof setColorScheme>;
+
+export type ColorStoreActionsType = SetColorSchemeType;
 

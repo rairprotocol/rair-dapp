@@ -91,7 +91,7 @@ import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
 import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
-import { getCurrentPageEnd } from './ducks/pages';
+import { getCurrentPageEnd } from './ducks/pages/actions';
 import { setChainId, setUserAddress } from './ducks/contracts/actions';
 import { setAdminRights } from './ducks/users/actions';
 import axios from 'axios';
