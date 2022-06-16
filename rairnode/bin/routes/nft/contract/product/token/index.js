@@ -2,9 +2,9 @@ const express = require('express');
 const _ = require('lodash');
 const fs = require('fs').promises;
 const { JWTVerification, validation, dataTransform } = require('../../../../../middleware');
-// eslint-disable-next-line operator-linebreak
-const { addMetadata, addPin, removePin, addFile } =
-  require('../../../../../integrations/ipfsService')();
+const {
+  addMetadata, addPin, removePin, addFile,
+} = require('../../../../../integrations/ipfsService')();
 const upload = require('../../../../../Multer/Config');
 const log = require('../../../../../utils/logger')(module);
 
@@ -14,16 +14,15 @@ module.exports = (context) => {
   // Get specific token by internal token ID
   router.get('/', async (req, res, next) => {
     try {
-      const { contract, offers, offerPool, token } = req;
-      const options = _.assign(
-        {
-          contract: contract._id,
-          token,
-        },
-        contract.diamond
-          ? { offer: { $in: offers } }
-          : { offerPool: offerPool.marketplaceCatalogIndex },
-      );
+      const {
+        contract, offers, offerPool, token,
+      } = req;
+      const options = _.assign({
+        contract: contract._id,
+        token,
+      }, contract.diamond
+        ? { offer: { $in: offers } }
+        : { offerPool: offerPool.marketplaceCatalogIndex });
 
       const result = await context.db.MintedToken.findOne(options);
 
@@ -171,7 +170,10 @@ module.exports = (context) => {
 
         const updatedToken = await context.db.MintedToken.findOneAndUpdate(
           options,
-          sanitizedFieldsForUpdate,
+          {
+            ...sanitizedFieldsForUpdate,
+            isMetadataPinned: false,
+          },
           { new: true },
         );
 
@@ -203,7 +205,9 @@ module.exports = (context) => {
   // Pin metadata to pinata cloud
   router.get('/pinning', JWTVerification, async (req, res, next) => {
     try {
-      const { contract, offers, offerPool, token } = req;
+      const {
+        contract, offers, offerPool, token,
+      } = req;
       const { user } = req;
       // eslint-disable-next-line prefer-regex-literals
       const reg = new RegExp(
@@ -236,23 +240,11 @@ module.exports = (context) => {
           .send({ success: false, message: 'Token not found.' });
       }
 
-      if (!foundToken.isMinted) {
-        return res
-          .status(400)
-          .send({ success: false, message: 'Token not minted.' });
-      }
-
       metadataURI = foundToken.metadataURI;
 
       if (!_.isEmpty(foundToken.metadata)) {
-        const CID = await addMetadata(
-          foundToken.metadata,
-          _.get(foundToken.metadata, 'name', 'none'),
-        );
-        await addPin(
-          CID,
-          `metadata_${_.get(foundToken.metadata, 'name', 'none')}`,
-        );
+        const CID = await addMetadata(foundToken.metadata, _.get(foundToken.metadata, 'name', 'none'));
+        await addPin(CID, `metadata_${_.get(foundToken.metadata, 'name', 'none')}`);
         metadataURI = `${process.env.PINATA_GATEWAY}/${CID}`;
       }
 
@@ -261,7 +253,7 @@ module.exports = (context) => {
         await removePin(CID);
       }
 
-      await foundToken.updateOne({ metadataURI });
+      await foundToken.updateOne({ metadataURI, isMetadataPinned: true });
 
       return res.json({ success: true, metadataURI });
     } catch (err) {

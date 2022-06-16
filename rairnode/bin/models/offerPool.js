@@ -12,7 +12,7 @@ const OfferPool = new Schema(
     creationDate: { type: Date, default: Date.now },
     transactionHash: { type: String, required: false },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 module.exports = OfferPool;

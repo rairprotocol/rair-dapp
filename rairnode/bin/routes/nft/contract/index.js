@@ -1,5 +1,7 @@
 const express = require('express');
 const { validation } = require('../../../middleware');
+const { MintedToken } = require('../../../models');
+const productRoutes = require('./product');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -11,7 +13,7 @@ module.exports = (context) => {
       const { tokenInContract } = req.params;
       const uniqueIndexInContract = tokenInContract;
 
-      const result = await context.db.MintedToken.findOne({
+      const result = await MintedToken.findOne({
         contract: contract._id,
         uniqueIndexInContract,
       });
@@ -30,7 +32,7 @@ module.exports = (context) => {
       req.product = req.params.product;
       return next();
     },
-    require('./product')(context),
+    productRoutes(context),
   );
 
   return router;

@@ -22,6 +22,7 @@ const nftProduct = require('./nftProduct');
 const getTokensByContractProduct = require('./getTokensByContractProduct');
 const search = require('./search');
 const updateTokenMetadata = require('./updateTokenMetadata');
+const pinningMultiple = require('./pinningMultiple');
 
 module.exports = {
   admin,
@@ -48,4 +49,5 @@ module.exports = {
   getTokensByContractProduct,
   search,
   updateTokenMetadata,
+  pinningMultiple,
 };

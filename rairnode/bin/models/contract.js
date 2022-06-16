@@ -12,6 +12,8 @@ const Contract = new Schema({
   transactionHash: { type: String, required: false },
   lastSyncedBlock: { type: String, required: false, default: '0' },
   external: { type: Boolean, required: true, default: false },
+  singleMetadata: { type: Boolean, default: false },
+  metadataURI: { type: String, default: 'none' },
 }, { versionKey: false });
 
 module.exports = Contract;

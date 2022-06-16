@@ -82,6 +82,7 @@ For correct work of sessions we need to set
     * [x] /nft - POST - create new or update existed nft tokens, [see details here](readme/bulk_create_NFT_tokens.md)
         * [x] / - GET - get all tokens which belongs to current user, [see details here](readme/get_all_tokens_for_current_user.md)
         * [x] /csv/sample - GET - get CSV sample file, [see details here](readme/get_csv_sample_file.md)
+        * [x] /pinningMultiple - POST - upload multiple tokens metadata to the cloud, [see details here](readme/upload_multiple_tokens_metadata_to_cloud.md)
         * [x] /network/:networkId/:contract
             * [x] /:product - GET - get tokens for the product, [see details here](readme/get_all_minted_tokens_from_product.md)
                 * [x] /tokenNumbers - GET - Get list of token numbers, [see details here](readme/get_all_minted_token_numbers_from_product.md)

@@ -1,5 +1,7 @@
 const { exec } = require('child_process');
 const _ = require('lodash');
+const { JSDOM } = require('jsdom');
+const createDOMPurify = require('dompurify');
 const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation');
 const log = require('./logger')(module);
 const { Contract, OfferPool, MintedToken, Offer } = require('../models');
@@ -107,7 +109,14 @@ const verifyAccessRightsToFile = (user, files) => Promise.all(_.map(files, async
   return clonedFile;
 }));
 
+// XSS sanitizer
+const textPurify = () => {
+  const { window } = new JSDOM('');
+  return createDOMPurify(window);
+};
+
 module.exports = {
   execPromise,
   verifyAccessRightsToFile,
+  textPurify: textPurify(),
 };

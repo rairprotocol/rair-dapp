@@ -8,7 +8,7 @@ const { DEFAULT_PRODUCT_COVER } = process.env;
 const Product = new Schema(
   {
     name: { type: String, required: true, trim: true },
-    collectionIndexInContract: { type: String, required: true }, //used only as productIndex
+    collectionIndexInContract: { type: String, required: true }, // used only as productIndex
     contract: { type: Schema.ObjectId, required: true },
     copies: { type: Number, required: true },
     soldCopies: { type: Number, default: 0 },
@@ -20,8 +20,10 @@ const Product = new Schema(
     creationDate: { type: Date, default: Date.now },
     transactionHash: { type: String, required: false },
     diamond: { type: Boolean, required: true, default: false },
+    singleMetadata: { type: Boolean, default: false },
+    metadataURI: { type: String, default: 'none' },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 Product.statics = {
@@ -34,7 +36,7 @@ Product.statics = {
         ...filters,
       },
       null,
-      { sort: { [sortBy]: direction } }
+      { sort: { [sortBy]: direction } },
     );
   },
 
@@ -47,7 +49,7 @@ Product.statics = {
         ...filters,
       },
       null,
-      { sort: { [sortBy]: direction } }
+      { sort: { [sortBy]: direction } },
     );
   },
 

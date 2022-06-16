@@ -10,8 +10,6 @@ const morgan = require('morgan');
 const session = require('express-session');
 const RedisStorage = require('connect-redis')(session);
 const redis = require('redis');
-const createDOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
 const seedDB = require('./seeds');
 const log = require('./utils/logger')(module);
 const StartHLS = require('./hls-starter');
@@ -19,6 +17,7 @@ const models = require('./models');
 const redisService = require('./services/redis');
 const streamRoute = require('./routes/stream');
 const apiV1Routes = require('./routes');
+const { textPurify } = require('./utils/helpers');
 
 const port = process.env.PORT;
 
@@ -88,10 +87,6 @@ async function main() {
   app.use(cors({ origin }));
 
   const hls = await StartHLS();
-
-  // XSS sanitizer
-  const { window } = new JSDOM('');
-  const textPurify = createDOMPurify(window);
 
   const context = {
     hls,

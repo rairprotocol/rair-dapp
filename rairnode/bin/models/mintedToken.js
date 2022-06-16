@@ -2,25 +2,25 @@ const mongoose = require('mongoose');
 
 const { Schema, model } = mongoose;
 
-const Metadata = new Schema(
-  {
-    name: { type: String, required: true, default: 'none' },
-    description: { type: String, required: true, default: 'none' },
-    artist: { type: String, default: 'none' },
-    external_url: { type: String, default: 'none' },
-    image: { type: String },
-    animation_url: { type: String },
-    attributes: {
-      type: [
-        {
-          trait_type: String,
-          value: String,
-        },
-      ],
-    },
+const Metadata = new Schema({
+  image: { type: String, required: true, default: process.env.DEFAULT_PRODUCT_COVER },
+  image_data: { type: String, required: false },
+  artist: { type: String, default: 'none' },
+  external_url: { type: String, default: 'none' },
+  description: { type: String, required: true, default: 'none' },
+  name: { type: String, required: true, default: 'none' },
+  attributes: {
+    type: [{
+      display_type: { type: String, required: false },
+      trait_type: { type: String, required: false },
+      value: { type: String, required: true },
+    }],
+    required: false,
   },
-  { _id: false }
-);
+  background_color: { type: String, required: false },
+  animation_url: { type: String, required: false },
+  youtube_url: { type: String, required: false },
+}, { _id: false });
 
 const MintedToken = new Schema(
   {
@@ -37,13 +37,13 @@ const MintedToken = new Schema(
     isMetadataPinned: { type: Boolean },
     creationDate: { type: Date, default: Date.now },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 MintedToken.pre('save', function (next) {
   const token = this;
   const reg = new RegExp(
-    /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm
+    /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
   );
 
   if (token.isNew) {
@@ -59,11 +59,10 @@ MintedToken.pre('save', function (next) {
         if (err) {
           next(err);
         } else {
-          token.isMetadataPinned =
-            reg.test(token.metadataURI || '') &&
-            token.metadataURI !== result.metadataURI;
+          token.isMetadataPinned = reg.test(token.metadataURI || '')
+            && token.metadataURI !== result.metadataURI;
         }
-      }
+      },
     );
   }
 
@@ -75,16 +74,15 @@ MintedToken.pre(
   async function (next) {
     try {
       const reg = new RegExp(
-        /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm
+        /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
       );
       const docToUpdate = await this.model.findOne(this.getQuery());
       const newFields = this.getUpdate();
 
       for (const key in newFields) {
         if (key.includes('metadata')) {
-          this.getUpdate().isMetadataPinned =
-            reg.test(newFields.metadataURI || '') &&
-            newFields.metadataURI !== docToUpdate.metadataURI;
+          this.getUpdate().isMetadataPinned = reg.test(newFields.metadataURI || '')
+            && newFields.metadataURI !== docToUpdate.metadataURI;
           break;
         }
       }
@@ -93,7 +91,7 @@ MintedToken.pre(
     } catch (error) {
       return next(error);
     }
-  }
+  },
 );
 
 MintedToken.pre('insertMany', async (next, tokens) => {
