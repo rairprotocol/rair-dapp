@@ -1,7 +1,7 @@
 import BinanceDiamond from '../images/binance-diamond.svg';
 import MaticLogo from '../images/polygon-matic.svg';
 import EthereumLogo from '../images/ethereum-logo.svg';
-import { TChainData } from './utilsTypes';
+import { TChainData } from './utils.types';
 
 const chainData: TChainData = {
 	'0x38': {

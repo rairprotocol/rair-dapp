@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
@@ -19,12 +18,11 @@ import { TTokenData } from '../../axios.responseTypes';
 const TransferTokens = () => {
 	const { currentChain, currentUserAddress, contractCreator } = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
 
-	const [traderRole, setTraderRole] = useState<boolean | undefined>();
+	const [traderRole, setTraderRole] = useState<boolean | any | undefined>();
 	const [manualAddress, setManualAddress] = useState<boolean>(false);
 	const [manualDiamond, setManualDiamond] = useState<boolean>(false);
 
 	const [contractData, setContractData] = useState<ContractDataType | undefined>();
-
 	const [userContracts, setUserContracts] = useState<OptionsType[]>([]);
 	const [selectedContract, setSelectedContract] = useState<string>('null');
 
@@ -65,10 +63,11 @@ const TransferTokens = () => {
 		}
 		let name = await metamaskCall(
 			instance.name(),
+			// name return string
 			"Unable to connect to the contract, please verify the address, blockchain and type of the contract"
 		);
 
-		if (name !== false) {
+		if (name !== false && typeof(name) === 'string') {
 			setContractData({
 				title: name,
 				contractAddress: instance.address
@@ -148,13 +147,16 @@ const TransferTokens = () => {
 
 	const hasTraderRole = useCallback(async () => {
 		if (contractInstance) {
+			// return boolean
 			const response = await metamaskCall(
 				contractInstance.hasRole(
 					await contractInstance.TRADER(),
 					currentUserAddress
 				)
 			)
-			setTraderRole(response);
+			if(typeof(response === 'boolean')){
+				setTraderRole(response);
+			}
 		}
 	}, [contractInstance, currentUserAddress]);
 
@@ -224,7 +226,7 @@ const TransferTokens = () => {
 		{(selectedProduct !== 'null' || (contractData && manualAddress)) && <>
 			<div className='col-12 row'>
 				{contractData && <div className='col-12'>
-					Connected to: {contractData.title} ({contractData.contractAddress})
+					{`Connected to: ${contractData.title} (${contractData.contractAddress})`}
 				</div>}
 				<div className='col-12'>
 				Your owned tokens:<br />

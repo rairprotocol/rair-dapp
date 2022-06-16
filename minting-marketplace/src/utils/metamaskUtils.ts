@@ -1,18 +1,18 @@
-//@ts-nocheck
+import { ethers } from 'ethers';
 import Swal from 'sweetalert2';
 import { rFetch } from './rFetch';
 
 // 2 for the transaction catcher, 1 for speed
 const confirmationsRequired = 2;
 
-const handleError = (errorMessage, defaultError = undefined) => {
+const handleError = (errorMessage: any, defaultError: string | undefined = undefined) => {
 	//console.log('Reason:', errorMessage.reason)
 	//console.log('Code', errorMessage.code)
 	//console.log('Error', errorMessage.error)
 	//console.log('Method', errorMessage.method)
 	//console.log('Transaction', errorMessage.transaction);
 
-	let cleanError;
+	let cleanError: string ='';
 
 	if (errorMessage.cancelled) {
 		cleanError = "The transaction has been cancelled!";
@@ -55,8 +55,12 @@ const handleError = (errorMessage, defaultError = undefined) => {
 	return false;
 }
 
-const metamaskCall = async (transaction, fallbackFailureMessage: string | undefined = undefined, gotoNextStep: any | undefined = undefined): any => {
-	let paramsValidation = undefined;
+
+const metamaskCall = async (transaction: Promise<ethers.ContractTransaction>, fallbackFailureMessage: string | undefined = undefined, gotoNextStep: (() => void) | undefined = undefined) => {
+// return type any 
+// to get ContractReceipt if we have it we just return it if not we try to get it (throw in wait func(arg: number - number of confrim))
+// wait method exists only in Contract Transaction type
+	let paramsValidation: any = undefined;
 	try {
 		paramsValidation = await transaction;
 	} catch (errorMessage) {
@@ -64,7 +68,7 @@ const metamaskCall = async (transaction, fallbackFailureMessage: string | undefi
 		return false;
 	}
 	if (paramsValidation?.wait) {
-		let transactionReceipt;
+		let transactionReceipt: ethers.ContractReceipt;
 		try {
 			transactionReceipt = await (paramsValidation).wait(confirmationsRequired);
 			console.log(transactionReceipt);
@@ -81,7 +85,7 @@ const metamaskCall = async (transaction, fallbackFailureMessage: string | undefi
 	return paramsValidation;
 }
 
-const handleReceipt = async (transactionReceipt, gotoNextStep) => {
+const handleReceipt = async (transactionReceipt: ethers.ContractReceipt, gotoNextStep?: (() => void) | undefined) => {
 	//console.log('Handling Receipt', transactionReceipt);
 	// Use window.ethereum.chainId because switching networks on Metamask cancels all transactions
 	try {
@@ -92,13 +96,10 @@ const handleReceipt = async (transactionReceipt, gotoNextStep) => {
 	} catch (error) {
 		console.log(error);
 	}
-
-
-
 }
 
-const validateInteger = (number) => {
-	if (number === undefined || number === "") {
+const validateInteger = (number: number) => {
+	if (number === undefined || Number.isNaN(number)) {
 		return false;
 	}
 	let stringified = number.toString();
