@@ -11,7 +11,7 @@ services:
       - ./rairnode/bin/Videos:/usr/local/src/bin/Videos
     environment:
       PRODUCTION: "true"
-      MONGO_URI:  {db}
+      MONGO_URI:  ${db}
       MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
       GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${rairnode_generate_mongo_uri_with_vault_credential_util}
       USE_X509_CERT_AUTH: ${VAULT_RAIRNODE_use_x509_cert_auth}

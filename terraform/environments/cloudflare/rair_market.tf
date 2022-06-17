@@ -46,3 +46,10 @@ resource "cloudflare_record" "rair_market__staging_rair_market" {
   value   = "35.227.249.6"
   type    = local.record_type.A
 }
+
+resource "cloudflare_record" "rair_market__nftnyc_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "Nftnyc"
+  value   = "34.98.108.170"
+  type    = local.record_type.A
+}
