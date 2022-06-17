@@ -48,7 +48,7 @@ const EditComponent = ({
       <form onSubmit={onSubmit}>
         <h1> </h1>
         <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
-        <Name onChange={(e) => setName(e.target.value)} value={name} />
+        <Name onChange={(e) => setName(e.target.value)} value={name.replace(/@/g,'')} />
         <Status onChange={(e) => setStatus(e.target.value)} value={status} />
         <button 
         type="submit" className={cl.save}>

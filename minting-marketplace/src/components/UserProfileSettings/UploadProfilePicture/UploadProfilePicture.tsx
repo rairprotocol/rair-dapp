@@ -15,10 +15,12 @@ const UploadProfilePicture = ({
   setImagePreviewUrl,
   imagePreviewUrl,
   setTriggerState,
+  userEmail,
+  userName
 }) => {
   const [file, setFile] = useState("");
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState("");
+  const [name, setName] = useState(userName);
+  const [status, setStatus] = useState(userEmail);
   const [active, setActive] = useState("edit");
   const { primaryColor } = useSelector(store => store.colorStore);
 

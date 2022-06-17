@@ -125,6 +125,8 @@ const PopUpSettings = ({
           setImagePreviewUrl={setImagePreviewUrl}
           imagePreviewUrl={imagePreviewUrl}
           setTriggerState={setTriggerState}
+          userEmail={userEmail}
+          userName={userName}
         />
       </>
     );
