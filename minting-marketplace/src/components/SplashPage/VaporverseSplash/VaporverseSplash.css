@@ -7,7 +7,9 @@
 
 .wrapper-splash-page.vaporverse .info-block.info-block-col{
     text-align: center;
-     width: 100%
+    width: 100%;
+    margin-bottom: 0;
+    height: 12vw;
 }
 
 .wrapper-splash-page.vaporverse {
@@ -83,6 +85,7 @@
 .wrapper-splash-page.vaporverse .main-greyman-pic-wrapper {
     width: 90vw;
     display: flex;
+    flex-direction: row;
     justify-content: center;
 }
 
@@ -148,6 +151,10 @@
     .wrapper-splash-page.vaporverse .info-block{
         font-size: 32px;
     }
+
+    .wrapper-splash-page.vaporverse .info-block.info-block-col{
+        height: 15vw;
+    }
 }
 
 @media screen and (max-width: 1800px) {
@@ -160,6 +167,7 @@
     .wrapper-splash-page.vaporverse .info-block{
         font-size: 24px;
     }
+
 }
 
 
@@ -171,6 +179,10 @@
     }
     .wrapper-splash-page.vaporverse .info-block{
         font-size: 18px;
+    }
+
+    .wrapper-splash-page.vaporverse .info-block.info-block-col{
+        height: 13vw;
     }
 }
 
@@ -240,9 +252,14 @@
     }
 
     .wrapper-splash-page.vaporverse .main-greyman-pic-wrapper {
-        width: 90vw;
-        display: -webkit-inline-box !important;
-        margin-left: -2rem;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .wrapper-splash-page.vaporverse .join-pic-main {
+        margin-right: 0rem;
+        margin-bottom: 2rem;
     }
 
     .wrapper-splash-page.vaporverse .left-tokens {
@@ -286,6 +303,10 @@
     .wrapper-splash-page.vaporverse .template-author-card .card-footer{
         font-size: 16px;
     }
+
+    .wrapper-splash-page.vaporverse .info-block.info-block-col{
+        height: 120px;
+    }
     
 }
 
@@ -304,7 +325,7 @@
     }
 
     .wrapper-splash-page.vaporverse .info-block.info-block-col{
-        font-size: 8px;
+        font-size: 12px;
 
     }
 }
@@ -358,13 +379,19 @@
         font-size: 24px;
     }
     
+    .wrapper-splash-page.vaporverse img.join-pic-img{
+        width: 220px;
+        height: 220px;
+    }
+    
+
     .wrapper-splash-page.vaporverse .info-block{
         font-size: 12px;
     }
 
     .wrapper-splash-page.vaporverse .info-block.info-block-col{
-        font-size: 6px;
-
+        font-size: 10px;
+        height: 100px;
     }
 
     .wrapper-splash-page.vaporverse .template-author-card {
@@ -428,6 +455,11 @@
     .wrapper-splash-page.vaporverse .template-author-card {
         background-position: center 21vw;
         height: 90vw;
+    }
+
+    .wrapper-splash-page.vaporverse img.join-pic-img{
+        width: 175px;
+        height: 175px;
     }
 
 }

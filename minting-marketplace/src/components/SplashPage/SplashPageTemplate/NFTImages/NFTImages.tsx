@@ -75,7 +75,7 @@ const NFTImages = ({
                             </div>
                         </>
                     </div> : <>
-                        <div className="exclusive-nfts"
+                        <div
                             style={{ width: "100%" }}>
                             <MobileCarouselNfts screen={"900"}>
                                 <img

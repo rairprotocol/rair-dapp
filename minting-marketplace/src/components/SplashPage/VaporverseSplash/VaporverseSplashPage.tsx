@@ -258,27 +258,33 @@ const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
         <div style={{ height: "5vw" }} />
 
         <div style={{display: "flex", width:"100%"}}>
-          <InfoBlock subclass="info-block-col" infoArray={[
-            <>must own</>,
-            <>/heavencomputer</>,
-            <>/bastardganpunksv1/v2</>,
-            <>/glitchpixx</>,
-            <div style={{color: "RGB(189,52,182)"}}>---Discord4FullList---</div>,
-            <div style={{height: "12px", width: "100%", backgroundColor: "RGB(198,212,131)"}}></div>,
-          ]}/>
-          <InfoBlock subclass="info-block-col" infoArray={[
-            <></>,
-            <>/snapshot date 8/19/2022</>,
-            <>/1:1 polygon claim token</>,
-            <>/convert to ETH @ ETH2.0 launch 2 save treees</>,
-            <br/>,
-            <div style={{height: "12px", width: "100%", backgroundColor: "white"}}></div>,
-          ]}/>
+
+          <div style={{display: "flex", flexDirection:"column", width:"50%"}}>
+            <InfoBlock subclass="info-block-col" infoArray={[
+              <>must own</>,
+              <>/heavencomputer</>,
+              <>/bastardganpunksv1/v2</>,
+              <>/glitchpixx</>,
+              <div style={{color: "RGB(189,52,182)"}}>---Discord4FullList---</div>,
+            ]}/>
+            <div style={{height: "12px", width: "100%", backgroundColor: "RGB(198,212,131)"}}></div>
+          </div>
+
+          <div style={{display: "flex", flexDirection:"column", width:"50%"}}>
+            <InfoBlock subclass="info-block-col" infoArray={[
+              <></>,
+              <>/snapshot date 8/19/2022</>,
+              <>/1:1 polygon claim token</>,
+              <>/convert to ETH @ ETH2.0 launch 2 save treees</>,
+            ]}/>
+            <div style={{height: "12px", width: "100%", backgroundColor: "white"}}></div>
+          </div>
+
         </div>
 
         <div style={{ height: "3vw" }} />
 
-        <InfoBlock style={{color: "RGB(213,233,216)"}} infoArray={[
+        <InfoBlock infoArray={[
           "mkdir vap0rverse",
           "rmdir vaporverse",
           "//N0stalgia. A permutation. A remix. Warm feelings. The click of high heels on smooth tile.",
