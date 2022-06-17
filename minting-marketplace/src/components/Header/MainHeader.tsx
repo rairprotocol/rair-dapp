@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 //tools
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,9 +18,17 @@ import headerLogoBlack from './../../images/rairTechLogoBlack.png';
 
 //styles
 import "./Header.css";
+// import { NavLink } from 'react-router-dom';
+// import Popup from 'reactjs-popup';
+import { IMainHeader, TAxiosCollectionData } from './header.types';
+import { TSearchDataUser, TSearchDataProduct, TSearchDataTokens, TSearchInitialState } from './../../ducks/search/search.types'
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../ducks/users/users.types';
 import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
 
-const MainHeader = ({
+const MainHeader: React.FC<IMainHeader> = ({
     goHome,
     loginDone,
     startedLogin,
@@ -30,7 +36,6 @@ const MainHeader = ({
     connectUserData,
     setLoginDone,
     userData,
-    errorAuth,
     sentryHistory,
     creatorViewsDisabled,
     selectedChain,
@@ -38,49 +43,52 @@ const MainHeader = ({
 }) => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const { primaryColor, headerLogo } = useSelector(store => store.colorStore);
-    const { dataAll, message, titleSearchDemo } = useSelector((store) => store.allInformationFromSearch);
-    const { adminRights } = useSelector(store => store.userStore);
+    const { primaryColor, headerLogo } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
+    const { dataAll, message } = useSelector<RootState, TSearchInitialState>((store) => store.allInformationFromSearch);
+    const { adminRights } = useSelector<RootState, TUsersInitialState>(store => store.userStore);
     const {
         currentUserAddress,
-        programmaticProvider,
-    } = useSelector(store => store.contractStore);
-    const [hiddenHeader, setHiddenHeader] = useState(false);
-    const [textSearch, setTextSearch] = useState(titleSearchDemo);
-    const [adminPanel, setAdminPanel] = useState(false);
+        programmaticProvider
+    } = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
+
+    const [textSearch, setTextSearch] = useState<string>('');
+    const [adminPanel, setAdminPanel] = useState<boolean>(false);
+    const [hiddenHeader, setHiddenHeader] = useState<boolean>(false);
 
     const splashPages = useMemo(() => {
-    return [
-        '/immersiverse-splash',
-        '/video-tiles-test',
-        '/nftla-splash',
-        '/ukraineglitch',
-        '/vaporverse-splash',
-        '/greyman-splash',
-        '/nutcrackers-splash',
-        '/nipsey-splash',
-        '/about-page',
-        '/slidelock'
-    ]
-}, []);
+        return [
+            '/immersiverse-splash',
+            '/video-tiles-test',
+            '/nftla-splash',
+            '/ukraineglitch',
+            '/vaporverse-splash',
+            '/greyman-splash',
+            '/nutcrackers-splash',
+            '/nipsey-splash',
+            '/about-page',
+            '/slidelock'
+        ]
+    }, []);
 
-    const handleHiddinHeader = useCallback((param) => {
+    const handleHiddinHeader = useCallback((param: string) => {
         setHiddenHeader(false);
         for (const el of splashPages) {
             if (param === el) {
                 setHiddenHeader(true);
             }
         }
-    },[splashPages]);
+    }, [splashPages]);
 
-    const goToExactlyContract = useCallback(async (addressId: String, collectionIndexInContract: String) => {
+    const goToExactlyContract = useCallback(async (addressId: string, collectionIndexInContract: string) => {
         if (dataAll) {
-            const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
+            const response = await axios.get<TAxiosCollectionData>(`/api/contracts/singleContract/${addressId}`);
+
             const exactlyContractData = {
                 blockchain: response.data.contract.blockchain,
                 contractAddress: response.data.contract.contractAddress,
                 indexInContract: collectionIndexInContract,
             };
+
             history.push(
                 `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
             )
@@ -89,13 +97,15 @@ const MainHeader = ({
         }
     }, [dataAll, dispatch, history]);
 
-    const goToExactlyToken = useCallback(async (addressId: String, token: String) => {
+    const goToExactlyToken = useCallback(async (addressId: string, token: string) => {
         if (dataAll) {
-            const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
+            const response = await axios.get<TAxiosCollectionData>(`/api/contracts/singleContract/${addressId}`);
+
             const exactlyTokenData = {
                 blockchain: response.data.contract.blockchain,
                 contractAddress: response.data.contract.contractAddress,
             };
+
             history.push(
                 `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
             )
@@ -107,10 +117,12 @@ const MainHeader = ({
     const Highlight = (props) => {
         const { filter, str } = props
         if (!filter) return str
+
         const regexp = new RegExp(filter, 'ig')
         const matchValue = str.match(regexp)
+
         if (matchValue) {
-            return str.split(regexp).map((s, index, array) => {
+            return str.split(regexp).map((s: string, index: number, array: string[]) => {
                 if (index < array.length - 1) {
                     const c = matchValue.shift()
                     return <React.Fragment key={index}>{s}<span className={'highlight'}>{c}</span></React.Fragment>
@@ -121,7 +133,7 @@ const MainHeader = ({
         return str
     }
 
-    const handleChangeText = (e) => {
+    const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTextSearch(e.target.value);
     }
 
@@ -168,11 +180,11 @@ const MainHeader = ({
                         {textSearch &&
                             <>
                                 {
-                                    dataAll?.products.length > 0 ?
+                                    dataAll && dataAll?.products.length > 0 ?
                                         <div className="data-find-wrapper">
                                             <h5>Products</h5>
-                                            {dataAll?.products.map((item: Object, index: Number) =>
-                                                <div key={index + Math.random()} className="data-find">
+                                            {dataAll?.products.map((item: TSearchDataProduct, index: number) =>
+                                                <div key={Number(index) + Math.random()} className="data-find">
                                                     <img className="data-find-img" src={item.cover} alt={item.name} />
                                                     <p onClick={() => goToExactlyContract(item.contract, item.collectionIndexInContract)}>
                                                         <Highlight filter={textSearch} str={item.name} />
@@ -183,11 +195,11 @@ const MainHeader = ({
                                         : <></>
                                 }
                                 {
-                                    dataAll?.tokens.length > 0 ?
+                                    dataAll && dataAll?.tokens.length > 0 ?
                                         <div className="data-find-wrapper">
                                             <h5>Tokens</h5>
-                                            {dataAll?.tokens.map((item: Object, index: Number) =>
-                                                <div key={index + Math.random()} className="data-find">
+                                            {dataAll?.tokens.map((item: TSearchDataTokens, index: number) =>
+                                                <div key={Number(index) + Math.random()} className="data-find">
                                                     <ImageCustomForSearch item={item} />
                                                     <p onClick={() => goToExactlyToken(item.contract, item.uniqueIndexInContract)}>
                                                         <Highlight filter={textSearch} str={item.metadata.name} />
@@ -203,12 +215,12 @@ const MainHeader = ({
                                         : <></>
                                 }
                                 {
-                                    dataAll?.users.length > 0 ?
+                                    dataAll && dataAll?.users.length > 0 ?
                                         <div className="data-find-wrapper">
                                             <h5>Users</h5>
-                                            {dataAll?.users.map((item: Object, index: Number) =>
-                                                <div key={index + Math.random()} className="data-find">
-                                                    <img className="data-find-img" src={item.avatar} alt={item.nickName} />
+                                            {dataAll?.users.map((item: TSearchDataUser, index: number) =>
+                                                <div key={Number(index) + Math.random()} className="data-find">
+                                                    <img className="data-find-img" src={item.avatar ? item.avatar : ""} alt={item.nickName ? item.nickName : "user-photo"} />
                                                     <p>
                                                         <Highlight filter={textSearch} str={item.nickName} />
                                                     </p>
@@ -258,9 +270,7 @@ const MainHeader = ({
                     }
                     <UserProfileSettings
                         userData={userData}
-                        errorAuth={errorAuth}
                         adminAccess={adminRights}
-                        primaryColor={primaryColor}
                         currentUserAddress={currentUserAddress}
                         loginDone={loginDone}
                         setLoginDone={setLoginDone}

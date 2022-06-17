@@ -126,7 +126,6 @@ function App({ sentryHistory }) {
 	const [userData, setUserData] = useState();
 	const [startedLogin, setStartedLogin] = useState(false);
 	const [loginDone, setLoginDone] = useState(false);
-	const [errorAuth, /*setErrorAuth*/] = useState('');
 	const [renderBtnConnect, setRenderBtnConnect] = useState(false);
 	const [showAlert, setShowAlert] = useState(true);
 	const { currentChain, realChain } = useSelector(store => store.contractStore);
@@ -409,7 +408,6 @@ function App({ sentryHistory }) {
               connectUserData={connectUserData}
               setLoginDone={setLoginDone}
               userData={userData}
-              errorAuth={errorAuth}
               sentryHistory={sentryHistory}
               creatorViewsDisabled={creatorViewsDisabled}
               showAlert={showAlert}
