@@ -71,16 +71,15 @@ function VideoPlayerView({
             <NftVideoplayer selectVideo={selectVideo} />
           ) : (
             <div
+              onClick={
+                () => setOpenVideoplayer(true)
+              }
               style={{
                 backgroundImage: `url(${selectVideo?.staticThumbnail})`,
               }}
               className={cl.SingleVideo}
             >
               <img
-                onClick={
-                  () => setOpenVideoplayer(true)
-                  // () => history.push(`/watch/${selectVideo?._id}/${selectVideo?.mainManifest}`)
-                }
                 className={cl.playImagesOnSingleVideo}
                 src={playImages}
                 alt="Play"

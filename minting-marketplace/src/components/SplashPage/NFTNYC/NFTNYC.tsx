@@ -32,7 +32,7 @@ import withReactContent from 'sweetalert2-react-content';
 import ModalHelp from "../SplashPageTemplate/ModalHelp";
 import VideoPlayerView from "../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView";
 
-
+import axios from 'axios';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -166,17 +166,17 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
 
   /* UTILITIES FOR VIDEO PLAYER VIEW */
   const [productsFromOffer, setProductsFromOffer] = useState([]);
-  const [selectVideo, setSelectVideo] = useState(productsFromOffer[0])
+  const [selectVideo, setSelectVideo] = useState()
  
   const getProductsFromOffer = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
-          `/api/nft/network/${blockchain}/${contract}/${product}/files`
-          );
-      
+      `/api/nft/network/0x89/0xb41660b91c8ebc19ffe345726764d4469a4ab9f8/0/files`
+    );
     setProductsFromOffer(response.data.files);
-  }, [blockchain, contract, product]);
+    setSelectVideo(response.data.files[0]);
+  }, []);
  
-   useEffect(() => {
+  useEffect(() => {
     getProductsFromOffer();
   }, [getProductsFromOffer]);
 
@@ -225,12 +225,12 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
         <VideoPlayerModule backgroundImage={videoBackground1} videoData={splashData.videoData1} />
         <div style={{ height: "108px" }} />
         <div className="info-block"> Unlockable Conferences Videos Coming Soon</div>
-        {/* <VideoPlayerView
+        <VideoPlayerView
           productsFromOffer={productsFromOffer}
           primaryColor={primaryColor}
           selectVideo={selectVideo}
           setSelectVideo={setSelectVideo}
-        /> */}
+        />
         <div style={{ height: "108px" }} />
         <TeamMeet primaryColor={primaryColor} arraySplash={"nftnyc"} />
         <NotCommercialTemplate
