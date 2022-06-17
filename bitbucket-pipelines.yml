@@ -1,8 +1,15 @@
 image: node:16.13.0
+definitions:
+  services:
+    docker:
+      memory: 3072
 
 pipelines:
+
   pull-requests:
+
     '**': #this runs as default for any branch not elsewhere defined
+
       - step:
           name: Install Dependencies and run typescript test for minting-network
           caches:
@@ -14,6 +21,7 @@ pipelines:
             changesets:
               includePaths:
                 - "minting-marketplace/**"
+
       - step:
           name: Run yarn install and compare generated yarn lock file with committed lock file
           caches:
@@ -25,6 +33,20 @@ pipelines:
               includePaths:
                 - "**/package.json"
                 - "**/yarn.lock"
+
+      - step:
+          name: Test that frontend app builds successfully
+          caches:
+            - node
+          services:
+            - docker
+          script:
+            - cd ./commands/bitbucket-pipelines/frontend-build-success-pipeline/ && ./init.sh
+          condition:
+            changesets:
+              includePaths:
+               - "minting-marketplace/**"
+
     feature/*: #any branch with a feature prefix
       - step:
           name: Install Dependencies and run typescript test for minting-network
@@ -37,12 +59,3 @@ pipelines:
             changesets:
               includePaths:
                 - "minting-marketplace/**"
-  #branches: #these will run on every push of the branch
-  #  dev:
-  #    - step:
-  #        script:
-  #          - ...
-  #  main:
-  #    - step:
-  #        script:
-  #          - ...
