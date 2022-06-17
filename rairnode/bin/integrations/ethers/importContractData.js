@@ -15,14 +15,27 @@ const insertTokens = async (tokens, contract, dbModels) => {
   let validCounter = 0;
   for await (const token of tokens) {
     let metadata;
-    try {
-      metadata = JSON.parse(token.metadata);
-    } catch (err) {
-      log.error('Cannot parse metadata!');
-      console.log(token.metadata);
-      continue;
+    if (token.metadata === null && token.token_uri) {
+      try {
+        log.info(`${token.token_id} has no metadata in Moralis, will try to fetch metadata from ${token.token_uri}`);
+        metadata = await (await fetch(token.token_uri)).json();
+        //console.log('Fetched data', metadata);
+      } catch (err) {
+        log.error('Cannot fetch metadata URI!');
+        console.log(token.metadata);
+        continue;
+      }
+    } else {
+      try {
+        //console.log('Metadata', token.metadata);
+        metadata = JSON.parse(token.metadata);
+      } catch (err) {
+        log.error('Cannot parse metadata!');
+        console.log(token.metadata);
+        continue;
+      }
     }
-    if (metadata && metadata.image && token.owner_of) {
+    if (metadata && metadata.image && metadata.name && token.owner_of) {
       // Handle images from IPFS (Use the moralis default gateway)
       metadata.image = metadata.image.replace('ipfs://', 'https://gateway.moralisipfs.com/ipfs/');
       if (!metadata.description) {
@@ -86,6 +99,14 @@ module.exports = {
           };
         }
 
+        if (allNFTs.total === 0) {
+          return {
+            success: false,
+            result: undefined,
+            message: "Couldn't find ERC721 tokens!",
+          };
+        }
+
         log.info(`Found ${allNFTs.total}, with ${allNFTs.page_size} tokens on every page`);
         const timesNeeded = Math.round(allNFTs.total / allNFTs.page_size);
         log.info(`Need to do this ${timesNeeded} more times`);
@@ -134,21 +155,11 @@ module.exports = {
 
         let numberOfTokensAdded = await insertTokens(allNFTs.result, contract, dbModels);
 
-        for (let i = 1; i <= timesNeeded; i++) {
+        while (allNFTs?.next) {
           await wasteTime(10000);
-          try {
-            options.cursor = allNFTs.cursor;
-            allNFTs = await Moralis.Web3API.token.getNFTOwners(options);
-            numberOfTokensAdded += await insertTokens(allNFTs.result, contract, dbModels);
-            log.info(`Inserted page ${i} of ${timesNeeded} for ${networkId}/${contractAddress} (${numberOfTokensAdded} NFTs so far)`);
-          } catch (err) {
-            log.error(err);
-            return {
-              success: false,
-              result: undefined,
-              message: 'There was a problem importing the tokens!',
-            };
-          }
+          allNFTs = await allNFTs.next();
+          numberOfTokensAdded += await insertTokens(allNFTs.result, contract, dbModels);
+          log.info(`Inserted page ${allNFTs?.page} of ${timesNeeded} for ${networkId}/${contractAddress} (${numberOfTokensAdded} NFTs so far)`);
         }
 
         if (numberOfTokensAdded === 0) {
