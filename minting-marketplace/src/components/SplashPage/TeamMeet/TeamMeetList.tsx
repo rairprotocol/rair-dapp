@@ -507,7 +507,9 @@ const teamNFTNYCArray = [
         nameTeammate: "NFTNYC",
         imageUrl: NFTNYC_LOGO,
         aboutTeammate: [
-            "NFT | LA is an integrated conference experience: an epic IRL conference fused with an immersive Metaverse integrations and L.A's robust nightlife scene. Explore the city of angels and journey into its new role as a global conduit for the adoption of web3 in of sports, music, art, and entertainment."
+            `NFT | NYC puts as many speakers on stage as possible to provide a forum for the NFT community, giving a voice to the most relevant ideas of the moment. 
+            Bring people together who are working on like projects. 
+            Educate the global community about the value of NFTs`
         ],
         socials: [
             {

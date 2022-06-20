@@ -9,7 +9,8 @@ import "./NFTNYC.css";
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import MetaMaskIcon from "../images/metamask_logo.png"
 import DiscordIcon from '../images/discord-icon.png';
-import NFTNYC_TITLE from '../images/NFTNYX_TITLE.gif'
+import NFTNYC_TITLE from '../images/NFTNYX_TITLE.gif';
+import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import warning0 from '../images/warning_0.png'
 import warning1 from '../images/warning_1.png'
 import warning2 from '../images/warning_2.png'
@@ -33,6 +34,7 @@ import ModalHelp from "../SplashPageTemplate/ModalHelp";
 import VideoPlayerView from "../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView";
 
 import axios from 'axios';
+import MetaTags from "../../SeoTags/MetaTags";
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -49,8 +51,8 @@ const splashData = {
     contentName: "author",
     content: "NFTNYC X RAIR",
     description: "Claim your NFT to unlock encrypted streams from the NFTLA conference",
-    // favicon: faviconUkraine,  
-    // image: UKR_rounded
+    favicon: NFTNYC_favicon,  
+    image: NFTNYC_TITLE
   },
 
   /*  this block needs to be changed */ 
@@ -92,9 +94,9 @@ const splashData = {
   },
   button2: {
     buttonColor: "#000000",
-    buttonLabel: "Discord",
+    buttonLabel: "View on Opensea",
     buttonImg: null,
-    buttonLink: "https://discord.com/invite/y98EMXRsCE",
+    buttonLink: "https://opensea.io/collection/swagnftnyc",
   },
   exclusiveNft: {
     title: "NFTs",
@@ -184,7 +186,7 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
 
   return (
     <div className="wrapper-splash-page nftnyc">
-      {/* <MetaTags seoMetaTags={splashData.seoInformation} /> */}
+      <MetaTags seoMetaTags={splashData.seoInformation} />
       <div className="template-home-splash-page">
         <ModalHelp 
           openCheckList={openCheckList}
@@ -197,8 +199,9 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
         <div style={{ height: "108px" }} />
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           <h1>How it works</h1>
-          <div style={{fontSize: 'calc(.75rem + 1vw)', margin:'24px 0'}}>Export your Kred NFT to Metamask</div>
-          <div style={{fontSize: 'calc(.75rem + 1vw)'}}>Click sign. We only ask for a single challenge request. This is safe</div>
+          <div style={{fontSize: 'calc(.75rem + 1vw)', margin:'24px 0'}}>1.  Export your Kred NFT to Metamask</div>
+          <div style={{fontSize: 'calc(.75rem + 1vw)'}}>2. OR just connect your wallet. We’ll mint an unlock NFT in the near future</div>
+          <div style={{fontSize: 'calc(.75rem + 1vw)', margin:'24px 0'}}>Click sign. We only ask for a single challenge request.</div>
           <img className="warning-img" src={warning0}/>
           <div className="btn-submit-with-form">
             <button

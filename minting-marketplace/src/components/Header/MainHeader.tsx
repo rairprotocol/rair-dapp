@@ -66,7 +66,8 @@ const MainHeader: React.FC<IMainHeader> = ({
             '/nutcrackers-splash',
             '/nipsey-splash',
             '/about-page',
-            '/slidelock'
+            '/slidelock',
+            '/nftnyc-splash'
         ]
     }, []);
 
