@@ -5,7 +5,9 @@
     "es6": true
   },
   "extends": [
-    "airbnb-base"
+    "airbnb-base",
+    "eslint:recommended",
+    "prettier" // Make sure this is the last
   ],
   "parserOptions": {
     "ecmaVersion": "latest"

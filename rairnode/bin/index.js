@@ -21,19 +21,14 @@ const { textPurify } = require('./utils/helpers');
 
 const port = process.env.PORT;
 
-const {
-  appSecretManager,
-  vaultAppRoleTokenManager,
-} = require('./vault');
+const { appSecretManager, vaultAppRoleTokenManager } = require('./vault');
 
 const config = require('./config');
 const gcp = require('./integrations/gcp');
 const {
   getMongoConnectionStringURI,
 } = require('./shared_backend_code_generated/mongo/mongoUtils');
-const {
-  mongoConnectionManager
-} = require('./mongooseConnect');
+const { mongoConnectionManager } = require('./mongooseConnect');
 
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
 
@@ -50,7 +45,7 @@ async function main() {
 
   mediaDirectories.forEach((folder) => {
     if (!fs.existsSync(folder)) {
-      log.info(folder, 'doesn\'t exist, creating it now!');
+      log.info(folder, "doesn't exist, creating it now!");
       fs.mkdirSync(folder);
     }
   });
@@ -111,7 +106,7 @@ async function main() {
     session({
       store: new RedisStorage({
         client,
-        ttl: (config.session.ttl * 60 * 60), // default 12 hours
+        ttl: config.session.ttl * 60 * 60, // default 12 hours
       }),
       secret: config.session.secret,
       saveUninitialized: true,
@@ -126,14 +121,17 @@ async function main() {
     }),
   );
 
-  app.use('/thumbnails', express.static(path.join(__dirname, 'Videos/Thumbnails')));
+  app.use(
+    '/thumbnails',
+    express.static(path.join(__dirname, 'Videos/Thumbnails')),
+  );
   app.use('/stream', streamRoute(context));
   app.use('/api', apiV1Routes(context));
   app.use(express.static(path.join(__dirname, 'public')));
-  // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     log.error(err);
     res.status(500).json({ success: false, error: true, message: err.message });
+    next();
   });
 
   const server = app.listen(port, () => {
@@ -174,8 +172,8 @@ async function main() {
     vaultToken: vaultAppRoleTokenManager.getToken(),
     listOfSecretsToFetch: [
       mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY,
-      mongoConfig.VAULT_MONGO_x509_SECRET_KEY
-    ]
+      mongoConfig.VAULT_MONGO_x509_SECRET_KEY,
+    ],
   });
 
   // fire up the rest of the app

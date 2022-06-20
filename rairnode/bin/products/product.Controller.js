@@ -1,5 +1,5 @@
 const express = require('express');
-const contractService = require('./contracts.Service');
+const productService = require('./product.Service');
 
 module.exports = () => {
   const router = express.Router();
@@ -10,8 +10,7 @@ module.exports = () => {
   // ); -> getMyContracts
   // +getFullContracts
 
-  // replacing old route '/singleContract/:contractId'
-  router.get('/:contractId', contractService.getContractById);
-
+  router.get('/user/:userAddress', productService.getProductsByUser);
+  router.get('/:productId', productService.getProductById);
   return router;
 };
