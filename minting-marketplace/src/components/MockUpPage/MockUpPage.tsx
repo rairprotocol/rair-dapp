@@ -1,13 +1,15 @@
 //@ts-nocheck
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SearchPanel from "./SearchPanel";
-// import setDocumentTitle from "../../utils/setTitle";
-import MetaTags from "../SeoTags/MetaTags";
-import RairFavicon from './assets/rair_favicon.ico'
 import { setShowSidebarTrue } from "../../ducks/metadata/actions";
 
-const MockUpPage = ({ item }) => {
+import SearchPanel from "./SearchPanel";
+import MetaTags from "../SeoTags/MetaTags";
+import RairFavicon from './assets/rair_favicon.ico'
+// import setDocumentTitle from "../../utils/setTitle";
+
+const MockUpPage = ({tabIndex, setTabIndex}) => {
+
   const seoInformation = {
     title: "Rair Tech Marketplace",
     contentName: "author",
@@ -26,7 +28,11 @@ const MockUpPage = ({ item }) => {
   return (
     <div className={"mock-up-page-wrapper"}>
       <MetaTags seoMetaTags={seoInformation} />
-      <SearchPanel primaryColor={primaryColor} textColor={textColor} />
+      <SearchPanel 
+        tabIndex={tabIndex}
+        setTabIndex={setTabIndex}
+        primaryColor={primaryColor} 
+        textColor={textColor} />
     </div>
   );
 };

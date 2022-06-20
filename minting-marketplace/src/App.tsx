@@ -1,8 +1,16 @@
 //@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
-import { Router, Switch, Route, /*Redirect*/ NavLink, /*useLocation*/ } from 'react-router-dom';
+import { Router, Switch, Route, /*Redirect, NavLink, useLocation*/ } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch';
+import { detectBlockchain } from './utils/blockchainData';
+import { setAdminRights } from './ducks/users/actions';
+import { getCurrentPageEnd } from './ducks/pages/actions';
+import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
+import { setChainId, setUserAddress } from './ducks/contracts/actions';
+
+import axios from 'axios';
+import { TUserResponse } from './axios.responseTypes';
 
 import './App.css';
 
@@ -22,8 +30,6 @@ import jsonwebtoken from 'jsonwebtoken';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
 
 import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher';
-import TransferTokens from './components/adminViews/transferTokens';
-import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
 
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
@@ -33,12 +39,16 @@ import ContractDetails from './components/creatorStudio/ContractDetails';
 import CreatorMode from './components/creatorMode';
 
 import Deploy from './components/creatorStudio/Deploy';
+import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
 
+import Footer from './components/Footer/Footer';
 import FileUpload from './components/video/videoUpload/videoUpload';
-// import Footer from './components/Footer/Footer';
 
 import GreymanSplashPage from './components/SplashPage/GreymanSplashPage';
+
+import ImportExternalContracts from './components/adminViews/ImportExternalContracts';
 import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPage';
+
 import ListCollections from './components/creatorStudio/ListCollections';
 
 import MetadataEditor from './components/metadata/metadataEditor';
@@ -57,21 +67,18 @@ import Nutcrackers from './components/SplashPage/Nutcrackers/Nutcrackers';
 import { PrivacyPolicy } from './components/SplashPage/PrivacyPolicy';
 
 import RairProduct from './components/nft/rairCollection';
-//Google Analytics
-// import ReactGA from 'react-ga';
 
 import SplashPage from './components/SplashPage';
 // import setTitle from './utils/setTitle';
 
 import ThankYouPage from './components/ThankYouPage';
 import Token from './components/nft/Token';
+import TransferTokens from './components/adminViews/transferTokens';
 import { TermsUse } from './components/SplashPage/TermsUse';
 
 import VideoPlayer from './components/video/videoPlayer';
 
 import WorkflowSteps from './components/creatorStudio/workflowSteps';
-import Footer from './components/Footer/Footer';
-import DiamondMarketplace from './components/ConsumerMode/DiamondMarketplace';
 
 // logos for About Page
 import headerLogoWhite from './images/rairTechLogoWhite.png';
@@ -79,7 +86,6 @@ import headerLogoBlack from './images/rairTechLogoBlack.png';
 import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico'
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
-import { detectBlockchain } from './utils/blockchainData';
 import AlertMetamask from './components/AlertMetamask/index';
 import NFTLASplashPage from './components/SplashPage/NFTLASplashPage';
 import MenuNavigation from './components/Navigation/Menu';
@@ -90,14 +96,9 @@ import MetaTags from './components/SeoTags/MetaTags';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
-import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
-import { getCurrentPageEnd } from './ducks/pages/actions';
-import { setChainId, setUserAddress } from './ducks/contracts/actions';
-import { setAdminRights } from './ducks/users/actions';
-import axios from 'axios';
-import { TUserResponse } from './axios.responseTypes';
 
-
+//Google Analytics
+// import ReactGA from 'react-ga';
 
 const gAppName = process.env.REACT_APP_GA_NAME
 const gUaNumber = process.env.REACT_APP_GOOGLE_ANALYTICS
@@ -132,6 +133,7 @@ function App({ sentryHistory }) {
 	const { selectedChain, realNameChain } = detectBlockchain(currentChain, realChain);
 	const carousel_match = window.matchMedia('(min-width: 900px)')
 	const [carousel, setCarousel] = useState(carousel_match.matches)
+  const [tabIndex, setTabIndex] = useState(0);
 
 	const seoInformation = {
 		title: "Rair Tech Marketplace",
@@ -567,7 +569,7 @@ function App({ sentryHistory }) {
                             </p>
                           </div>
                           <div className="col-12 mt-3 row">
-                            <MockUpPage />
+                            <MockUpPage tabIndex={tabIndex} setTabIndex={setTabIndex}/>
                           </div>
                         </div>
                       ),

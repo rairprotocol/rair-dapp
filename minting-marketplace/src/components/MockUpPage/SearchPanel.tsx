@@ -11,15 +11,16 @@ import axios, { AxiosError } from "axios";
 import PaginationBox from "./PaginationBox/PaginationBox";
 import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages/actions";
 import { TGetFullContracts, TMediaList } from "../../axios.responseTypes";
+import { useStateIfMounted } from "use-state-if-mounted";
 
-const SearchPanel = ({ primaryColor, textColor }) => {
+const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   const dispatch = useDispatch();
   const { currentPage } = useSelector((store) => store.getPageStore);
   // const { dataAll } = useSelector((store) => store.allInformationFromSearch);
   const [titleSearch, setTitleSearch] = useState("");
   // const [titleSearchDemo, setTitleSearchDemo] = useState("");
   const [sortItem, setSortItem] = useState("");
-  const [mediaList, setMediaList] = useState();
+  const [mediaList, setMediaList] = useStateIfMounted();
   const [data, setData] = useState();
   // const [dataAll, setAllData] = useState();
   const [totalPage, setTotalPages] = useState(null);
@@ -159,7 +160,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
     }
   }, [blockchain, category, dispatch]);
 
-  const updateList = async () => {
+  const updateList = useCallback( async () => {
     try {
       let response = await axios.get<TMediaList>("/api/media/list", {
         headers: {
@@ -182,11 +183,15 @@ const SearchPanel = ({ primaryColor, textColor }) => {
         console.log(error?.message);
       }
     }
-  };
+  },[]);
 
   useEffect(() => {
     getContract();
   }, [currentPage, getContract]);
+  
+  useEffect(() => {
+    updateList();
+  }, [updateList]);
 
   // useEffect(() => {
   //   if (localStorage.token) {
@@ -220,7 +225,7 @@ const SearchPanel = ({ primaryColor, textColor }) => {
   };
   return (
     <div className="input-search-wrapper list-button-wrapper">
-      <Tabs>
+      <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
         <TabList className="category-wrapper">
           <Tab
             style={{
@@ -234,9 +239,9 @@ const SearchPanel = ({ primaryColor, textColor }) => {
             NFT
           </Tab>
           <Tab
-            onClick={() => {
-              updateList();
-            }}
+            // onClick={() => {
+            //   updateList();
+            // }}
             style={{
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,

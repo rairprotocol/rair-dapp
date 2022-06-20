@@ -65,7 +65,7 @@ const NftCollectionPageComponent = ({
   }, []);
 
   const goBack = () => {
-    history.goBack();
+    history.push('/');
   };
 
   const defaultImg =

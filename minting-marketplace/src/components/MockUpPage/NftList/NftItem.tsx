@@ -7,8 +7,8 @@ import ReactPlayer from "react-player";
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png'
 import axios from "axios";
 import { TNftItemResponse, TUserResponse } from "../../../axios.responseTypes";
+import { useStateIfMounted } from "use-state-if-mounted";
 // import { utils } from "ethers";
-
 // import Swal from 'sweetalert2';
 // import 'react-accessible-accordion/dist/fancy-example.css';
 // import VideoList from "../../video/videoList";
@@ -25,9 +25,9 @@ const NftItemComponent = ({
   ownerCollectionUser,
 }) => {
   const history = useHistory();
-  const [metaDataProducts, setMetaDataProducts] = useState();
+  const [metaDataProducts, setMetaDataProducts] = useStateIfMounted();
   const [playing, setPlaying] = useState(false);
-  const [accountData, setAccountData] = useState(null);
+  const [accountData, setAccountData] = useStateIfMounted(null);
 
   const [isFileUrl, setIsFileUrl] = useState();
 
@@ -55,10 +55,9 @@ const NftItemComponent = ({
       const result = await axios.get<TUserResponse>(`/api/users/${ownerCollectionUser}`).then((res) =>
         res.data
       );
-
       setAccountData(result.user);
     }
-  }, [ownerCollectionUser]);
+  }, [ownerCollectionUser, setAccountData]);
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -68,7 +67,7 @@ const NftItemComponent = ({
     if (responseProductMetadata.data.result.tokens.length > 0) {
       setMetaDataProducts(responseProductMetadata.data.result?.tokens[0]);
     }
-  }, [collectionIndexInContract, contractName, blockchain]);
+  }, [blockchain, contractName, collectionIndexInContract, setMetaDataProducts]);
 
 
   function RedirectToMockUp() {

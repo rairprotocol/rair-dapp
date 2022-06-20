@@ -46,6 +46,7 @@
         "styled-components": "^5.3.3",
         "sweetalert2": "^11.4.6",
         "sweetalert2-react-content": "^4.2.0",
+        "use-state-if-mounted": "^1.0.7",
         "video.js": "^7.18.1",
         "web-vitals": "^1.1.2",
         "wicg-inert": "^3.1.1"
