@@ -51,7 +51,6 @@ import ImmersiVerseSplashPage from './components/SplashPage/ImmersiVerseSplashPa
 
 import ListCollections from './components/creatorStudio/ListCollections';
 
-import MetadataEditor from './components/metadata/metadataEditor';
 import MyContracts from './components/whitelabel/myContracts';
 import MinterMarketplace from './components/marketplace/MinterMarketplace';
 import MockUpPage from './components/MockUpPage/MockUpPage';
@@ -632,13 +631,6 @@ function App({ sentryHistory }) {
                       ),
                       requirement:
                         loginDone && !creatorViewsDisabled && adminRights,
-                    },
-
-                    // Old Metadata Editor
-                    {
-                      path: "/metadata/:blockchain/:contract/:product",
-                      content: <MetadataEditor />,
-                      requirement: loginDone && !creatorViewsDisabled,
                     },
 
                     // Old MyNFTs (Using the database)

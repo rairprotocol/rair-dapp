@@ -255,13 +255,6 @@ const ProductManager: React.FC<IProductManager> = ({ productIndex, productInfo, 
 		}
 	}, [productInfo, tokenInstance, minterInstance, refresher])
 	return <details style={{position: 'relative'}} className='w-100 border border-secondary rounded'>
-		<Link
-			className='btn btn-warning'
-			id={`metadata_${productIndex + 1}`}
-			style={{position: 'absolute', top: 0, right: 0}}
-			to={`/metadata/${window.ethereum.chainId}/${tokenInstance?.address}/${productIndex}`}>
-			Edit Metadata!
-		</Link>
 		<summary>
 			Product #{productIndex + 1}: {productInfo.name}
 		</summary>
