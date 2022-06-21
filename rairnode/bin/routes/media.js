@@ -3,8 +3,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
-const { retrieveMediaInfo, addPin, removePin, addFolder } =
-  require('../integrations/ipfsService')();
+const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfsService')();
 const upload = require('../Multer/Config');
 const {
   JWTVerification,
@@ -27,7 +26,6 @@ const { verifyAccessRightsToFile } = require('../utils/helpers');
 
 const config = require('../config/index');
 const gcp = require('../integrations/gcp')(config);
-
 
 const {
   Blockchain,
@@ -178,22 +176,24 @@ module.exports = () => {
         }
 
         let data = await File.find(searchQuery, { key: 0 })
-        .sort({ title: 1 })
-        .skip(skip)
-        .limit(pageSize);
+          .sort({ title: 1 })
+          .skip(skip)
+          .limit(pageSize);
 
-      // verify the user have needed tokens for unlock the files
-      data = await verifyAccessRightsToFile(req.user, data);
+        const totalNumber = await File.count(searchQuery);
 
-      const list = _.chain(data)
-        .reduce((result, value) => {
+        // verify the user have needed tokens for unlock the files
+        data = await verifyAccessRightsToFile(req.user, data);
+
+        const list = _.chain(data)
+          .reduce((result, value) => {
           // eslint-disable-next-line no-param-reassign
-          result[value._id] = value;
-          return result;
-        }, {})
-        .value();
+            result[value._id] = value;
+            return result;
+          }, {})
+          .value();
 
-      return res.json({ success: true, list });
+        return res.json({ success: true, list, totalNumber });
       } catch (e) {
         log.error(e);
         return next(e.message);
@@ -250,206 +250,205 @@ module.exports = () => {
         foundOffers = await Offer.find({ contract: foundContract._id, offerPool: foundOfferPool.marketplaceCatalogIndex, offerIndex: { $in: offer } }).distinct('offerIndex');
       }
 
-        offer.forEach((item) => {
-          if (!_.includes(foundOffers, item)) {
-            return res
-              .status(404)
-              .send({ success: false, message: `Offer ${item} not found.` });
-          }
-
-          return true;
-        });
-      }
-      //  TODO endpoint for varification
-
-      // Get the socket connection from Express app
-      const io = req.app.get('io');
-      const sockets = req.app.get('sockets');
-      const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
-      const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : {
-        emit: (eventName, eventData) => {
-      log.info(`Dummy event: "${eventName}" socket emitter fired with message: "${eventData.message}" `);
-        },
-      };
-
-      if (req.file) {
-        try {
-          const storageName = {
-            ipfs: 'IPFS',
-            gcp: 'Google Cloud',
-          }[storage];
-      socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
-      log.info(`Processing: ${req.file.originalname}`);
-      log.info(`${req.file.originalname} generating thumbnails`);
-
-      res.json({ success: true, result: req.file.filename });
-
-      // Adds 'duration' to the req.file object
-      await getMediaData(req.file);
-
-      // Adds 'thumbnailName' to the req.file object
-      // Generates a static webp thumbnail and an animated gif thumbnail
-      // ONLY for videos
-      await generateThumbnails(req.file, socketInstance);
-
-      log.info(`${req.file.originalname} converting to stream`);
-      socketInstance.emit('uploadProgress', {
-        message: `${req.file.originalname} converting to stream`,
-        last: false,
-        done: 11,
-      });
-
-      // Converts the file with FFMPEG
-      await convertToHLS(req.file, socketInstance);
-
-      const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
-
-      log.info('ffmpeg DONE: converted to stream.');
-
-      // XSS sanitizer
-      const { window } = new JSDOM('');
-      const textPurify = createDOMPurify(window);
-
-      const rairJson = {
-        title: textPurify.sanitize(title),
-        mainManifest: 'stream.m3u8',
-        author,
-        encryptionType: 'aes-256-gcm',
-      };
-
-      if (description) {
-        rairJson.description = textPurify.sanitize(description);
-      }
-
-      fs.writeFileSync(`${req.file.destination}/rair.json`, JSON.stringify(rairJson, null, 4));
-
-      log.info(`${req.file.originalname} uploading to ${storageName}`);
-      socketInstance.emit('uploadProgress', {
-        message: `${req.file.originalname} uploading to ${storageName}`,
-        last: false,
-      });
-
-      switch (storage) {
-        case 'ipfs':
-          cid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
-          defaultGateway = `${config.pinata.gateway}/${cid}`;
-          storageLink = _.get(
-            {
-              ipfs: `${config.ipfs.gateway}/${cid}`,
-              pinata: `${config.pinata.gateway}/${cid}`,
-            },
-            config.ipfsService,
-            defaultGateway,
-          );
-          break;
-        case 'gcp':
-          cid = await gcp.uploadFolder(
-            config.gcp.videoBucketName,
-            req.file.destination,
-            socketInstance,
-          );
-          defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
-          storageLink = defaultGateway;
-          break;
-        default:
-      // gcp -> default
-          cid = await gcp.uploadFolder(
-            config.gcp.videoBucketName,
-            req.file.destination,
-            socketInstance,
-          );
-          defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
-          storageLink = defaultGateway;
-          break;
-      }
-
-      fs.rm(req.file.destination, { recursive: true }, (err) => {
-        if (err) log.error(err);
-      });
-      log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
-      delete req.file.destination;
-
-      const meta = {
-        mainManifest: 'stream.m3u8',
-        author,
-        authorPublicAddress: publicAddress,
-        encryptionType: 'aes-256-gcm',
-        title: textPurify.sanitize(title),
-        contract: foundContract._id,
-        product,
-        offer: demo === 'false' ? offer : [],
-        category: foundCategory._id,
-        staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
-        animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
-        type: req.file.type,
-        extension: req.file.extension,
-        duration: req.file.duration,
-        demo: demo === 'true',
-      };
-
-      if (description) {
-        meta.description = textPurify.sanitize(description);
-      }
-
-      log.info(`${req.file.originalname} uploaded to ${storageName}: ${cid}`);
-      socketInstance.emit('uploadProgress', { message: `uploaded to ${storageName}.`, last: false, done: 90 });
-
-      log.info(`${req.file.originalname} storing to DB.`);
-      socketInstance.emit('uploadProgress', {
-        message: `${req.file.originalname} storing to database.`,
-        last: false,
-      });
-
-      const key = { ...exportedKey, key: exportedKey.key.toJSON() };
-      // TODO enpoint
-      await File.create({
-        _id: cid,
-        key,
-        uri: storageLink,
-        ...meta,
-      });
-
-      try {
-        const vaultWriteRes = await vaultKeyManager.write({
-          secretName: cid,
-          data: {
-            uri: storageLink,
-            key,
-          },
-          vaultToken: vaultAppRoleTokenManager.getToken(),
-        });
-      } catch (err) {
-        console.log('Error writing key to vault:', cid);
-      }
-
-      log.info(`${req.file.originalname} stored to DB.`);
-      socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: !!['gcp'].includes(storage), done: ['gcp'].includes(storage) ? 100 : 96 });
-
-      await StartHLS();
-
-            log.info(`${req.file.originalname} pinning to ${storageName}.`);
-            socketInstance.emit('uploadProgress', {
-              message: `${req.file.originalname} pinning to ${storageName}.`,
-              last: false,
-            });
-
-            if (storage === 'ipfs') await addPin(cid, title, socketInstance);
-          } catch (e) {
-            if (req.file.destination) {
-              fs.rm(req.file.destination, { recursive: true }, (err) => {
-                if (err) log.error(err);
-              });
-            }
-
-            log.error('An error has occurred encoding the file', e);
-
-            return next(new Error('An error has occurred encoding the file.'));
-          }
-        } else {
-          return res.status(400).send({ success: false, message: 'File not provided.' });
+      offer.forEach((item) => {
+        if (!_.includes(foundOffers, item)) {
+          return res
+            .status(404)
+            .send({ success: false, message: `Offer ${item} not found.` });
         }
-    },
-  );
+
+        return true;
+      });
+    }
+    //  TODO endpoint for varification
+
+    // Get the socket connection from Express app
+    const io = req.app.get('io');
+    const sockets = req.app.get('sockets');
+    const thisSocketId = sockets && socketSessionId ? sockets[socketSessionId] : null;
+    const socketInstance = !_.isNull(thisSocketId) ? io.to(thisSocketId) : {
+      emit: (eventName, eventData) => {
+        log.info(`Dummy event: "${eventName}" socket emitter fired with message: "${eventData.message}" `);
+      },
+    };
+
+    if (req.file) {
+      try {
+        const storageName = {
+          ipfs: 'IPFS',
+          gcp: 'Google Cloud',
+        }[storage];
+        socketInstance.emit('uploadProgress', { message: 'File uploaded, processing data...', last: false, done: 5 });
+        log.info(`Processing: ${req.file.originalname}`);
+        log.info(`${req.file.originalname} generating thumbnails`);
+
+        res.json({ success: true, result: req.file.filename });
+
+        // Adds 'duration' to the req.file object
+        await getMediaData(req.file);
+
+        // Adds 'thumbnailName' to the req.file object
+        // Generates a static webp thumbnail and an animated gif thumbnail
+        // ONLY for videos
+        await generateThumbnails(req.file, socketInstance);
+
+        log.info(`${req.file.originalname} converting to stream`);
+        socketInstance.emit('uploadProgress', {
+          message: `${req.file.originalname} converting to stream`,
+          last: false,
+          done: 11,
+        });
+
+        // Converts the file with FFMPEG
+        await convertToHLS(req.file, socketInstance);
+
+        const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
+
+        log.info('ffmpeg DONE: converted to stream.');
+
+        // XSS sanitizer
+        const { window } = new JSDOM('');
+        const textPurify = createDOMPurify(window);
+
+        const rairJson = {
+          title: textPurify.sanitize(title),
+          mainManifest: 'stream.m3u8',
+          author,
+          encryptionType: 'aes-256-gcm',
+        };
+
+        if (description) {
+          rairJson.description = textPurify.sanitize(description);
+        }
+
+        fs.writeFileSync(`${req.file.destination}/rair.json`, JSON.stringify(rairJson, null, 4));
+
+        log.info(`${req.file.originalname} uploading to ${storageName}`);
+        socketInstance.emit('uploadProgress', {
+          message: `${req.file.originalname} uploading to ${storageName}`,
+          last: false,
+        });
+
+        switch (storage) {
+          case 'ipfs':
+            cid = await addFolder(req.file.destination, req.file.destinationFolder, socketInstance);
+            defaultGateway = `${config.pinata.gateway}/${cid}`;
+            storageLink = _.get(
+              {
+                ipfs: `${config.ipfs.gateway}/${cid}`,
+                pinata: `${config.pinata.gateway}/${cid}`,
+              },
+              config.ipfsService,
+              defaultGateway,
+            );
+            break;
+          case 'gcp':
+            cid = await gcp.uploadFolder(
+              config.gcp.videoBucketName,
+              req.file.destination,
+              socketInstance,
+            );
+            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
+            storageLink = defaultGateway;
+            break;
+          default:
+            // gcp -> default
+            cid = await gcp.uploadFolder(
+              config.gcp.videoBucketName,
+              req.file.destination,
+              socketInstance,
+            );
+            defaultGateway = `${config.gcp.gateway}/${config.gcp.videoBucketName}/${cid}`;
+            storageLink = defaultGateway;
+            break;
+        }
+
+        fs.rm(req.file.destination, { recursive: true }, (err) => {
+          if (err) log.error(err);
+        });
+        log.info(`Temporary folder ${req.file.destinationFolder} with stream chunks was removed.`);
+        delete req.file.destination;
+
+        const meta = {
+          mainManifest: 'stream.m3u8',
+          author,
+          authorPublicAddress: publicAddress,
+          encryptionType: 'aes-256-gcm',
+          title: textPurify.sanitize(title),
+          contract: foundContract._id,
+          product,
+          offer: demo === 'false' ? offer : [],
+          category: foundCategory._id,
+          staticThumbnail: `${req.file.type === 'video' ? `${defaultGateway}/` : ''}${req.file.staticThumbnail}`,
+          animatedThumbnail: req.file.animatedThumbnail ? `${defaultGateway}/${req.file.animatedThumbnail}` : '',
+          type: req.file.type,
+          extension: req.file.extension,
+          duration: req.file.duration,
+          demo: demo === 'true',
+        };
+
+        if (description) {
+          meta.description = textPurify.sanitize(description);
+        }
+
+        log.info(`${req.file.originalname} uploaded to ${storageName}: ${cid}`);
+        socketInstance.emit('uploadProgress', { message: `uploaded to ${storageName}.`, last: false, done: 90 });
+
+        log.info(`${req.file.originalname} storing to DB.`);
+        socketInstance.emit('uploadProgress', {
+          message: `${req.file.originalname} storing to database.`,
+          last: false,
+        });
+
+        const key = { ...exportedKey, key: exportedKey.key.toJSON() };
+        // TODO enpoint
+        await File.create({
+          _id: cid,
+          key,
+          uri: storageLink,
+          ...meta,
+        });
+
+        try {
+          const vaultWriteRes = await vaultKeyManager.write({
+            secretName: cid,
+            data: {
+              uri: storageLink,
+              key,
+            },
+            vaultToken: vaultAppRoleTokenManager.getToken(),
+          });
+        } catch (err) {
+          console.log('Error writing key to vault:', cid);
+        }
+
+        log.info(`${req.file.originalname} stored to DB.`);
+        socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: !!['gcp'].includes(storage), done: ['gcp'].includes(storage) ? 100 : 96 });
+
+        await StartHLS();
+
+        log.info(`${req.file.originalname} pinning to ${storageName}.`);
+        socketInstance.emit('uploadProgress', {
+          message: `${req.file.originalname} pinning to ${storageName}.`,
+          last: false,
+        });
+
+        if (storage === 'ipfs') await addPin(cid, title, socketInstance);
+      } catch (e) {
+        if (req.file.destination) {
+          fs.rm(req.file.destination, { recursive: true }, (err) => {
+            if (err) log.error(err);
+          });
+        }
+
+        log.error('An error has occurred encoding the file', e);
+
+        return next(new Error('An error has occurred encoding the file.'));
+      }
+    } else {
+      return res.status(400).send({ success: false, message: 'File not provided.' });
+    }
+  });
 
   return router;
 };
