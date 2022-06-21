@@ -17,26 +17,8 @@ const getMongoConnectionStringURI = ({
     resolve(legacyUri);
   }
 
-  console.log('Mongo URI: generated using new vault based logic path');
-
-  const passwordSecrets = appSecretManager.getSecretFromMemory(mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY);
-
-  // Verify that we have pulled secrets correctly
-  if (
-    !passwordSecrets || 
-    !passwordSecrets['data'] ||
-    !passwordSecrets['data']['username'] || 
-    !passwordSecrets['data']['password']
-  ) {
-    const errMessage = 'Could find vault password secrets during Mongo connection string generation process';
-    console.log(errMessage);
-    throw new Error(errMessage)
-  }
-
-  const username = passwordSecrets['data']['username'];
-  const password = passwordSecrets['data']['password'];
-  
   if(mongoConfig.USE_X509_CERT_AUTH === true) {
+    console.log('Mongo URI: generated using new vault based x509 auth path');
 
     // pull cert from vault
     const certSecret = appSecretManager.getSecretFromMemory(mongoConfig.VAULT_MONGO_x509_SECRET_KEY);
@@ -66,9 +48,25 @@ const getMongoConnectionStringURI = ({
       resolve(certMongoUri);
     });
   } else {
-
-    // Do password based auth
+    console.log('Mongo URI: generated using new vault based user/password auth path');
     
+    const passwordSecrets = appSecretManager.getSecretFromMemory(mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY);
+
+    // Verify that we have pulled secrets correctly
+    if (
+      !passwordSecrets || 
+      !passwordSecrets['data'] ||
+      !passwordSecrets['data']['username'] || 
+      !passwordSecrets['data']['password']
+    ) {
+      const errMessage = 'Could find vault password secrets during Mongo connection string generation process';
+      console.log(errMessage);
+      throw new Error(errMessage)
+    }
+
+    const username = passwordSecrets['data']['username'];
+    const password = passwordSecrets['data']['password'];
+  
     // Double check that we have appropriate mongo values coming in from ENV variables
     if(
       !mongoConfig.MONGO_DB_HOSTNAME ||
