@@ -67,8 +67,10 @@ const MainHeader: React.FC<IMainHeader> = ({
             '/nipsey-splash',
             '/about-page',
             '/slidelock',
-            '/nftnyc-splash'
-        ]
+            '/nftnyc-splash',
+            '/',
+            '/my-items'
+        ]   
     }, []);
 
     const handleHiddinHeader = useCallback((param: string) => {
