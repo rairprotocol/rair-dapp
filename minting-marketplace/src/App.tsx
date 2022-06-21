@@ -579,7 +579,7 @@ function App({ sentryHistory }) {
                     {
                       path: "/creator/deploy",
                       content: <Deploy />,
-                      requirement: loginDone && !creatorViewsDisabled,
+                      requirement: loginDone && adminRights && !creatorViewsDisabled,
                     },
                     {
                       path: "/creator/contracts",
@@ -654,6 +654,7 @@ function App({ sentryHistory }) {
                       requirement:
                         loginDone &&
                         !creatorViewsDisabled &&
+                        adminRights &&
                         factoryInstance !== undefined,
                     },
 

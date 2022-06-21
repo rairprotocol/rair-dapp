@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Popup } from "reactjs-popup";
 import defaultPictures from "./images/defaultUserPictures.png";
@@ -29,6 +29,8 @@ const PopUpSettings = ({
   const [userName, setUserName] = useState();
   const [userEmail, setUserEmail] = useState();
   const [triggerState, setTriggerState] = useState();
+
+  const { adminRights } = useSelector(store => store.userStore);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(
     // "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
@@ -217,7 +219,7 @@ const PopUpSettings = ({
                 >
                   <i className="fas fa-boxes"></i>My items
                 </li>
-                {process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== "true" && (
+                {process.env.REACT_APP_DISABLE_CREATOR_VIEWS !== "true" && adminRights && (
                   <li
                     onClick={pushToFactory}
                     style={{
