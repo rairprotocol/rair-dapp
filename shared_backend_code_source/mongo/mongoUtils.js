@@ -41,10 +41,11 @@ const getMongoConnectionStringURI = ({
 
     // write to temp file
     fs.writeFile(certTempFile, certString, fileEncoding, (err) => {
-      if(err) reject("Error writing cert to temp file");
+      if(err) reject("Error writing cert to temp file");      
+      // TODO:
       // delete temp file?? when?
 
-      const certMongoUri = `mongodb+srv://primary-pri.ahxui.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&tls=true&tlsCertificateKeyFile=${certTempFile}`
+      const certMongoUri = `mongodb+srv://${mongoConfig.MONGO_DB_HOSTNAME}/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&tls=true&tlsCertificateKeyFile=${certTempFile}`
       resolve(certMongoUri);
     });
   } else {
