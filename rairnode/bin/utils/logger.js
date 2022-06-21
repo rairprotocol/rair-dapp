@@ -7,7 +7,7 @@ const _ = require('lodash');
 require('winston-mongodb');
 
 const {
-  LOG_LEVEL, PRODUCTION, MONGO_URI, MONGO_URI_LOCAL, MONGO_LOG_COLLECTION, SERVICE_NAME,
+  LOG_LEVEL
 } = process.env;
 
 module.exports = (module) => {
@@ -35,16 +35,7 @@ module.exports = (module) => {
       metadata(),
     ),
     transports: [
-      new transports.Console(),
-      // transport logs to mongodb
-      new transports.MongoDB({
-        db: PRODUCTION === 'true' ? MONGO_URI : MONGO_URI_LOCAL,
-        collection: MONGO_LOG_COLLECTION || 'Log',
-        capped: true,
-        tryReconnect: true,
-        decolorize: true,
-        label: 'rairnode',
-      }),
+      new transports.Console()
     ],
   });
 };
