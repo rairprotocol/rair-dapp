@@ -17,7 +17,7 @@ const models = require('./models');
 const redisService = require('./services/redis');
 const streamRoute = require('./routes/stream');
 const apiV1Routes = require('./routes');
-const { textPurify } = require('./utils/helpers');
+const { textPurify, cleanStorage } = require('./utils/helpers');
 
 const port = process.env.PORT;
 
@@ -52,7 +52,7 @@ async function main() {
 
   // const mongoConnectionString = await getMongoConnectionStringURI({ appSecretManager });
 
-  const _mongoose = await mongoConnectionManager.getMongooseConnection({});
+  await mongoConnectionManager.getMongooseConnection({});
 
   // Connecting to Mongo DB instance
   // await mongoose.connect(mongoConnectionString, {
@@ -128,7 +128,14 @@ async function main() {
   app.use('/stream', streamRoute(context));
   app.use('/api', apiV1Routes(context));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use((err, req, res, next) => {
+  app.use(async (err, req, res, next) => {
+    // remove temporary files if validation of some middleware was rejected
+    try {
+      await cleanStorage(req.files);
+    } catch (e) {
+      log.error(e);
+    }
+
     log.error(err);
     res.status(500).json({ success: false, error: true, message: err.message });
     next();

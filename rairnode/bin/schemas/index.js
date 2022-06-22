@@ -23,6 +23,7 @@ const getTokensByContractProduct = require('./getTokensByContractProduct');
 const search = require('./search');
 const updateTokenMetadata = require('./updateTokenMetadata');
 const pinningMultiple = require('./pinningMultiple');
+const createCommonTokenMetadata = require('./createCommonTokenMetadata');
 
 module.exports = {
   admin,
@@ -50,4 +51,5 @@ module.exports = {
   search,
   updateTokenMetadata,
   pinningMultiple,
+  createCommonTokenMetadata,
 };

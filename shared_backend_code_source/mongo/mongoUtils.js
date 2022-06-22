@@ -1,8 +1,8 @@
 const mongoConfig = require('../config/mongoConfig');
 const crypto = require('crypto');
-const os = require('os'); 
-const fs = require('fs'); 
-const path = require('path'); 
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
 
 const getMongoConnectionStringURI = ({
   appSecretManager
@@ -14,7 +14,7 @@ const getMongoConnectionStringURI = ({
     // If we're running locally, use the original url pattern
     console.log('Mongo URI: generated using legacy logic path');
     const legacyUri = mongoConfig.PRODUCTION === 'true' ? mongoConfig.MONGO_URI : mongoConfig.MONGO_URI_LOCAL;
-    resolve(legacyUri);
+    return resolve(legacyUri);
   }
 
   if(mongoConfig.USE_X509_CERT_AUTH === true) {
@@ -22,7 +22,7 @@ const getMongoConnectionStringURI = ({
 
     // pull cert from vault
     const certSecret = appSecretManager.getSecretFromMemory(mongoConfig.VAULT_MONGO_x509_SECRET_KEY);
-    
+
     // Define temp file creation function
     const tmpFile = ({prefix, suffix, tmpdir}) => {
       prefix = (typeof prefix !== 'undefined') ? prefix : 'tmp.';
@@ -33,7 +33,7 @@ const getMongoConnectionStringURI = ({
 
     // define temp file name / location
     const certTempFile = tmpFile({});
-    
+
     // Extract cert string from returned vault data
     const certString = certSecret.data.x509_cert;
 
@@ -41,7 +41,7 @@ const getMongoConnectionStringURI = ({
 
     // write to temp file
     fs.writeFile(certTempFile, certString, fileEncoding, (err) => {
-      if(err) reject("Error writing cert to temp file");      
+      if(err) reject("Error writing cert to temp file");
       // TODO:
       // delete temp file?? when?
 
@@ -50,14 +50,14 @@ const getMongoConnectionStringURI = ({
     });
   } else {
     console.log('Mongo URI: generated using new vault based user/password auth path');
-    
+
     const passwordSecrets = appSecretManager.getSecretFromMemory(mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY);
 
     // Verify that we have pulled secrets correctly
     if (
-      !passwordSecrets || 
+      !passwordSecrets ||
       !passwordSecrets['data'] ||
-      !passwordSecrets['data']['username'] || 
+      !passwordSecrets['data']['username'] ||
       !passwordSecrets['data']['password']
     ) {
       const errMessage = 'Could find vault password secrets during Mongo connection string generation process';
@@ -67,7 +67,7 @@ const getMongoConnectionStringURI = ({
 
     const username = passwordSecrets['data']['username'];
     const password = passwordSecrets['data']['password'];
-  
+
     // Double check that we have appropriate mongo values coming in from ENV variables
     if(
       !mongoConfig.MONGO_DB_HOSTNAME ||

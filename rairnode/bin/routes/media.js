@@ -1,8 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const _ = require('lodash');
-const createDOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
 const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfsService')();
 const upload = require('../Multer/Config');
 const {
@@ -26,7 +24,7 @@ const { verifyAccessRightsToFile } = require('../utils/helpers');
 
 const config = require('../config/index');
 const gcp = require('../integrations/gcp')(config);
-
+const { textPurify } = require('../utils/helpers');
 const {
   Blockchain,
   Category,
@@ -305,10 +303,6 @@ module.exports = () => {
         const exportedKey = await encryptFolderContents(req.file, ['ts'], socketInstance);
 
         log.info('ffmpeg DONE: converted to stream.');
-
-        // XSS sanitizer
-        const { window } = new JSDOM('');
-        const textPurify = createDOMPurify(window);
 
         const rairJson = {
           title: textPurify.sanitize(title),

@@ -5,6 +5,7 @@ const createDOMPurify = require('dompurify');
 const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation');
 const log = require('./logger')(module);
 const { Contract, OfferPool, MintedToken, Offer } = require('../models');
+const { promises: fs } = require('fs');
 
 const execPromise = (command, options = {}) => new Promise((resolve, reject) => {
   exec(command, options, (error, stdout, stderr) => {
@@ -115,8 +116,21 @@ const textPurify = () => {
   return createDOMPurify(window);
 };
 
+// Remove files from temporary server storage
+const cleanStorage = async (files) => {
+  if (!!files && files.length) {
+    await Promise.all(
+      _.map(files, async (file) => {
+        await fs.rm(`${file.destination}/${file.filename}`);
+        log.info(`File ${file.filename} has removed.`);
+      }),
+    );
+  }
+};
+
 module.exports = {
   execPromise,
   verifyAccessRightsToFile,
   textPurify: textPurify(),
+  cleanStorage,
 };
