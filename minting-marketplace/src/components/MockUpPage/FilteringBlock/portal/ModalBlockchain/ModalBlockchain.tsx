@@ -50,7 +50,6 @@ const ModalBlockchain = ({
   setBlockchain,
   isOpenBlockchain,
   setIsOpenBlockchain,
-  getContract,
   setIsShow,
   setFilterText,
   click,

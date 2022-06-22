@@ -591,6 +591,11 @@ a:hover {
     margin-left: 5vw;
 }
 
+.list-wrapper-empty {
+    width: 100%;
+    margin: 40px;
+}
+
 .input-search-wrapper {
     /* max-width: 86%; */
     display: flex;

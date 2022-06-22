@@ -4,6 +4,7 @@ import { sagaAllInformationFromSearch } from "./search/sagas";
 import { sagaMetadata } from "./metadata/sagas";
 import { sagaUser } from "./users/sagas";
 import { sagaVideos } from "./videos/sagas";
+import { sagaNftData } from './nftData/saga';
 
 export default function* rootSaga() {
   yield all([
@@ -11,6 +12,7 @@ export default function* rootSaga() {
     sagaUser(),
     sagaVideos(),
     sagaAllInformationFromSearch(),
-    sagaMetadata()
+    sagaMetadata(),
+    sagaNftData()
   ]);
 }

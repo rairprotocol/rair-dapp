@@ -11,7 +11,7 @@ import { ContractsInitialType } from "../../ducks/contracts/contracts.types";
 import axios from "axios";
 import { TAuthGetChallengeResponse, TOnlySuccessResponse } from "../../axios.responseTypes";
 
-const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3u8", baseURL, setProcessDone = () => false}) => {
+const VideoPlayer: React.FC<IVideoPlayer> = ({ mediaId, mainManifest = "stream.m3u8", baseURL, setProcessDone = () => false }) => {
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>((state) => state.contractStore);
   const [videoName] = useState(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState<string>(
@@ -50,25 +50,31 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({mediaId, mainManifest = "stream.m3
       Swal.fire("Error", "Unable to decrypt videos", "error");
       return;
     }
-    let streamAddress = await axios.get<TOnlySuccessResponse>(
+    try {
+      let streamAddress = await axios.get<TOnlySuccessResponse>(
         "/api/auth/get_token/" +
-          parsedResponse.message.challenge +
-          "/" +
-          signature +
-          "/" +
-          mediaId
+        parsedResponse.message.challenge +
+        "/" +
+        signature +
+        "/" +
+        mediaId
       );
-    if (streamAddress.data.success) {
-      await setMediaAddress(
-        "/stream/" + mediaId + "/" + mainManifest
-      );
-      setTimeout(() => {
-        videojs("vjs-" + videoName);
-      }, 1000);
-      setProcessDone(false)
-    } else {
-      console.error(streamAddress);
-      Swal.fire("NFT required to view this content");
+      if (streamAddress.data.success) {
+        await setMediaAddress(
+          "/stream/" + mediaId + "/" + mainManifest
+        );
+        setTimeout(() => {
+          videojs("vjs-" + videoName);
+        }, 1000);
+        setProcessDone(false)
+      } else {
+        console.error(streamAddress);
+        Swal.fire("NFT required to view this content");
+        setProcessDone(false)
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Video not found");
       setProcessDone(false)
     }
   }, [programmaticProvider, mediaId, mainManifest, videoName]);

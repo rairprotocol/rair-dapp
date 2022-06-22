@@ -217,7 +217,6 @@ const FilteringBlock = ({
           setIsOpenBlockchain={setIsOpenBlockchain}
           setIsShow={setIsShow}
           setFilterText={setFilterText}
-          getContract={getContract}
         />
       </div>
     </>

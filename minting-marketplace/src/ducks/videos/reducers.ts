@@ -6,6 +6,7 @@ const InitialState: TVideosInitialState = {
     videos: null,
     error: null,
     refresh: false,
+    loading: false
 };
 
 export default function videosStore(state: TVideosInitialState = InitialState, action: TVideosActions): TVideosInitialState {
@@ -13,12 +14,14 @@ export default function videosStore(state: TVideosInitialState = InitialState, a
         case types.GET_LIST_VIDEOS_START:
             return {
                 ...state,
-                videos: null
+                videos: null,
+                loading: true
             };
         case types.GET_LIST_VIDEOS_COMPLETE:
             return {
                 ...state,
-                videos: action.videoList
+                videos: action.videoList,
+                loading: false
             };
         case types.GET_LIST_VIDEOS_ERROR:
             return {

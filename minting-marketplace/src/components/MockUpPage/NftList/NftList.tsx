@@ -5,6 +5,7 @@ import React, { memo } from "react";
 // import thirdPict from "../assets/Graphics-WEB-2021-03.png";
 import Skeleton from "@mui/material/Skeleton";
 import { NftItem } from "./NftItem";
+import { useSelector } from "react-redux";
 
 const NftListComponent = ({
   data,
@@ -14,6 +15,14 @@ const NftListComponent = ({
   titleSearch,
   sortItem,
 }) => {
+  const { loading } = useSelector(store => store.nftDataStore);
+
+  if (loading) {
+    return <div className="list-wrapper-empty" >
+      <h2>Loading...</h2>
+    </div>
+  }
+
   const defaultImg =
     "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
 
@@ -42,7 +51,7 @@ const NftListComponent = ({
   return (
     <div className={"list-button-wrapper"}>
       {
-        filteredData
+        filteredData && filteredData.length > 0
           ? filteredData.map((contractData, index) => {
             if (contractData.cover !== "none") {
               return (
@@ -65,18 +74,21 @@ const NftListComponent = ({
               return null;
             }
           })
-          : Array.from(new Array(10)).map((item, index) => {
-            return (
-              <Skeleton
-                key={index}
-                className={"skeloton-product"}
-                variant="rectangular"
-                width={283}
-                height={280}
-                style={{ borderRadius: 20 }}
-              />
-            );
-          })
+          : <div className="list-wrapper-empty">
+            <h2>No items to display</h2>
+          </div>
+        // Array.from(new Array(10)).map((item, index) => {
+        //   return (
+        //     <Skeleton
+        //       key={index}
+        //       className={"skeloton-product"}
+        //       variant="rectangular"
+        //       width={283}
+        //       height={280}
+        //       style={{ borderRadius: 20 }}
+        //     />
+        //   );
+        // })
         // <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: "20px" }} className="preloader-product">
         //     <CircularProgress size="70px" />
         // </div>

@@ -7,24 +7,17 @@ import { NftList } from "./NftList/NftList";
 import InputField from "../common/InputField";
 import VideoList from "../video/videoList";
 import FilteringBlock from "./FilteringBlock/FilteringBlock";
-import axios, { AxiosError } from "axios";
 import PaginationBox from "./PaginationBox/PaginationBox";
 import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages/actions";
-import { TGetFullContracts, TMediaList } from "../../axios.responseTypes";
-import { useStateIfMounted } from "use-state-if-mounted";
+import { getNftDataStart } from "../../ducks/nftData/action";
 
 const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   const dispatch = useDispatch();
   const { currentPage } = useSelector((store) => store.getPageStore);
-  // const { dataAll } = useSelector((store) => store.allInformationFromSearch);
+  const { nftList, itemsPerPage } = useSelector((store => store.nftDataStore));
+
   const [titleSearch, setTitleSearch] = useState("");
-  // const [titleSearchDemo, setTitleSearchDemo] = useState("");
   const [sortItem, setSortItem] = useState("");
-  const [mediaList, setMediaList] = useStateIfMounted();
-  const [data, setData] = useState();
-  // const [dataAll, setAllData] = useState();
-  const [totalPage, setTotalPages] = useState(null);
-  const [itemsPerPage /*setItemsPerPage*/] = useState(20);
   const [blockchain, setBlockchain] = useState();
   const [category, setCategory] = useState();
   const [isShow, setIsShow] = useState(false);
@@ -32,182 +25,91 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   const [filterText, setFilterText] = useState("");
   const [filterCategoriesText, setFilterCategoriesText] = useState("");
   const [click, setClick] = useState(null);
-  // const [exactlyContract, setExactlyContract] = useState();
-  // const [totalCountAll, setTotalCountAll] = useState();
-  // const [currentPage, setCurrentPage] = useState(1);
 
-  // const history = useHistory();
+  // const [mediaList, setMediaList] = useState();
 
-  let pagesArray = [];
-  for (let i = 0; i < totalPage; i++) {
-    pagesArray.push(i + 1);
-  }
 
-  const getContract = useCallback(async () => {
-    const responseContract = await axios.get<TGetFullContracts>("/api/contracts/full", {
-      headers: {
-        Accept: "application/json",
-        "X-rair-token": localStorage.token,
-      },
-      params: {
-        itemsPerPage: itemsPerPage,
-        pageNum: currentPage,
-        blockchain: blockchain,
-        category: category,
-      },
-    });
+  // const getContract = useCallback(async () => {
+  //   const responseContract = await axios.get<TGetFullContracts>("/api/contracts/full", {
+  //     headers: {
+  //       Accept: "application/json",
+  //       "X-rair-token": localStorage.token,
+  //     },
+  //     params: {
+  //       itemsPerPage: itemsPerPage,
+  //       pageNum: currentPage,
+  //       blockchain: blockchain,
+  //       category: category,
+  //     },
+  //   });
 
-    const covers = responseContract.data.contracts.map((item: Object) => ({
-      id: item._id,
-      productId: item.products?._id ?? "wut",
-      blockchain: item.blockchain,
-      collectionIndexInContract: item.products.collectionIndexInContract,
-      contract: item.contractAddress,
-      cover: item.products.cover,
-      title: item.title,
-      name: item.products.name,
-      user: item.user,
-      copiesProduct: item.products.copies,
-      offerData: item.products.offers.map((elem) => ({
-        price: elem.price,
-        offerName: elem.offerName,
-        offerIndex: elem.offerIndex,
-        productNumber: elem.product,
-      })),
-    }));
-    setData(covers);
-    // setTotalCountAll(responseContract.data.totalNumber);
+  //   const covers = responseContract.data.contracts.map((item: object) => ({
+  //     id: item._id,
+  //     productId: item.products?._id ?? "wut",
+  //     blockchain: item.blockchain,
+  //     collectionIndexInContract: item.products.collectionIndexInContract,
+  //     contract: item.contractAddress,
+  //     cover: item.products.cover,
+  //     title: item.title,
+  //     name: item.products.name,
+  //     user: item.user,
+  //     copiesProduct: item.products.copies,
+  //     offerData: item.products.offers.map((elem) => ({
+  //       price: elem.price,
+  //       offerName: elem.offerName,
+  //       offerIndex: elem.offerIndex,
+  //       productNumber: elem.product,
+  //     })),
+  //   }));
+  //   setData(covers);
 
-    const totalCount = responseContract.data.totalNumber;
-    setTotalPages(getPagesCount(totalCount, itemsPerPage));
-  }, [currentPage, itemsPerPage, blockchain, category]);
+  //   const totalCount = responseContract.data.totalNumber;
+  //   setTotalPages(getPagesCount(totalCount, itemsPerPage));
+  // }, [currentPage, itemsPerPage, blockchain, category]);
 
-  // const getAllContract = useCallback(async () => {
-  //   if (titleSearchDemo) {
-  //     const titleSearchDemoEncoded = encodeURIComponent(titleSearchDemo);
-  //     const responseContract = await axios.get(`/api/search/${titleSearchDemoEncoded}`, {
-  //       // headers: {
-  //       //   Accept: "application/json",
-  //       //   "X-rair-token": localStorage.token,
-  //       // },
-  //       // body: {
-  //       // searchString: 'ddsx',
-  //       // searchBy: 'products',
-  //       // }
-  //       // params: {
-  //       // searchString: 'ddsx',
-  //       //   pageNum: currentPage,
-  //       //   blockchain: blockchain,
-  //       //   category: category,
-  //       // },
-  //     });
-  //     setAllData(responseContract?.data?.data);
-  //   }
-  // }, [titleSearchDemo]);
 
-  // useEffect(()=> {
-  //   // if(titleSearchDemo.length > 0 ){
-  //     dispatch(getDataAllStart(titleSearchDemo));
-  //   // }
-  // },[dispatch, titleSearchDemo])
-
-  // const goToExactlyContract = useCallback(async (addressId: String, collectionIndexInContract: String) => {
-  //   if (dataAll) {
-  //     const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
-  //     const exactlyContractData = {
-  //       blockchain: response.data.contract.blockchain,
-  //       contractAddress: response.data.contract.contractAddress,
-  //       indexInContract: collectionIndexInContract,
-  //     };
-  //     history.push(
-  //       `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
-  //     )
-  //   }
-  // }, [dataAll, history]);
-
-  // const goToExactlyToken = useCallback(async (addressId: String, token: String) => {
-  //   if (dataAll) {
-  //     const response = await axios.get(`/api/contracts/singleContract/${addressId}`);
-  //     // TODO: expression to truncate a string to character #
-  //     // const truncatedValue = token.replace(/^[^#]*#([\s\S]*)$/, '$1');
-  //     const exactlyTokenData = {
-  //       blockchain: response.data.contract.blockchain,
-  //       contractAddress: response.data.contract.contractAddress,
-  //     };
-  //     history.push(
-  //       `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
-  //     )
-  //   }
-  // }, [dataAll, history]);
-
-  // useEffect(() => {
-  //   getAllContract();
-  // }, [getAllContract]);
-
-  const getPagesCount = (totalCount: Number, itemsPerPage: Number) => {
-    return Math.ceil(totalCount / itemsPerPage);
-  };
-
-  const changePage = (currentPage) => {
+  const changePage = (currentPage: number) => {
     dispatch(getCurrentPage(currentPage));
     // setCurrentPage(currentPage);
     window.scrollTo(0, 0);
   };
 
-  useEffect(() => {
-    if (blockchain || category) {
-      dispatch(getCurrentPageEnd());
-    }
-  }, [blockchain, category, dispatch]);
-
-  const updateList = useCallback( async () => {
-    try {
-      let response = await axios.get<TMediaList>("/api/media/list", {
-        headers: {
-          "x-rair-token": localStorage.token,
-        },
-      });
-      const { success, list } = response.data;
-      if (success) {
-        setMediaList(list);
-      }
-    } catch (err) {
-      const error = err as AxiosError;
-      if (
-        error?.message === "jwt expired" ||
-        error?.message === "jwt malformed"
-      ) {
-        localStorage.removeItem("token");
-      }
-       else {
-        console.log(error?.message);
-      }
-    }
-  },[]);
-
-  useEffect(() => {
-    getContract();
-  }, [currentPage, getContract]);
-  
-  useEffect(() => {
-    updateList();
-  }, [updateList]);
-
-  // useEffect(() => {
-  //   if (localStorage.token) {
-  //     updateList();
+  // const updateList = async () => {
+  //   try {
+  //     let response = await axios.get<TMediaList>("/api/media/list", {
+  //       headers: {
+  //         "x-rair-token": localStorage.token,
+  //       },
+  //     });
+  //     const { success, list } = response.data;
+  //     if (success) {
+  //       console.log(list, "list")
+  //       setMediaList(list);
+  //     }
+  //   } catch (err) {
+  //     const error = err as AxiosError;
+  //     if (
+  //       error?.message === "jwt expired" ||
+  //       error?.message === "jwt malformed"
+  //     ) {
+  //       localStorage.removeItem("token");
+  //     }
+  //     else {
+  //       console.log(error?.message);
+  //     }
   //   }
-  // }, []);
+  // };
 
+  // unused snippet
   const handleClick = useCallback(
     (cover) => {
-      data.forEach((item) => {
+      nftList.forEach((item) => {
         if (cover === item.cover) {
           console.log(1);
         }
       });
     },
-    [data]
+    []
   );
 
   const clearFilter = () => {
@@ -223,6 +125,41 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
     setIsShowCategories(false);
     dispatch(getCurrentPageEnd());
   };
+
+  useEffect(() => {
+    if (blockchain || category) {
+      dispatch(getCurrentPageEnd());
+    }
+  }, [blockchain, category, dispatch]);
+
+
+  useEffect(() => {
+    const params = {
+      itemsPerPage,
+      currentPage,
+      blockchain,
+      category
+    }
+
+    dispatch({ type: "GET_NFTLIST_START", params: params })
+  }, [
+    itemsPerPage,
+    currentPage,
+    blockchain,
+    category,
+    dispatch
+  ])
+
+  useEffect(() => {
+    return () => {
+      dispatch(getNftDataStart());
+    }
+  }, [dispatch])
+
+  // useEffect(() => {
+  //   getContract();
+  // }, [currentPage, getContract]);
+
   return (
     <div className="input-search-wrapper list-button-wrapper">
       <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
@@ -287,7 +224,7 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
               setIsShowCategories={setIsShowCategories}
               setFilterText={setFilterText}
               setFilterCategoriesText={setFilterCategoriesText}
-              getContract={getContract}
+            // getContract={getContract}
             />
           </div>
         </div>
@@ -322,18 +259,17 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             primaryColor={primaryColor}
             textColor={textColor}
             handleClick={handleClick}
-            data={data}
+            data={nftList}
           // dataAll={dataAll}
           />
           <PaginationBox
             primaryColor={primaryColor}
-            pagesArray={pagesArray}
             changePage={changePage}
             currentPage={currentPage}
           />
         </TabPanel>
         <TabPanel>
-          <VideoList mediaList={mediaList} titleSearch={titleSearch} />
+          <VideoList titleSearch={titleSearch} />
         </TabPanel>
       </Tabs>
     </div>

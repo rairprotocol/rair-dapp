@@ -1,9 +1,22 @@
-//@ts-check
+//@ts-nocheck
 import { Pagination } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux';
 
-const PaginationBox = ({ pagesArray, changePage, currentPage, primaryColor }) => {
+const PaginationBox = ({ changePage, currentPage, primaryColor }) => {
     const [page, setPage] = useState(currentPage);
+    const [totalPage, setTotalPages] = useState(null);
+    const { nftListTotal, itemsPerPage, nftList } = useSelector(store => store.nftDataStore);
+
+
+    let pagesArray = [];
+    for (let i = 0; i < totalPage; i++) {
+        pagesArray.push(i + 1);
+    }
+
+    const getPagesCount = (totalCount: number, itemsPerPage: number) => {
+        return Math.ceil(totalCount / itemsPerPage);
+    };
 
     const handlePage = (e, value) => {
         if (value !== currentPage) {
@@ -11,6 +24,12 @@ const PaginationBox = ({ pagesArray, changePage, currentPage, primaryColor }) =>
             setPage(value);
         }
     }
+
+    useEffect(() => {
+        if (nftListTotal) {
+            setTotalPages(getPagesCount(nftListTotal, itemsPerPage));
+        }
+    }, [nftListTotal, itemsPerPage])
 
     return (
         <div className="pagination__wrapper">
@@ -32,8 +51,8 @@ const PaginationBox = ({ pagesArray, changePage, currentPage, primaryColor }) =>
                 <h2 className="search-panel-empty-text">No items to display</h2>
             )} */}
             {
-                pagesArray && pagesArray.length > 0 ? <Pagination
-                className={primaryColor === "rhyno" ? "pagination-white" : "pagination-black"}
+                pagesArray && nftListTotal > 0 && pagesArray.length > 0 && <Pagination
+                    className={primaryColor === "rhyno" ? "pagination-white" : "pagination-black"}
                     count={pagesArray.length}
                     page={page}
                     onChange={handlePage}
@@ -43,7 +62,8 @@ const PaginationBox = ({ pagesArray, changePage, currentPage, primaryColor }) =>
                     hideNextButton={true}
                     hidePrevButton={true}
                     shape="rounded"
-                /> : <h2 className="search-panel-empty-text">No items to display</h2>
+                />
+                // : <h2 className="search-panel-empty-text">No items to display</h2>
             }
         </div>
     )

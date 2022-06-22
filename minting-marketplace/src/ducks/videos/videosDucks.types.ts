@@ -5,6 +5,7 @@ export type TVideosInitialState = {
     videos: MediaListResponseType | null;
     error: string | null;
     refresh: boolean;
+    loading: boolean;
 }
 
 export type TGetListVideosStart = ReturnType<typeof getListVideosStart>;
