@@ -20,10 +20,13 @@ const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 // Admin view to upload media to the server
 const FileUpload = ({ address, primaryColor, textColor }) => {
+
+	const [fullContractData, setFullContractData] = useState({});
+	const [contractID, setContractID] = useState('null');
+	const [selectedOffers, setSelectedOffers] = useState([]);
+
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
-	// const [author, setAuthor] = useState("");
-	// const [token, setToken] = useState('')
 	const [video, setVideo] = useState(undefined);
 	const [uploading, setUploading] = useState(false);
 	const [adminNFT, setAdminNFT] = useState("");
@@ -33,7 +36,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	const [message, setMessage] = useState(0);
 	const [/*part,*/ setPart] = useState(0);
 	const [, setVPV] = useState();
-	// const [productData,setProductData] = useState();
 	const [product, setProduct] = useState("null");
 	const [productOptions, setProductOptions] = useState();
 	const [offersOptions, setOffersOptions] = useState();
@@ -44,7 +46,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	const [contract, setContract] = useState('null');
 	const [category, setCategory] = useState('null');
 	const [storage, setStorage] = useState('null');
-	const [contractID, setContractID] = useState('null');
 	const [contractOptions, setContractOptions] = useState([]);
 	const [offersData, setOffersData] = useState([]);
 	const [collectionIndex, setCollectionIndex] = useState({});
@@ -67,62 +68,72 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 		getCategories();
 	}, [getCategories])
 
-	const getContract = useCallback(async () => {
-		const { success, contracts } = await rFetch("/api/contracts");
+	const getFullContractData = useCallback(async () => {
+		let request = await rFetch("/api/contracts/full?itemsPerPage=5");
+		if (request.success) {
+			let { success, contracts } = await rFetch(`/api/contracts/full?itemsPerPage=${request.totalNumber}`);
+			if (success) {
+				let mapping = {};
+				let options = [];
+				contracts.forEach(item => {
+					let offerMapping = {};
+					item.products.offers.forEach(offer => {
+						offerMapping[offer[item.diamond ? 'diamondRangeIndex' : 'offerIndex']] = offer;
+					})
+					item.products.offers = offerMapping;
 
-		if (success) {
-			const contractData = contracts.map((item) => ({
-				_id: item._id,
-				blockchain: item.blockchain,
-				value: item.contractAddress,
-				label: `${item.title} (...${item.contractAddress.slice(-4)})`,
-			}));
-			setContractOptions(contractData);
+					if (mapping[item._id] !== undefined) {
+						mapping[item._id].products[item.products.collectionIndexInContract] = item.products;
+					} else {
+						let productMapping = {};
+						productMapping[item.products.collectionIndexInContract] = item.products;
+						item.products = productMapping;
+						mapping[item._id] = item;
+						options.push({
+							label: `${item.title} (${item.external ? 'External' : item.diamond ? 'Diamond' : 'Classic'})`,
+							value: item._id
+						});
+					}
+				});
+
+				setFullContractData(mapping);
+				setContractOptions(options);
+			}
 		}
-	}, [setContractOptions]);
+	}, [])
+
+	useEffect(getFullContractData, [getFullContractData]);
 
 	const getProduct = useCallback(async () => {
-		const { success, products } = await rFetch(`api/contracts/network/${networkId}/${contract}/products`);
-
-		if (success) {
-			const names = products.map((product) => ({
-				value: product.name,
-				label: product.name,
-			}));
-			setProductOptions(names);
-		}
-
-		const collectionIndexInContract = products[0]?.collectionIndexInContract;
-		setCollectionIndex(collectionIndexInContract);
-
-		return products;
+		setProductOptions(Object.keys(fullContractData[contract].products).map(key => {
+			return {
+				label: fullContractData[contract].products[key].name,
+				value: fullContractData[contract].products[key].collectionIndexInContract
+			}
+		}));
 	}, [contract]);
 
 	useEffect(() => {
 		if (contract !== 'null') {
+			setProduct('null');
 			getProduct();
 		}
 	}, [contract, getProduct]);
 
 	const getOffers = useCallback(async () => {
-		const responseOffer = await rFetch(`api/contracts/network/${networkId}/${contract}/products/offers`);
-
-		const filteredOffer = responseOffer.products.filter(item => item.name === product);
-		const offersNames = filteredOffer[0]?.offers.map(prod => {
+		setOffersOptions(Object.keys(fullContractData[contract].products[product].offers).map(key => {
 			return {
-				value: prod.offerName,
-				label: prod.offerName,
+				label: fullContractData[contract].products[product].offers[key].offerName,
+				value: fullContractData[contract].products[product].offers[key][
+					fullContractData[contract].diamond ? 'diamondRangeIndex' : 'offerIndex'
+				]
 			}
-		})
-
-		setOffersData(responseOffer.products[0]?.offers);
-		setOffersOptions(offersNames);
-
-		return offersNames;
+		}));
 	}, [contract, product]);
 
 	useEffect(async () => {
 		if (product !== 'null') {
+			setSelectedOffers(['null']);
 			const offers = await getOffers();
 			setCountOfSelects(offers?.length - 1);
 		}
@@ -141,7 +152,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	}, [selectsData, offer]);
 
 	useEffect(async () => {
-		await getContract();
 		const sessionId = getRandomValues().toString(36).substr(2, 9);
 		setThisSessionId(sessionId);
 		const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
@@ -193,7 +203,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 				setContractOptions([]);
 				setProductOptions();
 				setOffersOptions();
-				getContract();
 				document.getElementById("media_id").value = "";
 				setMessage(0);
 			}
@@ -208,50 +217,26 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 	};
 
 	const createSelects = () => {
-		if (countOfSelects) {
-			setSelects([...selects, "select11"]);
-			setCountOfSelects((prev) => prev - 1);
-		}
+		let aux = [...selectedOffers];
+		aux.push('null');
+		setSelectedOffers(aux);
 	};
 
-	const renderSelects = () => {
-		return selects.map((item, i) => {
-			return (
-				<InputSelect
-					customClass="form-control input-select-custom-style"
-					customCSS={{
-						backgroundColor: `var(--${primaryColor})`,
-						color: `var(--${textColor})`,
-					}}
-					labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
-					// optionCSS={{color: `var(--${primaryColor})`}}
-					key={item + i}
-					label="Offers"
-					getter={selectsData[item + i]}
-					setter={(e) => handleChangeSelects(e, item + i)}
-					placeholder="Choose your offer"
-					options={offersOptions}
-				/>
-			);
-		});
-	};
-
-	const handleOffer = (value) => {
-		setOffer(value);
-		offersData.forEach((offer) => {
-			if (value === offer.offerName) {
-				offer.diamondRangeIndex
-					?
-					setOffersIndex((prev) => [...prev, offer.diamondRangeIndex])
-					:
-					setOffersIndex((prev) => [...prev, offer.offerIndex]);
-			}
-		});
+	const handleOffer = (key ,value) => {
+		let aux = [...selectedOffers];
+		aux[key] = value;
+		setSelectedOffers(aux);
 	};
 
 	let reusableStyle = {
 		backgroundColor: `var(--${primaryColor})`,
 		color: `var(--${textColor})`
+	}
+
+	const verifyOffer = () => {
+		return selectedOffers.reduce((prev, current) => {
+			return (prev && current === 'null')
+		}, true)
 	}
 
 	return (
@@ -276,17 +261,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						setter={setTitle}
 					/>
 				</div>
-				{/* <div className="col-8 py-1">
-					<InputField
-						customClass="form-control input-select-custom-style"
-						customCSS={reusableStyle}
-						labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
-						label="Author"
-						placeholder="Please input an author"
-						getter={author}
-						setter={setAuthor}
-					/>
-				</div> */}
 				<div className="col-8 py-1">
 					<InputField
 						label="Description"
@@ -333,19 +307,14 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						label="Contract"
 						getter={contract}
 						setter={e => {
-							contractOptions.forEach((el) => {
-								if (el.value === e) {
-									setNetworkId(el.blockchain)
-									setContractID(el._id)
-								}
-							})
+							setNetworkId(fullContractData[e].blockchain);
 							setContract(e);
 							setProduct("null");
 							setProductOptions([]);
 							setOffer("null");
 							setOffersOptions([]);
 						}}
-						placeholder="Choose a product"
+						placeholder="Select a Contract"
 						options={contractOptions}
 					/>
 				</div>
@@ -370,26 +339,28 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 						No products available
 						<br />
 					</>}
-				{offersOptions?.length > 0 ? <div className="col-8 py-1">
-					<InputSelect
-						customClass="form-control input-select-custom-style"
-						customCSS={reusableStyle}
-						labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
-						label="Offers"
-						getter={offer}
-						setter={(value) => handleOffer(value)}
-						placeholder="Choose a offer"
-						options={offersOptions}
-					/>
+				 <div className="col-8 py-1">
+					{offersOptions?.length ? Object.keys(selectedOffers)?.map(key => {
+						return <InputSelect
+							customClass="form-control input-select-custom-style"
+							customCSS={reusableStyle}
+							labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
+							label={key === '0' ? "Offers" : ''}
+							getter={selectedOffers[key]}
+							setter={(value) => handleOffer(key, value)}
+							placeholder="Select an offer"
+							options={offersOptions}
+						/>
+					}) : 'No offers available'}
 					<button
+						disabled={selectedOffers?.length >= offersOptions?.length}
 						style={reusableStyle}
 						className="addButton"
 						onClick={createSelects}
 					>
 						<i className='fas fa-plus' />
 					</button>
-					{renderSelects()}
-				</div> : 'No offers available'}
+				</div>
 				<div className="col-8 py-1">
 					<label htmlFor="media_id">File:</label>
 					<input
@@ -407,7 +378,18 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 				</div>
 				<button
 					type="button"
-					disabled={uploading || storage === 'null' || title === '' || description === '' ||/* author === '' || */  contract === 'null' || product === 'null' || offer === 'null' || video === undefined}
+					disabled={
+						uploading ||
+						storage === 'null' ||
+						title === '' ||
+						description === '' ||
+						/* author === '' || */ 
+						contract === 'null' ||
+						product === 'null' ||
+						selectedOffers.length === 0 ||
+						verifyOffer() ||
+						video === undefined
+					}
 					className="btn py-1 col-8 btn-primary btn-submit-custom"
 					onClick={(e) => {
 						if (uploading) {
@@ -419,11 +401,17 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 							formData.append("video", video);
 							formData.append("title", title);
 							formData.append("description", description);
-							formData.append("contract", contractID);
+							formData.append("contract", contract);
 							formData.append("category", category);
 							formData.append("storage", storage);
-							formData.append("product", collectionIndex);
-							formData.append("offer", JSON.stringify(offersIndex));
+							formData.append("product", product);
+							let acceptedOffers = [];
+							selectedOffers.forEach(item => {
+								if (item !== 'null' && !acceptedOffers.includes(item)) {
+									acceptedOffers.push(item);
+								}
+							});
+							formData.append("offer", JSON.stringify(acceptedOffers));
 							setUploading(true);
 							axios.post<TUploadSocket>(`/api/media/upload?socketSessionId=${thisSessionId}`, formData, {
 								headers: {
@@ -445,7 +433,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 									// setContractOptions([]);
 									// setProductOptions();
 									// setOffersOptions();
-									// getContract();
 									// 	// setAuthor("");
 								}
 								)
@@ -483,82 +470,6 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
 				</div>
 				<div>{status !== 100 && status !== 0 ? `Step: ${message}` : ""}</div>
 				<hr className="w-100 my-5" />
-			</div>
-			<h1> Manage Account </h1>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-				className="text-center mx-auto col-12"
-			>
-				<div className="col-8 py-1">
-					<InputField
-						customClass="form-control input-select-custom-style"
-						customCSS={{
-							backgroundColor: `var(--${primaryColor})`,
-							color: `var(--${textColor})`,
-						}}
-						labelCSS={{ backgroundColor: `var(--${primaryColor})` }}
-						label="Admin Control NFT"
-						getter={adminNFT}
-						setter={setAdminNFT}
-					/>
-				</div>
-				<button
-					type="button"
-					className="btn py-1 my-2 col-8 btn-primary btn-submit-custom"
-					onClick={(e) => {
-						if (adminNFT) {
-							axios.get<TAuthGetChallengeResponse>("/api/auth/get_challenge/" + currentUserAddress)
-								.then((res) => res.data)
-								.then(({success, response }) => {
-									window.ethereum
-										.request({
-											method: "eth_signTypedData_v4",
-											params: [currentUserAddress, JSON.stringify(response)],
-											from: currentUserAddress,
-										})
-										.then((e) => {
-									console.log("inside post method");
-
-											axios.post(
-												"/api/auth/new_admin/" +
-												JSON.parse(response).message.challenge +
-												"/" +
-												e +
-												"/", JSON.stringify({
-													adminNFT,
-												}),
-												{
-													headers: {
-														Accept: "application/json",
-														"Content-Type": "application/json",
-													},
-												}
-											)
-												.then((res) => res.data)
-												.then(({success, response }) => {
-													setAdminNFT("");
-													Swal.fire(
-														success ? "Success" : "Error",
-														response.message,
-														success ? "success" : "error"
-													);
-												})
-												.catch((e) => {
-													console.error(e);
-													Swal.fire("Error", e, "error");
-												});
-										});
-								});
-						}
-					}}
-				>
-					{" "}
-					Set new NFT{" "}
-				</button>
 			</div>
 		</>
 	);
