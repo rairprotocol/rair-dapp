@@ -321,6 +321,10 @@ const WorkflowSteps = ({ sentryHistory }) => {
 	}, [forceFetchData]);
 
 	const goBack = useCallback(() => {
+		if (currentStep === 0) {
+			history.goBack()
+			return;
+		}
 		history.push(steps[currentStep - 1].populatedPath);
 	}, [steps, currentStep, history]);
 
