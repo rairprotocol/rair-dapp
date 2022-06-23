@@ -39,81 +39,6 @@ import MetaTags from "../../SeoTags/MetaTags";
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-const splashData = {
-  NFTName: "NFT",
-  title: "NFTNYC X RAIR",
-  titleColor: "#F15621",
-  description: [
-    "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams"
-  ],
-  seoInformation: {
-    title: "NFTNYC X RAIR",
-    contentName: "author",
-    content: "NFTNYC X RAIR",
-    description: "Claim your NFT to unlock encrypted streams from the NFTLA conference",
-    favicon: NFTNYC_favicon,  
-    image: NFTNYC_TITLE
-  },
-
-  /*  this block needs to be changed */ 
-  buttonLabel: "Connect Wallet",
-  buttonBackgroundHelp: "rgb(3, 91, 188)",
-  backgroundImage: NFTNYC_TITLE,
-  purchaseButton: {
-    // Reusable component
-    buttonComponent: PurchaseTokenButton,
-    // OPTIONAL: Image on the purchase button
-    img: null,
-    // Contract address
-    // ...(process.env.REACT_APP_TEST_CONTRACTS === 'true' ? testContract : mainContract),
-    // Custom style for the button
-    customStyle: {
-      backgroundColor: "#F15621"
-    },
-    presaleMessage: 'Claim your NFT to unlock encrypted streams from the NFTNYC conference',
-    // Custom class for the div surrounding the button
-    customWrapperClassName: 'btn-submit-with-form',
-    blockchainOnly: true,
-    // Custom function that will be called if the minting is a success
-    // First parameter will be the minted token's number
-    customSuccessAction: async (nextToken) => {
-      let tokenMetadata = await rFetch(`/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`);
-      if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
-        Swal.fire({
-          imageUrl: tokenMetadata.result.metadata.image,
-          imageHeight: "auto",
-          imageWidth: "65%",
-          imageAlt: "Your NFT's image",
-          title: `You own #${nextToken}!`,
-          icon: "success"
-        });
-      } else {
-        Swal.fire('Success', `Bought token #${nextToken}`, 'success');
-      }
-    }
-  },
-  button2: {
-    buttonColor: "#000000",
-    buttonLabel: "View on Opensea",
-    buttonImg: null,
-    buttonLink: "https://opensea.io/collection/swagnftnyc",
-  },
-  exclusiveNft: {
-    title: "NFTs",
-    titleColor: "rgb(3, 91, 188)",
-  },
-  videoBackground1: videoBackground1,
-  videoData1: {
-    video: null,
-    videoTitle: "",
-    videoModuleDescription: "NFT owners can learn more about the project by signing with metamask to unlock an encrypted stream ",
-    videoModuleTitle: "Exclusive 1: Degen Toonz Cartoon",
-    // baseURL: 'https://storage.googleapis.com/rair-videos/',
-    // mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
-    demo: true,
-  },
-}
-
 const reactSwal = withReactContent(Swal);
 
 const WarningModal = () => {
@@ -130,13 +55,63 @@ const WarningModal = () => {
       }
 
 const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
+  const { currentChain, currentUserAddress, minterInstance } = useSelector((store) => store.contractStore);
+  
+  const splashData = {
+    NFTName: "NFT",
+    title: "NFTNYC X RAIR",
+    titleColor: "#F15621",
+    description: [
+      "Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams"
+    ],
+    seoInformation: {
+      title: "NFTNYC X RAIR",
+      contentName: "author",
+      content: "NFTNYC X RAIR",
+      description: "Claim your NFT to unlock encrypted streams from the NFTLA conference",
+      favicon: NFTNYC_favicon,  
+      image: NFTNYC_TITLE
+    },
+    purchaseButton:  {
+      requiredBlockchain: '0x89',
+      contractAddress: '0xb41660b91c8ebc19ffe345726764d4469a4ab9f8'
+    },
+    /*  this block needs to be changed */ 
+    buttonLabel: "Connect Wallet",
+    buttonBackgroundHelp: "rgb(3, 91, 188)",
+    backgroundImage: NFTNYC_TITLE,
+    button1: currentUserAddress === undefined && {
+      buttonColor: "#F15621",
+      buttonLabel: "Connect wallet",
+      buttonImg: MetaMaskIcon,
+      buttonAction: connectUserData
+    },
+    button2: {
+      buttonColor: "#000000",
+      buttonLabel: "View on Opensea",
+      buttonImg: null,
+      buttonLink: "https://opensea.io/collection/swagnftnyc",
+    },
+    exclusiveNft: {
+      title: "NFTs",
+      titleColor: "rgb(3, 91, 188)",
+    },
+    videoBackground1: videoBackground1,
+    videoData1: {
+      video: null,
+      videoTitle: "",
+      videoModuleDescription: "NFT owners can learn more about the project by signing with metamask to unlock an encrypted stream ",
+      videoModuleTitle: "Exclusive 1: Degen Toonz Cartoon",
+      // baseURL: 'https://storage.googleapis.com/rair-videos/',
+      // mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
+      demo: true,
+    },
+  }
 
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   /* UTILITIES FOR NFT PURCHASE */
   const [openCheckList, setOpenCheckList] = useState(false);
-  const [soldCopies, setSoldCopies] = useState(0);
-  const { currentChain, minterInstance } = useSelector((store) => store.contractStore);
   const [purchaseList, setPurshaseList] = useState(true);
   const ukraineglitchChainId = '0x1'
   const dispatch = useDispatch()
@@ -144,21 +119,6 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
   const togglePurchaseList = () => {
       setPurshaseList(prev => !prev);
   }
-
-  const getAllProduct = useCallback(async () => {
-    if (loginDone) {
-      if (currentChain === splashData.purchaseButton.requiredBlockchain) {
-        setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
-      } else {
-        setSoldCopies();
-      }
-    }
-
-  }, [setSoldCopies, loginDone, currentChain, minterInstance]);
-
-  useEffect(() => {
-    getAllProduct()
-  }, [getAllProduct])
 
   useEffect(() => {
     dispatch({type: 'SET_REAL_CHAIN', payload: ukraineglitchChainId})
@@ -195,7 +155,7 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
           // toggleCheckList={toggleCheckList}
           backgroundColor={{ darkTheme: "rgb(3, 91, 188)", lightTheme: "rgb(3, 91, 188)" }}
         />
-        <AuthorCard {...{ splashData, connectUserData}} />        
+        <AuthorCard {...{ splashData, connectUserData }} />        
         <div style={{ height: "108px" }} />
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           <h1>How it works</h1>
