@@ -139,7 +139,7 @@ module.exports = {
           copies: allNFTs.total,
           soldCopies: allNFTs.total - 1,
           sold: true,
-          price: 0,
+          price: '0',
           range: [0, allNFTs.total],
           offerName: allNFTs.result[0].name,
           transactionHash: 'UNKNOWN - External Import',
