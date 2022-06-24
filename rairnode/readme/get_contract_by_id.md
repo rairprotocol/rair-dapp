@@ -27,7 +27,8 @@ Get product by ID
         "_id": "629f308eb550f7001d6ee2cf",
         "title": "mike_test_001",
         "blockchain": "0x5",
-        "contractAddress": "0x205399b10bce421ecc6313a393c11f8083cd056f"
+        "contractAddress": "0x205399b10bce421ecc6313a393c11f8083cd056f",
+        "diamond": false
     }
 }
 ```

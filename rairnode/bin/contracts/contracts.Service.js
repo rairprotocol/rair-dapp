@@ -7,6 +7,7 @@ exports.getContractById = async (req, res, next) => {
       contractAddress: 1,
       title: 1,
       blockchain: 1,
+      diamond: 1,
     });
 
     res.json({ success: true, contract });
