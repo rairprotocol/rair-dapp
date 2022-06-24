@@ -55,21 +55,23 @@ const NftVideoplayer = ({ selectVideo }) => {
       Swal.fire("Error", "Unable to decrypt videos", "error");
       return;
     }
-    let streamAddress = await axios.get<TOnlySuccessResponse>(
-      "/api/auth/get_token/" +
-        parsedResponse.message.challenge +
-        "/" +
-        signature +
-        "/" +
-        selectVideo._id
-    );
-    if (streamAddress.data.success) {
-      await setMediaAddress("/stream/" + selectVideo._id + "/" + mainManifest);
-      setTimeout(() => {
-        videojs("vjs-" + videoName);
-      }, 1000);
-    } else {
-      console.error(streamAddress.data);
+    try {
+      let streamAddress = await axios.get<TOnlySuccessResponse>(
+        "/api/auth/get_token/" +
+          parsedResponse.message.challenge +
+          "/" +
+          signature +
+          "/" +
+          selectVideo._id
+      );
+      if (streamAddress.data.success) {
+        await setMediaAddress("/stream/" + selectVideo._id + "/" + mainManifest);
+        setTimeout(() => {
+          videojs("vjs-" + videoName);
+        }, 1000);
+      }
+    } catch (requestError) {
+      //console.error(requestError);
       Swal.fire("NFT required to view this content");
     }
   }, [programmaticProvider, selectVideo._id, mainManifest, videoName]);

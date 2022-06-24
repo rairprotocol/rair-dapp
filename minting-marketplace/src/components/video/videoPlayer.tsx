@@ -59,8 +59,8 @@ const VideoPlayer = () => {
 			if (streamAddress.data.success) {
 				await setMediaAddress('/stream/' + params.videoId + '/' + params.mainManifest);
 					videojs('vjs-' + videoName);
-		}
-	 } catch (err) {
+			}
+		 } catch (err) {
            const error = err as AxiosError;
 		   console.error(error.message);
 		   Swal.fire('NFT required to view this content');
