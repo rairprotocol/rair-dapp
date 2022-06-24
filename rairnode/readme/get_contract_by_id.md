@@ -2,7 +2,7 @@
 
 Get product by ID
 
-**URL** : `/api/v2/contracts/user/:userAddress`
+**URL** : `/api/v2/contracts/:contractId`
 
 **Method** : `GET`
 
