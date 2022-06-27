@@ -5,7 +5,6 @@ const v2 = require('./v2.router');
 
 module.exports = (context) => {
   const router = express.Router();
-  const v2Context = _.pick(context, 'db');
   router.use('/v2', v2(context, 'db')); // inject only db
   router.use('/auth', require('./auth')(context));
   router.use('/docs', require('./swagger'));
@@ -18,7 +17,7 @@ module.exports = (context) => {
   router.use('/transaction', require('./transactions')(context));
 
   // Searches ->
-  router.use('/search', searchController(v2Context));
+  router.use('/search', searchController);
 
   // Custom temporary endpoint for the monaco2021
   router.use('/', require('./monaco2021')(context));

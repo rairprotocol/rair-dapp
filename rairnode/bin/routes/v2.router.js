@@ -5,11 +5,11 @@ const productsController = require('../products/product.Controller');
 const tokensController = require('../tokens/tokens.Controller');
 const { JWTVerification } = require('../middleware');
 
-module.exports = (dbInjection) => {
+module.exports = () => {
   const router = express.Router();
-  router.use('/search', searchController(dbInjection));
-  router.use('/contracts', contractsController(dbInjection));
-  router.use('/products', productsController(dbInjection));
+  router.use('/search', searchController);
+  router.use('/contracts', contractsController);
+  router.use('/products', productsController);
   router.use('/tokens', JWTVerification, tokensController());
 
   return router;

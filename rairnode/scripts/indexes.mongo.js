@@ -57,6 +57,7 @@ const { MongoClient } = require('mongodb');
   await db.collection('MintedToken').createIndex({ contract: 1, uniqueIndexInContract: 1 }, { background: true, unique: true, name: 'MintedTokenUniqueIndex' });
   await db.collection('MintedToken').createIndex({ contract: 1, offerPool: 1 }, { background: true });
   await db.collection('MintedToken').createIndex({ contract: 1, offer: 1 }, { background: true });
+  await db.collection('MintedToken').createIndex({ 'metadata.name': 'text', 'metadata.description': 'text' }, { weights: { 'metadata.name': 2, 'metadata.description': 1 }, name: 'TokenTextSearchIndex' });
 
   await db.collection('Versioning').dropIndexes();
   await db.collection('Versioning').createIndex({ name: 1, network: 1 }, { background: true, unique: true });
