@@ -163,7 +163,7 @@ export type TContract = {
     diamond: boolean;
     firstTokenIndex: string;
     name: string;
-    offers: TOfferType[];
+    offers?: TOfferType[];
     royalty: number;
     sold: boolean;
     soldCopies: number;

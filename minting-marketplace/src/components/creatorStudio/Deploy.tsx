@@ -1,34 +1,36 @@
-//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import chainData from '../../utils/blockchainData'
 import InputField from '../common/InputField';
 import InputSelect from '../common/InputSelect';
 import Swal from 'sweetalert2';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { metamaskCall } from '../../utils/metamaskUtils';
-
 import NavigatorFactory from './NavigatorFactory';
 import setTitle from '../../utils/setTitle';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { TUsersInitialState } from '../../ducks/users/users.types';
 
 const Factory = () => {
-	const [contractName, setContractName] = useState('');
-	const [chainId, setChainId] = useState('null');
-	const [deploymentPrice, setDeploymentPrice] = useState(0);
-	const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState(0);
-	const [userBalance, setUserBalance] = useState(0);
-	const [tokenSymbol, setTokenSymbol] = useState('');
-	const [deploying, setDeploying] = useState(false);
+	const [contractName, setContractName] = useState<string>('');
+	const [chainId, setChainId] = useState<BlockchainType | undefined>(undefined);
+	const [deploymentPrice, setDeploymentPrice] = useState<BigNumber>(BigNumber.from(0));
+	const [deploymentPriceDiamond, setDeploymentPriceDiamond] = useState<BigNumber>(BigNumber.from(0));
+	const [userBalance, setUserBalance] = useState<BigNumber>(BigNumber.from(0));
+	const [tokenSymbol, setTokenSymbol] = useState<string>('');
+	const [deploying, setDeploying] = useState<boolean>(false);
 
-	const { currentUserAddress, programmaticProvider, factoryInstance, erc777Instance, diamondFactoryInstance } = useSelector(store => store.contractStore);
-	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
-	const { adminRights } = useSelector(store => store.userStore);
+	const { currentUserAddress, programmaticProvider, factoryInstance, erc777Instance, diamondFactoryInstance, currentChain } = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
+	const { primaryColor, secondaryColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
+	const { adminRights } = useSelector<RootState, TUsersInitialState>(store => store.userStore);
 
 	const getPrice = useCallback(async () => {
 		if (window.ethereum) {
-			setChainId(window.ethereum.chainId);
+			setChainId(currentChain);
 		} else if (programmaticProvider) {
-			setChainId(programmaticProvider.provider._network.chainId);
+			setChainId(currentChain);
 		}
 		if (factoryInstance && erc777Instance) {
 			setDeploymentPrice(await factoryInstance.deploymentCostForERC777(erc777Instance.address));
@@ -38,16 +40,16 @@ const Factory = () => {
 		if (diamondFactoryInstance && erc777Instance) {
 			setDeploymentPriceDiamond(await diamondFactoryInstance.getDeploymentCost(erc777Instance.address));
 		}
-	}, [currentUserAddress, factoryInstance, erc777Instance, programmaticProvider, diamondFactoryInstance]);
+	}, [currentUserAddress, factoryInstance, erc777Instance, programmaticProvider, diamondFactoryInstance, currentChain]);
 
 	useEffect(() => {
 		getPrice()
 	}, [getPrice])
 
 	useEffect(() => {
-		if (chainId !== 'null') {
+		if (chainId !== undefined) {
 			if (window.ethereum) {
-				if (chainId === window.ethereum.chainId) {
+				if (chainId === currentChain) {
 					return;
 				}
 				window.ethereum.request({
@@ -57,12 +59,12 @@ const Factory = () => {
 			} else {
 				Swal.fire('Blockchain Switch is disabled on Programmatic Connections!', 'Switch to the proper chain manually!');
 			}
-			setDeploymentPrice(0);
-			setDeploymentPriceDiamond(0);
+			setDeploymentPrice(BigNumber.from(0));
+			setDeploymentPriceDiamond(BigNumber.from(0));
 			setTokenSymbol('');
-			setUserBalance(0);
+			setUserBalance(BigNumber.from(0));
 		}
-	}, [chainId])
+	}, [chainId, currentChain])
 
 	useEffect(() => {
 		setTitle("Rair Factory")
@@ -104,7 +106,7 @@ const Factory = () => {
 			</div>
 			<div className='col-12 p-2'>
 				<button
-					disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying}
+					disabled={contractName === '' || chainId === undefined || adminRights === false || deploymentPrice === BigNumber.from(0) || userBalance === BigNumber.from(0) || deploying}
 					className='btn btn-stimorol col-12 rounded-rair'
 					onClick={async e => {
 						setDeploying(true);
@@ -114,8 +116,8 @@ const Factory = () => {
 							icon: 'info',
 							showConfirmButton: false
 						});
-						let success = await metamaskCall(erc777Instance.send(
-							factoryInstance.address,
+						let success = await metamaskCall(erc777Instance?.send(
+							factoryInstance?.address,
 							deploymentPrice,
 							utils.toUtf8Bytes(contractName)
 						));
@@ -138,7 +140,7 @@ const Factory = () => {
 						or
 					</div>
 					<button
-						disabled={contractName === '' || chainId === 'null' || adminRights === false || deploymentPrice === 0 || userBalance === 0 || deploying || diamondFactoryInstance === undefined}
+						disabled={contractName === '' || chainId === undefined || adminRights === false || deploymentPrice === BigNumber.from(0) || userBalance === BigNumber.from(0) || deploying || diamondFactoryInstance === undefined}
 						className='btn btn-stimorol col-12 rounded-rair'
 						onClick={async e => {
 							setDeploying(true);
@@ -148,7 +150,7 @@ const Factory = () => {
 								icon: 'info',
 								showConfirmButton: false
 							});
-							let success = await metamaskCall(erc777Instance.send(
+							let success = await metamaskCall(erc777Instance?.send(
 								diamondFactoryInstance.address,
 								deploymentPriceDiamond,
 								utils.toUtf8Bytes(contractName)
@@ -168,34 +170,6 @@ const Factory = () => {
 						<i className='fas fa-gem' /> Spend {utils.formatEther(deploymentPriceDiamond).toString()} {tokenSymbol} tokens to deploy with <b>Diamonds</b> <i className='fas fa-gem' />
 					</button>
 					<br />
-					{deploymentPriceDiamond.eq && deploymentPriceDiamond.eq(0) && <button
-						className='btn btn-stimorol col-12 rounded-rair'
-						onClick={async e => {
-							Swal.fire({
-								title: 'Adding token (to the Diamond Master Factory)!',
-								html: 'Please wait...',
-								icon: 'info',
-								showConfirmButton: false
-							});
-							let success = await metamaskCall(
-								diamondFactoryInstance
-									.acceptNewToken(
-										erc777Instance.address,
-										'10000000000000000000'
-									)
-								)
-							if (success) {
-								Swal.fire({
-									title: 'Success',
-									html: 'Token added!',
-									icon: 'success',
-									showConfirmButton: true
-								});
-							}
-						}}
-						>
-						<i className='fas fa-gem' /> Add a new ERC 777 to the Diamond Master Factory <i className='fas fa-gem' />
-					</button>}
 				</>}
 				<hr />
 				Your balance: {utils.formatEther(userBalance).toString()} {tokenSymbol} Tokens

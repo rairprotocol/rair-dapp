@@ -3,9 +3,9 @@ export type OptionsType = {
 	value: string;
   };
   
-export interface InputSelectProps {
-	getter: string;
-	setter: (targetValue: string) => void;
+export interface InputSelectProps<T = any> {
+	getter: string | undefined;
+	setter: (targetValue: T) => void;
 	options?: OptionsType[];
 	customCSS?: React.CSSProperties;
 	customClass?: string;

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import chainData from '../../utils/blockchainData'
@@ -8,23 +7,26 @@ import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
 import { useParams, useHistory } from 'react-router-dom';
 import { erc721Abi, diamondFactoryAbi } from '../../contracts';
-
 import FixedBottomNavigation from './FixedBottomNavigation';
 import NavigatorContract from './NavigatorContract';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { TContractsNetworkContract, TContractsNetworkProductsResponse, TContractsNetworkResponseType, TParamsContractDetails, TSetData } from './creatorStudio.types';
 
 const ContractDetails = () => {
 
-	const [collectionName, setCollectionName] = useState('');
-	const [isDiamond, setIsDiamond] = useState(false);
-	const [collectionLength, setCollectionLength] = useState(0);
+	const [collectionName, setCollectionName] = useState<string>('');
+	const [isDiamond, setIsDiamond] = useState<boolean>(false);
+	const [collectionLength, setCollectionLength] = useState<number>(0);
 
-	const [creatingCollection, setCreatingCollection] = useState(false);
+	const [creatingCollection, setCreatingCollection] = useState<boolean>(false);
 
-	const { primaryColor, secondaryColor } = useSelector(store => store.colorStore);
-	const { programmaticProvider, contractCreator } = useSelector(store => store.contractStore);
-	const { address, blockchain } = useParams();
+	const { primaryColor, secondaryColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
+	const { contractCreator, currentChain } = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
+	const { address, blockchain }: TParamsContractDetails = useParams();
 
-	const [data, setData] = useState();
+	const [data, setData] = useState<TContractsNetworkContract | TSetData>();
 
 	const history = useHistory();
 
@@ -32,36 +34,36 @@ const ContractDetails = () => {
 		if (!address) {
 			return
 		}
-		let dataRequest = await rFetch(`/api/contracts/network/${blockchain}/${address}`);
-		let productsRequest = await rFetch(`/api/contracts/network/${blockchain}/${address}/products`);
+		let dataRequest: TContractsNetworkResponseType = await rFetch(`/api/contracts/network/${blockchain}/${address}`);
+		let productsRequest: TContractsNetworkProductsResponse = await rFetch(`/api/contracts/network/${blockchain}/${address}/products`);
 		if (dataRequest.success) {
 			if (productsRequest.success) {
 				dataRequest.contract.products = productsRequest.products;
 			}
 			setData(dataRequest.contract);
-			setIsDiamond(dataRequest.diamond);
+			setIsDiamond(dataRequest.contract.diamond);
 		} else {
 			// Try diamonds
-			let instance = contractCreator(address, diamondFactoryAbi);
-			let productCount = Number((await instance.getProductCount()).toString());
+			let instance = contractCreator?.(address, diamondFactoryAbi);
+			let productCount = Number((await instance?.getProductCount()).toString());
 			setIsDiamond(true);
 			setData({
-				title: await instance.name(),
+				title: await instance?.name(),
 				contractAddress: address,
-				blockchain: window.ethereum.chainId,
+				blockchain: currentChain,
 				products: Array(productCount)
 			});
 		}
-	}, [address, blockchain, contractCreator])
+	}, [address, blockchain, contractCreator, currentChain])
 
 	useEffect(() => {
 		getContractData();
 	}, [getContractData])
 
-	let onMyChain = window.ethereum ?
-		chainData[data?.blockchain]?.chainId === window.ethereum.chainId
-		:
-		chainData[data?.blockchain]?.chainId === programmaticProvider?.provider?._network?.chainId;
+	let onMyChain = data?.blockchain && (window.ethereum ?
+		chainData[data?.blockchain]?.chainId === currentChain
+		: 
+		chainData[data?.blockchain]?.chainId === currentChain);
 
 	return <div className='row px-0 mx-0'>
 		{data ? <NavigatorContract contractName={data.title} contractAddress={data.contractAddress} contractBlockchain={data.blockchain} >
@@ -118,7 +120,7 @@ const ContractDetails = () => {
 						if (window.ethereum) {
 							await window.ethereum.request({
 								method: 'wallet_switchEthereumChain',
-								params: [{ chainId: chainData[data.blockchain].chainId }],
+								params: [{ chainId: data?.blockchain && chainData[data.blockchain]?.chainId }],
 							});
 						} else {
 							// Code for suresh goes here
@@ -131,8 +133,8 @@ const ContractDetails = () => {
 							showConfirmButton: false
 						});
 						setCreatingCollection(true);
-						let instance = await contractCreator(data.contractAddress, isDiamond ? diamondFactoryAbi : erc721Abi);
-						let success = await metamaskCall(instance.createProduct(collectionName, collectionLength));
+						let instance = await contractCreator?.(data?.contractAddress, isDiamond ? diamondFactoryAbi : erc721Abi);
+						let success = await metamaskCall(instance?.createProduct(collectionName, collectionLength));
 						if (success) {
 							Swal.fire({
 								title: 'Success!',
@@ -146,7 +148,7 @@ const ContractDetails = () => {
 						setCreatingCollection(false);
 					}
 				} : undefined,
-				label: (data && !onMyChain) ? `Switch to ${chainData[data?.blockchain].name}` : 'Create collection!',
+				label: (data && data.blockchain && !onMyChain) ? `Switch to ${chainData[data.blockchain]?.name}` : 'Create collection!',
 				disabled: creatingCollection || collectionLength === 0 || collectionName === ''
 			}]}
 		/>

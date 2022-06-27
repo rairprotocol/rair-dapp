@@ -1,8 +1,10 @@
-//@ts-nocheck
 import { useSelector } from 'react-redux';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { IFixedBottomNavigation } from './creatorStudio.types';
 
-const FixedBottomNavigation = ({forwardFunctions, backwardFunction, forwardLabels, backwardDisabled, forwardDisableds}) => {
-	const { primaryColor } = useSelector(store => store.colorStore);
+const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({forwardFunctions, backwardFunction, backwardDisabled}) => {
+	const { primaryColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
 
 	if (!forwardFunctions && !backwardFunction) {
 		return <></>
@@ -12,7 +14,7 @@ const FixedBottomNavigation = ({forwardFunctions, backwardFunction, forwardLabel
 		<div className='py-3' />
 		<div className={`w-100 bg-${primaryColor} py-4`}>
 			<div style={{position: 'relative'}}>
-				<div className='btn' style={{color: `var(--${primaryColor})`}} disabled={true}>
+				<div className='btn' style={{color: `var(--${primaryColor})`}}>
 					{
 						// Makes room for the other buttons
 						"_"

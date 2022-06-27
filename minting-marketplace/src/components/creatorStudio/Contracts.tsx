@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import chainData from '../../utils/blockchainData'
@@ -9,19 +8,24 @@ import NavigatorFactory from './NavigatorFactory';
 // React Redux types
 import setDocumentTitle from '../../utils/setTitle';
 import { getTokenError } from '../../ducks/auth/actions';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { TContractsArray } from './creatorStudio.types';
+import { ContractType } from '../adminViews/adminView.types';
 
 const Contracts = () => {
 	const dispatch = useDispatch();
 
-	const [contractArray, setContractArray] = useState();
-	const { programmaticProvider } = useSelector(store => store.contractStore);
-	const { primaryColor } = useSelector(store => store.colorStore);
+	const [contractArray, setContractArray] = useState<TContractsArray[]>();
+	const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(store => store.contractStore);
+	const { primaryColor } = useSelector<RootState, ColorStoreType>(store => store.colorStore);
 
 	const fetchContracts = useCallback(async () => {
 		let response = await rFetch('/api/contracts', undefined, { provider: programmaticProvider });
 		if (response.success) {
 			setContractArray(
-				response.contracts.map(item => ({
+				response.contracts.map((item: ContractType) => ({
 					address: item.contractAddress,
 					name: item.title,
 					blockchain: item.blockchain,
@@ -41,16 +45,14 @@ const Contracts = () => {
 	useEffect(() => {
 		setDocumentTitle(`Contracts`);
 	}, []);
-
-
-	return <NavigatorFactory>
+		return <NavigatorFactory>
 		{contractArray ? (contractArray.length ? contractArray.map((item, index) => {
 				return <NavLink to={`/creator/contract/${item.blockchain}/${item.address}/createCollection`} key={index} style={{position: 'relative', backgroundColor: `var(--${primaryColor}-80)` }} className={`col-12 btn btn-${primaryColor} text-start rounded-rair my-1`}>
 					{item?.blockchain &&
-						<abbr title={chainData[item.blockchain].name}>
+						<abbr title={chainData[item.blockchain]?.name}>
 							<img
-								alt={chainData[item.blockchain].name}
-								src={chainData[item.blockchain].image}
+								alt={chainData[item.blockchain]?.name}
+								src={chainData[item.blockchain]?.image}
 								style={{maxHeight: '1.5rem', maxWidth: '1.5rem'}}
 								className='me-2'
 							/>
@@ -61,7 +63,7 @@ const Contracts = () => {
 							<i className='fas fa-gem me-2' />
 						</abbr>
 					}
-					{item?.blockchain && chainData[item.blockchain].testnet &&
+					{item?.blockchain && chainData[item.blockchain]?.testnet &&
 						<abbr title={'Testnet Contract'}>
 							<i className='fas fa-vial me-2' />
 						</abbr>
