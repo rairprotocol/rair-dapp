@@ -26,8 +26,11 @@ import CollectionInfo from "./CollectionInfo/CollectionInfo";
 import TitleCollection from "./TitleCollection/TitleCollection";
 import NftListUnlockablesVideos from "./NftListUnlockablesVideos";
 import { setShowSidebarTrue } from "../../../../ducks/metadata/actions";
+import { gettingPrice } from "../utils/gettingPrice";
 
 const NftDataPageMain = ({
+  // setTokenData,
+
   blockchain,
   contract,
   currentUser,
@@ -48,7 +51,6 @@ const NftDataPageMain = ({
   userData,
   someUsersData,
   ownerInfo,
-  setTokenData,
   getAllProduct,
 }) => {
   const history = useHistory();
@@ -61,10 +63,6 @@ const NftDataPageMain = ({
     setPlaying((prev) => !prev);
   };
   const dispatch = useDispatch();
-  useEffect(() => {
-    setDocumentTitle("Single Token");
-    dispatch(setShowSidebarTrue());
-  }, [dispatch]);
 
   function randomInteger(min, max) {
     let rand = min + Math.random() * (max + 1 - min);
@@ -89,47 +87,15 @@ const NftDataPageMain = ({
     }
   }
 
-  if (offerPrice) {
-    var minPrice = arrayMin(offerPrice);
-    var maxPrice = arrayMax(offerPrice);
-  }
-
-  function arrayMin(arr) {
-    let len = arr.length,
-      min = Infinity;
-    while (len--) {
-      if (arr[len] < min) {
-        min = arr[len];
-      }
-    }
-    return min;
-  }
-
-  function arrayMax(arr) {
-    let len = arr.length,
-      max = -Infinity;
-    while (len--) {
-      if (arr[len] > max) {
-        max = arr[len];
-      }
-    }
-    return max;
-  }
-
   function checkPrice() {
-    if (maxPrice === minPrice) {
-      const samePrice = maxPrice;
-      // return `${samePrice} `;
-      return `${utils
-        .formatEther(
-          samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-        )
-        .toString()} 
-         
-        `;
+    if (offerPrice.length > 0) {
+      const { maxPrice, minPrice } = gettingPrice(offerPrice);
+
+      if (maxPrice === minPrice) {
+        const samePrice = maxPrice;
+        return `${samePrice} `;
+      } return `${minPrice} – ${maxPrice}`;
     }
-    return `${minPrice} – ${maxPrice} 
-    `;
   }
 
   // function showLink() {
@@ -303,7 +269,8 @@ const NftDataPageMain = ({
   };
 
   function checkOwner() {
-    let price = offerData?.price || minPrice;
+    let price = offerData?.price ;
+    // let price = offerData?.price || minPrice;
     if (
       currentUser === tokenData[selectedToken]?.ownerAddress &&
       tokenData[selectedToken]?.isMinted
@@ -340,13 +307,10 @@ const NftDataPageMain = ({
             ? buyContract
             : () => CheckEthereumChain()
         }
-        // onClick={() => buyContract()}
-        // onClick={() => alert("Coming soon")}
         style={{
           color: `var(--${textColor})`,
         }}
       >
-        {/* { `Purchase • ${minPrice} ${data?.product.blockchain}` } ||  */}
         Purchase •{" "}
         {utils
           .formatEther(price !== Infinity && price !== undefined ? price : 0)
@@ -454,6 +418,11 @@ const NftDataPageMain = ({
   }, []);
 
   useEffect(() => {
+    setDocumentTitle("Single Token");
+    dispatch(setShowSidebarTrue());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (offerDataInfo !== undefined && offerDataInfo.length) {
       const first = offerDataInfo.map((r) => {
         return {
@@ -557,7 +526,7 @@ const NftDataPageMain = ({
                 <span
                   style={{
                     paddingLeft: "9px",
-                    marginRight: "3rem",
+                    // marginRight: "3rem",
                     fontSize: "13px",
                   }}
                 >

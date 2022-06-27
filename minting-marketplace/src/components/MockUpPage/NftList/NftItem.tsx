@@ -2,16 +2,14 @@
 import React, { useState, useCallback, useEffect, memo } from "react";
 import { useHistory } from "react-router-dom";
 import { SvgKey } from "./SvgKey";
+import { TNftItemResponse, TUserResponse } from "../../../axios.responseTypes";
+import { useStateIfMounted } from "use-state-if-mounted";
+import { gettingPrice } from "./utils/gettingPrice";
 import chainData from "../../../utils/blockchainData";
 import ReactPlayer from "react-player";
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png'
 import axios from "axios";
-import { TNftItemResponse, TUserResponse } from "../../../axios.responseTypes";
-import { useStateIfMounted } from "use-state-if-mounted";
-// import { utils } from "ethers";
-// import Swal from 'sweetalert2';
-// import 'react-accessible-accordion/dist/fancy-example.css';
-// import VideoList from "../../video/videoList";
+
 
 const NftItemComponent = ({
   blockchain,
@@ -19,35 +17,28 @@ const NftItemComponent = ({
   pict,
   contractName,
   collectionIndexInContract,
-  // primaryColor,
-  // textColor,
   collectionName,
   ownerCollectionUser,
 }) => {
   const history = useHistory();
   const [metaDataProducts, setMetaDataProducts] = useStateIfMounted();
-  const [playing, setPlaying] = useState(false);
   const [accountData, setAccountData] = useStateIfMounted(null);
-
+  const [playing, setPlaying] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState();
 
-  const checkUrl =  useCallback(() => {
-    if(metaDataProducts && metaDataProducts.metadata && metaDataProducts.metadata.animation_url){
+  const { maxPrice, minPrice } = gettingPrice(price);
 
+  const checkUrl = useCallback(() => {
+    if (metaDataProducts && metaDataProducts.metadata && metaDataProducts.metadata.animation_url) {
       let fileUrl = metaDataProducts.metadata?.animation_url,
-      parts,
-      ext =
-        (parts = fileUrl.split("/").pop().split(".")).length > 1
-          ? parts.pop()
-          : "";
-    setIsFileUrl(ext);
+        parts,
+        ext =
+          (parts = fileUrl.split("/").pop().split(".")).length > 1
+            ? parts.pop()
+            : "";
+      setIsFileUrl(ext);
     }
-    
-  }, [metaDataProducts,setIsFileUrl]);
-
-  useEffect(() =>{
-    checkUrl()
-  }, [checkUrl])
+  }, [metaDataProducts, setIsFileUrl]);
 
   const getInfoFromUser = useCallback(async () => {
     // find user
@@ -62,6 +53,7 @@ const NftItemComponent = ({
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
+
   const getProductAsync = useCallback(async () => {
     const responseProductMetadata = await axios.get<TNftItemResponse>(`/api/nft/network/${blockchain}/${contractName}/${collectionIndexInContract}`);
     if (responseProductMetadata.data.result.tokens.length > 0) {
@@ -74,6 +66,41 @@ const NftItemComponent = ({
     redirection();
   }
 
+  const redirection = () => {
+    history.push(`/collection/${blockchain}/${contractName}/${collectionIndexInContract}/0`);
+  };
+
+  function checkPrice() {
+    if (maxPrice === minPrice) {
+      const samePrice = maxPrice;
+      return `${samePrice ? samePrice : samePrice} ${chainData[blockchain]?.symbol}`
+    }
+    return <div className="container-nft-fullPrice">
+      <div className="description description-price description-price-unlockables-page">
+        {`${minPrice} – ${maxPrice}`}
+      </div>
+      <div className="description description-price description-price-unlockables-page">
+        {`${chainData[blockchain]?.symbol}`}
+      </div>
+    </div>
+  }
+
+  function ifPriseSame() {
+    if (minPrice === maxPrice) {
+      if (minPrice.length > 5) {
+        return `${minPrice.slice(0, 5)} ${chainData[blockchain]?.symbol}`
+      } return `${minPrice} ${chainData[blockchain]?.symbol}`
+    } else if (maxPrice && minPrice) {
+      if (minPrice.length > 5) {
+        return `${minPrice.slice(0, 5) + '+'} ${chainData[blockchain]?.symbol}`
+      } return `${minPrice + '+'} ${chainData[blockchain]?.symbol}`
+    }
+  }
+
+  useEffect(() => {
+    checkUrl()
+  }, [checkUrl])
+
   useEffect(() => {
     getProductAsync();
   }, [getProductAsync]);
@@ -81,62 +108,6 @@ const NftItemComponent = ({
   useEffect(() => {
     getInfoFromUser()
   }, [getInfoFromUser])
-
-  // const waitResponse = useCallback(async () => {
-  // const data = await getData();
-  // if (data && data.metadata) {
-  // setSelected(data.metadata);
-  // setSelectedToken(data.token);
-  // openModal();
-  // }
-  // }, [getData, openModal, setSelected]);
-
-  const redirection = () => {
-    history.push(`/collection/${blockchain}/${contractName}/${collectionIndexInContract}/0`);
-  };
-
-  function arrayMin(arr) {
-    let len = arr.length,
-      min = Infinity;
-    while (len--) {
-      if (arr[len] < min) {
-        min = arr[len];
-      }
-    }
-    return min;
-  }
-
-  function arrayMax(arr) {
-    let len = arr.length,
-      max = -Infinity;
-    while (len--) {
-      if (arr[len] > max) {
-        max = arr[len];
-      }
-    }
-    return max;
-  }
-
-  function ch() {
-    if (maxPrice === minPrice) {
-      const samePrice = maxPrice;
-      return `${samePrice ? samePrice : samePrice} ${chainData[blockchain]?.symbol}`
-    }
-    return <div className="container-nft-fullPrice">
-      <div className="nft-item-fullPrice">
-        {
-          `${minPrice.toString().length > 5 ? minPrice.toString().slice(0, 5) : minPrice} 
-        – ${maxPrice.toString().length > 5 ? maxPrice.toString().slice(0, 6) : maxPrice}`
-        }
-      </div>
-      <div className="nft-item-blockchainName">
-        {`${chainData[blockchain]?.symbol}`}
-      </div>
-    </div>
-  }
-
-  const minPrice = arrayMin(price);
-  const maxPrice = arrayMax(price);
 
   return (
     <>
@@ -154,58 +125,58 @@ const NftItemComponent = ({
           }}
         >
           {metaDataProducts?.metadata?.animation_url && (
-          isFileUrl  === 'gif' ? 
-            <></> 
-            :
-            <div onClick={handlePlaying} className="btn-play">
-              {playing ? (
-                <div>
-                  <i className="fas fa-pause"></i>
-                </div>
-              ) : (
-                <div>
-                  <i className="fas fa-play"></i>
-                </div>
-              )}
-            </div>
+            isFileUrl === 'gif' ?
+              <></>
+              :
+              <div onClick={handlePlaying} className="btn-play">
+                {playing ? (
+                  <div>
+                    <i className="fas fa-pause"></i>
+                  </div>
+                ) : (
+                  <div>
+                    <i className="fas fa-play"></i>
+                  </div>
+                )}
+              </div>
           )}
           {metaDataProducts?.metadata?.animation_url ? (
-          isFileUrl  === 'gif' 
-          ?
-          <img
-          alt="thumbnail"
-          src={metaDataProducts?.metadata?.animation_url ? metaDataProducts?.metadata?.animation_url : pict}
-          style={{ position: "absolute", bottom: 0, borderRadius: "16px", objectFit: "contain" }}
-          className="col-12 h-100 w-100"
-        />
-          :
-            <div
-              style={{
-                borderRadius: "16px",
-                overflow: "hidden",
-              }}
-            >
-              <ReactPlayer
+            isFileUrl === 'gif'
+              ?
+              <img
                 alt="thumbnail"
-                url={`${metaDataProducts.metadata?.animation_url}`}
-                light={
-                  metaDataProducts.metadata?.image
-                    ? metaDataProducts.metadata?.image
-                    : pict
-                }
+                src={metaDataProducts?.metadata?.animation_url ? metaDataProducts?.metadata?.animation_url : pict}
+                style={{ position: "absolute", bottom: 0, borderRadius: "16px", objectFit: "contain" }}
+                className="col-12 h-100 w-100"
+              />
+              :
+              <div
                 style={{
-                  position: "absolute",
-                  bottom: 0,
                   borderRadius: "16px",
                   overflow: "hidden",
                 }}
-                autoPlay={false}
-                className="col-12 h-100 w-100"
-                onReady={handlePlaying}
-                playing={playing}
-                onEnded={handlePlaying}
-              />
-            </div>
+              >
+                <ReactPlayer
+                  alt="thumbnail"
+                  url={`${metaDataProducts.metadata?.animation_url}`}
+                  light={
+                    metaDataProducts.metadata?.image
+                      ? metaDataProducts.metadata?.image
+                      : pict
+                  }
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    borderRadius: "16px",
+                    overflow: "hidden",
+                  }}
+                  autoPlay={false}
+                  className="col-12 h-100 w-100"
+                  onReady={handlePlaying}
+                  playing={playing}
+                  onEnded={handlePlaying}
+                />
+              </div>
           ) : (
             <img
               alt="thumbnail"
@@ -238,7 +209,7 @@ const NftItemComponent = ({
                           alt="user"
                         />
                         <h5 style={{ wordBreak: "break-all" }}>
-                          {accountData.nickName ? accountData.nickName.length > 16 ? accountData.nickName.slice(0, 5)+ "..." + accountData.nickName.slice(accountData.nickName.length - 4) : accountData.nickName : ownerCollectionUser.slice(0, 5) + "..." + ownerCollectionUser.slice(ownerCollectionUser.length - 4)}
+                          {accountData.nickName ? accountData.nickName.length > 16 ? accountData.nickName.slice(0, 5) + "..." + accountData.nickName.slice(accountData.nickName.length - 4) : accountData.nickName : ownerCollectionUser.slice(0, 5) + "..." + ownerCollectionUser.slice(ownerCollectionUser.length - 4)}
                         </h5>
                       </div> : <div className="collection-block-user-creator">
                         <img
@@ -250,47 +221,26 @@ const NftItemComponent = ({
                         </h5>
                       </div>
                     }
-                    {/* <div className="collection-block-user-creator">
-                    <img
-                      className="blockchain-img"
-                      src={`${chainDataFront[blockchain]?.image}`}
-                      alt=""
-                    />
-                    <span className="description ">{minPrice} {chainDataFront[blockchain]?.name} </span>
-                  </div> */}
                   </div>
                   <div className="collection-block-price">
                     <img
                       className="blockchain-img"
                       src={`${chainData[blockchain]?.image}`}
-                      alt=""
+                      alt="blockchain-img"
                     />
-                    <span className="description">{minPrice.toString().length > 5 ? minPrice.toString().slice(0, 5) : minPrice} {chainData[blockchain]?.symbol}</span>
+                    <span className="description">{ifPriseSame()}</span>
                   </div>
                 </div>
               </div>
             </div>
-            {/* <span className="description">
-              {ownerCollectionUser.slice(0, 7)}
-              {ownerCollectionUser.length > 10 ? "..." : ""}
-              <br></br>
-            </span> */}
-            {/* <div className="description-small" style={{ paddingRight: "16px" }}>
-              <img
-                className="blockchain-img"
-                src={`${chainDataFront[blockchain]?.image}`}
-                alt=""
-              />
-              <span className="description ">{minPrice} {chainDataFront[blockchain]?.name} </span>
-            </div> */}
             <div onClick={RedirectToMockUp} className="description-big">
               <img
                 className="blockchain-img"
                 src={`${chainData[blockchain]?.image}`}
-                alt=""
+                alt="blockchain-img"
               />
               <span className="description description-price">
-                {ch()}
+                {checkPrice()}
               </span>
               <span className="description-more">View item</span>
             </div>
@@ -300,5 +250,5 @@ const NftItemComponent = ({
     </>
   );
 };
-// export default NftItem;
+
 export const NftItem = memo(NftItemComponent);

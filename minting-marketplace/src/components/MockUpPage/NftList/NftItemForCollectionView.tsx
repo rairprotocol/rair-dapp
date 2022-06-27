@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, { useState, memo, useCallback, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { utils } from "ethers";
+import { gettingPrice } from "./utils/gettingPrice";
 import { SvgKey } from "./SvgKey";
 import chainData from "../../../utils/blockchainData";
 import defaultImage from "./../assets/defultUser.png";
@@ -9,45 +9,26 @@ import ReactPlayer from "react-player";
 
 const NftItemForCollectionViewComponent = ({
   blockchain,
-  // price,
   pict,
-  // contractName,
-  // collectionIndexInContract,
-  // collectionName,
-  // ownerCollectionUser,
   offerPrice,
-  // handleClickToken,
-  // token,
   index,
   metadata,
-  // setSelectedToken,
-  // selectedToken,
-  contract,
-  ownerAddress,
   offer,
-  pic,
-  currentUser,
-  offerData,
-  primaryColor,
-  productsFromOffer,
   selectedData,
-  textColor,
-  tokenData,
-  totalCount,
-  product,
   someUsersData,
   userName,
   tokenDataLength
 }) => {
+  
   const params = useParams();
   const history = useHistory();
-  // const [metaDataProducts /*setMetaDataProducts*/] = useState();
+
   const [playing, setPlaying] = useState(false);
+  const [isFileUrl, setIsFileUrl] = useState();
+
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
-
-  const [isFileUrl, setIsFileUrl] = useState();
 
   const checkUrl = useCallback(() => {
     if (selectedData?.animation_url) {
@@ -62,10 +43,6 @@ const NftItemForCollectionViewComponent = ({
 
   }, [selectedData?.animation_url, setIsFileUrl]);
 
-  useEffect(() => {
-    checkUrl()
-  }, [checkUrl])
-
   function RedirectToMockUp() {
     redirection();
   }
@@ -76,95 +53,25 @@ const NftItemForCollectionViewComponent = ({
     );
   };
 
-  if (offerPrice) {
-    var minPrice = arrayMin(offerPrice);
-    var maxPrice = arrayMax(offerPrice);
-  }
-
-  function arrayMin(arr) {
-    let len = arr.length,
-      min = Infinity;
-    while (len--) {
-      if (arr[len] < min) {
-        min = arr[len];
-      }
-    }
-    return min;
-  }
-
-  function arrayMax(arr) {
-    let len = arr.length,
-      max = -Infinity;
-    while (len--) {
-      if (arr[len] > max) {
-        max = arr[len];
-      }
-    }
-    return max;
-  }
-
   function checkPrice() {
-    let maxPriceF = maxPrice;
-    let minPriceF = minPrice;
+    if (offerPrice.length > 0) {
+      const { maxPrice, minPrice } = gettingPrice(offerPrice);
 
-    if (maxPrice && minPrice) {
       if (maxPrice === minPrice) {
         const samePrice = maxPrice;
-        // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
-        return `${utils
-          .formatEther(
-            samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-          )
-          .toString().slice(0, 4)} ${chainData[blockchain]?.symbol}`;
+        return `${samePrice.slice(0, 4)} ${chainData[blockchain]?.symbol}`;
       }
-      // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
-
-      if (maxPriceF && minPriceF && maxPriceF !== Infinity && minPriceF !== Infinity) {
-        return `${utils
-          .formatEther(
-            minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
-          )
-          .toString().slice(0, 4)} 
-          – 
-          ${utils
-            .formatEther(
-              maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
-            )
-            .toString().slice(0, 5)} 
-          ${chainData[blockchain]?.symbol}`
-      }
-
+      return `${minPrice.slice(0, 4)} – ${maxPrice.slice(0, 5)} ${chainData[blockchain]?.symbol}`
     }
   }
 
   function fullPrice() {
-    let maxPriceF = maxPrice;
-    let minPriceF = minPrice;
+    if (offerPrice.length > 0) {
+      const { maxPrice, minPrice } = gettingPrice(offerPrice);
 
-    if (maxPrice && minPrice) {
-      if (maxPrice === minPrice) {
-        const samePrice = maxPrice;
-        // return `${samePrice} ${chainDataFront[blockchain]?.name}`;
-        return `${utils
-          .formatEther(
-            samePrice !== Infinity && samePrice !== undefined ? samePrice : 0
-          )} ${chainData[blockchain]?.symbol}`;
+      if (maxPrice && minPrice) {
+        return `${minPrice} – ${maxPrice} ${chainData[blockchain]?.symbol}`
       }
-      // return `${minPrice} – ${maxPrice} ${chainDataFront[blockchain]?.name}`;
-
-      if (maxPriceF && minPriceF && maxPriceF !== Infinity && minPriceF !== Infinity) {
-        return `${utils
-          .formatEther(
-            minPriceF !== Infinity && minPriceF !== undefined ? minPriceF : 0
-          )} 
-          – 
-          ${utils
-            .formatEther(
-              maxPriceF !== Infinity && maxPriceF !== undefined ? maxPriceF : 0
-            )} 
-          ${chainData[blockchain]?.symbol}`
-      }
-
     }
   }
 
@@ -173,6 +80,10 @@ const NftItemForCollectionViewComponent = ({
   if (tokenDataLength < 4) {
     className += " standartSize";
   }
+
+  useEffect(() => {
+    checkUrl()
+  }, [checkUrl])
 
   return (
 
@@ -275,10 +186,6 @@ const NftItemForCollectionViewComponent = ({
         ) : (
           <SvgKey color={"silver"} bgColor={'rgba(34, 32, 33, 0.5)'} />
         )}
-
-        {/* <div className="description-collectionItem-hover">
-            {metadata?.name === "none" ? contract : metadata?.name}
-          </div> */}
         <div className="col description-wrapper pic-description-wrapper wrapper-for-collection-view">
           <div className="description-title">
             <div className="description-item-name"
@@ -289,7 +196,6 @@ const NftItemForCollectionViewComponent = ({
                 alignItems: "flex-start"
               }}
             >
-              {/* {"#" + index} */}
               {metadata?.name === "none" ? "#" + index : metadata?.name}
               <div
                 className="brief-infor-nftItem"
@@ -300,7 +206,6 @@ const NftItemForCollectionViewComponent = ({
                   alignItems: "center"
                 }}
               >
-                {/* {metadata?.name === "none" ? contract : metadata?.name} */}
                 <div>
                   {
                     someUsersData ? <div className="collection-block-user-creator">
@@ -330,29 +235,6 @@ const NftItemForCollectionViewComponent = ({
               </div>
             </div>
           </div>
-
-          {/* <div
-            className="description-small"
-            style={{
-              paddingRight: "16px",
-              textAlign: "center",
-              lineHeight: "9px",
-            }}
-          >
-            <img
-              className="blockchain-img"
-              src={`${chainDataFront[blockchain]?.image}`}
-              alt=""
-            />
-            <span className="description ">
-              {utils
-                .formatEther(
-                  minPrice !== Infinity && minPrice !== undefined ? minPrice : 0
-                )
-                .toString()}{" "}
-              {chainDataFront[blockchain]?.name}
-            </span>
-          </div> */}
           <div onClick={RedirectToMockUp} className="description-big">
             <div>
               <img

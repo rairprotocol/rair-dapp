@@ -397,6 +397,7 @@ function App({ sentryHistory }) {
             backgroundImage: `url(${backgroundImage})`,
             backgroundPosition: 'center top',
             backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
             overflow: "hidden"
           }}
         >
