@@ -1,6 +1,7 @@
 //@ts-nocheck
 import React, { useCallback } from "react";
 import { SvgKeyForModalItem } from "../../../NftList/SvgKeyForModalItem";
+import { ModalContentPicture } from "../../FilteringBlockItems/FilteringBlockItems";
 import Modal from "../../modal";
 import "./ModalItemResponsive.css";
 
@@ -11,8 +12,6 @@ const ModalItem = ({
   defaultImg,
   primaryColor,
 }) => {
-  ;
-
   const onCloseModal = useCallback(() => {
     setIsOpenBlockchain(false);
   }, [setIsOpenBlockchain])
@@ -30,21 +29,19 @@ const ModalItem = ({
           </button>
         </div>
         <div className="modal-main-content">
-          <div
+          <ModalContentPicture 
             className="bg-my-items p-2"
-            style={{
-              backgroundImage: `url(${selectedData?.metadata.image || defaultImg
-                })`,
-              backgroundColor: `var(--${primaryColor}-transparent)`,
-            }}
-          ></div>
+            picture={selectedData?.metadata.image}
+            defaultImg={defaultImg}
+            primaryColor={primaryColor}
+          />
           <div
             className="modal-number-tokenContent">
             <span className="modal-item-title">
               {bidFirstLetter(selectedData.title)}
             </span>
             <span className="modal-item-user">{selectedData.user}</span>
-            <div style={{ display: "flex" }}>
+            <div className="modal-item-key">
               <SvgKeyForModalItem />
               <span className="modal-item-token description">
                 Token : {selectedData.token}

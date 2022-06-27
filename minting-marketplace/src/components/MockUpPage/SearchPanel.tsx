@@ -165,10 +165,6 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
       <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
         <TabList className="category-wrapper">
           <Tab
-            style={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: `var(--${textColor})`,
-            }}
             selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
               }`}
             className="category-button-nft category-button"
@@ -176,13 +172,6 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             NFT
           </Tab>
           <Tab
-            // onClick={() => {
-            //   updateList();
-            // }}
-            style={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: `var(--${textColor})`,
-            }}
             selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
               }`}
             className="category-button-videos category-button"
@@ -206,9 +195,6 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             <i
               className="fas fa-search fa-lg fas-custom"
               aria-hidden="true"
-              style={{
-                left: "7vw",
-              }}
             ></i>
             <FilteringBlock
               click={click}
@@ -232,8 +218,7 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
           <div className="clear-filter-wrapper">
             {isShow ? (
               <button
-                style={{ color: `var(--${textColor})` }}
-                className="clear-filter"
+                className={`clear-filter ${primaryColor === "rhyno" ? "rhyno" : ""}`}
                 onClick={() => clearFilter()}
               >
                 {filterText}
@@ -243,8 +228,7 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             )}
             {isShowCategories ? (
               <button
-                style={{ color: `var(--${textColor})` }}
-                className="clear-filter filter-category"
+                className={`clear-filter filter-category ${primaryColor === "rhyno" ? "rhyno" : ""}`}
                 onClick={() => clearCategoriesFilter()}
               >
                 {filterCategoriesText}

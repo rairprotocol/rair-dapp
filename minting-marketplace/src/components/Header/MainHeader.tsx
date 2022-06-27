@@ -11,6 +11,7 @@ import { OnboardingButton } from './../common/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
 import DiscordIcon from './DiscordIcon';
 import AdminPanel from './AdminPanel/AdminPanel';
+import {HeaderContainer, SocialHeaderBox} from './HeaderItems/HeaderItems';
 
 //images
 import headerLogoWhite from './../../images/rairTechLogoWhite.png';
@@ -67,9 +68,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             '/nipsey-splash',
             '/about-page',
             '/slidelock',
-            '/nftnyc-splash',
-            '/',
-            '/my-items'
+            '/nftnyc-splash'
         ]   
     }, []);
 
@@ -155,11 +154,12 @@ const MainHeader: React.FC<IMainHeader> = ({
     }, [sentryHistory.location.pathname, handleHiddinHeader])
 
     return (
-        <div className="col-12 header-master"
-            style={{
-                background: `${primaryColor === "rhyno" ? "#C4C4C4" : "#383637"}`,
-                marginTop: `${showAlert && selectedChain ? "50px" : ""}`
-            }}>
+        <HeaderContainer
+                className="col-12 header-master"
+                primaryColor={primaryColor}
+                showAlert={showAlert}
+                selectedChain={selectedChain}
+            >
             <div>
                 <MainLogo
                     goHome={goHome}
@@ -279,11 +279,9 @@ const MainHeader: React.FC<IMainHeader> = ({
                         setLoginDone={setLoginDone}
                     />
                     <div className="social-media">
-                        <div className="box-social"
-                            style={{
-                                border: `1px solid ${primaryColor === "rhyno" ? "#9867D9" : "#fff"}`,
-                                background: `${primaryColor === "rhyno" ? "#b2b2b2" : ""}`
-                            }}
+                        <SocialHeaderBox
+                            className="box-social"
+                            primaryColor={primaryColor}
                         >
                             <a
                                 href="https://twitter.com/rairtech"
@@ -292,12 +290,10 @@ const MainHeader: React.FC<IMainHeader> = ({
                             >
                                 <i className="fab fa-twitter"></i>
                             </a>
-                        </div>
-                        <div className="box-social"
-                            style={{
-                                border: `1px solid ${primaryColor === "rhyno" ? "#9867D9" : "#fff"}`,
-                                background: `${primaryColor === "rhyno" ? "#b2b2b2" : ""}`
-                            }}
+                        </SocialHeaderBox>
+                        <SocialHeaderBox
+                            className="box-social"
+                            primaryColor={primaryColor}
                         >
                             <a
                                 href="https://discord.gg/pSTbf2yz7V"
@@ -306,7 +302,7 @@ const MainHeader: React.FC<IMainHeader> = ({
                             >
                                 <DiscordIcon width="71px" height="55px" color={primaryColor === "rhyno" ? "#9867D9" : "#fff"} />
                             </a>
-                        </div>
+                        </SocialHeaderBox>
                         <AdminPanel
                             loginDone={loginDone}
                             creatorViewsDisabled={creatorViewsDisabled}
@@ -316,7 +312,7 @@ const MainHeader: React.FC<IMainHeader> = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </HeaderContainer>
     )
 }
 

@@ -66,6 +66,10 @@
     display: flex;
 }
 
+.nft-form-control-icon i.fas.fa-search {
+    left: 7vw;
+}
+
 .container-search {
     position: relative;
     display: flex;

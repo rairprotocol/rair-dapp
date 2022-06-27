@@ -1,6 +1,7 @@
 //@ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
 import "./FilteringBlock.css";
+import { FiltersTitleIcon, SelectFiltersItem, SelectFiltersPopUp, SelectSortItem, SelectSortPopUp, SortArrowDownIcon, SortArrowUpIcon } from "./FilteringBlockItems/FilteringBlockItems";
 import ModalBlockchain from "./portal/ModalBlockchain/ModalBlockchain";
 import ModalCategories from "./portal/ModalCategories/ModalCategories";
 
@@ -80,34 +81,26 @@ const FilteringBlock = ({
         </div>
       ) : (
         <div ref={filterRef} className="select-filters-wrapper">
-          <div
-            style={{
-              backgroundColor: `${filterPopUp ? "#E882D5" : `var(--${primaryColor})`
-                }`,
-              color: `${filterPopUp ? "#fff" : `var(--${textColor})`}`,
-              border: `${filterPopUp ? "1px solid #E882D5" : ""}`,
-            }}
+          <SelectFiltersItem
             className="select-filters"
             onClick={onChangeFilterPopUp}
+            filterPopUp={filterPopUp}
+            textColor={textColor}
+            primaryColor={primaryColor}
           >
             <div className="select-filters-title">
-              <i
-                style={{
-                  color: `${filterPopUp ? "#fff" : "#E882D5"}`,
-                }}
+              <FiltersTitleIcon
                 className="fas fa-sliders-h"
-              ></i>
+                filterPopUp={filterPopUp}
+              >
+              </FiltersTitleIcon>
               Filters
             </div>
-          </div>
-
+          </SelectFiltersItem>
           {filterPopUp && (
-            <div
-              style={{
-                backgroundColor: `var(--${primaryColor})`,
-                zIndex: 100,
-              }}
+            <SelectFiltersPopUp
               className="select-filters-popup"
+              primaryColor={primaryColor}
             >
               <div
                 onClick={() => {
@@ -118,12 +111,6 @@ const FilteringBlock = ({
               >
                 Blockchain
               </div>
-              {/* <div
-                onClick={() => onChangeFilterItem("Creator")}
-                className="select-filters-item"
-              >
-                Creator
-              </div> */}
               <div
                 onClick={() => {
                   onChangeFilterItem("Metadata");
@@ -133,35 +120,27 @@ const FilteringBlock = ({
               >
                 Categories
               </div>
-            </div>
+            </SelectFiltersPopUp>
           )}
         </div>
       )}
       <div ref={sortRef} className="select-sort-wrapper">
-        <div
+        <SelectSortItem
           onClick={onChangeSortPopUp}
-          style={{
-            backgroundColor: `var(--${primaryColor})`,
-            color: `var(--${textColor})`,
-            border: `${sortPopUp ? "1px solid #E882D5" : ""}`,
-          }}
           className="select-sort"
+          primaryColor={primaryColor}
+          textColor={textColor}
+          sortPopUp={sortPopUp}
         >
           <div className="select-sort-title">
             <div className="title-left">
               <div className="arrows-sort">
-                <i
-                  style={{
-                    color: `${sortItem === "up" ? "#E882D5" : "#A7A6A6"}`,
-                  }}
-                  className="fas fa-arrow-up"
-                ></i>
-                <i
-                  style={{
-                    color: `${sortItem === "down" ? "#E882D5" : "#A7A6A6"}`,
-                  }}
-                  className="fas fa-arrow-down"
-                ></i>
+                <SortArrowUpIcon
+                  sortItem={sortItem}
+                  className="fas fa-arrow-up" />
+                <SortArrowDownIcon
+                  sortItem={sortItem}
+                  className="fas fa-arrow-down" />
               </div>
               <div>Sort by name</div>
             </div>
@@ -173,15 +152,12 @@ const FilteringBlock = ({
               )}
             </div>
           </div>
-        </div>
+        </SelectSortItem>
         {sortPopUp && (
-          <div
-            style={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: `var(--${textColor})`,
-            }}
+          <SelectSortPopUp
             className="select-sort-title-pop-up"
-          // onClick={() => onChangeSortItem(<i className="fas fa-sort-amount-up"></i>)}
+            primaryColor={primaryColor}
+            textColor={textColor}
           >
             {sortItem === "up" ? (
               <div
@@ -198,7 +174,7 @@ const FilteringBlock = ({
                 <i className="fas fa-arrow-up"></i>
               </div>
             )}
-          </div>
+          </SelectSortPopUp>
         )}
         <ModalCategories
           click={click}
