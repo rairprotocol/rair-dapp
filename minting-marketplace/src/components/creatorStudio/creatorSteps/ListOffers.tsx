@@ -17,6 +17,8 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 	const [hasMinterRole, setHasMinterRole] = useState(false);
 	const [instance, setInstance] = useState();
 	const [onMyChain, setOnMyChain] = useState();
+	const [emptyNames, setEmptyNames] = useState(true);
+	const [validPrice, setValidPrice] = useState(true)
 
 	const { minterInstance, contractCreator, programmaticProvider, currentChain } = useSelector(store => store.contractStore);
 	const {primaryColor, textColor} = useSelector(store => store.colorStore);
@@ -37,6 +39,19 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 	useEffect(() => {
 		setStepNumber(stepNumber);
 	}, [setStepNumber, stepNumber])
+
+	useEffect(() => {
+		let auxPrices = forceRerender && false;
+		let auxNames = false;
+		offerList.forEach(item => {
+			if (!item.fixed) {
+				auxPrices = auxPrices || !validateInteger(item.price) || item.price <= 0;
+				auxNames = auxNames || item.name === '';
+			}
+		});
+		setEmptyNames(auxNames);
+		setValidPrice(auxPrices);
+	}, [offerList, forceRerender])
 
 	const rerender = useCallback(() => {
 		setForceRerender(() => !forceRerender);
@@ -244,15 +259,8 @@ const ListOffers = ({contractData, setStepNumber, steps, stepNumber, gotoNextSte
 							offerList.length === 0 ||
 							offerList.at(-1).ends > Number(contractData.product.copies) - 1 ||
 							offerList.at(-1).starts > Number(contractData.product.copies) - 1 ||
-							offerList
-								.reduce((previous, current) => {
-								return previous || !validateInteger(current.price) || current.price <= 0 
-							}, false) || 
-							offerList
-								.filter(item => item.fixed !== true)
-								.reduce((previous, current) => {
-									return previous || current.name === ''
-								}, false)
+							validPrice || 
+							emptyNames
 						) : false
 				}]}
 			/>}
