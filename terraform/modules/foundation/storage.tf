@@ -19,3 +19,10 @@ resource "google_storage_bucket" "kubernetes_tf_state_storage" {
   project       = var.gcp_project_id
   storage_class = "STANDARD"
 }
+
+resource "google_storage_bucket" "rair_files" {
+  name          = "rair-files-${var.obfuscated_project_id}"
+  location      = var.region
+  project       = var.gcp_project_id
+  storage_class = "STANDARD"
+}

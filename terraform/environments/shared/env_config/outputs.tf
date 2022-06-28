@@ -4,19 +4,22 @@ output "env_config" {
       env_name: "dev",
       vpc_cidr_block: "10.0.0.0/14",
       gcp_project_id: "rair-market-dev",
-      region: "us-west1"
+      region: "us-west1",
+      obfuscated_project_id: "4249348029"
     },
     "staging": {
       env_name: "staging",
       vpc_cidr_block: "10.4.0.0/14",
       gcp_project_id: "rair-market-staging",
-      region: "us-west1"
+      region: "us-west1",
+      obfuscated_project_id: "5573963367"
     },
     "prod": {
       env_name: "prod",
       vpc_cidr_block: "10.8.0.0/14",
       gcp_project_id: "rair-market-production",
-      region: "us-west1"
+      region: "us-west1",
+      obfuscated_project_id: "9550688921"
     }
   }
 }

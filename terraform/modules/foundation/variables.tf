@@ -39,3 +39,7 @@ variable "secret_adder_role_users" {
   default = []
   type = list(string)
 }
+
+variable "obfuscated_project_id" {
+  type = string
+}

@@ -32,6 +32,7 @@ module "foundation" {
   mongo_atlas_org_id = module.config.mongo_atlas_org_id
   jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
   rair_internal_load_balancer_name = module.config.rair_internal_load_balancer_name
+  obfuscated_project_id = module.config.env_config.staging.obfuscated_project_id
   account_users = [
     {
       email: module.config.users.brian.email,
