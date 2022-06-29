@@ -1,8 +1,8 @@
 //@ts-nocheck
-import React from "react";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import cl from "./CustomButton.module.css";
+import cl from './CustomButton.module.css';
 
 function CustomButton({
   text,
@@ -10,10 +10,10 @@ function CustomButton({
   height,
   onClick,
   textColor,
-  margin,
+  margin
   //   primaryColor,
 }) {
-  const { primaryColor } = useSelector(store => store.colorStore);
+  const { primaryColor } = useSelector((store) => store.colorStore);
 
   return (
     <div
@@ -21,10 +21,9 @@ function CustomButton({
         width: width,
         height: height,
         color: textColor,
-        margin: margin,
+        margin: margin
       }}
-      className={cl.nftDataPageShowMoreWrapper}
-    >
+      className={cl.nftDataPageShowMoreWrapper}>
       {onClick ? (
         <div
           onClick={() => onClick()}
@@ -32,10 +31,11 @@ function CustomButton({
             width: width,
             height: height,
             color: textColor,
-            background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#434343"}`,
+            background: `${
+              primaryColor === 'rhyno' ? 'var(--rhyno)' : '#434343'
+            }`
           }}
-          className={cl.nftDataPageShowMore}
-        >
+          className={cl.nftDataPageShowMore}>
           <span className={cl.nftDataPageShowMoreText}>{text}</span>
         </div>
       ) : (
@@ -43,12 +43,11 @@ function CustomButton({
           style={{
             width: width,
             height: height,
-            color: textColor,
+            color: textColor
             // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"
             //                      }`,
           }}
-          className={cl.nftDataPageShowMore}
-        >
+          className={cl.nftDataPageShowMore}>
           <span className={cl.nftDataPageShowMoreText}>{text}</span>
         </div>
       )}

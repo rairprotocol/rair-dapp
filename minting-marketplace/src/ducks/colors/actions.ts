@@ -1,4 +1,4 @@
-import { ColorChoice } from "./colorStore.types";
+import { ColorChoice } from './colorStore.types';
 import * as types from './types';
 
 export const setColorScheme = (colorScheme: ColorChoice) =>

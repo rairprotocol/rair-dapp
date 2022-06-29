@@ -1,5 +1,5 @@
 const headers = () => ({
-    'X-rair-token': `${localStorage.getItem('token')}`,
+  'X-rair-token': `${localStorage.getItem('token')}`
 });
 
 export { headers };

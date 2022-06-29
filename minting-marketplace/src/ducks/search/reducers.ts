@@ -1,11 +1,11 @@
-import { TSeacrhActionsType, TSearchInitialState } from "./search.types";
-import * as types from "./types";
+import { TSeacrhActionsType, TSearchInitialState } from './search.types';
+import * as types from './types';
 
 const InitialState: TSearchInitialState = {
-  titleSearchDemo: "",
+  titleSearchDemo: '',
   dataAll: null,
-  message: "",
-  loading: null,
+  message: '',
+  loading: null
 };
 
 export default function allInformationFromSearch(
@@ -18,7 +18,7 @@ export default function allInformationFromSearch(
         ...state,
         dataAll: null,
         loading: true,
-        message: "",
+        message: '',
         titleSearchDemo: action.titleSearchDemo
       };
     case types.GET_DATA_ALL_COMPLETE:
@@ -26,21 +26,21 @@ export default function allInformationFromSearch(
         ...state,
         dataAll: action.data,
         loading: false,
-        message: "",
+        message: ''
       };
     case types.GET_DATA_ALL_CLEAR:
       return {
         ...state,
         dataAll: null,
         loading: false,
-        message: "",
+        message: ''
       };
     case types.GET_DATA_ALL_EMPTY:
       return {
         ...state,
         dataAll: null,
         loading: false,
-        message: action.message,
+        message: action.message
       };
     default:
       return state;

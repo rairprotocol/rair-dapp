@@ -1,5 +1,5 @@
 const setTitle = (title: string) => {
-	document.title = `${title}`
-}
+  document.title = `${title}`;
+};
 
 export default setTitle;

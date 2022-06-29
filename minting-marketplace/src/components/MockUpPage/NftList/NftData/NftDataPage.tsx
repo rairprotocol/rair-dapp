@@ -1,18 +1,18 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   Accordion,
   AccordionItem,
   AccordionItemHeading,
   AccordionItemButton,
-  AccordionItemPanel,
-} from "react-accessible-accordion";
+  AccordionItemPanel
+} from 'react-accessible-accordion';
 // import chainData from "../../../../utils/blockchainData";
-import Carousel from "react-multi-carousel";
-import ItemRank from "../../SelectBox/ItemRank";
-import SelectBox from "../../SelectBox/SelectBox";
-import OfferItem from "../OfferItem";
+import Carousel from 'react-multi-carousel';
+import ItemRank from '../../SelectBox/ItemRank';
+import SelectBox from '../../SelectBox/SelectBox';
+import OfferItem from '../OfferItem';
 
 const NftDataPage = ({ primaryColor, textColor }) => {
   const history = useHistory();
@@ -21,11 +21,12 @@ const NftDataPage = ({ primaryColor, textColor }) => {
 
   const [data, setData] = useState();
   const [tokenData, _setTokenData] = useState([]);
-  const setTokenData = useCallback((ololo) => {
-    debugger
-    console.log('!!!!', {ololo});
-    _setTokenData(ololo);
-  }, [_setTokenData])
+  const setTokenData = useCallback(
+    (tokenDataToSet) => {
+      _setTokenData(tokenDataToSet);
+    },
+    [_setTokenData]
+  );
   const [offerPrice, setOfferPrice] = useState([]);
   const [selectedToken, setSelectedToken] = useState(token);
   // const [allProducts, setAllProducts] = useState([]);
@@ -37,21 +38,21 @@ const NftDataPage = ({ primaryColor, textColor }) => {
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 4,
+      items: 4
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      paddingLeft: "2rem",
-      items: 4,
+      paddingLeft: '2rem',
+      items: 4
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2,
+      items: 2
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
+      items: 1
+    }
   };
 
   const handleClickToken = () => {
@@ -61,18 +62,18 @@ const NftDataPage = ({ primaryColor, textColor }) => {
   };
 
   function randomInteger(min, max) {
-    let rand = min + Math.random() * (max + 1 - min);
+    const rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
 
   function percentToRGB(percent) {
     if (percent) {
       if (percent < 15) {
-        return "#95F619";
+        return '#95F619';
       } else if (15 <= percent && percent < 35) {
-        return "#F6ED19";
+        return '#F6ED19';
       } else {
-        return "#F63419";
+        return '#F63419';
       }
     }
     // if (percent === 100) {
@@ -128,7 +129,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
     if (adminToken && contract && product) {
       const response = await (
         await fetch(`/api/${adminToken}/${contract}/${product}`, {
-          method: "GET",
+          method: 'GET'
         })
       ).json();
       //   const data = response.result?.tokens.find(
@@ -147,41 +148,31 @@ const NftDataPage = ({ primaryColor, textColor }) => {
     } else return null;
   }, [adminToken, contract, product, setTokenData]);
 
-
-
-
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await (
       await fetch(`/api/nft/${contract}/${product}`, {
-        method: "GET",
+        method: 'GET'
       })
     ).json();
 
     setTokenData(responseAllProduct.result);
-    setData(responseAllProduct)
-    debugger
-    setSelectedToken(0)
+    setData(responseAllProduct);
+    setSelectedToken(0);
     // if (!Object.keys(params).length)
     //   setSelected(responseAllProduct.result[0].metadata);
   }, [product, contract, setTokenData]);
-  console.log(data, 'data');
 
   useEffect(() => {
     getData();
     getAllProduct();
-  }, [getData,
-     getAllProduct
-    ]);
+  }, [getData, getAllProduct]);
 
-  console.log(tokenData, "tokenData");
-
-    if (!tokenData[selectedToken]) {
-      return 'No token, sorry, go away:('
-    }
-    if (!data?.tokens) {
-      return 'No data.tokens, sorry :('
-    }
-    console.log('@@@', data?.tokens)
+  if (!tokenData[selectedToken]) {
+    return 'No token, sorry, go away:(';
+  }
+  if (!data?.tokens) {
+    return 'No data.tokens, sorry :(';
+  }
 
   return (
     <div>
@@ -203,28 +194,26 @@ const NftDataPage = ({ primaryColor, textColor }) => {
       </button> */}
           <div
             style={{
-              maxWidth: "1600px",
-              margin: "auto",
+              maxWidth: '1600px',
+              margin: 'auto',
               backgroundColor: `var(--${primaryColor})`,
-              borderRadius: "16px",
-              padding: "24px 0",
-            }}
-          >
+              borderRadius: '16px',
+              padding: '24px 0'
+            }}>
             <div className="ntf-header">
               <h2
                 style={{
-                  fontFamily: "Plus Jakarta Sans",
-                  fontSize: "40px",
-                  fontStyle: "normal",
-                  fontWeight: "700",
-                  lineHeight: "28px",
-                  letterSpacing: "0px",
-                  textAlign: "left",
-                  marginBottom: "3rem",
-                  marginTop: "1rem",
-                  marginLeft: "3px",
-                }}
-              >
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontSize: '40px',
+                  fontStyle: 'normal',
+                  fontWeight: '700',
+                  lineHeight: '28px',
+                  letterSpacing: '0px',
+                  textAlign: 'left',
+                  marginBottom: '3rem',
+                  marginTop: '1rem',
+                  marginLeft: '3px'
+                }}>
                 {tokenData[selectedToken]?.metadata.name}
               </h2>
               <div className="btn-share">
@@ -234,58 +223,53 @@ const NftDataPage = ({ primaryColor, textColor }) => {
             <div
               //   onClick={onClick}
               style={{
-                margin: "auto",
+                margin: 'auto',
                 backgroundImage: `url(${tokenData[selectedToken]?.metadata?.image})`,
-                width: "604px",
-                height: "45rem",
-                backgroundPosition: "center",
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-              }}
-            ></div>
+                width: '604px',
+                height: '45rem',
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat'
+              }}></div>
             <div
               className="main-tab"
               style={{
-                display: "flex",
-                flexWrap: "wrap",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginBottom: "1rem",
-                padding: "2rem",
-                alignItems: "center",
-              }}
-            >
+                display: 'flex',
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: '1rem',
+                padding: '2rem',
+                alignItems: 'center'
+              }}>
               <div>
                 <span>Price range</span>
                 <div
                   style={{
-                    borderRadius: "16px",
-                    padding: "10px",
-                    width: "228px",
-                    height: "48px",
-                    backgroundColor: "#383637",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
+                    borderRadius: '16px',
+                    padding: '10px',
+                    width: '228px',
+                    height: '48px',
+                    backgroundColor: '#383637',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
                   <img
-                    style={{ width: "24px", transform: "scale(1.2)" }}
+                    style={{ width: '24px', transform: 'scale(1.2)' }}
                     // src={`${chainData[data?.product.blockchain]?.image}`}
                     alt=""
                   />
                   <span
                     style={{
-                      paddingLeft: "9px",
-                      marginRight: "3rem",
-                    }}
-                  >
+                      paddingLeft: '9px',
+                      marginRight: '3rem'
+                    }}>
                     {minPrice} – {maxPrice} ETH
                   </span>
                   <span
                     style={{
-                      color: "#E882D5",
-                    }}
-                  >
+                      color: '#E882D5'
+                    }}>
                     ERC
                   </span>
                 </div>
@@ -298,7 +282,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
 
                     primaryColor={primaryColor}
                     items={[
-                      { pkey: `🔑`, value: "Rair", id: 1 },
+                      { pkey: '🔑', value: 'Rair', id: 1 }
                       // { pkey: `🔑`, value: "Ultra Rair", id: 2 },
                       // { pkey: `🔑`, value: "Common", id: 3 },
                     ]}
@@ -320,29 +304,26 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                         return {
                           value: p.metadata.name,
                           id: p._id,
-                          token: p.token,
+                          token: p.token
                         };
                       })
-                    }
-                  ></SelectBox>
+                    }></SelectBox>
                 </div>
               </div>
               <div
                 style={{
-                  marginTop: "18px",
-                }}
-              >
+                  marginTop: '18px'
+                }}>
                 <button
                   style={{
-                    width: "228px",
-                    height: "48px",
-                    border: "none",
-                    borderRadius: "16px",
+                    width: '228px',
+                    height: '48px',
+                    border: 'none',
+                    borderRadius: '16px',
                     color: textColor,
                     backgroundImage:
-                      "linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)",
-                  }}
-                >
+                      'linear-gradient(96.34deg, #725BDB 0%, #805FDA 10.31%, #8C63DA 20.63%, #9867D9 30.94%, #A46BD9 41.25%, #AF6FD8 51.56%, #AF6FD8 51.56%, #BB73D7 61.25%, #C776D7 70.94%, #D27AD6 80.62%, #DD7ED6 90.31%, #E882D5 100%)'
+                  }}>
                   Owned
                 </button>
               </div>
@@ -358,22 +339,20 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                       ? Object.keys(tokenData[selectedToken]).length &&
                         tokenData[selectedToken].metadata?.attributes.map(
                           (item, index) => {
-                            if (item.trait_type === "External URL") {
+                            if (item.trait_type === 'External URL') {
                               return (
                                 <div
                                   key={index}
                                   className="col-4 my-2 p-1 custom-desc-to-offer"
                                   style={{
                                     color: textColor,
-                                    textAlign: "center",
-                                  }}
-                                >
+                                    textAlign: 'center'
+                                  }}>
                                   <span>{item?.trait_type}:</span>
                                   <br />
                                   <a
                                     style={{ color: textColor }}
-                                    href={item?.value}
-                                  >
+                                    href={item?.value}>
                                     {item?.value}
                                   </a>
                                 </div>
@@ -383,14 +362,12 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                             return (
                               <div
                                 key={index}
-                                className="col-4 my-2 p-1 custom-desc-to-offer"
-                              >
+                                className="col-4 my-2 p-1 custom-desc-to-offer">
                                 <div
                                   style={{
-                                    padding: "0.1rem 1rem",
-                                    textAlign: "center",
-                                  }}
-                                >
+                                    padding: '0.1rem 1rem',
+                                    textAlign: 'center'
+                                  }}>
                                   <span>{item?.trait_type}:</span>
                                   <span style={{ color: textColor }}>
                                     {item?.value}
@@ -398,10 +375,9 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                                 </div>
                                 <span
                                   style={{
-                                    marginLeft: "15rem",
-                                    color: percentToRGB(percent),
-                                  }}
-                                >
+                                    marginLeft: '15rem',
+                                    color: percentToRGB(percent)
+                                  }}>
                                   {percent} %
                                 </span>
                               </div>
@@ -425,11 +401,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                       {tokenData[selectedToken].metadata?.description}
                     </div>
                     <div className="my-2 px-4 custom-desc-to-offer">
-                      <a
-                        href={
-                          tokenData[selectedToken].metadata?.external_url
-                        }
-                      >
+                      <a href={tokenData[selectedToken].metadata?.external_url}>
                         {tokenData[selectedToken].metadata?.external_url}
                       </a>
                     </div>
@@ -444,58 +416,52 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                   <div
                     // onClick={onClick}
                     style={{
-                      margin: "1rem",
-                      height: "135px",
-                    }}
-                  >
+                      margin: '1rem',
+                      height: '135px'
+                    }}>
                     <div
                       style={{
-                        display: "flex",
-                        borderRadius: "16px",
-                        width: "592px",
-                        backgroundColor: "#4E4D4DCC",
-                      }}
-                    >
+                        display: 'flex',
+                        borderRadius: '16px',
+                        width: '592px',
+                        backgroundColor: '#4E4D4DCC'
+                      }}>
                       <div
                         style={{
-                          position: "relative",
-                        }}
-                      >
+                          position: 'relative'
+                        }}>
                         <div
                           style={{
-                            width: "32px",
-                            height: "32px",
-                            background: "#CCA541",
-                            borderRadius: "50%",
-                            position: "absolute",
-                            top: "35%",
-                            left: "50%",
-                            transform: "translate(-50%, -35%)",
-                            zIndex: "1",
-                          }}
-                        >
+                            width: '32px',
+                            height: '32px',
+                            background: '#CCA541',
+                            borderRadius: '50%',
+                            position: 'absolute',
+                            top: '35%',
+                            left: '50%',
+                            transform: 'translate(-50%, -35%)',
+                            zIndex: '1'
+                          }}>
                           <i
-                            style={{ paddingLeft: "8.5px", paddingTop: "7px" }}
+                            style={{ paddingLeft: '8.5px', paddingTop: '7px' }}
                             className="fa fa-lock"
-                            aria-hidden="true"
-                          ></i>
+                            aria-hidden="true"></i>
                           <p
                             style={{
-                              textAlign: "center",
-                              marginLeft: "-2rem",
-                              marginTop: "9px",
-                              width: "max-content",
-                            }}
-                          >
+                              textAlign: 'center',
+                              marginLeft: '-2rem',
+                              marginTop: '9px',
+                              width: 'max-content'
+                            }}>
                             Coming soon
                           </p>
                         </div>
                         <img
                           style={{
-                            width: "230px",
-                            opacity: "0.4",
-                            height: "135px",
-                            filter: "blur(3px)",
+                            width: '230px',
+                            opacity: '0.4',
+                            height: '135px',
+                            filter: 'blur(3px)'
                           }}
                           src={data?.tokens[0].metadata?.image}
                           alt=""
@@ -503,25 +469,23 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                       </div>
                       <div
                         style={{
-                          borderLeft: "4px solid #CCA541",
-                          display: "flex",
-                          flexDirection: "column",
-                          width: "inher",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          paddingLeft: "1rem",
-                        }}
-                      >
+                          borderLeft: '4px solid #CCA541',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          width: 'inher',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          paddingLeft: '1rem'
+                        }}>
                         <div>
-                          {" "}
-                          <p>Video {data?.tokens[0].metadata?.name}</p>{" "}
+                          {' '}
+                          <p>Video {data?.tokens[0].metadata?.name}</p>{' '}
                         </div>
                         <div>
                           <p
                             style={{
-                              color: "#A7A6A6",
-                            }}
-                          >
+                              color: '#A7A6A6'
+                            }}>
                             00:03:23
                           </p>
                         </div>
@@ -544,15 +508,14 @@ const NftDataPage = ({ primaryColor, textColor }) => {
               </AccordionItem>
             </Accordion>
           </div>
-          <div style={{ maxWidth: "1600px", margin: "auto" }}>
+          <div style={{ maxWidth: '1600px', margin: 'auto' }}>
             {tokenData && (
               <Carousel
-                itemWidth={"300px"}
+                itemWidth={'300px'}
                 showDots={false}
                 infinite={true}
                 responsive={responsive}
-                itemClass="carousel-item-padding-4-px"
-              >
+                itemClass="carousel-item-padding-4-px">
                 {tokenData.map((p, index) => (
                   <OfferItem
                     key={index}

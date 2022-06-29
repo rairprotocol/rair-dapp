@@ -1,6 +1,6 @@
 //@ts-nocheck
-import React, { memo } from "react";
-import cl from "./Name.module.css";
+import React, { memo } from 'react';
+import cl from './Name.module.css';
 
 const NameComponent = ({ onChange, value }) => {
   return (

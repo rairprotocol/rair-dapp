@@ -1,27 +1,30 @@
 //@ts-nocheck
-import React, { useCallback } from "react";
-import { SvgKeyForModalItem } from "../../../NftList/SvgKeyForModalItem";
-import { ModalContentPicture } from "../../FilteringBlockItems/FilteringBlockItems";
-import Modal from "../../modal";
-import "./ModalItemResponsive.css";
+import React, { useCallback } from 'react';
+import { SvgKeyForModalItem } from '../../../NftList/SvgKeyForModalItem';
+import { ModalContentPicture } from '../../FilteringBlockItems/FilteringBlockItems';
+import Modal from '../../modal';
+import './ModalItemResponsive.css';
 
 const ModalItem = ({
   isOpenBlockchain,
   setIsOpenBlockchain,
   selectedData,
   defaultImg,
-  primaryColor,
+  primaryColor
 }) => {
   const onCloseModal = useCallback(() => {
     setIsOpenBlockchain(false);
-  }, [setIsOpenBlockchain])
+  }, [setIsOpenBlockchain]);
 
   function bidFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   return (
-    <Modal style={{ height: "auto !important" }} onClose={onCloseModal} open={isOpenBlockchain}>
+    <Modal
+      style={{ height: 'auto !important' }}
+      onClose={onCloseModal}
+      open={isOpenBlockchain}>
       <div className="modal-content-metadata">
         <div className="block-close">
           <button onClick={onCloseModal}>
@@ -29,14 +32,13 @@ const ModalItem = ({
           </button>
         </div>
         <div className="modal-main-content">
-          <ModalContentPicture 
+          <ModalContentPicture
             className="bg-my-items p-2"
             picture={selectedData?.metadata.image}
             defaultImg={defaultImg}
             primaryColor={primaryColor}
           />
-          <div
-            className="modal-number-tokenContent">
+          <div className="modal-number-tokenContent">
             <span className="modal-item-title">
               {bidFirstLetter(selectedData.title)}
             </span>
@@ -51,8 +53,9 @@ const ModalItem = ({
         </div>
         <hr />
         <div className="modal-item-footer-wrapper modal-filtering-btn">
-          {true && <>
-            {/* <div className="filtering-price">
+          {true && (
+            <>
+              {/* <div className="filtering-price">
               <select className="select-price">
                 <option value="0">Select network</option>
                 <option value="1">Ethereum(ETH)</option>
@@ -60,16 +63,17 @@ const ModalItem = ({
               </select>
             </div>
             <button className="modal-item-footer-price">Price</button> */}
-            <div>
-              <button>Sell</button>
-              {/* <Link
+              <div>
+                <button>Sell</button>
+                {/* <Link
                 to={`/token/${selectedData.contract}/${selectedData.uniqueIndexInContract}`}
                 className="btn btn-stimorol modal-item-footer-view-token"
               >
                 View Token
               </Link> */}
-            </div>
-          </>}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Modal>

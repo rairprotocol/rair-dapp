@@ -1,29 +1,26 @@
 /* to override Left Tokens Block use .template-home-splash-page selector */
 
 .template-home-splash-page .left-tokens {
-    display: flex;
-    margin-top: 108px;
-    justify-content: space-between;
-    max-width: 1200px;
+  display: flex;
+  margin-top: 108px;
+  justify-content: space-between;
+  max-width: 1200px;
 }
 
 .template-home-splash-page .left-tokens .block-left-tokens {
-    border-radius: 24px;
-    width: 472px;
-    height: 472px;
-    margin-right: 91px;
-    overflow: hidden;
-    /* background: url('./images/left-tokens.jpeg') center center; */
-    background-size: 472px auto;
-    position: relative;
+  border-radius: 24px;
+  width: 472px;
+  height: 472px;
+  margin-right: 91px;
+  overflow: hidden;
+  /* background: url('./images/left-tokens.jpeg') center center; */
+  background-size: 472px auto;
+  position: relative;
 }
 
 .template-home-splash-page .left-tokens-content .title-tokens {
-    margin: 24px 0;
+  margin: 24px 0;
 }
-
-
-
 
 /*
 .left-tokens.greyman-page .block-left-tokens {
@@ -37,7 +34,7 @@
     left: 71px;
     font-size: 12px;
     /* list-style: 21px; */
-    /* text-align: left;
+/* text-align: left;
     color: #fff;
 }
 
@@ -48,7 +45,6 @@
     align-items: center;
     position: relative;
 } */
-
 
 /* .progress-tokens span {
     margin-top: 200px;
@@ -150,9 +146,9 @@
 }
 */
 .template-home-splash-page .tokens-description {
-    width: 50vw;
-    text-align: left;
-    height: fit-content;
+  width: 50vw;
+  text-align: left;
+  height: fit-content;
 }
 
 /*
@@ -177,25 +173,24 @@
 }  
 */
 
-
 @media screen and (max-width: 1100px) {
-    .template-home-splash-page  .left-tokens {
-        flex-direction: column;
-        align-items: center;
-    }
+  .template-home-splash-page .left-tokens {
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .template-home-splash-page .tokens-description {
-        text-align: center;
-    }
+  .template-home-splash-page .tokens-description {
+    text-align: center;
+  }
 
-    .template-home-splash-page .left-tokens-content {
-        align-items: center;
-    }       
+  .template-home-splash-page .left-tokens-content {
+    align-items: center;
+  }
 }
 
 @media screen and (max-width: 1100px) {
-    .template-home-splash-page .tokens-description {
-        width: 100%;
-        text-align: left;
-    }
+  .template-home-splash-page .tokens-description {
+    width: 100%;
+    text-align: left;
+  }
 }

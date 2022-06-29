@@ -1,28 +1,27 @@
 //@ts-nocheck
-import React, { useState } from "react";
-import cl from "./VideoPlayerView.module.css";
-import playImages from "../../../../SplashPage/images/playImg.png";
-import NftVideoplayer from "../NftVideoplayer/NftVideoplayer";
+import React, { useState } from 'react';
+import cl from './VideoPlayerView.module.css';
+import playImages from '../../../../SplashPage/images/playImg.png';
+import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
 
 function VideoPlayerView({
   productsFromOffer,
   primaryColor,
   selectVideo,
-  setSelectVideo,
+  setSelectVideo
 }) {
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
 
-  const colorRarity = [`#E4476D`, "gold", "silver"];
+  const colorRarity = ['#E4476D', 'gold', 'silver'];
 
   return (
     <div
       className={cl.VideoPlayerViewWrapper}
       style={{
         background: `${
-          primaryColor === "rhyno" ? "rgb(189,189,189)" : "#383637"
-        }`,
-      }}
-    >
+          primaryColor === 'rhyno' ? 'rgb(189,189,189)' : '#383637'
+        }`
+      }}>
       <div className={cl.ListOfVideosWrapper}>
         {productsFromOffer?.length &&
           productsFromOffer.map((data) => {
@@ -34,10 +33,9 @@ function VideoPlayerView({
                   setOpenVideoplayer(false);
                 }}
                 style={{
-                  backgroundImage: `url(${data?.staticThumbnail})`,
+                  backgroundImage: `url(${data?.staticThumbnail})`
                 }}
-                className={cl.ListOfVideosOneVideo}
-              >
+                className={cl.ListOfVideosOneVideo}>
                 <div className={cl.previewWrapper}>
                   <span className={cl.preview}>Preview</span>
                   <i
@@ -47,9 +45,8 @@ function VideoPlayerView({
                 </div>
                 <div className={cl.play}>
                   <button
-                    style={{ border: "none", background: "none" }}
-                    className=""
-                  >
+                    style={{ border: 'none', background: 'none' }}
+                    className="">
                     <img
                       className={cl.playImagesOnListVideos}
                       src={playImages}
@@ -71,14 +68,11 @@ function VideoPlayerView({
             <NftVideoplayer selectVideo={selectVideo} />
           ) : (
             <div
-              onClick={
-                () => setOpenVideoplayer(true)
-              }
+              onClick={() => setOpenVideoplayer(true)}
               style={{
-                backgroundImage: `url(${selectVideo?.staticThumbnail})`,
+                backgroundImage: `url(${selectVideo?.staticThumbnail})`
               }}
-              className={cl.SingleVideo}
-            >
+              className={cl.SingleVideo}>
               <img
                 className={cl.playImagesOnSingleVideo}
                 src={playImages}

@@ -1,27 +1,27 @@
 //@ts-nocheck
-import React, { memo } from "react";
-import cl from "./Timeline.module.css";
-import pic1 from "./img/pic1.png";
-import pic2 from "./img/pic2.png";
-import pic3 from "./img/pic3.png";
-import pic4 from "../images/greyman.png";
-import pic5 from "./img/pic5.png";
-import pic6 from "./img/pic6.png";
-import pic7 from "./img/pic7.png";
+import React, { memo } from 'react';
+import cl from './Timeline.module.css';
+import pic1 from './img/pic1.png';
+import pic2 from './img/pic2.png';
+import pic3 from './img/pic3.png';
+import pic4 from '../images/greyman.png';
+import pic5 from './img/pic5.png';
+import pic6 from './img/pic6.png';
+import pic7 from './img/pic7.png';
 
 const TimelineComponent = () => {
   return (
     <div className={cl.root}>
       <div className={cl.timeline}>
         <ul>
-          <li style={{ paddingBottom: "91px" }}>
+          <li style={{ paddingBottom: '91px' }}>
             <div className={cl.right_content}>
               <img
                 style={{
-                  borderRadius: "16px",
-                  display: "block",
-                  width: "355px",
-                  height: "355px",
+                  borderRadius: '16px',
+                  display: 'block',
+                  width: '355px',
+                  height: '355px'
                 }}
                 src={pic1}
                 alt="TimeLine"
@@ -32,7 +32,7 @@ const TimelineComponent = () => {
             </div>
           </li>
           <>
-            <div style={{ paddingTop: "6rem" }} className={cl.right_content}>
+            <div style={{ paddingTop: '6rem' }} className={cl.right_content}>
               <p className={cl.p_content}>
                 <strong>1994</strong> <br /> Cryptogreyman is born. A modern
                 superhero in his combat against fun, humor, initiative, and
@@ -44,17 +44,16 @@ const TimelineComponent = () => {
           <div className={cl.right_content_margin}>
             <div
               style={{
-                display: "inline-flex",
+                display: 'inline-flex'
               }}
-              className={cl.right_content}
-            >
+              className={cl.right_content}>
               <img
                 style={{
-                  borderRadius: "16px",
-                  display: "block",
-                  width: "531px",
-                  height: "237px",
-                  zIndex: "1",
+                  borderRadius: '16px',
+                  display: 'block',
+                  width: '531px',
+                  height: '237px',
+                  zIndex: '1'
                 }}
                 src={pic2}
                 alt="TimeLine"
@@ -69,31 +68,28 @@ const TimelineComponent = () => {
             </div>
           </div>
           <div
-            style={{ marginBottom: "92px" }}
-            className={cl.right_content_margin}
-          >
+            style={{ marginBottom: '92px' }}
+            className={cl.right_content_margin}>
             <div
               style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start'
               }}
-              className={cl.right_content}
-            >
+              className={cl.right_content}>
               <img
                 style={{
-                  borderRadius: "16px",
-                  display: "block",
-                  width: "343px",
-                  height: "441px",
+                  borderRadius: '16px',
+                  display: 'block',
+                  width: '343px',
+                  height: '441px'
                 }}
                 src={pic3}
                 alt="TimeLine"
               />
               <p
-                style={{ paddingLeft: "5rem", wight: "353px" }}
-                className={cl.p_content}
-              >
+                style={{ paddingLeft: '5rem', wight: '353px' }}
+                className={cl.p_content}>
                 <strong>1998</strong> <br />
                 Nine metres high Greyman Statue of No Liberty made out of
                 concrete and bronze in front of Rijksmuseum in Amsterdam.
@@ -108,14 +104,14 @@ const TimelineComponent = () => {
               Burning Man festival where they surrounded an altar. People could
               customize them and make them less grey during the week after which
               they could burn them in a private ritual at the end, thus burning
-              and freeing their Inner Greyman.
+              burning and freeing their Inner Greyman.
             </p>
             <img
               style={{
-                borderRadius: "16px",
-                display: "block",
-                width: "460px",
-                height: "373px",
+                borderRadius: '16px',
+                display: 'block',
+                width: '460px',
+                height: '373px'
               }}
               src={pic5}
               alt="TimeLine"
@@ -135,13 +131,13 @@ const TimelineComponent = () => {
             </div>
           </li>
           <li>
-            <div style={{ marginTop: "3rem" }} className={cl.right_content}>
+            <div style={{ marginTop: '3rem' }} className={cl.right_content}>
               <img
                 style={{
-                  borderRadius: "16px",
-                  display: "block",
-                  width: "355px",
-                  height: "355px",
+                  borderRadius: '16px',
+                  display: 'block',
+                  width: '355px',
+                  height: '355px'
                 }}
                 src={pic4}
                 alt="TimeLine"
@@ -152,50 +148,47 @@ const TimelineComponent = () => {
             </div>
           </li>
           <>
-            <div style={{ paddingTop: "6rem" }} className={cl.right_content}>
+            <div style={{ paddingTop: '6rem' }} className={cl.right_content}>
               <p
-                style={{ marginTop: "5rem", marginLeft: "3rem" }}
-                className={cl.p_content}
-              >
+                style={{ marginTop: '5rem', marginLeft: '3rem' }}
+                className={cl.p_content}>
                 <strong>4 November 2021</strong> <br />
-                Birth of the handpainted Cryptogreyman (NFT sold on{" "}
-                <span style={{ textDecoration: "underline" }}>Rarible</span> for
+                Birth of the handpainted Cryptogreyman (NFT sold on{' '}
+                <span style={{ textDecoration: 'underline' }}>Rarible</span> for
                 2.429 ETH, painting sold for 3208 Euro at auction)
               </p>
             </div>
           </>
 
           <div
-            style={{ display: "inline-flex", paddingTop: "80px" }}
-            className={cl.right_content_1}
-          >
+            style={{ display: 'inline-flex', paddingTop: '80px' }}
+            className={cl.right_content_1}>
             <p className={cl.right_content_p_november}>
               <strong> 30 November 2021</strong> <br />
-              Birth of the pure digital Cryptogreyman (NFT sold on{" "}
-              <span style={{ textDecoration: "underline" }}>
+              Birth of the pure digital Cryptogreyman (NFT sold on{' '}
+              <span style={{ textDecoration: 'underline' }}>
                 Foundation
-              </span>{" "}
+              </span>{' '}
               for 0.7 ETH)
             </p>
             <img
               style={{
-                borderRadius: "16px",
-                display: "block",
-                width: "355px",
-                height: "356px",
+                borderRadius: '16px',
+                display: 'block',
+                width: '355px',
+                height: '356px'
               }}
               src={pic6}
               alt="TimeLine"
             />
           </div>
 
-          <li style={{ marginTop: "3rem" }}>
+          <li style={{ marginTop: '3rem' }}>
             <div
-              style={{ boxShadow: "none", left: "-428px" }}
-              className={cl.left_content}
-            >
+              style={{ boxShadow: 'none', left: '-428px' }}
+              className={cl.left_content}>
               <img
-                style={{ display: "block", width: "358px", height: "464px" }}
+                style={{ display: 'block', width: '358px', height: '464px' }}
                 src={pic7}
                 alt="TimeLine"
               />
@@ -203,32 +196,28 @@ const TimelineComponent = () => {
             <div className={cl.right_content}>
               <h3
                 style={{
-                  boxShadow: "0 0 0 3px rgb(59 112 239 / 30%)",
-                  padding: "8px 16px",
-                  borderRadius: "18px",
-                  width: "min-content",
-                  marginTop: "-2rem",
-                  marginLeft: "2rem",
-                }}
-              >
+                  boxShadow: '0 0 0 3px rgb(59 112 239 / 30%)',
+                  padding: '8px 16px',
+                  borderRadius: '18px',
+                  width: 'min-content',
+                  marginTop: '-2rem',
+                  marginLeft: '2rem'
+                }}>
                 Beyond
               </h3>
             </div>
           </li>
 
           <>
-            <div style={{ paddingTop: "6rem" }} className={cl.right_content}>
-              <p
-                style={{ marginTop: "5rem" }}
-                className={cl.p_content_last}
-              >
+            <div style={{ paddingTop: '6rem' }} className={cl.right_content}>
+              <p style={{ marginTop: '5rem' }} className={cl.p_content_last}>
                 <strong>2022</strong> <br />
                 Birth of 7.907.414.597 Greymen mintable on MATIC ready to turn
                 the Metaverse into a Greyverse.
               </p>
             </div>
           </>
-          <div style={{ clear: "both" }}></div>
+          <div style={{ clear: 'both' }}></div>
         </ul>
       </div>
       <div className={cl.timelineMobile}>
@@ -237,21 +226,23 @@ const TimelineComponent = () => {
           <img src={pic1} alt="TimeLine" />
 
           <div className={cl.mobileDesc}>
-            <span>1994</span><br />
-            Cryptogreyman is born. A modern superhero in his combat against
-            fun, humor, initiative, and creativity. Acrylic on linen.
-            90 x 90 cm. Part of Dadara’s No Fun exhibition in Amsterdam.
+            <span>1994</span>
+            <br />
+            Cryptogreyman is born. A modern superhero in his combat against fun,
+            humor, initiative, and creativity. Acrylic on linen. 90 x 90 cm.
+            Part of Dadara’s No Fun exhibition in Amsterdam.
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
           <img src={pic2} alt="TimeLine" />
 
           <div className={cl.mobileDesc}>
-            <span>1996-98</span><br />
-            Greyman became a series based on the same character with various traits and characteristics,
-            such as the Grey Punk, Grey Angel, Tattooed Greyman etc. Sounds
-            familiar nowadays in this age of 10K collectibles and PFPs,
-            doesn’t it?
+            <span>1996-98</span>
+            <br />
+            Greyman became a series based on the same character with various
+            traits and characteristics, such as the Grey Punk, Grey Angel,
+            Tattooed Greyman etc. Sounds familiar nowadays in this age of 10K
+            collectibles and PFPs, doesn’t it?
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
@@ -259,9 +250,8 @@ const TimelineComponent = () => {
 
           <div className={cl.mobileDesc}>
             <span>1998</span> <br />
-            Nine metres high Greyman Statue of No Liberty made
-            out of concrete and bronze in front of Rijksmuseum
-            in Amsterdam.
+            Nine metres high Greyman Statue of No Liberty made out of concrete
+            and bronze in front of Rijksmuseum in Amsterdam.
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
@@ -269,20 +259,20 @@ const TimelineComponent = () => {
 
           <div className={cl.mobileDesc}>
             <span>2002</span> <br />
-            140 paper maché Greymen traveled to the Nevada desert to
-            the Burning Man festival where they surrounded an altar.
-            People could customize them and make them less grey during
-            the week after which they could burn them in a private
-            ritual at the end, thus burning and freeing their Inner
-            Greyman.
+            140 paper maché Greymen traveled to the Nevada desert to the Burning
+            Man festival where they surrounded an altar. People could customize
+            them and make them less grey during week after which they could burn
+            them in a private ritual at the end, thus burning and freeing their
+            Inner Greyman.
           </div>
         </div>
         <div className={cl.mobileTitleBlock}>Web2 Era</div>
         <div className={cl.timeLineContentMobile}>
           <div className={cl.mobileDesc}>
-            <span>2002-2020</span><br />
-            Greyman lies dormant and patiently waits
-            for Web2 to develop into Web3
+            <span>2002-2020</span>
+            <br />
+            Greyman lies dormant and patiently waits for Web2 to develop into
+            Web3
           </div>
         </div>
         <div className={cl.mobileTitleBlock}>Web3 Era</div>
@@ -291,9 +281,8 @@ const TimelineComponent = () => {
 
           <div className={cl.mobileDesc}>
             <span>4 November 2021 </span> <br />
-            Birth of the handpainted Cryptogreyman
-            (NFT sold on Rarible for 2.429 ETH, painting
-            sold for 3208 Euro at auction)
+            Birth of the handpainted Cryptogreyman (NFT sold on Rarible for
+            2.429 ETH, painting for 3208 Euro at auction)
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
@@ -301,8 +290,8 @@ const TimelineComponent = () => {
 
           <div className={cl.mobileDesc}>
             <span>30 November 2021</span> <br />
-            Birth of the pure digital Cryptogreyman
-            (NFT sold on Foundation for 0.7 ETH)
+            Birth of the pure digital Cryptogreyman (NFT sold on Foundation for
+            0.7 ETH)
           </div>
         </div>
         <div className={cl.mobileTitleBlock}>Beyond</div>
@@ -311,9 +300,8 @@ const TimelineComponent = () => {
 
           <div className={cl.mobileDesc}>
             <span>2022</span> <br />
-            Birth of 7.907.414.597 Greymen mintable
-            on MATIC ready to turn the Metaverse
-            into a Greyverse.
+            Birth of 7.907.414.597 Greymen mintable on MATIC ready to turn the
+            Metaverse into a Greyverse.
           </div>
         </div>
       </div>

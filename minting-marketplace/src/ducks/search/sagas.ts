@@ -1,51 +1,56 @@
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { put, call, takeLatest } from 'redux-saga/effects';
+import {
+  getDataAllClear,
+  getDataAllComplete,
+  getDataAllEmpty
+} from './actions';
+import { TGetDataAllStart, TSearchDataResponseType } from './search.types';
+import * as types from './types';
 
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { put, call, takeLatest } from "redux-saga/effects";
-import { getDataAllClear, getDataAllComplete, getDataAllEmpty } from "./actions";
-import { TGetDataAllStart, TSearchDataResponseType } from "./search.types";
-import * as types from "./types";
-
-export function* getAllInformationFromSearch( titleSearchDemo: TGetDataAllStart ) {
+export function* getAllInformationFromSearch(
+  titleSearchDemo: TGetDataAllStart
+) {
   try {
     if (titleSearchDemo.titleSearchDemo) {
       const titleSearchDemoEncoded = encodeURIComponent(
         titleSearchDemo.titleSearchDemo
       );
 
-      console.log("titleSearchDemoEncoded: ", titleSearchDemo)
+      const searchData: AxiosResponse<TSearchDataResponseType> = yield call(
+        () => {
+          return axios.get<TSearchDataResponseType>(
+            `/api/search/${titleSearchDemoEncoded}`
+          );
+        }
+      );
 
-      let searchData: AxiosResponse<TSearchDataResponseType> = yield call(() => {
-        return axios.get<TSearchDataResponseType>(`/api/search/${titleSearchDemoEncoded}`);
-      });
-
-    //   if (searchData.data.data) {
+      //   if (searchData.data.data) {
       if (searchData.status === 200) {
         if (searchData.data.data) {
-            yield put(getDataAllComplete(searchData.data.data));
+          yield put(getDataAllComplete(searchData.data.data));
+        } else if (!searchData.data.data) {
+          yield put(getDataAllClear());
         }
-      else if(!searchData.data.data){
-        yield put(getDataAllClear());
-      }
       }
     }
   } catch (errors) {
     const error = errors as AxiosError;
-    console.log(error, "error from sagas");
+    console.error(error, 'error from sagas');
 
     if (error.response !== undefined) {
-        if (error.response.status === 404) {
-            const errorDirec = "Nothing can found";
-            yield put(getDataAllEmpty(errorDirec));
-        } else if (error.response.status === 500) {
-            const errorServer =
-                "Sorry. an internal server problem has occurred";
-            yield put(getDataAllEmpty(errorServer));
-        } else {
-            yield put(getDataAllEmpty(error.response.data.message));
-        }
+      if (error.response.status === 404) {
+        const errorDirec = 'Nothing can found';
+        yield put(getDataAllEmpty(errorDirec));
+      } else if (error.response.status === 500) {
+        const errorServer = 'Sorry. an internal server problem has occurred';
+        yield put(getDataAllEmpty(errorServer));
+      } else {
+        yield put(getDataAllEmpty(error.response.data.message));
+      }
     } else {
-        const errorConnection = "Nothing can fiend error!";
-        yield put(getDataAllEmpty(errorConnection));
+      const errorConnection = 'Nothing can fiend error!';
+      yield put(getDataAllEmpty(errorConnection));
     }
   }
 }

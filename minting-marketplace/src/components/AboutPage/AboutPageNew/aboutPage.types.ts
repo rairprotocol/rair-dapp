@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { ColorChoice } from "../../../ducks/colors/colorStore.types";
+import { ReactNode } from 'react';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 export interface IAboutPageNew {
   headerLogoBlack?: string;
@@ -41,9 +41,9 @@ export interface IMobileCarouselNfts {
 }
 
 export interface ICompareMobileSelect {
-    categories: number;
+  categories: number;
 }
 
 export interface ITokenomics {
-    Metamask: string;
+  Metamask: string;
 }

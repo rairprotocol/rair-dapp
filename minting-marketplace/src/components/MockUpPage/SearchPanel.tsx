@@ -1,33 +1,32 @@
 //@ts-nocheck
-import { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 // import { useHistory } from "react-router-dom";
-import { NftList } from "./NftList/NftList";
-import InputField from "../common/InputField";
-import VideoList from "../video/videoList";
-import FilteringBlock from "./FilteringBlock/FilteringBlock";
-import PaginationBox from "./PaginationBox/PaginationBox";
-import { getCurrentPage, getCurrentPageEnd } from "../../ducks/pages/actions";
-import { getNftDataStart } from "../../ducks/nftData/action";
+import { NftList } from './NftList/NftList';
+import InputField from '../common/InputField';
+import VideoList from '../video/videoList';
+import FilteringBlock from './FilteringBlock/FilteringBlock';
+import PaginationBox from './PaginationBox/PaginationBox';
+import { getCurrentPage, getCurrentPageEnd } from '../../ducks/pages/actions';
+import { getNftDataStart } from '../../ducks/nftData/action';
 
 const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   const dispatch = useDispatch();
   const { currentPage } = useSelector((store) => store.getPageStore);
-  const { nftList, itemsPerPage } = useSelector((store => store.nftDataStore));
+  const { nftList, itemsPerPage } = useSelector((store) => store.nftDataStore);
 
-  const [titleSearch, setTitleSearch] = useState("");
-  const [sortItem, setSortItem] = useState("");
+  const [titleSearch, setTitleSearch] = useState('');
+  const [sortItem, setSortItem] = useState('');
   const [blockchain, setBlockchain] = useState();
   const [category, setCategory] = useState();
   const [isShow, setIsShow] = useState(false);
   const [isShowCategories, setIsShowCategories] = useState(false);
-  const [filterText, setFilterText] = useState("");
-  const [filterCategoriesText, setFilterCategoriesText] = useState("");
+  const [filterText, setFilterText] = useState('');
+  const [filterCategoriesText, setFilterCategoriesText] = useState('');
   const [click, setClick] = useState(null);
 
   // const [mediaList, setMediaList] = useState();
-
 
   // const getContract = useCallback(async () => {
   //   const responseContract = await axios.get<TGetFullContracts>("/api/contracts/full", {
@@ -67,7 +66,6 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   //   setTotalPages(getPagesCount(totalCount, itemsPerPage));
   // }, [currentPage, itemsPerPage, blockchain, category]);
 
-
   const changePage = (currentPage: number) => {
     dispatch(getCurrentPage(currentPage));
     // setCurrentPage(currentPage);
@@ -101,16 +99,12 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   // };
 
   // unused snippet
-  const handleClick = useCallback(
-    (cover) => {
-      nftList.forEach((item) => {
-        if (cover === item.cover) {
-          console.log(1);
-        }
-      });
-    },
-    []
-  );
+  // const handleClick = useCallback((cover) => {
+  //   nftList.forEach((item) => {
+  //     if (cover === item.cover) {
+  //     }
+  //   });
+  // }, []);
 
   const clearFilter = () => {
     setBlockchain(null);
@@ -132,29 +126,22 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
     }
   }, [blockchain, category, dispatch]);
 
-
   useEffect(() => {
     const params = {
       itemsPerPage,
       currentPage,
       blockchain,
       category
-    }
+    };
 
-    dispatch({ type: "GET_NFTLIST_START", params: params })
-  }, [
-    itemsPerPage,
-    currentPage,
-    blockchain,
-    category,
-    dispatch
-  ])
+    dispatch({ type: 'GET_NFTLIST_START', params: params });
+  }, [itemsPerPage, currentPage, blockchain, category, dispatch]);
 
   useEffect(() => {
     return () => {
       dispatch(getNftDataStart());
-    }
-  }, [dispatch])
+    };
+  }, [dispatch]);
 
   // useEffect(() => {
   //   getContract();
@@ -165,17 +152,17 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
       <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
         <TabList className="category-wrapper">
           <Tab
-            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
-              }`}
-            className="category-button-nft category-button"
-          >
+            selectedClassName={`search-tab-selected-${
+              primaryColor === 'rhyno' ? 'default' : 'dark'
+            }`}
+            className="category-button-nft category-button">
             NFT
           </Tab>
           <Tab
-            selectedClassName={`search-tab-selected-${primaryColor === "rhyno" ? "default" : "dark"
-              }`}
-            className="category-button-videos category-button"
-          >
+            selectedClassName={`search-tab-selected-${
+              primaryColor === 'rhyno' ? 'default' : 'dark'
+            }`}
+            className="category-button-videos category-button">
             Unlockables
           </Tab>
         </TabList>
@@ -183,19 +170,18 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
-            placeholder={"Search..."}
+            placeholder={'Search...'}
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
               color: `var(--${textColor})`,
-              borderTopLeftRadius: "0",
+              borderTopLeftRadius: '0'
             }}
             customClass="form-control input-styled"
           />
           <div className="nft-form-control-icon">
             <i
               className="fas fa-search fa-lg fas-custom"
-              aria-hidden="true"
-            ></i>
+              aria-hidden="true"></i>
             <FilteringBlock
               click={click}
               isFilterShow={true}
@@ -210,7 +196,7 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
               setIsShowCategories={setIsShowCategories}
               setFilterText={setFilterText}
               setFilterCategoriesText={setFilterCategoriesText}
-            // getContract={getContract}
+              // getContract={getContract}
             />
           </div>
         </div>
@@ -218,9 +204,10 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
           <div className="clear-filter-wrapper">
             {isShow ? (
               <button
-                className={`clear-filter ${primaryColor === "rhyno" ? "rhyno" : ""}`}
-                onClick={() => clearFilter()}
-              >
+                className={`clear-filter ${
+                  primaryColor === 'rhyno' ? 'rhyno' : ''
+                }`}
+                onClick={() => clearFilter()}>
                 {filterText}
               </button>
             ) : (
@@ -228,9 +215,10 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             )}
             {isShowCategories ? (
               <button
-                className={`clear-filter filter-category ${primaryColor === "rhyno" ? "rhyno" : ""}`}
-                onClick={() => clearCategoriesFilter()}
-              >
+                className={`clear-filter filter-category ${
+                  primaryColor === 'rhyno' ? 'rhyno' : ''
+                }`}
+                onClick={() => clearCategoriesFilter()}>
                 {filterCategoriesText}
               </button>
             ) : (
@@ -242,9 +230,9 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             titleSearch={titleSearch}
             primaryColor={primaryColor}
             textColor={textColor}
-            handleClick={handleClick}
+            // handleClick={handleClick}
             data={nftList}
-          // dataAll={dataAll}
+            // dataAll={dataAll}
           />
           <PaginationBox
             primaryColor={primaryColor}

@@ -1,6 +1,6 @@
 //@ts-nocheck
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 // import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftListUnlockablesVideos = ({
@@ -9,7 +9,7 @@ const NftListUnlockablesVideos = ({
   // product,
   productsFromOffer,
   selectedData,
-  primaryColor,
+  primaryColor
   // selectedToken,
 }) => {
   const history = useHistory();
@@ -19,9 +19,7 @@ const NftListUnlockablesVideos = ({
     : 0;
 
   return (
-    <div
-      className="nftlist-unlockable-videos"
-    >
+    <div className="nftlist-unlockable-videos">
       {/* <NftDifferentRarity productsFromOffer={productsFromOffer} /> */}
       {(partOfVideo?.length &&
         partOfVideo.map((v) => {
@@ -30,53 +28,50 @@ const NftListUnlockablesVideos = ({
             <div
               key={v._id}
               style={{
-                margin: "1rem",
-                height: "135px",
-              }}
-            >
+                margin: '1rem',
+                height: '135px'
+              }}>
               <div
                 className="nft-unlockable-videoItem"
-                onClick={
-                  () => history.push(`/watch/${v._id}/${v.mainManifest}`)
+                onClick={() =>
+                  history.push(`/watch/${v._id}/${v.mainManifest}`)
                 }
                 style={{
-                  backgroundColor: `${primaryColor === "rhyno" ? "rgb(167, 166, 166)" : "#4E4D4DCC"}`,
-                }}
-              >
+                  backgroundColor: `${
+                    primaryColor === 'rhyno'
+                      ? 'rgb(167, 166, 166)'
+                      : '#4E4D4DCC'
+                  }`
+                }}>
                 <div
                   style={{
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    className="nft-unlockable-imgContent"
-                  >
+                    position: 'relative'
+                  }}>
+                  <div className="nft-unlockable-imgContent">
                     <i
                       style={{
-                        paddingLeft: "1px",
-                        paddingTop: "8px",
+                        paddingLeft: '1px',
+                        paddingTop: '8px'
                       }}
                       className="fa fa-lock"
-                      aria-hidden="true"
-                    ></i>
+                      aria-hidden="true"></i>
                     <p
                       style={{
-                        textAlign: "center",
-                        marginLeft: "-2rem",
-                        marginTop: "9px",
-                        width: "max-content",
-                        wordBreak: "break-all"
-                      }}
-                    >
+                        textAlign: 'center',
+                        marginLeft: '-2rem',
+                        marginTop: '9px',
+                        width: 'max-content',
+                        wordBreak: 'break-all'
+                      }}>
                       {v.description}
                     </p>
                   </div>
                   {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
                   <img
                     style={{
-
-                      filter: `${primaryColor === "rhyno" ? "blur(1px)" : "blur(3px)"}`,
-
+                      filter: `${
+                        primaryColor === 'rhyno' ? 'blur(1px)' : 'blur(3px)'
+                      }`
                     }}
                     src={`${v?.staticThumbnail}`}
                     // src={selectedData?.image}
@@ -86,27 +81,25 @@ const NftListUnlockablesVideos = ({
                 <div
                   className="nft-unlockable-contentItem"
                   style={{
-                    borderLeft: "4px solid #CCA541",
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "inher",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
-                    paddingLeft: "24px",
-                  }}
-                >
+                    borderLeft: '4px solid #CCA541',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: 'inher',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
+                    paddingLeft: '24px'
+                  }}>
                   <div>
-                    {" "}
-                    <p>
-                      {v?.title}
-                    </p>{" "}
+                    {' '}
+                    <p>{v?.title}</p>{' '}
                   </div>
                   <div>
                     <p
                       style={{
-                        color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
-                      }}
-                    >
+                        color: `${
+                          primaryColor === 'rhyno' ? 'black' : '#A7A6A6'
+                        }`
+                      }}>
                       {v?.duration}
                     </p>
                   </div>
@@ -115,93 +108,86 @@ const NftListUnlockablesVideos = ({
             </div>
           );
         })) || (
+        <div
+          style={{
+            margin: '1rem',
+            height: '135px'
+          }}>
           <div
+            className="nft-unlockable-videoItem"
+            onClick={
+              () => console.info('Cooming soon')
+              // history.push(
+              //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
+              // )
+            }
             style={{
-              margin: "1rem",
-              height: "135px",
-            }}
-          >
+              backgroundColor: `${
+                primaryColor === 'rhyno' ? 'rgb(167, 166, 166)' : '#4E4D4DCC'
+              }`
+            }}>
             <div
-              className="nft-unlockable-videoItem"
-              onClick={
-                () => console.log("Cooming soon")
-                // history.push(
-                //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
-                // )
-              }
               style={{
-                backgroundColor: `${primaryColor === "rhyno" ? "rgb(167, 166, 166)" : "#4E4D4DCC"}`,
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                }}
-              >
-                <div
-                  className="nft-unlockable-imgContent"
-                >
-                  <i
-                    style={{
-                      paddingLeft: "1px",
-                      paddingTop: "8px",
-                    }}
-                    className="fa fa-lock"
-                    aria-hidden="true"
-                  ></i>
-                  <p
-                    style={{
-                      textAlign: "center",
-                      marginLeft: "-2rem",
-                      marginTop: "9px",
-                      width: "max-content",
-                    }}
-                  >
-                    Coming soon
-                  </p>
-                </div>
-                {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
-                <img
+                position: 'relative'
+              }}>
+              <div className="nft-unlockable-imgContent">
+                <i
                   style={{
-                    filter: "blur(3px)",
+                    paddingLeft: '1px',
+                    paddingTop: '8px'
                   }}
-                  // src={`/thumbnails/${v?.thumbnail}.png`}
-                  src={selectedData?.image}
-                  alt=""
-                />
+                  className="fa fa-lock"
+                  aria-hidden="true"></i>
+                <p
+                  style={{
+                    textAlign: 'center',
+                    marginLeft: '-2rem',
+                    marginTop: '9px',
+                    width: 'max-content'
+                  }}>
+                  Coming soon
+                </p>
               </div>
-              <div
-                className="nft-unlockable-contentItem"
+              {/* {productsFromOffer.length && productsFromOffer.map((v) => {return } )} */}
+              <img
                 style={{
-                  borderLeft: "4px solid #CCA541",
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "inher",
-                  justifyContent: "center",
-                  alignItems: "flex-start",
-                  paddingLeft: "24px",
+                  filter: 'blur(3px)'
                 }}
-              >
-                <div>
-                  {" "}
-                  <p>
-                    {/* {v?.title} */}
-                    Video {selectedData?.name}
-                  </p>{" "}
-                </div>
-                <div>
-                  <p
-                    style={{
-                      color: `${primaryColor === "rhyno" ? "black" : "#A7A6A6"}`,
-                    }}
-                  >
-                    00:00:00
-                  </p>
-                </div>
+                // src={`/thumbnails/${v?.thumbnail}.png`}
+                src={selectedData?.image}
+                alt=""
+              />
+            </div>
+            <div
+              className="nft-unlockable-contentItem"
+              style={{
+                borderLeft: '4px solid #CCA541',
+                display: 'flex',
+                flexDirection: 'column',
+                width: 'inher',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                paddingLeft: '24px'
+              }}>
+              <div>
+                {' '}
+                <p>
+                  {/* {v?.title} */}
+                  Video {selectedData?.name}
+                </p>{' '}
+              </div>
+              <div>
+                <p
+                  style={{
+                    color: `${primaryColor === 'rhyno' ? 'black' : '#A7A6A6'}`
+                  }}>
+                  00:00:00
+                </p>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };

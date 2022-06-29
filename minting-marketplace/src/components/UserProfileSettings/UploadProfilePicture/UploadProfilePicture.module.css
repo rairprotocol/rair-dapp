@@ -10,7 +10,6 @@
     background-size: 80%;
   } */
 
-
 /* .card{
     width: 310px;
     height: 627px;
@@ -29,12 +28,10 @@
     z-index: 1;
   } */
 
-
 /* @keyframes open {
     0%  {background-position: 166% -25%, 220% -69%;}
     100%{background-position: 120% -5%, 200% -40%;}
   } */
-
 
 /* .card form{
     display: flex;
@@ -171,7 +168,6 @@
     outline: none;
   } */
 
-
 /* .lds-ripple {
     display: inline-block;
     position: relative;
@@ -188,7 +184,6 @@
   .lds-ripple div:nth-child(2) {
     animation-delay: -0.5s;
   } */
-
 
 /* .fa-instagram{
     position: absolute;

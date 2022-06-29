@@ -1,9 +1,9 @@
 //@ts-nocheck
-import React, { memo, useCallback } from "react";
-import { ImageUpload } from "../ImageUpload/ImageUpload";
-import { Name } from "../Name/Name";
-import { Status } from "../Status/Status";
-import cl from "./Edit.module.css";
+import React, { memo, useCallback } from 'react';
+import { ImageUpload } from '../ImageUpload/ImageUpload';
+import { Name } from '../Name/Name';
+import { Status } from '../Status/Status';
+import cl from './Edit.module.css';
 
 const EditComponent = ({
   onSubmit,
@@ -18,7 +18,6 @@ const EditComponent = ({
   setTriggerState,
   primaryColor
 }) => {
-  
   const photoUpload = useCallback(
     (e) => {
       e.preventDefault();
@@ -35,27 +34,28 @@ const EditComponent = ({
 
   const closeEditList = () => {
     setTriggerState(false);
-    setOpenModalPic(false)
-  }
+    setOpenModalPic(false);
+  };
 
   return (
-    <div 
-    className={cl.card}
-    style={{
-      background: primaryColor === "rhyno" ? "rgb(192, 192, 192)" :"#383637" 
-    }}
-    >
+    <div
+      className={cl.card}
+      style={{
+        background: primaryColor === 'rhyno' ? 'rgb(192, 192, 192)' : '#383637'
+      }}>
       <form onSubmit={onSubmit}>
         <h1> </h1>
         <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
-        <Name onChange={(e) => setName(e.target.value)} value={name.replace(/@/g,'')} />
+        <Name
+          onChange={(e) => setName(e.target.value)}
+          value={name.replace(/@/g, '')}
+        />
         <Status onChange={(e) => setStatus(e.target.value)} value={status} />
-        <button 
-        type="submit" className={cl.save}>
-          Save{" "}
+        <button type="submit" className={cl.save}>
+          Save{' '}
         </button>
         <button onClick={closeEditList} className={cl.save}>
-          Exit{" "}
+          Exit{' '}
         </button>
       </form>
     </div>

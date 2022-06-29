@@ -1,24 +1,25 @@
 .mainWrapper {
-    margin: auto;
-    /* max-width: 1600px; */
-    margin-top: 56px;
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    width: 97%;
+  margin: auto;
+  /* max-width: 1600px; */
+  margin-top: 56px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 97%;
 }
 
-.main {}
+.main {
+}
 
 .iconKey {
-    background: white;
-    padding: 6px;
-    border-radius: 10px;
+  background: white;
+  padding: 6px;
+  border-radius: 10px;
 }
 
 .rarity {
-    padding-left: 15px;
+  padding-left: 15px;
 }

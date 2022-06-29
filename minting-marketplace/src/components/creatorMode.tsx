@@ -1,71 +1,94 @@
-
-import {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import setTitle from '../utils/setTitle';
 
-import * as ethers from 'ethers'
+import * as ethers from 'ethers';
 
 import ERC721Manager from './CreatorMode/ERC721Manager';
 import ERC777Manager from './CreatorMode/erc777';
 import FactoryManager from './CreatorMode/factory';
-import { abi } from "../contracts/Minter_Marketplace.json";
+import { abi } from '../contracts/Minter_Marketplace.json';
 import { RootState } from '../ducks';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { TCreatorMode } from './creatorAndConsumerModes.types';
 
+const CreatorMode: React.FC<TCreatorMode> = ({ account, addresses }) => {
+  const [minterInstance, setMinterInstance] = useState<
+    ethers.Contract | undefined
+  >();
+  const [deployedTokens, setDeployedTokens] = useState<string[]>();
 
-const CreatorMode:React.FC<TCreatorMode> = ({account, addresses}) => {
+  const { erc777Instance, factoryInstance, programmaticProvider } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
 
-	const [minterInstance, setMinterInstance] = useState<ethers.Contract | undefined>();
-	const [deployedTokens, setDeployedTokens] = useState<string[]>();
+  useEffect(() => {
+    if (!addresses) {
+      return;
+    }
 
-	const {erc777Instance, factoryInstance, programmaticProvider} = useSelector<RootState, ContractsInitialType>(state => state.contractStore);
+    let signer: ethers.Wallet | ethers.providers.JsonRpcSigner | undefined =
+      programmaticProvider;
+    if (window.ethereum) {
+      // Ethers Connection
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      signer = provider.getSigner(0);
+    }
 
-	useEffect(() => {
-		if (!addresses) {
-			return;
-		}
+    const ethersMinterInstance = new ethers.Contract(
+      addresses.minterMarketplace,
+      abi,
+      signer
+    );
+    setMinterInstance(ethersMinterInstance);
+  }, [addresses, programmaticProvider]);
 
-		let signer: ethers.Wallet | ethers.providers.JsonRpcSigner | undefined = programmaticProvider;
-		if (window.ethereum) {
-			// Ethers Connection
-			let provider = new ethers.providers.Web3Provider(window.ethereum);
-			signer = provider.getSigner(0);
-		}
+  useEffect(() => {
+    setTitle('Old Factory');
+  }, []);
 
-		let ethersMinterInstance = new ethers.Contract(addresses.minterMarketplace, abi, signer);
-		setMinterInstance(ethersMinterInstance);
-
-	}, [addresses, programmaticProvider])
-
-	useEffect(() => {
-		setTitle('Old Factory')
-	}, [])
-
-	return <>
-		<br/>
-		<div className='w-100 text-center row mx-0 px-0'>
-			{erc777Instance && factoryInstance ? <ERC777Manager
-				instance={erc777Instance}
-				account={account}
-				factoryAddress={factoryInstance.address}
-			/> : 'Connecting to ERC777...'}
-			{factoryInstance && <FactoryManager
-				instance={factoryInstance}
-				erc777Instance={erc777Instance}
-				account={account}
-				setDeployedTokens={setDeployedTokens}
-			/>}
-			<div className='col-12 py-4 border border-white rounded'>
-			{deployedTokens !== undefined && <>
-				<h3> Your Deployed ERC721 Contracts </h3> 
-				{deployedTokens.map((item, index) => {
-					return <ERC721Manager key={index} tokenAddress={item} minter={minterInstance} account={account}/>
-				})}
-			</>}
-			</div>
-		</div>
-	</>
-}
+  return (
+    <>
+      <br />
+      <div className="w-100 text-center row mx-0 px-0">
+        {erc777Instance && factoryInstance ? (
+          <ERC777Manager
+            instance={erc777Instance}
+            account={account}
+            factoryAddress={factoryInstance.address}
+          />
+        ) : (
+          'Connecting to ERC777...'
+        )}
+        {factoryInstance && (
+          <FactoryManager
+            instance={factoryInstance}
+            erc777Instance={erc777Instance}
+            account={account}
+            setDeployedTokens={setDeployedTokens}
+          />
+        )}
+        <div className="col-12 py-4 border border-white rounded">
+          {deployedTokens !== undefined && (
+            <>
+              <h3> Your Deployed ERC721 Contracts </h3>
+              {deployedTokens.map((item, index) => {
+                return (
+                  <ERC721Manager
+                    key={index}
+                    tokenAddress={item}
+                    minter={minterInstance}
+                    account={account}
+                  />
+                );
+              })}
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default CreatorMode;

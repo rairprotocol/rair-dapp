@@ -1,20 +1,20 @@
 //@ts-nocheck
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import "./TitleCollection.css";
-import defaultUser from "./../../../assets/defultUser.png";
-import SharePopUp from "./SharePopUp/SharePopUp";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import './TitleCollection.css';
+import defaultUser from './../../../assets/defultUser.png';
+import SharePopUp from './SharePopUp/SharePopUp';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const TitleCollection = ({
   title,
   userName,
   currentUser,
   someUsersData,
-  selectedData,
+  selectedData
 }) => {
-  const { primaryColor } = useSelector(store => store.colorStore);
+  const { primaryColor } = useSelector((store) => store.colorStore);
 
   const { tokenId } = useParams();
   const [open, setOpen] = useState(false);
@@ -29,21 +29,22 @@ const TitleCollection = ({
     setSelectedValue(value);
   };
 
-  useEffect(() => { }, [currentUser, userName]);
+  // useEffect(() => {}, [currentUser, userName]);
 
   if (someUsersData) {
     return (
       <div className="container-title-collection">
         <div className="block-title-share">
-          <h2>{title === "none" ? `#${tokenId}` : title}</h2>
+          <h2>{title === 'none' ? `#${tokenId}` : title}</h2>
           <div>
             <button
               onClick={handleClickOpen}
               className="share-button"
               style={{
-                background: `${primaryColor === "rhyno" ? "var(--stimorol)" : "none"}`
-              }}
-            >
+                background: `${
+                  primaryColor === 'rhyno' ? 'var(--stimorol)' : 'none'
+                }`
+              }}>
               Share
             </button>
             <SharePopUp
@@ -63,14 +64,14 @@ const TitleCollection = ({
             alt="user"
           />
           {/* <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5> */}
-          <h5 style={{ wordBreak: "break-all" }}>
+          <h5 style={{ wordBreak: 'break-all' }}>
             {someUsersData.nickName ? someUsersData.nickName : userName}
           </h5>
         </div>
         <div className="block-collection-desc">
-          {selectedData && selectedData.description === 'none' 
-          ? '' 
-          : selectedData.description}
+          {selectedData && selectedData.description === 'none'
+            ? ''
+            : selectedData.description}
         </div>
       </div>
     );
@@ -78,15 +79,16 @@ const TitleCollection = ({
     return (
       <div className="container-title-collection">
         <div className="block-title-share">
-          <h2>{title === "none" ? `#${tokenId}` : title}</h2>
+          <h2>{title === 'none' ? `#${tokenId}` : title}</h2>
           <div>
             <button
               onClick={handleClickOpen}
               className="share-button"
               style={{
-                background: `${primaryColor === "rhyno" ? "var(--stimorol)" : "none"}`
-              }}
-            >
+                background: `${
+                  primaryColor === 'rhyno' ? 'var(--stimorol)' : 'none'
+                }`
+              }}>
               Share
             </button>
             <SharePopUp
@@ -108,10 +110,10 @@ const TitleCollection = ({
           </h5>
         </div>
         <div className="block-collection-desc">
-        {selectedData && selectedData.description === 'none' 
-          ? `` 
-          : selectedData.description}        
-          </div>
+          {selectedData && selectedData.description === 'none'
+            ? ''
+            : selectedData.description}
+        </div>
       </div>
     );
   }

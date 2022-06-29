@@ -1,9 +1,9 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
-import "../SplashPageTemplate/AuthorCard/AuthorCard.css";
-import "../../AboutPage/AboutPageNew/AboutPageNew.css";
-import "./SlideLock.css";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
+import '../../AboutPage/AboutPageNew/AboutPageNew.css';
+import './SlideLock.css';
 
 /* importing images*/
 import SlideLock_IMG from '../images/slidelock_background.png';
@@ -13,23 +13,21 @@ import slideNFT2 from '../images/slide-NFT2.png';
 import slideNFT3 from '../images/slide-NFT3.png';
 import slideNFT4 from '../images/slide-NFT4.png';
 
-import videoBackground from '../images/slidelock_video_background.png'
+import videoBackground from '../images/slidelock_video_background.png';
 import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
 import titleImage from './../images/NEW-Logo-sample-slidelock-1.png';
 
-
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
-import MetaMaskIcon from "../images/metamask_logo.png"
-
+import MetaMaskIcon from '../images/metamask_logo.png';
 
 /* importing Components*/
-import TeamMeet from "../TeamMeet/TeamMeetList";
-import AuthorCard from "../SplashPageTemplate/AuthorCard/AuthorCard";
-import NotCommercialTemplate from "../NotCommercial/NotCommercialTemplate";
-import VideoPlayerModule from "../SplashPageTemplate/VideoPlayer/VideoPlayerModule";
-import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
-import NFTImages from "../SplashPageTemplate/NFTImages/NFTImages";
-import TokenLeftTemplate from "../TokenLeft/TokenLeftTemplate";
+import TeamMeet from '../TeamMeet/TeamMeetList';
+import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
+import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
+import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+import StaticTiles from '../SplashPageTemplate/VideoTiles/StaticTiles';
+import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
+import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
 
 import PurchaseTokenButton from '../../common/PurchaseToken.tsx';
 import Swal from 'sweetalert2';
@@ -42,24 +40,22 @@ import { rFetch } from '../../../utils/rFetch';
 
 // This will be the default contract used in this splash page
 const mainContract = {
-    contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
-    requiredBlockchain: '0x1',
-    offerIndex: [0, 1]
+  contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+  requiredBlockchain: '0x1',
+  offerIndex: [0, 1]
 };
 // By setting REACT_APP_TEST_CONTRACTS
 const testContract = {
-    contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
-    requiredBlockchain: '0x5',
-    offerIndex: [52, 0]
+  contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
+  requiredBlockchain: '0x5',
+  offerIndex: [52, 0]
 };
 
 const splashData = {
-  title: "",
+  title: '',
   titleImage: titleImage,
-  titleColor: "#57B69C",
-  description: [
-    "The most secure way to stream encrypted documents"
-  ],
+  titleColor: '#57B69C',
+  description: ['The most secure way to stream encrypted documents'],
   // seoInformation: {
   //   title: "Слава Україні!",
   //   contentName: "author",
@@ -68,7 +64,7 @@ const splashData = {
   //   favicon: faviconUkraine,
   //   image: UKR_rounded
   // },
-  buttonLabel: "Unlock Document",
+  buttonLabel: 'Unlock Document',
   backgroundImage: SlideLock_IMG,
   purchaseButton: {
     // Reusable component
@@ -76,10 +72,12 @@ const splashData = {
     // OPTIONAL: Image on the purchase button
     img: MetaMaskIcon,
     // Contract address
-    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true' ? testContract : mainContract),
+    ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
+      ? testContract
+      : mainContract),
     // Custom style for the button
     customStyle: {
-      backgroundColor: "#57B69C"
+      backgroundColor: '#57B69C'
     },
     // presaleMessage: 'By accepting these terms, I agree to glitch the flag and support the country in distress.',
     // Custom class for the div surrounding the button
@@ -88,15 +86,17 @@ const splashData = {
     // Custom function that will be called if the minting is a success
     // First parameter will be the minted token's number
     customSuccessAction: async (nextToken) => {
-      let tokenMetadata = await rFetch(`/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`);
+      const tokenMetadata = await rFetch(
+        `/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`
+      );
       if (tokenMetadata.success && tokenMetadata?.result?.metadata?.image) {
         Swal.fire({
           imageUrl: tokenMetadata.result.metadata.image,
-          imageHeight: "auto",
-          imageWidth: "65%",
+          imageHeight: 'auto',
+          imageWidth: '65%',
           imageAlt: "Your NFT's image",
           title: `You own #${nextToken}!`,
-          icon: "success"
+          icon: 'success'
         });
       } else {
         Swal.fire('Success', `Bought token #${nextToken}`, 'success');
@@ -117,10 +117,10 @@ const splashData = {
   //   buttonImg: DiscordIcon,
   //   buttonLink: "https://discord.com/invite/y98EMXRsCE",
   // },
-  
+
   exclusiveNft: {
-    title: "NFTs",
-    titleColor: "#57B69C",
+    title: 'NFTs',
+    titleColor: '#57B69C'
   },
   // carouselTitle: "Our Developers",
   // carouselData: [
@@ -151,7 +151,7 @@ const splashData = {
     // baseURL: 'https://storage.googleapis.com/rair-videos/',
     // mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
   },
-  tilesTitle: "More streaming documents",
+  tilesTitle: 'More streaming documents',
   // videoArr: [
   //   {
   //       typeVideo: "NFTLA-EXCLUSIVE-1",
@@ -178,15 +178,15 @@ const splashData = {
   //       locked: true
   //   }
   // ],
-  NFTName: "NFT",
+  NFTName: 'NFT',
   counterData: {
-    titleColor: "#57B69C",
-    title1: "Your files",
-    title2: " secured",
+    titleColor: '#57B69C',
+    title1: 'Your files',
+    title2: ' secured',
     backgroundImage: SlideLock_IMG,
-    btnColorIPFS: "#035BBC",
+    btnColorIPFS: '#035BBC',
     nftCount: 960,
-    nftTitle: "Access passes",
+    nftTitle: 'Access passes',
     royaltiesNft: null,
     properties: [
       // {
@@ -202,32 +202,44 @@ const splashData = {
       //   percent: "1.7%",
       // },
     ],
-    description: ["NFTs are the access credentials of the future", "-Automated public record of accounting", "-One user one stream . No password sharing", "-Offchain control of private data repositories"]
+    description: [
+      'NFTs are the access credentials of the future',
+      '-Automated public record of accounting',
+      '-One user one stream . No password sharing',
+      '-Offchain control of private data repositories'
+    ]
   }
-}
+};
 
 const SlideLock = ({ loginDone, connectUserData }) => {
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentChain, minterInstance } = useSelector((store) => store.contractStore);
-  const carousel_match = window.matchMedia("(min-width: 900px)");
+  const { currentChain, minterInstance } = useSelector(
+    (store) => store.contractStore
+  );
+  const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
-  window.addEventListener("resize", () => setCarousel(carousel_match.matches));
+  window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
       if (currentChain === splashData.purchaseButton.requiredBlockchain) {
-        setSoldCopies((await minterInstance.getOfferRangeInfo(...splashData.purchaseButton.offerIndex)).tokensAllowed.toString());
+        setSoldCopies(
+          (
+            await minterInstance.getOfferRangeInfo(
+              ...splashData.purchaseButton.offerIndex
+            )
+          ).tokensAllowed.toString()
+        );
       } else {
         setSoldCopies();
       }
     }
-
   }, [setSoldCopies, loginDone, currentChain, minterInstance]);
 
   useEffect(() => {
-    getAllProduct()
-  }, [getAllProduct])
+    getAllProduct();
+  }, [getAllProduct]);
 
   // useEffect(() => {
   //   setTitle(`#UkraineGlitch`);
@@ -252,8 +264,11 @@ const SlideLock = ({ loginDone, connectUserData }) => {
           loginDone={loginDone}
           nftTitle={splashData.counterData.nftTitle}
         />
-        <div style={{ height: "108px" }} />
-        <VideoPlayerModule backgroundImage={videoBackground} videoData={splashData.videoData} />
+        <div style={{ height: '108px' }} />
+        <VideoPlayerModule
+          backgroundImage={videoBackground}
+          videoData={splashData.videoData}
+        />
         <NFTImages
           NftImage={slideNFT0}
           Nft_1={slideNFT1}
@@ -265,7 +280,7 @@ const SlideLock = ({ loginDone, connectUserData }) => {
           colorText={splashData.exclusiveNft.titleColor}
           carousel={carousel}
         />
-        <TeamMeet primaryColor={primaryColor} arraySplash={"slidelock"} />
+        <TeamMeet primaryColor={primaryColor} arraySplash={'slidelock'} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

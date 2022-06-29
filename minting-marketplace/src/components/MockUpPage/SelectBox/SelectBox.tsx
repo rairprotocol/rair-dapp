@@ -1,7 +1,7 @@
 //@ts-nocheck
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import "./styles.css";
+import './styles.css';
 
 const SelectBox = (props) => {
   const [items, setItems] = useState([]);
@@ -9,10 +9,10 @@ const SelectBox = (props) => {
   const [selectedItem, setSelectedItem] = useState({});
   // const [moreThen, setMoreThen] = useState();
 
-  useEffect(()=>{
-    if(items.length === 0 && typeof(props.items)==="object"){
-      setItems([...props.items])
-      setSelectedItem(props.items[0])
+  useEffect(() => {
+    if (items.length === 0 && typeof props.items === 'object') {
+      setItems([...props.items]);
+      setSelectedItem(props.items[0]);
     }
   }, [props.items, items]);
 
@@ -40,30 +40,33 @@ const SelectBox = (props) => {
           <div className="select-box--selected-item">Choose Serial Number</div>
           <div className="select-box--arrow" onClick={dropDown}>
             <span
-              className={`${showItems ? "select-box--arrow-up" : "select-box--arrow-down"
-                }`}
+              className={`${
+                showItems ? 'select-box--arrow-up' : 'select-box--arrow-down'
+              }`}
             />
           </div>
 
           <div
             style={{
-              display: showItems ? "flex" : "none",
-              flexWrap: "wrap",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "flex-start",
-              alignContent: "center",
-              width: "25rem",
+              display: showItems ? 'flex' : 'none',
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              alignContent: 'center',
+              width: '25rem',
               padding: '10px 0',
               background: '#383637',
               borderRadius: '16px'
             }}
-            className={"select-box--items"}
-          >
-            <div className="serial-box" onClick={(e) => {
-              e.preventDefault()
-              console.log(123)
-            }}>1-100</div>
+            className={'select-box--items'}>
+            <div
+              className="serial-box"
+              onClick={(e) => {
+                e.preventDefault();
+              }}>
+              1-100
+            </div>
             <div className="serial-box">101-200</div>
             <div className="serial-box">201-300</div>
             <div className="serial-box">301-400</div>
@@ -84,10 +87,9 @@ const SelectBox = (props) => {
       <div className="select-box--box">
         <div
           style={{ backgroundColor: `var(--${props.primaryColor})` }}
-          className="select-box--container"
-        >
+          className="select-box--container">
           <div className="select-box--selected-item">
-            <span style={{ paddingRight: "10px" }}>{selectedItem?.pkey}</span>
+            <span style={{ paddingRight: '10px' }}>{selectedItem?.pkey}</span>
             {items !== null ? (
               props.selectedToken ? (
                 items.map((i) => {
@@ -106,24 +108,24 @@ const SelectBox = (props) => {
                 <span>{selectedItem.token}</span>
               )
             ) : (
-              "Need to select"
+              'Need to select'
             )}
           </div>
           <div className="select-box--arrow" onClick={dropDown}>
             <span
               className={`${
-                showItems ? "select-box--arrow-up" : "select-box--arrow-down"
+                showItems ? 'select-box--arrow-up' : 'select-box--arrow-down'
               }`}
             />
           </div>
 
           <div
-            style={{ display: showItems ? "block" : "none", 
-            background: '#383637',
-            borderRadius: '16px'
-          }}
-            className={"select-box--items"}
-          >
+            style={{
+              display: showItems ? 'block' : 'none',
+              background: '#383637',
+              borderRadius: '16px'
+            }}
+            className={'select-box--items'}>
             {items !== null &&
               items.map((item) => (
                 <div
@@ -132,9 +134,8 @@ const SelectBox = (props) => {
                     onSelectItem(item);
                     props.handleClickToken(item.token);
                   }}
-                  className={selectedItem === item ? "selected" : ""}
-                >
-                  <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
+                  className={selectedItem === item ? 'selected' : ''}>
+                  <span style={{ paddingRight: '10px' }}>{item.pkey}</span>
                   {/* <span>{item.value}</span> */}
                   <span>{item.token}</span>
                 </div>
@@ -147,11 +148,6 @@ const SelectBox = (props) => {
 
   return (
     <RenderOption />
-
-
-
-
-
 
     // <div className="select-box--box">
     //   <div

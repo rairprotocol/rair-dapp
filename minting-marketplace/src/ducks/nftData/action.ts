@@ -1,27 +1,38 @@
-import { TNftDataItem } from "./nftData.types";
-import * as types from "./types";
+import { TNftDataItem } from './nftData.types';
+import * as types from './types';
 
-const getNftDataStart = () => ({
+const getNftDataStart = () =>
+  ({
     type: types.GET_NFTLIST_START
-} as const);
+  } as const);
 
-const setNftData = (nftList: Array<TNftDataItem>) => ({
+const setNftData = (nftList: Array<TNftDataItem>) =>
+  ({
     type: types.GET_NFTLIST_COMPLETE,
-    nftList,
-} as const);
+    nftList
+  } as const);
 
-const getNftListTotal = (nftListTotal: number) => ({
+const getNftListTotal = (nftListTotal: number) =>
+  ({
     type: types.GET_NFT_LIST_TOTAL,
     nftListTotal
-} as const)
+  } as const);
 
-const getNftListTotalClear = () => ({
+const getNftListTotalClear = () =>
+  ({
     type: types.GET_NFT_TOTAL_CLEAR
-} as const)
+  } as const);
 
-const getNftDataError = (errorMessage: string) => ({
+const getNftDataError = (errorMessage: string) =>
+  ({
     type: types.GET_NFT_DATA_ERROR,
     errorMessage
-} as const)
+  } as const);
 
-export { getNftDataStart, setNftData, getNftListTotal, getNftListTotalClear, getNftDataError };
+export {
+  getNftDataStart,
+  setNftData,
+  getNftListTotal,
+  getNftListTotalClear,
+  getNftDataError
+};

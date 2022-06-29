@@ -1,4 +1,4 @@
-import { ColorChoice } from "./../../ducks/colors/colorStore.types";
+import { ColorChoice } from './../../ducks/colors/colorStore.types';
 export interface IVideoPlayer {
   mediaId: number;
   mainManifest?: string;

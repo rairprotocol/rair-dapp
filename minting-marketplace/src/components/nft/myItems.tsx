@@ -2,54 +2,54 @@
 import React, {
   useState,
   useEffect,
-  useCallback /*createElement*/,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { rFetch /*useRfetch*/ } from "../../utils/rFetch";
-import { /*Link*/ useHistory } from "react-router-dom";
-import setDocumentTitle from "../../utils/setTitle";
+  useCallback /*createElement*/
+} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { rFetch /*useRfetch*/ } from '../../utils/rFetch';
+import { /*Link*/ useHistory } from 'react-router-dom';
+import setDocumentTitle from '../../utils/setTitle';
 import MyDiamondItems from './myDiamondItems';
 
 // React Redux types
 
-import InputField from "../common/InputField";
-import FilteringBlock from "../MockUpPage/FilteringBlock/FilteringBlock";
-import ModalItem from "../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem";
-import chainData from "../../utils/blockchainData";
+import InputField from '../common/InputField';
+import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
+import ModalItem from '../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem';
+import chainData from '../../utils/blockchainData';
 import './MyItems.css';
-import { getTokenError } from "../../ducks/auth/actions";
+import { getTokenError } from '../../ducks/auth/actions';
 
 const MyItems = (props) => {
   const dispatch = useDispatch();
 
   const defaultImg =
-    "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
+    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   const { primaryColor, textColor } = useSelector((state) => state.colorStore);
   // const { token } = useSelector((store) => store.accessStore);
   const history = useHistory();
   const [tokens, setTokens] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
-  const [titleSearch, setTitleSearch] = useState("");
-  const [sortItem, setSortItem] = useState("");
+  const [titleSearch, setTitleSearch] = useState('');
+  const [sortItem, setSortItem] = useState('');
   const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
 
   const fetchData = useCallback(async () => {
-    let response = await rFetch("/api/nft");
+    const response = await rFetch('/api/nft');
 
     if (response.success) {
       // console.log(response);
-      let tokenData = [];
-      for await (let token of response.result) {
+      const tokenData = [];
+      for await (const token of response.result) {
         if (!token.contract) {
           return;
         }
-        let contractData = await rFetch(
+        const contractData = await rFetch(
           `/api/contracts/singleContract/${token.contract}`
         );
         tokenData.push({
           ...token,
-          ...contractData.contract,
+          ...contractData.contract
         });
       }
       setTokens(tokenData);
@@ -69,7 +69,7 @@ const MyItems = (props) => {
   }, [fetchData]);
 
   useEffect(() => {
-    setDocumentTitle(`My Items`);
+    setDocumentTitle('My Items');
   }, []);
 
   const filteredData =
@@ -79,13 +79,13 @@ const MyItems = (props) => {
         return item?.title?.toLowerCase()?.includes(titleSearch?.toLowerCase());
       })
       .sort((a, b) => {
-        if (sortItem === "up") {
+        if (sortItem === 'up') {
           if (a.title < b.title) {
             return -1;
           }
         }
 
-        if (sortItem === "down") {
+        if (sortItem === 'down') {
           if (a.title > b.title) {
             return 1;
           }
@@ -103,8 +103,7 @@ const MyItems = (props) => {
       <div className="my-items-header-wrapper">
         <div
           onClick={() => history.goBack()}
-          className="my-items-title-wrapper"
-        >
+          className="my-items-title-wrapper">
           <i className="fas fa-arrow-left fa-arrow-custom"></i>
           <h1 className="my-items-title">My Items</h1>
         </div>
@@ -112,10 +111,10 @@ const MyItems = (props) => {
           <InputField
             getter={titleSearch}
             setter={setTitleSearch}
-            placeholder={"Search..."}
+            placeholder={'Search...'}
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
-              color: `var(--${textColor})`,
+              color: `var(--${textColor})`
             }}
             customClass="form-control input-styled my-items-search"
           />
@@ -145,23 +144,20 @@ const MyItems = (props) => {
                   backgroundImage: `url(${
                     // chainData[item?.blockchain]?.image
                     item.metadata.image || defaultImg
-                    })`,
-                  backgroundColor: `var(--${primaryColor}-transparent)`,
+                  })`,
+                  backgroundColor: `var(--${primaryColor}-transparent)`
                   // overflow: "hidden",
-                }}
-              >
-                <div
-                  className="w-100 bg-my-items"
-                >
+                }}>
+                <div className="w-100 bg-my-items">
                   {/* <small style={{ fontSize: "0.7rem" }}>
                       {item.contract}:{item.uniqueIndexInContract}
                     </small> */}
                   {/* <br /> */}
 
                   <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
-                    <div className="container-blue-description"
-                      style={{ color: "#fff" }}
-                    >
+                    <div
+                      className="container-blue-description"
+                      style={{ color: '#fff' }}>
                       <span className="description-title">
                         {item.metadata ? (
                           <>
@@ -200,15 +196,12 @@ const MyItems = (props) => {
                       <div className="container-blockchain-info">
                         <small className="description">
                           {/* {item.contract} */}
-                          {item.contract.slice(0, 5) + "...." + item.contract.slice(item.contract.length - 4)}
+                          {item.contract.slice(0, 5) +
+                            '....' +
+                            item.contract.slice(item.contract.length - 4)}
                           {/* {item.contract.length > 10 ? "..." : ""} */}
                         </small>
-                        <div
-                          className="description-small"
-                          style={{
-
-                          }}
-                        >
+                        <div className="description-small" style={{}}>
                           <img
                             className="my-items-blockchain-img"
                             src={`${chainData[item?.blockchain]?.image}`}
@@ -231,7 +224,7 @@ const MyItems = (props) => {
             );
           })
         ) : (
-          <p style={{ color: textColor, fontSize: "20px" }}>
+          <p style={{ color: textColor, fontSize: '20px' }}>
             There is no such item with that name
           </p>
         )}
@@ -249,7 +242,9 @@ const MyItems = (props) => {
         <></>
       )}
       <div className="container-diamond-items">
-        <h3>Diamond Items <i className='fas h5 fa-gem' /></h3>
+        <h3>
+          Diamond Items <i className="fas h5 fa-gem" />
+        </h3>
         <MyDiamondItems {...{ openModal, setSelectedData }} />
       </div>
     </div>

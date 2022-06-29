@@ -1,11 +1,11 @@
 //@ts-nocheck
-import React, { memo } from "react";
+import React, { memo } from 'react';
 // import firstPict from "../assets/Graphics-WEB-2021-01.png";
 // import secondPict from "../assets/Graphics-WEB-2021-02.png";
 // import thirdPict from "../assets/Graphics-WEB-2021-03.png";
-import Skeleton from "@mui/material/Skeleton";
-import { NftItem } from "./NftItem";
-import { useSelector } from "react-redux";
+import Skeleton from '@mui/material/Skeleton';
+import { NftItem } from './NftItem';
+import { useSelector } from 'react-redux';
 
 const NftListComponent = ({
   data,
@@ -13,18 +13,20 @@ const NftListComponent = ({
   primaryColor,
   textColor,
   titleSearch,
-  sortItem,
+  sortItem
 }) => {
-  const { loading } = useSelector(store => store.nftDataStore);
+  const { loading } = useSelector((store) => store.nftDataStore);
 
   if (loading) {
-    return <div className="list-wrapper-empty" >
-      <h2>Loading...</h2>
-    </div>
+    return (
+      <div className="list-wrapper-empty">
+        <h2>Loading...</h2>
+      </div>
+    );
   }
 
   const defaultImg =
-    "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
+    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   const filteredData =
     data &&
@@ -33,13 +35,13 @@ const NftListComponent = ({
         return item.name.toLowerCase().includes(titleSearch.toLowerCase());
       })
       .sort((a, b) => {
-        if (sortItem === "up") {
+        if (sortItem === 'up') {
           if (a.name < b.name) {
             return 1;
           }
         }
 
-        if (sortItem === "down") {
+        if (sortItem === 'down') {
           if (a.name > b.name) {
             return -1;
           }
@@ -49,15 +51,16 @@ const NftListComponent = ({
       });
 
   return (
-    <div className={"list-button-wrapper"}>
+    <div className={'list-button-wrapper'}>
       {
-        filteredData && filteredData.length > 0
-          ? filteredData.map((contractData, index) => {
-            if (contractData.cover !== "none") {
+        filteredData && filteredData.length > 0 ? (
+          filteredData.map((contractData, index) => {
+            if (contractData.cover !== 'none') {
               return (
                 <NftItem
-                  key={`${contractData.id + "-" + contractData.productId + index
-                    }`}
+                  key={`${
+                    contractData.id + '-' + contractData.productId + index
+                  }`}
                   pict={contractData.cover ? contractData.cover : defaultImg}
                   allData={contractData}
                   contractName={contractData.contract}
@@ -67,16 +70,20 @@ const NftListComponent = ({
                   blockchain={contractData.blockchain}
                   collectionName={contractData.name}
                   ownerCollectionUser={contractData.user}
-                  collectionIndexInContract={contractData.collectionIndexInContract}
+                  collectionIndexInContract={
+                    contractData.collectionIndexInContract
+                  }
                 />
               );
             } else {
               return null;
             }
           })
-          : <div className="list-wrapper-empty">
+        ) : (
+          <div className="list-wrapper-empty">
             <h2>No items to display</h2>
           </div>
+        )
         // Array.from(new Array(10)).map((item, index) => {
         //   return (
         //     <Skeleton

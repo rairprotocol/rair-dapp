@@ -1,63 +1,65 @@
 //@ts-nocheck
-import React, { memo } from "react";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import HomeIcon from "@mui/icons-material/Home";
-import { NavLink } from "react-router-dom";
-import { useParams, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { memo } from 'react';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import HomeIcon from '@mui/icons-material/Home';
+import { NavLink } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const BreadcrumbsComponent = () => {
   const params = useParams();
   const history = useHistory();
-  const { primaryColor } = useSelector(store => store.colorStore);
+  const { primaryColor } = useSelector((store) => store.colorStore);
 
   function handleClick(event) {
     event.preventDefault();
     history.push(
       `/collection/${params.blockchain}/${params.contract}/${params.product}/0`
     );
-    console.info("You clicked a breadcrumb.");
+    console.info('You clicked a breadcrumb.');
   }
   function goToSingleView(event) {
     event.preventDefault();
-    history.goBack()
+    history.goBack();
   }
   let breadcrumbs = [];
 
   switch (params.tokens) {
-    case "collection":
+    case 'collection':
       breadcrumbs = [
         <NavLink key="1" to="/">
           <HomeIcon
             style={{
-              borderRadius: "8px",
-              padding: "2px",
-              background: "#E882D5",
-              color: "black",
+              borderRadius: '8px',
+              padding: '2px',
+              background: '#E882D5',
+              color: 'black'
             }}
-            sx={{ fontSize: "x-large" }}
+            sx={{ fontSize: 'x-large' }}
           />
         </NavLink>,
-        <Typography key="3" color={`${primaryColor === "rhyno" ? "black" : "white"}`}>
+        <Typography
+          key="3"
+          color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
           Collection
-        </Typography>,
+        </Typography>
       ];
       break;
-    case "tokens":
+    case 'tokens':
       breadcrumbs = [
         <NavLink key="1" to="/">
           <HomeIcon
             style={{
-              borderRadius: "8px",
-              padding: "2px",
-              background: "#E882D5",
-              color: "black",
+              borderRadius: '8px',
+              padding: '2px',
+              background: '#E882D5',
+              color: 'black'
             }}
-            sx={{ fontSize: "x-large" }}
+            sx={{ fontSize: 'x-large' }}
           />
         </NavLink>,
 
@@ -66,26 +68,27 @@ const BreadcrumbsComponent = () => {
           key="2"
           color="gray"
           href="/all"
-          onClick={handleClick}
-        >
+          onClick={handleClick}>
           Collection
         </Link>,
-        <Typography key="3" color={`${primaryColor === "rhyno" ? "black" : "white"}`}>
+        <Typography
+          key="3"
+          color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
           Single Token
-        </Typography>,
+        </Typography>
       ];
       break;
-    case "unlockables":
+    case 'unlockables':
       breadcrumbs = [
         <NavLink key="1" to="/">
           <HomeIcon
             style={{
-              borderRadius: "8px",
-              padding: "2px",
-              background: "#E882D5",
-              color: "black",
+              borderRadius: '8px',
+              padding: '2px',
+              background: '#E882D5',
+              color: 'black'
             }}
-            sx={{ fontSize: "x-large" }}
+            sx={{ fontSize: 'x-large' }}
           />
         </NavLink>,
 
@@ -94,8 +97,7 @@ const BreadcrumbsComponent = () => {
           key="2"
           color="gray"
           href="/all"
-          onClick={handleClick}
-        >
+          onClick={handleClick}>
           Collection
         </Link>,
         <Link
@@ -103,25 +105,25 @@ const BreadcrumbsComponent = () => {
           key="3"
           color="gray"
           href="/all"
-          onClick={goToSingleView}
-        >
+          onClick={goToSingleView}>
           Single Token
         </Link>,
-        <Typography key="3" color={`${primaryColor === "rhyno" ? "black" : "white"}`}>
+        <Typography
+          key="3"
+          color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
           Unlockables Content
-        </Typography>,
+        </Typography>
       ];
       break;
     default:
   }
 
   return (
-    <Stack style={{ marginBottom: "2rem", paddingLeft: "0.5rem" }} spacing={2}>
+    <Stack style={{ marginBottom: '2rem', paddingLeft: '0.5rem' }} spacing={2}>
       <Breadcrumbs
         color="white"
         separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-      >
+        aria-label="breadcrumb">
         {breadcrumbs}
       </Breadcrumbs>
     </Stack>

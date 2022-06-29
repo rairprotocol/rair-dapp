@@ -9,21 +9,21 @@ import accessStore from './auth/reducers';
 import videosStore from './videos/reducers';
 import contractStore from './contracts/reducer';
 import metadataStore from './metadata/reducers';
-import {createReduxEnhancer} from "@sentry/react";
+import { createReduxEnhancer } from '@sentry/react';
 import rootSaga from './sagas';
-import allInformationFromSearch from './search/reducers'
+import allInformationFromSearch from './search/reducers';
 import nftDataStore from './nftData/reducers';
 
 const reducers = combineReducers({
-    accessStore,
-    userStore,
-    videosStore,
-    contractStore,
-    colorStore,
-    metadataStore,
-    getPageStore,
-    allInformationFromSearch,
-    nftDataStore
+  accessStore,
+  userStore,
+  videosStore,
+  contractStore,
+  colorStore,
+  metadataStore,
+  getPageStore,
+  allInformationFromSearch,
+  nftDataStore
 });
 
 const sentryReduxEnhancer = createReduxEnhancer({
@@ -32,7 +32,11 @@ const sentryReduxEnhancer = createReduxEnhancer({
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(reducers, undefined, compose(sentryReduxEnhancer, applyMiddleware(sagaMiddleware)));
+const store = createStore(
+  reducers,
+  undefined,
+  compose(sentryReduxEnhancer, applyMiddleware(sagaMiddleware))
+);
 sagaMiddleware.run(rootSaga);
 
 export type RootState = ReturnType<typeof reducers>;

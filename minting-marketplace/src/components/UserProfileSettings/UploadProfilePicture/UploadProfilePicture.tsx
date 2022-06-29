@@ -1,11 +1,11 @@
 // @ts-nocheck
-import React, { useCallback, useState, useRef, useEffect } from "react";
-import { Edit } from "./Edit/Edit";
-import { Profile } from "./Profile/Profile";
-import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import axios, { AxiosError } from "axios";
-import { TUserResponse } from "../../../axios.responseTypes";
+import React, { useCallback, useState, useRef, useEffect } from 'react';
+import { Edit } from './Edit/Edit';
+import { Profile } from './Profile/Profile';
+import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import axios, { AxiosError } from 'axios';
+import { TUserResponse } from '../../../axios.responseTypes';
 
 const UploadProfilePicture = ({
   setOpenModalPic,
@@ -18,37 +18,41 @@ const UploadProfilePicture = ({
   userEmail,
   userName
 }) => {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState('');
   const [name, setName] = useState(userName);
   const [status, setStatus] = useState(userEmail);
-  const [active, setActive] = useState("edit");
-  const { primaryColor } = useSelector(store => store.colorStore);
+  const [active, setActive] = useState('edit');
+  const { primaryColor } = useSelector((store) => store.colorStore);
 
   const [, /*updateUsr*/ setUpdateUsr] = useState({});
 
   const updateProfile = useCallback(async () => {
-    let formData = new FormData();
-    formData.append("nickName", name);
-    formData.append("email", status);
+    const formData = new FormData();
+    formData.append('nickName', name);
+    formData.append('email', status);
     if (file) {
-      formData.append("file", file);
+      formData.append('file', file);
     }
     try {
-      const profileUpdateResponse = await axios.post<TUserResponse>(`/api/users/${currentUserAddress.toLowerCase()}`, formData, {
-        headers: {
-          Accept: "multipart/form-data",
-          "X-rair-token": localStorage.token,
+      const profileUpdateResponse = await axios.post<TUserResponse>(
+        `/api/users/${currentUserAddress.toLowerCase()}`,
+        formData,
+        {
+          headers: {
+            Accept: 'multipart/form-data',
+            'X-rair-token': localStorage.token
+          }
         }
-      });
-      const { user, success } = profileUpdateResponse.data
+      );
+      const { user, success } = profileUpdateResponse.data;
       setUpdateUsr(user);
-      if(success) {
+      if (success) {
         setUserName(user.nickName);
         setUserEmail(user.email);
       }
       if (user?.avatar) {
-      setImagePreviewUrl(user.avatar);
-    }
+        setImagePreviewUrl(user.avatar);
+      }
     } catch (err) {
       const error = err as AxiosError;
       Swal.fire('Info', `${error.message}`, 'question');
@@ -60,7 +64,7 @@ const UploadProfilePicture = ({
     currentUserAddress,
     setUserName,
     setUserEmail,
-    setImagePreviewUrl,
+    setImagePreviewUrl
   ]);
 
   // const upPr = useCallback(async () => {
@@ -87,7 +91,7 @@ const UploadProfilePicture = ({
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      let activeP = active === "edit" ? "profile" : "edit";
+      const activeP = active === 'edit' ? 'profile' : 'edit';
       setActive(activeP);
       updateProfile();
     },
@@ -107,13 +111,13 @@ const UploadProfilePicture = ({
   );
 
   useEffect(() => {
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
   }, [onClick, setOpenModalPic]);
 
   return (
     <div ref={rootEl}>
-      {active === "edit" ? (
+      {active === 'edit' ? (
         <Edit
           currentUserAddress={currentUserAddress}
           imagePreviewUrl={imagePreviewUrl}

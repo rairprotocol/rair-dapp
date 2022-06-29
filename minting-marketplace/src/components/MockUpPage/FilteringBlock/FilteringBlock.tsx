@@ -1,9 +1,17 @@
 //@ts-nocheck
-import React, { useState, useEffect, useRef } from "react";
-import "./FilteringBlock.css";
-import { FiltersTitleIcon, SelectFiltersItem, SelectFiltersPopUp, SelectSortItem, SelectSortPopUp, SortArrowDownIcon, SortArrowUpIcon } from "./FilteringBlockItems/FilteringBlockItems";
-import ModalBlockchain from "./portal/ModalBlockchain/ModalBlockchain";
-import ModalCategories from "./portal/ModalCategories/ModalCategories";
+import React, { useState, useEffect, useRef } from 'react';
+import './FilteringBlock.css';
+import {
+  FiltersTitleIcon,
+  SelectFiltersItem,
+  SelectFiltersPopUp,
+  SelectSortItem,
+  SelectSortPopUp,
+  SortArrowDownIcon,
+  SortArrowUpIcon
+} from './FilteringBlockItems/FilteringBlockItems';
+import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
+import ModalCategories from './portal/ModalCategories/ModalCategories';
 
 const FilteringBlock = ({
   primaryColor,
@@ -19,10 +27,10 @@ const FilteringBlock = ({
   setFilterText,
   setFilterCategoriesText,
   click,
-  setClick,
+  setClick
 }) => {
   const [filterPopUp, setFilterPopUp] = useState(false);
-  const [, /*filterItem*/ setFilterItem] = useState("Filters");
+  const [, /*filterItem*/ setFilterItem] = useState('Filters');
   const filterRef = useRef();
 
   const [sortPopUp, setSortPopUp] = useState(false);
@@ -62,22 +70,22 @@ const FilteringBlock = ({
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutSideFilter);
+    document.addEventListener('mousedown', handleClickOutSideFilter);
     return () =>
-      document.removeEventListener("mousedown", handleClickOutSideFilter);
+      document.removeEventListener('mousedown', handleClickOutSideFilter);
   });
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutSideSort);
+    document.addEventListener('mousedown', handleClickOutSideSort);
     return () =>
-      document.removeEventListener("mousedown", handleClickOutSideSort);
+      document.removeEventListener('mousedown', handleClickOutSideSort);
   });
 
   return (
     <>
       {!isFilterShow ? (
         <div ref={filterRef} className="emptyFilter">
-          {" "}
+          {' '}
         </div>
       ) : (
         <div ref={filterRef} className="select-filters-wrapper">
@@ -86,38 +94,32 @@ const FilteringBlock = ({
             onClick={onChangeFilterPopUp}
             filterPopUp={filterPopUp}
             textColor={textColor}
-            primaryColor={primaryColor}
-          >
+            primaryColor={primaryColor}>
             <div className="select-filters-title">
               <FiltersTitleIcon
                 className="fas fa-sliders-h"
-                filterPopUp={filterPopUp}
-              >
-              </FiltersTitleIcon>
+                filterPopUp={filterPopUp}></FiltersTitleIcon>
               Filters
             </div>
           </SelectFiltersItem>
           {filterPopUp && (
             <SelectFiltersPopUp
               className="select-filters-popup"
-              primaryColor={primaryColor}
-            >
+              primaryColor={primaryColor}>
               <div
                 onClick={() => {
-                  onChangeFilterItem("Price");
+                  onChangeFilterItem('Price');
                   setIsOpenBlockchain(true);
                 }}
-                className="select-filters-item"
-              >
+                className="select-filters-item">
                 Blockchain
               </div>
               <div
                 onClick={() => {
-                  onChangeFilterItem("Metadata");
+                  onChangeFilterItem('Metadata');
                   setIsOpenCategories(true);
                 }}
-                className="select-filters-item"
-              >
+                className="select-filters-item">
                 Categories
               </div>
             </SelectFiltersPopUp>
@@ -130,17 +132,18 @@ const FilteringBlock = ({
           className="select-sort"
           primaryColor={primaryColor}
           textColor={textColor}
-          sortPopUp={sortPopUp}
-        >
+          sortPopUp={sortPopUp}>
           <div className="select-sort-title">
             <div className="title-left">
               <div className="arrows-sort">
                 <SortArrowUpIcon
                   sortItem={sortItem}
-                  className="fas fa-arrow-up" />
+                  className="fas fa-arrow-up"
+                />
                 <SortArrowDownIcon
                   sortItem={sortItem}
-                  className="fas fa-arrow-down" />
+                  className="fas fa-arrow-down"
+                />
               </div>
               <div>Sort by name</div>
             </div>
@@ -157,20 +160,17 @@ const FilteringBlock = ({
           <SelectSortPopUp
             className="select-sort-title-pop-up"
             primaryColor={primaryColor}
-            textColor={textColor}
-          >
-            {sortItem === "up" ? (
+            textColor={textColor}>
+            {sortItem === 'up' ? (
               <div
-                onClick={() => onChangeSortItem("down")}
-                className="select-sort-item"
-              >
+                onClick={() => onChangeSortItem('down')}
+                className="select-sort-item">
                 <i className="fas fa-arrow-down"></i>
               </div>
             ) : (
               <div
-                onClick={() => onChangeSortItem("up")}
-                className="select-sort-item"
-              >
+                onClick={() => onChangeSortItem('up')}
+                className="select-sort-item">
                 <i className="fas fa-arrow-up"></i>
               </div>
             )}

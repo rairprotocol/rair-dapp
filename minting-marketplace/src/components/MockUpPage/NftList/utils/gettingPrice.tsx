@@ -1,33 +1,33 @@
 //@ts-nocheck
-import { utils } from "ethers";
+import { utils } from 'ethers';
 
 export const gettingPrice = (arr: Array<any>) => {
-    if (Array.isArray(arr) && arr.length) {
-        const minPrice = function arrayMin(arr) {
-            let len = arr.length,
-                min = Infinity;
-            while (len--) {
-                if (arr[len] < min) {
-                    min = arr[len];
-                }
-            }
-            return utils.formatEther(BigInt(min)).toString();
+  if (Array.isArray(arr) && arr.length) {
+    const minPrice = function arrayMin(arr) {
+      let len = arr.length,
+        min = Infinity;
+      while (len--) {
+        if (arr[len] < min) {
+          min = arr[len];
         }
+      }
+      return utils.formatEther(BigInt(min)).toString();
+    };
 
-        const maxPrice = function arrayMax(arr) {
-            let len = arr.length,
-                max = -Infinity;
-            while (len--) {
-                if (arr[len] > max) {
-                    max = arr[len];
-                }
-            }
-            return utils.formatEther(BigInt(max)).toString();
+    const maxPrice = function arrayMax(arr) {
+      let len = arr.length,
+        max = -Infinity;
+      while (len--) {
+        if (arr[len] > max) {
+          max = arr[len];
         }
+      }
+      return utils.formatEther(BigInt(max)).toString();
+    };
 
-        return {
-            maxPrice: maxPrice(arr),
-            minPrice: minPrice(arr)
-        }
-    }
-}
+    return {
+      maxPrice: maxPrice(arr),
+      minPrice: minPrice(arr)
+    };
+  }
+};

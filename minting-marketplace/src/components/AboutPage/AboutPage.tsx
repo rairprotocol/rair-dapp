@@ -1,4 +1,3 @@
-
 // import React from "react";
 // import cl from "./AboutPage.module.css";
 // import pic1 from "./assets/RAIR2.jpg";

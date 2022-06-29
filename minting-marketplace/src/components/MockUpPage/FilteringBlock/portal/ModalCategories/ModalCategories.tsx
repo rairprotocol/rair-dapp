@@ -1,25 +1,25 @@
 //@ts-nocheck
-import React, { useState } from "react";
-import Modal from "../../modal";
+import React, { useState } from 'react';
+import Modal from '../../modal';
 // import BlockMinMax from "../BlockMinMax/BlockMinMax";
 
 const categories = [
   {
-    name: "Music",
-    clicked: false,
+    name: 'Music',
+    clicked: false
   },
   {
-    name: "Art",
-    clicked: false,
+    name: 'Art',
+    clicked: false
   },
   {
-    name: "Conference",
-    clicked: false,
+    name: 'Conference',
+    clicked: false
   },
   {
-    name: "Science",
-    clicked: false,
-  },
+    name: 'Science',
+    clicked: false
+  }
 ];
 
 const ModalCategories = ({
@@ -29,7 +29,7 @@ const ModalCategories = ({
   setCategory,
   setClick,
   setIsShowCategories,
-  click,
+  click
 }) => {
   const [arrCategories /*setArrCategories*/] = useState(categories);
   const [, /*clearAll*/ setClearAll] = useState(false);
@@ -107,14 +107,13 @@ const ModalCategories = ({
                 return (
                   <button
                     className={`${
-                      click === c.name ? "categories-clicked" : ""
+                      click === c.name ? 'categories-clicked' : ''
 
                       // c.clicked ? "categories-clicked" : ""
                     }`}
                     key={c.name}
                     // onClick={() => onChangeClicked(c.name)}
-                    onClick={() => onClickButton(c)}
-                  >
+                    onClick={() => onClickButton(c)}>
                     {c.name}
                   </button>
                 );
@@ -142,16 +141,14 @@ const ModalCategories = ({
             className="modal-filtering-clear-btn"
             onClick={() => {
               clearAllFilters();
-            }}
-          >
+            }}>
             Clear
           </button>
           <button
             className="modal-filtering-apply-btn"
             onClick={() => {
               onClickApply();
-            }}
-          >
+            }}>
             Apply
           </button>
         </div>

@@ -1,21 +1,21 @@
 //@ts-nocheck
-import React from "react";
-import "./CollectionInfo.css";
-import { utils } from "ethers";
-import chainData from "./../../../../../utils/blockchainData";
-import { useSelector } from "react-redux";
-import { BlockItemCollection, CollectionInfoBody } from "./CollectionInfoItems";
+import React from 'react';
+import './CollectionInfo.css';
+import { utils } from 'ethers';
+import chainData from './../../../../../utils/blockchainData';
+import { useSelector } from 'react-redux';
+import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
 
 const CollectionInfo = ({
   defaultImg,
   blockchain,
   offerData,
   openTitle,
-  someUsersData,
+  someUsersData
 }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
   const defaultPhoto =
-    "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW";
+    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   return (
     <div className="wrapper-collection-info">
@@ -23,9 +23,8 @@ const CollectionInfo = ({
       <div
         className="contianer-collection-info"
         style={{
-          background: `${primaryColor === "rhyno" ? "#bdbdbd" : "#383637"}`,
-        }}
-      >
+          background: `${primaryColor === 'rhyno' ? '#bdbdbd' : '#383637'}`
+        }}>
         <div className="collection-info-title">
           <div className="collection-part-text">Item name</div>
           <div className="collection-part-text">Rank</div>
@@ -34,8 +33,7 @@ const CollectionInfo = ({
         </div>
         <CollectionInfoBody
           primaryColor={primaryColor}
-          className="collection-info-body"
-        >
+          className="collection-info-body">
           {offerData &&
             offerData
               ?.sort((a, b) => {
@@ -48,8 +46,7 @@ const CollectionInfo = ({
                 return (
                   <BlockItemCollection
                     className="block-item-collection"
-                    key={index + token.price}
-                  >
+                    key={index + token.price}>
                     <div className="item-name">
                       <img
                         src={
@@ -63,16 +60,16 @@ const CollectionInfo = ({
                     </div>
                     <div className="item-rank">
                       {token.offerIndex === '0' ? (
-                        <i style={{ color: `red` }} className="fas fa-key" />
+                        <i style={{ color: 'red' }} className="fas fa-key" />
                       ) : token.offerIndex === '1' ? (
-                        `🔑`
+                        '🔑'
                       ) : (
-                        <i style={{ color: `silver` }} className="fas fa-key" />
-                      )}{" "}
+                        <i style={{ color: 'silver' }} className="fas fa-key" />
+                      )}{' '}
                       &nbsp;
-                      {token.offerIndex === '0' && "Ultra Rair"}
-                      {token.offerIndex === '1' && "Rair"}
-                      {token.offerIndex >= '2' && "Common"}
+                      {token.offerIndex === '0' && 'Ultra Rair'}
+                      {token.offerIndex === '1' && 'Rair'}
+                      {token.offerIndex >= '2' && 'Common'}
                     </div>
                     <div className="item-availa">
                       <p>
@@ -90,7 +87,7 @@ const CollectionInfo = ({
                             ? token.price.toString()
                             : 0
                         )
-                        .toString()}{" "}
+                        .toString()}{' '}
                       {chainData[blockchain]?.symbol}
                       {/* {token.price} */}
                     </div>

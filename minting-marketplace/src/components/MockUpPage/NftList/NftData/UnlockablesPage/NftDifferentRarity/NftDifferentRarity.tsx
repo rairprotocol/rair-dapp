@@ -1,9 +1,9 @@
 //@ts-nocheck
-import React, { useCallback, useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import axios from "axios";
-import cl from "./NftDifferentRarity.module.css";
-import CustomButton from "../../../../utils/button/CustomButton";
+import React, { useCallback, useState, useEffect } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import axios from 'axios';
+import cl from './NftDifferentRarity.module.css';
+import CustomButton from '../../../../utils/button/CustomButton';
 
 const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
   const history = useHistory();
@@ -12,12 +12,12 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
   const [isOpenPart, setIsOpenPart] = useState(false);
 
   const checkThisPart = (data) => {
-    const part = data.every((i) => i === true)
-    setIsOpenPart(part)
-  } 
-  useEffect(()=>{
-    checkThisPart(isUnlocked)
-  },[isUnlocked])
+    const part = data.every((i) => i === true);
+    setIsOpenPart(part);
+  };
+  useEffect(() => {
+    checkThisPart(isUnlocked);
+  }, [isUnlocked]);
 
   const getAllTokens = useCallback(async () => {
     const responseAllTokens = await axios.get(
@@ -27,32 +27,44 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
   }, [params.product, params.contract, params.blockchain]);
 
   const colorRarity =
-    title === "Unlock Ultra Rair" ||  title === "Ultra Rair" ? `#E4476D` : title === "Unlock Rair" || title === "Rair" ? "gold" : "silver";
+    title === 'Unlock Ultra Rair' || title === 'Ultra Rair'
+      ? '#E4476D'
+      : title === 'Unlock Rair' || title === 'Rair'
+      ? 'gold'
+      : 'silver';
   const sortedClick = () => {
+    // mb need to refactor
+    /* eslint-disable */
     switch (title) {
-      case "Unlock Ultra Rair":
-        const firstTokenFromUnlockUltra = allTokenData.filter((e) => e.offer === '0');
+      case 'Unlock Ultra Rair':
+        const firstTokenFromUnlockUltra = allTokenData.filter(
+          (e) => e.offer === '0'
+        );
         setTokenDataFiltered(firstTokenFromUnlockUltra);
         history.push(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${firstTokenFromUnlockUltra[0].token}`
         );
         break;
-      case "Ultra Rair":
+      case 'Ultra Rair':
         const firstTokenFromUltra = allTokenData.filter((e) => e.offer === '0');
         setTokenDataFiltered(firstTokenFromUltra);
         history.push(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${firstTokenFromUltra[0].token}`
         );
         break;
-      case "Unlock Rair":
-        const secondTokenFromUnlockUltra = allTokenData.filter((e) => e.offer === '1');
+      case 'Unlock Rair':
+        const secondTokenFromUnlockUltra = allTokenData.filter(
+          (e) => e.offer === '1'
+        );
         setTokenDataFiltered(secondTokenFromUnlockUltra);
         history.push(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${secondTokenFromUnlockUltra[0].token}`
         );
         break;
-      case "Rair":
-        const secondTokenFromUltra = allTokenData.filter((e) => e.offer === '1');
+      case 'Rair':
+        const secondTokenFromUltra = allTokenData.filter(
+          (e) => e.offer === '1'
+        );
         setTokenDataFiltered(secondTokenFromUltra);
         history.push(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${secondTokenFromUltra[0].token}`
@@ -65,6 +77,7 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${thirdTokenFromUltra[0].token}`
         );
     }
+    /* eslint-enable */
   };
   useEffect(() => {
     getAllTokens();
@@ -85,9 +98,9 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
       ) : (
         <CustomButton
           text={title}
-          width={"224px"}
-          height={"48px"}
-          margin={"0"}
+          width={'224px'}
+          height={'48px'}
+          margin={'0'}
           onClick={sortedClick}
         />
       )}

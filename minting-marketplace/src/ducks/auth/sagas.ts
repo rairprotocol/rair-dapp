@@ -1,29 +1,28 @@
-import { put, takeLatest } from "redux-saga/effects";
-import * as types from "./types";
-import * as ethers from "ethers";
+import { put, takeLatest } from 'redux-saga/effects';
+import * as types from './types';
+import * as ethers from 'ethers';
 import { getProviderComplete, getProviderError } from './actions';
 
 export function* getProvider() {
-    try {
-        let provider = new ethers.providers.Web3Provider(window.ethereum);
-        yield put(getProviderComplete(provider));
-    } catch (error: any) {
-        if (error.response !== undefined) {
-            if (error.response.status === 404) {
-                const errorDirec = "This address does not exist";
-                yield put(getProviderError(errorDirec));
-            } else if (error.response.status === 500) {
-                const errorServer =
-                    "Sorry. an internal server problem has occurred";
-                yield put(getProviderError(errorServer));
-            } else {
-                yield put(getProviderError(error.response.data.message));
-            }
-        } else {
-            const errorConex = "Connection error!";
-            yield put(getProviderError(errorConex));
-        }
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    yield put(getProviderComplete(provider));
+  } catch (error: any) {
+    if (error.response !== undefined) {
+      if (error.response.status === 404) {
+        const errorDirec = 'This address does not exist';
+        yield put(getProviderError(errorDirec));
+      } else if (error.response.status === 500) {
+        const errorServer = 'Sorry. an internal server problem has occurred';
+        yield put(getProviderError(errorServer));
+      } else {
+        yield put(getProviderError(error.response.data.message));
+      }
+    } else {
+      const errorConex = 'Connection error!';
+      yield put(getProviderError(errorConex));
     }
+  }
 }
 
 // export function* getToken({ payload }) {
@@ -68,7 +67,6 @@ export function* getProvider() {
 // }
 
 export function* sagaAccess() {
-    yield takeLatest(types.GET_PROVIDER_START, getProvider);
-    // yield takeLatest(types.GET_TOKEN_START, getToken);
+  yield takeLatest(types.GET_PROVIDER_START, getProvider);
+  // yield takeLatest(types.GET_TOKEN_START, getToken);
 }
-

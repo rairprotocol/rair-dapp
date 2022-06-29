@@ -1,13 +1,13 @@
 //@ts-nocheck
-import { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { rFetch } from "../../utils/rFetch";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { rFetch } from '../../utils/rFetch';
+import { Link } from 'react-router-dom';
 
 // React Redux types
 
-import chainData from "../../utils/blockchainData";
-import { getTokenError } from "../../ducks/auth/actions";
+import chainData from '../../utils/blockchainData';
+import { getTokenError } from '../../ducks/auth/actions';
 
 const MyNFTs = () => {
   const dispatch = useDispatch();
@@ -16,17 +16,17 @@ const MyNFTs = () => {
   const [tokens, setTokens] = useState();
 
   const fetchData = useCallback(async () => {
-    let response = await rFetch("/api/nft");
+    const response = await rFetch('/api/nft');
 
     if (response.success) {
-      let tokenData = [];
-      for await (let token of response.result) {
-        let contractData = await rFetch(
+      const tokenData = [];
+      for await (const token of response.result) {
+        const contractData = await rFetch(
           `/api/contracts/singleContract/${token.contract}`
         );
         tokenData.push({
           ...token,
-          ...contractData.contract,
+          ...contractData.contract
         });
       }
       setTokens(tokenData);
@@ -57,10 +57,9 @@ const MyNFTs = () => {
                     backgroundImage: `url(${
                       chainData[item?.blockchain]?.image
                     })`,
-                    backgroundColor: `var(--${primaryColor}-transparent)`,
-                  }}
-                >
-                  <small style={{ fontSize: "0.7rem" }}>
+                    backgroundColor: `var(--${primaryColor}-transparent)`
+                  }}>
+                  <small style={{ fontSize: '0.7rem' }}>
                     {item.contractAddress}:{item.uniqueIndexInContract}
                   </small>
                   <br />
@@ -71,9 +70,9 @@ const MyNFTs = () => {
                           alt="NFT"
                           src={item.metadata.image}
                           style={{
-                            width: "auto",
-                            height: "auto",
-                            maxHeight: "30vh",
+                            width: 'auto',
+                            height: 'auto',
+                            maxHeight: '30vh'
                           }}
                         />
                       </div>
@@ -91,15 +90,14 @@ const MyNFTs = () => {
                   <br />
                   <Link
                     to={`/token/${item.blockchain}/${item.contractAddress}/${item.uniqueIndexInContract}`}
-                    className="btn btn-stimorol"
-                  >
+                    className="btn btn-stimorol">
                     View Token
                   </Link>
                 </div>
               </div>
             );
           })
-        : "Fetching data..."}
+        : 'Fetching data...'}
     </div>
   );
 };

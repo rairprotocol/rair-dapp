@@ -1,11 +1,11 @@
-import MetaMaskOnboarding from "@metamask/onboarding";
-import { Maybe } from "@metamask/providers/dist/utils";
+import MetaMaskOnboarding from '@metamask/onboarding';
+import { Maybe } from '@metamask/providers/dist/utils';
 // import Swal from "sweetalert2";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-const ONBOARD_TEXT = "Click here to install MetaMask!";
-const CONNECT_TEXT = "Connect Wallet";
-const CONNECTED_TEXT = "Connected";
+const ONBOARD_TEXT = 'Click here to install MetaMask!';
+const CONNECT_TEXT = 'Connect Wallet';
+const CONNECTED_TEXT = 'Connected';
 
 export function OnboardingButton() {
   const [buttonText, setButtonText] = useState<string>(ONBOARD_TEXT);
@@ -15,7 +15,7 @@ export function OnboardingButton() {
   const onboarding = useRef<MetaMaskOnboarding>();
 
   const dappUrl = window.location.host;
-  const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
+  const metamaskAppDeepLink = 'https://metamask.app.link/dapp/' + dappUrl;
 
   const isMobileDevice = useCallback(() => {
     if (
@@ -70,7 +70,7 @@ export function OnboardingButton() {
   const onClick = () => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       window.ethereum
-        .request({ method: "eth_requestAccounts" })
+        .request({ method: 'eth_requestAccounts' })
         .then((newAccounts) => setAccounts(newAccounts));
     } else {
       onboarding?.current?.startOnboarding();
@@ -86,8 +86,7 @@ export function OnboardingButton() {
     <button
       className="metamask-on-boarding"
       disabled={isDisabled}
-      onClick={onClick}
-    >
+      onClick={onClick}>
       {buttonText}
     </button>
   );

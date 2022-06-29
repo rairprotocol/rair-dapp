@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React from 'react';
 import UnlockVideoItem from '../../UnlockVideos/UnlockVideoItem';
-import "../StaticVideoTiles/StaticTiles.css"
+import '../StaticVideoTiles/StaticTiles.css';
 
 // const videoArr = [
 //     {
@@ -31,39 +31,37 @@ import "../StaticVideoTiles/StaticTiles.css"
 // ]
 
 const StaticTiles = ({ videoArr, title, UnlockableVideo, primaryColor }) => {
-    return (
-        <div 
-            className="unlockble-video"
-            style={{
-                marginBottom:"108px",
-                width: "100%"
-            }}
-        >
-            <div 
-                className="title-gets"
-                style={{
-                    textAlign: "center"
-                }}
-            >
-                <h3> {title} </h3>
-            </div>
-            <div className="block-videos">
-                {
-                    videoArr.map(((video, index) => {
-                        return <UnlockVideoItem
-                            key={index + video.unlockVideoName}
-                            UnlockableVideo={UnlockableVideo}
-                            typeVideo={video.typeVideo}
-                            nameVideo={video.unlockVideoName}
-                            timeVideo={video.timeVideo}
-                            locked={video.locked}
-                            primaryColor={primaryColor}
-                        />
-                    }))
-                }
-            </div>
-        </div>
-    )
-}
+  return (
+    <div
+      className="unlockble-video"
+      style={{
+        marginBottom: '108px',
+        width: '100%'
+      }}>
+      <div
+        className="title-gets"
+        style={{
+          textAlign: 'center'
+        }}>
+        <h3> {title} </h3>
+      </div>
+      <div className="block-videos">
+        {videoArr.map((video, index) => {
+          return (
+            <UnlockVideoItem
+              key={index + video.unlockVideoName}
+              UnlockableVideo={UnlockableVideo}
+              typeVideo={video.typeVideo}
+              nameVideo={video.unlockVideoName}
+              timeVideo={video.timeVideo}
+              locked={video.locked}
+              primaryColor={primaryColor}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 export default StaticTiles;

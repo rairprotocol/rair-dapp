@@ -1,108 +1,108 @@
 .wrapper-collection-info {
-    margin: 48px 0;
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    width: 100%;
+  margin: 48px 0;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  width: 100%;
 }
 
 .contianer-collection-info {
-    max-width: 85vw;
-    border-radius: 16px;
-    overflow: hidden;
+  max-width: 85vw;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .contianer-collection-info .collection-info-title {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
 }
 
 .collection-info-title .collection-part-text {
-    font-size: 20px;
-    font-weight: 700;
-    text-align: left;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: left;
 }
 
 .collection-info-title .collection-part-text:first-child {
-    width: 307px;
-    padding-left: 24px;
+  width: 307px;
+  padding-left: 24px;
 }
 
 .collection-info-title .collection-part-text:nth-child(2) {
-    width: 245px;
+  width: 245px;
 }
 
 .collection-info-title .collection-part-text:nth-child(3) {
-    width: 260px;
+  width: 260px;
 }
 
 .collection-info-title .collection-part-text:last-child {
-    width: 290px;
+  width: 290px;
 }
 
 .collection-info-body .item-name img {
-    width: 48px;
-    height: 48px;
-    border-radius: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
 
-    margin-right: 16px;
+  margin-right: 16px;
 }
 
 .collection-info-body .item-price img {
-    width: auto;
-    height: 24px;
-    margin-right: 5px;
+  width: auto;
+  height: 24px;
+  margin-right: 5px;
 }
 
 .collection-info-head {
-    font-size: 20px;
-    font-weight: 700;
-    text-align: left;
-    margin-bottom: 24px;
-    width: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 24px;
+  width: 100%;
 }
 
 .collection-info-body .block-item-collection .item-name {
-    width: 307px;
-    display: flex;
-    align-items: center;
+  width: 307px;
+  display: flex;
+  align-items: center;
 
-    padding-left: 24px;
+  padding-left: 24px;
 }
 
 .collection-info-body .block-item-collection .item-rank {
-    width: 245px;
-    text-align: left;
+  width: 245px;
+  text-align: left;
 }
 
 .collection-info-body .block-item-collection .item-availa {
-    width: 260px;
-    text-align: left;
+  width: 260px;
+  text-align: left;
 }
 
 .collection-info-body .block-item-collection .item-availa p {
-    margin: 0;
+  margin: 0;
 }
 
 .collection-info-body .block-item-collection .item-price {
-    width: 290px;
-    text-align: left;
+  width: 290px;
+  text-align: left;
 }
 
 @media screen and (max-width: 1000px) {
-    .contianer-collection-info {
-        max-width: 100%;
-    }
+  .contianer-collection-info {
+    max-width: 100%;
+  }
 }
 
 @media screen and (max-width: 800px) {
-    .collection-info-body .block-item-collection {
-        font-size: 16px;
-    }
+  .collection-info-body .block-item-collection {
+    font-size: 16px;
+  }
 
-    .collection-info-title .collection-part-text {
-        font-size: 16px;
-    }
+  .collection-info-title .collection-part-text {
+    font-size: 16px;
+  }
 }

@@ -1,82 +1,86 @@
 .share-button {
-    font-size: 20px;
-    padding: 10px 53px;
-    border-radius: 16px;
-    border: 1px solid #D37AD6;
-    transition: .3s all ease;
-    color: #fff;
+  font-size: 20px;
+  padding: 10px 53px;
+  border-radius: 16px;
+  border: 1px solid #d37ad6;
+  transition: 0.3s all ease;
+  color: #fff;
 }
 
 .share-button:hover {
-    background:  var(--stimorol-hover) !important;
+  background: var(--stimorol-hover) !important;
 }
 
 .share-button:focus {
-    background:  var(--stimorol-click) !important;
+  background: var(--stimorol-click) !important;
 }
 
 .share-pop-up {
-    position: absolute;
-    width: 164px;
-    background: rgb(56, 54, 55);
-    border-radius: 16px;
-    right: 0;
-    top: 70px;
-    overflow: hidden;
+  position: absolute;
+  width: 164px;
+  background: rgb(56, 54, 55);
+  border-radius: 16px;
+  right: 0;
+  top: 70px;
+  overflow: hidden;
 
-    transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
-.share-pop-up button.share-copy-link, .share-pop-up div.share-copy-link {
-    padding: 15px 0;
-    background: rgb(56, 54, 55);
-    border: none;
-    border-radius: 0;
-    width: 100%;
+.share-pop-up button.share-copy-link,
+.share-pop-up div.share-copy-link {
+  padding: 15px 0;
+  background: rgb(56, 54, 55);
+  border: none;
+  border-radius: 0;
+  width: 100%;
 }
 
-.share-pop-up button.share-copy-link, .share-pop-up div.share-copy-link {
-    border-bottom: 1px solid grey;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
+.share-pop-up button.share-copy-link,
+.share-pop-up div.share-copy-link {
+  border-bottom: 1px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
 
-    transition: all .2s ease;
+  transition: all 0.2s ease;
 }
 
-.share-pop-up button.share-copy-link:last-child, .share-pop-up div.share-copy-link:last-child {
-    border-bottom: 0;
+.share-pop-up button.share-copy-link:last-child,
+.share-pop-up div.share-copy-link:last-child {
+  border-bottom: 0;
 }
 
-.share-pop-up button.share-copy-link:hover, .share-pop-up div.share-copy-link:hover  {
-    background: grey;
+.share-pop-up button.share-copy-link:hover,
+.share-pop-up div.share-copy-link:hover {
+  background: grey;
 }
 
 .share-pop-up button.share-copy-link img {
-    width: 1.5rem;
-    height: auto;
-    margin-right: 10px;
+  width: 1.5rem;
+  height: auto;
+  margin-right: 10px;
 }
 
 .share-pop-up button.share-copy-link i {
-    font-size: 1.5rem;
-    color: #fff;
+  font-size: 1.5rem;
+  color: #fff;
 }
 
 .share-pop-up .react-share__ShareButton.network__share-button {
-    width: 100%;
-    height: 100% !important;
-    border-radius: none;
-    background-color: none !important;
+  width: 100%;
+  height: 100% !important;
+  border-radius: none;
+  background-color: none !important;
 }
 
 .share-pop-up .react-share__ShareButton.network__share-button:focus {
-    background-color: none !important;
-    border-radius: none !important;
+  background-color: none !important;
+  border-radius: none !important;
 }
 
 .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
-    background-color: grey !important;
-    border-radius: 16px !important;
+  background-color: grey !important;
+  border-radius: 16px !important;
 }

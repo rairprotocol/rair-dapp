@@ -1,5 +1,5 @@
-import React, { /*useEffect,*/ useState } from 'react'
-import { getRandomValues } from '../../utils/getRandomValues'
+import React, { /*useEffect,*/ useState } from 'react';
+import { getRandomValues } from '../../utils/getRandomValues';
 
 /***
 	InputField
@@ -26,71 +26,81 @@ import { getRandomValues } from '../../utils/getRandomValues'
 			!---	In the case of a File input, the route is event.target.files[0], ---!
 			!---		so pass ['files',0] to that prop!							 ---!
 **/
-
+// eslint-disable-next-line
 type TInputFieldProps<T extends any = any> = {
-	getter?: HTMLInputElement['value']| number;
-	setter: (value: T) => void;
-	setterField?: Array<string | number>;
-	customCSS?: { [key: string]: string };
-	customClass?: string;
-	labelCSS?: { [key: string]: string };
-	labelClass?: string;
-	placeholder?: string;
-	type?: string;
-	label?: string;
-	required?: boolean;
-	disabled?: boolean;
-	min?: number;
-	max?: number;
-	maxLength?: number;
-	id?: string;
-  };
+  getter?: HTMLInputElement['value'] | number;
+  setter: (value: T) => void;
+  setterField?: Array<string | number>;
+  customCSS?: { [key: string]: string };
+  customClass?: string;
+  labelCSS?: { [key: string]: string };
+  labelClass?: string;
+  placeholder?: string;
+  type?: string;
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+  min?: number;
+  max?: number;
+  maxLength?: number;
+  id?: string;
+};
 
+// eslint-disable-next-line
 const InputField = <T extends any = any>({
-	getter,
-	setter,
-	setterField = ['value'],
-	customCSS = { color: 'black' },
-	customClass,
-	labelCSS = { color: 'inherit' },
-	labelClass,
-	placeholder = '',
-	type,
-	label,
-	required,
-	disabled,
-	min,
-	max,
-	maxLength
+  getter,
+  setter,
+  setterField = ['value'],
+  customCSS = { color: 'black' },
+  customClass,
+  labelCSS = { color: 'inherit' },
+  labelClass,
+  placeholder = '',
+  type,
+  label,
+  required,
+  disabled,
+  min,
+  max,
+  maxLength
 }: TInputFieldProps<T>) => {
-	
-	const [id,] = useState<number | null>(getRandomValues)
+  const [id] = useState<number | null>(getRandomValues);
 
-	return <>
-		{label &&
-			<label
-				htmlFor={id?.toString()}
-				style={{
-					...labelCSS,
-					color: labelCSS.color
-				}}
-				className={labelClass}>
-				{label + (required ? '*' : '')}
-			</label>}
-		<input
-			type={type}
-			id={id?.toString()}
-			onChange={e => setter(setterField.reduce((start, piece) => { return start[piece] }, e.target) as T)}
-			value={getter}
-			disabled={disabled}
-			style={{ ...customCSS }}
-			className={customClass}
-			required={required ? required : false}
-			min={min}
-			max={max}
-			maxLength={maxLength}
-			placeholder={placeholder + (required ? '*' : '')} />
-	</>
-}
+  return (
+    <>
+      {label && (
+        <label
+          htmlFor={id?.toString()}
+          style={{
+            ...labelCSS,
+            color: labelCSS.color
+          }}
+          className={labelClass}>
+          {label + (required ? '*' : '')}
+        </label>
+      )}
+      <input
+        type={type}
+        id={id?.toString()}
+        onChange={(e) =>
+          setter(
+            setterField.reduce((start, piece) => {
+              return start[piece];
+            }, e.target) as T
+          )
+        }
+        value={getter}
+        disabled={disabled}
+        style={{ ...customCSS }}
+        className={customClass}
+        required={required ? required : false}
+        min={min}
+        max={max}
+        maxLength={maxLength}
+        placeholder={placeholder + (required ? '*' : '')}
+      />
+    </>
+  );
+};
 
-export default InputField
+export default InputField;

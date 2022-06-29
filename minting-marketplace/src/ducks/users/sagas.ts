@@ -1,10 +1,10 @@
-import { getUserComplete, getUserError } from "./actions";
-import { put, call, takeLatest } from "redux-saga/effects";
-import * as types from "./types";
-import axios, { AxiosResponse, AxiosError } from "axios";
-import { TUserResponse } from "../../axios.responseTypes";
+import { getUserComplete, getUserError } from './actions';
+import { put, call, takeLatest } from 'redux-saga/effects';
+import * as types from './types';
+import axios, { AxiosResponse, AxiosError } from 'axios';
+import { TUserResponse } from '../../axios.responseTypes';
 
-export type Params = { publicAddress: string, type: string }
+export type Params = { publicAddress: string; type: string };
 
 export function* getUser({ publicAddress }: Params) {
   try {
@@ -20,16 +20,16 @@ export function* getUser({ publicAddress }: Params) {
     const errors = error as AxiosError;
     if (errors.response !== undefined) {
       if (errors.response.status === 404) {
-        const errorDirec = "This address does not exist";
+        const errorDirec = 'This address does not exist';
         yield put(getUserError(errorDirec));
       } else if (errors.response.status === 500) {
-        const errorServer = "Sorry. an internal server problem has occurred";
+        const errorServer = 'Sorry. an internal server problem has occurred';
         yield put(getUserError(errorServer));
       } else {
         yield put(getUserError(errors.message));
       }
     } else {
-      const errorConex = "Connection error!";
+      const errorConex = 'Connection error!';
       yield put(getUserError(errorConex));
     }
   }
