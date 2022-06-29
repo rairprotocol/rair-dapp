@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTransaction } = require('../integrations/ethers/transactionCatcher.js');
+const { getTransaction } = require('../integrations/ethers/transactionCatcher');
 const { JWTVerification } = require('../middleware');
 
 module.exports = (context) => {

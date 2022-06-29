@@ -66,6 +66,36 @@ services:
       - 5000:5000
     networks:
       - rair-local
+  media-service:
+    container_name: 'media-service'
+    build:
+      context: media-service/
+      dockerfile: Dockerfile
+    environment:
+      PRODUCTION: "false"
+      MEDIA_SERVICE_PORT: ${media_service_port}
+      BASE_RAIRNODE_URL: ${base_rairnode_url}
+      GCP_PROJECT_ID: ${gcp_project_id}
+      GCP_IMAGE_BUCKET_NAME: ${gcp_image_bucket_name}
+      GCP_VIDEO_BUCKET_NAME: ${gcp_video_bucket_name}
+      GCP_CREDENTIALS: ${gcp_credentials}
+      GCP_GATEWAY: ${gcp_gateway}
+      USE_X509_CERT_AUTH: ${VAULT_BLOCKCHAIN_NETWORK_use_x509_cert_auth}
+      PINATA_KEY: ${pinata_key}
+      PINATA_SECRET: ${pinata_secret}
+      PINATA_GATEWAY: ${pinata_gateway}
+      IPFS_SERVICE: ${ipfs_service}
+      IPFS_GATEWAY: ${ipfs_gateway}
+      IPFS_API: ${ipfs_api}
+      MONGO_LOG_COLLECTION: ${mongo_log_collection}
+      LOG_LEVEL: ${log_level}
+      VAULT_URL: ${VAULT_URL}
+      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID}
+      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID}
+    ports:
+      - 5002:5002
+    networks:
+      - rair-local
   rair-redis:
     container_name: "rair-redis"
     image: redis

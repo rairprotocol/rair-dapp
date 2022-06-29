@@ -103,6 +103,11 @@ For correct work of sessions we need to set
     * [x] /contracts - NULL
       * [x] /:contractId - return one found by ID [see details here](readme/get_contract_by_id.md)
     * [x] /products - NULL
+      * [x] /:productId - return one found by ID [see details here](readme\get_product_by_id)
+      * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme\get_products_by_user_adress)
+    * [x] /upload/file - POST- create file with media data si database [see details here](readme/add_file_after_upload_media.md)
+    * [x] /upload/validate - GET - get validate data for upload video [see details here](readme/get_validate_data_for_upload.md)
+    * [x] /verify - GET - return  verify User with rightAdmin for uploading media [see details here](readme/get_verify_user_for_upload_media.md)
       * [x] /:productId - return one found by ID [see details here](readme/get_product_by_id.md)
       * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme/get_products_by_user_adress.md)
     * [x] /tokens - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)

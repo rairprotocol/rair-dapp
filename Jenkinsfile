@@ -60,7 +60,7 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/rairservernode:latest \
                     --destination rairtechinc/rairservernode:${GIT_COMMIT} \
-                    --destination rairtechinc/rairservernode:${GIT_BRANCH}_1.${BUILD_ID}
+                    --destination rairtechinc/rairservernode:${GIT_BRANCH}_2.${BUILD_ID}
                 '''
               }
 
@@ -78,7 +78,7 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/minting-network:latest \
                     --destination rairtechinc/minting-network:${GIT_COMMIT} \
-                    --destination rairtechinc/minting-network:${GIT_BRANCH}_1.${BUILD_ID}
+                    --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
                 '''
               }
 
@@ -96,7 +96,25 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/blockchain-event-listener:latest \
                     --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
-                    --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_1.${BUILD_ID}
+                    --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_2.${BUILD_ID}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push media-service') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./media-service/ \
+                    --verbosity debug \
+                    --destination rairtechinc/blockchain-event-listener:latest \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_2.${BUILD_ID}
                 '''
               }
 

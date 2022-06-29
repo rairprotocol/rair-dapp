@@ -2,10 +2,10 @@ const { exec } = require('child_process');
 const _ = require('lodash');
 const { JSDOM } = require('jsdom');
 const createDOMPurify = require('dompurify');
+const { promises: fs } = require('fs');
 const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation');
 const log = require('./logger')(module);
 const { Contract, OfferPool, MintedToken, Offer } = require('../models');
-const { promises: fs } = require('fs');
 
 const execPromise = (command, options = {}) => new Promise((resolve, reject) => {
   exec(command, options, (error, stdout, stderr) => {
@@ -118,9 +118,10 @@ const textPurify = () => {
 
 // Remove files from temporary server storage
 const cleanStorage = async (files) => {
-  if (!!files && files.length) {
+  if (files) {
+    const preparedFiles = [].concat(files);
     await Promise.all(
-      _.map(files, async (file) => {
+      _.map(preparedFiles, async (file) => {
         await fs.rm(`${file.destination}/${file.filename}`);
         log.info(`File ${file.filename} has removed.`);
       }),

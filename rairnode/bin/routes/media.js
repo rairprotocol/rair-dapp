@@ -11,7 +11,6 @@ const {
   assignUser,
   isAdmin,
 } = require('../middleware');
-const StartHLS = require('../hls-starter');
 const log = require('../utils/logger')(module);
 const {
   generateThumbnails,
@@ -258,7 +257,6 @@ module.exports = () => {
         return true;
       });
     }
-    //  TODO endpoint for varification
 
     // Get the socket connection from Express app
     const io = req.app.get('io');
@@ -395,7 +393,7 @@ module.exports = () => {
         });
 
         const key = { ...exportedKey, key: exportedKey.key.toJSON() };
-        // TODO enpoint
+
         await File.create({
           _id: cid,
           key,
@@ -413,13 +411,11 @@ module.exports = () => {
             vaultToken: vaultAppRoleTokenManager.getToken(),
           });
         } catch (err) {
-          console.log('Error writing key to vault:', cid);
+          log.error('Error writing key to vault:', cid);
         }
 
         log.info(`${req.file.originalname} stored to DB.`);
         socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: !!['gcp'].includes(storage), done: ['gcp'].includes(storage) ? 100 : 96 });
-
-        await StartHLS();
 
         log.info(`${req.file.originalname} pinning to ${storageName}.`);
         socketInstance.emit('uploadProgress', {
@@ -436,8 +432,6 @@ module.exports = () => {
         }
 
         log.error('An error has occurred encoding the file', e);
-
-        return next(new Error('An error has occurred encoding the file.'));
       }
     } else {
       return res.status(400).send({ success: false, message: 'File not provided.' });

@@ -131,7 +131,7 @@ async function main() {
   app.use(async (err, req, res, next) => {
     // remove temporary files if validation of some middleware was rejected
     try {
-      await cleanStorage(req.files);
+      await cleanStorage(req.files || req.file);
     } catch (e) {
       log.error(e);
     }
@@ -142,7 +142,7 @@ async function main() {
   });
 
   const server = app.listen(port, () => {
-    log.info(`Decrypt node service listening at http://localhost:${port}`);
+    log.info(`Rairnode server listening at http://localhost:${port}`);
   });
 
   const io = Socket(server);
