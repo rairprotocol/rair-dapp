@@ -63,7 +63,7 @@ const TokenURIRow = ({
         />
       </th>
       <th>
-        <button onClick={(_) => deleter(index)} className="btn btn-danger">
+        <button onClick={() => deleter(index)} className="btn btn-danger">
           <i className="fas fa-trash" />
         </button>
       </th>
@@ -71,7 +71,7 @@ const TokenURIRow = ({
   );
 };
 
-const BlockchainURIManager = ({ contractData, address, collectionIndex }) => {
+const BlockchainURIManager = ({ contractData, collectionIndex }) => {
   const { currentChain } = useSelector((store) => store.contractStore);
 
   const lastTokenInProduct = contractData?.product?.copies || 0;
@@ -169,7 +169,7 @@ const BlockchainURIManager = ({ contractData, address, collectionIndex }) => {
             {!appendTokenForContract && "Don't "}Include token ID
           </button>
           <button
-            onClick={async (e) => {
+            onClick={async () => {
               if (!checkCurrentBlockchain()) {
                 return;
               }
@@ -227,7 +227,7 @@ const BlockchainURIManager = ({ contractData, address, collectionIndex }) => {
             {!appendTokenForCollection && "Don't "}Include token ID
           </button>
           <button
-            onClick={async (e) => {
+            onClick={async () => {
               if (!checkCurrentBlockchain()) {
                 return;
               }
@@ -290,7 +290,7 @@ const BlockchainURIManager = ({ contractData, address, collectionIndex }) => {
             {!appendTokenForRange && "Don't "}Include token ID
           </button>
           <button
-            onClick={async (e) => {
+            onClick={async () => {
               if (!checkCurrentBlockchain()) {
                 return;
               }
@@ -363,7 +363,7 @@ const BlockchainURIManager = ({ contractData, address, collectionIndex }) => {
             </tbody>
           </table>
           <button
-            onClick={async (e) => {
+            onClick={async () => {
               if (!checkCurrentBlockchain() || uniqueURIArray.length <= 0) {
                 return;
               }
@@ -417,7 +417,7 @@ const BlockchainURIManager = ({ contractData, address, collectionIndex }) => {
           </div>
           <div className="col-12 col-md-3">
             <button
-              onClick={async (e) => {
+              onClick={async () => {
                 if (!checkCurrentBlockchain()) {
                   return;
                 }

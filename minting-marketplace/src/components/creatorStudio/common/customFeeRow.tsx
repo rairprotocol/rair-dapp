@@ -20,7 +20,7 @@ const CustomFeeRow = ({
   setMarketValuesChanged,
   price,
   symbol
-}) => {
+}: any) => {
   const [recipientAddress, setRecipientAddress] = useState(recipient);
   const [percentageReceived, setPercentageReceived] = useState(percentage);
 
@@ -131,7 +131,7 @@ const CustomFeeRow = ({
       <th style={{ width: '5vw' }}>
         {editable && (
           <button
-            onClick={(e) => deleter(index)}
+            onClick={() => deleter(index)}
             className="btn btn-danger rounded-rair">
             <i className="fas fa-trash" />
           </button>

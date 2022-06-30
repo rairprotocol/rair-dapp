@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import InputField from '../../common/InputField';
@@ -10,36 +9,44 @@ import chainData from '../../../utils/blockchainData';
 import colors from '../../../utils/offerLockColors';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-import { utils } from 'ethers';
+import { ethers, utils } from 'ethers';
 import { metamaskCall, validateInteger } from '../../../utils/metamaskUtils';
+import {
+  ILockRow,
+  TListLocks,
+  TListLocksArrayItem,
+  TParamsListLocks
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 
-const LockRow = ({
+const LockRow: React.FC<ILockRow> = ({
   index,
   locker,
   name,
   starts,
   ends,
   price,
-  fixed,
   array,
   rerender,
   maxCopies,
   lockedNumber,
   blockchainSymbol
 }) => {
-  const { primaryColor, secondaryColor } = useSelector(
-    (store) => store.colorStore
-  );
+  const { primaryColor, secondaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
-  const [itemName] = useState(name);
-  const [startingToken] = useState(starts);
-  const [endingToken] = useState(ends);
-  const [lockedTokens, setLockedTokens] = useState(lockedNumber);
-
+  const [itemName, setItemName] = useState<string>(name);
+  const [startingToken, setStartingToken] = useState<string>(starts);
+  const [endingToken, setEndingToken] = useState<string>(ends);
+  const [lockedTokens, setLockedTokens] = useState<number>(lockedNumber);
+  const [statePrice, setStatePrice] = useState<string>(price);
   const randColor = colors[index];
-
   const updateLockedNumber = useCallback(
-    (value) => {
+    (value: string) => {
       array[index].lockedNumber = Number(value);
       setLockedTokens(Number(value));
       rerender();
@@ -62,6 +69,7 @@ const LockRow = ({
         <InputField
           disabled={true}
           getter={itemName}
+          setter={setItemName}
           customClass="form-control rounded-rair"
           customCSS={{
             backgroundColor: `var(--${primaryColor})`,
@@ -74,8 +82,9 @@ const LockRow = ({
         <InputField
           disabled={true}
           getter={startingToken}
+          setter={setStartingToken}
           type="number"
-          min="0"
+          min={0}
           customClass="form-control rounded-rair"
           customCSS={{
             backgroundColor: `var(--${primaryColor})`,
@@ -88,9 +97,10 @@ const LockRow = ({
         <InputField
           disabled={true}
           getter={endingToken}
+          setter={setEndingToken}
           customClass="form-control rounded-rair"
           type="number"
-          min="0"
+          min={0}
           max={maxCopies}
           customCSS={{
             backgroundColor: `var(--${primaryColor})`,
@@ -103,8 +113,13 @@ const LockRow = ({
         <InputField
           disabled={true}
           getter={`${utils
-            .formatEther(price === '' || !validateInteger(price) ? 0 : price)
+            .formatEther(
+              statePrice === '' || !validateInteger(Number(statePrice))
+                ? 0
+                : statePrice
+            )
             .toString()} ${blockchainSymbol}`}
+          setter={setStatePrice}
           customClass="form-control rounded-rair"
           customCSS={{
             backgroundColor: `var(--${primaryColor})`,
@@ -119,8 +134,8 @@ const LockRow = ({
             getter={lockedTokens}
             setter={updateLockedNumber}
             type="number"
-            min="0"
-            max={endingToken - startingToken}
+            min={0}
+            max={Number(endingToken) - Number(startingToken)}
             customClass="form-control rounded-rair"
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
@@ -143,34 +158,35 @@ const LockRow = ({
   );
 };
 
-const ListLocks = ({
+const ListLocks: React.FC<TListLocks> = ({
   contractData,
   setStepNumber,
-  steps,
   gotoNextStep,
   stepNumber,
   goBack
 }) => {
-  const [offerList, setOfferList] = useState([]);
-  const [forceRerender, setForceRerender] = useState(false);
-  const [instance, setInstance] = useState();
-  const [onMyChain, setOnMyChain] = useState();
+  const [offerList, setOfferList] = useState<TListLocksArrayItem[]>([]);
+  const [forceRerender, setForceRerender] = useState<boolean>(false);
+  const [instance, setInstance] = useState<ethers.Contract | undefined>();
+  const [onMyChain, setOnMyChain] = useState<boolean>();
 
-  const { contractCreator, programmaticProvider, currentChain } = useSelector(
-    (store) => store.contractStore
-  );
-  const { address /*collectionIndex*/ } = useParams();
-
-  const locker = async (data) => {
+  const { contractCreator, programmaticProvider, currentChain } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
+  const { address }: TParamsListLocks = useParams();
+  const locker = async (data: TListLocksArrayItem) => {
     Swal.fire({
-      title: `Locking ${data.ends - data.starts} tokens from ${data.name}`,
+      title: `Locking ${Number(data.ends) - Number(data.starts)} tokens from ${
+        data.name
+      }`,
       html: `${data.lockedNumber} tokens will have to be minted to unlock them again.`,
       icon: 'info',
       showConfirmButton: false
     });
     if (
       await metamaskCall(
-        instance.createRangeLock(
+        instance?.createRangeLock(
           data.productIndex,
           data.starts,
           data.ends,
@@ -179,8 +195,8 @@ const ListLocks = ({
       )
     ) {
       Swal.fire({
-        title: 'Success!',
-        html: 'The range has been locked',
+        title: `Success!`,
+        html: `The range has been locked`,
         icon: 'success'
       });
     }
@@ -209,22 +225,21 @@ const ListLocks = ({
 
   useEffect(() => {
     if (onMyChain) {
-      const createdInstance = contractCreator(address, erc721Abi);
+      const createdInstance = contractCreator?.(address, erc721Abi);
       setInstance(createdInstance);
     }
   }, [address, onMyChain, contractCreator]);
 
   useEffect(() => {
     setOnMyChain(
-      window.ethereum
-        ? chainData[contractData?.blockchain]?.chainId ===
-            window.ethereum.chainId
-        : chainData[contractData?.blockchain]?.chainId ===
-            programmaticProvider?.provider?._network?.chainId
+      contractData &&
+        (window.ethereum
+          ? chainData[contractData?.blockchain]?.chainId === currentChain
+          : chainData[contractData?.blockchain]?.chainId === currentChain)
     );
   }, [contractData, programmaticProvider, currentChain]);
 
-  const switchBlockchain = async (chainId) => {
+  const switchBlockchain = async (chainId: BlockchainType) => {
     web3Switch(chainId);
   };
 
@@ -250,14 +265,14 @@ const ListLocks = ({
                   return (
                     <LockRow
                       array={array}
-                      locker={(e) => locker(item)}
+                      locker={() => locker(item)}
                       key={index}
                       index={index}
                       {...item}
                       blockchainSymbol={
                         chainData[contractData?.blockchain]?.symbol
                       }
-                      rerender={(e) => setForceRerender(!forceRerender)}
+                      rerender={() => setForceRerender(!forceRerender)}
                       maxCopies={Number(contractData?.product?.copies) - 1}
                     />
                   );
@@ -273,12 +288,13 @@ const ListLocks = ({
                   action: !onMyChain
                     ? () =>
                         switchBlockchain(
-                          chainData[contractData?.blockchain]?.chainId
+                          // eslint-disable-next-line
+                          chainData[contractData?.blockchain]?.chainId!
                         )
                     : gotoNextStep,
                   label: !onMyChain
                     ? `Switch to ${chainData[contractData?.blockchain]?.name}`
-                    : 'Proceed',
+                    : `Proceed`,
                   disabled: false
                 }
               ]}
@@ -292,7 +308,7 @@ const ListLocks = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: TListLocks) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

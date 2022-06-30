@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
@@ -9,21 +8,28 @@ import CustomFeeRow from '../common/customFeeRow';
 import { utils } from 'ethers';
 import InputField from '../../common/InputField';
 import { metamaskCall } from '../../../utils/metamaskUtils';
+import { TCustomPayments, TResaleMarketplace } from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 
-const CustomizeFees = ({
+const CustomizeFees: React.FC<TResaleMarketplace> = ({
   contractData,
   correctMinterInstance,
   setStepNumber,
-  steps,
   stepNumber,
   gotoNextStep,
   goBack,
   simpleMode
 }) => {
-  const { textColor, primaryColor } = useSelector((store) => store.colorStore);
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
+  const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
-  const [customPayments, setCustomPayments] = useState(
+  const [customPayments, setCustomPayments] = useState<TCustomPayments[]>(
     simpleMode
       ? [
           {
@@ -35,13 +41,13 @@ const CustomizeFees = ({
         ]
       : []
   );
-  const [approving, setApproving] = useState(false);
-  const [rerender, setRerender] = useState(false);
-  const [resaleAddress, setResaleAddress] = useState('');
-  const [nodeFee, setNodeFee] = useState(0);
-  const [treasuryFee, setTreasuryFee] = useState(0);
-  const [minterDecimals, setMinterDecimals] = useState(0);
-  const [sendingData, setSendingData] = useState(false);
+  const [approving, setApproving] = useState<boolean>(false);
+  const [rerender, setRerender] = useState<boolean>(false);
+  const [resaleAddress, setResaleAddress] = useState<string>('');
+  const [nodeFee, setNodeFee] = useState<number>(0);
+  const [treasuryFee, setTreasuryFee] = useState<number>(0);
+  const [minterDecimals, setMinterDecimals] = useState<number>(0);
+  const [sendingData, setSendingData] = useState<boolean>(false);
 
   const getContractData = useCallback(async () => {
     if (!correctMinterInstance) {
@@ -56,7 +62,7 @@ const CustomizeFees = ({
     getContractData();
   }, [getContractData]);
 
-  const removePayment = (index) => {
+  const removePayment = (index: number) => {
     const aux = [...customPayments];
     aux.splice(index, 1);
     setCustomPayments(aux);
@@ -72,16 +78,12 @@ const CustomizeFees = ({
     });
     setCustomPayments(aux);
   };
-  // let onMyChain = window.ethereum ?
-  // 	chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
-  // 	:
-  // 	chainData[contractData?.blockchain]?.chainId === programmaticProvider.provider._network.chainId;
-
   useEffect(() => {
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
 
-  const setCustomFees = async (e) => {
+  //unused-snippet
+  const setCustomFees = async () => {
     setSendingData(true);
     try {
       Swal.fire({
@@ -90,13 +92,6 @@ const CustomizeFees = ({
         icon: 'info',
         showConfirmButton: false
       });
-      /*
-			await (await correctMinterInstance.setCustomPayment(
-				contractData.product?.offers[0]?.offerPool,
-				customPayments.map(i => i.recipient),
-				customPayments.map(i => i.percentage * Math.pow(10, minterDecimals))
-			)).wait();
-			*/
       Swal.fire({
         title: 'Success',
         html: 'Custom fees set',
@@ -126,14 +121,14 @@ const CustomizeFees = ({
             </tr>
           </thead>
           <tbody style={{ maxHeight: '50vh', overflowY: 'scroll' }}>
-            {customPayments.map((item, index, array) => {
+            {customPayments.map((item, index) => {
               return (
                 <CustomFeeRow
                   key={index}
                   index={index}
                   array={customPayments}
                   deleter={removePayment}
-                  renderer={(e) => setRerender(!rerender)}
+                  renderer={() => setRerender(!rerender)}
                   minterDecimals={minterDecimals}
                   {...item}
                 />
@@ -171,7 +166,7 @@ const CustomizeFees = ({
           </button>
         </div>
       </div>
-      {!simpleMode && contractData.instance && (
+      {!simpleMode && contractData?.instance && (
         <div className="w-100 row">
           <hr />
           <div className="col-12">
@@ -195,7 +190,7 @@ const CustomizeFees = ({
               });
               if (
                 await metamaskCall(
-                  contractData.instance.grantRole(
+                  contractData?.instance.grantRole(
                     await metamaskCall(contractData.instance.TRADER()),
                     resaleAddress
                   )
@@ -234,7 +229,7 @@ const CustomizeFees = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: TResaleMarketplace) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

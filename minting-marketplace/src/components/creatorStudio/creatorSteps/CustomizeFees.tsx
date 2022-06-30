@@ -1,17 +1,19 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
-// import withReactContent from 'sweetalert2-react-content';
 import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import FixedBottomNavigation from '../FixedBottomNavigation';
-// import {web3Switch} from '../../../utils/switchBlockchain';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import {
+  ICustomizeFees,
+  ICustomPayRateRow,
+  TCustomizeFeesArrayItem
+} from '../creatorStudio.types';
 
-// const rSwal = withReactContent(Swal);
-
-const CustomPayRateRow = ({
+const CustomPayRateRow: React.FC<ICustomPayRateRow> = ({
   index,
   array,
   receiver,
@@ -19,12 +21,13 @@ const CustomPayRateRow = ({
   percentage,
   renderer
 }) => {
-  const [receiverAddress, setReceiverAddress] = useState(receiver);
-  const [percentageReceived, setPercentageReceived] = useState(percentage);
-
-  const { secondaryColor, primaryColor } = useSelector(
-    (store) => store.colorStore
-  );
+  const [receiverAddress, setReceiverAddress] = useState<string>(receiver);
+  const [percentageReceived, setPercentageReceived] =
+    useState<number>(percentage);
+  const { secondaryColor, primaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   useEffect(() => {
     setReceiverAddress(receiver);
@@ -34,13 +37,13 @@ const CustomPayRateRow = ({
     setPercentageReceived(percentage);
   }, [percentage]);
 
-  const updatePercentage = (value) => {
+  const updatePercentage = (value: number) => {
     setPercentageReceived(value);
     array[index].percentage = Number(value);
     renderer();
   };
 
-  const updateReceiver = (value) => {
+  const updateReceiver = (value: string) => {
     setReceiverAddress(value);
     array[index].receiver = value;
     renderer();
@@ -68,8 +71,8 @@ const CustomPayRateRow = ({
           <InputField
             labelClass="w-100 text-start"
             customClass="form-control rounded-rair"
-            min="0"
-            max="100"
+            min={0}
+            max={100}
             type="number"
             getter={percentageReceived}
             setter={updatePercentage}
@@ -83,7 +86,7 @@ const CustomPayRateRow = ({
       </th>
       <th>
         <button
-          onClick={(e) => deleter(index)}
+          onClick={() => deleter(index)}
           className="btn btn-danger rounded-rair">
           <i className="fas fa-trash" />
         </button>
@@ -92,24 +95,26 @@ const CustomPayRateRow = ({
   );
 };
 
-const CustomizeFees = ({
+const CustomizeFees: React.FC<ICustomizeFees> = ({
   contractData,
   correctMinterInstance,
   setStepNumber,
-  steps,
   stepNumber,
   gotoNextStep,
   goBack
 }) => {
-  const { textColor, primaryColor } = useSelector((store) => store.colorStore);
+  const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
-  const [customPayments, setCustomPayments] = useState([]);
-  const [rerender, setRerender] = useState(false);
-  const [nodeFee, setNodeFee] = useState(0);
-  const [treasuryFee, setTreasuryFee] = useState(0);
-  const [minterDecimals, setMinterDecimals] = useState(0);
-  const [sendingData, setSendingData] = useState(false);
-
+  const [customPayments, setCustomPayments] = useState<
+    TCustomizeFeesArrayItem[]
+  >([]);
+  const [rerender, setRerender] = useState<boolean>(false);
+  const [nodeFee, setNodeFee] = useState<number>(0);
+  const [treasuryFee, setTreasuryFee] = useState<number>(0);
+  const [minterDecimals, setMinterDecimals] = useState<number>(0);
+  const [sendingData, setSendingData] = useState<boolean>(false);
   const getContractData = useCallback(async () => {
     if (!correctMinterInstance) {
       return;
@@ -123,7 +128,7 @@ const CustomizeFees = ({
     getContractData();
   }, [getContractData]);
 
-  const removePayment = (index) => {
+  const removePayment = (index: number) => {
     const aux = [...customPayments];
     aux.splice(index, 1);
     setCustomPayments(aux);
@@ -137,16 +142,12 @@ const CustomizeFees = ({
     });
     setCustomPayments(aux);
   };
-  // let onMyChain = window.ethereum ?
-  // 	chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
-  // 	:
-  // 	chainData[contractData?.blockchain]?.chainId === programmaticProvider.provider._network.chainId;
 
   useEffect(() => {
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
 
-  const setCustomFees = async (e) => {
+  const setCustomFees = async () => {
     setSendingData(true);
     try {
       Swal.fire({
@@ -156,8 +157,9 @@ const CustomizeFees = ({
         showConfirmButton: false
       });
       await (
-        await correctMinterInstance.setCustomPayment(
-          contractData.product?.offers[0]?.offerPool,
+        await correctMinterInstance?.setCustomPayment(
+          contractData?.product.offers &&
+            contractData?.product?.offers[0]?.offerPool,
           customPayments.map((i) => i.receiver),
           customPayments.map((i) => i.percentage * Math.pow(10, minterDecimals))
         )
@@ -191,14 +193,14 @@ const CustomizeFees = ({
             </tr>
           </thead>
           <tbody style={{ maxHeight: '50vh', overflowY: 'scroll' }}>
-            {customPayments.map((item, index, array) => {
+            {customPayments.map((item, index) => {
               return (
                 <CustomPayRateRow
                   key={index}
                   index={index}
                   array={customPayments}
                   deleter={removePayment}
-                  renderer={(e) => setRerender(!rerender)}
+                  renderer={() => setRerender(!rerender)}
                   {...item}
                 />
               );
@@ -251,7 +253,7 @@ const CustomizeFees = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: ICustomizeFees) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

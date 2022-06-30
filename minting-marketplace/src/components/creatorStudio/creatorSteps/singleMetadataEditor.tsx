@@ -1,10 +1,9 @@
-//@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import InputField from '../../common/InputField';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
 import PropertyRow from './propertyRow';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useHistory, NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import FixedBottomNavigation from '../FixedBottomNavigation';
 import { web3Switch } from '../../../utils/switchBlockchain';
@@ -15,61 +14,71 @@ import Swal from 'sweetalert2';
 import Dropzone from 'react-dropzone';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
-import { TMetadataType } from '../../../axios.responseTypes';
+import {
+  TAttributes,
+  TMetadataType,
+  TTokenData
+} from '../../../axios.responseTypes';
+import {
+  TNftMapping,
+  TParamsBatchMetadata,
+  TSingleMetadataType
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
-const SingleMetadataEditor = ({
+const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   contractData,
   setStepNumber,
-  steps,
   stepNumber,
   gotoNextStep,
   simpleMode
 }) => {
-  const [nftMapping, setNFTMapping] = useState([]);
-  const [nftCount, setNFTCount] = useState(0);
+  const [nftMapping, setNFTMapping] = useState<TNftMapping>({});
+  const [nftCount, setNFTCount] = useState<number>(0);
 
-  const [nftID, setNFTID] = useState(
+  const [nftID, setNFTID] = useState<string>(
     BigNumber.from(contractData?.product?.firstTokenIndex).toString()
   );
-  const [nftTitle, setNFTTitle] = useState('');
-  const [nftImage, setNFTImage] = useState(BinanceDiamond);
-  const [nftDescription, setNFTDescription] = useState('');
-  const [forceRerender, setForceRerender] = useState(false);
-  const [propertiesArray, setPropertiesArray] = useState([]);
-  const [onMyChain, setOnMyChain] = useState();
-  const [files, setFiles] = useState([]);
-
-  const { programmaticProvider, currentChain } = useSelector(
-    (store) => store.contractStore
+  const [nftTitle, setNFTTitle] = useState<string>('');
+  const [nftImage, setNFTImage] = useState<string>(BinanceDiamond);
+  const [nftDescription, setNFTDescription] = useState<string>('');
+  const [forceRerender, setForceRerender] = useState<boolean>(false);
+  const [propertiesArray, setPropertiesArray] = useState<TAttributes[]>([]);
+  const [onMyChain, setOnMyChain] = useState<boolean | undefined>();
+  const [files, setFiles] = useState<File>();
+  const { programmaticProvider, currentChain } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
   );
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
-  const { address, collectionIndex } = useParams();
+  const { address, collectionIndex }: TParamsBatchMetadata = useParams();
 
   const history = useHistory();
 
   const networkId = contractData?.blockchain;
   const contractAddress = contractData?.contractAddress;
   const product = contractData?.product?.collectionIndexInContract;
-
-  const { error_message } = useSelector((store) => store.metadataStore);
-  const dispatch = useDispatch();
-  const [metadataURI, setMetadataURI] = useState('');
+  const [metadataURI, setMetadataURI] = useState<string>('');
 
   const getNFTData = useCallback(async () => {
     const { success, result } = await rFetch(
       `/api/nft/network/${
-        contractData.blockchain
+        contractData?.blockchain
       }/${address.toLowerCase()}/${collectionIndex}`
     );
     if (success) {
       const mapping = {};
-      result.tokens.forEach((token) => {
+      result.tokens.forEach((token: TTokenData) => {
         mapping[token.uniqueIndexInContract] = token;
       });
       setNFTMapping(mapping);
       setNFTCount(result.totalCount);
     }
-  }, [address, collectionIndex, contractData.blockchain]);
+  }, [address, collectionIndex, contractData?.blockchain]);
 
   const addRow = () => {
     const aux = [...propertiesArray];
@@ -80,7 +89,7 @@ const SingleMetadataEditor = ({
     setPropertiesArray(aux);
   };
 
-  const deleter = (index) => {
+  const deleter = (index: number) => {
     const aux = [...propertiesArray];
     aux.splice(index, 1);
     setPropertiesArray(aux);
@@ -96,7 +105,7 @@ const SingleMetadataEditor = ({
 
   useEffect(() => {
     const tokenData = nftMapping[nftID];
-    if (tokenData) {
+    if (tokenData && tokenData.metadata.attributes) {
       setNFTImage(tokenData?.metadata?.image);
       setNFTTitle(tokenData?.metadata?.name);
       setNFTDescription(tokenData?.metadata?.description);
@@ -105,24 +114,20 @@ const SingleMetadataEditor = ({
       setNFTImage(BinanceDiamond);
       setNFTTitle('');
       setNFTDescription('');
-      setPropertiesArray('');
+      setPropertiesArray([]);
     }
   }, [nftID, nftMapping]);
 
-  const switchBlockchain = async (chainId) => {
-    web3Switch(chainId);
-  };
-
   useEffect(() => {
     setOnMyChain(
-      window.ethereum
-        ? chainData[contractData?.blockchain]?.chainId === currentChain
-        : chainData[contractData?.blockchain]?.chainId ===
-            programmaticProvider?.provider?._network?.chainId
+      contractData &&
+        (window.ethereum
+          ? chainData[contractData?.blockchain]?.chainId === currentChain
+          : chainData[contractData?.blockchain]?.chainId === currentChain)
     );
   }, [contractData, programmaticProvider, currentChain]);
 
-  const onImageDrop = useCallback((acceptedFiles) => {
+  const onImageDrop = useCallback((acceptedFiles: File[]) => {
     const objectURL = URL.createObjectURL(acceptedFiles[0]);
     setFiles(acceptedFiles[0]);
     setNFTImage(objectURL);
@@ -136,9 +141,9 @@ const SingleMetadataEditor = ({
       icon: 'info'
     });
 
-    const internalNFTID = BigNumber.from(nftID).sub(
-      contractData.product.firstTokenIndex
-    );
+    const internalNFTID =
+      contractData &&
+      BigNumber.from(nftID).sub(contractData.product.firstTokenIndex);
 
     const response = await rFetch(
       `/api/nft/network/${networkId}/${contractAddress}/${product}/token/${internalNFTID}/pinning`
@@ -147,14 +152,14 @@ const SingleMetadataEditor = ({
     if (response?.success) {
       Swal.fire({
         title: 'Please wait...',
-        html: 'Sending URI to the blockchain',
+        html: `Sending URI to the blockchain`,
         showConfirmButton: false,
         icon: 'info'
       });
 
       if (
         await metamaskCall(
-          contractData.instance.setUniqueURI(
+          contractData?.instance.setUniqueURI(
             BigNumber.from(contractData.product.firstTokenIndex).add(nftID),
             response.metadataURI
           )
@@ -172,9 +177,9 @@ const SingleMetadataEditor = ({
   const updateMetadata = async () => {
     const formData = new FormData();
 
-    const internalNFTID = BigNumber.from(nftID).sub(
-      contractData.product.firstTokenIndex
-    );
+    const internalNFTID =
+      contractData &&
+      BigNumber.from(nftID).sub(contractData.product.firstTokenIndex);
 
     Swal.fire({
       title: 'Please wait...',
@@ -187,7 +192,7 @@ const SingleMetadataEditor = ({
     formData.append('description', nftDescription);
     formData.append('attributes', JSON.stringify(propertiesArray));
 
-    if (files.name) {
+    if (files?.name) {
       formData.append('image', files.name);
       formData.append('files', files);
     }
@@ -220,15 +225,19 @@ const SingleMetadataEditor = ({
               getter={nftID}
               setter={setNFTID}
               customClass={`bg-${primaryColor} rounded-rair w-100 form-control text-center`}
-              customCSS={{ color: textColor }}
+              customCSS={{ color: textColor ? textColor : '' }}
               type="number"
-              min={BigNumber.from(
-                contractData?.product?.firstTokenIndex
-              ).toString()}
-              max={BigNumber.from(contractData?.product?.firstTokenIndex)
-                .add(contractData?.product?.copies)
-                .sub(1)
-                .toString()}
+              min={Number(
+                BigNumber.from(
+                  contractData?.product?.firstTokenIndex
+                ).toString()
+              )}
+              max={Number(
+                BigNumber.from(contractData?.product?.firstTokenIndex)
+                  .add(BigNumber.from(contractData?.product?.copies))
+                  .sub(1)
+                  .toString()
+              )}
             />
           </div>
         </div>
@@ -253,7 +262,7 @@ const SingleMetadataEditor = ({
             onClick={() => {
               setNFTID(
                 BigNumber.from(contractData?.product?.firstTokenIndex)
-                  .add(contractData?.product?.copies)
+                  .add(BigNumber.from(contractData?.product?.copies))
                   .sub(1)
                   .toString()
               );
@@ -269,7 +278,7 @@ const SingleMetadataEditor = ({
             getter={nftImage}
             setter={setNFTImage}
             customClass={`bg-${primaryColor} rounded-rair w-100 form-control`}
-            customCSS={{ color: textColor }}
+            customCSS={{ color: textColor ? textColor : '' }}
           />
         </div>
         <br />
@@ -280,7 +289,7 @@ const SingleMetadataEditor = ({
             getter={nftTitle}
             setter={setNFTTitle}
             customClass={`bg-${primaryColor} rounded-rair w-100 form-control`}
-            customCSS={{ color: textColor }}
+            customCSS={{ color: textColor ? textColor : '' }}
           />
         </div>
         <br />
@@ -292,7 +301,7 @@ const SingleMetadataEditor = ({
             onChange={(e) => setNFTDescription(e.target.value)}
             className={`bg-${primaryColor} rounded-rair w-100 form-control`}
             style={{ color: textColor }}
-            rows="3"
+            rows={3}
           />
         </div>
         <br />
@@ -343,7 +352,7 @@ const SingleMetadataEditor = ({
           style={{ minHeight: '70vh', maxHeight: '100vh' }}
           className="w-100 border-stimorol py-auto rounded-rair">
           <Dropzone onDrop={onImageDrop}>
-            {({ getRootProps, getInputProps, isDragActive }) => (
+            {({ getRootProps, getInputProps }) => (
               <div
                 {...getRootProps()}
                 className={`w-100 h-100 bg-${primaryColor} rounded-rair`}>
@@ -373,10 +382,14 @@ const SingleMetadataEditor = ({
           forwardFunctions={[
             {
               action: !onMyChain
-                ? () => web3Switch(chainData[contractData?.blockchain]?.chainId)
+                ? () =>
+                    // eslint-disable-next-line
+                    web3Switch(chainData[contractData?.blockchain!]?.chainId!)
                 : pinMetadata,
               label: !onMyChain
-                ? `Switch to ${chainData[contractData?.blockchain]?.name}`
+                ? chainData && contractData?.blockchain
+                  ? `Switch to ${chainData[contractData?.blockchain]?.name}`
+                  : ''
                 : 'Pin to IPFS',
               disabled: false
             },
@@ -392,7 +405,7 @@ const SingleMetadataEditor = ({
           ]}
         />
       )}
-      {!simpleMode && contractData.diamond && contractData.instance && (
+      {!simpleMode && contractData?.diamond && contractData.instance && (
         <>
           <div className="col-12">
             <button
@@ -407,7 +420,9 @@ const SingleMetadataEditor = ({
                   setNFTImage(data.data.image);
                   setNFTTitle(data.data.name);
                   setNFTDescription(data.data.description);
-                  setPropertiesArray(data.data.attributes);
+                  if (data.data.attributes) {
+                    setPropertiesArray(data.data.attributes);
+                  }
                   setMetadataURI(URI);
                 }
               }}
@@ -460,7 +475,7 @@ const SingleMetadataEditor = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: TSingleMetadataType) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

@@ -1,9 +1,7 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import imageIcon from '../../../images/imageIcon.svg';
-// import documentIcon from '../../../images/documentIcon.svg';
-import { NavLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { rFetch } from '../../../utils/rFetch';
 import FixedBottomNavigation from '../FixedBottomNavigation';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
@@ -13,28 +11,34 @@ import Swal from 'sweetalert2';
 import blockchainData from '../../../utils/blockchainData';
 import BlockchainURIManager from '../common/blockchainURIManager';
 import axios from 'axios';
+import {
+  IBatchMetadataParser,
+  TBatchMetadataType,
+  TParamsBatchMetadata
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { TTokenData } from '../../../axios.responseTypes';
 
-const BatchMetadataParser = ({
+const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   contractData,
   setStepNumber,
-  steps,
   stepNumber,
   gotoNextStep,
   goBack,
   simpleMode
 }) => {
-  const { address, collectionIndex } = useParams();
+  const { address, collectionIndex }: TParamsBatchMetadata = useParams();
 
-  const [csvFile, setCSVFile] = useState();
-  const [metadata, setMetadata] = useState();
-  const [headers, setHeaders] = useState();
-  const [metadataExists, setMetadataExists] = useState(false);
+  const [csvFile, setCSVFile] = useState<File>();
+  const [metadata, setMetadata] = useState<TBatchMetadataType[] | undefined>();
+  const [headers, setHeaders] = useState<string[]>();
+  const [metadataExists, setMetadataExists] = useState<boolean>(false);
 
-  const onImageDrop = useCallback((acceptedFiles) => {
-    // eslint-disable-next-line
-    csvParser(acceptedFiles[0], console.log);
+  const onImageDrop = useCallback((acceptedFiles: File[]) => {
+    csvParser(acceptedFiles[0], console.info);
   }, []);
-  const onCSVDrop = useCallback((acceptedFiles) => {
+  const onCSVDrop = useCallback((acceptedFiles: File[]) => {
     setCSVFile(acceptedFiles[0]);
     csvParser(acceptedFiles[0], setMetadata);
   }, []);
@@ -56,25 +60,31 @@ const BatchMetadataParser = ({
     );
     if (success && result.totalCount > 0) {
       setMetadataExists(
-        result.tokens.filter((item) => item.metadata.name !== 'none').length > 0
+        result.tokens.filter(
+          (item: TTokenData) => item.metadata.name !== 'none'
+        ).length > 0
       );
     }
   }, [address, collectionIndex, contractData.blockchain]);
 
-  useEffect(fetchData, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   useEffect(() => {
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
 
-  const sendMetadata = async (updateMeta) => {
+  const sendMetadata = async (updateMeta: boolean) => {
     const formData = new FormData();
     formData.append('product', collectionIndex);
     formData.append('contract', contractData._id);
-    formData.append('updateMeta', updateMeta);
-    formData.append('csv', csvFile, 'metadata.csv');
+    formData.append('updateMeta', String(updateMeta));
+    formData.append('csv', csvFile as Blob, 'metadata.csv');
     const response = await rFetch('/api/nft', {
       method: 'POST',
       body: formData,
@@ -102,7 +112,7 @@ const BatchMetadataParser = ({
         const url = window.URL.createObjectURL(new Blob([blob]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'template.csv');
+        link.setAttribute('download', `template.csv`);
 
         // Append to html link element page
         document.body.appendChild(link);
@@ -111,7 +121,7 @@ const BatchMetadataParser = ({
         link.click();
 
         // Clean up and remove the link
-        link.parentNode.removeChild(link);
+        link.parentNode?.removeChild(link);
       });
   };
 
@@ -135,7 +145,7 @@ const BatchMetadataParser = ({
       </small>
       <div className="col-4 text-start mb-3" />
       <button
-        className={'btn btn-stimorol rounded-rair col-4 my-5'}
+        className={`btn btn-stimorol rounded-rair col-4 my-5`}
         onClick={downloadTemplateCSV}>
         Download CSV Template
       </button>
@@ -287,8 +297,8 @@ const BatchMetadataParser = ({
         <>
           {!contractData.instance ? (
             <>
-              Connect to {blockchainData[contractData.blockchain].name} for more
-              options
+              Connect to {blockchainData[contractData.blockchain]?.name} for
+              more options
             </>
           ) : (
             <>
@@ -316,7 +326,7 @@ const BatchMetadataParser = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: IBatchMetadataParser) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

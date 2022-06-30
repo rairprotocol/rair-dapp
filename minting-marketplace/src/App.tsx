@@ -210,15 +210,19 @@ function App({ sentryHistory }) {
         `/api/users/${currentUser}`
       );
       const { success, user } = userData.data;
-			if (!success || !user) {
-				// If the user doesn't exist, send a request to register him using a TEMP adminNFT
-				console.log('Address is not registered!');
-        const userCreation = await axios.post<TUserResponse>('/api/users',  JSON.stringify({ publicAddress: currentUser }), {
-          headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json'
-					}
-        });
+      if (!success || !user) {
+        // If the user doesn't exist, send a request to register him using a TEMP adminNFT
+        console.info('Address is not registered!');
+        const userCreation = await axios.post<TUserResponse>(
+          '/api/users',
+          JSON.stringify({ publicAddress: currentUser }),
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            }
+          }
+        );
         const { user } = userCreation.data;
         setUserData(user);
       } else {

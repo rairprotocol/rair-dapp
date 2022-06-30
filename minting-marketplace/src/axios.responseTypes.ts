@@ -12,7 +12,7 @@ export type TNftItemResult = {
   tokens: TTokenData[];
 };
 
-type TAttributes = {
+export type TAttributes = {
   trait_type: string;
   value: string;
 };
