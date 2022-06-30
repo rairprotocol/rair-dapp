@@ -25,7 +25,9 @@ module.exports = (context) => {
 
       publicAddress = publicAddress.toLowerCase();
 
-      const user = await context.db.User.create({ publicAddress, adminNFT });
+      const addUser = await context.db.User.create({ publicAddress, adminNFT });
+
+      const user = _.omit(addUser.toObject(), ['adminNFT', 'nonce']);
 
       res.json({ success: true, user });
     } catch (e) {
@@ -37,7 +39,7 @@ module.exports = (context) => {
   router.get('/:publicAddress', validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
-      const user = await context.db.User.findOne({ publicAddress }, { adminNFT: 0 });
+      const user = await context.db.User.findOne({ publicAddress }, { adminNFT: 0, nonce: 0 });
 
       res.json({ success: true, user });
     } catch (e) {
@@ -88,7 +90,7 @@ module.exports = (context) => {
       const updatedUser = await context.db.User.findOneAndUpdate(
         { publicAddress },
         fieldsForUpdate,
-        { new: true },
+        { new: true, projection: { adminNFT: 0, nonce: 0 } },
       );
 
       return res.json({ success: true, user: updatedUser });

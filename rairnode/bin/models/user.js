@@ -28,14 +28,14 @@ const User = new Schema(
   { versionKey: false },
 );
 
-User.pre('save', (next) => {
+User.pre('save', function signNickName(next) {
   if (!this.nickName) {
     this.nickName = this.publicAddress;
   }
   next();
 });
 
-User.pre('findOneAndUpdate', (next) => {
+User.pre('findOneAndUpdate', function updateNickName(next) {
   if (this.getUpdate().nickName) {
     this.getUpdate().nickName = `@${this.getUpdate().nickName}`;
   }
