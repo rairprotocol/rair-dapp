@@ -1,5 +1,6 @@
 //@ts-nocheck
 import React, { useEffect, useState } from 'react';
+import { SelectBoxContainer } from './ItemRankItems';
 
 import './styles.css';
 
@@ -7,14 +8,6 @@ const SelectBox = (props) => {
   const [items, setItems] = useState([]);
   const [showItems, setShowItems] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  // const [moreThen, setMoreThen] = useState();
-
-  useEffect(() => {
-    if (items.length === 0 && typeof props.items === 'object') {
-      setItems([...props.items]);
-      setSelectedItem(props.items[0]);
-    }
-  }, [props.items, items]);
 
   const dropDown = () => {
     setShowItems(!showItems);
@@ -33,6 +26,13 @@ const SelectBox = (props) => {
     return <RenderListTokens />;
   };
 
+  useEffect(() => {
+    if (items.length === 0 && typeof props.items === 'object') {
+      setItems([...props.items]);
+      setSelectedItem(props.items[0]);
+    }
+  }, [props.items, items]);
+
   const RenderListTokens = () => {
     return (
       <div className="select-box--box">
@@ -46,20 +46,7 @@ const SelectBox = (props) => {
             />
           </div>
 
-          <div
-            style={{
-              display: showItems ? 'flex' : 'none',
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              alignContent: 'center',
-              width: '25rem',
-              padding: '10px 0',
-              background: '#383637',
-              borderRadius: '16px'
-            }}
-            className={'select-box--items'}>
+          <div className={`select-box--items ${!showItem ? 'none' : ''}`}>
             <div
               className="serial-box"
               onClick={(e) => {
@@ -85,26 +72,20 @@ const SelectBox = (props) => {
   const RenderToken = () => {
     return (
       <div className="select-box--box">
-        <div
-          style={{ backgroundColor: `var(--${props.primaryColor})` }}
+        <SelectBoxContainer
+          primaryColor={primaryColor}
           className="select-box--container">
           <div className="select-box--selected-item">
-            <span style={{ paddingRight: '10px' }}>{selectedItem?.pkey}</span>
+            <span>{selectedItem?.pkey}</span>
             {items !== null ? (
               props.selectedToken ? (
                 items.map((i) => {
                   if (i.token === props.selectedToken) {
-                    return (
-                      <span key={i.id}>
-                        {/* {i.value}  */}
-                        {i.token}
-                      </span>
-                    );
+                    return <span key={i.id}>{i.token}</span>;
                   }
                   return null;
                 })
               ) : (
-                // <span>{selectedItem.value}</span>
                 <span>{selectedItem.token}</span>
               )
             ) : (
@@ -119,13 +100,7 @@ const SelectBox = (props) => {
             />
           </div>
 
-          <div
-            style={{
-              display: showItems ? 'block' : 'none',
-              background: '#383637',
-              borderRadius: '16px'
-            }}
-            className={'select-box--items'}>
+          <div className={`select-box--items ${!showItem ? 'none' : ''}`}>
             {items !== null &&
               items.map((item) => (
                 <div
@@ -135,79 +110,17 @@ const SelectBox = (props) => {
                     props.handleClickToken(item.token);
                   }}
                   className={selectedItem === item ? 'selected' : ''}>
-                  <span style={{ paddingRight: '10px' }}>{item.pkey}</span>
-                  {/* <span>{item.value}</span> */}
+                  <span>{item.pkey}</span>
                   <span>{item.token}</span>
                 </div>
               ))}
           </div>
-        </div>
+        </SelectBoxContainer>
       </div>
     );
   };
 
-  return (
-    <RenderOption />
-
-    // <div className="select-box--box">
-    //   <div
-    //     style={{ backgroundColor: `var(--${props.primaryColor})` }}
-    //     className="select-box--container"
-    //   >
-    //     <div className="select-box--selected-item">
-    //       <span style={{ paddingRight: "10px" }}>{selectedItem?.pkey}</span>
-    //       {items !== null ? (
-    //         props.selectedToken ? (
-    //           items.map((i) => {
-    //             if (i.token === props.selectedToken) {
-    //               return (
-    //                 <span key={i.id}>
-    //                   {/* {i.value}  */}
-    //                   {i.token}
-    //                 </span>
-    //               );
-    //             }
-    //             return null;
-    //           })
-    //         ) : (
-    //           // <span>{selectedItem.value}</span>
-    //           <span>{selectedItem.token}</span>
-    //         )
-    //       ) : (
-    //         "Need to select"
-    //       )}
-    //     </div>
-    //     <div className="select-box--arrow" onClick={dropDown}>
-    //       <span
-    //         className={`${
-    //           showItems ? "select-box--arrow-up" : "select-box--arrow-down"
-    //         }`}
-    //       />
-    //     </div>
-
-    //     <div
-    //       style={{ display: showItems ? "block" : "none" }}
-    //       className={"select-box--items"}
-    //     >
-    //       {items !== null &&
-    //         items.map((item) => (
-    //           <div
-    //             key={item.id}
-    //             onClick={() => {
-    //               onSelectItem(item);
-    //               props.handleClickToken(item.token);
-    //             }}
-    //             className={selectedItem === item ? "selected" : ""}
-    //           >
-    //             <span style={{ paddingRight: "10px" }}>{item.pkey}</span>
-    //             {/* <span>{item.value}</span> */}
-    //             <span>{item.token}</span>
-    //           </div>
-    //         ))}
-    //     </div>
-    //   </div>
-    // </div>
-  );
+  return <RenderOption />;
 };
 
 export default SelectBox;

@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import cl from './CustomButton.module.css';
+import { ShowMoreContainer, ShowMoreItem } from './ShowMoreItems';
 
 function CustomButton({
   text,
@@ -16,42 +17,32 @@ function CustomButton({
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   return (
-    <div
-      style={{
-        width: width,
-        height: height,
-        color: textColor,
-        margin: margin
-      }}
-      className={cl.nftDataPageShowMoreWrapper}>
+    <ShowMoreContainer
+      className={cl.nftDataPageShowMoreWrapper}
+      width={width}
+      height={height}
+      color={textColor}
+      margin={margin}>
       {onClick ? (
-        <div
-          onClick={() => onClick()}
-          style={{
-            width: width,
-            height: height,
-            color: textColor,
-            background: `${
-              primaryColor === 'rhyno' ? 'var(--rhyno)' : '#434343'
-            }`
-          }}
-          className={cl.nftDataPageShowMore}>
+        <ShowMoreItem
+          width={width}
+          height={height}
+          textColor={textColor}
+          primaryColor={primaryColor}
+          className={cl.nftDataPageShowMore}
+          onClick={onClick}>
           <span className={cl.nftDataPageShowMoreText}>{text}</span>
-        </div>
+        </ShowMoreItem>
       ) : (
-        <div
-          style={{
-            width: width,
-            height: height,
-            color: textColor
-            // background: `${primaryColor === "rhyno" ? "var(--rhyno)" : "#383637"
-            //                      }`,
-          }}
+        <ShowMoreItem
+          width={width}
+          height={height}
+          textColor={textColor}
           className={cl.nftDataPageShowMore}>
           <span className={cl.nftDataPageShowMoreText}>{text}</span>
-        </div>
+        </ShowMoreItem>
       )}
-    </div>
+    </ShowMoreContainer>
   );
 }
 

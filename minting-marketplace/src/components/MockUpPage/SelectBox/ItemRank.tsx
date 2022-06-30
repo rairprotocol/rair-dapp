@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useEffect, useState, useRef } from 'react';
-// import { useParams, useHistory } from "react-router-dom";
+import { ItemRankContainer, SelectBoxItemRank } from './ItemRankItems';
 import './styles.css';
 
 const ItemRank = ({
@@ -15,10 +15,6 @@ const ItemRank = ({
   const [itemsToken, setItemsToken] = useState([]);
   const [showItems, setShowItems] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  // const [allTokenData, setAllTokenData] = useState([]);
-
-  // const history = useHistory();
-  // const params = useParams();
   const rankRef = useRef();
 
   // const sortedClick = () => {
@@ -58,13 +54,9 @@ const ItemRank = ({
   };
 
   const onSelectItem = (item) => {
-    // props.selectItem(item.id);
     setSelectedItem(item);
     setShowItems(false);
     getAllProduct(item.range[0], item.range[1]);
-    // getAllProduct(Number(item.range[0]), Number(item.range[1]))
-    // setSelectedToken(item.range[0])
-    // handleClickToken(item.range[0])
   };
 
   const handleClickOutSideItemRank = (e) => {
@@ -81,15 +73,11 @@ const ItemRank = ({
 
   return (
     <div ref={rankRef} className="item-rant--box">
-      <div
-        style={{
-          backgroundColor: `${
-            primaryColor === 'rhyno' ? 'var(--rhyno)' : '#383637'
-          }`
-        }}
+      <ItemRankContainer
+        primaryColor={primaryColor}
         className="item-rank--container">
         <div className="select-box--selected-item" onClick={dropDown}>
-          <span style={{ paddingRight: '10px' }}>{selectedItem?.pkey}</span>
+          <span className="select-box-item-box">{selectedItem?.pkey}</span>
           {itemsToken !== null ? (
             selectedToken ? (
               itemsToken.map((i) => {
@@ -109,29 +97,14 @@ const ItemRank = ({
           ) : (
             'Need to select'
           )}
-          {/* <span>{items !== null ? selectedItem.value : 'Need to select'}</span> */}
         </div>
         <div className="select-box--arrow">
           <i className={`fas fa-chevron-${showItems ? 'up' : 'down'}`}></i>
-          {/* <span
-            className={`${showItems ? "select-box--arrow-up" : "select-box--arrow-down"
-              }`}
-          /> */}
         </div>
-
-        <div
-          style={{
-            display: showItems ? 'block' : 'none',
-            backgroundColor: `${
-              primaryColor === 'rhyno' ? 'var(--rhyno)' : '#383637'
-            }`,
-            border: `${
-              primaryColor === 'rhyno' ? '1px solid #D37AD6' : 'none'
-            }`,
-            position: 'relative',
-            zIndex: '10'
-          }}
-          className={'select-box--items items-rank'}>
+        <SelectBoxItemRank
+          className={'select-box--items items-rank'}
+          showItems={showItems}
+          primaryColor={primaryColor}>
           {itemsToken !== null &&
             itemsToken.map((item) => (
               <div
@@ -144,16 +117,15 @@ const ItemRank = ({
                 className={`item-rank-wrapper ${
                   selectedItem === item ? 'selected' : ''
                 }`}>
-                <span style={{ paddingRight: '10px' }}>{item.pkey}</span>
+                <span className="selected-item-popup-key">{item.pkey}</span>
                 <span>{item.value}</span>{' '}
-                <p style={{ marginLeft: '10px', color: '#7A797A' }}>
+                <p>
                   {item.soldCopies}/{item.copies}
                 </p>
-                {/* <span>{item.token}</span> */}
               </div>
             ))}
-        </div>
-      </div>
+        </SelectBoxItemRank>
+      </ItemRankContainer>
     </div>
   );
 };

@@ -184,6 +184,14 @@ a:hover {
   color: white;
 }
 
+.main-block-app {
+  margin-top: 40px;
+}
+
+.general-title {
+  text-align: left;
+}
+
 .row.w-100.main-content {
   padding-bottom: 200px !important;
   overflow: hidden;
@@ -406,6 +414,10 @@ a:hover {
 
 .text-charcoal-50 {
   color: #22202188 !important;
+}
+
+.col-12.blockchain-switcher {
+  height: 6vw;
 }
 
 /* v1 */

@@ -70,15 +70,38 @@
   vertical-align: middle;
 }
 
+.select-box--selected-item span:first-child {
+  padding-right: 10px;
+}
+
+.select-box-item-box {
+  padding-right: 10px;
+}
+
 .select-box--items {
-  width: max-content;
+  display: flex;
   margin-top: 8px;
   background: #383637;
   border-radius: 16px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  align-content: center;
+  width: 25rem;
+  padding: 10px 0;
+}
+
+.select-box--items.none {
+  display: none;
 }
 
 .items-rank {
   width: 100%;
+}
+
+.selected-item-popup-key {
+  padding-right: 10px;
 }
 
 .select-box--items div {
@@ -123,6 +146,12 @@
   align-content: center;
   justify-content: start;
 }
+
+.item-rank-wrapper p {
+  margin-left: 10px;
+  color: #7a797a;
+}
+
 .serial-box:hover {
   background-color: #af6fd8;
 }

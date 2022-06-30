@@ -99,6 +99,7 @@ import MetaTags from './components/SeoTags/MetaTags';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
+import { AppContainerFluid } from './styled-components/nft/AppContainer';
 
 //Google Analytics
 // import ReactGA from 'react-ga';
@@ -434,21 +435,12 @@ function App({ sentryHistory }) {
         />
       ) : null}
       <Router history={sentryHistory}>
-        <div
+        <AppContainerFluid
           className="App p-0 container-fluid"
-          style={{
-            ...backgroundImageEffect,
-            backgroundSize: '100vw 100vh',
-            minHeight: '90vh',
-            position: 'relative',
-            backgroundColor: `var(--${primaryColor})`,
-            color: textColor,
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundPosition: 'center top',
-            backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'fixed',
-            overflow: 'hidden'
-          }}>
+          backgroundImageEffect={backgroundImageEffect}
+          textColor={textColor}
+          primaryColor={primaryColor}
+          backgroundImage={backgroundImage}>
           <div className="row w-100 m-0 p-0">
             {carousel ? (
               <MainHeader
@@ -494,11 +486,10 @@ function App({ sentryHistory }) {
 							Main body, the header, router and footer are here
 						*/}
             <div
-              className={`col-12 col-md-${adminRights ? '11' : '11'}`}
-              style={{ marginTop: 40 }}>
-              <div
-                className="col-12 blockchain-switcher"
-                style={{ height: '10vh' }}>
+              className={`main-block-app col-12 col-md-${
+                adminRights ? '11' : '11'
+              }`}>
+              <div className="col-12 blockchain-switcher">
                 <Switch>
                   <SentryRoute path="/admin" component={BlockChainSwitcher} />
                 </Switch>
@@ -613,12 +604,12 @@ function App({ sentryHistory }) {
                         <div className="main-wrapper">
                           <MetaTags seoMetaTags={seoInformation} />
                           <div className="col-6 text-left main">
-                            <h1 className="w-100" style={{ textAlign: 'left' }}>
+                            <h1 className="w-100 general-title">
                               Digital <b className="title">Ownership</b>
                               <br />
                               Encryption
                             </h1>
-                            <p className="w-100" style={{ textAlign: 'left' }}>
+                            <p className="w-100 general-title">
                               RAIR is a Blockchain-based digital rights
                               management platform that uses NFTs to gate access
                               to streaming content
@@ -862,7 +853,7 @@ function App({ sentryHistory }) {
               </div>
             </div>
           </div>
-        </div>
+        </AppContainerFluid>
         <Footer
           sentryHistory={sentryHistory}
           openAboutPage={openAboutPage}
