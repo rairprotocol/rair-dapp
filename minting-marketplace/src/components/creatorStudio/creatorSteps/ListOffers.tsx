@@ -25,8 +25,8 @@ const ListOffers = ({
   const [hasMinterRole, setHasMinterRole] = useState(false);
   const [instance, setInstance] = useState();
   const [onMyChain, setOnMyChain] = useState();
-  const [emptyNames, setEmptyNames] = useState(true);
-  const [validPrice, setValidPrice] = useState(true);
+  const [, /*emptyNames*/ setEmptyNames] = useState(true);
+  const [, /*validPrice*/ setValidPrice] = useState(true);
 
   const {
     minterInstance,
@@ -36,6 +36,23 @@ const ListOffers = ({
   } = useSelector((store) => store.contractStore);
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
   const { address, collectionIndex } = useParams();
+
+  const validateOffer = (hasMinterRole: boolean) => {
+    if (hasMinterRole) {
+      if (offerList.length !== 0) {
+        const result = offerList.find(
+          (offerItem) =>
+            Number(offerItem.ends) > Number(contractData?.product.copies) ||
+            offerItem.price <= 0 ||
+            offerItem.name.trim() === ''
+        );
+        return !!result;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  };
 
   useEffect(() => {
     setOfferList(
@@ -312,15 +329,7 @@ const ListOffers = ({
                         : 'Append to Offer'
                       : 'Create Offer'
                     : 'Approve Minter Marketplace',
-                  disabled: hasMinterRole
-                    ? offerList.length === 0 ||
-                      offerList.at(-1).ends >
-                        Number(contractData.product.copies) - 1 ||
-                      offerList.at(-1).starts >
-                        Number(contractData.product.copies) - 1 ||
-                      validPrice ||
-                      emptyNames
-                    : false
+                  disabled: validateOffer(hasMinterRole)
                 }
               ]}
             />
