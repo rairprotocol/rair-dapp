@@ -143,7 +143,7 @@ const splashData = {
     videoModuleDescription: null,
     videoModuleTitle: 'loading... test comms',
     baseURL: 'https://storage.googleapis.com/rair-videos/',
-    mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ'
+    mediaId: 'tx2cV7kzqFXF9lTC5iy1VCYoXBwonyG-HcjunEI5j1rqfX'
   },
   tilesTitle: null,
   NFTName: 'NFT',
