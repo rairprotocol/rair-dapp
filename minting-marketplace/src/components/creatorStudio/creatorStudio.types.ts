@@ -1,12 +1,15 @@
 import { ethers } from 'ethers';
-import { MouseEvent } from 'react';
+import { ReactNode } from 'react';
 import {
   TContract,
   TNftItemResult,
-  TProducts,
-  TTokenData
+  TOfferPool,
+  TTokenData,
+  TProducts
 } from '../../axios.responseTypes';
+import * as H from 'history';
 import { ContractType } from '../adminViews/adminView.types';
+import { MouseEvent } from 'react';
 
 export type TParamsBatchMetadata = {
   address: string;
@@ -179,6 +182,10 @@ export type TParamsContractDetails = {
   blockchain: BlockchainType;
 };
 
+export type TWorkflowParams = TParamsContractDetails & {
+  collectionIndex: string;
+};
+
 export type TSetData = {
   title: string;
   contractAddress: string;
@@ -211,12 +218,67 @@ export type TContractsNetworkContract = {
   lastSyncedBlock: string;
   metadataURI: string;
   singleMetadata: boolean;
-  products: TProducts[];
+  products: TListCollectionsProducts[];
   title: string;
   transactionHash?: string;
   user: string;
   _id: string;
 };
+
+export type TListCollectionsContractResponse = {
+  successs: boolean;
+  contract: TContractsNetworkContract;
+};
+
+export type TListCollectionsProducts = TProducts & TMetadataExtra;
+
+export type TListCollectionsNetworkProductsResponse = {
+  success: boolean;
+  products: TListCollectionsProducts[];
+};
+
+export type TListCollectionsOffers = TProducts & {
+  offerPool: TOfferPool;
+};
+
+export type TContractsNetworkOffersResponse = {
+  success: boolean;
+  products: TListCollectionsOffers[];
+};
+
+export type TProductDataLocal = {
+  collectionIndexInContract: number;
+  name: string;
+  diamond: boolean;
+};
+
+export type TSetDataUseState = {
+  title: string;
+  contractAddress: string;
+  blockchain: BlockchainType | undefined;
+  products: TProductDataLocal[];
+};
+
+export interface IFixedBottomNavigation {
+  forwardFunctions?: IForwardFunctions[];
+  backwardFunction: () => void;
+  backwardDisabled?: boolean;
+}
+
+export interface INavigatorContract {
+  children: ReactNode;
+  contractAddress: string;
+  contractName: string;
+  contractBlockchain: BlockchainType | undefined;
+}
+
+export interface INavigatorFactory {
+  children: ReactNode;
+}
+
+export interface IWorkflowSteps {
+  sentryHistory: H.History;
+}
 
 export type TContractsNetworkResponseType = {
   success: boolean;

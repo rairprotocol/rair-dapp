@@ -1,15 +1,19 @@
-//@ts-nocheck
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { INavigatorContract } from './creatorStudio.types';
 
-const NavigatorContract = ({
+const NavigatorContract: React.FC<INavigatorContract> = ({
   children,
   contractAddress,
   contractName,
   contractBlockchain
 }) => {
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
   return (
     <div className="row px-0 mx-0">
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />
@@ -25,7 +29,7 @@ const NavigatorContract = ({
         <div className="row">
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={'btn-stimorol'}
+              activeClassName={`btn-stimorol`}
               to={`/creator/contract/${contractBlockchain}/${contractAddress}/createCollection`}
               className={`btn btn-${primaryColor} w-100 rounded-rair`}>
               Create New Collection
@@ -33,7 +37,7 @@ const NavigatorContract = ({
           </div>
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={'btn-stimorol'}
+              activeClassName={`btn-stimorol`}
               to={`/creator/contract/${contractBlockchain}/${contractAddress}/listCollections`}
               className={`btn btn-${primaryColor} w-100 rounded-rair`}>
               Existing Collections

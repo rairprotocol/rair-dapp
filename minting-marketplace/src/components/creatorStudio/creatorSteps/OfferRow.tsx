@@ -22,7 +22,6 @@ const OfferRow = ({
   const { primaryColor, secondaryColor } = useSelector(
     (store) => store.colorStore
   );
-
   const [itemName, setItemName] = useState(name);
   const [startingToken, setStartingToken] = useState(starts);
   const [endingToken, setEndingToken] = useState(ends);

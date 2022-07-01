@@ -65,7 +65,7 @@ body {
   color: var(--rhyno);
   background-color: var(--charcoal-80);
   border-radius: 10px !important;
-  content: attr(steplabel);
+  content: attr(id);
   position: relative;
   left: -50px;
   top: 10px;

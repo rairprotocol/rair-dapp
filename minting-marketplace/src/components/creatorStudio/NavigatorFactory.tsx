@@ -1,11 +1,18 @@
-//@ts-nocheck
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { INavigatorFactory } from './creatorStudio.types';
 
-const NavigatorFactory = ({ children }) => {
-  const { factoryInstance } = useSelector((store) => store.contractStore);
-  const { primaryColor } = useSelector((store) => store.colorStore);
+const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
+  const { factoryInstance } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
   return (
     <div className="row px-0 mx-0">
       <div className="col-xl-3 col-lg-1 col-md-1 d-none d-md-inline-block" />
@@ -19,7 +26,7 @@ const NavigatorFactory = ({ children }) => {
         <div className="row">
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={'btn-stimorol'}
+              activeClassName={`btn-stimorol`}
               to="/creator/deploy"
               className={`btn btn-${primaryColor} w-100 rounded-rair`}>
               Deploy
@@ -27,7 +34,7 @@ const NavigatorFactory = ({ children }) => {
           </div>
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={'btn-stimorol'}
+              activeClassName={`btn-stimorol`}
               to="/creator/contracts"
               className={`btn btn-${primaryColor} w-100 rounded-rair`}>
               My Contracts

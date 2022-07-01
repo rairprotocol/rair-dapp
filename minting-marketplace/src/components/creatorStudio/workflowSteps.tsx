@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { withSentryRouting } from '@sentry/react';
 import { rFetch } from '../../utils/rFetch';
@@ -27,39 +26,57 @@ import MediaUpload from './creatorSteps/MediaUpload';
 import ListOffersDiamond from './diamondCreatorSteps/ListOffersDiamond';
 import DiamondMinterMarketplace from './diamondCreatorSteps/DiamondMinterMarketplace';
 import ResaleMarketplace from './creatorSteps/ResaleMarketplace';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import {
+  IWorkflowSteps,
+  TContractData,
+  TSteps,
+  TWorkflowContextType,
+  TWorkflowParams
+} from './creatorStudio.types';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ethers } from 'ethers';
 
 const SentryRoute = withSentryRouting(Route);
 
-const WorkflowSteps = ({ sentryHistory }) => {
-  const { address, collectionIndex, blockchain } = useParams();
+const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
+  const { address, collectionIndex, blockchain }: TWorkflowParams = useParams();
 
   const {
     minterInstance,
     contractCreator,
-    programmaticProvider,
     diamondMarketplaceInstance,
     currentChain,
     currentUserAddress
-  } = useSelector((store) => store.contractStore);
+  } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
-  const [mintingRole, setMintingRole] = useState();
-  const [traderRole, setTraderRole] = useState();
+  const [mintingRole, setMintingRole] = useState<boolean>();
+  const [traderRole, setTraderRole] = useState<boolean>();
 
-  const [contractData, setContractData] = useState();
+  const [contractData, setContractData] = useState<TContractData>();
 
-  const [tokenInstance, setTokenInstance] = useState();
+  const [tokenInstance, setTokenInstance] = useState<
+    TContractData | ethers.Contract
+  >();
 
-  const [correctMinterInstance, setCorrectMinterInstance] = useState();
+  const [correctMinterInstance, setCorrectMinterInstance] = useState<
+    ethers.Contract | undefined
+  >();
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState<number>(0);
 
-  const [forceFetchData, setForceFetchData] = useState(false);
+  const [forceFetchData, setForceFetchData] = useState<boolean>(false);
 
-  const [simpleMode, setSimpleMode] = useState(true);
+  const [simpleMode, setSimpleMode] = useState<boolean>(true);
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
-  const [steps, setSteps] = useState([]);
+  const [steps, setSteps] = useState<TSteps[]>([]);
 
   const history = useHistory();
 
@@ -67,7 +84,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
     if (!contractData) {
       return;
     }
-    let filteredSteps = [
+    let filteredSteps: TSteps[] = [
       {
         path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
@@ -167,10 +184,11 @@ const WorkflowSteps = ({ sentryHistory }) => {
     blockchain
   ]);
 
-  const onMyChain = window.ethereum
-    ? chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
-    : chainData[contractData?.blockchain]?.chainId ===
-      programmaticProvider?.provider?._network?.chainId;
+  const onMyChain =
+    contractData &&
+    (window.ethereum
+      ? chainData[contractData?.blockchain]?.chainId === currentChain
+      : chainData[contractData?.blockchain]?.chainId === currentChain);
 
   const fetchData = useCallback(async () => {
     if (!address) {
@@ -205,7 +223,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
       ))[0];
       delete response2.contract.products;
       if (response2.contract.blockchain === currentChain) {
-        response2.contract.instance = contractCreator(
+        response2.contract.instance = contractCreator?.(
           address,
           response2.contract.diamond ? diamondFactoryAbi : erc721Abi
         );
@@ -284,8 +302,8 @@ const WorkflowSteps = ({ sentryHistory }) => {
             contractData.instance.hasRole(
               await metamaskCall(contractData.instance.MINTER()),
               contractData.diamond
-                ? diamondMarketplaceInstance.address
-                : minterInstance.address
+                ? diamondMarketplaceInstance?.address
+                : minterInstance?.address
             )
           )
         );
@@ -294,8 +312,8 @@ const WorkflowSteps = ({ sentryHistory }) => {
             contractData.instance.hasRole(
               await contractData.instance.TRADER(),
               contractData.diamond
-                ? diamondMarketplaceInstance.address
-                : minterInstance.address
+                ? diamondMarketplaceInstance?.address
+                : minterInstance?.address
             )
           )
         );
@@ -303,43 +321,28 @@ const WorkflowSteps = ({ sentryHistory }) => {
     }
   }, [contractData, diamondMarketplaceInstance, minterInstance]);
 
-  /*const fetchMintingStatus = useCallback(async () => {
-		if (!tokenInstance || !onMyChain) {
-			return;
-		}
-		try {
-			return await tokenInstance.hasRole(
-				await tokenInstance.MINTER(),
-				correctMinterInstance.address
-			);
-		} catch (err) {
-			console.error(err);
-			return false;
-		}
-	}, [correctMinterInstance, tokenInstance, onMyChain]);*/
-
   useEffect(() => {
     // Fix this
     if (onMyChain) {
-      const createdInstance = contractCreator(
-        minterInstance.address,
+      const createdInstance = contractCreator?.(
+        minterInstance?.address,
         minterAbi
       );
       setCorrectMinterInstance(createdInstance);
     }
-  }, [address, onMyChain, contractCreator, minterInstance.address]);
+  }, [address, onMyChain, contractCreator, minterInstance?.address]);
 
   useEffect(() => {
     // Fix this
     if (onMyChain) {
-      const createdInstance = contractCreator(address, erc721Abi);
+      const createdInstance = contractCreator?.(address, erc721Abi);
       setTokenInstance(createdInstance);
     }
   }, [address, onMyChain, contractCreator]);
 
   useEffect(() => {
     fetchData();
-  }, [forceFetchData]);
+  }, [forceFetchData, fetchData]);
 
   const goBack = useCallback(() => {
     if (currentStep === 0) {
@@ -349,15 +352,20 @@ const WorkflowSteps = ({ sentryHistory }) => {
     history.push(steps[currentStep - 1].populatedPath);
   }, [steps, currentStep, history]);
 
-  const initialValue = {
+  const initialValue: TWorkflowContextType = {
     contractData,
     steps,
     setStepNumber: setCurrentStep,
     gotoNextStep: () => {
       history.push(steps[currentStep + 1].populatedPath);
     },
-    switchBlockchain: async () =>
-      web3Switch(chainData[contractData?.blockchain]?.chainId),
+    switchBlockchain: async () => {
+      if (chainData === undefined || contractData === undefined) return;
+      return await web3Switch(
+        // eslint-disable-next-line
+        chainData[contractData?.blockchain]?.chainId!
+      ); /*here web3Switch method accepts only BlockchainType, but our chainId can be also of type undefined */
+    },
     goBack,
     mintingRole,
     traderRole,
@@ -371,7 +379,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
   return (
     <WorkflowContext.Provider value={initialValue}>
       <WorkflowContext.Consumer>
-        {({ contractData, steps /*, setStepNumber*/ }) => {
+        {() => {
           return (
             <div className="row px-0 mx-0">
               <div className="col-12 my-5" style={{ position: 'relative' }}>
@@ -409,7 +417,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
                           position: 'relative',
                           textAlign: 'right',
                           backgroundColor: `var(--${
-                            currentStep >= index ? 'bubblegum' : 'charcoal-80'
+                            currentStep >= index ? 'bubblegum' : `charcoal-80`
                           })`
                         }}>
                         <div
@@ -428,7 +436,7 @@ const WorkflowSteps = ({ sentryHistory }) => {
                             textAlign: 'center',
                             color: currentStep >= index ? undefined : 'gray'
                           }}>
-                          <div className="rair-abbr" steplabel={item.shortName}>
+                          <div className="rair-abbr" id={item.shortName}>
                             {index + 1}
                           </div>
                         </div>
