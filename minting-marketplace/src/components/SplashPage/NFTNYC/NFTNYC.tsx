@@ -1,32 +1,35 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './NFTNYC.css';
 
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
+// import DiscordIcon from '../images/discord-icon.png';
+// import warning1 from '../images/warning_1.png';
+// import warning2 from '../images/warning_2.png';
+// import videoBackground2 from '../images/nftnyc_videobackground2.png';
+// import videoBackground3 from '../images/nftnyc_videobackground3.png';
+// import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
+// import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
+// import PurchaseTokenButton from '../../common/PurchaseToken';
+// import { rFetch } from '../../../utils/rFetch';
+// import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
+
 import MetaMaskIcon from '../images/metamask_logo.png';
-import DiscordIcon from '../images/discord-icon.png';
 import NFTNYC_TITLE from '../images/NFTNYX_TITLE.gif';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import warning0 from '../images/warning_0.png';
-import warning1 from '../images/warning_1.png';
-import warning2 from '../images/warning_2.png';
+
 import videoBackground1 from '../images/nftnyc_videobackground1.png';
-import videoBackground2 from '../images/nftnyc_videobackground2.png';
-import videoBackground3 from '../images/nftnyc_videobackground3.png';
 
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
-import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
-import PurchaseTokenButton from '../../common/PurchaseToken';
+
 import Swal from 'sweetalert2';
-import { rFetch } from '../../../utils/rFetch';
 import withReactContent from 'sweetalert2-react-content';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
@@ -52,10 +55,9 @@ const WarningModal = () => {
   );
 };
 
-const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
-  const { currentChain, currentUserAddress, minterInstance } = useSelector(
-    (store) => store.contractStore
-  );
+const NFTNYCSplashPage = ({ /*loginDone ,*/ connectUserData }) => {
+  const { /* currentChain */ currentUserAddress /*minterInstance */ } =
+    useSelector((store) => store.contractStore);
 
   const splashData = {
     NFTName: 'NFT',
@@ -113,13 +115,13 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   /* UTILITIES FOR NFT PURCHASE */
-  const [openCheckList, setOpenCheckList] = useState(false);
-  const [purchaseList, setPurshaseList] = useState(true);
+  const [openCheckList /*setOpenCheckList*/] = useState(false);
+  const [purchaseList, setPurchaseList] = useState(true);
   const ukraineglitchChainId = '0x1';
   const dispatch = useDispatch();
 
   const togglePurchaseList = () => {
-    setPurshaseList((prev) => !prev);
+    setPurchaseList((prev) => !prev);
   };
 
   useEffect(() => {
@@ -143,6 +145,7 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
     getProductsFromOffer();
   }, [getProductsFromOffer]);
 
+  const whatSplashPage = 'nftnyc-font';
   /**** */
 
   return (
@@ -159,38 +162,47 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
-        <AuthorCard {...{ splashData, connectUserData }} />
-        <div style={{ height: '108px' }} />
+        <AuthorCard {...{ splashData, connectUserData, whatSplashPage }} />
+        <div style={{ height: '78px' }} />
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
           }}>
-          <h1>How it works</h1>
-          <div style={{ fontSize: 'calc(.75rem + 1vw)', margin: '24px 0' }}>
+          <h1 className="nftnyc-font">How it works</h1>
+          <div
+            className="nftnyc-font"
+            style={{ fontSize: 'calc(.75rem + 1vw)', margin: '24px 0' }}>
             1. Export your Kred NFT to Metamask
           </div>
-          <div style={{ fontSize: 'calc(.75rem + 1vw)' }}>
+          <div
+            className="nftnyc-font"
+            style={{ fontSize: 'calc(.75rem + 1vw)' }}>
             2. OR just connect your wallet. We’ll mint an unlock NFT in the near
             future
           </div>
-          <div style={{ fontSize: 'calc(.75rem + 1vw)', margin: '24px 0' }}>
+          <div
+            className="nftnyc-font"
+            style={{ fontSize: 'calc(.75rem + 1vw)', margin: '24px 0' }}>
             Click sign. We only ask for a single challenge request.
           </div>
           <img className="warning-img" src={warning0} />
           <div className="btn-submit-with-form">
             <button
+              className="nftnyc-font"
               onClick={() =>
                 reactSwal.fire({
                   title:
                     'Watch out for sign requests that look like this. There are now gasless attack vectors that can set permissions to drain your wallet',
                   html: <WarningModal />,
+                  borderRadius: '16px',
                   width: '90vw',
                   height: '70vh',
                   customClass: {
-                    popup: `bg-${primaryColor}`,
+                    popup: `bg-${primaryColor} nftnyc-radius`,
                     title: 'text-nftnyc'
+                    // container: 'nftnyc-radius'
                   },
                   showConfirmButton: false
                 })
@@ -202,21 +214,22 @@ const NFTNYCSplashPage = ({ loginDone, connectUserData }) => {
             </button>
           </div>
         </div>
-        <div style={{ height: '108px' }} />
-        <VideoPlayerModule
+        <div style={{ height: '58px' }} />
+        {/* <VideoPlayerModule
           backgroundImage={videoBackground1}
           videoData={splashData.videoData1}
-        />
-        <div style={{ height: '108px' }} />
-        <div className="info-block">
+        /> */}
+        {/* <div style={{ height: '108px' }} /> */}
+        {/* <div className="info-block">
           {' '}
           Unlockable Conferences Videos Coming Soon
-        </div>
+        </div> */}
         <VideoPlayerView
           productsFromOffer={productsFromOffer}
           primaryColor={primaryColor}
           selectVideo={selectVideo}
           setSelectVideo={setSelectVideo}
+          whatSplashPage={whatSplashPage}
         />
         <div style={{ height: '108px' }} />
         <TeamMeet primaryColor={primaryColor} arraySplash={'nftnyc'} />

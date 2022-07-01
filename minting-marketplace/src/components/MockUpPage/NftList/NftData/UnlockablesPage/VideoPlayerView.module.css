@@ -84,3 +84,23 @@
 .playImagesOnSingleVideo {
   margin-top: 7rem;
 }
+
+.forSplashPageStyleOneVideo {
+  /* width: 406px; */
+  width: 40vw;
+  height: 406px;
+  background-size: cover;
+  background-position: center center;
+  cursor: pointer;
+  border-radius: 16px;
+  margin: 9px 100px;
+}
+
+.forSplashPageStyleWrapperVideo{
+  width: 1200px;
+  height: 446px;
+  margin: auto;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: row;
+}

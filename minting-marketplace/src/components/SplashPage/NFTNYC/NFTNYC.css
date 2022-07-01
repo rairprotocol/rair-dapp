@@ -1,4 +1,14 @@
 /* use .wrapper-splash-page.nftnyc selector to override any general styling*/
+.nftnyc-radius{
+  border-radius: 16px;
+}
+.nftnyc-textCenter{
+  text-align: center !important;
+}
+.nftnyc-font{
+  font-family: 'Charriot Deluxe', sans-serif;
+}
+
 .wrapper-splash-page.nftnyc .info-block {
   font-size: calc(32px + 0.5vw);
   text-align: center;
@@ -11,7 +21,7 @@
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  height: 70vh;
+  height: 53vh;
   margin-top: 5vh;
 }
 
@@ -33,20 +43,27 @@
 
 .warning-modal-col-0-title {
   font-family: 'Charriot Deluxe', sans-serif;
-  font-size: calc(0.75rem + 1vw);
+  font-size: calc(1.25rem + 1vw);
   color: red;
-  margin-top: 52px;
+  /* margin-top: 52px; */
+  position: relative;
+  top: -4rem;
 }
 
 .warning-modal-col-1-title {
   font-family: 'Charriot Deluxe', sans-serif;
-  font-size: calc(0.75rem + 1vw);
+  font-size: calc(1.25rem + 1vw);
   color: green;
-  margin-top: 50px;
+  /* margin-top: 50px; */
+  position: relative;
+  top: -4rem;
 }
 
 .swal2-title.text-nftnyc {
   color: #f15621;
+  /* margin-top: 1rem; */
+  font-family: 'Charriot Deluxe', sans-serif;
+
 }
 
 .wrapper-splash-page.nftnyc
@@ -61,7 +78,7 @@
 
 .wrapper-splash-page.nftnyc .warning-img {
   width: 30vw;
-  margin: 48px 0 24px 0;
+  margin: 25px 0 24px 0;
 }
 
 .wrapper-splash-page.nftnyc .template-author-card .text-splash {
@@ -74,6 +91,7 @@
   .text-splash
   .text-description {
   padding: 2vw 0 2vw 3vw;
+  font-family: 'Charriot Deluxe', sans-serif;
 }
 
 .wrapper-splash-page.nftnyc .template-author-card .text-splash .button-wrapper {
@@ -190,11 +208,11 @@
   }
 
   .warning-modal-col-0-title {
-    margin-top: 42px;
+    /* margin-top: 42px; */
   }
 
   .warning-modal-col-1-title {
-    margin-top: 44px;
+    /* margin-top: 44px; */
   }
 
   .wrapper-splash-page.nftnyc .template-author-card {

@@ -8,12 +8,13 @@ const hyperlink = (url) => {
   window.open(url);
 };
 
-const AuthorCardButton = ({ buttonData }) => {
+const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
   const { buttonLabel, buttonColor, buttonImg, buttonLink, buttonAction } =
     buttonData;
   return (
     <div className="btn-submit-with-form">
       <button
+        className={whatSplashPage ? whatSplashPage : ''}
         onClick={() => {
           if (buttonAction) {
             buttonAction();
@@ -33,7 +34,12 @@ const AuthorCardButton = ({ buttonData }) => {
   );
 };
 
-const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
+const AuthorCard = ({
+  splashData,
+  connectUserData,
+  toggleCheckList,
+  whatSplashPage
+}) => {
   const {
     title,
     titleColor,
@@ -91,11 +97,26 @@ const AuthorCard = ({ splashData, connectUserData, toggleCheckList }) => {
               />
             )}
             <div className="button-row-0">
-              {button1 && <AuthorCardButton buttonData={button1} />}
+              {button1 && (
+                <AuthorCardButton
+                  buttonData={button1}
+                  whatSplashPage={whatSplashPage}
+                />
+              )}
             </div>
             <div className="button-row-1">
-              {button2 && <AuthorCardButton buttonData={button2} />}
-              {button3 && <AuthorCardButton buttonData={button3} />}
+              {button2 && (
+                <AuthorCardButton
+                  buttonData={button2}
+                  whatSplashPage={whatSplashPage}
+                />
+              )}
+              {button3 && (
+                <AuthorCardButton
+                  buttonData={button3}
+                  whatSplashPage={whatSplashPage}
+                />
+              )}
             </div>
           </div>
         </div>

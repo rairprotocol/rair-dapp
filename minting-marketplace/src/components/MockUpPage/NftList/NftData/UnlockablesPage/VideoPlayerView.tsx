@@ -8,7 +8,8 @@ function VideoPlayerView({
   productsFromOffer,
   primaryColor,
   selectVideo,
-  setSelectVideo
+  setSelectVideo,
+  whatSplashPage
 }) {
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
 
@@ -72,7 +73,9 @@ function VideoPlayerView({
               style={{
                 backgroundImage: `url(${selectVideo?.staticThumbnail})`
               }}
-              className={cl.SingleVideo}>
+              className={
+                whatSplashPage ? cl.forSplashPageStyleOneVideo : cl.SingleVideo
+              }>
               <img
                 className={cl.playImagesOnSingleVideo}
                 src={playImages}

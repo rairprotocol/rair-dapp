@@ -1012,7 +1012,15 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
   return (
     <div className="splash-team">
       <div className="title-team">
-        {arraySplash === 'nftnyc' && <h3> About </h3>}
+        {arraySplash === 'nftnyc' && (
+          <h3
+            className={
+              arraySplash === 'nftnyc' ? 'nftnyc-font nftnyc-textCenter' : ''
+            }>
+            {' '}
+            About{' '}
+          </h3>
+        )}
         {arraySplash === 'ukraine' && (
           <h3>
             {' '}
