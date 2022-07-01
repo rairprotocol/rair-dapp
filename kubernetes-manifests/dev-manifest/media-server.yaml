@@ -46,7 +46,7 @@ spec:
         io.kompose.service: media-server
     spec:
       containers:
-        - image: rairtechinc/rairservernode:dev_latest
+        - image: rairtechinc/rairservernode:dev_2.9
           name: media-server
           imagePullPolicy: Always
           ports:
@@ -59,7 +59,7 @@ spec:
                   key: APP_ROLE_SECRET_ID
           envFrom:
           - configMapRef:
-              name: media-sever-env
+              name: media-server-env
           resources: {}
       imagePullSecrets:
         - name: regcred

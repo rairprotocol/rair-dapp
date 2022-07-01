@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1beta1
 kind: FrontendConfig
 metadata:
-  name: ssl-redirect
+  name: my-frontend-config
 spec:
   redirectToHttps:
     enabled: true
