@@ -1,5 +1,4 @@
-//@ts-nocheck
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
@@ -7,8 +6,17 @@ import Swal from 'sweetalert2';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import { metamaskCall } from '../../../utils/metamaskUtils';
 import { BigNumber } from 'ethers';
+import {
+  IIBlockchainURIManager,
+  ITokenURIRow,
+  TNextToken,
+  TUniqueURIArray
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { UsersContractsType } from '../../adminViews/adminView.types';
 
-const TokenURIRow = ({
+const TokenURIRow: React.FC<ITokenURIRow> = ({
   tokenId,
   metadataURI,
   deleter,
@@ -16,9 +24,8 @@ const TokenURIRow = ({
   array,
   lastTokenInProduct
 }) => {
-  const [tokenIndex, setTokenIndex] = useState(tokenId);
-  const [metadataLink, setMetadataLink] = useState(metadataURI);
-
+  const [tokenIndex, setTokenIndex] = useState<string>(tokenId);
+  const [metadataLink, setMetadataLink] = useState<string>(metadataURI);
   useEffect(() => {
     setTokenIndex(tokenId);
   }, [tokenId]);
@@ -27,12 +34,12 @@ const TokenURIRow = ({
     setMetadataLink(metadataURI);
   }, [metadataURI]);
 
-  const tokenIdSetter = (value) => {
+  const tokenIdSetter = (value: string) => {
     array[index].tokenId = value;
     setTokenIndex(value);
   };
 
-  const metadataURISetter = (value) => {
+  const metadataURISetter = (value: string) => {
     array[index].metadataURI = value;
     setMetadataLink(value);
   };
@@ -45,7 +52,7 @@ const TokenURIRow = ({
           getter={tokenIndex}
           setter={tokenIdSetter}
           type="number"
-          min="0"
+          min={0}
           max={lastTokenInProduct}
           customClass="form-control"
           labelClass="w-100"
@@ -71,30 +78,31 @@ const TokenURIRow = ({
   );
 };
 
-const BlockchainURIManager = ({ contractData, collectionIndex }) => {
-  const { currentChain } = useSelector((store) => store.contractStore);
+const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
+  contractData,
+  collectionIndex
+}) => {
+  const { currentChain } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
   const lastTokenInProduct = contractData?.product?.copies || 0;
-
   const [blockchainOperationInProgress, setBlockchainOperationInProgress] =
-    useState(false);
-
-  const [contractWideMetadata, setContractWideMetadata] = useState('');
-  const [appendTokenForContract, setAppendTokenForContract] = useState(false);
-
-  const [collectionWideMetadata, setCollectionWideMetadata] = useState('');
+    useState<boolean>(false);
+  const [contractWideMetadata, setContractWideMetadata] = useState<string>('');
+  const [appendTokenForContract, setAppendTokenForContract] =
+    useState<boolean>(false);
+  const [collectionWideMetadata, setCollectionWideMetadata] =
+    useState<string>('');
   const [appendTokenForCollection, setAppendTokenForCollection] =
-    useState(false);
-
-  const [rangeWideMetadata, setRangeWideMetadata] = useState('');
-  const [rangeOptions, setRangeOptions] = useState([]);
-  const [selectedRange, setSelectedRange] = useState('null');
-  const [appendTokenForRange, setAppendTokenForRange] = useState(false);
-
-  const [uniqueURIArray, setUniqueURIArray] = useState([]);
-
-  const [openSeaURI, setOpenSeaURI] = useState('');
-
+    useState<boolean>(false);
+  const [rangeWideMetadata, setRangeWideMetadata] = useState<string>('');
+  const [rangeOptions, setRangeOptions] = useState<UsersContractsType[]>([]);
+  const [selectedRange, setSelectedRange] = useState<string>('null');
+  const [appendTokenForRange, setAppendTokenForRange] =
+    useState<boolean>(false);
+  const [uniqueURIArray, setUniqueURIArray] = useState<TUniqueURIArray[]>([]);
+  const [openSeaURI, setOpenSeaURI] = useState<string>('');
   useEffect(() => {
     if (contractData?.product?.offers) {
       setRangeOptions(
@@ -113,11 +121,14 @@ const BlockchainURIManager = ({ contractData, collectionIndex }) => {
       return;
     }
     const aux = [...uniqueURIArray];
-    let nextToken = contractData.nfts.tokens[uniqueURIArray.length];
+    let nextToken: TNextToken =
+      contractData?.nfts.tokens[uniqueURIArray.length];
     if (!nextToken) {
       nextToken = {
         uniqueIndexInContract:
-          uniqueURIArray.length > 0 ? uniqueURIArray.at(-1).tokenId + 1 : 0,
+          uniqueURIArray.length > 0
+            ? String(Number(uniqueURIArray.at(-1)?.tokenId) + 1)
+            : '0',
         metadataURI: ''
       };
     }
@@ -128,7 +139,7 @@ const BlockchainURIManager = ({ contractData, collectionIndex }) => {
     setUniqueURIArray(aux);
   };
 
-  const deleteUniqueURIRow = (index) => {
+  const deleteUniqueURIRow = (index: number) => {
     const aux = [...uniqueURIArray];
     aux.splice(index, 1);
     setUniqueURIArray(aux);
@@ -307,7 +318,7 @@ const BlockchainURIManager = ({ contractData, collectionIndex }) => {
                   contractData.instance.setRangeURI(
                     selectedRange,
                     rangeWideMetadata,
-                    appentTokenForRange
+                    appendTokenForRange
                   ),
                   'This feature might not be implemented yet!'
                 )

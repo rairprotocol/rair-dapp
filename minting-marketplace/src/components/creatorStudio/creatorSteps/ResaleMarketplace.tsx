@@ -128,7 +128,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
                   index={index}
                   array={customPayments}
                   deleter={removePayment}
-                  renderer={() => setRerender(!rerender)}
+                  rerender={() => setRerender(!rerender)}
                   minterDecimals={minterDecimals}
                   {...item}
                 />

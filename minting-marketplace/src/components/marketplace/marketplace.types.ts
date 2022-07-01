@@ -19,6 +19,7 @@ export type TOfferType = {
   soldCopies: number;
   transactionHash: string;
   _id: string;
+  diamondRangeIndex: string;
 };
 
 export type TOfferData = TOfferType & {

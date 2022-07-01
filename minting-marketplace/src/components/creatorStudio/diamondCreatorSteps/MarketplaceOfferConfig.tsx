@@ -1,9 +1,8 @@
 //@ts-nocheck
 import React, { useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
-import { utils /*, BigNumber*/ } from 'ethers';
+import { utils } from 'ethers';
 import { useSelector } from 'react-redux';
-// import DiamondCustomPaymentRow from './diamondCustomPaymentRow'
 import CustomFeeRow from '../common/customFeeRow';
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../../utils/metamaskUtils';
@@ -97,9 +96,6 @@ const MarketplaceOfferConfig = ({
   const total = customPayments.reduce((prev, current) => {
     return Number(prev) + Number(current.percentage);
   }, 0);
-  // let splitTotal = customPayments.reduce((prev, current) => {
-  // 	return prev.add((BigNumber.from(current.percentage)).div(100).mul(item.price))
-  // }, BigNumber.from(0));
   const updateAvailable = simpleMode || !marketValuesChanged;
 
   return (
@@ -217,7 +213,7 @@ const MarketplaceOfferConfig = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {customPayments.map((customPaymentItem, index, array) => {
+                  {customPayments.map((customPaymentItem, index) => {
                     return (
                       <CustomFeeRow
                         key={index}

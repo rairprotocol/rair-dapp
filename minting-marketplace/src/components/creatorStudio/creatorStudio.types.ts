@@ -1,4 +1,6 @@
 import { ethers } from 'ethers';
+import { ContractType } from '../adminViews/adminView.types';
+import { MouseEvent } from 'react';
 import { ReactNode } from 'react';
 import {
   TContract,
@@ -8,9 +10,36 @@ import {
   TProducts
 } from '../../axios.responseTypes';
 import * as H from 'history';
-import { ContractType } from '../adminViews/adminView.types';
-import { MouseEvent } from 'react';
+export interface ICustomFeeRow {
+  index: number;
+  array: TCustomPayments[];
+  recipient: string | undefined;
+  deleter: (index: number) => void;
+  percentage: number;
+  rerender: () => void;
+  editable: boolean;
+  message: string;
+  minterDecimals: number;
+  disabled?: boolean;
+  marketValuesChanged?: boolean;
+  setMarketValuesChanged?: (value: boolean) => void;
+  price?: string;
+  symbol?: string;
+}
 
+export interface ITokenURIRow {
+  tokenId: string;
+  metadataURI: string;
+  deleter: (index: number) => void;
+  index: number;
+  array: TUniqueURIArray[];
+  lastTokenInProduct: number;
+}
+
+export interface IIBlockchainURIManager {
+  contractData: TContractData;
+  collectionIndex: string;
+}
 export type TParamsBatchMetadata = {
   address: string;
   collectionIndex: string;
@@ -46,6 +75,16 @@ export type TContractData = Omit<TContract, 'product' | 'offerPool'> &
     nfts: TNftItemResult;
     product: TWorkflowProduct;
   };
+
+export type TUniqueURIArray = {
+  tokenId: string;
+  metadataURI: string;
+};
+
+export type TNextToken = Pick<
+  TTokenData,
+  'uniqueIndexInContract' | 'metadataURI'
+>;
 export type TResaleMarketplace = Pick<
   TWorkflowContextType,
   | 'contractData'
