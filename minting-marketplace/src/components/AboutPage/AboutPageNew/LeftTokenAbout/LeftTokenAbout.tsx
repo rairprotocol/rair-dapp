@@ -13,33 +13,24 @@ const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
           </h3>
         </div>
         <div className="tokens-description">
-          <p style={{ color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}` }}>
+          <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
             RAIRtech has developed a new way to control content on the
             blockchain called DDRM or distributed digital rights management.
           </p>
           <ul>
             <li>
-              <p
-                style={{
-                  color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-                }}>
+              <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
                 Allows for encrypted streaming of videos, music, images and data
               </p>
             </li>
             <li>
-              <p
-                style={{
-                  color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-                }}>
+              <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
                 Only the owner of the NFT can stream the content this makes
                 digital goods work like real goods
               </p>
             </li>
             <li>
-              <p
-                style={{
-                  color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-                }}>
+              <p className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
                 Feature complete platform: minting, streaming, royalties &
                 metadata
               </p>

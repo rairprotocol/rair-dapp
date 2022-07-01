@@ -148,19 +148,15 @@ const MainBlock: React.FC<IMainBlock> = ({
   return (
     <div className="information-author">
       <div className="home-about-desc">
-        <h2
-          style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-          }}>
+        <h2 className={primaryColor === 'rhyno' ? 'rhyno' : ''}>
           Encrypted,
           <br />
           Streaming NFTs
         </h2>
         <div
-          className="autor-about-text"
-          style={{
-            color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
-          }}>
+          className={`autor-about-text ${
+            primaryColor === 'rhyno' ? 'rhyno' : ''
+          }`}>
           Our platform makes it possible to attach digital goods
           <br />
           {"to an NFT using encrypted streaming - making today's"}
@@ -175,14 +171,7 @@ const MainBlock: React.FC<IMainBlock> = ({
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="Example Modal">
-            <h2
-              style={{
-                fontSize: '60px',
-                fontWeight: 'bold',
-                paddingTop: '3rem',
-                cursor: 'default'
-              }}
-              ref={(_subtitle) => (subtitle = _subtitle)}>
+            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
               Terms of Service
             </h2>
             <div className="modal-content-wrapper">
@@ -200,18 +189,11 @@ const MainBlock: React.FC<IMainBlock> = ({
                       htmlFor="policy">
                       I agree to the{' '}
                     </label>
-                    <span
-                      onClick={() => window.open('/privacy', '_blank')}
-                      style={{
-                        color: '#9013FE',
-                        fontSize: '24px',
-                        paddingRight: '1rem',
-                        marginLeft: '-2.5rem'
-                      }}>
+                    <span onClick={() => window.open('/privacy', '_blank')}>
                       Privacy Policy
                     </span>
                   </div>
-                  <div className="form-group sec-group ">
+                  <div className="form-group sec-group">
                     <input type="checkbox" className="dgdfgd" id="use" />
                     <label
                       onClick={() =>
@@ -220,14 +202,7 @@ const MainBlock: React.FC<IMainBlock> = ({
                       htmlFor="use">
                       I accept the{' '}
                     </label>
-                    <span
-                      onClick={() => window.open('/terms-use', '_blank')}
-                      style={{
-                        color: '#9013FE',
-                        fontSize: '24px',
-                        paddingRight: '2.3rem',
-                        marginLeft: '-2.5rem'
-                      }}>
+                    <span onClick={() => window.open('/terms-use', '_blank')}>
                       Terms of Use
                     </span>
                   </div>
@@ -243,7 +218,6 @@ const MainBlock: React.FC<IMainBlock> = ({
                     disabled={!Object.values(active).every((el) => el)}
                     className="modal-btn">
                     <img
-                      style={{ width: '100px', marginLeft: '-1.5rem' }}
                       className="metamask-logo modal-btn-logo"
                       src={Metamask}
                       alt="metamask-logo"

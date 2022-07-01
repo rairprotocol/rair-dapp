@@ -29,11 +29,7 @@ import { IAboutPageNew } from './aboutPage.types';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
-const AboutPageNew: React.FC<IAboutPageNew> = ({
-  headerLogoBlack,
-  headerLogoWhite,
-  connectUserData
-}) => {
+const AboutPageNew: React.FC<IAboutPageNew> = ({ connectUserData }) => {
   const { pathname } = useLocation();
   // const history = useHistory();
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
@@ -86,14 +82,8 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
 
   return (
     <>
-      <div className="wrapper-about-page" style={{ marginTop: 0 }}>
+      <div className="wrapper-about-page">
         <MetaTags seoMetaTags={seoInformation} />
-        {/* <div className="about-page-logo">
-                    <img onClick={() => history.push('/')}
-                        alt='Header Logo'
-                        src={primaryColor === "rhyno" ? headerLogoBlack : headerLogoWhite}
-                        className='header_logo-about' />
-                </div> */}
         <div className="home-about--page">
           <MainBlock
             connectUserData={connectUserData}

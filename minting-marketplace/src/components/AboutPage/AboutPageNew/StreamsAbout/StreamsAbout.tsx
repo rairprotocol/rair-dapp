@@ -70,9 +70,6 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
           title="unique-box-video"
           src="https://www.youtube.com/embed/ju4aohAfXEs"></iframe>
       </div>
-      {/* <div className="about-video-tutorial-text">
-                You’ll need Metamask and a watch token to  play our encrypted streams. No middleman necessary.
-            </div> */}
       <div className="join-community">
         <div className="title-join">
           <h3>
@@ -80,15 +77,14 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
           </h3>
         </div>
         <div
-          className="community-description"
-          style={{
-            background: `${primaryColor === 'rhyno' ? '#fff' : '#383637'}`
-          }}>
-          <div className="community-text">
-            <p
-              style={{
-                color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
-              }}>
+          className={`community-description ${
+            primaryColor === 'rhyno' ? 'rhyno' : ''
+          }`}>
+          <div
+            className={`community-text ${
+              primaryColor === 'rhyno' ? 'rhyno' : ''
+            }`}>
+            <p>
               You’ll need <span>Metamask</span> and a watch token to play our
               encrypted streams. To stream the videos below you’ll need to mint
               a watch token for .1 MATIC
@@ -100,35 +96,15 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
       </div>
       <div className="tutorial-with-metamask">
         <div className="container-content-metamask">
-          {/* <div className="content-show-arrow">
-                        <img src={ArrowUp} alt="cursor" />
-                    </div>
-                    <div className="metamask-box">
-                        <img src={MetamaskTutorial} alt="img-metamask" />
-                        <div className="btn-buy-metamask">
-                            <button>
-                                <img
-                                    className="metamask-logo"
-                                    src={Metamask}
-                                    alt="metamask-logo"
-                                />{" "}
-                                Mint a token
-                            </button>
-                        </div>
-                    </div> */}
           <div className="container-block-video">
             <div className="block-videos">
               <div className="box-video">
                 <div
                   onClick={() => handleOpenVideo(urlVideo, mediaIdVideo)}
-                  className="video-locked"
-                  style={{
-                    background: `${
-                      primaryColor === 'rhyno' ? '#fff' : '#4E4D4DCC'
-                    }`,
-                    cursor: `${process ? 'default' : 'pointer'}`
-                  }}>
-                  <div style={{ position: 'relative' }}>
+                  className={`video-locked ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}>
+                  <div className="video-about-cotent">
                     <div className="video-icon">
                       <i className="fa fa-lock"></i>
                       <p>RAIR Exclusive</p>
@@ -136,36 +112,27 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
                     <img src={VideoBg_2} alt="unlockble video" />
                   </div>
                   <div className="video-description">
-                    <div className="video-title">
-                      <p
-                        style={{
-                          color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-                        }}>
-                        How RAIR Works
-                      </p>
+                    <div
+                      className={`video-title ${
+                        primaryColor === 'rhyno' ? 'rhyno' : ''
+                      }`}>
+                      <p>How RAIR Works</p>
                     </div>
-                    <div className="video-timer">
-                      <p
-                        style={{
-                          color: `${
-                            primaryColor === 'rhyno' ? '#000' : '#A7A6A6'
-                          }`
-                        }}>
-                        00:05:33
-                      </p>
+                    <div
+                      className={`video-timer ${
+                        primaryColor === 'rhyno' ? 'rhyno' : ''
+                      }`}>
+                      <p>00:05:33</p>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="box-video">
                 <div
-                  className="video-locked"
-                  style={{
-                    background: `${
-                      primaryColor === 'rhyno' ? '#fff' : '#4E4D4DCC'
-                    }`
-                  }}>
-                  <div style={{ position: 'relative' }}>
+                  className={`video-locked ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}>
+                  <div className="video-about-cotent">
                     <div className="video-icon">
                       <i className="fa fa-lock"></i>
                       <p>RAIR Exclusive</p>
@@ -173,29 +140,21 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
                     <img src={VideoBg_1} alt="unlockble video" />
                   </div>
                   <div className="video-description">
-                    <div className="video-title">
-                      <p
-                        style={{
-                          color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-                        }}>
-                        Coming soon
-                      </p>
+                    <div
+                      className={`video-title ${
+                        primaryColor === 'rhyno' ? 'rhyno' : ''
+                      }`}>
+                      <p>Coming soon</p>
                     </div>
-                    {/* <div className="video-timer">
-                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:27</p>
-                                        </div> */}
                   </div>
                 </div>
               </div>
               <div className="box-video">
                 <div
-                  className="video-locked"
-                  style={{
-                    background: `${
-                      primaryColor === 'rhyno' ? '#fff' : '#4E4D4DCC'
-                    }`
-                  }}>
-                  <div style={{ position: 'relative' }}>
+                  className={`video-locked ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}>
+                  <div className="video-about-cotent">
                     <div className="video-icon">
                       <i className="fa fa-lock"></i>
                       <p>RAIR Exclusive</p>
@@ -203,29 +162,21 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
                     <img src={VideoBg_2} alt="unlockble video" />
                   </div>
                   <div className="video-description">
-                    <div className="video-title">
-                      <p
-                        style={{
-                          color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-                        }}>
-                        Coming soon
-                      </p>
+                    <div
+                      className={`video-title ${
+                        primaryColor === 'rhyno' ? 'rhyno' : ''
+                      }`}>
+                      <p>Coming soon</p>
                     </div>
-                    {/* <div className="video-timer">
-                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:09:33</p>
-                                        </div> */}
                   </div>
                 </div>
               </div>
               <div className="box-video">
                 <div
-                  className="video-locked"
-                  style={{
-                    background: `${
-                      primaryColor === 'rhyno' ? '#fff' : '#4E4D4DCC'
-                    }`
-                  }}>
-                  <div style={{ position: 'relative' }}>
+                  className={`video-locked ${
+                    primaryColor === 'rhyno' ? 'rhyno' : ''
+                  }`}>
+                  <div className="video-about-cotent">
                     <div className="video-icon">
                       <i className="fa fa-lock"></i>
                       <p>RAIR Exclusive</p>
@@ -233,25 +184,16 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
                     <img src={VideoBg_1} alt="unlockble video" />
                   </div>
                   <div className="video-description">
-                    <div className="video-title">
-                      <p
-                        style={{
-                          color: `${primaryColor === 'rhyno' ? '#000' : '#fff'}`
-                        }}>
-                        Coming soon
-                      </p>
+                    <div
+                      className={`video-title ${
+                        primaryColor === 'rhyno' ? 'rhyno' : ''
+                      }`}>
+                      <p>Coming soon</p>
                     </div>
-                    {/* <div className="video-timer">
-                                            <p style={{ color: `${primaryColor === "rhyno" ? "#000" : "#A7A6A6"}` }}>00:05:27</p>
-                                        </div> */}
                   </div>
                 </div>
               </div>
             </div>
-            {/* <div className="text-watch-token">
-                            To stream the videos above you’ll need to mint<br />
-                            a watch token for .1 MATIC
-                        </div> */}
           </div>
         </div>
       </div>

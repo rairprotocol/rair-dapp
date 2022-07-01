@@ -6,6 +6,7 @@ import Nft_2 from './../../assets/coin-agenda_2.png';
 import Nft_3 from './../../assets/nutcracher-nft-photo.png';
 import Nft_4 from './../../assets/coin-agenda_1.jpeg';
 import MobileCarouselNfts from './MobileCarouselNfts';
+import { MainSelectNft } from './MainSelectNft';
 
 const ExclusiveNfts = () => {
   return (
@@ -16,19 +17,13 @@ const ExclusiveNfts = () => {
         </h3>
       </div>
       <div className="nfts-select">
-        <div
-          className="main-nft"
-          style={{
-            background: `url(${NftImage}) no-repeat`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center'
-          }}>
+        <MainSelectNft className="main-nft" NftImage={NftImage}>
           <div className="btn-open-store">
             <NavLink to="/greyman-splash">
               <span>View drop page</span> <i className="fas fa-arrow-right"></i>
             </NavLink>
           </div>
-        </div>
+        </MainSelectNft>
         <div className="block-nfts">
           <div className="box-nft">
             <img src={Nft_4} alt="img" />
