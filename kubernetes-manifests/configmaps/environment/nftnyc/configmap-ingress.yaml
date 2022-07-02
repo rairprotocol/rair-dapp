@@ -4,4 +4,4 @@ metadata:
   name: ingress-env
 data:
   IP_NAME: nftnyc
-  HOSTNAME: nftnyc.rair.tech
+  HOSTNAME: nftnyc.rair.market
