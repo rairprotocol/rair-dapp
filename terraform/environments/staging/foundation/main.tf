@@ -53,6 +53,12 @@ module "foundation" {
   ]
 }
 
+module "hcp_cloud" {
+  source = "../../../modules/hcp_cloud"
+  env_name = module.config.env_config.staging.env_name
+  vault_cluster_tier = "dev"
+}
+
 output "complete_output" {
   value = module.foundation.complete_output
 }

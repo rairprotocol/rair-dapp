@@ -48,7 +48,8 @@ module "foundation" {
 
 module "hcp_cloud" {
   source = "../../../modules/hcp_cloud"
-  env_name = "dev"
+  env_name = module.config.env_config.dev.env_name
+  vault_cluster_tier = "dev"
 }
 
 output "complete_output" {

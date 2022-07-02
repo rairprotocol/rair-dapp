@@ -3,5 +3,5 @@ resource "hcp_vault_cluster" "primary" {
   hvn_id     = hcp_hvn.primary.hvn_id
 
   public_endpoint = true
-  tier = "dev"
+  tier = var.vault_cluster_tier
 }

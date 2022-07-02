@@ -26,4 +26,3 @@ provider "vault" {
 module "vault_config" {
   source = "../../../modules/vault_config"
 }
-
