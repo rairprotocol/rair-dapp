@@ -10,6 +10,15 @@
 .ListOfVideosWrapper {
   padding: 10px;
   overflow: scroll;
+  /* Internet Explorer 10+ */
+  -ms-overflow-style: none;  
+  /* Firefox */
+  scrollbar-width: none;
+}
+
+ /* Safari and Chrome */
+ .ListOfVideosWrapper::-webkit-scrollbar { 
+  display: none;
 }
 
 .previewWrapper {
