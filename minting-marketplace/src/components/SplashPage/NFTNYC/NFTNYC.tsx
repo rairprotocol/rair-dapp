@@ -7,8 +7,8 @@ import './NFTNYC.css';
 
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 // import DiscordIcon from '../images/discord-icon.png';
-// import warning1 from '../images/warning_1.png';
-// import warning2 from '../images/warning_2.png';
+import warning1 from '../images/warning_1.png';
+import warning2 from '../images/warning_2.png';
 // import videoBackground2 from '../images/nftnyc_videobackground2.png';
 // import videoBackground3 from '../images/nftnyc_videobackground3.png';
 // import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
@@ -44,14 +44,25 @@ const reactSwal = withReactContent(Swal);
 
 const WarningModal = () => {
   return (
-    <div className="warning-modal">
-      <div className="warning-modal-col-0">
-        <div className="warning-modal-col-0-title">{"Bad don't sign"}</div>
+    <div className="main-wrapper-nyc">
+      <div className="bad">
+        <h3>Bad don&#8219;t sign</h3>
+        <img src={warning1} alt="Bad don&#8219;t sign" />
       </div>
-      <div className="warning-modal-col-1">
-        <div className="warning-modal-col-1-title">Good safe to sign</div>
+      <div className="good">
+        <h3>Good safe to sign</h3>
+        <img src={warning2} alt="Good safe to sign" />
       </div>
     </div>
+
+    // <div className="warning-modal">
+    //   <div className="warning-modal-col-0">
+    //     <div className="warning-modal-col-0-title">Bad don t sign</div>
+    //   </div>
+    //   <div className="warning-modal-col-1">
+    //     <div className="warning-modal-col-1-title">Good safe to sign</div>
+    //   </div>
+    // </div>
   );
 };
 
@@ -196,11 +207,8 @@ const NFTNYCSplashPage = ({ /*loginDone ,*/ connectUserData }) => {
                   title:
                     'Watch out for sign requests that look like this. There are now gasless attack vectors that can set permissions to drain your wallet',
                   html: <WarningModal />,
-                  borderRadius: '16px',
-                  width: '90vw',
-                  height: '70vh',
                   customClass: {
-                    popup: `bg-${primaryColor} nftnyc-radius`,
+                    popup: `bg-${primaryColor} nftnyc-radius nftnyc-resp `,
                     title: 'text-nftnyc'
                     // container: 'nftnyc-radius'
                   },

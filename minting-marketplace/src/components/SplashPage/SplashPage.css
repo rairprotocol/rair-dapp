@@ -447,13 +447,13 @@
 }
 
 .btn-submit-with-form button {
-  font-size: 20px;
+  font-size: 1.25rem;
   color: #fff;
   background: #0a464f;
-  width: 303px;
-  height: 64px;
+  width: 18.938rem;
+  height: 4rem;
   border: none;
-  border-radius: 16px;
+  border-radius: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1307,7 +1307,7 @@
 }
 
 .title-team h3 {
-  font-size: 40px;
+  font-size: 2.5rem;
   text-align: left;
 }
 

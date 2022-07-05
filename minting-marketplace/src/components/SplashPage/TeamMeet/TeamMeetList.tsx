@@ -850,7 +850,7 @@ const UkraineGlitchComponent = ({ primaryColor }) => {
   );
 };
 
-const NFTNYCTeamComponent = ({ primaryColor }) => {
+const NFTNYCTeamComponent = ({ primaryColor, arraySplash }) => {
   return (
     <div className="splash-team-greyman">
       {teamNFTNYCArray.map((t, index) => {
@@ -863,6 +863,7 @@ const NFTNYCTeamComponent = ({ primaryColor }) => {
             socials={t.socials}
             primaryColor={primaryColor}
             url={t.imageUrl}
+            arraySplash={arraySplash}
           />
         );
       })}
@@ -1013,13 +1014,13 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
     <div className="splash-team">
       <div className="title-team">
         {arraySplash === 'nftnyc' && (
-          <h3
+          <h1
             className={
               arraySplash === 'nftnyc' ? 'nftnyc-font nftnyc-textCenter' : ''
             }>
             {' '}
             About{' '}
-          </h3>
+          </h1>
         )}
         {arraySplash === 'ukraine' && (
           <h3>
@@ -1064,7 +1065,10 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
       </div>
       <div className="meet-team">
         {arraySplash === 'nftnyc' && (
-          <NFTNYCTeamComponent primaryColor={primaryColor} />
+          <NFTNYCTeamComponent
+            primaryColor={primaryColor}
+            arraySplash={arraySplash}
+          />
         )}
         {arraySplash === 'ukraine' && <UkraineGlitchComponent />}
         {arraySplash === 'vaporverse' && <VaporVerseComponent />}

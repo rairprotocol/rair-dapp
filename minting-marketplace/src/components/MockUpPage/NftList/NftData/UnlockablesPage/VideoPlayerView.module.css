@@ -96,20 +96,58 @@
 
 .forSplashPageStyleOneVideo {
   /* width: 406px; */
-  width: 40vw;
-  height: 406px;
+  width: 34vw;
+  height: 25.375rem;
   background-size: cover;
   background-position: center center;
   cursor: pointer;
-  border-radius: 16px;
-  margin: 9px 100px;
+  border-radius: 1rem;
+  margin: 0.563rem 1rem;
 }
 
-.forSplashPageStyleWrapperVideo{
+.forSplashPageStyleWrapperVideo {
   width: 1200px;
   height: 446px;
   margin: auto;
   border-radius: 16px;
   display: flex;
   flex-direction: row;
+}
+
+@media screen and (max-width: 850px) {
+  .VideoPlayerViewWrapper {
+    max-width: 1600px;
+    height: auto;
+    margin: auto;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .ListOfVideosWrapper {
+    padding: 10px;
+    overflow: scroll;
+    height: 394px;
+  }
+  .forSplashPageStyleOneVideo {
+    /* width: 406px; */
+    width: 41vw;
+    height: 14.375rem;
+    background-size: cover;
+    background-position: center center;
+    cursor: pointer;
+    border-radius: 1rem;
+    margin: 0.563rem 1rem;
+  }
+  .playImagesOnSingleVideo {
+    margin-top: 1.4vh;
+    width: 20vw;
+  }
+  
+}
+@media screen and (max-width: 570px) {
+  .playImagesOnSingleVideo {
+    margin-top: 2.4vh;
+    width: 20vw;
+  }
+  
 }

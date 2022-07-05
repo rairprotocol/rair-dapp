@@ -2,7 +2,15 @@
 import React from 'react';
 import TeammateDesc from './TeammateDesc';
 
-const Teammate = ({ url, name, desc, primaryColor, socials, chain }) => {
+const Teammate = ({
+  url,
+  name,
+  desc,
+  primaryColor,
+  socials,
+  chain,
+  arraySplash
+}) => {
   return (
     <div className="box-teammate">
       <div className="img-teammate">
@@ -12,11 +20,21 @@ const Teammate = ({ url, name, desc, primaryColor, socials, chain }) => {
         <div className="temmate-content-up">
           <div className="teammate-title-socials">
             <div className="teammate-wrapper-name">
-              {chain && <span>{chain}</span>}
-              <h4>{name}</h4>
+              {chain && (
+                <span className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}>
+                  {chain}
+                </span>
+              )}
+              <h4 className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}>
+                {name}
+              </h4>
             </div>
           </div>
-          <TeammateDesc desc={desc} primaryColor={primaryColor} />
+          <TeammateDesc
+            arraySplash={arraySplash}
+            desc={desc}
+            primaryColor={primaryColor}
+          />
         </div>
         <div className="box-socials">
           {socials &&

@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, { useState } from 'react';
 
-const TeammateDesc = ({ desc, primaryColor }) => {
+const TeammateDesc = ({ desc, primaryColor, arraySplash }) => {
   const [showMore, setShowMore] = useState(false);
 
   return (
@@ -11,6 +11,7 @@ const TeammateDesc = ({ desc, primaryColor }) => {
           if (p.length >= 500) {
             return (
               <p
+                className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                 key={index}
                 style={{
                   color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
@@ -29,6 +30,7 @@ const TeammateDesc = ({ desc, primaryColor }) => {
           return (
             <p
               key={index}
+              className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
               style={{
                 color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
               }}>
@@ -42,6 +44,7 @@ const TeammateDesc = ({ desc, primaryColor }) => {
             return (
               <p
                 key={index}
+                className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                 style={{
                   color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
                 }}>
@@ -62,6 +65,7 @@ const TeammateDesc = ({ desc, primaryColor }) => {
               return (
                 <p
                   key={index}
+                  className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                   style={{
                     color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
                   }}>
@@ -79,6 +83,7 @@ const TeammateDesc = ({ desc, primaryColor }) => {
             return (
               <p
                 key={index}
+                className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                 style={{
                   color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
                 }}>
