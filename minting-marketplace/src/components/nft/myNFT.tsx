@@ -1,25 +1,23 @@
-//@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+//unused-component
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { rFetch } from '../../utils/rFetch';
 import { Link } from 'react-router-dom';
-
-// React Redux types
-
 import chainData from '../../utils/blockchainData';
 import { getTokenError } from '../../ducks/auth/actions';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { TDiamondTokensType } from './nft.types';
 
 const MyNFTs = () => {
   const dispatch = useDispatch();
-  // const { token } = useSelector(store => store.accessStore)
 
-  const [tokens, setTokens] = useState();
-
+  const [tokens, setTokens] = useState<TDiamondTokensType[]>();
   const fetchData = useCallback(async () => {
     const response = await rFetch('/api/nft');
 
     if (response.success) {
-      const tokenData = [];
+      const tokenData: TDiamondTokensType[] = [];
       for await (const token of response.result) {
         const contractData = await rFetch(
           `/api/contracts/singleContract/${token.contract}`
@@ -37,7 +35,9 @@ const MyNFTs = () => {
     }
   }, [dispatch]);
 
-  const { primaryColor, textColor } = useSelector((state) => state.colorStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (state) => state.colorStore
+  );
 
   useEffect(() => {
     fetchData();
@@ -47,16 +47,16 @@ const MyNFTs = () => {
     <div className="row px-0 mx-0">
       {tokens
         ? tokens.length > 0 &&
-          tokens.map((item, index) => {
+          tokens.map((item: TDiamondTokensType, index: number) => {
             return (
               <div key={index} className="p-2 my-2 col-4">
                 <div
                   className="w-100 bg-blockchain p-2"
                   style={{
                     border: `solid 1px ${textColor}`,
-                    backgroundImage: `url(${
-                      chainData[item?.blockchain]?.image
-                    })`,
+                    backgroundImage: item.blockchain
+                      ? `url(${chainData[item?.blockchain]?.image})`
+                      : '',
                     backgroundColor: `var(--${primaryColor}-transparent)`
                   }}>
                   <small style={{ fontSize: '0.7rem' }}>
@@ -81,7 +81,7 @@ const MyNFTs = () => {
                       <small>{item.metadata.description}</small>
                       <br />
                       <small>
-                        {item.metadata.attributes.length} attributes!
+                        {item.metadata.attributes?.length} attributes!
                       </small>
                     </>
                   ) : (

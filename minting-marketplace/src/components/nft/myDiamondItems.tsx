@@ -1,16 +1,31 @@
-//@ts-nocheck
 import axios from 'axios';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { TMetadataType } from '../../axios.responseTypes';
 import { diamondFactoryAbi } from '../../contracts';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import blockchainData from '../../utils/blockchainData';
+import {
+  IItemsForContract,
+  IMyDiamondItems,
+  ITokenLayout,
+  TMyDiamondItemsToken,
+  TSingleOfferData
+} from './nft.types';
 
-const TokenLayout = ({ item, openModal, setSelectedData }) => {
+const TokenLayout: React.FC<ITokenLayout> = ({
+  item,
+  openModal,
+  setSelectedData
+}) => {
   const defaultImg =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   return (
     <div
@@ -24,7 +39,6 @@ const TokenLayout = ({ item, openModal, setSelectedData }) => {
         backgroundColor: `var(--${primaryColor}-transparent)`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        // overflow: "hidden",
         position: 'relative'
       }}
       className="m-1 my-1 col-2 my-item-element">
@@ -71,7 +85,11 @@ const TokenLayout = ({ item, openModal, setSelectedData }) => {
             }}>
             <img
               className="my-items-blockchain-img"
-              src={`${blockchainData[item?.blockchain]?.image}`}
+              src={
+                item.blockchain !== undefined
+                  ? `${blockchainData[item?.blockchain]?.image}`
+                  : ''
+              }
               alt=""
             />
           </div>
@@ -81,45 +99,55 @@ const TokenLayout = ({ item, openModal, setSelectedData }) => {
   );
 };
 
-const ItemsForContract = ({ item, openModal, setSelectedData }) => {
-  const [tokens, setTokens] = useState([]);
-  const [contractName, setContractName] = useState('');
-
-  const { contractCreator, currentUserAddress } = useSelector(
-    (store) => store.contractStore
-  );
-
+const ItemsForContract: React.FC<IItemsForContract> = ({
+  item,
+  openModal,
+  setSelectedData
+}) => {
+  const [tokens, setTokens] = useState<TMyDiamondItemsToken[]>([]);
+  const [contractName, setContractName] = useState<string>('');
+  const { contractCreator, currentUserAddress, currentChain } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
   const getTokens = useCallback(async () => {
-    const instance = contractCreator(item, diamondFactoryAbi);
-    setContractName(await instance.name());
-    const balanceOfUser = await instance.balanceOf(currentUserAddress);
+    const instance = contractCreator?.(item, diamondFactoryAbi);
+    setContractName(await instance?.name());
+    const balanceOfUser = await instance?.balanceOf(currentUserAddress);
     if (!balanceOfUser?.gt(0)) {
       return;
     }
-    const tokenData = [];
+    const tokenData: TMyDiamondItemsToken[] = [];
     for (let i = 0; i < balanceOfUser.toString(); i++) {
-      const index = await instance.tokenOfOwnerByIndex(currentUserAddress, i);
-      const tokenURI = await instance.tokenURI(index);
-      let metadata;
+      const index = await instance?.tokenOfOwnerByIndex(currentUserAddress, i);
+      const tokenURI = await instance?.tokenURI(index);
+      let metadata: TMetadataType = {
+        image: '',
+        name: '',
+        artist: '',
+        description: ''
+      };
       if (tokenURI !== '') {
-        metadata = await (await axios.get<TMetadataType>(tokenURI)).data;
+        metadata = (await axios.get<TMetadataType>(tokenURI)).data;
       }
       tokenData.push({
         token: index.toString(),
         metadata,
         contract: item,
         title: metadata ? metadata.name : contractName,
-        blockchain: window.ethereum.chainId
+        blockchain: currentChain
       });
     }
     setTokens(tokenData);
-  }, [item, contractCreator, contractName, currentUserAddress]);
+  }, [item, contractCreator, contractName, currentUserAddress, currentChain]);
 
-  useEffect(getTokens, [getTokens]);
+  useEffect(() => {
+    getTokens();
+  }, [getTokens]);
 
   return (
     <>
-      {tokens.map((token, index) => {
+      {tokens.map((token: TMyDiamondItemsToken, index: number) => {
         return (
           <TokenLayout
             item={token}
@@ -132,14 +160,13 @@ const ItemsForContract = ({ item, openModal, setSelectedData }) => {
   );
 };
 
-const MyDiamondItems = (props) => {
-  const [deploymentAddresses, setDeploymentAddresses] = useState([]);
-  const [status, setStatus] = useState('Fetching data...');
-
-  const { diamondMarketplaceInstance } = useSelector(
-    (store) => store.contractStore
-  );
-
+const MyDiamondItems: React.FC<IMyDiamondItems> = (props) => {
+  const [deploymentAddresses, setDeploymentAddresses] = useState<string[]>([]);
+  const [status, setStatus] = useState<string>('Fetching data...');
+  const { diamondMarketplaceInstance } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
   const fetchDiamondData = useCallback(async () => {
     if (!diamondMarketplaceInstance) {
       return;
@@ -148,19 +175,22 @@ const MyDiamondItems = (props) => {
       (await diamondMarketplaceInstance.getTotalOfferCount()).toString()
     );
     setStatus(`Found ${offerCount} addresses...`);
-    const deployments = [];
+    const deployments: string[] = [];
     for (let i = 0; i < offerCount; i++) {
       setStatus(`Querying address ${i + 1} of ${offerCount}...`);
-      const singleOfferData = await diamondMarketplaceInstance.getOfferInfo(i);
+      const singleOfferData: TSingleOfferData =
+        await diamondMarketplaceInstance.getOfferInfo(i);
       if (!deployments.includes(singleOfferData.mintOffer.erc721Address)) {
         deployments.push(singleOfferData.mintOffer.erc721Address);
       }
     }
     setDeploymentAddresses(deployments);
-    setStatus('');
+    setStatus(``);
   }, [diamondMarketplaceInstance]);
 
-  useEffect(fetchDiamondData, [fetchDiamondData]);
+  useEffect(() => {
+    fetchDiamondData();
+  }, [fetchDiamondData]);
 
   return (
     <div className="my-items-product-wrapper row">

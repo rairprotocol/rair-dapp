@@ -1,11 +1,11 @@
-//@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
-//import { useDispatch, useSelector } from 'react-redux';
+// @ts-nocheck
+//unused-component
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { rFetch } from '../../utils/rFetch';
 import setDocumentTitle from '../../utils/setTitle';
 
-const MyNFTs = (props) => {
+const MyNFTs = () => {
   const params = useParams();
 
   const [creator, setCreator] = useState('');

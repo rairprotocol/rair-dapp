@@ -21,14 +21,13 @@ const FilteringBlock = ({
   isFilterShow,
   setBlockchain,
   setCategory,
-  getContract,
   setIsShow,
   setIsShowCategories,
   setFilterText,
   setFilterCategoriesText,
   click,
   setClick
-}) => {
+}: any) => {
   const [filterPopUp, setFilterPopUp] = useState(false);
   const [, /*filterItem*/ setFilterItem] = useState('Filters');
   const filterRef = useRef();

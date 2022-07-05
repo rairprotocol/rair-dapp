@@ -91,24 +91,11 @@ const TransferTokens = () => {
         contractAddress: instance.address
       });
       setContractBlockchain(blockchainData[currentChain]);
-      //0xbadd57ebb7778de50515be69c0d126e8f562a6a4
       setContractInstance(instance);
     } else {
       return;
     }
-
-    // let tokensOwnedAsyncCall = (async () => {
-    // 	let ownedTokensArray = [];
-    // 	let numberOfOwnedTokens = (await metamaskCall(instance.balanceOf(currentUserAddress)));
-    // 	for (let i = 0; i < numberOfOwnedTokens; i++) {
-    // 		ownedTokensArray.push({
-    // 			uniqueIndexInContract: (await metamaskCall(instance.tokenOfOwnerByIndex(currentUserAddress, i))).toString()
-    // 		});
-    // 	}
-    // 	setOwnedTokens(ownedTokensArray);
-    // })();
   };
-
   const getContractData = useCallback(async () => {
     setContractInstance(undefined);
     setSelectedProducts('null');

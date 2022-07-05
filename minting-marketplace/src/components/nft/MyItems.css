@@ -24,20 +24,7 @@
   height: 291px;
 }
 
-/* .my-items-pic-description-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    background: rgba(34, 32, 33, 0.5);
-    width: 100%;
-} */
-
 .my-items-description-wrapper {
-  /* display: flex;
-    flex-direction: column;
-    align-items: flex-start; */
-
   position: absolute;
   width: 100%;
   bottom: 0;
