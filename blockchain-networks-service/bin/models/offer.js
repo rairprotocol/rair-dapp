@@ -11,7 +11,7 @@ const Offer = new Schema(
     copies: { type: Number },
     soldCopies: { type: Number, default: 0 },
     sold: { type: Boolean, default: false },
-    price: { type: Number, required: true },
+    price: { type: String, required: true },
     range: { type: [String], required: true },
     offerName: { type: String, default: "Default", trim: true },
     creationDate: { type: Date, default: Date.now },
