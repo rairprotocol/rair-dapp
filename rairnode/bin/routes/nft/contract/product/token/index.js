@@ -1,10 +1,13 @@
 const express = require('express');
 const _ = require('lodash');
 const fs = require('fs').promises;
-const { JWTVerification, validation, dataTransform } = require('../../../../../middleware');
 const {
-  addMetadata, addPin, removePin, addFile,
-} = require('../../../../../integrations/ipfsService')();
+  JWTVerification,
+  validation,
+  dataTransform,
+} = require('../../../../../middleware');
+const { addMetadata, addPin, removePin, addFile } =
+  require('../../../../../integrations/ipfsService')();
 const upload = require('../../../../../Multer/Config');
 const log = require('../../../../../utils/logger')(module);
 
@@ -14,15 +17,16 @@ module.exports = (context) => {
   // Get specific token by internal token ID
   router.get('/', async (req, res, next) => {
     try {
-      const {
-        contract, offers, offerPool, token,
-      } = req;
-      const options = _.assign({
-        contract: contract._id,
-        token,
-      }, contract.diamond
-        ? { offer: { $in: offers } }
-        : { offerPool: offerPool.marketplaceCatalogIndex });
+      const { contract, offers, offerPool, token } = req;
+      const options = _.assign(
+        {
+          contract: contract._id,
+          token,
+        },
+        contract.diamond
+          ? { offer: { $in: offers } }
+          : { offerPool: offerPool.marketplaceCatalogIndex },
+      );
 
       const result = await context.db.MintedToken.findOne(options);
 
@@ -205,9 +209,7 @@ module.exports = (context) => {
   // Pin metadata to pinata cloud
   router.get('/pinning', JWTVerification, async (req, res, next) => {
     try {
-      const {
-        contract, offers, offerPool, token,
-      } = req;
+      const { contract, offers, offerPool, token } = req;
       const { user } = req;
       // eslint-disable-next-line prefer-regex-literals
       const reg = new RegExp(
