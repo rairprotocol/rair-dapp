@@ -12,7 +12,7 @@ export type TOfferType = {
   offerIndex: string;
   offerName: string;
   offerPool: string;
-  price: number;
+  price: string;
   product: string;
   range: string[];
   sold: boolean;

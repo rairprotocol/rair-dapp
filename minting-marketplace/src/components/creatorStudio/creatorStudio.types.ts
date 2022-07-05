@@ -3,6 +3,7 @@ import { ContractType } from '../adminViews/adminView.types';
 import { MouseEvent } from 'react';
 import { ReactNode } from 'react';
 import {
+  TAttributes,
   TContract,
   TNftItemResult,
   TOfferPool,
@@ -75,6 +76,121 @@ export type TContractData = Omit<TContract, 'product' | 'offerPool'> &
     nfts: TNftItemResult;
     product: TWorkflowProduct;
   };
+
+export interface IMediaUpload {
+  setStepNumber: Function;
+  contractData: TContractData | undefined;
+  stepNumber: number;
+}
+
+export type TWorkflowContextType = {
+  contractData: TContractData | undefined;
+  steps: TSteps[];
+  setStepNumber: Function;
+  gotoNextStep: () => void;
+  switchBlockchain: () => Promise<void>;
+  goBack: () => void;
+  mintingRole: boolean | undefined;
+  traderRole: boolean | undefined;
+  onMyChain: boolean | undefined;
+  correctMinterInstance: ethers.Contract | undefined;
+  tokenInstance: ethers.Contract | TContractData | undefined;
+  simpleMode: boolean;
+  forceRefetch: () => void;
+};
+
+export type TSteps = {
+  classic: boolean;
+  component: (props: any) => JSX.Element;
+  diamond: boolean;
+  hasAdvancedFeatures: boolean;
+  path: string;
+  populatedPath: string;
+  shortName: string;
+  simple: boolean;
+};
+
+export type TMediaType = {
+  category: string;
+  contractAddress: string;
+  description: string;
+  file: File;
+  offer: string;
+  preview: string;
+  productIndex: string;
+  storage: string;
+  title: string;
+};
+
+export type TOptionCategory = {
+  label: string;
+  value: string;
+};
+
+export type TCategories = {
+  name: string;
+  _id: string;
+};
+
+export interface IMediaUploadRow {
+  item: TMediaType;
+  offerList: TOptionCategory[];
+  deleter: () => void;
+  rerender: () => void;
+  index: number;
+  array: TMediaType[];
+  categoriesArray: TOptionCategory[];
+}
+
+export interface IOfferRow {
+  index: number;
+  deleter: () => void;
+  name: string;
+  starts: string;
+  ends: string;
+  price: string;
+  fixed?: boolean | undefined;
+  array: TOfferListItem[];
+  rerender: () => void;
+  maxCopies: number;
+  blockchainSymbol: string | undefined;
+}
+
+export interface IListOffers {
+  contractData: TContractData | undefined;
+  setStepNumber: Function;
+  stepNumber: number;
+  gotoNextStep: () => (() => void) | undefined;
+  goBack: () => void;
+  forceRefetch: () => void;
+}
+
+export type TParamsListOffers = {
+  address: string;
+  collectionIndex: string;
+};
+
+export type TOfferListItem = {
+  ends: string;
+  fixed?: boolean;
+  name: string;
+  price: string;
+  starts: string;
+};
+
+export interface IPropertyRow {
+  trait_type: string;
+  value: string;
+  deleter: () => void;
+  rerender: () => void;
+  array: TAttributes[];
+  index: number;
+}
+
+export type TParamsContractDetails = {
+  address: string;
+  blockchain: BlockchainType;
+};
 
 export type TUniqueURIArray = {
   tokenId: string;
@@ -155,33 +271,6 @@ export interface ICustomPayRateRow {
   renderer: () => void;
 }
 
-export type TSteps = {
-  classic: boolean;
-  component: (props: any) => JSX.Element;
-  diamond: boolean;
-  hasAdvancedFeatures: boolean;
-  path: string;
-  populatedPath: string;
-  shortName: string;
-  simple: boolean;
-};
-
-export type TWorkflowContextType = {
-  contractData: TContractData | undefined;
-  steps: TSteps[];
-  setStepNumber: Function;
-  gotoNextStep: () => void;
-  switchBlockchain: () => Promise<void>;
-  goBack: () => void;
-  mintingRole: boolean | undefined;
-  traderRole: boolean | undefined;
-  onMyChain: boolean | undefined;
-  correctMinterInstance: ethers.Contract | undefined;
-  tokenInstance: ethers.Contract | TContractData | undefined;
-  simpleMode: boolean;
-  forceRefetch: () => void;
-};
-
 export interface ILockRow {
   index: number;
   locker: (data: any) => Promise<void>;
@@ -214,11 +303,6 @@ export type TCustomPayments = {
   percentage: number;
   editable: boolean;
   message: string;
-};
-
-export type TParamsContractDetails = {
-  address: string;
-  blockchain: BlockchainType;
 };
 
 export type TWorkflowParams = TParamsContractDetails & {

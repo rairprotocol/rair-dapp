@@ -1,12 +1,14 @@
-//@ts-nocheck
 import React, { useState, useEffect } from 'react';
 import InputField from '../../common/InputField';
 import InputSelect from '../../common/InputSelect';
 import { useSelector } from 'react-redux';
 import { rFetch } from '../../../utils/rFetch';
 import io from 'socket.io-client';
+import { IMediaUploadRow, TOptionCategory } from '../creatorStudio.types';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { RootState } from '../../../ducks';
 
-const MediaUploadRow = ({
+const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   item,
   offerList,
   deleter,
@@ -15,12 +17,12 @@ const MediaUploadRow = ({
   array,
   categoriesArray
 }) => {
-  const [uploading, setUploading] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [thisSessionId, setThisSessionId] = useState('');
-  const [socketMessage, setSocketMessage] = useState();
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
+  const [thisSessionId, setThisSessionId] = useState<string>('');
+  const [socketMessage, setSocketMessage] = useState<string | undefined>();
 
-  const storageOptions = [
+  const storageOptions: TOptionCategory[] = [
     { label: 'Google Cloud', value: 'gcp' },
     { label: 'IPFS', value: 'ipfs' }
   ];
@@ -28,12 +30,7 @@ const MediaUploadRow = ({
   useEffect(() => {
     const sessionId = Math.random().toString(36).substr(2, 9);
     setThisSessionId(sessionId);
-    // const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ["websocket"] });
-    const so = io('http://localhost:5000', { transports: ['websocket'] });
-
-    // so.on("connect", data => {
-    //   console.log('Connected !');
-    // });
+    const so = io(`http://localhost:5000`, { transports: ['websocket'] });
 
     so.emit('init', sessionId);
 
@@ -52,7 +49,9 @@ const MediaUploadRow = ({
     };
   }, []);
 
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   const cornerStyle = { height: '35vh', borderRadius: '16px 0 0 16px' };
   const selectCommonInfo = {
@@ -66,27 +65,27 @@ const MediaUploadRow = ({
     }
   };
 
-  const updateMediaTitle = (value) => {
+  const updateMediaTitle = (value: string) => {
     array[index].title = value;
     rerender();
   };
 
-  const updateMediaDescription = (value) => {
+  const updateMediaDescription = (value: string) => {
     array[index].description = value;
     rerender();
   };
 
-  const updateMediaCategory = (value) => {
+  const updateMediaCategory = (value: string) => {
     array[index].category = value;
     rerender();
   };
 
-  const updateMediaOffer = (value) => {
+  const updateMediaOffer = (value: string) => {
     array[index].offer = value;
     rerender();
   };
 
-  const updateStorage = (value) => {
+  const updateStorage = (value: string) => {
     array[index].storage = value;
     rerender();
   };
@@ -138,13 +137,13 @@ const MediaUploadRow = ({
           <div className="border-stimorol rounded-rair col-12 mb-0">
             <InputField
               disabled={uploadSuccess}
-              maxLength="30"
+              maxLength={30}
               getter={item.title}
               setter={updateMediaTitle}
               customClass="mb-0 form-control rounded-rair"
               customCSS={{
                 backgroundColor: `var(--${primaryColor}-80)`,
-                color: textColor
+                color: textColor ? textColor : ''
               }}
             />
           </div>
@@ -209,7 +208,6 @@ const MediaUploadRow = ({
             formData.append('title', item.title.slice(0, 29));
             formData.append('description', item.description);
             formData.append('contract', item.contractAddress);
-            //category, demo = 'false'
             formData.append('product', item.productIndex);
             formData.append('category', item.category);
             formData.append('storage', item.storage);
@@ -228,7 +226,7 @@ const MediaUploadRow = ({
                   : []
               )
             );
-            formData.append('demo', item.offer === '-1');
+            formData.append('demo', String(item.offer === '-1'));
             setUploading(true);
             try {
               const response = await rFetch(

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import FixedBottomNavigation from '../FixedBottomNavigation';
@@ -10,50 +9,44 @@ import { web3Switch } from '../../../utils/switchBlockchain';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import OfferRow from './OfferRow';
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
+import {
+  IListOffers,
+  TOfferListItem,
+  TParamsListOffers
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { ethers } from 'ethers';
 
-const ListOffers = ({
+const ListOffers: React.FC<IListOffers> = ({
   contractData,
   setStepNumber,
-  steps,
   stepNumber,
   gotoNextStep,
   goBack,
   forceRefetch
 }) => {
-  const [offerList, setOfferList] = useState([]);
-  const [forceRerender, setForceRerender] = useState(false);
-  const [hasMinterRole, setHasMinterRole] = useState(false);
-  const [instance, setInstance] = useState();
-  const [onMyChain, setOnMyChain] = useState();
-  const [, /*emptyNames*/ setEmptyNames] = useState(true);
-  const [, /*validPrice*/ setValidPrice] = useState(true);
+  const [offerList, setOfferList] = useState<TOfferListItem[]>([]);
+  const [forceRerender, setForceRerender] = useState<boolean>(false);
+  const [hasMinterRole, setHasMinterRole] = useState<boolean>(false);
+  const [instance, setInstance] = useState<ethers.Contract | undefined>();
+  const [onMyChain, setOnMyChain] = useState<boolean>();
+  const [emptyNames, setEmptyNames] = useState<boolean>(true);
+  const [validPrice, setValidPrice] = useState<boolean>(true);
 
   const {
     minterInstance,
     contractCreator,
     programmaticProvider,
     currentChain
-  } = useSelector((store) => store.contractStore);
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
-  const { address, collectionIndex } = useParams();
-
-  const validateOffer = (hasMinterRole: boolean) => {
-    if (hasMinterRole) {
-      if (offerList.length !== 0) {
-        const result = offerList.find(
-          (offerItem) =>
-            Number(offerItem.ends) > Number(contractData?.product.copies) ||
-            offerItem.price <= 0 ||
-            offerItem.name.trim() === ''
-        );
-        return !!result;
-      } else {
-        return true;
-      }
-    }
-    return false;
-  };
-
+  } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+  const { address, collectionIndex }: TParamsListOffers = useParams();
   useEffect(() => {
     setOfferList(
       contractData?.product?.offers
@@ -75,12 +68,12 @@ const ListOffers = ({
   }, [setStepNumber, stepNumber]);
 
   useEffect(() => {
-    let auxPrices = forceRerender && false;
+    let auxPrices: boolean = forceRerender && false;
     let auxNames = false;
     offerList.forEach((item) => {
       if (!item.fixed) {
         auxPrices =
-          auxPrices || !validateInteger(item.price) || item.price <= 0;
+          auxPrices || !validateInteger(+item.price) || +item.price <= 0;
         auxNames = auxNames || item.name === '';
       }
     });
@@ -92,23 +85,23 @@ const ListOffers = ({
     setForceRerender(() => !forceRerender);
   }, [setForceRerender, forceRerender]);
 
-  const addOffer = (data) => {
-    const aux = [...offerList];
+  const addOffer = () => {
+    const aux: TOfferListItem[] = [...offerList];
     const startingToken =
-      offerList.length === 0 ? 0 : Number(offerList.at(-1).ends) + 1;
+      offerList.length === 0 ? 0 : Number(offerList.at(-1)?.ends) + 1;
     aux.push({
       name: '',
-      starts: startingToken,
-      ends: startingToken,
-      price: 100
+      starts: String(startingToken),
+      ends: String(startingToken),
+      price: '100'
     });
     setOfferList(aux);
   };
 
-  const deleter = (index) => {
+  const deleter = (index: number) => {
     const aux = [...offerList];
     if (aux.length > 1 && index !== aux.length - 1) {
-      aux[1].starts = 0;
+      aux[1].starts = '0';
     }
     aux.splice(index, 1);
     setOfferList(aux);
@@ -116,7 +109,7 @@ const ListOffers = ({
 
   useEffect(() => {
     if (onMyChain) {
-      const createdInstance = contractCreator(address, erc721Abi);
+      const createdInstance = contractCreator?.(address, erc721Abi);
       setInstance(createdInstance);
     }
   }, [address, onMyChain, contractCreator]);
@@ -130,7 +123,7 @@ const ListOffers = ({
         await metamaskCall(
           instance.hasRole(
             await metamaskCall(instance.MINTER()),
-            minterInstance.address
+            minterInstance?.address
           )
         )
       );
@@ -153,7 +146,7 @@ const ListOffers = ({
     });
     if (
       await metamaskCall(
-        instance.grantRole(await instance.MINTER(), minterInstance.address)
+        instance?.grantRole(await instance.MINTER(), minterInstance?.address)
       )
     ) {
       Swal.fire('Success!', 'You can create offers now!', 'success');
@@ -170,8 +163,8 @@ const ListOffers = ({
     });
     if (
       await metamaskCall(
-        minterInstance.addOffer(
-          instance.address,
+        minterInstance?.addOffer(
+          instance?.address,
           collectionIndex,
           offerList.map((item) => item.starts),
           offerList.map((item) => item.ends),
@@ -179,6 +172,7 @@ const ListOffers = ({
           offerList.map((item) => item.name),
           process.env.REACT_APP_NODE_ADDRESS
         ),
+        undefined,
         gotoNextStep()
       )
     ) {
@@ -202,13 +196,14 @@ const ListOffers = ({
     const filteredList = offerList.filter((item) => !item.fixed);
     if (
       await metamaskCall(
-        minterInstance.appendOfferRangeBatch(
-          contractData.product.offers[0].offerPool,
+        minterInstance?.appendOfferRangeBatch(
+          contractData?.product.offers?.[0].offerPool,
           filteredList.map((item) => item.starts),
           filteredList.map((item) => item.ends),
           filteredList.map((item) => item.price),
           filteredList.map((item) => item.name)
         ),
+        undefined,
         gotoNextStep()
       )
     ) {
@@ -219,21 +214,19 @@ const ListOffers = ({
         showConfirmButton: true
       });
       forceRefetch();
-      // gotoNextStep();
     }
   };
 
-  const switchBlockchain = async (chainId) => {
+  const switchBlockchain = async (chainId: BlockchainType | undefined) => {
     web3Switch(chainId);
   };
 
   useEffect(() => {
     setOnMyChain(
-      window.ethereum
-        ? chainData[contractData?.blockchain]?.chainId ===
-            window.ethereum.chainId
-        : chainData[contractData?.blockchain]?.chainId ===
-            programmaticProvider?.provider?._network?.chainId
+      contractData &&
+        (window.ethereum
+          ? chainData[contractData?.blockchain]?.chainId === currentChain
+          : chainData[contractData?.blockchain]?.chainId === currentChain)
     );
   }, [contractData, programmaticProvider, currentChain]);
 
@@ -258,7 +251,7 @@ const ListOffers = ({
                   return (
                     <OfferRow
                       array={array}
-                      deleter={(e) => deleter(index)}
+                      deleter={() => deleter(index)}
                       key={index}
                       index={index}
                       {...item}
@@ -295,7 +288,7 @@ const ListOffers = ({
             className="col-12 mt-3 p-5 text-center rounded-rair"
             style={{ border: 'dashed 2px var(--charcoal-80)' }}>
             First Token: {contractData?.product?.firstTokenIndex}, Last Token:{' '}
-            {contractData?.product?.firstTokenIndex +
+            {Number(contractData?.product?.firstTokenIndex) +
               contractData?.product?.copies -
               1}
             , Mintable Tokens Left:{' '}
@@ -329,7 +322,15 @@ const ListOffers = ({
                         : 'Append to Offer'
                       : 'Create Offer'
                     : 'Approve Minter Marketplace',
-                  disabled: validateOffer(hasMinterRole)
+                  disabled: hasMinterRole
+                    ? offerList.length === 0 ||
+                      Number(offerList.at(-1)?.ends) >
+                        Number(contractData.product.copies) - 1 ||
+                      Number(offerList.at(-1)?.starts) >
+                        Number(contractData.product.copies) - 1 ||
+                      validPrice ||
+                      emptyNames
+                    : false
                 }
               ]}
             />
@@ -342,7 +343,7 @@ const ListOffers = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: IListOffers) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

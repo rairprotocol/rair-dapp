@@ -1,10 +1,11 @@
-//@ts-nocheck
-// import {useState, useEffect, useCallback} from 'react';
 import React from 'react';
 import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { IPropertyRow } from '../creatorStudio.types';
 
-const PropertyRow = ({
+const PropertyRow: React.FC<IPropertyRow> = ({
   trait_type,
   value,
   deleter,
@@ -12,17 +13,16 @@ const PropertyRow = ({
   array,
   index
 }) => {
-  // const [propertyName, setPropertyName] = useState(trait_type);
-  // const [propertyValue, setPropertyValue] = useState(value);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
-
-  const updatePropertyName = (value) => {
+  const updatePropertyName = (value: string) => {
     array[index].trait_type = value;
     rerender();
   };
 
-  const updatePropertyValue = (value) => {
+  const updatePropertyValue = (value: string) => {
     array[index].value = value;
     rerender();
   };
@@ -35,7 +35,7 @@ const PropertyRow = ({
             customClass={`form-control rounded-rair bg-${primaryColor}`}
             getter={trait_type}
             setter={updatePropertyName}
-            customCSS={{ color: textColor }}
+            customCSS={{ color: textColor ? textColor : '' }}
           />
         </div>
       </th>
@@ -45,7 +45,7 @@ const PropertyRow = ({
             customClass={`form-control rounded-rair bg-${primaryColor}`}
             getter={value}
             setter={updatePropertyValue}
-            customCSS={{ color: textColor }}
+            customCSS={{ color: textColor ? textColor : '' }}
           />
         </div>
       </th>

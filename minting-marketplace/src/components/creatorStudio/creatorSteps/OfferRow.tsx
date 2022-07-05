@@ -1,12 +1,14 @@
-//@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import colors from '../../../utils/offerLockColors';
 import { validateInteger } from '../../../utils/metamaskUtils';
 import InputField from '../../common/InputField';
 import { utils } from 'ethers';
+import { IOfferRow } from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
-const OfferRow = ({
+const OfferRow: React.FC<IOfferRow> = ({
   index,
   deleter,
   name,
@@ -19,29 +21,33 @@ const OfferRow = ({
   maxCopies,
   blockchainSymbol
 }) => {
-  const { primaryColor, secondaryColor } = useSelector(
-    (store) => store.colorStore
-  );
-  const [itemName, setItemName] = useState(name);
-  const [startingToken, setStartingToken] = useState(starts);
-  const [endingToken, setEndingToken] = useState(ends);
-  const [individualPrice, setIndividualPrice] = useState(price);
+  const { primaryColor, secondaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
-  //const [randColor, ] = useState(Math.abs(0xE4476D - (0x58ec5c * index)));
+  const [itemName, setItemName] = useState<string>(name);
+  const [startingToken, setStartingToken] = useState<string>(starts);
+  const [endingToken, setEndingToken] = useState<string>(ends);
+  const [individualPrice, setIndividualPrice] = useState<string>(price);
   const randColor = colors[index];
 
-  const updater = (name, setter, value) => {
+  const updater = (
+    name: string,
+    setter: (value: string) => void,
+    value: string
+  ) => {
     array[index][name] = value;
     setter(value);
     rerender();
   };
 
   const updateEndingToken = useCallback(
-    (value) => {
-      array[index].ends = Number(value);
-      setEndingToken(Number(value));
-      if (array[Number(index) + 1] !== undefined) {
-        array[Number(index) + 1].starts = Number(value) + 1;
+    (value: string) => {
+      array[index].ends = value;
+      setEndingToken(value);
+      if (array[index + 1] !== undefined) {
+        array[index + 1].starts = String(Number(value) + 1);
       }
       rerender();
     },
@@ -49,11 +55,11 @@ const OfferRow = ({
   );
 
   const updateStartingToken = useCallback(
-    (value) => {
-      array[index].starts = Number(value);
+    (value: string) => {
+      array[index].starts = value;
       setStartingToken(value);
       if (Number(endingToken) < Number(value)) {
-        updateEndingToken(Number(value));
+        updateEndingToken(value);
       }
       rerender();
     },
@@ -112,7 +118,7 @@ const OfferRow = ({
             getter={startingToken}
             setter={updateStartingToken}
             type="number"
-            min="0"
+            min={0}
             customClass="form-control rounded-rair"
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
@@ -129,7 +135,11 @@ const OfferRow = ({
               customClass="form-control rounded-rair"
               disabled={fixed}
               type="number"
-              min={startingToken > maxCopies ? maxCopies : startingToken}
+              min={
+                Number(startingToken) > maxCopies
+                  ? maxCopies
+                  : Number(startingToken)
+              }
               max={maxCopies}
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
@@ -146,7 +156,7 @@ const OfferRow = ({
               setter={(value) => updater('price', setIndividualPrice, value)}
               type="number"
               disabled={fixed}
-              min="100"
+              min={100}
               customClass="form-control rounded-rair"
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
@@ -173,9 +183,10 @@ const OfferRow = ({
           <small>
             {utils
               .formatEther(
-                individualPrice === '' || !validateInteger(individualPrice)
+                individualPrice === '' ||
+                  !validateInteger(Number(individualPrice))
                   ? 0
-                  : individualPrice.toString()
+                  : individualPrice
               )
               .toString()}{' '}
             {blockchainSymbol}

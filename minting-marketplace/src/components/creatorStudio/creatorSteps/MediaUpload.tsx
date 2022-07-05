@@ -1,38 +1,41 @@
-//@ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
 import { rFetch } from '../../../utils/rFetch';
 import { useSelector } from 'react-redux';
-// import { useParams, useHistory, NavLink } from 'react-router-dom';
 import { validateInteger } from '../../../utils/metamaskUtils';
-// import { rFetch } from '../../../utils/rFetch';
 import { utils } from 'ethers';
-// import InputSelect from '../../common/InputSelect';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
-// import FixedBottomNavigation from '../FixedBottomNavigation';
 import chainData from '../../../utils/blockchainData';
 import Dropzone from 'react-dropzone';
 import videoIcon from '../../../images/videoIcon.svg';
 import MediaUploadRow from './MediaUploadRow';
+import {
+  IMediaUpload,
+  TCategories,
+  TMediaType,
+  TOptionCategory
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { TOfferType } from '../../marketplace/marketplace.types';
 
-const MediaUpload = ({
+const MediaUpload: React.FC<IMediaUpload> = ({
   setStepNumber,
   contractData,
-  gotoNextStep,
   stepNumber
 }) => {
-  const { primaryColor /*secondaryColor, textColor*/ } = useSelector(
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
-  const [mediaList, setMediaList] = useState([]);
-  const [offerList, setOfferList] = useState([]);
-  const [forceRerender, setForceRerender] = useState(false);
-  const [categoryArray, setCategoryArray] = useState([]);
+  const [mediaList, setMediaList] = useState<TMediaType[]>([]);
+  const [offerList, setOfferList] = useState<TOptionCategory[]>([]);
+  const [forceRerender, setForceRerender] = useState<boolean>(false);
+  const [categoryArray, setCategoryArray] = useState<TOptionCategory[]>([]);
   const getCategories = useCallback(async () => {
     const { success, categories } = await rFetch('/api/categories');
     if (success) {
       setCategoryArray(
-        categories.map((item) => {
+        categories.map((item: TCategories) => {
           return { label: item.name, value: item.name };
         })
       );
@@ -54,16 +57,16 @@ const MediaUpload = ({
     setOfferList(
       contractData?.product?.offers
         ? unlocked.concat(
-            contractData?.product?.offers.map((item) => {
+            contractData?.product?.offers.map((item: TOfferType) => {
               return {
                 label: `${item.offerName} (${
-                  item.range[1] - item.range[0] + 1
+                  Number(item.range[1]) - Number(item.range[0]) + 1
                 } tokens for ${utils
                   .formatEther(
-                    validateInteger(item.price) ? item.price.toString() : 0
+                    validateInteger(+item.price) ? item.price.toString() : 0
                   )
                   .toString()} ${
-                  chainData[contractData.blockchain].symbol
+                  chainData[contractData.blockchain]?.symbol
                 } each)`,
                 value: contractData.diamond
                   ? item.diamondRangeIndex
@@ -76,9 +79,9 @@ const MediaUpload = ({
   }, [contractData]);
 
   const onMediaDrop = (media) => {
-    let aux = [...mediaList];
+    let aux: TMediaType[] = [...mediaList];
     aux = aux.concat(
-      media.map((item) => {
+      media.map((item: File) => {
         return {
           offer: 'null',
           category: 'null',
@@ -86,8 +89,8 @@ const MediaUpload = ({
           file: item,
           description: '',
           preview: URL.createObjectURL(item),
-          contractAddress: contractData._id,
-          productIndex: contractData.product.collectionIndexInContract,
+          contractAddress: contractData?._id,
+          productIndex: contractData?.product.collectionIndexInContract,
           storage: 'null'
         };
       })
@@ -95,7 +98,7 @@ const MediaUpload = ({
     setMediaList(aux);
   };
 
-  const deleter = (index) => {
+  const deleter = (index: number) => {
     const aux = [...mediaList];
     aux.splice(index, 1);
     setMediaList(aux);
@@ -161,7 +164,7 @@ const MediaUpload = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: IMediaUpload) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {
