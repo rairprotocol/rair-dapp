@@ -9,7 +9,7 @@ import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
 import { OnboardingButton } from './../common/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
-import DiscordIcon from './DiscordIcon';
+import { DiscordIcon } from './DiscordIcon';
 import AdminPanel from './AdminPanel/AdminPanel';
 import { HeaderContainer, SocialHeaderBox } from './HeaderItems/HeaderItems';
 
@@ -367,11 +367,7 @@ const MainHeader: React.FC<IMainHeader> = ({
                 href="https://discord.gg/pSTbf2yz7V"
                 target={'_blank'}
                 rel="noreferrer">
-                <DiscordIcon
-                  width="71px"
-                  height="55px"
-                  color={primaryColor === 'rhyno' ? '#9867D9' : '#fff'}
-                />
+                <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
               </a>
             </SocialHeaderBox>
             <AdminPanel

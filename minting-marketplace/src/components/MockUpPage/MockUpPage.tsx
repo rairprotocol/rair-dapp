@@ -23,8 +23,14 @@ const MockUpPage = ({ tabIndex, setTabIndex }) => {
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
   useEffect(() => {
     // setDocumentTitle(`All`);
+
     dispatch(setShowSidebarTrue());
   }, [dispatch]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className={'mock-up-page-wrapper'}>
       <MetaTags seoMetaTags={seoInformation} />

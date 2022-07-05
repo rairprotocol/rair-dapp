@@ -1,7 +1,9 @@
 import * as types from './types';
 
-import headerLogoBlack from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
-import headerLogoWhite from '../../images/RAIR-Tech-Logo-POWERED BY-WHITE-2021.png';
+// import headerLogoBlack from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
+// import headerLogoWhite from '../../images/RAIR-Tech-Logo-POWERED BY-WHITE-2021.png';
+import headerLogoWhite from '../../images/rairTechLogoWhite.png';
+import headerLogoBlack from '../../images/rairTechLogoBlack.png';
 
 import bgLogoBlack from '../../images/BlackBg.png';
 import bgLogoWhite from '../../images/ClayBg.png';

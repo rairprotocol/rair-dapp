@@ -69,6 +69,7 @@ const MyItems: React.FC<IMyItems> = () => {
 
   useEffect(() => {
     setDocumentTitle('My Items');
+    window.scrollTo(0, 0);
   }, []);
 
   const filteredData =

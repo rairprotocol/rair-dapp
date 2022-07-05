@@ -15,33 +15,19 @@ const MainLogo: React.FC<IMainLogo> = ({
 
   return (
     <>
-      {sentryHistory.location.pathname === '/about-page' ? (
-        <div>
-          <img
-            onClick={() => goHome()}
-            alt="Header Logo"
-            src={headerLogoWhite}
-            style={{
-              width: 'auto',
-              height: '32px',
-              cursor: 'pointer'
-            }}
-            // className='h-100 header_logo'
-          />
-        </div>
-      ) : (
+      <div>
         <img
           onClick={() => goHome()}
           alt="Header Logo"
-          src={headerLogo}
+          src={headerLogoWhite}
           style={{
             width: 'auto',
-            height: '55px',
+            height: '26px',
             cursor: 'pointer'
           }}
           // className='h-100 header_logo'
         />
-      )}
+      </div>
     </>
   );
 };

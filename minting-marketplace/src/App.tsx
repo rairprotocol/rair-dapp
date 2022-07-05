@@ -854,11 +854,7 @@ function App({ sentryHistory }) {
             </div>
           </div>
         </AppContainerFluid>
-        <Footer
-          sentryHistory={sentryHistory}
-          openAboutPage={openAboutPage}
-          primaryColor={primaryColor}
-        />
+        <Footer sentryHistory={sentryHistory} />
       </Router>
     </Sentry.ErrorBoundary>
   );
