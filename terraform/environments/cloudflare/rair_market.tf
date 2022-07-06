@@ -53,3 +53,24 @@ resource "cloudflare_record" "rair_market__nftnyc_rair_market" {
   value   = "34.98.108.170"
   type    = local.record_type.A
 }
+
+resource "cloudflare_record" "dev_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "dev"
+  value   = "34.160.12.217"
+  type    = local.record_type.A
+}
+
+resource "cloudflare_record" "staging_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "new-staging"
+  value   = "34.160.53.255"
+  type    = local.record_type.A
+}
+
+resource "cloudflare_record" "prod_rair_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = "@"
+  value   = "34.160.73.41"
+  type    = local.record_type.A
+}
