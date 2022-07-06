@@ -1,5 +1,6 @@
 const log = require('./logger')(module);
 const fetch = require('node-fetch');
+const Moralis = require('moralis/node');
 
 const {
 	insertContract,
@@ -34,7 +35,9 @@ const findContractFromAddress = async (address, network, transactionReceipt, dbM
 	return await dbModels.Contract.findOne({contractAddress: address.toLowerCase(), blockchain: network});
 }
 
-
+const wasteTime = (ms) => new Promise((resolve, reject) => {
+	setTimeout(resolve, ms);
+})
 
 // Events from this list will be stored on the database
 const insertionMapping = {
@@ -153,10 +156,37 @@ const processLog = (event) => {
 	return foundEvents;
 }
 
+const getTransactionHistory = async (address, chain, from_block = 0) => {
+	// Wait some time between requests
+	await wasteTime(process.env.TASK_SEPARATION_TIME || 10000);
+
+	// Call Moralis SDK and receive ALL logs emitted in a timeframe
+	// This counts as 2 requests in the Rate Limiting (March 2022)
+	const options = {
+		address,
+		chain,
+		from_block
+	};
+
+	// Result is in DESCENDING order, to process it chronologically we need to reverse this array
+	let {result, ...logData} = await Moralis.Web3API.native.getLogsByAddress(options);
+	let completeListOfTransactions = result;
+
+	while (logData?.next) {
+		let nextPage = await logData.next();
+		completeListOfTransactions.push(...nextPage.result);
+		logData = nextPage;
+		log.info(`Querying page #${nextPage.page} for ${chain}:${address}`);
+	}
+	
+	log.info(`[${chain}] Found ${logData.total} events on ${address} since block #${from_block}`);
+	
+	return completeListOfTransactions.reverse().map(processLog);
+}
+
 module.exports = {
 	processLog,
 	getContractEvents,
-	wasteTime: (ms) => new Promise((resolve, reject) => {
-		setTimeout(resolve, ms);
-	})
+	getTransactionHistory,
+	wasteTime
 }

@@ -2,7 +2,7 @@ const Moralis = require('moralis/node');
 const log = require('../utils/logger')(module);
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
-const { processLog, wasteTime } = require('../utils/logUtils.js');
+const { processLog, wasteTime, getTransactionHistory } = require('../utils/logUtils.js');
 
 const lockLifetime = 1000 * 60 * 5;
 
@@ -25,13 +25,6 @@ module.exports = (context) => {
 				log.info(`Skipping classic marketplace events of ${network}, marketplace address is not defined.`);
 				return done();
 			}
-
-			// Find all non-diamond contracts from this blockchain
-			let contractsToQuery = await context.db.PastAddress.find({
-				contractType: 'marketplace',
-				blockchain: network,
-				diamond: false
-			}).distinct('address')
 
 			let forbiddenTokenSyncs = await context.db.SyncRestriction.find({
 				blockchain: network, tokens: false
@@ -80,25 +73,11 @@ module.exports = (context) => {
 			// Keep track of the latest block number processed
 			let lastSuccessfullBlock = version.number;
 			let transactionArray = [];
-
-			// Call Moralis SDK and receive ALL logs
-			// This counts as 2 requests in the Rate Limiting (March 2022)
-			const options = {
-				address: networkData.minterAddress,
-				chain: network,
-				from_block: version.number
-			};
-
-			// Result is in DESCENDING order
-			const {result, ...logData} = await Moralis.Web3API.native.getLogsByAddress(options);
-			log.info(`[${network}] Found ${logData.total} events on classic minter marketplace since block #${version.number}`);
 			
-			if (logData.total === 0) {
+			let processedResult = await getTransactionHistory(networkData.minterAddress, network, version.number);
+			if (processedResult.length === 0) {
 				return done();
 			}
-
-			// Reverse to get it in ascending order (useful for the block number tracking)
-			let processedResult = result.reverse().map(processLog);
 
 			let insertions = {};
 

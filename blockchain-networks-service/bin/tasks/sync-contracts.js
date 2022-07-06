@@ -2,7 +2,7 @@ const Moralis = require('moralis/node');
 const log = require('../utils/logger')(module);
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
-const { processLog, wasteTime } = require('../utils/logUtils.js');
+const { processLog, wasteTime, getTransactionHistory } = require('../utils/logUtils.js');
 
 const lockLifetime = 1000 * 60 * 5;
 
@@ -94,25 +94,7 @@ module.exports = (context) => {
 			let insertions = {};
 
 			for await (let masterFactory of contractsToQuery) {
-				wasteTime(7000)
-				// Call Moralis SDK and receive ALL logs emitted in a timeframe
-				// This counts as 2 requests in the Rate Limiting (March 2022)
-				const options = {
-					address: masterFactory,
-					chain: network,
-					from_block: version.number
-				};
-
-				// Result is in DESCENDING order
-				const {result, ...logData} = await Moralis.Web3API.native.getLogsByAddress(options);
-				log.info(`[${network}] Found ${logData.total} events on classic master factory since block #${version.number}`);
-				
-				if (logData.total === 0) {
-					continue;
-				}
-
-				// Reverse to get it in ascending order (useful for the block number tracking)
-				let processedResult = await result.reverse().map(processLog);
+				let processedResult = await getTransactionHistory(masterFactory, network, version.number);
 
 				let processedTransactions = await context.db.Transaction.find({
 					toAddress: masterFactory,

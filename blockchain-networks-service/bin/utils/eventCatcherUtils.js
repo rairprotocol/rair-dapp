@@ -21,6 +21,58 @@ const handleDuplicateKey = (err) => {
 	}
 };
 
+const handleMetadataForToken = async (
+	dbModels,
+	contractId,
+	collectionIndex,
+	tokenIndex,
+	tokenInstance
+) => {
+	// 4 possible sources of metadata
+	// 1.- Direct metadata on the token
+	let foundMetadata = await dbModels.MetadataLink.findOne({
+		contract: contractId,
+		tokenIndex,
+	}).populate('metadata');
+
+	if (foundMetadata === null) {
+		// 2.- Product wide metadata
+		foundMetadata = await dbModels.MetadataLink.findOne({
+			contract: contractId,
+			tokenIndex: { $exists: false },
+			collectionIndex
+		}).populate('metadata');
+
+		if (foundMetadata === null) {
+			// 3.- Contract wide metadata
+			foundMetadata = await dbModels.MetadataLink.findOne({
+				contract: contractId,
+				tokenIndex: { $exists: false },
+				collectionIndex: { $exists: false }
+			}).populate('metadata');
+		}
+	}
+
+	if (foundMetadata !== null) {
+		// If metadata exists, set it as the token's metadata
+		//log.info(`New token has Metadata from the blockchain!`);
+		tokenInstance.metadata = { ...foundMetadata.metadata };
+		tokenInstance.metadataURI = foundMetadata.uri;
+	} else if (tokenInstance?.metadata?.name !== 'none' && tokenInstance.metadataURI === 'none') {
+		// If metadata from the blockchain doesn't exist but the database has metadata, pin it and set it.
+		const CID = await addMetadata(tokenInstance.metadata, tokenInstance.metadata.name);
+		await addPin(CID, `metadata_${ tokenInstance.metadata.name }`);
+		tokenInstance.metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
+		tokenInstance.isMetadataPinned = true;
+		//log.info(`New token has Metadata from the database! Pinned with CID: ${CID}`);
+	} else {
+		//log.info(`Minted token has no metadata!`);
+		//console.log(tokenInstance);
+	}
+
+	return tokenInstance;
+}
+
 // Insert NFT data from a diamond contract
 const insertTokenDiamond = async (
 	dbModels,
@@ -85,42 +137,7 @@ const insertTokenDiamond = async (
 		foundToken = new dbModels.MintedToken({});
 	}
 
-	// 4 possible sources of metadata
-	// 1.- Direct metadata on the token
-	let foundMetadata = await dbModels.MetadataLink.findOne({
-		contract: contract._id,
-		tokenIndex,
-	}).populate('metadata');
-
-	if (foundMetadata === null) {
-		// 2.- Product wide metadata
-		foundMetadata = await dbModels.MetadataLink.findOne({
-			contract: contract._id,
-			tokenIndex: { $exists: false },
-			collectionIndex: foundLock.product,
-		}).populate('metadata');
-
-		if (foundMetadata === null) {
-			// 3.- Contract wide metadata
-			foundMetadata = await dbModels.MetadataLink.findOne({
-				contract: contract._id,
-				tokenIndex: { $exists: false },
-				collectionIndex: { $exists: false },
-			}).populate('metadata');
-		}
-	}
-
-	if (foundMetadata !== null) {
-		// If metadata exists, set it as the token's metadata
-		foundToken.metadata = { ...foundMetadata.metadata };
-		foundToken.metadataURI = foundMetadata.uri;
-	} else if (foundToken?.metadata?.name !== 'none' && foundToken.metadataURI === 'none') {
-		// If metadata from the blockchain doesn't exist but the database has metadata, pin it and set it.
-		const CID = await addMetadata(foundToken.metadata, foundToken.metadata.name);
-		await addPin(CID, `metadata_${ foundToken.metadata.name }`);
-		foundToken.metadataURI = `${ process.env.PINATA_GATEWAY }/${ CID }`;
-		foundToken.isMetadataPinned = true;
-	}
+	foundToken = await handleMetadataForToken(dbModels, contract._id, foundLock.product, tokenIndex, foundToken);
 
 	// Set all the properties of the minted token
 	foundToken.token = tokenIndex;
@@ -133,17 +150,17 @@ const insertTokenDiamond = async (
 	// Decrease the amount of copies in the offer
 	if (foundOffer) {
 		foundOffer.soldCopies += 1;
-		foundOffer.save().catch(handleDuplicateKey);
+		await foundOffer.save().catch(handleDuplicateKey);
 	}
 
 	// Decrease the amount of copies in the product
 	if (product) {
 		product.soldCopies += 1;
-		product.save().catch(handleDuplicateKey);
+		await product.save().catch(handleDuplicateKey);
 	}
 
 	// Save the token data
-	foundToken?.save().catch(handleDuplicateKey);
+	await foundToken.save().catch(handleDuplicateKey);
 
 	return foundToken;
 };
@@ -248,7 +265,7 @@ module.exports = {
 			blockchain: chainId,
 			contractAddress: deploymentAddress.toLowerCase(),
 			lastSyncedBlock: 0,
-			external: false,
+			external: false
 		}).save().catch(handleDuplicateKey);
 
 		return [contract];
@@ -368,40 +385,7 @@ module.exports = {
 			foundToken = new dbModels.MintedToken({});
 		}
 
-		// 3 possible sources of metadata
-
-		// 1.- Direct metadata on the token
-		let foundMetadata = await dbModels.MetadataLink.findOne({
-			contract: contract._id,
-			tokenIndex,
-		}).populate('metadata');
-
-		if (foundMetadata === null) {
-			// 2.- Product wide metadata
-			foundMetadata = await dbModels.MetadataLink.findOne({
-				contract: contract._id,
-				tokenIndex: { $exists: false },
-				collectionIndex: product.collectionIndexInContract,
-			}).populate('metadata');
-
-			if (foundMetadata === null) {
-				// Last try
-				// 3.- Contract wide metadata
-				foundMetadata = await dbModels.MetadataLink.findOne({
-					contract: contract._id,
-					tokenIndex: { $exists: false },
-					collectionIndex: { $exists: false },
-				}).populate('metadata');
-			}
-		}
-
-		// If metadata exists, set it as the token's metadata
-		if (foundMetadata !== null) {
-			// console.log(`[${contract.contractAddress}:${tokenIndex.toString()}] - Found metadata!`);
-			// console.log('will set', foundToken, 'with', foundMetadata.metadata);
-			foundToken.metadata = { ...foundMetadata.metadata };
-			foundToken.metadataURI = foundMetadata.uri;
-		}
+		foundToken = await handleMetadataForToken(dbModels, contract._id, offerPool.product, tokenIndex, foundToken);
 
 		foundToken.token = tokenIndex;
 		foundToken.uniqueIndexInContract = tokenIndex.add(product.firstTokenIndex);
@@ -600,7 +584,11 @@ module.exports = {
 		let fetchedMetadata = {};
 		// New URI can come empty, it means it got unset
 		if (newURI !== '') {
-			fetchedMetadata = await (await fetch(newURI)).json();
+			try {
+				fetchedMetadata = await (await fetch(newURI)).json();
+			} catch (err) {
+				log.error(`Error fetching metadata ${newURI}, the URI will be saved but the metadata won't be loaded.`);
+			}
 		}
 
 		const databaseMetadata = await (new dbModels.TokenMetadata(fetchedMetadata)).save().catch(handleDuplicateKey);
@@ -649,7 +637,11 @@ module.exports = {
 
 		if (appendTokenIndex === false) {
 			if (newURI !== '') {
-				fetchedMetadata = await (await fetch(newURI)).json();
+				try {
+					fetchedMetadata = await (await fetch(newURI)).json();
+				} catch (err) {
+					log.error(`Error fetching metadata ${newURI}, the URI will be saved but the metadata won't be loaded.`);
+				}
 			}
 			databaseMetadata = await (new dbModels.TokenMetadata(fetchedMetadata)).save().catch(handleDuplicateKey);
 		}
@@ -676,7 +668,11 @@ module.exports = {
 			});
 			for await (const token of foundTokensToUpdate) {
 				if (newURI !== '') {
-					token.metadata = await (await fetch(`${newURI}${token.token}`));
+					try {
+						token.metadata = await (await fetch(`${newURI}${token.token}`)).json();
+					} catch (err) {
+						log.error(`Error fetching product metadata ${newURI}, the URI will be saved but the metadata won't be loaded.`);
+					}
 					token.metadataURI = `${newURI}${token.token}`;
 				} else {
 					token.metadata = databaseMetadata;
@@ -715,8 +711,6 @@ module.exports = {
 		newURI,
 		appendTokenIndex = true // Assume it's true for the classic contracts that don't have the append index feature
 	) => {
-        console.log('METADATA FOR CONTRACT =++++++++ >')
-
 		let contract = await findContractFromAddress(transactionReceipt.to ? transactionReceipt.to : transactionReceipt.to_address, chainId, transactionReceipt, dbModels);
 		
 		if (!contract) {
@@ -729,7 +723,11 @@ module.exports = {
 
 		if (appendTokenIndex === false) {
 			if (newURI !== '') {
-				fetchedMetadata = await (await fetch(newURI)).json();
+				try {
+					fetchedMetadata = await (await fetch(newURI)).json();
+				} catch (err) {
+					log.error(`Error fetching contract metadata ${newURI}, the URI will be saved but the metadata won't be loaded.`);
+				}
 			}
 			databaseMetadata = await (new dbModels.TokenMetadata(fetchedMetadata)).save().catch(handleDuplicateKey);
 		}
@@ -765,7 +763,11 @@ module.exports = {
 			});
 			for await (const token of foundTokensToUpdate) {
 				if (newURI !== '') {
-					token.metadata = await (await fetch(`${newURI}${token.token}`));
+					try {
+						token.metadata = await (await fetch(`${newURI}${token.token}`)).json();
+					} catch (err) {
+						log.error(`Error fetching contract metadata ${newURI}, the URI will be saved but the metadata won't be loaded.`);
+					}
 					token.metadataURI = `${newURI}${token.token}`;
 				} else {
 					token.metadata = databaseMetadata;
