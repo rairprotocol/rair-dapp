@@ -22,3 +22,7 @@ resource "google_compute_address" "jenkins_internal_load_balancer" {
   address_type = "INTERNAL"
   subnetwork = google_compute_subnetwork.kubernetes_primary_cluster.id
  }
+
+resource "google_compute_global_address" "minting_network" {
+  name = "minting-network"
+}
