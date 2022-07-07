@@ -2,7 +2,7 @@ import React from 'react';
 import './VideoPlayer.css';
 import ShowVideoToLoggedInUsers from './ShowVideoToLoggedInUsers';
 
-const VideoPlayerModule = ({ backgroundImage, videoData }) => {
+const VideoPlayerModule = ({ backgroundImage, videoData, selectVideo }) => {
   const {
     videoTitle,
     videoModuleDescription,
@@ -23,7 +23,8 @@ const VideoPlayerModule = ({ backgroundImage, videoData }) => {
             baseURL,
             mediaId,
             videoTitle,
-            demo
+            demo,
+            selectVideo
           }}
         />
       </div>

@@ -11,7 +11,7 @@ import {
   TOnlySuccessResponse
 } from '../../../../../axios.responseTypes';
 
-const NftVideoplayer = ({ selectVideo }) => {
+const NftVideoplayer = ({ selectVideo, main }) => {
   // console.log(selectVideo, 'selectVideo');
   // const params = useParams();
   // const history = useHistory();
@@ -100,32 +100,53 @@ const NftVideoplayer = ({ selectVideo }) => {
     };
   }, [videoName]);
 
-  return (
-    <>
-      <div
-        className=""
-        style={{
-          width: '40vw',
-          height: '406px'
-        }}>
-        <video
-          id={'vjs-' + videoName}
+  if (main) {
+    return (
+      <>
+        <div className="col-12 row mx-0 bg-secondary h1">
+          <video
+            id={'vjs-' + videoName}
+            className="video-js vjs-16-9"
+            controls
+            preload="auto"
+            data-setup="{}">
+            <source
+              // autostart="false"
+              src={mediaAddress}
+              type="application/x-mpegURL"
+            />
+          </video>
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div
+          className=""
           style={{
-            width: 'inherit',
-            height: 'inherit',
-            borderRadius: '16px'
-          }}
-          className="video-js "
-          controls
-          preload="auto"
-          autoPlay
-          //poster={ video && ('/thumbnails/' + video.thumbnail + '.png') }
-          data-setup="{}">
-          <source src={mediaAddress} type="application/x-mpegURL" />
-        </video>
-      </div>
-    </>
-  );
+            width: '40vw',
+            height: '406px'
+          }}>
+          <video
+            id={'vjs-' + videoName}
+            style={{
+              width: 'inherit',
+              height: 'inherit',
+              borderRadius: '16px'
+            }}
+            className="video-js "
+            controls
+            preload="auto"
+            autoPlay
+            //poster={ video && ('/thumbnails/' + video.thumbnail + '.png') }
+            data-setup="{}">
+            <source src={mediaAddress} type="application/x-mpegURL" />
+          </video>
+        </div>
+      </>
+    );
+  }
 };
 
 export default NftVideoplayer;

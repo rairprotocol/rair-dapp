@@ -9,6 +9,7 @@ import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { Provider, useStore, useSelector } from 'react-redux';
+import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 
 const reactSwal = withReactContent(Swal);
 
@@ -138,7 +139,11 @@ const ShowVideoToLoggedInUsers = ({
                 title: videoTitle,
                 html: (
                   <Provider store={store}>
-                    <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
+                    {selectVideo && selectVideo?._id ? (
+                      <NftVideoplayer selectVideo={selectVideo} main={true} />
+                    ) : (
+                      <StandaloneVideoPlayer {...{ baseURL, mediaId }} />
+                    )}
                   </Provider>
                 ),
                 width: '90vw',
