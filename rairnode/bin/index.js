@@ -25,9 +25,7 @@ const { appSecretManager, vaultAppRoleTokenManager } = require('./vault');
 
 const config = require('./config');
 const gcp = require('./integrations/gcp');
-const {
-  getMongoConnectionStringURI,
-} = require('./shared_backend_code_generated/mongo/mongoUtils');
+
 const { mongoConnectionManager } = require('./mongooseConnect');
 
 const mongoConfig = require('./shared_backend_code_generated/config/mongoConfig');
@@ -50,27 +48,7 @@ async function main() {
     }
   });
 
-  // const mongoConnectionString = await getMongoConnectionStringURI({ appSecretManager });
-
   await mongoConnectionManager.getMongooseConnection({});
-
-  // Connecting to Mongo DB instance
-  // await mongoose.connect(mongoConnectionString, {
-  //   useNewUrlParser: true,
-  //   useUnifiedTopology: true,
-  // })
-  //   .then((c) => {
-  //     if (process.env.PRODUCTION === 'true') {
-  //       log.info('DB Connected!');
-  //     } else {
-  //       log.info('Development DB Connected!');
-  //     }
-  //     return c;
-  //   })
-  //   .catch((e) => {
-  //     log.error('DB Not Connected!');
-  //     log.error(`Reason: ${e.message}`);
-  //   });
 
   mongoose.set('useFindAndModify', false);
 
@@ -128,6 +106,8 @@ async function main() {
   app.use('/stream', streamRoute(context));
   app.use('/api', apiV1Routes(context));
   app.use(express.static(path.join(__dirname, 'public')));
+  // ESLint block reason is that nex structure is documented express approach
+  // eslint-disable-next-line consistent-return
   app.use(async (err, req, res, next) => {
     // remove temporary files if validation of some middleware was rejected
     try {
@@ -135,10 +115,12 @@ async function main() {
     } catch (e) {
       log.error(e);
     }
-
+    // prevents from server drop by headers already sent
+    if (res.headersSent) {
+      return next(err);
+    }
     log.error(err);
     res.status(500).json({ success: false, error: true, message: err.message });
-    next();
   });
 
   const server = app.listen(port, () => {

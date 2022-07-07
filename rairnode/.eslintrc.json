@@ -12,6 +12,7 @@
     "ecmaVersion": "latest"
   },
   "rules": {
+    "linebreak-style":["warn"],
     "no-underscore-dangle": 0,
     "object-curly-newline":"off"
   }
