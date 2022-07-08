@@ -43,7 +43,7 @@ pipeline {
     DEV_PROJECT_ID = 'rair-market-dev'
     DEV_CLUSTER = 'primary'
     DEV_LOCATION = 'us-west1-a'
-    CREDENTIALS_ID = 'rair-market'
+    CREDENTIALS_ID = 'rair-market-dev'
     MAIN_PROJECT_ID = "rair-market-dev" 
     MAIN_CLUSTER = "staging"
     MAIN_LOCATION = "southamerica-west1-a"
