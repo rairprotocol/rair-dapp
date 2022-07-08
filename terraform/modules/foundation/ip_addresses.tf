@@ -24,5 +24,5 @@ resource "google_compute_address" "jenkins_internal_load_balancer" {
  }
 
 resource "google_compute_global_address" "minting_network" {
-  name = "minting-network"
+  name = var.minting_marketplace_static_ip_name
 }

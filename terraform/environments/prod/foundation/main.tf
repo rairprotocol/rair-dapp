@@ -25,15 +25,19 @@ module "config" {
 module "foundation" {
   source = "../../../modules/foundation"
 
-  env_name = module.config.env_config.prod.env_name
-  region = module.config.env_config.prod.region
-  gcp_project_id = module.config.env_config.prod.gcp_project_id
-  vpc_cidr_block = module.config.env_config.prod.vpc_cidr_block
-  mongo_atlas_org_id = module.config.mongo_atlas_org_id
-  jenkins_internal_load_balancer_name = module.config.jenkins_internal_load_balancer_name
-  rair_internal_load_balancer_name = module.config.rair_internal_load_balancer_name
-  obfuscated_project_id = module.config.env_config.prod.obfuscated_project_id
-  account_users = [
+  env_name                              = module.config.env_config.prod.env_name
+  region                                = module.config.env_config.prod.region
+  gcp_project_id                        = module.config.env_config.prod.gcp_project_id
+  vpc_cidr_block                        = module.config.env_config.prod.vpc_cidr_block
+  mongo_atlas_org_id                    = module.config.mongo_atlas_org_id
+  jenkins_internal_load_balancer_name   = module.config.jenkins_internal_load_balancer_name
+  rair_internal_load_balancer_name      = module.config.rair_internal_load_balancer_name
+  obfuscated_project_id                 = module.config.env_config.prod.obfuscated_project_id
+  minting_marketplace_managed_cert_name = module.config.env_config.prod.minting_marketplace_managed_cert_name
+  minting_marketplace_static_ip_name    = module.config.env_config.prod.minting_marketplace_static_ip_name
+  minting_marketplace_subdomain         = module.config.env_config.prod.minting_marketplace_subdomain
+  
+  account_users                         = [
     {
       email: module.config.users.brian.email,
       role: "roles/editor"

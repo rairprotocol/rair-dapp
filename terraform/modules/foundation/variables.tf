@@ -43,3 +43,15 @@ variable "secret_adder_role_users" {
 variable "obfuscated_project_id" {
   type = string
 }
+
+variable "minting_marketplace_managed_cert_name" {
+  type = string
+}
+
+variable "minting_marketplace_static_ip_name" {
+  type = string
+}
+
+variable "minting_marketplace_subdomain" {
+  type = string
+}

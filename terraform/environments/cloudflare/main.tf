@@ -16,6 +16,10 @@ terraform {
 
 provider "cloudflare" {}
 
+module "shared_config" {
+  source = "../shared/env_config"
+}
+
 locals {
   record_type = {
     A: "A",

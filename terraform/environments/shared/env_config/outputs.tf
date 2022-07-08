@@ -5,21 +5,30 @@ output "env_config" {
       vpc_cidr_block: "10.0.0.0/14",
       gcp_project_id: "rair-market-dev",
       region: "us-west1",
-      obfuscated_project_id: "4249348029"
+      obfuscated_project_id: "4249348029",
+      minting_marketplace_managed_cert_name: "minting-marketplace",
+      minting_marketplace_static_ip_name: "minting-network",
+      minting_marketplace_subdomain: "dev"
     },
     "staging": {
       env_name: "staging",
       vpc_cidr_block: "10.4.0.0/14",
       gcp_project_id: "rair-market-staging",
       region: "us-west1",
-      obfuscated_project_id: "5573963367"
+      obfuscated_project_id: "5573963367",
+      minting_marketplace_managed_cert_name: "minting-marketplace",
+      minting_marketplace_static_ip_name: "minting-network",
+      minting_marketplace_subdomain: "new-staging"
     },
     "prod": {
       env_name: "prod",
       vpc_cidr_block: "10.8.0.0/14",
       gcp_project_id: "rair-market-production",
       region: "us-west1",
-      obfuscated_project_id: "9550688921"
+      obfuscated_project_id: "9550688921",
+      minting_marketplace_managed_cert_name: "minting-marketplace",
+      minting_marketplace_static_ip_name: "minting-network",
+      minting_marketplace_subdomain: ""
     }
   }
 }
@@ -52,6 +61,14 @@ output "users" {
     },
     ramki: {
       email: "ramki@rair.tech"
+    }
+  }
+}
+
+output "domains" {
+  value = {
+    rair_market: {
+      "base_domain": "rair.market"
     }
   }
 }

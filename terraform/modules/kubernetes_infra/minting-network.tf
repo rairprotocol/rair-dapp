@@ -19,6 +19,36 @@ resource "kubernetes_config_map" "minting_network_configmap" {
   data = var.minting_network_configmap_data
 }
 
+resource "kubernetes_ingress_v1" "minting_network_ingress" {
+  metadata {
+    name = "minging-network-public-ingress"
+    annotations = {
+      "kubernetes.io/ingress.allow-http": false
+      "ingress.gcp.kubernetes.io/pre-shared-cert": var.minting_marketplace_managed_cert_name
+      "kubernetes.io/ingress.global-static-ip-name": var.minting_marketplace_static_ip_name
+    }
+  }
+
+  wait_for_load_balancer = true
+
+  spec {
+    rule {
+      http {
+        path {
+          path = "/*"
+          backend {
+            service {
+              name = local.minting_network_service
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 resource "kubernetes_service" "minting_network_service" {
   metadata {
