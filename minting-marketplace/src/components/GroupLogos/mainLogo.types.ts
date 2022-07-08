@@ -3,7 +3,7 @@ import { History, LocationState } from 'history';
 
 export interface IMainLogo {
   goHome: () => void;
-  sentryHistory: History<LocationState>;
+  sentryHistory?: History<LocationState>;
   headerLogoWhite?: string;
   headerLogoBlack?: string;
   headerLogo: string;

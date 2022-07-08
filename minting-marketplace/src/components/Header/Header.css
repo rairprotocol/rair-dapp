@@ -1,7 +1,7 @@
 .col-12.header-master {
   display: flex;
   filter: drop-shadow(1px 0.5px 3px black);
-  padding: 10px 88px;
+  padding: 20px 120px;
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -19,6 +19,7 @@
   top: 32%;
   color: #e882d5;
   font-weight: normal;
+  font-size: 18px;
 }
 
 .header-master .main-search i.fas.fa-times {
@@ -33,12 +34,17 @@
 .header-master .main-search input {
   background: none;
   border-radius: 12px;
-  width: 40vw;
-  padding: 8px 20px 8px 50px;
-  border: 1px solid #4e4d4d;
+  width: 35vw;
+  padding: 8px 16px 8px 42px;
+  border: 1px solid #666666;
   color: white;
   transition: all 0.1s ease;
   position: relative;
+}
+
+.header-master .main-search input.rhyno {
+  border: 1px solid #DEDEDE;
+  color: #4f4f4f;
 }
 
 .header-master .container-admin-panel {
@@ -88,7 +94,6 @@
 }
 
 .header-master .admin-panel-btn {
-  margin-right: 10px;
   transition: all 0.2s ease;
   cursor: pointer;
   width: 32px;
@@ -116,7 +121,7 @@
   justify-content: center;
   align-items: center;
   color: white;
-  margin-right: 9px;
+  margin-right: 16px;
 }
 
 .header-master .social-media .box-social a {
@@ -128,7 +133,7 @@
 }
 
 .header-master .social-media .box-social:last-child {
-  margin-right: 28px;
+  margin-right: 16px;
 }
 
 .header-master .social-media .box-social:hover {

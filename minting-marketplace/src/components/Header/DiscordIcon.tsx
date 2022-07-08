@@ -58,3 +58,104 @@ export const TwitterIcon = ({ color, primaryColor }) => {
     </svg>
   );
 };
+
+export const SunIcon = ({ color, primaryColor }) => {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 16.6895C14.5888 16.6895 16.6875 14.5908 16.6875 12.002C16.6875 9.41312 14.5888 7.31445 12 7.31445C9.41116 7.31445 7.3125 9.41312 7.3125 12.002C7.3125 14.5908 9.41116 16.6895 12 16.6895Z"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 1.6875V3.56382"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 20.4375V22.3138"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.70605 4.70703L6.03824 6.03922"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M17.9629 17.9629L19.2951 19.2951"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M1.6875 12H3.56382"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M20.4375 12H22.3138"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.70605 19.2951L6.03824 17.9629"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M17.9629 6.03922L19.2951 4.70703"
+        stroke={primaryColor === 'rhyno' ? '#E882D5' : '#7879F1'}
+        strokeWidth="1.13838"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const BellIcon = ({ primaryColor, color }) => {
+  return (
+    <svg
+      width="18"
+      height="20"
+      viewBox="0 0 18 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M14.3333 6.40096C14.3333 4.96853 13.7714 3.59478 12.7712 2.5819C11.771 1.56903 10.4145 1 9 1C7.58551 1 6.22896 1.56903 5.22876 2.5819C4.22857 3.59478 3.66667 4.96853 3.66667 6.40096C3.66667 12.7021 1 14.5024 1 14.5024H17C17 14.5024 14.3333 12.7021 14.3333 6.40096Z"
+        stroke={primaryColor === 'rhyno' ? '#D0D0D0' : '#fff'}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10.5375 18.1016C10.3812 18.3744 10.1569 18.6008 9.887 18.7583C9.61712 18.9157 9.31114 18.9985 8.99969 18.9985C8.68824 18.9985 8.38226 18.9157 8.11238 18.7583C7.8425 18.6008 7.61819 18.3744 7.46191 18.1016"
+        stroke={primaryColor === 'rhyno' ? '#D0D0D0' : '#fff'}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};

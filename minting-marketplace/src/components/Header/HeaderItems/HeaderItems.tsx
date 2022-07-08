@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const HeaderContainer = styled.div`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? '#C4C4C4' : '#383637'};
+    props.primaryColor === 'rhyno' ? '#fff' : '#383637'};
   margin-top: ${(props) =>
     props.showAlert && props.selectedChain ? '50px' : ''};
 `;

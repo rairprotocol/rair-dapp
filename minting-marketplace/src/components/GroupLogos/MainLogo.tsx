@@ -5,27 +5,22 @@ import { IMainLogo } from './mainLogo.types';
 
 const MainLogo: React.FC<IMainLogo> = ({
   goHome,
-  sentryHistory,
-  headerLogo,
-  headerLogoBlack,
-  headerLogoWhite,
-  primaryColor
+  // sentryHistory,
+  headerLogo
+  // primaryColor
 }) => {
-  // const params = useParams();
-
   return (
     <>
       <div>
         <img
           onClick={() => goHome()}
           alt="Header Logo"
-          src={headerLogoWhite}
+          src={headerLogo}
           style={{
             width: 'auto',
             height: '26px',
             cursor: 'pointer'
           }}
-          // className='h-100 header_logo'
         />
       </div>
     </>

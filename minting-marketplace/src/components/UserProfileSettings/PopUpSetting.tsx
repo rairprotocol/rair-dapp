@@ -139,49 +139,67 @@ const PopUpSettings = ({
     <>
       <button
         onClick={() => setTriggerState((prev) => !prev)}
-        className="button profile-btn"
+        className={`button profile-btn ${
+          primaryColor === 'rhyno' ? 'rhyno' : ''
+        }`}
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-around',
-          alignContent: 'center',
-          flexDirection: 'row',
-          backgroundColor: `${
-            primaryColor === 'charcoal' ? '#222021' : '#D3D2D3'
-          }`
+          justifyContent: 'flex-start'
+          // alignContent: 'center',
+          // flexDirection: 'row'
         }}>
-        <img
+        <div
+          className="profile-btn-img"
           style={{
-            position: 'absolute',
-            width: '30px',
+            // borderRight: `1px solid ${
+            //   primaryColor === 'rhyno' ? '#D0D0D0' : '#fff'
+            // }`,
             height: '100%',
-            objectFit: 'cover',
-            left: 5,
-            top: 0,
-            transform: 'scale(0.8)',
-            borderRadius: 16
-          }}
-          src={imagePreviewUrl === null ? defaultPictures : imagePreviewUrl}
-          alt="avatart-user"
-        />
-        <span
-          style={{
-            padding: '0 10px 0 5px',
-            color: primaryColor === 'charcoal' ? '#fff' : '#383637'
+            width: '37px',
+            borderTopRightRadius: 10,
+            borderBottomRightRadius: 10,
+            overflow: 'hidden'
+            // backgroundImage: `url(${
+            //   imagePreviewUrl === null ? defaultPictures : imagePreviewUrl
+            // })`,
+            // backgroundSize: 'contain',
+            // backgroundRepeat: 'no-repeat',
+            // backgroundPosition: 'center'
           }}>
-          {cutUserAddress()}
-          {/* {userName
-            ? userName.slice(0, 12)
-            : currentUserAddress.slice(0, 7)}
-          {currentUserAddress.length || userName.length > 13
-            ? userName
-              ? ""
-              : "..."
-            : currentUserAddress.length > 13
-              ? "..."
-              : ""} */}
-        </span>
-        <i className="icon-menu fas fa-bars"></i>
+          <img
+            style={{
+              // position: 'absolute',
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+              // left: 5,
+              // top: 0,
+              // transform: 'scale(0.8)',
+              // borderRadius: 16
+            }}
+            src={imagePreviewUrl === null ? defaultPictures : imagePreviewUrl}
+            alt="avatart-user"
+          />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            width: '140px',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 5px'
+          }}>
+          <span
+            style={{
+              padding: '0 0px 0 2px',
+              color: primaryColor === 'charcoal' ? '#fff' : '#383637',
+              fontSize: '14px'
+            }}>
+            {cutUserAddress()}
+          </span>
+          <i className="icon-menu fas fa-bars"></i>
+        </div>
       </button>
       <Popup
         className="popup-settings-block"

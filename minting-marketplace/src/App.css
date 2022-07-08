@@ -1300,6 +1300,7 @@ button.metamask-on-boarding {
   color: white;
   transition: all 0.2s ease;
   font-weight: 700;
+  font-size: 14px;
 }
 
 button.metamask-on-boarding:hover {

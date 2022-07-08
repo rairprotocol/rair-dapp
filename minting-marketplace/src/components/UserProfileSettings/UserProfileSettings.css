@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
+
 .user-popup {
   background: '#383637';
   border-radius: 16px;
@@ -136,15 +138,25 @@
 }
 
 .profile-btn {
-  width: 200px;
-  height: 32px;
+  width: 186px;
+  height: 39px;
   color: #fff;
   position: relative;
-  padding: 2px 10px 2px 40px;
+  /* padding: 2px 10px 2px 40px; */
+  padding: 0;
   overflow: hidden;
-  border: solid 1px #9867d9;
+  border: solid 1px #fff;
   border-radius: 12px;
+  background: none;
   transition: 0.2s ease border;
+}
+
+.profile-btn span {
+  font-family: 'Aldrich', sans-serif;
+}
+
+.profile-btn.rhyno {
+  border: 1px solid #DEDEDE;
 }
 
 .button.profile-btn:hover {
@@ -157,6 +169,7 @@
 
 .profile-btn i {
   color: var(--bubblegum);
+  font-size: 18px;
 }
 
 .btn-back {

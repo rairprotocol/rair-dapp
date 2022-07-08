@@ -9,7 +9,7 @@ import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
 import { OnboardingButton } from './../common/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
-import { DiscordIcon } from './DiscordIcon';
+import { DiscordIcon, TwitterIcon } from './DiscordIcon';
 import AdminPanel from './AdminPanel/AdminPanel';
 import { HeaderContainer, SocialHeaderBox } from './HeaderItems/HeaderItems';
 
@@ -33,6 +33,7 @@ import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
+import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -200,7 +201,7 @@ const MainHeader: React.FC<IMainHeader> = ({
       </div>
       <div className={`main-search ${hiddenHeader ? 'hidden' : ''}`}>
         <input
-          className={primaryColor === 'rhyno' ? '' : 'input-search-black'}
+          className={primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'}
           type="text"
           placeholder="Search the rairverse..."
           onChange={handleChangeText}
@@ -354,22 +355,26 @@ const MainHeader: React.FC<IMainHeader> = ({
             setLoginDone={setLoginDone}
           />
           <div className="social-media">
-            <SocialHeaderBox className="box-social" primaryColor={primaryColor}>
-              <a
-                href="https://twitter.com/rairtech"
-                target={'_blank'}
-                rel="noreferrer">
-                <i className="fab fa-twitter"></i>
-              </a>
-            </SocialHeaderBox>
-            <SocialHeaderBox className="box-social" primaryColor={primaryColor}>
+            <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
               <a
                 href="https://discord.gg/pSTbf2yz7V"
                 target={'_blank'}
                 rel="noreferrer">
                 <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
               </a>
-            </SocialHeaderBox>
+            </SocialBox>
+            <SocialBox
+              marginRight={'17px'}
+              marginLeft={'17px'}
+              hoverColor={'#1DA1F2'}
+              primaryColor={primaryColor}>
+              <a
+                href="https://twitter.com/rairtech"
+                target={'_blank'}
+                rel="noreferrer">
+                <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
+              </a>
+            </SocialBox>
             <AdminPanel
               loginDone={loginDone}
               creatorViewsDisabled={creatorViewsDisabled}

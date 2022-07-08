@@ -28,7 +28,7 @@ const UploadProfilePicture = ({
 
   const updateProfile = useCallback(async () => {
     const formData = new FormData();
-    formData.append('nickName', name);
+    formData.append('nickName', name.replace(/@/g, ''));
     formData.append('email', status);
     if (file) {
       formData.append('file', file);

@@ -7,6 +7,8 @@ import './UserProfileSettings.css';
 import PopUpSettings from './PopUpSetting';
 import PopUpNotification from './PopUpNotification/PopUpNotification';
 import { setColorScheme } from '../../ducks/colors/actions';
+import { SunIcon } from '../Header/DiscordIcon';
+import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 
 const UserProfileSettings = ({
   loginDone,
@@ -23,29 +25,42 @@ const UserProfileSettings = ({
       style={{
         // position: "absolute",
         display: 'flex',
-        alignContent: 'center',
-        marginRight: '16px'
+        alignContent: 'center'
+        // marginRight: '16px'
       }}>
       <div
         style={{
           display: 'flex',
-          alignContent: 'center',
+          alignItems: 'center',
           justifyContent: 'center'
         }}>
+        {loginDone && (
+          <PopUpNotification
+            primaryColor={primaryColor}
+            isNotification={false}
+          />
+        )}
+        <SocialBox
+          className="social-sun-icon"
+          primaryColor={primaryColor}
+          marginRight={'17px'}
+          onClick={(e) => {
+            dispatch(
+              setColorScheme(primaryColor === 'rhyno' ? 'charcoal' : 'rhyno')
+            );
+          }}>
+          <SunIcon primaryColor={primaryColor} color={'#fff'} />
+        </SocialBox>
         {loginDone && (
           <div
             style={{
               marginRight: '12px',
               display: 'flex',
-              alignContent: 'center',
+              alignItems: 'center',
               justifyContent: 'center',
-              alignItems: 'flex-start'
+              alignItems: 'center'
             }}
             className="user-block">
-            <PopUpNotification
-              primaryColor={primaryColor}
-              isNotification={false}
-            />
             <PopUpSettings
               userData={userData}
               primaryColor={primaryColor}
@@ -57,7 +72,7 @@ const UserProfileSettings = ({
         )}
       </div>
       <div>
-        <button
+        {/* <button
           className="btn-change-theme"
           style={{
             backgroundColor: primaryColor === 'charcoal' ? '#222021' : '#D3D2D3'
@@ -70,9 +85,9 @@ const UserProfileSettings = ({
           {primaryColor === 'rhyno' ? (
             <i className="far fa-moon" />
           ) : (
-            <i className="fas fa-sun" />
+            <SunIcon primaryColor={primaryColor} color={'#fff'} />
           )}
-        </button>
+        </button> */}
       </div>
     </div>
   );

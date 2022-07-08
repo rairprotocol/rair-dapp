@@ -4,29 +4,34 @@ import { useSelector } from 'react-redux';
 import { Popup } from 'reactjs-popup';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { BellIcon } from '../../Header/DiscordIcon';
 import NotificationPage from '../NotificationPage/NotificationPage';
 import NftImg from './images/image.png';
 
 const MySwal = withReactContent(Swal);
 
-const PopUpNotification = ({ primaryColor, isNotification }) => {
+const PopUpNotification = ({ isNotification }) => {
   const [openModal, setOpenModal] = useState(false);
-  const { headerLogo } = useSelector((store) => store.colorStore);
+  const { headerLogo, primaryColor } = useSelector((store) => store.colorStore);
 
   return (
     <Popup
       trigger={(open) => {
         return (
-          <button
-            className="btn-notification"
-            style={{
-              // color: primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)",
-              backgroundColor:
-                primaryColor === 'charcoal' ? '#222021' : '#D3D2D3'
-            }}>
-            {isNotification && <div className="ellipse" />}
-            <i className="far fa-bell"></i>
-          </button>
+          <SocialBox className="social-bell-icon" marginRight={'17px'}>
+            <BellIcon primaryColor={primaryColor} />
+          </SocialBox>
+          // <button
+          //   className="btn-notification"
+          //   style={{
+          //     // color: primaryColor === "charcoal" ? "#fff" : "var(--royal-purple)",
+          //     backgroundColor:
+          //       primaryColor === 'charcoal' ? '#222021' : '#D3D2D3'
+          //   }}>
+          //   {isNotification && <div className="ellipse" />}
+          //   <i className="far fa-bell"></i>
+          // </button>
         );
       }}
       position="bottom center"
