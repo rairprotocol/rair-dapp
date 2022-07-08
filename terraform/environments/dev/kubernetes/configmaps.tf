@@ -151,6 +151,9 @@ locals {
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
     MONGO_DB_HOSTNAME: "primary-pri.ahxui.mongodb.net"
     MONGO_DB_NAME: "test",
-    USE_X509_CERT_AUTH: true
+    USE_X509_CERT_AUTH: true,
+    VAULT_URL: "https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200",
+    VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9",
+    VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: "dcb29f8c-58c4-b5a0-a0eb-63624a594291"
   }
 }

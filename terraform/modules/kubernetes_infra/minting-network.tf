@@ -21,7 +21,7 @@ resource "kubernetes_config_map" "minting_network_configmap" {
 
 resource "kubernetes_ingress_v1" "minting_network_ingress" {
   metadata {
-    name = "minging-network-public-ingress"
+    name = "minting-network-public-ingress"
     annotations = {
       "kubernetes.io/ingress.allow-http": false
       "ingress.gcp.kubernetes.io/pre-shared-cert": var.minting_marketplace_managed_cert_name

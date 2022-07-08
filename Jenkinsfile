@@ -58,6 +58,7 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
+                    --cache=true \
                     --destination rairtechinc/rairservernode:latest \
                     --destination rairtechinc/rairservernode:${GIT_COMMIT} \
                     --destination rairtechinc/rairservernode:${GIT_BRANCH}_2.${BUILD_ID}
@@ -76,6 +77,7 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./minting-marketplace/ \
                     --verbosity debug \
+                    --cache=true \
                     --destination rairtechinc/minting-network:latest \
                     --destination rairtechinc/minting-network:${GIT_COMMIT} \
                     --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
@@ -94,6 +96,7 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./blockchain-networks-service/ \
                     --verbosity debug \
+                    --cache=true \
                     --destination rairtechinc/blockchain-event-listener:latest \
                     --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
                     --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_2.${BUILD_ID}
@@ -112,6 +115,7 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./media-service/ \
                     --verbosity debug \
+                    --cache=true \
                     --destination rairtechinc/media-service:latest \
                     --destination rairtechinc/media-service:${GIT_COMMIT} \
                     --destination rairtechinc/media-service:${GIT_BRANCH}_2.${BUILD_ID}
@@ -130,7 +134,7 @@ pipeline {
         projectId: env.DEV_PROJECT_ID, 
         clusterName: env.DEV_CLUSTER, 
         zone: env.DEV_LOCATION, 
-        manifestPattern: 'kubernetes-manifests/configmaps/environment/dev', 
+        manifestPattern: 'kubernetes-manifests/configmaps/environment/tf', 
         credentialsId: env.CREDENTIALS_ID])
     }
       }
@@ -139,13 +143,13 @@ pipeline {
       when { branch 'dev' }
       steps {
         container('kubectl') {
-        sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/dev-manifest/*.yaml")
+        sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/tf-manifest/*.yaml")
         step([$class: 'KubernetesEngineBuilder', 
         namespace: "default", 
         projectId: env.DEV_PROJECT_ID, 
         clusterName: env.DEV_CLUSTER, 
         zone: env.DEV_LOCATION, 
-        manifestPattern: 'kubernetes-manifests/dev-manifest', 
+        manifestPattern: 'kubernetes-manifests/tf-manifest', 
         credentialsId: env.CREDENTIALS_ID, 
         verifyDeployments: true])
     }
