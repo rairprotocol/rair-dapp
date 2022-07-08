@@ -112,9 +112,9 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./media-service/ \
                     --verbosity debug \
-                    --destination rairtechinc/blockchain-event-listener:latest \
-                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
-                    --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_2.${BUILD_ID}
+                    --destination rairtechinc/media-service:latest \
+                    --destination rairtechinc/media-service:${GIT_COMMIT} \
+                    --destination rairtechinc/media-service:${GIT_BRANCH}_2.${BUILD_ID}
                 '''
               }
 
