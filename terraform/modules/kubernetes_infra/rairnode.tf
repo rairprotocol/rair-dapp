@@ -6,7 +6,7 @@ locals {
   rairnode_persistent_volume_claim_name_1 = "rairnode-claim1"
   rairnode_persistent_storage_name_0 = "rairnode-claim0"
   rairnode_persistent_storage_name_1 = "rairnode-claim1"
-  rairnode_image = "rairtechinc/rairservernode:dev_2.14"
+  rairnode_image = "rairtechinc/rairservernode:dev_2.15"
   rairnode_configmap_name = "rairnode-env"
 }
 

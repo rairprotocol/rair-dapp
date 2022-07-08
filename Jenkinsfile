@@ -40,11 +40,11 @@ pipeline {
     //DOCKERHUB_CREDENTIALS = credentials('rairtech-dockerhub')
     VERSION = "${env.BUILD_ID}"
     BRANCH = "${env.BRANCH_NAME}"
-    DEV_PROJECT_ID = 'rair-market'
-    DEV_CLUSTER = 'dev'
-    DEV_LOCATION = 'us-east1-b'
+    DEV_PROJECT_ID = 'rair-market-dev'
+    DEV_CLUSTER = 'primary'
+    DEV_LOCATION = 'us-west1-a'
     CREDENTIALS_ID = 'rair-market'
-    MAIN_PROJECT_ID = "rair-market" 
+    MAIN_PROJECT_ID = "rair-market-dev" 
     MAIN_CLUSTER = "staging"
     MAIN_LOCATION = "southamerica-west1-a"
   }
