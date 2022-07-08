@@ -21,12 +21,21 @@ const ListOffers = ({
   const [offerList, setOfferList] = useState([]);
   const [forceRerender, setForceRerender] = useState(false);
   const [onMyChain, setOnMyChain] = useState();
+	const [invalidItems, setInvalidItems] = useState(true);
 
   const { programmaticProvider, currentChain } = useSelector(
     (store) => store.contractStore
   );
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
   const { collectionIndex } = useParams();
+
+	useEffect(() => {
+		let value = false;
+		offerList.forEach((item) => {
+			value = value || item.offerName.trim() === '' || item.price <= 0
+		});
+		setInvalidItems(value);
+	}, [forceRerender, offerList]);
 
   useEffect(() => {
     setOfferList(
@@ -202,9 +211,7 @@ const ListOffers = ({
                       (offerList.at(-1).range[1] >
                         Number(contractData.product.copies) - 1 &&
                         offerList.at(-1)._id === undefined) ||
-                      offerList.reduce((current, item) => {
-                        return current || item.offerName === '';
-                      }, false))
+                      invalidItems)
                 }
               ]}
             />
