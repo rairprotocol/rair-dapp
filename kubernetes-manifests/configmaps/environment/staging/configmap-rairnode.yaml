@@ -34,4 +34,16 @@ data:
   BINANCE_TESTNET_RPC: https://data-seed-prebsc-1-s1.binance.org:8545/
   BINANCE_MAINNET_RPC: https://bsc-dataseed.binance.org/
   MONGO_LOG_COLLECTION: Log
+  MORALIS_SERVER_TEST: https://ldz2lkdhowt1.usemoralis.com:2053/server
+  MORALIS_SERVER_MAIN: https://y14jhwis7uao.moralishost.com:2053/server
+  MORALIS_API_KEY_TEST: 1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn
+  MORALIS_MASTER_KEY_TEST: P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5
+  REDIS_HOST: rair-redis
+  REDIS_PORT: "6379"
+  SESSION_SECRET: testsecret
+  SESSION_TTL: "12"
   LOG_LEVEL: debug
+  GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: "false"
+  MONGO_DB_HOSTNAME: test
+  MONGO_DB_NAME: test
+  VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
