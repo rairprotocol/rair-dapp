@@ -1,15 +1,15 @@
 /* use .wrapper-splash-page.nftnyc selector to override any general styling*/
-.nftnyc-radius{
+.nftnyc-radius {
   border-radius: 1rem;
 }
-.nftnyc-resp{
+.nftnyc-resp {
   height: 95vh;
   width: 80%;
 }
-.nftnyc-textCenter{
+.nftnyc-textCenter {
   text-align: center !important;
 }
-.nftnyc-font{
+.nftnyc-font {
   font-family: 'Charriot Deluxe', sans-serif;
 }
 
@@ -66,29 +66,29 @@
   /* top: -4rem; */
 }
 
-.main-wrapper-nyc{
+.main-wrapper-nyc {
   /* max-width: 400px;
   max-height: 60%;
   display: flex; */
   /* max-height: 60%; */
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    align-items: flex-start;
-    justify-content: space-evenly;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: flex-start;
+  justify-content: space-evenly;
 }
-.main-wrapper-nyc img{
+.main-wrapper-nyc img {
   max-width: 80%;
   /* height: 300px; */
   height: 30rem;
 }
-.bad{
+.bad {
   flex: 1;
   font-family: 'Charriot Deluxe', sans-serif;
   font-size: 1.125rem;
   color: red;
 }
-.good{
+.good {
   flex: 1;
 
   font-family: 'Charriot Deluxe', sans-serif;
@@ -167,17 +167,17 @@
 } */
 
 @media screen and (max-width: 4200px) and (min-width: 2001px) {
-  .main-wrapper-nyc img{
+  .main-wrapper-nyc img {
     max-width: 80%;
     height: 78rem;
   }
   .swal2-title.text-nftnyc {
     font-size: 5rem;
   }
-  .main-wrapper-nyc h3{
+  .main-wrapper-nyc h3 {
     font-size: 5.75rem;
   }
-  .nftnyc-resp{
+  .nftnyc-resp {
     height: 90vh;
     width: 80%;
   }
@@ -261,11 +261,11 @@
   }
 
   /* .warning-modal-col-0-title { */
-    /* margin-top: 42px; */
+  /* margin-top: 42px; */
   /* } */
 
   /* .warning-modal-col-1-title { */
-    /* margin-top: 44px; */
+  /* margin-top: 44px; */
   /* } */
 
   /* .wrapper-splash-page.nftnyc .template-author-card { */
@@ -334,7 +334,7 @@
 
 @media screen and (max-width: 700px) {
   /* .wrapper-splash-page.nftnyc .warning-img { */
-    /* width: 40vw; */
+  /* width: 40vw; */
   /* } */
 
   /* .wrapper-splash-page.nftnyc .template-author-card { */
@@ -441,7 +441,7 @@
 
 @media screen and (max-width: 390px) {
   /* .wrapper-splash-page.nftnyc .warning-img { */
-    /* width: 60vw; */
+  /* width: 60vw; */
   /* } */
 
   .template-home-splash-page .splash-team-greyman {
@@ -449,13 +449,13 @@
   }
 }
 @media screen and (min-width: 2500px) {
-  html{
+  html {
     font-size: 1rem;
   }
-  .nftnyc-font{
+  .nftnyc-font {
     font-size: 2rem !important;
   }
-  .position-teammate{
+  .position-teammate {
     justify-content: start !important;
   }
 }

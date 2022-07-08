@@ -11,13 +11,13 @@
   padding: 10px;
   overflow: scroll;
   /* Internet Explorer 10+ */
-  -ms-overflow-style: none;  
+  -ms-overflow-style: none;
   /* Firefox */
   scrollbar-width: none;
 }
 
- /* Safari and Chrome */
- .ListOfVideosWrapper::-webkit-scrollbar { 
+/* Safari and Chrome */
+.ListOfVideosWrapper::-webkit-scrollbar {
   display: none;
 }
 
@@ -142,12 +142,10 @@
     margin-top: 1.4vh;
     width: 20vw;
   }
-  
 }
 @media screen and (max-width: 570px) {
   .playImagesOnSingleVideo {
     margin-top: 2.4vh;
     width: 20vw;
   }
-  
 }
