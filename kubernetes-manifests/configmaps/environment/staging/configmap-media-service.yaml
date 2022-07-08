@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: media-server-env
+  name: media-service-env
 data:
   PRODUCTION: "true"
   PINATA_KEY: aaa581a498f99ed85279
@@ -16,6 +16,3 @@ data:
   LOG_LEVEL: debug
   MEDIA_SERVICE_PORT: "5002"
   BASE_RAIRNODE_URL: http://rairnode:5000
-  USE_X509_CERT_AUTH: "false"
-  IPFS_API: http://rairipfs:5001
-  VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200

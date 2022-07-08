@@ -1,6 +1,6 @@
 locals {
   minting_network_service = "minting-network-primary"
-  minting_network_image = "rairtechinc/minting-network:dev_latest"
+  minting_network_image = "rairtechinc/minting-network:dev_2.14"
   minting_network_default_port_1 = 3001
   minting_network_configmap_name = "minting-network-env"
 }

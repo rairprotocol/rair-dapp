@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: media-server-env
+  name: media-service-env
 data:
   PRODUCTION: "true"
   PINATA_KEY: aaa581a498f99ed85279

@@ -26,6 +26,10 @@ variable "blockchain_event_listener_configmap_data" {
   type = map(string)
 }
 
+variable "media_service_configmap_data" {
+  type = map(string)
+}
+
 variable "pull_secret_name" {
   type = string
 }

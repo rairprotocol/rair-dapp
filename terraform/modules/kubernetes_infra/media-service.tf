@@ -1,29 +1,24 @@
 locals {
-  rairnode_namespace = "rairnode-primary"
-  rairnode_default_port_1 = "3000"
-  rairnode_default_port_2 = "5000"
-  rairnode_persistent_volume_claim_name_0 = "rairnode-claim0"
-  rairnode_persistent_volume_claim_name_1 = "rairnode-claim1"
-  rairnode_persistent_storage_name_0 = "rairnode-claim0"
-  rairnode_persistent_storage_name_1 = "rairnode-claim1"
-  rairnode_image = "rairtechinc/rairservernode:dev_2.14"
-  rairnode_configmap_name = "rairnode-env"
+   media_service_namespace = "media-service-primary"
+   media_service_default_port_1 = "5002"
+   media_service_image = "rairtechinc/media-service:dev_2.14"
+   media_service_configmap_name = "media-service-env"
 }
 
-resource "kubernetes_config_map" "rairnode_configmap" {
+resource "kubernetes_config_map" "media_service_configmap" {
   metadata {
-    name = local.rairnode_configmap_name
+    name = local.media_service_configmap_name
   }
 
-  data = var.rairnode_configmap_data
+  data = var.media_service_configmap_data
 }
 
-resource "kubernetes_service" "rairnode_service" {
+resource "kubernetes_service" "media_service_service" {
   metadata {
-    name      = local.rairnode_namespace
+    name      = local.media_service_namespace
     labels = {
       managedby = "terraform"
-      service   = local.rairnode_namespace
+      service   = local.media_service_namespace
     }
     annotations = {
       "networking.gke.io/load-balancer-type" = "loadBalancer"
@@ -31,60 +26,21 @@ resource "kubernetes_service" "rairnode_service" {
   }
   spec {
     port {
-      port        = 3000
-      target_port = local.rairnode_default_port_1
-      name = "3000"
-    }
-    port {
-      port        = 5000
-      target_port = local.rairnode_default_port_2
-      name = "5000"
+      port        = 5002
+      target_port = local.media_service_default_port_1
+      name = "5002"
     }
 
     type = "ClusterIP"
   }
 }
 
-resource "kubernetes_persistent_volume_claim" "rairnode-claim0" {
-  metadata {
-    name      = local.rairnode_persistent_volume_claim_name_0
-    labels = {
-      managedby = "terraform"
-    }
-  }
-  spec {
-    access_modes = ["ReadWriteOnce"]
-    resources {
-      requests = {
-        storage = "10Gi"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "rairnode-claim1" {
-  metadata {
-    name      = local.rairnode_persistent_volume_claim_name_1
-    labels = {
-      managedby = "terraform"
-    }
-  }
-  spec {
-    access_modes = ["ReadWriteOnce"]
-    resources {
-      requests = {
-        storage = "10Gi"
-      }
-    }
-  }
-}
-
-resource "kubernetes_deployment" "rairnode" {
+resource "kubernetes_deployment" "media_service" {
   depends_on = [
-    kubernetes_config_map.rairnode_configmap
+    kubernetes_config_map.media_service_configmap
   ]
   metadata {
-    name = "${local.rairnode_namespace}-deployment"
+    name = "${local.media_service_namespace}-deployment"
     labels = {
       managedby = "terraform"
     }
@@ -96,22 +52,22 @@ resource "kubernetes_deployment" "rairnode" {
 
     selector {
       match_labels = {
-        app = local.rairnode_namespace
+        app = local.media_service_namespace
       }
     }
 
     template {
       metadata {
         labels = {
-          app = local.rairnode_namespace
+          app = local.media_service_namespace
         }
       }
 
       spec {
 
         container {
-          image = local.rairnode_image
-          name  = local.rairnode_namespace
+          image = local.media_service_image
+          name  = local.media_service_namespace
           resources {
             limits = {
               cpu    = "0.5"
@@ -124,14 +80,11 @@ resource "kubernetes_deployment" "rairnode" {
           }
           image_pull_policy = "Always"
           port {
-            container_port = "${local.rairnode_default_port_1}"
-          }
-          port {
-            container_port = "${local.rairnode_default_port_2}"
+            container_port = "${local.media_service_default_port_1}"
           }
           env_from {
             config_map_ref {
-              name = local.rairnode_configmap_name
+              name = local.media_service_configmap_name
            }
           }
           env {
@@ -189,30 +142,10 @@ resource "kubernetes_deployment" "rairnode" {
               }
             }
           }
-           volume_mount {
-            name       = local.rairnode_persistent_volume_claim_name_0
-            mount_path = "/usr/local/src/db"
-          }
-          volume_mount {
-            name       = local.rairnode_persistent_volume_claim_name_1
-            mount_path = "/usr/local/src/bin/Videos"
-          }
         }
       image_pull_secrets {
         name        = var.pull_secret_name
       }
-      volume {
-          name = local.rairnode_persistent_storage_name_0
-          persistent_volume_claim {
-            claim_name = local.rairnode_persistent_volume_claim_name_0
-          }
-        }
-      volume {
-          name = local.rairnode_persistent_storage_name_1
-          persistent_volume_claim {
-            claim_name = local.rairnode_persistent_volume_claim_name_1
-          }
-        }
       }
     }
   }
