@@ -63,6 +63,7 @@ Thumbs.db
 
 # configuration files
 .env
+.env-bak
 blockchain-networks-service/.env
 commands/update-local-admin/.env
 
