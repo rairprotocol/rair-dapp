@@ -30,6 +30,7 @@
     "express": "^4.17.3",
     "ipfs-http-client": "^56.0.2",
     "lodash": "^4.17.20",
+    "merge-descriptors": "^1.0.1",
     "moment-timezone": "^0.5.34",
     "mongodb": "^4.5.0",
     "mongoose": "^6.3.0",
