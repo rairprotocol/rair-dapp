@@ -183,16 +183,6 @@ pipeline {
         verifyDeployments: true])
     }
   }
-  post {
-            failure {
-                slackSend failOnError:true message:"Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-            }
-        }
-  post {
-            success {
-                slackSend "Build successful - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-            }
-        }
   
 }
 }
