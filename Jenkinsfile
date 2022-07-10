@@ -12,7 +12,7 @@ pipeline {
         - /bin/cat
         tty: true
       - name: kaniko
-        image: gcr.io/kaniko-project/executor:debug
+        image: gcr.io/kaniko-project/executor:v1.3.0-debug
         command:
         - /busybox/cat
         tty: true
@@ -21,10 +21,10 @@ pipeline {
           mountPath: /kaniko/.docker
         resources:
           limits:
-            memory: 8Gi
+            memory: 16Gi
           requests:
-            memory: 4Gi
-            cpu: 2
+            memory: 8Gi
+            cpu: 4
       restartPolicy: Never
       volumes:
       - name: kaniko-secret
@@ -49,25 +49,6 @@ pipeline {
     MAIN_LOCATION = "southamerica-west1-a"
   }
   stages{
-    stage('Build and push rairnode') {
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile \
-                    --context ./rairnode/ \
-                    --verbosity debug \
-                    --cache=false \
-                    --destination rairtechinc/rairservernode:latest \
-                    --destination rairtechinc/rairservernode:${GIT_COMMIT} \
-                    --destination rairtechinc/rairservernode:${GIT_BRANCH}_2.${BUILD_ID}
-                '''
-              }
-
-            }
-          }
-        }
     stage('Build and push minting-marketplace') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
@@ -77,10 +58,29 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./minting-marketplace/ \
                     --verbosity debug \
-                    --cache=false \
+                    --cleanup \
                     --destination rairtechinc/minting-network:latest \
                     --destination rairtechinc/minting-network:${GIT_COMMIT} \
                     --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push rairnode') {
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./rairnode/ \
+                    --verbosity debug \
+                    --cleanup \
+                    --destination rairtechinc/rairservernode:latest \
+                    --destination rairtechinc/rairservernode:${GIT_COMMIT} \
+                    --destination rairtechinc/rairservernode:${GIT_BRANCH}_2.${BUILD_ID}
                 '''
               }
 
@@ -96,7 +96,7 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./blockchain-networks-service/ \
                     --verbosity debug \
-                    --cache=false \
+                    --cleanup \
                     --destination rairtechinc/blockchain-event-listener:latest \
                     --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
                     --destination rairtechinc/blockchain-event-listener:${GIT_BRANCH}_2.${BUILD_ID}
@@ -115,7 +115,6 @@ pipeline {
                     --dockerfile Dockerfile \
                     --context ./media-service/ \
                     --verbosity debug \
-                    --cache=false \
                     --destination rairtechinc/media-service:latest \
                     --destination rairtechinc/media-service:${GIT_COMMIT} \
                     --destination rairtechinc/media-service:${GIT_BRANCH}_2.${BUILD_ID}

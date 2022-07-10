@@ -11,7 +11,7 @@ metadata:
 spec:
   rules:
 #Add the host for DNS rules
-  - host: nftnyc.rair.market
+  - host: dev.rair.tech
     http:
       paths:
       - path: /*
