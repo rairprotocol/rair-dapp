@@ -7,7 +7,7 @@ import axios from 'axios';
 //imports components
 import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
-import { OnboardingButton } from './../common/OnboardingButton';
+import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
 import { DiscordIcon, TwitterIcon } from './DiscordIcon';
 import AdminPanel from './AdminPanel/AdminPanel';

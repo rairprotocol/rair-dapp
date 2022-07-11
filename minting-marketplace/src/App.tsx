@@ -12,7 +12,7 @@ import { setAdminRights } from './ducks/users/actions';
 import { getCurrentPageEnd } from './ducks/pages/actions';
 import { getTokenComplete, getTokenStart } from './ducks/auth/actions';
 import { setChainId, setUserAddress } from './ducks/contracts/actions';
-
+import { OnboardingButton } from './components/common/OnboardingButton/OnboardingButton';
 import axios from 'axios';
 import { TUserResponse } from './axios.responseTypes';
 
@@ -25,6 +25,7 @@ import * as Sentry from '@sentry/react';
 
 // Sweetalert2 for the popup messages
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 import gtag from './utils/gtag';
 
@@ -100,6 +101,8 @@ import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
 import { AppContainerFluid } from './styled-components/nft/AppContainer';
+
+const rSwal = withReactContent(Swal);
 
 //Google Analytics
 // import ReactGA from 'react-ga';
@@ -197,6 +200,18 @@ function App({ sentryHistory }) {
         )
       );
       currentUser = programmaticProvider.address;
+    } else {
+      rSwal.fire({
+        title: 'Please install a Crypto wallet',
+        html: (
+          <div>
+            <OnboardingButton />
+          </div>
+        ),
+        icon: 'error'
+      });
+      setStartedLogin(false);
+      return;
     }
 
     if (!currentUser && currentUser !== undefined) {

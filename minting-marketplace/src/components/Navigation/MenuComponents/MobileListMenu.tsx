@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React from 'react';
-import { OnboardingButton } from './../../common/OnboardingButton';
+import { OnboardingButton } from '../../common/OnboardingButton/OnboardingButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { List, ListItem } from './../NavigationItems/NavigationItems';
 import { NavLink } from 'react-router-dom';
