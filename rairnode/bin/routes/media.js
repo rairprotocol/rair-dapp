@@ -172,7 +172,7 @@ module.exports = () => {
           searchQuery.contract = { $in: arrayOfContracts };
         }
 
-        let data = await File.find(searchQuery, { key: 0 })
+        let data = await File.find(searchQuery, { key: 0, uri: 0 })
           .sort({ title: 1 })
           .skip(skip)
           .limit(pageSize);
@@ -394,25 +394,21 @@ module.exports = () => {
 
         const key = { ...exportedKey, key: exportedKey.key.toJSON() };
 
-        await File.create({
-          _id: cid,
-          key,
-          uri: storageLink,
-          ...meta,
+        await vaultKeyManager.write({
+          secretName: cid,
+          data: {
+            uri: storageLink,
+            key,
+          },
+          vaultToken: vaultAppRoleTokenManager.getToken(),
         });
 
-        try {
-          const vaultWriteRes = await vaultKeyManager.write({
-            secretName: cid,
-            data: {
-              uri: storageLink,
-              key,
-            },
-            vaultToken: vaultAppRoleTokenManager.getToken(),
-          });
-        } catch (err) {
-          log.error('Error writing key to vault:', cid);
-        }
+        log.info('Key wrote to vault.');
+
+        await File.create({
+          _id: cid,
+          ...meta,
+        });
 
         log.info(`${req.file.originalname} stored to DB.`);
         socketInstance.emit('uploadProgress', { message: 'Stored to database.', last: !!['gcp'].includes(storage), done: ['gcp'].includes(storage) ? 100 : 96 });

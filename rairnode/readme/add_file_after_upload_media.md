@@ -11,15 +11,6 @@ Add file with media data
 ```json
  {
   "cid": "gQrotDfRLLnJ3rWiXvd3mVwJwFrJ4lWnZMp7L",
-  "key": {
-        "key": { "type": "Buffer", "data": [Array] },
-        "authTag": {
-            "1080p0": "351b6a0a9a6750bbe9a4f9dd71e58927",
-            "1080p1": "ab1be0d1ca02f7d55953665d01d8c940",
-        .....
-      }
-  },
-  "storageLink": "https://storage.googleapis......",
   "meta": {
      "mainManifest": "stream.m3u8",
      "author": "some toket",

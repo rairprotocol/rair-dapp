@@ -13,12 +13,10 @@ const File = new Schema(
     description: { type: String },
     // Encryption data
     encryptionType: { type: String, required: true },
-    key: { type: Object, required: true },
     mainManifest: { type: String, required: true },
     // Thumbnails
     staticThumbnail: { type: String, required: true },
     animatedThumbnail: { type: String, required: false },
-    uri: { type: String, required: true },
     // Blockchain data
     contract: { type: Schema.ObjectId, required: true },
     product: { type: String, required: true },

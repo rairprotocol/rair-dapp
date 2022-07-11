@@ -88,12 +88,10 @@ module.exports = {
 
   addFile: async (req, res, next) => {
     try {
-      const { cid, key, storageLink, meta } = req.body;
+      const { cid, meta } = req.body;
 
       await File.create({
         _id: cid,
-        key,
-        uri: storageLink,
         ...meta,
       });
 
