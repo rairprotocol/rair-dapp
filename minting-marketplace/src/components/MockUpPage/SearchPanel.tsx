@@ -8,13 +8,22 @@ import InputField from '../common/InputField';
 import VideoList from '../video/videoList';
 import FilteringBlock from './FilteringBlock/FilteringBlock';
 import PaginationBox from './PaginationBox/PaginationBox';
-import { getCurrentPage, getCurrentPageEnd } from '../../ducks/pages/actions';
+import {
+  getCurrentPage,
+  getCurrentPageEnd,
+  getCurrentPageNull
+} from '../../ducks/pages/actions';
 import { getNftDataStart } from '../../ducks/nftData/action';
+import { TVideosInitialState } from '../../ducks/videos/videosDucks.types';
+import { RootState } from '../../ducks';
 
 const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   const dispatch = useDispatch();
   const { currentPage } = useSelector((store) => store.getPageStore);
-  const { nftList, itemsPerPage } = useSelector((store) => store.nftDataStore);
+  const { nftListTotal, nftList, itemsPerPage } = useSelector(
+    (store) => store.nftDataStore
+  );
+  const { totalNumberVideo } = useSelector((store) => store.videosStore);
 
   const [titleSearch, setTitleSearch] = useState('');
   const [sortItem, setSortItem] = useState('');
@@ -25,86 +34,26 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   const [filterText, setFilterText] = useState('');
   const [filterCategoriesText, setFilterCategoriesText] = useState('');
   const [click, setClick] = useState(null);
+  const [currentPageForVideo, setCurrentPageForVideo] = useState(1);
+  const { videos, loading } = useSelector<RootState, TVideosInitialState>(
+    (store) => store.videosStore
+  );
 
-  // const [mediaList, setMediaList] = useState();
+  const _locTok: string = localStorage.token;
 
-  // const getContract = useCallback(async () => {
-  //   const responseContract = await axios.get<TGetFullContracts>("/api/contracts/full", {
-  //     headers: {
-  //       Accept: "application/json",
-  //       "X-rair-token": localStorage.token,
-  //     },
-  //     params: {
-  //       itemsPerPage: itemsPerPage,
-  //       pageNum: currentPage,
-  //       blockchain: blockchain,
-  //       category: category,
-  //     },
-  //   });
-
-  //   const covers = responseContract.data.contracts.map((item: object) => ({
-  //     id: item._id,
-  //     productId: item.products?._id ?? "wut",
-  //     blockchain: item.blockchain,
-  //     collectionIndexInContract: item.products.collectionIndexInContract,
-  //     contract: item.contractAddress,
-  //     cover: item.products.cover,
-  //     title: item.title,
-  //     name: item.products.name,
-  //     user: item.user,
-  //     copiesProduct: item.products.copies,
-  //     offerData: item.products.offers.map((elem) => ({
-  //       price: elem.price,
-  //       offerName: elem.offerName,
-  //       offerIndex: elem.offerIndex,
-  //       productNumber: elem.product,
-  //     })),
-  //   }));
-  //   setData(covers);
-
-  //   const totalCount = responseContract.data.totalNumber;
-  //   setTotalPages(getPagesCount(totalCount, itemsPerPage));
-  // }, [currentPage, itemsPerPage, blockchain, category]);
-
+  const clearPagesForVideo = () => {
+    dispatch(getCurrentPageNull());
+  };
   const changePage = (currentPage: number) => {
     dispatch(getCurrentPage(currentPage));
     // setCurrentPage(currentPage);
     window.scrollTo(0, 0);
   };
-
-  // const updateList = async () => {
-  //   try {
-  //     let response = await axios.get<TMediaList>("/api/media/list", {
-  //       headers: {
-  //         "x-rair-token": localStorage.token,
-  //       },
-  //     });
-  //     const { success, list } = response.data;
-  //     if (success) {
-  //       console.log(list, "list")
-  //       setMediaList(list);
-  //     }
-  //   } catch (err) {
-  //     const error = err as AxiosError;
-  //     if (
-  //       error?.message === "jwt expired" ||
-  //       error?.message === "jwt malformed"
-  //     ) {
-  //       localStorage.removeItem("token");
-  //     }
-  //     else {
-  //       console.log(error?.message);
-  //     }
-  //   }
-  // };
-
-  // unused snippet
-  // const handleClick = useCallback((cover) => {
-  //   nftList.forEach((item) => {
-  //     if (cover === item.cover) {
-  //     }
-  //   });
-  // }, []);
+  const changePageForVideo = (currentPage: number) => {
+    // dispatch(getCurrentPage(currentPage));
+    setCurrentPageForVideo(currentPage);
+    window.scrollTo(0, 0);
+  };
 
   const clearFilter = () => {
     setBlockchain(null);
@@ -126,6 +75,22 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
     }
   }, [blockchain, category, dispatch]);
 
+  const updateVideo = useCallback(
+    (params) => {
+      dispatch({ type: 'GET_LIST_VIDEOS_START', params: params });
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    const params = {
+      itemsPerPage: itemsPerPage,
+      pageNum: currentPageForVideo,
+      xTok: _locTok
+    };
+    updateVideo(params);
+  }, [_locTok, currentPageForVideo, itemsPerPage, updateVideo]);
+
   useEffect(() => {
     const params = {
       itemsPerPage,
@@ -143,10 +108,6 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
     };
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   getContract();
-  // }, [currentPage, getContract]);
-
   return (
     <div className="input-search-wrapper list-button-wrapper">
       <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
@@ -159,6 +120,13 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             NFT
           </Tab>
           <Tab
+            onClick={() => {
+              clearPagesForVideo();
+            }}
+            style={{
+              backgroundColor: `var(--${primaryColor})`,
+              color: `var(--${textColor})`
+            }}
             selectedClassName={`search-tab-selected-${
               primaryColor === 'rhyno' ? 'default' : 'dark'
             }`}
@@ -196,7 +164,6 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
               setIsShowCategories={setIsShowCategories}
               setFilterText={setFilterText}
               setFilterCategoriesText={setFilterCategoriesText}
-              // getContract={getContract}
             />
           </div>
         </div>
@@ -230,18 +197,29 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             titleSearch={titleSearch}
             primaryColor={primaryColor}
             textColor={textColor}
-            // handleClick={handleClick}
             data={nftList}
-            // dataAll={dataAll}
           />
           <PaginationBox
+            totalPageForPagination={nftListTotal}
+            whatPage={'nft'}
             primaryColor={primaryColor}
             changePage={changePage}
             currentPage={currentPage}
           />
         </TabPanel>
         <TabPanel>
-          <VideoList titleSearch={titleSearch} />
+          <VideoList
+            videos={videos}
+            loading={loading}
+            titleSearch={titleSearch}
+          />
+          <PaginationBox
+            totalPageForPagination={totalNumberVideo}
+            whatPage={'video'}
+            primaryColor={primaryColor}
+            changePage={changePageForVideo}
+            currentPage={currentPageForVideo}
+          />
         </TabPanel>
       </Tabs>
     </div>

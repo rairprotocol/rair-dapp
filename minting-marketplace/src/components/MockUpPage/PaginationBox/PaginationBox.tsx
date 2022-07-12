@@ -3,16 +3,28 @@ import { Pagination } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-const PaginationBox = ({ changePage, currentPage, primaryColor }) => {
+const PaginationBox = ({
+  changePage,
+  currentPage,
+  primaryColor,
+  totalPageForPagination,
+  whatPage
+}) => {
+  const { itemsPerPage } = useSelector((store) => store.nftDataStore);
+
   const [page, setPage] = useState(currentPage);
   const [totalPage, setTotalPages] = useState(null);
-  const { nftListTotal, itemsPerPage, nftList } = useSelector(
-    (store) => store.nftDataStore
-  );
+  const [totalPageVideo, setTotalPagesVideo] = useState(null);
 
   const pagesArray = [];
-  for (let i = 0; i < totalPage; i++) {
-    pagesArray.push(i + 1);
+  if (whatPage && whatPage === 'nft') {
+    for (let i = 0; i < totalPage; i++) {
+      pagesArray.push(i + 1);
+    }
+  } else if (whatPage && whatPage === 'video') {
+    for (let i = 0; i < totalPageVideo; i++) {
+      pagesArray.push(i + 1);
+    }
   }
 
   const getPagesCount = (totalCount: number, itemsPerPage: number) => {
@@ -27,10 +39,12 @@ const PaginationBox = ({ changePage, currentPage, primaryColor }) => {
   };
 
   useEffect(() => {
-    if (nftListTotal) {
-      setTotalPages(getPagesCount(nftListTotal, itemsPerPage));
+    if (totalPageForPagination && whatPage === 'nft') {
+      setTotalPages(getPagesCount(totalPageForPagination, itemsPerPage));
+    } else if (totalPageForPagination && whatPage === 'video') {
+      setTotalPagesVideo(getPagesCount(totalPageForPagination, itemsPerPage));
     }
-  }, [nftListTotal, itemsPerPage]);
+  }, [setTotalPages, totalPageForPagination, itemsPerPage, whatPage]);
 
   return (
     <div className="pagination__wrapper">
@@ -52,7 +66,7 @@ const PaginationBox = ({ changePage, currentPage, primaryColor }) => {
                 <h2 className="search-panel-empty-text">No items to display</h2>
             )} */}
       {
-        pagesArray && nftListTotal > 0 && pagesArray.length > 0 && (
+        pagesArray && totalPageForPagination > 0 && pagesArray.length > 0 && (
           <Pagination
             className={
               primaryColor === 'rhyno' ? 'pagination-white' : 'pagination-black'

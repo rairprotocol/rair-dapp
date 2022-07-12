@@ -4,6 +4,7 @@ import { TVideosActions, TVideosInitialState } from './videosDucks.types';
 const InitialState: TVideosInitialState = {
   videos: null,
   error: null,
+  totalNumberVideo: null,
   refresh: false,
   loading: false
 };
@@ -24,6 +25,17 @@ export default function videosStore(
         ...state,
         videos: action.videoList,
         loading: false
+      };
+    case types.GET_LIST_VIDEOS_TOTAL_CLEAR:
+      return {
+        ...state,
+        totalNumberVideo: null
+      };
+    case types.GET_LIST_VIDEOS_TOTAL:
+      return {
+        ...state,
+        loading: false,
+        totalNumberVideo: action.totalNumberVideo
       };
     case types.GET_LIST_VIDEOS_ERROR:
       return {

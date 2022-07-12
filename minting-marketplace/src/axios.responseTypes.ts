@@ -130,6 +130,7 @@ export type INftProductOffers = {
 export type TMediaList = {
   success: boolean;
   list: MediaListResponseType;
+  totalNumber: number;
 };
 
 export type TGetFullContracts = {

@@ -1,5 +1,13 @@
-const headers = () => ({
-  'X-rair-token': `${localStorage.getItem('token')}`
-});
+const headers = () => {
+  return {
+    'X-rair-token': `${localStorage.token}`
+  };
+};
+const paramsVideo = (params) => {
+  return {
+    itemsPerPage: `${params.itemsPerPage}`,
+    pageNum: `${params.pageNum}`
+  };
+};
 
-export { headers };
+export { headers, paramsVideo };

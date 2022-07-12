@@ -1274,6 +1274,56 @@ i.fas-custom {
   margin-right: 16px;
 }
 
+.info-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  line-height: 28px;
+}
+
+.video-size{
+  font-size: 14px;
+}
+.user-info {
+  display: flex;
+}
+.user-info img {
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  margin-top: -10px;
+}
+.user-image {
+  padding-right: 10px;
+}
+.price-info {
+  display: flex;
+}
+
+.duration-for-video {
+  background-color: var(--charcoal);
+  color: white;
+  min-width: 107px;
+  height: 25px;
+  text-align: center;
+  border-radius: 25px;
+  padding: 5px 5px;
+  opacity: 0.7;
+}
+
+.price-total {
+  padding-left: 6px;
+}
+
+.price-blockchain {
+  margin-right: 15px;
+  padding-left: 10px;
+}
+
 /* .modal-item-footer-wrapper:last-child{
 justify-content: flex-end;
 } */

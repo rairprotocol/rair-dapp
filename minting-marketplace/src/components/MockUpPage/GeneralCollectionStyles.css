@@ -219,20 +219,23 @@
   background-color: rgba(34, 32, 33, 0.5);
   color: white;
   position: relative;
-  top: -3.7rem;
-  height: 59px;
-  padding: 0px 0px 8px 16px;
+  top: -4.5rem;
+  height: 72px;
+  width: inherit;
+  padding: 8px 16px 8px 16px;
+  backdrop-filter: blur(8px);
 }
 
-.description-wrapper-video:hover {
+/* maybe we will use it at future */
+/* .description-wrapper-video:hover {
   padding-top: 1rem;
-  height: 17.35rem;
-  top: -17.35rem;
-  margin-bottom: -16.35rem;
+  height: 12.35rem;
+  top: -12.35rem;
+  margin-bottom: -7.35rem;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   transition-duration: 0.5s;
-}
+} */
 
 /* .description-wrapper {
     border-bottom-left-radius: 16px;
@@ -351,6 +354,7 @@
   .container-search,
   .category-wrapper {
     padding-left: 1.5vw;
+    min-width: 96vw;
   }
 }
 

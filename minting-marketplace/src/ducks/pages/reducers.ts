@@ -29,6 +29,11 @@ export default function getPageStore(
         currentPage: 1,
         loading: true
       };
+    case types.GET_CURRENT_NULL:
+      return {
+        ...state,
+        currentPage: 1
+      };
     default:
       return state;
   }
