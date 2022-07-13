@@ -72,3 +72,13 @@ output "domains" {
     }
   }
 }
+
+output "gke_service_accounts" {
+  value = {
+    rairnode:            "gke-rairnode",
+    blockchain_networks: "gke-blockchain-networks",
+    jenkins:             "gke-jenkins",
+    minting_network:     "gke-minting-network",
+    media_service:       "gke-media-service",
+  }
+}

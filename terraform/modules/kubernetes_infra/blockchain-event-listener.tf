@@ -47,6 +47,7 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
   }
 
   spec {
+
     replicas = 1
     selector {
       match_labels = {
@@ -66,6 +67,9 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
       }
 
       spec {
+        
+        service_account_name = module.shared_config.gke_service_accounts.blockchain_networks
+
         container {
           image = local.blockchain_event_listener_image
           name  = local.blockchain_event_listener_service

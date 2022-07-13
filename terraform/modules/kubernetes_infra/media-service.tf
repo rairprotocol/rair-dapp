@@ -64,6 +64,7 @@ resource "kubernetes_deployment" "media_service" {
       }
 
       spec {
+        service_account_name = module.shared_config.gke_service_accounts.media_service
 
         container {
           image = local.media_service_image

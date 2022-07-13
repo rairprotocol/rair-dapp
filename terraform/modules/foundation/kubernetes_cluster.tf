@@ -49,6 +49,10 @@ resource "google_container_cluster" "primary" {
 
   networking_mode = "VPC_NATIVE"
 
+  workload_identity_config {
+    workload_pool = "${var.gcp_project_id}.svc.id.goog"
+  }
+
   private_cluster_config {
     enable_private_nodes = true
     enable_private_endpoint = true

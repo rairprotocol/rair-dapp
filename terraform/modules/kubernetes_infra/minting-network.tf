@@ -98,6 +98,9 @@ resource "kubernetes_deployment" "minting_network" {
       }
 
       spec{
+        
+        service_account_name = module.shared_config.gke_service_accounts.minting_network
+
         container {
           image = local.minting_network_image
           name  = local.minting_network_service

@@ -56,6 +56,9 @@ resource "kubernetes_deployment" "jenkins" {
       }
 
       spec {
+        
+        service_account_name = module.shared_config.gke_service_accounts.jenkins
+
         security_context {
           fs_group = 1000
           run_as_user = 0

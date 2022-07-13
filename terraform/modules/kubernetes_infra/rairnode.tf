@@ -91,7 +91,7 @@ resource "kubernetes_deployment" "rairnode" {
   }
 
   spec {
-    
+
     replicas = 1
 
     selector {
@@ -108,6 +108,8 @@ resource "kubernetes_deployment" "rairnode" {
       }
 
       spec {
+
+        service_account_name = module.shared_config.gke_service_accounts.rairnode
 
         container {
           image = local.rairnode_image
