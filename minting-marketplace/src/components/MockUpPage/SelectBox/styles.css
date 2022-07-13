@@ -270,11 +270,21 @@
   color: white;
 }
 
+.pagination__wrapper .MuiPagination-ul.css-wjh20t-MuiPagination-ul li{
+  margin: 0 3px;
+}
+
 .pagination__wrapper
   .pagination-white
   .css-10w330c-MuiButtonBase-root-MuiPaginationItem-root {
   /* background: var(--stimorol); */
-  color: #000;
+  color: #222021;
+  border: 1px solid #222021;
+  border-radius: 9.5px;
+}
+
+.pagination__wrapper .pagination-white .MuiPaginationItem-root.MuiPaginationItem-sizeMedium.MuiPaginationItem-text.MuiPaginationItem-rounded.MuiPaginationItem-ellipsis.css-1v2lvtn-MuiPaginationItem-root {
+  color: #222021;
 }
 
 .pagination__wrapper
@@ -282,34 +292,46 @@
   .css-10w330c-MuiButtonBase-root-MuiPaginationItem-root {
   /* background: var(--stimorol); */
   color: #fff;
+  border-radius: 9.5px;
+  border: 1px solid #fff;
+}
+
+.pagination__wrapper .MuiButtonBase-root.Mui-disabled.MuiPaginationItem-root.MuiPaginationItem-sizeMedium.MuiPaginationItem-text.MuiPaginationItem-rounded.Mui-disabled.MuiPaginationItem-previousNext.css-10w330c-MuiButtonBase-root-MuiPaginationItem-root,
+.pagination__wrapper .MuiButtonBase-root.MuiPaginationItem-root.MuiPaginationItem-sizeMedium.MuiPaginationItem-text.MuiPaginationItem-rounded.MuiPaginationItem-previousNext.css-10w330c-MuiButtonBase-root-MuiPaginationItem-root {
+  border: none;
 }
 
 .pagination__wrapper
   .pagination-black
   .css-10w330c-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
-  background: var(--stimorol-click);
+  position: relative;
+  background: var(--stimorol);
   color: #fff;
-  -webkit-box-shadow: 0px 0px 10px 2px rgba(0, 144, 255, 0.73);
-  -moz-box-shadow: 0px 0px 10px 2px rgba(0, 144, 255, 0.73);
-  box-shadow: 0px 0px 10px 2px rgba(0, 144, 255, 0.73);
+  border: none;
+  -webkit-box-shadow: 0px 0px 7px 0.4px #b278a7;
+  -moz-box-shadow: 0px 0px 7px 0.4px #b278a7;
+  box-shadow: 0px 0px 7px 0.4px #b278a7;
 }
 
 .pagination__wrapper
   .pagination-white
   .css-10w330c-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
-  background: var(--stimorol-click);
+  background: var(--stimorol);
   color: #fff;
-  -webkit-box-shadow: 0px 0px 10px 2px rgba(0, 144, 255, 0.73);
-  -moz-box-shadow: 0px 0px 10px 2px rgba(0, 144, 255, 0.73);
-  box-shadow: 0px 0px 10px 2px rgba(0, 144, 255, 0.73);
+  border: none;
+  -webkit-box-shadow: 0px 0px 7px 0.4px #b278a7;
+  -moz-box-shadow: 0px 0px 7px 0.4px #b278a7;
+  box-shadow: 0px 0px 7px 0.4px #b278a7;
+  
 }
 
 .pagination__wrapper
   .css-10w330c-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected:hover,
 .pagination__wrapper
   .css-10w330c-MuiButtonBase-root-MuiPaginationItem-root:hover {
-  background: var(--stimorol-hover);
+  background: var(--stimorol);
   color: #fff;
+  border: none;
 }
 
 .pagination__wrapper

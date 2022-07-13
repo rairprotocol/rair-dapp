@@ -75,10 +75,8 @@ const PaginationBox = ({
             page={page}
             onChange={handlePage}
             // variant="outlined"
-            showFirstButton={true}
-            showLastButton={true}
-            hideNextButton={true}
-            hidePrevButton={true}
+            // hideNextButton={true}
+            // hidePrevButton={true}
             shape="rounded"
           />
         )

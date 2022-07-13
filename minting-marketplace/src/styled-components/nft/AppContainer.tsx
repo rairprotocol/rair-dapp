@@ -5,7 +5,10 @@ export const AppContainerFluid = styled.div`
   background-size: 100vw 100vh;
   min-height: 90vh;
   position: relative;
-  background-color: var(--${(props) => props.primaryColor});
+  background-color: ${(props) =>
+    props.primaryColor === 'rhyno'
+      ? '#fafafa'
+      : 'var(--' + props.primaryColor + ')'};
   color: ${(props) => props.textColor};
   background-image: url(${(props) => props.backgroundImage});
   background-position: center top;
