@@ -7,6 +7,14 @@ export const FooterMain = styled.footer`
 
   border-top: 1px solid
     ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
+
+  @media screen and (max-width: 1024px) {
+    padding: 40px 40px 25px 40px;
+  }
+
+  @media screen and (max-width: 450px) {
+    padding: 20px 20px 16px 20px;
+  }
 `;
 
 export const FooterWrapper = styled.div`
@@ -17,6 +25,12 @@ export const FooterWrapper = styled.div`
   padding-bottom: 52px;
   border-bottom: 1px solid
     ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const FooterImage = styled.div`
@@ -26,6 +40,14 @@ export const FooterImage = styled.div`
     height: 26px;
     width: auto;
   }
+
+  @media screen and (max-width: 450px) {
+    margin-bottom: 0;
+
+    img {
+      display: none;
+    }
+  }
 `;
 
 export const FooterBoxJoin = styled.div``;
@@ -34,15 +56,33 @@ export const CommunityBlock = styled.div`
   .community-text {
     color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
   }
+
+  @media screen and (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 export const CommunityBoxFooter = styled.div`
   display: flex;
   margin-top: 14px;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 export const NavFooter = styled.nav`
   display: flex;
+
+  @media screen and (max-width: 768px) {
+    margin-bottom: 28px;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
+  @media screen and (max-width: 450px) {
+    justify-content: space-around;
+  }
 `;
 
 export const NavFooterBox = styled.ul`
@@ -64,6 +104,10 @@ export const NavFooterBox = styled.ul`
   li:last-child {
     margin-bottom: 0px;
   }
+
+  @media screen and (max-width: 450px) {
+    padding-left: 0;
+  }
 `;
 
 export const ListFooter = styled.ul``;
@@ -83,6 +127,18 @@ export const FooterTextRairTech = styled.div`
     }
     li:nth-child(2) {
       margin: 0 32px;
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    padding-top: 20px;
+    ul {
+      padding-left: 0;
+      flex-direction: column;
+      align-items: center;
+      li {
+        font-size: 10px;
+      }
     }
   }
 `;
@@ -118,6 +174,36 @@ export const FooterEmailBlock = styled.div`
       border-radius: 10px;
       background: var(--stimorol);
       color: #fff;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    margin-bottom: 28px;
+    width: 80%;
+
+    .footer-send-email {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    h4 {
+      text-align: center;
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    width: 100%;
+
+    .footer-send-email {
+      justify-content: space-between;
+
+      input,
+      button {
+        font-size: 12px;
+      }
+      button {
+        padding: 8px 20px;
+      }
     }
   }
 `;
