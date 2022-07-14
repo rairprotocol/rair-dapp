@@ -353,6 +353,8 @@ const MainHeader: React.FC<IMainHeader> = ({
             currentUserAddress={currentUserAddress}
             loginDone={loginDone}
             setLoginDone={setLoginDone}
+            showAlert={showAlert}
+            selectedChain={selectedChain}
           />
           <div className="social-media">
             <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>

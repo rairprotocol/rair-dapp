@@ -15,7 +15,9 @@ const UserProfileSettings = ({
   currentUserAddress,
   adminAccess,
   setLoginDone,
-  userData
+  userData,
+  showAlert,
+  selectedChain
 }) => {
   const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -67,6 +69,8 @@ const UserProfileSettings = ({
               setLoginDone={setLoginDone}
               adminAccess={adminAccess}
               currentUserAddress={currentUserAddress}
+              showAlert={showAlert}
+              selectedChain={selectedChain}
             />
           </div>
         )}
