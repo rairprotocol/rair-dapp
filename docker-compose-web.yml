@@ -26,8 +26,8 @@ services:
     container_name: 'rairnode'
     image: rairtechinc/rairservernode:dev_latest
     volumes:
-      - ./demo-decrypt-node/db:/usr/local/src/db
-      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+      - ./rairnode/db:/usr/src/rairnode/db
+      - ./rairnode/bin/Videos:/usr/src/rairnode/bin/Videos
     environment:
       PRODUCTION: "true"
       MONGO_URI: mongodb+srv://${dbuser}:${dbpass}@${dbhost}
@@ -91,12 +91,12 @@ services:
       ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
       BINANCE_MAINNET_DIAMOND_FACTORY_ADDRESS: ${binance_mainnet_diamond_factory_address}
       BINANCE_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${binance_mainnet_diamond_marketplace_address}
-      BINANCE_TESTNET_DIAMOND_FACTORY_ADDRESS: ${binance_testnet_diamond_factory_address} 
+      BINANCE_TESTNET_DIAMOND_FACTORY_ADDRESS: ${binance_testnet_diamond_factory_address}
       BINANCE_TESTNET_DIAMOND_MARKETPLACE_ADDRESS: ${binance_testnet_diamond_marketplace_address}
       GOERLI_DIAMOND_FACTORY_ADDRESS: ${goerli_diamond_factory_address}
       GOERLI_DIAMOND_MARKETPLACE_ADDRESS: ${goerli_diamond_marketplace_address}
       MATIC_MUMBAI_DIAMOND_FACTORY_ADDRESS: ${matic_mumbai_diamond_factory_address}
-      MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mumbai_diamond_marketplace_address} 
+      MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mumbai_diamond_marketplace_address}
       MATIC_MAINNET_DIAMOND_FACTORY_ADDRESS: ${matic_mainnet_diamond_factory_address}
       MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mainnet_diamond_marketplace_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}

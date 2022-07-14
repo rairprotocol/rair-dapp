@@ -7,8 +7,8 @@ services:
       context: rairnode/
       dockerfile: Dockerfile
     volumes:
-      - ./rairnode/db:/usr/local/src/db
-      - ./rairnode/bin/Videos:/usr/local/src/bin/Videos
+      - ./rairnode/db:/usr/src/rairnode/db
+      - ./rairnode/bin/Videos:/usr/src/rairnode/bin/Videos
     environment:
       PRODUCTION: "true"
       MONGO_URI:  ${db}

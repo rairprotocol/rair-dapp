@@ -101,9 +101,9 @@ spec:
               name: rairnode-env
           resources: {}
           volumeMounts:
-            - mountPath: /usr/local/src/db
+            - mountPath: /usr/src/rairnode/db
               name: rairnode-claim0
-            - mountPath: /usr/local/src/bin/Videos
+            - mountPath: /usr/src/rairnode/bin/Videos
               name: rairnode-claim1
       imagePullSecrets:
         - name: regcred

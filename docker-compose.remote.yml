@@ -7,8 +7,8 @@ services:
       context: rairnode
       dockerfile: Dockerfile
     volumes:
-      - ./demo-decrypt-node/db:/usr/local/src/db
-      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+      - ./rairnode/db:/usr/src/rairnode/db
+      - ./rairnode/bin/Videos:/usr/src/rairnode/bin/Videos
     environment:
       PRODUCTION: "true"
       MONGO_URI:  mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}

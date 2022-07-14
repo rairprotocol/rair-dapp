@@ -25,8 +25,8 @@ services:
     container_name: 'rairnode'
     image: rairtechinc/rairservernode:dev_latest
     volumes:
-      - ./demo-decrypt-node/db:/usr/local/src/db
-      - ./demo-decrypt-node/bin/Videos:/usr/local/src/bin/Videos
+      - ./rairnode/db:/usr/src/rairnode/db
+      - ./rairnode/bin/Videos:/usr/src/rairnode/bin/Videos
     restart: always
     environment:
       PRODUCTION: "true"
