@@ -4,6 +4,7 @@ FROM node:latest as build
 WORKDIR /usr/src/media-service
 COPY package*.json ./
 RUN npm install
+RUN npm install -g npm@8.14.0
 COPY . /usr/src/media-service
 #RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 

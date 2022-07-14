@@ -7,6 +7,7 @@ COPY VERSION /
 WORKDIR /usr/src/event-listener
 COPY package*.json ./
 RUN npm install
+RUN npm install -g npm@8.14.0
 COPY . /usr/src/event-listener
 #RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
