@@ -196,6 +196,7 @@ export type TAuthGetChallengeResponse = {
 
 export type TOnlySuccessResponse = {
   success: boolean;
+  message?: string;
 };
 
 export type TTokenResponseData = {

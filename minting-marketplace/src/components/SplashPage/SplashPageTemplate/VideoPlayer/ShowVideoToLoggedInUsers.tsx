@@ -45,7 +45,8 @@ const ShowVideoToLoggedInUsers = ({
   videoTitle,
   baseURL,
   mediaId,
-  demo
+  demo,
+  selectVideo
 }) => {
   const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
   const openModalForVideo = useCallback(() => {

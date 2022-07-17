@@ -26,7 +26,6 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
   const [mediaAddress, setMediaAddress] = useState<string>(
     `${baseURL}${mediaId}`
   );
-  console.info(' inside video player general page ');
 
   //https://storage.googleapis.com/rair-videos/
   //https://rair.mypinata.cloud/ipfs/
@@ -87,8 +86,8 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
         setProcessDone(false);
       }
     } catch (error) {
-      console.error(error);
-      Swal.fire('Video not found');
+      Swal.fire('NFT required to view this content');
+
       setProcessDone(false);
     }
   }, [programmaticProvider, mediaId, mainManifest, videoName]);

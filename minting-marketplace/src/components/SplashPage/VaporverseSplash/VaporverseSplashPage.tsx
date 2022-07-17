@@ -137,13 +137,23 @@ const splashData = {
         'Originally based in Kharkiv, Valerii and Natalia are respsonsible for backend database architecture and syncing to allow for seemless purchase'
     }
   ],
+  videoDataDemo: {
+    video: null,
+    // 'https://storage.googleapis.com/rair-videos/tx2cV7kzqFXF9lTC5iy1VCYoXBwonyG-HcjunEI5j1rqfX/2596768157',
+    videoTitle: '',
+    videoModuleDescription: null,
+    videoModuleTitle: 'loading...',
+    baseURL: 'https://staging.rair.market/stream/',
+    mediaId: '9zG0NPK0DXRpCzMQeZ2y6yQYfpDMDJS-Pc1WSewRUaspE9'
+    // demo: true
+  },
   videoData: {
     video: null,
-    videoTitle: 'Watch the Transformation',
+    videoTitle: '',
     videoModuleDescription: null,
-    videoModuleTitle: 'loading... test comms',
-    baseURL: 'https://storage.googleapis.com/rair-videos/',
-    mediaId: 'tx2cV7kzqFXF9lTC5iy1VCYoXBwonyG-HcjunEI5j1rqfX'
+    videoModuleTitle: 'loading...',
+    baseURL: 'https://staging.rair.market/stream/',
+    mediaId: '8ZOEmFxjGbNURmepHXlsitn4e3icUCF4UZ0RCpcx_7sy0r'
   },
   tilesTitle: null,
   NFTName: 'NFT',
@@ -216,7 +226,7 @@ const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
   const [openCheckList, setOpenCheckList] = useState(false);
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentChain, minterInstance } = useSelector(
+  const { currentChain, minterInstance, currentUserAddress } = useSelector(
     (store) => store.contractStore
   );
   const carousel_match = window.matchMedia('(min-width: 630px)');
@@ -419,7 +429,11 @@ const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
 
         <div style={{ height: '5vw' }} />
 
-        <img style={{ width: '100%' }} src={VV_test_transmission} />
+        {/* <img style={{ width: '100%' }} src={VV_test_transmission} /> */}
+        <VideoPlayerModule
+          backgroundImage={VV_test_transmission}
+          videoData={splashData.videoDataDemo}
+        />
 
         <div style={{ height: '7vw' }} />
 
@@ -433,7 +447,6 @@ const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
           ))}
         />
 
-        <div style={{ height: '5vw' }} />
         <VideoPlayerModule
           backgroundImage={videoBackground}
           videoData={splashData.videoData}
