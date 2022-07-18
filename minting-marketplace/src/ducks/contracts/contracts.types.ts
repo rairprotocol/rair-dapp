@@ -26,6 +26,7 @@ export type AbiType = AbiSingleType[];
 
 export type ContractsInitialType = {
   minterInstance: ethers.Contract | undefined;
+  resaleInstance: ethers.Contract | undefined;
   factoryInstance: ethers.Contract | undefined;
   erc777Instance: ethers.Contract | undefined;
   diamondFactoryInstance: ethers.Contract | undefined;
@@ -49,6 +50,7 @@ export type ContractContents = {
   minterMarketplace: string | undefined;
   diamondFactory: string | undefined;
   diamondMarketplace: string | undefined;
+  resaleMarketplace: string | undefined;
 };
 
 export type ContractAddressesType = {

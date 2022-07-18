@@ -11,7 +11,8 @@ import {
   factoryAbi,
   erc777Abi,
   diamondFactoryAbi,
-  diamondMarketplaceAbi
+  diamondMarketplaceAbi,
+  resaleAbi
 } from '../../contracts';
 
 const contractAddresses: ContractAddressesType = {
@@ -23,7 +24,8 @@ const contractAddresses: ContractAddressesType = {
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x556a3Db6d800AAA56f8B09E476793c5100705Db5') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
-      '0x92FBe344513e108B581170E73CFA352B729E47EA') as string
+      '0x92FBe344513e108B581170E73CFA352B729E47EA') as string,
+    resaleMarketplace: undefined
   },
   '0x61': {
     // Binance Testnet
@@ -33,7 +35,8 @@ const contractAddresses: ContractAddressesType = {
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0xA2c57691b8DF0D8479f5f888c69346363D23a49F') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
-      '0xaCb13B4c527eD6237f7DB6E95Ef71929d1e13DD6') as string
+      '0xaCb13B4c527eD6237f7DB6E95Ef71929d1e13DD6') as string,
+    resaleMarketplace: undefined
   },
   '0x5': {
     // Ethereum Goerli
@@ -43,7 +46,8 @@ const contractAddresses: ContractAddressesType = {
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0xEF85370b8F136E2F28eA904bF0dA5acac3D1d74f') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
-      '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64') as string
+      '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64') as string,
+    resaleMarketplace: '0xb88af2c5d0f095A8AA093CAe95c9e5e2e158b677'
   },
   '0x13881': {
     // Matic Mumbai
@@ -53,7 +57,8 @@ const contractAddresses: ContractAddressesType = {
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0xbB236Ce48dDCb58adB8665E220FE976bA5d080a5') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
-      '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0') as string
+      '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0') as string,
+    resaleMarketplace: undefined
   },
   '0x89': {
     // Matic Mainnet
@@ -63,7 +68,8 @@ const contractAddresses: ContractAddressesType = {
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x9498b23e964760364435C23c793e9352Ff4E2200') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
-      '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1') as string
+      '0x51eA5316F2A9062e1cAB3c498cCA2924A7AB03b1') as string,
+    resaleMarketplace: undefined
   },
   '0x1': {
     // Ethereum Mainnet
@@ -71,12 +77,14 @@ const contractAddresses: ContractAddressesType = {
     erc777: '0xf0ebe73fdae61b305132fd1873c98fb5c4735b40',
     minterMarketplace: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
     diamondFactory: undefined,
-    diamondMarketplace: undefined
+    diamondMarketplace: undefined,
+    resaleMarketplace: undefined
   }
 };
 
 const InitialState: ContractsInitialType = {
   minterInstance: undefined,
+  resaleInstance: undefined,
   factoryInstance: undefined,
   erc777Instance: undefined,
   diamondFactoryInstance: undefined,

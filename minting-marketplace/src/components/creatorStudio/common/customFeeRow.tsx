@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
-import { utils, BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { validateInteger } from '../../../utils/metamaskUtils';
 import { ICustomFeeRow } from '../creatorStudio.types';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
