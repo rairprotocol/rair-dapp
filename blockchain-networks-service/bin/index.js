@@ -98,7 +98,6 @@ async function main() {
   await appSecretManager.getAppSecrets({
     vaultToken: vaultAppRoleTokenManager.getToken(),
     listOfSecretsToFetch: [
-      mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY,
       mongoConfig.VAULT_MONGO_x509_SECRET_KEY
     ]
   });
