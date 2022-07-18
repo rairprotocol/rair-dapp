@@ -55,33 +55,6 @@ class VaultKeyManager {
     }
   }
 
-  async read({ secretName, vaultToken }) {
-    try {
-      const secretKVDestinationName = this.getKVProviderName();
-      const url = this.getKeyWriteReadUrl({
-        secretKVDestinationName,
-        secretName
-      })
-      const res = await axios({
-        method: "POST",
-        url,
-        headers: this.generateVaultHeaders({vaultToken}),
-        data: {
-          data: {
-            ...data
-          }
-        }
-      });
-      return res;
-    } catch(err) {
-      const errMessage = 'Error writing key to vault';
-      console.log(errMessage);
-      if(!this.preventThrowingErrors) {
-        throw new Error(errMessage);
-      }
-    }    
-  }
-
   async read({secretName, vaultToken}) {
     try {
       const secretKVDestinationName = this.getKVProviderName()
