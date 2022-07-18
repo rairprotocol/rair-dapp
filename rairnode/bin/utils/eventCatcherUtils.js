@@ -74,15 +74,16 @@ const handleMetadataForToken = async (
   // in such cases meta should be already preset and pined to pinata
   if (foundMetadataURI !== 'none' && tokenInstance.metadataURI === 'none') {
     // If single metadata exists, set it as the token's metadata
-    log.info(`New token has single Metadata preset!`);
+    log.info('New token has single Metadata preset!');
     const fetchedMetadata = await (await fetch(foundMetadataURI)).json();
     tokenInstance.metadata = fetchedMetadata;
   } else if (
-    tokenInstance?.metadata?.name !== 'none' &&
-    tokenInstance.metadataURI === 'none' &&
-    tokenInstance.isMetadataPinned === false
+    tokenInstance?.metadata?.name !== 'none'
+    && tokenInstance.metadataURI === 'none'
+    && tokenInstance.isMetadataPinned === false
   ) {
-    // If metadata from the blockchain doesn't exist but the database has metadata, pin it and set it.
+    // If metadata from the blockchain doesn't exist but the database
+    //  has metadata, pin it and set it.
     const CID = await addMetadata(
       tokenInstance.metadata,
       tokenInstance.metadata.name,
@@ -94,7 +95,7 @@ const handleMetadataForToken = async (
       `New token has Metadata from the database! Pinned with CID: ${CID}`,
     );
   } else {
-    log.info(`Minted token has no metadata!`);
+    log.info('Minted token has no metadata!');
     console.log(tokenInstance);
   }
 
@@ -108,7 +109,7 @@ async function updateMetadataForTokens(tokens, fetchedMetadata) {
       token.isMetadataPinned = true;
       data.push(token);
       return data;
-    });
+    }, []);
     if (tokensToUpdate) {
       const tokensSaveStatus = await Promise.allSettled(
         tokensToUpdate.save().catch(handleDuplicateKey),
@@ -118,7 +119,7 @@ async function updateMetadataForTokens(tokens, fetchedMetadata) {
           'Was unable to save some of the tokens during batch meta update',
         );
       } else {
-        console.log(`Batch tokens update successful`);
+        console.log('Batch tokens update successful');
       }
     }
   }
@@ -611,6 +612,7 @@ module.exports = {
     rangeName,
     price,
     feeSplitsLength,
+    visible,
     offerIndex,
   ) => {
     const contract = await findContractFromAddress(
@@ -631,7 +633,9 @@ module.exports = {
         price,
         offerIndex: { $exists: false },
       },
-      { offerIndex },
+      // If offer index doesn't exist then it's an old version of the event
+      // And 'visible' would hold the data for 'offerIndex'
+      { offerIndex: offerIndex || visible },
     );
 
     return foundOffer;
@@ -807,7 +811,8 @@ module.exports = {
       dbModels,
     );
     if (!contract) {
-      // MB:TODO: can remove in case findContractFromAddress will throw error insted of returning log to console
+      // MB:TODO: can remove in case findContractFromAddress will throw error
+      //  insted of returning log to console
       throw new Error(
         'Contract not fount, terminated metadataForProduct Update...',
       );

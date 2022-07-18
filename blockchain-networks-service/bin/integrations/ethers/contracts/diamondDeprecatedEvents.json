@@ -36,12 +36,6 @@
         },
         {
           "indexed": false,
-          "internalType": "bool",
-          "name": "visible",
-          "type": "bool"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
           "name": "offerIndex",
           "type": "uint256"
