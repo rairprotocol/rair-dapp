@@ -14,6 +14,7 @@ import axios from 'axios';
 import {
   IBatchMetadataParser,
   TBatchMetadataType,
+  TNftMapping,
   TParamsBatchMetadata
 } from '../creatorStudio.types';
 import { RootState } from '../../../ducks';
@@ -29,11 +30,21 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   simpleMode
 }) => {
   const { address, collectionIndex }: TParamsBatchMetadata = useParams();
-
   const [csvFile, setCSVFile] = useState<File>();
-  const [metadata, setMetadata] = useState<TBatchMetadataType[] | undefined>();
+  const [metadata, setMetadata] = useState<TBatchMetadataType[]>([
+    {
+      Artist: '',
+      Name: '',
+      NFTID: '',
+      Description: '',
+      Image: '',
+      'Public Address': ''
+    }
+  ]);
   const [headers, setHeaders] = useState<string[]>();
   const [metadataExists, setMetadataExists] = useState<boolean>(false);
+  const [changeFile, setChangeFile] = useState<boolean>(false);
+  const [buttons, setButtons] = useState<any>([]);
 
   const onImageDrop = useCallback((acceptedFiles: File[]) => {
     csvParser(acceptedFiles[0], console.info);
@@ -45,6 +56,12 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
 
   useEffect(() => {
     if (!metadata) {
+      setButtons([
+        {
+          label: 'Continue',
+          action: gotoNextStep
+        }
+      ]);
       return;
     }
     setHeaders(
@@ -54,11 +71,60 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
     );
   }, [metadata, setHeaders]);
 
+  useEffect(() => {
+    if (!metadata) {
+      setButtons([
+        {
+          label: 'Continue',
+          action: gotoNextStep
+        }
+      ]);
+      return;
+    } else {
+      setButtons([
+        {
+          label: changeFile ? 'Send' : 'There is already a csv file uploaded',
+          action: changeFile ? () => sendMetadata(metadataExists) : null,
+          disabled: changeFile ? false : true
+        },
+        {
+          label: 'Continue',
+          action: gotoNextStep
+        }
+      ]);
+      return;
+    }
+  }, [metadata]);
+
   const fetchData = useCallback(async () => {
     const { success, result } = await rFetch(
       `/api/nft/network/${contractData.blockchain}/${address}/${collectionIndex}`
     );
+
+    const newArray: any[] = [];
+
     if (success && result.totalCount > 0) {
+      //fetch data form set Metadata info for show table
+      for (let i = 0; i < result.tokens.length; i++) {
+        const mtd = result.tokens[i].metadata;
+        const nftId = result.tokens[i].token;
+        const info = result.tokens[i];
+
+        const injectData = {
+          Artist: mtd.artist,
+          Name: mtd.name,
+          NFTID: nftId,
+          Description: mtd.description,
+          Image: mtd.image,
+          'Public Address': info.ownerAddress
+        };
+        newArray.push(injectData);
+        for (let e = 0; e < mtd.attributes.length; e++) {
+          const element = mtd.attributes[e];
+          injectData[element.trait_type] = element.value;
+        }
+      }
+      setMetadata(newArray);
       setMetadataExists(
         result.tokens.filter(
           (item: TTokenData) => item.metadata.name !== 'none'
@@ -98,6 +164,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         } metadata entries!`,
         'success'
       );
+      setChangeFile(false);
+      fetchData();
     } else {
       Swal.fire('Error', response?.message, 'error');
     }
@@ -199,7 +267,9 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
           {({ getRootProps, getInputProps, isDragActive }) => (
             <section>
               <div
-                {...getRootProps()}
+                {...getRootProps({
+                  onClick: () => setChangeFile(true)
+                })}
                 style={{
                   border: 'dashed 1px var(--charcoal-80)',
                   position: 'relative'
@@ -243,10 +313,10 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
           style={{
             border: 'solid 1px var(--charcoal-80)',
             overflow: 'scroll',
-            width: '80vw',
+            width: '100%',
             maxHeight: '50vh'
           }}
-          className="rounded-rair px-0">
+          className="rounded-rair">
           <table className={`rair-table table-${primaryColor}`}>
             <thead>
               <tr>
@@ -313,14 +383,10 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
           )}
         </>
       )}
+
       <FixedBottomNavigation
         backwardFunction={goBack}
-        forwardFunctions={[
-          {
-            label: metadata ? (metadataExists ? 'Update' : 'Send') : 'Continue',
-            action: metadata ? () => sendMetadata(metadataExists) : gotoNextStep
-          }
-        ]}
+        forwardFunctions={buttons}
       />
     </>
   );

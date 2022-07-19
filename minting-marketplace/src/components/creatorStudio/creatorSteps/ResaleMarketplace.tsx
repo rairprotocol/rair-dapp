@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+//@ts-nocheck
+import { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import chainData from '../../../utils/blockchainData';

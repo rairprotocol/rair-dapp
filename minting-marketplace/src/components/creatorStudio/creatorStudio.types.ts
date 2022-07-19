@@ -247,14 +247,14 @@ export type TSingleMetadataType = Pick<
 
 export type TBatchMetadataType = {
   Artist: string;
-  'Boson Movement': string;
+  'Boson Movement'?: string;
   Description: string;
-  FermionFreckles: string;
+  FermionFreckles?: string;
   Image: string;
   NFTID: string;
   Name: string;
   'Public Address': string | undefined;
-  external_url: string;
+  external_url?: string;
 };
 
 export type TCustomizeFeesArrayItem = {
@@ -322,7 +322,7 @@ export type IForwardFunctions = {
     | (() => Promise<void>)
     | (() => void)
     | undefined
-    | ((e: MouseEvent<HTMLButtonElement>) => Promise<void>);
+    | ((e?: MouseEvent<HTMLButtonElement>) => Promise<void>);
   disabled?: boolean;
 };
 

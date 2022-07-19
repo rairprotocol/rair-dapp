@@ -1259,8 +1259,8 @@ i.fas-custom {
 
 .modal-item-footer-wrapper {
   display: flex;
-  justify-content: flex-start !important;
-  align-items: flex-end;
+  justify-content: space-between !important;
+  align-items: center;
 }
 
 .modal-item-footer-price {

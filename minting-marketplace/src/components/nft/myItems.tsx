@@ -195,12 +195,11 @@ const MyItems: React.FC<IMyItems> = () => {
       ) : (
         <></>
       )}
-      <div className="container-diamond-items">
-        <h3>
-          Diamond Items <i className="fas h5 fa-gem" />
-        </h3>
-        <MyDiamondItems {...{ openModal, setSelectedData }} />
-      </div>
+
+      {/* <div className="container-diamond-items">
+        <h3>Diamond Items <i className='fas h5 fa-gem' /></h3>
+        <MyDiamondItems {...{ openModal, setSelectedData }} /> 
+      </div>*/}
     </div>
   );
 };

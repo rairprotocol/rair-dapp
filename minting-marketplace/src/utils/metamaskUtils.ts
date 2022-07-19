@@ -117,7 +117,11 @@ const handleReceipt = async (
 };
 
 const validateInteger = (number: number) => {
-  if (number === undefined || Number.isNaN(number)) {
+  if (
+    number === undefined ||
+    number.toString() === '' ||
+    Number.isNaN(number)
+  ) {
     return false;
   }
   const stringified = number.toString();

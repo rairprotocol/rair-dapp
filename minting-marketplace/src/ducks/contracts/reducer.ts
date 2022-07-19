@@ -124,7 +124,6 @@ export default function userStore(
             // When a Provider makes its initial connection, it emits a "network"
             // event with a null oldNetwork along with the newNetwork. So, if the
             // oldNetwork exists, it represents a changing network
-
             /*
 							Example of a network object:
 							{
@@ -133,14 +132,14 @@ export default function userStore(
 							    "ensAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
 							}
 						*/
-
-            if (oldNetwork) {
-              console.info(
-                `Detected a network change, from ${oldNetwork.name} to ${newNetwork.name}`
-              );
-            } else {
-              console.info(`Connected to ${newNetwork.name}`);
-            }
+            //Eslint bloked the console.logs
+            // if (oldNetwork) {
+            //   console.log(
+            //     `Detected a network change, from ${oldNetwork.name} to ${newNetwork.name}`
+            //   );
+            // } else {
+            //   console.log(`Connected to ${newNetwork.name}`);
+            //}
           });
           signer = provider.getSigner(0);
         } else if (state.programmaticProvider) {
@@ -174,6 +173,10 @@ export default function userStore(
           minterInstance: contractCreator(
             contractAddresses[action.currentChain].minterMarketplace,
             minterAbi
+          ),
+          resaleInstance: contractCreator(
+            contractAddresses[action.currentChain].resaleMarketplace,
+            resaleAbi
           ),
           erc777Instance: contractCreator(
             contractAddresses[action.currentChain].erc777,
