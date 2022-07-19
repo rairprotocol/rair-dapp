@@ -1,7 +1,7 @@
-const applicationConfig = require('./share_backend_code/config/applicationConfig');
-const { VaultAppRoleTokenManager } = require('./share_backend_code/vault/vaultAppRoleTokenManager');
-const { AppSecretManager } = require('./share_backend_code/vault/appSecretManager');
-const { VaultKeyManager } = require('./share_backend_code/vault/vaultKeyManager');
+const applicationConfig = require('./shared_backend_code_generated/config/applicationConfig');
+const { VaultAppRoleTokenManager } = require('./shared_backend_code_generated/vault/vaultAppRoleTokenManager');
+const { AppSecretManager } = require('./shared_backend_code_generated/vault/appSecretManager');
+const { VaultKeyManager } = require('./shared_backend_code_generated/vault/vaultKeyManager');
 
 const appName = applicationConfig['media-service'].name;
 

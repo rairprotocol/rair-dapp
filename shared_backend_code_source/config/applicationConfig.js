@@ -4,6 +4,9 @@ const applicationConfig = {
   },
   "blockchain-network": {
     name: "blockchain-network"
+  },
+  "media-service": {
+    name: "media-service"
   }
 }
 

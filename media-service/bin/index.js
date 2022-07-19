@@ -12,10 +12,7 @@ const config = require('./config');
 
 const { port, serviceHost } = config;
 
-// const {
-//     appSecretManager,
-//     vaultAppRoleTokenManager,
-//   } = require('./vault');
+const { appSecretManager, vaultAppRoleTokenManager } = require('./vault');
 
 async function main() {
   const mediaDirectories = ['./bin/Videos', './bin/Videos/Thumbnails'];
@@ -70,15 +67,13 @@ async function main() {
 
 (async () => {
   // Login with vault app role creds first
-  // await vaultAppRoleTokenManager.initialLogin();
+  await vaultAppRoleTokenManager.initialLogin();
 
   // Get app secrets from Vault
-  // await appSecretManager.getAppSecrets({
-  //   vaultToken: vaultAppRoleTokenManager.getToken(),
-  //   listOfSecretsToFetch: [
-  //     mongoConfig.VAULT_MONGO_USER_PASS_SECRET_KEY,
-  //   ],
-  // });
+  await appSecretManager.getAppSecrets({
+    vaultToken: vaultAppRoleTokenManager.getToken(),
+    listOfSecretsToFetch: [],
+  });
 
   // fire up the rest of the app
   await main();

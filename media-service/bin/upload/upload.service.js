@@ -220,29 +220,25 @@ module.exports = {
 
         const key = { ...exportedKey, key: exportedKey.key.toJSON() };
 
+        await vaultKeyManager.write({
+          secretName: cid,
+          data: {
+            uri: storageLink,
+            key,
+          },
+          vaultToken: vaultAppRoleTokenManager.getToken(),
+        });
+
+        log.info('Key wrote to vault.');
+
         await axios({
           method: 'POST',
           url: `${baseUri}/api/v2/upload/file`,
           data: {
             cid,
-            key,
-            storageLink,
             meta,
           },
         });
-
-        try {
-          const vaultWriteRes = await vaultKeyManager.write({
-            secretName: cid,
-            data: {
-              uri: storageLink,
-              key,
-            },
-            vaultToken: vaultAppRoleTokenManager.getToken(),
-          });
-        } catch (err) {
-          log.error('Error writing key to vault:', cid);
-        }
 
         log.info(`${req.file.originalname} stored to DB.`);
         socketInstance.emit('uploadProgress', {
