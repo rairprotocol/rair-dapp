@@ -100,9 +100,9 @@ For correct work of sessions we need to set
     * [x] /search - NULL
       * [x] /:textParam - GET - returns top 4 results of search among tokens, products and authors with text params [see details here](readme/search_v2.md)
       * [x] /:textParam/all - GET - NOT FOR PROD work in progress - returns all results of search among tokens, products and authors with text params
-    * [x] /contracts - NULL
-      * [x] /:contractId - return one found by ID [see details here](readme/get_contract_by_id.md)
-    * [x] /products - NULL
+    * [x] /contracts - Return all Contracts (Query string supported) [see details here](readme/get_all.md)
+      * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
+    * [x] /products - Return all Products (Query string supported) [see details here](readme/common_get_all.md)
       * [x] /:productId - return one found by ID [see details here](readme\get_product_by_id)
       * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme\get_products_by_user_adress)
     * [x] /upload/file - POST- create file with media data si database [see details here](readme/add_file_after_upload_media.md)
@@ -110,7 +110,14 @@ For correct work of sessions we need to set
     * [x] /verify - GET - return  verify User with rightAdmin for uploading media [see details here](readme/get_verify_user_for_upload_media.md)
       * [x] /:productId - return one found by ID [see details here](readme/get_product_by_id.md)
       * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme/get_products_by_user_adress.md)
+    * [x] /offers - Return all Offers (Query string supported) [see details here](readme/common_get_all.md)
+      * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
     * [x] /tokens - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
+    * [x] /resales - Return all ResalesTokenOffers (Query string supported) [see details here](readme/common_get_all.md)
+      * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
+      * [x] /customRoyalties - Return all customRoyaltiesSets (Query string supported) [see details here](readme/common_get_all.md)
+      * [x] /byProduct/:productId - Return all ResalesTokenOffers for provided Product Id [see details here](readme/get_resales_by_Product.md)
+      * [x] /byOffer/:offerId - Return all ResalesTokenOffers for provided Offer Id [see details here](readme/get_resales_by_Offer.md)
 * [x] /stream/:token/:mediaId - POST - Register a new piece of media, [see details here](readme/stream.md)
 * [x] /thumbnails - GET - get static files, [see details here](readme/thumbnails.md)
 

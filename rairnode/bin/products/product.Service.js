@@ -2,6 +2,9 @@ const contractService = require('../contracts/contracts.Service');
 const APIFeatures = require('../utils/apiFeatures');
 const { Product: ProductModel } = require('../models');
 
+const eFactory = require('../utils/entityFactory');
+
+exports.getAllProducts = eFactory.getAll(ProductModel);
 exports.getProductById = async (req, res, next) => {
   try {
     const product = await ProductModel.findById(req.params.productId);

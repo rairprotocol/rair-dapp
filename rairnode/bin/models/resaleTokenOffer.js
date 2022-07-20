@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const OfferStatusChange = new Schema({
-  //operator: Operator that caused the event to be emitted
+const ResaleTokenOffer = new Schema({
+  // operator: Operator that caused the event to be emitted
   operator: { type: String, required: true },
-  // blockchaing prefix for contract adress
-  blockchain: { type: String, required: true },
   // tokenAddress: Address of the ERC721 contract (Contract schema)
-  tokenAddress: { type: String, required: true },
+  contract: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Contract',
+    required: true,
+  },
   // tokenId: Index of the NFT put up for sale
   tokenId: { type: String, required: true },
   // price: Price (in wei) of the NFT.
@@ -18,4 +20,4 @@ const OfferStatusChange = new Schema({
   // tradeid: Index of the resale offer
   tradeid: { type: String, required: true },
 });
-module.exports = OfferStatusChange;
+module.exports = ResaleTokenOffer;

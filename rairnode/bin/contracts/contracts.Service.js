@@ -1,8 +1,11 @@
 const { Contract } = require('../models');
+const eFactory = require('../utils/entityFactory');
+
+exports.getAllContracts = eFactory.getAll(Contract);
 
 exports.getContractById = async (req, res, next) => {
   try {
-    const contract = await Contract.findById(req.params.contractId, {
+    const contract = await Contract.findById(req.params.id, {
       _id: 1,
       contractAddress: 1,
       title: 1,

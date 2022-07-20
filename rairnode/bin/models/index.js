@@ -15,7 +15,7 @@ const Transaction = require('./transaction');
 const TokenMetadata = require('./tokenMetadata');
 const MetadataLink = require('./metadataLink');
 const CustomRoyaltiesSet = require('./customRoyaltiesSet');
-const OfferStatusChange = require('./offerStatusChange');
+const ResaleTokenOffer = require('./resaleTokenOffer');
 
 module.exports = {
   Contract: mongoose.model('Contract', Contract, 'Contract'),
@@ -46,9 +46,9 @@ module.exports = {
     CustomRoyaltiesSet,
     'CustomRoyaltiesSet',
   ),
-  OfferStatusChange: mongoose.model(
-    'OfferStatusChange',
-    OfferStatusChange,
-    'OfferStatusChange',
+  ResaleTokenOffer: mongoose.model(
+    'ResaleTokenOffer',
+    ResaleTokenOffer,
+    'ResaleTokenOffer',
   ),
 };

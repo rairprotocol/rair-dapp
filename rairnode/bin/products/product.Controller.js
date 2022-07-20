@@ -9,6 +9,7 @@ const router = express.Router();
 // ); -> getMyContracts
 // +getFullContracts
 
+router.get('/', productService.getAllProducts);
 router.get('/user/:userAddress', productService.getProductsByUser);
 router.get('/:productId', productService.getProductById);
 module.exports = router;

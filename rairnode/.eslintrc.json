@@ -14,6 +14,8 @@
   "rules": {
     "linebreak-style":["warn"],
     "no-underscore-dangle": 0,
-    "object-curly-newline":"off"
+    "object-curly-newline":"off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
+    "operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" }}]
   }
 }
