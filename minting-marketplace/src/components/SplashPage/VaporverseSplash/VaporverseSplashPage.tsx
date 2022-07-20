@@ -153,7 +153,7 @@ const splashData = {
     videoModuleDescription: null,
     videoModuleTitle: 'loading...',
     baseURL: 'https://staging.rair.market/stream/',
-    mediaId: '8ZOEmFxjGbNURmepHXlsitn4e3icUCF4UZ0RCpcx_7sy0r'
+    mediaId: 'tx2cV7kzqFXF9lTC5iy1VCYoXBwonyG-HcjunEI5j1rqfX'
   },
   tilesTitle: null,
   NFTName: 'NFT',
