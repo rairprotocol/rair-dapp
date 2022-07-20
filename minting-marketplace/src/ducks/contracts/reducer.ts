@@ -11,8 +11,8 @@ import {
   factoryAbi,
   erc777Abi,
   diamondFactoryAbi,
-  diamondMarketplaceAbi
-  // resaleAbi
+  diamondMarketplaceAbi,
+  resaleAbi
 } from '../../contracts';
 
 const contractAddresses: ContractAddressesType = {
