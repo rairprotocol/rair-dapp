@@ -63,3 +63,13 @@ In the dev-testing-deployment directory, run the following command-
 This will create all appropriate resources, provision your environment, and create deployments.  This will generate a custom IP address which is accessible via the ingress.  You can find these deployments with:
 
 `kubectl get pod -l -n $UNQIQUE_NAMESPACE`
+
+---
+
+#==CLEANUP==
+
+To delete all objects in your namespace when you are done using them, or to clean your environment, run
+
+`kubectl delete -n <namespace-name> --all`
+
+**THIS DELETES ALL RESOURCES IN CURRENT NAMESPACE, PLEASE MAKE SURE YOU ARE USING THE PROPER NAMESPACE**
