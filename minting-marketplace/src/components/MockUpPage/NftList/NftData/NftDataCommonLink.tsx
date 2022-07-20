@@ -13,6 +13,7 @@ import {
   TNftItemResponse,
   TUserResponse
 } from '../../../../axios.responseTypes';
+import { utils } from 'ethers';
 
 const NftDataCommonLinkComponent = ({ userData }) => {
   const [collectionName, setCollectionName] = useState();
@@ -166,7 +167,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (neededUserAddress) {
+    if (neededUserAddress && utils.isAddress(neededUserAddress)) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${neededUserAddress}`)
         .then((res) => res.data);

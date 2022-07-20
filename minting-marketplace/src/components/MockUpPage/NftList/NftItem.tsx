@@ -9,6 +9,7 @@ import chainData from '../../../utils/blockchainData';
 import ReactPlayer from 'react-player';
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png';
 import axios from 'axios';
+import { utils } from 'ethers';
 
 const NftItemComponent = ({
   blockchain,
@@ -42,7 +43,7 @@ const NftItemComponent = ({
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (ownerCollectionUser) {
+    if (ownerCollectionUser && utils.isAddress(ownerCollectionUser)) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${ownerCollectionUser}`)
         .then((res) => res.data);

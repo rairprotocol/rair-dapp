@@ -216,15 +216,16 @@ module.exports = (context) => {
   });
 
   router.get(
-    '/import/network/:networkId/:contractAddress/',
+    '/import/network/:networkId/:contractAddress/:limit',
     JWTVerification,
     isAdmin,
     async (req, res, next) => {
       try {
-        const { networkId, contractAddress } = req.params;
+        const { networkId, contractAddress, limit } = req.params;
         const { success, result, message } = await importContractData(
           networkId,
           contractAddress,
+          limit,
           req.user,
           context.db,
         );
@@ -246,10 +247,11 @@ module.exports = (context) => {
         blockchain: req.params.networkId,
       });
 
-      if (_.isEmpty(contract))
-        {return res
+      if (_.isEmpty(contract)) {
+        return res
           .status(404)
-          .send({ success: false, message: 'Contract not found.' });}
+          .send({ success: false, message: 'Contract not found.' });
+      }
 
       req.contract = contract;
 

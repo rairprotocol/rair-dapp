@@ -10,6 +10,7 @@ import {
   TNftFilesResponse,
   TUserResponse
 } from '../../../../axios.responseTypes';
+import { utils } from 'ethers';
 
 const NftDataExternalLink = () => {
   const { currentUserAddress } = useSelector((store) => store.contractStore);
@@ -94,7 +95,7 @@ const NftDataExternalLink = () => {
   const neededUserAddress = dataForUser?.user;
 
   const getInfoFromUser = useCallback(async () => {
-    if (neededUserAddress) {
+    if (neededUserAddress && utils.isAddress(neededUserAddress)) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${neededUserAddress}`)
         .then((res) => res.data);

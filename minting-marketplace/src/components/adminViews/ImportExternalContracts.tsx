@@ -5,12 +5,14 @@ import { rFetch } from '../../utils/rFetch';
 import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import { TExternalContractType } from './adminView.types';
+import { validateInteger } from '../../utils/metamaskUtils';
 
 const ImportExternalContract = () => {
   const [selectedContract, setSelectedContract] = useState<string>('');
   const [resultData, setResultData] = useState<TExternalContractType>();
   const [selectedBlockchain, setSelectedBlockchain] = useState<string>('null');
   const [sendingData, setSendingData] = useState<boolean>(false);
+  const [limit, setLimit] = useState<number>(0);
 
   const blockchainOptions = Object.keys(blockchainData).map((blockchainId) => {
     return {
@@ -20,9 +22,12 @@ const ImportExternalContract = () => {
   });
 
   const callImport = async () => {
+    if (!validateInteger(limit)) {
+      return;
+    }
     setSendingData(true);
     const { success, result } = await rFetch(
-      `/api/contracts/import/network/${selectedBlockchain}/${selectedContract}/`
+      `/api/contracts/import/network/${selectedBlockchain}/${selectedContract}/${limit}`
     );
     setSendingData(false);
     if (success) {
@@ -33,7 +38,7 @@ const ImportExternalContract = () => {
   return (
     <div className="col-12 row">
       <h3>Import External Data</h3>
-      <div className="col-12 col-md-4">
+      <div className="col-12 col-md-6">
         <InputSelect
           getter={selectedBlockchain}
           setter={setSelectedBlockchain}
@@ -43,7 +48,7 @@ const ImportExternalContract = () => {
           placeholder="Select a blockchain"
         />
       </div>
-      <div className="col-12 col-md-8">
+      <div className="col-12 col-md-6">
         <InputField
           getter={selectedContract}
           setter={setSelectedContract}
@@ -52,10 +57,20 @@ const ImportExternalContract = () => {
           labelClass="col-12"
         />
       </div>
+      <div className="col-12 col-md-12">
+        <InputField
+          getter={limit}
+          setter={setLimit}
+          label="Limit of tokens to import (0 = all)"
+          customClass="form-control"
+          labelClass="col-12"
+        />
+      </div>
       <button
         onClick={callImport}
         disabled={
           sendingData ||
+          !validateInteger(limit) ||
           selectedBlockchain === 'null' ||
           !utils.isAddress(selectedContract)
         }

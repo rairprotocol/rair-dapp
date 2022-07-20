@@ -10,6 +10,7 @@ import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts/actions';
 import axios from 'axios';
 import { TUserResponse } from '../../axios.responseTypes';
+import { utils } from 'ethers';
 
 const MenuNavigation = ({
   headerLogo,
@@ -48,7 +49,7 @@ const MenuNavigation = ({
 
   const getInfoFromUser = useCallback(async () => {
     // find user
-    if (currentUserAddress) {
+    if (currentUserAddress && utils.isAddress(currentUserAddress)) {
       const result = await axios
         .get<TUserResponse>(`/api/users/${currentUserAddress}`)
         .then((res) => {

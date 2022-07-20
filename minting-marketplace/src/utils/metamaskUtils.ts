@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Swal from 'sweetalert2';
 import { rFetch } from './rFetch';
 
@@ -124,10 +124,12 @@ const validateInteger = (number: number) => {
   ) {
     return false;
   }
-  const stringified = number.toString();
-  return ['e', ',', '.'].reduce((previous, current) => {
-    return previous && !stringified.includes(current);
-  }, true);
+  try {
+    BigNumber.from(number);
+  } catch (err) {
+    return false;
+  }
+  return true;
 };
 
 export { metamaskCall, validateInteger };
