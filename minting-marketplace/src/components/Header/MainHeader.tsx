@@ -80,7 +80,8 @@ const MainHeader: React.FC<IMainHeader> = ({
       '/nipsey-splash',
       '/about-page',
       '/slidelock',
-      '/nftnyc-splash'
+      '/nftnyc-splash',
+      '/'
     ];
   }, []);
 
@@ -199,7 +200,8 @@ const MainHeader: React.FC<IMainHeader> = ({
           primaryColor={primaryColor}
         />
       </div>
-      <div className={`main-search ${hiddenHeader ? 'hidden' : ''}`}>
+      {/* <div className={`main-search ${hiddenHeader ? 'hidden' : ''}`}> */}
+      <div className={`main-search hidden`}>
         <input
           className={primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'}
           type="text"

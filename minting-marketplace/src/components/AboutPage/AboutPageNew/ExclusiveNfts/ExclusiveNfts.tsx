@@ -19,9 +19,12 @@ const ExclusiveNfts = () => {
       <div className="nfts-select">
         <MainSelectNft className="main-nft" NftImage={NftImage}>
           <div className="btn-open-store">
-            <NavLink to="/greyman-splash">
+            <a
+              href="https://cryptogreyman.com/"
+              target={'_blank'}
+              rel="noreferrer">
               <span>View drop page</span> <i className="fas fa-arrow-right"></i>
-            </NavLink>
+            </a>
           </div>
         </MainSelectNft>
         <div className="block-nfts">
