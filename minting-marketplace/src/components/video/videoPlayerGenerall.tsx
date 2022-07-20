@@ -55,7 +55,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
         '/api/auth/get_challenge/' + programmaticProvider.address
       );
       parsedResponse = JSON.parse(response.data.response);
-      const { EIP712Domain, ...revisedTypes } = parsedResponse.types;
+      const { /*EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
       signature = await programmaticProvider._signTypedData(
         parsedResponse.domain,
         revisedTypes,
@@ -90,7 +90,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
 
       setProcessDone(false);
     }
-  }, [programmaticProvider, mediaId, mainManifest, videoName]);
+  }, [setProcessDone, programmaticProvider, mediaId, mainManifest, videoName]);
 
   useEffect(() => {
     requestChallenge();

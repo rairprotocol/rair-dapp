@@ -10,7 +10,7 @@ const NFTImages = ({
   Nft_4,
   NftImage,
   amountTokens,
-  linkComing,
+  // linkComing,
   titleNft,
   colorText,
   carousel,

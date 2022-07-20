@@ -3,11 +3,11 @@ import React from 'react';
 import Metamask from '../images/metamask_logo.png';
 
 const UnlockVideoItem = ({
-  typeVideo,
+  // typeVideo,
   nameVideo,
   timeVideo,
   UnlockableVideo,
-  locked,
+  // locked,
   primaryColor
 }) => {
   return (

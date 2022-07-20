@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CurrentTokens } from './CurrentTokens/CurrentTokens';
 import { ListOfTokens } from './ListOfTokens/ListOfTokens';

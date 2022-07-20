@@ -209,6 +209,7 @@ a:hover {
   font-size: larger;
   background: var(--stimorol);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -725,10 +726,10 @@ i.fas-custom {
   cursor: pointer;
 }
 
-.react-tabs__tab.react-tabs__tab--selected {
-  /* background-color: var(--charcoal-80); */
-  /* background-color: red; */
-}
+/* .react-tabs__tab.react-tabs__tab--selected { */
+/* background-color: var(--charcoal-80); */
+/* background-color: red; */
+/* } */
 
 #react-tabs-3 {
   margin-bottom: 4rem;
@@ -786,11 +787,11 @@ i.fas-custom {
   text-decoration: none;
 }
 
-.carousel-item-padding-4-px {
-  /* width: auto !important; */
-  /* background-color: red; */
-  /* padding-left: 2rem; */
-}
+/* .carousel-item-padding-4-px { */
+/* width: auto !important; */
+/* background-color: red; */
+/* padding-left: 2rem; */
+/* } */
 
 .carousel-item-padding-4-px button {
   padding-left: 0px;

@@ -54,7 +54,8 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-const SplashPage = ({ loginDone }) => {
+const SplashPage = () => {
+  // props was loginDone
   const [/*active,*/ setActive] = useState({ policy: false, use: false });
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [modalIsOpen, setIsOpen] = useState(false);

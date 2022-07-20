@@ -99,7 +99,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
           {window.ethereum && (
             <button
               className="btn btn-light"
-              onClick={(e) => {
+              onClick={() => {
                 window.ethereum
                   .request({
                     method: 'metamask_watchAsset',

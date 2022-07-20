@@ -46,7 +46,7 @@ const UserProfileSettings = ({
           className="social-sun-icon"
           primaryColor={primaryColor}
           marginRight={'17px'}
-          onClick={(e) => {
+          onClick={() => {
             dispatch(
               setColorScheme(primaryColor === 'rhyno' ? 'charcoal' : 'rhyno')
             );

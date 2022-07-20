@@ -50,7 +50,7 @@ const NftVideoplayer = ({ selectVideo, main }) => {
       );
       parsedResponse = JSON.parse(response.data.response);
       // EIP712Domain is added automatically by Ethers.js!
-      const { EIP712Domain, ...revisedTypes } = parsedResponse.types;
+      const { /*EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
       signature = await programmaticProvider._signTypedData(
         parsedResponse.domain,
         revisedTypes,

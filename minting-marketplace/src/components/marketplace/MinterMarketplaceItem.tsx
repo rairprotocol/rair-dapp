@@ -54,7 +54,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
         <br />
         <button
           id={`button_${index}`}
-          onClick={async (e) => {
+          onClick={async () => {
             const onMyChain = window.ethereum
               ? chainData[item.blockchain]?.chainId === window.ethereum.chainId
               : chainData[item.blockchain]?.chainId ===

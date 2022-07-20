@@ -6,11 +6,11 @@ import './styles.css';
 const ItemRank = ({
   items,
   primaryColor,
-  selectedToken,
-  offerDataInfo,
-  getAllProduct,
-  setSelectedToken,
-  handleClickToken
+  selectedToken
+  // getAllProduct,
+  // offerDataInfo,
+  // setSelectedToken,
+  // handleClickToken
 }) => {
   const [itemsToken, setItemsToken] = useState([]);
   const [showItems, setShowItems] = useState(false);
@@ -52,12 +52,12 @@ const ItemRank = ({
   const dropDown = () => {
     setShowItems(!showItems);
   };
-
-  const onSelectItem = (item) => {
-    setSelectedItem(item);
-    setShowItems(false);
-    getAllProduct(item.range[0], item.range[1]);
-  };
+  //TODO:will be used in a future
+  // const onSelectItem = (item) => {
+  //   setSelectedItem(item);
+  //   setShowItems(false);
+  //   getAllProduct(item.range[0], item.range[1]);
+  // };
 
   const handleClickOutSideItemRank = (e) => {
     if (!rankRef.current.contains(e.target)) {

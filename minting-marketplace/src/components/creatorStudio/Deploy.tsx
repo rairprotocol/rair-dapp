@@ -145,7 +145,7 @@ const Factory = () => {
         </div>
         <div className="col-12 p-2">
           <InputSelect
-            options={Object.keys(chainData).map((item, index, array) => {
+            options={Object.keys(chainData).map((item /*, index, array*/) => {
               return { label: chainData[item].name, value: item };
             })}
             getter={chainId}
@@ -173,7 +173,7 @@ const Factory = () => {
               deploying
             }
             className="btn btn-stimorol col-12 rounded-rair"
-            onClick={async (e) => {
+            onClick={async () => {
               setDeploying(true);
               Swal.fire({
                 title: 'Deploying contract!',
@@ -216,7 +216,7 @@ const Factory = () => {
                   diamondFactoryInstance === undefined
                 }
                 className="btn btn-stimorol col-12 rounded-rair"
-                onClick={async (e) => {
+                onClick={async () => {
                   setDeploying(true);
                   Swal.fire({
                     title: 'Deploying contract (with Diamonds)!',

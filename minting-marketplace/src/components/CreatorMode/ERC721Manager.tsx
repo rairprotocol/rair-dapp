@@ -150,7 +150,7 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
               To sell your unminted products
               <br />
               <button
-                onClick={async (e) => {
+                onClick={async () => {
                   erc721Instance.grantRole(
                     await erc721Instance.MINTER(),
                     minterInstance?.address

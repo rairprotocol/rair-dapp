@@ -9,10 +9,10 @@ import './videoUpload.css';
 import { getRandomValues } from '../../../utils/getRandomValues';
 import axios from 'axios';
 import {
-  TAuthGetChallengeResponse,
+  // TAuthGetChallengeResponse,
   TUploadSocket
 } from '../../../axios.responseTypes';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 //TODO: alternative env
@@ -20,37 +20,37 @@ const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 // console.log(hostname, 'hostname');
 
 // Admin view to upload media to the server
-const FileUpload = ({ address, primaryColor, textColor }) => {
+const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
   const [fullContractData, setFullContractData] = useState({});
-  const [contractID, setContractID] = useState('null');
+  // const [contractID, setContractID] = useState('null');
   const [selectedOffers, setSelectedOffers] = useState([]);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [video, setVideo] = useState(undefined);
   const [uploading, setUploading] = useState(false);
-  const [adminNFT, setAdminNFT] = useState('');
+  // const [adminNFT, setAdminNFT] = useState('');
   const [thisSessionId, setThisSessionId] = useState('');
   const [socket, setSocket] = useState(null);
   const [status, setStatus] = useState(0);
   const [message, setMessage] = useState(0);
-  const [/*part,*/ setPart] = useState(0);
+  const [, /*part,*/ setPart] = useState(0);
   const [, setVPV] = useState();
   const [product, setProduct] = useState('null');
   const [productOptions, setProductOptions] = useState();
   const [offersOptions, setOffersOptions] = useState();
   const [offer, setOffer] = useState('null');
-  const [countOfSelects, setCountOfSelects] = useState(0);
-  const [selects, setSelects] = useState([]);
-  const [selectsData, setSelectsData] = useState({});
+  const [, /*countOfSelects*/ setCountOfSelects] = useState(0);
+  const [, /*selects*/ setSelects] = useState([]);
+  const [selectsData /*setSelectsData*/] = useState({});
   const [contract, setContract] = useState('null');
   const [category, setCategory] = useState('null');
   const [storage, setStorage] = useState('null');
   const [contractOptions, setContractOptions] = useState([]);
-  const [offersData, setOffersData] = useState([]);
-  const [collectionIndex, setCollectionIndex] = useState({});
-  const [offersIndex, setOffersIndex] = useState([]);
-  const [networkId, setNetworkId] = useState('');
+  const [offersData /*setOffersData*/] = useState([]);
+  const [, /*collectionIndex*/ setCollectionIndex] = useState({});
+  const [, /*offersIndex,*/ setOffersIndex] = useState([]);
+  const [, /*networkId*/ setNetworkId] = useState('');
 
   const currentToken = localStorage.getItem('token');
 
@@ -66,9 +66,9 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
     }
   }, []);
 
-  const currentUserAddress = useSelector<RootState, string>(
-    (state) => state.contractStore.currentUserAddress
-  );
+  // const currentUserAddress = useSelector<RootState, string>(
+  //   (state) => state.contractStore.currentUserAddress
+  // );
 
   useEffect(() => {
     getCategories();
@@ -133,7 +133,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
         };
       })
     );
-  }, [contract]);
+  }, [contract, fullContractData]);
 
   useEffect(() => {
     if (contract !== 'null') {
@@ -160,14 +160,17 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
         }
       )
     );
-  }, [contract, product]);
+  }, [contract, fullContractData, product]);
 
-  useEffect(async () => {
-    if (product !== 'null') {
-      setSelectedOffers(['null']);
-      const offers = await getOffers();
-      setCountOfSelects(offers?.length - 1);
+  useEffect(() => {
+    async function isOffersGet() {
+      if (product !== 'null') {
+        setSelectedOffers(['null']);
+        const offers = await getOffers();
+        setCountOfSelects(offers?.length - 1);
+      }
     }
+    isOffersGet();
   }, [product, contract, getOffers]);
 
   useEffect(() => {
@@ -180,24 +183,25 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
         });
       });
     }
-  }, [selectsData, offer]);
+  }, [selectsData, offer, offersData, setOffersIndex]);
 
-  useEffect(async () => {
-    const sessionId = getRandomValues().toString(36).substr(2, 9);
-    setThisSessionId(sessionId);
-    const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ['websocket'] });
-    // const so = io(`http://localhost:5000`, { transports: ["websocket"] });
+  useEffect(() => {
+    async function goSession() {
+      const sessionId = getRandomValues().toString(36).substr(2, 9);
+      setThisSessionId(sessionId);
+      const so = io(`${UPLOAD_PROGRESS_HOST}`, { transports: ['websocket'] });
+      // const so = io(`http://localhost:5000`, { transports: ["websocket"] });
+      setSocket(so);
+      // so.on("connect", data => {
+      //   console.log('Connected !');
+      // });
+      so.emit('init', sessionId);
 
-    setSocket(so);
-    // so.on("connect", data => {
-    //   console.log('Connected !');
-    // });
-
-    so.emit('init', sessionId);
-
-    return () => {
-      so.emit('end', sessionId);
-    };
+      return () => {
+        so.emit('end', sessionId);
+      };
+    }
+    goSession();
   }, []);
 
   if (socket) {
@@ -234,16 +238,17 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
         setOffersOptions();
         document.getElementById('media_id').value = '';
         setMessage(0);
+        getFullContractData();
       }
     });
   }
 
-  const handleChangeSelects = (value, name) => {
-    setSelectsData({
-      ...selectsData,
-      [name]: value
-    });
-  };
+  // const handleChangeSelects = (value, name) => {
+  //   setSelectsData({
+  //     ...selectsData,
+  //     [name]: value
+  //   });
+  // };
 
   const createSelects = () => {
     const aux = [...selectedOffers];
@@ -426,7 +431,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
             video === undefined
           }
           className="btn py-1 col-8 btn-primary btn-submit-custom"
-          onClick={(e) => {
+          onClick={() => {
             if (uploading) {
               return;
             }
@@ -460,6 +465,7 @@ const FileUpload = ({ address, primaryColor, textColor }) => {
                   }
                 )
                 .then((res) => res.data)
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .then((response) => {
                   // TODO: in time of uploading
                   // setUploading(false);

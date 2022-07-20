@@ -12,7 +12,7 @@ import DiamondOfferRow from './diamondOfferRow';
 const ListOffers = ({
   contractData,
   setStepNumber,
-  steps,
+  // steps,
   simpleMode,
   stepNumber,
   switchBlockchain,
@@ -51,7 +51,7 @@ const ListOffers = ({
     setForceRerender(() => !forceRerender);
   }, [setForceRerender, forceRerender]);
 
-  const addOffer = (data) => {
+  const addOffer = () => {
     const aux = [...offerList];
     const startingToken =
       offerList.length === 0 ? 0 : Number(offerList.at(-1)?.range?.at(1)) + 1;
@@ -130,7 +130,7 @@ const ListOffers = ({
                 return (
                   <DiamondOfferRow
                     array={array}
-                    deleter={(e) => deleter(index)}
+                    deleter={() => deleter(index)}
                     key={index}
                     index={index}
                     {...item}

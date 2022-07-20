@@ -286,10 +286,10 @@ function App({ sentryHistory }) {
     dispatch(getCurrentPageEnd());
   };
 
-  const openAboutPage = useCallback(() => {
-    sentryHistory.push('/about-page');
-    window.scrollTo(0, 0);
-  }, [sentryHistory]);
+  // const openAboutPage = useCallback(() => {
+  //   sentryHistory.push('/about-page');
+  //   window.scrollTo(0, 0);
+  // }, [sentryHistory]);
 
   const btnCheck = useCallback(() => {
     if (window.ethereum && window.ethereum.isMetaMask) {

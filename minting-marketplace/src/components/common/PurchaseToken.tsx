@@ -61,6 +61,7 @@ const queryRangeDataFromDatabase = async (
   contractInstance: ethers.Contract | undefined,
   network: string,
   offerIndex: number[],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   diamond = false
 ): Promise<undefined | IRangeDataType> => {
   // eslint-disable-next-line
@@ -99,6 +100,7 @@ const getNextSequentialIndex = async (
   start: string,
   end: string,
   product: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   diamond: boolean
 ) => {
   return await contractInstance?.getNextSequentialIndex(product, start, end);

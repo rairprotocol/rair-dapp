@@ -100,7 +100,7 @@ const getJWT = async (
       const parsedResponse = JSON.parse(response);
 
       // EIP712Domain is added automatically by Ethers.js!
-      const { EIP712Domain, ...revisedTypes } = parsedResponse.types;
+      const { /*EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
       ethResponse = await signer._signTypedData(
         parsedResponse.domain,
         revisedTypes,

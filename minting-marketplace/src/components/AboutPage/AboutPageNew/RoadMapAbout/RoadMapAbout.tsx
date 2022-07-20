@@ -1,7 +1,7 @@
 import React from 'react';
 import { IRoadMap } from '../aboutPage.types';
 
-const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
+const RoadMap: React.FC<IRoadMap> = () => {
   return (
     <div className="about-roadmap">
       <div className="about-road-title">2022 Roadmap</div>

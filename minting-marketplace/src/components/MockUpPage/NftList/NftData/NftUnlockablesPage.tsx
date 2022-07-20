@@ -10,20 +10,20 @@ import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 const NftUnlockablesPage = ({
   blockchain,
   contract,
-  currentUser,
-  data,
-  handleClickToken,
   product,
   productsFromOffer,
   primaryColor,
   selectedData,
   selectedToken,
-  setSelectedToken,
   tokenData,
-  totalCount,
-  textColor,
-  offerData,
-  offerPrice,
+  // currentUser,
+  // data,
+  // handleClickToken,
+  // setSelectedToken,
+  // totalCount,
+  // textColor,
+  // offerData,
+  // offerPrice,
   setTokenDataFiltered
 }) => {
   const [selectVideo, setSelectVideo] = useState(productsFromOffer[0]);

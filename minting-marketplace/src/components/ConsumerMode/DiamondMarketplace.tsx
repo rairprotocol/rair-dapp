@@ -119,7 +119,7 @@ const TokenSelector = ({ buyCall, max, min }) => {
   );
 };
 
-const DiamondMarketplace = (props) => {
+const DiamondMarketplace = () => {
   const [offersArray, setOffersArray] = useState([]);
   const [transactionInProgress, setTransactionInProgress] = useState(false);
   const [treasuryAddress, setTreasuryAddress] = useState();
@@ -332,7 +332,7 @@ const DiamondMarketplace = (props) => {
             {offer.visible && (
               <button
                 id={`button_${index}`}
-                onClick={async (e) => {
+                onClick={async () => {
                   rSwal.fire({
                     html: (
                       <Provider store={store}>

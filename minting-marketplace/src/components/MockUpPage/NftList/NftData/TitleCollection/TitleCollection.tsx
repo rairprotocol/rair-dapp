@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import './TitleCollection.css';
 import defaultUser from './../../../assets/defultUser.png';
@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 const TitleCollection = ({
   title,
   userName,
-  currentUser,
+  // currentUser,
   someUsersData,
   selectedData
 }) => {

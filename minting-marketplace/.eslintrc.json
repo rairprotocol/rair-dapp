@@ -32,6 +32,7 @@
             "error",
             "always"
         ],
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         "react/react-in-jsx-scope": "off",
         "no-mixed-spaces-and-tabs": "off",
         "@typescript-eslint/ban-ts-comment": "off",

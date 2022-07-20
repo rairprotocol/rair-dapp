@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
 
 const CollectionInfo = ({
-  defaultImg,
+  // defaultImg,
   blockchain,
   offerData,
   openTitle,

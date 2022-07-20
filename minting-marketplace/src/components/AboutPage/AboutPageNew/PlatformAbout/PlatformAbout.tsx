@@ -23,7 +23,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
     // expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
     {...props}
   />
-))(({ theme }) => ({
+))(() => ({
   backgroundColor: '#383637',
   borderRadius: 16,
   color: 'white',

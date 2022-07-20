@@ -36,7 +36,7 @@ const ModalContent = ({
           chainData[blockchain]?.chainId !== window.ethereum.chainId ||
           !instance
         }
-        onClick={async (e) => {
+        onClick={async () => {
           await instance.createRangeLock(
             productIndex,
             firstToken,
@@ -77,7 +77,7 @@ const LockRange = ({
         !window.ethereum
       }
       className={`btn btn-${onMyChain ? 'stimorol' : 'royal-ice'} py-0 col-12`}
-      onClick={async (e) => {
+      onClick={async () => {
         if (!onMyChain) {
           if (window.ethereum) {
             await window.ethereum.request({

@@ -12,12 +12,8 @@ import slideNFT1 from '../images/slide-NFT1.png';
 import slideNFT2 from '../images/slide-NFT2.png';
 import slideNFT3 from '../images/slide-NFT3.png';
 import slideNFT4 from '../images/slide-NFT4.png';
-
 import videoBackground from '../images/slidelock_video_background.png';
-import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
 import titleImage from './../images/NEW-Logo-sample-slidelock-1.png';
-
-// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
 import MetaMaskIcon from '../images/metamask_logo.png';
 
 /* importing Components*/
@@ -25,14 +21,18 @@ import TeamMeet from '../TeamMeet/TeamMeetList';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-import StaticTiles from '../SplashPageTemplate/VideoTiles/StaticTiles';
 import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
 import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
 
 import PurchaseTokenButton from '../../common/PurchaseToken.tsx';
 import Swal from 'sweetalert2';
-// import MetaTags from '../../SeoTags/MetaTags'
 import { rFetch } from '../../../utils/rFetch';
+
+// TODO: UNUSED
+// import MetaTags from '../../SeoTags/MetaTags'
+// import StaticTiles from '../SplashPageTemplate/VideoTiles/StaticTiles';
+// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
+// import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID

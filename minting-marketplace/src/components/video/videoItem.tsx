@@ -4,12 +4,12 @@ import { IVideoItem, TParticularProduct } from './video.types';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
 import axios from 'axios';
-// import chainData from '../../utils/blockchainData';
-// import { TChainItemData } from '../../utils/utils.types';
 import { UserType } from '../../ducks/users/users.types';
 import { TUserResponse } from '../../axios.responseTypes';
 import { useStateIfMounted } from 'use-state-if-mounted';
 // import zIndex from '@mui/material/styles/zIndex';
+// import chainData from '../../utils/blockchainData';
+// import { TChainItemData } from '../../utils/utils.types';
 
 const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
   const [data, setData] = useStateIfMounted<TParticularProduct | null>(null);
@@ -55,7 +55,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
       );
       setDataUser(response.data.user);
     }
-  }, [mediaList, item, data]);
+  }, [mediaList, item, data, setDataUser]);
 
   useEffect(() => {
     getInfo();
@@ -80,15 +80,13 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
         marginBottom: '20px',
         marginRight: '24px'
       }}
-      onClick={(e) => {
+      onClick={() => {
         history.push(
           `/watch/${mediaList[item]._id}/${mediaList[item].mainManifest}`
         );
       }}
-      onMouseEnter={(e) =>
-        setHovering(mediaList[item].animatedThumbnail !== '')
-      }
-      onMouseLeave={(e) => setHovering(false)}>
+      onMouseEnter={() => setHovering(mediaList[item].animatedThumbnail !== '')}
+      onMouseLeave={() => setHovering(false)}>
       <div
         className="col-12 rounded"
         style={{

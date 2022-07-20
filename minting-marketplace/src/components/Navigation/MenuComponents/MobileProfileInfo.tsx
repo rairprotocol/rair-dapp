@@ -16,7 +16,7 @@ const MobileProfileInfo = ({
   toggleOpenProfile,
   userData,
   currentUserAddress,
-  loading,
+  // loading,
   setUserData
 }) => {
   const [profileData, setProfileData] = useState(userData);

@@ -8,7 +8,7 @@ import './TokenLeftTemplate.css';
 
 const TokenLeftTemplate = ({
   primaryColor,
-  DiscordIcon,
+  // DiscordIcon,
   copies,
   soldCopies,
   counterData,

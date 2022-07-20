@@ -11,8 +11,8 @@ import {
   factoryAbi,
   erc777Abi,
   diamondFactoryAbi,
-  diamondMarketplaceAbi,
-  resaleAbi
+  diamondMarketplaceAbi
+  // resaleAbi
 } from '../../contracts';
 
 const contractAddresses: ContractAddressesType = {
@@ -112,14 +112,22 @@ export default function userStore(
             window.ethereum,
             'any'
           );
-          provider.on('debug', ({ action, request, response, provider }) => {
-            if (process.env.REACT_APP_LOG_WEB3 === 'true') {
-              console.info(
-                response ? 'Receiving response to' : 'Sending request',
-                request.method
-              );
+          provider.on(
+            'debug',
+            ({
+              // action,
+              request,
+              response
+              // provider
+            }) => {
+              if (process.env.REACT_APP_LOG_WEB3 === 'true') {
+                console.info(
+                  response ? 'Receiving response to' : 'Sending request',
+                  request.method
+                );
+              }
             }
-          });
+          );
           provider.on('network', (newNetwork, oldNetwork) => {
             // When a Provider makes its initial connection, it emits a "network"
             // event with a null oldNetwork along with the newNetwork. So, if the

@@ -107,7 +107,7 @@ const BatchMinting = ({ name, start, end, price, batchMint }) => {
         })}
       </div>
       <button
-        onClick={(e) => batchMint(rows)}
+        onClick={() => batchMint(rows)}
         disabled={!rows.length}
         className="col btn btn-primary">
         Batch Mint {rows.length} tokens!

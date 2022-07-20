@@ -181,7 +181,7 @@ const BlockChainSwitcher = () => {
                       currentChain === item.chainData.chainId?.toLowerCase() ||
                       UNSAFE_PrivateKey.length !== 64
                     }
-                    onClick={async (e) => {
+                    onClick={async () => {
                       await connectProgrammatically(item.chainData);
                     }}>
                     {item.chainData.chainName}
@@ -200,7 +200,7 @@ const BlockChainSwitcher = () => {
               key={index}
               className={`btn btn-${item.bootstrapColor} mt-5`}
               disabled={currentChain === item.chainData.chainId?.toLowerCase()}
-              onClick={async (e) => {
+              onClick={async () => {
                 await switchEthereumChain(item.chainData);
                 dispatch(setChainId(undefined));
               }}>

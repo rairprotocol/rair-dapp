@@ -8,7 +8,7 @@ import { TableAuthenticity } from './AuthenticityBlockItems';
 
 const AuthenticityBlock = ({
   tokenData,
-  ownerInfo,
+  // ownerInfo,
   selectedToken,
   title,
   collectionToken,

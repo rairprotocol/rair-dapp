@@ -18,7 +18,7 @@ const NftDataExternalLink = () => {
 
   const [data, setData] = useState();
   const [dataForUser, setDataForUser] = useState();
-  const [offer, setOffer] = useState([]);
+  const [offer /*setOffer*/] = useState([]);
   const [offerPrice, setOfferPrice] = useState();
   const [totalCount, setTotalCount] = useState();
   const [tokenData, setTokenData] = useState([]);

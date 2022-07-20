@@ -56,7 +56,7 @@ const VideoPlayer = () => {
       const { response } = responseWithProgrammaticProvider.data;
       parsedResponse = JSON.parse(response);
       // EIP712Domain is added automatically by Ethers.js!
-      const { EIP712Domain, ...revisedTypes } = parsedResponse.types;
+      const { /* EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
       signature = await programmaticProvider._signTypedData(
         parsedResponse.domain,
         revisedTypes,

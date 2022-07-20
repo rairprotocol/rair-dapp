@@ -10,7 +10,7 @@ import { RootState } from '../ducks';
 import { ContractsInitialType } from '../ducks/contracts/contracts.types';
 import { IConsumerMode, TOfferDataType } from './creatorAndConsumerModes.types';
 
-const ConsumerMode: React.FC<IConsumerMode> = ({ addresses }) => {
+const ConsumerMode: React.FC<IConsumerMode> = () => {
   const [offerCount, setOfferCount] = useState<string>();
   const [, /*treasuryAddress*/ setTreasuryAddress] = useState<string>();
   const [salesCount, setSalesCount] = useState<string>();

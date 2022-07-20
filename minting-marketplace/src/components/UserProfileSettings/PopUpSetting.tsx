@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
 import defaultPictures from './images/defaultUserPictures.png';
-import UploadProfilePicture from './UploadProfilePicture/UploadProfilePicture';
+// import UploadProfilePicture from './UploadProfilePicture/UploadProfilePicture';
 
 // React Redux types
 import { getTokenComplete } from '../../ducks/auth/actions';
@@ -31,7 +31,7 @@ const PopUpSettings = ({
   const dispatch = useDispatch();
   const [next, setNext] = useState(false);
   const [, /*openModal*/ setOpenModal] = useState(false);
-  const [openModalPic, setOpenModalPic] = useState(false);
+  // const [openModalPic, setOpenModalPic] = useState(false);
   const [, /*userData*/ setUserData] = useState({});
   const [userName, setUserName] = useState();
   const [userEmail, setUserEmail] = useState();

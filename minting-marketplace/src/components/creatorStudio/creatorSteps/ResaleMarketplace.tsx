@@ -48,7 +48,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
   const [nodeFee, setNodeFee] = useState<number>(0);
   const [treasuryFee, setTreasuryFee] = useState<number>(0);
   const [minterDecimals, setMinterDecimals] = useState<number>(0);
-  const [sendingData, setSendingData] = useState<boolean>(false);
+  const [sendingData /*, setSendingData*/] = useState<boolean>(false);
 
   const getContractData = useCallback(async () => {
     if (!correctMinterInstance) {
@@ -83,29 +83,29 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
 
-  //unused-snippet
-  const setCustomFees = async () => {
-    setSendingData(true);
-    try {
-      Swal.fire({
-        title: 'Setting custom fees',
-        html: 'Please wait...',
-        icon: 'info',
-        showConfirmButton: false
-      });
-      Swal.fire({
-        title: 'Success',
-        html: 'Custom fees set',
-        icon: 'success',
-        showConfirmButton: false
-      });
-      gotoNextStep();
-    } catch (e) {
-      console.error(e);
-      Swal.fire('Error', '', 'error');
-    }
-    setSendingData(false);
-  };
+  //TODO: unused-snippet
+  // const setCustomFees = async () => {
+  //   setSendingData(true);
+  //   try {
+  //     Swal.fire({
+  //       title: 'Setting custom fees',
+  //       html: 'Please wait...',
+  //       icon: 'info',
+  //       showConfirmButton: false
+  //     });
+  //     Swal.fire({
+  //       title: 'Success',
+  //       html: 'Custom fees set',
+  //       icon: 'success',
+  //       showConfirmButton: false
+  //     });
+  //     gotoNextStep();
+  //   } catch (e) {
+  //     console.error(e);
+  //     Swal.fire('Error', '', 'error');
+  //   }
+  //   setSendingData(false);
+  // };
 
   const total = customPayments.reduce((prev, current) => {
     return prev + current.percentage;

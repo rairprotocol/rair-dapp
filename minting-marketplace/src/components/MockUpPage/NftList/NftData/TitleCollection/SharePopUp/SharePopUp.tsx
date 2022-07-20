@@ -19,7 +19,7 @@ const SharePopUp = ({
   primaryColor,
   selectedData
 }) => {
-  const [copySuccess, setCopySuccess] = useState('Copy link');
+  const [copySuccess /*setCopySuccess*/] = useState('Copy link');
   const currentUrl = document.location.href;
   const { headerLogo } = useSelector((store) => store.colorStore);
 

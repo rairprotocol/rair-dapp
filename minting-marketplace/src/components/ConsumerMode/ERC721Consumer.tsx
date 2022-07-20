@@ -48,7 +48,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
     if (tokenInstance) {
       tokenInstance.on(
         'Transfer(address,address,uint256)',
-        async (from, to, tokenId) => {
+        async (/*from, to, tokenId*/) => {
           refreshData();
         }
       );
@@ -89,7 +89,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
       <div style={{ position: 'absolute', left: 0 }}>{start}...</div>
       <div style={{ position: 'absolute', right: 0 }}>...{end}</div>
       <button
-        onClick={async (e) => {
+        onClick={async () => {
           Swal.fire({
             title: 'Preparing transaction',
             html: 'Please wait',
@@ -113,7 +113,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
         {blockchainData[window?.ethereum?.chainId]?.symbol}!
       </button>
       <button
-        onClick={(e) => {
+        onClick={() => {
           MySwal.fire({
             html: (
               <BatchMinting
@@ -152,7 +152,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
               <br />
               <button
                 disabled={next > specificIndex}
-                onClick={async (e) => {
+                onClick={async () => {
                   try {
                     await minterInstance.buyToken(
                       offerIndex,

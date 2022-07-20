@@ -11,7 +11,9 @@ import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
 import { DiscordIcon, TwitterIcon } from './DiscordIcon';
 import AdminPanel from './AdminPanel/AdminPanel';
-import { HeaderContainer, SocialHeaderBox } from './HeaderItems/HeaderItems';
+import {
+  HeaderContainer /*, SocialHeaderBox */
+} from './HeaderItems/HeaderItems';
 
 //images
 import headerLogoWhite from './../../images/rairTechLogoWhite.png';

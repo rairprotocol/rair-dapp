@@ -3,7 +3,7 @@
 import videoBackground1 from '../../../SplashPage/images/nftnyc_videobackground1.png';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import VideoPlayerModule from '../VideoPlayer/VideoPlayerModule';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 

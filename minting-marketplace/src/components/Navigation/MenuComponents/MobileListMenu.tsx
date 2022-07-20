@@ -81,7 +81,7 @@ const MobileListMenu = ({
             height: 32,
             fontSize: 18
           }}
-          onClick={(e) => {
+          onClick={() => {
             dispatch(
               setColorScheme(primaryColor === 'rhyno' ? 'charcoal' : 'rhyno')
             );

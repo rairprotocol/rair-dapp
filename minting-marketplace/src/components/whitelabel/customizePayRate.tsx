@@ -64,7 +64,7 @@ const CustomPayRateRow = ({
       <div className="col-1 my-2">
         {index === 0 && <br />}
         <button
-          onClick={(e) => deleter(index)}
+          onClick={() => deleter(index)}
           className="btn btn-royal-ice rounded-rair">
           <i className="fas fa-trash" />
         </button>
@@ -125,7 +125,7 @@ const ModalContent = ({ instance, catalogIndex }) => {
               index={index}
               array={customPayments}
               deleter={removePayment}
-              renderer={(e) => setRerender(!rerender)}
+              renderer={() => setRerender(!rerender)}
               {...item}
             />
           );
@@ -151,7 +151,7 @@ const ModalContent = ({ instance, catalogIndex }) => {
           !instance ||
           settingCustomSplits
         }
-        onClick={async (e) => {
+        onClick={async () => {
           Swal.fire('Setting data', '', 'info');
           setSettingCustomSplits(true);
           try {
@@ -164,8 +164,8 @@ const ModalContent = ({ instance, catalogIndex }) => {
                 )
               )
             ).wait();
-          } catch (e) {
-            console.error(e);
+          } catch (err) {
+            console.error(err);
             Swal.fire('Error', '', 'error');
           }
           setSettingCustomSplits(false);
@@ -206,7 +206,7 @@ const CustomizePayRate = ({
         !window.ethereum
       }
       className={'btn btn-royal-ice'}
-      onClick={async (e) => {
+      onClick={async () => {
         if (!onMyChain) {
           if (window.ethereum) {
             await window.ethereum.request({

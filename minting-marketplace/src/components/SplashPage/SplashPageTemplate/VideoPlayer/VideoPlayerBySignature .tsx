@@ -77,7 +77,7 @@ const VideoPlayerBySignature = ({ mediaAddress }) => {
         '/api/auth/get_challenge/' + programmaticProvider.address
       );
       parsedResponse = JSON.parse(response.data.response);
-      const { EIP712Domain, ...revisedTypes } = parsedResponse.types;
+      const { /*EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
       try {
         sign = await programmaticProvider._signTypedData(
           parsedResponse.domain,

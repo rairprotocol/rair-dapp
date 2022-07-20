@@ -39,7 +39,7 @@ const reactSwal = withReactContent(Swal);
 
 const VideoTilesItem = ({
   videoName,
-  videoType,
+  // videoType,
   videoTime,
   videoSRC,
   baseURL,

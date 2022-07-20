@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
 import Swal from 'sweetalert2';
@@ -74,6 +74,7 @@ const EditMode = ({
 
       onChangeEditMode();
     } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const error = err as AxiosError;
       Swal.fire('Info', `The name ${userName} already exists`, 'question');
     }

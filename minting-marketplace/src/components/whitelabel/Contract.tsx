@@ -11,7 +11,7 @@ import chainData from '../../utils/blockchainData';
 import { rFetch } from '../../utils/rFetch';
 import CustomPayRate from './customizePayRate';
 
-const Contract = ({ contractAddress, blockchain, title }) => {
+const Contract = ({ contractAddress, blockchain /*, title*/ }) => {
   const [data, setData] = useState();
 
   const { primaryColor, textColor } = useSelector((state) => state.colorStore);

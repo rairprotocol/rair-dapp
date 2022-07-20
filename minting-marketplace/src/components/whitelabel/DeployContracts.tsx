@@ -98,7 +98,7 @@ const ModalContent = () => {
         setter={setERC721Name}
       />
       <button
-        onClick={async (e) => {
+        onClick={async () => {
           await erc777Instance.send(
             factoryInstance.address,
             price,
@@ -126,7 +126,7 @@ const DeployContracts = () => {
       disabled={factoryInstance === undefined || !window.ethereum}
       className="btn btn-stimorol col-2"
       style={{ position: 'absolute', top: 0, right: 0 }}
-      onClick={async (e) => {
+      onClick={async () => {
         rSwal.fire({
           html: (
             <Provider store={store}>

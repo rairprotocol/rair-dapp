@@ -17,7 +17,7 @@ import React, { useState } from 'react';
 const reactSwal = withReactContent(Swal);
 
 const StreamsAbout: React.FC<IStreamsAbout> = ({
-  Metamask,
+  // Metamask,
   purchaseButton
 }) => {
   // const [showVideo, setShowVideo] = useState(false);

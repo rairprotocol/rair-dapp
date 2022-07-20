@@ -121,7 +121,8 @@ const splashData = {
   ]
 };
 
-const NFTLASplashPage = ({ loginDone }) => {
+const NFTLASplashPage = () => {
+  // props was loginDone
   const { primaryColor } = useSelector((store) => store.colorStore);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);

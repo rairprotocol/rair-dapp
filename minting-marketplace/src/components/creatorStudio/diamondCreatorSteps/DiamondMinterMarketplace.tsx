@@ -12,7 +12,7 @@ import MarketplaceOfferConfig from './MarketplaceOfferConfig';
 const DiamondMinterMarketplace = ({
   contractData,
   setStepNumber,
-  steps,
+  // steps,
   simpleMode,
   stepNumber,
   gotoNextStep,
@@ -75,7 +75,7 @@ const DiamondMinterMarketplace = ({
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
 
-  const setCustomFees = async (e) => {
+  const setCustomFees = async () => {
     setSendingData(true);
     Swal.fire({
       title: 'Publishing offers on the marketplace',

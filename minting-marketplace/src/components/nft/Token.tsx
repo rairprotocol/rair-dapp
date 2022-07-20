@@ -13,7 +13,7 @@ import axios from 'axios';
 import { TMetadataType, TTokenResponseData } from '../../axios.responseTypes';
 const erc721Abi = ERC721Token.default.abi;
 
-const Token = (props) => {
+const Token = () => {
   const params = useParams();
   const [metadata, setMetadata] = useState({ name: 'Loading...' });
   const [owner, setOwner] = useState('');

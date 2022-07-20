@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
-const TokenLeftGreyman = ({ primaryColor, Metamask, soldCopies, copies }) => {
+const TokenLeftGreyman = ({ primaryColor, soldCopies, copies }) => {
+  // in props was Metamask
   const [percentTokens, setPersentTokens] = useState(0);
   const [showMore, setShowMore] = useState(false);
   const [fontSize, setFontSize] = useState('');

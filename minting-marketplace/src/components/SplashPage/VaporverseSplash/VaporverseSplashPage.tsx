@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
@@ -12,67 +12,68 @@ import VV1 from '../images/vv_NFT_1.png';
 import VV2 from '../images/vv_NFT_2.png';
 import VV3 from '../images/vv_NFT_3.png';
 import VV4 from '../images/vv_NFT_4.png';
-
 import VV_warning_1 from '../images/vv_warning_1.png';
 import VV_warning_2 from '../images/vv_warning_2.png';
 import VV_test_transmission from '../images/vv_test_transmission.png';
 import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
-
 import UKR126 from '../images/UkraineGlitchNFTExamples/126.jpg';
-// import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg'
 import UKR497 from '../images/UkraineGlitchNFTExamples/497.jpg';
-// import UKR653 from '../images/UkraineGlitchNFTExamples/653.jpg'
-// import UKR777 from '../images/UkraineGlitchNFTExamples/777.jpg'
-// import UKR1050 from '../images/UkraineGlitchNFTExamples/1050.jpg'
 import UKR1294 from '../images/UkraineGlitchNFTExamples/1294.jpg';
-// import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg'
-// import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
-// import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
 import videoBackground from '../images/vaporverse_video_background.png';
 import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
-import faviconUkraine from './../images/favicons/favicon-ukraine.ico';
-
-// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
-import MetaMaskIcon from '../images/metamask_logo.png';
-import DiscordIcon from '../images/discord-icon.png';
 
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import setTitle from '../../../utils/setTitle';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
-import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
 import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-// import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
-// import UnlockableVideo from "../images/nipsey1.png";
-// import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
 import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
-import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
-
-import PurchaseTokenButton from '../../common/PurchaseToken';
-import Swal from 'sweetalert2';
 import MetaTags from '../../SeoTags/MetaTags';
-import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
 import { setRealChain } from '../../../ducks/contracts/actions';
+
+// TODO: UNUSED
+// import { rFetch } from '../../../utils/rFetch';
+// import PurchaseTokenButton from '../../common/PurchaseToken';
+// import Swal from 'sweetalert2';
+// import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
+// import StaticTiles from "../SplashPageTemplate/VideoTiles/StaticTiles";
+// import UnlockableVideo from "../images/nipsey1.png";
+// import NFTCounter from "../SplashPageTemplate/NFTCounter/NFTCounter";
+// import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
+// import setTitle from '../../../utils/setTitle';
+// import faviconUkraine from './../images/favicons/favicon-ukraine.ico';
+// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4";
+// import MetaMaskIcon from '../images/metamask_logo.png';
+// import DiscordIcon from '../images/discord-icon.png';
+// import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg';
+// import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg';
+// import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg';
+// import UKR653 from '../images/UkraineGlitchNFTExamples/653.jpg';
+// import UKR777 from '../images/UkraineGlitchNFTExamples/777.jpg';
+// import UKR1050 from '../images/UkraineGlitchNFTExamples/1050.jpg';
+// import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg';
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
 // This will be the default contract used in this splash page
-const mainContract = {
-  contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
-  requiredBlockchain: '0x1',
-  offerIndex: [0, 1]
-};
+// // TODO: UNUSED
+// const mainContract = {
+//   contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
+//   requiredBlockchain: '0x1',
+//   offerIndex: [0, 1]
+// };
+
 // By setting REACT_APP_TEST_CONTRACTS
-const testContract = {
-  contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
-  requiredBlockchain: '0x5',
-  offerIndex: [52, 0]
-};
+// TODO: UNUSED
+// const testContract = {
+//   contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
+//   requiredBlockchain: '0x5',
+//   offerIndex: [52, 0]
+// };
 
 const splashData = {
   title: null,
@@ -212,31 +213,31 @@ const InfoBlock = ({ infoArray, style, subclass }) => {
     <div style={style} className={`info-block ${subclass}`}>
       {infoArray?.map((info, index) => {
         return (
-          <>
+          <span key={index}>
             {info}
             <br />
-          </>
+          </span>
         );
       })}
     </div>
   );
 };
 
-const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
+const VaporverseSplashPage = ({ connectUserData }) => {
   const [openCheckList, setOpenCheckList] = useState(false);
-  const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentChain, minterInstance, currentUserAddress } = useSelector(
-    (store) => store.contractStore
-  );
+  // const [soldCopies, setSoldCopies] = useState(0);
+  // const { currentChain, minterInstance, currentUserAddress } = useSelector(
+  //   (store) => store.contractStore
+  // );
   const carousel_match = window.matchMedia('(min-width: 630px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
-  const [purchaseList, setPurshaseList] = useState(true);
+  const [purchaseList, setPurchaseList] = useState(true);
   const ukraineglitchChainId = '0x1';
   const dispatch = useDispatch();
 
   const togglePurchaseList = () => {
-    setPurshaseList((prev) => !prev);
+    setPurchaseList((prev) => !prev);
   };
 
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
@@ -262,8 +263,7 @@ const VaporverseSplashPage = ({ loginDone, connectUserData }) => {
 
   useEffect(() => {
     dispatch(setRealChain(ukraineglitchChainId));
-    //eslint-disable-next-line
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="wrapper-splash-page vaporverse">

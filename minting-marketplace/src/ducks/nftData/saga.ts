@@ -5,7 +5,7 @@ import axios, { AxiosResponse } from 'axios';
 import { TContract, TGetFullContracts } from '../../axios.responseTypes';
 import { getNftListTotal, getNftListTotalClear } from './action';
 
-export function* setNftDataContract({ params, type }: TParamsNftDataProps) {
+export function* setNftDataContract({ params }: TParamsNftDataProps) {
   getNftListTotalClear();
   try {
     const { data }: AxiosResponse<TGetFullContracts> = yield call(

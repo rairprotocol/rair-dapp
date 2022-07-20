@@ -22,9 +22,9 @@ const DiamondOfferRow = ({
   lockedTokens,
   simpleMode,
   instance,
-  offerIndex,
-  diamondRangeIndex,
-  ...leftovers
+  // offerIndex,
+  diamondRangeIndex
+  // ...leftovers,
 }) => {
   const { primaryColor, secondaryColor } = useSelector(
     (store) => store.colorStore

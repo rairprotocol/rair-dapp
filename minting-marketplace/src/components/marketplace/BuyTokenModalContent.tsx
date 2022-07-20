@@ -16,7 +16,7 @@ import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
-  blockchain,
+  // blockchain,
   start,
   end,
   price,
@@ -109,7 +109,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
             borderTopRightRadius: '0px',
             borderBottomRightRadius: '0px'
           }}
-          onClick={(e) => setBatchMode(false)}>
+          onClick={() => setBatchMode(false)}>
           Buy one Token
         </button>
         <button
@@ -119,7 +119,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
             borderTopLeftRadius: '0px',
             borderBottomLeftRadius: '0px'
           }}
-          onClick={(e) => setBatchMode(true)}>
+          onClick={() => setBatchMode(true)}>
           Buy multiple tokens
         </button>
       </div>
@@ -140,7 +140,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
             <div className="col-2" />
             <button
               disabled={!minterInstance}
-              onClick={async (e) => {
+              onClick={async () => {
                 let result;
                 if (diamonds) {
                   result = await buyTokenFunction?.(
@@ -229,7 +229,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
               />
             </div>
             <button
-              onClick={(e) => {
+              onClick={() => {
                 if (diamonds) {
                   buyTokenBatchFunction?.(
                     +offerIndex,

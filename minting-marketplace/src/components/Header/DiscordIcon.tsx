@@ -59,7 +59,7 @@ export const TwitterIcon = ({ color, primaryColor }) => {
   );
 };
 
-export const SunIcon = ({ color, primaryColor }) => {
+export const SunIcon = ({ primaryColor }) => {
   return (
     <svg
       width="20"
@@ -134,7 +134,7 @@ export const SunIcon = ({ color, primaryColor }) => {
   );
 };
 
-export const BellIcon = ({ primaryColor, color }) => {
+export const BellIcon = ({ primaryColor }) => {
   return (
     <svg
       width="18"

@@ -33,7 +33,7 @@ const ModalContent = ({ instance, blockchain }) => {
       <br />
       <button
         disabled={chainData[blockchain].chainId !== window.ethereum.chainId}
-        onClick={async (e) => {
+        onClick={async () => {
           await instance.createProduct(productName, productLength);
           rSwal.close();
         }}
@@ -63,7 +63,7 @@ const CreateProduct = ({ address, blockchain }) => {
         !window.ethereum
       }
       className={`btn btn-${onMyChain ? 'stimorol' : 'royal-ice'} py-0 col-12`}
-      onClick={async (e) => {
+      onClick={async () => {
         if (!onMyChain) {
           if (window.ethereum) {
             await window.ethereum.request({

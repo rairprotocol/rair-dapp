@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import CustomPayRate from '../whitelabel/customizePayRate';
 import { utils } from 'ethers';
 import { metamaskCall } from '../../utils/metamaskUtils';
@@ -108,7 +108,7 @@ const RangeManager: React.FC<IRangeManager> = ({
         <th>
           {!disabled ? (
             <button
-              onClick={(e) => deleter(index)}
+              onClick={() => deleter(index)}
               className="btn btn-danger h-50">
               <i className="fas fa-trash" />
             </button>
@@ -163,7 +163,7 @@ const RangeManager: React.FC<IRangeManager> = ({
         <th>
           <button
             disabled={!disabled || !rangePrice || !rangeName}
-            onClick={(e) =>
+            onClick={() =>
               updater(
                 offerIndex,
                 index,
@@ -188,9 +188,7 @@ const RangeManager: React.FC<IRangeManager> = ({
         <th>
           <button
             disabled={locked <= 0}
-            onClick={(e) =>
-              locker(productIndex, rangeInit, endingRange, locked)
-            }
+            onClick={() => locker(productIndex, rangeInit, endingRange, locked)}
             className="btn btn-royal-ice h-50">
             <i className="fas fa-lock" />
           </button>
@@ -423,7 +421,7 @@ const ProductManager: React.FC<IProductManager> = ({
         <div className="col-12" style={{ position: 'relative' }}>
           <button
             style={{ position: 'absolute', right: 0, top: 0 }}
-            onClick={(e) => {
+            onClick={() => {
               const aux = [...ranges];
               aux.push({
                 endingToken:
@@ -477,7 +475,7 @@ const ProductManager: React.FC<IProductManager> = ({
             </tbody>
           </table>
           <button
-            onClick={async (e) => {
+            onClick={async () => {
               try {
                 if (ranges.length > 0 && ranges[0].disabled) {
                   Swal.fire({

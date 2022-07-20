@@ -20,8 +20,8 @@ const RangeManager = ({
   array,
   deleter,
   sync,
-  hardLimit,
-  productIndex
+  hardLimit
+  // productIndex
 }) => {
   const [endingRange, setEndingRange] = useState(
     disabled
@@ -63,7 +63,7 @@ const RangeManager = ({
       <th>
         {!disabled ? (
           <button
-            onClick={(e) => deleter(index)}
+            onClick={() => deleter(index)}
             className="btn btn-danger h-50">
             <i className="fas fa-trash" />
           </button>
@@ -123,7 +123,7 @@ const RangeManager = ({
 
 const ModalContent = ({
   instance,
-  blockchain,
+  // blockchain,
   productIndex,
   tokenLimit,
   existingOffers
@@ -179,7 +179,7 @@ const ModalContent = ({
           <button
             disabled={instance === undefined}
             className="btn btn-warning"
-            onClick={async (e) => {
+            onClick={async () => {
               if (
                 await metamaskCall(
                   instance.grantRole(
@@ -209,7 +209,7 @@ const ModalContent = ({
                   <button
                     style={{ position: 'absolute', right: 0, top: 0 }}
                     disabled={!hasMinterRole}
-                    onClick={(e) => {
+                    onClick={() => {
                       const aux = [...ranges];
                       aux.push({
                         endingToken:
@@ -248,7 +248,7 @@ const ModalContent = ({
           </table>
           <br />
           <button
-            onClick={async (e) => {
+            onClick={async () => {
               if (ranges.length > 0 && ranges[0].disabled) {
                 await metamaskCall(
                   minterInstance.appendOfferRangeBatch(
@@ -329,7 +329,7 @@ const AddOffer = ({
         !window.ethereum
       }
       className={`btn btn-${onMyChain ? 'stimorol' : 'royal-ice'} py-0`}
-      onClick={async (e) => {
+      onClick={async () => {
         if (!onMyChain) {
           if (window.ethereum) {
             await window.ethereum.request({
