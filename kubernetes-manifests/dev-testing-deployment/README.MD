@@ -50,6 +50,10 @@ kubernetes-manifests/dev-testing-deployment/media-service.yaml line 49
 kubernetes-manifests/dev-testing-deployment/rairnode.yaml line 52
 kubernetes-manifests/dev-testing-deployment/blockchain-event-listener.yaml line 50
 
+Utility scripts have been added in the ./commands directory to update images at once.  This will also revert them to the dev_latest state.
+
+###*==Please don't commit new images to the repository==*
+
 All environment variables are stored in the appropriate configmap files.  Anything that needs to be adjusted here needs to be done ==before deployment==. 
 ###*Changed configmaps will not be applied until a new image is built*
 
@@ -60,9 +64,14 @@ All environment variables are stored in the appropriate configmap files.  Anythi
 In the dev-testing-deployment directory, run the following command-
 `kubectl apply -f . -n $UNIQUE_NAMESPACE`
 
-This will create all appropriate resources, provision your environment, and create deployments.  This will generate a custom IP address which is accessible via the ingress.  You can find these deployments with:
+This will create all appropriate resources, provision your environment, and create deployments.  This will generate a custom IP address which is accessible via the ingress.  You can find this deployments with:
 
-`kubectl get pod -l -n $UNQIQUE_NAMESPACE`
+`kubectl get ingress -n $UNQIQUE_NAMESPACE`
+
+This should give you something similar to the follwing:
+
+> NAME           CLASS    HOSTS   ADDRESS         PORTS   AGE
+> rair-ingress   <none>   *       34.120.194.63   80      3h38m
 
 ---
 
@@ -73,3 +82,11 @@ To delete all objects in your namespace when you are done using them, or to clea
 `kubectl delete -n <namespace-name> --all`
 
 **THIS DELETES ALL RESOURCES IN CURRENT NAMESPACE, PLEASE MAKE SURE YOU ARE USING THE PROPER NAMESPACE**
+
+*If you wish to do a complete clean of the namespace, you can also just delete the namespace.  Upon recreating the namespace, everything should be gone.*
+
+---
+
+#*Don't run the following command unless you know what you are doing.*
+
+`kubectl delete namespace {namespace}`
