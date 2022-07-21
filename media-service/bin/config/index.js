@@ -1,4 +1,5 @@
 const {
+  PRODUCTION,
   GCP_PROJECT_ID,
   GCP_IMAGE_BUCKET_NAME,
   GCP_VIDEO_BUCKET_NAME,
@@ -13,9 +14,13 @@ const {
   MEDIA_SERVICE_PORT,
   SERVICE_HOST,
   BASE_RAIRNODE_URL,
+  SENTRY_DSN,
+  LOG_LEVEL,
 } = process.env;
 
 module.exports = {
+  production: !!(PRODUCTION && PRODUCTION === 'true'),
+  logLevel: LOG_LEVEL || 'info',
   port: MEDIA_SERVICE_PORT || 5002,
   serviceHost: SERVICE_HOST,
   rairnode: {
@@ -38,4 +43,9 @@ module.exports = {
     api: IPFS_API,
   },
   ipfsService: IPFS_SERVICE || 'pinata',
+  sentry: {
+    dsn: SENTRY_DSN || '',
+    serverName: 'media-service',
+    logLevels: ['error'],
+  },
 };

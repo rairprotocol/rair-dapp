@@ -44,6 +44,7 @@ services:
       REDIS_PORT: ${redisport}
       SESSION_SECRET: ${session_secret}
       SESSION_TTL: ${session_ttl}
+      SENTRY_DSN: ${sentry_dsn}
     ports:
       - 3000:3000
       - 5000:5000
@@ -55,7 +56,7 @@ services:
       context: media-service/
       dockerfile: Dockerfile
     environment:
-      PRODUCTION: "false"
+      PRODUCTION: "true"
       MEDIA_SERVICE_PORT: ${media_service_port}
       BASE_RAIRNODE_URL: ${base_rairnode_url}
       GCP_PROJECT_ID: ${gcp_project_id}
@@ -75,6 +76,7 @@ services:
       VAULT_URL: ${VAULT_URL}
       VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID}
       VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID}
+      SENTRY_DSN: ${sentry_dsn}
     ports:
       - 5002:5002
     networks:

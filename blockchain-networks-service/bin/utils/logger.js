@@ -1,9 +1,10 @@
 const { createLogger, format, transports } = require('winston');
-const { combine, splat, timestamp, printf, label, errors, colorize, metadata } = format;
 const _ = require('lodash');
-require('winston-mongodb');
 
-const { LOG_LEVEL } = process.env;
+const SentryTransport = require('./loggerTransports/sentryTransport');
+const config = require('../config');
+
+const { combine, splat, timestamp, printf, label, errors, colorize, metadata } = format;
 
 module.exports = (module) => {
   const path = module.filename.split('/').slice(-2).join('/');
@@ -16,8 +17,8 @@ module.exports = (module) => {
     return msg;
   });
 
-  return new createLogger({
-    level: LOG_LEVEL || 'info',
+  const logger = new createLogger({
+    level: config.logLevel,
     format: combine(
       errors({ stack: true }),
       label({ label: path, message: true }),
@@ -31,4 +32,11 @@ module.exports = (module) => {
       new transports.Console()
     ],
   });
+
+  // FIXME: have to be uncomment right after testing of sentry
+  // if (config.production) {
+    logger.add(new SentryTransport());
+  // }
+
+  return logger;
 };

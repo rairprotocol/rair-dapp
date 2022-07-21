@@ -48,6 +48,14 @@ For correct work of sessions we need to set
 
 `SESSION_TTL` - number of hours (**default 12**)
 
+# Sentry
+
+Logs to Sentry will collect only for Production environment
+
+`PRODUCTION` - has to be "true"
+
+`SENTRY_DSN` - should be provided Sentry Data Source Name
+
 # API
 
 * [x] /api

@@ -1,4 +1,5 @@
 const {
+  PRODUCTION,
   TEST_BSCSCAN_GATEWAY,
   TEST_POLYGONSCAN_GATEWAY,
   TEST_ETHERSCAN_GATEWAY,
@@ -34,10 +35,14 @@ const {
   MORALIS_API_KEY_TEST,
   MORALIS_API_KEY_MAIN,
   MORALIS_MASTER_KEY_TEST,
-  MORALIS_MASTER_KEY_MAIN
+  MORALIS_MASTER_KEY_MAIN,
+  SENTRY_DSN,
+  LOG_LEVEL
 } = process.env;
 
 module.exports = {
+  production: !!(PRODUCTION && PRODUCTION === 'true'),
+  logLevel: LOG_LEVEL || 'info',
   blockchain: {
     networks: {
       '0x13881': {
@@ -137,6 +142,11 @@ module.exports = {
         masterKey: MORALIS_MASTER_KEY_TEST
       }
     }
-  }
+  },
+  sentry: {
+    dsn: SENTRY_DSN || '',
+    serverName: 'blockchain-service',
+    logLevels: ['error'],
+  },
 };
 
