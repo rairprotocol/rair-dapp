@@ -33,10 +33,9 @@ module.exports = (module) => {
     ],
   });
 
-  // FIXME: have to be uncomment right after testing of sentry
-  // if (config.production) {
+  if (config.production) {
     logger.add(new SentryTransport());
-  // }
+  }
 
   return logger;
 };
