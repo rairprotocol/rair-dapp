@@ -2,14 +2,14 @@
 import React from 'react';
 // import DiscordIcon from './../images/discord-icon.png';
 // import logoAuthor from './../images/colab.png';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Main from '../images/nuts-main.png';
 
 const ComingSoonNut = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const goBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   return (

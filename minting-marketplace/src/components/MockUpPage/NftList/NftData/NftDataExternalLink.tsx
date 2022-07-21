@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import NftDataPageMain from './NftDataPageMain';
@@ -31,7 +31,7 @@ const NftDataExternalLink = () => {
   const [selectedIndexInContract, setSelectedIndexInContract] = useState();
   // const [/*selectedContract*/, setSelectedContract] = useState();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const params = useParams();
   const { contractId, product, token } = params;
 
@@ -85,7 +85,7 @@ const NftDataExternalLink = () => {
     });
   }
   const handleClickToken = async (token) => {
-    history.push(
+    navigate(
       `/tokens/${neededBlockchain}/${neededContract}/${product}/${token}`
     );
     setSelectedData(tokenData[token].metadata);

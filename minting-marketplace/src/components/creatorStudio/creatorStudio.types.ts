@@ -10,7 +10,6 @@ import {
   TTokenData,
   TProducts
 } from '../../axios.responseTypes';
-import * as H from 'history';
 export interface ICustomFeeRow {
   index: number;
   array: TCustomPayments[];
@@ -397,10 +396,6 @@ export interface INavigatorContract {
 
 export interface INavigatorFactory {
   children: ReactNode;
-}
-
-export interface IWorkflowSteps {
-  sentryHistory: H.History;
 }
 
 export type TContractsNetworkResponseType = {

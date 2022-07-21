@@ -45,7 +45,7 @@ const AdminPanel = ({
               },
               {
                 name: <i className="fa fa-user-secret" aria-hidden="true" />,
-                route: '/admin',
+                route: '/admin/fileUpload',
                 disabled: !loginDone
               },
               {
@@ -80,8 +80,11 @@ const AdminPanel = ({
                     key={index}
                     className={`col-12 py-3 btn-${primaryColor}`}>
                     <NavLink
-                      activeClassName={`active-${primaryColor}`}
-                      className="py-3"
+                      className={({ isActive }) => {
+                        return `py-3 ${
+                          isActive ? `active-${primaryColor}` : ''
+                        }`;
+                      }}
                       to={item.route}
                       style={{ color: 'inherit', textDecoration: 'none' }}
                       onClick={() => {

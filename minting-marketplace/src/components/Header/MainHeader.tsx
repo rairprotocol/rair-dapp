@@ -1,7 +1,7 @@
 //tools
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 //imports components
@@ -45,13 +45,12 @@ const MainHeader: React.FC<IMainHeader> = ({
   connectUserData,
   setLoginDone,
   userData,
-  sentryHistory,
   creatorViewsDisabled,
   selectedChain,
   showAlert
 }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { primaryColor, headerLogo } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -65,6 +64,8 @@ const MainHeader: React.FC<IMainHeader> = ({
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
+
+  const location = useLocation();
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
@@ -110,14 +111,14 @@ const MainHeader: React.FC<IMainHeader> = ({
           contractAddress: response.data.contract.contractAddress,
           indexInContract: collectionIndexInContract
         };
-        history.push(
+        navigate(
           `/collection/${exactlyContractData.blockchain}/${exactlyContractData.contractAddress}/${exactlyContractData.indexInContract}/0`
         );
         setTextSearch('');
         dispatch(getDataAllClear());
       }
     },
-    [dataAll, dispatch, history]
+    [dataAll, dispatch, navigate]
   );
 
   const goToExactlyToken = useCallback(
@@ -132,14 +133,14 @@ const MainHeader: React.FC<IMainHeader> = ({
           contractAddress: response.data.contract.contractAddress
         };
 
-        history.push(
+        navigate(
           `/tokens/${exactlyTokenData.blockchain}/${exactlyTokenData.contractAddress}/0/${token}`
         );
         setTextSearch('');
         dispatch(getDataAllClear());
       }
     },
-    [dataAll, dispatch, history]
+    [dataAll, dispatch, navigate]
   );
 
   const Highlight = (props) => {
@@ -183,8 +184,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   }, [dispatch, textSearch]);
 
   useEffect(() => {
-    handleHiddinHeader(sentryHistory.location.pathname);
-  }, [sentryHistory.location.pathname, handleHiddinHeader]);
+    handleHiddinHeader(location.pathname);
+  }, [location.pathname, handleHiddinHeader]);
 
   return (
     <HeaderContainer
@@ -195,7 +196,6 @@ const MainHeader: React.FC<IMainHeader> = ({
       <div>
         <MainLogo
           goHome={goHome}
-          sentryHistory={sentryHistory}
           headerLogoWhite={headerLogoWhite}
           headerLogoBlack={headerLogoBlack}
           headerLogo={headerLogo}

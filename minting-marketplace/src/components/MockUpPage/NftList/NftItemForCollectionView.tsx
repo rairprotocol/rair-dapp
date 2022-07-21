@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useState, memo, useCallback, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { gettingPrice } from './utils/gettingPrice';
 import { SvgKey } from './SvgKey';
 import chainData from '../../../utils/blockchainData';
@@ -20,7 +20,7 @@ const NftItemForCollectionViewComponent = ({
   tokenDataLength
 }) => {
   const params = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [playing, setPlaying] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState();
@@ -44,7 +44,7 @@ const NftItemForCollectionViewComponent = ({
   }
 
   const redirection = () => {
-    history.push(
+    navigate(
       `/tokens/${blockchain}/${params.contract}/${params.product}/${index}`
     );
   };

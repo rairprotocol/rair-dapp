@@ -1,10 +1,6 @@
 //@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Router,
-  Switch,
-  Route /*Redirect, NavLink, useLocation*/
-} from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch';
 import { detectBlockchain } from './utils/blockchainData';
@@ -19,7 +15,7 @@ import { TUserResponse } from './axios.responseTypes';
 import './App.css';
 
 // React Redux types
-import * as Sentry from '@sentry/react';
+import { withSentryReactRouterV6Routing, ErrorBoundary } from '@sentry/react';
 // import * as ethers from 'ethers';
 // import * as colorTypes from './ducks/colors/types';
 
@@ -33,8 +29,6 @@ import jsonwebtoken from 'jsonwebtoken';
 
 //import CSVParser from './components/metadata/csvParser';
 import AboutPageNew from './components/AboutPage/AboutPageNew/AboutPageNew';
-
-import BlockChainSwitcher from './components/adminViews/BlockchainSwitcher';
 
 import ComingSoon from './components/SplashPage/CommingSoon/CommingSoon';
 import ComingSoonNut from './components/SplashPage/CommingSoon/ComingSoonNut';
@@ -96,7 +90,7 @@ import MenuNavigation from './components/Navigation/Menu';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
 import NFTNYCSplashPage from './components/SplashPage/NFTNYC/NFTNYC';
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
-import MetaTags from './components/SeoTags/MetaTags';
+import WelcomeHeader from './components/FrontPage/WelcomeHeader';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
@@ -120,8 +114,6 @@ const analytics = Analytics({
 /* Track a page view */
 analytics.page();
 
-const SentryRoute = Sentry.withSentryRouting(Route);
-
 const ErrorFallback = () => {
   return (
     <div className="not-found-page">
@@ -133,7 +125,9 @@ const ErrorFallback = () => {
   );
 };
 
-function App({ sentryHistory }) {
+const SentryRoutes = withSentryReactRouterV6Routing(Routes);
+
+function App() {
   const dispatch = useDispatch();
   const [userData, setUserData] = useState();
   const [startedLogin, setStartedLogin] = useState(false);
@@ -149,7 +143,8 @@ function App({ sentryHistory }) {
   );
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
-  const [tabIndex, setTabIndex] = useState(0);
+
+  const navigate = useNavigate();
 
   const seoInformation = {
     title: 'Rair Tech Marketplace',
@@ -281,15 +276,10 @@ function App({ sentryHistory }) {
   }, [programmaticProvider, adminRights, dispatch]);
 
   const goHome = () => {
-    sentryHistory.push('/');
+    navigate('/');
     setShowAlert(false);
     dispatch(getCurrentPageEnd());
   };
-
-  // const openAboutPage = useCallback(() => {
-  //   sentryHistory.push('/about-page');
-  //   window.scrollTo(0, 0);
-  // }, [sentryHistory]);
 
   const btnCheck = useCallback(() => {
     if (window.ethereum && window.ethereum.isMetaMask) {
@@ -319,12 +309,12 @@ function App({ sentryHistory }) {
   useEffect(() => {
     // setTitle('Welcome');
     if (process.env.NODE_ENV === 'development') {
-      window.gotoRouteBackdoor = sentryHistory.push;
+      window.gotoRouteBackdoor = navigate;
       window.adminAccessBackdoor = (boolean) => {
         dispatch(setAdminRights(boolean));
       };
     }
-  }, [dispatch, sentryHistory.push]);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     btnCheck();
@@ -441,7 +431,7 @@ function App({ sentryHistory }) {
     process.env.REACT_APP_DISABLE_CREATOR_VIEWS === 'true';
 
   return (
-    <Sentry.ErrorBoundary fallback={ErrorFallback}>
+    <ErrorBoundary fallback={ErrorFallback}>
       {selectedChain && showAlert ? (
         <AlertMetamask
           selectedChain={selectedChain}
@@ -449,71 +439,64 @@ function App({ sentryHistory }) {
           setShowAlert={setShowAlert}
         />
       ) : null}
-      <Router history={sentryHistory}>
-        <AppContainerFluid
-          className="App p-0 container-fluid"
-          backgroundImageEffect={backgroundImageEffect}
-          textColor={textColor}
-          primaryColor={primaryColor}
-          backgroundImage={backgroundImage}>
-          <div className="row w-100 m-0 p-0">
-            {carousel ? (
-              <MainHeader
-                goHome={goHome}
-                loginDone={loginDone}
-                startedLogin={startedLogin}
-                renderBtnConnect={renderBtnConnect}
-                connectUserData={connectUserData}
-                setLoginDone={setLoginDone}
-                userData={userData}
-                sentryHistory={sentryHistory}
-                creatorViewsDisabled={creatorViewsDisabled}
-                showAlert={showAlert}
-                selectedChain={selectedChain}
-              />
-            ) : (
-              <MenuNavigation
-                adminRights={adminRights}
-                primaryColor={primaryColor}
-                headerLogo={headerLogo}
-                startedLogin={startedLogin}
-                connectUserData={connectUserData}
-                renderBtnConnect={renderBtnConnect}
-                loginDone={loginDone}
-                setLoginDone={setLoginDone}
-                currentUserAddress={currentUserAddress}
-                creatorViewsDisabled={creatorViewsDisabled}
-              />
-            )}
+      <AppContainerFluid
+        className="App p-0 container-fluid"
+        backgroundImageEffect={backgroundImageEffect}
+        textColor={textColor}
+        primaryColor={primaryColor}
+        backgroundImage={backgroundImage}>
+        <div className="row w-100 m-0 p-0">
+          {carousel ? (
+            <MainHeader
+              goHome={goHome}
+              loginDone={loginDone}
+              startedLogin={startedLogin}
+              renderBtnConnect={renderBtnConnect}
+              connectUserData={connectUserData}
+              setLoginDone={setLoginDone}
+              userData={userData}
+              creatorViewsDisabled={creatorViewsDisabled}
+              showAlert={showAlert}
+              selectedChain={selectedChain}
+            />
+          ) : (
+            <MenuNavigation
+              adminRights={adminRights}
+              primaryColor={primaryColor}
+              headerLogo={headerLogo}
+              startedLogin={startedLogin}
+              connectUserData={connectUserData}
+              renderBtnConnect={renderBtnConnect}
+              loginDone={loginDone}
+              setLoginDone={setLoginDone}
+              currentUserAddress={currentUserAddress}
+              creatorViewsDisabled={creatorViewsDisabled}
+            />
+          )}
 
-            {/*
+          {/*
 							Left sidebar, includes the RAIR logo and the admin sidebar
 						*/}
-            {carousel ? (
-              <div className="col-1 hidden-block">
-                <div></div>
-              </div>
-            ) : (
-              <></>
-            )}
+          {carousel ? (
+            <div className="col-1 hidden-block">
+              <div></div>
+            </div>
+          ) : (
+            <></>
+          )}
 
-            {/*
+          {/*
 							Main body, the header, router and footer are here
 						*/}
-            <div
-              className={`main-block-app col-12 col-md-${
-                adminRights ? '11' : '11'
-              }`}>
-              <div className="col-12 blockchain-switcher">
-                <Switch>
-                  <SentryRoute path="/admin" component={BlockChainSwitcher} />
-                </Switch>
-              </div>
-              <div className="col-12 mt-3 row">
-                <Switch>
-                  {/*
+          <div
+            className={`main-block-app col-12 col-md-${
+              adminRights ? '11' : '11'
+            }`}>
+            <div className="col-12 blockchain-switcher" />
+            <div className="col-12 mt-3 row">
+              <SentryRoutes>
+                {/*
 										Iterate over the routes in the array
-										Order matters!
 										Full object structure: 
 										{
 											path: {
@@ -537,341 +520,311 @@ function App({ sentryHistory }) {
 										}
 									*/}
 
-                  {/*
+                {/*
 										Iterate over any splash page and add the connect user data function
 										This needs a different map because the requirements for rendering are more
 										complex than just a boolean
 									*/}
-                  {[
-                    {
-                      path: '/immersiverse-splash',
-                      content: ImmersiVerseSplashPage
-                    },
-                    {
-                      path: '/nftnyc-splash',
-                      content: NFTNYCSplashPage
-                    },
-                    {
-                      path: '/video-tiles-test',
-                      content: VideoTilesTest
-                    },
-                    {
-                      path: '/nftla-splash',
-                      content: NFTLASplashPage
-                    },
-                    {
-                      path: '/ukraineglitch',
-                      content: UkraineSplashPage
-                    },
-                    {
-                      path: '/vaporverse-splash',
-                      content: VaporverseSplashPage
-                    },
-                    {
-                      path: '/greyman-splash',
-                      content: GreymanSplashPage
-                    },
-                    {
-                      path: '/nutcrackers-splash',
-                      content: Nutcrackers
-                    },
-                    {
-                      path: '/nipsey-splash',
-                      content: SplashPage
-                    },
-                    {
-                      path: '/about-page',
-                      content: AboutPageNew
-                    },
-                    {
-                      path: '/slidelock',
-                      content: SlideLock
-                    }
-                  ].map((item, index) => {
-                    // If the path is set as the Home Page, render it as the default path (/)
-                    const isHome =
-                      item.path === process.env.REACT_APP_HOME_PAGE;
+                {[
+                  {
+                    path: '/immersiverse-splash',
+                    content: ImmersiVerseSplashPage
+                  },
+                  {
+                    path: '/nftnyc-splash',
+                    content: NFTNYCSplashPage
+                  },
+                  {
+                    path: '/video-tiles-test',
+                    content: VideoTilesTest
+                  },
+                  {
+                    path: '/nftla-splash',
+                    content: NFTLASplashPage
+                  },
+                  {
+                    path: '/ukraineglitch',
+                    content: UkraineSplashPage
+                  },
+                  {
+                    path: '/vaporverse-splash',
+                    content: VaporverseSplashPage
+                  },
+                  {
+                    path: '/greyman-splash',
+                    content: GreymanSplashPage
+                  },
+                  {
+                    path: '/nutcrackers-splash',
+                    content: Nutcrackers
+                  },
+                  {
+                    path: '/nipsey-splash',
+                    content: SplashPage
+                  },
+                  {
+                    path: '/slidelock',
+                    content: SlideLock
+                  }
+                ].map((item, index) => {
+                  // If the path is set as the Home Page, render it as the default path (/)
+                  const isHome = item.path === process.env.REACT_APP_HOME_PAGE;
 
-                    if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
-                      return undefined;
-                    }
+                  if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
+                    return <></>;
+                  }
 
-                    return (
-                      <SentryRoute
-                        key={index}
-                        exact
-                        path={isHome ? '/' : item.path}>
-                        <item.content
-                          {...{ connectUserData }}
-                          loginDone={loginDone}
-                        />
-                      </SentryRoute>
-                    );
-                  })}
-                  {[
-                    /*
+                  return (
+                    <Route
+                      key={index}
+                      exact
+                      path={isHome ? '/' : item.path}
+                      element={
+                        <item.content {...{ connectUserData, loginDone }} />
+                      }
+                    />
+                  );
+                })}
+                {[
+                  /*
                       If the home page isn't the default '/', it won't show the
                         'Digital Ownership Encryption' message
                     */
-                    {
-                      path: '/',
-                      content: (
-                        <div className="main-wrapper">
-                          <MetaTags seoMetaTags={seoInformation} />
-                          <div className="col-6 text-left main">
-                            <h1 className="w-100 general-title">
-                              Digital <b className="title">Ownership</b>
-                              <br />
-                              Encryption
-                            </h1>
-                            <p className="w-100 general-title">
-                              RAIR is a Blockchain-based digital rights
-                              management platform that uses NFTs to gate access
-                              to streaming content
-                            </p>
-                          </div>
-                          <div className="col-12 mt-3 row">
-                            <MockUpPage
-                              tabIndex={tabIndex}
-                              setTabIndex={setTabIndex}
-                            />
-                          </div>
-                        </div>
-                      ),
-                      requirement: process.env.REACT_APP_HOME_PAGE === '/'
-                    },
-
-                    // Creator UI - New Views based on Figma
-                    {
-                      path: '/creator/deploy',
-                      content: <Deploy />,
-                      requirement:
-                        loginDone && adminRights && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/creator/contracts',
-                      content: <Contracts />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/creator/contract/:blockchain/:address/createCollection',
-                      content: <ContractDetails />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/creator/contract/:blockchain/:address/listCollections',
-                      content: <ListCollections />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/',
-                      content: <WorkflowSteps {...{ sentryHistory }} />,
-                      requirement: loginDone && !creatorViewsDisabled,
-                      exact: false
-                    },
-
-                    // Old Creator UI (Using the Database)
-                    {
-                      path: '/new-factory',
-                      content: <MyContracts />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/on-sale',
-                      content: <MinterMarketplace />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/rair/:contract/:product',
-                      content: <RairProduct />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-
-                    // Old Video Upload view
-                    {
-                      path: '/admin',
-                      content: (
-                        <FileUpload
-                          primaryColor={primaryColor}
-                          textColor={textColor}
-                        />
-                      ),
-                      requirement:
-                        loginDone && !creatorViewsDisabled && adminRights
-                    },
-
-                    // Old MyNFTs (Using the database)
-                    {
-                      path: '/my-nft',
-                      content: <MyNFTs />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-
-                    // Old Token Viewer (Using the database)
-                    {
-                      path: '/token/:blockchain/:contract/:identifier',
-                      content: <Token />,
-                      requirement: loginDone && !creatorViewsDisabled
-                    },
-
-                    // Classic Factory (Uses the blockchain)
-                    {
-                      path: '/factory',
-                      content: <CreatorMode />,
-                      requirement:
-                        loginDone &&
-                        !creatorViewsDisabled &&
-                        adminRights &&
-                        factoryInstance !== undefined
-                    },
-
-                    // Classic Minter Marketplace (Uses the blockchain)
-                    {
-                      path: '/minter',
-                      content: <ConsumerMode />,
-                      requirement:
-                        loginDone &&
-                        !creatorViewsDisabled &&
-                        minterInstance !== undefined
-                    },
-
-                    // Diamond Marketplace (Uses the blockchain)
-                    {
-                      path: '/diamondMinter',
-                      content: <DiamondMarketplace />,
-                      requirement:
-                        loginDone &&
-                        !creatorViewsDisabled &&
-                        diamondMarketplaceInstance !== undefined
-                    },
-                    {
-                      path: '/admin/transferNFTs',
-                      content: <TransferTokens />,
-                      constraint: loginDone && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/importExternalContracts',
-                      content: <ImportExternalContracts />,
-                      constraint: loginDone && !creatorViewsDisabled
-                    },
-                    {
-                      path: '/about-page',
-                      content: (
-                        <AboutPageNew
-                          connectUserData={connectUserData}
-                          headerLogoWhite={headerLogoWhite}
-                          headerLogoBlack={headerLogoBlack}
-                        />
-                      )
-                    },
-
-                    /*
-                      Public Facing Routes
-                    */
-                    {
-                      path: '/all',
-                      content: <MockUpPage />
-                    },
-                    {
-                      path: '/my-items',
-                      content: <MyItems goHome={goHome} />,
-                      requirement: loginDone
-                    },
-                    {
-                      path: '/:contractId/:product/:offer/:token',
-                      content: (
-                        <NftDataExternalLink
-                          currentUser={currentUserAddress}
-                          primaryColor={primaryColor}
-                          textColor={textColor}
-                        />
-                      )
-                    },
-                    {
-                      path: '/coming-soon',
-                      content: <ComingSoon />
-                    },
-                    {
-                      path: '/coming-soon-nutcrackers',
-                      content: <ComingSoonNut />
-                    },
-                    {
-                      path: '/privacy',
-                      content: <PrivacyPolicy />
-                    },
-                    {
-                      path: '/terms-use',
-                      content: <TermsUse />
-                    },
-                    {
-                      path: '/thankyou',
-                      content: <ThankYouPage />
-                    },
-
-                    /*
-                      3 Tab Marketplace?
-                    */
-                    {
-                      path: '/:tokens/:blockchain/:contract/:product/:tokenId',
-                      content: <NftDataCommonLink userData={userData} />,
-                      requirement:
-                        process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                        'true'
-                    },
-                    {
-                      path: '/:collection/:blockchain/:contract/:product/:tokenId',
-                      content: <NftDataCommonLink userData={userData} />,
-                      requirement:
-                        process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                        'true'
-                    },
-                    {
-                      path: '/:unlockables/:blockchain/:contract/:product/:tokenId',
-                      content: <NftDataCommonLink userData={userData} />,
-                      requirement:
-                        process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                        'true'
-                    },
-
-                    {
-                      path: '/notifications',
-                      content: <NotificationPage />
-                    },
-                    // Video Player
-                    {
-                      path: '/watch/:videoId/:mainManifest',
-                      content: <VideoPlayer />,
-                      exact: false
-                    },
-
-                    // Default route, leave this at the bottom always
-                    {
-                      path: '',
-                      content: <NotFound />,
-                      exact: false
+                  {
+                    path: '/',
+                    content: WelcomeHeader,
+                    requirement: process.env.REACT_APP_HOME_PAGE === '/',
+                    props: {
+                      seoInformation
                     }
-                  ].map((item, index) => {
-                    // If the requirements for the route aren't met, it won't return anything
-                    if (item.requirement !== undefined && !item.requirement) {
-                      return null;
+                  },
+
+                  // Old Video Upload view
+                  {
+                    path: '/admin/fileUpload',
+                    content: FileUpload,
+                    requirement:
+                      loginDone && !creatorViewsDisabled && adminRights,
+                    props: {
+                      primaryColor: primaryColor,
+                      textColor: textColor
                     }
-                    return (
-                      <SentryRoute
-                        key={index}
-                        exact={item.exact !== undefined ? item.exact : true}
-                        path={item.path}
-                        render={() => item.content}
-                      />
-                    );
-                  })}
-                </Switch>
-              </div>
+                  },
+                  // Token transfers
+                  {
+                    path: '/admin/transferNFTs',
+                    content: TransferTokens,
+                    constraint: loginDone && !creatorViewsDisabled
+                  },
+
+                  // Creator UI - New Views based on Figma
+                  {
+                    path: '/creator/deploy',
+                    content: Deploy,
+                    requirement:
+                      loginDone && adminRights && !creatorViewsDisabled
+                  },
+                  {
+                    path: '/creator/contracts',
+                    content: Contracts,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+                  {
+                    path: '/creator/contract/:blockchain/:address/createCollection',
+                    content: ContractDetails,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+                  {
+                    path: '/creator/contract/:blockchain/:address/listCollections',
+                    content: ListCollections,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+                  {
+                    path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/*', // NEW: Wildcard allows WorkflowSteps to have routes within
+                    content: WorkflowSteps,
+                    requirement: loginDone && !creatorViewsDisabled,
+                    exact: false
+                  },
+
+                  // Old Creator UI (Using the Database)
+                  {
+                    path: '/new-factory',
+                    content: MyContracts,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+                  {
+                    path: '/on-sale',
+                    content: MinterMarketplace,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+                  {
+                    path: '/rair/:contract/:product',
+                    content: RairProduct,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+
+                  // Old MyNFTs (Using the database)
+                  {
+                    path: '/my-nft',
+                    content: MyNFTs,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+
+                  // Old Token Viewer (Using the database)
+                  {
+                    path: '/token/:blockchain/:contract/:identifier',
+                    content: Token,
+                    requirement: loginDone && !creatorViewsDisabled
+                  },
+
+                  // Classic Factory (Uses the blockchain)
+                  {
+                    path: '/factory',
+                    content: CreatorMode,
+                    requirement:
+                      loginDone &&
+                      !creatorViewsDisabled &&
+                      adminRights &&
+                      factoryInstance !== undefined
+                  },
+
+                  // Classic Minter Marketplace (Uses the blockchain)
+                  {
+                    path: '/minter',
+                    content: ConsumerMode,
+                    requirement:
+                      loginDone &&
+                      !creatorViewsDisabled &&
+                      minterInstance !== undefined
+                  },
+
+                  // Diamond Marketplace (Uses the blockchain)
+                  {
+                    path: '/diamondMinter',
+                    content: DiamondMarketplace,
+                    requirement:
+                      loginDone &&
+                      !creatorViewsDisabled &&
+                      diamondMarketplaceInstance !== undefined
+                  },
+                  {
+                    path: '/importExternalContracts',
+                    content: ImportExternalContracts,
+                    constraint: loginDone && !creatorViewsDisabled
+                  },
+                  {
+                    path: '/about-page',
+                    content: AboutPageNew,
+                    props: {
+                      connectUserData: connectUserData,
+                      headerLogoWhite: headerLogoWhite,
+                      headerLogoBlack: headerLogoBlack,
+                      seoInformation
+                    }
+                  },
+
+                  // Public Facing Routes
+                  {
+                    path: '/all',
+                    content: MockUpPage
+                  },
+                  {
+                    path: '/my-items',
+                    content: MyItems,
+                    requirement: loginDone,
+                    props: { goHome }
+                  },
+                  {
+                    path: '/:contractId/:product/:offer/:token',
+                    content: NftDataExternalLink,
+                    props: {
+                      currentUser: currentUserAddress,
+                      primaryColor: primaryColor,
+                      textColor: textColor
+                    }
+                  },
+                  {
+                    path: '/coming-soon',
+                    content: ComingSoon
+                  },
+                  {
+                    path: '/coming-soon-nutcrackers',
+                    content: ComingSoonNut
+                  },
+                  {
+                    path: '/privacy',
+                    content: PrivacyPolicy
+                  },
+                  {
+                    path: '/terms-use',
+                    content: TermsUse
+                  },
+                  {
+                    path: '/thankyou',
+                    content: ThankYouPage
+                  },
+
+                  //3 Tab Marketplace?
+                  {
+                    path: '/tokens/:blockchain/:contract/:product/:tokenId',
+                    content: NftDataCommonLink,
+                    requirement:
+                      process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
+                      'true'
+                  },
+                  {
+                    path: '/collection/:blockchain/:contract/:product/:tokenId',
+                    content: NftDataCommonLink,
+                    requirement:
+                      process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
+                      'true',
+                    props: { userData }
+                  },
+                  {
+                    path: '/unlockables/:blockchain/:contract/:product/:tokenId',
+                    content: NftDataCommonLink,
+                    requirement:
+                      process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
+                      'true',
+                    props: { userData }
+                  },
+
+                  {
+                    path: '/notifications',
+                    content: NotificationPage
+                  },
+                  // Video Player
+                  {
+                    path: '/watch/:videoId/:mainManifest',
+                    content: VideoPlayer,
+                    exact: false
+                  },
+                  {
+                    path: '*',
+                    content: NotFound,
+                    exact: false
+                  }
+                ].map((item, index) => {
+                  // If the requirements for the route aren't met, it won't return anything
+                  if (item.requirement !== undefined && !item.requirement) {
+                    return <></>;
+                  }
+                  return (
+                    <Route
+                      key={index}
+                      exact={item.exact !== undefined ? item.exact : true}
+                      path={item.path}
+                      element={<item.content {...item.props} />}
+                    />
+                  );
+                })}
+              </SentryRoutes>
             </div>
           </div>
-        </AppContainerFluid>
-        <Footer sentryHistory={sentryHistory} />
-      </Router>
-    </Sentry.ErrorBoundary>
+        </div>
+      </AppContainerFluid>
+      <Footer />
+    </ErrorBoundary>
   );
 }
 

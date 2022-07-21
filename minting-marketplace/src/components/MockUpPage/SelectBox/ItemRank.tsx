@@ -22,21 +22,21 @@ const ItemRank = ({
   //     case "Ultra Rair":
   //       const firstTokenFromUltra = offerDataInfo.filter((e) => e.offerIndex === 0);
   //       setTokenDataFiltered(firstTokenFromUltra);
-  //       history.push(
+  //       navigate(
   //         `/collection/${params.blockchain}/${params.contract}/${params.product}/${params.tokenId}`
   //       );
   //       break;
   //     case "Rair":
   //       const secondTokenFromUltra = offerDataInfo.filter((e) => e.offerIndex === 1);
   //       setTokenDataFiltered(secondTokenFromUltra);
-  //       history.push(
+  //       navigate(
   //         `/collection/${params.blockchain}/${params.contract}/${params.product}/${params.tokenId}`
   //       );
   //       break;
   //     default:
   //       const thirdTokenFromUltra = offerDataInfo.filter((e) => e.offerIndex === 2);
   //       setTokenDataFiltered(thirdTokenFromUltra);
-  //       history.push(
+  //       navigate(
   //         `/collection/${params.blockchain}/${params.contract}/${params.product}/${params.tokenId}`
   //       );
   //   }

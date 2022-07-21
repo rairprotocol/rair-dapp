@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, { useState /*useCallback, useEffect */ } from 'react';
 import { useSelector } from 'react-redux';
-// import { useHistory } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import './SplashPage.css';
 import './GreymanSplashPageMobile.css';

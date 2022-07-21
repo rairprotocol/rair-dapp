@@ -14,7 +14,7 @@ const Layout: React.FC<ILayout> = (props) => {
     { name: <i className="fas fa-user" />, route: '/user' },
     { name: 'My NFTs', route: '/my-nft' },
     { name: 'For Sale', route: '/on-sale' },
-    { name: 'Admin', route: '/admin' },
+    { name: 'Admin', route: '/admin/fileUpload' },
     { name: 'All', route: '/all' },
     { name: 'Latest', route: '/latest' },
     { name: 'Hot', route: '/hot' },

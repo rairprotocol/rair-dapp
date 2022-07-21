@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Accordion,
   AccordionItem,
@@ -15,7 +15,7 @@ import SelectBox from '../../SelectBox/SelectBox';
 import OfferItem from '../OfferItem';
 
 const NftDataPage = ({ primaryColor, textColor }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const params = useParams();
   const { adminToken, contract, product, token, offer } = params;
 
@@ -56,9 +56,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
   };
 
   const handleClickToken = () => {
-    history.push(
-      `/${adminToken}/${contract}/${product}/${offer}/${selectedToken}`
-    );
+    navigate(`/${adminToken}/${contract}/${product}/${offer}/${selectedToken}`);
   };
 
   function randomInteger(min, max) {

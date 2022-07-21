@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IVideoItem, TParticularProduct } from './video.types';
 import { SvgKey } from '../MockUpPage/NftList/SvgKey';
 import { SvgLock } from '../MockUpPage/NftList/SvgLock';
@@ -12,6 +12,7 @@ import { useStateIfMounted } from 'use-state-if-mounted';
 // import { TChainItemData } from '../../utils/utils.types';
 
 const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
+  const navigate = useNavigate();
   const [data, setData] = useStateIfMounted<TParticularProduct | null>(null);
   const [dataUser, setDataUser] = useStateIfMounted<UserType | null>(null);
 
@@ -65,7 +66,6 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
     getInfoUser();
   }, [getInfoUser]);
 
-  const history = useHistory();
   const [hovering, setHovering] = useState(false);
   return (
     <button
@@ -81,7 +81,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
         marginRight: '24px'
       }}
       onClick={() => {
-        history.push(
+        navigate(
           `/watch/${mediaList[item]._id}/${mediaList[item].mainManifest}`
         );
       }}

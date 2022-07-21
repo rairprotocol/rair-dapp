@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { utils } from 'ethers';
 import Swal from 'sweetalert2';
@@ -53,7 +53,7 @@ const NftDataPageMain = ({
   ownerInfo,
   getAllProduct
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { minterInstance } = useSelector((state) => state.contractStore);
   const [playing, setPlaying] = useState(false);
@@ -774,7 +774,7 @@ const NftDataPageMain = ({
                 {productsFromOffer && productsFromOffer.length !== 0 ? (
                   <CustomButton
                     onClick={() =>
-                      history.push(
+                      navigate(
                         `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
                       )
                     }

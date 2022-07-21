@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import FixedBottomNavigation from '../FixedBottomNavigation';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
@@ -12,7 +12,6 @@ import DiamondOfferRow from './diamondOfferRow';
 const ListOffers = ({
   contractData,
   setStepNumber,
-  // steps,
   simpleMode,
   stepNumber,
   switchBlockchain,
@@ -73,7 +72,7 @@ const ListOffers = ({
     aux.splice(index, 1);
     setOfferList(aux);
   };
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const createOffers = async () => {
     Swal.fire({
@@ -186,7 +185,7 @@ const ListOffers = ({
           {chainData && (
             <FixedBottomNavigation
               backwardFunction={() => {
-                history.goBack();
+                navigate(-1);
               }}
               forwardFunctions={[
                 {

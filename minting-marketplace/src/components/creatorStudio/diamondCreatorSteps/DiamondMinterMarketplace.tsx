@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { metamaskCall } from '../../../utils/metamaskUtils';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
@@ -12,7 +12,6 @@ import MarketplaceOfferConfig from './MarketplaceOfferConfig';
 const DiamondMinterMarketplace = ({
   contractData,
   setStepNumber,
-  // steps,
   simpleMode,
   stepNumber,
   gotoNextStep,
@@ -21,7 +20,7 @@ const DiamondMinterMarketplace = ({
   const { diamondMarketplaceInstance } = useSelector(
     (store) => store.contractStore
   );
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [offerData, setOfferData] = useState([]);
   const [nodeFee, setNodeFee] = useState(0);
@@ -159,7 +158,7 @@ const DiamondMinterMarketplace = ({
       {chainData && treasuryAddress && (
         <FixedBottomNavigation
           backwardFunction={() => {
-            history.goBack();
+            navigate(-1);
           }}
           forwardFunctions={[
             {

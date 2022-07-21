@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { rFetch } from '../../utils/rFetch';
-import { useParams, useHistory, NavLink } from 'react-router-dom';
+import { useParams, useNavigate, NavLink } from 'react-router-dom';
 import { diamondFactoryAbi } from '../../contracts';
 
 import FixedBottomNavigation from './FixedBottomNavigation';
@@ -29,13 +29,13 @@ const ListCollections = () => {
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
-  const { address, blockchain }: TParamsContractDetails = useParams();
+  const { address, blockchain } = useParams<TParamsContractDetails>();
 
   const [data, setData] = useState<
     TContractsNetworkContract | TSetDataUseState
   >();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const getContractData = useCallback(async () => {
     if (!address) {
@@ -135,7 +135,7 @@ const ListCollections = () => {
       )}
       <FixedBottomNavigation
         backwardFunction={() => {
-          history.goBack();
+          navigate(-1);
         }}
       />
     </div>

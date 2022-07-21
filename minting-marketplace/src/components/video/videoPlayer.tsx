@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
@@ -16,7 +16,7 @@ import {
 
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
     (state) => state.contractStore
@@ -28,7 +28,7 @@ const VideoPlayer = () => {
   );
 
   const btnGoBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   const requestChallenge = useCallback(async () => {

@@ -14,7 +14,6 @@ import axios from 'axios';
 import {
   IBatchMetadataParser,
   TBatchMetadataType,
-  TNftMapping,
   TParamsBatchMetadata
 } from '../creatorStudio.types';
 import { RootState } from '../../../ducks';
@@ -29,7 +28,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   goBack,
   simpleMode
 }) => {
-  const { address, collectionIndex }: TParamsBatchMetadata = useParams();
+  const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
+
   const [csvFile, setCSVFile] = useState<File>();
   const [metadata, setMetadata] = useState<TBatchMetadataType[]>([
     {
@@ -69,32 +69,7 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
         (item) => !['Name', 'NFTID', 'Description', 'Image'].includes(item)
       )
     );
-  }, [metadata, setHeaders]);
-
-  useEffect(() => {
-    if (!metadata) {
-      setButtons([
-        {
-          label: 'Continue',
-          action: gotoNextStep
-        }
-      ]);
-      return;
-    } else {
-      setButtons([
-        {
-          label: changeFile ? 'Send' : 'There is already a csv file uploaded',
-          action: changeFile ? () => sendMetadata(metadataExists) : null,
-          disabled: changeFile ? false : true
-        },
-        {
-          label: 'Continue',
-          action: gotoNextStep
-        }
-      ]);
-      return;
-    }
-  }, [metadata]);
+  }, [metadata, setHeaders, gotoNextStep]);
 
   const fetchData = useCallback(async () => {
     const { success, result } = await rFetch(
@@ -134,6 +109,69 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   }, [address, collectionIndex, contractData.blockchain]);
 
   useEffect(() => {
+    const sendMetadata = async (updateMeta: boolean) => {
+      const formData = new FormData();
+      if (!collectionIndex) {
+        return;
+      }
+      formData.append('product', collectionIndex);
+      formData.append('contract', contractData._id);
+      formData.append('updateMeta', String(updateMeta));
+      formData.append('csv', csvFile as Blob, 'metadata.csv');
+      const response = await rFetch('/api/nft', {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow'
+      });
+      if (response?.success) {
+        Swal.fire(
+          'Success',
+          `${updateMeta ? 'Updated' : 'Generated'} ${
+            response.result.length
+          } metadata entries!`,
+          'success'
+        );
+        setChangeFile(false);
+        fetchData();
+      } else {
+        Swal.fire('Error', response?.message, 'error');
+      }
+    };
+
+    if (!metadata) {
+      setButtons([
+        {
+          label: 'Continue',
+          action: gotoNextStep
+        }
+      ]);
+      return;
+    } else {
+      setButtons([
+        {
+          label: changeFile ? 'Send' : 'There is already a csv file uploaded',
+          action: changeFile ? () => sendMetadata(metadataExists) : null,
+          disabled: changeFile ? false : true
+        },
+        {
+          label: 'Continue',
+          action: gotoNextStep
+        }
+      ]);
+      return;
+    }
+  }, [
+    metadata,
+    changeFile,
+    gotoNextStep,
+    metadataExists,
+    collectionIndex,
+    contractData,
+    csvFile,
+    fetchData
+  ]);
+
+  useEffect(() => {
     fetchData();
   }, [fetchData]);
 
@@ -144,32 +182,6 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   useEffect(() => {
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
-
-  const sendMetadata = async (updateMeta: boolean) => {
-    const formData = new FormData();
-    formData.append('product', collectionIndex);
-    formData.append('contract', contractData._id);
-    formData.append('updateMeta', String(updateMeta));
-    formData.append('csv', csvFile as Blob, 'metadata.csv');
-    const response = await rFetch('/api/nft', {
-      method: 'POST',
-      body: formData,
-      redirect: 'follow'
-    });
-    if (response?.success) {
-      Swal.fire(
-        'Success',
-        `${updateMeta ? 'Updated' : 'Generated'} ${
-          response.result.length
-        } metadata entries!`,
-        'success'
-      );
-      setChangeFile(false);
-      fetchData();
-    } else {
-      Swal.fire('Error', response?.message, 'error');
-    }
-  };
 
   const downloadTemplateCSV = () => {
     axios
@@ -372,13 +384,15 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
             </>
           ) : (
             <>
-              <BlockchainURIManager
-                {...{
-                  contractData,
-                  address,
-                  collectionIndex
-                }}
-              />
+              {collectionIndex && address && (
+                <BlockchainURIManager
+                  {...{
+                    contractData,
+                    address,
+                    collectionIndex
+                  }}
+                />
+              )}
             </>
           )}
         </>

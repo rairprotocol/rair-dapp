@@ -29,17 +29,23 @@ const NavigatorContract: React.FC<INavigatorContract> = ({
         <div className="row">
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={`btn-stimorol`}
-              to={`/creator/contract/${contractBlockchain}/${contractAddress}/createCollection`}
-              className={`btn btn-${primaryColor} w-100 rounded-rair`}>
+              className={({ isActive }) => {
+                return `btn btn-${
+                  isActive ? 'stimorol' : primaryColor
+                } w-100 rounded-rair`;
+              }}
+              to={`/creator/contract/${contractBlockchain}/${contractAddress}/createCollection`}>
               Create New Collection
             </NavLink>
           </div>
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={`btn-stimorol`}
-              to={`/creator/contract/${contractBlockchain}/${contractAddress}/listCollections`}
-              className={`btn btn-${primaryColor} w-100 rounded-rair`}>
+              className={({ isActive }) => {
+                return `btn btn-${
+                  isActive ? 'stimorol' : primaryColor
+                } w-100 rounded-rair`;
+              }}
+              to={`/creator/contract/${contractBlockchain}/${contractAddress}/listCollections`}>
               Existing Collections
             </NavLink>
           </div>

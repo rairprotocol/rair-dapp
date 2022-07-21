@@ -7,28 +7,31 @@ import Stack from '@mui/material/Stack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import HomeIcon from '@mui/icons-material/Home';
 import { NavLink } from 'react-router-dom';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const BreadcrumbsComponent = () => {
   const params = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   function handleClick(event) {
     event.preventDefault();
-    history.push(
+    navigate(
       `/collection/${params.blockchain}/${params.contract}/${params.product}/0`
     );
     console.info('You clicked a breadcrumb.');
   }
   function goToSingleView(event) {
     event.preventDefault();
-    history.goBack();
+    navigate(-1);
   }
   let breadcrumbs = [];
 
-  switch (params.tokens) {
+  const { pathname } = useLocation();
+  const mode = pathname?.split('/')?.at(1);
+
+  switch (mode) {
     case 'collection':
       breadcrumbs = [
         <NavLink key="1" to="/">

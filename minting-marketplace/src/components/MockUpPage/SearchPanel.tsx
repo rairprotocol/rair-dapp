@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-// import { useHistory } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { NftList } from './NftList/NftList';
 import InputField from '../common/InputField';
 import VideoList from '../video/videoList';

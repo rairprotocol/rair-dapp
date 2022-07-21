@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";
 
 const NftListUnlockablesVideos = ({
@@ -12,7 +12,7 @@ const NftListUnlockablesVideos = ({
   primaryColor
   // selectedToken,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const partOfVideo = productsFromOffer?.length
     ? productsFromOffer.slice(0, 2)
@@ -33,9 +33,7 @@ const NftListUnlockablesVideos = ({
               }}>
               <div
                 className="nft-unlockable-videoItem"
-                onClick={() =>
-                  history.push(`/watch/${v._id}/${v.mainManifest}`)
-                }
+                onClick={() => navigate(`/watch/${v._id}/${v.mainManifest}`)}
                 style={{
                   backgroundColor: `${
                     primaryColor === 'rhyno'
@@ -117,7 +115,7 @@ const NftListUnlockablesVideos = ({
             className="nft-unlockable-videoItem"
             onClick={
               () => console.info('Cooming soon')
-              // history.push(
+              // navigate(
               //   `/watch/${productsFromOffer._id}/${productsFromOffer.mainManifest}`
               // )
             }

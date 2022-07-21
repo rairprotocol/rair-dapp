@@ -18,6 +18,7 @@ import {
 import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 import { ethers } from 'ethers';
 import { TTokenData } from '../../axios.responseTypes';
+import BlockChainSwitcher from './BlockchainSwitcher';
 
 const TransferTokens = () => {
   const { currentChain, currentUserAddress, contractCreator } = useSelector<
@@ -182,6 +183,7 @@ const TransferTokens = () => {
 
   return (
     <div className="col-12 row">
+      <BlockChainSwitcher />
       <button
         onClick={() => {
           setManualAddress(false);

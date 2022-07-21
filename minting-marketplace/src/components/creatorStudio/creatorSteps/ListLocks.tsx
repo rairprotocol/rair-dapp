@@ -174,7 +174,7 @@ const ListLocks: React.FC<TListLocks> = ({
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
-  const { address }: TParamsListLocks = useParams();
+  const { address } = useParams<TParamsListLocks>();
   const locker = async (data: TListLocksArrayItem) => {
     Swal.fire({
       title: `Locking ${Number(data.ends) - Number(data.starts)} tokens from ${

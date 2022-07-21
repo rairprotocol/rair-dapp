@@ -5,7 +5,7 @@ import InputField from '../common/InputField';
 import { rFetch } from '../../utils/rFetch';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { erc721Abi, diamondFactoryAbi } from '../../contracts';
 import FixedBottomNavigation from './FixedBottomNavigation';
 import NavigatorContract from './NavigatorContract';
@@ -35,11 +35,11 @@ const ContractDetails = () => {
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
-  const { address, blockchain }: TParamsContractDetails = useParams();
+  const { address, blockchain } = useParams<TParamsContractDetails>();
 
   const [data, setData] = useState<TContractsNetworkContract | TSetData>();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const getContractData = useCallback(async () => {
     if (!address) {
@@ -149,7 +149,7 @@ const ContractDetails = () => {
       )}
       <FixedBottomNavigation
         backwardFunction={() => {
-          history.goBack();
+          navigate(-1);
         }}
         forwardFunctions={[
           {

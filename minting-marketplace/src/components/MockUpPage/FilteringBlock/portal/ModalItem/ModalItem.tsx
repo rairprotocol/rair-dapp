@@ -31,6 +31,10 @@ const ModalItem = ({
     currentChain === selectedData.blockchain
   );
 
+  useEffect(() => {
+    setOnMyChain(currentChain === selectedData.blockchain);
+  }, [currentChain, selectedData]);
+
   const onCloseModal = useCallback(() => {
     setIsOpenBlockchain(false);
     setPrice(0);
@@ -103,7 +107,13 @@ const ModalItem = ({
         ));
       setIsApproved(approved);
     }
-  }, [onMyChain, instance]);
+  }, [
+    onMyChain,
+    instance,
+    selectedData.uniqueIndexInContract,
+    resaleInstance.address,
+    currentUserAddress
+  ]);
 
   useEffect(() => {
     checkStatusContract();

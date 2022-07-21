@@ -1,12 +1,12 @@
 //@ts-nocheck
 import React, { useCallback, useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import cl from './NftDifferentRarity.module.css';
 import CustomButton from '../../../../utils/button/CustomButton';
 
 const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const params = useParams();
   const [allTokenData, setAllTokenData] = useState([]);
   const [isOpenPart, setIsOpenPart] = useState(false);
@@ -41,14 +41,14 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
           (e) => e.offer === '0'
         );
         setTokenDataFiltered(firstTokenFromUnlockUltra);
-        history.push(
+        navigate(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${firstTokenFromUnlockUltra[0].token}`
         );
         break;
       case 'Ultra Rair':
         const firstTokenFromUltra = allTokenData.filter((e) => e.offer === '0');
         setTokenDataFiltered(firstTokenFromUltra);
-        history.push(
+        navigate(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${firstTokenFromUltra[0].token}`
         );
         break;
@@ -57,7 +57,7 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
           (e) => e.offer === '1'
         );
         setTokenDataFiltered(secondTokenFromUnlockUltra);
-        history.push(
+        navigate(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${secondTokenFromUnlockUltra[0].token}`
         );
         break;
@@ -66,14 +66,14 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
           (e) => e.offer === '1'
         );
         setTokenDataFiltered(secondTokenFromUltra);
-        history.push(
+        navigate(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${secondTokenFromUltra[0].token}`
         );
         break;
       default:
         const thirdTokenFromUltra = allTokenData.filter((e) => e.offer === '2');
         setTokenDataFiltered(thirdTokenFromUltra);
-        history.push(
+        navigate(
           `/collection/${params.blockchain}/${params.contract}/${params.product}/${thirdTokenFromUltra[0].token}`
         );
     }

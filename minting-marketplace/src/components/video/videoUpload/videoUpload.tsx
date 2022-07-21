@@ -12,7 +12,7 @@ import {
   // TAuthGetChallengeResponse,
   TUploadSocket
 } from '../../../axios.responseTypes';
-// import { useSelector } from 'react-redux';
+import BlockChainSwitcher from '../../adminViews/BlockchainSwitcher';
 const UPLOAD_PROGRESS_HOST = process.env.REACT_APP_UPLOAD_PROGRESS_HOST;
 
 //TODO: alternative env
@@ -275,6 +275,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
 
   return (
     <>
+      <BlockChainSwitcher />
       <h1> Add Media </h1>
       <div
         style={{

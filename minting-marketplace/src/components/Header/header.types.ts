@@ -1,4 +1,3 @@
-import { History, LocationState } from 'history';
 import { TSearchDataObject } from '../../ducks/search/search.types';
 import { ContractType } from '../adminViews/adminView.types';
 
@@ -10,7 +9,6 @@ export interface IMainHeader {
   connectUserData: () => void;
   setLoginDone: (value: boolean) => void;
   userData: TSearchDataObject;
-  sentryHistory: History<LocationState>;
   creatorViewsDisabled: boolean;
   selectedChain: string | null;
   showAlert: boolean;

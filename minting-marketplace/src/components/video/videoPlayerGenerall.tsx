@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-// import { useParams, useHistory } from "react-router-dom";
+// import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import videojs from 'video.js';
 import Swal from 'sweetalert2';

@@ -46,7 +46,7 @@ const ListOffers: React.FC<IListOffers> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const { address, collectionIndex }: TParamsListOffers = useParams();
+  const { address, collectionIndex } = useParams<TParamsListOffers>();
   useEffect(() => {
     setOfferList(
       contractData?.product?.offers

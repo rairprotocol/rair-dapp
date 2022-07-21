@@ -26,17 +26,23 @@ const NavigatorFactory: React.FC<INavigatorFactory> = ({ children }) => {
         <div className="row">
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={`btn-stimorol`}
-              to="/creator/deploy"
-              className={`btn btn-${primaryColor} w-100 rounded-rair`}>
+              className={({ isActive }) => {
+                return `btn btn-${
+                  isActive ? 'stimorol' : primaryColor
+                } w-100 rounded-rair`;
+              }}
+              to="/creator/deploy">
               Deploy
             </NavLink>
           </div>
           <div className="col-6 p-2">
             <NavLink
-              activeClassName={`btn-stimorol`}
-              to="/creator/contracts"
-              className={`btn btn-${primaryColor} w-100 rounded-rair`}>
+              className={({ isActive }) => {
+                return `btn btn-${
+                  isActive ? 'stimorol' : primaryColor
+                } w-100 rounded-rair`;
+              }}
+              to="/creator/contracts">
               My Contracts
             </NavLink>
           </div>

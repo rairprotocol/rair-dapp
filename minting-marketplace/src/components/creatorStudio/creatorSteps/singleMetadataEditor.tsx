@@ -3,7 +3,7 @@ import InputField from '../../common/InputField';
 import BinanceDiamond from '../../../images/binance-diamond.svg';
 import PropertyRow from './propertyRow';
 import { useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import FixedBottomNavigation from '../FixedBottomNavigation';
 import { web3Switch } from '../../../utils/switchBlockchain';
@@ -55,9 +55,9 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const { address, collectionIndex }: TParamsBatchMetadata = useParams();
+  const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const networkId = contractData?.blockchain;
   const contractAddress = contractData?.contractAddress;
@@ -65,6 +65,9 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   const [metadataURI, setMetadataURI] = useState<string>('');
 
   const getNFTData = useCallback(async () => {
+    if (!address) {
+      return;
+    }
     const { success, result } = await rFetch(
       `/api/nft/network/${
         contractData?.blockchain
@@ -377,7 +380,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
       {chainData && (
         <FixedBottomNavigation
           backwardFunction={() => {
-            history.goBack();
+            navigate(-1);
           }}
           forwardFunctions={[
             {

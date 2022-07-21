@@ -113,7 +113,7 @@ const MobileListMenu = ({
           },
           {
             name: <i className="fa fa-user-secret" aria-hidden="true" />,
-            route: '/admin',
+            route: '/admin/fileUpload',
             disabled: !loginDone
           },
           {
@@ -144,8 +144,9 @@ const MobileListMenu = ({
                 onClick={toggleMenu}
                 key={index}>
                 <NavLink
-                  activeClassName={`active-${primaryColor}`}
-                  className="py-3"
+                  className={({ isActive }) => {
+                    return `py-3 ${isActive ? `active-${primaryColor}` : ''}`;
+                  }}
                   to={item.route}
                   style={{ textDecoration: 'none' }}>
                   {item.name}

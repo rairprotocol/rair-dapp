@@ -5,6 +5,7 @@ export interface IAboutPageNew {
   headerLogoBlack?: string;
   headerLogoWhite?: string;
   connectUserData: () => void;
+  seoInformation: Object;
 }
 
 export interface IMainBlock {

@@ -154,7 +154,7 @@ const BlockChainSwitcher = () => {
   };
 
   return (
-    <>
+    <div className="col-12">
       {!window.ethereum && (
         <div className="row w-100 px-0 mx-0">
           <div className="col-12 px-5">
@@ -208,7 +208,8 @@ const BlockChainSwitcher = () => {
             </button>
           );
         })}
-    </>
+      <hr />
+    </div>
   );
 };
 

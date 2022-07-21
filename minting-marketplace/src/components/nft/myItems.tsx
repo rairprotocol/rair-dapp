@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { rFetch } from '../../utils/rFetch';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import setDocumentTitle from '../../utils/setTitle';
-import MyDiamondItems from './myDiamondItems';
 import InputField from '../common/InputField';
 import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
 import ModalItem from '../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem';
@@ -26,7 +25,7 @@ const MyItems: React.FC<IMyItems> = () => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (state) => state.colorStore
   );
-  const history = useHistory();
+  const navigate = useNavigate();
   const [tokens, setTokens] = useState<TDiamondTokensType[]>([]);
   const [selectedData, setSelectedData] = useState<
     TDiamondTokensType | TMyDiamondItemsToken
@@ -97,9 +96,7 @@ const MyItems: React.FC<IMyItems> = () => {
   return (
     <div className="my-items-wrapper">
       <div className="my-items-header-wrapper">
-        <div
-          onClick={() => history.goBack()}
-          className="my-items-title-wrapper">
+        <div onClick={() => navigate(-1)} className="my-items-title-wrapper">
           <i className="fas fa-arrow-left fa-arrow-custom"></i>
           <h1 className="my-items-title">My Items</h1>
         </div>

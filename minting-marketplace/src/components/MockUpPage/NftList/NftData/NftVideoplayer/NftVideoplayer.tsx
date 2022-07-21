@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
-// import { useParams, useHistory } from "react-router-dom";
+// import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
@@ -14,7 +14,7 @@ import {
 const NftVideoplayer = ({ selectVideo, main }) => {
   // console.log(selectVideo, 'selectVideo');
   // const params = useParams();
-  // const history = useHistory();
+  // const navigate = useNavigate();
   const mainManifest = 'stream.m3u8';
 
   const { programmaticProvider } = useSelector((state) => state.contractStore);
@@ -25,7 +25,7 @@ const NftVideoplayer = ({ selectVideo, main }) => {
   );
 
   // const btnGoBack = () => {
-  // 	history.goBack();
+  // 	navigate(-1);
   // }
 
   const requestChallenge = useCallback(async () => {

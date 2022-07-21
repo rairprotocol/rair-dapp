@@ -4,7 +4,6 @@ import './AboutPageNew.css';
 // import images
 import RairLogo from '../assets/rairLogo_blue.png';
 import Metamask from '../assets/metamask_logo.png';
-import FaviconRair from '../assets/rair_favicon.ico';
 
 //import utils
 import setDocumentTitle from './../../../utils/setTitle';
@@ -20,7 +19,7 @@ import StreamsAbout from './StreamsAbout/StreamsAbout';
 import RoadMap from './RoadMapAbout/RoadMapAbout';
 import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
-import { useLocation /*useHistory*/ } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import PurchaseTokenButton from '../../common/PurchaseToken';
@@ -29,24 +28,17 @@ import { IAboutPageNew } from './aboutPage.types';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
-const AboutPageNew: React.FC<IAboutPageNew> = ({ connectUserData }) => {
+const AboutPageNew: React.FC<IAboutPageNew> = ({
+  connectUserData,
+  seoInformation
+}) => {
   const { pathname } = useLocation();
-  // const history = useHistory();
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
   const termsText =
     'I understand this a test NFT designed to unlock RAIR streams';
-
-  const seoInformation = {
-    title: 'RAIR Technologies',
-    contentName: 'author',
-    content: '#Cryptogreyman',
-    description: 'Encrypted, Streaming NFTs',
-    favicon: FaviconRair,
-    faviconMobile: FaviconRair
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);

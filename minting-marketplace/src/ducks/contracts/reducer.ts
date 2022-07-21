@@ -128,11 +128,12 @@ export default function userStore(
               }
             }
           );
-          provider.on('network', (newNetwork, oldNetwork) => {
-            // When a Provider makes its initial connection, it emits a "network"
-            // event with a null oldNetwork along with the newNetwork. So, if the
-            // oldNetwork exists, it represents a changing network
-            /*
+          //Eslint blocked the console.logs
+          //provider.on('network', (newNetwork, oldNetwork) => {
+          // When a Provider makes its initial connection, it emits a "network"
+          // event with a null oldNetwork along with the newNetwork. So, if the
+          // oldNetwork exists, it represents a changing network
+          /*
 							Example of a network object:
 							{
 							    "name": "goerli",
@@ -140,15 +141,14 @@ export default function userStore(
 							    "ensAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
 							}
 						*/
-            //Eslint bloked the console.logs
-            // if (oldNetwork) {
-            //   console.log(
-            //     `Detected a network change, from ${oldNetwork.name} to ${newNetwork.name}`
-            //   );
-            // } else {
-            //   console.log(`Connected to ${newNetwork.name}`);
-            //}
-          });
+          // if (oldNetwork) {
+          //   console.log(
+          //     `Detected a network change, from ${oldNetwork.name} to ${newNetwork.name}`
+          //   );
+          // } else {
+          //   console.log(`Connected to ${newNetwork.name}`);
+          //}
+          //});
           signer = provider.getSigner(0);
         } else if (state.programmaticProvider) {
           signer = state.programmaticProvider;

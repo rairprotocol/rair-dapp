@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import Skeleton from '@mui/material/Skeleton';
 import CollectionInfo from './CollectionInfo/CollectionInfo';
 import setDocumentTitle from '../../../../utils/setTitle';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import TitleCollection from './TitleCollection/TitleCollection';
 import CircularProgress from '@mui/material/CircularProgress';
 import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
@@ -46,7 +46,7 @@ const NftCollectionPageComponent = ({
   offerAllData,
   collectionName
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [show, setShow] = useState(true);
 
@@ -65,7 +65,7 @@ const NftCollectionPageComponent = ({
   }, []);
 
   const goBack = () => {
-    history.push('/');
+    navigate('/');
   };
 
   const defaultImg =

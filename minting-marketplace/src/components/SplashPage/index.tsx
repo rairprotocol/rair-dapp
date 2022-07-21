@@ -42,7 +42,7 @@ import Modal from 'react-modal';
 import RoadMap from './Roadmap/RoadMap';
 import NipseyRelease from './NipseyRelease/NipseyRelease';
 import { Countdown } from './Timer/CountDown';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { setRealChain } from '../../ducks/contracts/actions';
 import axios from 'axios';
 import { TProductResponseType } from '../../axios.responseTypes';
@@ -76,7 +76,7 @@ const SplashPage = () => {
   const [copies, setCopies] = useState();
   const [timerLeft, setTimerLeft] = useState();
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const switchEthereumChain = async (chainData) => {
     try {
@@ -380,7 +380,7 @@ const SplashPage = () => {
             </div>
 
             <Countdown />
-            {/* <button onClick={() => history.push('/coming-soon')}>
+            {/* <button onClick={() => navigate('/coming-soon')}>
                 <img
                   className="metamask-logo"
                   src={Metamask}
@@ -470,7 +470,7 @@ const SplashPage = () => {
                   community of like minded fans, artists, and industry veterans.
                 </div>
                 <div className="minted-btn">
-                  <button onClick={() => history.push('/coming-soon')}>
+                  <button onClick={() => navigate('/coming-soon')}>
                     WELCOME TO THE NIPSEYVERSE
                   </button>
                 </div>
@@ -505,7 +505,7 @@ const SplashPage = () => {
                   </div>
                   <div className="btn-claim">
                     <button
-                      onClick={() => history.push('/coming-soon')}
+                      onClick={() => navigate('/coming-soon')}
                       style={{
                         color: `${
                           primaryColor === 'rhyno' ? '#5D5FEF' : '#A5A6F6'
@@ -544,7 +544,7 @@ const SplashPage = () => {
                   </div>
                   <div className="btn-claim">
                     <button
-                      onClick={() => history.push('/coming-soon')}
+                      onClick={() => navigate('/coming-soon')}
                       style={{
                         color: `${
                           primaryColor === 'rhyno' ? '#5D5FEF' : '#A5A6F6'

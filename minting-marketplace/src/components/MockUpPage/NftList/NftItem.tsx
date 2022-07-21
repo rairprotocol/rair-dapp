@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { SvgKey } from './SvgKey';
 import { TNftItemResponse, TUserResponse } from '../../../axios.responseTypes';
 import { useStateIfMounted } from 'use-state-if-mounted';
@@ -20,7 +20,7 @@ const NftItemComponent = ({
   collectionName,
   ownerCollectionUser
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [metaDataProducts, setMetaDataProducts] = useStateIfMounted();
   const [accountData, setAccountData] = useStateIfMounted(null);
   const [playing, setPlaying] = useState(false);
@@ -74,7 +74,7 @@ const NftItemComponent = ({
   }
 
   const redirection = () => {
-    history.push(
+    navigate(
       `/collection/${blockchain}/${contractName}/${collectionIndexInContract}/0`
     );
   };

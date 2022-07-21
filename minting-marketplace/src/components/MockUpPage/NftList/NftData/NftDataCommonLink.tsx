@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { memo, useState, useEffect, useCallback } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { NftCollectionPage } from './NftCollectionPage';
 import NftDataPageMain from './NftDataPageMain';
 import NftUnlockablesPage from './NftUnlockablesPage';
@@ -39,8 +39,10 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   const { currentUserAddress } = useSelector((store) => store.contractStore);
   const { primaryColor, textColor } = useSelector((store) => store.colorStore);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const params = useParams();
+  const { pathname } = useLocation();
+  const mode = pathname?.split('/')?.at(1);
 
   const { contract, product, tokenId, blockchain } = params;
 
@@ -217,7 +219,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   );
 
   const handleClickToken = async (tokenId) => {
-    history.push(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
+    navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
 
     if (tokenData.length >= Number(tokenId)) {
       setSelectedData(tokenData[tokenId].metadata);
@@ -240,7 +242,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   //   }
   //   getBlockchains();
 
-  if (params.tokens === 'collection') {
+  if (mode === 'collection') {
     return (
       <NftCollectionPage
         userData={userData}
@@ -273,7 +275,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         collectionName={collectionName}
       />
     );
-  } else if (params.tokens === 'unlockables') {
+  } else if (mode === 'unlockables') {
     return (
       <NftUnlockablesPage
         userData={userData}
@@ -296,7 +298,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         setTokenDataFiltered={setTokenDataFiltered}
       />
     );
-  } else {
+  } else if (mode === 'tokens') {
     return (
       <NftDataPageMain
         userData={userData}
@@ -323,13 +325,15 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         offerDataInfo={offerDataInfo}
       />
     );
+  } else {
+    return <></>;
   }
 };
 
 export const NftDataCommonLink = memo(NftDataCommonLinkComponent);
 
 // import React, { useState, useEffect, useCallback } from "react";
-// import { useParams, useHistory } from "react-router-dom";
+// import { useParams, useNavigate } from "react-router-dom";
 // import { NftCollectionPage } from "./NftCollectionPage";
 // import NftDataPageTest from "./NftDataPageTest";
 
@@ -346,7 +350,7 @@ export const NftDataCommonLink = memo(NftDataCommonLinkComponent);
 //   const [totalCount, setTotalCount] = useState();
 
 //   // eslint-disable-next-line no-unused-vars
-//   const history = useHistory();
+//   const navigate = useNavigate();
 //   const params = useParams();
 
 //   const {  contract, product, tokenId, blockchain } = params;
@@ -460,7 +464,7 @@ export const NftDataCommonLink = memo(NftDataCommonLinkComponent);
 //   }
 
 //   const handleClickToken = async (tokenId) => {
-//     history.push(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
+//     navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
 
 //     if (tokenData.length >= Number(tokenId)) {
 //       setSelectedData(tokenData[tokenId].metadata);

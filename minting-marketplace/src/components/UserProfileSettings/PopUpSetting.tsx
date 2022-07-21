@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
 import defaultPictures from './images/defaultUserPictures.png';
 // import UploadProfilePicture from './UploadProfilePicture/UploadProfilePicture';
@@ -27,7 +27,7 @@ const PopUpSettings = ({
   selectedChain
 }) => {
   const settingBlockRef = useRef();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [next, setNext] = useState(false);
   const [, /*openModal*/ setOpenModal] = useState(false);
@@ -80,15 +80,15 @@ const PopUpSettings = ({
     dispatch(setAdminRights(false));
     localStorage.removeItem('token');
     setLoginDone(false);
-    history.push('/');
+    navigate('/');
   };
 
   const pushToMyItems = () => {
-    history.push('/my-items');
+    navigate('/my-items');
   };
 
   const pushToFactory = () => {
-    history.push('/creator/deploy');
+    navigate('/creator/deploy');
   };
 
   const handlePopUp = () => {

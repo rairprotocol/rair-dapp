@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { withSentryRouting } from '@sentry/react';
+import { withSentryReactRouterV6Routing } from '@sentry/react';
 import { rFetch } from '../../utils/rFetch';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { useSelector } from 'react-redux';
 import {
   useParams,
-  Router,
-  Switch,
+  Routes,
   Route,
-  useHistory,
+  useNavigate,
   NavLink
 } from 'react-router-dom';
 import WorkflowContext from '../../contexts/CreatorWorkflowContext';
@@ -29,7 +28,6 @@ import ResaleMarketplace from './creatorSteps/ResaleMarketplace';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import {
-  IWorkflowSteps,
   TContractData,
   TSteps,
   TWorkflowContextType,
@@ -38,10 +36,10 @@ import {
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 import { ethers } from 'ethers';
 
-const SentryRoute = withSentryRouting(Route);
+const SentryRoutes = withSentryReactRouterV6Routing(Routes);
 
-const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
-  const { address, collectionIndex, blockchain }: TWorkflowParams = useParams();
+const WorkflowSteps: React.FC = () => {
+  const { address, collectionIndex, blockchain } = useParams<TWorkflowParams>();
 
   const {
     minterInstance,
@@ -78,7 +76,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
 
   const [steps, setSteps] = useState<TSteps[]>([]);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!contractData) {
@@ -86,7 +84,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
     }
     let filteredSteps: TSteps[] = [
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/offers',
+        path: 'offers',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/offers`,
         component: contractData.diamond ? ListOffersDiamond : ListOffers,
         simple: true,
@@ -96,7 +94,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
         hasAdvancedFeatures: true
       },
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/locks',
+        path: 'locks',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/locks`,
         component: ListLocks,
         simple: false,
@@ -106,7 +104,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
         hasAdvancedFeatures: true
       },
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/customizeFees',
+        path: 'customizeFees',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/customizeFees`,
         component: CustomizeFees,
         simple: false,
@@ -116,7 +114,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
         hasAdvancedFeatures: true
       },
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/minterMarketplace',
+        path: 'minterMarketplace',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/minterMarketplace`,
         component: DiamondMinterMarketplace,
         simple: true,
@@ -126,7 +124,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
         hasAdvancedFeatures: true
       },
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/resaleMarketplace',
+        path: 'resaleMarketplace',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/resaleMarketplace`,
         component: ResaleMarketplace,
         simple: false,
@@ -136,7 +134,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
         hasAdvancedFeatures: true
       },
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/batch',
+        path: 'metadata/batch',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/batch`,
         component: BatchMetadata,
         simple: true,
@@ -146,7 +144,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
         hasAdvancedFeatures: true
       },
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/metadata/single',
+        path: 'metadata/single',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/metadata/single`,
         component: SingleMetadataEditor,
         simple: true,
@@ -156,7 +154,7 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
         hasAdvancedFeatures: true
       },
       {
-        path: '/creator/contract/:blockchain/:address/collection/:collectionIndex/media',
+        path: 'media',
         populatedPath: `/creator/contract/${blockchain}/${address}/collection/${collectionIndex}/media`,
         component: MediaUpload,
         simple: true,
@@ -346,18 +344,18 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
 
   const goBack = useCallback(() => {
     if (currentStep === 0) {
-      history.goBack();
+      navigate(-1);
       return;
     }
-    history.push(steps[currentStep - 1].populatedPath);
-  }, [steps, currentStep, history]);
+    navigate(steps[currentStep - 1].populatedPath);
+  }, [steps, currentStep, navigate]);
 
   const initialValue: TWorkflowContextType = {
     contractData,
     steps,
     setStepNumber: setCurrentStep,
     gotoNextStep: () => {
-      history.push(steps[currentStep + 1].populatedPath);
+      navigate(steps[currentStep + 1].populatedPath);
     },
     switchBlockchain: async () => {
       if (chainData === undefined || contractData === undefined) return;
@@ -377,122 +375,124 @@ const WorkflowSteps: React.FC<IWorkflowSteps> = ({ sentryHistory }) => {
   };
 
   return (
-    <WorkflowContext.Provider value={initialValue}>
-      <WorkflowContext.Consumer>
-        {() => {
-          return (
-            <div className="row px-0 mx-0">
-              <div className="col-12 my-5" style={{ position: 'relative' }}>
-                {steps.length > 0 && currentStep !== 0 && (
-                  <div
-                    style={{ position: 'absolute', left: 0 }}
-                    className="border-stimorol btn rounded-rair p-0">
-                    <button
-                      onClick={goBack}
-                      style={{ border: 'none' }}
-                      className={`btn rounded-rair w-100 btn-${primaryColor}`}>
-                      <i className="fas fa-arrow-left" /> Back
-                    </button>
-                  </div>
-                )}
-                {contractData && contractData.diamond && (
-                  <div className="w-100 text-center h1">
-                    <i className="fas fa-gem" />
-                  </div>
-                )}
-                <h4>{contractData?.title}</h4>
-                <small>{contractData?.product?.name}</small>
-                <div className="w-75 mx-auto px-auto text-center mb-5">
-                  {steps.map((item, index) => {
-                    return (
-                      <NavLink
-                        to={item.populatedPath}
-                        key={index}
-                        className="d-inline-block"
-                        style={{
-                          width: `${
-                            (100 / steps.length) * (index === 0 ? 0.09 : 1)
-                          }%`,
-                          height: '3px',
-                          position: 'relative',
-                          textAlign: 'right',
-                          backgroundColor: `var(--${
-                            currentStep >= index ? 'bubblegum' : `charcoal-80`
-                          })`
-                        }}>
-                        <div
+    <>
+      <WorkflowContext.Provider value={initialValue}>
+        <WorkflowContext.Consumer>
+          {() => {
+            return (
+              <div className="row px-0 mx-0">
+                <div className="col-12 my-5" style={{ position: 'relative' }}>
+                  {steps.length > 0 && currentStep !== 0 && (
+                    <div
+                      style={{ position: 'absolute', left: 0 }}
+                      className="border-stimorol btn rounded-rair p-0">
+                      <button
+                        onClick={goBack}
+                        style={{ border: 'none' }}
+                        className={`btn rounded-rair w-100 btn-${primaryColor}`}>
+                        <i className="fas fa-arrow-left" /> Back
+                      </button>
+                    </div>
+                  )}
+                  {contractData && contractData.diamond && (
+                    <div className="w-100 text-center h1">
+                      <i className="fas fa-gem" />
+                    </div>
+                  )}
+                  <h4>{contractData?.title}</h4>
+                  <small>{contractData?.product?.name}</small>
+                  <div className="w-75 mx-auto px-auto text-center mb-5">
+                    {steps.map((item, index) => {
+                      return (
+                        <NavLink
+                          to={item.populatedPath}
+                          key={index}
+                          className="d-inline-block"
                           style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: '-10px',
-                            borderRadius: '50%',
-                            background: `var(--${
-                              currentStep >= index ? 'bubblegum' : primaryColor
-                            })`,
-                            height: '1.7rem',
-                            width: '1.7rem',
-                            margin: 'auto',
-                            border: 'solid 1px var(--charcoal-60)',
-                            textAlign: 'center',
-                            color: currentStep >= index ? undefined : 'gray'
+                            width: `${
+                              (100 / steps.length) * (index === 0 ? 0.09 : 1)
+                            }%`,
+                            height: '3px',
+                            position: 'relative',
+                            textAlign: 'right',
+                            backgroundColor: `var(--${
+                              currentStep >= index ? 'bubblegum' : `charcoal-80`
+                            })`
                           }}>
-                          <div className="rair-abbr" id={item.shortName}>
-                            {index + 1}
+                          <div
+                            style={{
+                              position: 'absolute',
+                              right: 0,
+                              top: '-10px',
+                              borderRadius: '50%',
+                              background: `var(--${
+                                currentStep >= index
+                                  ? 'bubblegum'
+                                  : primaryColor
+                              })`,
+                              height: '1.7rem',
+                              width: '1.7rem',
+                              margin: 'auto',
+                              border: 'solid 1px var(--charcoal-60)',
+                              textAlign: 'center',
+                              color: currentStep >= index ? undefined : 'gray'
+                            }}>
+                            <div className="rair-abbr" id={item.shortName}>
+                              {index + 1}
+                            </div>
                           </div>
-                        </div>
-                      </NavLink>
-                    );
-                  })}
-                </div>
-                {steps?.at(currentStep)?.hasAdvancedFeatures && (
-                  <div
-                    className="row mt-3 w-100"
-                    style={{ paddingTop: '50px' }}>
-                    <div className="col-12 col-md-6 text-end">
-                      <button
-                        onClick={() => setSimpleMode(true)}
-                        className={`btn btn-${
-                          simpleMode ? 'stimorol' : primaryColor
-                        } rounded-rair col-12 col-md-6`}>
-                        Simple
-                      </button>
-                    </div>
-                    <div className="col-12 col-md-6 text-start mb-3">
-                      <button
-                        onClick={() => setSimpleMode(false)}
-                        className={`btn btn-${
-                          simpleMode ? primaryColor : 'stimorol'
-                        } rounded-rair col-12 col-md-6`}>
-                        Advanced
-                      </button>
-                    </div>
+                        </NavLink>
+                      );
+                    })}
                   </div>
-                )}
-                <h5>{steps?.at(currentStep)?.shortName}</h5>
+                  {steps?.at(currentStep)?.hasAdvancedFeatures && (
+                    <div
+                      className="row mt-3 w-100"
+                      style={{ paddingTop: '50px' }}>
+                      <div className="col-12 col-md-6 text-end">
+                        <button
+                          onClick={() => setSimpleMode(true)}
+                          className={`btn btn-${
+                            simpleMode ? 'stimorol' : primaryColor
+                          } rounded-rair col-12 col-md-6`}>
+                          Simple
+                        </button>
+                      </div>
+                      <div className="col-12 col-md-6 text-start mb-3">
+                        <button
+                          onClick={() => setSimpleMode(false)}
+                          className={`btn btn-${
+                            simpleMode ? primaryColor : 'stimorol'
+                          } rounded-rair col-12 col-md-6`}>
+                          Advanced
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <h5>{steps?.at(currentStep)?.shortName}</h5>
+                </div>
               </div>
-            </div>
-          );
-        }}
-      </WorkflowContext.Consumer>
-      <Router history={sentryHistory}>
-        <Switch>
+            );
+          }}
+        </WorkflowContext.Consumer>
+        <SentryRoutes>
           {steps.map((item, index) => {
             return (
-              <SentryRoute
+              <Route
                 key={index}
                 path={item.path}
-                render={() => (
+                element={
                   <item.component
                     setContractData={setContractData}
                     stepNumber={index}
                   />
-                )}
+                }
               />
             );
           })}
-        </Switch>
-      </Router>
-    </WorkflowContext.Provider>
+        </SentryRoutes>
+      </WorkflowContext.Provider>
+    </>
   );
 };
 
