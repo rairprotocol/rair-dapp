@@ -46,7 +46,7 @@ spec:
         io.kompose.service: media-service
     spec:
       containers:
-        - image: rairtechinc/media-service:dev_2.34
+        - image: rairtechinc/media-service:dev_2.54
           name: media-service
           imagePullPolicy: Always
           ports:
