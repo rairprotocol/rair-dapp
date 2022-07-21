@@ -11,6 +11,6 @@ FROM node:16.13.0
 WORKDIR /usr/src/minting
 COPY --from=build /usr/src/minting /usr/src/minting
 
-EXPOSE 5002
+EXPOSE 3001
 
 CMD npm start  
