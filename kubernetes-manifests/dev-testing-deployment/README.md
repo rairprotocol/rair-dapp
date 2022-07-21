@@ -1,11 +1,11 @@
-##Running your own kubernetes instance
+## Running your own kubernetes instance
 
 
-###*Requires gcloud and kubectl*
+### *Requires gcloud and kubectl*
 
 ---
 
-###Dependencies
+### Dependencies
 
 [Installation of gcloud](https://cloud.google.com/sdk/docs/install)
 
@@ -16,7 +16,7 @@
 
 ---
 
-==**Please contact devops for a copy of the secrets.yaml file required to deploy the entire kubernetes instance.  This is gitignored for security reasons.**==
+**Please contact devops for a copy of the secrets.yaml file required to deploy the entire kubernetes instance.  This is gitignored for security reasons.**
 
 ---
 
@@ -35,7 +35,7 @@ Configure your environment to default to this new namespace
 - [ ]`kubectl config set-context --current --namespace=$UNIQUE_NAMESPACE`
 This will default all kubectl commands to interact within your designated namespace.
 
-==*It is recommended to use the -n flag with your namespace to ensure you working in the correct environment*==
+*It is recommended to use the -n flag with your namespace to ensure you working in the correct environment*
 
 - [ ]Once your environment is configured, place the secrets.yaml file in the kubernetes-manifests/dev-testing-deployment directory.
 
@@ -52,14 +52,14 @@ kubernetes-manifests/dev-testing-deployment/blockchain-event-listener.yaml line 
 
 Utility scripts have been added in the ./commands directory to update images at once.  This will also revert them to the dev_latest state.
 
-###*==Please don't commit new images to the repository==*
+### *Please don't commit new images to the repository*
 
 All environment variables are stored in the appropriate configmap files.  Anything that needs to be adjusted here needs to be done ==before deployment==. 
 ###*Changed configmaps will not be applied until a new image is built*
 
 ---
 
-##Deploy the environment!
+## Deploy the environment!
 
 In the dev-testing-deployment directory, run the following command-
 `kubectl apply -f . -n $UNIQUE_NAMESPACE`
@@ -75,7 +75,7 @@ This should give you something similar to the follwing:
 
 ---
 
-#==CLEANUP==
+# CLEANUP
 
 To delete all objects in your namespace when you are done using them, or to clean your environment, run
 
@@ -87,6 +87,6 @@ To delete all objects in your namespace when you are done using them, or to clea
 
 ---
 
-#*Don't run the following command unless you know what you are doing.*
+# *Don't run the following command unless you know what you are doing.*
 
 `kubectl delete namespace {namespace}`
