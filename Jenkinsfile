@@ -129,6 +129,7 @@ pipeline {
           }
         }
     stage('Build and push dev minting-marketplace') {
+          when { branch 'dev'}
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -147,6 +148,7 @@ pipeline {
           }
         }
     stage('Build and push dev rairnode') {
+          when { branch 'dev'}
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -165,6 +167,7 @@ pipeline {
           }
         }
     stage('Build and push dev event-listener') {
+          when { branch 'dev'}
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -183,6 +186,7 @@ pipeline {
           }
         }
     stage('Build and push dev media-service') {
+          when { branch 'dev'}
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -211,6 +215,12 @@ pipeline {
         manifestPattern: 'kubernetes-manifests/configmaps/environment/tf', 
         credentialsId: env.CREDENTIALS_ID])
     }
+      }
+    }
+    stage('Jenkins Slack Notification') {
+      steps {
+                slackSend channel: '#jenkins-builds', 
+                          message: 'Branch' + GIT_BRANCH + 'with build-id' + GIT_COMMIT + ' has successfully built and pushed to docker ' + JOB_URL
       }
     }
     stage('Deploy k8s'){
