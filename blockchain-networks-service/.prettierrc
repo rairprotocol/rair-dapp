@@ -1,0 +1,9 @@
+{
+  "singleQuote": true,
+  "endOfLine": "auto",
+  "printWidth": 80,
+  "parser": "flow",
+  "bracketSpacing": true,
+  "bracketSameLine": true, 
+  "trailingComma": "all"
+}

@@ -12,8 +12,6 @@ const Blockchain = require('./blockchain');
 const Category = require('./category');
 const SyncRestriction = require('./syncRestriction');
 const Transaction = require('./transaction');
-const TokenMetadata = require('./tokenMetadata');
-const MetadataLink = require('./metadataLink');
 const CustomRoyaltiesSet = require('./customRoyaltiesSet');
 const ResaleTokenOffer = require('./resaleTokenOffer');
 
@@ -35,12 +33,6 @@ module.exports = {
     'SyncRestriction',
   ),
   Transaction: mongoose.model('Transaction', Transaction, 'Transaction'),
-  TokenMetadata: mongoose.model(
-    'TokenMetadata',
-    TokenMetadata,
-    'TokenMetadata',
-  ),
-  MetadataLink: mongoose.model('MetadataLink', MetadataLink, 'MetadataLink'),
   CustomRoyaltiesSet: mongoose.model(
     'CustomRoyaltiesSet',
     CustomRoyaltiesSet,
