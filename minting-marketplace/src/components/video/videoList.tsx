@@ -4,7 +4,12 @@ import VideoItem from './videoItem';
 
 const VideoList: React.FC<IVideoList> = ({ loading, videos, titleSearch }) => {
   if (loading) {
-    return <h2>Loading...</h2>;
+    // return <h2>Loading...</h2>;
+    return (
+      <div className="loader-wrapper">
+        <div className="load" />
+      </div>
+    );
   }
 
   return (

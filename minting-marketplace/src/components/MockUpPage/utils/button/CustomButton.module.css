@@ -29,10 +29,28 @@
   padding-top: auto;
 }
 .nftDataPageShowMore:hover {
-  background: #8d18916e;
+  /* background: #8d18916e; */
+  background: linear-gradient(
+      186.34deg,
+      #725bdb 0%,
+      #805fda 10.31%,
+      #8c63da 20.63%,
+      #9867d9 30.94%,
+      #a46bd9 41.25%,
+      #af6fd8 51.56%,
+      #af6fd8 51.56%,
+      #bb73d7 61.25%,
+      #c776d7 70.94%,
+      #d27ad6 80.62%,
+      #dd7ed6 90.31%,
+      #e882d5 100%
+    ),
+    linear-gradient(0deg, #ffffff, #ffffff);
+  transition: all 2.2s ease;
 }
 .nftDataPageShowMoreText {
   text-align: center;
   display: inline-block;
   padding: 12.5px;
+  width: inherit;
 }

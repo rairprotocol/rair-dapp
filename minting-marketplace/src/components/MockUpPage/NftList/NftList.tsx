@@ -20,6 +20,11 @@ const NftListComponent = ({
         <h2>Loading...</h2>
       </div>
     );
+    // return (
+    //   <div className="loader-wrapper">
+    //     <div className="load" />
+    //   </div>
+    // );
   }
 
   const defaultImg =

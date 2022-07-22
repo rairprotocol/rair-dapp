@@ -394,7 +394,7 @@ function App() {
             .join('');
 
           spans = p.children;
-        }
+        } else console.info('kik');
 
         // function wheee() {
         //   for (var i = 0; i < len; i++) {
@@ -405,15 +405,15 @@ function App() {
         // //   requestAnimationFrame(wheee);
         // };
         // setInterval(wheee, 100);
-        else
-          (function wheee() {
-            for (let i = 0; i < len; i++) {
-              spans[i].style.color =
-                'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
-            }
-            angle++;
-            requestAnimationFrame(wheee);
-          })();
+
+        (function wheee() {
+          for (let i = 0; i < len; i++) {
+            spans[i].style.color =
+              'hsl(' + (angle + Math.floor(i * phaseJump)) + ', 55%, 70%)';
+          }
+          angle++;
+          requestAnimationFrame(wheee);
+        })();
       })();
     }
   }, [primaryColor]);

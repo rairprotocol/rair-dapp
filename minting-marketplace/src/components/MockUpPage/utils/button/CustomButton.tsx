@@ -11,8 +11,9 @@ function CustomButton({
   height,
   onClick,
   textColor,
-  margin
-  //   primaryColor,
+  margin,
+  custom
+  // primaryColor
 }) {
   const { primaryColor } = useSelector((store) => store.colorStore);
 
@@ -25,6 +26,7 @@ function CustomButton({
       margin={margin}>
       {onClick ? (
         <ShowMoreItem
+          background={custom}
           width={width}
           height={height}
           textColor={textColor}

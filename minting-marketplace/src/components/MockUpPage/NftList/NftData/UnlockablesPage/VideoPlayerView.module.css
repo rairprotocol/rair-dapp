@@ -1,5 +1,6 @@
 .VideoPlayerViewWrapper {
-  max-width: 1600px;
+  /* max-width: 1600px; */
+  min-width: 83.8vw;
   height: 446px;
   margin: auto;
   border-radius: 16px;
@@ -9,6 +10,8 @@
 
 .ListOfVideosWrapper {
   padding: 10px;
+  padding-top: 20px;
+  margin-bottom: 20px;
   overflow: scroll;
   /* Internet Explorer 10+ */
   -ms-overflow-style: none;
@@ -37,7 +40,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* border: 1px solid palevioletred; */
   padding: 15px 15px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -77,7 +79,6 @@
   border-radius: 10px;
 }
 .SingleVideoWrapper {
-  /* padding: 24px 209px 16px 249px; */
   margin: auto;
 }
 .SingleVideo {
@@ -87,16 +88,13 @@
   background-position: center center;
   cursor: pointer;
   border-radius: 16px;
-  /* background-repeat: no-repeat;
-    background-size: contain; */
 }
 .playImagesOnSingleVideo {
   margin-top: 7rem;
 }
 
 .forSplashPageStyleOneVideo {
-  /* width: 406px; */
-  width: 34vw;
+  width: 50vw;
   height: 25.375rem;
   background-size: cover;
   background-position: center center;
@@ -114,7 +112,27 @@
   flex-direction: row;
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 940px) and (min-width: 800px) {
+  .ListOfVideosOneVideo {
+    width: 30vw;
+  }
+  .forSplashPageStyleOneVideo {
+    width: 51vw;
+  }
+}
+@media screen and (max-width: 799px) and (min-width: 550px) {
+  .ListOfVideosOneVideo {
+    width: 29vw;
+  }
+  .forSplashPageStyleOneVideo {
+    width: 51vw;
+  }
+  .playImagesOnSingleVideo {
+    transform: scale(0.7);
+  }
+}
+
+@media screen and (max-width: 549px) and (min-width: 250px) {
   .VideoPlayerViewWrapper {
     max-width: 1600px;
     height: auto;
@@ -123,14 +141,16 @@
     display: flex;
     flex-direction: column-reverse;
   }
+  .ListOfVideosOneVideo {
+    width: 80vw;
+  }
   .ListOfVideosWrapper {
     padding: 10px;
     overflow: scroll;
     height: 394px;
   }
   .forSplashPageStyleOneVideo {
-    /* width: 406px; */
-    width: 41vw;
+    width: 78vw;
     height: 14.375rem;
     background-size: cover;
     background-position: center center;
@@ -139,13 +159,35 @@
     margin: 0.563rem 1rem;
   }
   .playImagesOnSingleVideo {
-    margin-top: 1.4vh;
+    margin-top: 6.4vh;
     width: 20vw;
   }
 }
-@media screen and (max-width: 570px) {
-  .playImagesOnSingleVideo {
-    margin-top: 2.4vh;
-    width: 20vw;
+
+@media screen and (max-width: 2030px) and (min-width: 1500px) {
+  .VideoPlayerViewWrapper {
+    max-width: 1200px;
+    min-width: 1200px;
+  }
+  .forSplashPageStyleOneVideo {
+    width: 37vw;
+  }
+}
+
+@media screen and (max-width: 3030px) and (min-width: 2029px) {
+  .VideoPlayerViewWrapper {
+    min-width: 1200px;
+  }
+  .forSplashPageStyleOneVideo {
+    width: 28vw;
+  }
+}
+
+@media screen and (max-width: 5030px) and (min-width: 3029px) {
+  .VideoPlayerViewWrapper {
+    min-width: 1200px;
+  }
+  .forSplashPageStyleOneVideo {
+    width: 21vw;
   }
 }

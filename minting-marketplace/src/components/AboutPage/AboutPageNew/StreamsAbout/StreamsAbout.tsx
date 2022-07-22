@@ -1,60 +1,43 @@
-// import { useState } from 'react';
-import VideoBg_1 from './../../assets/video-bg_1.png';
-import VideoBg_2 from './../../assets/video-bg_2.png';
-// import ArrowUp from './../../assets/arrow-up-about.png';
-// import MetamaskTutorial from './../../assets/matamaskTutorial.png';
-// import JoinCom from '../../../SplashPage/JoinCom/JoinCom';
-// import Modal from "react-modal";
-import { useSelector, Provider, useStore } from 'react-redux';
-import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+//@ts-nocheck
+import React, { useEffect, useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { IStreamsAbout } from '../aboutPage.types';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
-import React, { useState } from 'react';
+import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import VideoBg_2 from './../../assets/video-bg_2.png';
+import axios from 'axios';
+import { TNftFilesResponse } from '../../../../axios.responseTypes';
 
-const reactSwal = withReactContent(Swal);
-
-const StreamsAbout: React.FC<IStreamsAbout> = ({
-  // Metamask,
-  purchaseButton
-}) => {
-  // const [showVideo, setShowVideo] = useState(false);
-
-  // const { currentUserAddress } = useSelector(store => store.contractStore);
-  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
+  const whatSplashPage = 'about-page';
+  const [allVideos, setAllVideos] = useState([]);
+  const [selectVideo, setSelectVideo] = useState();
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const [process, setProcessDone] = useState(false);
-  const urlVideo = 'https://storage.googleapis.com/rair-videos/';
-  const mediaIdVideo = 'pxlXm5vHD6KE3nVarq5HygBuKA54wqWsBoYf4vci_hp0Tc';
 
-  const store = useStore();
-
-  const openVideo = (baseURL, mediaId) => {
-    reactSwal.fire({
-      title: 'How RAIR works',
-      html: (
-        <Provider store={store}>
-          <StandaloneVideoPlayer {...{ baseURL, mediaId, setProcessDone }} />
-        </Provider>
-      ),
-      width: '90vw',
-      // height: '90vh',
-      customClass: {
-        popup: `bg-${primaryColor}`,
-        title: `text-${textColor}`
-      },
-      showConfirmButton: false
-    });
-  };
-
-  const handleOpenVideo = (baseURL, mediaId) => {
-    if (!process) {
-      openVideo(baseURL, mediaId);
+  const someAdditionalData = [
+    {
+      urlVideo: 'https://storage.googleapis.com/rair-videos/',
+      mediaIdVideo: 'pxlXm5vHD6KE3nVarq5HygBuKA54wqWsBoYf4vci_hp0Tc',
+      videoTime: '00:05:33',
+      videoName: 'How RAIR Works',
+      VideoBg: VideoBg_2
     }
-  };
+  ];
+
+  const getAllVideos = useCallback(async () => {
+    const response = await axios.get<TNftFilesResponse>(
+      '/api/nft/network/0x56/0xb6163454da87e9f3fd63683c5d476f7d067f75a2/0/files'
+    );
+    setAllVideos(response.data.files);
+    setSelectVideo(response.data.files[0]);
+  }, []);
+
+  useEffect(() => {
+    getAllVideos();
+  }, [getAllVideos]);
 
   return (
     <div className="about-streams-video">
@@ -89,7 +72,6 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
               encrypted streams. To stream the videos below you’ll need to mint
               a watch token for .1 MATIC
             </p>
-
             {purchaseButton}
           </div>
         </div>
@@ -97,103 +79,14 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({
       <div className="tutorial-with-metamask">
         <div className="container-content-metamask">
           <div className="container-block-video">
-            <div className="block-videos">
-              <div className="box-video">
-                <div
-                  onClick={() => handleOpenVideo(urlVideo, mediaIdVideo)}
-                  className={`video-locked ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}>
-                  <div className="video-about-cotent">
-                    <div className="video-icon">
-                      <i className="fa fa-lock"></i>
-                      <p>RAIR Exclusive</p>
-                    </div>
-                    <img src={VideoBg_2} alt="unlockble video" />
-                  </div>
-                  <div className="video-description">
-                    <div
-                      className={`video-title ${
-                        primaryColor === 'rhyno' ? 'rhyno' : ''
-                      }`}>
-                      <p>How RAIR Works</p>
-                    </div>
-                    <div
-                      className={`video-timer ${
-                        primaryColor === 'rhyno' ? 'rhyno' : ''
-                      }`}>
-                      <p>00:05:33</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="box-video">
-                <div
-                  className={`video-locked ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}>
-                  <div className="video-about-cotent">
-                    <div className="video-icon">
-                      <i className="fa fa-lock"></i>
-                      <p>RAIR Exclusive</p>
-                    </div>
-                    <img src={VideoBg_1} alt="unlockble video" />
-                  </div>
-                  <div className="video-description">
-                    <div
-                      className={`video-title ${
-                        primaryColor === 'rhyno' ? 'rhyno' : ''
-                      }`}>
-                      <p>Coming soon</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="box-video">
-                <div
-                  className={`video-locked ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}>
-                  <div className="video-about-cotent">
-                    <div className="video-icon">
-                      <i className="fa fa-lock"></i>
-                      <p>RAIR Exclusive</p>
-                    </div>
-                    <img src={VideoBg_2} alt="unlockble video" />
-                  </div>
-                  <div className="video-description">
-                    <div
-                      className={`video-title ${
-                        primaryColor === 'rhyno' ? 'rhyno' : ''
-                      }`}>
-                      <p>Coming soon</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="box-video">
-                <div
-                  className={`video-locked ${
-                    primaryColor === 'rhyno' ? 'rhyno' : ''
-                  }`}>
-                  <div className="video-about-cotent">
-                    <div className="video-icon">
-                      <i className="fa fa-lock"></i>
-                      <p>RAIR Exclusive</p>
-                    </div>
-                    <img src={VideoBg_1} alt="unlockble video" />
-                  </div>
-                  <div className="video-description">
-                    <div
-                      className={`video-title ${
-                        primaryColor === 'rhyno' ? 'rhyno' : ''
-                      }`}>
-                      <p>Coming soon</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <VideoPlayerView
+              productsFromOffer={allVideos}
+              primaryColor={primaryColor}
+              selectVideo={selectVideo}
+              setSelectVideo={setSelectVideo}
+              whatSplashPage={whatSplashPage}
+              someAdditionalData={someAdditionalData}
+            />
           </div>
         </div>
       </div>

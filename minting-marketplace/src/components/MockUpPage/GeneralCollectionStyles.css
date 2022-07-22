@@ -224,6 +224,7 @@
   width: inherit;
   padding: 8px 16px 8px 16px;
   backdrop-filter: blur(8px);
+  cursor: default;
 }
 
 /* maybe we will use it at future */

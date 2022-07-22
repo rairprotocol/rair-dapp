@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState /*, useEffect*/ } from 'react';
+import { /*useCallback, useEffect,*/ useState } from 'react';
 import { useSelector } from 'react-redux';
 import './SplashPageTemplate/AuthorCard/AuthorCard.css';
 import './../AboutPage/AboutPageNew/AboutPageNew.css';
@@ -17,14 +17,15 @@ import NFTfavicon from './images/NFT_favicon.ico';
 /* importing Components*/
 import TeamMeet from './TeamMeet/TeamMeetList';
 import AuthorCard from './SplashPageTemplate/AuthorCard/AuthorCard';
-// import setTitle from '../../utils/setTitle';
 import NotCommercialTemplate from './NotCommercial/NotCommercialTemplate';
 import CarouselModule from './SplashPageTemplate/Carousel/Carousel';
 import VideoPlayerModule from './SplashPageTemplate/VideoPlayer/VideoPlayerModule';
-// import StaticTiles from "./SplashPageTemplate/VideoTiles/StaticTiles";
-// import UnlockableVideo from "./images/white_pixel.png";
 import MetaTags from '../SeoTags/MetaTags';
-import VideoTiles from './SplashPageTemplate/VideoTiles/VideoTiles';
+import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+
+//TODO:Until we have a contract it will be commented
+// import { TNftFilesResponse } from '../../axios.responseTypes';
+// import axios from 'axios';
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -122,15 +123,51 @@ const splashData = {
 };
 
 const NFTLASplashPage = () => {
-  // props was loginDone
+  const [selectVideo, setSelectVideo] = useState({});
+  // TODO: Until we have a contract it will be commented
+  const [allVideos /*setAllVideos*/] = useState([]);
   const { primaryColor } = useSelector((store) => store.colorStore);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
+  const whatSplashPage = 'nftla-page';
+
+  const someAdditionalData = [
+    {
+      urlVideo: 'https://storage.googleapis.com/rair-videos/',
+      mediaIdVideo: 'YOyAaCOt8xrOt-NcvffXR7g0ibX5kJ2w21yGHR1XKOPMEY',
+      videoTime: '02:21.38',
+      videoName: 'NFTs and Hollywood',
+      VideoBg: NFTLA1
+    },
+    {
+      urlVideo: 'https://storage.googleapis.com/rair-videos/',
+      mediaIdVideo: 'Zosxmne0LRAu2TxEMU5A0WMg8-msfHqvxGws9osGnu4yxL',
+      videoTime: '32:00.58',
+      videoName: 'Orange Comet',
+      VideoBg: NFTLA2
+    },
+    {
+      urlVideo: 'https://storage.googleapis.com/rair-videos/',
+      mediaIdVideo: 'pZJJmq9rR6HC1jPxy-RpVvutfTYMtyAGRb2DDnMdTTIlhA',
+      videoTime: '30:46.31',
+      videoName: 'Web 3 Convergence',
+      VideoBg: NFTLA3
+    }
+  ];
+
+  // const getAllVideos = useCallback(async () => {
+  //   const response = await axios.get<TNftFilesResponse>(
+  //     '/api/nft/network/neededBlockchain/neededContract/indexInContract/files'
+  //   );
+  //   setAllVideos(response.data.files);
+  //   setSelectVideo(response.data.files[0]);
+  // }, []);
+
   // useEffect(() => {
-  //   setTitle(`NFTLA`);
-  // }, [])
+  //   getAllVideos();
+  // }, [getAllVideos]);
 
   return (
     <div className="wrapper-splash-page">
@@ -146,12 +183,21 @@ const NFTLASplashPage = () => {
           backgroundImage={splashData.backgroundImage}
           videoData={splashData.videoData}
         />
-        <VideoTiles
-          title={splashData.videoTilesTitle}
-          videoArr={splashData.videoArr}
-          primaryColor={primaryColor}
-          backgroundImage={splashData.backgroundImage}
-        />
+        <div className="unlockable-video">
+          <div className="title-gets">
+            <h3> NFTLA </h3>
+          </div>
+          <div className="block-videos">
+            <VideoPlayerView
+              productsFromOffer={allVideos}
+              primaryColor={primaryColor}
+              selectVideo={selectVideo}
+              setSelectVideo={setSelectVideo}
+              whatSplashPage={whatSplashPage}
+              someAdditionalData={someAdditionalData}
+            />
+          </div>
+        </div>
         <TeamMeet primaryColor={primaryColor} arraySplash={'NFTLA'} />
         <NotCommercialTemplate
           primaryColor={primaryColor}

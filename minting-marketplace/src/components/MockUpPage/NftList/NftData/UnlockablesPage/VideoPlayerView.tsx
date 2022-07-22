@@ -3,15 +3,18 @@ import React, { useState } from 'react';
 import cl from './VideoPlayerView.module.css';
 import playImages from '../../../../SplashPage/images/playImg.png';
 import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
+import { IVideoPlaterView } from './videoPlayerView.types';
 
-function VideoPlayerView({
+const VideoPlayerView: React.FC<IVideoPlaterView> = ({
   productsFromOffer,
   primaryColor,
   selectVideo,
   setSelectVideo,
-  whatSplashPage
-}) {
+  whatSplashPage,
+  someAdditionalData
+}) => {
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
+  const [selectedBg, setSelectedBg] = useState();
 
   const colorRarity = ['#E4476D', 'gold', 'silver'];
 
@@ -24,7 +27,51 @@ function VideoPlayerView({
         }`
       }}>
       <div className={cl.ListOfVideosWrapper}>
-        {productsFromOffer?.length &&
+        {whatSplashPage &&
+          someAdditionalData &&
+          someAdditionalData.map((data, index) => {
+            return (
+              <div
+                key={index}
+                onClick={() => {
+                  setSelectVideo(
+                    data.VideoBg,
+                    data.urlVideo,
+                    data.mediaIdVideo
+                  );
+                  setOpenVideoplayer(false);
+                  setSelectedBg(data.VideoBg);
+                }}
+                style={{
+                  backgroundImage: `url(${data.VideoBg})`
+                }}
+                className={cl.ListOfVideosOneVideo}>
+                <div className={cl.previewWrapper}>
+                  <span className={cl.preview}>Preview</span>
+                  <i
+                    style={{ color: `red` }}
+                    className={`fas fa-key ${cl.iconKey}`}
+                  />
+                </div>
+                <div className={cl.play}>
+                  <button
+                    style={{ border: 'none', background: 'none' }}
+                    className="">
+                    <img
+                      className={cl.playImagesOnListVideos}
+                      src={playImages}
+                      alt="Play"
+                    />
+                  </button>
+                </div>
+                <div className={cl.description}>
+                  <strong>{data.videoName}</strong>
+                  <span className={cl.duration}>{data.videoTime}</span>
+                </div>
+              </div>
+            );
+          })}
+        {!!productsFromOffer?.length &&
           productsFromOffer.map((data) => {
             return (
               <div
@@ -71,7 +118,9 @@ function VideoPlayerView({
             <div
               onClick={() => setOpenVideoplayer(true)}
               style={{
-                backgroundImage: `url(${selectVideo?.staticThumbnail})`
+                backgroundImage: `url(${
+                  selectVideo?.staticThumbnail || selectedBg
+                })`
               }}
               className={
                 whatSplashPage ? cl.forSplashPageStyleOneVideo : cl.SingleVideo
@@ -85,10 +134,37 @@ function VideoPlayerView({
           )}
         </div>
       ) : (
-        <></>
+        <>
+          <div className={cl.SingleVideoWrapper}>
+            {openVideoplayer ? (
+              <NftVideoplayer selectVideo={selectVideo} />
+            ) : (
+              someAdditionalData && (
+                <div
+                  onClick={() => setOpenVideoplayer(true)}
+                  style={{
+                    backgroundImage: `url(${
+                      selectedBg || someAdditionalData[0].VideoBg
+                    })`
+                  }}
+                  className={
+                    whatSplashPage
+                      ? cl.forSplashPageStyleOneVideo
+                      : cl.SingleVideo
+                  }>
+                  <img
+                    className={cl.playImagesOnSingleVideo}
+                    src={playImages}
+                    alt="Play"
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </>
       )}
     </div>
   );
-}
+};
 
 export default VideoPlayerView;

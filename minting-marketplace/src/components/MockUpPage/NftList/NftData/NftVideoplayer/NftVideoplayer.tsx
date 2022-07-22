@@ -81,7 +81,7 @@ const NftVideoplayer = ({ selectVideo, main }) => {
       //console.error(requestError);
       Swal.fire('NFT required to view this content');
     }
-  }, [programmaticProvider, selectVideo._id, mainManifest, videoName]);
+  }, [programmaticProvider, selectVideo, mainManifest, videoName]);
 
   useEffect(() => {
     requestChallenge();

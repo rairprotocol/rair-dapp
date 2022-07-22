@@ -573,8 +573,138 @@ a:hover {
 }
 
 .pictures-wrapper {
-  border-radius: 16px;
-  width: 291px;
+  border-radius: 1rem;
+  width: 18.188rem;
+}
+
+.modal-content-wrapper-for-video {
+  width: 75rem;
+  height: 26.75rem;
+  display: flex;
+  justify-content: space-between;
+}
+.modal-content-play-image {
+  position: absolute;
+  top: 32%;
+  left: 36%;
+}
+.modal-content-play-image:hover {
+  transform: scale(1.2);
+}
+
+.modal-content-video-lock {
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  transform: scale(5.5);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+}
+.modal-content-video-lock::after {
+  /* pointer-events: none; 
+  opacity: 0;
+  transition: ease opacity 0.3s;
+  transition-delay: .0s;  */
+}
+
+/* .modal-content-video-lock:hover::after {
+  content: attr(data-title);
+  font-size: 0.5rem;
+  color: white;
+} */
+/* .more-info-unlock-wrapper:hover::after {
+  content: attr(data-title);
+  font-size: 0.5rem;
+  color: white;
+} */
+
+.modal-content-video {
+  width: 48rem;
+  position: relative;
+}
+.modal-content-video-thumbnail {
+  border-radius: 1rem;
+  width: inherit;
+}
+.modal-content-video-choice {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: flex-end;
+}
+.modal-content-close-btn {
+  width: 32px;
+  height: 32px;
+  background: #4e4d4d;
+  border-radius: 11.6289px;
+  border: none;
+}
+.modal-content-close-btn:hover {
+  background: #c676d7;
+}
+.modal-content-close-btn:hover i::before {
+  color: white;
+}
+.modal-content-close-btn i::before {
+  display: inline-block;
+  color: #e882d5;
+}
+.modal-content-block-btns {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: -webkit-fill-available;
+  justify-content: center;
+}
+
+.modal-content-block-buy {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content-block-buy img {
+  width: 7.5rem;
+  height: 7.5rem;
+  margin-bottom: 2rem;
+  border-radius: 1rem;
+}
+.more-info-wrapper {
+  width: 1200px;
+}
+.more-info-text {
+  padding: 1rem 0;
+  color: white;
+  display: inline-block;
+  font-size: larger;
+}
+.more-info {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  width: auto;
+  /* overflow: scroll; */
+  overflow-y: hidden;
+  justify-content: space-between;
+}
+.more-info-unlock-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2.2rem;
+}
+.more-info-unlock-wrapper img {
+  width: 8.2rem;
+  height: 8.2rem;
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
+  object-fit: cover;
 }
 
 /* .description-wrapper-video {
@@ -1562,6 +1692,211 @@ button.metamask-on-boarding:focus {
   }
 }
 
+@media screen and (max-width: 1260px) and (min-width: 850px) {
+  .ReactModal__Content--after-open {
+    margin-right: auto !important;
+    height: 71%;
+    place-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+  .modal-content-wrapper-for-video {
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+  }
+  .more-info-wrapper {
+    width: 46.875rem;
+  }
+  .modal-content-block-btns {
+    margin-bottom: 2rem;
+  }
+  .modal-content-close-btn-wrapper {
+    align-self: end;
+  }
+  .modal-content-video-choice {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: stretch;
+    width: -webkit-fill-available;
+  }
+  .modal-content-play-image {
+    position: absolute;
+    top: 28%;
+    left: 38%;
+    max-width: 100%;
+    transform: scale(0.9);
+  }
+  .modal-content-play-image:hover {
+    transform: scale(1.1);
+  }
+}
+
+@media screen and (max-width: 849px) and (min-width: 660px) {
+  .ReactModal__Content--after-open {
+    margin-right: auto !important;
+    width: 90%;
+    height: 71%;
+    place-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+  .modal-content-wrapper-for-video {
+    width: 95%;
+    height: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+  }
+  .more-info-wrapper {
+    width: 33.875rem;
+  }
+  .modal-content-video {
+    width: 35rem;
+  }
+  .modal-content-block-btns {
+    margin-bottom: 2rem;
+  }
+  .modal-content-close-btn-wrapper {
+    align-self: end;
+  }
+  .modal-content-video-choice {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: stretch;
+    width: -webkit-fill-available;
+  }
+  .modal-content-video-lock {
+    transform: scale(4.5);
+  }
+  .modal-content-play-image {
+    position: absolute;
+    top: 20%;
+    left: 33%;
+    max-width: 100%;
+    transform: scale(0.7);
+  }
+  .modal-content-play-image:hover {
+    transform: scale(0.9);
+  }
+}
+@media screen and (max-width: 659px) and (min-width: 410px) {
+  .ReactModal__Content--after-open {
+    margin-right: auto !important;
+    width: 90%;
+    height: 71%;
+    place-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+  .modal-content-wrapper-for-video {
+    width: 95%;
+    height: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+  }
+  .modal-content-block-buy img {
+    margin-bottom: 1rem;
+  }
+  .modal-content-video-lock {
+    transform: scale(4);
+  }
+  .more-info-wrapper {
+    width: 21.875rem;
+  }
+  .modal-content-video {
+    width: 22rem;
+  }
+  .modal-content-block-btns {
+    margin-bottom: 1rem;
+  }
+  .modal-content-close-btn-wrapper {
+    align-self: end;
+  }
+  .modal-content-video-choice {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: stretch;
+    width: -webkit-fill-available;
+  }
+  .modal-content-play-image {
+    position: absolute;
+    top: 0;
+    left: 23%;
+    max-width: 100%;
+    transform: scale(0.5);
+  }
+  .modal-content-play-image:hover {
+    transform: scale(0.6);
+  }
+}
+@media screen and (max-width: 409px) and (min-width: 250px) {
+  .ReactModal__Content--after-open {
+    margin-right: auto !important;
+    width: 90%;
+    height: 71%;
+    place-content: space-between !important;
+    flex-wrap: nowrap !important;
+  }
+  .modal-content-wrapper-for-video {
+    width: 95%;
+    height: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+  }
+  .modal-content-block-buy img {
+    margin-bottom: 1rem;
+  }
+  .modal-content-video-lock {
+    transform: scale(2);
+  }
+  .more-info-wrapper {
+    width: 12.875rem;
+  }
+  .modal-content-video {
+    width: 13rem;
+  }
+  .modal-content-block-btns {
+    margin-bottom: 1rem;
+  }
+  .modal-content-close-btn-wrapper {
+    align-self: end;
+  }
+  .modal-content-video-choice {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: stretch;
+    width: -webkit-fill-available;
+  }
+  .modal-content-play-image {
+    position: absolute;
+    top: 0;
+    left: 23%;
+    max-width: 100%;
+    transform: scale(0.5);
+  }
+  .modal-content-play-image:hover {
+    transform: scale(0.6);
+  }
+}
+
 @media screen and (max-width: 1200px) and (min-width: 1078px) {
   i.fas-custom {
     left: 3vw !important;
@@ -1772,4 +2107,57 @@ body::-webkit-scrollbar-thumb:active {
 }
 .vjs-tech {
   border-radius: 16px !important;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.loader-wrapper {
+  width: 150px;
+  height: 150px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: -7rem;
+}
+
+.load {
+  width: 100px;
+  height: 100px;
+  margin: 110px auto 0;
+  border: solid 10px #bb73d7;
+  border-radius: 50%;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  -webkit-transition: all 0.5s ease-in;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+
+  transition: all 0.5s ease-in;
+  animation-name: rotate;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.vjs-tech {
+  width: -webkit-fill-available !important;
+}
+.modal-content-video div {
+  width: auto !important;
 }
