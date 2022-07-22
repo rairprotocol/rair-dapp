@@ -206,7 +206,7 @@ pipeline {
     stage('Jenkins Slack Notification') {
       steps {
                 slackSend channel: '#jenkins-builds', 
-                          message: 'Branch' + GIT_BRANCH + 'with build-id' + GIT_COMMIT + ' has successfully built and pushed to docker ' + JOB_URL
+                          message: 'Branch ' + GIT_BRANCH + 'with build-id ' + GIT_COMMIT + ' has successfully built and pushed to docker ' + BUILD_URL
       }
     }
   //   stage('Deploy configmap to dev k8s environment'){
