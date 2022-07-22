@@ -292,6 +292,19 @@ const WorkflowSteps: React.FC = () => {
     diamondMarketplaceInstance
   ]);
 
+  const handleMinterRole = async () => {
+    setMintingRole(
+      await metamaskCall(
+        contractData?.instance.hasRole(
+          await metamaskCall(contractData.instance.MINTER()),
+          contractData.diamond
+            ? diamondMarketplaceInstance?.address
+            : minterInstance?.address
+        )
+      )
+    );
+  };
+
   useEffect(() => {
     if (contractData && contractData.instance) {
       (async () => {

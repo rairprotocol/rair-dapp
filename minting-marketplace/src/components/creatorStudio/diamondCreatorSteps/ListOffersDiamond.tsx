@@ -15,7 +15,8 @@ const ListOffers = ({
   simpleMode,
   stepNumber,
   switchBlockchain,
-  gotoNextStep
+  gotoNextStep,
+  forceRefetch
 }) => {
   const [offerList, setOfferList] = useState([]);
   const [forceRerender, setForceRerender] = useState(false);
@@ -99,13 +100,13 @@ const ListOffers = ({
         )
       )
     ) {
+      forceRefetch();
       Swal.fire({
         title: 'Success!',
         html: 'The offer(s) have been created!',
         icon: 'success',
         showConfirmButton: true
       });
-      gotoNextStep();
     }
   };
 

@@ -15,7 +15,9 @@ const DiamondMinterMarketplace = ({
   simpleMode,
   stepNumber,
   gotoNextStep,
-  mintingRole
+  mintingRole,
+  handleMinterRole,
+  forceRefetch
 }) => {
   const { diamondMarketplaceInstance } = useSelector(
     (store) => store.contractStore
@@ -105,6 +107,7 @@ const DiamondMinterMarketplace = ({
       });
     }
     setSendingData(false);
+    getContractData();
   };
 
   const giveMinterRole = async () => {
@@ -129,6 +132,7 @@ const DiamondMinterMarketplace = ({
         icon: 'success',
         showConfirmButton: true
       });
+      forceRefetch();
       getContractData();
     }
     setSendingData(false);
