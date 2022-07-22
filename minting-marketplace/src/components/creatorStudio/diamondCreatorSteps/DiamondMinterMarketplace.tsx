@@ -1,15 +1,20 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { metamaskCall } from '../../../utils/metamaskUtils';
 import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import FixedBottomNavigation from '../FixedBottomNavigation';
 import MarketplaceOfferConfig from './MarketplaceOfferConfig';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import {
+  TDiamondMinterMarketplace,
+  TMarketplaceOfferConfigArrayItem
+} from '../creatorStudio.types';
+import { useNavigate } from 'react-router-dom';
 
-const DiamondMinterMarketplace = ({
+const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
   contractData,
   setStepNumber,
   simpleMode,
@@ -19,28 +24,32 @@ const DiamondMinterMarketplace = ({
   handleMinterRole,
   forceRefetch
 }) => {
-  const { diamondMarketplaceInstance } = useSelector(
-    (store) => store.contractStore
-  );
+  const { diamondMarketplaceInstance } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
   const navigate = useNavigate();
 
-  const [offerData, setOfferData] = useState([]);
-  const [nodeFee, setNodeFee] = useState(0);
-  const [treasuryFee, setTreasuryFee] = useState(0);
-  const [treasuryAddress, setTreasuryAddress] = useState(undefined);
-  const [minterDecimals, setMinterDecimals] = useState(0);
-  const [sendingData, setSendingData] = useState(false);
-  const [rerender, setRerender] = useState(false);
+  const [offerData, setOfferData] = useState<
+    TMarketplaceOfferConfigArrayItem[]
+  >([]);
+  const [nodeFee, setNodeFee] = useState<number>(0);
+  const [treasuryFee, setTreasuryFee] = useState<number>(0);
+  const [treasuryAddress, setTreasuryAddress] = useState<string | undefined>(
+    undefined
+  );
+  const [minterDecimals, setMinterDecimals] = useState<number>(0);
+  const [sendingData, setSendingData] = useState<boolean>(false);
+  const [rerender, setRerender] = useState<boolean>(false);
 
   const getOfferData = useCallback(async () => {
-    if (!contractData.product.offers) {
+    if (!contractData?.product.offers) {
       return;
     }
+
     setOfferData(
       contractData.product.offers.map((item) => {
-        item.price = item.price.toString();
         return {
-          selected: !item._id,
           ...item
         };
       })
@@ -67,11 +76,6 @@ const DiamondMinterMarketplace = ({
     getContractData();
   }, [getContractData]);
 
-  // let onMyChain = window.ethereum ?
-  // 	chainData[contractData?.blockchain]?.chainId === window.ethereum.chainId
-  // 	:
-  // 	chainData[contractData?.blockchain]?.chainId === programmaticProvider.provider._network.chainId;
-
   useEffect(() => {
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
@@ -84,17 +88,16 @@ const DiamondMinterMarketplace = ({
       icon: 'info',
       showConfirmButton: false
     });
-    const filteredOffers = offerData.filter((item) => item.selected);
+    const filteredOffers = offerData?.filter((item) => item.selected);
     if (
       await metamaskCall(
-        diamondMarketplaceInstance.addMintingOfferBatch(
-          //console.log(
-          contractData.contractAddress,
-          filteredOffers.map((item) => item.diamondRangeIndex),
-          filteredOffers.map((item) =>
-            item.customSplits.filter((split) => split.editable)
+        diamondMarketplaceInstance?.addMintingOfferBatch(
+          contractData?.contractAddress,
+          filteredOffers?.map((item) => item.diamondRangeIndex),
+          filteredOffers?.map((item) =>
+            item.customSplits?.filter((split) => split.editable)
           ),
-          filteredOffers.map((item) => item.marketData.visible),
+          filteredOffers?.map((item) => item.marketData.visible),
           process.env.REACT_APP_NODE_ADDRESS
         )
       )
@@ -120,9 +123,9 @@ const DiamondMinterMarketplace = ({
     });
     if (
       await metamaskCall(
-        contractData.instance.grantRole(
+        contractData?.instance.grantRole(
           await contractData.instance.MINTER(),
-          diamondMarketplaceInstance.address
+          diamondMarketplaceInstance?.address
         )
       )
     ) {
@@ -173,7 +176,7 @@ const DiamondMinterMarketplace = ({
               disabled:
                 sendingData ||
                 mintingRole === undefined ||
-                offerData.filter((item) => item.selected === true).length === 0
+                offerData?.filter((item) => item.selected === true).length === 0
             },
             {
               label: 'Continue',
@@ -187,7 +190,7 @@ const DiamondMinterMarketplace = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: TDiamondMinterMarketplace) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { IFooter } from './footer.types';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../ducks';
@@ -21,7 +20,7 @@ import { TwitterIcon } from '../Header/DiscordIcon';
 import { DiscordIcon } from '../Header/DiscordIcon';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
-const Footer: React.FC<IFooter> = () => {
+const Footer = () => {
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );

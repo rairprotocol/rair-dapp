@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import colors from '../../../utils/offerLockColors';
@@ -6,8 +5,10 @@ import InputField from '../../common/InputField';
 import { utils } from 'ethers';
 import { validateInteger, metamaskCall } from '../../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
-
-const DiamondOfferRow = ({
+import { IDiamondOfferRow } from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+const DiamondOfferRow: React.FC<IDiamondOfferRow> = ({
   index,
   deleter,
   offerName,
@@ -22,26 +23,30 @@ const DiamondOfferRow = ({
   lockedTokens,
   simpleMode,
   instance,
-  // offerIndex,
   diamondRangeIndex
-  // ...leftovers,
 }) => {
-  const { primaryColor, secondaryColor } = useSelector(
-    (store) => store.colorStore
-  );
+  const { primaryColor, secondaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const [itemName, setItemName] = useState(offerName);
-  const [startingToken, setStartingToken] = useState(range?.at(0));
-  const [endingToken, setEndingToken] = useState(range?.at(1));
-  const [individualPrice, setIndividualPrice] = useState(price);
-  const [allowedTokenCount, setAllowedTokenCount] = useState(copies);
-  const [lockedTokenCount, setLockedTokenCount] = useState(lockedTokens || 0);
-  const [valuesChanged, setValuesChanged] = useState(false);
-
+  const [startingToken, setStartingToken] = useState<string>(range[0]);
+  const [endingToken, setEndingToken] = useState<string>(range[1]);
+  const [individualPrice, setIndividualPrice] = useState<string>(price);
+  const [allowedTokenCount, setAllowedTokenCount] = useState<number>(copies);
+  const [lockedTokenCount, setLockedTokenCount] = useState<string>(
+    lockedTokens || '0'
+  );
+  const [valuesChanged, setValuesChanged] = useState<boolean>(false);
   const randColor = colors[index];
-
   const updater = useCallback(
-    (fieldName, setter, value, doRerender = true) => {
+    (
+      fieldName: string,
+      setter: (someValue: any /*string | number */) => void,
+      value: number,
+      doRerender = true
+    ) => {
       array[index][fieldName] = value;
       setter(value);
       if (doRerender) {
@@ -55,14 +60,14 @@ const DiamondOfferRow = ({
   );
 
   const updateEndingToken = useCallback(
-    (value) => {
+    (value: string) => {
       if (!array) {
         return;
       }
-      array[index].range[1] = Number(value);
-      setEndingToken(Number(value));
-      if (array[Number(index) + 1] !== undefined) {
-        array[Number(index) + 1].range[0] = Number(value) + 1;
+      array[index].range[1] = value;
+      setEndingToken(value);
+      if (array[index + 1] !== undefined) {
+        array[index + 1].range[0] = String(+value + 1);
       }
       rerender();
     },
@@ -70,14 +75,14 @@ const DiamondOfferRow = ({
   );
 
   const updateStartingToken = useCallback(
-    (value) => {
+    (value: string) => {
       if (!array) {
         return;
       }
-      array[index].range[0] = Number(value);
+      array[index].range[0] = value;
       setStartingToken(value);
       if (Number(endingToken) < Number(value)) {
-        updateEndingToken(Number(value));
+        updateEndingToken(value);
       }
       rerender();
     },
@@ -88,11 +93,11 @@ const DiamondOfferRow = ({
     if (range?.at(0) === startingToken) {
       return;
     }
-    updateStartingToken(range?.at(0));
+    updateStartingToken(range[0]);
   }, [range, updateStartingToken, startingToken]);
 
   useEffect(() => {
-    const correctCount = endingToken - startingToken + 1;
+    const correctCount = +endingToken - +startingToken + 1;
     if (!_id && simpleMode && correctCount !== allowedTokenCount) {
       updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
       updater('lockedTokens', setLockedTokenCount, correctCount, false);
@@ -100,13 +105,13 @@ const DiamondOfferRow = ({
     if (!_id && correctCount < allowedTokenCount) {
       updater('tokensAllowed', setAllowedTokenCount, correctCount, false);
     }
-    if (!_id && correctCount < lockedTokenCount) {
+    if (!_id && correctCount < +lockedTokenCount) {
       updater('lockedTokens', setLockedTokenCount, correctCount, false);
     }
     if (range?.at(1) === endingToken) {
       return;
     }
-    updateEndingToken(range?.at(1));
+    updateEndingToken(range[1]);
   }, [
     range,
     updateEndingToken,
@@ -176,7 +181,7 @@ const DiamondOfferRow = ({
         <i style={{ color: `${randColor}` }} className="fas fa-key h1" />
       </button>
       <div className="col-12 col-md-11 row">
-        <div className={'col-12 col-md-11 px-2'}>
+        <div className={`col-12 col-md-11 px-2`}>
           Range name:
           <div className={`${disabledClass} w-100 mb-2`}>
             <InputField
@@ -191,7 +196,7 @@ const DiamondOfferRow = ({
             />
           </div>
         </div>
-        <div className={'col-12 col-md-1 pt-4 px-0'}>
+        <div className={`col-12 col-md-1 pt-4 px-0`}>
           {_id ? (
             <button
               onClick={updateRange}
@@ -209,7 +214,7 @@ const DiamondOfferRow = ({
             </button>
           )}
         </div>
-        <div className={'col-12 col-md-4'}>
+        <div className={`col-12 col-md-4`}>
           Starting token:
           <div className={`${!_id && disabledClass} w-100`}>
             <InputField
@@ -217,7 +222,7 @@ const DiamondOfferRow = ({
               getter={startingToken}
               setter={updateStartingToken}
               type="number"
-              min="0"
+              min={0}
               customClass="form-control rounded-rair"
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
@@ -227,11 +232,11 @@ const DiamondOfferRow = ({
             />
           </div>
         </div>
-        <div className={'col-12 col-md-4'}>
+        <div className={`col-12 col-md-4`}>
           Ending token:
           {!_id && (
             <button
-              onClick={() => updateEndingToken(maxCopies)}
+              onClick={() => updateEndingToken(String(maxCopies))}
               className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
               Max
             </button>
@@ -241,9 +246,9 @@ const DiamondOfferRow = ({
               getter={endingToken}
               setter={updateEndingToken}
               customClass="form-control rounded-rair"
-              disabled={_id}
+              disabled={!!_id}
               type="number"
-              min={startingToken}
+              min={+startingToken}
               max={maxCopies}
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
@@ -253,14 +258,14 @@ const DiamondOfferRow = ({
             />
           </div>
         </div>
-        <div className={'col-12 col-md-4'}>
+        <div className={`col-12 col-md-4`}>
           Range price:
           <div className={`${disabledClass} w-100`}>
             <InputField
               getter={individualPrice}
               setter={(value) => updater('price', setIndividualPrice, value)}
               type="number"
-              min="100"
+              min={100}
               customClass="form-control rounded-rair"
               customCSS={{
                 backgroundColor: `var(--${primaryColor})`,
@@ -269,19 +274,17 @@ const DiamondOfferRow = ({
               }}
             />
           </div>
-          {validateInteger(individualPrice) && (
+          {validateInteger(+individualPrice) && (
             <small>
               {utils
-                .formatEther(
-                  individualPrice === '' ? 0 : individualPrice.toString()
-                )
+                .formatEther(!individualPrice ? 0 : individualPrice.toString())
                 .toString()}{' '}
               {blockchainSymbol}
             </small>
           )}
         </div>
         {!simpleMode && (
-          <div className={'col-12 col-md-6'}>
+          <div className={`col-12 col-md-6`}>
             Tokens allowed to mint:
             {!_id && (
               <button
@@ -289,7 +292,7 @@ const DiamondOfferRow = ({
                   updater(
                     'copies',
                     setAllowedTokenCount,
-                    endingToken - startingToken + 1
+                    Number(endingToken) - Number(startingToken) + 1
                   )
                 }
                 className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
@@ -303,8 +306,8 @@ const DiamondOfferRow = ({
                   updater('copies', setAllowedTokenCount, value)
                 }
                 type="number"
-                min="0"
-                max={endingToken - startingToken + 1}
+                min={0}
+                max={Number(endingToken) - Number(startingToken) + 1}
                 customClass="form-control rounded-rair"
                 customCSS={{
                   backgroundColor: `var(--${primaryColor})`,
@@ -316,7 +319,7 @@ const DiamondOfferRow = ({
           </div>
         )}
         {!simpleMode && (
-          <div className={'col-12 col-md-6'}>
+          <div className={`col-12 col-md-6`}>
             Minted tokens needed before trades are unlocked:
             {!_id && (
               <button
@@ -324,7 +327,7 @@ const DiamondOfferRow = ({
                   updater(
                     'lockedTokens',
                     setLockedTokenCount,
-                    endingToken - startingToken + 1
+                    Number(endingToken) - Number(startingToken) + 1
                   )
                 }
                 className={`btn btn-${primaryColor} py-0 float-end rounded-rair`}>
@@ -338,8 +341,8 @@ const DiamondOfferRow = ({
                   updater('lockedTokens', setLockedTokenCount, value)
                 }
                 type="number"
-                min="0"
-                max={endingToken - startingToken + 1}
+                min={0}
+                max={Number(endingToken) - Number(startingToken) + 1}
                 customClass="form-control rounded-rair"
                 customCSS={{
                   backgroundColor: `var(--${primaryColor})`,

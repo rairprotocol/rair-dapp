@@ -69,7 +69,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
-  const [hiddenHeader, setHiddenHeader] = useState<boolean>(false);
+  const [, /*hiddenHeader*/ setHiddenHeader] = useState<boolean>(false);
 
   const splashPages = useMemo(() => {
     return [

@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import NftImage from './../../assets/grayman-matrix.png';
 import Nft_1 from './../../assets/monster.jpeg';
 import Nft_2 from './../../assets/coin-agenda_2.png';

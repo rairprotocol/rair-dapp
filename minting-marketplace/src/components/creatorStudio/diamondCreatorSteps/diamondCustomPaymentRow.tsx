@@ -1,10 +1,13 @@
-//@ts-nocheck
+//unused-component
 import React, { useState, useEffect } from 'react';
 import InputField from '../../common/InputField';
 import { useSelector } from 'react-redux';
 import { utils, BigNumber } from 'ethers';
+import { RootState } from '../../../ducks';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { ICustomFeeRow } from '../creatorStudio.types';
 
-const DiamondCustomPaymentRow = ({
+const DiamondCustomPaymentRow: React.FC<ICustomFeeRow> = ({
   index,
   array,
   recipient,
@@ -20,12 +23,15 @@ const DiamondCustomPaymentRow = ({
   price,
   symbol
 }) => {
-  const [recipientAddress, setRecipientAddress] = useState(recipient);
-  const [percentageReceived, setPercentageReceived] = useState(percentage);
-
-  const { secondaryColor, primaryColor } = useSelector(
-    (store) => store.colorStore
+  const [recipientAddress, setRecipientAddress] = useState<string | undefined>(
+    recipient
   );
+  const [percentageReceived, setPercentageReceived] =
+    useState<number>(percentage);
+  const { secondaryColor, primaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   useEffect(() => {
     setRecipientAddress(recipient);
@@ -35,20 +41,20 @@ const DiamondCustomPaymentRow = ({
     setPercentageReceived(percentage);
   }, [percentage]);
 
-  const updatePercentage = (value) => {
+  const updatePercentage = (value: number) => {
     setPercentageReceived(value);
     array[index].percentage = Number(value);
     rerender();
-    if (!marketValuesChanged) {
+    if (!marketValuesChanged && setMarketValuesChanged) {
       setMarketValuesChanged(true);
     }
   };
 
-  const updateRecipient = (value) => {
+  const updateRecipient = (value: string) => {
     setRecipientAddress(value);
     array[index].recipient = value;
     rerender();
-    if (!marketValuesChanged) {
+    if (!marketValuesChanged && setMarketValuesChanged) {
       setMarketValuesChanged(true);
     }
   };
@@ -89,7 +95,7 @@ const DiamondCustomPaymentRow = ({
             disabled={!editable || disabled}
             labelClass="w-100 text-start"
             customClass="form-control rounded-rair"
-            min="0"
+            min={0}
             max={100 * Math.pow(10, minterDecimals)}
             type="number"
             getter={percentageReceived}
@@ -114,7 +120,7 @@ const DiamondCustomPaymentRow = ({
       <th style={{ width: '5vw' }}>
         {editable && (
           <button
-            onClick={(e) => deleter(index)}
+            onClick={() => deleter(index)}
             className="btn btn-danger rounded-rair">
             <i className="fas fa-trash" />
           </button>

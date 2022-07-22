@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import FixedBottomNavigation from '../FixedBottomNavigation';
@@ -8,8 +7,17 @@ import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import { metamaskCall } from '../../../utils/metamaskUtils';
 import DiamondOfferRow from './diamondOfferRow';
+import {
+  TMarketplaceOfferConfigArrayItem,
+  TListOffers,
+  TParamsDiamondListOffers,
+  TAddDiamondOffer
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
-const ListOffers = ({
+const ListOffers: React.FC<TListOffers> = ({
   contractData,
   setStepNumber,
   simpleMode,
@@ -18,21 +26,26 @@ const ListOffers = ({
   gotoNextStep,
   forceRefetch
 }) => {
-  const [offerList, setOfferList] = useState([]);
-  const [forceRerender, setForceRerender] = useState(false);
-  const [onMyChain, setOnMyChain] = useState();
-  const [invalidItems, setInvalidItems] = useState(true);
+  const [offerList, setOfferList] = useState<
+    TMarketplaceOfferConfigArrayItem[]
+  >([]);
+  const [forceRerender, setForceRerender] = useState<boolean>(false);
+  const [onMyChain, setOnMyChain] = useState<boolean>();
+  const [invalidItems, setInvalidItems] = useState<boolean>(true);
 
-  const { programmaticProvider, currentChain } = useSelector(
-    (store) => store.contractStore
+  const { programmaticProvider, currentChain } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
   );
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
-  const { collectionIndex } = useParams();
+  const { collectionIndex } = useParams<TParamsDiamondListOffers>();
 
   useEffect(() => {
     let value = false;
     offerList.forEach((item) => {
-      value = value || item.offerName.trim() === '' || item.price <= 0;
+      value = value || item.offerName.trim() === '' || +item.price <= 0;
     });
     setInvalidItems(value);
   }, [forceRerender, offerList]);
@@ -52,23 +65,27 @@ const ListOffers = ({
   }, [setForceRerender, forceRerender]);
 
   const addOffer = () => {
-    const aux = [...offerList];
+    const aux: (TAddDiamondOffer | TMarketplaceOfferConfigArrayItem)[] = [
+      ...offerList
+    ];
     const startingToken =
-      offerList.length === 0 ? 0 : Number(offerList.at(-1)?.range?.at(1)) + 1;
+      offerList.length === 0
+        ? '0'
+        : String(Number(offerList.at(-1)?.range?.at(1)) + 1);
     aux.push({
       offerName: '',
       range: [startingToken, startingToken],
-      price: 0,
-      tokensAllowed: 0,
-      lockedTokens: 0
+      price: '0',
+      tokensAllowed: '0',
+      lockedTokens: '0'
     });
-    setOfferList(aux);
+    setOfferList(aux as TMarketplaceOfferConfigArrayItem[]);
   };
 
-  const deleter = (index) => {
+  const deleter = (index: number) => {
     const aux = [...offerList];
     if (aux.length > 1 && index !== aux.length - 1) {
-      aux[1].starts = 0;
+      aux[1].range[0] = '0';
     }
     aux.splice(index, 1);
     setOfferList(aux);
@@ -84,13 +101,13 @@ const ListOffers = ({
     });
     if (
       await metamaskCall(
-        contractData.instance.createRangeBatch(
+        contractData?.instance.createRangeBatch(
           collectionIndex,
           offerList
-            .filter((item) => !item._id)
+            .filter((item: TMarketplaceOfferConfigArrayItem) => !item._id)
             .map((item) => {
               return {
-                rangeLength: item.range[1] - item.range[0] + 1,
+                rangeLength: Number(item.range[1]) - Number(item.range[0]) + 1,
                 tokensAllowed: item.tokensAllowed,
                 lockedTokens: item.lockedTokens,
                 price: item.price,
@@ -112,11 +129,10 @@ const ListOffers = ({
 
   useEffect(() => {
     setOnMyChain(
-      window.ethereum
-        ? chainData[contractData?.blockchain]?.chainId ===
-            window.ethereum.chainId
-        : chainData[contractData?.blockchain]?.chainId ===
-            programmaticProvider?.provider?._network?.chainId
+      contractData &&
+        (window.ethereum
+          ? chainData[contractData?.blockchain]?.chainId === currentChain
+          : chainData[contractData?.blockchain]?.chainId === currentChain)
     );
   }, [contractData, programmaticProvider, currentChain]);
 
@@ -153,7 +169,7 @@ const ListOffers = ({
                 disabled={
                   contractData === undefined ||
                   offerList.length >= 12 ||
-                  offerList?.at(-1)?.range[1] >=
+                  Number(offerList?.at(-1)?.range[1]) >=
                     Number(contractData?.product?.copies) - 1
                 }
                 className={`btn btn-${primaryColor} rounded-rair px-4`}>
@@ -173,7 +189,7 @@ const ListOffers = ({
             className="col-12 mt-3 p-5 text-center rounded-rair"
             style={{ border: 'dashed 2px var(--charcoal-80)' }}>
             First Token: {contractData?.product?.firstTokenIndex}, Last Token:{' '}
-            {contractData?.product?.firstTokenIndex +
+            {Number(contractData?.product?.firstTokenIndex) +
               contractData?.product?.copies -
               1}
             , Mintable Tokens Left:{' '}
@@ -208,9 +224,9 @@ const ListOffers = ({
                     onMyChain &&
                     (!contractData.diamond ||
                       offerList.length === 0 ||
-                      (offerList.at(-1).range[1] >
+                      (Number(offerList.at(-1)?.range[1]) >
                         Number(contractData.product.copies) - 1 &&
-                        offerList.at(-1)._id === undefined) ||
+                        offerList.at(-1)?._id === undefined) ||
                       invalidItems)
                 }
               ]}
@@ -224,7 +240,7 @@ const ListOffers = ({
   );
 };
 
-const ContextWrapper = (props) => {
+const ContextWrapper = (props: TListOffers) => {
   return (
     <WorkflowContext.Consumer>
       {(value) => {

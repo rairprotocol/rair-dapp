@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect } from 'react';
 import chainData from '../../../utils/blockchainData';
 import { utils } from 'ethers';
@@ -6,8 +5,14 @@ import { useSelector } from 'react-redux';
 import CustomFeeRow from '../common/customFeeRow';
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../../utils/metamaskUtils';
+import {
+  IMarketplaceOfferConfig,
+  TCustomPayments
+} from '../creatorStudio.types';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 
-const MarketplaceOfferConfig = ({
+const MarketplaceOfferConfig: React.FC<IMarketplaceOfferConfig> = ({
   array,
   index,
   nodeFee,
@@ -18,12 +23,13 @@ const MarketplaceOfferConfig = ({
   rerender
 }) => {
   const item = array[index];
-  const { currentUserAddress, diamondMarketplaceInstance } = useSelector(
-    (store) => store.contractStore
-  );
-
-  const [marketValuesChanged, setMarketValuesChanged] = useState(false);
-  const [customPayments, setCustomPayments] = useState([
+  const { currentUserAddress, diamondMarketplaceInstance, currentChain } =
+    useSelector<RootState, ContractsInitialType>(
+      (store) => store.contractStore
+    );
+  const [marketValuesChanged, setMarketValuesChanged] =
+    useState<boolean>(false);
+  const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([
     {
       message: 'Node address',
       recipient: process.env.REACT_APP_NODE_ADDRESS,
@@ -43,9 +49,8 @@ const MarketplaceOfferConfig = ({
       editable: true
     }
   ]);
-
   useEffect(() => {
-    if (!array[index].marketData || array[index]._id === false) {
+    if (!array[index].marketData || !!array[index]._id === false) {
       return;
     }
     setCustomPayments(
@@ -63,9 +68,9 @@ const MarketplaceOfferConfig = ({
           editable: false
         }
       ].concat(
-        array[index].marketData.fees.map((fee) => ({
+        array[index].marketData.fees.map((fee: TCustomPayments) => ({
           recipient: fee.recipient,
-          percentage: fee.percentage.toString(),
+          percentage: fee.percentage,
           editable: true,
           message: 'Data from the marketplace'
         }))
@@ -73,7 +78,7 @@ const MarketplaceOfferConfig = ({
     );
   }, [array, index, nodeFee, treasuryAddress, treasuryFee]);
 
-  const removePayment = (index) => {
+  const removePayment = (index: number) => {
     const aux = [...customPayments];
     aux.splice(index, 1);
     setCustomPayments(aux);
@@ -106,15 +111,15 @@ const MarketplaceOfferConfig = ({
       <div className="row w-100 p-3">
         <div className="col-10 rounded-rair text-start">
           <h3>{item.offerName}</h3>
-          <h5 style={{ display: 'inline' }}>{item.tokensAllowed}</h5> tokens
-          available for{' '}
+          <h5 style={{ display: 'inline' }}>{item.copies}</h5> tokens available
+          for{' '}
           <h5 style={{ display: 'inline' }}>
             {utils.formatEther(item.price)}{' '}
-            {chainData[window.ethereum.chainId].symbol}
+            {currentChain && chainData[currentChain]?.symbol}
           </h5>
         </div>
         <div className="col-2 rounded-rair text-end">
-          {item._id && item.offerIndex && (
+          {item._id && item.diamondRangeIndex && item.offerIndex && (
             <button
               disabled={updateAvailable}
               className={`btn col-12 btn-${
@@ -129,8 +134,8 @@ const MarketplaceOfferConfig = ({
                 });
                 if (
                   await metamaskCall(
-                    diamondMarketplaceInstance.updateMintingOffer(
-                      item.marketData.mintingOfferIndex,
+                    diamondMarketplaceInstance?.updateMintingOffer(
+                      item.offerIndex,
                       customPayments.filter((item) => item.editable),
                       array[index].marketData.visible
                     )
@@ -149,7 +154,7 @@ const MarketplaceOfferConfig = ({
               </small>
             </button>
           )}
-          {!(item._id && item.offerIndex) && (
+          {item._id && item.diamondRangeIndex && !item.offerIndex && (
             <button
               onClick={() => {
                 array[index].selected = !array[index].selected;
@@ -226,7 +231,8 @@ const MarketplaceOfferConfig = ({
                           marketValuesChanged,
                           setMarketValuesChanged,
                           price: item.price,
-                          symbol: chainData[window.ethereum.chainId].symbol
+                          symbol:
+                            currentChain && chainData[currentChain]?.symbol
                         }}
                         {...customPaymentItem}
                       />

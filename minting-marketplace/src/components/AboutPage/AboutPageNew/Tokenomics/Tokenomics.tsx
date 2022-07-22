@@ -8,7 +8,7 @@ import Arb_icon from './../../assets/arb-icon.png';
 import Kit_icon from './../../assets/kat-icon.png';
 import { ITokenomics } from '../aboutPage.types';
 
-const Tokenomics: React.FC<ITokenomics> = ({ Metamask }) => {
+const Tokenomics: React.FC<ITokenomics> = () => {
   return (
     <div className="about-tokenomics">
       <div className="about-tokenomics-title">

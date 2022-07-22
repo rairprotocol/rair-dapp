@@ -1,5 +1,4 @@
 //@ts-nocheck
-import React from 'react';
 import Modal from 'react-modal';
 
 import './SplashPage.css';

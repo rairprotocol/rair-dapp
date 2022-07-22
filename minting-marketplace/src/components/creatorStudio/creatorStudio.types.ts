@@ -10,6 +10,35 @@ import {
   TTokenData,
   TProducts
 } from '../../axios.responseTypes';
+export interface IMarketplaceOfferConfig {
+  array: TMarketplaceOfferConfigArrayItem[];
+  index: number;
+  nodeFee: number;
+  minterDecimals: number;
+  treasuryFee: number;
+  treasuryAddress: string;
+  simpleMode: boolean;
+  rerender: () => void;
+}
+
+export type TListOffers = Pick<
+  TWorkflowContextType,
+  'setStepNumber' | 'simpleMode' | 'switchBlockchain' | 'gotoNextStep'
+> & {
+  stepNumber: number;
+  contractData: TDiamondContractData | undefined;
+};
+export type TDiamondMinterMarketplace = Pick<
+  TWorkflowContextType,
+  | 'simpleMode'
+  | 'setStepNumber'
+  | 'gotoNextStep'
+  | 'mintingRole'
+  | 'contractData'
+> & {
+  stepNumber: number;
+};
+
 export interface ICustomFeeRow {
   index: number;
   array: TCustomPayments[];
@@ -18,7 +47,7 @@ export interface ICustomFeeRow {
   percentage: number;
   rerender: () => void;
   editable: boolean;
-  message: string;
+  message?: string;
   minterDecimals: number;
   disabled?: boolean;
   marketValuesChanged?: boolean;
@@ -45,23 +74,68 @@ export type TParamsBatchMetadata = {
   collectionIndex: string;
 };
 
-export type TParamsListLocks = {
-  address: string;
+export type TCustomPayments = {
+  recipient: string | undefined;
+  percentage: number;
+  editable: boolean;
+  message?: string;
+};
+
+export type TMarketData = {
+  fees: TCustomPayments[];
+  visible: boolean;
+};
+export interface IDiamondOfferRow {
+  index: number;
+  deleter: () => void;
+  offerName: string;
+  range: string[];
+  price: string;
+  _id: string | undefined;
+  array: TMarketplaceOfferConfigArrayItem[];
+  rerender: () => void;
+  maxCopies: number;
+  blockchainSymbol: string | undefined;
+  copies: number;
+  lockedTokens: string;
+  simpleMode: boolean;
+  instance: ethers.Contract | undefined;
+  diamondRangeIndex: string;
+}
+
+export type TMarketplaceOfferConfigArrayItem = {
+  contract: string;
+  copies: number;
+  creationDate: string;
+  customSplits?: TCustomPayments[];
+  diamond: boolean;
+  diamondRangeIndex: string;
+  lockedTokens: string;
+  marketData: TMarketData;
+  offerIndex?: string;
+  offerName: string;
+  price: string;
+  product: string;
+  range: string[];
+  selected: boolean;
+  sold: boolean;
+  soldCopies: number;
+  transactionHash: string;
+  _id: string;
+  tokensAllowed?: string;
+};
+
+export type TAddDiamondOffer = {
+  offerName: string;
+  range: string[];
+  price: string;
+  tokensAllowed: string;
+  lockedTokens: string;
 };
 
 export type TMetadataExtra = {
   metadataURI: string;
   singleMetadata: boolean;
-};
-
-export type TTokenLock = {
-  contract: string;
-  isLocked: boolean;
-  lockIndex: string;
-  lockedTokens: string;
-  product: string;
-  rande: string[];
-  _id: string;
 };
 
 export type TWorkflowProduct = TProducts &
@@ -76,14 +150,18 @@ export type TContractData = Omit<TContract, 'product' | 'offerPool'> &
     product: TWorkflowProduct;
   };
 
-export interface IMediaUpload {
-  setStepNumber: Function;
-  contractData: TContractData | undefined;
-  stepNumber: number;
-}
+export type TTokenLock = {
+  contract: string;
+  isLocked: boolean;
+  lockIndex: string;
+  lockedTokens: string;
+  product: string;
+  rande: string[];
+  _id: string;
+};
 
 export type TWorkflowContextType = {
-  contractData: TContractData | undefined;
+  contractData: TContractData | TDiamondContractData | undefined;
   steps: TSteps[];
   setStepNumber: Function;
   gotoNextStep: () => void;
@@ -97,6 +175,32 @@ export type TWorkflowContextType = {
   simpleMode: boolean;
   forceRefetch: () => void;
 };
+
+export type TParamsDiamondListOffers = {
+  collectionIndex: string;
+};
+
+export type TListOffersProductType = Omit<TProducts, 'offers'> &
+  TMetadataExtra & {
+    tokenLock: TTokenLock | undefined;
+    offers: TMarketplaceOfferConfigArrayItem[];
+  };
+
+export type TDiamondContractData = Omit<TContract, 'product' | 'offerPool'> &
+  TMetadataExtra & {
+    instance: ethers.Contract;
+    nfts: TNftItemResult;
+    product: TListOffersProductType;
+  };
+
+export type TParamsListLocks = {
+  address: string;
+};
+export interface IMediaUpload {
+  setStepNumber: Function;
+  contractData: TContractData | undefined;
+  stepNumber: number;
+}
 
 export type TSteps = {
   classic: boolean;
@@ -185,11 +289,6 @@ export interface IPropertyRow {
   array: TAttributes[];
   index: number;
 }
-
-export type TParamsContractDetails = {
-  address: string;
-  blockchain: BlockchainType;
-};
 
 export type TUniqueURIArray = {
   tokenId: string;
@@ -297,11 +396,9 @@ export type TNftMapping = {
   [key: string]: TTokenData;
 };
 
-export type TCustomPayments = {
-  recipient: string | undefined;
-  percentage: number;
-  editable: boolean;
-  message: string;
+export type TParamsContractDetails = {
+  address: string;
+  blockchain: BlockchainType;
 };
 
 export type TWorkflowParams = TParamsContractDetails & {
