@@ -50,6 +50,85 @@ pipeline {
   }
   stages{
     stage('Build and push minting-marketplace') {
+          when {
+            not { branch 'dev'}
+          }
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile.prod \
+                    --context ./minting-marketplace/ \
+                    --verbosity debug \
+                    --cleanup \
+                    --destination rairtechinc/minting-network:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push rairnode') {
+          when {
+            not { branch 'dev'}
+          }
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./rairnode/ \
+                    --verbosity debug \
+                    --cleanup \
+                    --destination rairtechinc/rairservernode:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push event-listener') {
+          when {
+            not { branch 'dev'}
+          }
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./blockchain-networks-service/ \
+                    --verbosity debug \
+                    --cleanup \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push media-service') {
+          when {
+            not { branch 'dev'}
+          }
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile \
+                    --context ./media-service/ \
+                    --verbosity debug \
+                    --destination rairtechinc/media-service:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push dev minting-marketplace') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -67,7 +146,7 @@ pipeline {
             }
           }
         }
-    stage('Build and push rairnode') {
+    stage('Build and push dev rairnode') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -85,7 +164,7 @@ pipeline {
             }
           }
         }
-    stage('Build and push event-listener') {
+    stage('Build and push dev event-listener') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
@@ -103,7 +182,7 @@ pipeline {
             }
           }
         }
-    stage('Build and push media-service') {
+    stage('Build and push dev media-service') {
           steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
               withEnv(['PATH+EXTRA=/busybox']) {
