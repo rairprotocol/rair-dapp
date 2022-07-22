@@ -203,6 +203,12 @@ pipeline {
             }
           }
         }
+    stage('Jenkins Slack Notification') {
+      steps {
+                slackSend channel: '#jenkins-builds', 
+                          message: 'Branch' + GIT_BRANCH + 'with build-id' + GIT_COMMIT + ' has successfully built and pushed to docker ' + JOB_URL
+      }
+    }
     stage('Deploy configmap to dev k8s environment'){
       when { branch 'dev' }
       steps {
