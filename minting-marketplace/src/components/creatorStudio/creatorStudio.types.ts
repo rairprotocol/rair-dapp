@@ -23,7 +23,11 @@ export interface IMarketplaceOfferConfig {
 
 export type TListOffers = Pick<
   TWorkflowContextType,
-  'setStepNumber' | 'simpleMode' | 'switchBlockchain' | 'gotoNextStep'
+  | 'setStepNumber'
+  | 'simpleMode'
+  | 'switchBlockchain'
+  | 'gotoNextStep'
+  | 'forceRefetch'
 > & {
   stepNumber: number;
   contractData: TDiamondContractData | undefined;
@@ -35,6 +39,7 @@ export type TDiamondMinterMarketplace = Pick<
   | 'gotoNextStep'
   | 'mintingRole'
   | 'contractData'
+  | 'forceRefetch'
 > & {
   stepNumber: number;
 };

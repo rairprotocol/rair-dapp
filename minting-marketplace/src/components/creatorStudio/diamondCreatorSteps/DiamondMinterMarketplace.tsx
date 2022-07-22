@@ -21,7 +21,7 @@ const DiamondMinterMarketplace: React.FC<TDiamondMinterMarketplace> = ({
   stepNumber,
   gotoNextStep,
   mintingRole,
-  handleMinterRole,
+  //handleMinterRole,
   forceRefetch
 }) => {
   const { diamondMarketplaceInstance } = useSelector<
