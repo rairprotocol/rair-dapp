@@ -209,70 +209,64 @@ pipeline {
                           message: 'Branch' + GIT_BRANCH + 'with build-id' + GIT_COMMIT + ' has successfully built and pushed to docker ' + JOB_URL
       }
     }
-    stage('Deploy configmap to dev k8s environment'){
-      when { branch 'dev' }
-      steps {
-        container('kubectl') {
-        step([$class: 'KubernetesEngineBuilder', 
-        namespace: "default", 
-        projectId: env.DEV_PROJECT_ID, 
-        clusterName: env.DEV_CLUSTER, 
-        zone: env.DEV_LOCATION, 
-        manifestPattern: 'kubernetes-manifests/configmaps/environment/tf', 
-        credentialsId: env.CREDENTIALS_ID])
-    }
-      }
-    }
-    stage('Jenkins Slack Notification') {
-      steps {
-                slackSend channel: '#jenkins-builds', 
-                          message: 'Branch' + GIT_BRANCH + 'with build-id' + GIT_COMMIT + ' has successfully built and pushed to docker ' + JOB_URL
-      }
-    }
-    stage('Deploy k8s'){
-      when { branch 'dev' }
-      steps {
-        container('kubectl') {
-        sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/tf-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', 
-        namespace: "default", 
-        projectId: env.DEV_PROJECT_ID, 
-        clusterName: env.DEV_CLUSTER, 
-        zone: env.DEV_LOCATION, 
-        manifestPattern: 'kubernetes-manifests/tf-manifest', 
-        credentialsId: env.CREDENTIALS_ID, 
-        verifyDeployments: true])
-    }
-      }
-    }
-    stage('Deploy configmap to staging k8s environment'){
-      when { branch 'main' }
-      steps {
-        container('kubectl') {
-        step([$class: 'KubernetesEngineBuilder', 
-        namespace: "default", 
-        projectId: env.MAIN_PROJECT_ID, 
-        clusterName: env.MAIN_CLUSTER, 
-        zone: env.MAIN_LOCATION, 
-        manifestPattern: 'kubernetes-manifests/configmaps/environment/staging', 
-        credentialsId: env.CREDENTIALS_ID])
-    }
-      }
-    }
-    stage('Deploy to k8s staging'){
-      when { branch 'main' }
-      steps {
-        sh("sed -i.bak 's#latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/staging-manifest/*.yaml")
-        step([$class: 'KubernetesEngineBuilder', 
-        namespace: "default", 
-        projectId: env.MAIN_PROJECT_ID, 
-        clusterName: env.MAIN_CLUSTER, zone: 
-        env.MAIN_LOCATION, 
-        manifestPattern: 'kubernetes-manifests/staging-manifest', 
-        credentialsId: env.CREDENTIALS_ID, 
-        verifyDeployments: true])
-    }
-  }
+  //   stage('Deploy configmap to dev k8s environment'){
+  //     when { branch 'dev' }
+  //     steps {
+  //       container('kubectl') {
+  //       step([$class: 'KubernetesEngineBuilder', 
+  //       namespace: "default", 
+  //       projectId: env.DEV_PROJECT_ID, 
+  //       clusterName: env.DEV_CLUSTER, 
+  //       zone: env.DEV_LOCATION, 
+  //       manifestPattern: 'kubernetes-manifests/configmaps/environment/tf', 
+  //       credentialsId: env.CREDENTIALS_ID])
+  //   }
+  //     }
+  //   }
+  //   stage('Deploy k8s'){
+  //     when { branch 'dev' }
+  //     steps {
+  //       container('kubectl') {
+  //       sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/tf-manifest/*.yaml")
+  //       step([$class: 'KubernetesEngineBuilder', 
+  //       namespace: "default", 
+  //       projectId: env.DEV_PROJECT_ID, 
+  //       clusterName: env.DEV_CLUSTER, 
+  //       zone: env.DEV_LOCATION, 
+  //       manifestPattern: 'kubernetes-manifests/tf-manifest', 
+  //       credentialsId: env.CREDENTIALS_ID, 
+  //       verifyDeployments: true])
+  //   }
+  //     }
+  //   }
+  //   stage('Deploy configmap to staging k8s environment'){
+  //     when { branch 'main' }
+  //     steps {
+  //       container('kubectl') {
+  //       step([$class: 'KubernetesEngineBuilder', 
+  //       namespace: "default", 
+  //       projectId: env.MAIN_PROJECT_ID, 
+  //       clusterName: env.MAIN_CLUSTER, 
+  //       zone: env.MAIN_LOCATION, 
+  //       manifestPattern: 'kubernetes-manifests/configmaps/environment/staging', 
+  //       credentialsId: env.CREDENTIALS_ID])
+  //   }
+  //     }
+  //   }
+  //   stage('Deploy to k8s staging'){
+  //     when { branch 'main' }
+  //     steps {
+  //       sh("sed -i.bak 's#latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/staging-manifest/*.yaml")
+  //       step([$class: 'KubernetesEngineBuilder', 
+  //       namespace: "default", 
+  //       projectId: env.MAIN_PROJECT_ID, 
+  //       clusterName: env.MAIN_CLUSTER, zone: 
+  //       env.MAIN_LOCATION, 
+  //       manifestPattern: 'kubernetes-manifests/staging-manifest', 
+  //       credentialsId: env.CREDENTIALS_ID, 
+  //       verifyDeployments: true])
+  //   }
+  // }
   
 }
 }
