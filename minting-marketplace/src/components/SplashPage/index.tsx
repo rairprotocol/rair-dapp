@@ -71,7 +71,7 @@ const customStyles = {
 
 // Modal.setAppElement("#root");
 
-const SplashPage = () => {
+const SplashPage = ({ setIsSplashPage }) => {
   const [dataNipsey, setDataNipsey] = useState();
   const [copies, setCopies] = useState();
   const [timerLeft, setTimerLeft] = useState();
@@ -105,6 +105,10 @@ const SplashPage = () => {
     dispatch(setRealChain('0x1'));
     //eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   // let params = `scrollbars=no,resizable=no,status=no,location=no,
   //               toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;

@@ -57,7 +57,7 @@ const testContract = {
 //     }
 // ]
 
-const VideoTilesTest = () => {
+const VideoTilesTest = ({ setIsSplashPage }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
 
   /* UTILITIES FOR VIDEO PLAYERS */
@@ -77,6 +77,10 @@ const VideoTilesTest = () => {
   useEffect(() => {
     getProductsFromOffer();
   }, []);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   /* */
 

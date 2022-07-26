@@ -17,7 +17,7 @@ import {
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 
-const MyItems: React.FC<IMyItems> = () => {
+const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
   const dispatch = useDispatch();
   const defaultImg =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
@@ -69,7 +69,8 @@ const MyItems: React.FC<IMyItems> = () => {
   useEffect(() => {
     setDocumentTitle('My Items');
     window.scrollTo(0, 0);
-  }, []);
+    setIsSplashPage(false);
+  }, [setIsSplashPage]);
 
   const filteredData =
     tokens &&

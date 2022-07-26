@@ -25,7 +25,7 @@ import Swal from 'sweetalert2';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { setRealChain } from '../../../ducks/contracts/actions';
 
-const Nutcrackers = ({ connectUserData }) => {
+const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
   const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
   const [, /*percentTokens*/ setPresentTokens] = useState(0);
@@ -105,6 +105,10 @@ const Nutcrackers = ({ connectUserData }) => {
       setPresentTokens(100);
     }
   }, [setPresentTokens, leftTokensNumber, wholeTokens]);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   return (
     <div className="wrapper-splash-page nutcrackers">

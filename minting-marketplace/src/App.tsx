@@ -134,6 +134,7 @@ function App() {
   const [loginDone, setLoginDone] = useState(false);
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
+  const [isSplashPage, setIsSplashPage] = useState(false);
   const { currentChain, realChain } = useSelector(
     (store) => store.contractStore
   );
@@ -458,6 +459,7 @@ function App() {
               creatorViewsDisabled={creatorViewsDisabled}
               showAlert={showAlert}
               selectedChain={selectedChain}
+              isSplashPage={isSplashPage}
             />
           ) : (
             <MenuNavigation
@@ -580,7 +582,9 @@ function App() {
                       exact
                       path={isHome ? '/' : item.path}
                       element={
-                        <item.content {...{ connectUserData, loginDone }} />
+                        <item.content
+                          {...{ connectUserData, loginDone, setIsSplashPage }}
+                        />
                       }
                     />
                   );
@@ -595,7 +599,8 @@ function App() {
                     content: WelcomeHeader,
                     requirement: process.env.REACT_APP_HOME_PAGE === '/',
                     props: {
-                      seoInformation
+                      seoInformation,
+                      setIsSplashPage
                     }
                   },
 
@@ -719,6 +724,7 @@ function App() {
                       connectUserData: connectUserData,
                       headerLogoWhite: headerLogoWhite,
                       headerLogoBlack: headerLogoBlack,
+                      setIsSplashPage: setIsSplashPage,
                       seoInformation
                     }
                   },
@@ -732,7 +738,7 @@ function App() {
                     path: '/my-items',
                     content: MyItems,
                     requirement: loginDone,
-                    props: { goHome }
+                    props: { goHome, setIsSplashPage }
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',
@@ -753,11 +759,17 @@ function App() {
                   },
                   {
                     path: '/privacy',
-                    content: PrivacyPolicy
+                    content: PrivacyPolicy,
+                    props: {
+                      setIsSplashPage: setIsSplashPage
+                    }
                   },
                   {
                     path: '/terms-use',
-                    content: TermsUse
+                    content: TermsUse,
+                    props: {
+                      setIsSplashPage: setIsSplashPage
+                    }
                   },
                   {
                     path: '/thankyou',

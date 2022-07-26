@@ -1,9 +1,14 @@
 //@ts-nocheck
 /* eslint-disable  */
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import cl from './PrivacyPolicy.module.css';
 
-const PrivacyPolicyComponent = () => {
+const PrivacyPolicyComponent = ({ setIsSplashPage }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setIsSplashPage(false);
+  }, [setIsSplashPage]);
+
   return (
     <div className={cl.main}>
       <h1>PRIVACY POLICY</h1>

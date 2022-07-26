@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState /*useCallback, useEffect */ } from 'react';
+import React, { useState /*useCallback*/, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 // import { useNavigate } from "react-router-dom";
 
@@ -54,7 +54,7 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-const SplashPage = () => {
+const SplashPage = ({ setIsSplashPage }) => {
   // props was loginDone
   const [/*active,*/ setActive] = useState({ policy: false, use: false });
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -104,6 +104,10 @@ const SplashPage = () => {
       '_blank'
     );
   };
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   return (
     <div className="wrapper-splash-page greyman-page">

@@ -3,10 +3,11 @@
 import React, { memo, useEffect } from 'react';
 import cl from './TermsUse.module.css';
 
-const TermsUseComponent = () => {
+const TermsUseComponent = ({ setIsSplashPage }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    setIsSplashPage(false);
+  }, [setIsSplashPage]);
 
   return (
     <div className={cl.main}>

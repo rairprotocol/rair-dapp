@@ -211,7 +211,7 @@ const splashData = {
   }
 };
 
-const SlideLock = ({ loginDone, connectUserData }) => {
+const SlideLock = ({ loginDone, connectUserData, setIsSplashPage }) => {
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
   const { currentChain, minterInstance } = useSelector(
@@ -240,6 +240,10 @@ const SlideLock = ({ loginDone, connectUserData }) => {
   useEffect(() => {
     getAllProduct();
   }, [getAllProduct]);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   // useEffect(() => {
   //   setTitle(`#UkraineGlitch`);

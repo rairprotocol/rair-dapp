@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { /*useCallback, useEffect,*/ useState } from 'react';
+import { /*useCallback, useEffect,*/ useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import './SplashPageTemplate/AuthorCard/AuthorCard.css';
 import './../AboutPage/AboutPageNew/AboutPageNew.css';
@@ -122,7 +122,7 @@ const splashData = {
   ]
 };
 
-const NFTLASplashPage = () => {
+const NFTLASplashPage = ({ setIsSplashPage }) => {
   const [selectVideo, setSelectVideo] = useState({});
   // TODO: Until we have a contract it will be commented
   const [allVideos /*setAllVideos*/] = useState([]);
@@ -168,6 +168,10 @@ const NFTLASplashPage = () => {
   // useEffect(() => {
   //   getAllVideos();
   // }, [getAllVideos]);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   return (
     <div className="wrapper-splash-page">

@@ -91,7 +91,7 @@ const customStylesForVideo = {
 };
 Modal.setAppElement('#root');
 
-const SplashPage = ({ loginDone, connectUserData }) => {
+const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
   const [timerLeft, setTimerLeft] = useState();
   const [copies, setCopies] = useState();
   const [soldCopies, setSoldCopies] = useState();
@@ -368,6 +368,10 @@ const SplashPage = ({ loginDone, connectUserData }) => {
   useEffect(() => {
     getAllProduct();
   }, [getAllProduct]);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   return (
     <div className="wrapper-splash-page greyman-page">

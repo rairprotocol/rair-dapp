@@ -4,6 +4,7 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 export interface IAboutPageNew {
   headerLogoBlack?: string;
   headerLogoWhite?: string;
+  setIsSplashPage: (arg: boolean) => void;
   connectUserData: () => void;
   seoInformation: Object;
 }

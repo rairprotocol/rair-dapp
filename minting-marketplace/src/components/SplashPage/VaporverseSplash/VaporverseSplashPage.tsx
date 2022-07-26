@@ -223,7 +223,7 @@ const InfoBlock = ({ infoArray, style, subclass }) => {
   );
 };
 
-const VaporverseSplashPage = ({ connectUserData }) => {
+const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
   const [openCheckList, setOpenCheckList] = useState(false);
   const { primaryColor } = useSelector((store) => store.colorStore);
   // const [soldCopies, setSoldCopies] = useState(0);
@@ -264,6 +264,10 @@ const VaporverseSplashPage = ({ connectUserData }) => {
   useEffect(() => {
     dispatch(setRealChain(ukraineglitchChainId));
   }, [dispatch]);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   return (
     <div className="wrapper-splash-page vaporverse">

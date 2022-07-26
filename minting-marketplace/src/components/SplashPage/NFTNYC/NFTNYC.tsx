@@ -66,7 +66,10 @@ const WarningModal = () => {
   );
 };
 
-const NFTNYCSplashPage = ({ /*loginDone ,*/ connectUserData }) => {
+const NFTNYCSplashPage = ({
+  /*loginDone ,*/ connectUserData,
+  setIsSplashPage
+}) => {
   const { /* currentChain */ currentUserAddress /*minterInstance */ } =
     useSelector((store) => store.contractStore);
 
@@ -155,6 +158,10 @@ const NFTNYCSplashPage = ({ /*loginDone ,*/ connectUserData }) => {
   useEffect(() => {
     getProductsFromOffer();
   }, [getProductsFromOffer]);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   const whatSplashPage = 'nftnyc-font';
   /**** */

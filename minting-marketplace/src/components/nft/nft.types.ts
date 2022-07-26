@@ -29,6 +29,7 @@ export interface IMyDiamondItems {
 
 export interface IMyItems {
   goHome: () => void;
+  setIsSplashPage: (arg: boolean) => void;
 }
 
 export type TPercentageRecipient = {

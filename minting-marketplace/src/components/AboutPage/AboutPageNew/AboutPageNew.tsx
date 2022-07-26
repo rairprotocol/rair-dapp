@@ -30,7 +30,8 @@ import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
 const AboutPageNew: React.FC<IAboutPageNew> = ({
   connectUserData,
-  seoInformation
+  seoInformation,
+  setIsSplashPage
 }) => {
   const { pathname } = useLocation();
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
@@ -47,6 +48,10 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
   useEffect(() => {
     setDocumentTitle('About Page');
   }, []);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   const switchToNetwork = '0x38';
   const aboutPageAddress =

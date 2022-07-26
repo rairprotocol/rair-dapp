@@ -1,7 +1,7 @@
 //tools
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 //imports components
@@ -47,7 +47,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   userData,
   creatorViewsDisabled,
   selectedChain,
-  showAlert
+  showAlert,
+  isSplashPage
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,40 +66,8 @@ const MainHeader: React.FC<IMainHeader> = ({
     ContractsInitialType
   >((store) => store.contractStore);
 
-  const location = useLocation();
-
   const [textSearch, setTextSearch] = useState<string>('');
   const [adminPanel, setAdminPanel] = useState<boolean>(false);
-  const [, /*hiddenHeader*/ setHiddenHeader] = useState<boolean>(false);
-
-  const splashPages = useMemo(() => {
-    return [
-      '/immersiverse-splash',
-      '/video-tiles-test',
-      '/nftla-splash',
-      '/ukraineglitch',
-      '/vaporverse-splash',
-      '/greyman-splash',
-      '/nutcrackers-splash',
-      '/nipsey-splash',
-      '/about-page',
-      '/slidelock',
-      '/nftnyc-splash',
-      '/'
-    ];
-  }, []);
-
-  const handleHiddinHeader = useCallback(
-    (param: string) => {
-      setHiddenHeader(false);
-      for (const el of splashPages) {
-        if (param === el) {
-          setHiddenHeader(true);
-        }
-      }
-    },
-    [splashPages]
-  );
 
   const goToExactlyContract = useCallback(
     async (addressId: string, collectionIndexInContract: string) => {
@@ -183,10 +152,6 @@ const MainHeader: React.FC<IMainHeader> = ({
     }
   }, [dispatch, textSearch]);
 
-  useEffect(() => {
-    handleHiddinHeader(location.pathname);
-  }, [location.pathname, handleHiddinHeader]);
-
   return (
     <HeaderContainer
       className="col-12 header-master"
@@ -202,8 +167,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           primaryColor={primaryColor}
         />
       </div>
-      {/* <div className={`main-search ${hiddenHeader ? 'hidden' : ''}`}> */}
-      <div className={`main-search hidden`}>
+      <div className={`main-search ${isSplashPage ? 'hidden' : ''}`}>
         <input
           className={primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'}
           type="text"

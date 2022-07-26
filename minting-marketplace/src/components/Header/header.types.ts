@@ -12,6 +12,7 @@ export interface IMainHeader {
   creatorViewsDisabled: boolean;
   selectedChain: string | null;
   showAlert: boolean;
+  isSplashPage: boolean;
 }
 
 export type TAxiosCollectionData = {

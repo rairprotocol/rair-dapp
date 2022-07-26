@@ -219,7 +219,7 @@ const splashData = {
   }
 };
 
-const UkraineSplashPage = ({ loginDone, connectUserData }) => {
+const UkraineSplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
   const [openCheckList, setOpenCheckList] = useState(false);
   const [soldCopies, setSoldCopies] = useState(0);
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -266,6 +266,10 @@ const UkraineSplashPage = ({ loginDone, connectUserData }) => {
     dispatch(setRealChain(ukraineglitchChainId));
     //eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   return (
     <div className="wrapper-splash-page ukraineglitch">
