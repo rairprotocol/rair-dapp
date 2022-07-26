@@ -33,7 +33,7 @@ async function main() {
   app.use(bodyParser.raw());
   app.use(bodyParser.json());
 
-  app.use('/api', apiRoutes());
+  app.use('/ms/api', apiRoutes());
   app.use(errorHandler);
 
   const server = app.listen(port, () => {
