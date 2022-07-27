@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.10; 
+pragma solidity 0.8.15; 
 
 // Used on interfaces
 import '@openzeppelin/contracts/access/AccessControl.sol';
@@ -8,8 +8,6 @@ import "../Tokens/IERC2981.sol";
 
 // Parent classes
 import '@openzeppelin/contracts/access/Ownable.sol';
-
-import 'hardhat/console.sol';
 
 /// @title  Minter Marketplace 
 /// @notice Handles the minting of ERC721 RAIR Tokens
@@ -44,7 +42,7 @@ contract Minter_Marketplace is Ownable {
 	mapping(address => mapping(uint => uint)) internal _contractToOffers;
 	mapping(uint => customPayment) internal customPayments;
 
-	offer[] offerCatalog;
+	offer[] public offerCatalog;
 
 	address public treasury;
 	uint public openSales;
@@ -177,6 +175,7 @@ contract Minter_Marketplace is Ownable {
 	/// @dev	Doubles as a view function for anyone wondering if they can mint or if they need to approve the marketplace
 	/// @param	tokenAddress 	Address of the token to validate
 	function validateRoles(address tokenAddress) public view returns (bool canOffer) {
+		require(tokenAddress != address(0), "Minting Marketplace: Invalid token address");
 		require(IAccessControl(tokenAddress).hasRole(bytes32(keccak256("MINTER")), address(this)), "Minting Marketplace: This Marketplace isn't a Minter!");
 		require(IAccessControl(tokenAddress).hasRole(bytes32(keccak256("CREATOR")), address(msg.sender)), "Minting Marketplace: Sender isn't the creator!");
 		return true;

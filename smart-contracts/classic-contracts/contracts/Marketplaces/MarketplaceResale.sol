@@ -1,436 +1,480 @@
 //SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.10;
+pragma solidity 0.8.15;
 
-import "../Tokens/RAIR-ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "../Tokens/IERC2981.sol";
 
-import "hardhat/console.sol";
+contract Resale_MarketPlace is AccessControl {
+	
+	// Status of an offer
+	enum OfferStatus{ OPEN, CLOSED, CANCELLED }
 
-contract Resale_MarketPlace is ERC721Holder, AccessControl {
-    event TradeStatusChange(
-        address indexed operator,
-        address tokenAddress,
-        uint256 indexed itemId,
-        uint256 indexed price,
-        uint256 status,
-        uint256 tradeid
-    );
-    event PriceChange(
-        uint256 indexed itemId,
-        uint256 oldPrice,
-        uint256 newPrice
-    );
-    event ChangedTreasury(address newTreasury);
-    event ChangedTreasuryFee(address treasury, uint16 newTreasuryFee);
-    event ChangedNodeFee(uint16 newNodeFee);
+	// Data structure for the offers
+	struct Offer {
+		address sellerAddress;
+		address contractAddress;
+		uint tokenId;
+		uint price;
+		OfferStatus tradeStatus;
+		address nodeAddress;
+	}
 
-    // price: wei
-    // status: 1 => Open, 2 => Executed, 3 => Cancelled
-    struct Trade {
-        address payable poster;
-        address tokenAddress;
-        address payable creator;
-        uint256 itemId;
-        uint256 price;
-        uint256 status;
-    }
+	// Custom splits for an entire contract
+	struct ContractCustomSplits {
+		address[] recipients;
+		uint[] percentages;
+		uint precisionDecimals;
+	}
+	// Event emitted whenever an offer is created, completed or cancelled
+	event OfferStatusChange(
+		address operator,
+		address tokenAddress,
+		uint tokenId,
+		uint price,
+		OfferStatus status,
+		uint tradeid
+	);
 
-    struct TradeRoyaltyReceivers {
-        address[] recipients;
-        uint256[] percentages;
-    }
+	// Emitted whenever an offer is updated with a new price
+	event UpdatedOfferPrice(
+		uint offerId,
+		uint oldPrice,
+		uint newPrice
+	);
 
-    address public treasury;
-    address public nodeAddress;
+	// Emitted when the treasury address is updated
+	event ChangedTreasuryAddress(address newTreasury);
+		
+	// Emitted whenever the treasury fee is updated, includes the current treasury address
+	event ChangedTreasuryFee(address treasuryAddress, uint newTreasuryFee);
+	
+	// Emitted whenever the node fee is updated
+	event ChangedNodeFee(uint newNodeFee);
 
-    //uint16 public constant feeDecimals = 3;
+	// Emitted when custom splits are set/removed
+	event CustomRoyaltiesSet(address contractAddress, uint recipients, uint remainderForSeller);
 
-    uint16 public nodeFee = 1000;
-    uint16 public treasuryFee = 9000;
+	address public treasuryAddress;
+	uint16 public feeDecimals = 3;
 
-    mapping(uint256 => Trade) private trades;
-    mapping(uint256 => TradeRoyaltyReceivers) private royaltyReceivers;
+	// The limit for this is 65535
+	uint public nodeFee = 1000;
+	uint public treasuryFee = 9000;
 
-    mapping(address => mapping(uint256 => bool)) tokenIdToSelling;
+	mapping(uint => Offer) private offers;
+	mapping(address => ContractCustomSplits) private contractSplits;
 
-    uint256 private tradeCounter;
-    uint256 private offerCounter;
+	mapping(address => mapping(uint => bool)) public tokenOnSale;
 
-    modifier OnlyTokenCreator(address tokenAddress) {
-        RAIR_ERC721 itemToken = RAIR_ERC721(tokenAddress);
-        require(tokenAddress != address(0), "Error: Invalid trade specified");
-        require(
-            itemToken.hasRole(itemToken.CREATOR(), msg.sender),
-            "Error: Only token creator can set trade royalties"
-        );
-        _;
-    }
+	bool public paused = false;
 
-    modifier OnlyItemOwner(address tokenAddress, uint256 tokenId) {
-        RAIR_ERC721 itemToken = RAIR_ERC721(tokenAddress);
-        require(
-            itemToken.ownerOf(tokenId) == msg.sender,
-            "Sender does not own the item"
-        );
-        _;
-    }
+	uint private tradeCounter;
+	uint private offerCounter;
 
-    modifier HasTransferApproval(address tokenAddress, uint256 tokenId) {
-        RAIR_ERC721 itemToken = RAIR_ERC721(tokenAddress);
-        require(itemToken.getApproved(tokenId) == address(this));
-        _;
-    }
+	/// @notice 	Ensures the marketplace isn't paused
+	modifier isPaused() {
+		require(paused == false, "Resale Marketplace: Currently paused");
+		_;
+	}
 
-    constructor(address _treasury, address _nodeAddress) {
-        tradeCounter = 0;
-        treasury = _treasury;
-        nodeAddress = _nodeAddress;
+	/// @notice 	Ensures the offer being managed is open
+	/// @param 		offerIndex 		Index of the offer to manage
+	modifier OpenOffer(uint offerIndex) {
+		require(offers[offerIndex].tradeStatus == OfferStatus.OPEN, "Resale Marketplace: Offer is not available");
+		_;
+	}
 
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    }
+	/// @notice     Makes sure the function can only be called by the creator of a RAIR contract
+	/// @param      contractAddress    Address of the RAIR ERC721 contract
+	modifier OnlyTokenCreator(address contractAddress) {
+		IERC2981 itemToken = IERC2981(contractAddress);
+		require(
+			itemToken.supportsInterface(type(IERC2981).interfaceId),
+			"Resale Marketplace: Only the EIP-2981 receiver can be recognized as the creator"
+		);
+		(address creator,) = itemToken.royaltyInfo(0, 100000);
+		require(contractAddress != address(0), "Resale Marketplace: Invalid address specified");
+		require(
+			creator == msg.sender,
+			"Resale Marketplace: Only token creator can set custom royalties"
+		);
+		_;
+	}
 
-    // Get individual trade
-    function getTrade(uint256 _trade) public view returns (Trade memory) {
-        Trade memory trade = trades[_trade];
-        return trade;
-    }
+	/// @notice 	Ensures only the NFT's holder is able to manage the offer
+	/// @param 		contractAddress 	Address of the ERC721 contract
+	/// @param 		tokenId 			Index of the NFT
+	modifier OnlyTokenHolder(address contractAddress, uint256 tokenId) {
+		_onlyTokenHolder(contractAddress, tokenId);
+		_;
+	}
 
-    function onlyItemOwner(
-        address tokenAddress,
-        address addr,
-        uint256 tokenId
-    ) public view returns (bool) {
-        RAIR_ERC721 itemToken = RAIR_ERC721(tokenAddress);
-        return itemToken.ownerOf(tokenId) == addr;
-    }
+	/// @notice 	Ensures the resale marketplace is approved to handle the NFT on behalf of the owner
+	/// @param 		contractAddress 	Address of the ERC721 contract
+	/// @param 		tokenId 			Index of the NFT
+	modifier HasTransferApproval(address contractAddress, uint256 tokenId) {
+		IERC721 itemToken = IERC721(contractAddress);
+		require(
+			contractAddress != address(0) &&
+			tokenId >= 0,
+			"Resale Marketplace: Invalid data"
+		);
+		require(
+			itemToken.isApprovedForAll(itemToken.ownerOf(tokenId), address(this)) ||
+			itemToken.getApproved(tokenId) == address(this),
+			"Resale Marketplace: Marketplace is not approved"
+		);
+		_;
+	}
 
-    function setTradeRoyaltyReceivers(
-        uint256 trade,
-        address[] calldata recipients,
-        uint256[] calldata percentages
-    ) external OnlyTokenCreator(trades[trade].tokenAddress) {
-        require(
-            recipients.length == percentages.length,
-            "Error: Recipients and Percentages should have the same length"
-        );
-        require(trades[trade].status == 1, "Error: Trade status must be Open");
+	/// @notice 	Constructor
+	/// @param 		_treasury 		Address of the treasury
+	constructor(address _treasury) {
+		treasuryAddress = _treasury;
+		_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+	}
 
-        uint256 total = 0;
-        for (uint256 i = 0; i < recipients.length; i++) {
-            total = total + percentages[i];
-        }
+	/// @notice Utility function to verify that the recipient of a custom splits ISN'T a contract
+	/// @dev 	This isn't a foolproof function, a contract running code in it's constructor has a code size of 0
+	/// @param 	addr 	Address to verify
+	/// @return bool that indicates if the address is a contract or not
+	function isContract(address addr) internal view returns (bool) {
+		uint size;
+		assembly { size := extcodesize(addr) }
+		return size > 0;
+	}
 
-        require(
-            total == 100000,
-            "Error: Percentages should add up to 100% (100000, including node fee and treasury fee)"
-        );
+	/// @notice 	Ensures only the NFT owner can manage the offer
+	/// @param 		contractAddress 	Address of the ERC721 contract
+	/// @param 		tokenId 			Index of the NFT
+	function _onlyTokenHolder(address contractAddress, uint tokenId) internal view {
+		IERC721 itemToken = IERC721(contractAddress);
+		require(
+			itemToken.ownerOf(tokenId) == msg.sender,
+			"Resale Marketplace: Address does not own the token"
+		);
+	}
 
-        TradeRoyaltyReceivers storage trReceivers = royaltyReceivers[trade];
-        trReceivers.recipients = recipients;
-        trReceivers.percentages = percentages;
-    }
+	/// @notice 	Returns information about a specific offer
+	/// @param 		offerIndex 		Index of the offer on the marketplace
+	/// @return 	selectedOffer 	Information about the offer
+	function getOfferInfo(uint256 offerIndex) public view returns (Offer memory selectedOffer) {
+		selectedOffer = offers[offerIndex];
+	}
 
-    /* 
-    List item in the market place for sale
-    item unique id and amount of tokens to be put on sale price of item
-    and an additional data parameter if you dont wan to pass data set it to empty string 
-    if your sending the transaction through Frontend 
-    else if you are send the transaction using etherscan or using nodejs set it to 0x00 
-    */
-    function openTrade(
-        uint256 _itemId,
-        uint256 _price,
-        address tokenAddress
-    )
-        external
-        OnlyItemOwner(tokenAddress, _itemId)
-        HasTransferApproval(tokenAddress, _itemId)
-    {
-        require(
-            tokenIdToSelling[tokenAddress][_itemId] == false,
-            "Shouldn't create offers for a token that's already on sale"
-        );
+	/// @notice 	Sets a custom array of royalties for the entire ERC721 contract
+	/// @dev 		You can send empty arrays to unset the creator royalties!
+	/// @param 		contractAddress 	Address of the ERC721 contract
+	/// @param 		recipients 			Array of addresses where the royalties will be sent, they cannot be smart contracts
+	/// @param 		percentages 		Array of percentages (represented by integers)
+	function setCustomRoyalties(
+		address contractAddress,
+		address[] calldata recipients,
+		uint256[] calldata percentages
+	) external OnlyTokenCreator(contractAddress) {
+		require(
+			recipients.length == percentages.length,
+			"Resale Marketplace: Recipients and Percentages should have the same length"
+		);
 
-        RAIR_ERC721 itemToken = RAIR_ERC721(tokenAddress);
+		uint256 total = 0;
+		for (uint256 i = 0; i < recipients.length; i++) {
+			require(
+				isContract(recipients[i]) == false,
+				"Resale Marketplace: For security reasons we don't allow smart contracts to receive funds"
+			);
+			total += percentages[i];
+		}
 
-        address creator;
-        uint256 royalty;
-        (creator, royalty) = itemToken.royaltyInfo(_itemId, _price);
+		require(
+			total < (100 * (10 ** feeDecimals)) - nodeFee - treasuryFee,
+			"Resale Marketplace: Royalties exceed the 100%"
+		);
 
-        itemToken.safeTransferFrom(
-            payable(msg.sender),
-            address(this),
-            _itemId,
-            "0x00"
-        );
+		ContractCustomSplits storage splits = contractSplits[contractAddress];
 
-        trades[tradeCounter] = Trade({
-            poster: payable(msg.sender),
-            tokenAddress: tokenAddress,
-            creator: payable(creator),
-            itemId: _itemId,
-            price: _price,
-            status: 1
-        });
+		splits.precisionDecimals = feeDecimals;
+		splits.recipients = recipients;
+		splits.percentages = percentages;
 
-        tradeCounter += 1;
-        tokenIdToSelling[tokenAddress][_itemId] = true;
+		emit CustomRoyaltiesSet(
+			contractAddress,
+			recipients.length,
+			(100 * (10 ** feeDecimals)) - nodeFee - treasuryFee - total
+		);
+	}
 
-        emit TradeStatusChange(
-            msg.sender,
-            tokenAddress,
-            _itemId,
-            _price,
-            1,
-            tradeCounter - 1
-        );
-    }
+	/// @notice 	Creates a resale offer on the marketplace
+	/// @param 		_tokenId 			Index of the NFT
+	/// @param 		_price 				Price for the NFT to be sold
+	/// @param 		_contractAddress 	Address of the ERC721 contract
+	/// @param 		_nodeAddress 		Address of the RAIR node that will receive the node fee
+	function createResaleOffer(
+		uint256 _tokenId,
+		uint256 _price,
+		address _contractAddress,
+		address _nodeAddress
+	)
+		external
+		HasTransferApproval(_contractAddress, _tokenId)
+		OnlyTokenHolder(_contractAddress, _tokenId)
+		isPaused
+	{
+		require(
+			isContract(_nodeAddress) == false,
+			"Resale Marketplace: Node address cannot be a smart contract"
+		);
+		require(!isContract(msg.sender), 'Resale Marketplace: Cannot trust smart contracts as sellers');
+		require(
+			tokenOnSale[_contractAddress][_tokenId] == false,
+			"Resale Marketplace: Token is already on sale"
+		);
 
-    /*
-    Buyer execute trade and pass the trade number
-    and an additional data parameter if you dont wan to pass data set it to empty string 
-    if your sending the transaction through Frontend 
-    else if you are send the transaction using etherscan or using nodejs set it to 0x00 
-    // 30% to creator's wallet <-- (this is the field that creators can edit when creating in the factory)
-    // 60% to the seller
-    // 9% to RAIR treasury wallet
-    // 1% to the node's operator's wallet
-    */
-    function executeTrade(uint256 _trade) public payable {
-        Trade memory trade = trades[_trade];
+		offers[tradeCounter] = Offer({
+			sellerAddress: msg.sender,
+			contractAddress: _contractAddress,
+			tokenId: _tokenId,
+			price: _price,
+			tradeStatus: OfferStatus.OPEN,
+			nodeAddress: _nodeAddress
+		});
 
-        require(trade.status == 1, "Error: Trade is not Open");
-        require(
-            msg.sender != address(0) && msg.sender != trade.poster,
-            "Error: msg.sender is zero address or the owner is trying to buy his own nft"
-        );
-        require(msg.value >= trade.price, "Insuficient Funds!");
+		tradeCounter += 1;
+		tokenOnSale[_contractAddress][_tokenId] = true;
 
-        RAIR_ERC721 itemToken = RAIR_ERC721(trade.tokenAddress);
+		emit OfferStatusChange(
+			msg.sender,
+			_contractAddress,
+			_tokenId,
+			_price,
+			OfferStatus.OPEN,
+			tradeCounter - 1
+		);
+	}
 
-        uint256 toNode = (trade.price * nodeFee) / 100000;
-        uint256 toRAIR = (trade.price * treasuryFee) / 100000;
+	/// @notice 	Executes a sale, sending funds to any royalty recipients and transferring the token to the buyer
+	/// @dev 		If custom splits exist, it will execute it, if they don't it will try to use the 2981 standard
+	/// @param 		offerIndex 		Index of the offer on the marketplace
+	function buyResaleOffer(uint256 offerIndex) public payable OpenOffer(offerIndex) isPaused {
+		Offer memory selectedOffer = offers[offerIndex];
+		require(
+			msg.sender != address(0) && msg.sender != selectedOffer.sellerAddress,
+			"Resale Marketplace: Invalid addresses"
+		);
+		require(!isContract(msg.sender), "Resale Marketplace: Cannot trust smart contract as buyer");
+		require(msg.value >= selectedOffer.price, "Insuficient Funds!");
 
-        address creator;
-        uint256 royalty;
-        (creator, royalty) = itemToken.royaltyInfo(trade.itemId, trade.price);
-        require(
-            trade.price - royalty >= toNode + toRAIR,
-            "Insufficient Funds! Excessive Royalty"
-        );
+		uint totalPercentage = 100 * (10 ** feeDecimals);
 
-        TradeRoyaltyReceivers storage tradeRoyaltyReceivers = royaltyReceivers[
-            _trade
-        ];
-        if (tradeRoyaltyReceivers.recipients.length > 0) {
-            for (
-                uint256 i = 0;
-                i < tradeRoyaltyReceivers.recipients.length;
-                i++
-            ) {
-                uint256 toReceiver = (royalty *
-                    tradeRoyaltyReceivers.percentages[i]) / 100000;
-                payable(tradeRoyaltyReceivers.recipients[i]).transfer(
-                    toReceiver
-                );
-            }
-        } else {
-            payable(creator).transfer(royalty);
-        }
+		// Pay the buyer any excess they transferred
+		payable(msg.sender).transfer(msg.value - selectedOffer.price);
 
-        payable(nodeAddress).transfer(toNode);
-        payable(treasury).transfer(toRAIR);
+		uint256 toRAIR = (selectedOffer.price * treasuryFee) / totalPercentage;
+		
+		payable(selectedOffer.nodeAddress).transfer((selectedOffer.price * nodeFee) / totalPercentage);
+		payable(treasuryAddress).transfer(toRAIR);
+		
+		uint totalSent = ((selectedOffer.price * nodeFee) / totalPercentage) + toRAIR;
 
-        uint256 toPoster = trade.price - royalty - toRAIR - toNode;
-        payable(trade.poster).transfer(toPoster);
+		ContractCustomSplits storage customSplits = contractSplits[selectedOffer.contractAddress];
+		if (customSplits.recipients.length > 0) {
+			uint i = 0;
+			if (customSplits.precisionDecimals != feeDecimals) {
+				for (; i < customSplits.recipients.length; i++) {
+					customSplits.percentages[i] = _updatePrecision(customSplits.percentages[i], customSplits.precisionDecimals, feeDecimals);
+				}
+				i = 0;
+			}
+			for (; i < customSplits.recipients.length; i++) {
+				uint toReceiver = selectedOffer.price * customSplits.percentages[i] / totalPercentage;
+				payable(customSplits.recipients[i]).transfer(toReceiver);
+				totalSent += toReceiver;
+			}
+		} else if (IERC2981(selectedOffer.contractAddress).supportsInterface(type(IERC2981).interfaceId)) {
+			(address creator, uint royalty) = IERC2981(selectedOffer.contractAddress)
+												.royaltyInfo(
+													selectedOffer.tokenId,
+													selectedOffer.price
+												);
+			totalSent += royalty;
+			payable(creator).transfer(royalty);
+		}
 
-        // Pay the buyer any excess they transferred
-        payable(msg.sender).transfer(msg.value - trade.price);
+		uint256 toPoster = selectedOffer.price - totalSent;
+		payable(selectedOffer.sellerAddress).transfer(toPoster);
+		
+		IERC721(selectedOffer.contractAddress).safeTransferFrom(
+			address(selectedOffer.sellerAddress),
+			payable(msg.sender),
+			selectedOffer.tokenId
+		);
 
-        itemToken.safeTransferFrom(
-            address(this),
-            payable(msg.sender),
-            trade.itemId
-        );
+		offers[offerIndex].tradeStatus = OfferStatus.CLOSED;
+		tokenOnSale[selectedOffer.contractAddress][selectedOffer.tokenId] = false;
 
-        trades[_trade].status = 2;
-        tokenIdToSelling[trade.tokenAddress][trade.itemId] = false;
+		emit OfferStatusChange(
+			msg.sender,
+			selectedOffer.contractAddress,
+			selectedOffer.tokenId,
+			selectedOffer.price,
+			OfferStatus.CLOSED,
+			offerIndex
+		);
+	}
 
-        emit TradeStatusChange(
-            msg.sender,
-            trade.tokenAddress,
-            trade.itemId,
-            msg.value,
-            2,
-            _trade
-        );
-    }
+	/// @notice 	Cancels an offer on the marketplace
+	/// @dev 		This doesn't delete the entry, just marks it as CANCELLED
+	/// @param 		offerIndex 		Index of the offer to be cancelled
+	function cancelOffer(uint256 offerIndex) public OpenOffer(offerIndex) {
+		Offer memory offer = offers[offerIndex];
+		_onlyTokenHolder(offer.contractAddress, offer.tokenId);
 
-    /*
-    Seller can cancle trade by passing the trade number
-    and an additional data parameter if you dont wan to pass data set it to empty string 
-    if your sending the transaction through Frontend 
-    else if you are send the transaction using etherscan or using nodejs set it to 0x00 
-    */
+		offers[offerIndex].tradeStatus = OfferStatus.CANCELLED;
+		tokenOnSale[offer.contractAddress][offer.tokenId] = false;
 
-    function cancelTrade(uint256 _trade) public {
-        Trade memory trade = trades[_trade];
+		emit OfferStatusChange(
+			msg.sender,
+			offer.contractAddress,
+			offer.tokenId,
+			offer.price,
+			OfferStatus.CANCELLED,
+			offerIndex
+		);
+	}
 
-        require(
-            msg.sender == trade.poster,
-            "Error: Trade can be cancelled only by poster"
-        );
-        require(trade.status == 1, "Error: Trade is not Open");
+	/// @notice 	Returns all open offers on the marketplace
+	/// @dev 		This is a view function that uses loops, do not use on any non-view function
+	/// @return 	An array of all open offers on the marketplace
+	function getAllOnSale() public view virtual returns (Offer[] memory) {
+		uint256 counter = 0;
+		uint256 itemCounter = 0;
+		for (uint256 i = 0; i < tradeCounter; i++) {
+			if (offers[i].tradeStatus == OfferStatus.OPEN) {
+				counter++;
+			}
+		}
 
-        IERC721 itemToken = IERC721(trade.tokenAddress);
-        itemToken.safeTransferFrom(address(this), trade.poster, trade.itemId);
+		Offer[] memory tokensOnSale = new Offer[](counter);
+		if (counter != 0) {
+			for (uint256 i = 0; i < tradeCounter; i++) {
+				if (offers[i].tradeStatus == OfferStatus.OPEN) {
+					tokensOnSale[itemCounter] = offers[i];
+					itemCounter++;
+				}
+			}
+		}
 
-        trades[_trade].status = 3;
-        delete royaltyReceivers[_trade];
-        tokenIdToSelling[trade.tokenAddress][trade.itemId] = false;
+		return tokensOnSale;
+	}
 
-        emit TradeStatusChange(
-            msg.sender,
-            trade.tokenAddress,
-            trade.itemId,
-            0,
-            3,
-            _trade
-        );
-    }
+	/// @notice 	Returns all offers made by an user
+	/// @param 		user 		Address of the seller
+	/// @return 	An array of all offers made by a specific user
+	function getUserOffers(address user) public view returns (Offer[] memory) {
+		uint256 counter = 0;
+		uint256 itemCounter = 0;
+		for (uint256 i = 0; i < tradeCounter; i++) {
+			if (offers[i].sellerAddress == user) {
+				counter++;
+			}
+		}
 
-    // Get all items which are on sale in the market place
-    function getAllOnSale() public view virtual returns (Trade[] memory) {
-        uint256 counter = 0;
-        uint256 itemCounter = 0;
-        for (uint256 i = 0; i < tradeCounter; i++) {
-            if (trades[i].status == 1) {
-                counter++;
-            }
-        }
+		Offer[] memory tokensByOwner = new Offer[](counter);
+		if (counter != 0) {
+			for (uint256 i = 0; i < tradeCounter; i++) {
+				if (offers[i].sellerAddress == user) {
+					tokensByOwner[itemCounter] = offers[i];
+					itemCounter++;
+				}
+			}
+		}
 
-        Trade[] memory tokensOnSale = new Trade[](counter);
-        if (counter != 0) {
-            for (uint256 i = 0; i < tradeCounter; i++) {
-                if (trades[i].status == 1) {
-                    tokensOnSale[itemCounter] = trades[i];
-                    itemCounter++;
-                }
-            }
-        }
+		return tokensByOwner;
+	}
 
-        return tokensOnSale;
-    }
+	/// @notice 	Updates the price of an offer
+	/// @dev 		Price is the only thing that can be updated on any offer
+	/// @param 		offerIndex 		Index of the offer
+	/// @param 		newPrice 		New price for the offer
+	function updateOffer(uint256 offerIndex, uint256 newPrice) public OpenOffer(offerIndex) {
+		Offer storage selectedOffer = offers[offerIndex];
+		_onlyTokenHolder(selectedOffer.contractAddress, selectedOffer.tokenId);
+		if (msg.sender != selectedOffer.sellerAddress) {
+			selectedOffer.sellerAddress = msg.sender;
+		}
+		uint oldPrice = selectedOffer.price;
+		selectedOffer.price = newPrice;
+		emit UpdatedOfferPrice(offerIndex, oldPrice, newPrice);
+	}
 
-    // get all items owned by a perticular address
-    function getAllByOwner(address owner) public view returns (Trade[] memory) {
-        uint256 counter = 0;
-        uint256 itemCounter = 0;
-        for (uint256 i = 0; i < tradeCounter; i++) {
-            if (trades[i].poster == owner) {
-                counter++;
-            }
-        }
+	/// @notice 	Queries the marketplace to find if a token is on sale
+	/// @param 		contractAddress 		Address of the ERC721 contract
+	/// @param 		tokenId 				Index of the NFT
+	/// @return 	Boolean value, true if there is an open offer on the marketplace
+	function getTokenIdStatus(
+		address contractAddress,
+		uint256 tokenId
+	) public view returns (bool) {
+		return tokenOnSale[contractAddress][tokenId];
+	}
 
-        Trade[] memory tokensByOwner = new Trade[](counter);
-        if (counter != 0) {
-            for (uint256 i = 0; i < tradeCounter; i++) {
-                if (trades[i].poster == owner) {
-                    tokensByOwner[itemCounter] = trades[i];
-                    itemCounter++;
-                }
-            }
-        }
+	/// @notice 	Updates the treasury address
+	/// @dev 		If the treasury is a contract, make sure it has a receive function
+	/// @param 		_newTreasury 	New treasury address
+	function setTreasuryAddress(
+		address _newTreasury
+	) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		require(_newTreasury != address(0), "invalid address");
+		treasuryAddress = _newTreasury;
+		emit ChangedTreasuryAddress(_newTreasury);
+	}
 
-        return tokensByOwner;
-    }
+	/// @notice Sets the new treasury fee
+	/// @param _newFee New Fee
+	function setTreasuryFee(
+		uint _newFee
+	) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		treasuryFee = _newFee;
+		emit ChangedTreasuryFee(treasuryAddress, _newFee);
+	}
 
-    /*
-    Seller can lowner the price of item by specifing trade number and new price
-    if he wants to increase the price of item, he can unlist the item and then specify a higher price
-    */
-    function lowerTokenPrice(uint256 _trade, uint256 newPrice) public {
-        require(
-            msg.sender == trades[_trade].poster,
-            "Error: Price can only be set by poster"
-        );
+	/// @notice 	Sets the new fee that will be paid to RAIR nodes
+	/// @param 		_newFee 	New Fee
+	function setNodeFee(uint _newFee) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		nodeFee = _newFee;
+		emit ChangedNodeFee(_newFee);
+	}
 
-        require(trades[_trade].status == 1, "Error: Trade is not Open");
+	/// @notice 	Updates the precision decimals on percentages and fees
+	/// @dev 		Automatically updates node and treasury fees
+	/// @dev 		Sales made before the update will have a special bit of code on sale execution to handle this change
+	/// @dev 		New sales will be required to follow the new number of decimals
+	/// @param 		_newDecimals 		New number of decimals
+	function updateFeeDecimals(uint8 _newDecimals) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		treasuryFee = _updatePrecision(treasuryFee, feeDecimals, _newDecimals); 
+		nodeFee = _updatePrecision(nodeFee, feeDecimals, _newDecimals); 
+		feeDecimals = _newDecimals;
+	}
 
-        uint256 oldPrice = trades[_trade].price;
-        require(
-            newPrice < oldPrice,
-            "Error: please specify a price value less than the old price if you want to increase the price, cancel the trade and list again  with a higher price"
-        );
-        trades[_trade].price = newPrice;
-        emit PriceChange(_trade, oldPrice, newPrice);
-    }
+	/// @notice 	Updates the precision of a number
+	/// @dev 		Multiply first to not lose decimals on the way
+	/// @return 	Updated number
+	function _updatePrecision(uint number, uint oldDecimals, uint newDecimals) internal pure returns (uint) {
+		return (number * (10 ** newDecimals)) / (10 ** oldDecimals); 
+	}
 
-    function getTokenIdStatus(address tokenAddress, uint256 tokenId)
-        public
-        view
-        returns (bool)
-    {
-        return tokenIdToSelling[tokenAddress][tokenId];
-    }
+	/// @notice 	Pauses / Resumes sales on the contract
+	/// @dev 		Only prevents offer creation and executions, the other functions continue as normal
+	/// @param 		_pause 		Boolean flag to pause (true) or resume (false) the contract
+	function pauseContract(bool _pause) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		paused = _pause;
+	}
 
-    /// @notice	Sets the new treasury address
-    /// @dev	Make sure the treasury is a wallet address!
-    /// @dev	If the treasury is a contract, make sure it has a receive function!
-    /// @param	_newTreasury	New address
-    // function setTreasuryAddress(address _newTreasury) public onlyOwner {
-    // 	treasury = _newTreasury;
-    // 	emit ChangedTreasury(_newTreasury);
-    // }
-
-    /// @notice	Sets the new treasury fee
-    // function setTreasuryFee(uint16 _newFee) public onlyOwner {
-    // 	treasuryFee = _newFee;
-    // 	emit ChangedTreasuryFee(treasury, _newFee);
-    // }
-
-    /// @notice Set the new treasury address
-    /// @dev Make sure the treasury is a wallet address!
-    /// @dev If the treasury is a contract, make sure it has a receive function
-    /// @param _newTreasury New address
-    function setTreasuryAddress(address _newTreasury)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        require(_newTreasury != address(0), "invalid address");
-        treasury = _newTreasury;
-        emit ChangedTreasury(_newTreasury);
-    }
-
-    /// @notice Sets the new treasury fee
-    /// @param _newFee New Fee
-    function setTreasuryFee(uint16 _newFee)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        treasuryFee = _newFee;
-        emit ChangedTreasuryFee(treasury, _newFee);
-    }
-
-    /// @notice Sets the new node address pair to nodes
-    /// @param _newNodeAddress New node address
-    function setNodeAddress(address _newNodeAddress)
-        public
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
-        require(_newNodeAddress != address(0), "invalid address");
-        nodeAddress = _newNodeAddress;
-    }
-
-    /// @notice Sets the new fee paid to nodes
-    /// @param _newFee New Fee
-    function setNodeFee(uint16 _newFee) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        nodeFee = _newFee;
-        emit ChangedNodeFee(_newFee);
-    }
-
-    function withdraw(uint256 _amount) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        payable(msg.sender).transfer(_amount);
-    }
+	/// @notice  	Withdraws any funds stuck on the resale marketplace
+	/// @dev 		There shouldn't be any funds stuck on the resale marketplace
+	/// @param 		_amount 	Amount of funds to be withdrawn
+	function withdraw(uint256 _amount) public onlyRole(DEFAULT_ADMIN_ROLE) {
+		payable(msg.sender).transfer(_amount);
+	}
 }

@@ -324,11 +324,10 @@ contract RAIR_ERC721 is IERC2981, ERC165, IRAIR_ERC721, ERC721Enumerable, Access
 		tokenToProduct[currentProduct.startingToken + indexInProduct] = productId;
 		currentProduct.mintableTokens--;
 
-		lockedRange storage lock;
 		for (uint i = 0; i < currentProduct.locks.length; i++) {
 			if (_lockedRange[currentProduct.locks[i]].startingToken <= currentProduct.startingToken + indexInProduct &&
 					_lockedRange[currentProduct.locks[i]].endingToken >= currentProduct.startingToken + indexInProduct) {
-				lock = _lockedRange[currentProduct.locks[i]];
+				lockedRange storage lock = _lockedRange[currentProduct.locks[i]];
 				tokenToLock[currentProduct.startingToken + indexInProduct] = currentProduct.locks[i];
 				if (lock.lockCountdown > 0) {
 					lock.lockCountdown--;

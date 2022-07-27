@@ -1,27 +1,36 @@
-async function main() {
-    const [deployer] = await ethers.getSigners();
+const {deployments, ethers} = require('hardhat');
 
-    console.log('Deploying contracts with the account:', deployer.address);
-    console.log('Account balance:', (await deployer.getBalance()).toString());
+module.exports = async ({accounts, getUnnamedAccounts}) => {
+	const {deploy} = deployments;
+	const [deployerAddress] = await getUnnamedAccounts();
 
-    const ResaleMarketPlace = await ethers.getContractFactory(
-        'Resale_MarketPlace'
-    );
-    const marketPlace = await ResaleMarketPlace.deploy(
-        // Treasury_Address
-        // Howard
-        '0x1EEBb16264D8BDB031685bEfF3d66bd6849F3942',
-        // Node_Address
-        // Howard
-        '0x1EEBb16264D8BDB031685bEfF3d66bd6849F3942'
-    );
+	let contractArgs = [
+			{
+				ethMainnet: "UNKNOWN",
+				goerli: "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+				mumbai: "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+				matic: "0x3fD4268B03cce553f180E77dfC14fde00271F9B7",
+				binanceTestnet: "0xEC30759D0A3F3CE0A730920DC29d74e441f492C3",
+				binanceMainnet: "UNKNOWN",
+			}[hre.network.name] // Treasury addresses
+		]
 
-    console.log('Token address:', marketPlace.address);
-}
+	let deployment = await deploy("Resale_MarketPlace", {
+		args: contractArgs,
+		from: deployerAddress,
+		waitConfirmations: 6
+	});
+	console.log(`Resale Marketplace deployed at ${deployment.receipt.contractAddress}`);
+	if (deployment.newlyDeployed) {
+		try {
+			await hre.run("verify:verify", {
+				address: deployment.receipt.contractAddress,
+				constructorArguments: contractArgs,
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	}
+};
 
-main()
-    .then(() => process.exit(0))
-    .catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
+module.exports.tags = ['ResaleMarketplace'];
