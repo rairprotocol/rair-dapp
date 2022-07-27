@@ -2,6 +2,10 @@
   margin: 0 auto;
 }
 
+#nft-data-page-wrapper {
+  margin: 3rem 6rem;
+}
+
 #nft-data-page-wrapper .single-token-block-img {
   margin: auto;
   width: 604px;
@@ -12,11 +16,23 @@
 }
 
 .nft-item-collection {
-  width: 291px;
-  height: 291px;
+  width: 282px;
+  height: 282px;
   border: none;
   background-color: transparent;
   overflow: hidden;
+  margin: 0px 24px 24px 24px;
+}
+
+.video-wrapper {
+  padding: 0px;
+}
+
+.nft-item-collection:nth-child(1n + 1) {
+  margin-left: 0px;
+}
+.nft-item-collection:nth-child(4n + 4) {
+  margin-right: 0px;
 }
 
 #nft-data-page-wrapper .single-token-block-img {
@@ -66,19 +82,16 @@
   display: flex;
 }
 
-.nft-form-control-icon i.fas.fa-search {
-  left: 7vw;
-}
-
 .container-search {
   position: relative;
   display: flex;
   flex-direction: row;
-  padding-left: 6vw;
+  width: 1200px;
 }
 
 .container-search .form-control.input-styled {
-  width: 54.5%;
+  width: 100%;
+  height: 48px;
   margin-bottom: 32px;
 }
 
@@ -156,7 +169,6 @@
 
 .nft-item-collection .description-wrapper:hover {
   height: 100%;
-  /* top: -17.35rem; */
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   transition-duration: 0.5s;
@@ -211,8 +223,6 @@
   border-radius: 50%;
 }
 
-/* hover effect for description nft*/
-
 .description-wrapper-video {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
@@ -226,42 +236,6 @@
   backdrop-filter: blur(8px);
   cursor: default;
 }
-
-/* maybe we will use it at future */
-/* .description-wrapper-video:hover {
-  padding-top: 1rem;
-  height: 12.35rem;
-  top: -12.35rem;
-  margin-bottom: -7.35rem;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  transition-duration: 0.5s;
-} */
-
-/* .description-wrapper {
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-    background-color: rgba(34, 32, 33, 0.5);
-    backdrop-filter: blur(2px);
-    color: white;
-    position: relative;
-    height: 87px;
-    padding: 8px 0px 8px 16px;
-}
-
-.description-wrapper:hover {
-    height: 17.35rem;
-    top: -17.35rem;
-    margin-bottom: -16.35rem;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    transition-duration: 0.5s;
-}
-
-.description-wrapper:not(:hover),
-.description-wrapper-video:not(:hover) {
-    transition-duration: 0.5s;
-} */
 
 .description {
   font-weight: 400;
@@ -279,9 +253,6 @@
   left: 0;
 }
 
-.pic-description-wrapper:hover .description-big .container-nft-fullPrice {
-}
-
 .pic-description-wrapper .description-big .container-nft-fullPrice,
 .description.description-price {
   text-align: center;
@@ -295,12 +266,6 @@
   transition-duration: 0.5s;
   z-index: 1;
 }
-/* 
-.pic-description-wrapper:hover .description-price {
-    font-size: 26px;
-    text-align: center;
-    line-height: 1.1;
-} */
 
 .pic-description-wrapper:hover .description-price-unlockables-page {
   font-size: 17px;
@@ -313,16 +278,12 @@
 }
 
 .pic-description-wrapper:hover .blockchain-img {
-  /* transform: scale(2); */
-  /* margin-top: -20px; */
   padding-bottom: 10px;
 }
 
 .blockchain-img {
   width: auto;
   height: 50px;
-  /* transform: scale(1); */
-  /* margin-right: 8px; */
 }
 
 .description-small {
@@ -334,28 +295,135 @@
 }
 
 @media screen and (max-width: 1500px) {
-  .nft-item-collection {
-    height: 20.5vw;
-    width: 20.5vw;
-  }
-
-  .nft-item-collection.standartSize {
-    width: 291px;
-    height: 291px;
-  }
-
-  .list-button-wrapper {
-    margin-left: 1.5vw;
-  }
-
-  .col-6.text-left.main {
-    margin-left: 3vw;
-  }
-
   .container-search,
   .category-wrapper {
     padding-left: 1.5vw;
-    min-width: 96vw;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .react-tabs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .category-wrapper {
+    width: 894px;
+  }
+  .container-search {
+    width: 894px;
+  }
+  .list-button-wrapper {
+    width: 894px;
+  }
+  .nft-item-collection:nth-child(4n + 4) {
+    margin: 0px 24px 24px 0px;
+  }
+  .nft-item-collection:nth-child(3n + 3) {
+    margin-right: 0px;
+  }
+  .container-search {
+    width: 894px;
+  }
+  .main {
+    max-width: 894px;
+  }
+  .general-title {
+    max-width: 894px;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .main-wrapper {
+    padding: 70px 90px 0px 90px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .main-wrapper {
+    padding: 40px 10px 0px 0px;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .container-search {
+    display: flex;
+  }
+  .select-filters {
+    margin: 0px 0px 0px 16px;
+  }
+  .container-search .form-control.input-styled {
+    margin-bottom: 16px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .container-search {
+    flex-direction: column;
+    margin-bottom: 32px;
+  }
+  .select-filters {
+    margin: 0px 0px 0px 16px;
+  }
+  .select-sort {
+    margin: 0;
+  }
+  .select-sort-title {
+    display: flex;
+    align-items: center;
+  }
+
+  .container-search {
+    width: 588px;
+  }
+  .list-button-wrapper {
+    width: 588px;
+  }
+  .nft-item-collection:nth-child(3n + 3) {
+    margin: 0px 24px 24px 0px;
+  }
+  .nft-item-collection:nth-child(2n + 2) {
+    margin-right: 0px;
+  }
+  .pagination__wrapper {
+    justify-content: space-evenly;
+  }
+  .category-wrapper > * {
+    width: 100%;
+  }
+  .category-wrapper {
+    width: 588px;
+  }
+  .general-title {
+    max-width: 588px;
+  }
+  .border-top-radius-tablet {
+    border-top-right-radius: 1px;
+  }
+
+  .select-sort-title {
+    height: 100%;
+  }
+  .nft-form-control-icon {
+    justify-content: space-between;
+  }
+  .nft-form-control-icon > * {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .main {
+    width: 588px;
+  }
+  .general-title {
+    width: 588px;
   }
 }
 
@@ -369,16 +437,10 @@
   }
 }
 
-@media screen and (max-width: 1200px) {
-  .list-button-wrapper {
-    width: 95vw;
-    margin-left: -1rem;
-  }
-
-  .nft-item-collection {
-    height: 23vw;
-    width: 23vw;
-  }
+@media screen and (max-width: 1260px) {
+  /* .list-button-wrapper {
+    width: 894px;
+  } */
 
   .col.description-wrapper.pic-description-wrapper.wrapper-for-collection-view {
     display: flex;
@@ -408,7 +470,6 @@
 
   .description-title,
   .description-small .description {
-    /* font-size: calc(9px + .3vw); */
     text-align: center;
     line-height: 14px;
   }
@@ -423,9 +484,6 @@
 }
 
 @media screen and (max-width: 1100px) {
-  .blockchain-img {
-  }
-
   .pic-description-wrapper .description-big .container-nft-fullPrice,
   .description.description-price {
     font-size: 16px;
@@ -434,43 +492,21 @@
   .description-more {
     font-size: 14px;
   }
-}
-
-@media screen and (min-width: 1000px) and (max-width: 1200px) {
-  .wrapper-collection .list-button-wrapper {
-    margin-left: -2.5rem;
+  .select-filters-wrapper {
+    width: 242px;
+  }
+  .select-filters {
+    width: 100%;
+    margin: 0;
   }
 }
 
-@media screen and (min-width: 900px) and (max-width: 1200px) {
+@media screen and (min-width: 900px) and (max-width: 1260px) {
   .pic-description-wrapper:hover .description-price-unlockables-page {
     font-size: calc(9px + 0.3vw);
     word-wrap: break-word;
     line-height: 20px;
     text-align: center;
-  }
-}
-
-@media screen and (min-width: 900px) and (max-width: 1077px) {
-  .list-button-wrapper {
-    width: 95vw;
-    margin-left: 1rem;
-  }
-
-  .nft-item-collection .description-wrapper:not(:hover) .brief-info-nftItem {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .nft-item-collection .description-wrapper:not(:hover) {
-    padding: 0px;
-    height: 90px;
-  }
-
-  .nft-item-collection .description-wrapper:not(:hover) .description-item-name {
-    align-items: center !important;
   }
 }
 
@@ -508,20 +544,14 @@
 @media screen and (max-width: 950px) {
   .wrapper-collection,
   #nft-data-page-wrapper {
-    padding: 0 10px;
+    /* padding: 0 10px; */
   }
 }
 
 @media screen and (max-width: 900px) {
   .list-button-wrapper {
-    width: 100%;
+    /* width: 100%; */
     margin-left: 0rem;
-    justify-content: center;
-  }
-
-  .nft-item-collection {
-    height: calc(10vw + 240px);
-    width: calc(10vw + 240px);
   }
 
   .nftlist-unlockable-videos .nft-unlockable-videoItem {
@@ -561,10 +591,6 @@
     font-size: 16px;
   }
 
-  .nft-item-collection .description-wrapper {
-    padding: 10px 10px;
-  }
-
   .pic-description-wrapper:hover .blockchain-img {
     padding-bottom: 10px;
   }
@@ -580,12 +606,6 @@
 
   .pic-description-wrapper:hover .description-more {
     margin-top: 60px;
-  }
-}
-
-@media screen and (max-width: 835px) {
-  .description-wrapper:hover {
-    /* top: -39vw; */
   }
 }
 
@@ -608,30 +628,38 @@
   #nft-data-page-wrapper .nft-data-content {
     padding: 30px 15px;
   }
-}
-
-@media screen and (max-width: 720px) {
-  .description-wrapper:hover {
-    /* top: -43.5vw; */
+  .list-button-wrapper {
+    justify-content: flex-start;
+    width: 588px;
   }
 }
 
 @media screen and (max-width: 700px) {
+  .main-wrapper {
+    padding: 0;
+  }
+  .category-wrapper {
+    width: 400px;
+  }
   .container-search {
-    flex-direction: column;
+    width: 400px;
   }
-
-  .container-search .form-control.input-styled {
-    width: 100%;
-    margin-bottom: 8px;
+  .main {
+    width: 350px;
   }
-
-  .nft-form-control-icon {
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 32px;
+  .general-title {
+    width: 350px;
   }
+  .main .general-title {
+    text-align: center;
+  }
+  .list-button-wrapper {
+    justify-content: flex-start;
+    width: 540px;
+  }
+}
 
+@media screen and (max-width: 700px) {
   .nft-unlockable-videoItem .nft-unlockable-contentItem p {
     font-size: 16px;
   }
@@ -650,14 +678,13 @@
 }
 
 @media screen and (max-width: 670px) {
-  .nft-item-collection {
-    height: calc(10vw + 200px);
-    width: calc(10vw + 200px);
+  .nft-item {
+    height: calc(15vw + 282px);
+    width: calc(15vw + 282px);
   }
-
-  .description-wrapper:hover {
-    /* height: calc(10vw + 200px); */
-    /* top: -40vw; */
+  .list-button-wrapper {
+    justify-content: flex-start;
+    align-items: center;
   }
 
   .pic-description-wrapper:hover .description-more {
@@ -679,213 +706,359 @@
   }
 }
 
-@media screen and (max-width: 620px) {
-  .description-wrapper:hover {
-    /* top: -42vw; */
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .nftlist-unlockable-videos .nft-unlockable-videoItem img {
-    height: 100px;
-    width: 35vw;
-  }
-
-  .nft-unlockable-videoItem .nft-unlockable-contentItem p {
-    font-size: 14px;
-  }
-
-  .nft-unlockable-videoItem .nft-unlockable-imgContent p {
-    font-size: 12px;
-  }
-
-  .pic-description-wrapper:hover .description-big {
-    width: 97%;
-  }
-
-  .pic-description-wrapper .description-big .container-nft-fullPrice,
-  .description.description-price {
-    font-size: 20px;
-  }
-
-  .pic-description-wrapper:hover .blockchain-img {
-    margin-top: -30px;
-  }
-}
-
-@media screen and (max-width: 585px) {
-  .description-wrapper:hover {
-    /* top: -44vw; */
-  }
-}
-
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 375px) {
   .nft-item-collection {
-    height: 80vw;
-    width: 80vw;
-  }
-
-  .description-wrapper {
-    /* top: -4.5rem; */
-    /* top: -15vw; */
-    height: 15vw;
-  }
-
-  .description-wrapper:hover {
-    /* height: 100%; */
-    /* top: -77vw; */
-    /* margin-bottom: -16.35rem; */
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    transition-duration: 0.5s;
-  }
-
-  .description-wrapper:hover .blockchain-img {
-    margin-right: 0;
-  }
-
-  .pic-description-wrapper:hover {
-    justify-content: center;
-  }
-
-  .description-title {
-    font-size: calc(12px + 0.5vw);
-    text-align: center;
-  }
-
-  .pic-description-wrapper:hover .description-big {
-    width: 98%;
-  }
-
-  .pic-description-wrapper .description-big .container-nft-fullPrice,
-  .description.description-price {
-    font-size: 24px;
-  }
-
-  .pic-description-wrapper:hover .blockchain-img {
-    margin-top: -30px;
-  }
-
-  .pic-description-wrapper:hover .description-more {
-    margin-top: 50px;
-  }
-
-  .pic-description-wrapper .description-big .blockchain-img {
-    height: 70px;
-  }
-
-  .description-more {
-    font-size: 18px;
-  }
-
-  .nft-item-collection .description-title {
-    font-size: 18px;
-  }
-
-  .description-wrapper .collection-block-user-creator img {
-    width: 30px;
-    height: 30px;
-  }
-
-  .description-wrapper .collection-block-user-creator h5 {
-    font-size: 15px;
-    margin-left: 10px;
-    margin-top: 5px;
-  }
-
-  .nft-item-collection .description-wrapper {
-    padding: 15px;
-  }
-}
-
-@media screen and (max-width: 520px) {
-  #nft-data-page-wrapper .single-token-block-video {
-    width: 100%;
-    height: 400px;
-    padding: 0 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .nft-collection .react-player__preview {
-    width: 100% !important;
-    height: 250px !important;
+    height: calc(10vw + 282px);
+    width: calc(10vw + 282px);
   }
 }
 
 @media screen and (max-width: 450px) {
-  .description-title {
-    /* font-size: calc(12px - .2vw); */
-  }
-
-  .description-small .description {
-    /* font-size: calc(12px - .2vw); */
-  }
-
-  .description-wrapper {
-    /* top: -20vw; */
-    /* height: 20vw; */
-  }
-
-  .description-wrapper:hover .description-title,
-  .description-wrapper:hover .description-small .description {
-    font-size: calc(12px + 0.2vw);
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .nft-item-collection .description-title {
-    font-size: 14px;
-  }
-
-  .description-wrapper .collection-block-user-creator img {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-@media screen and (max-width: 370px) {
-  .pic-description-wrapper:hover .description-price-unlockables-page {
-    font-size: calc(14px - 0.2vw);
-    line-height: 20px;
-    word-break: break-all;
-  }
-
-  .pic-description-wrapper:hover .description-more {
-    margin-top: 20px;
-    font-size: 14px;
-  }
-
-  .pic-description-wrapper .description-big .blockchain-img {
-    height: 35px;
-  }
-}
-
-@media screen and (max-width: 350px) {
-  .pic-description-wrapper .description-big .container-nft-fullPrice,
-  .description.description-price {
-    font-size: 18px;
-  }
-
-  .pic-description-wrapper:hover .description-big {
-    padding: 0 10px;
-    margin-top: 5px;
-  }
-
-  .nft-item-collection .description-wrapper:not(:hover) .brief-info-nftItem {
-    display: flex;
-    width: 100%;
+  .nft-form-control-icon {
     flex-direction: column;
     align-items: center;
   }
+  .select-filters {
+    margin: 0;
+  }
+  .main-wrapper {
+    padding: 35px 10px 35px 10px;
+  }
+  .container-search {
+    width: 300px;
+  }
+  .container-search {
+    margin-bottom: 0px;
+  }
+  .category-wrapper {
+    width: 300px;
+  }
+}
 
-  .nft-item-collection .description-wrapper:not(:hover) {
-    padding: 0px;
-    height: 90px;
+.mock-up-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1.general-title {
+  font-size: 4rem;
+}
+
+p.general-title {
+  font-size: 1.25rem;
+}
+
+@media screen and (max-width: 1100px) {
+  h1.general-title {
+    font-size: 2rem;
   }
 
-  .nft-item-collection .description-wrapper:not(:hover) .description-item-name {
-    align-items: center !important;
+  p.general-title {
+    /* font-size: 0.75rem; */
+  }
+  .select-filters-popup {
+    left: 60px;
+  }
+}
+
+.select-sort-title-pop-up {
+  margin-left: 16.5px;
+}
+
+@media screen and (max-width: 1100px) {
+  .select-sort-title-pop-up {
+    margin-left: 0;
+  }
+}
+
+.unlockable-video {
+  width: 384px;
+  height: 215px;
+  margin: 0px 24px 24px 24px;
+}
+
+.unlockable-video:nth-child(1n + 1) {
+  margin-left: 0px;
+}
+
+.unlockable-video:nth-child(3n + 3) {
+  margin-right: 0px;
+}
+
+@media screen and (max-width: 1260px) {
+  .unlockable-video:nth-child(3n + 3) {
+    margin: 0px 24px 24px 0;
+  }
+  .unlockable-video:nth-child(2n + 2) {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .unlockable-video {
+    width: 480px;
+    height: 270px;
+    margin: 0 0 24px 0 !important;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .unlockable-video {
+    width: 384px;
+    height: 215px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .select-filters-title svg {
+    margin: 0;
+  }
+
+  .nft-item-collection {
+    margin: 10px !important;
+    height: 160px;
+    width: 160px;
+  }
+  .search-mobile {
+    border-radius: 16px;
+    border-top-left-radius: 16px !important;
+    margin-right: 8px;
+    max-width: 300px;
+    max-height: 40px;
+  }
+  .category-wrapper {
+    width: 520px;
+    /* width: 100%; */
+    border: 1px solid var(--charcoal-80);
+    border-radius: 16px;
+    margin-bottom: 8px;
+  }
+  .category-wrapper > * {
+    border: 1px solid var(--charcoal-80);
+    border-radius: 16px;
+  }
+  .input-styled {
+    max-width: 480px;
+    width: 100%;
+  }
+  .container-search {
+    width: 520px;
+    /* width: 100%; */
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .nft-form-control-icon {
+    flex-direction: row;
+    width: 85px;
+  }
+  .nft-form-control-icon > * {
+    max-width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .arrows-sort {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+  .select-sort-wrapper {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+  }
+  .select-sort {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .select-sort-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+  }
+  .select-sort-title-pop-up {
+    max-width: 70px;
+    left: -16px;
+  }
+  .select-sort-item {
+    width: 60px;
+  }
+
+  .select-filters-popup {
+    left: -90px;
+  }
+  .title-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+  }
+  .select-filters-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  .select-filters {
+    max-height: 40px;
+  }
+
+  .pic-description-wrapper {
+    max-height: 70px;
+    align-items: flex-start;
+  }
+  .pic-description-wrapper:hover {
+    max-height: 100%;
+    align-items: flex-start;
+  }
+  .brief-info-nftItem {
+    max-height: 40px;
+  }
+  .description {
+    font-weight: 300;
+    font-size: 10px;
+    line-height: 20px;
+    margin-left: 4px;
+  }
+  .collection-block-price {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .pic-description-wrapper:hover .description-price {
+    font-size: 10px;
+  }
+
+  .collection-block-price span {
+    margin-bottom: 20px;
+  }
+  .blockchain-img {
+    margin: 0px !important;
+    margin-left: 10px !important;
+  }
+  .description-wrapper .collection-block-user-creator h5 {
+    margin-top: 5px;
+    font-size: 10px;
+  }
+  .collection-block-user-creator {
+    display: flex;
+    align-items: flex-start;
+  }
+  i.fas-custom {
+    top: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .category-wrapper {
+    width: 340px;
+  }
+  .input-styled {
+    max-width: 280px;
+  }
+  .container-search {
+    width: 340px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .search-mobile {
+    max-width: 250px;
+    max-height: 40px;
+  }
+  .nft-item-collection {
+    height: 160px;
+    width: 160px;
+    margin: 7px !important;
+  }
+  .description-title,
+  .brief-info-nftItem,
+  .description.description-price,
+  .collection-block-price {
+    font-size: 12px !important;
+  }
+  .container-search {
+    align-items: baseline;
+  }
+  .nft-form-control-icon {
+    align-items: baseline;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .main-wrapper {
+    padding: 20px 20px 0px 20px;
+  }
+}
+
+@media screen and (max-width: 1202px) {
+  .unlockable-video:nth-child(1n + 1) {
+    margin-right: 8rem;
+  }
+  .unlockable-video:nth-child(2n + 2) {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .unlockables-wrapper {
+    justify-content: space-between;
+  }
+  .unlockable-video:nth-child(1n + 1) {
+    margin-right: 0rem;
+  }
+  .unlockable-video:nth-child(2n + 2) {
+    margin-right: 0px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .unlockables-wrapper {
+    justify-content: center;
+  }
+  .unlockable-video:nth-child(1n + 1) {
+    width: 580px;
+    height: 325px;
+    margin: 0rem;
+  }
+  .main-wrapper {
+    padding-top: 20px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .unlockable-video:nth-child(1n + 1) {
+    width: 520px;
+    height: 290px;
+  }
+  .main-wrapper {
+    padding-top: 0px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .unlockable-video:nth-child(1n + 1) {
+    width: 340px;
+    height: 190px;
+  }
+  .description-wrapper-video {
+    padding-top: 0;
+    height: 80px;
+    backdrop-filter: blur(150px);
+  }
+  .video-size {
+    flex-direction: column;
+    margin: 0;
+  }
+  .duration-for-video {
+    padding-top: 0px;
+  }
+  .list-button-wrapper {
+    width: 360px;
   }
 }

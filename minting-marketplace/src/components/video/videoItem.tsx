@@ -178,14 +178,14 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
 
   return (
     <button
-      className="col-12 col-sm-6 col-md-4 col-lg-3 px-1 text-start video-wrapper"
+      className="text-start video-wrapper unlockable-video"
       style={{
-        height: '215px',
-        width: '384px',
+        // height: '215px',
+        // width: '384px',
         border: 'none',
-        backgroundColor: 'transparent',
-        marginBottom: '20px',
-        marginRight: '24px'
+        backgroundColor: 'transparent'
+        // marginBottom: '24px',
+        // marginRight: '24px'
       }}
       // onClick={() => {
       // setIsOpen(true);

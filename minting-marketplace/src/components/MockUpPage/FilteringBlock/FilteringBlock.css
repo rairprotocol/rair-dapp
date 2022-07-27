@@ -8,12 +8,12 @@
   height: 48px;
   color: var(--white);
   border-radius: 16px;
-  border: 1px solid #4e4d4d;
+  /* border: 1px solid #4e4d4d; */
   display: flex;
   justify-content: center;
   align-items: center;
   width: 129px;
-  margin: 0 16px;
+  margin: 0px 0px 0px 16.5px;
   cursor: pointer;
 
   transition: all 0.2s ease;
@@ -30,10 +30,10 @@
 .select-filters-popup {
   width: 129px;
   border-radius: 16px;
-  border: 1px solid #4e4d4d;
+  /* border: 1px solid #4e4d4d; */
   position: absolute;
   top: 64px;
-  left: 16px;
+  left: -79px;
   overflow: hidden;
 }
 
@@ -226,12 +226,13 @@ select.select-price option {
   height: 48px;
   color: var(--white);
   border-radius: 16px;
-  border: 1px solid #4e4d4d;
+  /* border: 1px solid #4e4d4d; */
   display: flex;
   justify-content: center;
   align-items: center;
   width: 244px;
   cursor: pointer;
+  margin: 0 0 0 16.5px;
 
   transition: all 0.2s ease;
 }
@@ -244,14 +245,14 @@ select.select-price option {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 0 15px 0 24px;
+  padding: 0 15px 0 7px;
 }
 
 .select-sort-title-pop-up {
   height: 48px;
   width: 244px;
   border-radius: 16px;
-  border: 1px solid #4e4d4d;
+  /* border: 1px solid #4e4d4d; */
   position: absolute;
   top: 64px;
   left: 0;
@@ -265,7 +266,6 @@ select.select-price option {
   align-items: center;
   cursor: pointer;
   height: 48px;
-  width: 244px;
   padding: 0 15px 0 24px;
 }
 
@@ -313,7 +313,7 @@ select.select-price option {
   }
 
   .select-sort-title {
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
     padding: 0 8px;
   }
 
@@ -327,7 +327,7 @@ select.select-price option {
     width: 130px;
   }
 
-  .category-button-nft.category-button {
+  /* .category-button-nft.category-button {
     width: 130px;
-  }
+  } */
 }

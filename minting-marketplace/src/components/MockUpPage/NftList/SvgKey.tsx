@@ -1,23 +1,27 @@
 //@ts-nocheck
 import React from 'react';
-
-export const SvgKey = ({ color, bgColor }) => (
+export type TSvgKeyProps = {
+  color: string;
+  bgColor: string;
+  mobile?: boolean;
+};
+export const SvgKey = ({ color, bgColor, mobile }: TSvgKeyProps) => (
   <div
     style={{
-      width: '32px',
-      height: '32px',
+      width: mobile ? '24px' : '32px',
+      height: mobile ? '24px' : '32px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       position: 'absolute',
-      top: '16px',
-      right: '16px',
+      top: mobile ? '8px' : '24px',
+      right: mobile ? '8px' : '24px',
       background: bgColor,
-      borderRadius: '12px'
+      borderRadius: mobile ? '8px' : '12px'
     }}>
     <svg
-      width="20"
-      height="20"
+      width="16"
+      height="16"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">

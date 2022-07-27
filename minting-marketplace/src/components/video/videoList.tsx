@@ -16,7 +16,7 @@ const VideoList: React.FC<IVideoList> = ({ loading, videos, titleSearch }) => {
     <>
       {/* <div className="input-search-wrapper list-button-wrapper"></div> */}
       <div
-        className="list-button-wrapper"
+        className="list-button-wrapper unlockables-wrapper"
         style={{ verticalAlign: 'top', width: '100%' }}>
         {videos ? (
           Object.keys(videos).length > 0 ? (

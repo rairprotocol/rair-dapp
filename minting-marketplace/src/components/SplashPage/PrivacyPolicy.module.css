@@ -1,7 +1,7 @@
 .main {
   width: 100%;
   font-size: large;
-  padding: 10px;
+  padding: 1rem 7rem;
   text-align: start;
 }
 .main strong {
@@ -15,4 +15,16 @@
 }
 .main div h3 {
   padding-bottom: 20px;
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    padding: 1rem 2rem;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    padding: 0.5rem 1rem;
+  }
 }

@@ -116,7 +116,14 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             selectedClassName={`search-tab-selected-${
               primaryColor === 'rhyno' ? 'default' : 'dark'
             }`}
-            className="category-button-nft category-button">
+            className="category-button-nft category-button"
+            style={{
+              border: `${
+                primaryColor === 'charcoal'
+                  ? 'solid 1px var(--charcoal-80)'
+                  : 'solid 1px var(--rhyno)'
+              } `
+            }}>
             NFT
           </Tab>
           <Tab
@@ -124,8 +131,13 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
               clearPagesForVideo();
             }}
             style={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: `var(--${textColor})`
+              backgroundColor: ``,
+              color: `var(--${textColor})`,
+              border: `${
+                primaryColor === 'charcoal'
+                  ? 'solid 1px var(--charcoal-80)'
+                  : 'solid 1px var(--rhyno)'
+              } `
             }}
             selectedClassName={`search-tab-selected-${
               primaryColor === 'rhyno' ? 'default' : 'dark'
@@ -140,11 +152,18 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
             setter={setTitleSearch}
             placeholder={'Search...'}
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
+              backgroundColor: `var(--${
+                primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
+              })`,
               color: `var(--${textColor})`,
-              borderTopLeftRadius: '0'
+              borderTopLeftRadius: '0',
+              border: `${
+                primaryColor === 'charcoal'
+                  ? 'solid 1px var(--charcoal-80)'
+                  : 'solid 1px var(--rhyno)'
+              } `
             }}
-            customClass="form-control input-styled"
+            customClass="form-control input-styled border-top-radius-tablet search-mobile"
           />
           <div className="nft-form-control-icon">
             <i
@@ -154,7 +173,9 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
               click={click}
               isFilterShow={true}
               textColor={textColor}
-              primaryColor={primaryColor}
+              primaryColor={
+                primaryColor === 'charcoal' ? 'charcoal-90' : `${primaryColor}`
+              }
               sortItem={sortItem}
               setBlockchain={setBlockchain}
               setCategory={setCategory}

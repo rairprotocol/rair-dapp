@@ -73,8 +73,7 @@ const NftItemForCollectionViewComponent = ({
     }
   }
 
-  let className =
-    'col-12 p-1 col-sm-6 col-md-4 col-lg-3 text-start video-wrapper nft-item-collection';
+  let className = 'col-12 text-start video-wrapper nft-item-collection';
 
   if (tokenDataLength < 4) {
     className += ' standartSize';
@@ -193,7 +192,8 @@ const NftItemForCollectionViewComponent = ({
                   display: 'flex',
                   width: '100%',
                   justifyContent: 'space-between',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  maxHeight: '40px'
                 }}>
                 <div>
                   {someUsersData ? (
@@ -232,7 +232,9 @@ const NftItemForCollectionViewComponent = ({
                     </div>
                   )}
                 </div>
-                <div className="collection-block-price">
+                <div
+                  className="collection-block-price"
+                  style={{ alignItems: 'flex-end' }}>
                   <img src={chainData[blockchain]?.image} alt="blockchain" />
                   {checkPrice()}
                 </div>

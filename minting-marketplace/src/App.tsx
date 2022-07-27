@@ -490,10 +490,7 @@ function App() {
           {/*
 							Main body, the header, router and footer are here
 						*/}
-          <div
-            className={`main-block-app col-12 col-md-${
-              adminRights ? '11' : '11'
-            }`}>
+          <div className="main-block-app">
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3 row">
               <SentryRoutes>

@@ -1,5 +1,6 @@
 //@ts-nocheck
 import React, { useState, useCallback, useEffect, memo } from 'react';
+import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { useNavigate } from 'react-router-dom';
 import { SvgKey } from './SvgKey';
 import { TNftItemResponse, TUserResponse } from '../../../axios.responseTypes';
@@ -26,8 +27,11 @@ const NftItemComponent = ({
   const [playing, setPlaying] = useState(false);
   const [isFileUrl, setIsFileUrl] = useState();
 
+  const { width /*height*/ } = useWindowDimensions();
+
   const { maxPrice, minPrice } = gettingPrice(price);
 
+  const mobileFont = width > 400 ? '' : { fontSize: '9px' };
   const checkUrl = useCallback(() => {
     if (
       metaDataProducts &&
@@ -111,7 +115,6 @@ const NftItemComponent = ({
       return `${minPrice + '+'} ${chainData[blockchain]?.symbol}`;
     }
   }
-
   useEffect(() => {
     checkUrl();
   }, [checkUrl]);
@@ -126,12 +129,12 @@ const NftItemComponent = ({
 
   return (
     <>
-      <div className="col-12 p-1 col-sm-6 col-md-4 col-lg-3 text-start video-wrapper nft-item-collection">
+      <div className="text-start video-wrapper nft-item-collection mobile-respinsove">
         <div
           onClick={() => {
             if (!metaDataProducts?.metadata?.animation_url) RedirectToMockUp();
           }}
-          className="col-12 rounded"
+          className="col-12 rounded font-size"
           style={{
             top: 0,
             position: 'relative',
@@ -217,7 +220,13 @@ const NftItemComponent = ({
               className="col-12 h-100 w-100"
             />
           )}
-          {<SvgKey color={'white'} bgColor={'rgba(34, 32, 33, 0.5)'} />}
+          {
+            <SvgKey
+              color={'white'}
+              bgColor={'rgba(34, 32, 33, 0.5)'}
+              mobile={width > 700 ? false : true}
+            />
+          }
           <div className="col description-wrapper pic-description-wrapper">
             <div className="description-title">
               <div
@@ -242,7 +251,7 @@ const NftItemComponent = ({
                           }
                           alt="user"
                         />
-                        <h5 style={{ wordBreak: 'break-all' }}>
+                        <h5 style={{ wordBreak: 'break-all', ...mobileFont }}>
                           {accountData.nickName
                             ? accountData.nickName.length > 16
                               ? accountData.nickName.slice(0, 5) +
@@ -261,7 +270,7 @@ const NftItemComponent = ({
                     ) : (
                       <div className="collection-block-user-creator">
                         <img src={defaultAvatar} alt="user" />
-                        <h5 style={{ wordBreak: 'break-all' }}>
+                        <h5 style={{ wordBreak: 'break-all', ...mobileFont }}>
                           {ownerCollectionUser &&
                             ownerCollectionUser.slice(0, 5) +
                               '....' +
@@ -278,7 +287,9 @@ const NftItemComponent = ({
                       src={`${chainData[blockchain]?.image}`}
                       alt="blockchain-img"
                     />
-                    <span className="description">{ifPriseSame()}</span>
+                    <span className="description">
+                      {ifPriseSame()?.split(' ')[0]}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -107,8 +107,15 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
             setter={setTitleSearch}
             placeholder={'Search...'}
             customCSS={{
-              backgroundColor: `var(--${primaryColor})`,
-              color: `var(--${textColor})`
+              backgroundColor: `var(--${
+                primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
+              })`,
+              color: `var(--${textColor})`,
+              border: `${
+                primaryColor === 'charcoal'
+                  ? 'solid 1px var(--charcoal-80)'
+                  : 'solid 1px var(--rhyno)'
+              } `
             }}
             customClass="form-control input-styled my-items-search"
           />
@@ -121,7 +128,7 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
           />
         </div>
       </div>
-      <div className="my-items-product-wrapper row">
+      <div className="my-items-product-wrapper">
         {filteredData.length > 0 ? (
           filteredData.map((item, index) => {
             return (
@@ -131,13 +138,13 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
                   setSelectedData(item);
                 }}
                 key={index}
-                className="m-1 my-1 col-2 my-item-element"
+                className="my-item-element"
                 style={{
                   backgroundImage: `url(${item.metadata.image || defaultImg})`,
                   backgroundColor: `var(--${primaryColor}-transparent)`
                 }}>
-                <div className="w-100 bg-my-items">
-                  <div className="col my-items-description-wrapper my-items-pic-description-wrapper">
+                <div className="bg-my-items">
+                  <div className="my-items-description-wrapper my-items-pic-description-wrapper">
                     <div
                       className="container-blue-description"
                       style={{ color: '#fff' }}>
@@ -157,7 +164,10 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
                             '....' +
                             item.contract.slice(item.contract.length - 4)}
                         </small>
-                        <div className="description-small" style={{}}>
+                        {/*currently on my items view if you cant buy item cos
+                        you already bought it no need to show blockchain
+                        currency cos item dont have price.*/}
+                        {/* <div className="description-small" style={{}}>
                           <img
                             className="my-items-blockchain-img"
                             src={
@@ -167,7 +177,7 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
                             }
                             alt=""
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
