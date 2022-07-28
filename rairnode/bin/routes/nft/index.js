@@ -30,8 +30,8 @@ module.exports = (context) => {
       const { contract, product, updateMeta = 'false' } = req.body;
       const { user } = req;
       const prod = product;
-      const defaultFields = ['nftid', 'publicaddress', 'name', 'description', 'artist'];
-      const optionalFields = ['image', 'animation_url'];
+      const defaultFields = ['nftid', 'name', 'description', 'artist'];
+      const optionalFields = ['image', 'animation_url', 'publicaddress'];
       const roadToFile = `${req.file.destination}${req.file.filename}`;
       const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
       const records = [];

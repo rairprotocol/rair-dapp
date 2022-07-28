@@ -31,12 +31,6 @@ Adding new or updating existed lazy minted tokens from csv file
       "type": "csv file"
     }
   },
-  "blockchain": {
-    "required": true,
-    "content": {
-      "type": "string"
-    }
-  },
   "contract": {
     "required": true,
     "content": {
@@ -54,12 +48,6 @@ Adding new or updating existed lazy minted tokens from csv file
     "required": false,
     "content": {
       "type": "boolean"
-    }
-  },
-  "blockchain": {
-    "required": true,
-    "content": {
-      "type": "string"
     }
   }
 }
