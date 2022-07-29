@@ -163,9 +163,15 @@
 .container-admin-panel .col-12.py-3 a {
 }
 
-@media screen and (max-width: 1250px) {
+@media screen and (max-width: 1320px) {
   .col-12.header-master {
-    padding: 10px 40px;
+    padding: 20px 40px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .col-12.header-master {
+    padding: 20px 20px;
   }
 }
 

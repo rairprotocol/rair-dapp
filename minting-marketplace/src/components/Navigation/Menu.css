@@ -9,10 +9,8 @@
   height: auto;
 }
 
-.mobile-menu {
-  display: block;
-  font-size: 30px;
-  cursor: pointer;
+.burder-menu .social-media {
+  display: flex;
 }
 
 .col-1.rounded.burder-menu .metamask-on-boarding {
@@ -69,4 +67,11 @@
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid #fff;
+}
+
+@media screen and (max-width: 800px) {
+  .col-1.rounded.burder-menu .burder-menu-logo img {
+    width: 30px;
+    height: auto;
+  }
 }

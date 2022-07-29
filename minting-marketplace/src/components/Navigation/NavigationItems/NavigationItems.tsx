@@ -1,14 +1,19 @@
 //@ts-nocheck
 import styled from 'styled-components';
 
+export const MenuMobileWrapper = styled.div`
+  z-index: 50;
+  position: fixed;
+  padding: 0;
+`;
+
 export const Nav = styled.nav`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? 'rgb(192, 192, 192)' : 'rgb(43, 40, 41)'};
-  height: 85px;
+    props.primaryColor === 'rhyno' ? '#fff' : '#383637'};
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 20px;
   z-index: 12;
   width: 100%;
   position: ${(props) => (props.editMode ? 'fixed' : 'reletive')};
@@ -19,14 +24,12 @@ export const ListItem = styled.li`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 10vw;
+  height: 4vw;
   padding: 30px 0px;
   width: 100%;
   &:hover {
     background: ${(props) =>
-      props.primaryColor === 'rhyno'
-        ? 'rgb(211, 210, 211)'
-        : 'rgb(46, 44, 45)'};
+      props.primaryColor === 'rhyno' ? 'rgb(211, 210, 211)' : '#383637'};
   }
 
   .burger-menu-logout,
@@ -53,24 +56,27 @@ export const TitleEditProfile = styled.h4`
 
 export const List = styled.ul`
   background: ${(props) =>
-    props.primaryColor === 'rhyno' ? 'rgb(201, 201, 201)' : 'rgb(56, 54, 55)'};
+    props.primaryColor === 'rhyno' ? '#fff' : 'rgb(56, 54, 55)'};
   overflow: ${(props) => props.click && 'hidden'};
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;
   margin-top: 5px;
   display: flex;
+  justify-content: space-between;
+  padding: 20px 20px 50px;
   width: 100%;
+  height: 93vh;
   position: absolute;
-  top: 80px;
+  top: 73px;
   left: ${(props) => (props.click ? '0' : '-100%')};
   opacity: ${(props) => (props.click ? '1' : '0')};
   align-items: ${(props) => props.click && 'center'};
-  padding-left: ${(props) => props.click && '0px'};
-  transition: all 0.5s ease;
+  padding-left: ${(props) => props.click && '20px'};
+  transition: all 0.5s ease-in-out;
   flex-direction: column;
   list-style-type: none;
   grid-gap: 0px;
-  z-index: 12;
+  z-index: 50;
 `;
 
 export const ListProfileItem = styled.div`
@@ -179,5 +185,73 @@ export const ButtonEdit = styled.button`
 
   @media screen and (max-width: 380px) {
     font-size: 16px;
+  }
+`;
+
+export const RightSideMenu = styled.div`
+  display: flex;
+
+  button.btn-connect-wallet-mobile {
+    width: 90px;
+    height: 40px;
+    box-shadow: inset 0px 3.11351px 3.11351px rgba(74, 74, 74, 0.25);
+    background: #bb73d7;
+    border: 1px solid #f1b4e6;
+    border-radius: 10px;
+    margin-right: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #bd6bae;
+    }
+    &:active {
+      background: #925486;
+    }
+  }
+`;
+
+export const SearchInputMobile = styled.div`
+  position: relative;
+  width: 90vw;
+  border-radius: 12px;
+  background: none;
+  padding: 8px 16px;
+  border: 1px solid #666666;
+  color: white;
+  transition: all 0.1s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  i {
+    color: #bd6bae;
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  input {
+    margin-left: 10px;
+    background: none;
+    border: none;
+    width: 100%;
+    outline: none;
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#000' : '#fff')};
+  }
+`;
+
+export const BackBtnMobileNav = styled.div`
+  width: 80vw;
+  text-align: left;
+  cursor: pointer;
+
+  i {
+    color: #bd6bae;
   }
 `;

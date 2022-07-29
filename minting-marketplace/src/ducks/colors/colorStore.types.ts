@@ -23,6 +23,7 @@ export type ColorStoreType = {
   primaryColor: ColorChoice;
   secondaryColor: ColorChoice;
   headerLogo: string;
+  headerLogoMobile: string;
   textColor: string | undefined;
   backgroundImage: string;
   backgroundImageEffect: {

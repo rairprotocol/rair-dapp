@@ -159,3 +159,69 @@ export const BellIcon = ({ primaryColor }) => {
     </svg>
   );
 };
+
+export const MenuIcon = ({ primaryColor }) => {
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <g clipPath="url(#clip0_635_2475)">
+        <path
+          d="M1.41016 5.57812H12.3477"
+          stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M1.41016 12.8691H24.3268"
+          stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M13.9102 20.1602L24.3268 20.1602"
+          stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_635_2475">
+          <rect
+            width="25"
+            height="25"
+            fill="white"
+            transform="translate(0.368164 0.369141)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
+export const CloseIconMobile = ({ primaryColor }) => {
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M4.78516 20.584L20.9507 5.15275"
+        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M20.9502 20.584L4.78463 5.15275"
+        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};

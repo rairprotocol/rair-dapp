@@ -142,7 +142,7 @@ function App() {
     currentChain,
     realChain
   );
-  const carousel_match = window.matchMedia('(min-width: 900px)');
+  const carousel_match = window.matchMedia('(min-width: 1025px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
 
   const navigate = useNavigate();
@@ -165,13 +165,8 @@ function App() {
     programmaticProvider,
     diamondMarketplaceInstance
   } = useSelector((store) => store.contractStore);
-  const {
-    primaryColor,
-    headerLogo,
-    textColor,
-    backgroundImage,
-    backgroundImageEffect
-  } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor, backgroundImage, backgroundImageEffect } =
+    useSelector((store) => store.colorStore);
   const { token } = useSelector((store) => store.accessStore);
   const { adminRights } = useSelector((store) => store.userStore);
 
@@ -465,7 +460,6 @@ function App() {
             <MenuNavigation
               adminRights={adminRights}
               primaryColor={primaryColor}
-              headerLogo={headerLogo}
               startedLogin={startedLogin}
               connectUserData={connectUserData}
               renderBtnConnect={renderBtnConnect}

@@ -1708,7 +1708,7 @@ button.btn-show-more {
   }
 
   .wrapper-about-page {
-    margin-top: -220px;
+    margin-top: 20px;
   }
 
   .container-content-metamask {
@@ -1935,7 +1935,7 @@ button.btn-show-more {
   }
 
   .wrapper-about-page {
-    margin-top: -230px;
+    margin-top: 0px;
   }
 
   .about-page-logo {
@@ -2145,10 +2145,6 @@ button.btn-show-more {
 
   .roadmap-container .about-map-item .map-item-desc {
     padding: 10px;
-  }
-
-  .wrapper-about-page {
-    margin-top: -160px;
   }
 }
 

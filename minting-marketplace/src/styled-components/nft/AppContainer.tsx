@@ -14,4 +14,8 @@ export const AppContainerFluid = styled.div`
   background-position: center top;
   background-repeat: no-repeat;
   overflow: hidden;
+
+  @media screen and (max-width: 1024px) {
+    background-size: contain;
+  }
 `;

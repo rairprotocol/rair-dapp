@@ -1,5 +1,6 @@
 import React from 'react';
 import { IMainLogo } from './mainLogo.types';
+import { MainLogoContaier } from './MainLogoItems';
 // import { useEffect } from 'react';
 // import { useParams } from 'react-router-dom';
 
@@ -11,18 +12,9 @@ const MainLogo: React.FC<IMainLogo> = ({
 }) => {
   return (
     <>
-      <div>
-        <img
-          onClick={() => goHome()}
-          alt="Header Logo"
-          src={headerLogo}
-          style={{
-            width: 'auto',
-            height: '26px',
-            cursor: 'pointer'
-          }}
-        />
-      </div>
+      <MainLogoContaier>
+        <img onClick={() => goHome()} alt="Header Logo" src={headerLogo} />
+      </MainLogoContaier>
     </>
   );
 };

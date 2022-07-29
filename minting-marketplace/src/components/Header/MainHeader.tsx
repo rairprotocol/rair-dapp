@@ -308,7 +308,7 @@ const MainHeader: React.FC<IMainHeader> = ({
           </div>
         )}
         <div className="box-connect-btn">
-          {adminRights && (
+          {adminRights && currentUserAddress && (
             <div
               onClick={() => setAdminPanel((prev) => !prev)}
               className="admin-panel-btn">

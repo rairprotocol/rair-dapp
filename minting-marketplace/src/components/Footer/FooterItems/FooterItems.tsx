@@ -63,6 +63,10 @@ export const CommunityBlock = styled.div`
 `;
 
 export const CommunityBoxFooter = styled.div`
+  &.header-mobile-community {
+    justify-content: center;
+  }
+
   display: flex;
   margin-top: 14px;
 
@@ -88,6 +92,16 @@ export const NavFooter = styled.nav`
 export const NavFooterBox = styled.ul`
   list-type: none;
 
+  &.nav-header-box-mobile {
+    li {
+      font-size: 16px;
+
+      i {
+        margin-right: 10px;
+      }
+    }
+  }
+
   h4 {
     font-size: 16px;
     line-height: 20px;
@@ -101,6 +115,11 @@ export const NavFooterBox = styled.ul`
     color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
     margin-bottom: 8px;
   }
+
+  li.logout {
+    cursor: pointer;
+  }
+
   li:last-child {
     margin-bottom: 0px;
   }

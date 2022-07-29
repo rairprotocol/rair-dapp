@@ -1,7 +1,7 @@
 import * as types from './types';
 
-// import headerLogoBlack from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
-// import headerLogoWhite from '../../images/RAIR-Tech-Logo-POWERED BY-WHITE-2021.png';
+import headerLogoBlackMobile from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
+import headerLogoWhiteMobile from '../../images/RAIR-Tech-Logo-POWERED BY-WHITE-2021.png';
 import headerLogoWhite from '../../images/rairTechLogoWhite.png';
 import headerLogoBlack from '../../images/rairTechLogoBlack.png';
 
@@ -18,6 +18,7 @@ const schemes: SchemaType = {
     primaryColor: 'rhyno',
     secondaryColor: 'charcoal',
     headerLogo: headerLogoBlack,
+    headerLogoMobile: headerLogoBlackMobile,
     textColor: 'black',
     backgroundImage: bgLogoWhite,
     backgroundImageEffect: { backgroundBlendMode: undefined }
@@ -26,6 +27,7 @@ const schemes: SchemaType = {
     primaryColor: 'charcoal',
     secondaryColor: 'rhyno',
     headerLogo: headerLogoWhite,
+    headerLogoMobile: headerLogoWhiteMobile,
     textColor: 'white',
     backgroundImage: bgLogoBlack,
     backgroundImageEffect: { backgroundBlendMode: 'lighten' }

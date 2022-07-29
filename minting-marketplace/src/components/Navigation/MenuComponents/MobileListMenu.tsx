@@ -1,76 +1,60 @@
 //@ts-nocheck
 import React from 'react';
-import { OnboardingButton } from '../../common/OnboardingButton/OnboardingButton';
-import { useDispatch, useSelector } from 'react-redux';
-import { List, ListItem } from './../NavigationItems/NavigationItems';
-import { NavLink } from 'react-router-dom';
-import { setColorScheme } from '../../../ducks/colors/actions';
+import { useSelector } from 'react-redux';
+import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
+import {
+  CommunityBlock,
+  CommunityBoxFooter
+} from '../../Footer/FooterItems/FooterItems';
+import {
+  DiscordIcon,
+  TelegramIcon,
+  TwitterIcon
+} from '../../Header/DiscordIcon';
+import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import MobileNavigationList from './MobileNavigationList';
 
 const MobileListMenu = ({
   primaryColor,
   click,
-  renderBtnConnect,
-  loginDone,
-  startedLogin,
-  connectUserData,
-  toggleOpenProfile,
   logout,
-  adminRights,
-  creatorViewsDisabled,
-  toggleMenu
+  activeSearch,
+  toggleMenu,
+  messageAlert,
+  setMessageAlert
 }) => {
-  const {
-    minterInstance,
-    factoryInstance,
-    programmaticProvider,
-    diamondMarketplaceInstance
-  } = useSelector((store) => store.contractStore);
-
-  const dispatch = useDispatch();
+  const { currentUserAddress } = useSelector((store) => store.contractStore);
 
   return (
     <List primaryColor={primaryColor} click={click}>
-      {!loginDone && !renderBtnConnect && (
-        <ListItem primaryColor={primaryColor}>
-          <div className="btn-connect-wallet-wrapper">
-            <button
-              disabled={
-                !window.ethereum && !programmaticProvider && !startedLogin
+      <div>
+        {activeSearch && (
+          <SearchInputMobile primaryColor={primaryColor}>
+            <i className="fas fa-search" aria-hidden="true"></i>
+            <input
+              className={
+                primaryColor === 'rhyno' ? 'rhyno' : 'input-search-black'
               }
-              className={`btn btn-${primaryColor} btn-connect-wallet`}
-              onClick={connectUserData}>
-              {startedLogin ? 'Please wait...' : 'Connect Wallet'}
-            </button>
-          </div>
-        </ListItem>
-      )}
-      {renderBtnConnect && (
-        <ListItem>
-          <OnboardingButton className="borading-btn-mobile" />
-        </ListItem>
-      )}
-      {loginDone && (
-        <ListItem primaryColor={primaryColor}>
-          <div className="burder-menu-profile" onClick={toggleOpenProfile}>
-            <i className="fas fa-cog"></i>Profile settings
-          </div>
-        </ListItem>
-      )}
-      {loginDone && (
-        <ListItem onClick={toggleMenu} primaryColor={primaryColor}>
-          <NavLink to="/my-items">
-            <div className="burder-menu-profile">
-              <i className="fas fa-boxes"></i>My Items
-            </div>
-          </NavLink>
-        </ListItem>
-      )}
-      <ListItem primaryColor={primaryColor}>
+              type="text"
+              placeholder="Search the rairverse..."
+            />
+          </SearchInputMobile>
+        )}
+        <MobileNavigationList
+          messageAlert={messageAlert}
+          setMessageAlert={setMessageAlert}
+          primaryColor={primaryColor}
+          toggleMenu={toggleMenu}
+          currentUserAddress={currentUserAddress}
+          logout={logout}
+        />
+      </div>
+      {/* <ListItem primaryColor={primaryColor}>
         <a href="https://rair.tech/" target="_blank" rel="noreferrer">
           RAIR TECH
         </a>
-      </ListItem>
-      <ListItem primaryColor={primaryColor}>
+      </ListItem> */}
+      {/* <ListItem primaryColor={primaryColor}>
         <button
           className="btn-change-theme"
           style={{
@@ -92,8 +76,8 @@ const MobileListMenu = ({
             <i className="fas fa-sun" />
           )}
         </button>
-      </ListItem>
-      {loginDone && adminRights === true && !creatorViewsDisabled ? (
+      </ListItem> */}
+      {/* {!loginDone && !adminRights === true && !creatorViewsDisabled ? (
         [
           {
             name: <i className="fas fa-photo-video" />,
@@ -158,14 +142,35 @@ const MobileListMenu = ({
         })
       ) : (
         <></>
-      )}
-      {loginDone && (
-        <ListItem primaryColor={primaryColor} onClick={logout}>
-          <div className="burger-menu-logout">
-            <i className="fas fa-sign-out-alt"></i>Logout
-          </div>
-        </ListItem>
-      )}
+      )} */}
+      <CommunityBlock primaryColor={primaryColor}>
+        <div className="community-text">Join our community</div>
+        <CommunityBoxFooter className="header-mobile-community">
+          <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>
+            <a
+              href="https://discord.gg/pSTbf2yz7V"
+              target={'_blank'}
+              rel="noreferrer">
+              <DiscordIcon primaryColor={primaryColor} color={'#fff'} />
+            </a>
+          </SocialBox>
+          <SocialBox
+            marginRight={'17px'}
+            marginLeft={'17px'}
+            hoverColor={'#1DA1F2'}
+            primaryColor={primaryColor}>
+            <a
+              href="https://twitter.com/rairtech"
+              target={'_blank'}
+              rel="noreferrer">
+              <TwitterIcon primaryColor={primaryColor} color={'#fff'} />
+            </a>
+          </SocialBox>
+          <SocialBox hoverColor={'#229ED9'} primaryColor={primaryColor}>
+            <TelegramIcon primaryColor={primaryColor} color={'#fff'} />
+          </SocialBox>
+        </CommunityBoxFooter>
+      </CommunityBlock>
     </List>
   );
 };

@@ -154,6 +154,10 @@ input.stimorol-radio[type='radio']:checked:after {
   text-align: center;
 }
 
+body.no-scroll {
+  overflow: hidden !important;
+}
+
 li {
   list-style: none;
 }
@@ -2229,6 +2233,12 @@ body::-webkit-scrollbar-thumb:active {
 @media screen and (max-width: 1077px) {
   .col-1.hidden-block {
     width: 0px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .main-block-app {
+    margin-top: 80px;
   }
 }
 
