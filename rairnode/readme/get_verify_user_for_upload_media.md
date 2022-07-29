@@ -37,7 +37,6 @@ Returns verify userAdmin
 "lastName": null,
 "_id": "6295e23d279c31001d009d18",
 "publicAddress": "some public address",
-"adminNFT": "some NFT",
 "creationDate": "2022-05-31T09:39:09.152Z",
 "nickName": null,
 "adminRights": true

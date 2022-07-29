@@ -14,6 +14,8 @@ const {
   SESSION_TTL,
   SENTRY_DSN,
   LOG_LEVEL,
+  ADMIN_NETWORK,
+  ADMIN_CONTRACT,
 } = process.env;
 
 const binanceTestnetData = {
@@ -56,6 +58,10 @@ const polygonTestnetData = {
 module.exports = {
   production: !!(PRODUCTION && PRODUCTION === 'true'),
   logLevel: LOG_LEVEL || 'info',
+  admin: {
+    network: ADMIN_NETWORK,
+    contract: ADMIN_CONTRACT,
+  },
   blockchain: {
     networks: {
       '0x13881': polygonTestnetData,

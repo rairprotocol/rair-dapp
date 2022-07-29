@@ -1,5 +1,8 @@
 const ethers = require('ethers');
+const log = require('../../utils/logger')(module);
 const RAIR_ERC721Abi = require('./contracts/RAIR_ERC721.json').abi;
+
+const config = require('../../config');
 
 const endpoints = {
   '0x13881': process.env.MATIC_TESTNET_RPC,
@@ -101,7 +104,29 @@ async function checkBalanceSingle(
   return false;
 }
 
+async function checkAdminTokenOwns(accountAddress) {
+  // Static RPC Providers are used because the chain ID *WILL NOT* change,
+  // doing this we save calls to the blockchain to verify Chain ID
+  try {
+    let provider = new ethers.providers.StaticJsonRpcProvider(
+      endpoints[config.admin.network]
+    );
+    const tokenInstance = new ethers.Contract(
+      config.admin.contract,
+      RAIR_ERC721Abi,
+      provider
+    );
+    const result = await tokenInstance.balanceOf(accountAddress);
+    return result.gt(ethers.BigNumber.from(0));
+  } catch (err) {
+    log.error(`Error querying tokens for user ${accountAddress} from admin Contract.`);
+    log.error(err);
+    return false;
+  }
+}
+
 module.exports = {
   checkBalanceProduct,
   checkBalanceSingle,
+  checkAdminTokenOwns,
 };

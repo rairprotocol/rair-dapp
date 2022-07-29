@@ -44,12 +44,6 @@ Updating specific user
       "type": "image file"
     }
   },
-  "adminNFT": {
-    "required": false,
-    "content": {
-      "type": "string"
-    }
-  },
   "nickName": {
     "required": false,
     "content": {
@@ -91,7 +85,6 @@ Returns if updated successfully
     "lastName": null,
     "_id": "61af976dc4444d001c98d851",
     "publicAddress": "publicAddress",
-    "adminNFT": "temp_0xasdfwe",
     "nonce": "some_string",
     "creationDate": "2021-12-07T17:18:37.231Z",
     "nickName": "@Test"

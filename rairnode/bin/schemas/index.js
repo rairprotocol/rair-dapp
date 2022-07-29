@@ -7,8 +7,6 @@ const getChallenge = require('./getChallenge');
 const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
 const singleUser = require('./singleUser');
-const newAdmin = require('./newAdmin');
-const newAdminParams = require('./newAdminParams');
 const removeMedia = require('./removeMedia');
 const stream = require('./stream');
 const uploadVideo = require('./uploadVideo');
@@ -35,8 +33,6 @@ module.exports = {
   filterAndSort,
   getToken,
   singleUser,
-  newAdmin,
-  newAdminParams,
   removeMedia,
   stream,
   uploadVideo,

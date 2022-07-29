@@ -2,11 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
 const _ = require('lodash');
-const { recoverPersonalSignature } = require('eth-sig-util');
-const { bufferToHex } = require('ethereumjs-util');
 const { ObjectId } = require('mongodb');
-const { nanoid } = require('nanoid');
-const { checkBalanceSingle, checkBalanceProduct } = require('../integrations/ethers/tokenValidation.js');
+const { checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
 const { JWTVerification, validation } = require('../middleware');
 const log = require('../utils/logger')(module);
 
@@ -118,7 +115,7 @@ module.exports = (context) => {
    *         description: If the signer meets the requirments (signature valid, holds required token) returns a JWT which grants stream access.
    */
   router.get('/get_token/:MetaMessage/:MetaSignature/:mediaId', validation('getToken', 'params'), metaAuth, async (req, res, next) => {
-    const ethAddres = req.metaAuth.recovered;
+    const ethAddress = req.metaAuth.recovered;
     const { mediaId } = req.params;
     try {
       let ownsTheAdminToken;
@@ -132,17 +129,16 @@ module.exports = (context) => {
       const contract = await context.db.Contract.findOne(file.contract);
       const offers = await context.db.Offer.find(_.assign(
         { contract: file.contract },
-        contract.diamond ? { diamondRangeIndex: { $in: file.offer } } : { offerIndex: { $in: file.offer } }));
+        contract.diamond ? { diamondRangeIndex: { $in: file.offer } } : { offerIndex: { $in: file.offer } },
+      ));
 
-      if (ethAddres) {
+      if (ethAddress) {
         // verify the user have needed tokens
 
-        // Replace with full blockchain authentication
-        // ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
-        // async function checkBalanceProduct (accountAddress, blockchain, contractAddress, productId, offerRangeStart, offerRangeEnd) {
+        // for unlock the file
         for await (const offer of offers) {
           ownsTheAccessTokens.push(await checkBalanceProduct(
-            ethAddres,
+            ethAddress,
             contract.blockchain,
             contract.contractAddress,
             offer.product,
@@ -154,17 +150,14 @@ module.exports = (context) => {
           }
         }
 
-        // TODO: have to be the call functionality of tokens sync
-        // if (_.isEmpty(ownsTheAccessTokens)) {
-        //   ownsTheAccessTokens = await getTokensForUser(context, ethAddres, file);
-        // }
-
-        // verify the account holds the required NFT
-        if (typeof file.author === 'string' && file.author.length > 0 && !ownsTheAccessTokens.includes(true)) {
-          const [contractAddress, tokenId] = file.author.split(':');
-          log.info('Verifying account has token');
+        // verify the account holds the required admin NFT
+        if (!ownsTheAccessTokens.includes(true) && file.authorPublicAddress === ethAddress.toLowerCase()) {
           try {
-            ownsTheAdminToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
+            ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);
+
+            if (ownsTheAdminToken) {
+              log.info('Verifying user account has the admin token');
+            }
           } catch (e) {
             return next(new Error(`Could not verify account: ${e}`));
           }
@@ -174,11 +167,11 @@ module.exports = (context) => {
           return res.status(403).send({ success: false, message: 'You don\'t have permission.' });
         }
 
-        await context.redis.redisService.set(`sess:${ req.sessionID }`, {
+        await context.redis.redisService.set(`sess:${req.sessionID}`, {
           ...req.session,
-          eth_addr: ethAddres,
+          eth_addr: ethAddress,
           media_id: mediaId,
-          streamAuthorized: true
+          streamAuthorized: true,
         });
 
         res.send({ success: true });
@@ -192,40 +185,27 @@ module.exports = (context) => {
 
   // Verify with a Metamask challenge if the user holds the current Administrator token
   router.get('/admin/:MetaMessage/:MetaSignature/', validation('admin', 'params'), metaAuth, async (req, res, next) => {
-    const ethAddres = req.metaAuth.recovered;
-    const reg = new RegExp(/^0x\w{40}:\w+$/);
+    const ethAddress = req.metaAuth.recovered;
 
     try {
-      if (ethAddres) {
-        let user = await context.db.User.findOne({ publicAddress: ethAddres });
+      if (ethAddress) {
+        const user = await context.db.User.findOne({ publicAddress: ethAddress });
 
         if (_.isNull(user)) {
           return res.status(404).send({ success: false, message: 'User not found.' });
         }
 
-        user = user.toObject();
+        try {
+          const ownsTheToken = await checkAdminTokenOwns(ethAddress);
 
-        const nftIdentifier = _.get(user, 'adminNFT', '');
-
-        log.info('Verifying user account has the admin token');
-
-        if (typeof nftIdentifier === 'string' && reg.test(nftIdentifier)) { // verify the account holds the required NFT!
-          const [contractAddress, tokenId] = nftIdentifier.split(':');
-
-          try {
-            const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-
-            if (!ownsTheToken) {
-              res.json({ success: false, message: 'You don\'t hold the current admin token' });
-            } else {
-              res.json({ success: true, message: 'Admin token holder' });
-            }
-          } catch (e) {
-            log.error(e);
-            next(new Error('Could not verify account.'));
+          if (!ownsTheToken) {
+            res.json({ success: false, message: 'You don\'t hold the current admin token' });
+          } else {
+            res.json({ success: true, message: 'Admin token holder' });
           }
-        } else {
-          return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
+        } catch (e) {
+          log.error(e);
+          next(new Error('Could not verify account.'));
         }
       } else {
         return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
@@ -235,96 +215,33 @@ module.exports = (context) => {
     }
   });
 
-  // Verify the user holds the current Admin token and then replace it with a new token
-  router.post('/new_admin/:MetaMessage/:MetaSignature/', validation('newAdminParams', 'params'), validation('newAdmin'), metaAuth, async (req, res, next) => {
-    try {
-      const ethAddres = req.metaAuth.recovered;
-
-      if (ethAddres) {
-        const user = (await context.db.User.findOne({ publicAddress: ethAddres })).toObject();
-        const nftIdentifier = _.get(user, 'adminNFT');
-        const { adminNFT } = req.body;
-
-        log.info('New Admin NFT', adminNFT);
-
-        if (!nftIdentifier) {
-          await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
-          log.info('There was no NFT identifier, so', adminNFT, 'is the new admin token');
-          res.status(200).json({
-            success: true,
-            message: 'New NFT set!',
-          });
-          return;
-        }
-
-        if (typeof nftIdentifier === 'string' && nftIdentifier.length > 0) { // verify the account holds the required NFT!
-          const [contractAddress, tokenId] = nftIdentifier.split(':');
-
-          log.info('Verifying user account has the admin token');
-
-          try {
-            const ownsTheToken = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-
-            if (!ownsTheToken) {
-              res.json({ success: false, message: 'You don\'t hold the current admin token' });
-            } else {
-              await context.db.User.update({ _id: user._id }, { $set: { adminNFT } });
-              res.json({
-                success: true,
-                message: 'New NFT set!',
-              });
-            }
-          } catch (e) {
-            next(new Error('Could not verify account', e));
-          }
-        }
-      } else {
-        return res.status(400).send({ success: false });
-      }
-    } catch (err) {
-      log.error('New NFT Admin Error:', err);
-      res.json({
-        success: false,
-        message: 'There was an error validating your request',
-      });
-    }
-  });
-
   router.get('/authentication/:MetaMessage/:MetaSignature/', validation('authentication', 'params'), metaAuth, async (req, res, next) => {
-    const ethAddres = req.metaAuth.recovered;
-    const reg = new RegExp(/^0x\w{40}:\w+$/);
+    const ethAddress = req.metaAuth.recovered;
     let adminRights = false;
 
     try {
-      if (ethAddres) {
-        let user = await context.db.User.findOne({ publicAddress: ethAddres });
+      if (ethAddress) {
+        const user = await context.db.User.findOne({ publicAddress: ethAddress });
 
         if (_.isNull(user)) {
           return res.status(404).send({ success: false, message: 'User not found.' });
         }
 
-        user = user.toObject();
+        try {
+          adminRights = await checkAdminTokenOwns(ethAddress);
 
-        const nftIdentifier = _.get(user, 'adminNFT', '');
-
-        log.info('Verifying user account has the admin token');
-
-        // verify the account holds the correct NFT
-        if (typeof nftIdentifier === 'string' && reg.test(nftIdentifier)) {
-          const [contractAddress, tokenId] = nftIdentifier.split(':');
-
-          try {
-            adminRights = await checkBalanceSingle(ethAddres, process.env.ADMIN_NETWORK, contractAddress, tokenId);
-          } catch (e) {
-            log.error(e);
+          if (adminRights) {
+            log.info('Verifying user account has the admin token');
           }
+        } catch (e) {
+          log.error(e);
         }
       } else {
         return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
       }
 
       jwt.sign(
-        { eth_addr: ethAddres, adminRights },
+        { eth_addr: ethAddress, adminRights },
         process.env.JWT_SECRET,
         { expiresIn: '1d' },
         (err, token) => {
@@ -340,7 +257,7 @@ module.exports = (context) => {
   router.get('/user_info', JWTVerification, async (req, res, next) => {
     const user = _.chain(req.user)
       .assign({})
-      .omit(['nonce', 'adminNFT'])
+      .omit(['nonce'])
       .value();
 
     res.send({

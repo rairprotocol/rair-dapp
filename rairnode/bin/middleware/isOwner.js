@@ -3,12 +3,20 @@ const { File } = require('../models');
 
 module.exports = async (req, res, next) => {
   try {
-    const { adminNFT: author } = req.user;
-    // eslint-disable-next-line prefer-regex-literals
-    const reg = new RegExp(/^0x\w{40}:\w+$/);
-    const fileData = (await File.findOne({ _id: req.params.mediaId })).toObject();
+    const { publicAddress } = req.user;
+    const file = await File.findOne({ _id: req.params.mediaId });
 
-    if (!author || !reg.test(author) || author !== fileData.author) {
+    if (!file) {
+      const message = 'File not found..';
+
+      log.error(message);
+
+      return res.status(404).send({ success: false, error: true, message });
+    }
+
+    const fileData = file.toObject();
+
+    if (publicAddress !== fileData.authorPublicAddress) {
       const message = 'You don\'t have permission to manage this file.';
 
       log.error(message);

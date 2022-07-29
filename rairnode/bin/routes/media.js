@@ -204,7 +204,7 @@ module.exports = () => {
       title, description, contract, product, offer = [], category, demo = 'false', storage = 'ipfs',
     } = req.body;
     // Get the user information
-    const { adminNFT: author, publicAddress } = req.user;
+    const { publicAddress } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
 
@@ -286,6 +286,7 @@ module.exports = () => {
         // Adds 'thumbnailName' to the req.file object
         // Generates a static webp thumbnail and an animated gif thumbnail
         // ONLY for videos
+        // TODO: make the verification for making thumbnails only for videos
         await generateThumbnails(req.file, socketInstance);
 
         log.info(`${req.file.originalname} converting to stream`);
@@ -305,7 +306,7 @@ module.exports = () => {
         const rairJson = {
           title: textPurify.sanitize(title),
           mainManifest: 'stream.m3u8',
-          author,
+          author: publicAddress,
           encryptionType: 'aes-256-gcm',
         };
 
@@ -363,7 +364,6 @@ module.exports = () => {
 
         const meta = {
           mainManifest: 'stream.m3u8',
-          author,
           authorPublicAddress: publicAddress,
           encryptionType: 'aes-256-gcm',
           title: textPurify.sanitize(title),
