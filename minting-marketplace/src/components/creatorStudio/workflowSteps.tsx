@@ -387,6 +387,17 @@ const WorkflowSteps: React.FC = () => {
     forceRefetch: () => setForceFetchData(!forceFetchData)
   };
 
+  const navigateRoute = () => {
+    let notSimple = false;
+    setSimpleMode(true);
+    steps.map((item, index) => {
+      if (!item.simple) {
+        notSimple = true;
+      }
+    });
+    if (notSimple) navigate(`${steps[0].populatedPath}`);
+  };
+
   return (
     <>
       <WorkflowContext.Provider value={initialValue}>
@@ -464,7 +475,7 @@ const WorkflowSteps: React.FC = () => {
                       style={{ paddingTop: '50px' }}>
                       <div className="col-12 col-md-6 text-end">
                         <button
-                          onClick={() => setSimpleMode(true)}
+                          onClick={() => navigateRoute()}
                           className={`btn btn-${
                             simpleMode ? 'stimorol' : primaryColor
                           } rounded-rair col-12 col-md-6`}>
