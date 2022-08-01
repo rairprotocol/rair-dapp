@@ -116,7 +116,7 @@ const handleReceipt = async (
   }
 };
 
-const validateInteger = (number: number) => {
+const validateInteger = (number: string | number) => {
   if (
     number === undefined ||
     number.toString() === '' ||

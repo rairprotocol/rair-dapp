@@ -292,19 +292,6 @@ const WorkflowSteps: React.FC = () => {
     diamondMarketplaceInstance
   ]);
 
-  const handleMinterRole = async () => {
-    setMintingRole(
-      await metamaskCall(
-        contractData?.instance.hasRole(
-          await metamaskCall(contractData.instance.MINTER()),
-          contractData.diamond
-            ? diamondMarketplaceInstance?.address
-            : minterInstance?.address
-        )
-      )
-    );
-  };
-
   useEffect(() => {
     if (contractData && contractData.instance) {
       (async () => {
@@ -384,7 +371,11 @@ const WorkflowSteps: React.FC = () => {
     correctMinterInstance,
     tokenInstance,
     simpleMode,
-    forceRefetch: () => setForceFetchData(!forceFetchData)
+    forceRefetch: () => {
+      setTimeout(() => {
+        setForceFetchData(!forceFetchData);
+      }, 2000);
+    }
   };
 
   const navigateRoute = () => {

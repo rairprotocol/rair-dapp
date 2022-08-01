@@ -17,7 +17,7 @@ import {
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 const ListOffers: React.FC<IListOffers> = ({
   contractData,
@@ -172,8 +172,7 @@ const ListOffers: React.FC<IListOffers> = ({
           offerList.map((item) => item.name),
           process.env.REACT_APP_NODE_ADDRESS
         ),
-        undefined,
-        gotoNextStep()
+        undefined
       )
     ) {
       Swal.fire({
@@ -184,6 +183,27 @@ const ListOffers: React.FC<IListOffers> = ({
       });
       forceRefetch();
     }
+  };
+
+  const validateTokenIndexes = () => {
+    if (contractData && offerList.length > 0) {
+      const copies = BigNumber.from(contractData.product.copies).sub(1);
+      let allOffersAreCorrect = true;
+      for (const item of offerList) {
+        if (!allOffersAreCorrect) {
+          return false;
+        }
+        allOffersAreCorrect =
+          allOffersAreCorrect &&
+          validateInteger(item.ends) &&
+          validateInteger(item.starts) &&
+          BigNumber.from(item.ends).lte(copies) &&
+          BigNumber.from(item.starts).lte(copies) &&
+          BigNumber.from(item.starts).lte(item.ends);
+      }
+      return allOffersAreCorrect;
+    }
+    return false;
   };
 
   const appendOffers = async () => {
@@ -203,8 +223,7 @@ const ListOffers: React.FC<IListOffers> = ({
           filteredList.map((item) => item.price),
           filteredList.map((item) => item.name)
         ),
-        undefined,
-        gotoNextStep()
+        undefined
       )
     ) {
       Swal.fire({
@@ -215,10 +234,6 @@ const ListOffers: React.FC<IListOffers> = ({
       });
       forceRefetch();
     }
-  };
-
-  const switchBlockchain = async (chainId: BlockchainType | undefined) => {
-    web3Switch(chainId);
   };
 
   useEffect(() => {
@@ -298,39 +313,34 @@ const ListOffers: React.FC<IListOffers> = ({
             <FixedBottomNavigation
               backwardFunction={goBack}
               forwardFunctions={[
+                !onMyChain
+                  ? {
+                      action: () => web3Switch(contractData?.blockchain),
+                      label: `Switch to ${
+                        chainData[contractData?.blockchain]?.name
+                      }`
+                    }
+                  : hasMinterRole === true
+                  ? {
+                      action: offerList[0]?.fixed ? appendOffers : createOffers,
+                      label: offerList[0]?.fixed
+                        ? 'Append to offer'
+                        : 'Create new offers',
+                      disabled:
+                        offerList.filter((item) => item.fixed !== true)
+                          .length === 0 ||
+                        offerList.length === 0 ||
+                        !validateTokenIndexes() ||
+                        validPrice ||
+                        emptyNames
+                    }
+                  : {
+                      action: giveMinterRole,
+                      label: 'Connect to Minter Marketplace'
+                    },
                 {
-                  action: !onMyChain
-                    ? () =>
-                        switchBlockchain(
-                          chainData[contractData?.blockchain]?.chainId
-                        )
-                    : hasMinterRole === true
-                    ? offerList[0]?.fixed
-                      ? offerList.filter((item) => item.fixed !== true)
-                          .length === 0
-                        ? gotoNextStep
-                        : appendOffers
-                      : createOffers
-                    : giveMinterRole,
-                  label: !onMyChain
-                    ? `Switch to ${chainData[contractData?.blockchain]?.name}`
-                    : hasMinterRole
-                    ? offerList[0]?.fixed
-                      ? offerList.filter((item) => item.fixed !== true)
-                          .length === 0
-                        ? 'Continue'
-                        : 'Append to Offer'
-                      : 'Create Offer'
-                    : 'Approve Minter Marketplace',
-                  disabled: hasMinterRole
-                    ? offerList.length === 0 ||
-                      Number(offerList.at(-1)?.ends) >
-                        Number(contractData.product.copies) - 1 ||
-                      Number(offerList.at(-1)?.starts) >
-                        Number(contractData.product.copies) - 1 ||
-                      validPrice ||
-                      emptyNames
-                    : false
+                  label: 'Continue',
+                  action: gotoNextStep
                 }
               ]}
             />
