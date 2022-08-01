@@ -1,0 +1,29 @@
+FROM node:latest as build
+
+#version management
+COPY VERSION /
+
+#install dependencies
+WORKDIR /usr/src/rairnode
+COPY package*.json ./
+RUN npm install
+RUN npm install -g npm@8.14.0
+COPY . /usr/src/rairnode
+#RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+
+FROM node:latest
+
+###############################################
+# install gcloud cli as per these instructions:
+# https://cloud.google.com/sdk/docs/install#deb
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
+###############################################
+
+WORKDIR /usr/src/rairnode
+COPY --from=build /usr/src/rairnode /usr/src/rairnode
+
+EXPOSE 3000
+EXPOSE 5000
+
+
+CMD bash commands/start_rairnode_prod.sh

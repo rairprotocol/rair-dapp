@@ -62,7 +62,9 @@ pipeline {
                     --context ./minting-marketplace/ \
                     --verbosity debug \
                     --cleanup \
-                    --destination rairtechinc/minting-network:${GIT_COMMIT}
+                    --destination rairtechinc/minting-network:latest \
+                    --destination rairtechinc/minting-network:${GIT_COMMIT} \
+                    --destination rairtechinc/minting-network:${BUILD_TAG}
                 '''
               }
 
@@ -78,11 +80,13 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile \
+                    --dockerfile Dockerfile.prod \
                     --context ./rairnode/ \
                     --verbosity debug \
                     --cleanup \
-                    --destination rairtechinc/rairservernode:${GIT_COMMIT}
+                    --destination rairtechinc/rairservernode:latest \
+                    --destination rairtechinc/rairservernode:${GIT_COMMIT} \
+                    --destination rairtechinc/rairservernode:${BUILD_TAG}
                 '''
               }
 
@@ -98,11 +102,13 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile \
+                    --dockerfile Dockerfile.prod \
                     --context ./blockchain-networks-service/ \
                     --verbosity debug \
                     --cleanup \
-                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT}
+                    --destination rairtechinc/blockchain-event-listener:latest \
+                    --destination rairtechinc/blockchain-event-listener:${GIT_COMMIT} \
+                    --destination rairtechinc/blockchain-event-listener:${BUILD_TAG}
                 '''
               }
 
@@ -154,7 +160,7 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile \
+                    --dockerfile Dockerfile.prod \
                     --context ./rairnode/ \
                     --verbosity debug \
                     --cleanup \
@@ -173,7 +179,7 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile \
+                    --dockerfile Dockerfile.prod \
                     --context ./blockchain-networks-service/ \
                     --verbosity debug \
                     --cleanup \
@@ -197,6 +203,8 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/media-service:${GIT_COMMIT} \
                     --destination rairtechinc/media-service:${GIT_BRANCH}_2.${BUILD_ID}
+                    --destination rairtechinc/media-service:testing.${BUILD_ID}
+
                 '''
               }
 
@@ -206,7 +214,7 @@ pipeline {
     stage('Jenkins Slack Notification') {
       steps {
                 slackSend channel: '#jenkins-builds', 
-                          message: 'Branch ' + GIT_BRANCH + 'with build-id ' + GIT_COMMIT + ' has successfully built and pushed to docker ' + BUILD_URL
+                          message: 'Branch ' + GIT_BRANCH + ' with build-id ' + GIT_COMMIT + ' has successfully built and pushed to docker ' + BUILD_URL
       }
     }
   //   stage('Deploy configmap to dev k8s environment'){

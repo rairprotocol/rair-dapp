@@ -29,3 +29,20 @@ resource "google_service_account" "each_gke_service_account" {
   account_id = each.value
   description = local.gke_service_account_description
 }
+
+locals {
+  gke_default_namespace = "default"
+}
+
+resource "google_service_account_iam_binding" "rairnode" {
+  for_each = module.shared_config.gke_service_accounts
+
+  service_account_id = google_service_account.each_gke_service_account[
+    each.key
+  ].id
+
+  role = "roles/iam.workloadIdentityUser"
+  members             = [
+    "serviceAccount:${var.gcp_project_id}.svc.id.goog[${local.gke_default_namespace}/${each.value}]"
+  ]
+}

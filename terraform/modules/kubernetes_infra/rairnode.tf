@@ -114,6 +114,7 @@ resource "kubernetes_deployment" "rairnode" {
         container {
           image = local.rairnode_image
           name  = local.rairnode_namespace
+          
           resources {
             limits = {
               cpu    = "0.5"

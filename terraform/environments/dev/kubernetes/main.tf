@@ -19,9 +19,13 @@ module "config" {
   source = "../../shared/env_config"
 }
 
+locals {
+  gcp_project_id = "rair-market-dev"
+}
+
 module "kubernetes_infra" {
   source                                   = "../../../modules/kubernetes_infra"
-  gcp_project_id                           = "rair-market-dev"
+  gcp_project_id                           = local.gcp_project_id
   region                                   = "us-west1"
   jenkins_internal_load_balancer_name      = module.config.jenkins_internal_load_balancer_name
   rair_internal_load_balancer_name         = module.config.rair_internal_load_balancer_name
