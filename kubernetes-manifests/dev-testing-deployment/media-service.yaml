@@ -52,11 +52,31 @@ spec:
           ports:
             - containerPort: 5002
           env:
+            - name: GCP_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: rair-manager-key
+                  key: key.json
+            - name: PINATA_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pinata-secret
+                  key: PINATA_SECRET
             - name: APP_ROLE_SECRET_ID
               valueFrom:
                 secretKeyRef:
                   name: app-role-secret-id
                   key: APP_ROLE_SECRET_ID
+            - name: VAULT_RAIRNODE_APP_ROLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-rairnode-app-role-id
+                  key: VAULT_RAIRNODE_APP_ROLE_ID
+            - name: VAULT_RAIRNODE_APP_ROLE_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-rairnode-app-role-secret-id
+                  key: VAULT_RAIRNODE_APP_ROLE_SECRET_ID
           envFrom:
           - configMapRef:
               name: media-service-env

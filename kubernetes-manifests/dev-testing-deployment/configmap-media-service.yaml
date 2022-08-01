@@ -16,7 +16,7 @@ data:
   LOG_LEVEL: debug
   MEDIA_SERVICE_PORT: "5002"
   BASE_RAIRNODE_URL: http://rairnode:5000
-  USE_X509_CERT_AUTH: "false"
+  USE_X509_CERT_AUTH: "true"
   IPFS_API: http://rairipfs:5001
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
   VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9"

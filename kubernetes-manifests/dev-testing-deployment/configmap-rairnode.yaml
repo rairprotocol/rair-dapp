@@ -47,3 +47,4 @@ data:
   MONGO_DB_HOSTNAME: test
   MONGO_DB_NAME: test
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
+  USE_X509_CERT_AUTH: "true"
