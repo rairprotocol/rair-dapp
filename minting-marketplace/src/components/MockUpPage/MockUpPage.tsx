@@ -33,7 +33,7 @@ const MockUpPage = ({ tabIndex, setTabIndex }) => {
 
   return (
     <div className={'mock-up-page-wrapper'}>
-      <MetaTags seoMetaTags={seoInformation} />
+      {/* <MetaTags seoMetaTags={seoInformation} /> */}
       <SearchPanel
         tabIndex={tabIndex}
         setTabIndex={setTabIndex}

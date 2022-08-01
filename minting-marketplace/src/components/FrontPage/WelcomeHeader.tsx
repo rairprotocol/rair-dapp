@@ -11,7 +11,7 @@ const WelcomeHeader = ({ seoInformation, setIsSplashPage }) => {
 
   return (
     <div className="main-wrapper">
-      <MetaTags seoMetaTags={seoInformation} />
+      {/* <MetaTags seoMetaTags={seoInformation} /> */}
       <div className="col-6 text-left main">
         <h1 className="w-100 general-title">
           Digital <b className="title">Ownership</b>

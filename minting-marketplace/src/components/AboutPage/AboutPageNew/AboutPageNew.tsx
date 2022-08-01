@@ -80,7 +80,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
   return (
     <>
       <div className="wrapper-about-page">
-        <MetaTags seoMetaTags={seoInformation} />
+        {/* <MetaTags seoMetaTags={seoInformation} /> */}
         <div className="home-about--page">
           <MainBlock
             connectUserData={connectUserData}

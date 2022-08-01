@@ -148,7 +148,7 @@ function App() {
   const navigate = useNavigate();
 
   const seoInformation = {
-    title: 'Rair Tech Marketplace',
+    title: 'RAIR Technologies',
     contentName: 'author',
     content: 'Digital Ownership Encryption',
     description:
