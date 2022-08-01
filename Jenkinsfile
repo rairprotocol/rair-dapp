@@ -160,7 +160,7 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
+                    --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
                     --cleanup \
@@ -203,7 +203,6 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/media-service:${GIT_COMMIT} \
                     --destination rairtechinc/media-service:${GIT_BRANCH}_2.${BUILD_ID}
-                    --destination rairtechinc/media-service:testing.${BUILD_ID}
 
                 '''
               }
