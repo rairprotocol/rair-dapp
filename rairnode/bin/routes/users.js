@@ -3,12 +3,7 @@ const _ = require('lodash');
 const { nanoid } = require('nanoid');
 const { JWTVerification, validation } = require('../middleware');
 const upload = require('../Multer/Config');
-const { execPromise } = require('../utils/helpers');
-
-const removeTempFile = async (roadToFile) => {
-  const command = `rm ${roadToFile}`;
-  await execPromise(command);
-};
+const { cleanStorage } = require('../utils/helpers');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -64,7 +59,7 @@ module.exports = (context) => {
 
       if (req.file) {
         avatarFile = await context.gcp.uploadFile(context.config.gcp.imageBucketName, req.file);
-        await removeTempFile(`${req.file.destination}${req.file.filename}`);
+        await cleanStorage(req.file);
 
         if (avatarFile) {
           _.assign(fieldsForUpdate, { avatar: `${context.config.gcp.gateway}/${context.config.gcp.imageBucketName}/${avatarFile}` });
@@ -89,10 +84,6 @@ module.exports = (context) => {
 
       return res.json({ success: true, user: updatedUser });
     } catch (e) {
-      if (req.file) {
-        await removeTempFile(`${req.file.destination}${req.file.filename}`);
-      }
-
       return next(e);
     }
   });
