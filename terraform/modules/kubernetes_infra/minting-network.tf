@@ -5,18 +5,6 @@ locals {
   minting_network_configmap_name = "minting-network-env"
 }
 
-data "google_compute_address" "rair_internal_load_balancer" {
-  name = var.rair_internal_load_balancer_name
-  project = var.gcp_project_id
-  region = var.region
-}
-
-data "google_compute_address" "minting_marketplace_internal_load_balancer" {
-  name = var.minting_marketplace_internal_load_balancer_name
-  project = var.gcp_project_id
-  region = var.region
-}
-
 resource "kubernetes_config_map" "minting_network_configmap" {
   metadata {
     name = local.minting_network_configmap_name

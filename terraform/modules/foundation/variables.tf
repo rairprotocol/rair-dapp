@@ -18,22 +18,6 @@ variable "mongo_atlas_org_id" {
   type = string
 }
 
-variable "jenkins_internal_load_balancer_name" {
-  type = string
-}
-
-variable "rair_internal_load_balancer_name" {
-  type = string
-}
-
-variable "redis_internal_load_balancer_name" {
-  type = string
-}
-
-variable "minting_marketplace_internal_load_balancer_name" {
-  type = string
-}
-
 variable "account_users" {
   default = []
   

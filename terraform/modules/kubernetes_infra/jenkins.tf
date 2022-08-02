@@ -24,12 +24,6 @@ resource "kubernetes_persistent_volume_claim" "claim" {
   }
 }
 
-data "google_compute_address" "jenkins_internal_load_balancer" {
-  name = var.jenkins_internal_load_balancer_name
-  project = var.gcp_project_id
-  region = var.region
-}
-
 resource "kubernetes_deployment" "jenkins" {
   metadata {
     name = "${local.jenkins_namespace}-deployment"

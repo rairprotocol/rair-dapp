@@ -5,12 +5,6 @@ locals {
   redis_runtime_command = "redis-server"
 }
 
-data "google_compute_address" "redis_internal_load_balancer" {
-  name    = var.redis_internal_load_balancer_name
-  project = var.gcp_project_id
-  region  = var.region
-}
-
 resource "kubernetes_service" "redis_service" {
   metadata {
     name = local.redis_service
