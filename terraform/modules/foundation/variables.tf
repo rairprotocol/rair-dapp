@@ -30,6 +30,10 @@ variable "redis_internal_load_balancer_name" {
   type = string
 }
 
+variable "minting_marketplace_internal_load_balancer_name" {
+  type = string
+}
+
 variable "account_users" {
   default = []
   

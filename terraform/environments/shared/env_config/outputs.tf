@@ -49,6 +49,10 @@ output "redis_internal_load_balancer_name" {
   value = "redis-internal-load-balancer"
 }
 
+output "minting_marketplace_internal_load_balancer_name" {
+  value = "minting-marketplace-internal-load-balancer"
+}
+
 output "users" {
   value = {
     brian: {

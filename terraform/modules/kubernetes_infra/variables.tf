@@ -18,6 +18,10 @@ variable "redis_internal_load_balancer_name" {
   type = string
 }
 
+variable "minting_marketplace_internal_load_balancer_name" {
+  type = string
+}
+
 variable "rairnode_configmap_data" {
   type = map(string)
 }

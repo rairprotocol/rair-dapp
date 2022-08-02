@@ -11,6 +11,12 @@ data "google_compute_address" "rair_internal_load_balancer" {
   region = var.region
 }
 
+data "google_compute_address" "minting_marketplace_internal_load_balancer" {
+  name = var.minting_marketplace_internal_load_balancer_name
+  project = var.gcp_project_id
+  region = var.region
+}
+
 resource "kubernetes_config_map" "minting_network_configmap" {
   metadata {
     name = local.minting_network_configmap_name
@@ -62,7 +68,7 @@ resource "kubernetes_service" "minting_network_service" {
     }
   }
   spec {
-    load_balancer_ip = data.google_compute_address.rair_internal_load_balancer.address
+    load_balancer_ip = data.google_compute_address.minting_marketplace_internal_load_balancer.address
     selector = {
       app = local.minting_network_service
     }
