@@ -235,7 +235,11 @@ const WorkflowSteps: React.FC = () => {
             offer.lockedTokens =
               response2.contract.product.tokenLock.lockedTokens;
           }
-          if (offer.offerIndex && diamondMarketplaceInstance) {
+          if (
+            offer.offerIndex &&
+            diamondMarketplaceInstance &&
+            currentChain === contractData?.blockchain
+          ) {
             const aux = await diamondMarketplaceInstance.getOfferInfo(
               offer.offerIndex
             );
@@ -289,11 +293,16 @@ const WorkflowSteps: React.FC = () => {
     collectionIndex,
     contractCreator,
     currentUserAddress,
-    diamondMarketplaceInstance
+    diamondMarketplaceInstance,
+    contractData?.blockchain
   ]);
 
   useEffect(() => {
-    if (contractData && contractData.instance) {
+    if (
+      contractData &&
+      contractData.instance &&
+      currentChain === contractData.blockchain
+    ) {
       (async () => {
         setMintingRole(
           await metamaskCall(
@@ -317,7 +326,7 @@ const WorkflowSteps: React.FC = () => {
         );
       })();
     }
-  }, [contractData, diamondMarketplaceInstance, minterInstance]);
+  }, [contractData, diamondMarketplaceInstance, minterInstance, currentChain]);
 
   useEffect(() => {
     // Fix this
@@ -381,7 +390,7 @@ const WorkflowSteps: React.FC = () => {
   const navigateRoute = () => {
     let notSimple = false;
     setSimpleMode(true);
-    steps.map((item, index) => {
+    steps.forEach((item) => {
       if (!item.simple) {
         notSimple = true;
       }
