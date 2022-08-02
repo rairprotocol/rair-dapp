@@ -43,6 +43,7 @@ Returns if found some tokens
       "contract": "contractAddress",
       "uniqueIndexInContract": 1,
       "isMinted": true,
+      "isURIStoredToBlockchain": true,
       "metadata": {
         "artist": "chrissweet",
         "external_url": "none",

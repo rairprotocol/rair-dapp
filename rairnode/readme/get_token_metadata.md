@@ -91,6 +91,7 @@ Returns founded user
         "contract": "contractAddress",
         "uniqueIndexInContract": 0,
         "isMinted": true,
+        "isURIStoredToBlockchain": true,
         "metadata": {
           "artist": "chrissweet",
           "external_url": "none",

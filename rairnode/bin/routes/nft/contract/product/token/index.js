@@ -177,6 +177,7 @@ module.exports = (context) => {
           {
             ...sanitizedFieldsForUpdate,
             isMetadataPinned: false,
+            isURIStoredToBlockchain: false,
           },
           { new: true },
         );

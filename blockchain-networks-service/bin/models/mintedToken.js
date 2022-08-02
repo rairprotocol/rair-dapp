@@ -35,6 +35,7 @@ const MintedToken = new Schema(
     authenticityLink: { type: String, default: "none" },
     isMinted: { type: Boolean, required: true },
     isMetadataPinned: { type: Boolean },
+    isURIStoredToBlockchain: { type: Boolean, default: false },
     creationDate: { type: Date, default: Date.now },
   },
   { versionKey: false }
