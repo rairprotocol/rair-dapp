@@ -8,7 +8,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./rairnode/db:/usr/src/rairnode/db
-      - ./rairnode/bin/Videos:/usr/src/rairnode/bin/Videos
     environment:
       PRODUCTION: "false"
       MONGO_URI:  mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
