@@ -16,6 +16,13 @@ resource "google_compute_address" "rair_internal_load_balancer" {
   subnetwork = google_compute_subnetwork.kubernetes_primary_cluster.id
 }
 
+resource "google_compute_address" "redis_internal_load_balancer" {
+  name = var.redis_internal_load_balancer_name
+  region = var.region
+  address_type = "INTERNAL"
+  subnetwork = google_compute_subnetwork.kubernetes_primary_cluster.id
+}
+
 resource "google_compute_address" "jenkins_internal_load_balancer" {
   name = var.jenkins_internal_load_balancer_name
   region = var.region

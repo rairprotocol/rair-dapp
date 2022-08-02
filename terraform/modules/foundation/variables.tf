@@ -26,6 +26,10 @@ variable "rair_internal_load_balancer_name" {
   type = string
 }
 
+variable "redis_internal_load_balancer_name" {
+  type = string
+}
+
 variable "account_users" {
   default = []
   

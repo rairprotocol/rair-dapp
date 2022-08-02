@@ -45,6 +45,10 @@ output "rair_internal_load_balancer_name" {
   value = "rair-internal-load-balancer"
 }
 
+output "redis_internal_load_balancer_name" {
+  value = "redis-internal-load-balancer"
+}
+
 output "users" {
   value = {
     brian: {
