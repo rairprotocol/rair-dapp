@@ -8,10 +8,11 @@ TAILSCALE_AUTH_KEY=$(gcloud secrets versions access latest --secret=${tailscale_
 ######################################################
 # Install Tailscale
 # Official install docs here:
-# https://tailscale.com/download/linux/debian-stretch
+# https://tailscale.com/download/linux
+
 apt-get -y install apt-transport-https
-curl -fsSL https://pkgs.tailscale.com/stable/debian/stretch.gpg | sudo apt-key add -
-curl -fsSL https://pkgs.tailscale.com/stable/debian/stretch.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+curl -fsSL https://pkgs.tailscale.com/stable/debian/${debian_version_name}.gpg | sudo apt-key add -
+curl -fsSL https://pkgs.tailscale.com/stable/debian/${debian_version_name}.list | sudo tee /etc/apt/sources.list.d/tailscale.list
 apt-get -y update
 apt-get -y install tailscale
 # End Install Tailscale
