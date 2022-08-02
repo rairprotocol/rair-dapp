@@ -40,6 +40,10 @@ const ModalItem = ({
     setPrice(0);
   }, [setIsOpenBlockchain]);
 
+  useEffect(() => {
+    setOnMyChain(currentChain === selectedData.blockchain);
+  }, [currentChain, selectedData.blockchain]);
+
   const createResaleOffer = async () => {
     if (onMyChain && isApproved) {
       if (!validateInteger(price)) {
@@ -97,7 +101,7 @@ const ModalItem = ({
   };
 
   const checkStatusContract = useCallback(async () => {
-    if (onMyChain && instance) {
+    if (onMyChain && instance && resaleInstance) {
       const approved =
         (await metamaskCall(
           instance.getApproved(selectedData.uniqueIndexInContract)
@@ -107,13 +111,7 @@ const ModalItem = ({
         ));
       setIsApproved(approved);
     }
-  }, [
-    onMyChain,
-    instance,
-    selectedData.uniqueIndexInContract,
-    resaleInstance.address,
-    currentUserAddress
-  ]);
+  }, [onMyChain, instance, currentUserAddress, resaleInstance, selectedData]);
 
   useEffect(() => {
     checkStatusContract();
@@ -182,9 +180,8 @@ const ModalItem = ({
           <div>
             <button
               className="btn btn-stimorol"
-              disabled={isApproved === undefined}
               onClick={() => {
-                if (onMyChain) {
+                if (onMyChain && resaleInstance) {
                   if (isApproved === false) {
                     approveToken();
                   } else if (isApproved === true) {
@@ -195,11 +192,13 @@ const ModalItem = ({
                 }
               }}>
               {onMyChain
-                ? isApproved === undefined
-                  ? 'Please wait...'
-                  : isApproved
-                  ? 'Sell'
-                  : 'Approve the marketplace for this token'
+                ? resaleInstance
+                  ? isApproved === undefined
+                    ? 'Please wait...'
+                    : isApproved
+                    ? 'Sell'
+                    : 'Approve the marketplace for this token'
+                  : 'The marketplace is not available for this blockchain'
                 : `Switch to ${blockchainData[selectedData.blockchain].name}`}
             </button>
           </div>
