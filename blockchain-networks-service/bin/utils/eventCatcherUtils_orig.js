@@ -874,4 +874,5 @@ module.exports = {
     updateMetadataForTokens(foundTokensToUpdate, fetchedMetadata);
     return newURI;
   },
+  log,
 };
