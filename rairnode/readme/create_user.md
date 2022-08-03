@@ -35,6 +35,7 @@ Returns if created successfully
   "user": {
     "email": null,
     "avatar": null,
+    "background": null,
     "firstName": null,
     "lastName": null,
     "_id": "61af976dc4444d001c98d851",

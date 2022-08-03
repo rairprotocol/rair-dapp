@@ -1,9 +1,9 @@
 const express = require('express');
 const _ = require('lodash');
-const { nanoid } = require('nanoid');
 const { JWTVerification, validation } = require('../middleware');
 const upload = require('../Multer/Config');
 const { cleanStorage } = require('../utils/helpers');
+const log = require('../utils/logger')(module);
 
 module.exports = (context) => {
   const router = express.Router();
@@ -38,13 +38,12 @@ module.exports = (context) => {
   });
 
   // Update specific user fields
-  router.post('/:publicAddress', JWTVerification, upload.single('file'), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
+  router.post('/:publicAddress', JWTVerification, upload.array('files', 2), validation('updateUser'), validation('singleUser', 'params'), async (req, res, next) => {
     try {
       const publicAddress = req.params.publicAddress.toLowerCase();
       const foundUser = await context.db.User.findOne({ publicAddress });
       const { user } = req;
       let fieldsForUpdate = _.assign({}, req.body);
-      let avatarFile = '';
 
       if (!foundUser) {
         return res.status(404).send({ success: false, message: 'User not found.' });
@@ -57,16 +56,46 @@ module.exports = (context) => {
         });
       }
 
-      if (req.file) {
-        avatarFile = await context.gcp.uploadFile(context.config.gcp.imageBucketName, req.file);
-        await cleanStorage(req.file);
+      if (req.files.length) {
+        const files = await Promise.all(
+          _.map(req.files, async (file) => {
+            try {
+              const fileLink = await context.gcp.uploadFile(context.config.gcp.imageBucketName, file);
 
-        if (avatarFile) {
-          _.assign(fieldsForUpdate, { avatar: `${context.config.gcp.gateway}/${context.config.gcp.imageBucketName}/${avatarFile}` });
-        }
+              if (fileLink) {
+                log.info(`File ${file.filename} has added to GCP bucket.`);
+
+                file.link = `${context.config.gcp.gateway}/${context.config.gcp.imageBucketName}/${fileLink}`;
+              }
+
+              return file;
+            } catch (err) {
+              log.error(err);
+
+              return err;
+            }
+          }),
+        );
+
+        _.chain(fieldsForUpdate)
+          .pick(['avatar', 'background'])
+          .forEach((value, key) => {
+            const v = _.chain(files)
+              .find((f) => f.originalname === value)
+              .get('link')
+              .value();
+
+            if (v) fieldsForUpdate[key] = v;
+            else delete fieldsForUpdate[key];
+          })
+          .value();
+
+        fieldsForUpdate = _.pick(fieldsForUpdate, ['nickName', 'avatar', 'email', 'background']);
+
+        await cleanStorage(req.files);
+      } else {
+        fieldsForUpdate = _.pick(fieldsForUpdate, ['nickName', 'email']);
       }
-
-      fieldsForUpdate = _.pick(fieldsForUpdate, ['nickName', 'avatar', 'email']);
 
       if (_.isEmpty(fieldsForUpdate)) {
         return res.status(400).send({ success: false, message: 'Nothing to update.' });

@@ -38,10 +38,10 @@ Updating specific user
 
 ```json
 {
-  "file": {
+  "files": {
     "required": false,
     "content": {
-      "type": "image file"
+      "type": "image files"
     }
   },
   "nickName": {
@@ -53,7 +53,15 @@ Updating specific user
   "avatar": {
     "required": false,
     "content": {
-      "type": "string"
+      "type": "string",
+      "description": "name of the file"
+    }
+  },
+  "background": {
+    "required": false,
+    "content": {
+      "type": "string",
+      "description": "name of the file"
     }
   },
   "email": {
@@ -81,6 +89,7 @@ Returns if updated successfully
   "user": {
     "email": null,
     "avatar": null,
+    "background": null,
     "firstName": null,
     "lastName": null,
     "_id": "61af976dc4444d001c98d851",

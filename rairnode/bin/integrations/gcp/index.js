@@ -93,6 +93,6 @@ module.exports = config => {
   return ({
     storage,
     uploadFile,
-    uploadFolder
+    uploadFolder,
   });
 };

@@ -33,6 +33,7 @@ Returns verify userAdmin
 {
 "email": "user email",
 "avatar": null,
+"background": null,
 "firstName": null,
 "lastName": null,
 "_id": "6295e23d279c31001d009d18",

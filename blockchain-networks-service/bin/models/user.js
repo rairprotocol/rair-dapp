@@ -8,6 +8,7 @@ const User = new Schema({
   email: { type: String, default: null },
   nickName: { type: String, unique: true },
   avatar: { type: String, default: null },
+  background: { type: String, default: null },
   firstName: { type: String, default: null, trim: true },
   lastName: { type: String, default: null, trim: true },
   publicAddress: { type: String, lowercase:true, required: true, unique: true },
