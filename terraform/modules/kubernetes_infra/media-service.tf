@@ -10,7 +10,10 @@ resource "kubernetes_config_map" "media_service_configmap" {
     name = local.media_service_configmap_name
   }
 
-  data = var.media_service_configmap_data
+  data = merge(
+    local.redis_configmap_append,
+    var.media_service_configmap_data
+  )
 }
 
 resource "kubernetes_service" "media_service_service" {

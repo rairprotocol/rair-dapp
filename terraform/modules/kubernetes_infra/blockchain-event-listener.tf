@@ -12,7 +12,10 @@ resource "kubernetes_config_map" "blockchain_event_listener_configmap" {
   metadata {
     name = local.blockchain_event_listener_config_map
   }
-  data = var.blockchain_event_listener_configmap_data
+  data = merge(
+    var.blockchain_event_listener_configmap_data,
+    local.redis_configmap_append
+  )
 }
 
 

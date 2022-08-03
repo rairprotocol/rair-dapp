@@ -10,7 +10,10 @@ resource "kubernetes_config_map" "minting_network_configmap" {
     name = local.minting_network_configmap_name
   }
 
-  data = var.minting_network_configmap_data
+  data = merge(
+    local.redis_configmap_append,
+    var.minting_network_configmap_data
+  )
 }
 
 resource "kubernetes_ingress_v1" "minting_network_ingress" {

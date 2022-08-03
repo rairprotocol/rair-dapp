@@ -6,7 +6,7 @@ locals {
   rairnode_persistent_volume_claim_name_1 = "rairnode-claim1"
   rairnode_persistent_storage_name_0 = "rairnode-claim0"
   rairnode_persistent_storage_name_1 = "rairnode-claim1"
-  rairnode_image = "rairtechinc/rairservernode:dev_2.100"
+  rairnode_image = "rairtechinc/rairservernode:dev_2.103"
   rair_ingress_name = "rair-ingress"
   rairnode_configmap_name = "rairnode-env"
 }
@@ -16,7 +16,10 @@ resource "kubernetes_config_map" "rairnode_configmap" {
     name = local.rairnode_configmap_name
   }
 
-  data = var.rairnode_configmap_data
+  data = merge(
+    local.redis_configmap_append,
+    var.rairnode_configmap_data
+  )
 }
 
 resource "kubernetes_service" "rairnode_service" {

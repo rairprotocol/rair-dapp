@@ -1,5 +1,6 @@
 locals {
   vault_url = "https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200"
+
   rairnode_configmap = {
     PRODUCTION: "true",
     PINATA_KEY: "aaa581a498f99ed85279",
@@ -38,8 +39,6 @@ locals {
     MORALIS_API_KEY_TEST: "1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn",
     MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
     MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
-    REDIS_HOST: "rair-redis",
-    REDIS_PORT: "6379",
     SESSION_SECRET: "testsecret",
     SESSION_TTL: "12"
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
@@ -148,8 +147,6 @@ locals {
     MORALIS_API_KEY_TEST: "1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn",
     MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
     MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
-    REDIS_HOST: "rair-redis",
-    REDIS_PORT: "6379",
     SESSION_SECRET: "testsecret",
     SESSION_TTL: "12"
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
