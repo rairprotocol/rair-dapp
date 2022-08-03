@@ -24,9 +24,9 @@
     ],
     "settings": {
         "import/resolver": {
-          "typescript": {}
+            "typescript": {}
         }
-      },
+    },
     "rules": {
         "semi": [
             "error",
@@ -40,12 +40,17 @@
         "@typescript-eslint/no-explicit-any": "off",
         "prefer-rest-params": "off",
         "react/prop-types": "off",
-        "react-hooks/rules-of-hooks": "error", 
+        "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
-        "no-console": [ "error", 
-        {
-            "allow": ["warn", "error", "info" ]
-        }
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error",
+                    "info"
+                ]
+            }
         ]
     }
 }

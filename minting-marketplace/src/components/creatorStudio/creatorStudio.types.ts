@@ -73,6 +73,7 @@ export interface ITokenURIRow {
 export interface IIBlockchainURIManager {
   contractData: TContractData;
   collectionIndex: string;
+  refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
 }
 export type TParamsBatchMetadata = {
   address: string;
@@ -179,6 +180,7 @@ export type TWorkflowContextType = {
   tokenInstance: ethers.Contract | TContractData | undefined;
   simpleMode: boolean;
   forceRefetch: () => void;
+  refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
 };
 
 export type TParamsDiamondListOffers = {
@@ -323,6 +325,7 @@ export interface IBatchMetadataParser {
   gotoNextStep: () => void;
   goBack: () => void;
   simpleMode: boolean;
+  refreshNFTMetadata: () => Promise<TNftItemResult | undefined>;
 }
 
 export interface ICustomizeFees {

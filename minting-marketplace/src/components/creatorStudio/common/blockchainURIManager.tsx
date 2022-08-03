@@ -15,6 +15,8 @@ import {
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { UsersContractsType } from '../../adminViews/adminView.types';
+import { rFetch } from '../../../utils/rFetch';
+import { TTokenData } from '../../../axios.responseTypes';
 
 const TokenURIRow: React.FC<ITokenURIRow> = ({
   tokenId,
@@ -80,7 +82,8 @@ const TokenURIRow: React.FC<ITokenURIRow> = ({
 
 const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
   contractData,
-  collectionIndex
+  collectionIndex,
+  refreshNFTMetadata
 }) => {
   const { currentChain } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -153,6 +156,76 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
     return true;
   };
 
+  const pinAll = async () => {
+    Swal.fire({
+      title: `Pinning Metadata`,
+      html: `Please wait...`,
+      icon: 'info',
+      showConfirmButton: false
+    });
+
+    const pinAllResponse = await rFetch('/api/nft/pinningMultiple', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contractId: contractData._id,
+        product: contractData.product.collectionIndexInContract
+      })
+    });
+
+    if (!pinAllResponse.success) {
+      return;
+    }
+
+    const nftDataResult = await refreshNFTMetadata();
+    console.info(nftDataResult);
+    if (!nftDataResult || nftDataResult.totalCount.toString() === '0') {
+      Swal.fire('Error', 'There are no NFTs to send', 'error');
+      return;
+    }
+
+    const aux2: TTokenData[] = [
+      ...nftDataResult.tokens.filter((item) => {
+        return (
+          !item.metadataURI ||
+          item.metadataURI !== 'none' ||
+          !item.isMetadataPinned
+        );
+      })
+    ];
+
+    let counter = 0;
+    const pageLength = 50;
+    const totalPages = Math.round(aux2.length / pageLength);
+    do {
+      const page = aux2.splice(0, pageLength);
+      Swal.fire({
+        title: `Sending group ${counter++} of ${totalPages}`,
+        html: `Setting ${page.length} metadata URIs`,
+        icon: 'info',
+        showConfirmButton: false
+      });
+      if (
+        await metamaskCall(
+          contractData.instance.setUniqueURIBatch(
+            page.map((item) =>
+              BigNumber.from(contractData.product.firstTokenIndex).add(
+                item.token
+              )
+            ),
+            page.map((item) => item.metadataURI)
+          )
+        )
+      ) {
+        Swal.fire('Success', 'Token URIs updated', 'success');
+      } else {
+        break;
+      }
+    } while (aux2.length > 0);
+  };
+
   return (
     <>
       <hr />
@@ -174,9 +247,8 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
           </div>
           <button
             onClick={() => setAppendTokenForContract(!appendTokenForContract)}
-            className={`col-12 col-md-6 btn btn-${
-              appendTokenForContract ? 'royal-ice' : 'warning'
-            }`}>
+            className={`col-12 col-md-6 btn
+            btn-${appendTokenForContract ? 'royal-ice' : 'warning'}`}>
             {!appendTokenForContract && "Don't "}Include token ID
           </button>
           <button
@@ -232,9 +304,8 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
             onClick={() =>
               setAppendTokenForCollection(!appendTokenForCollection)
             }
-            className={`col-12 col-md-6 btn btn-${
-              appendTokenForCollection ? 'royal-ice' : 'warning'
-            }`}>
+            className={`col-12 col-md-6 btn 
+              btn-${appendTokenForCollection ? 'royal-ice' : 'warning'}`}>
             {!appendTokenForCollection && "Don't "}Include token ID
           </button>
           <button
@@ -295,9 +366,8 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
           </div>
           <button
             onClick={() => setAppendTokenForRange(!appendTokenForRange)}
-            className={`col-12 col-md-6 btn btn-${
-              appendTokenForRange ? 'royal-ice' : 'warning'
-            }`}>
+            className={`col-12 col-md-6 btn 
+            btn-${appendTokenForRange ? 'royal-ice' : 'warning'}`}>
             {!appendTokenForRange && "Don't "}Include token ID
           </button>
           <button
@@ -342,6 +412,12 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       <hr />
       <details>
         <summary className="col-12"> Unique metadata for each token </summary>
+        <button onClick={pinAll} className="btn btn-stimorol">
+          Pin and set metadata for all tokens
+        </button>
+        <br />
+        or
+        <br />
         <div className="col-12">
           You can set each NFT with an unique URI
           <table

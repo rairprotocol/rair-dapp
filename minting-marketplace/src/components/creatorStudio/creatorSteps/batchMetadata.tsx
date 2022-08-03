@@ -26,7 +26,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
   stepNumber,
   gotoNextStep,
   goBack,
-  simpleMode
+  simpleMode,
+  refreshNFTMetadata
 }) => {
   const { address, collectionIndex } = useParams<TParamsBatchMetadata>();
 
@@ -389,7 +390,8 @@ const BatchMetadataParser: React.FC<IBatchMetadataParser> = ({
                   {...{
                     contractData,
                     address,
-                    collectionIndex
+                    collectionIndex,
+                    refreshNFTMetadata
                   }}
                 />
               )}

@@ -188,6 +188,29 @@ const WorkflowSteps: React.FC = () => {
       ? chainData[contractData?.blockchain]?.chainId === currentChain
       : chainData[contractData?.blockchain]?.chainId === currentChain);
 
+  const refreshNFTMetadata = async () => {
+    if (!contractData) {
+      return;
+    }
+    const aux = { ...contractData };
+    aux.nfts = await getNFTMetadata(
+      contractData.blockchain,
+      contractData.contractAddress,
+      collectionIndex
+    );
+    setContractData(aux);
+    return aux.nfts;
+  };
+
+  const getNFTMetadata = async (blockchain, address, collectionIndex) => {
+    const { success, result } = await rFetch(
+      `/api/nft/network/${blockchain}/${address.toLowerCase()}/${collectionIndex}`
+    );
+    if (success) {
+      return result;
+    }
+  };
+
   const fetchData = useCallback(async () => {
     if (!address) {
       return;
@@ -238,7 +261,7 @@ const WorkflowSteps: React.FC = () => {
           if (
             offer.offerIndex &&
             diamondMarketplaceInstance &&
-            currentChain === contractData?.blockchain
+            currentChain === response2.contract.blockchain
           ) {
             const aux = await diamondMarketplaceInstance.getOfferInfo(
               offer.offerIndex
@@ -275,14 +298,11 @@ const WorkflowSteps: React.FC = () => {
           });
       }
       if (response2?.contract?.product?.offers) {
-        const response5 = await rFetch(
-          `/api/nft/network/${
-            response2.contract.blockchain
-          }/${address.toLowerCase()}/${collectionIndex}`
+        response2.contract.nfts = await getNFTMetadata(
+          response2.contract.blockchain,
+          address,
+          collectionIndex
         );
-        if (response5.success) {
-          response2.contract.nfts = response5.result;
-        }
       }
     }
     setContractData(response2.contract);
@@ -293,8 +313,7 @@ const WorkflowSteps: React.FC = () => {
     collectionIndex,
     contractCreator,
     currentUserAddress,
-    diamondMarketplaceInstance,
-    contractData?.blockchain
+    diamondMarketplaceInstance
   ]);
 
   useEffect(() => {
@@ -384,7 +403,8 @@ const WorkflowSteps: React.FC = () => {
       setTimeout(() => {
         setForceFetchData(!forceFetchData);
       }, 2000);
-    }
+    },
+    refreshNFTMetadata
   };
 
   const navigateRoute = () => {
