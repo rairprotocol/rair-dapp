@@ -31,9 +31,8 @@ module "foundation" {
   vpc_cidr_block                        = module.config.env_config.staging.vpc_cidr_block
   mongo_atlas_org_id                    = module.config.mongo_atlas_org_id
   obfuscated_project_id                 = module.config.env_config.staging.obfuscated_project_id
-  minting_marketplace_managed_cert_name = module.config.env_config.staging.minting_marketplace_managed_cert_name
-  minting_marketplace_static_ip_name    = module.config.env_config.staging.minting_marketplace_static_ip_name
   minting_marketplace_subdomain         = module.config.env_config.staging.minting_marketplace_subdomain
+  rairnode_subdomain                    = module.config.env_config.staging.rairnode_subdomain
   account_users                         = [
     {
       email: module.config.users.brian.email,

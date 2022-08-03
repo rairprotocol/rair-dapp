@@ -74,3 +74,10 @@ resource "cloudflare_record" "prod_rair_market" {
   value   = "34.160.73.41"
   type    = local.record_type.A
 }
+
+resource "cloudflare_record" "dev_rairnode_market" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = module.shared_config.env_config.dev.rairnode_subdomain
+  value   = "34.160.73.41"
+  type    = local.record_type.A
+}

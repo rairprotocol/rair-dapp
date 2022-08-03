@@ -32,6 +32,4 @@ module "kubernetes_infra" {
   blockchain_event_listener_configmap_data = local.blockchain_event_listener_configmap
   media_service_configmap_data             = local. media_service_configmap
   pull_secret_name                         = "regcred"
-  minting_marketplace_managed_cert_name    = module.config.env_config.dev.minting_marketplace_managed_cert_name
-  minting_marketplace_static_ip_name       = module.config.env_config.dev.minting_marketplace_static_ip_name
 }

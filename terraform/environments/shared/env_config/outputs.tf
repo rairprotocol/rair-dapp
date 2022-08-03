@@ -6,9 +6,8 @@ output "env_config" {
       gcp_project_id: "rair-market-dev",
       region: "us-west1",
       obfuscated_project_id: "4249348029",
-      minting_marketplace_managed_cert_name: "minting-marketplace",
-      minting_marketplace_static_ip_name: "minting-network",
-      minting_marketplace_subdomain: "dev"
+      minting_marketplace_subdomain: "dev",
+      rairnode_subdomain: "dev-rairnode"
     },
     "staging": {
       env_name: "staging",
@@ -16,9 +15,8 @@ output "env_config" {
       gcp_project_id: "rair-market-staging",
       region: "us-west1",
       obfuscated_project_id: "5573963367",
-      minting_marketplace_managed_cert_name: "minting-marketplace",
-      minting_marketplace_static_ip_name: "minting-network",
-      minting_marketplace_subdomain: "new-staging"
+      minting_marketplace_subdomain: "new-staging",
+      rairnode_subdomain: "new-staging-rairnode"
     },
     "prod": {
       env_name: "prod",
@@ -26,11 +24,26 @@ output "env_config" {
       gcp_project_id: "rair-market-production",
       region: "us-west1",
       obfuscated_project_id: "9550688921",
-      minting_marketplace_managed_cert_name: "minting-marketplace",
-      minting_marketplace_static_ip_name: "minting-network",
-      minting_marketplace_subdomain: ""
+      minting_marketplace_subdomain: "",
+      rairnode_subdomain: "rairnode"
     }
   }
+}
+
+output "minting_marketplace_managed_cert_name" {
+  value = "minting-marketplace"
+}
+
+output "minting_marketplace_static_ip_name" {
+  value = "minting-network"
+}
+
+output "rairnode_managed_cert_name" {
+  value = "rairnode"
+}
+
+output "rairnode_static_ip_name" {
+  value = "rairnode"
 }
 
 output "mongo_atlas_org_id" {

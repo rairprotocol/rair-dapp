@@ -25,11 +25,3 @@ variable "media_service_configmap_data" {
 variable "pull_secret_name" {
   type = string
 }
-
-variable "minting_marketplace_managed_cert_name" {
-  type = string
-}
-
-variable "minting_marketplace_static_ip_name" {
-  type = string
-}
