@@ -6,58 +6,56 @@ import chainData from '../../../utils/blockchainData';
 import WorkflowContext from '../../../contexts/CreatorWorkflowContext';
 import FixedBottomNavigation from '../FixedBottomNavigation';
 import CustomFeeRow from '../common/customFeeRow';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import InputField from '../../common/InputField';
 import { metamaskCall } from '../../../utils/metamaskUtils';
 import { TCustomPayments, TResaleMarketplace } from '../creatorStudio.types';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { web3Switch } from '../../../utils/switchBlockchain';
 
 const CustomizeFees: React.FC<TResaleMarketplace> = ({
   contractData,
-  correctMinterInstance,
   setStepNumber,
   stepNumber,
   gotoNextStep,
-  goBack,
-  simpleMode
+  goBack
 }) => {
   const { textColor, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
-  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
-    (store) => store.contractStore
-  );
+  const { currentChain, resaleInstance } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
 
-  const [customPayments, setCustomPayments] = useState<TCustomPayments[]>(
-    simpleMode
-      ? [
-          {
-            recipient: currentUserAddress,
-            percentage: 30,
-            editable: true,
-            message: 'Your address'
-          }
-        ]
-      : []
-  );
+  const [customPayments, setCustomPayments] = useState<TCustomPayments[]>([]);
   const [approving, setApproving] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
   const [resaleAddress, setResaleAddress] = useState<string>('');
-  const [nodeFee, setNodeFee] = useState<number>(0);
-  const [treasuryFee, setTreasuryFee] = useState<number>(0);
-  const [minterDecimals, setMinterDecimals] = useState<number>(0);
-  const [sendingData /*, setSendingData*/] = useState<boolean>(false);
+  const [nodeFee, setNodeFee] = useState<BigNumber>(BigNumber.from(0));
+  const [treasuryFee, setTreasuryFee] = useState<BigNumber>(BigNumber.from(0));
+  const [minterDecimals, setMinterDecimals] = useState<BigNumber>(
+    BigNumber.from(0)
+  );
+  const [precisionFactor, setPrecisionFactor] = useState<BigNumber>(
+    BigNumber.from(10)
+  );
+  const [sendingData, setSendingData] = useState<boolean>(false);
 
   const getContractData = useCallback(async () => {
-    if (!correctMinterInstance) {
+    if (!resaleInstance) {
       return;
     }
-    setNodeFee(await correctMinterInstance.nodeFee());
-    setTreasuryFee(await correctMinterInstance.treasuryFee());
-    setMinterDecimals(await correctMinterInstance.feeDecimals());
-  }, [correctMinterInstance]);
+    setNodeFee(await resaleInstance.nodeFee());
+    setTreasuryFee(await resaleInstance.treasuryFee());
+    const feeDecimals = await resaleInstance.feeDecimals();
+    if (feeDecimals !== 0) {
+      setMinterDecimals(feeDecimals);
+      setPrecisionFactor(BigNumber.from(10).pow(feeDecimals));
+    }
+  }, [resaleInstance]);
 
   useEffect(() => {
     getContractData();
@@ -73,7 +71,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
     const aux = [...customPayments];
     aux.push({
       recipient: '',
-      percentage: 0,
+      percentage: precisionFactor,
       editable: true,
       message: ''
     });
@@ -83,36 +81,70 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
     setStepNumber(stepNumber);
   }, [setStepNumber, stepNumber]);
 
-  //TODO: unused-snippet
-  // const setCustomFees = async () => {
-  //   setSendingData(true);
-  //   try {
-  //     Swal.fire({
-  //       title: 'Setting custom fees',
-  //       html: 'Please wait...',
-  //       icon: 'info',
-  //       showConfirmButton: false
-  //     });
-  //     Swal.fire({
-  //       title: 'Success',
-  //       html: 'Custom fees set',
-  //       icon: 'success',
-  //       showConfirmButton: false
-  //     });
-  //     gotoNextStep();
-  //   } catch (e) {
-  //     console.error(e);
-  //     Swal.fire('Error', '', 'error');
-  //   }
-  //   setSendingData(false);
-  // };
+  const setCustomFees = async () => {
+    setSendingData(true);
+    try {
+      Swal.fire({
+        title: 'Setting custom fees',
+        html: 'Please wait...',
+        icon: 'info',
+        showConfirmButton: false
+      });
+      if (
+        await metamaskCall(
+          resaleInstance.setCustomRoyalties(
+            contractData?.contractAddress,
+            customPayments.map((item) => item.recipient),
+            customPayments.map((item) => item.percentage)
+          )
+        )
+      ) {
+        Swal.fire({
+          title: 'Success',
+          html: 'Custom fees set',
+          icon: 'success',
+          showConfirmButton: false
+        });
+        gotoNextStep();
+      }
+    } catch (e) {
+      console.error(e);
+      Swal.fire('Error', '', 'error');
+    }
+    setSendingData(false);
+  };
+
+  const validatePaymentData = () => {
+    if (customPayments.length) {
+      let valid = true;
+      let total = BigNumber.from(0);
+      for (const payment of customPayments) {
+        console.info(payment);
+        valid = valid && utils.isAddress(payment.recipient);
+        total = total.add(payment.percentage);
+        console.info(total);
+      }
+      console.info(
+        BigNumber.from(90).mul(precisionFactor).toString(),
+        total.add(nodeFee).add(treasuryFee).toString()
+      );
+      if (
+        BigNumber.from(90)
+          .mul(precisionFactor)
+          .gte(total.add(nodeFee).add(treasuryFee))
+      ) {
+        return valid;
+      }
+    }
+    return false;
+  };
 
   const total = customPayments.reduce((prev, current) => {
-    return prev + current.percentage;
-  }, 0);
+    return prev.add(current.percentage);
+  }, BigNumber.from(0));
   return (
     <div className="row px-0 mx-0">
-      {false && contractData && customPayments?.length !== 0 && (
+      {contractData && customPayments?.length !== 0 && (
         <table className="col-12 text-start">
           <thead>
             <tr>
@@ -131,6 +163,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
                   deleter={removePayment}
                   rerender={() => setRerender(!rerender)}
                   minterDecimals={minterDecimals}
+                  symbol={chainData[contractData.blockchain].symbol}
                   {...item}
                 />
               );
@@ -138,21 +171,36 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           </tbody>
         </table>
       )}
-      <div className="col-12">
-        Node Fee: {nodeFee / Math.pow(10, minterDecimals)}%, Treasury Fee:{' '}
-        {treasuryFee / Math.pow(10, minterDecimals)}%
-      </div>
-      <div className="col-12">
-        Total:{' '}
-        {total +
-          nodeFee / Math.pow(10, minterDecimals) +
-          treasuryFee / Math.pow(10, minterDecimals)}
-        %
-      </div>
+      {nodeFee && treasuryFee && minterDecimals && (
+        <div className="col-12">
+          Node Fee: {BigNumber.from(nodeFee).div(precisionFactor).toString()}
+          %
+          <br />
+          Treasury Fee:
+          {BigNumber.from(treasuryFee).div(precisionFactor).toString()}
+          <br />
+          Total:{' '}
+          {total
+            .add(nodeFee)
+            .add(treasuryFee)
+            .div(BigNumber.from(10).pow(minterDecimals))
+            .toString()}
+          %
+          <br />
+          Percentage left for the buyer:{' '}
+          {BigNumber.from(100)
+            .mul(precisionFactor)
+            .sub(total.add(nodeFee).add(treasuryFee))
+            .div(BigNumber.from(10).pow(minterDecimals))
+            .toString()}
+          %
+          <br />
+        </div>
+      )}
+      <div className="col-12"></div>
       <div className="col-12 mt-3 text-center">
         <div className="border-stimorol rounded-rair">
           <button
-            disabled={true}
             onClick={addPayment}
             className={`btn btn-${primaryColor} rounded-rair px-4`}>
             Add new{' '}
@@ -167,7 +215,7 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           </button>
         </div>
       </div>
-      {!simpleMode && contractData?.instance && (
+      {contractData?.instance && (
         <div className="w-100 row">
           <hr />
           <div className="col-12">
@@ -215,13 +263,17 @@ const CustomizeFees: React.FC<TResaleMarketplace> = ({
           backwardFunction={goBack}
           forwardFunctions={[
             {
+              label: `Switch to ${
+                chainData[contractData?.blockchain].name
+              } for more options.`,
+              action: () => web3Switch(contractData?.blockchain),
+              disabled: contractData?.blockchain === currentChain,
+              visible: contractData?.blockchain !== currentChain
+            },
+            {
               label: customPayments.length ? 'Set custom fees' : 'Continue',
-              // There are no actions setup for now, the resale marketplace is not ready
-              action: customPayments.length
-                ? /*setCustomFees*/ gotoNextStep
-                : gotoNextStep,
-              disabled:
-                sendingData || (customPayments.length ? total !== 90 : false)
+              action: customPayments.length ? setCustomFees : gotoNextStep,
+              disabled: sendingData || !validatePaymentData()
             }
           ]}
         />

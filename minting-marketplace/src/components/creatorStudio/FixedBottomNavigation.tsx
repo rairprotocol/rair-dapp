@@ -48,21 +48,25 @@ const FixedBottomNavigation: React.FC<IFixedBottomNavigation> = ({
             }}>
             {forwardFunctions &&
               forwardFunctions.length &&
-              forwardFunctions.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="border-stimorol rounded-rair btn p-0 mx-2">
-                    <button
-                      style={{ border: 'none' }}
-                      disabled={item.disabled}
-                      className="btn rounded-rair btn-stimorol"
-                      onClick={item.action}>
-                      {item.label ? item.label : 'Proceed'}
-                    </button>
-                  </div>
-                );
-              })}
+              forwardFunctions
+                .filter((item) => {
+                  return item.visible === undefined || item.visible;
+                })
+                .map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="border-stimorol rounded-rair btn p-0 mx-2">
+                      <button
+                        style={{ border: 'none' }}
+                        disabled={item.disabled}
+                        className="btn rounded-rair btn-stimorol"
+                        onClick={item.action}>
+                        {item.label ? item.label : 'Proceed'}
+                      </button>
+                    </div>
+                  );
+                })}
           </div>
         </div>
       </div>

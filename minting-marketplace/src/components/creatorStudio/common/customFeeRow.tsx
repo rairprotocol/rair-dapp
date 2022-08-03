@@ -23,11 +23,13 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   setMarketValuesChanged,
   symbol
 }) => {
+  const precisionFactor = BigNumber.from(10).pow(minterDecimals);
   const [recipientAddress, setRecipientAddress] = useState<string | undefined>(
     recipient
   );
-  const [percentageReceived, setPercentageReceived] =
-    useState<number>(percentage);
+  const [percentageReceived, setPercentageReceived] = useState<BigNumber>(
+    BigNumber.from(percentage)
+  );
   const { secondaryColor, primaryColor } = useSelector<
     RootState,
     ColorStoreType
@@ -42,7 +44,7 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
   }, [recipient]);
 
   const updatePercentage = (value: number) => {
-    setPercentageReceived(!value ? 0 : value);
+    setPercentageReceived(BigNumber.from(!value ? 0 : value));
     array[index].percentage = Number(value);
     if (rerender) {
       rerender();
@@ -63,21 +65,9 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
     }
   };
 
-  if (
-    !validateInteger(percentageReceived) ||
-    !validateInteger(minterDecimals)
-  ) {
-    return (
-      <tr>
-        {' '}
-        Missing data {percentageReceived} {minterDecimals}{' '}
-      </tr>
-    );
-  }
-
   const calculatedFee = BigNumber.from(100)
     .mul(percentageReceived)
-    .div(BigNumber.from(10).pow(minterDecimals));
+    .div(precisionFactor);
   const calculatedPrice = BigNumber.from(
     price && validateInteger(+price) ? Number(price) : 0
   );
@@ -113,9 +103,9 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
             labelClass="w-100 text-start"
             customClass="form-control rounded-rair"
             min={0}
-            max={100 * Math.pow(10, minterDecimals)}
+            max={BigNumber.from(100).mul(precisionFactor).toString()}
             type="number"
-            getter={percentageReceived}
+            getter={percentageReceived.toString()}
             setter={updatePercentage}
             customCSS={{
               backgroundColor: `var(--${primaryColor})`,
@@ -126,7 +116,7 @@ const CustomFeeRow: React.FC<ICustomFeeRow> = ({
         </div>
         {!calculatedFee.eq(0) && (
           <small>
-            {percentageReceived / 10 ** minterDecimals}% (
+            {percentageReceived.div(precisionFactor).toString()}% (
             {utils.formatEther(
               BigNumber.from(calculatedPrice).div(calculatedFee)
             )}{' '}

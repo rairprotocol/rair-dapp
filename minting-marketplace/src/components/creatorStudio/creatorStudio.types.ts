@@ -428,6 +428,7 @@ export type IForwardFunctions = {
     | undefined
     | ((e?: MouseEvent<HTMLButtonElement>) => Promise<void>);
   disabled?: boolean;
+  visible?: boolean;
 };
 
 export interface IFixedBottomNavigation {

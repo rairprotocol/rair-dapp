@@ -40,8 +40,8 @@ type TInputFieldProps<T extends any = any> = {
   label?: string;
   required?: boolean;
   disabled?: boolean;
-  min?: number;
-  max?: number;
+  min?: number | string;
+  max?: number | string;
   maxLength?: number;
   id?: string;
 };
