@@ -294,6 +294,11 @@
   display: none;
 }
 
+.container-video-js {
+  width: auto;
+  height: 406px;
+}
+
 @media screen and (max-width: 1500px) {
   .container-search,
   .category-wrapper {
@@ -538,6 +543,10 @@
 
   .pic-description-wrapper:hover .description-more {
     margin-top: 12px;
+  }
+
+  .container-video-js {
+    width: 100%;
   }
 }
 

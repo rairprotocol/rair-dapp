@@ -2356,7 +2356,7 @@ body::-webkit-scrollbar-thumb:active {
   width: -webkit-fill-available !important;
 }
 .modal-content-video div {
-  width: auto !important;
+  /* width: auto !important; */
 }
 
 .main {
