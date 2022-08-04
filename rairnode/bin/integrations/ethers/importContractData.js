@@ -1,5 +1,6 @@
 const Moralis = require('moralis/node');
 const fetch = require('node-fetch');
+const { BigNumber } = require('ethers');
 const log = require('../../utils/logger')(module);
 
 // Contract ABIs
@@ -191,7 +192,7 @@ module.exports = {
         escapeCounter = 0;
         numberOfTokensAdded += await insertTokens(allNFTs.result, contract, dbModels);
         log.info(`Inserted page ${allNFTs?.page} of ${timesNeeded} for ${networkId}/${contractAddress} (${numberOfTokensAdded} NFTs so far)`);
-        if (limit > 0 && numberOfTokensAdded > limit) {
+        if (BigNumber.from(limit).gt(0) && BigNumber.from(numberOfTokensAdded).gt(limit)) {
           break;
         }
       }
