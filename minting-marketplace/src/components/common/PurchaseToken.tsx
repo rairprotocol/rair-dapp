@@ -61,47 +61,54 @@ const queryRangeDataFromDatabase = async (
   contractInstance: ethers.Contract | undefined,
   network: string,
   offerIndex: number[],
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   diamond = false
 ): Promise<undefined | IRangeDataType> => {
-  // eslint-disable-next-line
-  let { success, products } = await rFetch(
+  const { success, products } = await rFetch(
     `/api/contracts/network/${network}/${contractInstance?.address}/products/offers`,
     undefined,
     undefined,
     false // disables error messages for this rFetch call, because if this fails, the blockchain query starts
   );
   if (success) {
-    const [selectedOfferPool] = products.filter(
-      (item) => item.offerPool.marketplaceCatalogIndex === offerIndex[0]
-    );
-    if (!selectedOfferPool) {
-      success = false;
+    if (diamond) {
+      for (const product of products) {
+        for (const offer of product.offers) {
+          if (offerIndex.includes(offer.diamondRangeIndex)) {
+            return {
+              start: offer.range[0],
+              end: offer.range[1],
+              product: offer.product,
+              price: offer.price.toString()
+            };
+          }
+        }
+      }
     } else {
-      const [selectedOffer] = selectedOfferPool.offers.filter(
-        (item) => item.offerIndex === offerIndex[1]
+      const [selectedOfferPool] = products.filter(
+        (item) => item.offerPool.marketplaceCatalogIndex === offerIndex[0]
       );
-      if (!selectedOffer) {
-        success = false;
-      } else {
-        return {
-          start: selectedOffer.range[0],
-          end: selectedOffer.range[1],
-          product: selectedOffer.product,
-          price: selectedOffer.price.toString()
-        };
+      if (selectedOfferPool) {
+        const [selectedOffer] = selectedOfferPool.offers.filter(
+          (item) => item.offerIndex === offerIndex[1]
+        );
+        if (selectedOffer) {
+          return {
+            start: selectedOffer.range[0],
+            end: selectedOffer.range[1],
+            product: selectedOffer.product,
+            price: selectedOffer.price.toString()
+          };
+        }
       }
     }
   }
 };
 
-const getNextSequentialIndex = async (
+const findNextToken = async (
   contractInstance: ethers.Contract | undefined,
   start: string,
   end: string,
-  product: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  diamond: boolean
+  product: string
 ) => {
   return await contractInstance?.getNextSequentialIndex(product, start, end);
 };
@@ -283,12 +290,11 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
 
             const { start, end, product, price } = rangeData;
 
-            const nextToken = await getNextSequentialIndex(
+            const nextToken = await findNextToken(
               contractInstance,
               start,
               end,
-              product,
-              diamond
+              product
             );
 
             setButtonMessage(`Minting token #${nextToken.toString()}`);
