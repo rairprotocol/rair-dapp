@@ -49,7 +49,7 @@ spec:
         io.kompose.service: rairnode
     spec:
       containers:
-        - image: rairtechinc/rairservernode:dev_2.54
+        - image: rairtechinc/rairservernode:0f6d1dea141901dbfd3c086f5abd9cd9421bf9ac
           name: rairnode
           imagePullPolicy: Always
           ports:
