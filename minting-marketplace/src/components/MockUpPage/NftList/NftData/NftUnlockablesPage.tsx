@@ -7,6 +7,7 @@ import VideoPlayerView from './UnlockablesPage/VideoPlayerView';
 import { useDispatch } from 'react-redux';
 import setDocumentTitle from '../../../../utils/setTitle';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
+import TitleCollection from './TitleCollection/TitleCollection';
 const NftUnlockablesPage = ({
   blockchain,
   contract,
@@ -16,7 +17,9 @@ const NftUnlockablesPage = ({
   selectedData,
   selectedToken,
   tokenData,
-  // currentUser,
+  someUsersData,
+  collectionName,
+
   // data,
   // handleClickToken,
   // setSelectedToken,
@@ -26,7 +29,7 @@ const NftUnlockablesPage = ({
   // offerPrice,
   setTokenDataFiltered
 }) => {
-  const [selectVideo, setSelectVideo] = useState(productsFromOffer[0]);
+  const [selectVideo, setSelectVideo] = useState();
 
   const dispatch = useDispatch();
 
@@ -39,17 +42,31 @@ const NftUnlockablesPage = ({
     window.scroll(0, 0);
   }, []);
 
+  useEffect(() => {
+    setSelectVideo(productsFromOffer[0]);
+  }, [setSelectVideo, productsFromOffer]);
+
   return (
-    <div>
+    <div style={{ width: '85vw', margin: '30px auto' }}>
       <BreadcrumbsView />
+      {tokenData && selectedToken && (
+        <TitleCollection
+          selectedData={tokenData && tokenData[selectedToken]?.metadata}
+          title={collectionName}
+          someUsersData={someUsersData}
+          userName={tokenData[selectedToken]?.owner}
+          // currentUser={userData}
+        />
+      )}
       <div style={{ marginBottom: 108 }}>
         <VideoPlayerView
           productsFromOffer={productsFromOffer}
           primaryColor={primaryColor}
           selectVideo={selectVideo}
           setSelectVideo={setSelectVideo}
+          unlockables={true}
         />
-        <div style={{ maxWidth: '1600px', margin: 'auto' }} className="">
+        <div style={{ width: '85vw', margin: 'auto' }} className="">
           <NftSingleUnlockables
             blockchain={blockchain}
             contract={contract}

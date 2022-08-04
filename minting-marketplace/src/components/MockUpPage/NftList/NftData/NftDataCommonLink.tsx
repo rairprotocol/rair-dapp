@@ -296,6 +296,8 @@ const NftDataCommonLinkComponent = ({ userData }) => {
         totalCount={totalCount}
         product={product}
         setTokenDataFiltered={setTokenDataFiltered}
+        someUsersData={someUsersData}
+        collectionName={collectionName}
       />
     );
   } else if (mode === 'tokens') {

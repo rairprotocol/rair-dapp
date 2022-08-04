@@ -467,6 +467,7 @@ function App() {
               setLoginDone={setLoginDone}
               currentUserAddress={currentUserAddress}
               creatorViewsDisabled={creatorViewsDisabled}
+              programmaticProvider={programmaticProvider}
             />
           )}
 

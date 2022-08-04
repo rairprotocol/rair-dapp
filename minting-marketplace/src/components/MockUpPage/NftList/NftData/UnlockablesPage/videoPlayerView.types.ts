@@ -5,4 +5,5 @@ export interface IVideoPlaterView {
   setSelectVideo: () => void;
   whatSplashPage?: string;
   someAdditionalData?: object;
+  unlockables?: boolean;
 }

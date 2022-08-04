@@ -1,6 +1,7 @@
 //@ts-nocheck
 import React, { useEffect, useState } from 'react';
 import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferentRarity';
+import './NftSingleUnlockables.css';
 
 const NftSingleUnlockables = ({
   productsFromOffer,
@@ -38,175 +39,64 @@ const NftSingleUnlockables = ({
   }, [productsFromOffer]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        overflow: 'hidden',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        maxWidth: '1600px'
-      }}>
+    <div className="nft-single-unlockables-page">
       {sections &&
         Object.entries(sections).map(([key, item]) => {
           return (
-            <div key={key} style={{ width: '100%' }}>
+            <div className="nft-rarity-wrapper" key={key}>
               <NftDifferentRarity
                 setTokenDataFiltered={setTokenDataFiltered}
                 title={rarity[key]}
                 isUnlocked={item.map((i) => i.isUnlocked)}
               />
-              <div
-                className="video-wrapper"
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignContent: 'center',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
+              <div className="video-wrapper">
                 {item.map((v) => {
                   return (
                     <div
                       key={v._id}
                       style={{
-                        margin: '1rem'
+                        marginBottom: '16px'
                       }}>
                       <div
                         onClick={() => setSelectVideo(v)}
+                        className="video-box-rarity"
                         style={{
-                          cursor: 'pointer',
-                          display: 'flex',
-                          borderRadius: '16px',
-                          minWidth: '592px',
                           backgroundColor: `${
-                            primaryColor === 'rhyno'
-                              ? 'rgb(167, 166, 166)'
-                              : '#4E4D4DCC'
+                            primaryColor === 'rhyno' ? '#F2F2F2' : '#4E4D4DCC'
                           }`
                         }}>
                         {v.isUnlocked ? (
                           <div
+                            className="block-rariry-unlock-video"
                             style={{
                               position: 'relative'
                             }}>
-                            <img
-                              style={{
-                                width: '230px',
-                                // opacity: "0.4",
-                                height: '135px',
-                                // filter: "blur(3px)",
-                                borderTopLeftRadius: '16px',
-                                borderBottomLeftRadius: '16px'
-                              }}
-                              src={`${v?.staticThumbnail}`}
-                              alt=""
-                            />
+                            <img src={`${v?.staticThumbnail}`} alt="" />
                           </div>
                         ) : (
-                          <div
-                            style={{
-                              position: 'relative'
-                            }}>
-                            <div
-                              style={{
-                                width: '32px',
-                                height: '32px',
-                                // background: "#CCA541",
-                                border: '1px solid #E882D5',
-                                borderRadius: '50%',
-                                position: 'absolute',
-                                top: '35%',
-                                left: '50%',
-                                transform: 'translate(-50%, -35%)',
-                                zIndex: '1'
-                              }}>
-                              <i
-                                style={{
-                                  paddingLeft: '0',
-                                  paddingTop: '7px'
-                                }}
-                                className="fa fa-lock"
-                                aria-hidden="true"></i>
+                          <div className="block-rariry-unlock-video lock">
+                            <div className="custom-lock">
+                              <i className="fa fa-lock" aria-hidden="true"></i>
                               <p
-                                style={
-                                  v.description.length > 20
-                                    ? {
-                                        textAlign: 'center',
-                                        marginLeft: '-5.8rem',
-                                        marginTop: '9px',
-                                        width: '220px',
-                                        height: '50px',
-                                        wordBreak: 'break-all',
-                                        overflow: 'auto',
-                                        color: `${
-                                          primaryColor === 'rhyno'
-                                            ? 'black'
-                                            : '#A7A6A6'
-                                        }`
-                                      }
-                                    : {
-                                        textAlign: 'center',
-                                        marginLeft: '-85px',
-                                        marginTop: '9px',
-                                        width: '200px',
-                                        color: `${
-                                          primaryColor === 'rhyno'
-                                            ? 'black'
-                                            : '#A7A6A6'
-                                        }`
-                                      }
-                                }>
+                                className={`video-rarity-preview-text ${
+                                  v.description.length > 20 ? 'long' : ''
+                                } ${primaryColor === 'rhyno' ? 'rhyno' : ''}`}>
                                 {v.description}
                               </p>
                             </div>
-                            <img
-                              style={{
-                                width: '230px',
-                                opacity: '0.4',
-                                height: '135px',
-                                filter: 'blur(3px)',
-                                borderTopLeftRadius: '16px',
-                                borderBottomLeftRadius: '16px'
-                              }}
-                              src={`${v?.staticThumbnail}`}
-                              alt=""
-                            />
+                            <img src={`${v?.staticThumbnail}`} alt="" />
                           </div>
                         )}
                         <div
-                          style={{
-                            // borderLeft: "4px solid #CCA541",
-                            display: 'flex',
-                            flexDirection: 'column',
-                            width: 'inher',
-                            justifyContent: 'center',
-                            alignItems: 'flex-start',
-                            paddingLeft: '24px'
-                          }}>
+                          className={`nft-unlokvideo-description ${
+                            primaryColor === 'rhyno' ? 'rhyno' : ''
+                          }`}>
                           <div>
                             {' '}
-                            <p
-                              style={{
-                                fontSize: 20,
-                                color: `${
-                                  primaryColor === 'rhyno' ? 'black' : 'white'
-                                }`
-                              }}>
-                              {v?.title}
-                            </p>{' '}
+                            <p>{v?.title}</p>{' '}
                           </div>
                           <div>
-                            <p
-                              style={{
-                                fontSize: 20,
-                                color: `${
-                                  primaryColor === 'rhyno' ? 'black' : '#A7A6A6'
-                                }`
-                              }}>
-                              {v?.duration}
-                            </p>
+                            <p>{v?.duration}</p>
                           </div>
                         </div>
                       </div>

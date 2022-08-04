@@ -94,9 +94,10 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
         </span>
       </div>
       {isOpenPart ? (
-        <span>&#10003; Unlocked</span>
+        <span className={cl.unlockText}>&#10003; Unlocked</span>
       ) : (
         <CustomButton
+          className="custom-btn-rarity"
           text={title}
           width={'224px'}
           height={'48px'}

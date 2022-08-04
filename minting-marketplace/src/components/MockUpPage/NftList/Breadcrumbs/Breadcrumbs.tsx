@@ -122,7 +122,7 @@ const BreadcrumbsComponent = () => {
   }
 
   return (
-    <Stack style={{ marginBottom: '2rem', paddingLeft: '0.5rem' }} spacing={2}>
+    <Stack style={{ marginBottom: '2rem' }} spacing={2}>
       <Breadcrumbs
         color="white"
         separator={<NavigateNextIcon fontSize="small" />}

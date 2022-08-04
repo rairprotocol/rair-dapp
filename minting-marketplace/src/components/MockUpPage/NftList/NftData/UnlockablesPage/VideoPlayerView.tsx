@@ -11,7 +11,8 @@ const VideoPlayerView: React.FC<IVideoPlaterView> = ({
   selectVideo,
   setSelectVideo,
   whatSplashPage,
-  someAdditionalData
+  someAdditionalData,
+  unlockables
 }) => {
   const [openVideoplayer, setOpenVideoplayer] = useState(false);
   const [selectedBg, setSelectedBg] = useState();
@@ -20,11 +21,13 @@ const VideoPlayerView: React.FC<IVideoPlaterView> = ({
 
   return (
     <div
-      className={cl.VideoPlayerViewWrapper}
+      className={
+        unlockables
+          ? cl.VideoPlayerViewWrapperUnlockables
+          : cl.VideoPlayerViewWrapper
+      }
       style={{
-        background: `${
-          primaryColor === 'rhyno' ? 'rgb(189,189,189)' : '#383637'
-        }`
+        background: `${primaryColor === 'rhyno' ? '#F2F2F2' : '#383637'}`
       }}>
       <div className={cl.ListOfVideosWrapper}>
         {whatSplashPage &&

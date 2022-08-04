@@ -33,7 +33,8 @@ const MenuNavigation = ({
   setLoginDone,
   currentUserAddress,
   adminRights,
-  creatorViewsDisabled
+  creatorViewsDisabled,
+  programmaticProvider
 }) => {
   const [click, setClick] = useState(false);
   const [userData, setUserData] = useState(null);

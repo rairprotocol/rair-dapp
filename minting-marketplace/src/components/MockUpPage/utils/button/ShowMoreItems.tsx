@@ -5,15 +5,8 @@ export const ShowMoreContainer = styled.div`
   height: ${(props) => props.height};
   color: ${(props) => props.textColor};
   margin: ${(props) => props.margin};
-  @media screen and (max-width: 1260px) and (min-width: 850px) {
-    min-width: 48rem;
-  }
-  @media screen and (max-width: 849px) and (min-width: 660px) {
-    min-width: 35rem;
-  }
   @media screen and (max-width: 659px) and (min-width: 410px) {
     margin: 0.5rem;
-    min-width: 22rem;
   }
   @media screen and (max-width: 409px) and (min-width: 250px) {
     width: 13rem;

@@ -1,6 +1,7 @@
-.VideoPlayerViewWrapper {
+.VideoPlayerViewWrapper,
+.VideoPlayerViewWrapperUnlockables {
   /* max-width: 1600px; */
-  min-width: 83.8vw;
+  min-width: 85vw;
   height: 446px;
   margin: auto;
   border-radius: 16px;
@@ -9,9 +10,7 @@
 }
 
 .ListOfVideosWrapper {
-  padding: 10px;
-  padding-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px 0 20px 20px;
   overflow: scroll;
   /* Internet Explorer 10+ */
   -ms-overflow-style: none;
@@ -133,8 +132,10 @@
 }
 
 @media screen and (max-width: 549px) and (min-width: 250px) {
-  .VideoPlayerViewWrapper {
+  .VideoPlayerViewWrapper,
+  .VideoPlayerViewWrapperUnlockables {
     max-width: 1600px;
+    padding-top: 10px;
     height: auto;
     margin: auto;
     border-radius: 16px;
@@ -145,12 +146,17 @@
     width: 80vw;
   }
   .ListOfVideosWrapper {
-    padding: 10px;
     overflow: scroll;
     height: 394px;
+    margin: 10px 10px;
   }
+
+  .SingleVideo {
+    width: 80vw;
+  }
+
   .forSplashPageStyleOneVideo {
-    width: 78vw;
+    width: 80vw;
     height: 14.375rem;
     background-size: cover;
     background-position: center center;
@@ -159,7 +165,7 @@
     margin: 0.563rem 1rem;
   }
   .playImagesOnSingleVideo {
-    margin-top: 6.4vh;
+    /* margin-top: 6.4vh; */
     width: 20vw;
   }
 }

@@ -7,11 +7,15 @@
   align-content: center;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  width: 97%;
+  margin-bottom: 24px;
+  width: 100%;
 }
 
 .main {
+}
+
+.unlockText {
+  font-size: 18px;
 }
 
 .iconKey {
@@ -22,4 +26,12 @@
 
 .rarity {
   padding-left: 15px;
+  font-weight: 700;
+}
+
+@media screen and (max-width: 500px) {
+  .rarity,
+  .unlockText {
+    font-size: 12px;
+  }
 }
