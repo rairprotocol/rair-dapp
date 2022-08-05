@@ -1,0 +1,25 @@
+:root {
+  --box-size: 48px;
+}
+
+.like-button-container {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background-color: #4e4d4d;
+  width: var(--box-size);
+  height: var(--box-size);
+  text-align: center;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.like-button-container.rhyno {
+  background-color: #fff;
+}
+
+.like-button {
+  color: #e882d5;
+  font-size: 24px;
+  line-height: var(--box-size);
+}

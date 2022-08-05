@@ -28,6 +28,7 @@ import NftListUnlockablesVideos from './NftListUnlockablesVideos';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { gettingPrice } from '../utils/gettingPrice';
 import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
+import LikeButton from '../LikeButton/LikeButton';
 
 const NftDataPageMain = ({
   // setTokenData,
@@ -403,6 +404,7 @@ const NftDataPageMain = ({
                 primaryColor === 'rhyno' ? 'rgb(191 191 191)' : '#383637'
               }`
             }}>
+            <LikeButton />
             {selectedData?.animation_url ? (
               <div className="single-token-block-video">
                 <ReactPlayer

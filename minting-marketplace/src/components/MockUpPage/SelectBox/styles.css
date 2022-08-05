@@ -200,6 +200,7 @@
 }
 
 .nft-collection {
+  position: relative;
   border-radius: 16px;
   padding: 24px 0;
 }
