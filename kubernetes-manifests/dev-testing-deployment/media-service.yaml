@@ -49,6 +49,13 @@ spec:
         - image: rairtechinc/media-service:dev_latest
           name: media-service
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "2000Mi"
+              cpu: "2500m"
+            limits:
+              memory: "2500Mi"
+              cpu: "3500m"
           ports:
             - containerPort: 5002
           env:
@@ -80,7 +87,6 @@ spec:
           envFrom:
           - configMapRef:
               name: media-service-env
-          resources: {}
       imagePullSecrets:
         - name: regcred
       restartPolicy: Always
