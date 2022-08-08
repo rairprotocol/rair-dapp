@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import MockUpPage from '../MockUpPage/MockUpPage';
 import MetaTags from '../SeoTags/MetaTags';
 
-const WelcomeHeader = ({ seoInformation, setIsSplashPage }) => {
-  const [tabIndex, setTabIndex] = useState(0);
-
+const WelcomeHeader = ({
+  seoInformation,
+  tabIndex,
+  setTabIndex,
+  setIsSplashPage
+}) => {
   useEffect(() => {
     setIsSplashPage(false);
   }, [setIsSplashPage]);

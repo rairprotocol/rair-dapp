@@ -144,7 +144,7 @@ function App() {
   );
   const carousel_match = window.matchMedia('(min-width: 1025px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
-
+  const [tabIndex, setTabIndex] = useState(0);
   const navigate = useNavigate();
 
   const seoInformation = {
@@ -592,7 +592,9 @@ function App() {
                     requirement: process.env.REACT_APP_HOME_PAGE === '/',
                     props: {
                       seoInformation,
-                      setIsSplashPage
+                      setIsSplashPage,
+                      tabIndex: tabIndex,
+                      setTabIndex: setTabIndex
                     }
                   },
 
