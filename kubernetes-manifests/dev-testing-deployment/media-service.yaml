@@ -51,11 +51,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "2000Mi"
-              cpu: "2500m"
+              memory: "1000M"
+              cpu: "500m"
             limits:
-              memory: "2500Mi"
-              cpu: "3500m"
+              memory: "2000M"
+              cpu: "1000m"
           ports:
             - containerPort: 5002
           env:
