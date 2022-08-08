@@ -75,7 +75,12 @@ module.exports = {
     timeout: 0
   },
   etherscan: {
-    //apiKey: process.env.POLYGONSCAN_API_KEY
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: {
+      goerli: process.env.ETHERSCAN_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+      bsc: process.env.BSCSCAN_API_KEY,
+      bscTestnet: process.env.BSCSCAN_API_KEY,
+    }
   }
 };

@@ -1336,6 +1336,7 @@ describe("Token Factory", function () {
 					.to.emit(resaleInstance, "UpdatedOfferPrice")
 					.withArgs(
 						1,
+						rair721Instance.address,
 						resaleOfferPrice,
 						resaleOfferPrice * 2
 					);

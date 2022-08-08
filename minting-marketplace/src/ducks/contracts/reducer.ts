@@ -36,7 +36,7 @@ const contractAddresses: ContractAddressesType = {
       '0xA2c57691b8DF0D8479f5f888c69346363D23a49F') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0xaCb13B4c527eD6237f7DB6E95Ef71929d1e13DD6') as string,
-    resaleMarketplace: undefined
+    resaleMarketplace: '0x166eD118F380dDFe1F4FD3ccc7D2C5CaeCf0AE96'
   },
   '0x5': {
     // Ethereum Goerli
@@ -47,7 +47,7 @@ const contractAddresses: ContractAddressesType = {
       '0xEF85370b8F136E2F28eA904bF0dA5acac3D1d74f') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x6B3c06b39Aa1ADe73c625b184326d4837c7a2b64') as string,
-    resaleMarketplace: '0xb88af2c5d0f095A8AA093CAe95c9e5e2e158b677'
+    resaleMarketplace: '0x73eDc2F5Fc3F895Dfc6aE8a580a5969640260b79'
   },
   '0x13881': {
     // Matic Mumbai
@@ -58,7 +58,7 @@ const contractAddresses: ContractAddressesType = {
       '0xbB236Ce48dDCb58adB8665E220FE976bA5d080a5') as string,
     diamondMarketplace: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
       '0x2c8BA9f098CD319a971cE2705F26723c81044Cb0') as string,
-    resaleMarketplace: undefined
+    resaleMarketplace: '0x0F08c99070fbebDa7E324596d95635d30D414070'
   },
   '0x89': {
     // Matic Mainnet

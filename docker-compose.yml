@@ -91,6 +91,9 @@ services:
       MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
       ETHEREUM_MAINNET_FACTORY_ADDRESS: ${ethereum_mainnet_factory_addres}
       ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
+      BINANCE_RESALE_ADDRESS: ${binance_resale_address}
+      GOERLI_RESALE_ADDRESS: ${goerli_resale_address}
+      MATIC_MUMBAI_RESALE_ADDRESS: ${matic_mumbai_resale_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
       IPFS_SERVICE: ${ipfs_service}

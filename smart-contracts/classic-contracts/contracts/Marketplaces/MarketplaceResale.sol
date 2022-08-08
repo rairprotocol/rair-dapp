@@ -39,6 +39,7 @@ contract Resale_MarketPlace is AccessControl {
 	// Emitted whenever an offer is updated with a new price
 	event UpdatedOfferPrice(
 		uint offerId,
+		address contractAddress,
 		uint oldPrice,
 		uint newPrice
 	);
@@ -405,7 +406,7 @@ contract Resale_MarketPlace is AccessControl {
 		}
 		uint oldPrice = selectedOffer.price;
 		selectedOffer.price = newPrice;
-		emit UpdatedOfferPrice(offerIndex, oldPrice, newPrice);
+		emit UpdatedOfferPrice(offerIndex, selectedOffer.contractAddress, oldPrice, newPrice);
 	}
 
 	/// @notice 	Queries the marketplace to find if a token is on sale

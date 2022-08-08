@@ -101,6 +101,9 @@ services:
       MATIC_MUMBAI_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mumbai_diamond_marketplace_address}
       MATIC_MAINNET_DIAMOND_FACTORY_ADDRESS: ${matic_mainnet_diamond_factory_address}
       MATIC_MAINNET_DIAMOND_MARKETPLACE_ADDRESS: ${matic_mainnet_diamond_marketplace_address}
+      BINANCE_RESALE_ADDRESS: ${binance_resale_address}
+      GOERLI_RESALE_ADDRESS: ${goerli_resale_address}
+      MATIC_MUMBAI_RESALE_ADDRESS: ${matic_mumbai_resale_address}
       SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
       SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
       IPFS_SERVICE: ${ipfs_service}
