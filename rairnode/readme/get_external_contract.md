@@ -1,8 +1,8 @@
-# Get token
+# Import external contract
 
-Respond to a challenge to receive a JWT
+Loads all of the information about the NFTs of a contract
 
-**URL** : `/api/contracts/import/network/:networkId/:contractAddress/`
+**URL** : `/api/contracts/import/network/:networkId/:contractAddress/:limit`
 
 **Method** : `GET`
 
@@ -19,13 +19,19 @@ Respond to a challenge to receive a JWT
     "description": "The address of the external contract",
     "type": "string",
     "required": true
+  },
+  "limit": {
+    "description": "Limit of tokens to import",
+    "type": "string",
+    "required": true
   }
 }
 ```
 
 ## Success Response
 
-If the user has admin access, NFTs will get imported in pages of 500 (This is a limit by Moralis)
+If the user has admin access, NFTs will get slowly imported in groups of 100 (This is a limit by Moralis)
+Once the number of NFTs imported is greater than the limit, it will stop.
 
 **Code** : `200 OK`
 
@@ -38,7 +44,7 @@ If the user has admin access, NFTs will get imported in pages of 500 (This is a 
   "success": true,
   "result": {
     "contract": {...contractSchema},
-    "numberOfTokensAdded": 500
+    "numberOfTokensAdded": 100
   },
   "message": undefined
 }
@@ -62,7 +68,7 @@ If the user has admin access, NFTs will get imported in pages of 500 (This is a 
 
 OR
 
-**Condition** : None of the tokens have metadata, making their insertion useless
+**Condition** : None of the tokens have metadata, so there's no point storing the data
 
 **Code** : `500 INTERNAL SERVER ERROR`
 
@@ -73,5 +79,21 @@ OR
   "success": false,
   "result": undefined,
   "message": "Of the XX tokens inserted, none of them had metadata!"
+}
+```
+
+OR 
+
+**Condition** : Retried too many times to get information
+
+**Code** : `500 INTERNAL SERVER ERROR`
+
+**Content** :
+
+```json
+{
+  "success": false,
+  "result": undefined,
+  "message": "Aborted import of contract 0x..., request for page XXX failed too many times`
 }
 ```
