@@ -45,6 +45,7 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "express-session": "^1.17.2",
+    "follow-redirects": "^1.15.1",
     "foreman": "^3.0.1",
     "ipfs-http-client": "^49.0.4",
     "joi": "^17.4.0",

@@ -1,11 +1,9 @@
-const HLSServer = require('@rair/hls-server');
+// const HLSServer = require('@rair/hls-server');
+const HLSServer = require('./utils/hls-server');
 const streamDecrypter = require('./stream-decrypter');
 const { File } = require('./models');
 
-const {
-  vaultKeyManager,
-  vaultAppRoleTokenManager,
-} = require('./vault');
+const { vaultKeyManager, vaultAppRoleTokenManager } = require('./vault');
 
 module.exports = async () => {
   const getMediaConfigStoreData = async (mediaId) => {
