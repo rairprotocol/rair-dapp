@@ -54,7 +54,6 @@ import MyContracts from './components/whitelabel/myContracts';
 import MinterMarketplace from './components/marketplace/MinterMarketplace';
 import MockUpPage from './components/MockUpPage/MockUpPage';
 import MyItems from './components/nft/myItems';
-import MyNFTs from './components/nft/myNFT';
 
 import NotificationPage from './components/UserProfileSettings/NotificationPage/NotificationPage';
 import { NftDataCommonLink } from './components/MockUpPage/NftList/NftData/NftDataCommonLink';
@@ -659,13 +658,6 @@ function App() {
                   {
                     path: '/rair/:contract/:product',
                     content: RairProduct,
-                    requirement: loginDone && !creatorViewsDisabled
-                  },
-
-                  // Old MyNFTs (Using the database)
-                  {
-                    path: '/my-nft',
-                    content: MyNFTs,
                     requirement: loginDone && !creatorViewsDisabled
                   },
 

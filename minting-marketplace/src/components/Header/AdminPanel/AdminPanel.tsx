@@ -32,7 +32,6 @@ const AdminPanel = ({
                 route: '/all',
                 disabled: !loginDone
               },
-              { name: <i className="fas fa-key" />, route: '/my-nft' },
               {
                 name: <i className="fa fa-id-card" aria-hidden="true" />,
                 route: '/new-factory',
