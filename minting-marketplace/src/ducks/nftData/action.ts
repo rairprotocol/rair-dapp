@@ -1,3 +1,4 @@
+import { TTokenData } from '../../axios.responseTypes';
 import { TNftDataItem } from './nftData.types';
 import * as types from './types';
 
@@ -29,10 +30,14 @@ const getNftDataError = (errorMessage: string) =>
     errorMessage
   } as const);
 
+const setTokenData = (tokenData: TTokenData[]) =>
+  ({ type: types.SET_SELECTED_INDEX, tokenData } as const);
+
 export {
   getNftDataStart,
   setNftData,
   getNftListTotal,
   getNftListTotalClear,
-  getNftDataError
+  getNftDataError,
+  setTokenData
 };

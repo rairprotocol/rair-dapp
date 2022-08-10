@@ -1,6 +1,4 @@
-//@ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
-// import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
@@ -10,39 +8,41 @@ import {
   TAuthGetChallengeResponse,
   TOnlySuccessResponse
 } from '../../../../../axios.responseTypes';
+import { INftVideoplayer } from '../../../mockupPage.types';
+import { RootState } from '../../../../../ducks';
+import { ethers } from 'ethers';
 
-const NftVideoplayer = ({ selectVideo, main }) => {
-  // console.log(selectVideo, 'selectVideo');
-  // const params = useParams();
-  // const navigate = useNavigate();
+const NftVideoplayer: React.FC<INftVideoplayer> = ({
+  selectVideo,
+  main,
+  setSelectVideo
+}) => {
   const mainManifest = 'stream.m3u8';
 
-  const { programmaticProvider } = useSelector((state) => state.contractStore);
+  const programmaticProvider = useSelector<
+    RootState,
+    ethers.Wallet | undefined
+  >((state) => state.contractStore.programmaticProvider);
 
-  const [videoName] = useState(Math.round(Math.random() * 10000));
-  const [mediaAddress, setMediaAddress] = useState(
-    Math.round(Math.random() * 10000)
+  const [videoName] = useState<number>(Math.round(Math.random() * 10000));
+  const [mediaAddress, setMediaAddress] = useState<string>(
+    String(Math.round(Math.random() * 10000))
   );
-
-  // const btnGoBack = () => {
-  // 	navigate(-1);
-  // }
-
   const requestChallenge = useCallback(async () => {
     let signature;
     let parsedResponse;
     if (window.ethereum) {
-      const [account] = await window.ethereum.request({
+      const account = await window.ethereum.request({
         method: 'eth_requestAccounts'
       });
       const response = await axios.get<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/' + account
+        '/api/auth/get_challenge/' + account?.[0]
       );
       parsedResponse = JSON.parse(response.data.response);
       signature = await window.ethereum.request({
         method: 'eth_signTypedData_v4',
-        params: [account, response.data.response],
-        from: account
+        params: [account?.[0], response.data.response],
+        from: account?.[0]
       });
     } else if (programmaticProvider) {
       const response = await axios.get<TAuthGetChallengeResponse>(
@@ -50,7 +50,7 @@ const NftVideoplayer = ({ selectVideo, main }) => {
       );
       parsedResponse = JSON.parse(response.data.response);
       // EIP712Domain is added automatically by Ethers.js!
-      const { /*EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
+      const { ...revisedTypes } = parsedResponse.types;
       signature = await programmaticProvider._signTypedData(
         parsedResponse.domain,
         revisedTypes,
@@ -67,18 +67,17 @@ const NftVideoplayer = ({ selectVideo, main }) => {
           '/' +
           signature +
           '/' +
-          selectVideo._id
+          selectVideo?._id
       );
       if (streamAddress.data.success) {
         await setMediaAddress(
-          '/stream/' + selectVideo._id + '/' + mainManifest
+          '/stream/' + selectVideo?._id + '/' + mainManifest
         );
         setTimeout(() => {
           videojs('vjs-' + videoName);
         }, 1000);
       }
     } catch (requestError) {
-      //console.error(requestError);
       Swal.fire('NFT required to view this content');
     }
   }, [programmaticProvider, selectVideo, mainManifest, videoName]);
@@ -86,9 +85,9 @@ const NftVideoplayer = ({ selectVideo, main }) => {
   useEffect(() => {
     requestChallenge();
     return () => {
-      setMediaAddress();
+      setMediaAddress('');
     };
-  }, [requestChallenge]);
+  }, [selectVideo, setSelectVideo, requestChallenge]);
 
   useEffect(() => {
     setDocumentTitle('Streaming');
@@ -110,11 +109,7 @@ const NftVideoplayer = ({ selectVideo, main }) => {
             controls
             preload="auto"
             data-setup="{}">
-            <source
-              // autostart="false"
-              src={mediaAddress}
-              type="application/x-mpegURL"
-            />
+            <source src={mediaAddress} type="application/x-mpegURL" />
           </video>
         </div>
       </>
@@ -122,19 +117,16 @@ const NftVideoplayer = ({ selectVideo, main }) => {
   } else {
     return (
       <>
-        <div className="container-video-js">
+        <div className="nft-video-player-video">
           <video
             id={'vjs-' + videoName}
             style={{
-              width: 'inherit',
-              height: 'inherit',
               borderRadius: '16px'
             }}
-            className="video-js "
+            className="video-js"
             controls
             preload="auto"
             autoPlay
-            //poster={ video && ('/thumbnails/' + video.thumbnail + '.png') }
             data-setup="{}">
             <source src={mediaAddress} type="application/x-mpegURL" />
           </video>

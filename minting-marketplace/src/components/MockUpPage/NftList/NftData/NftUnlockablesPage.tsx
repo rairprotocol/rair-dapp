@@ -47,7 +47,7 @@ const NftUnlockablesPage = ({
   }, [setSelectVideo, productsFromOffer]);
 
   return (
-    <div style={{ width: '85vw', margin: '30px auto' }}>
+    <div className="wrapper-unlockables-page">
       <BreadcrumbsView />
       {tokenData && selectedToken && (
         <TitleCollection

@@ -1,12 +1,15 @@
-//@ts-nocheck
 import React, { useRef, memo, useCallback, useState, useMemo } from 'react';
 import { useEffect } from 'react';
 import { CurrentTokens } from '../CurrentTokens/CurrentTokens';
 import '../../styles.css';
-import { TNftItemResponse } from '../../../../../axios.responseTypes';
+import {
+  TNftItemResponse,
+  TTokenData
+} from '../../../../../axios.responseTypes';
 import axios from 'axios';
+import { IListOfTokensComponent } from '../../selectBox.types';
 
-const ListOfTokensComponent = ({
+const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   blockchain,
   contract,
   isOpen,
@@ -21,43 +24,60 @@ const ListOfTokensComponent = ({
   setIsOpen,
   totalCount
 }) => {
-  const [tokenData, setTokenData] = useState([]);
-  const [productTokenNumbers, setProductTokenNumbers] = useState([]);
-  const rootRef = useRef();
-  const appRef = useRef();
+  const [tokenData, setTokenData] = useState<TTokenData[]>([]);
+  const [productTokenNumbers, setProductTokenNumbers] = useState<string[]>([]);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const appRef = useRef<HTMLDivElement>(null);
+  const listOfTokensRef = useRef<HTMLDivElement>(null);
   const limit = 100;
-  const [isOpens, setIsOpens] = useState(false);
-  const [isBack /*setIsBack*/] = useState(true);
+  const [isOpens, setIsOpens] = useState<boolean>(false);
+  const [isBack /*setIsBack*/] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(true);
 
-  const [open, setOpen] = useState(true);
-
-  const getNumberFromStr = (str) => {
+  const getNumberFromStr = (str: string) => {
     const newStr = str.replace(' -', '');
     const first = newStr.slice(0, newStr.indexOf(' '));
     const second = newStr.slice(newStr.indexOf(' ') + 1);
-    // const second = Number(newStr.slice(newStr.indexOf(" ") + 1)) + 1;
     return [first, second];
   };
 
+  const handleOpenListOfTokens = () => {
+    setOpen(false);
+  };
+
   const getPaginationData = useCallback(
-    async (target) => {
-      const indexes = getNumberFromStr(target.innerText);
+    async (target: HTMLElement) => {
+      const indexes = getNumberFromStr(target?.innerText);
       const responseAllProduct = await axios.get<TNftItemResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${indexes[0]}&toToken=${indexes[1]}&limit=${limit}`
       );
       const { result } = responseAllProduct.data;
       setTokenData(result.tokens);
       setSelectedToken(indexes[0]);
-      // setSelectedToken(Number(indexes[0]));
       onClickItem(indexes[0]);
-      // onClickItem(Number(indexes[0]));
-      handleIsOpen(true);
+      handleIsOpen();
     },
     [blockchain, contract, handleIsOpen, onClickItem, product, setSelectedToken]
   );
 
-  // console.log(tokenData, 'tokenData');
-  // console.log(productTokenNumbers, 'productTokenNumbers');
+  const handleClickOutSideListOfTokens = useCallback(
+    (e: MouseEvent) => {
+      if (isOpens) {
+        return;
+      } else {
+        if (!listOfTokensRef.current?.contains(e.target as Node)) {
+          setOpen(true);
+        }
+      }
+    },
+    [listOfTokensRef, isOpens]
+  );
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutSideListOfTokens);
+    return () =>
+      document.removeEventListener('mousedown', handleClickOutSideListOfTokens);
+  }, [handleClickOutSideListOfTokens, isOpen]);
 
   useEffect(() => {
     let isDestroyed = false;
@@ -75,8 +95,8 @@ const ListOfTokensComponent = ({
 
   const availableRanges = useMemo(
     () =>
-      productTokenNumbers.reduce((acc, tokenNumber) => {
-        const tokenRange = Math.floor(tokenNumber / 100) * 100;
+      productTokenNumbers.reduce((acc, tokenNumber: string) => {
+        const tokenRange = Math.floor(+tokenNumber / 100) * 100;
         return {
           ...acc,
           [tokenRange]: true
@@ -86,8 +106,8 @@ const ListOfTokensComponent = ({
   );
 
   const getPaginationToken = useCallback(
-    (e) => {
-      getPaginationData(e.target);
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      getPaginationData(e.target as HTMLButtonElement);
       setIsOpens(true);
     },
     [getPaginationData, setIsOpens]
@@ -106,7 +126,9 @@ const ListOfTokensComponent = ({
 
   return !open ? (
     !isOpens ? (
-      <div ref={numberRef} className="select-box--box">
+      <div
+        ref={numberRef}
+        className="select-box--box select-box--box_listOfTokens">
         <div className="select-box--container">
           <div ref={appRef} className="select-box--selected-item">
             Choose Range
@@ -114,41 +136,29 @@ const ListOfTokensComponent = ({
           <div className="select-box--arrow"></div>
           <div
             style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              alignContent: 'center',
-              width: '25rem',
-              padding: '10px 0',
-              // background: "#383637",
               background: `${
                 primaryColor === 'rhyno' ? 'var(--rhyno)' : '#383637'
-              }`,
-              borderRadius: '16px',
-              border: '1px solid #D37AD6'
+              }`
             }}
             id="rred"
-            className={'select-box--items'}
-            ref={rootRef}>
+            className={'select-box--items list-of-tokens'}
+            ref={listOfTokensRef}>
             {ranges.map((i) => {
               return (
                 <button
                   disabled={availableRanges[i] ? false : true}
                   key={i}
                   onClick={(e) => getPaginationToken(e)}
-                  className="serial-box serial-numb llll"
-                  style={{
-                    // border: "1px solid #D37AD6",
-                    background: '#a7a6a6',
-                    color: '#rgb(0 0 0)'
-                    // background: availableRanges[i] ? "grey" : "red",
-                  }}>
+                  className="serial-box serial-numb check-disable">
                   {`${i} - ${i + 99}`}
                 </button>
               );
             })}
+            <span
+              className="backClose-list-tokens"
+              onClick={() => setOpen(true)}>
+              &#10007;
+            </span>
           </div>
         </div>
       </div>
@@ -169,10 +179,11 @@ const ListOfTokensComponent = ({
     )
   ) : (
     <div
-      style={{ cursor: 'pointer' }}
       className="nft-single-price-range"
       ref={rootRef}
-      onClick={() => setOpen(false)}>
+      onClick={() => {
+        handleOpenListOfTokens();
+      }}>
       Selected now : {Number(selectedToken)}
     </div>
   );

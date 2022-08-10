@@ -59,9 +59,12 @@
   width: 40px;
   height: 40px;
 }
+
 .playImagesOnListVideos:hover {
   transform: scale3d(1.5, 1.5, 1.5);
+  transition: all 0.1s ease;
 }
+
 .description {
   display: flex;
   flex-direction: column;
@@ -77,9 +80,11 @@
   padding: 6px;
   border-radius: 10px;
 }
+
 .SingleVideoWrapper {
   margin: auto;
 }
+
 .SingleVideo {
   width: 40vw;
   height: 406px;
@@ -90,6 +95,11 @@
 }
 .playImagesOnSingleVideo {
   margin-top: 7rem;
+  transition: all 0.1s ease;
+}
+
+.playImagesOnSingleVideo:hover {
+  transform: scale3d(1.2, 1.2, 1.2);
 }
 
 .forSplashPageStyleOneVideo {

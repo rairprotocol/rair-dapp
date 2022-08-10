@@ -1,3 +1,4 @@
+//@ts-nocheck
 import styled from 'styled-components';
 import { FilterIconNew, ArrowDown, ArrowUp, SimpleFilterArrow } from './incons';
 

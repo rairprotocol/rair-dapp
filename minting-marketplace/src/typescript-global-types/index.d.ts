@@ -20,6 +20,7 @@ declare global {
   // 	TEthereumMainnet = '0x1',
   // 	TMaticPolygonMainnet = '0x89'
   //  KlaytnBaobab = '0x3e9'
+  //  'Ropsten (Ethereum)' = '0x3'
   type BlockchainType =
     | '0x38'
     | '0x61'
@@ -27,5 +28,6 @@ declare global {
     | '0x5'
     | '0x1'
     | '0x89'
-    | '0x3e9';
+    | '0x3e9'
+    | '0x3';
 }

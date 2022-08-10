@@ -1,11 +1,13 @@
-//@ts-nocheck
-import React, { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { ISelectNumber } from '../selectBox.types';
 import { CurrentTokens } from './CurrentTokens/CurrentTokens';
 import { ListOfTokens } from './ListOfTokens/ListOfTokens';
 import './SelectNumber.css';
 
-const SelectNumber = ({
+const SelectNumber: React.FC<ISelectNumber> = ({
   blockchain,
   items,
   handleClickToken,
@@ -15,36 +17,38 @@ const SelectNumber = ({
   contract,
   setSelectedToken
 }) => {
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
-  const [selectedItem, setSelectedItem] = useState(selectedToken);
-  const [isOpen, setIsOpen] = useState(false);
-  const numberRef = useRef();
+  const [selectedItem, setSelectedItem] = useState<string>(selectedToken);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const numberRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutSideNumberItem = useCallback(
+    (e: MouseEvent) => {
+      if (!numberRef.current?.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    },
+    [numberRef, setIsOpen]
+  );
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutSideNumberItem);
+    return () =>
+      document.removeEventListener('mousedown', handleClickOutSideNumberItem);
+  }, [handleClickOutSideNumberItem]);
 
   const handleIsOpen = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const onClickItem = (el) => {
+  const onClickItem = (el: string) => {
     setSelectedItem(el);
     handleClickToken(el);
     handleIsOpen();
   };
-
-  // const handleClickOutSideNumberItem = useCallback(
-  //   (e) => {
-  //     if (!numberRef.current.contains(e.target)) {
-  //       setIsOpen(false);
-  //     }
-  //   },
-  //   [numberRef, setIsOpen]
-  // );
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutSideNumberItem);
-  //   return () =>
-  //     document.removeEventListener("mousedown", handleClickOutSideNumberItem);
-  // }, [handleClickOutSideNumberItem]);
 
   return totalCount < 100 ? (
     <CurrentTokens

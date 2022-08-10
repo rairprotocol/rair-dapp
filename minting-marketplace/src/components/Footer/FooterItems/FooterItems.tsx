@@ -1,7 +1,12 @@
 import styled from 'styled-components';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+
+type TFooterMainStyled = {
+  primaryColor: ColorChoice;
+};
 
 export const FooterMain = styled.footer`
-  background: ${(props) =>
+  background: ${(props: TFooterMainStyled) =>
     props.primaryColor === 'rhyno' ? '#fff' : 'rgba(56, 54, 55, 0.9);'};
   padding: 40px 120px 25px 120px;
 
@@ -24,7 +29,8 @@ export const FooterWrapper = styled.div`
 
   padding-bottom: 52px;
   border-bottom: 1px solid
-    ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
+    ${(props: TFooterMainStyled) =>
+      props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959'};
 
   @media screen and (max-width: 768px) {
     flex-direction: column-reverse;
@@ -54,7 +60,8 @@ export const FooterBoxJoin = styled.div``;
 
 export const CommunityBlock = styled.div`
   .community-text {
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props: TFooterMainStyled) =>
+      props.primaryColor === 'rhyno' ? '#7A797A' : '#fff'};
   }
 
   @media screen and (max-width: 768px) {
@@ -106,7 +113,7 @@ export const NavFooterBox = styled.ul`
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 14px;
-    color: ${(props) =>
+    color: ${(props: TFooterMainStyled) =>
       props.primaryColor === 'rhyno' ? '#725BDB' : '#AA9DE9'};
   }
 
@@ -141,7 +148,7 @@ export const FooterTextRairTech = styled.div`
     li {
       font-size: 14px;
       line-height: 28px;
-      color: ${(props) =>
+      color: ${(props: TFooterMainStyled) =>
         props.primaryColor === 'rhyno' ? '#7A797A' : '#A7A6A6'};
     }
     li:nth-child(2) {
@@ -166,7 +173,8 @@ export const FooterEmailBlock = styled.div`
   h4 {
     font-size: 16px;
     line-height: 20px;
-    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    color: ${(props: TFooterMainStyled) =>
+      props.primaryColor === 'rhyno' ? '#7A797A' : '#fff'};
   }
 
   .footer-send-email {

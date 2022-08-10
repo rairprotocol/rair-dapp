@@ -36,7 +36,7 @@ const chainData: TChainData = {
         decimals: 18
       },
       rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-      blockExplorerUrls: ['https://testnet.bscscan.com']
+      blockExplorerUrls: ['https://testnet.bscscan.com/']
     }
   },
   '0x13881': {
@@ -54,7 +54,7 @@ const chainData: TChainData = {
         decimals: 18
       },
       rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
-      blockExplorerUrls: ['https://matic.network/']
+      blockExplorerUrls: ['https://mumbai.polygonscan.com/']
     }
   },
   '0x5': {
@@ -65,7 +65,8 @@ const chainData: TChainData = {
     symbol: 'ETH',
     addChainData: {
       chainId: '0x5',
-      chainName: 'Goerli (Ethereum)'
+      chainName: 'Goerli (Ethereum)',
+      blockExplorerUrls: ['https://goerli.etherscan.io/']
     }
   },
   '0x1': {
@@ -75,7 +76,8 @@ const chainData: TChainData = {
     symbol: 'ETH',
     addChainData: {
       chainId: '0x1',
-      chainName: 'Mainnet (Ethereum)'
+      chainName: 'Mainnet (Ethereum)',
+      blockExplorerUrls: ['https://etherscan.io/']
     }
   },
   '0x89': {
@@ -92,7 +94,7 @@ const chainData: TChainData = {
         decimals: 18
       },
       rpcUrls: ['https://polygon-rpc.com/'],
-      blockExplorerUrls: ['https://polygonscan.com']
+      blockExplorerUrls: ['https://polygonscan.com/']
     }
   }
 };

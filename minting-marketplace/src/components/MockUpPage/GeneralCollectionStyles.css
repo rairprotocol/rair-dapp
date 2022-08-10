@@ -3,16 +3,8 @@
 }
 
 #nft-data-page-wrapper {
-  margin: 3rem 6rem;
-}
-
-#nft-data-page-wrapper .single-token-block-img {
-  margin: auto;
-  width: 604px;
-  height: 45rem;
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
+  margin-bottom: 3rem;
+  margin-left: 5vw;
 }
 
 .nft-item-collection {
@@ -35,29 +27,66 @@
   margin-right: 0px;
 }
 
-#nft-data-page-wrapper .single-token-block-img {
-  margin: auto;
-  width: 604px;
-  height: 45rem;
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-#nft-data-page-wrapper .single-token-block-video {
-  width: 600px;
-  height: 600px;
-  margin: auto;
-}
-
 #nft-data-page-wrapper .nft-data-content {
   max-width: 85vw;
   border-radius: 16px;
-  padding: 24px 0;
+  position: relative;
 }
 
-.nft-collection {
-  padding: 0 10px;
+.single-token-img-video-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 34px;
+  border-radius: 16px;
+}
+
+.nft-images-gifs-wrapper {
+  position: relative;
+  width: 406px;
+  height: 406px;
+}
+
+.nft-videos-wrapper-container {
+  position: relative;
+  width: 768px;
+  height: 428px;
+  border-radius: 16px;
+}
+
+.single-token-block-img {
+  width: inherit;
+  height: inherit;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border-radius: 16px;
+  position: relative;
+}
+
+.nft-collection-icons-media {
+  position: absolute;
+  display: none;
+  right: 7px;
+  top: 15px;
+}
+
+.nft-collection-single-video {
+  position: absolute;
+  display: none;
+  right: 7px;
+  top: 15px;
+}
+
+.single-token-block-video {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+}
+
+.nft-data-sell-button {
+  display: flex;
+  justify-content: space-between;
 }
 
 .brief-info-nftItem {
@@ -76,6 +105,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .nft-form-control-icon {
@@ -443,10 +473,6 @@
 }
 
 @media screen and (max-width: 1260px) {
-  /* .list-button-wrapper {
-    width: 894px;
-  } */
-
   .col.description-wrapper.pic-description-wrapper.wrapper-for-collection-view {
     display: flex;
     justify-content: center;
@@ -516,10 +542,6 @@
 }
 
 @media screen and (max-width: 1000px) {
-  #nft-data-page-wrapper .nft-data-content {
-    max-width: 100%;
-  }
-
   .blockchain-img {
     height: 40px;
   }
@@ -551,15 +573,14 @@
 }
 
 @media screen and (max-width: 950px) {
+  /* unused-snippet */
   .wrapper-collection,
   #nft-data-page-wrapper {
-    /* padding: 0 10px; */
   }
 }
 
 @media screen and (max-width: 900px) {
   .list-button-wrapper {
-    /* width: 100%; */
     margin-left: 0rem;
   }
 
@@ -618,24 +639,19 @@
   }
 }
 
-@media screen and (max-width: 767px) {
-  #nft-data-page-wrapper .single-token-block-img {
-    width: 100%;
-    height: 400px;
+@media screen and (max-width: 845px) {
+  .wrapper-collection {
+    padding-top: 6rem !important;
   }
 
-  #nft-data-page-wrapper .single-token-block-video {
-    width: 400px;
-    height: auto;
+  .main-wrapper {
+    padding-top: 6rem !important;
   }
+}
 
-  .nft-collection .react-player__preview {
-    width: 100% !important;
-    height: 400px !important;
-  }
-
-  #nft-data-page-wrapper .nft-data-content {
-    padding: 30px 15px;
+@media screen and (max-width: 720px) {
+  /* unused-snippet */
+  .description-wrapper:hover {
   }
   .list-button-wrapper {
     justify-content: flex-start;
@@ -691,6 +707,12 @@
     height: calc(15vw + 282px);
     width: calc(15vw + 282px);
   }
+
+  /* unused-snippet */
+  .description-wrapper:hover {
+    /* height: calc(10vw + 200px); */
+    /* top: -40vw; */
+  }
   .list-button-wrapper {
     justify-content: flex-start;
     align-items: center;
@@ -715,6 +737,11 @@
   }
 }
 
+@media screen and (max-width: 620px) {
+  /* unused-snippet */
+  .description-wrapper:hover {
+  }
+}
 @media screen and (max-width: 375px) {
   .nft-item-collection {
     height: calc(10vw + 282px);
@@ -763,9 +790,8 @@ p.general-title {
   h1.general-title {
     font-size: 2rem;
   }
-
+  /* unused-snippet */
   p.general-title {
-    /* font-size: 0.75rem; */
   }
   .select-filters-popup {
     left: 60px;
@@ -839,7 +865,6 @@ p.general-title {
   }
   .category-wrapper {
     width: 520px;
-    /* width: 100%; */
     border: 1px solid var(--charcoal-80);
     border-radius: 16px;
     margin-bottom: 8px;
@@ -854,7 +879,6 @@ p.general-title {
   }
   .container-search {
     width: 520px;
-    /* width: 100%; */
     flex-direction: row;
     justify-content: space-between;
   }
@@ -1046,7 +1070,7 @@ p.general-title {
     height: 290px;
   }
   .main-wrapper {
-    padding-top: 0px;
+    padding-top: 6rem;
   }
 }
 

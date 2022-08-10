@@ -1,3 +1,4 @@
+//@ts-nocheck
 //tools
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';

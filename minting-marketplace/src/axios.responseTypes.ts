@@ -26,6 +26,7 @@ export type TMetadataType = TCheckMetadataOnBlockchain & {
   artist: string;
   description: string;
   external_url?: string;
+  animation_url?: string;
 };
 
 export type TTokenData = {
@@ -62,6 +63,7 @@ export type TFileKeyType = {
 export type TFileType = {
   animatedThumbnail: string;
   author: string;
+  authorPublicAddress: string;
   category: string;
   contract: string;
   creationDate: string;
@@ -118,7 +120,7 @@ export type INftProductOffers = {
   offerIndex: string;
   offerName: string;
   offerPool: string;
-  price: number;
+  price: string;
   product: string;
   range: string[];
   sold: boolean;

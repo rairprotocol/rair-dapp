@@ -1,16 +1,15 @@
 .select-number-container {
   position: relative;
+  margin-right: 16px;
 }
 
 .select-field {
   cursor: pointer;
   width: 288px;
   height: 48px;
-  /* background: #383637; */
   border-radius: 16px;
   border: 1px solid #d37ad6;
   padding: 0 16px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,25 +19,20 @@
   font-size: 20px;
 }
 
-.select-number-arrow {
-  color: #e882d5;
-}
-
 .select-number-popup {
+  flex-wrap: wrap;
   border-radius: 16px;
   position: absolute;
   top: 60px;
-  /* background: #383637; */
   width: auto;
-  padding: 60px 24px 24px 24px;
+  padding: 50px 0px 24px 15px;
   z-index: 1;
   border: 1px solid #d37ad6;
-  grid-gap: 12px;
+  gap: 12px;
   grid-template-columns: 72px 72px 72px 72px;
   overflow-y: auto;
   overflow-x: hidden;
-
-  width: 370px;
+  width: 288px;
   max-height: 456px;
   z-index: 2;
 }
@@ -47,7 +41,6 @@
 }
 .select-number-box.sold-token:hover::after {
   content: attr(data-title);
-  /* font-size: small; */
   position: relative;
   top: -56px;
   left: -5px;
@@ -58,26 +51,27 @@
   border: 1px solid cornflowerblue;
   border-radius: 16px;
 }
-.select-number-popup .select-number-title {
-  top: 10px;
+.select-number-title {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 14px;
   font-size: 20px;
   font-weight: 700;
   line-height: 28px;
   width: 100%;
-  position: absolute;
+  left: 0px;
 }
 
 .select-number-popup .select-number-box {
   cursor: pointer;
-  /* border: 1px solid red; */
   color: #a7a6a6;
   border-radius: 12px;
-  width: 72px;
+  width: 74px;
   height: 32px;
   padding: 4px;
   transition: all 0.1s ease;
-
-  margin-top: 20px;
+  margin-top: 6px;
 }
 
 .select-number-popup .selected-box {
@@ -88,10 +82,6 @@
 .select-number-popup .select-number-box.select-number-box:hover {
   color: #fff;
   background: #d37ad6 !important;
-}
-
-.select-number-popup div:last-child {
-  /* margin-bottom: 0; */
 }
 
 .select-number-popup::-webkit-scrollbar {
@@ -129,35 +119,27 @@
   background: #a46bd9;
 }
 
-.backClose-current-tokens:hover {
+.backClose-list-tokens {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.backClose-list-tokens:hover {
   color: #d37ad6;
 }
 
-@media screen and (max-width: 1330px) {
-  .select-number-popup {
-    width: 100%;
-    grid-template-columns: 72px 72px 72px;
-  }
+.backClose-current-tokens-close-sign {
+  cursor: pointer;
+  padding-right: 17px;
 }
 
-@media screen and (max-width: 653px) {
-  .select-field {
-    width: 80vw;
-  }
-
-  .select-number-popup {
-    grid-template-columns: 25% 25% 25% 25%;
-  }
+.backClose-current-tokens-back-sign {
+  cursor: pointer;
+  padding-left: 18px;
 }
 
-@media screen and (max-width: 460px) {
-  .select-number-popup {
-    grid-template-columns: 30% 30% 30%;
-  }
-}
-
-@media screen and (max-width: 330px) {
-  .select-number-popup {
-    grid-template-columns: 50% 50%;
-  }
+.backClose-current-tokens:hover {
+  color: #d37ad6;
 }

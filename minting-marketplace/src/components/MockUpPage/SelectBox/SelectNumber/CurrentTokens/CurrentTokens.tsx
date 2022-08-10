@@ -1,7 +1,9 @@
-//@ts-nocheck
 import React, { memo } from 'react';
+import { ICurrentTokensComponent } from '../../selectBox.types';
+import { ReactComponent as ArrowDown } from '../../../assets/ArrowDown.svg';
+import { ReactComponent as ArrowUp } from '../../../assets/ArrowUp.svg';
 
-const CurrentTokensComponent = ({
+const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   primaryColor,
   items,
   isBack,
@@ -22,50 +24,41 @@ const CurrentTokensComponent = ({
           className="select-field"
           style={{
             background: `${
-              primaryColor === 'rhyno' ? 'var(--rhyno)' : '#383637'
+              primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
             }`
           }}>
           <div className="number-item">{selectedToken}</div>
-          <div className="select-number-arrow">
-            <i className={`fas fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
-          </div>
+          {isOpen ? (
+            <ArrowUp className="arrow-select" />
+          ) : (
+            <ArrowDown className="arrow-select" />
+          )}
         </div>
         <div
           style={{
-            display: `${isOpen ? 'grid' : 'none'}`,
+            display: `${isOpen ? 'flex' : 'none'}`,
             background: `${
-              primaryColor === 'rhyno' ? 'var(--rhyno)' : '#383637'
+              primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
             }`,
             border: `${primaryColor === 'rhyno' ? '1px solid #D37AD6' : 'none'}`
-            //  overflowY: 'auto',
           }}
           className="select-number-popup">
           <div className="select-number-title">
-            Serial number
-            <span
-              className="backClose-current-tokens"
-              onClick={() => setIsOpen(false)}
-              style={{
-                float: 'right',
-                display: 'inline-block',
-                cursor: 'pointer',
-                paddingRight: '30px'
+            <div
+              className="backClose-current-tokens backClose-current-tokens-back-sign"
+              style={{ visibility: isBack ? 'visible' : 'hidden' }}
+              onClick={() => {
+                setIsOpens?.(false);
+                setIsOpen(false);
               }}>
+              &#8617;
+            </div>
+            <div className="serial-number-title">Serial number</div>
+            <div
+              className="backClose-current-tokens backClose-current-tokens-close-sign"
+              onClick={() => setIsOpen(false)}>
               &#10007;
-            </span>
-            {isBack ? (
-              <span
-                className="backClose-current-tokens"
-                onClick={() => setIsOpens(false)}
-                style={{
-                  float: 'left',
-                  display: 'inline-block',
-                  cursor: 'pointer',
-                  paddingLeft: '30px'
-                }}>
-                &#8617;
-              </span>
-            ) : null}
+            </div>
           </div>
           {items &&
             items.map((el) => {
@@ -79,7 +72,7 @@ const CurrentTokensComponent = ({
                   data-title={` #${el.token}`}
                   style={{
                     background: `${
-                      primaryColor === 'rhyno' ? '#A7A6A6' : 'grey'
+                      primaryColor === 'rhyno' ? '#7A797A' : 'grey'
                     }`,
                     color: `${primaryColor === 'rhyno' ? '#fff' : 'A7A6A6'}`
                   }}

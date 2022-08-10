@@ -1,3 +1,8 @@
+.wrapper-unlockables-page {
+  width: 85vw;
+  margin: 30px auto;
+}
+
 .nft-single-unlockables-page {
   display: flex;
   flex-wrap: wrap;
@@ -141,6 +146,12 @@
   .nft-single-unlockables-page .nft-rarity-wrapper .video-wrapper {
     justify-content: center;
     align-items: center;
+  }
+}
+
+@media screen and (max-width: 845px) {
+  .wrapper-unlockables-page {
+    padding-top: 6rem;
   }
 }
 

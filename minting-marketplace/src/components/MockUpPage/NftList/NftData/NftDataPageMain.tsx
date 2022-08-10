@@ -1,46 +1,29 @@
-//@ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { utils } from 'ethers';
-import Swal from 'sweetalert2';
-import {
-  Accordion,
-  AccordionItem,
-  AccordionItemHeading,
-  AccordionItemButton,
-  AccordionItemPanel
-} from 'react-accessible-accordion';
-import { metamaskCall } from '../../../../utils/metamaskUtils';
-import ItemRank from '../../SelectBox/ItemRank';
-import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
 import ReactPlayer from 'react-player';
-import chainData from '../../../../utils/blockchainData';
 import { useDispatch } from 'react-redux';
 import setDocumentTitle from '../../../../utils/setTitle';
-
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
-import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
-import CustomButton from '../../utils/button/CustomButton';
-import CollectionInfo from './CollectionInfo/CollectionInfo';
 import TitleCollection from './TitleCollection/TitleCollection';
-import NftListUnlockablesVideos from './NftListUnlockablesVideos';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import { gettingPrice } from '../utils/gettingPrice';
-import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
-import LikeButton from '../LikeButton/LikeButton';
+import { INftDataPageMain, TOffersIndexesData } from '../../mockupPage.types';
+import CustomShareButton from './CustomShareButton';
+import { TFileType } from '../../../../axios.responseTypes';
+import EtherscanIconComponent from './EtherscanIconComponent';
+import { ReactComponent as PlayCircle } from '../../assets/PlayCircle.svg';
+import SerialNumberBuySell from './SerialNumberBuySell';
+import { TitleSingleTokenView } from './TitleSingleTokenView';
+import SingleTokenViewProperties from './SingleTokenViewProperties';
+import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
 
-const NftDataPageMain = ({
-  // setTokenData,
-
+const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
   contract,
   currentUser,
-  data,
   handleClickToken,
   product,
-  productsFromOffer,
   primaryColor,
+  productsFromOffer,
   selectedData,
   selectedToken,
   setSelectedToken,
@@ -49,295 +32,47 @@ const NftDataPageMain = ({
   textColor,
   offerData,
   offerDataInfo,
-  offerPrice,
-  userData,
   someUsersData,
-  ownerInfo,
-  getAllProduct
+  ownerInfo
 }) => {
+  const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
+  const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
+  const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const navigate = useNavigate();
 
-  const { minterInstance } = useSelector((state) => state.contractStore);
-  const [playing, setPlaying] = useState(false);
-  const [offersIndexesData, setOffersIndexesData] = useState();
-
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [, /*offersIndexesData*/ setOffersIndexesData] =
+    useState<TOffersIndexesData[]>();
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
   };
   const dispatch = useDispatch();
 
-  function randomInteger(min, max) {
-    const rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
-  }
+  useEffect(() => {
+    setSelectVideo(productsFromOffer[0]);
+  }, [setSelectVideo, productsFromOffer]);
 
-  function percentToRGB(percent) {
-    if (percent) {
-      if (percent < 15) {
-        return '#95F619';
-      } else if (15 <= percent && percent < 35) {
-        return '#F6ED19';
-      } else {
-        return '#F63419';
-      }
+  const checkUrl = useCallback(() => {
+    if (selectedData && selectedData.animation_url) {
+      const fileUrl = selectedData?.animation_url;
+      const parts = fileUrl.split('/').pop()?.split('.');
+      const ext = parts && parts.length > 1 ? parts?.pop() : '';
+      setIsFileUrl(ext);
     }
-  }
+  }, [selectedData, setIsFileUrl]);
 
-  function toUpper(string) {
-    if (string) {
-      return string[0].toUpperCase() + string.slice(1);
-    }
-  }
+  useEffect(() => {
+    checkUrl();
+  }, [checkUrl]);
 
-  function checkPrice() {
-    if (offerPrice.length > 0) {
-      const { maxPrice, minPrice } = gettingPrice(offerPrice);
-
-      if (maxPrice === minPrice) {
-        const samePrice = maxPrice;
-        return `${samePrice} `;
-      }
-      return `${minPrice} – ${maxPrice}`;
-    }
-  }
-
-  // function showLink() {
-  //   //  checks if you are the owner and shows only to the owner
-
-  //   // if (currentUser === tokenData[selectedToken]?.ownerAddress) {
-  //   //   return (
-  //   //     <div>
-  //   //       {tokenData[selectedToken]?.authenticityLink !== "none" ? (
-  //   //         <a href={tokenData[selectedToken]?.authenticityLink}>
-  //   //           {tokenData[selectedToken]?.authenticityLink}
-  //   //         </a>
-  //   //       ) : (
-  //   //         "Not minted yet"
-  //   //       )}
-  //   //     </div>
-  //   //   );
-  //   // } else {
-  //   //   return <span>Not minted yet</span>;
-  //   // }
-
-  //   // shows everyone
-  //   // v1
-  //   // return (
-  //   //   <div>
-  //   //     {tokenData[selectedToken]?.authenticityLink ? (
-  //   //       <a href={tokenData[selectedToken]?.authenticityLink}>
-  //   //         {tokenData[selectedToken]?.authenticityLink}
-  //   //       </a>
-  //   //     ) : (
-  //   //       "Not minted yet"
-  //   //     )}
-  //   //   </div>
-  //   // );
-
-  //   // v2
-  //   // eslint-disable-next-line array-callback-return
-  //   return tokenData.map((el, index) => {
-  //     if (Number(el.token) === Number(selectedToken)) {
-  //       return (
-  //         <a
-  //           className="nftDataPageTest-a-hover"
-  //           key={index}
-  //           href={el?.authenticityLink}
-  //         >
-  //           {el?.authenticityLink}
-  //         </a>
-  //       );
-  //     }
-  //     //   //  else {
-  //     // return <span style={{cursor:"default"}}>Not minted yet</span>;
-  //     //   // }
-  //   });
-
-  //   // if (tokenData[selectedToken]) {
-  //   // eslint-disable-next-line array-callback-return
-  //   //     return tokenData.map((el, index) => {
-  //   //       if (Number(el.token) === Number(selectedToken)) {
-  //   //         return (
-  //   //           <a
-  //   //             className="nftDataPageTest-a-hover"
-  //   //             key={index}
-  //   //             href={el?.authenticityLink}
-  //   //           >
-  //   //             {el?.authenticityLink}
-  //   //           </a>
-  //   //         );
-  //   //       }
-  //   //     });
-  //   //   } else {
-  //   //     return <span style={{ cursor: "default" }}>Not minted yet</span>;
-  //   //   }
-  // }
-
-  const buyContract = async () => {
-    Swal.fire({
-      title: 'Buying token',
-      html: 'Awaiting transaction completion',
-      icon: 'info',
-      showConfirmButton: false
-    });
-    if (
-      await metamaskCall(
-        minterInstance.buyToken(
-          offerData.offerPool,
-          offerData.offerIndex,
-          selectedToken,
-          {
-            value: offerData.price
-          }
-        ),
-        'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
-      )
-    ) {
-      Swal.fire('Success', 'Now, you are the owner of this token', 'success');
-    }
-  };
-
-  function checkOwner() {
-    const price = offerData?.price;
-    // let price = offerData?.price || minPrice;
-    if (
-      currentUser === tokenData[selectedToken]?.ownerAddress &&
-      tokenData[selectedToken]?.isMinted
-    ) {
-      return (
-        <button
-          className="nft-btn-sell"
-          style={{
-            color: `var(--${textColor})`
-          }}>
-          Sell
-        </button>
-      );
-    } else if (tokenData[selectedToken]?.isMinted) {
-      return (
-        <button
-          className="nft-btn-sell"
-          disabled
-          style={{
-            color: `var(--${textColor})`
-          }}>
-          Already sold
-        </button>
-      );
-    }
-    return (
-      <button
-        className="btn rounded-rair btn-stimorol nft-btn-stimorol"
-        disabled={!offerData?.offerPool}
-        onClick={
-          window?.ethereum?.chainId === blockchain
-            ? buyContract
-            : () => CheckEthereumChain(blockchain)
-        }
-        style={{
-          color: `var(--${textColor})`
-        }}>
-        Purchase •{' '}
-        {utils
-          .formatEther(price !== Infinity && price !== undefined ? price : 0)
-          .toString()}{' '}
-        {chainData[blockchain]?.symbol}
-      </button>
+  const goToUnlockables = () =>
+    navigate(
+      `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
     );
-  }
-  // function checkDataOfProperty() {
-  //   if ( selectedData === 'object' && selectedData !== null) {
-  //       if(selectedData.length){
-  //       return selectedData?.attributes.map((item, index) => {
-  //         if (item.trait_type === "External URL") {
-  //           return (
-  //             <div
-  //               key={index}
-  //               className="col-4 my-2 p-1 custom-desc-to-offer"
-  //               style={{
-  //                 color: textColor,
-  //                 textAlign: "center",
-  //               }}
-  //             >
-  //               <span>{item?.trait_type}:</span>
-  //               <br />
-  //               <a
-  //                 style={{ color: textColor }}
-  //                 href={item?.value}
-  //               >
-  //                 {item?.value}
-  //               </a>
-  //             </div>
-  //           );
-  //         }
-  //         const percent = randomInteger(1, 40);
-  //         return (
-  //           <div
-  //             key={index}
-  //             className="col-4 my-2 p-1 custom-desc-to-offer"
-  //           >
-  //             <div className="custom-desc-item">
-  //               <span>{item?.trait_type}:</span>
-  //               <span style={{ color: textColor }}>
-  //                 {item?.value}
-  //               </span>
-  //             </div>
-  //             <div className="custom-offer-percents">
-  //               <span
-  //                 style={{
-  //                   color: percentToRGB(percent),
-  //                 }}
-  //               >
-  //                 {percent}%
-  //               </span>
-  //             </div>
-  //           </div>
-  //         );
-  //       })
-  //       }
-  //   } else {
-  //     if (Object.keys(selectedData).length) {
-  //       return selectedData?.attributes.map((item, index) => {
-  //         if (item.trait_type === "External URL") {
-  //           return (
-  //             <div
-  //               key={index}
-  //               className="col-4 my-2 p-1 custom-desc-to-offer"
-  //               style={{
-  //                 color: textColor,
-  //                 textAlign: "center",
-  //               }}
-  //             >
-  //               <span>{item?.trait_type}:</span>
-  //               <br />
-  //               <a style={{ color: textColor }} href={item?.value}>
-  //                 {item?.value}
-  //               </a>
-  //             </div>
-  //           );
-  //         }
-  //         const percent = randomInteger(1, 40);
-  //         return (
-  //           <div key={index} className="col-4 my-2 p-1 custom-desc-to-offer">
-  //             <div className="custom-desc-item">
-  //               <span>{item?.trait_type}:</span>
-  //               <span style={{ color: textColor }}>{item?.value}</span>
-  //             </div>
-  //             <div className="custom-offer-percents">
-  //               <span
-  //                 style={{
-  //                   color: percentToRGB(percent),
-  //                 }}
-  //               >
-  //                 {percent}%
-  //               </span>
-  //             </div>
-  //           </div>
-  //         );
-  //       });
-  //     }
-  //   }
-  // }
+
+  const handlePlayerClick = () => {
+    setOpenVideoPlayer(true);
+  };
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -386,7 +121,7 @@ const NftDataPageMain = ({
   }, [offerDataInfo]);
 
   return (
-    <div id="nft-data-page-wrapper">
+    <main id="nft-data-page-wrapper">
       <BreadcrumbsView />
       <div>
         <TitleCollection
@@ -394,362 +129,176 @@ const NftDataPageMain = ({
           title={selectedData?.name}
           someUsersData={someUsersData}
           userName={ownerInfo?.owner}
-          currentUser={userData}
         />
         <div className="nft-data-content">
           <div
-            className="nft-collection"
+            className="nft-collection nft-collection-wrapper"
             style={{
-              background: `${
-                primaryColor === 'rhyno' ? 'rgb(191 191 191)' : '#383637'
+              backgroundColor: `${
+                primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
               }`
             }}>
-            <LikeButton />
-            {selectedData?.animation_url ? (
-              <div className="single-token-block-video">
-                <ReactPlayer
-                  width={'100%'}
-                  height={'auto'}
-                  controls
-                  playing={playing}
-                  onReady={handlePlaying}
-                  url={selectedData?.animation_url}
-                  light={
-                    selectedData.image
-                      ? selectedData?.image
-                      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
-                  }
-                  loop={false}
-                  onEnded={handlePlaying}
-                />
-              </div>
-            ) : (
-              <div
-                className="single-token-block-img"
-                style={{
-                  backgroundImage: `url(${
-                    selectedData?.image
-                      ? selectedData.image
-                      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
-                  })`
-                }}></div>
-            )}
-          </div>
-          <div className="main-tab">
-            <div>
-              <div className="collection-label-name">Price range</div>
-              <div className="nft-single-price-range">
-                <img
-                  style={{ width: '24px', transform: 'scale(1.2)' }}
-                  src={`${
-                    data
-                      ? chainData[data?.contract.blockchain]?.image
-                      : chainData[blockchain]?.image
-                  }`}
-                  alt=""
-                />
-                <span
-                  style={{
-                    paddingLeft: '9px',
-                    // marginRight: "3rem",
-                    fontSize: '13px'
-                  }}>
-                  {offerPrice && `${checkPrice()}`}
-                </span>
-                <span
-                  style={{
-                    color: '#E882D5'
-                  }}>
-                  {data
-                    ? chainData[data?.contract.blockchain]?.symbol
-                    : chainData[blockchain]?.symbol}
-                </span>
-              </div>
-            </div>
-            <div>
-              <div className="collection-label-name">Item rank</div>
-              <div>
-                <ItemRank
-                  primaryColor={primaryColor}
-                  items={offersIndexesData}
-                  getAllProduct={getAllProduct}
-                  setSelectedToken={setSelectedToken}
-                  handleClickToken={handleClickToken}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="collection-label-name">Serial number</div>
-              <div>
-                {tokenData.length ? (
-                  <SelectNumber
-                    blockchain={blockchain}
-                    product={product}
-                    contract={contract}
-                    totalCount={totalCount}
-                    handleClickToken={handleClickToken}
-                    selectedToken={selectedToken}
-                    setSelectedToken={setSelectedToken}
-                    items={
-                      tokenData &&
-                      tokenData.map((p) => {
-                        return {
-                          value: p.metadata.name,
-                          id: p._id,
-                          token: p.token,
-                          sold: p.isMinted
-                        };
-                      })
-                    }
-                  />
-                ) : (
-                  <></>
-                )}
-              </div>
-            </div>
+            <EtherscanIconComponent
+              blockchain={blockchain}
+              contract={contract}
+              selectedToken={selectedToken}
+              classTitle={
+                selectedData.animation_url && isFileUrl !== 'gif'
+                  ? 'nft-collection-video-etherscan'
+                  : 'nft-collection-icons'
+              }
+            />
             <div
-              style={{
-                marginTop: '18px'
-              }}>
-              {checkOwner()}
+              className={
+                selectedData.animation_url && isFileUrl !== 'gif'
+                  ? 'nft-videos-wrapper-container'
+                  : 'nft-images-gifs-wrapper'
+              }>
+              <EtherscanIconComponent
+                blockchain={blockchain}
+                contract={contract}
+                selectedToken={selectedToken}
+                classTitle={
+                  selectedData.animation_url && isFileUrl !== 'gif'
+                    ? 'nft-collection-single-video'
+                    : 'nft-collection-icons-media'
+                }
+              />
+              {selectedData?.animation_url ? (
+                isFileUrl === 'gif' ? (
+                  <div
+                    className="single-token-block-img"
+                    style={{
+                      backgroundImage: `url(${
+                        selectedData?.animation_url
+                          ? selectedData.animation_url
+                          : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                      })`
+                    }}></div>
+                ) : (
+                  <div className="single-token-block-video">
+                    <ReactPlayer
+                      width={'100%'}
+                      height={'100%'}
+                      controls
+                      playing={playing}
+                      onReady={handlePlaying}
+                      url={selectedData?.animation_url}
+                      light={
+                        selectedData.image
+                          ? selectedData?.image
+                          : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                      }
+                      loop={false}
+                      playIcon={
+                        <PlayCircle className="play-circle-nft-video" />
+                      }
+                      onEnded={handlePlaying}
+                    />
+                  </div>
+                )
+              ) : (
+                <div
+                  className="single-token-block-img"
+                  style={{
+                    backgroundImage: `url(${
+                      selectedData?.image
+                        ? selectedData.image
+                        : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                    })`
+                  }}></div>
+              )}
             </div>
           </div>
-          <Accordion
-            allowMultipleExpanded
-            preExpanded={['a']} /* allowZeroExpanded allowMultipleExpanded*/
-          >
-            <AccordionItem uuid="a">
-              <AccordionItemHeading>
-                <AccordionItemButton>Description</AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                {selectedData?.artist === 'none' &&
-                selectedData?.description === 'none' &&
-                selectedData?.external_url === 'none' ? (
-                  <div
-                    className=" custom-desc-to-offer-wrapper"
-                    style={{ color: '#A7A6A6', textAlign: 'left' }}>
-                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
-                    <span>Created by </span>
-                    <strong>
-                      {someUsersData !== null
-                        ? someUsersData?.nickName
-                        : ownerInfo?.owner}
-                    </strong>
-                    {/* </div> */}
-                  </div>
-                ) : (
-                  <div className=" custom-desc-to-offer-wrapper">
-                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
-                    <p style={{ color: '#A7A6A6', textAlign: 'left' }}>
-                      {/* {selectedData?.artist? `${toUpper(selectedData?.artist)}#` :'' }  */}
-                      {selectedData?.description}
-                    </p>
-                    {/* </div> */}
-                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
-                    {/* </div> */}
-                    {/* <div className="my-2 px-4 custom-desc-to-offer"> */}
-                    {/* <a
-                        target="_blank"
-                        rel="noreferrer"
-                        href={selectedData?.external_url}
-                      >
-                        {selectedData?.external_url}
-                      </a> */}
-                    {/* </div> */}
-                  </div>
-                )}
-              </AccordionItemPanel>
-            </AccordionItem>
-
-            <AccordionItem uuid="b">
-              <AccordionItemHeading>
-                <AccordionItemButton>Properties</AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                <div className="col-12 row mx-0 box--properties">
-                  {/* {checkDataOfProperty()} */}
-                  {selectedData ? (
-                    Object.keys(selectedData).length &&
-                    // ? selectedData.length &&
-                    selectedData?.attributes.length > 0 ? (
-                      selectedData?.attributes.map((item, index) => {
-                        if (
-                          item.trait_type === 'External URL' ||
-                          item.trait_type === 'external_url'
-                        ) {
-                          return null;
-                          // <div
-                          //   key={index}
-                          //   className="col-4 my-2 p-1 custom-desc-to-offer"
-                          //   style={{
-                          //     cursor: "default",
-                          //     color: textColor,
-                          //     textAlign: "center",
-                          //   }}
-                          // >
-                          //   <span>{item?.trait_type}:</span>
-                          //   <br />
-                          //   <a
-                          //     className="custom-offer-pic-link"
-                          //     style={{ color: textColor }}
-                          //     href={item?.value}
-                          //   >
-                          //     {item?.value.length > 15 ? "..." : ""}
-                          //     {item?.value.substr(
-                          //       item?.value.indexOf("\n") + 19
-                          //     )}
-                          //   </a>
-                          // </div>
-                        }
-                        if (
-                          item.trait_type === 'image' ||
-                          item.trait_type === 'animation_url'
-                        ) {
-                          return (
-                            <div
-                              key={index}
-                              className="col-1 m-1 p-1 px-4 custom-desc-to-offer"
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                color: textColor,
-                                textAlign: 'center'
-                              }}>
-                              <span>
-                                {' '}
-                                <a
-                                  className="custom-offer-pic-link"
-                                  style={{
-                                    color: textColor
-                                  }}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  href={item?.value}>
-                                  {toUpper(item?.trait_type)}
-                                </a>
-                              </span>
-                            </div>
-                          );
-                        }
-                        const percent = randomInteger(1, 40);
-                        return (
-                          <div
-                            key={index}
-                            className="col-1 m-1 p-1 custom-desc-to-offer d-flex flex-column justify-content-center"
-                            style={{ width: '157px' }}>
-                            <div className="custom-desc-item">
-                              <span
-                                className="rtl-overlow-elipsis"
-                                title={toUpper(
-                                  item?.trait_type.toString().toLowerCase()
-                                )}>
-                                {`${item?.trait_type.toUpperCase()} `}
-                              </span>
-                            </div>
-                            <div className="custom-offer-percents">
-                              {/* <span className="rtl-overlow-elipsis" title={toUpper(item?.value.toString().toLowerCase())} */}
-                              {/* > */}
-                              {/* <span className="rtl-overlow-elipsis">  */}
-                              <span
-                                className="text-bold rtl-overlow-elipsis"
-                                title={toUpper(
-                                  item?.value.toString().toLowerCase()
-                                )}>
-                                <span
-                                  style={{
-                                    color: percentToRGB(percent),
-                                    fontSize: '12px'
-                                  }}>
-                                  {percent}%
-                                </span>
-                                :
-                                {`${toUpper(
-                                  item?.value.toString().toLowerCase()
-                                )} `}
-                              </span>
-
-                              {/* </span> */}
-                              {/* </span> */}
-                            </div>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div>{"You don't have any properties"}</div>
-                    )
-                  ) : null}
-                </div>
-              </AccordionItemPanel>
-            </AccordionItem>
-
-            <AccordionItem>
-              <AccordionItemHeading>
-                <AccordionItemButton>This NFT unlocks</AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                <NftListUnlockablesVideos
-                  blockchain={blockchain}
-                  contract={contract}
-                  product={product}
-                  productsFromOffer={productsFromOffer}
-                  selectedData={selectedData}
-                  selectedToken={selectedToken}
+          <SerialNumberBuySell
+            primaryColor={primaryColor}
+            tokenData={tokenData}
+            handleClickToken={handleClickToken}
+            setSelectedToken={setSelectedToken}
+            totalCount={totalCount}
+            blockchain={blockchain}
+            offerData={offerData}
+            product={product}
+            contract={contract}
+            selectedToken={selectedToken}
+            textColor={textColor}
+            currentUser={currentUser}
+          />
+          <div className="properties-title">
+            <TitleSingleTokenView
+              title="Description"
+              primaryColor={primaryColor}
+            />
+          </div>
+          <div
+            className="description-text"
+            style={{
+              color: `${primaryColor === 'rhyno' ? '#383637' : '#A7A6A6'}`
+            }}>
+            {selectedData.description !== 'none' &&
+            selectedData.description !== 'No description available'
+              ? selectedData.description
+              : "This NFT doesn't have any description"}
+          </div>
+          <div className="properties-title">
+            <TitleSingleTokenView
+              title="Properties"
+              primaryColor={primaryColor}
+            />
+          </div>
+          {selectedData.attributes && selectedData.attributes?.length > 0 ? (
+            <SingleTokenViewProperties
+              selectedData={selectedData}
+              textColor={textColor}
+            />
+          ) : (
+            <div className="description-text">
+              This nft doesn&apos;t have any properties
+            </div>
+          )}
+        </div>
+        <div className="this-nft-unlocks">
+          <TitleSingleTokenView
+            title="This NFT unlocks"
+            primaryColor={primaryColor}
+          />
+        </div>
+        {productsFromOffer && productsFromOffer.length !== 0 ? (
+          <>
+            <div
+              className="nft-collection nft-collection-video-wrapper"
+              style={{
+                backgroundColor: `${
+                  primaryColor === 'rhyno' ? 'var(--rhyno-40)' : '#383637'
+                }`
+              }}>
+              <UnlockableVideosSingleTokenPage
+                selectVideo={selectVideo}
+                setSelectVideo={setSelectVideo}
+                productsFromOffer={productsFromOffer}
+                openVideoplayer={openVideoplayer}
+                setOpenVideoPlayer={setOpenVideoPlayer}
+                handlePlayerClick={handlePlayerClick}
+                primaryColor={primaryColor}
+              />
+            </div>
+            <div className="more-unlockables-button-container">
+              <div className="share-button-linear-border more-unlock">
+                <CustomShareButton
+                  title="More Unlockables"
+                  handleClick={goToUnlockables}
                   primaryColor={primaryColor}
+                  isCollectionPathExist={false}
+                  moreUnlockablesClassName={'share-button-more-unlock'}
                 />
-                {productsFromOffer && productsFromOffer.length !== 0 ? (
-                  <CustomButton
-                    onClick={() =>
-                      navigate(
-                        `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
-                      )
-                    }
-                    text="More Unlockables"
-                    width="288px"
-                    height="48px"
-                    textColor={textColor}
-                    primaryColor={primaryColor}
-                    margin={'0 auto'}
-                  />
-                ) : null}
-              </AccordionItemPanel>
-            </AccordionItem>
-
-            <AccordionItem>
-              <AccordionItemHeading>
-                <AccordionItemButton>Collection info</AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                <CollectionInfo
-                  someUsersData={someUsersData}
-                  offerData={offerDataInfo}
-                  blockchain={blockchain}
-                />
-              </AccordionItemPanel>
-            </AccordionItem>
-
-            <AccordionItem>
-              <AccordionItemHeading>
-                <AccordionItemButton>Authenticity</AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel>
-                {/* <div>{showLink()}</div> */}
-                <AuthenticityBlock
-                  ownerInfo={ownerInfo}
-                  tokenData={tokenData}
-                  selectedToken={selectedToken}
-                  selectedData={selectedData}
-                />
-              </AccordionItemPanel>
-            </AccordionItem>
-          </Accordion>
-        </div>
-        <div style={{ maxWidth: '1200px', margin: 'auto' }}>
-          {/* <span style={{}}>More by {tokenData[selectedToken]?.ownerAddress ? tokenData[selectedToken]?.ownerAddress : "User" }</span> */}
-        </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="description-text">{`This nft doesn't have any unlockable videos`}</div>
+        )}
       </div>
-    </div>
+    </main>
   );
 };
 

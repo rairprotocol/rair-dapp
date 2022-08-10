@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react';
 import NftImage from './../../assets/grayman-matrix.png';
 import Nft_1 from './../../assets/monster.jpeg';

@@ -1,18 +1,89 @@
-.share-button {
-  font-size: 20px;
-  padding: 10px 53px;
+.more-unlockables-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 85vw;
+}
+
+.share-button-linear-border {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  background: linear-gradient(
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.62%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  );
+  padding: 1px;
   border-radius: 16px;
-  border: 1px solid #d37ad6;
+}
+
+.more-unlock {
+  width: 288px;
+}
+
+.share-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  height: 46px;
+  border-radius: 16px;
+  border: none;
   transition: 0.3s all ease;
-  color: #fff;
+  padding: 0px;
 }
 
 .share-button:hover {
-  background: var(--stimorol-hover) !important;
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  ) !important;
 }
 
 .share-button:focus {
-  background: var(--stimorol-click) !important;
+  background: linear-gradient(
+    96.34deg,
+    #725bdb 0%,
+    #805fda 10.31%,
+    #8c63da 20.63%,
+    #9867d9 30.94%,
+    #a46bd9 41.25%,
+    #af6fd8 51.56%,
+    #af6fd8 51.56%,
+    #bb73d7 61.25%,
+    #c776d7 70.94%,
+    #d27ad6 80.62%,
+    #dd7ed6 90.31%,
+    #e882d5 100%
+  ) !important;
+}
+
+.share-button-more-unlock {
+  padding: 10px 54px;
 }
 
 .share-pop-up {

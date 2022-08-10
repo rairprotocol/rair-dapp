@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -11,44 +10,37 @@ import { FacebookShareButton, TwitterShareButton } from 'react-share';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { useSelector } from 'react-redux';
 import './SharePopUp.css';
+import { ISharePopUp } from '../../../../mockupPage.types';
+import { RootState } from '../../../../../../ducks';
 
-const SharePopUp = ({
+const SharePopUp: React.FC<ISharePopUp> = ({
   onClose,
   selectedValue,
   open,
   primaryColor,
   selectedData
 }) => {
-  const [copySuccess /*setCopySuccess*/] = useState('Copy link');
+  const [copySuccess /*setCopySuccess*/] = useState<string>('Copy link');
   const currentUrl = document.location.href;
-  const { headerLogo } = useSelector((store) => store.colorStore);
+  const headerLogo = useSelector<RootState, string>(
+    (store) => store.colorStore.headerLogo
+  );
 
   const handleClose = () => {
     onClose(selectedValue);
   };
 
-  // function copyStringToClipboard(str) {
-  //     var el = document.createElement('textarea');
-  //     el.value = str;
-  //     el.setAttribute('readonly', '');
-  //     document.body.appendChild(el);
-  //     el.select();
-  //     document.execCommand('copy');
-  //     document.body.removeChild(el);
-  //     setCopySuccess("Copies");
-  // }
-
   const closePopUp = () => {
-    // copyStringToClipboard(currentUrl);
-    // console.log(currentUrl)
     setTimeout(() => {
       handleClose();
     }, 1000);
   };
 
   const handleCopy = async () => {
-    window.navigator.clipboard.writeText(selectedData.external_url);
-    closePopUp();
+    if (selectedData.external_url) {
+      window.navigator.clipboard.writeText(selectedData.external_url);
+      closePopUp();
+    }
   };
 
   return (
@@ -103,7 +95,7 @@ const SharePopUp = ({
           <TwitterShareButton
             className="share-copy-link"
             url={currentUrl}
-            quote={'Rair tech'}
+            // quote={'Rair tech'} - property quote doesn't exist in the lib
             style={{ display: 'flex' }}>
             <ListItemAvatar>
               <TwitterIcon style={{ color: '#1D9BF0', fontSize: 40 }} />
@@ -122,3 +114,16 @@ const SharePopUp = ({
 };
 
 export default SharePopUp;
+
+//will be used in future
+
+// function copyStringToClipboard(str) {
+//     var el = document.createElement('textarea');
+//     el.value = str;
+//     el.setAttribute('readonly', '');
+//     document.body.appendChild(el);
+//     el.select();
+//     document.execCommand('copy');
+//     document.body.removeChild(el);
+//     setCopySuccess("Copies");
+// }

@@ -1,52 +1,125 @@
-//@ts-nocheck
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import './TitleCollection.css';
 import defaultUser from './../../../assets/defultUser.png';
+import { useParams, useLocation } from 'react-router-dom';
+import {
+  ITitleCollection,
+  TParamsTitleCollection
+} from '../../../mockupPage.types';
+import CustomShareButton from '../CustomShareButton';
 import SharePopUp from './SharePopUp/SharePopUp';
-import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../ducks';
+import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import { ReactComponent as EtherScanCollectionLogo } from '../../../assets/EtherScanCollectionLogo.svg';
+import chainData from '../../../../../utils/blockchainData';
 
-const TitleCollection = ({
+const TitleCollection: React.FC<ITitleCollection> = ({
   title,
   userName,
-  // currentUser,
   someUsersData,
   selectedData
 }) => {
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { contract, tokenId, blockchain } = useParams<TParamsTitleCollection>();
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (state) => state.colorStore.primaryColor
+  );
 
-  const { tokenId } = useParams();
-  const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(0);
+  const location = useLocation();
+
+  const [selectedValue, setSelectedValue] = useState<number>(0);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isCollectionPathExist, setIsCollectionPathExist] =
+    useState<boolean>(false);
+
+  const handleClose = (value: number) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (value) => {
-    setOpen(false);
-    setSelectedValue(value);
+  const handleTitleColor = () => {
+    if (title) {
+      if (title.includes('#')) {
+        const val = title.slice(title.indexOf('#'));
+        return (
+          <>
+            <span>{title.slice(0, title.indexOf('#'))}</span>{' '}
+            <span className="block-title-purple">{val}</span>
+          </>
+        );
+      } else {
+        return title;
+      }
+    }
   };
 
-  // useEffect(() => {}, [currentUser, userName]);
+  const findCollectionPathExist = () => {
+    if (location.pathname.includes('collection')) {
+      setIsCollectionPathExist(true);
+    } else {
+      setIsCollectionPathExist(false);
+    }
+  };
 
-  if (someUsersData) {
-    return (
-      <div className="container-title-collection">
-        <div className="block-title-share">
-          <h2>{title === 'none' ? `#${tokenId}` : title}</h2>
-          <div>
-            <button
-              onClick={handleClickOpen}
-              className="share-button"
-              style={{
-                background: `${
-                  primaryColor === 'rhyno' ? 'var(--stimorol)' : 'none'
-                }`
-              }}>
-              Share
-            </button>
+  useEffect(() => {
+    findCollectionPathExist();
+  });
+
+  return (
+    <div className="title-collection-container">
+      <div className="title-collection-wrapper">
+        <div className="container-title-collection">
+          <div className="block-title-share">
+            <h2
+              className={title && title !== 'none' ? '' : 'block-title-purple'}>
+              {title === 'none' ? `#${tokenId}` : handleTitleColor()}
+            </h2>
+          </div>
+          <div className="block-user-creator">
+            <span>by:</span>
+            <img
+              src={someUsersData?.avatar ? someUsersData.avatar : defaultUser}
+              alt="user"
+            />
+            <h5 style={{ wordBreak: 'break-all' }}>
+              {someUsersData && someUsersData.nickName
+                ? someUsersData.nickName
+                : userName && userName.length > 25
+                ? `${userName.substring(0, 25)}...`
+                : userName}
+            </h5>
+          </div>
+        </div>
+        <div
+          className={
+            isCollectionPathExist
+              ? 'collection-authenticity-link-share'
+              : 'tokens-share'
+          }>
+          {isCollectionPathExist && (
+            <a
+              href={`${
+                blockchain &&
+                chainData[blockchain]?.addChainData.blockExplorerUrls?.[0]
+              }address/${contract}`}
+              target="_blank"
+              rel="noreferrer">
+              <div className="etherscan-icon">
+                <EtherScanCollectionLogo className="etherscan-collection-icon" />
+              </div>
+            </a>
+          )}
+          <div className="share-button-linear-border">
+            <CustomShareButton
+              title="Share"
+              handleClick={handleClickOpen}
+              primaryColor={primaryColor}
+              isCollectionPathExist={isCollectionPathExist}
+            />
             <SharePopUp
               primaryColor={primaryColor}
               selectedValue={selectedValue}
@@ -56,67 +129,17 @@ const TitleCollection = ({
             />
           </div>
         </div>
-        <div className="block-user-creator">
-          <span>by:</span>
-          <img
-            // src={currentUser?.avatar ? currentUser.avatar : defaultUser}
-            src={someUsersData.avatar ? someUsersData.avatar : defaultUser}
-            alt="user"
-          />
-          {/* <h5>{currentUser?.nickName ? currentUser.nickName : userName}</h5> */}
-          <h5 style={{ wordBreak: 'break-all' }}>
-            {someUsersData.nickName ? someUsersData.nickName : userName}
-          </h5>
-        </div>
-        <div className="block-collection-desc">
-          {selectedData && selectedData.description === 'none'
-            ? ''
-            : selectedData.description}
-        </div>
       </div>
-    );
-  } else {
-    return (
-      <div className="container-title-collection">
-        <div className="block-title-share">
-          <h2>{title === 'none' ? `#${tokenId}` : title}</h2>
-          <div>
-            <button
-              onClick={handleClickOpen}
-              className="share-button"
-              style={{
-                background: `${
-                  primaryColor === 'rhyno' ? 'var(--stimorol)' : 'none'
-                }`
-              }}>
-              Share
-            </button>
-            <SharePopUp
-              primaryColor={primaryColor}
-              selectedValue={selectedValue}
-              open={open}
-              onClose={handleClose}
-              selectedData={selectedData}
-            />
+      {isCollectionPathExist &&
+        selectedData &&
+        selectedData.description !== 'none' &&
+        selectedData.description !== 'No description available' && (
+          <div className="block-collection-desc">
+            {selectedData.description}
           </div>
-        </div>
-        <div className="block-user-creator">
-          <span>by:</span>
-          <img src={defaultUser} alt="user" />
-          <h5>
-            {userName && userName.length > 25
-              ? `${userName.substring(0, 25)}...`
-              : userName}
-          </h5>
-        </div>
-        <div className="block-collection-desc">
-          {selectedData && selectedData.description === 'none'
-            ? ''
-            : selectedData.description}
-        </div>
-      </div>
-    );
-  }
+        )}
+    </div>
+  );
 };
 
 export default TitleCollection;

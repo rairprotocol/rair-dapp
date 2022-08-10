@@ -15,10 +15,10 @@ import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
 import './../../GeneralCollectionStyles.css';
 import CustomButton from '../../utils/button/CustomButton';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
+import { setTokenData } from '../../../../ducks/nftData/action';
 
 const NftCollectionPageComponent = ({
   blockchain,
-  // contract,
   currentUser,
   handleClickToken,
   product,
@@ -36,10 +36,8 @@ const NftCollectionPageComponent = ({
   showToken,
   setShowToken,
   isLoading,
-  // data,
   tokenDataFiltered,
   setTokenDataFiltered,
-  setTokenData,
   userData,
   someUsersData,
   offerDataCol,
@@ -115,7 +113,7 @@ const NftCollectionPageComponent = ({
               text={'Clean filter'}
               onClick={() => {
                 setTokenDataFiltered(0);
-                setTokenData(tokenData);
+                dispatch(setTokenData(tokenData));
                 setShow(false);
               }}
             />

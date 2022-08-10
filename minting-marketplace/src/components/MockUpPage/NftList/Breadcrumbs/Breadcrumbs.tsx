@@ -1,32 +1,36 @@
-//@ts-nocheck
-import React, { memo } from 'react';
+import React, { memo, MouseEvent, ReactElement } from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import HomeIcon from '@mui/icons-material/Home';
 import { NavLink } from 'react-router-dom';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { ReactComponent as SingleTokenHome } from '../../assets/singleTokenHome.svg';
+import './Breadcrumbs.css';
+import { RootState } from '../../../../ducks';
+import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
+import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
 
 const BreadcrumbsComponent = () => {
-  const params = useParams();
+  const { blockchain, product, contract } =
+    useParams<TParamsBreadcrumbsComponent>();
   const navigate = useNavigate();
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
-  function handleClick(event) {
+  function handleClick(event: MouseEvent) {
     event.preventDefault();
-    navigate(
-      `/collection/${params.blockchain}/${params.contract}/${params.product}/0`
-    );
+    navigate(`/collection/${blockchain}/${contract}/${product}/0`);
     console.info('You clicked a breadcrumb.');
   }
-  function goToSingleView(event) {
+  function goToSingleView(event: MouseEvent) {
     event.preventDefault();
     navigate(-1);
   }
-  let breadcrumbs = [];
+  let breadcrumbs: ReactElement[] = [];
 
   const { pathname } = useLocation();
   const mode = pathname?.split('/')?.at(1);
@@ -35,19 +39,15 @@ const BreadcrumbsComponent = () => {
     case 'collection':
       breadcrumbs = [
         <NavLink key="1" to="/">
-          <HomeIcon
-            style={{
-              borderRadius: '8px',
-              padding: '2px',
-              background: '#E882D5',
-              color: 'black'
-            }}
-            sx={{ fontSize: 'x-large' }}
-          />
+          <div className="nft-home-icon">
+            <SingleTokenHome width={24} height={24} />
+          </div>
         </NavLink>,
         <Typography
           key="3"
-          color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
+          color={`${
+            primaryColor === 'rhyno' ? 'var(--charcoal)' : 'var(--charcoal-60)'
+          }`}>
           Collection
         </Typography>
       ];
@@ -55,28 +55,24 @@ const BreadcrumbsComponent = () => {
     case 'tokens':
       breadcrumbs = [
         <NavLink key="1" to="/">
-          <HomeIcon
-            style={{
-              borderRadius: '8px',
-              padding: '2px',
-              background: '#E882D5',
-              color: 'black'
-            }}
-            sx={{ fontSize: 'x-large' }}
-          />
+          <div className="nft-home-icon">
+            <SingleTokenHome width={24} height={24} />
+          </div>
         </NavLink>,
 
         <Link
           underline="hover"
           key="2"
-          color="gray"
+          color={`${
+            primaryColor === 'rhyno' ? 'var(--charcoal)' : 'var(--charcoal-60)'
+          }`}
           href="/all"
           onClick={handleClick}>
           Collection
         </Link>,
         <Typography
           key="3"
-          color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
+          color={`${primaryColor === 'rhyno' ? 'var(--charcoal)' : '#FFFFFF'}`}>
           Single Token
         </Typography>
       ];
@@ -84,15 +80,9 @@ const BreadcrumbsComponent = () => {
     case 'unlockables':
       breadcrumbs = [
         <NavLink key="1" to="/">
-          <HomeIcon
-            style={{
-              borderRadius: '8px',
-              padding: '2px',
-              background: '#E882D5',
-              color: 'black'
-            }}
-            sx={{ fontSize: 'x-large' }}
-          />
+          <div className="nft-home-icon">
+            <SingleTokenHome width={24} height={24} />
+          </div>
         </NavLink>,
 
         <Link
@@ -122,9 +112,9 @@ const BreadcrumbsComponent = () => {
   }
 
   return (
-    <Stack style={{ marginBottom: '2rem' }} spacing={2}>
+    <Stack spacing={2} className="breadcrumbs-container">
       <Breadcrumbs
-        color="white"
+        color="var(--charcoal-80)"
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb">
         {breadcrumbs}

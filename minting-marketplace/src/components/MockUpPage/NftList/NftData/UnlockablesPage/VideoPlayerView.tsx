@@ -116,7 +116,11 @@ const VideoPlayerView: React.FC<IVideoPlaterView> = ({
       {productsFromOffer?.length ? (
         <div className={cl.SingleVideoWrapper}>
           {openVideoplayer ? (
-            <NftVideoplayer selectVideo={selectVideo} />
+            <NftVideoplayer
+              selectVideo={selectVideo}
+              width="40vw"
+              height="406px"
+            />
           ) : (
             <div
               onClick={() => setOpenVideoplayer(true)}

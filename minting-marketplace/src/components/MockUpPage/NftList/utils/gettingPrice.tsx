@@ -1,7 +1,12 @@
 //@ts-nocheck
 import { utils } from 'ethers';
 
-export const gettingPrice = (arr: Array<any>) => {
+export type TGettingPriceReturnType = {
+  maxPrice: string;
+  minPrice: string;
+};
+
+export const gettingPrice = (arr: Array<any>): TGettingPriceReturnType => {
   if (Array.isArray(arr) && arr.length) {
     const minPrice = function arrayMin(arr) {
       let len = arr.length,
