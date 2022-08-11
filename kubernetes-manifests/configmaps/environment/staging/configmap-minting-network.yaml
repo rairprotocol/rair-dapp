@@ -11,3 +11,4 @@ data:
   REACT_APP_HOME_PAGE: /
   REACT_APP_GOOGLE_ANALYTICS: unknown_development_build
   REACT_APP_GA_NAME: unknown_development_build
+  REACT_APP_UPLOAD_PROGRESS_HOST: http://rairnode:5000

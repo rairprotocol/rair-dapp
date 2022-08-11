@@ -179,6 +179,8 @@ services:
       - 80:80
     networks:
       - rair-local
+    depends_on:
+      - rairnode
 networks:
   rair-local:
     driver: bridge
