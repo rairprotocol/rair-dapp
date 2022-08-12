@@ -66,7 +66,7 @@ const { MongoClient } = require('mongodb');
   await db.collection('SyncRestriction').createIndex({ blockchain: 1, contractAddress: 1 }, { background: true, unique: true });
 
   await db.collection('Transaction').dropIndexes();
-  await db.collection('Transaction').createIndex({ _id: 1, blockchainId: 1 }, { background: true, uniquer: true });
+  await db.collection('Transaction').createIndex({ _id: 1, blockchainId: 1 }, { background: true, unique: true });
 
   console.log('Completed Database Indexes');
 

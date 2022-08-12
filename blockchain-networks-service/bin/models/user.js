@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { nanoid } = require('nanoid');
-const _ = require('lodash');
 
 const { Schema } = mongoose;
 
@@ -16,49 +15,53 @@ const User = new Schema({
   creationDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
-User.pre('save', function (next) {
+User.pre('save', function signNickName(next) {
   if (!this.nickName) {
     this.nickName = this.publicAddress;
   }
   next();
 });
 
-User.pre('findOneAndUpdate', function (next) {
+User.pre('findOneAndUpdate', function updateNickName(next) {
   if (this.getUpdate().nickName) {
     this.getUpdate().nickName = `@${this.getUpdate().nickName}`;
   }
   next();
 });
-
 User.statics = {
-  searchPartial: async function (filter, { sortBy, direction }) {
-    const filters = _.omit(filter, 'query');
-    const reg = new RegExp(_.get(filter, 'query', ''), "gi");
-
-    return this.find({
-      $or: [
-        { publicAddress: reg },
-        { nickName: reg },
-      ],
-      ...filters,
-    }, { adminNFT: 0, nonce: 0 }, { sort: { [sortBy]: direction } });
+  async textSearch(searchQuery, projection, limit, page) {
+    return this.find(searchQuery, projection)
+      .limit(limit)
+      .skip(limit * (page - 1));
   },
-
-  searchFull: async function (filter, { sortBy, direction }) {
-    const filters = _.omit(filter, 'query');
-
-    return this.find({
-      $text: { $search: _.get(filter, 'query', ''), $caseSensitive: false },
-      ...filters,
-    }, { adminNFT: 0, nonce: 0 }, { sort: { [sortBy]: direction } });
-  },
-
-  search: async function (filter, options = { sortBy: 'nickName', direction: 1 }) {
-    return this.searchFull(filter, options)
-      .then((data) => {
-        if (!data.length || data.length === 0) return this.searchPartial(filter, options);
+  async search(
+    textParam,
+    projection = { _id: 1, avatar: 1, nickName: 1 },
+    limit = 4,
+    page = 1,
+  ) {
+    // eslint-disable-next-line no-param-reassign
+    if (limit > 100) limit = 100;
+    // eslint-disable-next-line no-param-reassign
+    if (page < 0) page = 0;
+    let searchQuery = {
+      $text: {
+        $search: `"${textParam}"`,
+        $language: 'en',
+        $caseSensitive: false,
+      },
+    };
+    return this.textSearch(searchQuery, projection, limit, page).then(
+      (data) => {
+        if (!data.length || data.length === 0) {
+          searchQuery = {
+            nickName: { $regex: `.*${textParam}.*`, $options: 'i' },
+          };
+          return this.textSearch(searchQuery, projection, limit, page);
+        }
         return data;
-      });
+      },
+    );
   },
 };
 

@@ -16,7 +16,10 @@ const {
 	metadataForProduct,
 	updateOfferClassic,
 	updateDiamondRange,
-	metadataForContract
+	metadataForContract,
+	handleResaleOffer,
+	updateResaleOffer,
+	registerCustomSplits
 } = require('./eventCatcherUtils');
 
 const ethers = require('ethers');
@@ -28,7 +31,8 @@ const {
 	diamondMarketplaceAbi,
 	diamondFactoryAbi,
 	classicDeprecatedEvents,
-	diamondDeprecatedEvents
+	diamondDeprecatedEvents,
+	resaleMarketplaceEvents
 } = require('../integrations/ethers/contracts');
 
 const findContractFromAddress = async (address, network, transactionReceipt, dbModels) => {
@@ -70,6 +74,11 @@ const insertionMapping = {
 	RangeLocked: insertLock,
 	UpdatedOffer: updateOfferClassic,
 	SoldOut: null,
+
+	// Resale Marketplace
+    OfferStatusChange: handleResaleOffer,
+    UpdatedOfferPrice: updateResaleOffer,
+    CustomRoyaltiesSet: registerCustomSplits
 };
 
 const getContractEvents = (abi, isDiamond = false) => {
@@ -107,6 +116,8 @@ const masterMapping = {
 	
 	...getContractEvents(classicDeprecatedEvents, false),
 	...getContractEvents(diamondDeprecatedEvents, true),
+
+	...getContractEvents(resaleMarketplaceEvents, false),
 }
 
 const processLog = (event) => {

@@ -57,9 +57,9 @@ async function main() {
       Task: _mongoose.model('Task', require('./models/task'), 'Task'),
       SyncRestriction: _mongoose.model('SyncRestriction', require('./models/syncRestriction'), 'SyncRestriction'),
       Transaction: _mongoose.model('Transaction', require('./models/transaction.js'), 'Transaction'),
-      TokenMetadata: _mongoose.model('TokenMetadata', require('./models/tokenMetadata.js'), 'TokenMetadata'),
-      MetadataLink: _mongoose.model('MetadataLink', require('./models/metadataLink.js'), 'MetadataLink'),
       PastAddress: _mongoose.model('PastAddress', require('./models/pastAddress.js'), 'PastAddress'),
+      ResaleTokenOffer: _mongoose.model('ResaleTokenOffer', require('./models/resaleTokenOffer.js'), 'ResaleTokenOffer'),
+      CustomRoyaltiesSet: _mongoose.model('CustomRoyaltiesSet', require('./models/customRoyaltiesSet.js'), 'CustomRoyaltiesSet')
     },
     mongo: _db,
     config

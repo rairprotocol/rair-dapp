@@ -100,6 +100,13 @@ module.exports = async (context) => {
             .toDate())
           .save()
         break;
+        case AgendaTaskEnum.SyncDiamondMarketplaceEvents:
+          await agenda.create(AgendaTaskEnum.SyncResaleMarketplaceEvents, data)
+            .schedule(moment()
+              .utc()
+              .toDate())
+            .save()
+          break;
       default:
         break;
     }

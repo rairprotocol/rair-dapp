@@ -2,7 +2,7 @@ const Moralis = require('moralis/node');
 const log = require('../utils/logger')(module);
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
-const { processLog, wasteTime, getTransactionHistory } = require('../utils/logUtils.js');
+const { wasteTime, getTransactionHistory } = require('../utils/logUtils.js');
 const { BigNumber } = require('ethers');
 
 const lockLifetime = 1000 * 60 * 5;

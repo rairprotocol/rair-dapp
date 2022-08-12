@@ -12,6 +12,9 @@ const insertDiamondRange = require('./insertDiamondRange');
 const metadataForToken = require('./metadataForToken');
 const metadataForProduct = require('./metadataForProduct');
 const metadataForContract = require('./metadataForContract');
+const handleResaleOffer = require("./handleResaleOffer");
+const registerCustomSplits = require("./insertCustomResaleSplits");
+const updateResaleOffer = require("./updateResaleOffer");
 
 module.exports = {
   updateDiamondRange,
@@ -28,4 +31,7 @@ module.exports = {
   metadataForToken,
   metadataForProduct,
   metadataForContract,
+  handleResaleOffer,
+  registerCustomSplits,
+  updateResaleOffer
 };

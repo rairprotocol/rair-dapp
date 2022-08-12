@@ -85,6 +85,7 @@ services:
       BINANCE_MAINNET_MINTER_ADDRESS: ${binance_mainnet_minter_address}
       GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
       GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
+      GOERLI_RESALE_ADDRESS: ${goerli_resale_address}
       MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
       MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
       MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}

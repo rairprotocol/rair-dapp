@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const _ = require("lodash");
+const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const { Schema } = mongoose;
 
@@ -31,13 +31,13 @@ const File = new Schema(
 
     creationDate: { type: Date, default: Date.now },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 File.statics = {
-  searchPartial: async function (filter, { sortBy, direction }) {
-    const filters = _.omit(filter, "query");
-    const reg = new RegExp(_.get(filter, "query", ""), "gi");
+  async searchPartial(filter, { sortBy, direction }) {
+    const filters = _.omit(filter, 'query');
+    const reg = new RegExp(_.get(filter, 'query', ''), 'gi');
 
     return this.find(
       {
@@ -45,27 +45,26 @@ File.statics = {
         ...filters,
       },
       { key: 0 },
-      { sort: { [sortBy]: direction } }
+      { sort: { [sortBy]: direction } },
     );
   },
 
-  searchFull: async function (filter, { sortBy, direction }) {
-    const filters = _.omit(filter, "query");
+  async searchFull(filter, { sortBy, direction }) {
+    const filters = _.omit(filter, 'query');
 
     return this.find(
       {
-        $text: { $search: _.get(filter, "query", ""), $caseSensitive: false },
+        $text: { $search: _.get(filter, 'query', ''), $caseSensitive: false },
         ...filters,
       },
       { key: 0 },
-      { sort: { [sortBy]: direction } }
+      { sort: { [sortBy]: direction } },
     );
   },
 
-  search: async function (filter, options = { sortBy: "title", direction: 1 }) {
+  async search(filter, options = { sortBy: 'title', direction: 1 }) {
     return this.searchFull(filter, options).then((data) => {
-      if (!data.length || data.length === 0)
-        return this.searchPartial(filter, options);
+      if (!data.length || data.length === 0) return this.searchPartial(filter, options);
       return data;
     });
   },

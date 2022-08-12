@@ -10,5 +10,6 @@ exports.AgendaTaskEnum = Object.freeze({
   SyncClassicMarketplaceEvents: "sync classic minter logs",
   SyncDiamondContracts: "sync diamond contracts",
   SyncAllDiamond721Events: "sync all diamond 721 logs",
-  SyncDiamondMarketplaceEvents: "sync diamond marketplace logs"
+  SyncDiamondMarketplaceEvents: "sync diamond marketplace logs",
+  SyncResaleMarketplaceEvents: "sync resale marketplace logs"
 });

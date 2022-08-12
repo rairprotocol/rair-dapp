@@ -49,6 +49,9 @@ const handleMetadataForToken = async (
   if (tokenInstance.isMetadataPinned && tokenInstance.metadataURI !== 'none') {
     // regex check for valid URI -> tokenInstance.metadataURI
     if (_.get(tokenInstance.metadata, 'name')) {
+      if (tokenInstance.metadata.image === '') {
+        tokenInstance.metadata.image = 'none';
+      }
       return tokenInstance;
     }
     // TODO: else {throw / log have URI and meta not populated}
@@ -96,7 +99,11 @@ const handleMetadataForToken = async (
       `New token has Metadata from the database! Pinned with CID: ${CID}`,
     );
   } else {
-    log.info(`Minted token ${tokenInstance}has no metadata!`);
+    log.info(`Minted token ${tokenInstance} has no metadata!`);
+  }
+
+  if (tokenInstance.metadata.image === '') {
+    tokenInstance.metadata.image = 'none';
   }
 
   return tokenInstance;
@@ -239,6 +246,140 @@ const insertTokenDiamond = async (
 };
 
 module.exports = {
+  handleResaleOffer: async (
+    dbModels,
+    chainId,
+    transactionReceipt,
+    diamondEvent,
+    operator,
+    tokenAddress,
+    tokenId,
+    price,
+    status,
+    tradeid,
+  ) => {
+    const contract = await findContractFromAddress(
+      tokenAddress,
+      chainId,
+      transactionReceipt,
+      dbModels,
+    );
+
+    if (!contract) {
+      return;
+    }
+
+    const token = await dbModels.MintedToken.findOne({
+      contract: contract._id,
+      uniqueIndexInContract: tokenId,
+    });
+
+    if (!token) {
+      return;
+    }
+
+    let offer = await dbModels.ResaleTokenOffer.findOne({
+      contract: contract._id,
+      tokenId,
+      tradeid,
+      status: 0,
+    });
+
+    if (offer) {
+      switch (status.toString()) {
+        case '1':
+          console.log('OFFER CLOSED');
+          break;
+        case '2':
+          console.log('OFFER CANCELLED');
+          break;
+        default:
+          console.log('Unsupported status', status);
+          return undefined;
+      }
+      offer.status = status;
+    } else {
+      offer = await new dbModels.ResaleTokenOffer({
+        operator,
+        contract: contract._id,
+        tokenId,
+        price,
+        status,
+        tradeid,
+      });
+    }
+    await offer.save();
+    return offer;
+  },
+  updateResaleOffer: async (
+    dbModels,
+    chainId,
+    transactionReceipt,
+    diamondEvent,
+    offerId,
+    contractAddress,
+    oldPrice,
+    newPrice,
+  ) => {
+    const contract = await findContractFromAddress(
+      contractAddress,
+      chainId,
+      transactionReceipt,
+      dbModels,
+    );
+
+    const foundOffer = await dbModels.ResaleTokenOffer.findOne({
+      tradeid: offerId,
+      contract: contract._id,
+    });
+
+    if (foundOffer) {
+      foundOffer.price = newPrice;
+      await foundOffer.save();
+    } else {
+      log.error(
+        `[${chainId}] Error updating resale offer, couldn't find offer for contract ${contractAddress}`,
+      );
+    }
+  },
+  registerCustomSplits: async (
+    dbModels,
+    chainId,
+    transactionReceipt,
+    diamondEvent,
+    contractAddress,
+    recipients,
+    remainderForSeller,
+  ) => {
+    const contract = await findContractFromAddress(
+      contractAddress,
+      chainId,
+      transactionReceipt,
+      dbModels,
+    );
+
+    if (!contract) {
+      return;
+    }
+
+    const foundCustomSplit = await dbModels.CustomRoyaltiesSet.findOne({
+      contract: contract._id,
+    });
+
+    if (foundCustomSplit) {
+      foundCustomSplit.recipients = recipients;
+      foundCustomSplit.remainderForSeller = remainderForSeller;
+      foundCustomSplit.save();
+      // console.log('Updated customSplits', foundCustomSplit);
+    } else {
+      new dbModels.CustomRoyaltiesSet({
+        contract: contract._id,
+        recipients,
+        remainderForSeller,
+      }).save();
+      // console.log('New customSplits for ', chainId, contractAddress);
+    }
+  },
   updateDiamondRange: async (
     dbModels,
     chainId,
