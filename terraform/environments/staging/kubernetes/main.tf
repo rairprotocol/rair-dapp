@@ -23,7 +23,9 @@ module "kubernetes_infra" {
   source                                   = "../../../modules/kubernetes_infra"
   gcp_project_id                           = "rair-market-staging"
   region                                   = "us-west1"
+  pull_secret_name                         = "regcred"
   rairnode_configmap_data                  = local.rairnode_configmap
   minting_network_configmap_data           = local.minting_network_configmap
   blockchain_event_listener_configmap_data = local.blockchain_event_listener_configmap
+  media_service_configmap_data             = local.media_service_configmap
 }

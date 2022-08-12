@@ -57,7 +57,7 @@ const getMongoConnectionStringURI = ({
       // TODO:
       // delete temp file?? when?
 
-      const certMongoUri = `mongodb+srv://${mongoConfig.MONGO_DB_HOSTNAME}/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&tls=true&tlsCertificateKeyFile=${certTempFile}`
+      const certMongoUri = `mongodb+srv://${mongoConfig.MONGO_DB_HOSTNAME}/${mongoConfig.MONGO_DB_NAME}?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&tls=true&tlsCertificateKeyFile=${certTempFile}`
       resolve(certMongoUri);
     });
   } else {

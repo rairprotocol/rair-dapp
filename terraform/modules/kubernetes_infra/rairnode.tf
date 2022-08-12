@@ -6,7 +6,8 @@ locals {
   rairnode_persistent_volume_claim_name_1 = "rairnode-claim1"
   rairnode_persistent_storage_name_0 = "rairnode-claim0"
   rairnode_persistent_storage_name_1 = "rairnode-claim1"
-  rairnode_image = "rairtechinc/rairservernode:dev_2.103"
+  # rairnode_image = "rairtechinc/rairservernode:dev_2.103"
+  rairnode_image = "rairtechinc/rairservernode:90388dafbdc70263f019e817a5418316e178ed12"
   rair_ingress_name = "rair-ingress"
   rairnode_configmap_name = "rairnode-env"
 }
@@ -117,7 +118,7 @@ resource "kubernetes_deployment" "rairnode" {
         container {
           image = local.rairnode_image
           name  = local.rairnode_namespace
-          
+
           resources {
             limits = {
               cpu    = "0.5"
@@ -137,62 +138,8 @@ resource "kubernetes_deployment" "rairnode" {
               name = local.rairnode_configmap_name
            }
           }
-          env {
-            name = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
-                key = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
-              }
-            }
-          }
-          env {
-            name = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
-                key = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
-              }
-            }
-          }
-          env {
-            name = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.jwt-secret.secret_name
-                key = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
-              }
-            }
-          }
-          env {
-            name = "GCP_CREDENTIALS"
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.rair-file-manager.secret_name
-                key = var.namespace_secrets.default.env_secrets.rair-file-manager.env_reference_name
-              }
-            }
-          }
-          env{
-            name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
-                key = var.namespace_secrets.default.env_secrets.moralis-master-key-main.env_reference_name
-              }
-            }
-          }
 
-          env{
-            name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
-                key = var.namespace_secrets.default.env_secrets.moralis-master-key-test.env_reference_name
-              }
-            }
-          }
-           volume_mount {
+          volume_mount {
             name       = local.rairnode_persistent_volume_claim_name_0
             mount_path = "/usr/local/src/db"
           }

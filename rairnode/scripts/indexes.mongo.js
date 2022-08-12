@@ -1,10 +1,32 @@
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
+const {
+  appSecretManager,
+  vaultAppRoleTokenManager
+} = require('../bin/vault');
+const {
+  getMongoConnectionStringURI
+} = require('../bin/shared_backend_code_generated/mongo/mongoUtils');
+const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoConfig');
 
 (async function () {
+
+  // Login with vault app role creds first
+  await vaultAppRoleTokenManager.initialLogin();
+
+  // Get app secrets from Vault
+  await appSecretManager.getAppSecrets({
+    vaultToken: vaultAppRoleTokenManager.getToken(),
+    listOfSecretsToFetch: [
+      mongoConfig.VAULT_MONGO_x509_SECRET_KEY,
+    ],
+  });
+    
   console.log('Running Database Indexes');
 
-  const client = await MongoClient.connect(process.env.PRODUCTION === 'true' ? process.env.MONGO_URI : process.env.MONGO_URI_LOCAL, {
+  const mongoConnectionString = await getMongoConnectionStringURI({appSecretManager});
+  
+  const client = await MongoClient.connect(mongoConnectionString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

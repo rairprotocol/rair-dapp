@@ -1,5 +1,7 @@
 locals {
   vault_url = "https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200"
+  MONGO_DB_NAME = "app"
+  MONGO_DB_HOSTNAME = "primary-pri.ahxui.mongodb.net"
 
   rairnode_configmap = {
     PRODUCTION: "true",
@@ -42,11 +44,11 @@ locals {
     SESSION_SECRET: "testsecret",
     SESSION_TTL: "12"
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
-    MONGO_DB_HOSTNAME: "primary-pri.ahxui.mongodb.net"
-    MONGO_DB_NAME: "test",
+    MONGO_DB_HOSTNAME: local.MONGO_DB_HOSTNAME,
+    MONGO_DB_NAME: local.MONGO_DB_NAME,
     USE_X509_CERT_AUTH: true,
     GCP_PROJECT_ID: local.gcp_project_id,
-    VAULT_URL: local.vault_url,
+    VAULT_URL: local.vault_url
   }
 
   minting_network_configmap = {
@@ -104,8 +106,8 @@ locals {
     MORALIS_MASTER_KEY_TEST: "",
     MORALIS_MASTER_KEY_MAIN: "",
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true,
-    MONGO_DB_HOSTNAME: "primary-pri.ahxui.mongodb.net",
-    MONGO_DB_NAME: "test",
+    MONGO_DB_HOSTNAME: local.MONGO_DB_HOSTNAME,
+    MONGO_DB_NAME: local.MONGO_DB_NAME,
     USE_X509_CERT_AUTH: true,
     VAULT_URL: local.vault_url,
   }
@@ -150,8 +152,8 @@ locals {
     SESSION_SECRET: "testsecret",
     SESSION_TTL: "12"
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
-    MONGO_DB_HOSTNAME: "primary-pri.ahxui.mongodb.net"
-    MONGO_DB_NAME: "test",
+    MONGO_DB_HOSTNAME: local.MONGO_DB_HOSTNAME,
+    MONGO_DB_NAME: local.MONGO_DB_NAME,
     USE_X509_CERT_AUTH: true,
     VAULT_URL: local.vault_url,
     VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9",

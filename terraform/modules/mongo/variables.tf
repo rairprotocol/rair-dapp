@@ -13,3 +13,7 @@ variable "dev_team_db_admins" {
 
   default = {}
 }
+
+variable "primary_cluster_name" {
+  type = string
+}

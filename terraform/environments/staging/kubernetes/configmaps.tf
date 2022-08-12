@@ -1,5 +1,8 @@
 locals {
+  vault_url = "https://primary-staging-public-vault-f709a5a3.9b077395.z1.hashicorp.cloud:8200"
+  mongo_db_hostname = "primary-pri.cdzdt.mongodb.net"
   rairnode_configmap = {
+    
     PRODUCTION: "true",
     PINATA_KEY: "aaa581a498f99ed85279",
     ADMIN_NETWORK: "matic",
@@ -32,10 +35,15 @@ locals {
     BINANCE_MAINNET_RPC: "https://bsc-dataseed.binance.org/",
     MONGO_LOG_COLLECTION: "Log",
     LOG_LEVEL: "debug",
-    REDIS_HOST: "rair-redis",
-    REDIS_PORT: "6379",
+    # REDIS_HOST: "rair-redis",
+    # REDIS_PORT: "6379",
     SESSION_SECRET: "testsecret",
-    SESSION_TTL: "12"
+    SESSION_TTL: "12",
+    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
+    MONGO_DB_HOSTNAME: local.mongo_db_hostname,
+    MONGO_DB_NAME: "test",
+    USE_X509_CERT_AUTH: true,
+    VAULT_URL: local.vault_url,
   }
 
   minting_network_configmap = {
@@ -75,5 +83,53 @@ locals {
     ETHEREUM_MAINNET_MINTER_ADDRESS: "0x0Ce668D271b8016a785Bf146e58739F432300B12",
     SYNC_CONTRACT_REPEAT_EVERY: "5",
     SYNC_CONTRACT_TASK_INTERVAL: "5"
+  }
+  media_service_configmap = {
+    PRODUCTION: "true",
+    PINATA_KEY: "aaa581a498f99ed85279",
+    ADMIN_NETWORK: "matic",
+    ADMIN_CONTRACT: "0xe5a9efb29b82517166fcef23722452543b5f380f",
+    INFURA_PROJECT_ID: "92a88973a28d41318792f77451db4c5b",
+    SERVICE_HOST: "dev.rair.market",
+    DEFAULT_PRODUCT_COVER: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW",
+    GCP_PROJECT_ID: "rair-market",
+    GCP_IMAGE_BUCKET_NAME: "rair_images",
+    GCP_VIDEO_BUCKET_NAME: "rair-videos",
+    GCP_GATEWAY: "https://storage.googleapis.com",
+    IPFS_SERVICE: "pinata",
+    IPFS_GATEWAY: "http://rairipfs:8080/ipfs",
+    PINATA_GATEWAY: "https://rair.mypinata.cloud/ipfs",
+    BINANCE_FACTORY_ADDRESS: "0xb173E2F7eD8Bb697e70b02Ed38faaa2319dB3C23",
+    BINANCE_MINTER_ADDRESS: "0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD",
+    GOERLI_FACTORY_ADDRESS: "0xF9DC1787179c1404910adE194A5087cEbD5c4717",
+    GOERLI_MINTER_ADDRESS: "0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5",
+    MATIC_MUMBAI_FACTORY_ADDRESS: "0xB8083810Fa33e7Ebd777c8cd6eBB453948aFd354",
+    MATIC_MUMBAI_MINTER_ADDRESS: "0x4594D508cDa05D016571082d467889f4629e1f56",
+    MATIC_MAINNET_FACTORY_ADDRESS: "0x9bB24e68d952Ab872b0421297E0cda8D89B2390B",
+    MATIC_MAINNET_MINTER_ADDRESS: "0x781F15a23506CF28539EA057e3f33008E6339E49",
+    ETHEREUM_MAINNET_FACTORY_ADDRESS: "0xC9eF9902fa24923A17326aDdb7da0E67fF46692a",
+    ETHEREUM_MAINNET_MINTER_ADDRESS: "0x0Ce668D271b8016a785Bf146e58739F432300B12",
+    MATIC_TESTNET_RPC: "https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b",
+    MATIC_MAINNET_RPC: "https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b",
+    ETHEREUM_MAINNET_RPC: "https://mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b",
+    ETHEREUM_TESTNET_GOERLI_RPC: "https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b",
+    BINANCE_TESTNET_RPC: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+    BINANCE_MAINNET_RPC: "https://bsc-dataseed.binance.org/",
+    MONGO_LOG_COLLECTION: "Log",
+    LOG_LEVEL: "debug",
+    MORALIS_SERVER_TEST: "https://ldz2lkdhowt1.usemoralis.com:2053/server",
+    MORALIS_SERVER_MAIN: "https://y14jhwis7uao.moralishost.com:2053/server",
+    MORALIS_API_KEY_TEST: "1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn",
+    MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
+    MORALIS_MASTER_KEY_TEST: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
+    SESSION_SECRET: "testsecret",
+    SESSION_TTL: "12"
+    GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
+    MONGO_DB_HOSTNAME: local.mongo_db_hostname,
+    MONGO_DB_NAME: "test",
+    USE_X509_CERT_AUTH: true,
+    VAULT_URL: local.vault_url,
+    VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9",
+    VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: "dcb29f8c-58c4-b5a0-a0eb-63624a594291"
   }
 }

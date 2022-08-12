@@ -14,7 +14,7 @@ resource "mongodbatlas_database_user" "rairnode" {
   }
   
   scopes {
-    name   = var.primary_db_name
+    name   = var.primary_cluster_name
     type = "CLUSTER"
   }
 }
@@ -31,7 +31,7 @@ resource "mongodbatlas_database_user" "blockchain_network_509" {
   }
   
   scopes {
-    name   = var.primary_db_name
+    name   = var.primary_cluster_name
     type = "CLUSTER"
   }
 }

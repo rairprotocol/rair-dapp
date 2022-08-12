@@ -91,61 +91,61 @@ resource "kubernetes_deployment" "media_service" {
               name = local.media_service_configmap_name
            }
           }
-          env {
-            name = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
-                key = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
-              }
-            }
-          }
-          env {
-            name = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
-                key = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
-              }
-            }
-          }
-          env {
-            name = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.jwt-secret.secret_name
-                key = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
-              }
-            }
-          }
-          env {
-            name = "GCP_CREDENTIALS"
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.rair-file-manager.secret_name
-                key = var.namespace_secrets.default.env_secrets.rair-file-manager.env_reference_name
-              }
-            }
-          }
-          env{
-            name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
-                key = var.namespace_secrets.default.env_secrets.moralis-master-key-main.env_reference_name
-              }
-            }
-          }
+          # env {
+          #   name = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
+          #   value_from {
+          #     secret_key_ref {
+          #       name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
+          #       key = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
+          #     }
+          #   }
+          # }
+          # env {
+          #   name = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
+          #   value_from {
+          #     secret_key_ref {
+          #       name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
+          #       key = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
+          #     }
+          #   }
+          # }
+          # env {
+          #   name = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
+          #   value_from {
+          #     secret_key_ref {
+          #       name = var.namespace_secrets.default.env_secrets.jwt-secret.secret_name
+          #       key = var.namespace_secrets.default.env_secrets.jwt-secret.env_reference_name
+          #     }
+          #   }
+          # }
+          # env {
+          #   name = "GCP_CREDENTIALS"
+          #   value_from {
+          #     secret_key_ref {
+          #       name = var.namespace_secrets.default.env_secrets.rair-file-manager.secret_name
+          #       key = var.namespace_secrets.default.env_secrets.rair-file-manager.env_reference_name
+          #     }
+          #   }
+          # }
+          # env{
+          #   name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
+          #   value_from {
+          #     secret_key_ref {
+          #       name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
+          #       key = var.namespace_secrets.default.env_secrets.moralis-master-key-main.env_reference_name
+          #     }
+          #   }
+          # }
 
-          env{
-            name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
-                key = var.namespace_secrets.default.env_secrets.moralis-master-key-test.env_reference_name
-              }
-            }
-          }
+          # env{
+          #   name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
+          #   value_from {
+          #     secret_key_ref {
+          #       name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
+          #       key = var.namespace_secrets.default.env_secrets.moralis-master-key-test.env_reference_name
+          #     }
+          #   }
+          # }
         }
       image_pull_secrets {
         name        = var.pull_secret_name

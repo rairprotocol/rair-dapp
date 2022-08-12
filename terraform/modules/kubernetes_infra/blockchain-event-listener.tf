@@ -1,7 +1,8 @@
 locals {
   blockchain_event_listener_namespace = var.namespace_secrets.default.namespace
   blockchain_event_listener_service = "blockchain-event-listener-primary"
-  blockchain_event_listener_image = "rairtechinc/blockchain-event-listener:dev_2.34"
+  # blockchain_event_listener_image = "rairtechinc/blockchain-event-listener:dev_2.34"
+  blockchain_event_listener_image = "rairtechinc/blockchain-event-listener:90388dafbdc70263f019e817a5418316e178ed12"
   blockchain_event_listener_default_port_1 = "5001"
   blockchain_event_listener_config_map = "blockchain-event-listener-env"
 }
@@ -85,55 +86,6 @@ resource "kubernetes_deployment" "blockchain_event_listener" {
           env_from {
             config_map_ref {
               name = local.blockchain_event_listener_config_map
-            }
-          }
-
-          env{
-            name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
-                key = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
-              }
-            }
-          }
-          env{
-            name = var.namespace_secrets.default.env_secrets.mongodb-credential-local.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.mongodb-credential.secret_name
-                key = var.namespace_secrets.default.env_secrets.mongodb-credential.env_reference_name
-              }
-            }
-          }
-
-          env{
-            name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.pinata-secret.secret_name
-                key = var.namespace_secrets.default.env_secrets.pinata-secret.env_reference_name
-              }
-            }
-          }
-          
-          env{
-            name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.moralis-master-key-main.secret_name
-                key = var.namespace_secrets.default.env_secrets.moralis-master-key-main.env_reference_name
-              }
-            }
-          }
-
-          env{
-            name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
-            value_from {
-              secret_key_ref {
-                name = var.namespace_secrets.default.env_secrets.moralis-master-key-test.secret_name
-                key = var.namespace_secrets.default.env_secrets.moralis-master-key-test.env_reference_name
-              }
             }
           }
         }

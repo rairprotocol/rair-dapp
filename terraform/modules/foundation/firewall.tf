@@ -75,3 +75,20 @@ resource "google_compute_firewall" "tailscale_relay_ingress_to_gke" {
     module.vpc_cidr_ranges.network_cidr_blocks.vpn
   ]
 }
+
+resource "google_compute_firewall" "primary_cluster_ingress_to_network" {
+  name          = "primary-cluster-ingress-to-network"
+  network       = google_compute_network.primary.id
+  description   = "Allow primary GKE cluster traffic into rest of network. Allows peering to Mongo to work"
+
+  allow {
+    # allow all protocols and ports
+    protocol    = "all"
+  }
+
+  direction     = "INGRESS"
+
+  source_ranges = [
+    module.vpc_cidr_ranges.network_cidr_blocks.kubernetes_primary_cluster
+  ]
+}

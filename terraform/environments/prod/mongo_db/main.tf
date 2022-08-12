@@ -27,7 +27,8 @@ module "mongo_common" {
   source = "../../../modules/mongo"
   
   # replace this entry with a real db output variable later
-  primary_db_name = "primary"
+  primary_db_name = "app"
+  primary_cluster_name = mongodbatlas_cluster.primary.name
   
   project_id = local.project_id
 }
