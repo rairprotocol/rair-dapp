@@ -21,6 +21,7 @@ services:
       PINATA_SECRET: ${pinata_secret}
       ADMIN_NETWORK: ${admin_nft_chain}
       ADMIN_CONTRACT: ${admin_contract}
+      SUPER_ADMIN_VAULT_STORE: ${SUPER_ADMIN_VAULT_STORE}
       INFURA_PROJECT_ID: ${infura_project_id}
       SERVICE_HOST: ${hostname}
       DEFAULT_PRODUCT_COVER: ${default_product_cover}

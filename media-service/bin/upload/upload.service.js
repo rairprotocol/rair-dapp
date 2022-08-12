@@ -31,7 +31,7 @@ module.exports = {
     } = req.body;
 
     // Get the user information
-    const { adminNFT: author, publicAddress } = req.user;
+    const { publicAddress, superAdmin } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
     let cid = '';
@@ -52,7 +52,13 @@ module.exports = {
 
     if (validData instanceof Error) return next(validData);
 
-    const { foundContractId, foundCategory } = validData.data;
+    const { foundContract, foundCategory } = validData.data;
+
+    const foundContractId = foundContract._id;
+
+    if (foundContract.user !== publicAddress && !superAdmin) {
+      return res.status(400).send({ success: false, message: `Contract ${contract} not belong to you.` });
+    }
 
     // Get the socket connection from Express app
 
@@ -114,7 +120,7 @@ module.exports = {
         const rairJson = {
           title: textPurify.sanitize(title),
           mainManifest: 'stream.m3u8',
-          author,
+          author: superAdmin ? foundContract.user : publicAddress,
           encryptionType: 'aes-256-gcm',
         };
 
@@ -181,8 +187,7 @@ module.exports = {
 
         const meta = {
           mainManifest: 'stream.m3u8',
-          author,
-          authorPublicAddress: publicAddress,
+          authorPublicAddress: superAdmin ? foundContract.user : publicAddress,
           encryptionType: 'aes-256-gcm',
           title: textPurify.sanitize(title),
           contract: foundContractId,

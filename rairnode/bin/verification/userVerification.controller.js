@@ -1,10 +1,10 @@
 const express = require('express');
-const { JWTVerification, isAdmin } = require('../middleware');
+const { JWTVerification, isAdmin, isSuperAdmin } = require('../middleware');
 
 module.exports = () => {
   const router = express.Router();
 
-  router.get('/', JWTVerification, isAdmin, async (req, res, next) => {
+  router.get('/', JWTVerification, isAdmin, isSuperAdmin, async (req, res, next) => {
     try {
       const userAdmin = req.user;
       res.json(userAdmin);

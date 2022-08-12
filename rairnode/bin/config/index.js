@@ -16,6 +16,7 @@ const {
   LOG_LEVEL,
   ADMIN_NETWORK,
   ADMIN_CONTRACT,
+  SUPER_ADMIN_VAULT_STORE,
 } = process.env;
 
 const binanceTestnetData = {
@@ -61,6 +62,9 @@ module.exports = {
   admin: {
     network: ADMIN_NETWORK,
     contract: ADMIN_CONTRACT,
+  },
+  superAdmin: {
+    storageKye: SUPER_ADMIN_VAULT_STORE || null,
   },
   blockchain: {
     networks: {

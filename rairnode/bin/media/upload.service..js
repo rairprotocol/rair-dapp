@@ -77,10 +77,10 @@ module.exports = {
             .send({ success: false, message: `Offer ${notExistOffer} not found.` });
         }
 
-        return res.json({ foundContractId, foundCategory });
+        return res.json({ foundContract, foundCategory });
       }
 
-      return res.json({ foundContractId, foundCategory });
+      return res.json({ foundContract, foundCategory });
     } catch (e) {
       return next(e);
     }

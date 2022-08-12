@@ -5,6 +5,7 @@ const formDataHandler = require('./formDataHandler');
 const streamVerification = require('./streamVerification');
 const assignUser = require('./assignUser');
 const isAdmin = require('./isAdmin');
+const isSuperAdmin = require('./isSuperAdmin');
 const dataTransform = require('./dataTransform');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   streamVerification,
   assignUser,
   isAdmin,
+  isSuperAdmin,
   dataTransform,
 };

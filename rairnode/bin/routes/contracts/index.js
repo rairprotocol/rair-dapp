@@ -1,6 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
-const { JWTVerification, validation, isAdmin } = require('../../middleware');
+const { JWTVerification, validation, isAdmin, isSuperAdmin } = require('../../middleware');
 const {
   importContractData,
 } = require('../../integrations/ethers/importContractData');
@@ -14,7 +14,7 @@ module.exports = (context) => {
     // Contex is part of global scope
     try {
       const contracts = await context.db.Contract.find(
-        { user },
+        user ? { user } : {},
         {
           _id: 1,
           contractAddress: 1,
@@ -23,11 +23,12 @@ module.exports = (context) => {
           diamond: 1,
         },
       );
-      res.json({ success: true, contracts });
+      return res.json({ success: true, contracts });
     } catch (e) {
-      next(e);
+      return next(e);
     }
   }
+
   // Get list of contracts with all products and offers
   router.get(
     '/full',
@@ -178,11 +179,18 @@ module.exports = (context) => {
       }
     },
   );
-  // Get list of contracts for current user
-  router.get('/', JWTVerification, async (req, res, next) => {
-    const { publicAddress: user } = req.user;
-    await getContractsByUser(user, res, next);
+
+  // Get list of contracts for current user or all contracts if user have superAdmin rights
+  router.get('/', JWTVerification, isSuperAdmin, (req, res, next) => {
+    const { publicAddress: user, superAdmin } = req.user;
+
+    if (superAdmin) {
+      return getContractsByUser(null, res, next);
+    }
+
+    return getContractsByUser(user, res, next);
   });
+
   // Get list of contracts for specific user
   router.get(
     'byUser/:userId',
