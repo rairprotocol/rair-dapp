@@ -208,8 +208,14 @@
   }
 }
 
-/* @media screen and (max-width: 800px) {
-    .col-12.header-master {
-        padding: 10px 20px;
-    }
-} */
+@media screen and (max-width: 470px) {
+  button.metamask-on-boarding {
+    font-size: 12px;
+    padding: 0;
+    height: 40px;
+    width: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

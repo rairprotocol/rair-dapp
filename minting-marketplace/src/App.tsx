@@ -724,7 +724,7 @@ function App() {
                     path: '/my-items',
                     content: MyItems,
                     requirement: loginDone,
-                    props: { goHome, setIsSplashPage }
+                    props: { goHome, userData, setIsSplashPage }
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',

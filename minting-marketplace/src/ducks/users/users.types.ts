@@ -19,6 +19,7 @@ export type UserType = {
   firstName: string | null;
   lastName: string | null;
   nickName: string | null;
+  background: string | null;
   nonce?: string;
   publicAddress: string;
   _id: string;

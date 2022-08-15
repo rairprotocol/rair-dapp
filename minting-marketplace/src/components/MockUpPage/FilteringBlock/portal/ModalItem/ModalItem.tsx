@@ -118,7 +118,9 @@ const ModalItem = ({
   }, [checkStatusContract]);
 
   function bidFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    if (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
   }
 
   return (
@@ -199,7 +201,7 @@ const ModalItem = ({
                     ? 'Sell'
                     : 'Approve the marketplace for this token'
                   : 'The marketplace is not available for this blockchain'
-                : `Switch to ${blockchainData[selectedData.blockchain].name}`}
+                : `Switch to ${blockchainData[selectedData.blockchain]?.name}`}
             </button>
           </div>
         </div>

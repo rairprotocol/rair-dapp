@@ -31,7 +31,8 @@ const UploadProfilePicture = ({
     formData.append('nickName', name.replace(/@/g, ''));
     formData.append('email', status);
     if (file) {
-      formData.append('file', file);
+      formData.append('files', file);
+      formData.append('avatar', file.name);
     }
     try {
       const profileUpdateResponse = await axios.post<TUserResponse>(

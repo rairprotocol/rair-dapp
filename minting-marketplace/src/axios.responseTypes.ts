@@ -5,6 +5,7 @@ import { UserType } from './ducks/users/users.types';
 export type TUserResponse = {
   success: boolean;
   user: UserType | null;
+  message: string;
 };
 
 export type TNftItemResult = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { rFetch } from '../../utils/rFetch';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import setDocumentTitle from '../../utils/setTitle';
 import InputField from '../common/InputField';
 import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
@@ -16,8 +16,23 @@ import {
 } from './nft.types';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
 
-const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import HomeIcon from '@mui/icons-material/Home';
+import { NavLink } from 'react-router-dom';
+import Stack from '@mui/material/Stack';
+import { PersonalProfileBackground } from './PersonalProfile/PersonalProfileBackground/PersonalProfileBackground';
+import { PersonalProfileIcon } from './PersonalProfile/PersonalProfileIcon/PersonalProfileIcon';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { PersonalProfileMyNftTab } from './PersonalProfile/PersonalProfileMyNftTab/PersonalProfileMyNftTab';
+import { PersonalProfileMyVideoTab } from './PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
+import { PersonalProfileMyCreated } from './PersonalProfile/PersonalProfileMyCreated/PersonalProfileMyCreated';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+
+const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
+  const { width } = useWindowDimensions();
   const dispatch = useDispatch();
   const defaultImg =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
@@ -25,7 +40,7 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (state) => state.colorStore
   );
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [tokens, setTokens] = useState<TDiamondTokensType[]>([]);
   const [selectedData, setSelectedData] = useState<
     TDiamondTokensType | TMyDiamondItemsToken
@@ -33,7 +48,9 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [sortItem, setSortItem] = useState<string>('');
   const [isOpenBlockchain, setIsOpenBlockchain] = useState<boolean>(false);
-  const fetchData = useCallback(async () => {
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const getMyNft = useCallback(async () => {
     const response = await rFetch('/api/nft');
 
     if (response.success) {
@@ -62,15 +79,24 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
     setIsOpenBlockchain(true);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  useEffect(() => {
-    setDocumentTitle('My Items');
-    window.scrollTo(0, 0);
-    setIsSplashPage(false);
-  }, [setIsSplashPage]);
+  const breadcrumbs = [
+    <NavLink key="1" to="/">
+      <HomeIcon
+        style={{
+          borderRadius: '8px',
+          padding: '2px',
+          background: '#19A7F6',
+          color: 'black'
+        }}
+        sx={{ fontSize: 'x-large' }}
+      />
+    </NavLink>,
+    <Typography
+      key="3"
+      color={`${primaryColor === 'rhyno' ? 'black' : 'white'}`}>
+      Personal profile
+    </Typography>
+  ];
 
   const filteredData =
     tokens &&
@@ -84,7 +110,6 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
             return -1;
           }
         }
-
         if (sortItem === 'down') {
           if (a.title > b.title) {
             return 1;
@@ -94,104 +119,163 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
         return 0;
       });
 
+  useEffect(() => {
+    getMyNft();
+  }, [getMyNft]);
+
+  useEffect(() => {
+    setDocumentTitle('My Items');
+    window.scrollTo(0, 0);
+    setIsSplashPage(false);
+  }, [setIsSplashPage]);
+
   return (
     <div className="my-items-wrapper">
+      <div className="my-items-breadcrumbs-wrapper">
+        <Stack
+          style={{ marginBottom: '2rem', paddingLeft: '0.5rem' }}
+          spacing={2}>
+          <Breadcrumbs
+            color="white"
+            separator={<NavigateNextIcon fontSize="small" />}
+            aria-label="breadcrumb">
+            {breadcrumbs}
+          </Breadcrumbs>
+        </Stack>
+      </div>
+      <PersonalProfileBackground />
       <div className="my-items-header-wrapper">
-        <div onClick={() => navigate(-1)} className="my-items-title-wrapper">
+        <PersonalProfileIcon userData={userData} />
+
+        {/* <div onClick={() => navigate(-1)} className="my-items-title-wrapper">
           <i className="fas fa-arrow-left fa-arrow-custom"></i>
           <h1 className="my-items-title">My Items</h1>
-        </div>
-        <div className="my-items-bar-wrapper">
-          <InputField
-            getter={titleSearch}
-            setter={setTitleSearch}
-            placeholder={'Search...'}
-            customCSS={{
-              backgroundColor: `var(--${
-                primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
-              })`,
-              color: `var(--${textColor})`,
-              border: `${
-                primaryColor === 'charcoal'
-                  ? 'solid 1px var(--charcoal-80)'
-                  : 'solid 1px var(--rhyno)'
-              } `
-            }}
-            customClass="form-control input-styled my-items-search"
-          />
-          <i className="fas fa-search fa-lg fas-custom" aria-hidden="true"></i>
-          <FilteringBlock
-            primaryColor={primaryColor}
-            setSortItem={setSortItem}
-            sortItem={sortItem}
-            isFilterShow={false}
-          />
-        </div>
-      </div>
-      <div className="my-items-product-wrapper">
-        {filteredData.length > 0 ? (
-          filteredData.map((item, index) => {
-            return (
-              <div
-                onClick={() => {
-                  openModal();
-                  setSelectedData(item);
-                }}
-                key={index}
-                className="my-item-element"
+        </div> */}
+        <>
+          <Tabs
+            selectedIndex={tabIndex}
+            onSelect={(index) => setTabIndex(index)}>
+            <TabList className="category-wrapper">
+              <Tab
+                selectedClassName={`search-tab-selected-${
+                  primaryColor === 'rhyno' ? 'default' : 'dark'
+                }`}
                 style={{
-                  backgroundImage: `url(${item.metadata.image || defaultImg})`,
-                  backgroundColor: `var(--${primaryColor}-transparent)`
-                }}>
-                <div className="bg-my-items">
-                  <div className="my-items-description-wrapper my-items-pic-description-wrapper">
-                    <div
-                      className="container-blue-description"
-                      style={{ color: '#fff' }}>
-                      <span className="description-title">
-                        {item.metadata ? (
-                          <>
-                            <span>{item.title}</span>
-                          </>
-                        ) : (
-                          <b> No metadata available </b>
-                        )}
-                        <br />
-                      </span>
-                      <div className="container-blockchain-info">
-                        <small className="description">
-                          {item.contract.slice(0, 5) +
-                            '....' +
-                            item.contract.slice(item.contract.length - 4)}
-                        </small>
-                        {/*currently on my items view if you cant buy item cos
-                        you already bought it no need to show blockchain
-                        currency cos item dont have price.*/}
-                        {/* <div className="description-small" style={{}}>
-                          <img
-                            className="my-items-blockchain-img"
-                            src={
-                              item.blockchain
-                                ? `${chainData[item?.blockchain]?.image}`
-                                : ''
-                            }
-                            alt=""
-                          />
-                        </div> */}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <p style={{ color: textColor, fontSize: '20px' }}>
-            There is no such item with that name
-          </p>
-        )}
+                  backgroundColor: `${
+                    primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                  }`,
+                  border: `1px solid ${
+                    primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                  }`
+                }}
+                className="category-button-nft category-button">
+                {width <= 700 ? 'NFT' : 'My NFTs'}
+              </Tab>
+              <Tab
+                style={{
+                  backgroundColor: `${
+                    primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                  }`,
+                  border: `1px solid ${
+                    primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                  }`
+                }}
+                selectedClassName={`search-tab-selected-${
+                  primaryColor === 'rhyno' ? 'default' : 'dark'
+                }`}
+                className="category-button-videos category-button">
+                {width <= 700 ? 'Video' : 'My Videos'}
+              </Tab>
+              <Tab
+                style={{
+                  backgroundColor: `${
+                    primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                  }`,
+                  border: `1px solid ${
+                    primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                  }`
+                }}
+                selectedClassName={`search-tab-selected-${
+                  primaryColor === 'rhyno' ? 'default' : 'dark'
+                }`}
+                className="category-button-videos category-button">
+                {width <= 700 ? <i className="fas fa-heart" /> : 'My favorites'}
+              </Tab>
+              <Tab
+                style={{
+                  backgroundColor: `${
+                    primaryColor === 'rhyno' ? '#fafafa' : '#222021'
+                  }`,
+                  border: `1px solid ${
+                    primaryColor === 'rhyno' ? 'var(--rhyno)' : '#4E4D4D'
+                  }`
+                }}
+                selectedClassName={`search-tab-selected-${
+                  primaryColor === 'rhyno' ? 'default' : 'dark'
+                }`}
+                className="category-button-videos category-button">
+                Created
+              </Tab>
+            </TabList>
+            {/* Search block */}
+            <div className="my-items-bar-wrapper">
+              <InputField
+                getter={titleSearch}
+                setter={setTitleSearch}
+                placeholder={'Search...'}
+                customCSS={{
+                  backgroundColor: `var(--${
+                    primaryColor === 'charcoal' ? 'charcoal-90' : `rhyno-40`
+                  })`,
+                  color: `var(--${textColor})`,
+                  borderTopLeftRadius: '0',
+                  border: `${
+                    primaryColor === 'charcoal'
+                      ? 'solid 1px var(--charcoal-80)'
+                      : 'solid 1px var(--rhyno)'
+                  } `
+                }}
+                customClass="form-control input-styled my-items-search"
+              />
+              <i
+                className="fas fa-search fa-lg fas-custom"
+                aria-hidden="true"></i>
+              <FilteringBlock
+                primaryColor={primaryColor}
+                setSortItem={setSortItem}
+                sortItem={sortItem}
+                isFilterShow={false}
+              />
+            </div>
+            <TabPanel>
+              <PersonalProfileMyNftTab
+                filteredData={filteredData && filteredData}
+                openModal={openModal}
+                setSelectedData={setSelectedData}
+                defaultImg={defaultImg}
+                primaryColor={primaryColor}
+                chainData={chainData}
+                textColor={textColor}
+              />
+            </TabPanel>
+            <TabPanel>
+              <PersonalProfileMyVideoTab titleSearch={titleSearch} />
+            </TabPanel>
+            <TabPanel>
+              <h1> My favorites</h1>
+            </TabPanel>
+            <TabPanel>
+              <PersonalProfileMyCreated
+                openModal={openModal}
+                setSelectedData={setSelectedData}
+                primaryColor={primaryColor}
+                chainData={chainData}
+                // textColor={textColor}
+              />
+            </TabPanel>
+          </Tabs>
+        </>
       </div>
-
       {isOpenBlockchain ? (
         <ModalItem
           setIsOpenBlockchain={setIsOpenBlockchain}
@@ -203,6 +287,10 @@ const MyItems: React.FC<IMyItems> = ({ setIsSplashPage }) => {
       ) : (
         <></>
       )}
+      {/* <div className="container-diamond-items">
+        <h3>Diamond Items <i className='fas h5 fa-gem' /></h3>
+        <MyDiamondItems {...{ openModal, setSelectedData }} /> 
+      </div>*/}
     </div>
   );
 };

@@ -864,7 +864,7 @@ i.fas-custom {
 }
 
 .category-button {
-  /* border: 1px solid var(--charcoal-80); */
+  border: 1px solid var(--rhyno);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   width: 204px;
@@ -897,10 +897,16 @@ i.fas-custom {
   z-index: 0;
 }
 
+.my-items-header-wrapper .category-button.search-tab-selected-dark,
+.my-items-header-wrapper .category-button.search-tab-selected-default {
+  color: #19a7f6;
+}
+
 .search-tab-selected-default {
   background-color: var(--rhyno) !important;
-  color: rgb(41, 41, 41) !important;
+  color: rgb(41, 41, 41);
   z-index: 0;
+  /* border: solid 1px var(--charcoal-80); */
 }
 
 .styles-module_carousel-arrow__26sRw {

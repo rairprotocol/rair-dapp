@@ -44,7 +44,8 @@ const EditMode = ({
     formData.append('nickName', userName);
     formData.append('email', emailUser);
     if (filePhoto) {
-      formData.append('file', filePhoto);
+      formData.append('files', filePhoto);
+      formData.append('avatar', filePhoto.name);
     }
 
     try {

@@ -331,7 +331,8 @@
 
 @media screen and (max-width: 1500px) {
   .container-search,
-  .category-wrapper {
+  .category-wrapper,
+  .container-search .my-items-bar-wrapper {
     padding-left: 1.5vw;
     margin-block-start: 0;
     margin-block-end: 0;
@@ -350,7 +351,8 @@
   .category-wrapper {
     width: 894px;
   }
-  .container-search {
+  .container-search,
+  .my-items-bar-wrapper {
     width: 894px;
   }
   .list-button-wrapper {
@@ -386,7 +388,8 @@
 }
 
 @media screen and (max-width: 1260px) {
-  .container-search {
+  .container-search,
+  .my-items-bar-wrapper {
     display: flex;
   }
   .select-filters {
@@ -398,9 +401,11 @@
 }
 
 @media screen and (max-width: 1100px) {
-  .container-search {
+  .container-search,
+  .my-items-bar-wrapper {
     flex-direction: column;
     margin-bottom: 32px;
+    width: 86.6vw;
   }
   .select-filters {
     margin: 0px 0px 0px 16px;
@@ -434,6 +439,11 @@
   .category-wrapper {
     width: 588px;
   }
+
+  .my-items-header-wrapper .category-wrapper {
+    width: 86.6vw;
+  }
+
   .general-title {
     max-width: 588px;
   }
@@ -659,6 +669,12 @@
   }
 }
 
+@media screen and (max-width: 750px) {
+  .form-control.input-styled.my-items-search {
+    border-top-right-radius: 0px;
+  }
+}
+
 @media screen and (max-width: 700px) {
   .main-wrapper {
     padding: 0;
@@ -837,6 +853,10 @@ p.general-title {
     height: 270px;
     margin: 0 0 24px 0 !important;
   }
+
+  .list-button-wrapper {
+    justify-content: center;
+  }
 }
 
 @media screen and (max-width: 700px) {
@@ -877,6 +897,18 @@ p.general-title {
     max-width: 480px;
     width: 100%;
   }
+
+  .form-control.input-styled.my-items-search {
+    width: 86.6vw;
+    max-width: 100%;
+    border-top-left-radius: 16px !important;
+    border-top-right-radius: 16px;
+  }
+
+  .my-items-bar-wrapper {
+    flex-direction: row;
+  }
+
   .container-search {
     width: 520px;
     flex-direction: row;
@@ -1039,7 +1071,8 @@ p.general-title {
 }
 
 @media screen and (max-width: 1260px) {
-  .unlockables-wrapper {
+  .unlockables-wrapper,
+  .list-button-wrapper {
     justify-content: space-between;
   }
   .unlockable-video:nth-child(1n + 1) {
