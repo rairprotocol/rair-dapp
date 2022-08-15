@@ -11,8 +11,23 @@ terraform {
   }
 }
 
+locals {
+  gcp_project_id                           = "rair-market-staging"
+}
+
+module "gke_auth" {
+  source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
+
+  project_id           = local.gcp_project_id
+  cluster_name         = "primary"
+  location             = "us-west1-a"
+  use_private_endpoint = true
+}
+
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
+  host                   = module.gke_auth.host
+  token                  = module.gke_auth.token
 }
 
 module "config" {
@@ -21,7 +36,7 @@ module "config" {
 
 module "kubernetes_infra" {
   source                                   = "../../../modules/kubernetes_infra"
-  gcp_project_id                           = "rair-market-staging"
+  gcp_project_id                           = local.gcp_project_id
   region                                   = "us-west1"
   pull_secret_name                         = "regcred"
   rairnode_configmap_data                  = local.rairnode_configmap

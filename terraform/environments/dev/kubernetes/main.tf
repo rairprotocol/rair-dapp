@@ -11,8 +11,19 @@ terraform {
   }
 }
 
+module "gke_auth" {
+  source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
+
+  project_id           = local.gcp_project_id
+  cluster_name         = "primary"
+  location             = "us-west1-a"
+  use_private_endpoint = true
+}
+
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
+  host                   = module.gke_auth.host
+  token                  = module.gke_auth.token
 }
 
 module "config" {
