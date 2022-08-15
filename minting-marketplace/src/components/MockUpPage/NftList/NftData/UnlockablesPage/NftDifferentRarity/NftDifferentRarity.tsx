@@ -5,9 +5,25 @@ import axios from 'axios';
 import cl from './NftDifferentRarity.module.css';
 import CustomButton from '../../../../utils/button/CustomButton';
 
-const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
+const NftDifferentRarity = ({
+  title,
+  setTokenDataFiltered,
+  isUnlocked,
+  embeddedParams
+}) => {
   const navigate = useNavigate();
   const params = useParams();
+  const { contract, product, blockchain } = embeddedParams
+    ? embeddedParams
+    : params;
+  const sortedClickHandler = (tokenId) => {
+    if (embeddedParams) {
+      embeddedParams.setTokenId(tokenId);
+      embeddedParams.setMode('collection');
+    } else {
+      navigate(`/collection/${blockchain}/${contract}/${product}/${tokenId}`);
+    }
+  };
   const [allTokenData, setAllTokenData] = useState([]);
   const [isOpenPart, setIsOpenPart] = useState(false);
 
@@ -21,10 +37,10 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
 
   const getAllTokens = useCallback(async () => {
     const responseAllTokens = await axios.get(
-      `/api/nft/network/${params.blockchain}/${params.contract}/${params.product}`
+      `/api/nft/network/${blockchain}/${contract}/${product}`
     );
     setAllTokenData(responseAllTokens.data.result.tokens);
-  }, [params.product, params.contract, params.blockchain]);
+  }, [product, contract, blockchain]);
 
   const colorRarity =
     title === 'Unlock Ultra Rair' || title === 'Ultra Rair'
@@ -41,41 +57,31 @@ const NftDifferentRarity = ({ title, setTokenDataFiltered, isUnlocked }) => {
           (e) => e.offer === '0'
         );
         setTokenDataFiltered(firstTokenFromUnlockUltra);
-        navigate(
-          `/collection/${params.blockchain}/${params.contract}/${params.product}/${firstTokenFromUnlockUltra[0].token}`
-        );
+        sortedClickHandler(firstTokenFromUnlockUltra[0].token);
         break;
       case 'Ultra Rair':
         const firstTokenFromUltra = allTokenData.filter((e) => e.offer === '0');
         setTokenDataFiltered(firstTokenFromUltra);
-        navigate(
-          `/collection/${params.blockchain}/${params.contract}/${params.product}/${firstTokenFromUltra[0].token}`
-        );
+        sortedClickHandler(firstTokenFromUltra[0].token);
         break;
       case 'Unlock Rair':
         const secondTokenFromUnlockUltra = allTokenData.filter(
           (e) => e.offer === '1'
         );
         setTokenDataFiltered(secondTokenFromUnlockUltra);
-        navigate(
-          `/collection/${params.blockchain}/${params.contract}/${params.product}/${secondTokenFromUnlockUltra[0].token}`
-        );
+        sortedClickHandler(secondTokenFromUnlockUltra[0].token);
         break;
       case 'Rair':
         const secondTokenFromUltra = allTokenData.filter(
           (e) => e.offer === '1'
         );
         setTokenDataFiltered(secondTokenFromUltra);
-        navigate(
-          `/collection/${params.blockchain}/${params.contract}/${params.product}/${secondTokenFromUltra[0].token}`
-        );
+        sortedClickHandler(secondTokenFromUltra[0].token);
         break;
       default:
         const thirdTokenFromUltra = allTokenData.filter((e) => e.offer === '2');
         setTokenDataFiltered(thirdTokenFromUltra);
-        navigate(
-          `/collection/${params.blockchain}/${params.contract}/${params.product}/${thirdTokenFromUltra[0].token}`
-        );
+        sortedClickHandler(thirdTokenFromUltra[0].token);
     }
     /* eslint-enable */
   };

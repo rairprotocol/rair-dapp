@@ -9,8 +9,17 @@ const hyperlink = (url) => {
 };
 
 const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
-  const { buttonLabel, buttonColor, buttonImg, buttonLink, buttonAction } =
-    buttonData;
+  const {
+    buttonLabel,
+    buttonColor,
+    buttonBorder,
+    buttonTextColor,
+    buttonMarginTop,
+    buttonMarginBottom,
+    buttonImg,
+    buttonLink,
+    buttonAction
+  } = buttonData;
   return (
     <div className="btn-submit-with-form">
       <button
@@ -23,7 +32,11 @@ const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
           }
         }}
         style={{
-          background: buttonColor
+          color: buttonTextColor,
+          border: buttonBorder,
+          background: buttonColor,
+          marginTop: buttonMarginTop,
+          marginBottom: buttonMarginBottom
         }}>
         {buttonImg && (
           <img className="metamask-logo" src={buttonImg} alt="form-logo" />
@@ -45,6 +58,7 @@ const AuthorCard = ({
     titleColor,
     titleImage,
     description,
+    textDescriptionCustomStyles,
     backgroundImage,
     cardFooter,
     button1,
@@ -89,7 +103,9 @@ const AuthorCard = ({
               />
             )}
           </div>
-          <div className="text-description">{description}</div>
+          <div className="text-description" style={textDescriptionCustomStyles}>
+            {description}
+          </div>
           <div className="button-wrapper">
             {purchaseButton?.buttonComponent !== undefined && (
               <purchaseButton.buttonComponent

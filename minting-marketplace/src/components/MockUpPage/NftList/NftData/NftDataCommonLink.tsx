@@ -17,7 +17,7 @@ import { utils } from 'ethers';
 import { RootState } from '../../../../ducks';
 import { setTokenData } from '../../../../ducks/nftData/action';
 
-const NftDataCommonLinkComponent = ({ userData }) => {
+const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
   const [collectionName, setCollectionName] = useState();
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
   const [totalCount, setTotalCount] = useState();
@@ -46,9 +46,14 @@ const NftDataCommonLinkComponent = ({ userData }) => {
   const navigate = useNavigate();
   const params = useParams();
   const { pathname } = useLocation();
-  const mode = pathname?.split('/')?.at(1);
 
-  const { contract, product, tokenId, blockchain } = params;
+  const mode = embeddedParams
+    ? embeddedParams.mode
+    : pathname?.split('/')?.at(1);
+
+  const { contract, product, tokenId, blockchain } = embeddedParams
+    ? embeddedParams
+    : params;
 
   const checkUserConnect = useCallback(() => {
     if (currentUserAddress) {
@@ -180,9 +185,14 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     [tokenData]
   );
 
-  const handleClickToken = async (tokenId: string) => {
-    navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
-    if (tokenData.length > Number(tokenId)) {
+  const handleClickToken = async (tokenId) => {
+    if (embeddedParams) {
+      embeddedParams.setTokenId(tokenId);
+    } else {
+      navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
+    }
+
+    if (tokenData.length >= Number(tokenId)) {
       setSelectedData(tokenData[tokenId].metadata);
     }
 
@@ -199,6 +209,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     return (
       <NftCollectionPage
         userData={userData}
+        embeddedParams={embeddedParams}
         blockchain={blockchain}
         contract={contract}
         currentUser={currentUserAddress}
@@ -231,6 +242,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     return (
       <NftUnlockablesPage
         userData={userData}
+        embeddedParams={embeddedParams}
         blockchain={blockchain}
         contract={contract}
         currentUser={currentUserAddress}
@@ -256,6 +268,7 @@ const NftDataCommonLinkComponent = ({ userData }) => {
     return (
       <NftDataPageMain
         userData={userData}
+        embeddedParams={embeddedParams}
         blockchain={blockchain}
         contract={contract}
         currentUser={currentUserAddress}

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { memo, useEffect, useCallback, useState } from 'react';
+import React, { memo, useEffect, useCallback, useState, useRef } from 'react';
 import { NftItemForCollectionView } from '../NftItemForCollectionView';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import { useDispatch } from 'react-redux';
@@ -18,6 +18,7 @@ import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { setTokenData } from '../../../../ducks/nftData/action';
 
 const NftCollectionPageComponent = ({
+  embeddedParams,
   blockchain,
   currentUser,
   handleClickToken,
@@ -46,6 +47,7 @@ const NftCollectionPageComponent = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const myRef = useRef();
   const [show, setShow] = useState(true);
 
   const loadToken = useCallback(() => {
@@ -59,7 +61,9 @@ const NftCollectionPageComponent = ({
   }, [dispatch]);
 
   useEffect(() => {
-    window.scroll(0, 0);
+    if (!embeddedParams) {
+      window.scroll(0, 0);
+    }
   }, []);
 
   const goBack = () => {
@@ -71,24 +75,27 @@ const NftCollectionPageComponent = ({
 
   if (tokenData.length === 0) {
     return (
-      <>
-        <div
-          style={{
-            cursor: 'pointer',
-            color: 'rgb(232, 130, 213)',
-            fontSize: '2rem'
-          }}
-          onClick={() => goBack()}
-          className="arrow-back">
-          <i className="fas fa-arrow-alt-circle-left"></i>
-        </div>
+      <div ref={myRef}>
+        {!!embeddedParams || (
+          <div
+            style={{
+              cursor: 'pointer',
+              color: 'rgb(232, 130, 213)',
+              fontSize: '2rem'
+            }}
+            onClick={() => goBack()}
+            className="arrow-back">
+            <i className="fas fa-arrow-alt-circle-left"></i>
+          </div>
+        )}
         <h1>{"Don't have product"}</h1>
-      </>
+      </div>
     );
   }
   return (
     <div
       className="wrapper-collection"
+      ref={myRef}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -129,6 +136,7 @@ const NftCollectionPageComponent = ({
                     key={`${token.id + '-' + token.productId + index}`}
                     pict={token.cover ? token.cover : defaultImg}
                     metadata={token.metadata}
+                    embeddedParams={embeddedParams}
                     contract={token.contract}
                     token={token.token}
                     handleClickToken={handleClickToken}
@@ -164,6 +172,7 @@ const NftCollectionPageComponent = ({
                     key={`${token.id + '-' + token.productId + index}`}
                     pict={token.cover ? token.cover : defaultImg}
                     metadata={token.metadata}
+                    embeddedParams={embeddedParams}
                     contract={token.contract}
                     token={token.token}
                     handleClickToken={handleClickToken}

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomButton from '../../utils/button/CustomButton';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import NftSingleUnlockables from './NftSingleUnlockables';
@@ -9,6 +9,7 @@ import setDocumentTitle from '../../../../utils/setTitle';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import TitleCollection from './TitleCollection/TitleCollection';
 const NftUnlockablesPage = ({
+  embeddedParams,
   blockchain,
   contract,
   product,
@@ -30,7 +31,7 @@ const NftUnlockablesPage = ({
   setTokenDataFiltered
 }) => {
   const [selectVideo, setSelectVideo] = useState();
-
+  const myRef = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,7 +40,12 @@ const NftUnlockablesPage = ({
   }, [dispatch]);
 
   useEffect(() => {
-    window.scroll(0, 0);
+    if (embeddedParams) {
+      myRef.current.scrollIntoView();
+    } else {
+      window.scroll(0, 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -47,8 +53,8 @@ const NftUnlockablesPage = ({
   }, [setSelectVideo, productsFromOffer]);
 
   return (
-    <div className="wrapper-unlockables-page">
-      <BreadcrumbsView />
+    <div ref={myRef} className="wrapper-unlockables-page">
+      <BreadcrumbsView embeddedParams={embeddedParams} />
       {tokenData && selectedToken && (
         <TitleCollection
           selectedData={tokenData && tokenData[selectedToken]?.metadata}
@@ -68,6 +74,7 @@ const NftUnlockablesPage = ({
         />
         <div style={{ width: '85vw', margin: 'auto' }} className="">
           <NftSingleUnlockables
+            embeddedParams={embeddedParams}
             blockchain={blockchain}
             contract={contract}
             product={product}

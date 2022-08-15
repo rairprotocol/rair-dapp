@@ -8,6 +8,7 @@ import defaultImage from './../assets/defultUser.png';
 import ReactPlayer from 'react-player';
 
 const NftItemForCollectionViewComponent = ({
+  embeddedParams,
   blockchain,
   pict,
   offerPrice,
@@ -43,11 +44,16 @@ const NftItemForCollectionViewComponent = ({
     redirection();
   }
 
-  const redirection = () => {
-    navigate(
-      `/tokens/${blockchain}/${params.contract}/${params.product}/${index}`
-    );
-  };
+  const redirection = embeddedParams
+    ? () => {
+        embeddedParams.setTokenId(index);
+        embeddedParams.setMode('tokens');
+      }
+    : () => {
+        navigate(
+          `/tokens/${blockchain}/${params.contract}/${params.product}/${index}`
+        );
+      };
 
   function checkPrice() {
     if (offerPrice.length > 0) {

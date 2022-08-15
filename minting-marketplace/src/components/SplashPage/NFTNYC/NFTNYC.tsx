@@ -4,18 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './NFTNYC.css';
-
-// import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
-// import DiscordIcon from '../images/discord-icon.png';
 import warning1 from '../images/warning_1.png';
 import warning2 from '../images/warning_2.png';
-// import videoBackground2 from '../images/nftnyc_videobackground2.png';
-// import videoBackground3 from '../images/nftnyc_videobackground3.png';
-// import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
-// import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
-// import PurchaseTokenButton from '../../common/PurchaseToken';
-// import { rFetch } from '../../../utils/rFetch';
-// import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
 
 import MetaMaskIcon from '../images/metamask_logo.png';
 import NFTNYC_TITLE from '../images/NFTNYX_TITLE.gif';
@@ -54,15 +44,6 @@ const WarningModal = () => {
         <img src={warning2} alt="Good safe to sign" />
       </div>
     </div>
-
-    // <div className="warning-modal">
-    //   <div className="warning-modal-col-0">
-    //     <div className="warning-modal-col-0-title">Bad don t sign</div>
-    //   </div>
-    //   <div className="warning-modal-col-1">
-    //     <div className="warning-modal-col-1-title">Good safe to sign</div>
-    //   </div>
-    // </div>
   );
 };
 

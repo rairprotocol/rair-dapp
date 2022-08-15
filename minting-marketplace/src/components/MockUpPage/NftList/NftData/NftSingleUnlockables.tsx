@@ -4,6 +4,7 @@ import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferen
 import './NftSingleUnlockables.css';
 
 const NftSingleUnlockables = ({
+  embeddedParams,
   productsFromOffer,
   setTokenDataFiltered,
   primaryColor,
@@ -45,6 +46,7 @@ const NftSingleUnlockables = ({
           return (
             <div className="nft-rarity-wrapper" key={key}>
               <NftDifferentRarity
+                embeddedParams={embeddedParams}
                 setTokenDataFiltered={setTokenDataFiltered}
                 title={rarity[key]}
                 isUnlocked={item.map((i) => i.isUnlocked)}

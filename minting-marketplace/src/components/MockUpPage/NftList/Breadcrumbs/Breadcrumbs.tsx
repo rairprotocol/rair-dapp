@@ -13,9 +13,11 @@ import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
 
-const BreadcrumbsComponent = () => {
-  const { blockchain, product, contract } =
-    useParams<TParamsBreadcrumbsComponent>();
+const BreadcrumbsComponent = ({ embeddedParams }) => {
+  const params = useParams<TParamsBreadcrumbsComponent>();
+  const { contract, product, blockchain } = embeddedParams
+    ? embeddedParams
+    : params;
   const navigate = useNavigate();
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
@@ -23,26 +25,48 @@ const BreadcrumbsComponent = () => {
 
   function handleClick(event: MouseEvent) {
     event.preventDefault();
-    navigate(`/collection/${blockchain}/${contract}/${product}/0`);
+    embeddedParams
+      ? embeddedParams.setMode('collection')
+      : navigate(`/collection/${blockchain}/${contract}/${product}/0`);
     console.info('You clicked a breadcrumb.');
   }
   function goToSingleView(event: MouseEvent) {
     event.preventDefault();
-    navigate(-1);
+    embeddedParams ? embeddedParams.setMode('tokens') : navigate(-1);
   }
   let breadcrumbs: ReactElement[] = [];
 
   const { pathname } = useLocation();
-  const mode = pathname?.split('/')?.at(1);
+  const mode = embeddedParams
+    ? embeddedParams.mode
+    : pathname?.split('/')?.at(1);
+
+  const HomeButton = () => {
+    if (embeddedParams) {
+      return (
+        <div
+          className="nft-home-icon"
+          onClick={() => {
+            embeddedParams.setMode('collection');
+          }}>
+          <SingleTokenHome width={24} height={24} />
+        </div>
+      );
+    } else {
+      return (
+        <NavLink to="/">
+          <div className="nft-home-icon">
+            <SingleTokenHome width={24} height={24} />
+          </div>
+        </NavLink>
+      );
+    }
+  };
 
   switch (mode) {
     case 'collection':
       breadcrumbs = [
-        <NavLink key="1" to="/">
-          <div className="nft-home-icon">
-            <SingleTokenHome width={24} height={24} />
-          </div>
-        </NavLink>,
+        <HomeButton key="1" />,
         <Typography
           key="3"
           color={`${
@@ -54,12 +78,7 @@ const BreadcrumbsComponent = () => {
       break;
     case 'tokens':
       breadcrumbs = [
-        <NavLink key="1" to="/">
-          <div className="nft-home-icon">
-            <SingleTokenHome width={24} height={24} />
-          </div>
-        </NavLink>,
-
+        <HomeButton key="1" />,
         <Link
           underline="hover"
           key="2"
@@ -79,12 +98,7 @@ const BreadcrumbsComponent = () => {
       break;
     case 'unlockables':
       breadcrumbs = [
-        <NavLink key="1" to="/">
-          <div className="nft-home-icon">
-            <SingleTokenHome width={24} height={24} />
-          </div>
-        </NavLink>,
-
+        <HomeButton key="1" />,
         <Link
           underline="hover"
           key="2"

@@ -140,6 +140,7 @@ export interface INftDataPageMain {
   userData?: UserType;
   someUsersData: UserType;
   ownerInfo: INftProductType;
+  embeddedParams: any | undefined;
 }
 
 export type TOffersIndexesData = {

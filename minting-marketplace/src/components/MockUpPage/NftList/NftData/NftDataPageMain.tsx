@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import { useDispatch } from 'react-redux';
@@ -33,13 +33,14 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   offerData,
   offerDataInfo,
   someUsersData,
-  ownerInfo
+  ownerInfo,
+  embeddedParams
 }) => {
   const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
   const navigate = useNavigate();
-
+  const myRef = useRef(null);
   const [playing, setPlaying] = useState<boolean>(false);
   const [, /*offersIndexesData*/ setOffersIndexesData] =
     useState<TOffersIndexesData[]>();
@@ -65,17 +66,22 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     checkUrl();
   }, [checkUrl]);
 
-  const goToUnlockables = () =>
-    navigate(
-      `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
-    );
+  const goToUnlockables = () => {
+    embeddedParams
+      ? embeddedParams.setMode('unlockables')
+      : navigate(
+          `/unlockables/${blockchain}/${contract}/${product}/${selectedToken}`
+        );
+  };
 
   const handlePlayerClick = () => {
     setOpenVideoPlayer(true);
   };
 
   useEffect(() => {
-    window.scroll(0, 0);
+    if (!embeddedParams) {
+      window.scroll(0, 0);
+    }
   }, []);
 
   useEffect(() => {
@@ -121,8 +127,8 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   }, [offerDataInfo]);
 
   return (
-    <main id="nft-data-page-wrapper">
-      <BreadcrumbsView />
+    <main ref={myRef} id="nft-data-page-wrapper">
+      <BreadcrumbsView embeddedParams={embeddedParams} />
       <div>
         <TitleCollection
           selectedData={selectedData}
