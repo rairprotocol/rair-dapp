@@ -110,7 +110,7 @@ module.exports = () => {
     '/remove/:mediaId',
     JWTVerification,
     validation('removeMedia', 'params'),
-    isOwner,
+    isOwner(File),
     async (req, res, next) => {
       try {
         const { mediaId } = req.params;

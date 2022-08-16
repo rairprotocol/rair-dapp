@@ -1,23 +1,31 @@
+const _ = require('lodash');
 const log = require('../utils/logger')(module);
-const { File } = require('../models');
 
-module.exports = async (req, res, next) => {
+module.exports = (Model) => async (req, res, next) => {
   try {
     const { publicAddress } = req.user;
-    const file = await File.findOne({ _id: req.params.mediaId });
+    const { mediaId, id } = req.params;
+    const itemsToCompare = ['authorPublicAddress', 'userAddress'];
 
-    if (!file) {
-      const message = 'File not found..';
+    let foundItem = await Model.findById(mediaId || id);
+
+    if (!foundItem) {
+      const message = 'Data not found.';
 
       log.error(message);
 
       return res.status(404).send({ success: false, error: true, message });
     }
 
-    const fileData = file.toObject();
+    foundItem = foundItem.toObject();
 
-    if (publicAddress !== fileData.authorPublicAddress) {
-      const message = 'You don\'t have permission to manage this file.';
+    const owner = _.chain(itemsToCompare)
+      .map((i) => _.get(foundItem, i, null))
+      .includes(publicAddress)
+      .value();
+
+    if (!owner) {
+      const message = 'You don\'t have permission to manage this data.';
 
       log.error(message);
 

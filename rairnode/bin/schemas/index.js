@@ -22,6 +22,7 @@ const search = require('./search');
 const updateTokenMetadata = require('./updateTokenMetadata');
 const pinningMultiple = require('./pinningMultiple');
 const createCommonTokenMetadata = require('./createCommonTokenMetadata');
+const createFavoriteToken = require('./createFavoriteToken');
 
 module.exports = {
   admin,
@@ -48,4 +49,5 @@ module.exports = {
   updateTokenMetadata,
   pinningMultiple,
   createCommonTokenMetadata,
+  createFavoriteToken,
 };

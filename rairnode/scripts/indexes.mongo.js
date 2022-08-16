@@ -90,6 +90,9 @@ const mongoConfig = require('../bin/shared_backend_code_generated/config/mongoCo
   await db.collection('Transaction').dropIndexes();
   await db.collection('Transaction').createIndex({ _id: 1, blockchainId: 1 }, { background: true, unique: true });
 
+  await db.collection('FavoriteTokens').dropIndexes();
+  await db.collection('FavoriteTokens').createIndex({ userAddress: 1, token: 1 }, { background: true, unique: true });
+
   console.log('Completed Database Indexes');
 
   process.exit(0);

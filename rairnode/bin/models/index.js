@@ -14,6 +14,7 @@ const SyncRestriction = require('./syncRestriction');
 const Transaction = require('./transaction');
 const CustomRoyaltiesSet = require('./customRoyaltiesSet');
 const ResaleTokenOffer = require('./resaleTokenOffer');
+const FavoriteTokens = require('./favoriteTokens');
 
 module.exports = {
   Contract: mongoose.model('Contract', Contract, 'Contract'),
@@ -27,20 +28,9 @@ module.exports = {
   Versioning: mongoose.model('Versioning', Versioning, 'Versioning'),
   Blockchain: mongoose.model('Blockchain', Blockchain, 'Blockchain'),
   Category: mongoose.model('Category', Category, 'Category'),
-  SyncRestriction: mongoose.model(
-    'SyncRestriction',
-    SyncRestriction,
-    'SyncRestriction',
-  ),
+  SyncRestriction: mongoose.model('SyncRestriction', SyncRestriction, 'SyncRestriction'),
   Transaction: mongoose.model('Transaction', Transaction, 'Transaction'),
-  CustomRoyaltiesSet: mongoose.model(
-    'CustomRoyaltiesSet',
-    CustomRoyaltiesSet,
-    'CustomRoyaltiesSet',
-  ),
-  ResaleTokenOffer: mongoose.model(
-    'ResaleTokenOffer',
-    ResaleTokenOffer,
-    'ResaleTokenOffer',
-  ),
+  CustomRoyaltiesSet: mongoose.model('CustomRoyaltiesSet', CustomRoyaltiesSet, 'CustomRoyaltiesSet'),
+  ResaleTokenOffer: mongoose.model('ResaleTokenOffer', ResaleTokenOffer, 'ResaleTokenOffer'),
+  FavoriteTokens: mongoose.model('FavoriteTokens', FavoriteTokens, 'FavoriteTokens'),
 };

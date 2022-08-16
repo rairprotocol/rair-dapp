@@ -1,4 +1,5 @@
 /* eslint-disable implicit-arrow-linebreak */
+const _ = require('lodash');
 const AppError = require('./appError');
 const APIFeatures = require('./apiFeatures');
 
@@ -39,9 +40,16 @@ exports.updateOne = (Model) =>
     });
   });
 
-exports.createOne = (Model) =>
+exports.createOne = (Model, additionalFields = {}) =>
   catchAsync(async (req, res, next) => {
-    const newdoc = await Model.create(req.body);
+    const newdoc = await Model.create(_.assign(
+      req.body,
+      _.reduce(additionalFields, (r, v, k) => {
+        // eslint-disable-next-line no-param-reassign
+        r[k] = _.get(req, v, null);
+        return r;
+      }, {}),
+    ));
 
     res.status(201).json({
       status: 'success',
@@ -74,14 +82,22 @@ exports.getOne = (Model, populateOptions) =>
 
 exports.getAll = (Model, options = {}) =>
   catchAsync(async (req, res, next) => {
+    const filterOptions = options.filter
+      ? _.reduce(options.filter, (r, v, k) => {
+        // eslint-disable-next-line no-param-reassign
+        r[k] = _.get(req, v, v);
+        return r;
+      }, {})
+      : undefined;
     let features;
+
     if (options.populateOptions) {
       features = new APIFeatures(
         Model.find().populate(options.populateOptions),
         req.query,
       )
         .filter(
-          options.hardcodedFilter ? options.hardcodedFilter : undefined,
+          filterOptions,
           options.populateOptions,
         )
         .sort(options.hardcodedSorting ? options.hardcodedSorting : undefined)
@@ -91,7 +107,7 @@ exports.getAll = (Model, options = {}) =>
         .paginate();
     } else {
       features = new APIFeatures(Model.find(), req.query)
-        .filter(options.hardcodedFilter ? options.hardcodedFilter : undefined)
+        .filter(filterOptions)
         .sort(options.hardcodedSorting ? options.hardcodedSorting : undefined)
         .limitFields(
           options.hardcodedProjection ? options.hardcodedProjection : undefined,
