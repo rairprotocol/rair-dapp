@@ -50,10 +50,7 @@ const PurchaseChecklist = ({
           2. Click connect wallet in top right corner. You must be fully logged
           into metamask with your password first
         </li>
-        <li>
-          3. Sign the request to complete login. You can’t purchase until you
-          see a picture of Elon
-        </li>
+        <li>3. Sign the request to complete login.</li>
         <li>
           4. If you have errors purchasing see
           <a
@@ -66,15 +63,15 @@ const PurchaseChecklist = ({
           for error issues. Bignumber, mispriced, Internal JSON-RPC, etc
         </li>
         <li>
-          5. Make sure you are switched to the MATIC network and have at least
-          1.01 MATIC
+          5. Make sure you are switched to the correct network and have
+          sufficient funds.
         </li>
         <li>
-          6. Still need help?
+          {/* 6. Still need help?
           <a href="#video" target="_blank" rel="noreferrer">
             {' '}
             Watch this troubleshooting video{' '}
-          </a>
+          </a> */}
         </li>
       </ul>
     </div>

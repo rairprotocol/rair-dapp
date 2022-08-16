@@ -639,7 +639,7 @@ const teamUkraineArray = [
 
 const teamVaporVerseArray = [
   {
-    chain: null,
+    chain: '0x7849194dD593d6c3aeD24035D70B5394a1C90F8F',
     nameTeammate: 'RAIR Technologies',
     imageUrl: Teammate_VV,
     aboutTeammate: [

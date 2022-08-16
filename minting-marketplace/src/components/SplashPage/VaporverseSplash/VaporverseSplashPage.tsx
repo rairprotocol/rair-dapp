@@ -287,7 +287,7 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
         <PurchaseChecklist
           toggleCheckList={toggleCheckList}
           openCheckList={openCheckList}
-          nameSplash={'UkraineGlitch'}
+          nameSplash={'VaporVerse'}
           backgroundColor={{
             darkTheme: 'rgb(3, 91, 188)',
             lightTheme: 'rgb(3, 91, 188)'
