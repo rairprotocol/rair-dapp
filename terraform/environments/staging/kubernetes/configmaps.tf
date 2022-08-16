@@ -1,8 +1,9 @@
 locals {
   vault_url = "https://primary-staging-public-vault-f709a5a3.9b077395.z1.hashicorp.cloud:8200"
   mongo_db_hostname = "primary-pri.cdzdt.mongodb.net"
+  mongo_db_name = "app"
+
   rairnode_configmap = {
-    
     PRODUCTION: "true",
     PINATA_KEY: "aaa581a498f99ed85279",
     ADMIN_NETWORK: "matic",
@@ -35,13 +36,11 @@ locals {
     BINANCE_MAINNET_RPC: "https://bsc-dataseed.binance.org/",
     MONGO_LOG_COLLECTION: "Log",
     LOG_LEVEL: "debug",
-    # REDIS_HOST: "rair-redis",
-    # REDIS_PORT: "6379",
     SESSION_SECRET: "testsecret",
     SESSION_TTL: "12",
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
     MONGO_DB_HOSTNAME: local.mongo_db_hostname,
-    MONGO_DB_NAME: "test",
+    MONGO_DB_NAME: local.mongo_db_name,
     USE_X509_CERT_AUTH: true,
     VAULT_URL: local.vault_url,
   }
@@ -82,7 +81,8 @@ locals {
     ETHEREUM_MAINNET_FACTORY_ADDRESS: "0xC9eF9902fa24923A17326aDdb7da0E67fF46692a",
     ETHEREUM_MAINNET_MINTER_ADDRESS: "0x0Ce668D271b8016a785Bf146e58739F432300B12",
     SYNC_CONTRACT_REPEAT_EVERY: "5",
-    SYNC_CONTRACT_TASK_INTERVAL: "5"
+    SYNC_CONTRACT_TASK_INTERVAL: "5",
+
   }
   media_service_configmap = {
     PRODUCTION: "true",
@@ -126,7 +126,7 @@ locals {
     SESSION_TTL: "12"
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true
     MONGO_DB_HOSTNAME: local.mongo_db_hostname,
-    MONGO_DB_NAME: "test",
+    MONGO_DB_NAME: local.mongo_db_name,
     USE_X509_CERT_AUTH: true,
     VAULT_URL: local.vault_url,
     VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9",

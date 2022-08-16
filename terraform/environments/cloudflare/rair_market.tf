@@ -81,3 +81,26 @@ resource "cloudflare_record" "dev_rairnode_market" {
   value   = "34.160.73.41"
   type    = local.record_type.A
 }
+
+#######################################################
+# Start: Minting marketplace frontend public ingress to GKE
+resource "cloudflare_record" "minting_marketplace_frontend_dev" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = module.shared_config.env_config.dev.minting_marketplace_frontend_subdomain
+  value   = "34.160.12.217"
+  type    = local.record_type.A
+}
+resource "cloudflare_record" "minting_marketplace_frontend_staging" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = module.shared_config.env_config.staging.minting_marketplace_frontend_subdomain
+  value   = "34.160.53.255"
+  type    = local.record_type.A
+}
+resource "cloudflare_record" "minting_marketplace_frontend_prod" {
+  zone_id = cloudflare_zone.rair_market.id
+  name    = module.shared_config.env_config.prod.minting_marketplace_frontend_subdomain
+  value   = "34.160.73.41"
+  type    = local.record_type.A
+}
+# END: Minting marketplace frontend public ingress to GKE
+#######################################################

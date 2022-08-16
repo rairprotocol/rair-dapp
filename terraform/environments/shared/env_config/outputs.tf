@@ -7,7 +7,8 @@ output "env_config" {
       region: "us-west1",
       obfuscated_project_id: "4249348029",
       minting_marketplace_subdomain: "dev",
-      rairnode_subdomain: "dev-rairnode"
+      rairnode_subdomain: "dev-rairnode",
+      minting_marketplace_frontend_subdomain: "new-dev"
     },
     "staging": {
       env_name: "staging",
@@ -16,7 +17,8 @@ output "env_config" {
       region: "us-west1",
       obfuscated_project_id: "5573963367",
       minting_marketplace_subdomain: "new-staging",
-      rairnode_subdomain: "new-staging-rairnode"
+      rairnode_subdomain: "new-staging-rairnode",
+      minting_marketplace_frontend_subdomain: "new-staging"
     },
     "prod": {
       env_name: "prod",
@@ -25,7 +27,8 @@ output "env_config" {
       region: "us-west1",
       obfuscated_project_id: "9550688921",
       minting_marketplace_subdomain: "",
-      rairnode_subdomain: "rairnode"
+      rairnode_subdomain: "rairnode",
+      minting_marketplace_frontend_subdomain: "new-prod"
     }
   }
 }

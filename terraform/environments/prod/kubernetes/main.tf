@@ -42,5 +42,5 @@ module "kubernetes_infra" {
   minting_network_configmap_data           = local.minting_network_configmap
   blockchain_event_listener_configmap_data = local.blockchain_event_listener_configmap
   media_service_configmap_data             = {}
-  pull_secret_name                         = "regcred"
+  pull_secret_name                         = "dockercred"
 }

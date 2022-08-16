@@ -6,8 +6,8 @@ locals {
   rairnode_persistent_volume_claim_name_1 = "rairnode-claim1"
   rairnode_persistent_storage_name_0 = "rairnode-claim0"
   rairnode_persistent_storage_name_1 = "rairnode-claim1"
-  # rairnode_image = "rairtechinc/rairservernode:dev_2.103"
-  rairnode_image = "rairtechinc/rairservernode:90388dafbdc70263f019e817a5418316e178ed12"
+  # rairnode_image = "rairtechinc/rairservernode:dev_2.131"
+  rairnode_image = "rairtechinc/rairservernode:df79355b1a2b850a4cc1cdedfee5dc8e2ffdde0d"
   rair_ingress_name = "rair-ingress"
   rairnode_configmap_name = "rairnode-env"
 }
