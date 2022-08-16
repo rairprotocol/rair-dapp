@@ -24,7 +24,7 @@ module "foundation" {
   vpc_cidr_block                        = module.config.env_config.dev.vpc_cidr_block
   mongo_atlas_org_id                    = module.config.mongo_atlas_org_id
   obfuscated_project_id                 = module.config.env_config.dev.obfuscated_project_id
-  minting_marketplace_subdomain         = module.config.env_config.dev.minting_marketplace_subdomain
+  minting_marketplace_subdomain         = module.config.env_config.dev.minting_marketplace_frontend_subdomain
   rairnode_subdomain                    = module.config.env_config.dev.rairnode_subdomain
   account_users                         = [
     {

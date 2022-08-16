@@ -6,7 +6,6 @@ output "env_config" {
       gcp_project_id: "rair-market-dev",
       region: "us-west1",
       obfuscated_project_id: "4249348029",
-      minting_marketplace_subdomain: "dev",
       rairnode_subdomain: "dev-rairnode",
       minting_marketplace_frontend_subdomain: "new-dev"
     },
@@ -16,7 +15,6 @@ output "env_config" {
       gcp_project_id: "rair-market-staging",
       region: "us-west1",
       obfuscated_project_id: "5573963367",
-      minting_marketplace_subdomain: "new-staging",
       rairnode_subdomain: "new-staging-rairnode",
       minting_marketplace_frontend_subdomain: "new-staging"
     },
@@ -26,7 +24,6 @@ output "env_config" {
       gcp_project_id: "rair-market-production",
       region: "us-west1",
       obfuscated_project_id: "9550688921",
-      minting_marketplace_subdomain: "",
       rairnode_subdomain: "rairnode",
       minting_marketplace_frontend_subdomain: "new-prod"
     }
