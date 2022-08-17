@@ -79,7 +79,7 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
+                    --dockerfile Dockerfile \
                     --context ./rairnode/ \
                     --verbosity debug \
                     --cleanup \
@@ -100,7 +100,7 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
+                    --dockerfile Dockerfile \
                     --context ./blockchain-networks-service/ \
                     --verbosity debug \
                     --cleanup \
