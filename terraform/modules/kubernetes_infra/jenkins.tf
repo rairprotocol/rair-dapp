@@ -19,6 +19,7 @@ resource "kubernetes_persistent_volume_claim" "claim" {
     resources {
       requests = {
         storage = "20Gi"
+        
       }
     }
   }

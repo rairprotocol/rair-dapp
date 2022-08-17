@@ -28,6 +28,9 @@ resource "kubernetes_service" "media_service_service" {
     }
   }
   spec {
+    selector = {
+      app = local.media_service_namespace
+    }
     port {
       port        = 5002
       target_port = local.media_service_default_port_1
@@ -43,7 +46,7 @@ resource "kubernetes_deployment" "media_service" {
     kubernetes_config_map.media_service_configmap
   ]
   metadata {
-    name = "${local.media_service_namespace}-deployment"
+    name = "${local.media_service_namespace}"
     labels = {
       managedby = "terraform"
     }
@@ -51,7 +54,7 @@ resource "kubernetes_deployment" "media_service" {
 
   spec {
     
-    replicas = 1
+    replicas = 1 
 
     selector {
       match_labels = {

@@ -2,7 +2,7 @@ locals {
   blockchain_event_listener_namespace = var.namespace_secrets.default.namespace
   blockchain_event_listener_service = "blockchain-event-listener-primary"
   # blockchain_event_listener_image = "rairtechinc/blockchain-event-listener:dev_2.131"
-  blockchain_event_listener_image = "rairtechinc/blockchain-event-listener:df79355b1a2b850a4cc1cdedfee5dc8e2ffdde0d"
+  blockchain_event_listener_image = "rairtechinc/blockchain-event-listener:1aa03211ec4bd82e28af48af91a81cb8bcf70e54"
   blockchain_event_listener_default_port_1 = "5001"
   blockchain_event_listener_config_map = "blockchain-event-listener-env"
 }
