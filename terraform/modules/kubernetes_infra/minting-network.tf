@@ -17,6 +17,8 @@ resource "kubernetes_config_map" "minting_network_configmap" {
 }
 
 resource "kubernetes_ingress_v1" "minting_network_ingress" {
+  count = var.enable_public_ingress_minting_marketplace == true ? 1 : 0
+  
   metadata {
     name = "minting-network-public-ingress"
     annotations = {

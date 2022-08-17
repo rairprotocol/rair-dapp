@@ -169,6 +169,8 @@ resource "kubernetes_deployment" "rairnode" {
 }
 
 resource "kubernetes_ingress_v1" "rairnode_ingress" {
+  count = var.enable_public_ingress_rairnode == true ? 1 : 0
+  
   metadata {
     name = local.rair_ingress_name
     annotations = {

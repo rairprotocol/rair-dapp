@@ -25,3 +25,14 @@ variable "media_service_configmap_data" {
 variable "pull_secret_name" {
   type = string
 }
+
+variable "enable_public_ingress_rairnode" {
+  type = bool
+  default = false
+}
+
+variable "enable_public_ingress_minting_marketplace" {
+  type = bool
+  default = false
+}
+
