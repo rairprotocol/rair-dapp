@@ -56,14 +56,14 @@ resource "cloudflare_record" "rair_market__nftnyc_rair_market" {
 
 resource "cloudflare_record" "dev_rair_market" {
   zone_id = cloudflare_zone.rair_market.id
-  name    = module.shared_config.env_config.dev.minting_marketplace_subdomain
+  name    = module.shared_config.env_config.dev.minting_marketplace_frontend_subdomain
   value   = "34.160.12.217"
   type    = local.record_type.A
 }
 
 resource "cloudflare_record" "staging_rair_market" {
   zone_id = cloudflare_zone.rair_market.id
-  name    = module.shared_config.env_config.staging.minting_marketplace_subdomain
+  name    = module.shared_config.env_config.staging.minting_marketplace_frontend_subdomain
   value   = "34.160.53.255"
   type    = local.record_type.A
 }
