@@ -428,7 +428,7 @@ const WorkflowSteps: React.FC = () => {
                 <div className="col-12 my-5" style={{ position: 'relative' }}>
                   {steps.length > 0 && currentStep !== 0 && (
                     <div
-                      style={{ position: 'absolute', left: 0 }}
+                      style={{ position: 'absolute', left: 20 }}
                       className="border-stimorol btn rounded-rair p-0">
                       <button
                         onClick={goBack}
