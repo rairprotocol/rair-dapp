@@ -1,18 +1,23 @@
 const express = require('express');
-const { getTransaction } = require('../integrations/ethers/transactionCatcher');
+const axios = require('axios');
 const { JWTVerification } = require('../middleware');
-
+// eslint-disable-next-line no-unused-vars
 module.exports = (context) => {
   const router = express.Router();
 
   router.post('/:network/:hash', JWTVerification, async (req, res, next) => {
     try {
-      const { network, hash } = req.params;
-      if (!network || !hash) {
-        res.json({ success: false, message: 'Missing data' });
-      }
-      const result = await getTransaction(network, hash, req.user.publicAddress, context.db);
-      res.json({ success: result !== undefined, foundEvents: result });
+      const response = await axios({
+        method: 'POST',
+        url: `${process.env.BASE_BCN_URL}/api/v1/transaction/${req.params.network}/${req.params.hash}`,
+        headers: req.headers,
+        // params: req.params,
+        body: req.body,
+      });
+      res.json({
+        success: response.data.success,
+        foundEvents: response.data.foundEvents,
+      });
     } catch (e) {
       next(e);
     }

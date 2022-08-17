@@ -21,13 +21,15 @@ const {
   registerCustomSplits,
   updateResaleOffer,
 } = require('../../utils/eventCatcherUtils');
+const log = require('../../utils/logger')(module);
 
 // Contract ABIs
 const Rair721 = require('./contracts/RAIR_ERC721.json').abi;
 const MinterMarketplace = require('./contracts/Minter_Marketplace.json').abi;
 const MasterFactory = require('./contracts/RAIR_Token_Factory.json').abi;
 const DiamondFactory = require('./contracts/diamondFactoryABI.json').abi;
-const DiamondMarketplace = require('./contracts/diamondMarketplaceABI.json').abi;
+const DiamondMarketplace =
+  require('./contracts/diamondMarketplaceABI.json').abi;
 const ResaleMarketplace = require('./contracts/Resale_Marketplace.json').abi;
 
 const { providersMapping } = require('../../utils/speedyNodeProviders');
@@ -79,7 +81,9 @@ const getContractEvents = (abi, isDiamond = false) => {
   const contractInterface = new ethers.utils.Interface(abi);
   const mapping = {};
   Object.keys(contractInterface.events).forEach((eventSignature) => {
-    const singleAbi = abi.filter((item) => eventSignature.includes(item.name) && item.type === 'event')[0];
+    const singleAbi = abi.filter(
+      (item) => eventSignature.includes(item.name) && item.type === 'event',
+    )[0];
     mapping[ethers.utils.id(eventSignature)] = {
       signature: eventSignature,
       abi: [singleAbi],
@@ -99,26 +103,37 @@ const masterMapping = {
   ...getContractEvents(ResaleMarketplace),
 };
 
-const getTransaction = async (network, transactionHash, userAddress, dbModels) => {
+const getTransaction = async (
+  network,
+  transactionHash,
+  userAddress,
+  dbModels,
+) => {
   try {
     // Validate that the processed transaction doesn't exist already in the database
-    const existingTransaction = await dbModels.Transaction.findOne({ _id: transactionHash });
+    const existingTransaction = await dbModels.Transaction.findOne({
+      _id: transactionHash,
+    });
     if (existingTransaction !== null) {
-      throw Error(`Transaction Verification failed for tx: ${transactionHash}, the transaction is already processed`);
+      throw Error(
+        `Transaction Verification failed for tx: ${transactionHash}, the transaction is already processed`,
+      );
     }
     // Store on DB that the transaction is being processed
-    let newTransaction = await (new dbModels.Transaction({
+    let newTransaction = await new dbModels.Transaction({
       _id: transactionHash,
       blockchainId: network,
-    })).save();
+    }).save();
 
-    console.log(`Querying hash ${transactionHash} on ${network} using ${endpoints[network]}`);
+    log.info(
+      `Querying hash ${transactionHash} on ${network} using ${endpoints[network]}`,
+    );
 
     // Default values in case the Moralis SDK query works
     let transactionReceipt;
     let fromAddressLabel = 'from_address';
     let toAddressLabel = 'to_address';
-    let logIndexLabel = 'log_index';
+    // let logIndexLabel = 'log_index';
     let transactionHashLabel = 'hash';
 
     // Retreive data from Moralis SDK (Cheaper than speedy nodes (Feb 2022))
@@ -130,18 +145,20 @@ const getTransaction = async (network, transactionHash, userAddress, dbModels) =
       // Catch any error if the SDK fails
       transactionReceipt = await Moralis.Web3API.native.getTransaction(options);
     } catch (err) {
-      console.error(err);
+      log.error(err);
     }
 
     if (!transactionReceipt) {
-      console.error(`Validation failed for tx ${transactionHash}, couldn't get a response from Moralis`);
-      transactionReceipt = await providersMapping[network]
-        .provider
-        .getTransactionReceipt(transactionHash);
+      log.error(
+        `Validation failed for tx ${transactionHash}, couldn't get a response from Moralis`,
+      );
+      transactionReceipt = await providersMapping[
+        network
+      ].provider.getTransactionReceipt(transactionHash);
       // Values to get the data in the ethers.js format
       fromAddressLabel = 'from';
       toAddressLabel = 'to';
-      logIndexLabel = 'logIndex';
+      // logIndexLabel = 'logIndex';
       transactionHashLabel = 'transactionHash';
     }
 
@@ -149,8 +166,10 @@ const getTransaction = async (network, transactionHash, userAddress, dbModels) =
     if (transactionReceipt[fromAddressLabel].toLowerCase() !== userAddress) {
       newTransaction.processed = true;
       await newTransaction.save();
-      await dbModels.deleteOne({ _id: newTransaction._id });
-      throw Error(`Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userAddress}`);
+      await dbModels.Transaction.deleteOne({ _id: newTransaction._id });
+      throw Error(
+        `Transaction Authentication failed for tx: ${transactionHash}, expected ${transactionReceipt[fromAddressLabel]} to equal ${userAddress}`,
+      );
     }
 
     // Fill out data from the transaction
@@ -166,12 +185,7 @@ const getTransaction = async (network, transactionHash, userAddress, dbModels) =
       if (event.topic0) {
         // In case the data comes from the Moralis SDK
         // Formats the topic data into something ethers can decode
-        event.topics = [
-          event.topic0,
-          event.topic1,
-          event.topic2,
-          event.topic3,
-        ];
+        event.topics = [event.topic0, event.topic1, event.topic2, event.topic3];
         // Filters all the null topics
         event.topics = event.topics.filter((item) => item !== null);
       }
@@ -181,23 +195,32 @@ const getTransaction = async (network, transactionHash, userAddress, dbModels) =
         const found = masterMapping[item];
         if (found) {
           if (!Object.keys(insertionMapping).includes(found.abi[0].name)) {
-            console.log('Ignoring event', found.abi[0].name, ', not relevant for syncing');
+            log.info(
+              'Ignoring event',
+              found.abi[0].name,
+              ', not relevant for syncing',
+            );
             return;
           }
           const contractInterface = new ethers.utils.Interface(found.abi);
-          console.log(`TRANSACTION CATCHER - Found Event: ${found.signature}`);
+          log.info(`TRANSACTION CATCHER - Found Event: ${found.signature}`);
           // console.log('Sig', found.signature, 'Data', event.data, 'Topics', event.topics)
           const decodedData = contractInterface.decodeEventLog(
             found.signature,
             event.data,
             event.topics,
           );
-          // console.log(decodedData);
           if (found.insertionOperation) {
             insertionQueue.push({
               eventData: found,
               operation: found.insertionOperation,
-              params: [dbModels, network, transactionReceipt, found.diamondEvent, ...decodedData],
+              params: [
+                dbModels,
+                network,
+                transactionReceipt,
+                found.diamondEvent,
+                ...decodedData,
+              ],
             });
           }
 
@@ -214,12 +237,17 @@ const getTransaction = async (network, transactionHash, userAddress, dbModels) =
 
     if (insertionQueue.length > 0) {
       // Wait until all events are processed to actually insert them on the database
+      // eslint-disable-next-line no-restricted-syntax
       for await (const insertion of insertionQueue) {
         // This can be optimized if there are more than one event of the same type
         try {
           await insertion.operation(...insertion.params);
         } catch (err) {
-          console.error('Error storing information of event', insertion.eventData, err);
+          log.error(
+            'Error storing information of event',
+            insertion.eventData,
+            err,
+          );
         }
       }
       // Set transaction as fully processed ONLY if there was something to insert, otherwise ignore
@@ -227,7 +255,6 @@ const getTransaction = async (network, transactionHash, userAddress, dbModels) =
       newTransaction.caught = true;
       await newTransaction.save();
     }
-
     return result;
   } catch (err) {
     throw Error(err);

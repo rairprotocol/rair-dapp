@@ -38,7 +38,8 @@ const {
   MORALIS_MASTER_KEY_TEST,
   MORALIS_MASTER_KEY_MAIN,
   SENTRY_DSN,
-  LOG_LEVEL
+  BASE_RAIRNODE_URL,
+  LOG_LEVEL,
 } = process.env;
 
 module.exports = {
@@ -59,7 +60,7 @@ module.exports = {
         watchCollection: 'watchedPolygonAddress',
         network: '0x13881',
         name: 'Matic Mumbai Testnet',
-        testnet: true
+        testnet: true,
       },
       '0x38': {
         authenticityHost: BSCSCAN_GATEWAY,
@@ -74,7 +75,7 @@ module.exports = {
         watchCollection: 'watchedBscAddress',
         network: '0x38',
         name: 'Binance Mainnet',
-        testnet: false
+        testnet: false,
       },
       '0x61': {
         authenticityHost: TEST_BSCSCAN_GATEWAY,
@@ -89,7 +90,7 @@ module.exports = {
         watchCollection: 'watchedBscAddress',
         network: '0x61',
         name: 'Binance Testnet',
-        testnet: true
+        testnet: true,
       },
       '0x1': {
         authenticityHost: ETHERSCAN_GATEWAY,
@@ -104,7 +105,7 @@ module.exports = {
         watchCollection: 'watchedEthAddress',
         network: '0x1',
         name: 'Ethereum Mainnet',
-        testnet: false
+        testnet: false,
       },
       '0x5': {
         authenticityHost: TEST_ETHERSCAN_GATEWAY,
@@ -119,7 +120,7 @@ module.exports = {
         watchCollection: 'watchedEthAddress',
         network: '0x5',
         name: 'Goerli Testnet',
-        testnet: true
+        testnet: true,
       },
       '0x89': {
         authenticityHost: POLYGONSCAN_GATEWAY,
@@ -134,26 +135,28 @@ module.exports = {
         watchCollection: 'watchedPolygonAddress',
         network: '0x89',
         name: 'Matic Mainnet',
-        testnet: false
-      }
+        testnet: false,
+      },
     },
     moralis: {
       mainnet: {
         serverUrl: MORALIS_SERVER_MAIN,
         appId: MORALIS_API_KEY_MAIN,
-        masterKey: MORALIS_MASTER_KEY_MAIN
+        masterKey: MORALIS_MASTER_KEY_MAIN,
       },
       testnet: {
         serverUrl: MORALIS_SERVER_TEST,
         appId: MORALIS_API_KEY_TEST,
-        masterKey: MORALIS_MASTER_KEY_TEST
-      }
-    }
+        masterKey: MORALIS_MASTER_KEY_TEST,
+      },
+    },
   },
   sentry: {
     dsn: SENTRY_DSN || '',
     serverName: 'blockchain-service',
     logLevels: ['error'],
   },
+  rairnode: {
+    baseUri: BASE_RAIRNODE_URL,
+  },
 };
-

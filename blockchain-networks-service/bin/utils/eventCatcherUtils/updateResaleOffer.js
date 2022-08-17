@@ -1,37 +1,33 @@
-const {
-    findContractFromAddress,
-} = require('./eventsCommonUtils');
+const { findContractFromAddress, log } = require('./eventsCommonUtils');
 
 module.exports = async (
-    dbModels,
+  dbModels,
+  chainId,
+  transactionReceipt,
+  diamondEvent,
+  offerId,
+  contractAddress,
+  oldPrice,
+  newPrice,
+) => {
+  const contract = await findContractFromAddress(
+    contractAddress,
     chainId,
     transactionReceipt,
-    diamondEvent,
-    offerId,
-    contractAddress,
-    oldPrice,
-    newPrice,
-    ) => {
+    dbModels,
+  );
 
-    const contract = await findContractFromAddress(
-        contractAddress,
-        chainId,
-        transactionReceipt,
-        dbModels
-    )
+  const foundOffer = await dbModels.ResaleTokenOffer.findOne({
+    tradeid: offerId,
+    contract: contract._id,
+  });
 
-    const foundOffer = await dbModels.ResaleTokenOffer.findOne({
-        tradeid: offerId,
-        contract: contract._id
-    })
-
-    if (foundOffer) {
-        foundOffer.price = newPrice;
-        await foundOffer.save();
-    } else {
-        log.error(
-            `[${chainId}] Error updating resale offer, couldn't find offer ${offerId} with old price ${oldPrice}`,
-        );
-    }
-
-}
+  if (foundOffer) {
+    foundOffer.price = newPrice;
+    await foundOffer.save();
+  } else {
+    log.error(
+      `[${chainId}] Error updating resale offer, couldn't find offer ${offerId} with old price ${oldPrice}`,
+    );
+  }
+};

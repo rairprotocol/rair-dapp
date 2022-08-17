@@ -3,17 +3,25 @@ const { nanoid } = require('nanoid');
 
 const { Schema } = mongoose;
 
-const User = new Schema({
-  email: { type: String, default: null },
-  nickName: { type: String, unique: true },
-  avatar: { type: String, default: null },
-  background: { type: String, default: null },
-  firstName: { type: String, default: null, trim: true },
-  lastName: { type: String, default: null, trim: true },
-  publicAddress: { type: String, lowercase:true, required: true, unique: true },
-  nonce: { type: String, default: () => nanoid() },
-  creationDate: { type: Date, default: Date.now }
-}, { versionKey: false });
+const User = new Schema(
+  {
+    email: { type: String, default: null },
+    nickName: { type: String, unique: true },
+    avatar: { type: String, default: null },
+    background: { type: String, default: null },
+    firstName: { type: String, default: null, trim: true },
+    lastName: { type: String, default: null, trim: true },
+    publicAddress: {
+      type: String,
+      lowercase: true,
+      required: true,
+      unique: true,
+    },
+    nonce: { type: String, default: () => nanoid() },
+    creationDate: { type: Date, default: Date.now },
+  },
+  { versionKey: false },
+);
 
 User.pre('save', function signNickName(next) {
   if (!this.nickName) {

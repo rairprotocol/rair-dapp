@@ -54,6 +54,7 @@ services:
       SESSION_SECRET: ${session_secret}
       SESSION_TTL: ${session_ttl}
       SENTRY_DSN: ${sentry_dsn}
+      BASE_BCN_URL: ${base_bcn_url}
     ports:
       - 3000:3000
       - 5000:5000
@@ -129,6 +130,13 @@ services:
       MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
       MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
       SENTRY_DSN: ${sentry_dsn}
+      BASE_RAIRNODE_URL: ${base_rairnode_url}
+      MATIC_TESTNET_RPC: ${matic_testnet_rpc}
+      MATIC_MAINNET_RPC: ${matic_mainnet_rpc}
+      BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
+      BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
+      ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
+      ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
     ports:
       - 5001:5001
     depends_on:

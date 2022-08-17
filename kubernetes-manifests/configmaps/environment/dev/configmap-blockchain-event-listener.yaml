@@ -45,3 +45,10 @@ data:
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
   VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9"
   VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: "dcb29f8c-58c4-b5a0-a0eb-63624a594291"
+  BASE_RAIRNODE_URL: http://rairnode:5000
+  MATIC_TESTNET_RPC: https://polygon-mumbai.infura.io/v3/92a88973a28d41318792f77451db4c5b
+  MATIC_MAINNET_RPC: https://polygon-mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b
+  BINANCE_MAINNET_RPC: https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b
+  BINANCE_TESTNET_RPC: https://data-seed-prebsc-1-s1.binance.org:8545/
+  ETHEREUM_MAINNET_RPC: https://mainnet.infura.io/v3/92a88973a28d41318792f77451db4c5b
+  ETHEREUM_TESTNET_GOERLI_RPC: https://goerli.infura.io/v3/92a88973a28d41318792f77451db4c5b
