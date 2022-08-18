@@ -30,6 +30,11 @@ const getNftDataError = (errorMessage: string) =>
     errorMessage
   } as const);
 
+const setTokenDataStart = () =>
+  ({
+    type: types.SET_SELECTED_INDEX_START
+  } as const);
+
 const setTokenData = (tokenData: TTokenData[]) =>
   ({ type: types.SET_SELECTED_INDEX, tokenData } as const);
 
@@ -39,5 +44,6 @@ export {
   getNftListTotal,
   getNftListTotalClear,
   getNftDataError,
+  setTokenDataStart,
   setTokenData
 };

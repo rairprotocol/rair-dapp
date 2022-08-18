@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import setDocumentTitle from '../../../../utils/setTitle';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import TitleCollection from './TitleCollection/TitleCollection';
+import { CircularProgress } from '@mui/material';
 const NftUnlockablesPage = ({
   embeddedParams,
   blockchain,
@@ -20,7 +21,7 @@ const NftUnlockablesPage = ({
   tokenData,
   someUsersData,
   collectionName,
-
+  isLoading,
   // data,
   // handleClickToken,
   // setSelectedToken,
@@ -51,6 +52,18 @@ const NftUnlockablesPage = ({
   useEffect(() => {
     setSelectVideo(productsFromOffer[0]);
   }, [setSelectVideo, productsFromOffer]);
+
+  if (productsFromOffer.length === 0) {
+    return (
+      <div className="list-wrapper-empty">
+        <CircularProgress
+          sx={{ color: '#E882D5' }}
+          size={100}
+          thickness={4.6}
+        />
+      </div>
+    );
+  }
 
   return (
     <div ref={myRef} className="wrapper-unlockables-page">

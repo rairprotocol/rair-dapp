@@ -5,7 +5,8 @@ import {
   getNftListTotal,
   getNftListTotalClear,
   setNftData,
-  setTokenData
+  setTokenData,
+  setTokenDataStart
 } from './action';
 
 export interface InitialNftDataStateType {
@@ -14,7 +15,7 @@ export interface InitialNftDataStateType {
   nftListTotal: number | undefined;
   itemsPerPage: number;
   errorMessage: string;
-  tokenData: TTokenData[];
+  tokenData: TTokenData[] | null;
 }
 
 export type TNftDataItem = {
@@ -56,6 +57,7 @@ export type TSetNftData = ReturnType<typeof setNftData>;
 export type TGetNftListTotal = ReturnType<typeof getNftListTotal>;
 export type TGetNftListTotalClear = ReturnType<typeof getNftListTotalClear>;
 export type TGetNftDataErrorType = ReturnType<typeof getNftDataError>;
+export type TSetTokenDataStart = ReturnType<typeof setTokenDataStart>;
 export type TSetTokenData = ReturnType<typeof setTokenData>;
 
 export type TNftDataReducerActionType =
@@ -64,4 +66,5 @@ export type TNftDataReducerActionType =
   | TGetNftListTotal
   | TGetNftListTotalClear
   | TGetNftDataErrorType
+  | TSetTokenDataStart
   | TSetTokenData;

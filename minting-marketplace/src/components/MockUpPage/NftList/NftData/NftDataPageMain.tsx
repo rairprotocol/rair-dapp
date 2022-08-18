@@ -15,6 +15,7 @@ import SerialNumberBuySell from './SerialNumberBuySell';
 import { TitleSingleTokenView } from './TitleSingleTokenView';
 import SingleTokenViewProperties from './SingleTokenViewProperties';
 import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
+import { CircularProgress } from '@mui/material';
 
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
@@ -125,6 +126,18 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
       );
     }
   }, [offerDataInfo]);
+
+  if (!selectedData.name) {
+    return (
+      <div className="list-wrapper-empty">
+        <CircularProgress
+          sx={{ color: '#E882D5' }}
+          size={100}
+          thickness={4.6}
+        />
+      </div>
+    );
+  }
 
   return (
     <main ref={myRef} id="nft-data-page-wrapper">

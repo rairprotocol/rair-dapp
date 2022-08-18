@@ -3,6 +3,7 @@ import React, { memo } from 'react';
 // import Skeleton from "@mui/material/Skeleton";
 import { NftItem } from './NftItem';
 import { useSelector } from 'react-redux';
+import { CircularProgress } from '@mui/material';
 
 const NftListComponent = ({
   data,
@@ -17,7 +18,11 @@ const NftListComponent = ({
   if (loading) {
     return (
       <div className="list-wrapper-empty">
-        <h2>Loading...</h2>
+        <CircularProgress
+          sx={{ color: '#E882D5' }}
+          size={100}
+          thickness={4.6}
+        />
       </div>
     );
     // return (

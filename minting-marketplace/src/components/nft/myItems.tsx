@@ -262,7 +262,7 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
               <PersonalProfileMyVideoTab titleSearch={titleSearch} />
             </TabPanel>
             <TabPanel>
-              <h1> My favorites</h1>
+              <h1>Coming soon</h1>
             </TabPanel>
             <TabPanel>
               <PersonalProfileMyCreated

@@ -1,4 +1,5 @@
 //@ts-nocheck
+import { CircularProgress } from '@mui/material';
 import { IVideoList } from './video.types';
 import VideoItem from './videoItem';
 
@@ -6,9 +7,16 @@ const VideoList: React.FC<IVideoList> = ({ loading, videos, titleSearch }) => {
   if (loading) {
     // return <h2>Loading...</h2>;
     return (
-      <div className="loader-wrapper">
-        <div className="load" />
+      <div className="list-wrapper-empty">
+        <CircularProgress
+          sx={{ color: '#E882D5' }}
+          size={100}
+          thickness={4.6}
+        />
       </div>
+      // <div className="loader-wrapper">
+      //   <div className="load" />
+      // </div>
     );
   }
 

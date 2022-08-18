@@ -859,6 +859,12 @@ p.general-title {
   }
 }
 
+@media screen and (max-width: 1024px) {
+  .collection-no-products {
+    margin-top: 100px;
+  }
+}
+
 @media screen and (max-width: 700px) {
   .unlockable-video {
     width: 384px;

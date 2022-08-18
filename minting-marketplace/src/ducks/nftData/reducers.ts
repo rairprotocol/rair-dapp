@@ -10,7 +10,7 @@ const InitialState: InitialNftDataStateType = {
   nftListTotal: undefined,
   itemsPerPage: 20,
   errorMessage: '',
-  tokenData: []
+  tokenData: null
 };
 
 export default function nftDataStore(
@@ -53,9 +53,18 @@ export default function nftDataStore(
         errorMessage: action.errorMessage
       };
 
+    case types.SET_SELECTED_INDEX_START: {
+      return {
+        ...state,
+        loading: true,
+        tokenData: null
+      };
+    }
+
     case types.SET_SELECTED_INDEX: {
       return {
         ...state,
+        loading: false,
         tokenData: action.tokenData
       };
     }

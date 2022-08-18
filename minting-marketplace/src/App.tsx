@@ -94,7 +94,10 @@ import WelcomeHeader from './components/FrontPage/WelcomeHeader';
 import MainHeader from './components/Header/MainHeader';
 import SlideLock from './components/SplashPage/SlideLock/SlideLock';
 import VideoTilesTest from './components/SplashPage/SplashPageTemplate/VideoTiles/VideosTilesTest';
-import { AppContainerFluid } from './styled-components/nft/AppContainer';
+import {
+  AppContainerFluid,
+  MainBlockApp
+} from './styled-components/nft/AppContainer';
 
 const rSwal = withReactContent(Swal);
 
@@ -440,7 +443,8 @@ function App() {
         backgroundImageEffect={backgroundImageEffect}
         textColor={textColor}
         primaryColor={primaryColor}
-        backgroundImage={backgroundImage}>
+        backgroundImage={backgroundImage}
+        showAlert={showAlert}>
         <div className="row w-100 m-0 p-0">
           {carousel ? (
             <MainHeader
@@ -485,7 +489,7 @@ function App() {
           {/*
 							Main body, the header, router and footer are here
 						*/}
-          <div className="main-block-app">
+          <MainBlockApp showAlert={showAlert} selectedChain={selectedChain}>
             <div className="col-12 blockchain-switcher" />
             <div className="col-12 mt-3 row">
               <SentryRoutes>
@@ -823,7 +827,7 @@ function App() {
                 })}
               </SentryRoutes>
             </div>
-          </div>
+          </MainBlockApp>
         </div>
       </AppContainerFluid>
       <Footer />

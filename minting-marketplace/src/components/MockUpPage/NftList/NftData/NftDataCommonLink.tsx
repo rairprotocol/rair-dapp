@@ -15,7 +15,10 @@ import {
 } from '../../../../axios.responseTypes';
 import { utils } from 'ethers';
 import { RootState } from '../../../../ducks';
-import { setTokenData } from '../../../../ducks/nftData/action';
+import {
+  setTokenData,
+  setTokenDataStart
+} from '../../../../ducks/nftData/action';
 
 const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
   const [collectionName, setCollectionName] = useState();
@@ -61,17 +64,11 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
     }
   }, [currentUserAddress]);
 
-  useEffect(() => {
-    dispatch(setRealChain(blockchain));
-  }, [blockchain, dispatch]);
-
-  useEffect(() => {
-    checkUserConnect();
-  }, [checkUserConnect]);
-
   const getAllProduct = useCallback(
     async (fromToken: string, toToken: string) => {
-      setIsLoading(true);
+      // setIsLoading(true);
+      // dispatch(setTokenDataStart());
+
       let responseAllProduct;
       if (tokenId > 15) {
         responseAllProduct = await axios.get(
@@ -82,7 +79,7 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
           `/api/nft/network/${blockchain}/${contract}/${product}?fromToken=${fromToken}&toToken=${toToken}`
         );
       }
-      setIsLoading(false);
+      // setIsLoading(false);
       dispatch(setTokenData(responseAllProduct.data.result.tokens));
       setTotalCount(responseAllProduct.data.result.totalCount);
 
@@ -98,6 +95,7 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
   );
 
   const getProductsFromOffer = useCallback(async () => {
+    setIsLoading(true);
     if (userToken) {
       const responseIfUserConnect = await axios.get<TNftFilesResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}/files`,
@@ -109,14 +107,14 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
         }
       );
       setProductsFromOffer(responseIfUserConnect.data.files);
-      setSelectedOfferIndex(tokenData[tokenId]?.offer);
+      setSelectedOfferIndex(tokenData && tokenData[tokenId]?.offer);
     } else {
       const response = await axios.get<TNftFilesResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}/files`
       );
-
+      setIsLoading(false);
       setProductsFromOffer(response.data.files);
-      setSelectedOfferIndex(tokenData[tokenId]?.offer);
+      setSelectedOfferIndex(tokenData && tokenData[tokenId]?.offer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain, contract, product, tokenId, userToken]);
@@ -176,28 +174,41 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
 
   const onSelect = useCallback(
     (id) => {
-      tokenData.forEach((p) => {
-        if (p._id === id) {
-          setSelectedData(p.metadata);
-        }
-      });
+      tokenData &&
+        tokenData.forEach((p) => {
+          if (p._id === id) {
+            setSelectedData(p.metadata);
+          }
+        });
     },
     [tokenData]
   );
 
-  const handleClickToken = async (tokenId) => {
+  const handleClickToken = async (tokenId: string) => {
     if (embeddedParams) {
       embeddedParams.setTokenId(tokenId);
     } else {
       navigate(`/tokens/${blockchain}/${contract}/${product}/${tokenId}`);
     }
 
-    if (tokenData.length >= Number(tokenId)) {
-      setSelectedData(tokenData[tokenId].metadata);
+    if (tokenData && tokenData.length >= Number(tokenId)) {
+      setSelectedData(tokenData && tokenData[tokenId].metadata);
     }
 
     setSelectedToken(tokenId);
   };
+
+  useEffect(() => {
+    dispatch(setTokenDataStart());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(setRealChain(blockchain));
+  }, [blockchain, dispatch]);
+
+  // useEffect(() => {
+  //   checkUserConnect();
+  // }, [checkUserConnect]);
 
   useEffect(() => {
     getAllProduct(0, showToken);
@@ -241,6 +252,7 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
   } else if (mode === 'unlockables') {
     return (
       <NftUnlockablesPage
+        isLoading={isLoading}
         userData={userData}
         embeddedParams={embeddedParams}
         blockchain={blockchain}

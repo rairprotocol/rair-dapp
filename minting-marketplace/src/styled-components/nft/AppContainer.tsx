@@ -20,3 +20,8 @@ export const AppContainerFluid = styled.div`
     background-size: contain;
   }
 `;
+
+export const MainBlockApp = styled.div`
+  margin-top: ${(props) =>
+    props.showAlert && props.selectedChain ? '65px' : '0'};
+`;
