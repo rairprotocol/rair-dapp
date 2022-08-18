@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import InputField from '../../common/InputField';
-import InputSelect from '../../common/InputSelect';
+//import InputSelect from '../../common/InputSelect';
 import Swal from 'sweetalert2';
 import { web3Switch } from '../../../utils/switchBlockchain';
 import { metamaskCall } from '../../../utils/metamaskUtils';
@@ -14,7 +14,7 @@ import {
 } from '../creatorStudio.types';
 import { RootState } from '../../../ducks';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
-import { UsersContractsType } from '../../adminViews/adminView.types';
+//import { UsersContractsType } from '../../adminViews/adminView.types';
 import { rFetch } from '../../../utils/rFetch';
 import { TTokenData } from '../../../axios.responseTypes';
 
@@ -99,13 +99,15 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
     useState<string>('');
   const [appendTokenForCollection, setAppendTokenForCollection] =
     useState<boolean>(false);
-  const [rangeWideMetadata, setRangeWideMetadata] = useState<string>('');
-  const [rangeOptions, setRangeOptions] = useState<UsersContractsType[]>([]);
-  const [selectedRange, setSelectedRange] = useState<string>('null');
-  const [appendTokenForRange, setAppendTokenForRange] =
-    useState<boolean>(false);
+  //const [rangeWideMetadata, setRangeWideMetadata] = useState<string>('');
+  //const [rangeOptions, setRangeOptions] = useState<UsersContractsType[]>([]);
+  //const [selectedRange, setSelectedRange] = useState<string>('null');
+  //const [appendTokenForRange, setAppendTokenForRange] =
+  //useState<boolean>(false);
   const [uniqueURIArray, setUniqueURIArray] = useState<TUniqueURIArray[]>([]);
   const [openSeaURI, setOpenSeaURI] = useState<string>('');
+  const [metadataExtension, setMetadataExtension] = useState<string>('');
+  /*
   useEffect(() => {
     if (contractData?.product?.offers) {
       setRangeOptions(
@@ -118,6 +120,7 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
       );
     }
   }, [contractData]);
+  */
 
   const addUniqueURIRow = () => {
     if (uniqueURIArray.length > lastTokenInProduct) {
@@ -341,6 +344,8 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
           </button>
         </div>
       </details>
+      {/*
+      This might be used later
       <hr />
       <details>
         <summary className="col-12"> Range-wide metadata </summary>
@@ -408,6 +413,46 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               : `${rangeWideMetadata === '' ? 'Uns' : 'S'}et metadata`}
           </button>
         </div>
+      </details>*/}
+      <hr />
+      <details>
+        <summary>Metadata Extension for batch metadata</summary>
+        <InputField
+          customClass="form-control"
+          getter={metadataExtension}
+          setter={setMetadataExtension}
+          placeholder="'.' is required"
+          label="Metadata Extension (Only for URIs in product or contract-wide metadata)"
+        />
+        <button
+          onClick={async () => {
+            if (!checkCurrentBlockchain()) {
+              return;
+            }
+            Swal.fire({
+              title: 'Updating general metadata extension',
+              html: 'This will affect every contract and collection wide metadata',
+              icon: 'info',
+              showConfirmButton: false
+            });
+            setBlockchainOperationInProgress(true);
+
+            if (
+              await metamaskCall(
+                contractData.instance.setMetadataExtension(metadataExtension),
+                'This feature might not be implemented yet!'
+              )
+            ) {
+              Swal.fire('Success', 'General extension updated', 'success');
+            }
+            setBlockchainOperationInProgress(false);
+          }}
+          disabled={blockchainOperationInProgress || !contractData.instance}
+          className="col-12 col-md-6 btn-stimorol btn">
+          {blockchainOperationInProgress
+            ? 'Sending data...'
+            : `${metadataExtension === '' ? 'Uns' : 'S'}et extension`}
+        </button>
       </details>
       <hr />
       <details>

@@ -128,7 +128,7 @@ export default function userStore(
               }
             }
           );
-          //Eslint blocked the console.logs
+          //Eslint bloked the console.logs
           //provider.on('network', (newNetwork, oldNetwork) => {
           // When a Provider makes its initial connection, it emits a "network"
           // event with a null oldNetwork along with the newNetwork. So, if the

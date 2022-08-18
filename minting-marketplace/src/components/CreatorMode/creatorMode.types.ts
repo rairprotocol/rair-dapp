@@ -57,8 +57,6 @@ export interface IExistingLock {
 
 export interface IERC721Manager {
   tokenAddress: string;
-  minter: ethers.Contract | undefined;
-  account: any;
 }
 
 export interface IColdData {
@@ -72,8 +70,6 @@ export interface IColdData {
 export interface ITokenInfo {
   name: string;
   symbol: string;
-  totalSupply: string;
-  productCount: string;
   balance: string;
   address: string | undefined;
 }

@@ -3,9 +3,10 @@ pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "../Tokens/IERC2981.sol";
 
-contract Resale_MarketPlace is AccessControl {
+contract Resale_MarketPlace is AccessControl, ReentrancyGuard {
 	
 	// Status of an offer
 	enum OfferStatus{ OPEN, CLOSED, CANCELLED }
@@ -257,7 +258,7 @@ contract Resale_MarketPlace is AccessControl {
 	/// @notice 	Executes a sale, sending funds to any royalty recipients and transferring the token to the buyer
 	/// @dev 		If custom splits exist, it will execute it, if they don't it will try to use the 2981 standard
 	/// @param 		offerIndex 		Index of the offer on the marketplace
-	function buyResaleOffer(uint256 offerIndex) public payable OpenOffer(offerIndex) isPaused {
+	function buyResaleOffer(uint256 offerIndex) public payable OpenOffer(offerIndex) isPaused nonReentrant{
 		Offer memory selectedOffer = offers[offerIndex];
 		require(
 			msg.sender != address(0) && msg.sender != selectedOffer.sellerAddress,

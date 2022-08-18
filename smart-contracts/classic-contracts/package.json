@@ -21,20 +21,23 @@
   "homepage": "",
   "license": "MIT",
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.4",
-    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.1.0",
     "@openzeppelin/contracts": "^4.4.2",
-    "chai": "^4.3.4",
-    "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.5.4",
-    "hardhat": "^2.8.3",
-    "hardhat-deploy": "^0.10.5",
-    "hardhat-gas-reporter": "^1.0.7"
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.2",
+    "chai": "^4.3.6",
+    "ethers": "^5.6.9",
+    "hardhat": "^2.10.1",
+    "hardhat-deploy": "^0.11.11",
+    "hardhat-gas-reporter": "^1.0.8",
+    "typechain": "^8.0.0"
   },
   "dependencies": {
-    "@nomiclabs/hardhat-etherscan": "^3.0.0",
-    "dotenv": "^10.0.0",
-    "hardhat-contract-sizer": "^2.4.0",
-    "hardhat-tracer": "^1.0.0-alpha.6"
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "dotenv": "^16.0.1",
+    "hardhat-contract-sizer": "^2.6.1",
+    "hardhat-tracer": "^1.1.0-rc.6",
+    "openzeppelin-v4.7.1": "npm:@openzeppelin/contracts@^4.7.1"
   }
 }

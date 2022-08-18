@@ -750,7 +750,7 @@ describe("Diamonds", function () {
 			await expect(await rangesFacet.createRangeBatch(1, [
 				{
 					rangeLength: 101,
-					price: 20000,
+					price: 90000,
 					tokensAllowed: 5,
 					lockedTokens: 5,
 					name: 'Second Second First'
@@ -763,7 +763,7 @@ describe("Diamonds", function () {
 				}
 			]))
 				.to.emit(rangesFacet, 'CreatedRange')
-				.withArgs(1, 0, 100, 20000, 5, 5, 'Second Second First', 2)
+				.withArgs(1, 0, 100, 90000, 5, 5, 'Second Second First', 2)
 				.to.emit(rangesFacet, 'CreatedRange')
 				.withArgs(1, 101, 250, 35000, 50, 10, 'Second Second Second', 3)
 				.to.emit(rangesFacet, 'TradingLocked')
@@ -1094,6 +1094,15 @@ describe("Diamonds", function () {
 				.to.be.revertedWith(`AccessControl: account ${addr2.address.toLowerCase()} is missing role ${await metadataFacet.CREATOR()}`);
 		});
 
+		it ("Shouldn't allow extensions without the '.'", async () => {
+			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
+			await expect(metadataFacet.setMetadataExtension('json'))
+				.to.be.revertedWith("RAIR ERC721: Extension must start with a '.'");
+			await expect(await metadataFacet.setMetadataExtension('.webp'))
+				.to.emit(metadataFacet, "UpdatedURIExtension")
+				.withArgs('.webp');
+		});
+
 		it ("Should set the contract's URI", async () => {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setContractURI("DEV.RAIR.TECH"))
@@ -1107,7 +1116,7 @@ describe("Diamonds", function () {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setBaseURI("devs.rairs.techs/", true))
 				.to.emit(metadataFacet, 'UpdatedBaseURI')
-				.withArgs('devs.rairs.techs/', true);
+				.withArgs('devs.rairs.techs/', true, ".webp");
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("devs.rairs.techs/100");
 		});
@@ -1116,7 +1125,7 @@ describe("Diamonds", function () {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setProductURI(1, 'first.rair.tech/', true))
 				.to.emit(metadataFacet, 'UpdatedProductURI')
-				.withArgs(1, 'first.rair.tech/', true);
+				.withArgs(1, 'first.rair.tech/', true, ".webp");
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("first.rair.tech/0");
 		});
@@ -1173,13 +1182,13 @@ describe("Diamonds", function () {
 				.to.equal("first.rair.tech/0");
 			await expect(await metadataFacet.setProductURI(1, '', true))
 				.to.emit(metadataFacet, 'UpdatedProductURI')
-				.withArgs(1, '', true);
+				.withArgs(1, '', true, ".webp");
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("devs.rairs.techs/100");
 			await expect(await metadataFacet.setBaseURI("", false))
 				.to.emit(metadataFacet, 'UpdatedBaseURI')
-				.withArgs('', false);
+				.withArgs('', false, ".webp");
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("");
@@ -1189,7 +1198,7 @@ describe("Diamonds", function () {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setBaseURI("rair.cryptograyman.com/", false))
 				.to.emit(metadataFacet, 'UpdatedBaseURI')
-				.withArgs("rair.cryptograyman.com/", false);
+				.withArgs("rair.cryptograyman.com/", false, ".webp");
 
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("rair.cryptograyman.com/");
@@ -1199,7 +1208,7 @@ describe("Diamonds", function () {
 			let metadataFacet = await ethers.getContractAt('RAIRMetadataFacet', secondDeploymentAddress);
 			await expect(await metadataFacet.setProductURI(1, "rair.cryptograyman.com/product", false))
 				.to.emit(metadataFacet, 'UpdatedProductURI')
-				.withArgs(1, "rair.cryptograyman.com/product", false);
+				.withArgs(1, "rair.cryptograyman.com/product", false, ".webp");
 				
 			await expect(await metadataFacet.tokenURI(100))
 				.to.equal("rair.cryptograyman.com/product");

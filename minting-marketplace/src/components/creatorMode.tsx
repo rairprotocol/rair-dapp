@@ -74,14 +74,7 @@ const CreatorMode: React.FC<TCreatorMode> = ({ account, addresses }) => {
             <>
               <h3> Your Deployed ERC721 Contracts </h3>
               {deployedTokens.map((item, index) => {
-                return (
-                  <ERC721Manager
-                    key={index}
-                    tokenAddress={item}
-                    minter={minterInstance}
-                    account={account}
-                  />
-                );
+                return <ERC721Manager key={index} tokenAddress={item} />;
               })}
             </>
           )}

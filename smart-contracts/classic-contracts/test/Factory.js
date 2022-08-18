@@ -3,13 +3,17 @@ const { upgrades } = require("hardhat");
 
 describe("Token Factory", function () {
 	let owner, addr1, addr2, addr3, addr4, addr5, addrs;
-	let ERC777Factory, erc777instance, erc777ExtraInstance;
+	let ERC777Factory, erc777Instance, erc777ExtraInstance;
 	let FactoryFactory, factoryInstance;
 	let RAIR721Factory, rair721Instance;
+
 	let MinterFactory, minterInstance;
+
+	let newFactoryInstance, newDeployerInstance;
+	let NewRair721Factory, newRair721Instance;
 	let testFactory, testInstance;
-	
 	let ResaleFactory, resaleInstance;
+
 	const initialSupply = 20;
 	const tokenPrice = 5;
 	const testTokenName = "RAIR Test Token!";
@@ -18,6 +22,14 @@ describe("Token Factory", function () {
 	const collection3Limit = 250;
 	const collection4Limit = 50;
 
+	const priceToMint = 100;
+
+	const rairFeePercentage = 9000; // 9.000%
+	const nodeFeePercentage = 1000; // 1.000%
+
+	const firstDeploymentAddress = '0x2F2f161281f393837cf30a89E4BD18f38Dc07418';
+	const secondDeploymentAddress = '0x5B494da05Fe18De2Fb15393360625D9FC4BcA5EF';
+	const thirdDeploymentAddress = '0x0Ccf6a85510fc2ECD2DB37EF2C886c787D6C4A1d';
 	const resaleOfferPrice = 123000;
 
 	const OfferStatus = {
@@ -25,12 +37,6 @@ describe("Token Factory", function () {
 		CLOSED: 1,
 		CANCELLED: 2
 	};
-	
-	const rairFeePercentage = 9000; // 9.000%
-	const nodeFeePercentage = 1000; // 1.000%
-
-	const firstDeploymentAddress = '0x33791c463B145298c575b4409d52c2BcF743BF67';
-	const secondDeploymentAddress = '0x9472EF1614f103Ae8f714cCeeF4B438D353Ce1Fa';
 	// Contract addresses are derived from the user's address and the nonce of the transaction,
 	//		the generated address will always be the same (on this test file)
 	hre.tracer.nameTags[firstDeploymentAddress] = "First Deployment Address";
@@ -42,36 +48,37 @@ describe("Token Factory", function () {
 		FactoryFactory = await ethers.getContractFactory("RAIR_Token_Factory");
 		RAIR721Factory = await ethers.getContractFactory("RAIR_ERC721");
 		MinterFactory = await ethers.getContractFactory("Minter_Marketplace");
+		NewRair721Factory = await ethers.getContractFactory("RAIR721_Contract");
 		ResaleFactory = await ethers.getContractFactory('Resale_MarketPlace');
 		testFactory = await ethers.getContractFactory('Test721');
 	});
 
 	describe('Deployments', () => {
 		it ("Should deploy the ERC777 contract", async () => {
-			erc777instance = await ERC777Factory.deploy(initialSupply, initialSupply * 5, owner.address, [addr1.address]);
+			erc777Instance = await ERC777Factory.deploy(initialSupply, initialSupply * 5, owner.address, [addr1.address]);
 			erc777ExtraInstance = await ERC777Factory.deploy(initialSupply * 2, initialSupply * 5, owner.address, [addr2.address]);
 			testInstance = await testFactory.deploy();
 
-			expect(await erc777instance.name()).to.equal("RAIR");
-			expect(await erc777instance.symbol()).to.equal("RAIR");
-			expect(await erc777instance.decimals()).to.equal(18);
-			expect(await erc777instance.granularity()).to.equal(1);
-			expect(await erc777instance.totalSupply()).to.equal(initialSupply);
-			hre.tracer.nameTags[erc777instance.address] = "First 777 Address";
+			await expect(await erc777Instance.name()).to.equal("RAIR");
+			await expect(await erc777Instance.symbol()).to.equal("RAIR");
+			await expect(await erc777Instance.decimals()).to.equal(18);
+			await expect(await erc777Instance.granularity()).to.equal(1);
+			await expect(await erc777Instance.totalSupply()).to.equal(initialSupply);
+			hre.tracer.nameTags[erc777Instance.address] = "First 777 Address";
 			hre.tracer.nameTags[erc777ExtraInstance.address] = "Second 777 Address";
 		});
 
 		it ("Should deploy the RAIR Factory", async () => {
 			factoryInstance = await FactoryFactory.deploy(
 				tokenPrice, 			// Price for deployemnt
-				erc777instance.address 	// ERC777 Address
+				erc777Instance.address 	// ERC777 Address
 			);
 			hre.tracer.nameTags[factoryInstance.address] = "Factory";
 		});
 
 		it ("Should deploy the Minter Marketplace", async () => {
 			minterInstance = await MinterFactory.deploy(
-				erc777instance.address, 	// Treasury Address
+				erc777Instance.address, 	// Treasury Address
 				rairFeePercentage, 			// Treasury Royalty Percentage
 				nodeFeePercentage			// Node Royalty Percentage
 			);
@@ -80,7 +87,7 @@ describe("Token Factory", function () {
 
 		it('Should deploy the Resale MarketPlace', async () => {
 			resaleInstance = await ResaleFactory.deploy(
-				erc777instance.address // Treasury Address
+				erc777Instance.address // Treasury Address
 			);
 			hre.tracer.nameTags[resaleInstance.address] = 'Resale Marketplace';
 		});
@@ -91,15 +98,15 @@ describe("Token Factory", function () {
 		it ("Factory", async () => {
 			*	Normal deployment:
 			*	variable = await ContractFactory.deploy(...params);
-			*	factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777instance.address);
+			*	factoryInstance = await FactoryFactory.deploy(tokenPrice, erc777Instance.address);
 			*
 			*	Upgradeable deployment
 			*	variable = await upgrades.deployProxy(ContractFactory, [...params])
-			factoryInstance = await upgrades.deployProxy(FactoryFactory, [tokenPrice, erc777instance.address]);
+			factoryInstance = await upgrades.deployProxy(FactoryFactory, [tokenPrice, erc777Instance.address]);
 		});
 
 		it ("Minter Marketplace", async () => {
-			minterInstance = await upgrades.deployProxy(MinterFactory, [erc777instance.address, 9000, 1000]);
+			minterInstance = await upgrades.deployProxy(MinterFactory, [erc777Instance.address, 9000, 1000]);
 		})
 	})*/
 
@@ -114,7 +121,7 @@ describe("Token Factory", function () {
 		describe('Users', () => {
 			it ("Roles should be set up", async () => {
 				await expect(await factoryInstance.hasRole(await factoryInstance.OWNER(), owner.address)).to.equal(true);
-				await expect(await factoryInstance.hasRole(await factoryInstance.ERC777(), erc777instance.address)).to.equal(true);
+				await expect(await factoryInstance.hasRole(await factoryInstance.ERC777(), erc777Instance.address)).to.equal(true);
 				await expect(await factoryInstance.getRoleAdmin(await factoryInstance.ERC777())).to.equal(await factoryInstance.OWNER());
 				await expect(await factoryInstance.getRoleAdmin(await factoryInstance.OWNER())).to.equal(await factoryInstance.OWNER());
 			});
@@ -126,18 +133,18 @@ describe("Token Factory", function () {
 					.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await factoryInstance.ERC777()}`);
 			});
 			it ("Reverts if there aren't enough tokens for at least 1 contract", async () => {
-				await expect(erc777instance.send(factoryInstance.address, tokenPrice - 1, ethers.utils.toUtf8Bytes('')))
+				await expect(erc777Instance.send(factoryInstance.address, tokenPrice - 1, ethers.utils.toUtf8Bytes('')))
 					.to.be.revertedWith('RAIR Factory: not enough RAIR tokens to deploy a contract');
 			});
 
 			it ("Deploys an ERC721 contract after an ERC777 transfer", async () => {
 				// Should return leftover tokens
-				await expect(await erc777instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName)))
-					.to.emit(erc777instance, "Sent")
+				await expect(await erc777Instance.send(factoryInstance.address, tokenPrice + 1, ethers.utils.toUtf8Bytes(testTokenName)))
+					.to.emit(erc777Instance, "Sent")
 					.to.emit(factoryInstance, 'NewContractDeployed')
 					.withArgs(owner.address, 1, firstDeploymentAddress, testTokenName);
-				await expect(await erc777instance.balanceOf(owner.address)).to.equal(initialSupply - tokenPrice);
-				await expect(await erc777instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
+				await expect(await erc777Instance.balanceOf(owner.address)).to.equal(initialSupply - tokenPrice);
+				await expect(await erc777Instance.balanceOf(factoryInstance.address)).to.equal(tokenPrice);
 			});
 
 			it ("Should track number of token holders", async () => {
@@ -149,7 +156,7 @@ describe("Token Factory", function () {
 			});
 
 			it ("Return the ERC777 price of an NFT", async () => {
-				await expect(await factoryInstance.deploymentCostForERC777(erc777instance.address)).to.equal(tokenPrice);
+				await expect(await factoryInstance.deploymentCostForERC777(erc777Instance.address)).to.equal(tokenPrice);
 			});
 
 			it ("Return the creator's tokens", async () => {
@@ -167,11 +174,11 @@ describe("Token Factory", function () {
 			});
 
 			it ("Cannot withdraw more than the balance", async () => {
-				await expect(factoryInstance.withdrawTokens(erc777instance.address, tokenPrice + 1)).to.revertedWith("ERC777: transfer amount exceeds balance");
+				await expect(factoryInstance.withdrawTokens(erc777Instance.address, tokenPrice + 1)).to.revertedWith("ERC777: transfer amount exceeds balance");
 			});
 
 			it ("Owners should withdraw tokens", async () => {
-				await expect(await factoryInstance.withdrawTokens(erc777instance.address, tokenPrice)).to.emit(factoryInstance, 'TokensWithdrawn').withArgs(owner.address, erc777instance.address, tokenPrice);
+				await expect(await factoryInstance.withdrawTokens(erc777Instance.address, tokenPrice)).to.emit(factoryInstance, 'TokensWithdrawn').withArgs(owner.address, erc777Instance.address, tokenPrice);
 			});
 		});
 
@@ -303,8 +310,9 @@ describe("Token Factory", function () {
 
 			it ("Shouldn't lock ranges with tokens outside the collection's range", async () => {
 				await expect(rair721Instance.createRangeLock(0, 0, 2, 2)).to.be.revertedWith('RAIR ERC721: Invalid ending token');
+				// An update broke this invalid input test
+				//await expect(rair721Instance.createRangeLock(0, -1, 1, 2)).to.be.reverted; // Negative number is not allowed but there's no specific revert message for this
 				// Invalid starting token
-				await expect(rair721Instance.createRangeLock(0, -1, 1, 2)).to.be.reverted; // Negative number is not allowed but there's no specific revert message for this
 				await expect(rair721Instance.createRangeLock(1, 0, 9, 11)).to.be.revertedWith('RAIR ERC721: Invalid number of tokens to lock');
 			});
 
@@ -372,7 +380,7 @@ describe("Token Factory", function () {
 						.withArgs(0, 'COLLECTION #1')
 					.to.emit(rair721Instance, 'RangeUnlocked')
 						.withArgs(0, 0, 1);
-				await expect(rair721Instance.getNextSequentialIndex(0, 0, collection1Limit)).to.be.revertedWith("RAIR ERC721: There are no available tokens in this range");
+				await expect(rair721Instance.getNextSequentialIndex(0, 0, collection1Limit)).to.be.revertedWith("RAIR ERC721: There are no available tokens in this range.");
 				
 				next = await rair721Instance.getNextSequentialIndex(2, 0, collection3Limit);
 				await expect(next).to.equal(0);
@@ -380,7 +388,7 @@ describe("Token Factory", function () {
 				await expect(await rair721Instance.getNextSequentialIndex(2, 0, collection3Limit)).to.equal(next.add(1));
 			});
 
-			it ("miter test 721 token", async () => {
+			it ("Should mint external 721 tokens (Used later for testing)", async () => {
 				await expect(await testInstance.mint(addr3.address,1,2))
 				await expect(await testInstance.mint(addr3.address,2,2))
 				await expect(await testInstance.mint(addr3.address,3,2))
@@ -400,7 +408,7 @@ describe("Token Factory", function () {
 			})
 
 			it ("Minter cannot mint once the collection is complete", async () => {
-				await expect(rair721Instance.getNextSequentialIndex(0, 0, collection1Limit)).to.be.revertedWith('RAIR ERC721: There are no available tokens in this range');
+				await expect(rair721Instance.getNextSequentialIndex(0, 0, collection1Limit)).to.be.revertedWith('RAIR ERC721: There are no available tokens in this range.');
 				let rair721AsAddress2 = rair721Instance.connect(addr2);
 				await expect(rair721AsAddress2.mint(addr3.address, 0, 2)).to.be.revertedWith('RAIR ERC721: Invalid token index');
 			});
@@ -823,7 +831,7 @@ describe("Token Factory", function () {
 				await expect(next).to.equal(1);
 				await expect(await minterAsAddress2.buyToken(0, 0, next, {value: 999})).to.emit(rair721Instance, "Transfer").withArgs(ethers.constants.AddressZero, addr2.address, next.add(2));
 				await expect(await rair721Instance.getNextSequentialIndex(1, 0, 2)).to.equal(2);
-				await expect(rair721Instance.getNextSequentialIndex(1, 0, 1)).to.be.revertedWith('RAIR ERC721: There are no available tokens in this range');
+				await expect(rair721Instance.getNextSequentialIndex(1, 0, 1)).to.be.revertedWith('RAIR ERC721: There are no available tokens in this range.');
 			});
 
 			it ("Should create a new offer (Used on the custom payment rate)", async () => {
@@ -869,7 +877,7 @@ describe("Token Factory", function () {
 					.to.emit(minterInstance, "TokenMinted").withArgs(addr1.address, rair721Instance.address, 0, 1, 4)
 					.to.emit(minterInstance, "TokenMinted").withArgs(addr3.address, rair721Instance.address, 0, 1, 5)
 					// Minter events emitted
-					.to.changeEtherBalances([owner, addr2, erc777instance], [455 * 3, -500 * 3, 45 * 3]);
+					.to.changeEtherBalances([owner, addr2, erc777Instance], [455 * 3, -500 * 3, 45 * 3]);
 
 				let magicNumber = 100;
 				//await expect
@@ -881,7 +889,7 @@ describe("Token Factory", function () {
 							//...Array.apply(null, Array(9)).map(function (_, i) {return addr3.address;}),
 						], {value: 1000 * magicNumber})
 
-				//	.to.changeEtherBalances([owner, addr2, erc777instance], [455 * 249, -500 * 249, 45 * 249]);
+				//	.to.changeEtherBalances([owner, addr2, erc777Instance], [455 * 249, -500 * 249, 45 * 249]);
 				//expect(await minterInstance.openSales()).to.equal(6);
 			});
 
@@ -906,7 +914,7 @@ describe("Token Factory", function () {
 				await expect(next).to.equal(2);
 
 				await expect(await minterAsAddress2.buyToken(0, 0, next, {value: 999})).to.emit(rair721Instance, "Transfer")
-					.to.changeEtherBalances([owner, addr2, erc777instance], [899 + 9, -999, 89]);
+					.to.changeEtherBalances([owner, addr2, erc777Instance], [899 + 9, -999, 89]);
 
 				next = await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit);
 				await expect(next).to.equal(6);
@@ -934,7 +942,7 @@ describe("Token Factory", function () {
 
 			it ("Should mint specific tokens", async () => {
 				let minterAsAddress2 = await minterInstance.connect(addr2);
-				await expect(await minterAsAddress2.buyToken(0, 2, 8, {value: 29999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [91, -100, 9]);
+				await expect(await minterAsAddress2.buyToken(0, 2, 8, {value: 29999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777Instance], [91, -100, 9]);
 				await expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(6);
 			});
 			
@@ -946,18 +954,18 @@ describe("Token Factory", function () {
 				await expect(minterAsAddress2.buyToken(0, 2, next, {value: 99})).to.revertedWith("Minting Marketplace: Insuficient Funds!");
 				await expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(next);
 				
-				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 100})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance, minterInstance], [91, -100, 9, 0]);
+				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 100})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777Instance, minterInstance], [91, -100, 9, 0]);
 				await expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(Number(next) + 1);
 
 				// 8 is already minted, so after minting next sequential index should be 9
 				next = Number(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit));
 				await expect(next).to.equal(7);
-				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 19999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777instance], [91, -100, 9]);
+				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 19999})).to.emit(rair721Instance, "Transfer").to.changeEtherBalances([owner, addr2, erc777Instance], [91, -100, 9]);
 				await expect(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.equal(Number(next) + 2);
 				
 				next = Number(await rair721Instance.getNextSequentialIndex(1, 0, collection2Limit));
 				await expect(next).to.equal(9);
-				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 999999999})).to.emit(rair721Instance, "ProductCompleted").to.changeEtherBalances([owner, addr2, erc777instance], [91, -100, 9]);
+				await expect(await minterAsAddress2.buyToken(0, 2, next, {value: 999999999})).to.emit(rair721Instance, "ProductCompleted").to.changeEtherBalances([owner, addr2, erc777Instance], [91, -100, 9]);
 
 				await expect(rair721Instance.getNextSequentialIndex(1, 0, collection2Limit)).to.be.revertedWith('RAIR ERC721: There are no available tokens in this range.');
 				await expect(minterAsAddress2.buyToken(0, 2, next + 1, {value: 9999})).to.be.revertedWith('Minting Marketplace: Cannot mint more tokens for this range!');
@@ -1000,33 +1008,444 @@ describe("Token Factory", function () {
 	describe("RAIR 777", async () => {
 		describe("Access Control", async () => {
 			it ("Owner should have Admin role", async () => {
-				await expect(await erc777instance.getRoleMember(await erc777instance.DEFAULT_ADMIN_ROLE(), 0))
+				await expect(await erc777Instance.getRoleMember(await erc777Instance.DEFAULT_ADMIN_ROLE(), 0))
 					.to.equal(owner.address);
 			});
 
 			it ("Owner should be able to grant minter roles", async () => {
-				await expect(await erc777instance.grantRole(await erc777instance.MINTER(), owner.address))
-					.to.emit(erc777instance, "RoleGranted")
-					.withArgs(await erc777instance.MINTER(), owner.address, owner.address);
-				await expect(await erc777instance.getRoleMember(await erc777instance.MINTER(), 0))
+				await expect(await erc777Instance.grantRole(await erc777Instance.MINTER(), owner.address))
+					.to.emit(erc777Instance, "RoleGranted")
+					.withArgs(await erc777Instance.MINTER(), owner.address, owner.address);
+				await expect(await erc777Instance.getRoleMember(await erc777Instance.MINTER(), 0))
 					.to.equal(owner.address);
 			});
 
 			it ("Should mint new RAIR tokens as the owner", async () => {
-				await expect(await erc777instance.totalSupply())
+				await expect(await erc777Instance.totalSupply())
 					.to.equal(initialSupply);
-				await expect(await erc777instance.mint(20, addr1.address))
-					.to.emit(erc777instance, "Minted")
+				await expect(await erc777Instance.mint(20, addr1.address))
+					.to.emit(erc777Instance, "Minted")
 					.withArgs(owner.address, addr1.address, 20, '0x', '0x');
-				await expect(await erc777instance.totalSupply())
+				await expect(await erc777Instance.totalSupply())
 					.to.equal(initialSupply + 20);
 			})
 
 			it ("Shouldn't mint new RAIR tokens as any other address", async () => {
-				let ownerAsOtherAddress = await erc777instance.connect(addr1);
+				let ownerAsOtherAddress = await erc777Instance.connect(addr1);
 				await expect(ownerAsOtherAddress.mint(200, addr1.address))
-					.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await erc777instance.MINTER()}`);
+					.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await erc777Instance.MINTER()}`);
 			})
+		});
+	});
+
+	describe("New Factory", async() => {
+		it("Should deploy the master factory", async() => {
+			let NewFactoryFactory = await ethers.getContractFactory("RAIR721_Master_Factory");
+			newFactoryInstance = await NewFactoryFactory.deploy(tokenPrice, erc777Instance.address);
+		});
+
+		it("Should deploy the deployer contract", async() => {
+			let NewDeployerFactory = await ethers.getContractFactory("RAIR721_Deployer");
+			newDeployerInstance = await NewDeployerFactory.deploy(newFactoryInstance.address);
+		});
+
+		it ("Should set up the roles for the Master Factory", async () => {
+			await expect(await newDeployerInstance.hasRole(await newDeployerInstance.FACTORY(), newFactoryInstance.address))
+				.to.equal(true);
+			await expect(await newDeployerInstance.hasRole(await newDeployerInstance.FACTORY(), owner.address))
+				.to.equal(false);
+			
+			await expect(await newDeployerInstance.hasRole(await newDeployerInstance.DEFAULT_ADMIN_ROLE(), owner.address))
+				.to.equal(true);
+			await expect(await newDeployerInstance.hasRole(await newDeployerInstance.DEFAULT_ADMIN_ROLE(), newFactoryInstance.address))
+				.to.equal(false);
+
+			await expect(await newDeployerInstance.hasRole(await newDeployerInstance.MAINTAINER(), owner.address))
+				.to.equal(true);
+			await expect(await newDeployerInstance.hasRole(await newDeployerInstance.MAINTAINER(), newFactoryInstance.address))
+				.to.equal(false);
+		});
+
+		it ("Should reject any call to deploy unless it's the master factory", async () => {
+			await expect(newDeployerInstance.deployContract(owner.address, "Should fail"))
+				.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await newDeployerInstance.FACTORY()}`);
+		});
+
+		it ("Should update the deployment price", async () => {
+			await expect(await newFactoryInstance.updateDeploymentPrice(erc777Instance.address, 0))
+				.to.emit(newFactoryInstance, "DeploymentPriceUpdated")
+				.withArgs(erc777Instance.address, 0);
+		});
+
+		it ("Shouldn't update the deployment price for tokens that aren't approved", async () => {
+			await expect(newFactoryInstance.updateDeploymentPrice(erc777ExtraInstance.address, tokenPrice * 3))
+				.to.be.revertedWith(`AccessControl: account ${erc777ExtraInstance.address.toLowerCase()} is missing role ${await newFactoryInstance.ERC777()}`);
+		});
+
+		it ("Shouldn't receive ERC777 tokens if there's no price of deployment", async () => {
+			await expect(erc777Instance.send(newFactoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes('Test')))
+				.to.be.revertedWith("RAIR Factory: Deployments for this token are currently disabled");
+			await expect(await newFactoryInstance.updateDeploymentPrice(erc777Instance.address, tokenPrice * 3))
+				.to.emit(newFactoryInstance, "DeploymentPriceUpdated")
+				.withArgs(erc777Instance.address, tokenPrice * 3);
+		});
+
+
+		it ("Shouldn't receive ERC777 tokens if the price isn't equal or greater than the price", async () => {
+			await expect(erc777Instance.send(newFactoryInstance.address, tokenPrice * 2, ethers.utils.toUtf8Bytes('Test')))
+				.to.be.revertedWith("RAIR Factory: not enough RAIR tokens to deploy a contract");
+		});
+
+		it ("Shouldn't receive ERC777 tokens if the deployer isn't set up", async () => {
+			await expect(erc777Instance.send(newFactoryInstance.address, tokenPrice * 3, ethers.utils.toUtf8Bytes('Test')))
+				.to.be.revertedWith("RAIR Factory: No deployer found!");
+		});
+
+		it("Should have roles setup", async () => {
+			await expect(await newFactoryInstance.hasRole(await newFactoryInstance.OWNER(), owner.address))
+				.to.equal(true);
+			await expect(await newFactoryInstance.hasRole(await newFactoryInstance.ERC777(), erc777Instance.address))
+				.to.equal(true);
+			await expect(await newFactoryInstance.hasRole(await newFactoryInstance.DEFAULT_ADMIN_ROLE(), owner.address))
+				.to.equal(true);
+
+			await expect(await newFactoryInstance.hasRole(await newFactoryInstance.OWNER(), addr1.address))
+				.to.equal(false);
+			await expect(await newFactoryInstance.hasRole(await newFactoryInstance.ERC777(), erc777ExtraInstance.address))
+				.to.equal(false);
+			await expect(await newFactoryInstance.hasRole(await newFactoryInstance.DEFAULT_ADMIN_ROLE(), addr2.address))
+				.to.equal(false);
+		});
+
+		it("Should import data from the old factory", async() => {
+			await expect(await newFactoryInstance.getCreatorsCount()).to.equal(0);
+			await expect(await newFactoryInstance.importData(factoryInstance.address, false))
+				.to.emit(newFactoryInstance, "NewContractDeployed")
+				.withArgs(owner.address, 1, firstDeploymentAddress, testTokenName)
+				.to.emit(newFactoryInstance, "NewContractDeployed")
+				.withArgs(owner.address, 2, secondDeploymentAddress, '');
+		});
+
+		it ("Should have the imported data", async () => {
+			await expect(await newFactoryInstance.getCreatorsCount())
+				.to.equal(await factoryInstance.getCreatorsCount());
+			await expect(await newFactoryInstance.ownerToContracts(owner.address, 0))
+				.to.equal(firstDeploymentAddress);
+			await expect(await newFactoryInstance.ownerToContracts(owner.address, 1))
+				.to.equal(secondDeploymentAddress);
+		});
+
+		it ("Should connect to the Deployer contract", async () => {
+			await expect(await newFactoryInstance.setDeployerAddress(newDeployerInstance.address));
+		});
+
+		it ("Should deploy new contracts", async () => {
+			await expect(await erc777Instance.send(newFactoryInstance.address, tokenPrice * 3, ethers.utils.toUtf8Bytes('Test')))
+					.to.emit(erc777Instance, "Sent")
+					.to.emit(newFactoryInstance, 'DeployedContract')
+					.withArgs(owner.address, 3, thirdDeploymentAddress, 'Test');
+			await expect(await newFactoryInstance.ownerToContracts(owner.address, 2))
+				.to.equal(thirdDeploymentAddress);
+			newRair721Instance = await NewRair721Factory.attach(thirdDeploymentAddress);
+		});
+	});
+
+	describe("New RAIR721", async () => {
+		it ("Should reject any creator protected call", async () => {
+			let newRair721InstanceAsAddr1 = newRair721Instance.connect(addr1);
+			let tests = [
+				{foo: 'createProduct(string,uint256)', params: ['A', 2]},
+				{foo: 'createRange(uint256,uint256,uint256,uint256,uint256,string)', params: [1,2,3,4,5,'6']},
+				{foo: 'createRangeBatch(uint256,(uint256,uint256,uint256,uint256,string)[])', params: [1, [{
+					rangeLength: 2,
+					price: 3,
+					tokensAllowed: 4,
+					lockedTokens: 5,
+					name: '6'
+				}]]},
+				{foo: 'freezeMetadataOpensea(uint256)', params: [0]},
+				{foo: 'setBaseURI(string,bool)', params: ['AAAAA', false]},
+				{foo: 'setCollectionURI(uint256,string,bool)', params: ['0',"ASDA",false]},
+				{foo: 'setContractURI(string)', params: ['AAAAAA']},
+				{foo: 'setRoyaltyFee(uint16)', params: [23]},
+				{foo: 'setTokenSymbol(string)', params: ['QQQQ']},
+				{foo: 'setUniqueURI(uint256,string)', params: [0,'2222']},
+				{foo: 'setUniqueURIBatch(uint256[],string[])', params: [[0,1], ['a','b']]},
+				{foo: 'transferOwnership(address)', params: [addr1.address]},
+				{foo: 'updateRange(uint256,string,uint256,uint256,uint256)', params: [2,'3',4,5,7]},
+			]
+			for await (let test of tests) {
+				await expect(newRair721InstanceAsAddr1[test.foo](...test.params))
+					.to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await newRair721Instance.DEFAULT_ADMIN_ROLE()}`);
+			}
+		});
+
+		it ("Should create products", async () => {
+			await expect(await newRair721Instance.createProduct('First Collection!', collection1Limit))
+				.to.emit(newRair721Instance, 'CreatedCollection')
+				.withArgs(0, 'First Collection!', 0, collection1Limit);
+			await expect(await newRair721Instance.createProduct('Second Collection!', collection2Limit))
+				.to.emit(newRair721Instance, 'CreatedCollection')
+				.withArgs(1, 'Second Collection!', collection1Limit, collection2Limit);
+			await expect(await newRair721Instance.createProduct('Third Collection!', collection3Limit))
+				.to.emit(newRair721Instance, 'CreatedCollection')
+				.withArgs(2, 'Third Collection!', collection1Limit + collection2Limit, collection3Limit);
+			await expect(await newRair721Instance.createProduct('Fourth Collection!', collection4Limit))
+				.to.emit(newRair721Instance, 'CreatedCollection')
+				.withArgs(3, 'Fourth Collection!', collection1Limit + collection2Limit + collection3Limit, collection4Limit);
+		});
+
+		it ("Should create ranges", async () => {
+			await expect(
+				await newRair721Instance.createRange(
+					0,								// Collection index
+					collection1Limit,				// Length of the range
+					collection1Limit, 				// Tokens allowed to sell
+					collection1Limit,				// Tokens locked
+					priceToMint,					// Price of the range
+					"First First!"					// Name of the range
+				)
+			)
+				.to.emit(newRair721Instance, "CreatedRange")
+				.withArgs(
+					0,								// Collection index
+					0, 								// First token in range
+					collection1Limit - 1, 			// Last token in range
+					priceToMint,					// Price to mint each token
+					collection1Limit,				// Allowed tokens
+					collection1Limit, 				// Locked tokens
+					"First First!", 				// Range name
+					0 								// Range index
+				);
+
+			await expect(
+				await newRair721Instance.createRange(
+					1,								// Collection index
+					collection2Limit,				// Length of the range
+					2,				 				// Tokens allowed to sell
+					3,								// Tokens locked
+					priceToMint * 2,				// Price of the range
+					"Second First!"					// Name of the range
+				)
+			)
+				.to.emit(newRair721Instance, "CreatedRange")
+				.withArgs(
+					1,											// Collection index
+					collection1Limit,							// First token in range
+					collection2Limit + collection1Limit - 1, 	// Last token in range
+					priceToMint * 2,							// Price to mint each token
+					2,											// Allowed tokens
+					3, 											// Locked tokens
+					"Second First!", 							// Range name
+					1 											// Range index
+				);
+
+			await expect(
+				await newRair721Instance.createRange(
+					2,									// Collection index
+					collection3Limit / 2,				// Length of the range
+					Math.round(collection3Limit / 3),	// Tokens allowed to sell
+					Math.round(collection3Limit / 3),	// Tokens locked
+					priceToMint * 5,					// Price of the range
+					"Third First!"						// Name of the range
+				)
+			)
+				.to.emit(newRair721Instance, "CreatedRange")
+				.withArgs(
+					2,																	// Collection index
+					collection1Limit + collection2Limit,								// First token in range
+					collection2Limit + collection1Limit + (collection3Limit / 2) - 1, 	// Last token in range
+					priceToMint * 5,													// Price to mint each token
+					Math.round(collection3Limit / 3),									// Allowed tokens
+					Math.round(collection3Limit / 3),									// Locked tokens
+					"Third First!", 													// Range name
+					2 																	// Range index
+				);
+		});
+
+		it ("Should update a range", async () => {
+			await expect(await newRair721Instance.updateRange(
+				0, 					// Range index
+				"NEW First First", 	// Range name 
+				900000, 			// Price
+				0, 					// Allowed tokens
+				0, 					// Locked tokens
+			))
+				.to.emit(newRair721Instance, "UpdatedRange")
+				.withArgs(
+					0,
+					"NEW First First",
+					900000,
+					0,
+					0
+				);
+		});
+
+		it ("Shouldn't update ranges with invalid information", async () => {
+			await expect(newRair721Instance.updateRange(
+				12, 				// Invalid range
+				"BAD First First",
+				100,
+				0,
+				0,
+			))
+				.to.be.revertedWith("RAIR ERC721: Range does not exist");
+			await expect(newRair721Instance.updateRange(
+				0,
+				"BAD First First", 
+				99, 				// Invalid price
+				0,
+				0,
+			))
+				.to.be.revertedWith("RAIR ERC721: Minimum price for a range is 100");
+			await expect(newRair721Instance.updateRange(
+				0,
+				"BAD First First", 
+				100,
+				900000000,			// Invalid allowed tokens
+				0,
+			))
+				.to.be.revertedWith("RAIR ERC721: Tokens allowed should be less than the number of mintable tokens");
+			await expect(newRair721Instance.updateRange(
+				0,
+				"BAD First First",
+				100,
+				0,
+				900000000, 			// Invalid locked tokens
+			))
+				.to.be.revertedWith("RAIR ERC721: Locked tokens should be less than the number of mintable tokens");
+		});
+
+		it ("Should create ranges in batches", async () => {
+			await expect(await newRair721Instance.createRangeBatch(2, [{
+				rangeLength: collection3Limit / 5,
+				price: priceToMint * 6,
+				tokensAllowed: collection3Limit / 5,
+				lockedTokens: collection3Limit / 5,
+				name: 'Third Second!'
+			},{
+				rangeLength: collection3Limit / 5,
+				price: priceToMint * 7,
+				tokensAllowed: collection3Limit / 5,
+				lockedTokens: collection3Limit / 5,
+				name: 'Third Third!'
+			}]))
+				.to.emit(newRair721Instance, "CreatedRange")
+				.withArgs(
+					2,
+					collection2Limit + collection1Limit + (collection3Limit / 2),
+					collection2Limit + collection1Limit + (collection3Limit / 2) + (collection3Limit / 5) - 1,
+					priceToMint * 6,
+					collection3Limit / 5,
+					collection3Limit / 5,
+					"Third Second!",
+					3
+				)
+				.to.emit(newRair721Instance, "CreatedRange")
+				.withArgs(
+					2,
+					collection2Limit + collection1Limit + (collection3Limit / 2) + (collection3Limit / 5),
+					collection2Limit + collection1Limit + (collection3Limit / 2) + (collection3Limit * 2 / 5) - 1,
+					priceToMint * 7,
+					collection3Limit / 5,
+					collection3Limit / 5,
+					"Third Third!",
+					4
+				)
+		})
+
+		it ("Shouldn't mint tokens if the address doesn't have the MINTER role", async () => {
+			await newRair721Instance.renounceRole(await newRair721Instance.MINTER(), owner.address);
+			await expect(newRair721Instance.mintFromRange(addr1.address, 1, 2))
+				.to.be.revertedWith(`AccessControl: account ${owner.address.toLowerCase()} is missing role ${await newRair721Instance.MINTER()}`);
+		});
+
+		it ("Shouldn't mint tokens from ranges with no allowed tokens", async () => {
+			await newRair721Instance.grantRole(await newRair721Instance.MINTER(), owner.address);
+			await expect(newRair721Instance.mintFromRange(addr1.address, 0, 0))
+					.to.be.revertedWith('RAIR ERC721: Cannot mint more tokens from this range');
+		});
+
+		it ("Should mint tokens", async () => {
+			await expect(await newRair721Instance.mintFromRange(addr1.address, 1, 0))
+				.to.emit(newRair721Instance, "Transfer")
+				.withArgs(ethers.constants.AddressZero, addr1.address, 2);
+		});
+
+		it ("Should validate the request for token checks", async () => {
+			await expect(newRair721Instance.hasTokenInProduct(
+				owner.address,
+				0,
+				0,
+				collection1Limit
+			)).to.be.revertedWith("RAIR ERC721: Invalid parameters");
+
+			await expect(newRair721Instance.hasTokenInProduct(
+				owner.address,
+				0,
+				3,
+				collection1Limit - 1
+			)).to.be.revertedWith("RAIR ERC721: Invalid parameters");
+		});
+
+		it ("Should return if an user holds a token in a range", async () => {
+			await expect(await newRair721Instance.hasTokenInProduct(
+				owner.address,
+				0,
+				0,
+				collection1Limit - 1
+			)).to.equal(false);
+			await expect(await newRair721Instance.hasTokenInProduct(
+				owner.address, // Owner didn't buy the token
+				1,
+				0,
+				collection2Limit - collection1Limit - 1
+			)).to.equal(false);
+			await expect(await newRair721Instance.hasTokenInProduct(
+				addr1.address, // Owner didn't buy the token
+				1,
+				0,
+				collection2Limit - collection1Limit - 1
+			)).to.equal(true);
+		});
+
+		it ("Should get an extensionless metadata uri", async () => {
+			// Validation original functionality still works
+			await newRair721Instance.setBaseURI("123456/", true);
+			await expect(await newRair721Instance.tokenURI(2)).to.equal("123456/2"); 
+			await newRair721Instance.setBaseURI("7890/", false);
+			await expect(await newRair721Instance.tokenURI(2)).to.equal("7890/"); 
+		})
+
+		it ("Should set the general token metadata extension", async() => {
+			await expect(newRair721Instance.setMetadataExtension('json'))
+				.to.be.revertedWith("RAIR ERC721: Extension must start with a '.'");
+			await expect(await newRair721Instance.setMetadataExtension('.webp'))
+				.to.emit(newRair721Instance, "UpdatedURIExtension")
+				.withArgs('.webp');
+		})
+
+		it ("Should get the token URIs with the correct extension", async () => {
+			await newRair721Instance.setBaseURI("ABCD/", true);
+			await expect(await newRair721Instance.tokenURI(2)).to.equal("ABCD/2.webp"); 
+		});
+
+		it ("Should get the token URIs with the correct extension on products", async () => {
+			await newRair721Instance.setCollectionURI(1, "EFGHI/", true);
+			await expect(await newRair721Instance.setMetadataExtension('.txt'))
+				.to.emit(newRair721Instance, "UpdatedURIExtension")
+				.withArgs('.txt');
+			// Token #0 in this collection!
+			await expect(await newRair721Instance.tokenURI(2)).to.equal("EFGHI/0.txt"); 
+		});
+
+		it ("Should get the token URIs with the correct extension on products", async () => {
+			await newRair721Instance.setRangeURI(1, "JKLMNOPQRSTUVWXYZ/", true);
+			await expect(await newRair721Instance.setMetadataExtension('.json'))
+				.to.emit(newRair721Instance, "UpdatedURIExtension")
+				.withArgs('.json');
+			// Token #0 in this collection!
+			await expect(await newRair721Instance.tokenURI(2)).to.equal("JKLMNOPQRSTUVWXYZ/0.json"); 
 		});
 	});
 
@@ -1164,7 +1583,7 @@ describe("Token Factory", function () {
 					resaleInstance.connect(addr1).createResaleOffer(
 						0, 							// Token id
 						resaleOfferPrice, 			// Offer price
-						erc777instance.address, 	// Contract Address
+						erc777Instance.address, 	// Contract Address
 						addr5.address 				// Node address
 					)
 				).to.be.reverted;
@@ -1176,7 +1595,7 @@ describe("Token Factory", function () {
 						1,
 						resaleOfferPrice,
 						rair721Instance.address,
-						erc777instance.address 		// Smart contract
+						erc777Instance.address 		// Smart contract
 					)
 				).to.be.revertedWith("Resale Marketplace: Node address cannot be a smart contract");
 			});
@@ -1399,7 +1818,7 @@ describe("Token Factory", function () {
 							1
 						)
 						.to.changeEtherBalances(
-							[owner, addr1, addr2, addr3, addr4, erc777instance, addr5],
+							[owner, addr1, addr2, addr3, addr4, erc777Instance, addr5],
 							[
 								(resaleOfferPrice * 2) * 0.30, 			// Owner gets 30%
 								(resaleOfferPrice * 2) * 0.25, 			// Address 1 gets 25%

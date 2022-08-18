@@ -184,9 +184,7 @@ const WorkflowSteps: React.FC = () => {
 
   const onMyChain =
     contractData &&
-    (window.ethereum
-      ? chainData[contractData?.blockchain]?.chainId === currentChain
-      : chainData[contractData?.blockchain]?.chainId === currentChain);
+    chainData[contractData.blockchain]?.chainId === currentChain;
 
   const refreshNFTMetadata = async () => {
     if (!contractData) {

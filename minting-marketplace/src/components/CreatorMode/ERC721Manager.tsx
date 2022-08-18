@@ -40,29 +40,10 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
     const tokInfo: ITokenInfo = {
       name: await erc721Instance?.name(),
       symbol: await erc721Instance?.symbol(),
-      totalSupply: (await erc721Instance?.totalSupply()).toString(),
-      productCount: (await erc721Instance?.getProductCount()).toString(),
       balance: (await erc721Instance?.balanceOf(currentUserAddress)).toString(),
       address: erc721Instance?.address
     };
     setTokenInfo(tokInfo);
-    const productsData: ProductInfoType[] = [];
-    for await (const index of [
-      // eslint-disable-next-line
-      ...Array.apply<null, any, unknown[]>(null, {
-        length: tokInfo.productCount
-      }).keys()
-    ]) {
-      const colData = await erc721Instance?.getProduct(index);
-      productsData.push({
-        name: colData.productName,
-        startingToken: colData.startingToken.toString(),
-        endingToken: colData.endingToken.toString(),
-        mintableTokensLeft: colData.mintableTokensLeft.toString(),
-        locks: colData.locks?.map((item) => item.toString())
-      });
-    }
-    setExistingProductsData(productsData);
     setRefetchingFlag(false);
   }, [erc721Instance, currentUserAddress, minterInstance?.address]);
 
@@ -111,10 +92,6 @@ const ERC721Manager: React.FC<IERC721Manager> = ({ tokenAddress }) => {
             <br />
             Symbol: {tokenInfo.symbol}
             <br />
-            <br />
-            Total Supply: {tokenInfo.totalSupply}
-            <br />
-            Products Created: {tokenInfo.productCount}
             <br />
             Current Balance: {tokenInfo.balance}
             <br />

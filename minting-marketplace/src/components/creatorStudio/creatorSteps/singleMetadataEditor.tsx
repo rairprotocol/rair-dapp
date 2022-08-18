@@ -124,9 +124,7 @@ const SingleMetadataEditor: React.FC<TSingleMetadataType> = ({
   useEffect(() => {
     setOnMyChain(
       contractData &&
-        (window.ethereum
-          ? chainData[contractData?.blockchain]?.chainId === currentChain
-          : chainData[contractData?.blockchain]?.chainId === currentChain)
+        chainData[contractData.blockchain]?.chainId === currentChain
     );
   }, [contractData, programmaticProvider, currentChain]);
 

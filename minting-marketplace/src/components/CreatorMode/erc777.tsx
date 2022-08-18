@@ -53,7 +53,7 @@ const ERC777Manager: React.FC<IERC777Manager> = () => {
       {erc777Data ? (
         <>
           <br />
-          {"Your balance on the '{erc777Data.name}' Token: "}
+          {`Your balance on the '${erc777Data.name}' Token: `}
           {ethers.utils.formatEther(erc777Data.balance)} {erc777Data.symbol}{' '}
           <br />
           <hr className="w-100" />

@@ -13,21 +13,34 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	using Strings for uint256;
 
 	/// @notice This event stores in the blockchain when the base code of all the tokens has an update in its URI
-    /// @param  newURI Contains the new  base identifier for all the tokens
-	/// @param  appendTokenIndex Contains the index of the tokens appended to the URI
-	event UpdatedBaseURI(string newURI, bool appendTokenIndex);
+    /// @param  newURI 				Contains the new  base identifier for all the tokens
+	/// @param  appendTokenIndex 	Contains the index of the tokens appended to the URI
+	/// @param 	metadataExtension 	File extension (if exists)
+	event UpdatedBaseURI(string newURI, bool appendTokenIndex, string metadataExtension);
 	/// @notice This event stores in the blockchain when a token has a change in its URI
-	/// @param  tokenId Contains the index of the token appended to the URI
-    /// @param  newURI Contains the new identifier for the token
+	/// @param  tokenId 			Contains the index of the token appended to the URI
+    /// @param  newURI 				Contains the new identifier for the token
 	event UpdatedTokenURI(uint tokenId, string newURI);
 	/// @notice This event stores in the blockchain when a product has a change in its URI
-	/// @param 	productId Contains the index of the product to change
-    /// @param  newURI Contains the new identifier for the product
-	/// @param  appendTokenIndex Contains the index of the token appended to the URI
-	event UpdatedProductURI(uint productId, string newURI, bool appendTokenIndex);
+	/// @param 	productId 			Contains the index of the product to change
+    /// @param  newURI 				Contains the new identifier for the product
+	/// @param  appendTokenIndex 	Contains the index of the token appended to the URI
+	/// @param 	metadataExtension 	File extension (if exists)
+	event UpdatedProductURI(uint productId, string newURI, bool appendTokenIndex, string metadataExtension);
+	/// @notice This event stores in the blockchain when a range has a change in its URI
+	/// @param 	rangeId 			Contains the index of the product to change
+    /// @param  newURI 				Contains the new identifier for the product
+	/// @param  appendTokenIndex 	Contains the index of the token appended to the URI
+	/// @param 	metadataExtension 	File extension (if exists)
+	event UpdatedRangeURI(uint rangeId, string newURI, bool appendTokenIndex, string metadataExtension);
 	/// @notice This event stores in the blockchain when a contract has a change in its URI
-    /// @param  newURI Contains the new identifier for the contract 
+    /// @param  newURI 				Contains the new identifier for the contract 
 	event UpdatedContractURI(string newURI);
+	/// @notice This event informs the new extension all metadata URIs will have appended at the end
+	/// @dev 	It will be appended ONLY if the token ID has to also be appended
+	/// @param 	newExtension The new extension for all the URIs
+    event UpdatedURIExtension(string newExtension);
+
 
 	// For OpenSea's Freezing
 	event PermanentURI(string _value, uint256 indexed _id);
@@ -69,6 +82,30 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 		emit UpdatedTokenURI(tokenId, newURI);
 	}
 
+	/// @notice  Updates the metadata extension added at the end of all tokens
+    /// @dev     Must include the . before the extension
+    /// @param extension     Extension to be added at the end of all contract wide tokens
+    function setMetadataExtension(string calldata extension) external onlyRole(CREATOR) {
+        require(bytes(extension)[0] == '.', "RAIR ERC721: Extension must start with a '.'");
+        s._metadataExtension = extension;
+        emit UpdatedURIExtension(s._metadataExtension);
+    }
+
+	/// @notice	Gives all tokens within a range a specific URI
+    /// @dev	Emits an event so there's provenance
+    /// @param	rangeId				Token Index that will be given an URI
+    /// @param	newURI		    	New URI to be given
+    /// @param	appendTokenIndex	Flag to append the token index at the end of the new URI
+    function setRangeURI(
+        uint rangeId,
+        string calldata newURI,
+        bool appendTokenIndex
+    ) public onlyRole(CREATOR) {
+        s.rangeURI[rangeId] = newURI;
+        s.appendTokenIndexToRangeURI[rangeId] = appendTokenIndex;
+        emit UpdatedRangeURI(rangeId, newURI, appendTokenIndex, s._metadataExtension);
+    }
+
 	/// @notice	Gives an individual token an unique URI
 	/// @dev 	This function is only available to an account with a `CREATOR` role
 	/// @dev	Emits an event so there's provenance
@@ -78,7 +115,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	function setProductURI(uint productId, string calldata newURI, bool appendTokenIndexToProductURI) public onlyRole(CREATOR) {
 		s.productURI[productId] = newURI;
 		s.appendTokenIndexToProductURI[productId] = appendTokenIndexToProductURI;
-		emit UpdatedProductURI(productId, newURI, appendTokenIndexToProductURI);
+		emit UpdatedProductURI(productId, newURI, appendTokenIndexToProductURI, s._metadataExtension);
 	}
 
 	/// @notice	This function use OpenSea's to freeze the metadata
@@ -110,7 +147,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	function setBaseURI(string calldata newURI, bool appendTokenIndexToBaseURI) external onlyRole(CREATOR) {
 		s.baseURI = newURI;
 		s.appendTokenIndexToBaseURI = appendTokenIndexToBaseURI;
-		emit UpdatedBaseURI(newURI, appendTokenIndexToBaseURI);
+		emit UpdatedBaseURI(newURI, appendTokenIndexToBaseURI, s._metadataExtension);
 	}
 
 	/// @notice	Returns a token's URI, could be specific or general

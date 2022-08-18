@@ -1,10 +1,12 @@
-require("@nomiclabs/hardhat-waffle");
+require("@nomicfoundation/hardhat-chai-matchers");
 require("hardhat-gas-reporter");
 require('hardhat-deploy');
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-contract-sizer');
 require("hardhat-tracer");
+// Disabled because there's no use for Types
+//require('@typechain/hardhat');
 require('dotenv').config()
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -14,7 +16,7 @@ module.exports = {
     hardhat: {
       forking: {
         url: process.env.ETHEREUM_ARCHIVE_SPEEDY_NODE,
-        blockNumber: 13000000,
+        blockNumber: 14000000,
         timeout: 1000000
       }
     },

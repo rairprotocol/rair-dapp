@@ -53,6 +53,10 @@ struct AppStorage721 {
 	string contractMetadataURI;
 	mapping(uint => uint) rangeToProduct;
 	mapping(uint => bool) _minted;
+	// August 2022 - Metadata File Extension Update
+	mapping(uint => string) rangeURI;
+	mapping(uint => bool) appendTokenIndexToRangeURI;
+	string _metadataExtension;
 	// Always add new variables at the end of the struct
 }
 
