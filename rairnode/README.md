@@ -56,6 +56,13 @@ Logs to Sentry will collect only for Production environment
 
 `SENTRY_DSN` - should be provided Sentry Data Source Name
 
+# Super Admin rights
+
+Provide ability to make some specific actions on the platform
+
+`SUPER_ADMIN_VAULT_STORE` - key of the list of user public addresses on the Vault storage
+
+
 # API
 
 * [x] /api
