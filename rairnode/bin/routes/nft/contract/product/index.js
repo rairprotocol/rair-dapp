@@ -2,6 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const { validation, assignUser } = require('../../../../middleware');
 const { verifyAccessRightsToFile } = require('../../../../utils/helpers');
+const { Offer, OfferPool, Product, MintedToken, File, LockedTokens } = require('../../../../models');
 const tokenRoutes = require('./token');
 
 module.exports = (context) => {
@@ -14,16 +15,51 @@ module.exports = (context) => {
     async (req, res, next) => {
       try {
         const { contract, product } = req;
-        const { fromToken = 0, toToken = 0, limit = 0 } = req.query;
+        const {
+          fromToken = 0,
+          toToken = 0,
+          limit = 20,
+          sortByToken = '1',
+          sortByPrice = '',
+          priceFrom = '',
+          priceTo = '',
+          forSale = '',
+        } = req.query;
 
         const firstToken = (BigInt(fromToken) - 1n).toString();
         const lastToken = (BigInt(toToken) + 1n).toString();
         const numberOfTokens = Number(limit);
 
-        let options = {};
+        let options = {
+          token:
+            lastToken - 1
+              ? { $gt: firstToken, $lt: lastToken }
+              : { $gt: firstToken },
+        };
+        const filterOptions = {};
+        const populateOptions = {
+          let: { contr: '$contract' },
+          and: [
+            {
+              $eq: [
+                '$contract',
+                '$$contr',
+              ],
+            },
+          ],
+        };
+
+        // set filters
+        if (priceFrom || priceTo) {
+          filterOptions['offer.price'] = _.assign({},priceFrom ? { $gte: priceFrom } : {}, priceTo ? { $lte: priceTo } : {});
+        }
+
+        if (forSale !== '') {
+          filterOptions.isMinted = forSale !== 'true';
+        }
 
         if (contract.diamond) {
-          const offers = await context.db.Offer.find({
+          const offers = await Offer.find({
             contract: contract._id,
             product,
           }).distinct('diamondRangeIndex');
@@ -38,8 +74,17 @@ module.exports = (context) => {
             contract: contract._id,
             offer: { $in: offers },
           };
+          populateOptions.let = _.assign(populateOptions.let, { diamondRangeI: '$offer' });
+          populateOptions.and = _.concat(populateOptions.and, [
+            {
+              $eq: [
+                '$diamondRangeIndex',
+                '$$diamondRangeI',
+              ],
+            },
+          ]);
         } else {
-          const offerPool = await context.db.OfferPool.findOne({
+          const offerPool = await OfferPool.findOne({
             contract: contract._id,
             product,
           });
@@ -54,18 +99,65 @@ module.exports = (context) => {
             contract: contract._id,
             offerPool: offerPool.marketplaceCatalogIndex,
           };
+          populateOptions.let = _.assign(populateOptions.let, { offeP: '$offerPool', offerIn: '$offer' });
+          populateOptions.and = _.concat(populateOptions.and, [
+            {
+              $eq: [
+                '$offerPool',
+                '$$offeP',
+              ],
+            },
+            {
+              $eq: [
+                '$offerIndex',
+                '$$offerIn',
+              ],
+            },
+          ]);
         }
-        const totalCount = await context.db.MintedToken.countDocuments(options);
-        const tokens = await context.db.MintedToken.find({
-          ...options,
-          token:
-            lastToken - 1
-              ? { $gt: firstToken, $lt: lastToken }
-              : { $gt: firstToken },
-        })
-          .sort([['token', 1]])
+
+        const aggregateOptions = [
+          { $match: {
+            ...options,
+            token:
+                lastToken - 1
+                  ? { $gt: firstToken, $lt: lastToken }
+                  : { $gt: firstToken },
+          } },
+          {
+            $lookup: {
+              from: 'Offer',
+              let: populateOptions.let,
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: populateOptions.and,
+                    },
+                  },
+                },
+              ],
+              as: 'offer',
+            },
+          },
+          { $unwind: '$offer' },
+          { $match: filterOptions },
+        ];
+
+        const totalCount = _.chain(
+          await MintedToken.aggregate(aggregateOptions)
+            .count('tokens')
+            .collation({ locale: 'en_US', numericOrdering: true }),
+        )
+          .head()
+          .get('tokens', 0)
+          .value();
+
+        const tokens = await MintedToken.aggregate(aggregateOptions)
+          .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
           .collation({ locale: 'en_US', numericOrdering: true })
           .limit(numberOfTokens);
+
         return res.json({ success: true, result: { totalCount, tokens } });
       } catch (err) {
         return next(err);
@@ -79,7 +171,7 @@ module.exports = (context) => {
       let options = {};
 
       if (contract.diamond) {
-        const offers = await context.db.Offer.find({
+        const offers = await Offer.find({
           contract: contract._id,
           product,
         }).distinct('diamondRangeIndex');
@@ -95,7 +187,7 @@ module.exports = (context) => {
           offer: { $in: offers },
         };
       } else {
-        const offerPool = await context.db.OfferPool.findOne({
+        const offerPool = await OfferPool.findOne({
           contract: contract._id,
           product,
         });
@@ -112,7 +204,7 @@ module.exports = (context) => {
         };
       }
 
-      const tokens = await context.db.MintedToken.find(options)
+      const tokens = await MintedToken.find(options)
         .sort([['token', 1]])
         .collation({ locale: 'en_US', numericOrdering: true })
         .distinct('token');
@@ -165,7 +257,7 @@ module.exports = (context) => {
       ];
 
       if (contract.diamond) {
-        const offers = await context.db.Offer.find({
+        const offers = await Offer.find({
           contract: contract._id,
           product,
         }).distinct('diamondRangeIndex');
@@ -184,7 +276,7 @@ module.exports = (context) => {
           },
         });
       } else {
-        const offerPoolRaw = await context.db.OfferPool.findOne({
+        const offerPoolRaw = await OfferPool.findOne({
           contract: contract._id,
           product,
         });
@@ -208,7 +300,7 @@ module.exports = (context) => {
         });
       }
 
-      const files = await context.db.MintedToken.aggregate(options);
+      const files = await MintedToken.aggregate(options);
 
       return res.json({ success: true, files });
     } catch (err) {
@@ -221,7 +313,7 @@ module.exports = (context) => {
     try {
       const { contract, product } = req;
 
-      let files = await context.db.File.find({
+      let files = await File.find({
         contract: contract._id,
         product,
       });
@@ -240,7 +332,7 @@ module.exports = (context) => {
     try {
       const { contract, product: collectionIndexInContract } = req;
 
-      const [product] = await context.db.Product.aggregate([
+      const [product] = await Product.aggregate([
         { $match: { contract: contract._id, collectionIndexInContract } },
         {
           $lookup: {
@@ -289,7 +381,7 @@ module.exports = (context) => {
     try {
       const { contract, product } = req;
 
-      const locks = await context.db.LockedTokens.find({
+      const locks = await LockedTokens.find({
         contract: contract._id,
         product,
       });
@@ -315,7 +407,7 @@ module.exports = (context) => {
         req.token = req.params.token;
 
         if (contract.diamond) {
-          const offers = await context.db.Offer.find({
+          const offers = await Offer.find({
             contract: contract._id,
             product,
           }).distinct('diamondRangeIndex');
@@ -326,7 +418,7 @@ module.exports = (context) => {
           }
           req.offers = offers;
         } else {
-          const offerPool = await context.db.OfferPool.findOne({
+          const offerPool = await OfferPool.findOne({
             contract: contract._id,
             product,
           });

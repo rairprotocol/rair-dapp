@@ -52,6 +52,38 @@ Get tokens for the product
     "content": {
       "type": "number"
     }
+  },
+  "sortByToken": {
+    "required": false,
+    "content": {
+      "type": "number",
+      "values": ["1", "-1"]
+    }
+  },
+  "sortByPrice": {
+    "required": false,
+    "content": {
+      "type": "number",
+      "values": ["1", "-1"]
+    }
+  },
+  "priceFrom": {
+    "required": false,
+    "content": {
+      "type": "number"
+    }
+  },
+  "priceTo": {
+    "required": false,
+    "content": {
+      "type": "number"
+    }
+  },
+  "forSale": {
+    "required": false,
+    "content": {
+      "type": "boolean"
+    }
   }
 }
 ```
