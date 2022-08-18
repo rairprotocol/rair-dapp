@@ -7,42 +7,10 @@ const {
 } = require('fs');
 const _ = require('lodash');
 const log = require('./logger')(module);
-
-const standardResolutions = [
-  {
-    height: 144, videoBitrate: 200, maximumBitrate: 212, bufferSize: 200, audioBitrate: 42, bandwith: 200000,
-  },
-  {
-    height: 240, videoBitrate: 400, maximumBitrate: 425, bufferSize: 500, audioBitrate: 96, bandwith: 400000,
-  },
-  {
-    height: 360, videoBitrate: 800, maximumBitrate: 856, bufferSize: 1200, audioBitrate: 96, bandwith: 800000,
-  },
-  {
-    height: 480, videoBitrate: 1400, maximumBitrate: 1498, bufferSize: 2100, audioBitrate: 128, bandwith: 1400000,
-  },
-  {
-    height: 720, videoBitrate: 2800, maximumBitrate: 2996, bufferSize: 4200, audioBitrate: 128, bandwith: 2800000,
-  },
-  {
-    height: 1080, videoBitrate: 5000, maximumBitrate: 5350, bufferSize: 7500, audioBitrate: 192, bandwith: 5000000,
-  },
-];
-
-const genericConversionParams = [
-  '-c:a', 'aac',
-  '-ar', '48000',
-  '-c:v', 'h264',
-  '-profile:v', 'main',
-  '-level', '3.0',
-  '-start_number', '0',
-  '-crf', '20',
-  '-sc_threshold', '0',
-  '-g', '48',
-  '-keyint_min', '48',
-  '-hls_list_size', '0',
-  '-hls_playlist_type', 'vod',
-];
+const {
+  genericConversionParams,
+  standardResolutions,
+} = require('../videoConfig');
 
 function intToByteArray(num) {
   const byteArray = new Uint8Array(16);
@@ -68,7 +36,7 @@ const encryptFolderContents = async (mediaData, encryptExtensions, socketInstanc
     }
     const promise = new Promise((resolve, reject) => {
       const fullPath = path.join(mediaData.destination, entry);
-      log.info(`Encrypting ${entry}`)
+      log.info(`Encrypting ${entry}`);
       const encryptedPath = `${fullPath}.encrypted`;
       try {
         const iv = intToByteArray(parseInt(entry.match(/([0-9]+).ts/)[1]));
@@ -106,11 +74,13 @@ const convertToHLS = async (
 ) => {
   log.info('Converting');
   const totalRuntime = mediaData.duration.replace('.', '').replace(':', '').replace(':', '');
-  const promise = new Promise(async (resolve, reject) => {
+
+  const promise = new Promise((resolve, reject) => {
     try {
-      const resolutionConfigs = standardResolutions.map(({
+      const videoConversion = standardResolutions.map(({
         height, videoBitrate, maximumBitrate, bufferSize, audioBitrate,
-      }) => [
+      }) => spawn(ffmpeg.path, [
+        '-i', `${mediaData.path}`,
         ...(mediaData.type === 'video' ? ['-vf', `scale=-2:${height}`] : []),
         '-hls_time', mediaData.type === 'audio' ? '15' : '7',
         ...genericConversionParams,
@@ -119,9 +89,44 @@ const convertToHLS = async (
         '-bufsize', `${bufferSize}k`,
         '-b:a', `${audioBitrate}k`,
         `${mediaData.destination}/${height}p.m3u8`,
-      ]);
-      const videoConversion = await spawn(ffmpeg.path, ['-i', `${mediaData.path}`].concat(...resolutionConfigs));
-      videoConversion.stderr.on('data', (data) => {
+      ]));
+
+      videoConversion[0].stderr.on('data', (data) => {
+        log.info('child uploadProcess - 1');
+      });
+      videoConversion[0].on('exit', (code) => {
+        log.info(`finish child uploadProcess 1 with code ${code}`);
+      });
+
+      videoConversion[1].stderr.on('data', (data) => {
+        log.info('child uploadProcess - 2');
+      });
+      videoConversion[1].on('exit', (code) => {
+        log.info(`finish child uploadProcess 2 with code ${code}`);
+      });
+
+      videoConversion[2].stderr.on('data', (data) => {
+        log.info('child uploadProcess - 3');
+      });
+      videoConversion[2].on('exit', (code) => {
+        log.info(`finish child uploadProcess 3 with code ${code}`);
+      });
+
+      videoConversion[3].stderr.on('data', (data) => {
+        log.info('child uploadProcess - 4');
+      });
+      videoConversion[3].on('exit', (code) => {
+        log.info(`finish child uploadProcess 4 with code ${code}`);
+      });
+
+      videoConversion[4].stderr.on('data', (data) => {
+        log.info('child uploadProcess - 5');
+      });
+      videoConversion[4].on('exit', (code) => {
+        log.info(`finish child uploadProcess 5 with code ${code}`);
+      });
+
+      videoConversion[5].stderr.on('data', (data) => {
         let conversionProgress = data.toString()?.split('time=')[1]?.split(' bitrate')[0];
         if (conversionProgress) {
           conversionProgress = conversionProgress.replace('.', '').replace(':', '').replace(':', '');
@@ -132,14 +137,15 @@ const convertToHLS = async (
           });
         }
       });
-      videoConversion.on('close', (data) => {
+      videoConversion[5].on('close', (data) => {
         resolve();
       });
     } catch (e) {
-      console.error(e);
+      log.error(e);
       reject(e);
     }
   });
+
   await promise;
   await rm(mediaData.path, log.info);
   socketInstance.emit('uploadProgress', {
@@ -154,9 +160,7 @@ const convertToHLS = async (
 
 const getMediaData = async (mediaData) => {
   try {
-    const {
-      output, stdout, stderr, status,
-    } = await spawnSync(ffmpeg.path, ['-i', `${mediaData.path}`]);
+    const { stderr } = await spawnSync(ffmpeg.path, ['-i', `${mediaData.path}`]);
     const stringifiedData = stderr.toString();
     const duration = stringifiedData.split('Duration: ')[1]?.split(',')[0];
     if (duration) {
@@ -164,7 +168,7 @@ const getMediaData = async (mediaData) => {
     }
     if (!['audio', 'document'].includes(mediaData.type)) {
       try {
-        let [useless, width, height] = stringifiedData?.split('Video: ')[1]?.split('fps')[0]?.split('x');
+        let [width, height] = stringifiedData?.split('Video: ')[1]?.split('fps')[0]?.split('x');
         height = height.split(' [')[0];
         width = width.split(', ').at(-1);
         if (width) {
@@ -178,7 +182,7 @@ const getMediaData = async (mediaData) => {
       }
     }
   } catch (e) {
-    console.error(e);
+    log.error(e);
   }
 };
 

@@ -157,7 +157,7 @@ module.exports = {
             );
             break;
           case 'gcp':
-            cid = await gcp.uploadFolder(
+            cid = await gcp.uploadDirectory(
               config.gcp.videoBucketName,
               req.file.destination,
               socketInstance,
@@ -167,7 +167,7 @@ module.exports = {
             break;
           default:
             // gcp -> default
-            cid = await gcp.uploadFolder(
+            cid = await gcp.uploadDirectory(
               config.gcp.videoBucketName,
               req.file.destination,
               socketInstance,

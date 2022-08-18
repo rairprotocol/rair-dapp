@@ -13,6 +13,13 @@ module.exports = (config) => {
     storage = new Storage({
       credentials,
       projectId: config.gcp.projectId,
+      retryOptions: {
+        autoRetry: true,
+        retryDelayMultiplier: 3,
+        totalTimeout: 500,
+        maxRetryDelay: 60,
+        maxRetries: 5,
+      },
     });
   } catch (e) {
     log.error(e);
@@ -30,33 +37,67 @@ module.exports = (config) => {
     }
   };
 
-  const uploadFolder = async (bucketName, directoryPath, socketInstance) => {
+  const uploadDirectory = async (bucketName, directoryPath, socketInstance) => {
     try {
       let dirCtr = 1;
       let itemCtr = 0;
       const fileList = [];
+      const size = 200;
+      const groupsOffileList = [];
 
       const onComplete = async () => {
         const folderName = nanoid(46);
+        let successfulUploads = 0;
 
-        await Promise.all(
-          fileList.map((filePath) => {
-            const fileName = path.relative(directoryPath, filePath);
-            const destination = `${folderName}/${fileName}`;
+        if (fileList.length < size) {
+          await Promise.allSettled(
+            fileList.map(async (filePath) => {
+              try {
+                const fileName = path.relative(directoryPath, filePath);
+                const destination = `${folderName}/${fileName}`;
 
-            return storage
-              .bucket(bucketName)
-              .upload(filePath, { destination })
-              .then(
-                (uploadResp) => ({ fileName: destination, status: uploadResp[0] }),
-                (err) => ({ fileName: destination, response: err }),
-              );
-          }),
-        );
+                await storage
+                  .bucket(bucketName)
+                  .upload(filePath, { destination })
+                  .then(
+                    (uploadResp) => ({ fileName: destination, status: uploadResp[0] }),
+                  );
+                successfulUploads += 1;
+              } catch (e) {
+                log.error(`Error uploading ${filePath}:`, e);
+              }
+            }),
+          );
+        } else {
+          for (let i = 0; i < fileList.length; i += size) {
+            groupsOffileList.push(fileList.slice(i, i + size));
+          }
+
+          for await (const groupOffileList of groupsOffileList) {
+            await Promise.allSettled(
+              groupOffileList.map(async (filePath) => {
+                try {
+                  const fileName = path.relative(directoryPath, filePath);
+                  const destination = `${folderName}/${fileName}`;
+
+                  await storage
+                    .bucket(bucketName)
+                    .upload(filePath, { destination })
+                    .then(
+                      (uploadResp) => ({ fileName: destination, status: uploadResp[0] }),
+                    );
+                  successfulUploads += 1;
+                } catch (e) {
+                  log.error(`Error uploading ${filePath}:`, e);
+                }
+              }),
+            );
+          }
+        }
 
         if (socketInstance) {
           socketInstance.emit('uploadProgress', {
-            message: 'Added files to Google bucket',
+            message: `${successfulUploads} files added to ${folderName} and uploaded to Google Cloud successfully.`,
             last: false,
             part: false,
           });
@@ -67,21 +108,20 @@ module.exports = (config) => {
 
       const getFiles = async (directory) => {
         const items = await fs.readdir(directory);
-        dirCtr--;
+        dirCtr -= 1;
         itemCtr += items.length;
         for (const item of items) {
           const fullPath = path.join(directory, item);
           const stat = await fs.stat(fullPath);
-          itemCtr--;
+          itemCtr -= 1;
           if (stat.isFile()) {
             fileList.push(fullPath);
           } else if (stat.isDirectory()) {
-            dirCtr++;
+            dirCtr += 1;
             await getFiles(fullPath);
           }
         }
       };
-
       await getFiles(directoryPath);
 
       return onComplete();
@@ -94,6 +134,6 @@ module.exports = (config) => {
   return ({
     storage,
     uploadFile,
-    uploadFolder,
+    uploadDirectory,
   });
 };

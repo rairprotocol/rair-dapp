@@ -44,7 +44,7 @@ pipeline {
     DEV_CLUSTER = 'primary'
     DEV_LOCATION = 'us-west1-a'
     CREDENTIALS_ID = 'rair-market-dev'
-    MAIN_PROJECT_ID = "rair-market-dev" 
+    MAIN_PROJECT_ID = "rair-market-dev"
     MAIN_CLUSTER = "staging"
     MAIN_LOCATION = "southamerica-west1-a"
   }
@@ -209,7 +209,7 @@ pipeline {
         }
     stage('Jenkins Slack Notification') {
       steps {
-                slackSend channel: '#jenkins-builds', 
+                slackSend channel: '#jenkins-builds',
                           message: 'Branch ' + GIT_BRANCH + ' with build-id ' + GIT_COMMIT + ' has successfully built and pushed to docker ' + BUILD_URL
       }
     }
@@ -217,12 +217,12 @@ pipeline {
   //     when { branch 'dev' }
   //     steps {
   //       container('kubectl') {
-  //       step([$class: 'KubernetesEngineBuilder', 
-  //       namespace: "default", 
-  //       projectId: env.DEV_PROJECT_ID, 
-  //       clusterName: env.DEV_CLUSTER, 
-  //       zone: env.DEV_LOCATION, 
-  //       manifestPattern: 'kubernetes-manifests/configmaps/environment/tf', 
+  //       step([$class: 'KubernetesEngineBuilder',
+  //       namespace: "default",
+  //       projectId: env.DEV_PROJECT_ID,
+  //       clusterName: env.DEV_CLUSTER,
+  //       zone: env.DEV_LOCATION,
+  //       manifestPattern: 'kubernetes-manifests/configmaps/environment/tf',
   //       credentialsId: env.CREDENTIALS_ID])
   //   }
   //     }
@@ -232,13 +232,13 @@ pipeline {
   //     steps {
   //       container('kubectl') {
   //       sh("sed -i.bak 's#dev_latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/tf-manifest/*.yaml")
-  //       step([$class: 'KubernetesEngineBuilder', 
-  //       namespace: "default", 
-  //       projectId: env.DEV_PROJECT_ID, 
-  //       clusterName: env.DEV_CLUSTER, 
-  //       zone: env.DEV_LOCATION, 
-  //       manifestPattern: 'kubernetes-manifests/tf-manifest', 
-  //       credentialsId: env.CREDENTIALS_ID, 
+  //       step([$class: 'KubernetesEngineBuilder',
+  //       namespace: "default",
+  //       projectId: env.DEV_PROJECT_ID,
+  //       clusterName: env.DEV_CLUSTER,
+  //       zone: env.DEV_LOCATION,
+  //       manifestPattern: 'kubernetes-manifests/tf-manifest',
+  //       credentialsId: env.CREDENTIALS_ID,
   //       verifyDeployments: true])
   //   }
   //     }
@@ -247,12 +247,12 @@ pipeline {
   //     when { branch 'main' }
   //     steps {
   //       container('kubectl') {
-  //       step([$class: 'KubernetesEngineBuilder', 
-  //       namespace: "default", 
-  //       projectId: env.MAIN_PROJECT_ID, 
-  //       clusterName: env.MAIN_CLUSTER, 
-  //       zone: env.MAIN_LOCATION, 
-  //       manifestPattern: 'kubernetes-manifests/configmaps/environment/staging', 
+  //       step([$class: 'KubernetesEngineBuilder',
+  //       namespace: "default",
+  //       projectId: env.MAIN_PROJECT_ID,
+  //       clusterName: env.MAIN_CLUSTER,
+  //       zone: env.MAIN_LOCATION,
+  //       manifestPattern: 'kubernetes-manifests/configmaps/environment/staging',
   //       credentialsId: env.CREDENTIALS_ID])
   //   }
   //     }
@@ -261,16 +261,16 @@ pipeline {
   //     when { branch 'main' }
   //     steps {
   //       sh("sed -i.bak 's#latest#${GIT_COMMIT}#' ${env.WORKSPACE}/kubernetes-manifests/staging-manifest/*.yaml")
-  //       step([$class: 'KubernetesEngineBuilder', 
-  //       namespace: "default", 
-  //       projectId: env.MAIN_PROJECT_ID, 
-  //       clusterName: env.MAIN_CLUSTER, zone: 
-  //       env.MAIN_LOCATION, 
-  //       manifestPattern: 'kubernetes-manifests/staging-manifest', 
-  //       credentialsId: env.CREDENTIALS_ID, 
+  //       step([$class: 'KubernetesEngineBuilder',
+  //       namespace: "default",
+  //       projectId: env.MAIN_PROJECT_ID,
+  //       clusterName: env.MAIN_CLUSTER, zone:
+  //       env.MAIN_LOCATION,
+  //       manifestPattern: 'kubernetes-manifests/staging-manifest',
+  //       credentialsId: env.CREDENTIALS_ID,
   //       verifyDeployments: true])
   //   }
   // }
-  
+
 }
 }
