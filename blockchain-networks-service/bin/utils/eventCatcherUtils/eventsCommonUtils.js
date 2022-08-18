@@ -122,4 +122,5 @@ module.exports = {
       log.info('updateMetadataForTokens: no token to update');
     }
   },
+  log
 };
