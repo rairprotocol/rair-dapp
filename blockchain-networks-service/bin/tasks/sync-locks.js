@@ -1,3 +1,4 @@
+// UNUSED TASK
 const Moralis = require('moralis/node');
 const _ = require('lodash');
 const log = require('../utils/logger')(module);

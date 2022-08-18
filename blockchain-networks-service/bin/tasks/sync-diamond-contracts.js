@@ -69,19 +69,18 @@ module.exports = (context) => {
 				return done();
 			}
 
-			let processedTransactions = await context.db.Transaction.find({
-				toAddress: networkData.diamondFactoryAddress,
-				blockchainId: network,
-				processed: true
-			});
-			
 			let insertions = {};
 
 			for await (let [event] of processedResult) {
 				if (!event) {
 					continue;
 				}
-				let [filteredTransaction] = processedTransactions.filter(item => item._id === event.transactionHash)
+				let filteredTransaction = await context.db.Transaction.findOne({
+					_id: event.transactionHash,
+					blockchainId: network,
+					processed: true,
+					caught: true
+				});
 				if (filteredTransaction && (filteredTransaction.caught || filteredTransaction.toAddress.includes(networkData.diamondFactoryAddress))) {
 					log.info(`Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${networkData.diamondFactoryAddress}`);
 				} else {

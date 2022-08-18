@@ -96,14 +96,16 @@ module.exports = (context) => {
 			for await (let masterFactory of contractsToQuery) {
 				let processedResult = await getTransactionHistory(masterFactory, network, version.number);
 
-				let processedTransactions = await context.db.Transaction.find({
-					toAddress: masterFactory,
-					blockchainId: network,
-					processed: true
-				});
-
 				for await (let [event] of processedResult) {
-					let [filteredTransaction] = processedTransactions.filter(item => item._id === event.transactionHash);
+					if (!event) {
+						continue;
+					}
+					let filteredTransaction = await context.db.Transaction.findOne({
+						_id: event.transactionHash,
+						blockchainId: network,
+						processed: true,
+						caught: true
+					});
 					if (filteredTransaction && (filteredTransaction.caught || filteredTransaction.toAddress.includes(masterFactory))) {
 						log.info(`Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${masterFactory}`);
 					} else {

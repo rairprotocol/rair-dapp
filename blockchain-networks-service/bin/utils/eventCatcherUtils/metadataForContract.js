@@ -3,7 +3,7 @@
 const {
   findContractFromAddress,
   updateMetadataForTokens,
-  log,
+  log
 } = require('./eventsCommonUtils');
 
 module.exports = async (

@@ -64,11 +64,6 @@ module.exports = (context) => {
 				'Transaction'		Syncs on every file
 			*/
 
-			let processedTransactions = await context.db.Transaction.find({
-				blockchainId: network,
-				processed: true
-			})
-
 			// Keep track of the latest block number processed
 			let lastSuccessfullBlock = version.number;
 			let transactionArray = [];
@@ -84,7 +79,12 @@ module.exports = (context) => {
 				if (!event) {
 					continue;
 				}
-				let [filteredTransaction] = processedTransactions.filter(item => item._id === event.transactionHash);
+				let filteredTransaction = await context.db.Transaction.findOne({
+					_id: event.transactionHash,
+					blockchainId: network,
+					processed: true,
+					caught: true
+				});
 				if (filteredTransaction && filteredTransaction.caught && filteredTransaction.toAddress.includes(networkData.diamondMarketplaceAddress)) {
 					log.info(`[${network}] Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${networkData.diamondMarketplaceAddress}`);
 				} else {

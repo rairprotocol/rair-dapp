@@ -80,11 +80,6 @@ module.exports = (context) => {
 
 			let insertions = {};
 
-			let processedTransactions = await context.db.Transaction.find({
-				blockchainId: network,
-				processed: true
-			});
-
 			for await (let contract of contractsToQuery) {
 				// To avoid rate limiting errors on Moralis I wait X seconds to parse data
 				await wasteTime(7000);
@@ -101,7 +96,12 @@ module.exports = (context) => {
 					if (!event) {
 						continue;
 					}
-					let [filteredTransaction] = processedTransactions.filter(item => item._id === event.transactionHash)
+					let filteredTransaction = await context.db.Transaction.findOne({
+						_id: event.transactionHash,
+						blockchainId: network,
+						processed: true,
+						caught: true
+					});
 					if (filteredTransaction && (filteredTransaction.caught || filteredTransaction.toAddress.includes(contract))) {
 						log.info(`Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${contract}`);
 					} else {
