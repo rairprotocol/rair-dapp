@@ -1,4 +1,5 @@
 const {
+  PORT,
   PRODUCTION,
   GCP_PROJECT_ID,
   GCP_IMAGE_BUCKET_NAME,
@@ -58,6 +59,7 @@ const polygonTestnetData = {
 
 module.exports = {
   production: !!(PRODUCTION && PRODUCTION === 'true'),
+  port: PORT || 5000,
   logLevel: LOG_LEVEL || 'info',
   admin: {
     network: ADMIN_NETWORK,

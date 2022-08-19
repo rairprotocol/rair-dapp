@@ -19,8 +19,6 @@ const streamRoute = require('./routes/stream');
 const apiV1Routes = require('./routes');
 const { textPurify, cleanStorage } = require('./utils/helpers');
 
-const port = process.env.PORT;
-
 const { appSecretManager, vaultAppRoleTokenManager } = require('./vault');
 
 const config = require('./config');
@@ -123,8 +121,8 @@ async function main() {
     res.status(500).json({ success: false, error: true, message: err.message });
   });
 
-  const server = app.listen(port, () => {
-    log.info(`Rairnode server listening at http://localhost:${port}`);
+  const server = app.listen(config.port, () => {
+    log.info(`Rairnode server listening at http://localhost:${config.port}`);
   });
 
   const io = Socket(server);

@@ -130,6 +130,8 @@ services:
       SENTRY_DSN: ${sentry_dsn}
     ports:
       - 5001:5001
+    depends_on:
+      - rairnode
     networks:
       - rair-local
   media-service:

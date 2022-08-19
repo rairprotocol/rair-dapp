@@ -140,6 +140,7 @@ services:
     ports:
       - 5001:5001
     depends_on:
+      - rairnode
       - mongo
     networks:
       - rair-local
