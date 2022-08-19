@@ -43,6 +43,7 @@ module.exports = (context) => {
         } = req.query;
         const pageSize = parseInt(itemsPerPage, 10);
         const skip = (parseInt(pageNum, 10) - 1) * pageSize;
+        const blockchainArr = blockchain.split(',');
 
         const lookupProduct = {
           $lookup: {
@@ -153,12 +154,17 @@ module.exports = (context) => {
           },
         ];
 
-        const foundBlockchain = await context.db.Blockchain.findOne({
-          hash: blockchain,
+        const foundBlockchain = await context.db.Blockchain.find({
+          hash: [...blockchainArr],
         });
 
-        if (foundBlockchain) {
-          options.unshift({ $match: { blockchain } });
+        if (foundBlockchain.length >= 1) {
+          options.unshift({ $match: {
+            blockchain: {
+              $in: [...blockchainArr],
+            },
+          },
+          });
         }
 
         const totalNumber = _.chain(
