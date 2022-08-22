@@ -14,8 +14,8 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 443
+      targetPort: 443
   selector:
     io.kompose.service: minting-network
 status:
@@ -49,12 +49,12 @@ spec:
         app: minting-network
     spec:
       containers:
-        - image: rairtechinc/minting-network:514814c8043848dd794fc703145a1dd38a0eca96
+        - image: rairtechinc/minting-network:8548950afd10e2ed893dc0a7d2e468288a5642a6
           name: minting-network
           imagePullPolicy: Always
           ports:
           - name: http-server 
-            containerPort: 80
+            containerPort: 443
           envFrom:
           - configMapRef:
               name: minting-network-env

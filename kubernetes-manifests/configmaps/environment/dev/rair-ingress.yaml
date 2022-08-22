@@ -20,4 +20,4 @@ spec:
           service:
             name: minting-network
             port:
-              number: 80
+              number: 443
