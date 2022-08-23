@@ -50,6 +50,7 @@ module.exports = {
       log.info('New token has single Metadata preset!');
       const fetchedMetadata = await (await fetch(foundMetadataURI)).json();
       tokenInstance.metadata = fetchedMetadata;
+      tokenInstance.isMetadataPinned = true;
     } else if (
       tokenInstance?.metadata?.name !== 'none' &&
       tokenInstance.metadataURI === 'none' &&
@@ -70,7 +71,7 @@ module.exports = {
     } else {
       log.info(`Minted token ${tokenInstance}has no metadata!`);
     }
-
+    tokenInstance.isURIStoredToBlockchain = false;
     return tokenInstance;
   },
   handleDuplicateKey: (err) => {
@@ -100,18 +101,47 @@ module.exports = {
     }
     return contract;
   },
-  updateMetadataForTokens: async (tokens, fetchedMetadata) => {
+  updateMetadataForTokens: async (
+    tokens,
+    appendTokenIndexFlag,
+    newURI,
+    collectionWideFlag,
+  ) => {
+    let tokensToUpdate = [];
+    try {
+      await fetch(newURI);
+    } catch (err) {
+      log.error('Was unable to fetch URI', err);
+      throw err;
+    }
     if (tokens.length > 0) {
-      const tokensToUpdate = tokens.reduce((data, token) => {
-        token.metadata = fetchedMetadata;
-        token.isMetadataPinned = true;
-        data.push(token.save().catch(this.handleDuplicateKey));
-        return data;
-      }, []);
-      if (tokensToUpdate) {
+      if (appendTokenIndexFlag && newURI) {
+        tokensToUpdate = tokens.reduce(async (data, token) => {
+          const fetchedMetadata = collectionWideFlag
+            ? await (await fetch(`${newURI}/${token.token}`)).json()
+            : await (
+              await fetch(`${newURI}/${token.uniqueIndexInContract}`)
+            ).json();
+          token.metadata = fetchedMetadata;
+          token.isMetadataPinned = true;
+          token.isURIStoredToBlockchain = true;
+          data.push(token.save().catch(this.handleDuplicateKey));
+          return data;
+        }, []);
+      } else {
+        const fetchedMetadata = await (await fetch(newURI)).json();
+        tokensToUpdate = tokens.reduce((data, token) => {
+          token.metadata = fetchedMetadata;
+          token.isMetadataPinned = true;
+          token.isURIStoredToBlockchain = true;
+          data.push(token.save().catch(this.handleDuplicateKey));
+          return data;
+        }, []);
+      }
+      if (tokensToUpdate.length > 0) {
         const tokensSaveStatus = await Promise.allSettled(tokensToUpdate);
         if (tokensSaveStatus.find((el) => el === 'rejected')) {
-          log.info(
+          log.error(
             'Was unable to save some of the tokens during batch meta update',
           );
         } else {

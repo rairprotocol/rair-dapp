@@ -63,6 +63,7 @@ services:
       SESSION_SECRET: ${session_secret}
       SESSION_TTL: ${session_ttl}
       SENTRY_DSN: ${sentry_dsn}
+      BASE_BCN_URL: ${base_bcn_url}
     ports:
       - 3000:3000
       - 5000:5000

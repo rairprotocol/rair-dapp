@@ -41,6 +41,7 @@ module.exports = async (
     foundToken.metadata = fetchedMetadata;
     foundToken.metadataURI = newURI;
     foundToken.isMetadataPinned = true;
+    foundToken.isURIStoredToBlockchain = true;
     await foundToken.save().catch(handleDuplicateKey);
   }
   return foundToken;

@@ -184,6 +184,7 @@ module.exports = (context) => {
                       filter: mainFields,
                       update: {
                         ownerAddress: sanitizedOwnerAddress,
+                        isURIStoredToBlockchain: false,
                         metadata: {
                           name: textPurify.sanitize(record.name),
                           description: textPurify.sanitize(record.description),
@@ -404,7 +405,7 @@ module.exports = (context) => {
       foundTokens = foundTokens.map((item) => ({
         updateOne: {
           filter: { contract: contract._id, uniqueIndexInContract: item.uniqueIndexInContract },
-          update: { metadataURI: !singleMetadataFor ? `${storageLink}/${item.uniqueIndexInContract}.json` : 'none', isMetadataPinned: true },
+          update: { metadataURI: !singleMetadataFor ? `${storageLink}/${item.uniqueIndexInContract}.json` : 'none', isMetadataPinned: true, isURIStoredToBlockchain: false },
         },
       }));
 

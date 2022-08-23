@@ -29,7 +29,8 @@ module.exports = async (
   if (!contract) {
     return;
   }
-
+  contract.metadataURI = newURI;
+  await contract.save();
   // Find products with common URIs set
   const products = await dbModels.Product.find({
     contract: contract._id,
@@ -50,8 +51,7 @@ module.exports = async (
     offerIndex: { $in: foundOffers },
     metadataURI: 'none',
   });
-  const fetchedMetadata = await (await fetch(newURI)).json();
   // MB TODO: Same as above... and this is duplicate code
-  updateMetadataForTokens(foundTokensToUpdate, fetchedMetadata);
+  updateMetadataForTokens(foundTokensToUpdate, appendTokenIndex, newURI);
   return newURI;
 };

@@ -15,7 +15,6 @@ module.exports = async (
   // eslint-disable-next-line no-unused-vars
   appendTokenIndex = true, // MB:CHECK: this is not clear...
 ) => {
-  const fetchedMetadata = await (await fetch(newURI)).json();
   const contract = await findContractFromAddress(
     transactionReceipt.to
       ? transactionReceipt.to
@@ -52,6 +51,6 @@ module.exports = async (
     offerIndex: { $in: foundOffers },
     metadataURI: 'none',
   });
-  await updateMetadataForTokens(tokens, fetchedMetadata);
+  await updateMetadataForTokens(tokens, appendTokenIndex, newURI, true);
   return product;
 };

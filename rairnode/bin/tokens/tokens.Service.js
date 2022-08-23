@@ -1,5 +1,11 @@
 const _ = require('lodash');
-const { OfferPool, Offer, MintedToken, Contract, Product } = require('../models');
+const {
+  OfferPool,
+  Offer,
+  MintedToken,
+  Contract,
+  Product,
+} = require('../models');
 const config = require('../config');
 const { addPin, addFile } = require('../integrations/ipfsService')();
 const log = require('../utils/logger')(module);
@@ -31,7 +37,14 @@ const getOffersAndOfferPools = async (contract, product) => {
   return [offers, offerPool];
 };
 
-const prepareTokens = (tokens, metadata, contract, offers, product, offerPool) => {
+const prepareTokens = (
+  tokens,
+  metadata,
+  contract,
+  offers,
+  product,
+  offerPool,
+) => {
   const firstTokenInProduct = BigInt(product.firstTokenIndex);
   const mainFields = { contract: contract._id };
 
@@ -52,6 +65,7 @@ const prepareTokens = (tokens, metadata, contract, offers, product, offerPool) =
         offer: contract.diamond ? offer.diamondRangeIndex : offer.offerIndex,
         uniqueIndexInContract: (firstTokenInProduct + index).toString(),
         isMinted: false,
+        isURIStoredToBlockchain: false,
         metadata,
       });
     }
@@ -81,19 +95,25 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
     if (_.isEmpty(metadataFields)) {
       await cleanStorage(req.files);
-      return res.status(400).send({ success: false, message: 'Nothing to store.' });
+      return res
+        .status(400)
+        .send({ success: false, message: 'Nothing to store.' });
     }
 
     const foundContract = await Contract.findById(contract);
 
     if (_.isEmpty(foundContract)) {
       await cleanStorage(req.files);
-      return res.status(404).send({ success: false, message: 'Contract not found.' });
+      return res
+        .status(404)
+        .send({ success: false, message: 'Contract not found.' });
     }
 
     if (user.publicAddress !== foundContract.user) {
       await cleanStorage(req.files);
-      return res.status(403).send({ success: false, message: 'This contract not belong to you.' });
+      return res
+        .status(403)
+        .send({ success: false, message: 'This contract not belong to you.' });
     }
 
     // upload files to IPFS cloud storage
@@ -153,11 +173,18 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
     if (commonMetadataFor === 'contract') {
       // check if does specific Contract already contains created tokens
       if (foundContract.singleMetadata) {
-        const tokensCount = await MintedToken.count({ contract: foundContract._id });
+        const tokensCount = await MintedToken.count({
+          contract: foundContract._id,
+        });
 
         if (tokensCount > 0) {
           await cleanStorage(req.files);
-          return res.status(400).send({ success: false, message: `Current Contract already have ${tokensCount} created tokens.` });
+          return res
+            .status(400)
+            .send({
+              success: false,
+              message: `Current Contract already have ${tokensCount} created tokens.`,
+            });
         }
       }
 
@@ -176,26 +203,30 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
         });
       }
 
-      await Promise.all(_.map(foundProducts, async (foundProduct) => {
-        try {
-          const [offers, offerPool] = await getOffersAndOfferPools(
-            foundContract,
-            foundProduct.collectionIndexInContract,
-          );
+      await Promise.all(
+        _.map(foundProducts, async (foundProduct) => {
+          try {
+            const [offers, offerPool] = await getOffersAndOfferPools(
+              foundContract,
+              foundProduct.collectionIndexInContract,
+            );
 
-          return prepareTokens(
-            newTokens,
-            sanitizedMetadataFields,
-            foundContract,
-            offers,
-            foundProduct,
-            offerPool,
-          );
-        } catch (err) {
-          await cleanStorage(req.files);
-          return res.status(404).send({ success: false, message: err.message });
-        }
-      }));
+            return prepareTokens(
+              newTokens,
+              sanitizedMetadataFields,
+              foundContract,
+              offers,
+              foundProduct,
+              offerPool,
+            );
+          } catch (err) {
+            await cleanStorage(req.files);
+            return res
+              .status(404)
+              .send({ success: false, message: err.message });
+          }
+        }),
+      );
     } else {
       try {
         const foundProduct = await Product.findOne({
@@ -211,7 +242,10 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
           });
         }
 
-        const [offers, offerPool] = await getOffersAndOfferPools(foundContract, product);
+        const [offers, offerPool] = await getOffersAndOfferPools(
+          foundContract,
+          product,
+        );
 
         // check if does specific Product already contains created tokens
         if (foundProduct.singleMetadata) {
@@ -227,7 +261,12 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
           if (tokensCount > 0) {
             await cleanStorage(req.files);
-            return res.status(400).send({ success: false, message: `Current Product already have ${tokensCount} created tokens.` });
+            return res
+              .status(400)
+              .send({
+                success: false,
+                message: `Current Product already have ${tokensCount} created tokens.`,
+              });
           }
         }
 
@@ -254,10 +293,15 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
       try {
         await MintedToken.insertMany(newTokens, { ordered: false });
         log.info('All tokens is stored.');
-      } catch (err) { log.error(err); }
+      } catch (err) {
+        log.error(err);
+      }
     } else {
       await cleanStorage(req.files);
-      return res.json({ success: false, message: 'Don\'t have tokens for creation.' });
+      return res.json({
+        success: false,
+        message: "Don't have tokens for creation.",
+      });
     }
 
     await cleanStorage(req.files);
