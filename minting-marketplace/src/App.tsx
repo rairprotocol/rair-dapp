@@ -98,6 +98,7 @@ import {
   AppContainerFluid,
   MainBlockApp
 } from './styled-components/nft/AppContainer';
+import InquiriesPage from './components/InquiriesPage/InquiriesPage';
 
 const rSwal = withReactContent(Swal);
 
@@ -472,6 +473,8 @@ function App() {
               currentUserAddress={currentUserAddress}
               creatorViewsDisabled={creatorViewsDisabled}
               programmaticProvider={programmaticProvider}
+              showAlert={showAlert}
+              selectedChain={selectedChain}
             />
           )}
 
@@ -567,6 +570,17 @@ function App() {
                   {
                     path: '/slidelock',
                     content: SlideLock
+                  },
+                  {
+                    path: '/about-page',
+                    content: AboutPageNew,
+                    props: {
+                      connectUserData: connectUserData,
+                      headerLogoWhite: headerLogoWhite,
+                      headerLogoBlack: headerLogoBlack,
+                      setIsSplashPage: setIsSplashPage,
+                      seoInformation
+                    }
                   }
                 ].map((item, index) => {
                   // If the path is set as the Home Page, render it as the default path (/)
@@ -769,6 +783,10 @@ function App() {
                   {
                     path: '/thankyou',
                     content: ThankYouPage
+                  },
+                  {
+                    path: '/inquiries',
+                    content: InquiriesPage
                   },
 
                   //3 Tab Marketplace?

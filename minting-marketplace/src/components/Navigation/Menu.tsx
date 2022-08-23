@@ -34,7 +34,9 @@ const MenuNavigation = ({
   currentUserAddress,
   adminRights,
   creatorViewsDisabled,
-  programmaticProvider
+  programmaticProvider,
+  showAlert,
+  selectedChain
 }) => {
   const [click, setClick] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -122,7 +124,10 @@ const MenuNavigation = ({
   }, [getInfoFromUser]);
 
   return (
-    <MenuMobileWrapper className="col-1 rounded burder-menu">
+    <MenuMobileWrapper
+      className="col-1 rounded burder-menu"
+      showAlert={showAlert}
+      selectedChain={selectedChain}>
       <Nav primaryColor={primaryColor}>
         <MobileChoiseNav
           click={click}

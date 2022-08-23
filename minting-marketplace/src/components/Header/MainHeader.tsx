@@ -37,6 +37,7 @@ import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { TUsersInitialState } from '../../ducks/users/users.types';
 import { getDataAllClear, getDataAllStart } from '../../ducks/search/actions';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import TalkSalesComponent from './HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 
 const MainHeader: React.FC<IMainHeader> = ({
   goHome,
@@ -53,6 +54,7 @@ const MainHeader: React.FC<IMainHeader> = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { primaryColor, headerLogo } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -354,6 +356,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             />
           </div>
         </div>
+        <TalkSalesComponent text={'Talk to sales'} />
       </div>
     </HeaderContainer>
   );

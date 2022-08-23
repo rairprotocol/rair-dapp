@@ -13,8 +13,8 @@ export const Alert = styled.div`
   z-index: 101;
 
   @media (max-width: 500px) {
-    height: 100px;
-    font-size: 14px;
+    height: 50px;
+    font-size: 12px;
   }
 
   svg {

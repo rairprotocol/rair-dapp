@@ -5,6 +5,8 @@ export const MenuMobileWrapper = styled.div`
   z-index: 50;
   position: fixed;
   padding: 0;
+  margin-top: ${(props) =>
+    props.showAlert && props.selectedChain ? '50px' : ''};
 `;
 
 export const Nav = styled.nav`
@@ -17,6 +19,8 @@ export const Nav = styled.nav`
   z-index: 12;
   width: 100%;
   position: ${(props) => (props.editMode ? 'fixed' : 'reletive')};
+  margin-top: ${(props) =>
+    props.showAlert && props.selectedChain ? '50px' : ''};
 `;
 
 export const ListItem = styled.li`

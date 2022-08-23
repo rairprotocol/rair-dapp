@@ -24,4 +24,13 @@ export const AppContainerFluid = styled.div`
 export const MainBlockApp = styled.div`
   margin-top: ${(props) =>
     props.showAlert && props.selectedChain ? '65px' : '0'};
+
+  @media screen and (max-width: 1024px) {
+    margin-top: 8vh;
+  }
+
+  @media screen and (max-width: 845px) {
+    margin-top: ${(props) =>
+      props.showAlert && props.selectedChain ? '120px' : '100px'};
+  }
 `;

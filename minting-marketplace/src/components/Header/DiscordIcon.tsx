@@ -160,6 +160,23 @@ export const BellIcon = ({ primaryColor }) => {
   );
 };
 
+export const WarningErrorIcon = () => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <rect width="24" height="24" rx="12" fill="#F63419" />
+      <path
+        d="M11.0793 15.384L10.9353 7.08H13.0633L12.9193 15.384H11.0793ZM10.9353 19V16.76H13.0633V19H10.9353Z"
+        fill="white"
+      />
+    </svg>
+  );
+};
+
 export const MenuIcon = ({ primaryColor }) => {
   return (
     <svg

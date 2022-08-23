@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
+import TalkSalesComponent from '../../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
 
 const MobileNavigationList = ({
@@ -50,7 +51,12 @@ const MobileNavigationList = ({
               Contract
             </a>
           </li>
-          <li>Inquiries</li>
+          <li>
+            <TalkSalesComponent
+              text={'Inquiries'}
+              classes={'inquiries-sales'}
+            />
+          </li>
           {currentUserAddress && (
             <li className="logout" onClick={logout}>
               <i className="fas fa-sign-out-alt"></i>Logout

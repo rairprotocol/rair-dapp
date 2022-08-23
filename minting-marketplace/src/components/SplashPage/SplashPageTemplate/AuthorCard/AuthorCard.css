@@ -70,6 +70,7 @@
   display: flex;
   justify-content: center;
   background-image: none;
+  margin-top: 3rem;
 }
 
 .template-home-splash-page {
@@ -291,6 +292,12 @@
     height: 30px;
     top: 120px;
     right: 10px;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1024px) {
+  .wrapper-splash-page {
+    margin-top: 0;
   }
 }
 

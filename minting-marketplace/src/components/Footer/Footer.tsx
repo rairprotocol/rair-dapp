@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../ducks';
@@ -20,8 +20,12 @@ import { TelegramIcon } from '../Header/DiscordIcon';
 import { TwitterIcon } from '../Header/DiscordIcon';
 import { DiscordIcon } from '../Header/DiscordIcon';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import Swal from 'sweetalert2';
+import TalkSalesComponent from '../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 
 const Footer = () => {
+  const [emailChimp, setEmailChimp] = useState<string>('');
+
   const { headerLogo, primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
@@ -29,6 +33,21 @@ const Footer = () => {
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
+
+  const onChangeEmail = (e) => {
+    setEmailChimp(e.target.value);
+  };
+
+  const onSubmit = (e) => {
+    Swal.fire(
+      'Success',
+      `Thank you for sign up! Check to your email ${emailChimp}`,
+      'success'
+    );
+    setTimeout(() => {
+      setEmailChimp('');
+    }, 1000);
+  };
 
   return (
     <FooterMain primaryColor={primaryColor}>
@@ -82,7 +101,12 @@ const Footer = () => {
                 Contract
               </a>
             </li>
-            <li>Inquiries</li>
+            <li>
+              <TalkSalesComponent
+                text={'Inquiries'}
+                classes={'inquiries-sales'}
+              />
+            </li>
           </NavFooterBox>
           {currentUserAddress && (
             <NavFooterBox primaryColor={primaryColor}>
@@ -97,10 +121,38 @@ const Footer = () => {
         </NavFooter>
         <FooterEmailBlock primaryColor={primaryColor}>
           <h4>Stay in the loop</h4>
-          <div className="footer-send-email">
-            <input type="text" placeholder="Enter your email" />
-            <button>Sign up</button>
-          </div>
+          <form
+            action="https://tech.us16.list-manage.com/subscribe/post?u=4740c76c171ce33ffa0edd3e6&amp;id=1f95f6ad8c"
+            method="post"
+            id="mc-embedded-subscribe-form"
+            name="mc-embedded-subscribe-form"
+            className="validate"
+            target="_blank"
+            onSubmit={onSubmit}>
+            <div className="footer-send-email">
+              <input
+                value={emailChimp}
+                type="email"
+                name="EMAIL"
+                id="mce-EMAIL"
+                placeholder="Enter your email"
+                onChange={onChangeEmail}
+                required
+              />
+              <button type="submit">Sign up</button>
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '-5000px'
+                }}
+                aria-hidden="true">
+                <input
+                  type="text"
+                  name="b_4740c76c171ce33ffa0edd3e6_1f95f6ad8c"
+                />
+              </div>
+            </div>
+          </form>
         </FooterEmailBlock>
       </FooterWrapper>
       <FooterTextRairTech>

@@ -891,7 +891,7 @@ video {
   }
 
   #nft-data-page-wrapper {
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
   }
 
   .custom-desc-to-offer {
@@ -950,7 +950,7 @@ video {
   #nft-data-page-wrapper {
     padding: 16px 20px 33px;
     margin: 0px;
-    margin-top: 4rem;
+    /* margin-top: 4rem; */
   }
 
   .nft-collection-wrapper {
@@ -1088,7 +1088,7 @@ video {
   #nft-data-page-wrapper {
     padding: 16px 10px 33px;
     margin-bottom: 0px;
-    margin-top: 3rem;
+    /* margin-top: 3rem; */
   }
 
   .nft-collection-wrapper {
@@ -1435,7 +1435,7 @@ video {
     width: 85vw;
     padding: 16px 10px 108px;
     margin: 0px;
-    margin-top: 4rem;
+    /* margin-top: 4rem; */
   }
 
   .nft-data-content {
