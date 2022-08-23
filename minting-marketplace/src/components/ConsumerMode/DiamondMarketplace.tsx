@@ -1,22 +1,33 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useStore, Provider } from 'react-redux';
 import Swal from 'sweetalert2';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { diamondFactoryAbi } from '../../contracts';
-import { utils, constants } from 'ethers';
+import { utils, constants, BigNumber } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import InputField from '../common/InputField';
 import BuyTokenModalContent from '../marketplace/BuyTokenModalContent';
 import withReactContent from 'sweetalert2-react-content';
+import {
+  IBatchTokenSelector,
+  ITokenSelector,
+  TAux,
+  TOffersArrayItem
+} from './consumerMode.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
 const rSwal = withReactContent(Swal);
 
-const BatchTokenSelector = ({ batchMint, max }) => {
-  const [batchArray, setBatchArray] = useState([]);
-  const [rerender, setRerender] = useState(false);
+const BatchTokenSelector: React.FC<IBatchTokenSelector> = ({
+  batchMint,
+  max
+}) => {
+  const [batchArray, setBatchArray] = useState<TAux[]>([]);
+  const [rerender, setRerender] = useState<boolean>(false);
 
   const addRecipient = () => {
-    if (batchArray.length >= max) {
+    if (batchArray.length >= +max) {
       return;
     }
     const aux = [...batchArray];
@@ -27,7 +38,7 @@ const BatchTokenSelector = ({ batchMint, max }) => {
     setBatchArray(aux);
   };
 
-  const remove = (index) => {
+  const remove = (index: number) => {
     const aux = [...batchArray];
     aux.splice(index, 1);
     setBatchArray(aux);
@@ -71,7 +82,7 @@ const BatchTokenSelector = ({ batchMint, max }) => {
       })}
       <button
         className="btn btn-royal-ice"
-        disabled={batchArray.length >= max}
+        disabled={batchArray.length >= +max}
         onClick={addRecipient}>
         Add
       </button>
@@ -89,8 +100,8 @@ const BatchTokenSelector = ({ batchMint, max }) => {
   );
 };
 
-const TokenSelector = ({ buyCall, max, min }) => {
-  const [tokenId, setTokenId] = useState(min);
+const TokenSelector: React.FC<ITokenSelector> = ({ buyCall, max, min }) => {
+  const [tokenId, setTokenId] = useState<string>(min);
 
   return (
     <details>
@@ -120,19 +131,22 @@ const TokenSelector = ({ buyCall, max, min }) => {
 };
 
 const DiamondMarketplace = () => {
-  const [offersArray, setOffersArray] = useState([]);
-  const [transactionInProgress, setTransactionInProgress] = useState(false);
-  const [treasuryAddress, setTreasuryAddress] = useState();
+  const [offersArray, setOffersArray] = useState<TOffersArrayItem[]>([]);
+  const [transactionInProgress, setTransactionInProgress] =
+    useState<boolean>(false);
+  const [treasuryAddress, setTreasuryAddress] = useState<string>();
 
-  const { diamondMarketplaceInstance, contractCreator } = useSelector(
-    (store) => store.contractStore
-  );
+  const { diamondMarketplaceInstance, contractCreator, currentChain } =
+    useSelector<RootState, ContractsInitialType>(
+      (store) => store.contractStore
+    );
 
   const store = useStore();
 
-  const { primaryColor, secondaryColor } = useSelector(
-    (store) => store.colorStore
-  );
+  const { primaryColor, secondaryColor } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
 
   const fetchDiamondData = useCallback(async () => {
     if (!diamondMarketplaceInstance) {
@@ -142,11 +156,11 @@ const DiamondMarketplace = () => {
     const offerCount = Number(
       (await diamondMarketplaceInstance.getTotalOfferCount()).toString()
     );
-    const offerData = [];
+    const offerData: TOffersArrayItem[] = [];
     for (let i = 0; i < offerCount; i++) {
       const singleOfferData = await diamondMarketplaceInstance.getOfferInfo(i);
       offerData.push({
-        offerIndex: i,
+        offerIndex: i.toString(),
         contractAddress: singleOfferData.mintOffer.erc721Address,
         rangeIndex: singleOfferData.mintOffer.rangeIndex.toString(),
         visible: singleOfferData.mintOffer.visible,
@@ -164,14 +178,14 @@ const DiamondMarketplace = () => {
   }, [diamondMarketplaceInstance]);
 
   useEffect(() => {
-    diamondMarketplaceInstance.on('MintedToken', fetchDiamondData);
-    return () =>
-      diamondMarketplaceInstance.off('MintedToken', fetchDiamondData);
-  }, [diamondMarketplaceInstance, fetchDiamondData]);
+    fetchDiamondData();
+  }, [fetchDiamondData]);
 
-  useEffect(fetchDiamondData, [fetchDiamondData]);
-
-  const mintTokenCall = async (offerIndex, nextToken, price) => {
+  const mintTokenCall = async (
+    offerIndex: string,
+    nextToken: string,
+    price: BigNumber
+  ) => {
     setTransactionInProgress(true);
     Swal.fire({
       title: `Buying token #${nextToken}!`,
@@ -181,7 +195,7 @@ const DiamondMarketplace = () => {
     });
     if (
       await metamaskCall(
-        diamondMarketplaceInstance.buyMintingOffer(offerIndex, nextToken, {
+        diamondMarketplaceInstance?.buyMintingOffer(offerIndex, nextToken, {
           value: price
         })
       )
@@ -196,7 +210,12 @@ const DiamondMarketplace = () => {
     setTransactionInProgress(false);
   };
 
-  const batchMint = async (offerIndex, tokens, addresses, price) => {
+  const batchMint = async (
+    offerIndex: string,
+    tokens: number[],
+    addresses: string[],
+    price: BigNumber
+  ) => {
     setTransactionInProgress(true);
     Swal.fire({
       title: `Buying ${tokens.length} tokens!`,
@@ -206,7 +225,7 @@ const DiamondMarketplace = () => {
     });
     if (
       await metamaskCall(
-        diamondMarketplaceInstance.buyMintingOfferBatch(
+        diamondMarketplaceInstance?.buyMintingOfferBatch(
           offerIndex,
           tokens,
           addresses,
@@ -240,7 +259,7 @@ const DiamondMarketplace = () => {
           className="btn btn-stimorol"
           onClick={async () => {
             await metamaskCall(
-              diamondMarketplaceInstance.updateTreasuryAddress(
+              diamondMarketplaceInstance?.updateTreasuryAddress(
                 '0x3fD4268B03cce553f180E77dfC14fde00271F9B7'
               )
             );
@@ -275,13 +294,15 @@ const DiamondMarketplace = () => {
             tokens available for{' '}
             <h5 style={{ display: 'inline' }}>
               {utils.formatEther(offer.price)}{' '}
-              {blockchainData[window.ethereum.chainId].symbol}
+              {currentChain && blockchainData[currentChain]?.symbol}
             </h5>
             <br />
             <h5 className="w-100 text-center px-5">
               <div className="float-start">{offer.startingToken}...</div>
               <progress
-                max={offer.endingToken - offer.startingToken + 1}
+                max={
+                  Number(offer.endingToken) - Number(offer.startingToken) + 1
+                }
                 value={offer.tokensAllowed}
               />
               <div className="float-end">...{offer.endingToken}</div>
@@ -289,11 +310,11 @@ const DiamondMarketplace = () => {
             <button
               disabled={transactionInProgress || !offer.visible}
               onClick={async () => {
-                const instance = contractCreator(
+                const instance = contractCreator?.(
                   offer.contractAddress,
                   diamondFactoryAbi
                 );
-                const nextToken = await instance.getNextSequentialIndex(
+                const nextToken = await instance?.getNextSequentialIndex(
                   offer.productIndex,
                   offer.startingToken,
                   offer.endingToken
@@ -323,7 +344,7 @@ const DiamondMarketplace = () => {
             {false && offer.visible && (
               <BatchTokenSelector
                 max={offer.tokensAllowed}
-                batchMint={(tokens, addresses) =>
+                batchMint={(tokens: number[], addresses: string[]) =>
                   batchMint(offer.offerIndex, tokens, addresses, offer.price)
                 }
               />
@@ -342,8 +363,8 @@ const DiamondMarketplace = () => {
                           buyTokenBatchFunction={batchMint}
                           start={offer.startingToken}
                           end={offer.endingToken}
-                          blockchain={window.ethereum.chainId}
-                          minterAddress={diamondMarketplaceInstance.address}
+                          blockchain={currentChain}
+                          minterAddress={diamondMarketplaceInstance?.address}
                           price={offer.price}
                           offerName={offer.name}
                           offerIndex={offer.offerIndex}

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -8,22 +7,41 @@ import BatchMinting from './BatchMinting';
 import { utils } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
 import { metamaskCall } from '../../utils/metamaskUtils';
+import {
+  IERC721ManagerConsumer,
+  IRange,
+  TBalanceInfo,
+  TBatchMintingItem,
+  TRangeInfo
+} from './consumerMode.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 const MySwal = withReactContent(Swal);
 
-const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
-  const [next, setNext] = useState();
-  const [specificIndex, setSpecificIndex] = useState(0);
-
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [start, setStart] = useState('');
+const Range: React.FC<IRange> = ({
+  tokenInstance,
+  productIndex,
+  offerIndex,
+  rangeIndex
+}) => {
+  const [next, setNext] = useState<string>();
+  const [specificIndex, setSpecificIndex] = useState<number>(0);
+  const [name, setName] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [start, setStart] = useState<string>('');
   const [end, setEnd] = useState('');
-  const [allowed, setAllowed] = useState('');
+  const [allowed, setAllowed] = useState<string>('');
 
-  const { minterInstance } = useSelector((state) => state.contractStore);
+  const { minterInstance, currentChain } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
 
   const refreshData = useCallback(async () => {
-    const data = await minterInstance.getOfferRangeInfo(offerIndex, rangeIndex);
+    const data = await minterInstance?.getOfferRangeInfo(
+      offerIndex,
+      rangeIndex
+    );
     setName(data.name);
     setPrice(data.price.toString());
     setStart(data.tokenStart.toString());
@@ -32,7 +50,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
     try {
       setNext(
         (
-          await tokenInstance.getNextSequentialIndex(
+          await tokenInstance?.getNextSequentialIndex(
             productIndex,
             data.tokenStart,
             data.tokenEnd
@@ -56,9 +74,9 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
     refreshData();
   }, [refreshData, tokenInstance]);
 
-  const batchMint = async (data) => {
-    const addresses = data.map((i) => i.address);
-    const tokens = data.map((i) => i.token);
+  const batchMint = async (data: TBatchMintingItem[]) => {
+    const addresses = data.map((i: TBatchMintingItem) => i.address);
+    const tokens = data.map((i: TBatchMintingItem) => i.token);
     Swal.fire({
       title: 'Preparing transaction',
       html: 'Please wait',
@@ -67,13 +85,13 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
     });
     if (
       await metamaskCall(
-        minterInstance.buyTokenBatch(
+        minterInstance?.buyTokenBatch(
           offerIndex,
           rangeIndex,
           tokens,
           addresses,
           {
-            value: price * tokens.length
+            value: Number(price) * tokens.length
           }
         )
       )
@@ -98,7 +116,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
           });
           if (
             await metamaskCall(
-              minterInstance.buyToken(offerIndex, rangeIndex, next, {
+              minterInstance?.buyToken(offerIndex, rangeIndex, next, {
                 value: price
               }),
               'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
@@ -110,7 +128,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
         className="btn btn-success py-0">
         Buy token #{next} for{' '}
         {utils.formatEther(price === '' ? 0 : price)?.toString()}{' '}
-        {blockchainData[window?.ethereum?.chainId]?.symbol}!
+        {currentChain && blockchainData[currentChain]?.symbol}!
       </button>
       <button
         onClick={() => {
@@ -134,7 +152,7 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
       {start && allowed && end && (
         <progress
           className="w-100"
-          value={end - start + 1 - allowed}
+          value={Number(end) - Number(start) + 1 - Number(allowed)}
           max={end}
         />
       )}
@@ -147,14 +165,14 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
               <input
                 type="number"
                 value={specificIndex}
-                onChange={(e) => setSpecificIndex(e.target.value)}
+                onChange={(e) => setSpecificIndex(+e.target.value)}
               />
               <br />
               <button
-                disabled={next > specificIndex}
+                disabled={Number(next) > specificIndex}
                 onClick={async () => {
                   try {
-                    await minterInstance.buyToken(
+                    await minterInstance?.buyToken(
                       offerIndex,
                       rangeIndex,
                       specificIndex,
@@ -162,14 +180,14 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
                         value: price
                       }
                     );
-                  } catch (err) {
+                  } catch (err: any) {
                     Swal.fire('Error', err?.data?.message, 'error');
                   }
                 }}
                 className="btn py-0 btn-warning">
                 Buy token #{specificIndex} for{' '}
                 {utils.formatEther(price === '' ? 0 : price).toString()}{' '}
-                {blockchainData[window?.ethereum?.chainId]?.symbol}!
+                {currentChain && blockchainData[currentChain]?.symbol}!
               </button>
             </details>
           </small>
@@ -181,33 +199,40 @@ const Range = ({ tokenInstance, productIndex, offerIndex, rangeIndex }) => {
   );
 };
 
-const ERC721Manager = ({ offerInfo, index, width = 6 }) => {
-  const [balance, setBalance] = useState();
-  const [productName, setProductName] = useState();
-  const [contractName, setContractName] = useState();
-  const [rangeInfo, setRangeInfo] = useState([]);
-  const [refetchingFlag, setRefetchingFlag] = useState(false);
+const ERC721Manager: React.FC<IERC721ManagerConsumer> = ({
+  offerInfo,
+  index,
+  width = 6
+}) => {
+  const [balance, setBalance] = useState<TBalanceInfo[]>();
+  const [productName, setProductName] = useState<string>();
+  const [contractName, setContractName] = useState<string>();
+  const [rangeInfo, setRangeInfo] = useState<TRangeInfo[]>([]);
+  const [refetchingFlag, setRefetchingFlag] = useState<boolean>(false);
 
-  const { minterInstance, currentUserAddress } = useSelector(
-    (state) => state.contractStore
-  );
+  const { minterInstance, currentUserAddress } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
 
   const refreshData = useCallback(async () => {
     setRefetchingFlag(true);
-    const balances = [];
+    const balances: TBalanceInfo[] = [];
     const tokensOwned = (
-      await offerInfo.instance.balanceOf(currentUserAddress)
+      await offerInfo.instance?.balanceOf(currentUserAddress)
     ).toString();
     setProductName(
-      (await offerInfo.instance.getProduct(offerInfo.productIndex)).productName
+      (await offerInfo.instance?.getProduct(offerInfo.productIndex)).productName
     );
-    setContractName(await offerInfo.instance.name());
-    const ranges = [];
+    setContractName(await offerInfo.instance?.name());
+    const ranges: TRangeInfo[] = [];
     for await (const rangeIndex of [
       // eslint-disable-next-line
-      ...Array.apply(null, { length: offerInfo.ranges }).keys()
+      ...Array.apply<null, any, unknown[]>(null, {
+        length: offerInfo.ranges
+      }).keys()
     ]) {
-      const data = await minterInstance.getOfferRangeInfo(index, rangeIndex);
+      const data = await minterInstance?.getOfferRangeInfo(index, rangeIndex);
       ranges.push({
         name: data.name,
         price: data.price.toString(),
@@ -220,22 +245,24 @@ const ERC721Manager = ({ offerInfo, index, width = 6 }) => {
     if (tokensOwned > 0) {
       for await (const index of [
         // eslint-disable-next-line
-        ...Array.apply(null, { length: tokensOwned }).keys()
+        ...Array.apply<null, any, unknown[]>(null, {
+          length: tokensOwned
+        }).keys()
       ]) {
         const token = (
-          await offerInfo.instance.tokenOfOwnerByIndex(
+          await offerInfo.instance?.tokenOfOwnerByIndex(
             currentUserAddress,
             index
           )
         ).toString();
         if (
-          (await offerInfo.instance.tokenToProduct(token)).toString() ===
+          (await offerInfo.instance?.tokenToProduct(token)).toString() ===
           offerInfo.productIndex
         ) {
           balances.push({
             token,
             internalIndex: (
-              await offerInfo.instance.tokenToProductIndex(token)
+              await offerInfo.instance?.tokenToProductIndex(token)
             ).toString()
           });
         }

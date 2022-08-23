@@ -4,7 +4,6 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import BatchRow from './BatchRow';
 import { minterAbi } from '../../contracts';
-// import { CSVReader } from 'react-papaparse'
 import csvParser from '../../utils/csvParser';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { ethers, utils } from 'ethers';
@@ -60,7 +59,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
           tokens,
           addresses,
           {
-            value: price * tokens.length
+            value: +price * tokens.length
           }
         )
       )
@@ -144,8 +143,8 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
                 let result;
                 if (diamonds) {
                   result = await buyTokenFunction?.(
-                    +offerIndex,
-                    +tokenIndex,
+                    offerIndex,
+                    tokenIndex,
                     price
                   );
                 } else {
@@ -181,7 +180,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
             <div className="col">
               Total:{' '}
               {utils.formatEther(
-                diamonds ? price.mul(rows.length) : price * rows.length
+                diamonds ? price.mul(rows.length) : price.mul(rows.length)
               )}
             </div>
             <div
@@ -232,7 +231,7 @@ const BuyTokenModalContent: React.FC<TBuyTokenModalContentType> = ({
               onClick={() => {
                 if (diamonds) {
                   buyTokenBatchFunction?.(
-                    +offerIndex,
+                    offerIndex,
                     paginatedRows.map((item) => item['NFTID']),
                     paginatedRows.map((item) => item['Public Address']),
                     price

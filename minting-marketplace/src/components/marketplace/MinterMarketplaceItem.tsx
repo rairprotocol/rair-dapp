@@ -8,7 +8,7 @@ import { TMinterMarketplaceItemType } from './marketplace.types';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 const rSwal = withReactContent(Swal);
 
 const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
@@ -77,7 +77,7 @@ const MinterMarketplaceItem: React.FC<TMinterMarketplaceItemType> = ({
                     <BuyTokenModalContent
                       minterAddress={item.minterAddress}
                       blockchain={item.blockchain}
-                      price={item.price}
+                      price={BigNumber.from(item.price)}
                       start={item.range[0]}
                       end={item.range[1]}
                       offerName={item.offerName}

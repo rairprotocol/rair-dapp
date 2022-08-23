@@ -1,25 +1,29 @@
-//@ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { utils, BigNumber } from 'ethers';
 import blockchainData from '../../utils/blockchainData';
+import {
+  IBatchMinting,
+  IBatchRow,
+  TBatchMintingItem
+} from './consumerMode.types';
 
-const BatchRow = ({ index, deleter, array }) => {
-  const [address, setAddress] = useState();
-  const [token, setToken] = useState();
+const BatchRow: React.FC<IBatchRow> = ({ index, deleter, array }) => {
+  const [address, setAddress] = useState<string>();
+  const [token, setToken] = useState<number>();
 
   useEffect(() => {
     setAddress(array[index].address);
     setToken(array[index].token);
   }, [index, array]);
 
-  const addressChange = (e) => {
+  const addressChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAddress(e.target.value);
     array[index].address = e.target.value;
   };
 
-  const tokenChange = (e) => {
-    setToken(e.target.value);
-    array[index].token = e.target.value;
+  const tokenChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setToken(+e.target.value);
+    array[index].token = +e.target.value;
   };
 
   return (
@@ -51,11 +55,17 @@ const BatchRow = ({ index, deleter, array }) => {
   );
 };
 
-const BatchMinting = ({ name, start, end, price, batchMint }) => {
-  const [rows, setRows] = useState([]);
+const BatchMinting: React.FC<IBatchMinting> = ({
+  name,
+  start,
+  end,
+  price,
+  batchMint
+}) => {
+  const [rows, setRows] = useState<TBatchMintingItem[]>([]);
 
   const addRow = () => {
-    if (rows.length > end - start) {
+    if (rows.length > Number(end) - Number(start)) {
       return;
     }
     const aux = [...rows];
@@ -66,7 +76,7 @@ const BatchMinting = ({ name, start, end, price, batchMint }) => {
     setRows(aux);
   };
 
-  const deleteRow = (index) => {
+  const deleteRow = (index: number) => {
     const aux = [...rows];
     aux.splice(index, 1);
     setRows(aux);
@@ -78,7 +88,7 @@ const BatchMinting = ({ name, start, end, price, batchMint }) => {
         Offer: <b>{name}</b>
       </button>
       <button
-        disabled={rows.length > end - start}
+        disabled={rows.length > Number(end) - Number(start)}
         onClick={addRow}
         className="col-2 btn btn-success">
         Add <i className="fas fa-plus" />
@@ -90,12 +100,14 @@ const BatchMinting = ({ name, start, end, price, batchMint }) => {
             BigNumber.from(price === '' ? 0 : price).mul(rows.length)
           )
           .toString()}{' '}
-        {blockchainData[window?.ethereum?.chainId]?.symbol}!
+        {window.ethereum.chainId &&
+          blockchainData[window.ethereum.chainId]?.symbol}
+        !
       </button>
       <div
         className="col-12"
         style={{ maxHeight: '60vh', overflowY: 'scroll' }}>
-        {rows.map((item, index) => {
+        {rows.map((item: TBatchMintingItem, index: number) => {
           return (
             <BatchRow
               key={index}

@@ -83,7 +83,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     if (!embeddedParams) {
       window.scroll(0, 0);
     }
-  }, []);
+  }, [embeddedParams]);
 
   useEffect(() => {
     setDocumentTitle('Single Token');

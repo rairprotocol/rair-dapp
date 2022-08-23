@@ -1,3 +1,5 @@
+import { BigNumber } from 'ethers';
+
 export type TBatchRowPropsType = {
   index: number;
   deleter: () => void;
@@ -38,25 +40,25 @@ export type TMinterMarketplaceItemType = {
 };
 
 export type TBuyTokenModalContentType = {
-  blockchain: BlockchainType;
+  blockchain: BlockchainType | undefined;
   start: string;
   end: string;
-  price: any;
+  price: BigNumber;
   offerIndex: string;
-  rangeIndex: string;
+  rangeIndex?: string;
   offerName: string;
-  minterAddress: string;
+  minterAddress: string | undefined;
   diamonds?: boolean;
   buyTokenFunction?: (
-    offerIndex: number,
-    tokenIndex: number,
-    price: number
+    offerIndex: string,
+    tokenIndex: string,
+    price: BigNumber
   ) => void;
   buyTokenBatchFunction?: (
-    offerIndex: number,
+    offerIndex: string,
     tokens: number[],
     addresses: string[],
-    price: number
+    price: BigNumber
   ) => void;
 };
 
