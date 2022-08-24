@@ -7,6 +7,12 @@ const getNftDataStart = () =>
     type: types.GET_NFTLIST_START
   } as const);
 
+const getNftDataStartWithParams = (params: object) =>
+  ({
+    type: types.GET_NFTLIST_START,
+    params
+  } as const);
+
 const setNftData = (nftList: Array<TNftDataItem>) =>
   ({
     type: types.GET_NFTLIST_COMPLETE,
@@ -40,6 +46,7 @@ const setTokenData = (tokenData: TTokenData[]) =>
 
 export {
   getNftDataStart,
+  getNftDataStartWithParams,
   setNftData,
   getNftListTotal,
   getNftListTotalClear,

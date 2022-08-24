@@ -113,7 +113,8 @@ export const detectBlockchain = (
   ) {
     return {
       selectedChain: chainData[currentChain]?.name,
-      realNameChain: chainData[realChain]?.name
+      realNameChain: chainData[realChain]?.name,
+      selectedChainId: chainData[realChain]?.chainId
     };
   } else {
     return {

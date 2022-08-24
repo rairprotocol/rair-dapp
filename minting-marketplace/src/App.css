@@ -426,6 +426,27 @@ a:hover {
   height: 6vw;
 }
 
+.switch-network-incorrect-chain {
+  color: red;
+  cursor: no-drop;
+}
+.switch-network-text {
+  color: green;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  text-decoration: underline;
+}
+
+.switch-network-text:hover {
+  color: black;
+}
+
+.switch-network-close:hover {
+  color: black;
+}
+.switch-network-close {
+  margin-left: 1rem;
+}
 /* v1 */
 
 .header_logo:hover {

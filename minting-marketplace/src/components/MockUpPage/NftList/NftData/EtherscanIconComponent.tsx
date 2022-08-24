@@ -17,6 +17,7 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
   const primaryColor = useSelector<RootState, ColorChoice>(
     (state) => state.colorStore.primaryColor
   );
+
   return (
     <>
       {blockchain && chainData[blockchain] && (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import setDocumentTitle from '../../../../utils/setTitle';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
 import TitleCollection from './TitleCollection/TitleCollection';
@@ -16,6 +16,8 @@ import { TitleSingleTokenView } from './TitleSingleTokenView';
 import SingleTokenViewProperties from './SingleTokenViewProperties';
 import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
 import { CircularProgress } from '@mui/material';
+import { RootState } from '../../../../ducks';
+import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
 
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
@@ -28,15 +30,18 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
   selectedData,
   selectedToken,
   setSelectedToken,
-  tokenData,
   totalCount,
   textColor,
   offerData,
   offerDataInfo,
   someUsersData,
   ownerInfo,
+  loginDone,
   embeddedParams
 }) => {
+  const { tokenData } = useSelector<RootState, InitialNftDataStateType>(
+    (state) => state.nftDataStore
+  );
   const [selectVideo, setSelectVideo] = useState<TFileType | undefined>();
   const [openVideoplayer, setOpenVideoPlayer] = useState<boolean>(false);
   const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
@@ -229,20 +234,24 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               )}
             </div>
           </div>
-          <SerialNumberBuySell
-            primaryColor={primaryColor}
-            tokenData={tokenData}
-            handleClickToken={handleClickToken}
-            setSelectedToken={setSelectedToken}
-            totalCount={totalCount}
-            blockchain={blockchain}
-            offerData={offerData}
-            product={product}
-            contract={contract}
-            selectedToken={selectedToken}
-            textColor={textColor}
-            currentUser={currentUser}
-          />
+          {tokenData && (
+            <SerialNumberBuySell
+              primaryColor={primaryColor}
+              tokenData={tokenData}
+              handleClickToken={handleClickToken}
+              setSelectedToken={setSelectedToken}
+              totalCount={totalCount}
+              blockchain={blockchain}
+              offerData={offerData}
+              product={product}
+              contract={contract}
+              selectedToken={selectedToken}
+              textColor={textColor}
+              currentUser={currentUser}
+              loginDone={loginDone}
+            />
+          )}
+
           <div className="properties-title">
             <TitleSingleTokenView
               title="Description"

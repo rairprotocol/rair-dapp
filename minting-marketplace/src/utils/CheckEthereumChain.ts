@@ -1,13 +1,14 @@
-//@ts-nocheck
 import Swal from 'sweetalert2';
+import { TSwitchEthereumChainArgs } from '../components/MockUpPage/mockupPage.types';
 
-const switchEthereumChain = async (chainData) => {
+const switchEthereumChain = async (chainData: TSwitchEthereumChainArgs) => {
   try {
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: chainData.chainId }]
     });
-  } catch (switchError) {
+  } catch (error) {
+    const switchError = error as any;
     // This error code indicates that the chain has not been added to MetaMask.
     if (switchError.code === 4902) {
       try {
@@ -24,7 +25,7 @@ const switchEthereumChain = async (chainData) => {
   }
 };
 
-const CheckEthereumChain = async (blockchain) => {
+const CheckEthereumChain = async (blockchain: string | undefined) => {
   switch (blockchain) {
     case '0x61':
       switchEthereumChain({

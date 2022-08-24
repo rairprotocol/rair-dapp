@@ -1,16 +1,14 @@
-import React from 'react';
-import {
-  ISerialNumberBuySell,
-  TSwitchEthereumChainArgs
-} from '../../mockupPage.types';
-import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
+import React, { useCallback } from 'react';
+import { ISerialNumberBuySell } from '../../mockupPage.types';
+import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
 import { BuySellButton } from './BuySellButton';
-import chainData from '../../../../utils/blockchainData';
-import Swal from 'sweetalert2';
 import { metamaskCall } from '../../../../utils/metamaskUtils';
 import { RootState } from '../../../../ducks';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 import { useSelector } from 'react-redux';
+import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
+import chainData from '../../../../utils/blockchainData';
+import Swal from 'sweetalert2';
 import SellInputButton from './SellInputButton';
 
 const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
@@ -24,91 +22,28 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   setSelectedToken,
   primaryColor,
   offerData,
-  currentUser
+  currentUser,
+  loginDone
 }) => {
   const { minterInstance, currentChain } = useSelector<
     RootState,
     ContractsInitialType
   >((state) => state.contractStore);
+  const currentProvider = window.ethereum.chainId;
 
-  const switchEthereumChain = async (chainData: TSwitchEthereumChainArgs) => {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: chainData.chainId }]
-      });
-    } catch (error) {
-      const switchError = error as any;
-      // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [chainData]
-          });
-        } catch (addError) {
-          console.error(addError);
-        }
-      } else {
-        console.error(switchError);
-      }
+  const realChainProtected = currentChain || currentProvider;
+
+  const disableBuyBtn = useCallback(() => {
+    if (!offerData.diamondRangeIndex) {
+      return false;
+    } else if (!offerData?.offerPool) {
+      return false;
+    } else {
+      return true;
     }
-  };
+  }, [offerData]);
 
-  const CheckEthereumChain = async () => {
-    switch (blockchain) {
-      case '0x61':
-        switchEthereumChain({
-          chainId: '0x61',
-          chainName: 'Binance Testnet'
-        });
-        break;
-
-      case '0x3e9':
-        switchEthereumChain({
-          chainId: '0x3e9',
-          chainName: 'Klaytn Baobab'
-        });
-        break;
-
-      case '0x13881':
-        switchEthereumChain({
-          chainId: '0x13881',
-          chainName: 'Matic Testnet Mumbai'
-        });
-        break;
-
-      case '0x89':
-        switchEthereumChain({
-          chainId: '0x89',
-          chainName: 'Matic(Polygon) Mainnet'
-        });
-        break;
-
-      case '0x3':
-        switchEthereumChain({
-          chainId: '0x3',
-          chainName: 'Ropsten (Ethereum)'
-        });
-        break;
-
-      case '0x5':
-        switchEthereumChain({
-          chainId: '0x5',
-          chainName: 'Goerli (Ethereum)'
-        });
-        break;
-
-      default:
-        Swal.fire(
-          'Error',
-          ' This chain has not been added to MetaMask, yet',
-          'error'
-        );
-    }
-  };
-
-  const buyContract = async () => {
+  const buyContract = useCallback(async () => {
     Swal.fire({
       title: 'Buying token',
       html: 'Awaiting transaction completion',
@@ -130,19 +65,22 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     ) {
       Swal.fire('Success', 'Now, you are the owner of this token', 'success');
     }
-  };
+  }, [minterInstance, offerData, selectedToken]);
 
-  const checkOwner = () => {
+  const checkOwner = useCallback(() => {
     const price = offerData?.price;
     const handleBuyButton = () => {
-      return currentChain === blockchain
+      return realChainProtected === blockchain
         ? buyContract
-        : () => CheckEthereumChain();
+        : () => {
+            CheckEthereumChain(blockchain);
+            // buyContract();
+          };
     };
     return offerData && offerData.price ? (
       <BuySellButton
         handleClick={handleBuyButton()}
-        disabled={!offerData?.offerPool}
+        disabled={disableBuyBtn()}
         isColorPurple={true}
         title={`Buy .${(+price !== Infinity && price !== undefined
           ? price
@@ -151,9 +89,41 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
             ${blockchain && chainData[blockchain]?.symbol}`}
       />
     ) : (
-      <></>
+      <p>no data</p>
     );
-  };
+  }, [offerData, disableBuyBtn, blockchain, realChainProtected, buyContract]);
+
+  const checkAllSteps = useCallback(() => {
+    if (blockchain !== realChainProtected) {
+      return loginDone ? (
+        <BuySellButton
+          handleClick={() => CheckEthereumChain(blockchain)}
+          isColorPurple={true}
+          title={`Switch network`}
+        />
+      ) : (
+        checkOwner()
+      );
+    } else if (!tokenData[selectedToken]?.isMinted) {
+      return checkOwner();
+    } else {
+      return (
+        <SellInputButton
+          currentUser={currentUser}
+          tokenData={tokenData}
+          selectedToken={selectedToken}
+        />
+      );
+    }
+  }, [
+    blockchain,
+    checkOwner,
+    realChainProtected,
+    currentUser,
+    selectedToken,
+    tokenData,
+    loginDone
+  ]);
 
   return (
     <div className="main-tab">
@@ -166,7 +136,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           Serial number
         </div>
         <div>
-          {tokenData.length ? (
+          {tokenData?.length ? (
             <SelectNumber
               blockchain={blockchain}
               product={product}
@@ -192,19 +162,264 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
           )}
         </div>
       </div>
-      <div>
-        {!tokenData[selectedToken]?.isMinted ? (
-          checkOwner()
-        ) : (
-          <SellInputButton
-            currentUser={currentUser}
-            tokenData={tokenData}
-            selectedToken={selectedToken}
-          />
-        )}
-      </div>
+      <div>{checkAllSteps()}</div>
     </div>
   );
 };
 
 export default SerialNumberBuySell;
+
+// ======= New part of buy tokens =======
+// /* eslint-disable no-debugger */
+// /* eslint-disable no-console */
+// //@ts-nocheck
+
+// import React, { useCallback, useState, useEffect } from 'react';
+// import { ISerialNumberBuySell } from '../../mockupPage.types';
+// import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
+// import { BuySellButton } from './BuySellButton';
+// import { metamaskCall } from '../../../../utils/metamaskUtils';
+// import { RootState } from '../../../../ducks';
+// import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+// import { useSelector } from 'react-redux';
+// import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
+// import chainData from '../../../../utils/blockchainData';
+// import Swal from 'sweetalert2';
+// import SellInputButton from './SellInputButton';
+
+// const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
+//   tokenData,
+//   handleClickToken,
+//   blockchain,
+//   product,
+//   contract,
+//   totalCount,
+//   selectedToken,
+//   setSelectedToken,
+//   primaryColor,
+//   offerData,
+//   currentUser,
+//   loginDone
+// }) => {
+//   const { minterInstance, currentChain, diamondMarketplaceInstance } =
+//     useSelector<RootState, ContractsInitialType>(
+//       (state) => state.contractStore
+//     );
+
+//   const currentProvider = window.ethereum.chainId;
+//   const realChainProtected = currentChain || currentProvider;
+
+//   // const [offersArray, setOffersArray] = useState([]);
+
+//   const fetchDiamondData = useCallback(async () => {
+//     if (!diamondMarketplaceInstance) {
+//       return;
+//     }
+//     const offerCount = Number(
+//       (await diamondMarketplaceInstance.getTotalOfferCount()).toString()
+//     );
+//     const offerData = [];
+//     for (let i = 0; i < offerCount; i++) {
+//       const singleOfferData = await diamondMarketplaceInstance.getOfferInfo(i);
+//       offerData.push({
+//         offerIndex: i,
+//         contractAddress: singleOfferData.mintOffer.erc721Address,
+//         rangeIndex: singleOfferData.mintOffer.rangeIndex.toString(),
+//         visible: singleOfferData.mintOffer.visible,
+//         startingToken: singleOfferData.rangeData.rangeStart.toString(),
+//         endingToken: singleOfferData.rangeData.rangeEnd.toString(),
+//         name: singleOfferData.rangeData.rangeName,
+//         price: singleOfferData.rangeData.rangePrice,
+//         tokensAllowed: singleOfferData.rangeData.tokensAllowed.toString(),
+//         mintableTokens: singleOfferData.rangeData.mintableTokens.toString(),
+//         lockedTokens: singleOfferData.rangeData.lockedTokens.toString(),
+//         productIndex: singleOfferData.productIndex.toString()
+//       });
+//     }
+//     // setOffersArray(offerData);
+//   }, [diamondMarketplaceInstance]);
+
+//   useEffect(() => {
+//     if (diamondMarketplaceInstance) {
+//       diamondMarketplaceInstance.on('MintedToken', fetchDiamondData);
+//       return () =>
+//         diamondMarketplaceInstance.off('MintedToken', fetchDiamondData);
+//     }
+//   }, [diamondMarketplaceInstance, fetchDiamondData]);
+
+//   const mintTokenCall = useCallback(
+//     async (offerIndex, nextToken, price) => {
+//       Swal.fire({
+//         title: `Buying token #${nextToken}!`,
+//         html: 'Please wait...',
+//         icon: 'info',
+//         showConfirmButton: false
+//       });
+//       if (
+//         await metamaskCall(
+//           diamondMarketplaceInstance.buyMintingOffer(offerIndex, nextToken, {
+//             value: price
+//           })
+//         )
+//       ) {
+//         Swal.fire({
+//           title: 'Success',
+//           html: 'Token bought',
+//           icon: 'success',
+//           showConfirmButton: true
+//         });
+//       }
+//     },
+//     [diamondMarketplaceInstance]
+//   );
+
+//   const disableBuyBtn = useCallback(() => {
+//     if (!offerData.diamondRangeIndex) {
+//       return false;
+//     } else if (!offerData?.offerPool) {
+//       return false;
+//     } else {
+//       return true;
+//     }
+//   }, [offerData]);
+
+//   const buyContract = useCallback(async () => {
+//     Swal.fire({
+//       title: 'Buying token',
+//       html: 'Awaiting transaction completion',
+//       icon: 'info',
+//       showConfirmButton: false
+//     });
+//     if (offerData) {
+//       if (offerData.diamondRangeIndex) {
+//         await mintTokenCall?.(
+//           +offerData.diamondRangeIndex,
+//           +selectedToken,
+//           +offerData.price
+//         );
+//       } else {
+//         debugger;
+//         if (
+//           await metamaskCall(
+//             minterInstance?.buyToken(
+//               offerData.offerPool,
+//               offerData.offerIndex,
+//               selectedToken,
+//               {
+//                 value: offerData.price
+//               }
+//             ),
+//             'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
+//           )
+//         ) {
+//           Swal.fire(
+//             'Success',
+//             'Now, you are the owner of this token',
+//             'success'
+//           );
+//         }
+//       }
+//     }
+//   }, [mintTokenCall, minterInstance, offerData, selectedToken]);
+
+//   const checkOwner = useCallback(() => {
+//     const price = offerData?.price;
+//     const handleBuyButton = () => {
+//       return realChainProtected === blockchain
+//         ? buyContract
+//         : () => {
+//             CheckEthereumChain(blockchain);
+//             // buyContract();
+//           };
+//     };
+//     return offerData && offerData.price ? (
+//       <BuySellButton
+//         handleClick={handleBuyButton()}
+//         disabled={disableBuyBtn()}
+//         isColorPurple={true}
+//         title={`Buy .${(+price !== Infinity && price !== undefined
+//           ? price
+//           : 0
+//         ).toString()}
+//             ${blockchain && chainData[blockchain]?.symbol}`}
+//       />
+//     ) : (
+//       <p>no data</p>
+//     );
+//   }, [offerData, disableBuyBtn, blockchain, realChainProtected, buyContract]);
+
+//   const checkAllSteps = useCallback(() => {
+//     if (blockchain !== realChainProtected) {
+//       return loginDone ? (
+//         <BuySellButton
+//           handleClick={() => CheckEthereumChain(blockchain)}
+//           isColorPurple={true}
+//           title={`Switch network`}
+//         />
+//       ) : (
+//         checkOwner()
+//       );
+//     } else if (!tokenData[selectedToken]?.isMinted) {
+//       return checkOwner();
+//     } else {
+//       return (
+//         <SellInputButton
+//           currentUser={currentUser}
+//           tokenData={tokenData}
+//           selectedToken={selectedToken}
+//         />
+//       );
+//     }
+//   }, [
+//     blockchain,
+//     checkOwner,
+//     realChainProtected,
+//     currentUser,
+//     selectedToken,
+//     tokenData,
+//     loginDone
+//   ]);
+
+//   return (
+//     <div className="main-tab">
+//       <div className="main-tab-description-serial-number">
+//         <div
+//           className="description-text serial-number-text"
+//           style={{
+//             color: `${primaryColor === 'rhyno' ? '#7A797A' : '#A7A6A6'}`
+//           }}>
+//           Serial number
+//         </div>
+//         <div>
+//           {tokenData.length ? (
+//             <SelectNumber
+//               blockchain={blockchain}
+//               product={product}
+//               contract={contract}
+//               totalCount={totalCount}
+//               handleClickToken={handleClickToken}
+//               selectedToken={selectedToken}
+//               setSelectedToken={setSelectedToken}
+//               items={
+//                 tokenData &&
+//                 tokenData.map((p) => {
+//                   return {
+//                     value: p.metadata.name,
+//                     id: p._id,
+//                     token: p.token,
+//                     sold: p.isMinted
+//                   };
+//                 })
+//               }
+//             />
+//           ) : (
+//             <></>
+//           )}
+//         </div>
+//       </div>
+//       <div>{checkAllSteps()}</div>
+//     </div>
+//   );
+// };
+
+// export default SerialNumberBuySell;

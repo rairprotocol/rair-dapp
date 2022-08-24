@@ -118,6 +118,7 @@ export type INftProductOffers = {
   copies: number;
   creationDate: string;
   diamond: boolean;
+  diamondRangeIndex: string;
   offerIndex: string;
   offerName: string;
   offerPool: string;

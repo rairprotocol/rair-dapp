@@ -58,6 +58,7 @@ export interface ISerialNumberBuySell {
   textColor: string;
   offerData: INftProductOffers;
   currentUser: string;
+  loginDone: boolean;
 }
 export interface ISellButton {
   currentUser: string;
@@ -141,6 +142,7 @@ export interface INftDataPageMain {
   someUsersData: UserType;
   ownerInfo: INftProductType;
   embeddedParams: any | undefined;
+  loginDone: boolean;
 }
 
 export type TOffersIndexesData = {

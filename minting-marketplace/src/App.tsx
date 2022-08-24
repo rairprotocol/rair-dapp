@@ -142,7 +142,7 @@ function App() {
   const { currentChain, realChain } = useSelector(
     (store) => store.contractStore
   );
-  const { selectedChain, realNameChain } = detectBlockchain(
+  const { selectedChain, realNameChain, selectedChainId } = detectBlockchain(
     currentChain,
     realChain
   );
@@ -432,9 +432,10 @@ function App() {
 
   return (
     <ErrorBoundary fallback={ErrorFallback}>
-      {selectedChain && showAlert ? (
+      {selectedChain && showAlert && !isSplashPage ? (
         <AlertMetamask
           selectedChain={selectedChain}
+          selectedChainId={selectedChainId}
           realNameChain={realNameChain}
           setShowAlert={setShowAlert}
         />
@@ -795,7 +796,8 @@ function App() {
                     content: NftDataCommonLink,
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
-                      'true'
+                      'true',
+                    props: { loginDone }
                   },
                   {
                     path: '/collection/:blockchain/:contract/:product/:tokenId',
@@ -803,7 +805,7 @@ function App() {
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true',
-                    props: { userData }
+                    props: { userData, loginDone }
                   },
                   {
                     path: '/unlockables/:blockchain/:contract/:product/:tokenId',
@@ -811,7 +813,7 @@ function App() {
                     requirement:
                       process.env.REACT_APP_3_TAB_MARKETPLACE_DISABLED !==
                       'true',
-                    props: { userData }
+                    props: { userData, loginDone }
                   },
 
                   {

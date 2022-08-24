@@ -20,7 +20,11 @@ import {
   setTokenDataStart
 } from '../../../../ducks/nftData/action';
 
-const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
+const NftDataCommonLinkComponent = ({
+  userData,
+  embeddedParams,
+  loginDone
+}) => {
   const [collectionName, setCollectionName] = useState();
   const [tokenDataFiltered, setTokenDataFiltered] = useState([]);
   const [totalCount, setTotalCount] = useState();
@@ -107,17 +111,36 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
         }
       );
       setProductsFromOffer(responseIfUserConnect.data.files);
-      setSelectedOfferIndex(tokenData && tokenData[tokenId]?.offer);
+      if (tokenData && tokenId) {
+        if (tokenData[tokenId]?.offer?.diamond) {
+          setSelectedOfferIndex(
+            tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
+          );
+        } else {
+          setSelectedOfferIndex(
+            tokenData && tokenData[tokenId]?.offer?.offerIndex
+          );
+        }
+      }
     } else {
       const response = await axios.get<TNftFilesResponse>(
         `/api/nft/network/${blockchain}/${contract}/${product}/files`
       );
       setIsLoading(false);
       setProductsFromOffer(response.data.files);
-      setSelectedOfferIndex(tokenData && tokenData[tokenId]?.offer);
+      if (tokenData && tokenId) {
+        if (tokenData[tokenId]?.offer?.diamond) {
+          setSelectedOfferIndex(
+            tokenData && tokenData[tokenId]?.offer?.diamondRangeIndex
+          );
+        } else {
+          setSelectedOfferIndex(
+            tokenData && tokenData[tokenId]?.offer?.offerIndex
+          );
+        }
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, contract, product, tokenId, userToken]);
+  }, [blockchain, contract, product, tokenId, userToken, tokenData]);
 
   const getParticularOffer = useCallback(async () => {
     try {
@@ -129,7 +152,11 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
         setDataForUser(response.data.product);
         setOfferData(
           response.data.product.offers.find((neededOfferIndex) => {
-            return neededOfferIndex.offerIndex === selectedOfferIndex;
+            if (neededOfferIndex && neededOfferIndex.diamond) {
+              return neededOfferIndex.diamondRangeIndex === selectedOfferIndex;
+            } else {
+              return neededOfferIndex.offerIndex === selectedOfferIndex;
+            }
           })
         );
 
@@ -206,15 +233,21 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
     dispatch(setRealChain(blockchain));
   }, [blockchain, dispatch]);
 
-  // useEffect(() => {
-  //   checkUserConnect();
-  // }, [checkUserConnect]);
+  useEffect(() => {
+    checkUserConnect();
+  }, [checkUserConnect]);
 
   useEffect(() => {
     getAllProduct(0, showToken);
-    getProductsFromOffer();
+  }, [getAllProduct, showToken]);
+
+  useEffect(() => {
     getParticularOffer();
-  }, [getAllProduct, getParticularOffer, getProductsFromOffer, showToken]);
+  }, [getParticularOffer]);
+
+  useEffect(() => {
+    getProductsFromOffer();
+  }, [getProductsFromOffer]);
 
   if (mode === 'collection') {
     return (
@@ -295,11 +328,12 @@ const NftDataCommonLinkComponent = ({ userData, embeddedParams }) => {
         selectedData={selectedData}
         selectedToken={selectedToken}
         textColor={textColor}
-        tokenData={tokenData}
+        // tokenData={tokenData}
         totalCount={totalCount}
         product={product}
         ownerInfo={ownerInfo}
         offerDataInfo={offerDataInfo}
+        loginDone={loginDone}
       />
     );
   } else {

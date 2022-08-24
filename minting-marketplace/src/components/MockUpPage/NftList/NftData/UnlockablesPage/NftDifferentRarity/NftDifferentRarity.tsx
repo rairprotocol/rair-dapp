@@ -13,9 +13,12 @@ const NftDifferentRarity = ({
 }) => {
   const navigate = useNavigate();
   const params = useParams();
+  const [allTokenData, setAllTokenData] = useState([]);
+  const [isOpenPart, setIsOpenPart] = useState(false);
   const { contract, product, blockchain } = embeddedParams
     ? embeddedParams
     : params;
+
   const sortedClickHandler = (tokenId) => {
     if (embeddedParams) {
       embeddedParams.setTokenId(tokenId);
@@ -24,13 +27,12 @@ const NftDifferentRarity = ({
       navigate(`/collection/${blockchain}/${contract}/${product}/${tokenId}`);
     }
   };
-  const [allTokenData, setAllTokenData] = useState([]);
-  const [isOpenPart, setIsOpenPart] = useState(false);
 
   const checkThisPart = (data) => {
     const part = data.every((i) => i === true);
     setIsOpenPart(part);
   };
+
   useEffect(() => {
     checkThisPart(isUnlocked);
   }, [isUnlocked]);
@@ -54,40 +56,44 @@ const NftDifferentRarity = ({
     switch (title) {
       case 'Unlock Ultra Rair':
         const firstTokenFromUnlockUltra = allTokenData.filter(
-          (e) => e.offer === '0'
+          (e) => e.offer.offerIndex === '0'
         );
         setTokenDataFiltered(firstTokenFromUnlockUltra);
         sortedClickHandler(firstTokenFromUnlockUltra[0].token);
         break;
       case 'Ultra Rair':
-        const firstTokenFromUltra = allTokenData.filter((e) => e.offer === '0');
+        const firstTokenFromUltra = allTokenData.filter(
+          (e) => e.offer.offerIndex === '0'
+        );
         setTokenDataFiltered(firstTokenFromUltra);
         sortedClickHandler(firstTokenFromUltra[0].token);
         break;
       case 'Unlock Rair':
         const secondTokenFromUnlockUltra = allTokenData.filter(
-          (e) => e.offer === '1'
+          (e) => e.offer.offerIndex === '1'
         );
         setTokenDataFiltered(secondTokenFromUnlockUltra);
         sortedClickHandler(secondTokenFromUnlockUltra[0].token);
         break;
       case 'Rair':
         const secondTokenFromUltra = allTokenData.filter(
-          (e) => e.offer === '1'
+          (e) => e.offer.offerIndex === '1'
         );
         setTokenDataFiltered(secondTokenFromUltra);
         sortedClickHandler(secondTokenFromUltra[0].token);
         break;
       default:
-        const thirdTokenFromUltra = allTokenData.filter((e) => e.offer === '2');
+        const thirdTokenFromUltra = allTokenData.filter(
+          (e) => e.offer.offerIndex === '2'
+        );
         setTokenDataFiltered(thirdTokenFromUltra);
         sortedClickHandler(thirdTokenFromUltra[0].token);
     }
-    /* eslint-enable */
   };
   useEffect(() => {
     getAllTokens();
-  }, [getAllTokens]);
+  }, []);
+
   return (
     <div className={cl.mainWrapper}>
       <div className={cl.main}>

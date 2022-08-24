@@ -13,9 +13,13 @@ import {
   getCurrentPageEnd,
   getCurrentPageNull
 } from '../../ducks/pages/actions';
-import { getNftDataStart } from '../../ducks/nftData/action';
+import {
+  getNftDataStart,
+  getNftDataStartWithParams
+} from '../../ducks/nftData/action';
 import { TVideosInitialState } from '../../ducks/videos/videosDucks.types';
 import { RootState } from '../../ducks';
+import { getListVideosStart } from '../../ducks/videos/actions';
 
 const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   const dispatch = useDispatch();
@@ -77,7 +81,7 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
 
   const updateVideo = useCallback(
     (params) => {
-      dispatch({ type: 'GET_LIST_VIDEOS_START', params: params });
+      dispatch(getListVideosStart(params));
     },
     [dispatch]
   );
@@ -99,7 +103,7 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
       category
     };
 
-    dispatch({ type: 'GET_NFTLIST_START', params: params });
+    dispatch(getNftDataStartWithParams(params));
   }, [itemsPerPage, currentPage, blockchain, category, dispatch]);
 
   useEffect(() => {

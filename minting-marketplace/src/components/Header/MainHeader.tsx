@@ -160,6 +160,7 @@ const MainHeader: React.FC<IMainHeader> = ({
       className="col-12 header-master"
       primaryColor={primaryColor}
       showAlert={showAlert}
+      isSplashPage={isSplashPage}
       selectedChain={selectedChain}>
       <div>
         <MainLogo

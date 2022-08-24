@@ -1,9 +1,10 @@
 import { MediaListResponseType } from '../../components/video/video.types';
 import * as types from './types';
 
-const getListVideosStart = () =>
+const getListVideosStart = (params) =>
   ({
-    type: types.GET_LIST_VIDEOS_START
+    type: types.GET_LIST_VIDEOS_START,
+    params: params
   } as const);
 
 const getVideoListComplete = (videoList: MediaListResponseType | null) =>
