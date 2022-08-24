@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJWT, isTokenValid } from './utils/rFetch';
@@ -99,6 +99,7 @@ import {
   AppContainerFluid,
   MainBlockApp
 } from './styled-components/nft/AppContainer';
+import CoinAgenda2021SplashPage from './components/SplashPage/CoinAgenda2021/CoinAgenda2021';
 import InquiriesPage from './components/InquiriesPage/InquiriesPage';
 
 const rSwal = withReactContent(Swal);
@@ -536,6 +537,10 @@ function App() {
                   {
                     path: '/genesis-splash',
                     content: RAIRGenesisSplashPage
+                  },
+                  {
+                    path: '/coinagenda2021',
+                    content: CoinAgenda2021SplashPage
                   },
                   {
                     path: '/immersiverse-splash',

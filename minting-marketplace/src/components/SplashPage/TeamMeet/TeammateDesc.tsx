@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const TeammateDesc = ({ desc, primaryColor, arraySplash }) => {
   const [showMore, setShowMore] = useState(false);

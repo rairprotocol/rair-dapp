@@ -21,5 +21,3 @@ const DonationGrid = ({ donationGridArray }) => {
 };
 
 export default DonationGrid;
-
-//flex wrap that way later in can be a column

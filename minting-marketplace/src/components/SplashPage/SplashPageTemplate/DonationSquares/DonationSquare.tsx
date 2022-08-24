@@ -31,11 +31,9 @@ const DonationSquare = ({ donationSquareData, mobileView }) => {
             whatSplashPage={'donation-square-button'}
           />
           <div className="donation-square-textbox">
-            {textBoxArray.map((row, index) => (
+            {textBoxArray.map((row) => (
               // eslint-disable-next-line react/jsx-key
-              <div key={index} className="donation-square-textbox-row">
-                {row}
-              </div>
+              <div className="donation-square-textbox-row">{row}</div>
             ))}
           </div>
         </>
