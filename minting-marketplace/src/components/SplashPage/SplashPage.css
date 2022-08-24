@@ -1378,7 +1378,7 @@
   cursor: default;
 }
 
-.teammate-description p {
+.teammate-description div {
   color: #a7a6a6;
   font: 20px;
   line-height: 28px;

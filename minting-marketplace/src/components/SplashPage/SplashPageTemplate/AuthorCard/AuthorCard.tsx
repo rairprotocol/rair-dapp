@@ -1,73 +1,71 @@
 //@ts-nocheck
+import { connect } from 'http2';
 import React from 'react';
 import ButtonHelp from '../../PurchaseChecklist/ButtonHelp';
 // import DocumentIcon from "../../../../images/documentIcon.svg";
 import './AuthorCard.css';
-
-const hyperlink = (url) => {
-  window.open(url);
-};
-
-const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
-  const {
-    buttonLabel,
-    buttonColor,
-    buttonBorder,
-    buttonTextColor,
-    buttonMarginTop,
-    buttonMarginBottom,
-    buttonImg,
-    buttonLink,
-    buttonAction
-  } = buttonData;
-  return (
-    <div className="btn-submit-with-form">
-      <button
-        className={whatSplashPage ? whatSplashPage : ''}
-        onClick={() => {
-          if (buttonAction) {
-            buttonAction();
-          } else {
-            hyperlink(buttonLink);
-          }
-        }}
-        style={{
-          color: buttonTextColor,
-          border: buttonBorder,
-          background: buttonColor,
-          marginTop: buttonMarginTop,
-          marginBottom: buttonMarginBottom
-        }}>
-        {buttonImg && (
-          <img className="metamask-logo" src={buttonImg} alt="form-logo" />
-        )}{' '}
-        {buttonLabel}
-      </button>
-    </div>
-  );
-};
+import AuthorCardButton from './AuthorCardButton';
 
 const AuthorCard = ({
   splashData,
-  connectUserData,
   toggleCheckList,
+  customButtonBlock,
+  connectUserData,
   whatSplashPage
 }) => {
   const {
     title,
+    subtitle,
     titleColor,
     titleImage,
     description,
+    textBottom,
     textDescriptionCustomStyles,
     backgroundImage,
     cardFooter,
-    button1,
-    button2,
-    button3,
-    purchaseButton,
-    buttonLabel,
     buttonBackgroundHelp
   } = splashData;
+
+  const DefaultButtonBlock = ({
+    splashData,
+    connectUserData,
+    whatSplashPage
+  }) => {
+    const { button1, button2, button3, purchaseButton, buttonLabel } =
+      splashData;
+
+    return (
+      <div className="button-wrapper">
+        {purchaseButton?.buttonComponent !== undefined && (
+          <purchaseButton.buttonComponent
+            {...{ ...purchaseButton, connectUserData, buttonLabel }}
+          />
+        )}
+        <div className="button-row-0">
+          {button1 && (
+            <AuthorCardButton
+              buttonData={button1}
+              whatSplashPage={whatSplashPage}
+            />
+          )}
+        </div>
+        <div className="button-row-1">
+          {button2 && (
+            <AuthorCardButton
+              buttonData={button2}
+              whatSplashPage={whatSplashPage}
+            />
+          )}
+          {button3 && (
+            <AuthorCardButton
+              buttonData={button3}
+              whatSplashPage={whatSplashPage}
+            />
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -95,6 +93,7 @@ const AuthorCard = ({
               }}>
               {title}
             </h3>
+            {subtitle && <h3 className="author-card-subtitle"> {subtitle} </h3>}
             {titleImage && (
               <img
                 className="author-card-title-image"
@@ -103,38 +102,29 @@ const AuthorCard = ({
               />
             )}
           </div>
-          <div className="text-description" style={textDescriptionCustomStyles}>
-            {description}
-          </div>
-          <div className="button-wrapper">
-            {purchaseButton?.buttonComponent !== undefined && (
-              <purchaseButton.buttonComponent
-                {...{ ...purchaseButton, connectUserData, buttonLabel }}
-              />
-            )}
-            <div className="button-row-0">
-              {button1 && (
-                <AuthorCardButton
-                  buttonData={button1}
-                  whatSplashPage={whatSplashPage}
-                />
-              )}
+          {textBottom || (
+            <div
+              className="text-description"
+              style={textDescriptionCustomStyles}>
+              {description}
             </div>
-            <div className="button-row-1">
-              {button2 && (
-                <AuthorCardButton
-                  buttonData={button2}
-                  whatSplashPage={whatSplashPage}
-                />
-              )}
-              {button3 && (
-                <AuthorCardButton
-                  buttonData={button3}
-                  whatSplashPage={whatSplashPage}
-                />
-              )}
+          )}
+          {customButtonBlock ? (
+            customButtonBlock
+          ) : (
+            <DefaultButtonBlock
+              splashData={splashData}
+              connectUserData={connectUserData}
+              whatSplashPage={whatSplashPage}
+            />
+          )}
+          {textBottom && (
+            <div
+              className="text-description"
+              style={textDescriptionCustomStyles}>
+              {description}
             </div>
-          </div>
+          )}
         </div>
         {cardFooter && <div className="card-footer">{cardFooter}</div>}
       </div>

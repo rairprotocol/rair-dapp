@@ -9,6 +9,7 @@ import Teammate_6 from '../images/immersiverse_logo.png';
 import Teammate_7 from '../images/UkrainianAmericanCons/15724868_10208080805993720_1581371147497725224_o.jpeg';
 import Teammate_8 from '../images/slidelock_team.png';
 import Teammate_VV from '../images/vv_Rair_logo.png';
+import BruceFenton2 from '../images/BruceFenton2.png';
 import NFTLA_ICON from '../images/NFTLA_icon.png';
 import NFTNYC_LOGO from '../images/nftnyc_logo.png';
 // import TCC_ICON from '../images/TCC_icon.png'
@@ -25,6 +26,9 @@ import David from '../../AboutPage/assets/David.jpeg';
 // import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
 import Matthew from '../../AboutPage/assets/Matthew.jpg';
 import NutTeam from '../images/nuts-teammate.jpeg';
+import MichaelTerpin from '../images/MichaelTerpin.png';
+import AndreMiropolsky from '../images/AndreMiropolsky.png';
+import TransformVentures from '../images/TransformVentures.png';
 
 const teamArray = [
   {
@@ -591,6 +595,107 @@ const teamRAIRBasic2Array = [
   }
 ];
 
+const teamSimDogsArray = [
+  {
+    chain: '',
+    nameTeammate: 'Michael Terpin',
+    imageUrl: MichaelTerpin,
+    aboutTeammate: [
+      "Michael Terpin is perhaps best known for founding Marketwire, which was funded by Sequoia Capital in 2000, then sold in 2006. Today, Michael is a pioneering investor and adviser to a multitude of blockchain, media, and technology companies, including ShapeShift, Bancor, Purse.io, and GoCoin. Michael's Transform Group, with over 50 ICOs done and counting, is the world leader in blockchain + ICO public relations and advisory services. In 2013, he also co-founded two of the now most influential brands in cryptocurrency: CoinAgenda and BitAngels. CoinAgenda was the first-ever conference for Bitcoin investors and is now the one place where the world's most knowledgeable cryptocurrency investors meet to exchange information.",
+      'BitAngels was the first angel group for cryptocurrency investments. This was followed in early 2014 by the BitAngels Dapps Fund with David Johnston, which was the first digital currency fund ($6 million raised entirely in cryptocurrency). Additionally, Terpin, along with Gil Penchina and Nick Sullivan, co-founded the Bitcoin syndicate as part of Flight VC. He also co-founded e-commerce Bitcoin company incubator, bCommerce Labs, in 2015. In 2017, he joined Alphabit Fund, a $300 million digital currency fund, as special advisor, CMO and head of their ICO investment committee. RAIR is proud to have Michael as the strategic investment lead in its efforts to solve the problem of digital ownership'
+    ],
+    socials: [
+      {
+        classIcon: 'fab fa-linkedin-in',
+        link: 'https://www.linkedin.com/in/michaelterpin/',
+        classLink: ''
+      }
+    ]
+  },
+  {
+    chain: '',
+    nameTeammate: 'Andre Miropolsky',
+    imageUrl: AndreMiropolsky,
+    aboutTeammate: [
+      'Andre Miripolsky is an artist of extraordinary creative abilities. As colorful a man as the exuberantly colorific art he creates, his signature style of pop imagery is bright, whimsical, energetic, and downright fun. A true multi-media artist, Andre is much more than a painter, taking his unique pop-style into sculpture, mobiles, graphics, branding, production design, sets and costumes, and now, NFTs. His sense of humor has been embraced by film and music stars, creating several art costumes for Sir Elton John - most notably the often-photographed “Piano Jacket” made for the famous Central Park concert. He has also collaborated on projects for Bette Midler, Quincy Jones, Robin Williams, the Rolling Stones, MTV, and Mattel, where he was commissioned to create a one-of-a-kind “Miripolsky Art Barbie.” From 1997-2004 he painted huge scenic sets and floors for the music segments of “The Tonight Show” with Jay Leno, making history as the first visual artist ever commissioned to create original scenic art. He also made basketball history in 1992 by painting a 6000 sq. ft. mural directly on UCLA’s center court at Pauley Pavilion for MTV’s Rock and Jock B-Ball Jam. His famous “Fear No Art” button has been sold continuously at LACMA since 1985 and was once carried in over 300 museums.'
+    ],
+    socials: [
+      {
+        classIcon: 'fab fa-twitter',
+        link: 'https://twitter.com/miripolsky'
+      },
+      {
+        classIcon: 'fas fa-arrow-right',
+        link: 'https://www.miripolsky.com/',
+        classLink: 'arrrow-right'
+      }
+    ]
+  },
+  {
+    chain: '',
+    nameTeammate: 'Transform Ventures',
+    imageUrl: TransformVentures,
+    aboutTeammate: [
+      'RAIR is a blockchain-based digital rights management platform that uses NFTs to gate access to streaming content.Data monopolies like Amazon, YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics, and can change their terms of service at any time locking out creators and users alike. DIY distribution meanwhile offers no protection, and cannot help package works into a scarce, valuable, tradeable framework.',
+      'RAIR, through its decentralized key management node system, empowers anyone to create unique, controllable, and transferable digital assets tied to the actual underlying content.'
+    ],
+    socials: [
+      {
+        classIcon: 'fas fa-arrow-right',
+        link: 'https://www.transformventures.io/',
+        classLink: 'arrrow-right'
+      }
+    ]
+  },
+  {
+    chain: '0x7849194dD593d6c3aeD24035D70B5394a1C90F8F',
+    nameTeammate: 'RAIR Technologies',
+    imageUrl: Teammate_4,
+    aboutTeammate: [
+      `RAIR is a blockchain — based digital rights management platform that uses NFTs to gate access to streaming content. Data monopolies like Amazon, YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics, and can change their terms of service at any time locking out creators and users alike. DIY distribution meanwhile offers no protection, and cannot help package works into a scarce, valuable, tradeable framework.`,
+      `RAIR empowers anyone to create unique, controllable, and transferable digital assets tied to the actual underlying content.`
+    ],
+    socials: [
+      {
+        classIcon: 'fas fa-arrow-right',
+        link: 'https://rair.tech',
+        classLink: 'arrrow-right'
+      }
+    ]
+  }
+];
+
+const teamBruceFentonArray = [
+  {
+    chain: '',
+    nameTeammate: 'Bruce Fenton',
+    imageUrl: BruceFenton2,
+    aboutTeammate: [''],
+    socials: [
+      {
+        classIcon: 'fab fa-twitter',
+        link: 'http://placekitten.com/200/300'
+      }
+    ]
+  },
+  {
+    chain: '0x7849194dD593d6c3aeD24035D70B5394a1C90F8F',
+    nameTeammate: 'RAIR Technologies',
+    imageUrl: Teammate_4,
+    aboutTeammate: [
+      `RAIR is a blockchain — based digital rights management platform that uses NFTs to gate access to streaming content. Data monopolies like Amazon, YouTube, Google, Apple, and Netflix charge onerous fees, offer opaque analytics, and can change their terms of service at any time locking out creators and users alike. DIY distribution meanwhile offers no protection, and cannot help package works into a scarce, valuable, tradeable framework.`,
+      `RAIR empowers anyone to create unique, controllable, and transferable digital assets tied to the actual underlying content.`
+    ],
+    socials: [
+      {
+        classIcon: 'fas fa-arrow-right',
+        link: 'https://rair.tech',
+        classLink: 'arrrow-right'
+      }
+    ]
+  }
+];
+
 const teamUkraineArray = [
   {
     chain: '0xFC9E791955AeDB8dbAd1Be054f82720c8bDbf582',
@@ -938,6 +1043,48 @@ const RAIRBasic2TeamComponent = ({ primaryColor, arraySplash }) => {
   );
 };
 
+const BruceFentonTeamComponent = ({ primaryColor, arraySplash }) => {
+  return (
+    <div className="splash-team-greyman">
+      {teamBruceFentonArray.map((t, index) => {
+        return (
+          <Teammate
+            key={index + t.nameTeammate}
+            name={t.nameTeammate}
+            chain={t.chain}
+            desc={t.aboutTeammate}
+            socials={t.socials}
+            primaryColor={primaryColor}
+            url={t.imageUrl}
+            arraySplash={arraySplash}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+const SimDogsTeamComponent = ({ primaryColor, arraySplash }) => {
+  return (
+    <div className="splash-team-greyman">
+      {teamSimDogsArray.map((t, index) => {
+        return (
+          <Teammate
+            key={index + t.nameTeammate}
+            name={t.nameTeammate}
+            chain={t.chain}
+            desc={t.aboutTeammate}
+            socials={t.socials}
+            primaryColor={primaryColor}
+            url={t.imageUrl}
+            arraySplash={arraySplash}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 const NFTNYCTeamComponent = ({ primaryColor, arraySplash }) => {
   return (
     <div className="splash-team-greyman">
@@ -1172,6 +1319,12 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
         )}
         {arraySplash === 'rair-basic-2' && (
           <RAIRBasic2TeamComponent primaryColor={primaryColor} />
+        )}
+        {arraySplash === 'bruce-fenton' && (
+          <BruceFentonTeamComponent primaryColor={primaryColor} />
+        )}
+        {arraySplash === 'sim-dogs' && (
+          <SimDogsTeamComponent primaryColor={primaryColor} />
         )}
         {arraySplash === 'NFTLA' && (
           <NFTLATeamComponent primaryColor={primaryColor} />

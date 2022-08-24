@@ -89,6 +89,7 @@ import MenuNavigation from './components/Navigation/Menu';
 import UkraineSplashPage from './components/SplashPage/UkraineGlitchSplashPage/UkraineSplashPage';
 import NFTNYCSplashPage from './components/SplashPage/NFTNYC/NFTNYC';
 import RAIRGenesisSplashPage from './components/SplashPage/RAIRGenesis/RAIRGenesis';
+import SimDogsSplashPage from './components/SplashPage/SimDogs/SimDogs';
 import VaporverseSplashPage from './components/SplashPage/VaporverseSplash/VaporverseSplashPage';
 import WelcomeHeader from './components/FrontPage/WelcomeHeader';
 import MainHeader from './components/Header/MainHeader';
@@ -529,6 +530,10 @@ function App() {
 									*/}
                 {[
                   {
+                    path: '/simdogs-splash',
+                    content: SimDogsSplashPage
+                  },
+                  {
                     path: '/genesis-splash',
                     content: RAIRGenesisSplashPage
                   },
@@ -598,7 +603,11 @@ function App() {
                       path={isHome ? '/' : item.path}
                       element={
                         <item.content
-                          {...{ connectUserData, loginDone, setIsSplashPage }}
+                          {...{
+                            connectUserData,
+                            loginDone,
+                            setIsSplashPage
+                          }}
                         />
                       }
                     />

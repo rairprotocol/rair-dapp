@@ -10,7 +10,7 @@ const TeammateDesc = ({ desc, primaryColor, arraySplash }) => {
         desc.map((p, index) => {
           if (p.length >= 500) {
             return (
-              <p
+              <div
                 className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                 key={index}
                 style={{
@@ -24,31 +24,31 @@ const TeammateDesc = ({ desc, primaryColor, arraySplash }) => {
                   }}>
                   {showMore ? 'Read less' : 'Read more...'}
                 </button>
-              </p>
+              </div>
             );
           }
           return (
-            <p
+            <div
               key={index}
               className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
               style={{
                 color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
               }}>
               {p}
-            </p>
+            </div>
           );
         })}
       {desc.length >= 2 &&
         desc.map((p, index) => {
           if (!showMore && index === 0) {
             return (
-              <p
+              <div
                 key={index}
                 className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                 style={{
                   color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
                 }}>
-                {showMore ? p : p.substring(0, 500)}
+                {showMore ? p : p.substring(0, 500)}{' '}
                 <button
                   className="btn-show-more"
                   onClick={() => {
@@ -56,14 +56,14 @@ const TeammateDesc = ({ desc, primaryColor, arraySplash }) => {
                   }}>
                   {showMore ? 'Read less' : 'Read more...'}
                 </button>
-              </p>
+              </div>
             );
           }
 
           if (showMore) {
             if (index === desc.length - 1) {
               return (
-                <p
+                <div
                   key={index}
                   className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                   style={{
@@ -77,18 +77,18 @@ const TeammateDesc = ({ desc, primaryColor, arraySplash }) => {
                     }}>
                     Read less
                   </button>
-                </p>
+                </div>
               );
             }
             return (
-              <p
+              <div
                 key={index}
                 className={arraySplash === 'nftnyc' ? 'nftnyc-font' : ''}
                 style={{
                   color: `${primaryColor === 'rhyno' ? '#000' : '#A7A6A6'}`
                 }}>
                 {p}
-              </p>
+              </div>
             );
           }
 

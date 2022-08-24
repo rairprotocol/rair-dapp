@@ -3,7 +3,7 @@ import MockUpPage from '../MockUpPage/MockUpPage';
 import MetaTags from '../SeoTags/MetaTags';
 
 const WelcomeHeader = ({
-  seoInformation,
+  // seoInformation,
   tabIndex,
   setTabIndex,
   setIsSplashPage

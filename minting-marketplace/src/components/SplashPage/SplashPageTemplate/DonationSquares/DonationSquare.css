@@ -1,0 +1,88 @@
+.donation-grid {
+  align-self: center;
+  width: 80%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.donation-square {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45%;
+}
+
+.donation-square-title {
+  font-family: 'Bazar', sans-serif;
+  font-weight: 500;
+  font-size: 3vw;
+  margin: 2vw 0 0 0;
+  color: #ffffff;
+}
+
+.donation-square-image {
+  padding-top: 1vw;
+  border-radius: 16px;
+  position: relative;
+  width: 90%;
+  height: 0;
+  padding-bottom: 90%;
+  margin: 2vw 0 0 0;
+}
+
+.donation-square-image.zero {
+  background-size: 160%;
+  background-position: 50% 40%;
+  background-repeat: no-repeat;
+}
+
+.donation-square-image.one {
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.donation-square .btn-submit-with-form {
+  margin: 2vw 0 0 0;
+  width: 100%;
+  margin: 2vw 0 0 0;
+}
+
+.donation-square .btn-submit-with-form button.donation-square-button {
+  font-size: 1.8vw;
+  font-family: 'Plus Jakarta Sans Bold', sans-serif;
+  width: 100%;
+}
+
+.donation-square-textbox {
+  width: 100%;
+  margin: 2vw 0 0 0;
+  border-radius: 16px;
+  border: 1px dotted #ffffff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donation-square-textbox-row {
+  font-size: 1.7vw;
+  padding: 2.55vw 0; /* line-height multplier * font */
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  width: 90%;
+}
+
+@media screen and (max-width: 1100px) {
+  .donation-square {
+    width: 100%;
+    /* border: 2px dotted white;
+    border-radius: 16px; */
+    /* background-color: lightgrey; */
+  }
+
+  .donation-square-title:hover {
+    color: #8ffdff;
+  }
+}
