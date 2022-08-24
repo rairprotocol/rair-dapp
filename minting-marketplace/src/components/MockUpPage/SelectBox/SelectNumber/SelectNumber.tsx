@@ -12,16 +12,15 @@ const SelectNumber: React.FC<ISelectNumber> = ({
   items,
   handleClickToken,
   selectedToken,
+  setSelectedToken,
   totalCount,
   product,
-  contract,
-  setSelectedToken
+  contract
 }) => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
 
-  const [selectedItem, setSelectedItem] = useState<string>(selectedToken);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const numberRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +44,7 @@ const SelectNumber: React.FC<ISelectNumber> = ({
   };
 
   const onClickItem = (el: string) => {
-    setSelectedItem(el);
+    setSelectedToken(el);
     handleClickToken(el);
     handleIsOpen();
   };
@@ -56,7 +55,6 @@ const SelectNumber: React.FC<ISelectNumber> = ({
       items={items}
       isOpen={isOpen}
       selectedToken={selectedToken}
-      selectedItem={selectedItem}
       setIsOpen={setIsOpen}
       numberRef={numberRef}
       handleIsOpen={handleIsOpen}
@@ -74,7 +72,6 @@ const SelectNumber: React.FC<ISelectNumber> = ({
       primaryColor={primaryColor}
       setSelectedToken={setSelectedToken}
       selectedToken={selectedToken}
-      selectedItem={selectedItem}
       setIsOpen={setIsOpen}
       totalCount={totalCount}
     />

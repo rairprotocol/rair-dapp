@@ -12,7 +12,6 @@ export interface IListOfTokensComponent {
   primaryColor: ColorChoice;
   setSelectedToken: (tokenId: string) => void;
   selectedToken: string;
-  selectedItem: string;
   setIsOpen: (isOpen: boolean) => void;
   totalCount: number;
 }
@@ -25,7 +24,6 @@ export interface ICurrentTokensComponent {
   setIsOpen: (isOpen: boolean) => void;
   setIsOpens?: (isOpens: boolean) => void;
   selectedToken: string;
-  selectedItem: string;
   handleIsOpen: () => void;
   onClickItem: (element: string) => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
@@ -43,8 +41,8 @@ export interface ISelectNumber {
   items: SelectNumberItem[];
   handleClickToken: (tokenId: string) => Promise<void>;
   selectedToken: string;
+  setSelectedToken: (selectedToken: string) => void;
   totalCount: number;
   product: string;
   contract: string;
-  setSelectedToken: (tokenId: string) => void;
 }

@@ -11,7 +11,6 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
   setIsOpen,
   setIsOpens,
   selectedToken,
-  selectedItem,
   handleIsOpen,
   onClickItem,
   numberRef
@@ -65,7 +64,7 @@ const CurrentTokensComponent: React.FC<ICurrentTokensComponent> = ({
               return (
                 <div
                   className={`select-number-box ${
-                    selectedItem === el.token ? 'selected-box' : ''
+                    selectedToken === el.token ? 'selected-box' : ''
                   } ${
                     el.sold ? 'sold-token' : el.isMinted ? 'sold-token' : ''
                   }`}

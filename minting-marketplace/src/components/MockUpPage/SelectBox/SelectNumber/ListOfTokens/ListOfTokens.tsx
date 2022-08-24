@@ -20,7 +20,6 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
   primaryColor,
   setSelectedToken,
   selectedToken,
-  selectedItem,
   setIsOpen,
   totalCount
 }) => {
@@ -53,11 +52,19 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
       );
       const { result } = responseAllProduct.data;
       setTokenData(result.tokens);
-      setSelectedToken(indexes[0]);
-      onClickItem(indexes[0]);
+      setSelectedToken(selectedToken);
+      onClickItem(selectedToken);
       handleIsOpen();
     },
-    [blockchain, contract, handleIsOpen, onClickItem, product, setSelectedToken]
+    [
+      blockchain,
+      contract,
+      handleIsOpen,
+      onClickItem,
+      product,
+      setSelectedToken,
+      selectedToken
+    ]
   );
 
   const handleClickOutSideListOfTokens = useCallback(
@@ -169,7 +176,6 @@ const ListOfTokensComponent: React.FC<IListOfTokensComponent> = ({
         isOpen={isOpen}
         isBack={isBack}
         selectedToken={selectedToken}
-        selectedItem={selectedItem}
         setIsOpen={setIsOpen}
         setIsOpens={setIsOpens}
         numberRef={numberRef}
