@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as ethers from 'ethers';
@@ -14,25 +13,30 @@ import {
 import { erc721Abi } from '../../../../../contracts';
 import { web3Switch } from '../../../../../utils/switchBlockchain';
 import blockchainData from '../../../../../utils/blockchainData';
+import { IModalItem } from '../../filteringBlock.types';
+import { RootState } from '../../../../../ducks';
+import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
 
-const ModalItem = ({
+const ModalItem: React.FC<IModalItem> = ({
   isOpenBlockchain,
   setIsOpenBlockchain,
   selectedData,
   defaultImg,
   primaryColor
 }) => {
-  const [price, setPrice] = useState(0);
-  const [isApproved, setIsApproved] = useState(undefined);
+  const [price, setPrice] = useState<number>(0);
+  const [isApproved, setIsApproved] = useState<boolean | undefined>(undefined);
   const { currentChain, currentUserAddress, resaleInstance, contractCreator } =
-    useSelector((store) => store.contractStore);
-  const instance = contractCreator(selectedData.contractAddress, erc721Abi);
-  const [onMyChain, setOnMyChain] = useState(
-    currentChain === selectedData.blockchain
+    useSelector<RootState, ContractsInitialType>(
+      (store) => store.contractStore
+    );
+  const instance = contractCreator?.(selectedData?.contractAddress, erc721Abi);
+  const [onMyChain, setOnMyChain] = useState<boolean>(
+    currentChain === selectedData?.blockchain
   );
 
   useEffect(() => {
-    setOnMyChain(currentChain === selectedData.blockchain);
+    setOnMyChain(currentChain === selectedData?.blockchain);
   }, [currentChain, selectedData]);
 
   const onCloseModal = useCallback(() => {
@@ -41,8 +45,8 @@ const ModalItem = ({
   }, [setIsOpenBlockchain]);
 
   useEffect(() => {
-    setOnMyChain(currentChain === selectedData.blockchain);
-  }, [currentChain, selectedData.blockchain]);
+    setOnMyChain(currentChain === selectedData?.blockchain);
+  }, [currentChain, selectedData?.blockchain]);
 
   const createResaleOffer = async () => {
     if (onMyChain && isApproved) {
@@ -50,17 +54,17 @@ const ModalItem = ({
         return;
       }
       Swal.fire({
-        title: `Putting token #${selectedData.uniqueIndexInContract} up for sale`,
+        title: `Putting token #${selectedData?.uniqueIndexInContract} up for sale`,
         html: 'Please wait...',
         icon: 'info',
         showConfirmButton: false
       });
       if (
         await metamaskCall(
-          resaleInstance.createResaleOffer(
-            selectedData.uniqueIndexInContract,
+          resaleInstance?.createResaleOffer(
+            selectedData?.uniqueIndexInContract,
             price,
-            selectedData.contractAddress,
+            selectedData?.contractAddress,
             currentUserAddress
           )
         )
@@ -84,9 +88,9 @@ const ModalItem = ({
       });
       if (
         await metamaskCall(
-          instance.approve(
-            resaleInstance.address,
-            selectedData.uniqueIndexInContract
+          instance?.approve(
+            resaleInstance?.address,
+            selectedData?.uniqueIndexInContract
           )
         )
       ) {
@@ -104,7 +108,7 @@ const ModalItem = ({
     if (onMyChain && instance && resaleInstance) {
       const approved =
         (await metamaskCall(
-          instance.getApproved(selectedData.uniqueIndexInContract)
+          instance.getApproved(selectedData?.uniqueIndexInContract)
         )) === resaleInstance.address ||
         (await metamaskCall(
           instance.isApprovedForAll(currentUserAddress, resaleInstance.address)
@@ -124,11 +128,8 @@ const ModalItem = ({
   }
 
   return (
-    <Modal
-      style={{ height: 'auto !important' }}
-      onClose={onCloseModal}
-      open={isOpenBlockchain}>
-      <div className="modal-content-metadata">
+    <Modal onClose={onCloseModal} open={isOpenBlockchain}>
+      <div className="modal-content-metadata modal-item-metadata">
         <div className="block-close">
           <button onClick={onCloseModal}>
             <i className="fas fa-times"></i>
@@ -145,13 +146,14 @@ const ModalItem = ({
             }}></div>
           <div className="modal-number-tokenContent">
             <span className="modal-item-title">
-              {bidFirstLetter(selectedData.title)}
+              {bidFirstLetter(selectedData?.title)}
             </span>
-            <span className="modal-item-user">{selectedData.user}</span>
+            {/*There is no user inside selectedData object*/}
+            {/* <span className="modal-item-user">{selectedData?.user}</span> */}
             <div style={{ display: 'flex' }}>
               <SvgKeyForModalItem />
               <span className="modal-item-token description">
-                Token : {selectedData.uniqueIndexInContract}
+                Token : {selectedData?.uniqueIndexInContract}
               </span>
             </div>
           </div>
@@ -164,7 +166,8 @@ const ModalItem = ({
                 {validateInteger(price) && (
                   <>
                     {ethers.utils.formatEther(price)}{' '}
-                    {blockchainData[selectedData.blockchain].symbol}
+                    {selectedData?.blockchain &&
+                      blockchainData[selectedData.blockchain]?.symbol}
                   </>
                 )}
                 <InputField
@@ -190,7 +193,7 @@ const ModalItem = ({
                     createResaleOffer();
                   }
                 } else {
-                  web3Switch(selectedData.blockchain);
+                  web3Switch(selectedData?.blockchain);
                 }
               }}>
               {onMyChain
@@ -201,7 +204,10 @@ const ModalItem = ({
                     ? 'Sell'
                     : 'Approve the marketplace for this token'
                   : 'The marketplace is not available for this blockchain'
-                : `Switch to ${blockchainData[selectedData.blockchain]?.name}`}
+                : `Switch to ${
+                    selectedData?.blockchain &&
+                    blockchainData[selectedData?.blockchain]?.name
+                  }`}
             </button>
           </div>
         </div>

@@ -1,79 +1,103 @@
-//@ts-nocheck
 import styled from 'styled-components';
+import {
+  TFiltersTitleIconStyled,
+  TModalContentPictureStyled,
+  TSelectFiltersItemStyled,
+  TSelectFiltersPopUpStyled,
+  TSelectSortItemStyled,
+  TSelectSortPopUpStyled,
+  TSortArrowUpIconStyled,
+  TStyledShevronIconStyled
+} from '../filteringBlock.types';
 import { FilterIconNew, ArrowDown, ArrowUp, SimpleFilterArrow } from './incons';
 
 export const SelectFiltersItem = styled.div`
   background-color: var(
-    --${(props) => (props.primaryColor === 'charcoal-90' ? props.primaryColor : 'rhyno-40')}
+    --${(props: TSelectFiltersItemStyled) => (props.primaryColor === 'charcoal' ? 'charcoal-90' : 'rhyno-40')}
   );
-  color: ${(props) =>
+  color: ${(props: TSelectFiltersItemStyled) =>
     props.filterPopUp ? '#fff' : `var(--${props.textColor})`};
-  border: ${(props) =>
-    props.primaryColor === 'charcoal-90'
+  border: ${(props: TSelectFiltersItemStyled) =>
+    props.primaryColor === 'charcoal'
       ? 'solid 1px var(--charcoal-80)'
       : 'solid 1px var(--rhyno)'};
-  border: ${(props) => (props.filterPopUp ? '1px solid #E882D5' : '')};
+  border: ${(props: TSelectFiltersItemStyled) =>
+    props.filterPopUp ? '1px solid #E882D5' : ''};
 `;
 
 export const FiltersTitleIcon = styled.i`
-  color: ${(props) => (props.filterPopUp ? '#fff' : '#E882D5')};
+  color: ${(props: TFiltersTitleIconStyled) =>
+    props.filterPopUp ? '#fff' : '#E882D5'};
 `;
 
 export const SelectFiltersPopUp = styled.div`
-  background-color: var(--${(props) => props.primaryColor});
+  background-color: var(
+    --${(props: TSelectFiltersPopUpStyled) => props.primaryColor}
+  );
   z-index: 100;
 `;
 
 export const SelectSortItem = styled.div`
   background-color: var(
-    --${(props) => (props.primaryColor.includes('charcoal') ? 'charcoal-90' : 'rhyno-40')}
+    --${(props: TSelectSortItemStyled) => (props.primaryColor.includes('charcoal') ? 'charcoal-90' : 'rhyno-40')}
   );
-  color: var(--${(props) => props.textColor});
-  border: ${(props) =>
+  color: var(--${(props: TSelectSortItemStyled) => props.textColor});
+  border: ${(props: TSelectSortItemStyled) =>
     props.primaryColor.includes('charcoal')
       ? 'solid 1px var(--charcoal-80)'
       : 'solid 1px var(--rhyno)'};
-  border: ${(props) => (props.sortPopUp ? '1px solid #E882D5' : '')};
+  border: ${(props: TSelectSortItemStyled) =>
+    props.sortPopUp ? '1px solid #E882D5' : ''};
 `;
 
 export const SortArrowUpIcon = styled.i`
-  color: ${(props) => (props.sortItem === 'up' ? '#E882D5' : '#A7A6A6')};
+  color: ${(props: TSortArrowUpIconStyled) =>
+    props.sortItem === 'up' ? '#E882D5' : '#A7A6A6'};
 `;
 
 export const SortArrowDownIcon = styled.i`
-  color: ${(props) => (props.sortItem === 'down' ? '#E882D5' : '#A7A6A6')};
+  color: ${(props: TSortArrowUpIconStyled) =>
+    props.sortItem === 'down' ? '#E882D5' : '#A7A6A6'};
 `;
 
 export const SelectSortPopUp = styled.div`
-  background-color: var(--${(props) => props.primaryColor});
-  color: var(--${(props) => props.textColor});
+  background-color: var(
+    --${(props: TSelectSortPopUpStyled) => props.primaryColor}
+  );
+  color: var(--${(props: TSelectSortPopUpStyled) => props.textColor});
 `;
 
 export const ModalContentPicture = styled.div`
   background-image: url(${(props) => props.picture || props.defaultImg});
-  background-color: var(--${(props) => props.primaryColor}-transparent);
+  background-color: var(
+    --${(props: TModalContentPictureStyled) => props.primaryColor}-transparent
+  );
 `;
 
 export const StyledFilterIcon = styled(FilterIconNew)`
   path {
-    stroke: ${(props) => (props.filterPopUp ? '#fff' : '#E882D5')};
+    stroke: ${(props: TFiltersTitleIconStyled) =>
+      props.filterPopUp ? '#fff' : '#E882D5'};
   }
   margin-right: 8px;
 `;
 
 export const StyledArrowUpIcon = styled(ArrowUp)`
   path {
-    stroke: ${(props) => (props.sortItem === 'up' ? '#E882D5' : '#A7A6A6')};
+    stroke: ${(props: TSortArrowUpIconStyled) =>
+      props.sortItem === 'up' ? '#E882D5' : '#A7A6A6'};
   }
 `;
 export const StyledArrowDownIcon = styled(ArrowDown)`
   path {
-    stroke: ${(props) => (props.sortItem === 'down' ? '#E882D5' : '#A7A6A6')};
+    stroke: ${(props: TSortArrowUpIconStyled) =>
+      props.sortItem === 'down' ? '#E882D5' : '#A7A6A6'};
   }
 `;
 
 export const StyledShevronIcon = styled(SimpleFilterArrow)`
-  transform: ${(props) => (props.rotate ? 'rotate(-180deg)' : '')};
+  transform: ${(props: TStyledShevronIconStyled) =>
+    props.rotate ? 'rotate(-180deg)' : ''};
 `;
 
 export const StyledPopupArrowUpIcon = styled(ArrowUp)`

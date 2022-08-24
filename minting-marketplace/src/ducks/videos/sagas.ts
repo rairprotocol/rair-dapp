@@ -1,6 +1,3 @@
-//@ts-nocheck
-// import { headers, paramsVideo } from "../../utils/headers";
-
 import { put, call, takeLatest } from 'redux-saga/effects';
 import * as types from './types';
 import {
@@ -8,14 +5,18 @@ import {
   getVideoListComplete,
   getVideoListTotal
 } from './actions';
-import axios, { AxiosError, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { TMediaList } from '../../axios.responseTypes';
+import { TUpdataVideoParams } from './videosDucks.types';
 
-export function* getVideos({ params }) {
+export type TParamsVideosSaga = {
+  type: string;
+  params: TUpdataVideoParams;
+};
+
+export function* getVideos({ params }: TParamsVideosSaga) {
   try {
-    const videos: AxiosResponse<TMediaList> = yield call<
-      (url: string, config: AxiosRequestHeaders) => any
-    >(
+    const videos: AxiosResponse<TMediaList> = yield call(
       axios.get,
       `/api/media/list?itemsPerPage=${params.itemsPerPage}` +
         `${params.pageNum ? '&pageNum=' + params.pageNum : ''}`,

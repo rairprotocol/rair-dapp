@@ -1,24 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { rFetch } from '../../utils/rFetch';
-// import { useNavigate } from 'react-router-dom';
 import setDocumentTitle from '../../utils/setTitle';
 import InputField from '../common/InputField';
 import FilteringBlock from '../MockUpPage/FilteringBlock/FilteringBlock';
 import ModalItem from '../MockUpPage/FilteringBlock/portal/ModalItem/ModalItem';
-import chainData from '../../utils/blockchainData';
 import './MyItems.css';
 import { getTokenError } from '../../ducks/auth/actions';
-import {
-  IMyItems,
-  TMyDiamondItemsToken,
-  TDiamondTokensType
-} from './nft.types';
+import { IMyItems, TDiamondTokensType } from './nft.types';
 import { RootState } from '../../ducks';
 import { ColorStoreType } from '../../ducks/colors/colorStore.types';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Typography from '@mui/material/Typography';
-
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import HomeIcon from '@mui/icons-material/Home';
 import { NavLink } from 'react-router-dom';
@@ -30,6 +21,9 @@ import { PersonalProfileMyNftTab } from './PersonalProfile/PersonalProfileMyNftT
 import { PersonalProfileMyVideoTab } from './PersonalProfile/PersonalProfileMyVideoTab/PersonalProfileMyVideoTab';
 import { PersonalProfileMyCreated } from './PersonalProfile/PersonalProfileMyCreated/PersonalProfileMyCreated';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TSortChoice } from '../MockUpPage/FilteringBlock/filteringBlock.types';
+import { Breadcrumbs, Typography } from '@mui/material';
+import chainData from '../../utils/blockchainData';
 
 const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
   const { width } = useWindowDimensions();
@@ -40,13 +34,11 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
   const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
     (state) => state.colorStore
   );
-  // const navigate = useNavigate();
   const [tokens, setTokens] = useState<TDiamondTokensType[]>([]);
-  const [selectedData, setSelectedData] = useState<
-    TDiamondTokensType | TMyDiamondItemsToken
-  >();
+  const [selectedData, setSelectedData] =
+    useState<TDiamondTokensType /*| TMyDiamondItemsToken*/>();
   const [titleSearch, setTitleSearch] = useState<string>('');
-  const [sortItem, setSortItem] = useState<string>('');
+  const [sortItem, setSortItem] = useState<TSortChoice>();
   const [isOpenBlockchain, setIsOpenBlockchain] = useState<boolean>(false);
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -270,7 +262,6 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
                 setSelectedData={setSelectedData}
                 primaryColor={primaryColor}
                 chainData={chainData}
-                // textColor={textColor}
               />
             </TabPanel>
           </Tabs>

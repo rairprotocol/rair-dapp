@@ -1,9 +1,12 @@
-//@ts-nocheck
 import React, { useState } from 'react';
+import {
+  IModalBlockchain,
+  TBlockchainCategory,
+  TBlockchainNames
+} from '../../filteringBlock.types';
 import Modal from '../../modal';
-// import BlockMinMax from "../BlockMinMax/BlockMinMax";
 
-const blockchains = [
+const blockchains: TBlockchainCategory[] = [
   {
     name: 'Matic Mainnet',
     chainId: '0x89',
@@ -34,19 +37,9 @@ const blockchains = [
     chainId: '0x1',
     clicked: false
   }
-  // {
-  //   name: "Ropsten",
-  //   chainId: "0x3",
-  //   clicked: false,
-  // },
-  // {
-  //   name: "Klaytn",
-  //   chainId: "0x3e9",
-  //   clicked: false,
-  // },
 ];
 
-const ModalBlockchain = ({
+const ModalBlockchain: React.FC<IModalBlockchain> = ({
   setBlockchain,
   isOpenBlockchain,
   setIsOpenBlockchain,
@@ -56,44 +49,21 @@ const ModalBlockchain = ({
   setClick
 }) => {
   const [arrBlockchains /*setArrBlockchains*/] = useState(blockchains);
-  const [, /*clearAll*/ setClearAll] = useState(false);
+  const [, /*clearAll*/ setClearAll] = useState<boolean>(false);
 
-  const onChangeClicked = (name) => {
-    setClick(name);
-
-    // const updatedBlockchains = arrBlockchains.map((bch, index) => {
-    //   if (name === bch.name) {
-    //     return {
-    //       ...bch,
-    //       clicked: !bch.clicked,
-    //     };
-    //   } else {
-    //     return {
-    //       ...bch,
-    //       clicked: bch.clicked,
-    //     };
-    //   }
-    // });
-    // setArrBlockchains(updatedBlockchains);
+  const onChangeClicked = (name: TBlockchainNames) => {
+    setClick?.(name);
 
     setClearAll(false);
-    setIsShow(true);
-    setFilterText(name);
+    setIsShow?.(true);
+    setFilterText?.(name);
   };
 
   const clearAllFilters = () => {
-    setBlockchain(null);
+    setBlockchain?.(undefined);
     setClearAll(true);
-    setIsShow(false);
-    setClick(null);
-
-    // const clearArrBlockchains = arrBlockchains.map((cat) => {
-    //   return {
-    //     ...cat,
-    //     clicked: false,
-    //   };
-    // });
-    // setArrBlockchains(clearArrBlockchains);
+    setIsShow?.(false);
+    setClick?.(null);
   };
 
   const onCloseModal = () => {
@@ -109,7 +79,7 @@ const ModalBlockchain = ({
 
   const onClickButton = (data) => {
     onChangeClicked(data.name);
-    setBlockchain(data.chainId);
+    setBlockchain?.(data.chainId);
   };
 
   return (
@@ -183,3 +153,40 @@ const ModalBlockchain = ({
 };
 
 export default ModalBlockchain;
+
+//unused-snippet 1
+// const updatedBlockchains = arrBlockchains.map((bch, index) => {
+//   if (name === bch.name) {
+//     return {
+//       ...bch,
+//       clicked: !bch.clicked,
+//     };
+//   } else {
+//     return {
+//       ...bch,
+//       clicked: bch.clicked,
+//     };
+//   }
+// });
+// setArrBlockchains(updatedBlockchains);
+
+//unused-snippet 2
+// const clearArrBlockchains = arrBlockchains.map((cat) => {
+//   return {
+//     ...cat,
+//     clicked: false,
+//   };
+// });
+// setArrBlockchains(clearArrBlockchains);
+
+//unused-snippet 3
+// {
+//   name: "Ropsten",
+//   chainId: "0x3",
+//   clicked: false,
+// },
+// {
+//   name: "Klaytn",
+//   chainId: "0x3e9",
+//   clicked: false,
+// },

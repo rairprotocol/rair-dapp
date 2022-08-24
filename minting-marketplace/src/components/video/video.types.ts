@@ -1,5 +1,4 @@
 import { INftProductType, TTokenData } from '../../axios.responseTypes';
-import { ColorChoice } from './../../ducks/colors/colorStore.types';
 export interface IVideoPlayer {
   mediaId: number;
   mainManifest?: string;
@@ -32,11 +31,11 @@ export type TParticularProduct = {
   totalCount: number;
 };
 export interface IVideoList {
-  mediaList?: MediaListResponseType;
-  titleSearch: string;
-  primaryColor?: ColorChoice;
+  titleSearch?: string;
   responseLabel?: string;
   endpoint?: string;
+  loading: boolean;
+  videos: MediaListResponseType | null;
 }
 
 export type MediaListResponseType = {

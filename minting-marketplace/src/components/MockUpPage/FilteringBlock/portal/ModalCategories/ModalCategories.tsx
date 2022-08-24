@@ -1,9 +1,12 @@
-//@ts-nocheck
 import React, { useState } from 'react';
+import {
+  IModalCategories,
+  TModalCategoriesItem,
+  TOnClickCategories
+} from '../../filteringBlock.types';
 import Modal from '../../modal';
-// import BlockMinMax from "../BlockMinMax/BlockMinMax";
 
-const categories = [
+const categories: TModalCategoriesItem[] = [
   {
     name: 'Music',
     clicked: false
@@ -22,7 +25,7 @@ const categories = [
   }
 ];
 
-const ModalCategories = ({
+const ModalCategories: React.FC<IModalCategories> = ({
   setFilterCategoriesText,
   setIsOpenCategories,
   isOpenCategories,
@@ -31,46 +34,22 @@ const ModalCategories = ({
   setIsShowCategories,
   click
 }) => {
-  const [arrCategories /*setArrCategories*/] = useState(categories);
-  const [, /*clearAll*/ setClearAll] = useState(false);
+  const [arrCategories /*setArrCategories*/] =
+    useState<TModalCategoriesItem[]>(categories);
+  const [, /*clearAll*/ setClearAll] = useState<boolean>(false);
 
-  const onChangeClicked = (name) => {
-    setClick(name);
+  const onChangeClicked = (name: TOnClickCategories) => {
+    setClick?.(name);
     setClearAll(false);
-    setIsShowCategories(1);
-    setFilterCategoriesText(name);
-
-    // const updatedCategory = arrCategories.map((cat, index) => {
-    //     if (name === cat.name) {
-    //         return {
-    //             ...cat,
-    //             clicked: !cat.clicked
-    //         }
-    //     }
-    //     else {
-    //         return {
-    //             ...cat
-    //         }
-    //     }
-    // })
-    // setClearAll(false)
-    // setArrCategories(updatedCategory);
+    setIsShowCategories?.(true);
+    setFilterCategoriesText?.(name);
   };
 
   const clearAllFilters = () => {
-    setCategory(null);
+    setCategory?.(null);
     setClearAll(true);
-    setIsShowCategories(false);
-    setClick(null);
-
-    // const clearArrCategories = arrCategories.map((cat) => {
-    //     return {
-    //         ...cat,
-    //         clicked: false
-    //     }
-    // })
-    // setArrCategories(clearArrCategories);
-    // setClearAll(true);
+    setIsShowCategories?.(false);
+    setClick?.(null);
   };
 
   const onCloseModal = () => {
@@ -79,13 +58,12 @@ const ModalCategories = ({
     setClearAll(true);
   };
 
-  const onClickButton = (data) => {
+  const onClickButton = (data: TModalCategoriesItem) => {
     onChangeClicked(data.name);
-    setCategory(data.name);
+    setCategory?.(data.name);
   };
 
   const onClickApply = () => {
-    // getContract();
     onCloseModal();
   };
 
@@ -121,6 +99,7 @@ const ModalCategories = ({
             </div>
           </div>
           <div className="price-wrapper">
+            {/* unused-snippet */}
             {/* <div className="modal-filtering-price-title">
               <h4>Price</h4>
             </div> */}
@@ -158,3 +137,30 @@ const ModalCategories = ({
 };
 
 export default ModalCategories;
+
+//unused-snippet 1
+// const updatedCategory = arrCategories.map((cat, index) => {
+//     if (name === cat.name) {
+//         return {
+//             ...cat,
+//             clicked: !cat.clicked
+//         }
+//     }
+//     else {
+//         return {
+//             ...cat
+//         }
+//     }
+// })
+// setClearAll(false)
+// setArrCategories(updatedCategory);
+
+//unused-snippet 2
+// const clearArrCategories = arrCategories.map((cat) => {
+//     return {
+//         ...cat,
+//         clicked: false
+//     }
+// })
+// setArrCategories(clearArrCategories);
+// setClearAll(true);

@@ -158,3 +158,10 @@ export type TSwitchEthereumChainArgs = {
   chainId: BlockchainType;
   chainName: string;
 };
+
+export interface ISearchPanel {
+  primaryColor: ColorChoice;
+  textColor: string;
+  tabIndex: number;
+  setTabIndex: (index: number) => void;
+}

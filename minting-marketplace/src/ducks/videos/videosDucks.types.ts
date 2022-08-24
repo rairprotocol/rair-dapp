@@ -16,6 +16,12 @@ export type TVideosInitialState = {
   totalNumberVideo: number | null;
 };
 
+export type TUpdataVideoParams = {
+  itemsPerPage: number;
+  pageNum: number;
+  xTok: string;
+};
+
 export type TGetListVideosStart = ReturnType<typeof getListVideosStart>;
 export type TGetVideoListComplete = ReturnType<typeof getVideoListComplete>;
 export type TRefreshAction = ReturnType<typeof refreshAction>;

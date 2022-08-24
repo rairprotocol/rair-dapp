@@ -1,7 +1,11 @@
-//@ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import './FilteringBlock.css';
+import {
+  IFilteringBlock,
+  TFilterItemCategories,
+  TSortChoice
+} from './filteringBlock.types';
 import {
   SelectFiltersItem,
   SelectFiltersPopUp,
@@ -17,7 +21,7 @@ import {
 import ModalBlockchain from './portal/ModalBlockchain/ModalBlockchain';
 import ModalCategories from './portal/ModalCategories/ModalCategories';
 
-const FilteringBlock = ({
+const FilteringBlock: React.FC<IFilteringBlock> = ({
   primaryColor,
   textColor,
   sortItem,
@@ -29,21 +33,22 @@ const FilteringBlock = ({
   setIsShowCategories,
   setFilterText,
   setFilterCategoriesText,
-  click,
-  setClick
-}: any) => {
-  const [filterPopUp, setFilterPopUp] = useState(false);
-  const [, /*filterItem*/ setFilterItem] = useState('Filters');
-  const filterRef = useRef();
+  categoryClick,
+  setCategoryClick,
+  blockchainClick,
+  setBlockchainClick
+}) => {
+  const [filterPopUp, setFilterPopUp] = useState<boolean>(false);
+  const [, /*filterItem*/ setFilterItem] = useState<TFilterItemCategories>();
+  const [isOpenCategories, setIsOpenCategories] = useState<boolean>(false);
+  const [isOpenBlockchain, setIsOpenBlockchain] = useState<boolean>(false);
+  const [sortPopUp, setSortPopUp] = useState<boolean>(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const sortRef = useRef<HTMLDivElement>(null);
 
-  const [sortPopUp, setSortPopUp] = useState(false);
-  const sortRef = useRef();
+  const { width } = useWindowDimensions();
 
-  const [isOpenCategories, setIsOpenCategories] = useState(false);
-  const [isOpenBlockchain, setIsOpenBlockchain] = useState(false);
-  const { width /*height*/ } = useWindowDimensions();
-
-  const onChangeFilterItem = (item) => {
+  const onChangeFilterItem = (item: TFilterItemCategories) => {
     setFilterItem(item);
     onChangeFilterPopUp();
   };
@@ -56,19 +61,19 @@ const FilteringBlock = ({
     setSortPopUp((prev) => !prev);
   };
 
-  const onChangeSortItem = (item) => {
+  const onChangeSortItem = (item: TSortChoice) => {
     setSortItem(item);
     onChangeSortPopUp();
   };
 
-  const handleClickOutSideFilter = (e) => {
-    if (!filterRef.current.contains(e.target)) {
+  const handleClickOutSideFilter = (e: MouseEvent) => {
+    if (!filterRef.current?.contains(e.target as Node)) {
       setFilterPopUp(false);
     }
   };
 
-  const handleClickOutSideSort = (e) => {
-    if (!sortRef.current.contains(e.target)) {
+  const handleClickOutSideSort = (e: MouseEvent) => {
+    if (!sortRef.current?.contains(e.target as Node)) {
       setSortPopUp(false);
     }
   };
@@ -147,19 +152,19 @@ const FilteringBlock = ({
           </SelectSortPopUp>
         )}
         <ModalCategories
-          click={click}
+          click={categoryClick}
           isOpenCategories={isOpenCategories}
           setIsOpenCategories={setIsOpenCategories}
           setCategory={setCategory}
-          setClick={setClick}
+          setClick={setCategoryClick}
           setIsShowCategories={setIsShowCategories}
           setFilterCategoriesText={setFilterCategoriesText}
         />
         <ModalBlockchain
-          click={click}
+          click={blockchainClick}
           isOpenBlockchain={isOpenBlockchain}
           setBlockchain={setBlockchain}
-          setClick={setClick}
+          setClick={setBlockchainClick}
           setIsOpenBlockchain={setIsOpenBlockchain}
           setIsShow={setIsShow}
           setFilterText={setFilterText}

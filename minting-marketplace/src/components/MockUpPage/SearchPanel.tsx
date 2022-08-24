@@ -1,8 +1,6 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-// import { useNavigate } from "react-router-dom";
 import { NftList } from './NftList/NftList';
 import InputField from '../common/InputField';
 import VideoList from '../video/videoList';
@@ -19,26 +17,48 @@ import {
 } from '../../ducks/nftData/action';
 import { TVideosInitialState } from '../../ducks/videos/videosDucks.types';
 import { RootState } from '../../ducks';
+import { InitialNftDataStateType } from '../../ducks/nftData/nftData.types';
+import { ISearchPanel } from './mockupPage.types';
 import { getListVideosStart } from '../../ducks/videos/actions';
+import {
+  TBlockchainNames,
+  TOnClickCategories,
+  TSortChoice
+} from './FilteringBlock/filteringBlock.types';
 
-const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
+const SearchPanel: React.FC<ISearchPanel> = ({
+  primaryColor,
+  textColor,
+  tabIndex,
+  setTabIndex
+}) => {
   const dispatch = useDispatch();
-  const { currentPage } = useSelector((store) => store.getPageStore);
-  const { nftListTotal, nftList, itemsPerPage } = useSelector(
-    (store) => store.nftDataStore
+  const currentPage = useSelector<RootState, number>(
+    (store) => store.getPageStore.currentPage
   );
-  const { totalNumberVideo } = useSelector((store) => store.videosStore);
+  const { nftListTotal, nftList, itemsPerPage } = useSelector<
+    RootState,
+    InitialNftDataStateType
+  >((store) => store.nftDataStore);
+  const totalNumberVideo = useSelector<RootState, number | null>(
+    (store) => store.videosStore.totalNumberVideo
+  );
 
-  const [titleSearch, setTitleSearch] = useState('');
-  const [sortItem, setSortItem] = useState('');
-  const [blockchain, setBlockchain] = useState();
-  const [category, setCategory] = useState();
-  const [isShow, setIsShow] = useState(false);
-  const [isShowCategories, setIsShowCategories] = useState(false);
-  const [filterText, setFilterText] = useState('');
-  const [filterCategoriesText, setFilterCategoriesText] = useState('');
-  const [click, setClick] = useState(null);
-  const [currentPageForVideo, setCurrentPageForVideo] = useState(1);
+  const [titleSearch, setTitleSearch] = useState<string>('');
+  const [sortItem, setSortItem] = useState<TSortChoice | undefined>();
+  const [blockchain, setBlockchain] = useState<BlockchainType | undefined>();
+  const [category, setCategory] = useState<TOnClickCategories | null>();
+  const [isShow, setIsShow] = useState<boolean>(false);
+  const [isShowCategories, setIsShowCategories] = useState<boolean>(false);
+  const [filterText, setFilterText] = useState<TBlockchainNames>();
+  const [filterCategoriesText, setFilterCategoriesText] =
+    useState<TOnClickCategories | null>();
+  const [categoryClick, setCategoryClick] = useState<TOnClickCategories | null>(
+    null
+  );
+  const [blockchainClick, setBlockchainClick] =
+    useState<TBlockchainNames | null>(null);
+  const [currentPageForVideo, setCurrentPageForVideo] = useState<number>(1);
   const { videos, loading } = useSelector<RootState, TVideosInitialState>(
     (store) => store.videosStore
   );
@@ -50,25 +70,25 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
   };
   const changePage = (currentPage: number) => {
     dispatch(getCurrentPage(currentPage));
-    // setCurrentPage(currentPage);
     window.scrollTo(0, 0);
   };
   const changePageForVideo = (currentPage: number) => {
-    // dispatch(getCurrentPage(currentPage));
     setCurrentPageForVideo(currentPage);
     window.scrollTo(0, 0);
   };
 
   const clearFilter = () => {
-    setBlockchain(null);
-    setClick(null);
+    setBlockchain(undefined);
+    setCategoryClick(null);
+    setBlockchainClick(null);
     setIsShow(false);
     dispatch(getCurrentPageEnd());
   };
 
   const clearCategoriesFilter = () => {
     setCategory(null);
-    setClick(null);
+    setCategoryClick(null);
+    setBlockchainClick(null);
     setIsShowCategories(false);
     dispatch(getCurrentPageEnd());
   };
@@ -111,10 +131,11 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
       dispatch(getNftDataStart());
     };
   }, [dispatch]);
-
   return (
     <div className="input-search-wrapper list-button-wrapper">
-      <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
+      <Tabs
+        selectedIndex={tabIndex}
+        onSelect={(index: number) => setTabIndex(index)}>
         <TabList className="category-wrapper">
           <Tab
             selectedClassName={`search-tab-selected-${
@@ -174,16 +195,16 @@ const SearchPanel = ({ primaryColor, textColor, tabIndex, setTabIndex }) => {
               className="fas fa-search fa-lg fas-custom"
               aria-hidden="true"></i>
             <FilteringBlock
-              click={click}
               isFilterShow={true}
               textColor={textColor}
-              primaryColor={
-                primaryColor === 'charcoal' ? 'charcoal-90' : `${primaryColor}`
-              }
+              primaryColor={primaryColor}
+              categoryClick={categoryClick}
+              setCategoryClick={setCategoryClick}
+              blockchainClick={blockchainClick}
+              setBlockchainClick={setBlockchainClick}
               sortItem={sortItem}
               setBlockchain={setBlockchain}
               setCategory={setCategory}
-              setClick={setClick}
               setSortItem={setSortItem}
               setIsShow={setIsShow}
               setIsShowCategories={setIsShowCategories}

@@ -1,8 +1,9 @@
-//@ts-nocheck
+//unused-component
 import React, { useEffect } from 'react';
+import { IBlockMinMax } from '../../filteringBlock.types';
 import { useInput } from '../../hooks';
 
-const BlockMinMax = ({ clearAll }) => {
+const BlockMinMax: React.FC<IBlockMinMax> = ({ clearAll }) => {
   const minValue = useInput('');
   const maxValue = useInput('');
 

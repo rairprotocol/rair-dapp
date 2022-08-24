@@ -1,4 +1,6 @@
-export const ArrowUp = ({ className }) => (
+import { IArrowUp } from '../filteringBlock.types';
+
+export const ArrowUp: React.FC<IArrowUp> = ({ className }) => (
   <svg
     className={`${className || ''}`}
     width="11"
@@ -23,7 +25,7 @@ export const ArrowUp = ({ className }) => (
   </svg>
 );
 
-export const ArrowDown = ({ className }) => (
+export const ArrowDown: React.FC<IArrowUp> = ({ className }) => (
   <svg
     className={`${className || ''}`}
     width="11"
@@ -48,7 +50,9 @@ export const ArrowDown = ({ className }) => (
   </svg>
 );
 
-export const SimpleFilterArrow = ({ className /*rotate*/ }) => (
+export const SimpleFilterArrow: React.FC<IArrowUp> = ({
+  className /*rotate*/
+}) => (
   <svg
     className={`${className || ''}`}
     width="11"
@@ -66,7 +70,7 @@ export const SimpleFilterArrow = ({ className /*rotate*/ }) => (
   </svg>
 );
 
-export const FilterIconNew = ({ className }) => (
+export const FilterIconNew: React.FC<IArrowUp> = ({ className }) => (
   <svg
     className={`${className || ''}`}
     width="18"

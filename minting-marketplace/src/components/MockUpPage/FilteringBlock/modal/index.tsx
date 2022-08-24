@@ -1,8 +1,7 @@
-//@ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import 'wicg-inert';
-
+import { IModal } from '../filteringBlock.types';
 import Portal from '../portal';
 
 const Backdrop = styled.div`
@@ -59,20 +58,20 @@ const Content = styled.div`
   border-radius: 2px;
 `;
 
-export default function Modal(props) {
-  const [active, setActive] = useState(false);
-  const { open, onClose, locked } = props;
-  const backdrop = useRef(null);
+const Modal: React.FC<IModal> = ({ open, onClose, locked, children }) => {
+  const [active, setActive] = useState<boolean>(false);
+  const backdrop = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const { current } = backdrop;
 
     const transitionEnd = () => setActive(open);
 
-    const keyHandler = (e) =>
+    const keyHandler = (e: KeyboardEvent) =>
       !locked && [27].indexOf(e.which) >= 0 && onClose();
 
-    const clickHandler = (e) => !locked && e.target === current && onClose();
+    const clickHandler = (e: MouseEvent) =>
+      !locked && e.target === current && onClose();
 
     if (current) {
       current.addEventListener('transitionend', transitionEnd);
@@ -82,9 +81,9 @@ export default function Modal(props) {
 
     if (open) {
       window.setTimeout(() => {
-        document.activeElement.blur();
+        (document.activeElement as HTMLElement).blur();
         setActive(open);
-        document.querySelector('#root').setAttribute('inert', 'true');
+        document.querySelector('#root')?.setAttribute('inert', 'true');
       }, 10);
     }
 
@@ -94,7 +93,7 @@ export default function Modal(props) {
         current.removeEventListener('click', clickHandler);
       }
 
-      document.querySelector('#root').removeAttribute('inert');
+      document.querySelector('#root')?.removeAttribute('inert');
       window.removeEventListener('keyup', keyHandler);
     };
   }, [open, locked, onClose]);
@@ -103,11 +102,13 @@ export default function Modal(props) {
     <React.Fragment>
       {(open || active) && (
         <Portal className="modal-portal">
-          <Backdrop ref={backdrop} className={active && open && 'active'}>
-            <Content className="modal-content">{props.children}</Content>
+          <Backdrop ref={backdrop} className={active && open ? 'active' : ''}>
+            <Content className="modal-content">{children}</Content>
           </Backdrop>
         </Portal>
       )}
     </React.Fragment>
   );
-}
+};
+
+export default Modal;

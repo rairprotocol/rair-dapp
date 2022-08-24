@@ -299,6 +299,10 @@ select.select-price option {
   color: #e882d5;
 }
 
+.modal-item-metadata {
+  height: auto !important;
+}
+
 /* Media */
 
 @media screen and (max-width: 700px) {
