@@ -33,11 +33,6 @@ const InquiriesPage = () => {
           acceptCharset="UTF-8"
           encType="multipart/form-data"
           id="form">
-          <input
-            type="hidden"
-            name="zf_redirect_url"
-            value="https://staging.rair.market/thankyou"
-          />
           <InquireField>
             <InquireLabel primaryColor={primaryColor}>First name</InquireLabel>{' '}
             <InquireInput
@@ -74,7 +69,10 @@ const InquiriesPage = () => {
           </InquireField>
           <InquireField>
             <InquireLabel primaryColor={primaryColor}>Website</InquireLabel>{' '}
-            <InquireInput name="Website" placeholder="Link to the website" />
+            <InquireInput
+              name="SingleLine1"
+              placeholder="Link to the website"
+            />
           </InquireField>
           <InquireField>
             <InquireLabel primaryColor={primaryColor}>Message</InquireLabel>{' '}
