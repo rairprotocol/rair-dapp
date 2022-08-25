@@ -13,6 +13,7 @@
   },
   "rules": {
     "linebreak-style":["warn"],
+    "implicit-arrow-linebreak":"off",
     "no-underscore-dangle": 0,
     "object-curly-newline":"off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],

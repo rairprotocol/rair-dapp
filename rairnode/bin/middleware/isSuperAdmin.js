@@ -6,10 +6,18 @@ const { superAdmin: superAdminConfig } = require('../config');
 
 module.exports = async (req, res, next) => {
   try {
-    const { publicAddress } = req.user;
     let superAdmin = false;
+    let address = null;
 
-    if (superAdminConfig.storageKye) {
+    if (!_.isUndefined(req.user)) {
+      address = req.user.publicAddress;
+    }
+
+    if (!_.isUndefined(req.metaAuth)) {
+      address = req.metaAuth.recovered;
+    }
+
+    if (address && superAdminConfig.storageKye) {
       const vaultToken = vaultAppRoleTokenManager.getToken();
       const vaultRes = await vaultKeyManager.read({
         secretName: superAdminConfig.storageKye,
@@ -19,7 +27,7 @@ module.exports = async (req, res, next) => {
       if (vaultRes) {
         superAdmin = _.chain(vaultRes)
           .map((v) => v.toLowerCase())
-          .includes(publicAddress)
+          .includes(address)
           .value();
       }
     }

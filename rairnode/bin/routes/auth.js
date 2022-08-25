@@ -4,7 +4,7 @@ const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
 const { checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
-const { JWTVerification, validation } = require('../middleware');
+const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
 const log = require('../utils/logger')(module);
 
 const getTokensForUser = async (context, ownerAddress, { offer, contract, product }) => context.db.Offer.aggregate([
@@ -215,7 +215,7 @@ module.exports = (context) => {
     }
   });
 
-  router.get('/authentication/:MetaMessage/:MetaSignature/', validation('authentication', 'params'), metaAuth, async (req, res, next) => {
+  router.get('/authentication/:MetaMessage/:MetaSignature/', validation('authentication', 'params'), metaAuth, isSuperAdmin, async (req, res, next) => {
     const ethAddress = req.metaAuth.recovered;
     let adminRights = false;
 
@@ -239,9 +239,9 @@ module.exports = (context) => {
       } else {
         return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
       }
-
+      
       jwt.sign(
-        { eth_addr: ethAddress, adminRights },
+        { eth_addr: ethAddress, adminRights, superAdmin: req.user.superAdmin },
         process.env.JWT_SECRET,
         { expiresIn: '1d' },
         (err, token) => {

@@ -42,14 +42,13 @@ exports.updateOne = (Model) =>
 
 exports.createOne = (Model, additionalFields = {}) =>
   catchAsync(async (req, res, next) => {
-    const newdoc = await Model.create(_.assign(
-      req.body,
-      _.reduce(additionalFields, (r, v, k) => {
+    const newdoc = await Model.create(
+      _.assign(req.body, _.reduce(additionalFields, (r, v, k) => {
         // eslint-disable-next-line no-param-reassign
         r[k] = _.get(req, v, null);
         return r;
-      }, {}),
-    ));
+      }, {})),
+    );
 
     res.status(201).json({
       status: 'success',
@@ -87,8 +86,7 @@ exports.getAll = (Model, options = {}) =>
         // eslint-disable-next-line no-param-reassign
         r[k] = _.get(req, v, v);
         return r;
-      }, {})
-      : undefined;
+      }, {}) : undefined;
     let features;
 
     if (options.populateOptions) {
@@ -96,10 +94,7 @@ exports.getAll = (Model, options = {}) =>
         Model.find().populate(options.populateOptions),
         req.query,
       )
-        .filter(
-          filterOptions,
-          options.populateOptions,
-        )
+        .filter(filterOptions, options.populateOptions)
         .sort(options.hardcodedSorting ? options.hardcodedSorting : undefined)
         .limitFields(
           options.hardcodedProjection ? options.hardcodedProjection : undefined,
