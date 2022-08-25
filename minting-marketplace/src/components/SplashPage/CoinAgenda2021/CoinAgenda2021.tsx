@@ -37,7 +37,7 @@ const WarningModal = () => {
   );
 };
 
-const CoinAgenda2021SplashPage = ({ connectUserData }) => {
+const CoinAgenda2021SplashPage = ({ connectUserData, setIsSplashPage }) => {
   const { currentUserAddress } = useSelector((store) => store.contractStore);
   const splashData = {
     seoInformation: {
@@ -72,6 +72,11 @@ const CoinAgenda2021SplashPage = ({ connectUserData }) => {
   };
 
   const { primaryColor } = useSelector((store) => store.colorStore);
+
+  // this conditionally hides the search bar in header
+  useEffect(() => {
+    setIsSplashPage(true);
+  }, [setIsSplashPage]);
 
   /* UTILITIES FOR NFT PURCHASE */
   const [openCheckList /*setOpenCheckList*/] = useState(false);
