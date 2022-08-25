@@ -17,16 +17,6 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
     (store) => store.colorStore
   );
 
-  const someAdditionalData = [
-    {
-      urlVideo: 'https://storage.googleapis.com/rair-videos/',
-      mediaIdVideo: 'pxlXm5vHD6KE3nVarq5HygBuKA54wqWsBoYf4vci_hp0Tc',
-      videoTime: '00:05:33',
-      videoName: 'How RAIR Works',
-      VideoBg: VideoBg_2
-    }
-  ];
-
   const getAllVideos = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
       '/api/nft/network/0x38/0xb6163454da87e9f3fd63683c5d476f7d067f75a2/0/files'
@@ -73,7 +63,6 @@ const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
               selectVideo={selectVideo}
               setSelectVideo={setSelectVideo}
               whatSplashPage={whatSplashPage}
-              someAdditionalData={someAdditionalData}
             />
           </div>
         </div>
