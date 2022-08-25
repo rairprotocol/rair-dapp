@@ -1,9 +1,10 @@
 //@ts-nocheck
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SvgUserIcon } from '../SettingsIcons/SettingsIcons';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import { getUserStart } from '../../../ducks/users/actions';
 
 const EditMode = ({
   handlePopUp,
@@ -18,12 +19,13 @@ const EditMode = ({
   setImagePreviewUrl,
   mainName
 }) => {
+  const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
   const { currentUserAddress } = useSelector((store) => store.contractStore);
   const [userName, setUserName] = useState(mainName.replace(/@/g, ''));
   const [emailUser, setEmailUser] = useState(userEmail);
   const [userAvatar, setUserAvatar] = useState(
-    imagePreviewUrl ? imagePreviewUrl : defaultPictures
+    imagePreviewUrl ? imagePreviewUrl : ''
   );
   const [filePhoto, setFilePhoto] = useState();
 
@@ -63,10 +65,13 @@ const EditMode = ({
 
       if (user.nickName) {
         setUserName(user.nickName.replace(/@/g, ''));
+        dispatch(getUserStart(currentUserAddress));
       }
       if (success) {
         setMainName(user.nickName);
         setMainEmail(user.email);
+
+        dispatch(getUserStart(currentUserAddress));
       }
       if (user?.avatar) {
         setUserAvatar(user.avatar);

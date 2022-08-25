@@ -38,11 +38,11 @@ const PopUpSettings = ({
   const [triggerState, setTriggerState] = useState();
   const [editMode, setEditMode] = useState(false);
 
-  const { adminRights } = useSelector((store) => store.userStore);
+  const { adminRights, userRd } = useSelector((store) => store.userStore);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState(
     // "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
-    defaultPictures
+    null
   );
 
   const onChangeEditMode = useCallback(() => {
@@ -50,11 +50,15 @@ const PopUpSettings = ({
   }, [setEditMode]);
 
   useEffect(() => {
-    setUserName(userData.nickName);
-    setUserEmail(userData.email);
-    setUserData(userData);
-    setImagePreviewUrl(userData.avatar);
-  }, [userData]);
+    if (userRd) {
+      setUserName(userRd.nickName);
+      setUserEmail(userRd.email);
+      setUserData(userRd);
+      if (userRd.avatar) {
+        setImagePreviewUrl(userRd.avatar);
+      }
+    }
+  }, [userRd]);
 
   const cutUserAddress = () => {
     if (userName) {

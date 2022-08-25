@@ -1,9 +1,10 @@
 import * as types from './types';
 import { UserType } from './users.types';
 
-const getUserStart = () =>
+const getUserStart = (publicAddress: string) =>
   ({
-    type: types.GET_USER_START
+    type: types.GET_USER_START,
+    publicAddress: publicAddress
   } as const);
 
 const setAdminRights = (adminRights: boolean | undefined) =>

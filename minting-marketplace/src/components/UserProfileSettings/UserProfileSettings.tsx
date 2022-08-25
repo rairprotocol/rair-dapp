@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './UserProfileSettings.css';
 
@@ -9,6 +9,7 @@ import PopUpNotification from './PopUpNotification/PopUpNotification';
 import { setColorScheme } from '../../ducks/colors/actions';
 import { SunIcon } from '../Header/DiscordIcon';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
+import { getUserStart } from '../../ducks/users/actions';
 
 const UserProfileSettings = ({
   loginDone,
@@ -21,6 +22,12 @@ const UserProfileSettings = ({
 }) => {
   const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
+
+  useEffect(() => {
+    if (currentUserAddress) {
+      dispatch(getUserStart(currentUserAddress));
+    }
+  }, [currentUserAddress, dispatch]);
 
   return (
     <div

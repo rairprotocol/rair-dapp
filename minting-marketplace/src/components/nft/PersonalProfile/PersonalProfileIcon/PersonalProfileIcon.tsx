@@ -10,6 +10,7 @@ import defaultAvatar from './../../../../images/defaultAvatarProfile.png';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
+import { getUserStart } from '../../../../ducks/users/actions';
 
 const PersonalProfileIconComponent = ({ userData }) => {
   const dispatch = useDispatch();
@@ -18,11 +19,7 @@ const PersonalProfileIconComponent = ({ userData }) => {
     (state) => state.userStore
   );
 
-  const [userName, setUserName] = useState(
-    userData.nickName
-      ? userData.nickName.replace(/@/g, '')
-      : userData.publicAddress
-  );
+  const [userName, setUserName] = useState(userData.publicAddress);
   const [userNameNew, setUserNameNew] = useState(userName);
 
   const [emailUser, setEmailUser] = useState(userData.email);
@@ -30,12 +27,9 @@ const PersonalProfileIconComponent = ({ userData }) => {
 
   const [isPhotoUpdate, setIsPhotoUpdate] = useState(false);
 
-  const [originalPhotoValue, setOriginalPhotoValue] = useState<any>(
-    userData.avatar ? userData.avatar : defaultAvatar
-  );
-  const [newPhotoValue, setNewPhotoValue] = useState(
-    userRd ? userRd.avatar : originalPhotoValue
-  );
+  const [originalPhotoValue, setOriginalPhotoValue] =
+    useState<any>(defaultAvatar);
+  const [newPhotoValue, setNewPhotoValue] = useState(originalPhotoValue);
 
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
@@ -151,6 +145,11 @@ const PersonalProfileIconComponent = ({ userData }) => {
 
           setOriginalPhotoValue(user.avatar);
           setNewPhotoValue(user.avatar);
+
+          dispatch({
+            type: 'GET_USER_START',
+            publicAddress: currentUserAddress
+          });
         }
         onChangeEditMode();
       } catch (err) {
@@ -173,23 +172,35 @@ const PersonalProfileIconComponent = ({ userData }) => {
       onChangeEditMode,
       originalPhotoValue,
       userName,
-      userNameNew
+      userNameNew,
+      dispatch
     ]
   );
 
   useEffect(() => {
     if (currentUserAddress) {
-      dispatch({ type: 'GET_USER_START', publicAddress: currentUserAddress });
+      dispatch(getUserStart(currentUserAddress));
     }
   }, [currentUserAddress, dispatch]);
 
-  // useEffect(() => {
-  //   if (userData.avatar) {
-  //     setOriginalPhotoValue(userData.avatar);
-  //   } else {
-  //     setOriginalPhotoValue(defaultAvatar);
-  //   }
-  // }, [userData, setOriginalPhotoValue]);
+  useEffect(() => {
+    if (userRd) {
+      setUserName(
+        userRd && userRd.nickName && userRd.nickName.replace(/@/g, '')
+      );
+      setEmailUser(userRd && userRd.email && userRd.email);
+      if (userRd.avatar) {
+        setOriginalPhotoValue(userRd.avatar);
+        setNewPhotoValue(userRd.avatar);
+      }
+    }
+  }, [
+    userRd,
+    setOriginalPhotoValue,
+    setUserName,
+    setNewPhotoValue,
+    setEmailUser
+  ]);
 
   useEffect(() => {
     checkInputForSame(
@@ -315,7 +326,7 @@ const PersonalProfileIconComponent = ({ userData }) => {
                 </button>
                 <button
                   className={`${cl.editModeOff} ${textColor && cl[textColor]}`}
-                  onClick={() => resetAllStatesOnCancel(userData)}>
+                  onClick={() => resetAllStatesOnCancel(userRd)}>
                   <i className="fal fa-times" />
                 </button>
               </div>
