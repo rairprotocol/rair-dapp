@@ -52,7 +52,7 @@ const CoinAgenda2021SplashPage = ({ connectUserData, setIsSplashPage }) => {
     videoPlayerParams: {
       contract: '0x551213286900193ff3882a3f3d0441aadd32d42d',
       product: '0',
-      blockchain: '0x61'
+      blockchain: '0x89'
     },
     button2: {
       buttonTextColor: '#FFFFFF',
