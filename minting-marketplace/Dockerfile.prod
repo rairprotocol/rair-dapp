@@ -2,13 +2,13 @@
 
 FROM node:16.13.0 as build
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/minting
 
 COPY package*.json ./
 
 RUN npm install
 
-COPY . /usr/src/app
+COPY . /usr/src/minting
 
 RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
@@ -19,8 +19,8 @@ RUN npm run build
 
 FROM nginx:stable-alpine
 
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
-COPY --from=build /usr/src/app/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /usr/src/minting/build /usr/share/nginx/html
+COPY --from=build /usr/src/minting/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]blo  
