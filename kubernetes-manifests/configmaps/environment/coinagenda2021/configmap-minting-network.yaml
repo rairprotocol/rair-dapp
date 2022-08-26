@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minting-network-env
+data:
+  REACT_APP_SENTRY_ENABLED: "true"
+  REACT_APP_SENTRY_IO_ENDPOINT: https://b1b9b63c8d484d35a7f47235c681201b@o1004167.ingest.sentry.io/5965143
+  REACT_APP_SENTRY_IO_TRACE_RATE: "1.0"
+  REACT_APP_SENTRY_RELEASE: unknown_development_build
+  REACT_APP_DISABLE_CREATOR_VIEWS: "true"
+  REACT_APP_HOME_PAGE: /coinagenda2021
+  REACT_APP_GOOGLE_ANALYTICS: unknown_development_build
+  REACT_APP_GA_NAME: unknown_development_build
