@@ -598,7 +598,7 @@ function App() {
                   const isHome = item.path === process.env.REACT_APP_HOME_PAGE;
 
                   if (process.env.REACT_APP_HOME_PAGE !== '/' && !isHome) {
-                    return <></>;
+                    return <React.Fragment key={Math.random() + index} />;
                   }
 
                   return (
@@ -848,7 +848,7 @@ function App() {
                 ].map((item, index) => {
                   // If the requirements for the route aren't met, it won't return anything
                   if (item.requirement !== undefined && !item.requirement) {
-                    return <></>;
+                    return <React.Fragment key={Math.random() + index} />;
                   }
                   return (
                     <Route
