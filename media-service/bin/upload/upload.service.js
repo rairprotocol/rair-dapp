@@ -34,6 +34,13 @@ module.exports = {
     const { publicAddress, superAdmin } = req.user;
     // Get the socket ID from the request's query
     const { socketSessionId } = req.query;
+
+    // default value for parameter 'preset'.
+    // Currently remains unchanged and is not used in frontend
+    // available values: 'fast', 'faster', 'veryfast', 'ultrafast'
+    // using this valuas saves encoding time at the expense of much lower quality.
+    const { speed = 'medium' } = req.query;
+
     let cid = '';
     let defaultGateway = '';
     let storageLink = '';
@@ -107,7 +114,11 @@ module.exports = {
         });
 
         // Converts the file with FFMPEG
-        await convertToHLS(req.file, socketInstance);
+        await convertToHLS(
+          req.file,
+          speed,
+          socketInstance,
+        );
 
         const exportedKey = await encryptFolderContents(
           req.file,

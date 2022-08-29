@@ -70,6 +70,7 @@ const encryptFolderContents = async (mediaData, encryptExtensions, socketInstanc
 
 const convertToHLS = async (
   mediaData,
+  speed,
   socketInstance,
 ) => {
   log.info('Converting');
@@ -84,6 +85,7 @@ const convertToHLS = async (
         ...(mediaData.type === 'video' ? ['-vf', `scale=-2:${height}`] : []),
         '-hls_time', mediaData.type === 'audio' ? '15' : '7',
         ...genericConversionParams,
+        '-preset', `${speed}`,
         '-b:v', `${videoBitrate}k`,
         '-maxrate', `${maximumBitrate}k`,
         '-bufsize', `${bufferSize}k`,
@@ -91,39 +93,29 @@ const convertToHLS = async (
         `${mediaData.destination}/${height}p.m3u8`,
       ]));
 
-      videoConversion[0].stderr.on('data', (data) => {
-        log.info('child uploadProcess - 1');
-      });
+      videoConversion[0].stderr.on('data', () => {});
       videoConversion[0].on('exit', (code) => {
-        log.info(`finish child uploadProcess 1 with code ${code}`);
+        log.info(`finish child convertingProcess 1 with code ${code}`);
       });
 
-      videoConversion[1].stderr.on('data', (data) => {
-        log.info('child uploadProcess - 2');
-      });
+      videoConversion[1].stderr.on('data', () => {});
       videoConversion[1].on('exit', (code) => {
-        log.info(`finish child uploadProcess 2 with code ${code}`);
+        log.info(`finish child convertingProcess 2 with code ${code}`);
       });
 
-      videoConversion[2].stderr.on('data', (data) => {
-        log.info('child uploadProcess - 3');
-      });
+      videoConversion[2].stderr.on('data', () => {});
       videoConversion[2].on('exit', (code) => {
-        log.info(`finish child uploadProcess 3 with code ${code}`);
+        log.info(`finish child convertingProcess 3 with code ${code}`);
       });
 
-      videoConversion[3].stderr.on('data', (data) => {
-        log.info('child uploadProcess - 4');
-      });
+      videoConversion[3].stderr.on('data', () => {});
       videoConversion[3].on('exit', (code) => {
-        log.info(`finish child uploadProcess 4 with code ${code}`);
+        log.info(`finish child convertingProcess 4 with code ${code}`);
       });
 
-      videoConversion[4].stderr.on('data', (data) => {
-        log.info('child uploadProcess - 5');
-      });
+      videoConversion[4].stderr.on('data', () => {});
       videoConversion[4].on('exit', (code) => {
-        log.info(`finish child uploadProcess 5 with code ${code}`);
+        log.info(`finish child convertingProcess 5 with code ${code}`);
       });
 
       videoConversion[5].stderr.on('data', (data) => {
@@ -137,7 +129,7 @@ const convertToHLS = async (
           });
         }
       });
-      videoConversion[5].on('close', (data) => {
+      videoConversion[5].on('close', () => {
         resolve();
       });
     } catch (e) {
