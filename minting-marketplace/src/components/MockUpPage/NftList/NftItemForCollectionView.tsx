@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, memo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { gettingPrice } from './utils/gettingPrice';
@@ -6,8 +5,14 @@ import { SvgKey } from './SvgKey';
 import chainData from '../../../utils/blockchainData';
 import defaultImage from './../assets/defultUser.png';
 import ReactPlayer from 'react-player';
+import {
+  INftItemForCollectionView,
+  TParamsNftItemForCollectionView
+} from './nftList.types';
 
-const NftItemForCollectionViewComponent = ({
+const NftItemForCollectionViewComponent: React.FC<
+  INftItemForCollectionView
+> = ({
   embeddedParams,
   blockchain,
   pict,
@@ -20,11 +25,11 @@ const NftItemForCollectionViewComponent = ({
   userName,
   tokenDataLength
 }) => {
-  const params = useParams();
+  const params = useParams<TParamsNftItemForCollectionView>();
   const navigate = useNavigate();
 
-  const [playing, setPlaying] = useState(false);
-  const [isFileUrl, setIsFileUrl] = useState();
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [isFileUrl, setIsFileUrl] = useState<string | undefined>();
 
   const handlePlaying = () => {
     setPlaying((prev) => !prev);
@@ -32,10 +37,9 @@ const NftItemForCollectionViewComponent = ({
 
   const checkUrl = useCallback(() => {
     if (selectedData?.animation_url) {
-      // refactored
       const fileUrl = selectedData?.animation_url;
-      const parts = fileUrl.split('/').pop().split('.');
-      const ext = parts.length > 1 ? parts.pop() : '';
+      const parts = fileUrl.split('/').pop()?.split('.');
+      const ext = parts && parts?.length > 1 ? parts?.pop() : '';
       setIsFileUrl(ext);
     }
   }, [selectedData?.animation_url, setIsFileUrl]);
@@ -61,10 +65,12 @@ const NftItemForCollectionViewComponent = ({
 
       if (maxPrice === minPrice) {
         const samePrice = maxPrice;
-        return `${samePrice.slice(0, 4)} ${chainData[blockchain]?.symbol}`;
+        return `${samePrice.slice(0, 4)} ${
+          blockchain && chainData[blockchain]?.symbol
+        }`;
       }
       return `${minPrice.slice(0, 4)} – ${maxPrice.slice(0, 5)} ${
-        chainData[blockchain]?.symbol
+        blockchain && chainData[blockchain]?.symbol
       }`;
     }
   }
@@ -74,7 +80,9 @@ const NftItemForCollectionViewComponent = ({
       const { maxPrice, minPrice } = gettingPrice(offerPrice);
 
       if (maxPrice && minPrice) {
-        return `${minPrice} – ${maxPrice} ${chainData[blockchain]?.symbol}`;
+        return `${minPrice} – ${maxPrice} ${
+          blockchain && chainData[blockchain]?.symbol
+        }`;
       }
     }
   }
@@ -159,7 +167,6 @@ const NftItemForCollectionViewComponent = ({
           <img
             alt="thumbnail"
             src={
-              // metaDataProducts?.metadata?.image
               metadata?.image
                 ? // ? metaDataProducts?.metadata?.image
                   metadata?.image
@@ -241,7 +248,10 @@ const NftItemForCollectionViewComponent = ({
                 <div
                   className="collection-block-price"
                   style={{ alignItems: 'flex-end' }}>
-                  <img src={chainData[blockchain]?.image} alt="blockchain" />
+                  <img
+                    src={blockchain && chainData[blockchain]?.image}
+                    alt="blockchain"
+                  />
                   {checkPrice()}
                 </div>
               </div>
@@ -251,7 +261,7 @@ const NftItemForCollectionViewComponent = ({
             <div>
               <img
                 className="blockchain-img"
-                src={`${chainData[blockchain]?.image}`}
+                src={`${blockchain && chainData[blockchain]?.image}`}
                 alt=""
               />
             </div>

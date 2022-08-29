@@ -1,19 +1,12 @@
-//@ts-nocheck
 import React from 'react';
-export type TSvgKeyProps = {
-  color: string;
-  bgColor: string;
-  mobile?: boolean;
-};
-export const SvgKey = ({ color, bgColor, mobile }: TSvgKeyProps) => (
+import { ISvgKey } from './nftList.types';
+
+export const SvgKey: React.FC<ISvgKey> = ({ color, bgColor, mobile }) => (
   <div
+    className="svg-key-style"
     style={{
       width: mobile ? '24px' : '32px',
       height: mobile ? '24px' : '32px',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'absolute',
       top: mobile ? '8px' : '24px',
       right: mobile ? '8px' : '24px',
       background: bgColor,

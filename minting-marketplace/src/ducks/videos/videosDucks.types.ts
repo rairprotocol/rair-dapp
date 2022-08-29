@@ -13,7 +13,7 @@ export type TVideosInitialState = {
   error: string | null;
   refresh: boolean;
   loading: boolean;
-  totalNumberVideo: number | null;
+  totalNumberVideo: number | undefined;
 };
 
 export type TUpdataVideoParams = {

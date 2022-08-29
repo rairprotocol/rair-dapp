@@ -1,4 +1,6 @@
 //@ts-nocheck
+//unused-component
+
 import styled from 'styled-components';
 
 export const ItemRankContainer = styled.div`

@@ -1,4 +1,5 @@
 //@ts-nocheck
+//unused-component
 import React, { useEffect, useState, useRef } from 'react';
 import { ItemRankContainer, SelectBoxItemRank } from './ItemRankItems';
 import './styles.css';

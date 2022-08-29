@@ -161,7 +161,7 @@ export type TSwitchEthereumChainArgs = {
 
 export interface ISearchPanel {
   primaryColor: ColorChoice;
-  textColor: string;
+  textColor: string | undefined;
   tabIndex: number;
   setTabIndex: (index: number) => void;
 }

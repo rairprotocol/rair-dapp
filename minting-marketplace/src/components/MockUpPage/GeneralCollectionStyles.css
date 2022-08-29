@@ -120,6 +120,13 @@
   width: 1200px;
 }
 
+.svg-key-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+
 .container-search .form-control.input-styled {
   width: 100%;
   height: 48px;

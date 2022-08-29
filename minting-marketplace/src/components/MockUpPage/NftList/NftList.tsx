@@ -1,19 +1,19 @@
-//@ts-nocheck
 import React, { memo } from 'react';
-// import Skeleton from "@mui/material/Skeleton";
 import { NftItem } from './NftItem';
 import { useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
+import { RootState } from '../../../ducks';
+import { INftListComponent } from './nftList.types';
+import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
 
-const NftListComponent = ({
+const NftListComponent: React.FC<INftListComponent> = ({
   data,
-  // dataAll,
-  primaryColor,
-  textColor,
   titleSearch,
   sortItem
 }) => {
-  const { loading } = useSelector((store) => store.nftDataStore);
+  const loading = useSelector<RootState, boolean>(
+    (store) => store.nftDataStore.loading
+  );
 
   if (loading) {
     return (
@@ -25,6 +25,7 @@ const NftListComponent = ({
         />
       </div>
     );
+    //unused-snippet
     // return (
     //   <div className="loader-wrapper">
     //     <div className="load" />
@@ -38,7 +39,7 @@ const NftListComponent = ({
   const filteredData =
     data &&
     data
-      .filter((item) => {
+      .filter((item: TNftDataItem) => {
         return item.name.toLowerCase().includes(titleSearch.toLowerCase());
       })
       .sort((a, b) => {
@@ -69,11 +70,8 @@ const NftListComponent = ({
                     contractData.id + '-' + contractData.productId + index
                   }`}
                   pict={contractData.cover ? contractData.cover : defaultImg}
-                  allData={contractData}
                   contractName={contractData.contract}
-                  price={contractData.offerData.map((p) => p.price)}
-                  primaryColor={primaryColor}
-                  textColor={textColor}
+                  price={contractData.offerData.map((p) => String(p.price))}
                   blockchain={contractData.blockchain}
                   collectionName={contractData.name}
                   ownerCollectionUser={contractData.user}
@@ -91,6 +89,7 @@ const NftListComponent = ({
             <h2>No items to display</h2>
           </div>
         )
+        //unused-snippet
         // Array.from(new Array(10)).map((item, index) => {
         //   return (
         //     <Skeleton
@@ -111,5 +110,4 @@ const NftListComponent = ({
   );
 };
 
-// export default NftList
 export const NftList = memo(NftListComponent);

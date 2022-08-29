@@ -1,9 +1,12 @@
-//@ts-nocheck
 import React, { useState, useCallback, useEffect, memo } from 'react';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { useNavigate } from 'react-router-dom';
 import { SvgKey } from './SvgKey';
-import { TNftItemResponse, TUserResponse } from '../../../axios.responseTypes';
+import {
+  TNftItemResponse,
+  TTokenData,
+  TUserResponse
+} from '../../../axios.responseTypes';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import { gettingPrice } from './utils/gettingPrice';
 import chainData from '../../../utils/blockchainData';
@@ -11,8 +14,10 @@ import ReactPlayer from 'react-player';
 import defaultAvatar from './../../UserProfileSettings/images/defaultUserPictures.png';
 import axios from 'axios';
 import { utils } from 'ethers';
+import { INftItemComponent } from './nftList.types';
+import { UserType } from '../../../ducks/users/users.types';
 
-const NftItemComponent = ({
+const NftItemComponent: React.FC<INftItemComponent> = ({
   blockchain,
   price,
   pict,
@@ -22,12 +27,16 @@ const NftItemComponent = ({
   ownerCollectionUser
 }) => {
   const navigate = useNavigate();
-  const [metaDataProducts, setMetaDataProducts] = useStateIfMounted();
-  const [accountData, setAccountData] = useStateIfMounted(null);
-  const [playing, setPlaying] = useState(false);
-  const [isFileUrl, setIsFileUrl] = useState();
+  const [metaDataProducts, setMetaDataProducts] = useStateIfMounted<
+    TTokenData | undefined
+  >(undefined);
+  const [accountData, setAccountData] = useStateIfMounted<UserType | null>(
+    null
+  );
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [isFileUrl, setIsFileUrl] = useState<string>();
 
-  const { width /*height*/ } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const { maxPrice, minPrice } = gettingPrice(price);
 
@@ -38,9 +47,11 @@ const NftItemComponent = ({
       metaDataProducts.metadata &&
       metaDataProducts.metadata.animation_url
     ) {
-      const fileUrl = metaDataProducts.metadata?.animation_url;
-      const parts = fileUrl.split('/').pop().split('.');
-      const ext = parts.length > 1 ? parts.pop() : '';
+      const fileUrl: string | undefined =
+        metaDataProducts.metadata?.animation_url;
+      const parts: string[] | undefined = fileUrl?.split('/').pop()?.split('.');
+      const ext: string | undefined =
+        parts && parts?.length > 1 ? parts?.pop() : '';
       setIsFileUrl(ext);
     }
   }, [metaDataProducts, setIsFileUrl]);
@@ -87,7 +98,7 @@ const NftItemComponent = ({
     if (maxPrice === minPrice) {
       const samePrice = maxPrice;
       return `${samePrice ? samePrice : samePrice} ${
-        chainData[blockchain]?.symbol
+        blockchain && chainData[blockchain]?.symbol
       }`;
     }
     return (
@@ -96,7 +107,7 @@ const NftItemComponent = ({
           {`${minPrice} – ${maxPrice}`}
         </div>
         <div className="description description-price description-price-unlockables-page">
-          {`${chainData[blockchain]?.symbol}`}
+          {`${blockchain && chainData[blockchain]?.symbol}`}
         </div>
       </div>
     );
@@ -105,14 +116,18 @@ const NftItemComponent = ({
   function ifPriseSame() {
     if (minPrice === maxPrice) {
       if (minPrice.length > 5) {
-        return `${minPrice.slice(0, 5)} ${chainData[blockchain]?.symbol}`;
+        return `${minPrice.slice(0, 5)} ${
+          blockchain && chainData[blockchain]?.symbol
+        }`;
       }
-      return `${minPrice} ${chainData[blockchain]?.symbol}`;
+      return `${minPrice} ${blockchain && chainData[blockchain]?.symbol}`;
     } else if (maxPrice && minPrice) {
       if (minPrice.length > 5) {
-        return `${minPrice.slice(0, 5) + '+'} ${chainData[blockchain]?.symbol}`;
+        return `${minPrice.slice(0, 5) + '+'} ${
+          blockchain && chainData[blockchain]?.symbol
+        }`;
       }
-      return `${minPrice + '+'} ${chainData[blockchain]?.symbol}`;
+      return `${minPrice + '+'} ${blockchain && chainData[blockchain]?.symbol}`;
     }
   }
   useEffect(() => {
@@ -284,7 +299,7 @@ const NftItemComponent = ({
                   <div className="collection-block-price">
                     <img
                       className="blockchain-img"
-                      src={`${chainData[blockchain]?.image}`}
+                      src={`${blockchain && chainData[blockchain]?.image}`}
                       alt="blockchain-img"
                     />
                     <span className="description">
@@ -297,7 +312,7 @@ const NftItemComponent = ({
             <div onClick={RedirectToMockUp} className="description-big">
               <img
                 className="blockchain-img"
-                src={`${chainData[blockchain]?.image}`}
+                src={`${blockchain && chainData[blockchain]?.image}`}
                 alt="blockchain-img"
               />
               <span className="description description-price">

@@ -1,6 +1,6 @@
-//@ts-nocheck
 import React from 'react';
-export const SvgLock = ({ color }) => (
+import { ISvgLock } from './nftList.types';
+export const SvgLock: React.FC<ISvgLock> = ({ color }) => (
   <div
     style={{
       width: '32px',

@@ -1,4 +1,5 @@
 //@ts-nocheck
+//unused-component
 import React, { useEffect, useState } from 'react';
 import { SelectBoxContainer } from './ItemRankItems';
 

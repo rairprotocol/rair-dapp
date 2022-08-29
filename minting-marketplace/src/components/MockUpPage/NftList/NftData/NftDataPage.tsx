@@ -1,4 +1,5 @@
 //@ts-nocheck
+//unused-component
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -8,7 +9,6 @@ import {
   AccordionItemButton,
   AccordionItemPanel
 } from 'react-accessible-accordion';
-// import chainData from "../../../../utils/blockchainData";
 import Carousel from 'react-multi-carousel';
 import ItemRank from '../../SelectBox/ItemRank';
 import SelectBox from '../../SelectBox/SelectBox';
@@ -522,6 +522,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                     token={p.token}
                     handleClickToken={handleClickToken}
                     setSelectedToken={setSelectedToken}
+                    selectedToken={selectedToken}
                   />
                 ))}
               </Carousel>

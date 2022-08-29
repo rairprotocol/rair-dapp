@@ -1,15 +1,16 @@
 //@ts-nocheck
+//unused-component
 import React, { useState } from 'react';
-// import { useParams } from "react-router";
+import { IOfferItemComponent } from './nftList.types';
 
-export default function OfferItem({
+const OfferItem: React.FC<IOfferItemComponent> = ({
   handleClickToken,
   token,
   index,
   metadata,
   setSelectedToken,
   selectedToken
-}) {
+}) => {
   const [selectedItem, setSelectedItem] = useState(selectedToken);
 
   const select = () => {
@@ -55,4 +56,6 @@ export default function OfferItem({
       />
     </button>
   );
-}
+};
+
+export default OfferItem;

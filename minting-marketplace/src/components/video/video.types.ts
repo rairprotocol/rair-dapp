@@ -34,8 +34,8 @@ export interface IVideoList {
   titleSearch?: string;
   responseLabel?: string;
   endpoint?: string;
-  loading: boolean;
-  videos: MediaListResponseType | null;
+  loading?: boolean;
+  videos?: MediaListResponseType | null;
 }
 
 export type MediaListResponseType = {

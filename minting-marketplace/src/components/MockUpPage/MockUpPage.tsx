@@ -1,14 +1,15 @@
-//@ts-nocheck
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setShowSidebarTrue } from '../../ducks/metadata/actions';
 
 import SearchPanel from './SearchPanel';
-// import MetaTags from '../SeoTags/MetaTags';
 // import RairFavicon from './assets/rair_favicon.ico';
-// import setDocumentTitle from "../../utils/setTitle";
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { IMockUpPage } from './SelectBox/selectBox.types';
 
-const MockUpPage = ({ tabIndex, setTabIndex }) => {
+const MockUpPage: React.FC<IMockUpPage> = ({ tabIndex, setTabIndex }) => {
+  //unused-snippet
   // const seoInformation = {
   //   title: 'Rair Tech Marketplace',
   //   contentName: 'author',
@@ -20,10 +21,11 @@ const MockUpPage = ({ tabIndex, setTabIndex }) => {
   // };
 
   const dispatch = useDispatch();
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
-  useEffect(() => {
-    // setDocumentTitle(`All`);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
+  useEffect(() => {
     dispatch(setShowSidebarTrue());
   }, [dispatch]);
 

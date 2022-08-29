@@ -19,7 +19,7 @@ export interface InitialNftDataStateType {
 }
 
 export type TNftDataItem = {
-  blockchain: string;
+  blockchain: BlockchainType | undefined;
   collectionIndexInContract: string;
   contract: string;
   copiesProduct: number;

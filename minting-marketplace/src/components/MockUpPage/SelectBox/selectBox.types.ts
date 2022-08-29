@@ -46,3 +46,7 @@ export interface ISelectNumber {
   product: string;
   contract: string;
 }
+export interface IMockUpPage {
+  tabIndex: number;
+  setTabIndex: (index: number) => void;
+}

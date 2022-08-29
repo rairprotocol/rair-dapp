@@ -40,7 +40,7 @@ const SearchPanel: React.FC<ISearchPanel> = ({
     RootState,
     InitialNftDataStateType
   >((store) => store.nftDataStore);
-  const totalNumberVideo = useSelector<RootState, number | null>(
+  const totalNumberVideo = useSelector<RootState, number | undefined>(
     (store) => store.videosStore.totalNumberVideo
   );
 
@@ -241,8 +241,6 @@ const SearchPanel: React.FC<ISearchPanel> = ({
           <NftList
             sortItem={sortItem}
             titleSearch={titleSearch}
-            primaryColor={primaryColor}
-            textColor={textColor}
             data={nftList}
           />
           <PaginationBox
