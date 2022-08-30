@@ -15,7 +15,7 @@ const MinterMarketplace = () => {
       aux.contracts.forEach((contract) => {
         contract.products.offers.forEach((offer) => {
           for (const field of Object.keys(offer)) {
-            if (offer[field]['$numberDecimal']) {
+            if (offer && offer[field] && offer[field]['$numberDecimal']) {
               offer[field] = BigNumber.from(
                 offer[field]['$numberDecimal']
               ).toString();
