@@ -52,6 +52,76 @@ services:
       - 5000:5000
     networks:
       - rair-local
+  blockchain-networks:
+    container_name: 'blockchain-networks'
+    build:
+      context: blockchain-networks-service/
+      dockerfile: Dockerfile
+    environment:
+      PRODUCTION: "true"
+      MONGO_URI: ${db}
+      MONGO_URI_LOCAL: mongodb://${localdbuser}:${localdbpass}@mongo:27017/rair-db?authSource=${localdbuser}
+      MONGO_DB_HOSTNAME: ${BLOCKCHAIN_NETWORK_mongo_db_hostname}
+      MONGO_DB_NAME: ${mongo_db_name}
+      GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: ${blockchain_network_generate_mongo_uri_with_vault_credential_util}
+      USE_X509_CERT_AUTH: ${VAULT_BLOCKCHAIN_NETWORK_use_x509_cert_auth}
+      PINATA_KEY: ${pinata_key}
+      PINATA_SECRET: ${pinata_secret}
+      PINATA_GATEWAY: ${pinata_gateway}
+      INFURA_PROJECT_ID: ${infura_project_id}
+      DEFAULT_PRODUCT_COVER: ${default_product_cover}
+      BINANCE_TESTNET_FACTORY_ADDRESS: ${binance_testnet_factory_addres}
+      BINANCE_TESTNET_MINTER_ADDRESS: ${binance_testnet_minter_address}
+      BINANCE_MAINNET_FACTORY_ADDRESS: ${binance_mainnet_factory_addres}
+      BINANCE_MAINNET_MINTER_ADDRESS: ${binance_mainnet_minter_address}
+      GOERLI_FACTORY_ADDRESS: ${goerli_factory_addres}
+      GOERLI_MINTER_ADDRESS: ${goerli_minter_address}
+      MATIC_MUMBAI_FACTORY_ADDRESS: ${matic_mumbai_factory_addres}
+      MATIC_MUMBAI_MINTER_ADDRESS: ${matic_mumbai_minter_address}
+      MATIC_MAINNET_FACTORY_ADDRESS: ${matic_mainnet_factory_addres}
+      MATIC_MAINNET_MINTER_ADDRESS: ${matic_mainnet_minter_address}
+      ETHEREUM_MAINNET_FACTORY_ADDRESS: ${ethereum_mainnet_factory_addres}
+      ETHEREUM_MAINNET_MINTER_ADDRESS: ${ethereum_mainnet_minter_address}
+      BINANCE_RESALE_ADDRESS: ${binance_resale_address}
+      GOERLI_RESALE_ADDRESS: ${goerli_resale_address}
+      MATIC_MUMBAI_RESALE_ADDRESS: ${matic_mumbai_resale_address}
+      SYNC_CONTRACT_REPEAT_EVERY: ${sync_contract_repeat_every}
+      SYNC_CONTRACT_TASK_INTERVAL: ${sync_contract_task_interval}
+      IPFS_SERVICE: ${ipfs_service}
+      IPFS_GATEWAY: ${ipfs_gateway}
+      IPFS_API: ${ipfs_api}
+      MONGO_LOG_COLLECTION: ${mongo_log_collection}
+      LOG_LEVEL: ${log_level}
+      VAULT_URL: ${VAULT_URL}
+      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID}
+      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID}
+      TEST_BSCSCAN_GATEWAY: ${test_bscscan_gateway}
+      TEST_POLYGONSCAN_GATEWAY: ${test_polygonscan_gateway}
+      TEST_ETHERSCAN_GATEWAY: ${test_etherscan_gateway}
+      POLYGONSCAN_GATEWAY: ${polygonscan_gateway}
+      ETHERSCAN_GATEWAY: ${etherscan_gateway}
+      BSCSCAN_GATEWAY: ${bscscan_gateway}
+      MORALIS_SERVER_TEST: ${moralis_server_test}
+      MORALIS_SERVER_MAIN: ${moralis_server_main}
+      MORALIS_API_KEY_TEST: ${moralis_api_key_test}
+      MORALIS_API_KEY_MAIN: ${moralis_api_key_main}
+      MORALIS_MASTER_KEY_TEST: ${moralis_master_key_test}
+      MORALIS_MASTER_KEY_MAIN: ${moralis_master_key_main}
+      SENTRY_DSN: ${sentry_dsn}
+      BASE_RAIRNODE_URL: ${base_rairnode_url}
+      MATIC_TESTNET_RPC: ${matic_testnet_rpc}
+      MATIC_MAINNET_RPC: ${matic_mainnet_rpc}
+      BINANCE_MAINNET_RPC: ${binance_mainnet_rpc}
+      BINANCE_TESTNET_RPC: ${binance_testnet_rpc}
+      ETHEREUM_MAINNET_RPC: ${ethereum_mainnet_rpc}
+      ETHEREUM_TESTNET_GOERLI_RPC: ${ethereum_testnet_goerli_rpc}
+    ports:
+      - 5001:5001
+    depends_on:
+      - rairnode
+    networks:
+      - rair-local
+  
   media-service:
     container_name: 'media-service'
     build:

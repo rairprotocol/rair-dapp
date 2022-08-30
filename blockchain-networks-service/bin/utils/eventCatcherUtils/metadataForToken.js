@@ -3,6 +3,7 @@
 const {
   handleDuplicateKey,
   findContractFromAddress,
+  log
 } = require('./eventsCommonUtils');
 
 module.exports = async (
@@ -29,7 +30,11 @@ module.exports = async (
   let fetchedMetadata = {};
   // New URI can come empty, it means it got unset
   if (newURI !== '') {
-    fetchedMetadata = await (await fetch(newURI)).json();
+    try {
+      fetchedMetadata = await (await fetch(newURI)).json();
+    } catch (err) {
+      log.error(`Error fetching '${newURI}': ${err}`)
+    }
   }
   const foundToken = await dbModels.MintedToken.findOne({
     contract: contract._id,

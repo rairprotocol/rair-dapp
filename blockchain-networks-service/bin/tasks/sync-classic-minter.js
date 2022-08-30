@@ -3,6 +3,7 @@ const log = require('../utils/logger')(module);
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
 const { processLog, wasteTime, getTransactionHistory } = require('../utils/logUtils.js');
+const { BigNumber } = require('ethers');
 
 const lockLifetime = 1000 * 60 * 5;
 
@@ -66,7 +67,7 @@ module.exports = (context) => {
 			*/
 
 			// Keep track of the latest block number processed
-			let lastSuccessfullBlock = version.number;
+			let lastSuccessfullBlock = BigNumber.from(version.number);
 			let transactionArray = [];
 			
 			let processedResult = await getTransactionHistory(networkData.minterAddress, network, version.number);
@@ -98,12 +99,17 @@ module.exports = (context) => {
 							// Otherwise, push it into the insertion list
 							transactionArray.push(event.transactionHash);
 							// And create a DB entry right away
-							await (new context.db.Transaction({
-								_id: event.transactionHash,
-								toAddress: networkData.minterAddress,
-								processed: true,
-								blockchainId: network
-							})).save();
+							try {
+								await (new context.db.Transaction({
+									_id: event.transactionHash,
+									toAddress: networkData.minterAddress,
+									processed: true,
+									blockchainId: network
+								})).save();
+							} catch (error) {
+								log.error(`There was an issue saving transaction ${event.transactionHash} for contract ${networkData.minterAddress}: ${error}`);
+								continue;
+							}
 						}
 
 						try {
@@ -130,8 +136,8 @@ module.exports = (context) => {
 						}
 
 						// Update the latest successfull block
-						if (lastSuccessfullBlock <= event.blockNumber) {
-							lastSuccessfullBlock = event.blockNumber;
+						if (lastSuccessfullBlock.lte(event.blockNumber)) {
+							lastSuccessfullBlock = BigNumber.from(event.blockNumber);
 						}
 					}
 				}
@@ -149,8 +155,8 @@ module.exports = (context) => {
 			// But validate that the last parsed block is different from the current one,
 			// Otherwise it will keep increasing and could ignore events
 			version.running = false;
-			if (version.number < lastSuccessfullBlock) {
-				version.number = lastSuccessfullBlock + 1;
+			if (lastSuccessfullBlock.gte(version.number)) {
+				version.number = lastSuccessfullBlock.add(1).toString();
 			}
 			await version.save();
 

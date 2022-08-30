@@ -62,7 +62,7 @@ const contractAddresses: ContractAddressesType = {
   },
   '0x89': {
     // Matic Mainnet
-    factory: '0x701931758cB94F9AA684e13f710F5e4B85Bb94F2',
+    factory: '0x74278C22BfB1DCcc3d42F8b71280C25691E8C157',
     erc777: '0x0Ce668D271b8016a785Bf146e58739F432300B12',
     minterMarketplace: '0x781F15a23506CF28539EA057e3f33008E6339E49',
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&

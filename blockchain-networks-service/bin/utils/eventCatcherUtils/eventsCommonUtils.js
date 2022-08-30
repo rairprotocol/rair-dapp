@@ -108,20 +108,27 @@ module.exports = {
     collectionWideFlag,
   ) => {
     let tokensToUpdate = [];
-    try {
-      await fetch(newURI);
-    } catch (err) {
-      log.error('Was unable to fetch URI', err);
-      throw err;
+    if (newURI !== "") {
+      try {
+        await fetch(newURI);
+      } catch (err) {
+        log.error('Was unable to fetch URI', err);
+        throw err;
+      }
+    } else {
+      log.info("Updating metadata with a blank string (This means the metadata got unset)");
     }
     if (tokens.length > 0) {
       if (appendTokenIndexFlag && newURI) {
         tokensToUpdate = tokens.reduce(async (data, token) => {
-          const fetchedMetadata = collectionWideFlag
-            ? await (await fetch(`${newURI}/${token.token}`)).json()
-            : await (
-              await fetch(`${newURI}/${token.uniqueIndexInContract}`)
-            ).json();
+          let fetchedMetadata = "";
+          if (newURI !== "") {
+            fetchedMetadata = collectionWideFlag
+              ? await (await fetch(`${newURI}/${token.token}`)).json()
+              : await (
+                await fetch(`${newURI}/${token.uniqueIndexInContract}`)
+              ).json();
+          }
           token.metadata = fetchedMetadata;
           token.isMetadataPinned = true;
           token.isURIStoredToBlockchain = true;
@@ -129,7 +136,10 @@ module.exports = {
           return data;
         }, []);
       } else {
-        const fetchedMetadata = await (await fetch(newURI)).json();
+        let fetchedMetadata = ""
+        if (newURI !== "") {
+          fetchedMetadata = await (await fetch(newURI)).json();
+        }
         tokensToUpdate = tokens.reduce((data, token) => {
           token.metadata = fetchedMetadata;
           token.isMetadataPinned = true;

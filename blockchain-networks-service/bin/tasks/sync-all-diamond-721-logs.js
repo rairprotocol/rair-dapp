@@ -102,7 +102,7 @@ module.exports = (context) => {
 						processed: true,
 						caught: true
 					});
-					if (filteredTransaction && (filteredTransaction.caught || filteredTransaction.toAddress.includes(contract))) {
+					if (filteredTransaction && filteredTransaction.caught && filteredTransaction.toAddress.includes(contract)) {
 						log.info(`Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${contract}`);
 					} else {
 						if (event && event.operation) {
@@ -114,12 +114,17 @@ module.exports = (context) => {
 								// Otherwise, push it into the insertion list
 								transactionArray.push(event.transactionHash);
 								// And create a DB entry right away
-								await (new context.db.Transaction({
-									_id: event.transactionHash,
-									toAddress: contract.contractAddress,
-									processed: true,
-									blockchainId: network
-								})).save();
+								try {
+									await (new context.db.Transaction({
+										_id: event.transactionHash,
+										toAddress: contract.contractAddress,
+										processed: true,
+										blockchainId: network
+									})).save();
+								} catch (error) {
+									log.error(`There was an issue saving transaction ${event.transactionHash} for contract ${contract.contractAddress}: ${error}`);
+									continue;
+								}
 							}
 
 							// Try to do the insertions

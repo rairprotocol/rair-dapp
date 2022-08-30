@@ -3,6 +3,7 @@ const log = require('../utils/logger')(module);
 const { logAgendaActionStart } = require('../utils/agenda_action_logger');
 const { AgendaTaskEnum } = require('../enums/agenda-task');
 const { wasteTime, getTransactionHistory } = require('../utils/logUtils.js');
+const { BigNumber } = require('ethers');
 
 const lockLifetime = 1000 * 60 * 5;
 
@@ -69,7 +70,7 @@ module.exports = (context) => {
 			});
 
 			// Keep track of the latest block number processed
-			let lastSuccessfullBlock = version.number;
+			let lastSuccessfullBlock = BigNumber.from(version.number);
 			let transactionArray = [];
 
 			let processedResult = await getTransactionHistory(networkData.resaleMarketplaceAddress, network, version.number);
@@ -81,24 +82,29 @@ module.exports = (context) => {
 					continue;
 				}
 				let [filteredTransaction] = processedTransactions.filter(item => item._id === event.transactionHash);
-				if (filteredTransaction && filteredTransaction.caught && filteredTransaction.toAddress.includes(networkData.diamondMarketplaceAddress)) {
-					log.info(`[${network}] Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${networkData.diamondMarketplaceAddress}`);
+				if (filteredTransaction && filteredTransaction.caught && filteredTransaction.toAddress.includes(networkData.resaleMarketplaceAddress)) {
+					log.info(`[${network}] Ignorning log ${event.transactionHash} because the transaction is already processed for contract ${networkData.resaleMarketplaceAddress}`);
 				} else {
 					if (event && event.operation) {
 						// If the log is already on DB, update the address list
 						if (filteredTransaction) {
-							filteredTransaction.toAddress.push(networkData.diamondMarketplaceAddress);
+							filteredTransaction.toAddress.push(networkData.resaleMarketplaceAddress);
 							await filteredTransaction.save();
 						} else if (!transactionArray.includes(event.transactionHash)) {
 							// Otherwise, push it into the insertion list
 							transactionArray.push(event.transactionHash);
 							// And create a DB entry right away
-							await (new context.db.Transaction({
-								_id: event.transactionHash,
-								toAddress: networkData.diamondMarketplaceAddress,
-								processed: true,
-								blockchainId: network
-							})).save();
+							try {
+								await (new context.db.Transaction({
+									_id: event.transactionHash,
+									toAddress: networkData.resaleMarketplaceAddress,
+									processed: true,
+									blockchainId: network
+								})).save();
+							} catch (error) {
+								log.error(`There was an issue saving transaction ${event.transactionHash} for contract ${networkData.diamondMarketplaceAddress}: ${error}`);
+								continue;
+							}
 						}
 
 						try {
@@ -108,7 +114,7 @@ module.exports = (context) => {
 								// Make up a transaction data, the logs don't include it
 								{
 									transactionHash: event.transactionHash,
-									to: networkData.diamondMarketplaceAddress,
+									to: networkData.resaleMarketplaceAddress,
 									blockNumber: event.blockNumber
 								},
 								true,
@@ -126,8 +132,8 @@ module.exports = (context) => {
 					}
 				}
 				// Update the latest successfull block
-				if (lastSuccessfullBlock <= event.blockNumber) {
-					lastSuccessfullBlock = event.blockNumber;
+				if (lastSuccessfullBlock.lte(event.blockNumber)) {
+					lastSuccessfullBlock = BigNumber.from(event.blockNumber);
 				}
 			}
 			for await (let sig of Object.keys(insertions)) {
@@ -143,8 +149,8 @@ module.exports = (context) => {
 			// But validate that the last parsed block is different from the current one,
 			// Otherwise it will keep increasing and could ignore events
 			version.running = false;
-			if (version.number < lastSuccessfullBlock) {
-				version.number = lastSuccessfullBlock + 1;
+			if (lastSuccessfullBlock.gte(version.number)) {
+				version.number = lastSuccessfullBlock.add(1).toString();
 			}
 			await version.save();
 

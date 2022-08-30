@@ -183,15 +183,21 @@ const getTransactionHistory = async (address, chain, from_block = 0) => {
 	let {result, ...logData} = await Moralis.Web3API.native.getLogsByAddress(options);
 	let completeListOfTransactions = result;
 
-	while (logData?.next) {
-		let nextPage = await logData.next();
-		completeListOfTransactions.push(...nextPage.result);
-		logData = nextPage;
-		log.info(`Querying page #${nextPage.page} for ${chain}:${address}`);
+	while (completeListOfTransactions.length < logData.total) {
+		// Need to get more pages
+		//console.log("More pages required");
+		if (logData?.next) {
+			logData = await logData.next();
+			log.info(`Querying page #${logData.page} for ${chain}:${address} - Using Next`);
+		} else if (logData?.cursor) {
+			options.cursor = logData.cursor;
+			logData = await Moralis.Web3API.native.getLogsByAddress(options);
+			log.info(`Querying page #${logData.page} for ${chain}:${address} - Using Cursor`);
+		}
+		completeListOfTransactions.push(...logData.result);
 	}
-	
 	log.info(`[${chain}] Found ${logData.total} events on ${address} since block #${from_block}`);
-	
+	//console.log(logData.total,'on',address,'actually',completeListOfTransactions.length);
 	return completeListOfTransactions.reverse().map(processLog);
 }
 
