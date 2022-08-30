@@ -34,7 +34,7 @@ const insertTokens = async (tokens, contract, dbModels) => {
     }
     if (metadata && metadata.image && metadata.name && token.owner_of) {
       // Handle images from IPFS (Use the moralis default gateway)
-      metadata.image = metadata.image.replace('ipfs://', 'https://gateway.moralisipfs.com/ipfs/');
+      metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
       if (!metadata.description) {
         metadata.description = 'No description available';
       }
