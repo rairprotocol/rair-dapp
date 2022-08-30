@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useCallback, useEffect, Suspense } from 'react';
 import './Menu.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +6,7 @@ import {
   Nav,
   RightSideMenu
 } from './NavigationItems/NavigationItems';
-import { useHistory, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MobileProfileInfo from './MenuComponents/MobileProfileInfo';
 import MobileListMenu from './MenuComponents/MobileListMenu';
 import { getTokenComplete } from '../../ducks/auth/actions';
@@ -22,35 +21,53 @@ import {
   UserIconMobile
 } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { SvgUserIcon } from '../UserProfileSettings/SettingsIcons/SettingsIcons';
-import { utils } from 'ethers';
+import { ethers, utils } from 'ethers';
 import MobileChoiseNav from './MenuComponents/MobileChoiseNav';
+import { RootState } from '../../ducks';
+import { ColorStoreType } from '../../ducks/colors/colorStore.types';
+import { UserType } from '../../ducks/users/users.types';
 
-const MenuNavigation = ({
+interface IMenuNavigation {
+  connectUserData: () => void;
+  startedLogin: boolean;
+  renderBtnConnect: boolean;
+  loginDone: boolean;
+  setLoginDone: (arg: boolean) => void;
+  currentUserAddress: string | undefined;
+  programmaticProvider:
+    | ethers.Wallet
+    | ethers.providers.JsonRpcSigner
+    | undefined;
+  showAlert: boolean | null | undefined;
+  selectedChain: string | null | undefined;
+}
+
+const MenuNavigation: React.FC<IMenuNavigation> = ({
   connectUserData,
   startedLogin,
   renderBtnConnect,
   loginDone,
   setLoginDone,
   currentUserAddress,
-  adminRights,
-  creatorViewsDisabled,
   programmaticProvider,
   showAlert,
   selectedChain
 }) => {
-  const [click, setClick] = useState(false);
-  const [userData, setUserData] = useState(null);
-  const [openProfile, setOpenProfile] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [click, setClick] = useState<boolean>(false);
+  const [userData, setUserData] = useState<UserType | null>(null);
+  const [openProfile, setOpenProfile] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [activeSearch, setActiveSearch] = useState(false);
-  const [messageAlert, setMessageAlert] = useState(null);
+  const [messageAlert, setMessageAlert] = useState<string | null>(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
-  const handleMessageAlert = (pageNav) => {
+  const handleMessageAlert = (pageNav: string) => {
     setMessageAlert(pageNav);
   };
 
@@ -58,7 +75,7 @@ const MenuNavigation = ({
     setActiveSearch((prev) => !prev);
   };
 
-  const toggleMenu = (otherPage) => {
+  const toggleMenu = (otherPage?: string | undefined) => {
     if (otherPage === 'nav') {
       setClick(true);
       if (!click) {
@@ -99,15 +116,15 @@ const MenuNavigation = ({
         .get<TUserResponse>(`/api/users/${currentUserAddress}`)
         .then((res) => {
           setUserData(null);
-          setLoading(true);
+          // setLoading(true);
           return res.data;
         });
       if (result.success) {
-        setLoading(false);
+        // setLoading(false);
         setUserData(result.user);
       }
     }
-  }, [currentUserAddress, setUserData, setLoading]);
+  }, [currentUserAddress, setUserData]);
 
   const onScrollClick = useCallback(() => {
     if (!click) {
@@ -136,33 +153,21 @@ const MenuNavigation = ({
           handleMessageAlert={handleMessageAlert}
           activeSearch={activeSearch}
           handleActiveSearch={handleActiveSearch}
-          userData={userData}
         />
         {openProfile ? (
           <Suspense fallback={<h1>Loading profile...</h1>}>
             <MobileProfileInfo
-              setUserData={setUserData}
               primaryColor={primaryColor}
               click={click}
               toggleOpenProfile={toggleOpenProfile}
               userData={userData}
-              currentUserAddress={currentUserAddress}
-              loading={loading}
-              toggleMenu={toggleMenu}
             />
           </Suspense>
         ) : (
           <MobileListMenu
-            creatorViewsDisabled={creatorViewsDisabled}
-            adminRights={adminRights}
             primaryColor={primaryColor}
             click={click}
-            renderBtnConnect={renderBtnConnect}
-            loginDone={loginDone}
-            startedLogin={startedLogin}
-            connectUserData={connectUserData}
             toggleMenu={toggleMenu}
-            toggleOpenProfile={toggleOpenProfile}
             logout={logout}
             activeSearch={activeSearch}
             messageAlert={messageAlert}

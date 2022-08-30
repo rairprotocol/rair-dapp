@@ -1,7 +1,20 @@
-//@ts-nocheck
 import styled from 'styled-components';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
 
-export const SocialBox = styled.div`
+interface ISocialBox {
+  width?: string;
+  height?: string;
+  primaryColor?: ColorChoice;
+  marginRight?: string;
+  marginLeft?: string;
+  hoverColor?: string;
+  activeSearch?: boolean;
+  messageAlert?: string | null;
+  avatar?: string | null | undefined;
+  onClick?: any;
+}
+
+export const SocialBox = styled.div<ISocialBox>`
   width: ${(props) => (props.width ? props.width : '32px')};
   height: ${(props) => (props.height ? props.height : '32px')};
   border-radius: 10.5px;
@@ -59,7 +72,7 @@ export const SocialBox = styled.div`
   }
 `;
 
-export const SocialBoxSearch = styled.div`
+export const SocialBoxSearch = styled.div<ISocialBox>`
   width: 40px;
   height: 40px;
   border-radius: 10.5px;
@@ -95,7 +108,7 @@ export const SocialBoxSearch = styled.div`
   }
 `;
 
-export const UserIconMobile = styled.div`
+export const UserIconMobile = styled.div<ISocialBox>`
   width: 40px;
   height: 40px;
   border-radius: 10.5px;
@@ -118,7 +131,7 @@ export const UserIconMobile = styled.div`
   margin-left: ${(props) => props.marginLeft};
 `;
 
-export const SocialMenuMobile = styled.div`
+export const SocialMenuMobile = styled.div<ISocialBox>`
   cursor: pointer;
   background: ${(props) =>
     props.primaryColor === 'rhyno' ? '#fff' : '#424242'};

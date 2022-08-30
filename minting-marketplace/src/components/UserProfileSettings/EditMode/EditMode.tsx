@@ -9,7 +9,6 @@ import { getUserStart } from '../../../ducks/users/actions';
 const EditMode = ({
   handlePopUp,
   imagePreviewUrl,
-  defaultPictures,
   cutUserAddress,
   editMode,
   onChangeEditMode,

@@ -1,8 +1,10 @@
-//@ts-nocheck
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { RootState } from '../../../ducks';
 import { setColorScheme } from '../../../ducks/colors/actions';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
 import {
   SocialBox,
   SocialBoxSearch,
@@ -11,25 +13,38 @@ import {
 import { BellIcon, SunIcon } from '../../Header/DiscordIcon';
 import { SvgUserIcon } from '../../UserProfileSettings/SettingsIcons/SettingsIcons';
 
-const MobileChoiseNav = ({
+interface IMobileChoiseNav {
+  click: boolean;
+  messageAlert: string | null;
+  currentUserAddress: string | undefined;
+  handleMessageAlert: (arg: string) => void;
+  activeSearch: boolean;
+  handleActiveSearch: () => void;
+}
+
+const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
   click,
   messageAlert,
   currentUserAddress,
   handleMessageAlert,
   activeSearch,
-  handleActiveSearch,
-  userData
+  handleActiveSearch
 }) => {
-  const { primaryColor, headerLogoMobile } = useSelector(
-    (store) => store.colorStore
-  );
+  const { primaryColor, headerLogoMobile } = useSelector<
+    RootState,
+    ColorStoreType
+  >((store) => store.colorStore);
   const dispatch = useDispatch();
+  const { userRd } = useSelector<RootState, TUsersInitialState>(
+    (state) => state.userStore
+  );
 
   return (
     <div className="burder-menu-logo">
       {click ? (
         <div className="social-media">
-          {messageAlert && messageAlert === 'profile' ? (
+          {(messageAlert && messageAlert === 'profile') ||
+          messageAlert === 'profileEdit' ? (
             <div
               style={{
                 display: 'flex',
@@ -37,11 +52,11 @@ const MobileChoiseNav = ({
               }}>
               <UserIconMobile
                 onClick={() => handleMessageAlert('profile')}
-                avatar={userData && userData.avatar}
+                avatar={userRd && userRd.avatar}
                 marginRight={'16px'}
                 messageAlert={messageAlert}
                 primaryColor={primaryColor}>
-                {userData && !userData.avatar && (
+                {userRd && !userRd.avatar && (
                   <SvgUserIcon width={'22.5px'} height={'22.5px'} />
                 )}
               </UserIconMobile>
@@ -49,11 +64,15 @@ const MobileChoiseNav = ({
                 style={{
                   marginLeft: 10
                 }}>
-                {userData && userData.nickName.length > 13
-                  ? userData.nickName.slice(0, 5) +
-                    '...' +
-                    userData.nickName.slice(length - 4)
-                  : userData.nickName}
+                {userRd && (
+                  <>
+                    {userRd.nickName && userRd.nickName.length > 13
+                      ? userRd.nickName.slice(0, 5) +
+                        '...' +
+                        userRd.nickName.slice(userRd.nickName.length - 4)
+                      : userRd.nickName}
+                  </>
+                )}
               </div>
             </div>
           ) : messageAlert === 'notification' ? (

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   List,
@@ -9,18 +8,24 @@ import {
 import MobileEditProfile from './MobileEditProfile';
 import CircularProgress from '@mui/material/CircularProgress';
 import defaultPictures from './../../UserProfileSettings/images/defaultUserPictures.png';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { UserType } from '../../../ducks/users/users.types';
 
-const MobileProfileInfo = ({
+interface IMobileProfileInfo {
+  primaryColor: ColorChoice;
+  click: boolean;
+  toggleOpenProfile: () => void;
+  userData: UserType | null;
+}
+
+const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
   primaryColor,
   click,
   toggleOpenProfile,
-  userData,
-  currentUserAddress,
-  // loading,
-  setUserData
+  userData
 }) => {
   const [profileData, setProfileData] = useState(userData);
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   const toggleEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
@@ -64,14 +69,7 @@ const MobileProfileInfo = ({
   return (
     <List primaryColor={primaryColor} click={click}>
       {editMode ? (
-        <MobileEditProfile
-          editMode={true}
-          userData={profileData}
-          toggleEditMode={toggleEditMode}
-          setUserData={setUserData}
-          currentUserAddress={currentUserAddress}
-          defaultPictures={defaultPictures}
-        />
+        <MobileEditProfile />
       ) : (
         <ListProfileItem>
           <ProfileButtonBack onClick={toggleOpenProfile}>

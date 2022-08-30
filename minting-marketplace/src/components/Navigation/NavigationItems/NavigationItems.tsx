@@ -1,7 +1,17 @@
-//@ts-nocheck
+import { FieldErrors } from 'react-hook-form';
 import styled from 'styled-components';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
-export const MenuMobileWrapper = styled.div`
+interface IMenuMobileWrapper {
+  showAlert?: boolean | undefined | null;
+  selectedChain?: string | null;
+  primaryColor?: ColorChoice;
+  editMode?: boolean;
+  click?: boolean;
+  errors?: FieldErrors | undefined;
+}
+
+export const MenuMobileWrapper = styled.div<IMenuMobileWrapper>`
   z-index: 50;
   position: fixed;
   padding: 0;
@@ -9,7 +19,7 @@ export const MenuMobileWrapper = styled.div`
     props.showAlert && props.selectedChain ? '50px' : ''};
 `;
 
-export const Nav = styled.nav`
+export const Nav = styled.nav<IMenuMobileWrapper>`
   background: ${(props) =>
     props.primaryColor === 'rhyno' ? '#fff' : '#383637'};
   display: flex;
@@ -23,7 +33,7 @@ export const Nav = styled.nav`
     props.showAlert && props.selectedChain ? '50px' : ''};
 `;
 
-export const ListItem = styled.li`
+export const ListItem = styled.li<IMenuMobileWrapper>`
   font-size: 18px;
   display: flex;
   align-items: center;
@@ -58,7 +68,7 @@ export const TitleEditProfile = styled.h4`
   }
 `;
 
-export const List = styled.ul`
+export const List = styled.ul<IMenuMobileWrapper>`
   background: ${(props) =>
     props.primaryColor === 'rhyno' ? '#fff' : 'rgb(56, 54, 55)'};
   overflow: ${(props) => props.click && 'hidden'};
@@ -104,7 +114,7 @@ export const ListProfileLoading = styled.div`
   }
 `;
 
-export const ListEditProfileMode = styled.div`
+export const ListEditProfileMode = styled.div<IMenuMobileWrapper>`
   padding: 20px;
   height: 100%;
   background: ${(props) =>
@@ -220,7 +230,7 @@ export const RightSideMenu = styled.div`
   }
 `;
 
-export const SearchInputMobile = styled.div`
+export const SearchInputMobile = styled.div<IMenuMobileWrapper>`
   position: relative;
   width: 90vw;
   border-radius: 12px;
@@ -251,11 +261,101 @@ export const SearchInputMobile = styled.div`
 `;
 
 export const BackBtnMobileNav = styled.div`
-  width: 80vw;
+  // width: 80vw;
   text-align: left;
   cursor: pointer;
+  position: absolute;
+  left: 30px;
 
   i {
     color: #bd6bae;
+  }
+`;
+
+export const MobileEditFields = styled.div``;
+
+export const MobileProfileField = styled.div<IMenuMobileWrapper>`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+
+  label {
+    text-align: left;
+    color: ${(props) => (props.errors && props.errors ? '#F63419' : '#a7a6a6')};
+    margin-bottom: 4px;
+  }
+
+  input {
+    border: 1px solid
+      ${(props) => (props.errors && props.errors ? '#F63419' : '#19a7f6')};
+    background: none;
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+    padding: 8px 12px;
+    border-radius: 12px;
+    width: 80vw;
+  }
+
+  input::placeholder {
+    color: #a7a6a6;
+    border-radius: 12px;
+  }
+
+  button {
+    padding: 8px;
+    width: 101px;
+
+    background: var(--royal-ice);
+    border-radius: 12px;
+    color: white;
+    border: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  button:hover {
+    background: var(--royal-ice-hover);
+  }
+
+  button:active {
+    background: var(--royal-ice-click);
+  }
+`;
+
+export const MobileProfileBtnWrapper = styled.div<IMenuMobileWrapper>`
+  display: flex;
+  justify-content: space-between;
+
+  button:last-child {
+    background: none;
+    border: 1px solid #19a7f6;
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
+  }
+
+  button:last-child:hover {
+    background: var(--royal-ice-hover);
+  }
+
+  button:last-child:active {
+    background: var(--royal-ice-click);
+  }
+`;
+
+export const MobileStandartFields = styled.div`
+  p {
+    color: #a7a6a6;
+    margin: 0 0 4px 0;
+    text-align: left;
+  }
+
+  .block-simulated-input {
+    border: 1px solid #19a7f6;
+    background: none;
+    color: #a7a6a6;
+    padding: 8px 12px;
+    border-radius: 12px;
+    text-align: left;
+    width: 80vw;
   }
 `;

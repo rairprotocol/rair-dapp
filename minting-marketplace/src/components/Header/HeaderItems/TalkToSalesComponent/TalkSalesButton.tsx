@@ -1,7 +1,9 @@
 import styled from 'styled-components';
+import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 
 interface ITalkSalesButton {
   currentUserAddress: string | undefined;
+  primaryColor?: ColorChoice;
 }
 
 export const TalkSalesButton = styled.button<ITalkSalesButton>`
@@ -25,6 +27,7 @@ export const TalkSalesButton = styled.button<ITalkSalesButton>`
     padding: 0;
     font-weight: 500;
     font-size: 15px;
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : 'white')};
   }
 
   &:hover {

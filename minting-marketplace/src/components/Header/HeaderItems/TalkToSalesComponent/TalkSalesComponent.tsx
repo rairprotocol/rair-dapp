@@ -47,6 +47,7 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
 
   return (
     <TalkSalesButton
+      primaryColor={primaryColor}
       className={classes ? classes : ''}
       currentUserAddress={currentUserAddress}
       onClick={openInquiriesPage}>

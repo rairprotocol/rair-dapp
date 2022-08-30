@@ -19,10 +19,8 @@ import EditMode from './EditMode/EditMode';
 
 const PopUpSettings = ({
   currentUserAddress,
-  // adminAccess,
   setLoginDone,
   primaryColor,
-  userData,
   showAlert,
   selectedChain
 }) => {

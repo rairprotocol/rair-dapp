@@ -1,8 +1,6 @@
 //@ts-nocheck
-import { connect } from 'http2';
 import React from 'react';
 import ButtonHelp from '../../PurchaseChecklist/ButtonHelp';
-// import DocumentIcon from "../../../../images/documentIcon.svg";
 import './AuthorCard.css';
 import AuthorCardButton from './AuthorCardButton';
 

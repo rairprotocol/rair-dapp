@@ -1,164 +1,217 @@
 //@ts-nocheck
 import React, { useCallback, useState } from 'react';
-import { ImageUpload } from '../../UserProfileSettings/UploadProfilePicture/ImageUpload/ImageUpload';
 import { useForm } from 'react-hook-form';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
 import {
-  BlockAvatar,
-  ButtonEdit,
-  ErrorInput,
-  InputChange,
-  LabelForm,
-  ListEditProfileMode,
-  ProfileButtonBack,
-  TitleEditProfile
+  MobileEditFields,
+  MobileProfileBtnWrapper,
+  MobileProfileField,
+  MobileStandartFields
 } from '../NavigationItems/NavigationItems';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { TUserResponse } from '../../../axios.responseTypes';
+import { RootState } from '../../../ducks';
+import { TUsersInitialState } from '../../../ducks/users/users.types';
+import { useDispatch, useSelector } from 'react-redux';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
-const MobileEditProfile = ({
-  toggleEditMode,
-  userData,
-  editMode,
-  currentUserAddress,
-  setUserData,
-  defaultPictures
-}) => {
+const MobileEditProfile: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      email: userData.email
-    }
-  });
-  const avatarFile = userData.avatar ? userData.avatar : defaultPictures;
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(avatarFile);
-  const [file, setFile] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(false);
-
-  const photoUpload = useCallback(
-    (e) => {
-      e.preventDefault();
-      const reader = new FileReader();
-      const fileF = e.target.files[0];
-      reader.onloadend = () => {
-        setImagePreviewUrl(reader.result);
-        setFile(fileF);
-      };
-      reader.readAsDataURL(fileF);
-    },
-    [setImagePreviewUrl, setFile]
+    formState: { errors },
+    getValues
+  } = useForm();
+  const { userRd } = useSelector<RootState, TUsersInitialState>(
+    (state) => state.userStore
   );
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+
+  const { primaryColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
+
+  const dispatch = useDispatch();
+
+  const [editMode, setEditMode] = useState<boolean>(false);
+
+  const onChangeEditMode = () => {
+    setEditMode((prev) => !prev);
+  };
+
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors }
+  // } = useForm({
+  //   defaultValues: {
+  //     email: userData.email
+  //   }
+  // });
+  // const avatarFile = userData.avatar ? userData.avatar : defaultPictures;
+  // const [imagePreviewUrl, setImagePreviewUrl] = useState(avatarFile);
+  // const [file, setFile] = useState('');
+  // const [loading, setLoading] = useState(false);
+  // const [status, setStatus] = useState(false);
+
+  // const photoUpload = useCallback(
+  //   (e) => {
+  //     e.preventDefault();
+  //     const reader = new FileReader();
+  //     const fileF = e.target.files[0];
+  //     reader.onloadend = () => {
+  //       setImagePreviewUrl(reader.result);
+  //       setFile(fileF);
+  //     };
+  //     reader.readAsDataURL(fileF);
+  //   },
+  //   [setImagePreviewUrl, setFile]
+  // );
 
   const updateProfile = useCallback(
     async (data) => {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append('nickName', data.name);
-      formData.append('email', data.email);
-      if (file) {
-        formData.append('file', file);
-      }
-      try {
-        const profileEditResponse = await axios.post<TUserResponse>(
-          `/api/users/${currentUserAddress.toLowerCase()}`,
-          formData,
-          {
-            headers: {
-              Accept: 'multipart/form-data',
-              'X-rair-token': localStorage.token
+      if (
+        userRd?.nickName.replace(/@/g, '') !== getValues('username') ||
+        userRd?.email !== getValues('useremail')
+      ) {
+        const formData = new FormData();
+        formData.append('nickName', data.username);
+        formData.append('email', data.useremail);
+        // if (file) {
+        //   formData.append('file', file);
+        // }
+        try {
+          const profileEditResponse = await axios.post<TUserResponse>(
+            `/api/users/${currentUserAddress.toLowerCase()}`,
+            formData,
+            {
+              headers: {
+                Accept: 'multipart/form-data',
+                'X-rair-token': localStorage.token
+              }
             }
+          );
+          const { user, success } = profileEditResponse.data;
+          if (success && user) {
+            // if (user.avatar) {
+            //   setImagePreviewUrl(user.avatar);
+            // }
+            // setLoading(false);
+            onChangeEditMode();
+            dispatch({
+              type: 'GET_USER_START',
+              publicAddress: currentUserAddress
+            });
           }
-        );
-        const { user, success } = profileEditResponse.data;
-        if (success && user) {
-          setUserData(user);
+        } catch (err) {
+          const error = err as AxiosError;
 
-          if (user.avatar) {
-            setImagePreviewUrl(user.avatar);
+          if (
+            error.response?.data.message ===
+            `Plan executor error during findAndModify :: caused by :: E11000 duplicate key error collection: rair-db.User index: nickName_1 dup key: { nickName: "@${getValues(
+              'username'
+            )}" }`
+          ) {
+            Swal.fire(
+              'Info',
+              `The name ${getValues('username')} already exists`,
+              'question'
+            );
+          } else if (
+            error.response?.data.message ===
+            // eslint-disable-next-line no-useless-escape, prettier/prettier
+            '"email" must be a valid email'
+          ) {
+            Swal.fire('Info', `Wrong email format`, 'question');
+          } else {
+            Swal.fire(
+              'Info',
+              `The ${error.response?.data.message} `,
+              'question'
+            );
           }
-          setLoading(false);
-          setStatus(true);
         }
-      } catch (err) {
-        const error = err as AxiosError;
-        Swal.fire('Info', `${error.message}`, 'question');
+      } else {
+        Swal.fire('Info', `You need to change something`, 'question');
       }
     },
-    [file, currentUserAddress, setImagePreviewUrl, setLoading, setUserData]
+    [currentUserAddress, getValues, dispatch, userRd]
   );
 
   const onSubmit = (data) => {
-    updateProfile(data);
+    if (currentUserAddress) {
+      updateProfile(data);
+    }
   };
 
   return (
-    <ListEditProfileMode editMode={editMode} primaryColor={123}>
-      <ProfileButtonBack onClick={toggleEditMode}>
-        <i className="fas fa-chevron-left"></i>
-      </ProfileButtonBack>
-      <TitleEditProfile>Edit Profile</TitleEditProfile>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <BlockAvatar>
-          <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
-        </BlockAvatar>
-        <div>
-          <LabelForm>Name:</LabelForm>
-          <InputChange
-            id="name"
-            {...register('name', {
-              required: true,
-              maxLength: 20,
-              minLength: 2
-            })}
-            type="text"
-          />
-          {errors.name && errors.name.type === 'required' && (
-            <ErrorInput>This field is required!</ErrorInput>
+    <MobileEditFields>
+      {userRd && (
+        <>
+          {editMode ? (
+            <form id="form1" onSubmit={handleSubmit(onSubmit)}>
+              <MobileProfileField
+                primaryColor={primaryColor}
+                errors={errors.username}>
+                <label htmlFor="">Name</label>
+                <input
+                  defaultValue={userRd.nickName.replace(/@/g, '')}
+                  {...register('username', { required: true })}
+                  type="text"
+                  placeholder="Enter your name"
+                />
+              </MobileProfileField>
+              <MobileProfileField
+                primaryColor={primaryColor}
+                errors={errors.useremail}>
+                <label htmlFor="">E-mail</label>
+                <input
+                  defaultValue={userRd.email}
+                  {...register('useremail', { required: true })}
+                  type="text"
+                  placeholder="Enter your e-mail"
+                />
+              </MobileProfileField>
+              <MobileProfileField>
+                <MobileProfileBtnWrapper primaryColor={primaryColor}>
+                  <button type="submit">Save</button>
+                  <button onClick={onChangeEditMode} type="button">
+                    Exit
+                  </button>
+                </MobileProfileBtnWrapper>
+              </MobileProfileField>
+            </form>
+          ) : (
+            <MobileStandartFields>
+              <MobileProfileField>
+                <p>Name</p>
+                <div className="block-simulated-input">
+                  {userRd.nickName.length > 13
+                    ? userRd.nickName.slice(0, 5) +
+                      '....' +
+                      userRd.nickName.slice(userRd.nickName.length - 4)
+                    : userRd.nickName}
+                </div>
+              </MobileProfileField>
+              <MobileProfileField>
+                <p>E-mail</p>
+                <div className="block-simulated-input">
+                  {userRd.email ? userRd.email : 'email@example.com'}
+                </div>
+              </MobileProfileField>
+              <MobileProfileField>
+                <button onClick={onChangeEditMode} type="button">
+                  Edit
+                </button>
+              </MobileProfileField>
+            </MobileStandartFields>
           )}
-          {errors.name && errors.name.type === 'maxLength' && (
-            <ErrorInput>Name should be less 13 letters!</ErrorInput>
-          )}
-          {errors.name && errors.name.type === 'minLength' && (
-            <ErrorInput>Name should be more 2 letters!</ErrorInput>
-          )}
-          <LabelForm>Email:</LabelForm>
-          <InputChange
-            id="email"
-            {...register('email', { required: true })}
-            type="email"
-          />
-          {errors.email && errors.email.type === 'required' && (
-            <ErrorInput>This field is required!</ErrorInput>
-          )}
-        </div>
-
-        {status ? (
-          <Alert
-            style={{ display: 'flex', justifyContent: 'center' }}
-            variant="standard"
-            severity="success">
-            {"Success! Your profile's updated"}
-          </Alert>
-        ) : (
-          <>
-            {loading ? (
-              <>
-                <CircularProgress />
-              </>
-            ) : (
-              <ButtonEdit type="submit">Save changes</ButtonEdit>
-            )}
-          </>
-        )}
-      </form>
-    </ListEditProfileMode>
+        </>
+      )}
+    </MobileEditFields>
   );
 };
 

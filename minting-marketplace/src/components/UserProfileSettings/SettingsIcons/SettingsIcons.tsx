@@ -1,4 +1,16 @@
-export const SvgUserIcon = ({ primaryColor, width, height }) => {
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+
+interface ISvgUserIcon {
+  primaryColor?: ColorChoice;
+  width?: string;
+  height?: string;
+}
+
+export const SvgUserIcon: React.FC<ISvgUserIcon> = ({
+  primaryColor,
+  width,
+  height
+}) => {
   return (
     <svg
       width={width ? width : '16'}

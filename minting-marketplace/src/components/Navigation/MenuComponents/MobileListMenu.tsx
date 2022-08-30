@@ -1,6 +1,5 @@
-//@ts-nocheck
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { List, SearchInputMobile } from './../NavigationItems/NavigationItems';
 import {
   CommunityBlock,
@@ -13,8 +12,21 @@ import {
 } from '../../Header/DiscordIcon';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import MobileNavigationList from './MobileNavigationList';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { RootState } from '../../../ducks';
 
-const MobileListMenu = ({
+interface IMobileListMenu {
+  click: boolean;
+  messageAlert: string | null;
+  activeSearch: boolean;
+  primaryColor: ColorChoice;
+  logout: () => void;
+  setMessageAlert;
+  toggleMenu: (otherPage?: string | undefined) => void;
+}
+
+const MobileListMenu: React.FC<IMobileListMenu> = ({
   primaryColor,
   click,
   logout,
@@ -23,7 +35,16 @@ const MobileListMenu = ({
   messageAlert,
   setMessageAlert
 }) => {
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentUserAddress) {
+      dispatch({ type: 'GET_USER_START', publicAddress: currentUserAddress });
+    }
+  }, [currentUserAddress, dispatch]);
 
   return (
     <List primaryColor={primaryColor} click={click}>

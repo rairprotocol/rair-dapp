@@ -5,7 +5,6 @@ import { IStreamsAbout } from '../aboutPage.types';
 import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-import VideoBg_2 from './../../assets/video-bg_2.png';
 import axios from 'axios';
 import { TNftFilesResponse } from '../../../../axios.responseTypes';
 

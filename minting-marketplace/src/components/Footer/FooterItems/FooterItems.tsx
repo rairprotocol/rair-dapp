@@ -3,10 +3,11 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 type TFooterMainStyled = {
   primaryColor: ColorChoice;
+  messageAlert?: string;
 };
 
-export const FooterMain = styled.footer`
-  background: ${(props: TFooterMainStyled) =>
+export const FooterMain = styled.footer<TFooterMainStyled>`
+  background: ${(props) =>
     props.primaryColor === 'rhyno' ? '#fff' : 'rgba(56, 54, 55, 0.9);'};
   padding: 40px 120px 25px 120px;
 
@@ -22,15 +23,14 @@ export const FooterMain = styled.footer`
   }
 `;
 
-export const FooterWrapper = styled.div`
+export const FooterWrapper = styled.div<TFooterMainStyled>`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 
   padding-bottom: 52px;
   border-bottom: 1px solid
-    ${(props: TFooterMainStyled) =>
-      props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959'};
+    ${(props) => (props.primaryColor === 'rhyno' ? '#E5E5E5' : '#595959')};
 
   @media screen and (max-width: 768px) {
     flex-direction: column-reverse;
@@ -58,10 +58,9 @@ export const FooterImage = styled.div`
 
 export const FooterBoxJoin = styled.div``;
 
-export const CommunityBlock = styled.div`
+export const CommunityBlock = styled.div<TFooterMainStyled>`
   .community-text {
-    color: ${(props: TFooterMainStyled) =>
-      props.primaryColor === 'rhyno' ? '#7A797A' : '#fff'};
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
   }
 
   @media screen and (max-width: 768px) {
@@ -96,16 +95,34 @@ export const NavFooter = styled.nav`
   }
 `;
 
-export const NavFooterBox = styled.ul`
+export const NavFooterBox = styled.ul<TFooterMainStyled>`
   list-type: none;
 
   &.nav-header-box-mobile {
     li {
+      cursor: pointer;
+      transition: all 0.3s ease;
       font-size: 16px;
-
+      color: ${(props) =>
+        props.messageAlert && props.messageAlert === 'profileEdit'
+          ? '#19a7f6'
+          : ''};
       i {
         margin-right: 10px;
       }
+
+      i.fal.fa-edit {
+        margin-left: 10px;
+        font-size: 22px;
+        color: ${(props) =>
+          props.messageAlert && props.messageAlert === 'profileEdit'
+            ? '#19a7f6'
+            : ''};
+      }
+    }
+
+    li:hover {
+      color: #19a7f6;
     }
   }
 
@@ -113,7 +130,7 @@ export const NavFooterBox = styled.ul`
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 14px;
-    color: ${(props: TFooterMainStyled) =>
+    color: ${(props) =>
       props.primaryColor === 'rhyno' ? '#725BDB' : '#AA9DE9'};
   }
 
@@ -138,7 +155,7 @@ export const NavFooterBox = styled.ul`
 
 export const ListFooter = styled.ul``;
 
-export const FooterTextRairTech = styled.div`
+export const FooterTextRairTech = styled.div<TFooterMainStyled>`
   padding-top: 25px;
 
   ul {
@@ -148,7 +165,7 @@ export const FooterTextRairTech = styled.div`
     li {
       font-size: 14px;
       line-height: 28px;
-      color: ${(props: TFooterMainStyled) =>
+      color: ${(props) =>
         props.primaryColor === 'rhyno' ? '#7A797A' : '#A7A6A6'};
     }
     li:nth-child(2) {
@@ -169,12 +186,11 @@ export const FooterTextRairTech = styled.div`
   }
 `;
 
-export const FooterEmailBlock = styled.div`
+export const FooterEmailBlock = styled.div<TFooterMainStyled>`
   h4 {
     font-size: 16px;
     line-height: 20px;
-    color: ${(props: TFooterMainStyled) =>
-      props.primaryColor === 'rhyno' ? '#7A797A' : '#fff'};
+    color: ${(props) => (props.primaryColor === 'rhyno' ? '#7A797A' : '#fff')};
   }
 
   .footer-send-email {

@@ -9,14 +9,14 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import warning1 from '../images/warning_1.png';
 import warning2 from '../images/warning_2.png';
 
-import MetaMaskIcon from '../images/metamask_logo.png';
+// import MetaMaskIcon from '../images/metamask_logo.png';
 import DiscordIcon from '../images/discord-icon.png';
 import SimDogs0 from '../images/SimDogs0.png';
 import SimDogs1 from '../images/SimDogs1.png';
 import SimDogs2 from '../images/SimDogs2.png';
 import SimDogs3 from '../images/SimDogs3.png';
 import SimDogs4 from '../images/SimDogs4.png';
-import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
+// import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 
 import pic1 from '../SplashPageTemplate/TimelineGeneric/img/pic1.png';
 import pic2 from '../SplashPageTemplate/TimelineGeneric/img/pic2.png';
@@ -30,7 +30,6 @@ import pic4 from '../images/greyman.png';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-import { NftDataCommonLink } from '../../MockUpPage/NftList/NftData/NftDataCommonLink';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
 
 import Swal from 'sweetalert2';
@@ -40,10 +39,9 @@ import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/Vi
 
 import axios from 'axios';
 import MetaTags from '../../SeoTags/MetaTags';
-import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
-import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
+// import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -61,16 +59,6 @@ const WarningModal = () => {
         <h3>Good safe to sign</h3>
         <img src={warning2} alt="Good safe to sign" />
       </div>
-    </div>
-  );
-};
-
-const NumberedCircle = ({ index, primaryColor }) => {
-  return (
-    <div
-      className="numbered-circle"
-      style={{ color: `${primaryColor === 'rhyno' ? '#000000' : '#FFFFFF'}` }}>
-      {index}
     </div>
   );
 };
@@ -244,18 +232,6 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
   const customButtonBlock = <CustomButtonBlock splashData={splashData} />;
 
   const { primaryColor } = useSelector((store) => store.colorStore);
-
-  /* UTILITIES FOR MARKETPLACE DEMO */
-  const [mode, setMode] = useState('collection');
-  const [tokenId, setTokenId] = useState('0');
-
-  const embeddedParams = {
-    ...splashData.marketplaceDemoParams,
-    mode: mode,
-    setMode: setMode,
-    tokenId: tokenId,
-    setTokenId: setTokenId
-  };
 
   /* UTILITIES FOR NFT PURCHASE */
   const [openCheckList /*setOpenCheckList*/] = useState(false);

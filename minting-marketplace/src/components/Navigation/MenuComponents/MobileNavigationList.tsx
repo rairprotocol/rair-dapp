@@ -1,10 +1,21 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { NavFooter, NavFooterBox } from '../../Footer/FooterItems/FooterItems';
 import TalkSalesComponent from '../../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';
 import { BackBtnMobileNav } from '../NavigationItems/NavigationItems';
+import MobileEditProfile from './MobileEditProfile';
 
-const MobileNavigationList = ({
+interface IMobileNavigationList {
+  messageAlert: string | null;
+  setMessageAlert: (arg: string | null) => void;
+  primaryColor: ColorChoice;
+  currentUserAddress: string | undefined;
+  toggleMenu: (otherPage?: string) => void;
+  logout: () => void;
+}
+
+const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   messageAlert,
   setMessageAlert,
   primaryColor,
@@ -30,17 +41,32 @@ const MobileNavigationList = ({
           <BackBtnMobileNav onClick={() => setMessageAlert(null)}>
             <i className="fas fa-chevron-left"></i>
           </BackBtnMobileNav>
-          <li>My profile</li>
+          <li onClick={() => setMessageAlert('profileEdit')}>
+            Personal Profile <i className="fal fa-edit" />
+          </li>
           <li>My favorites</li>
-          <li onClick={toggleMenu}>
+          <li onClick={() => toggleMenu()}>
             <NavLink to="/my-items">My items</NavLink>
           </li>
+        </NavFooterBox>
+      ) : messageAlert === 'profileEdit' ? (
+        <NavFooterBox
+          className="nav-header-box-mobile"
+          primaryColor={primaryColor}
+          messageAlert={messageAlert}>
+          <BackBtnMobileNav onClick={() => setMessageAlert('profile')}>
+            <i className="fas fa-chevron-left"></i>
+          </BackBtnMobileNav>
+          <li>
+            Personal Profile <i className="fal fa-edit" />
+          </li>
+          <MobileEditProfile />
         </NavFooterBox>
       ) : (
         <NavFooterBox
           className="nav-header-box-mobile"
           primaryColor={primaryColor}>
-          <li onClick={toggleMenu}>
+          <li onClick={() => toggleMenu()}>
             <NavLink to="/about-page">About</NavLink>
           </li>
           <li>
@@ -53,7 +79,7 @@ const MobileNavigationList = ({
           </li>
           <li>
             <TalkSalesComponent
-              text={'Inquiries'}
+              text={'Talk to sales'}
               classes={'inquiries-sales'}
             />
           </li>

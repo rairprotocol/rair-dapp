@@ -38,7 +38,7 @@ const Footer = () => {
     setEmailChimp(e.target.value);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = () => {
     Swal.fire(
       'Success',
       `Thank you for sign up! Check to your email ${emailChimp}`,

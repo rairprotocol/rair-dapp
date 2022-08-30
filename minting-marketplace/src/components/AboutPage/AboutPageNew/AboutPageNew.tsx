@@ -23,14 +23,12 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import PurchaseTokenButton from '../../common/PurchaseToken';
-import MetaTags from '../../SeoTags/MetaTags';
 import { IAboutPageNew } from './aboutPage.types';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 
 const AboutPageNew: React.FC<IAboutPageNew> = ({
   connectUserData,
-  seoInformation,
   setIsSplashPage
 }) => {
   const { pathname } = useLocation();
@@ -80,7 +78,6 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
   return (
     <>
       <div className="wrapper-about-page">
-        {/* <MetaTags seoMetaTags={seoInformation} /> */}
         <div className="home-about--page">
           <MainBlock
             connectUserData={connectUserData}
