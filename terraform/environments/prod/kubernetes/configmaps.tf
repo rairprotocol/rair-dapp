@@ -2,6 +2,7 @@ locals {
   vault_url = "https://primary-prod-public-vault-19edc454.66c70199.z1.hashicorp.cloud:8200"
   MONGO_DB_NAME = "app"
   MONGO_DB_HOSTNAME = "primary-pri.uynyt.mongodb.net"
+  GCP_IMAGE_BUCKET_NAME = "rair-market-prod-rair-images"
 
   rairnode_configmap = {
     PRODUCTION: "true",
@@ -12,7 +13,7 @@ locals {
     SERVICE_HOST: "rair.market",
     DEFAULT_PRODUCT_COVER: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW",
     GCP_PROJECT_ID: "rair-market",
-    GCP_IMAGE_BUCKET_NAME: "rair_images",
+    GCP_IMAGE_BUCKET_NAME: local.GCP_IMAGE_BUCKET_NAME,
     GCP_VIDEO_BUCKET_NAME: "rair-videos",
     GCP_GATEWAY: "https://storage.googleapis.com",
     IPFS_SERVICE: "pinata",

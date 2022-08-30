@@ -1,8 +1,24 @@
-resource "google_project_iam_binding" "rair_file_manager_binding" {
-  project = var.gcp_project_id
-  role    = "roles/storage.admin"
-  members  = [
-    "serviceAccount:${google_service_account.rair_file_manager.email}"
+# Bucket admin for images bucket
+resource "google_storage_bucket_iam_binding" "image_manager_gke_binding" {
+  bucket = google_storage_bucket.rair_images.name
+  role = "roles/storage.admin"
+  members = [
+    # Rairnode
+    "serviceAccount:${google_service_account.each_gke_service_account[
+      "rairnode"
+    ].email}"
+  ]
+}
+
+# Bucket admin for rair-files bucket
+resource "google_storage_bucket_iam_binding" "file_manager_gke_binding" {
+  bucket = google_storage_bucket.rair-files.name
+  role = "roles/storage.admin"
+  members = [
+    # Rairnode
+    "serviceAccount:${google_service_account.each_gke_service_account[
+      "rairnode"
+    ].email}"
   ]
 }
 

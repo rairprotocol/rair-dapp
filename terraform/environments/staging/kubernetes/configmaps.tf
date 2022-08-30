@@ -2,6 +2,7 @@ locals {
   vault_url = "https://primary-staging-public-vault-f709a5a3.9b077395.z1.hashicorp.cloud:8200"
   mongo_db_hostname = "primary-pri.cdzdt.mongodb.net"
   mongo_db_name = "app"
+  GCP_IMAGE_BUCKET_NAME = "rair-market-staging-rair-images"
 
   rairnode_configmap = {
     PRODUCTION: "true",
@@ -12,7 +13,7 @@ locals {
     SERVICE_HOST: "staging.rair.market",
     DEFAULT_PRODUCT_COVER: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW",
     GCP_PROJECT_ID: "rair-market",
-    GCP_IMAGE_BUCKET_NAME: "rair_images",
+    GCP_IMAGE_BUCKET_NAME: local.GCP_IMAGE_BUCKET_NAME,
     GCP_VIDEO_BUCKET_NAME: "rair-videos",
     GCP_GATEWAY: "https://storage.googleapis.com",
     IPFS_SERVICE: "pinata",
@@ -93,7 +94,7 @@ locals {
     SERVICE_HOST: "dev.rair.market",
     DEFAULT_PRODUCT_COVER: "https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW",
     GCP_PROJECT_ID: "rair-market",
-    GCP_IMAGE_BUCKET_NAME: "rair_images",
+    GCP_IMAGE_BUCKET_NAME: local.GCP_IMAGE_BUCKET_NAME,
     GCP_VIDEO_BUCKET_NAME: "rair-videos",
     GCP_GATEWAY: "https://storage.googleapis.com",
     IPFS_SERVICE: "pinata",
