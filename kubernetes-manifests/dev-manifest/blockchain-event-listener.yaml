@@ -47,7 +47,7 @@ spec:
         io.kompose.service: blockchain-event-listener
     spec:
       containers:
-        - image: rairtechinc/blockchain-event-listener:514814c8043848dd794fc703145a1dd38a0eca96
+        - image: rairtechinc/blockchain-event-listener:48fd5b22ebfc9db1944d09ddb687a7fd93aa2092
           name: blockchain-event-listener
           imagePullPolicy: Always
           ports:

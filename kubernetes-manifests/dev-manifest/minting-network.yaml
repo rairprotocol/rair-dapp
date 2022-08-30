@@ -49,7 +49,7 @@ spec:
         app: minting-network
     spec:
       containers:
-        - image: rairtechinc/minting-network:0b73dc4593b23c09e13c8f730205c47024e80c71
+        - image: rairtechinc/minting-network:48fd5b22ebfc9db1944d09ddb687a7fd93aa2092
           name: minting-network
           imagePullPolicy: Always
           ports:

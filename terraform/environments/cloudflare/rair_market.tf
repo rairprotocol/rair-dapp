@@ -8,7 +8,7 @@ resource "cloudflare_record" "rair_market__coinagenda" {
 resource "cloudflare_record" "rair_market__demo" {
   zone_id = cloudflare_zone.rair_market.id
   name    = "Demo"
-  value   = "34.120.49.144"
+  value   = "34.111.190.85"
   type    = local.record_type.A
 }
 

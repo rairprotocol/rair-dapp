@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: media-service-env
+data:
+  PRODUCTION: "true"
+  PINATA_KEY: aaa581a498f99ed85279
+  GCP_PROJECT_ID: rair-market
+  GCP_IMAGE_BUCKET_NAME: rair_images
+  GCP_VIDEO_BUCKET_NAME: rair-videos
+  GCP_GATEWAY: https://storage.googleapis.com
+  IPFS_SERVICE: pinata
+  IPFS_GATEWAY: http://rairipfs:8080/ipfs
+  PINATA_GATEWAY: https://rair.mypinata.cloud/ipfs
+  MONGO_LOG_COLLECTION: Log
+  LOG_LEVEL: debug
+  MEDIA_SERVICE_PORT: "5002"
+  BASE_RAIRNODE_URL: http://rairnode:5000
+  USE_X509_CERT_AUTH: "false"
+  IPFS_API: http://rairipfs:5001
+  VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
+  VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: "32c9d603-bba7-28e1-7e23-b8741f208dd9"
+  VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: "dcb29f8c-58c4-b5a0-a0eb-63624a594291"
