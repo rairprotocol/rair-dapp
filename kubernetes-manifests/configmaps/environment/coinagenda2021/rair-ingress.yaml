@@ -5,13 +5,14 @@ metadata:
   annotations:
 #CREATE DEDICATED IP ADDRESS -- gcloud compute addresses create $IP-NAME --global
     kubernetes.io/ingress.global-static-ip-name: "coinagenda2021-ip"
-    #networking.gke.io/managed-certificates: dev-managed-cert
+    networking.gke.io/managed-certificates: dev-managed-cert
     kubernetes.io/ingress.class: "gce"
-    #networking.gke.io/v1beta1.FrontendConfig: ssl-redirect
+    networking.gke.io/v1beta1.FrontendConfig: ssl-redirect
 spec:
   rules:
 #Add the host for DNS rules
-  - http:
+  - host: coinagenda.rair.market
+    http:
       paths:
       - path: /*
         pathType: ImplementationSpecific
