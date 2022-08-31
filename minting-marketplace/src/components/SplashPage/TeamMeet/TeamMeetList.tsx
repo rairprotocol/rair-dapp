@@ -555,7 +555,7 @@ const teamCoinAgendaArray = [
     nameTeammate: 'CoinAgenda',
     imageUrl: CoinAgenda_LOGO,
     aboutTeammate: [
-      `CoinAgenda speakers and attendees are professional investors, traders, digital currency funds, founders and top entrepreneurs in the blockchain and cryptocurrency sectors.`
+      `CoinAgenda speakers and attendees are investors, traders, digital currency funds, founders, and top entrepreneurs in the blockchain and cryptocurrency sectors.`
     ],
     socials: [
       {

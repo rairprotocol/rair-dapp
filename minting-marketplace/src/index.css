@@ -10,6 +10,17 @@
     url(./fonts/webfonts/PlusJakartaSans-Bold.woff) format('woff');
 }
 
+@font-face {
+  font-family: 'Bazar';
+  src: local('Bazar'), url(./fonts/Bazar.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Charriot Deluxe';
+  src: local('Charriot Deluxe'),
+    url(./fonts/charriot_deluxe/CharriotDeluxe.ttf) format('truetype');
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
