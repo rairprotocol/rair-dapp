@@ -89,7 +89,7 @@ module.exports = (context) => {
 
 						// If the log is already on DB, update the address list
 						if (filteredTransaction) {
-							filteredTransaction.toAddress.push(contract);
+							filteredTransaction.toAddress.push(networkData.diamondFactoryAddress);
 							await filteredTransaction.save();
 						} else if (!transactionArray.includes(event.transactionHash)) {
 							// Otherwise, push it into the insertion list
