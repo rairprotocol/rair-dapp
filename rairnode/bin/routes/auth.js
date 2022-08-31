@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const { checkBalanceProduct, checkAdminTokenOwns } = require('../integrations/ethers/tokenValidation');
+const { checkBalanceProduct, checkAdminTokenOwns, checkBalanceAny } = require('../integrations/ethers/tokenValidation');
 const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
 const log = require('../utils/logger')(module);
 
@@ -133,18 +133,21 @@ module.exports = (context) => {
       ));
 
       if (ethAddress) {
-        // verify the user have needed tokens
-
-        // for unlock the file
+        // Verify the user has the tokens needed in a RAIR contract
         for await (const offer of offers) {
-          ownsTheAccessTokens.push(await checkBalanceProduct(
+          let result = contract.external ? await checkBalanceAny(
+            ethAddress,
+            contract.blockchain,
+            contract.contractAddress
+          ) : await checkBalanceProduct(
             ethAddress,
             contract.blockchain,
             contract.contractAddress,
             offer.product,
             offer.range[0],
             offer.range[1],
-          ));
+          )
+          ownsTheAccessTokens.push(result);
           if (ownsTheAccessTokens.includes(true)) {
             break;
           }

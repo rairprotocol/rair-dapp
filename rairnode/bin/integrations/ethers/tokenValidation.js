@@ -104,19 +104,17 @@ async function checkBalanceSingle(
   return false;
 }
 
-async function checkAdminTokenOwns(accountAddress) {
-  // Static RPC Providers are used because the chain ID *WILL NOT* change,
-  // doing this we save calls to the blockchain to verify Chain ID
+const checkBalanceAny = async (userAddress, chain, contractAddress) => {
   try {
     let provider = new ethers.providers.StaticJsonRpcProvider(
-      endpoints[config.admin.network]
+      endpoints[chain]
     );
     const tokenInstance = new ethers.Contract(
-      config.admin.contract,
+      contractAddress,
       RAIR_ERC721Abi,
       provider
     );
-    const result = await tokenInstance.balanceOf(accountAddress);
+    const result = await tokenInstance.balanceOf(userAddress);
     return result.gt(ethers.BigNumber.from(0));
   } catch (err) {
     log.error(`Error querying tokens for user ${accountAddress} from admin Contract.`);
@@ -125,8 +123,13 @@ async function checkAdminTokenOwns(accountAddress) {
   }
 }
 
+async function checkAdminTokenOwns(accountAddress) {
+  return await checkBalanceAny(accountAddress, config.admin.network, config.admin.contract);
+}
+
 module.exports = {
   checkBalanceProduct,
   checkBalanceSingle,
   checkAdminTokenOwns,
+  checkBalanceAny
 };
