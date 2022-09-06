@@ -1,17 +1,22 @@
-//@ts-nocheck
 import React, { useEffect, useState } from 'react';
 import NftDifferentRarity from './UnlockablesPage/NftDifferentRarity/NftDifferentRarity';
 import './NftSingleUnlockables.css';
+import {
+  INftSingleUnlockables,
+  TNftSingleUnlockablesSections,
+  TRarityType
+} from '../nftList.types';
 
-const NftSingleUnlockables = ({
+const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
   embeddedParams,
   productsFromOffer,
   setTokenDataFiltered,
   primaryColor,
   setSelectVideo
 }) => {
-  const [sections, setSections] = useState(null);
-  const [rarity, setRarity] = useState([
+  const [sections, setSections] =
+    useState<TNftSingleUnlockablesSections | null>(null);
+  const [rarity, setRarity] = useState<TRarityType>([
     'Unlock Ultra Rair',
     'Unlock Rair',
     'Unlock Common'

@@ -9,7 +9,6 @@ const SellInputButton: React.FC<ISellInputButton> = ({
   selectedToken
 }) => {
   const [inputSellValue, setInputSellValue] = useState<string>('');
-  const [sellError, setSellError] = useState<boolean>(false);
   const [isInputPriceExist, setIsInputPriceExist] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);

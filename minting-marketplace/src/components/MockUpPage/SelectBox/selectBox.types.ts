@@ -3,17 +3,17 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
 export interface IListOfTokensComponent {
   blockchain: BlockchainType | undefined;
-  contract: string;
+  contract: string | undefined;
   isOpen: boolean;
   handleIsOpen: () => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
-  onClickItem: (element: string) => void;
-  product: string;
+  onClickItem: (element: string | undefined) => void;
+  product: string | undefined;
   primaryColor: ColorChoice;
-  setSelectedToken: (tokenId: string) => void;
-  selectedToken: string;
+  setSelectedToken: (tokenId: string | undefined) => void;
+  selectedToken: string | undefined;
   setIsOpen: (isOpen: boolean) => void;
-  totalCount: number;
+  totalCount: number | undefined;
 }
 
 export interface ICurrentTokensComponent {
@@ -23,7 +23,7 @@ export interface ICurrentTokensComponent {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   setIsOpens?: (isOpens: boolean) => void;
-  selectedToken: string;
+  selectedToken: string | undefined;
   handleIsOpen: () => void;
   onClickItem: (element: string) => void;
   numberRef: React.LegacyRef<HTMLDivElement> | undefined;
@@ -39,12 +39,12 @@ export type SelectNumberItem = {
 export interface ISelectNumber {
   blockchain: BlockchainType | undefined;
   items: SelectNumberItem[];
-  handleClickToken: (tokenId: string) => Promise<void>;
-  selectedToken: string;
-  setSelectedToken: (selectedToken: string) => void;
-  totalCount: number;
-  product: string;
-  contract: string;
+  handleClickToken: (tokenId: string | undefined) => Promise<void>;
+  selectedToken: string | undefined;
+  totalCount: number | undefined;
+  product: string | undefined;
+  contract: string | undefined;
+  setSelectedToken: (tokenId: string | undefined) => void;
 }
 export interface IMockUpPage {
   tabIndex: number;

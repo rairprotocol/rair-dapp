@@ -38,11 +38,11 @@ const getNftDataError = (errorMessage: string) =>
 
 const setTokenDataStart = () =>
   ({
-    type: types.SET_SELECTED_INDEX_START
+    type: types.SET_TOKEN_DATA_START
   } as const);
 
-const setTokenData = (tokenData: TTokenData[]) =>
-  ({ type: types.SET_SELECTED_INDEX, tokenData } as const);
+const setTokenData = (tokenData: TTokenData[] | null) =>
+  ({ type: types.SET_TOKEN_DATA, tokenData } as const);
 
 export {
   getNftDataStart,

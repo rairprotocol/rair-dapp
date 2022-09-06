@@ -2,7 +2,7 @@ import { Pagination } from '@mui/material';
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../ducks';
-import { IPaginationBox } from '../NftList/nftList.types';
+import { IPaginationBox } from '../mockupPage.types';
 
 const PaginationBox: React.FC<IPaginationBox> = ({
   changePage,

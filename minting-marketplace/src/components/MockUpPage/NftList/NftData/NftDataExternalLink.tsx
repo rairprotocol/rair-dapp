@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -6,30 +5,46 @@ import Swal from 'sweetalert2';
 import NftDataPageMain from './NftDataPageMain';
 import axios, { AxiosError } from 'axios';
 import {
+  TContract,
+  TFileType,
+  TMetadataType,
   TNFTDataExternalLinkContractProduct,
   TNftFilesResponse,
+  TTokenData,
   TUserResponse
 } from '../../../../axios.responseTypes';
 import { utils } from 'ethers';
+import { RootState } from '../../../../ducks';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { UserType } from '../../../../ducks/users/users.types';
+import { TOfferType } from '../../../marketplace/marketplace.types';
+import { TNftExternalLinkType } from '../nftList.types';
 
 const NftDataExternalLink = () => {
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
-  const [data, setData] = useState();
-  const [dataForUser, setDataForUser] = useState();
-  const [offer /*setOffer*/] = useState([]);
-  const [offerPrice, setOfferPrice] = useState();
-  const [totalCount, setTotalCount] = useState();
-  const [tokenData, setTokenData] = useState([]);
-  const [selectedData, setSelectedData] = useState([]);
-  const [selectedToken, setSelectedToken] = useState();
-  const [neededBlockchain, setNeededBlockchain] = useState();
-  const [neededContract, setNeededContract] = useState();
-  const [productsFromOffer, setProductsFromOffer] = useState([]);
-  const [someUsersData, setSomeUsersData] = useState();
-  const [selectedIndexInContract, setSelectedIndexInContract] = useState();
-  // const [/*selectedContract*/, setSelectedContract] = useState();
+  const [, /*data*/ setData] = useState<TNftExternalLinkType>();
+  const [dataForUser, setDataForUser] = useState<TContract>();
+  const [offer /*setOffer*/] = useState<TOfferType[]>([]);
+  const [offerPrice, setOfferPrice] = useState<string[]>();
+  const [totalCount, setTotalCount] = useState<number>();
+  const [tokenData, setTokenData] = useState<TTokenData[]>([]);
+  const [selectedData, setSelectedData] = useState<TMetadataType>();
+  const [selectedToken, setSelectedToken] = useState<string>();
+  const [neededBlockchain, setNeededBlockchain] = useState<
+    BlockchainType | undefined
+  >();
+  const [neededContract, setNeededContract] = useState<string>();
+  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
+  const [someUsersData, setSomeUsersData] = useState<UserType | null>(null);
+  const [selectedIndexInContract, setSelectedIndexInContract] =
+    useState<string>();
 
   const navigate = useNavigate();
   const params = useParams();
@@ -47,7 +62,6 @@ const NftDataExternalLink = () => {
           setDataForUser(result.contract);
           setNeededContract(result.contract.contractAddress);
           setNeededBlockchain(result.contract.blockchain);
-          // setSelectedContract(response.result.contract.products.contract);
           setSelectedIndexInContract(
             result.contract.products.collectionIndexInContract
           );
@@ -55,11 +69,11 @@ const NftDataExternalLink = () => {
           setTokenData(result.tokens);
 
           if (result.tokens.length >= Number(token)) {
-            setSelectedData(result?.tokens[token]?.metadata);
+            setSelectedData(token && result?.tokens[token]?.metadata);
           }
 
           setSelectedToken(token);
-          setOfferPrice(result.contract.products.offers.map((p) => p.price));
+          setOfferPrice(result.contract.products.offers?.map((p) => p.price));
         }
       } catch (err) {
         const error = err as AxiosError;
@@ -77,18 +91,19 @@ const NftDataExternalLink = () => {
     }
   }, [neededContract, selectedIndexInContract, neededBlockchain]);
 
-  function onSelect(id) {
+  //unused-snippet
+  function onSelect(id: string) {
     tokenData.forEach((p) => {
       if (p._id === id) {
         setSelectedData(p.metadata);
       }
     });
   }
-  const handleClickToken = async (token) => {
+  const handleClickToken = async (token: string | undefined) => {
     navigate(
       `/tokens/${neededBlockchain}/${neededContract}/${product}/${token}`
     );
-    setSelectedData(tokenData[token].metadata);
+    token && setSelectedData(tokenData[token].metadata);
     setSelectedToken(token);
   };
 
@@ -114,12 +129,9 @@ const NftDataExternalLink = () => {
       blockchain={neededBlockchain}
       contract={neededContract}
       currentUser={currentUserAddress}
-      data={data}
       handleClickToken={handleClickToken}
-      onSelect={onSelect}
       offerPrice={offerPrice}
       offerDataInfo={offer}
-      tokenData={tokenData}
       totalCount={totalCount}
       textColor={textColor}
       selectedData={selectedData}

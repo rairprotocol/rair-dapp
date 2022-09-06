@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { IStreamsAbout } from '../aboutPage.types';
@@ -6,12 +5,12 @@ import { RootState } from '../../../../ducks';
 import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import axios from 'axios';
-import { TNftFilesResponse } from '../../../../axios.responseTypes';
+import { TFileType, TNftFilesResponse } from '../../../../axios.responseTypes';
 
 const StreamsAbout: React.FC<IStreamsAbout> = ({ purchaseButton }) => {
   const whatSplashPage = 'about-page';
-  const [allVideos, setAllVideos] = useState([]);
-  const [selectVideo, setSelectVideo] = useState();
+  const [allVideos, setAllVideos] = useState<TFileType[]>([]);
+  const [selectVideo, setSelectVideo] = useState<TFileType>();
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );

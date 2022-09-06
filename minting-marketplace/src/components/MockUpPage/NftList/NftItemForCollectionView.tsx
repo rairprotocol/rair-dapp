@@ -8,7 +8,7 @@ import ReactPlayer from 'react-player';
 import {
   INftItemForCollectionView,
   TParamsNftItemForCollectionView
-} from './nftList.types';
+} from '../mockupPage.types';
 
 const NftItemForCollectionViewComponent: React.FC<
   INftItemForCollectionView
@@ -60,7 +60,7 @@ const NftItemForCollectionViewComponent: React.FC<
       };
 
   function checkPrice() {
-    if (offerPrice.length > 0) {
+    if (offerPrice && offerPrice.length > 0) {
       const { maxPrice, minPrice } = gettingPrice(offerPrice);
 
       if (maxPrice === minPrice) {
@@ -76,7 +76,7 @@ const NftItemForCollectionViewComponent: React.FC<
   }
 
   function fullPrice() {
-    if (offerPrice.length > 0) {
+    if (offerPrice && offerPrice.length > 0) {
       const { maxPrice, minPrice } = gettingPrice(offerPrice);
 
       if (maxPrice && minPrice) {
@@ -89,7 +89,7 @@ const NftItemForCollectionViewComponent: React.FC<
 
   let className = 'col-12 text-start video-wrapper nft-item-collection';
 
-  if (tokenDataLength < 4) {
+  if (tokenDataLength && tokenDataLength < 4) {
     className += ' standartSize';
   }
 
@@ -228,9 +228,9 @@ const NftItemForCollectionViewComponent: React.FC<
                                 someUsersData.nickName.length - 4
                               )
                             : someUsersData.nickName
-                          : userName.slice(0, 5) +
+                          : userName?.slice(0, 5) +
                             '....' +
-                            userName.slice(userName.length - 4)}
+                            userName?.slice(userName.length - 4)}
                       </h5>
                     </div>
                   ) : (

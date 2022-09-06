@@ -4,9 +4,10 @@ import InputSelect from '../../common/InputSelect';
 import { useSelector } from 'react-redux';
 import { rFetch } from '../../../utils/rFetch';
 import io from 'socket.io-client';
-import { IMediaUploadRow, TOptionCategory } from '../creatorStudio.types';
+import { IMediaUploadRow } from '../creatorStudio.types';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { RootState } from '../../../ducks';
+import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 
 const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   item,
@@ -22,7 +23,7 @@ const MediaUploadRow: React.FC<IMediaUploadRow> = ({
   const [thisSessionId, setThisSessionId] = useState<string>('');
   const [socketMessage, setSocketMessage] = useState<string | undefined>();
 
-  const storageOptions: TOptionCategory[] = [
+  const storageOptions: OptionsType[] = [
     { label: 'Google Cloud', value: 'gcp' },
     { label: 'IPFS', value: 'ipfs' }
   ];

@@ -15,7 +15,6 @@ import PlatformAbout from './PlatformAbout/PlatformAbout';
 import RairOffer from './RairOffer/RairOffer';
 import ExclusiveNfts from './ExclusiveNfts/ExclusiveNfts';
 import StreamsAbout from './StreamsAbout/StreamsAbout';
-// import Tokenomics from './Tokenomics/Tokenomics';
 import RoadMap from './RoadMapAbout/RoadMapAbout';
 import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';

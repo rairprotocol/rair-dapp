@@ -36,9 +36,10 @@ export type TTokenData = {
   creationDate: string;
   isMetadataPinned: boolean;
   isMinted: boolean;
+  isURIStoredToBlockchain: boolean;
   metadata: TMetadataType;
   metadataURI: string;
-  offer: string;
+  offer: TOfferType;
   offerPool: string;
   ownerAddress: string;
   token: string;
@@ -74,14 +75,12 @@ export type TFileType = {
   encryptionType: string;
   extension: string;
   isUnlocked: boolean;
-  key: TFileKeyType;
   mainManifest: string;
   offer: string[];
   product: string;
   staticThumbnail: string;
   title: string;
   type: string;
-  uri: string;
   _id: string;
 };
 
@@ -92,43 +91,7 @@ export type TNftFilesResponse = {
 
 export type IOffersResponseType = {
   success: boolean;
-  product: INftProductType;
-};
-
-export type INftProductType = {
-  collectionIndexInContract: string;
-  contract: string;
-  copies: number;
-  cover: string;
-  creationDate: string;
-  diamond: boolean;
-  firstTokenIndex: string;
-  name: string;
-  offers: INftProductOffers[];
-  owner: string;
-  royalty: number;
-  sold: boolean;
-  soldCopies: number;
-  transactionHash: string;
-  _id: string;
-};
-
-export type INftProductOffers = {
-  contract: string;
-  copies: number;
-  creationDate: string;
-  diamond: boolean;
-  diamondRangeIndex: string;
-  offerIndex: string;
-  offerName: string;
-  offerPool: string;
-  price: string;
-  product: string;
-  range: string[];
-  sold: boolean;
-  soldCopies: number;
-  transactionHash: string;
-  _id: string;
+  product: TProducts;
 };
 
 export type TMediaList = {
@@ -150,8 +113,10 @@ export type TContract = {
   diamond: boolean;
   external: boolean;
   lastSyncedBlock: string;
+  metadataURI: string;
   offerPool?: TOfferPool;
   products: TProducts;
+  singleMetadata: boolean;
   title: string;
   transactionHash?: string;
   user: string;
@@ -166,15 +131,17 @@ export type TProducts = {
   creationDate: string;
   diamond: boolean;
   firstTokenIndex: string;
+  metadataURI: string;
   name: string;
   offers?: TOfferType[];
+  owner?: string;
   royalty: number;
+  singleMetadata: boolean;
   sold: boolean;
   soldCopies: number;
   transactionHash: string;
   _id: string;
   // offerPool?: OfferPoolType;
-  //owner?: string;
 };
 
 export type TOfferPool = {

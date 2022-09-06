@@ -43,13 +43,13 @@ const SelectNumber: React.FC<ISelectNumber> = ({
     setIsOpen((prev) => !prev);
   };
 
-  const onClickItem = (el: string) => {
+  const onClickItem = (el: string | undefined) => {
     setSelectedToken(el);
     handleClickToken(el);
     handleIsOpen();
   };
 
-  return totalCount < 100 ? (
+  return totalCount && totalCount < 100 ? (
     <CurrentTokens
       primaryColor={primaryColor}
       items={items}

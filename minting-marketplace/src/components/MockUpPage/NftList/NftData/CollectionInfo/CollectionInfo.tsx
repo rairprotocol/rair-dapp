@@ -1,19 +1,22 @@
-//@ts-nocheck
 import React from 'react';
 import './CollectionInfo.css';
 import { utils } from 'ethers';
 import chainData from './../../../../../utils/blockchainData';
 import { useSelector } from 'react-redux';
 import { BlockItemCollection, CollectionInfoBody } from './CollectionInfoItems';
+import { ICollectionInfo } from '../../nftList.types';
+import { RootState } from '../../../../../ducks';
+import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
 
-const CollectionInfo = ({
-  // defaultImg,
+const CollectionInfo: React.FC<ICollectionInfo> = ({
   blockchain,
   offerData,
   openTitle,
   someUsersData
 }) => {
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
   const defaultPhoto =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
@@ -78,17 +81,17 @@ const CollectionInfo = ({
                     </div>
                     <div className="item-price">
                       <img
-                        src={chainData[blockchain]?.image}
+                        src={blockchain && chainData[blockchain]?.image}
                         alt="blockchain"
                       />
                       {utils
                         .formatEther(
-                          token.price !== Infinity && token.price !== undefined
+                          +token.price !== Infinity && token.price !== undefined
                             ? token.price.toString()
                             : 0
                         )
                         .toString()}{' '}
-                      {chainData[blockchain]?.symbol}
+                      {blockchain && chainData[blockchain]?.symbol}
                       {/* {token.price} */}
                     </div>
                   </BlockItemCollection>

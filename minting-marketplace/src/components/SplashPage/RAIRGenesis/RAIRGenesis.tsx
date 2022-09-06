@@ -12,7 +12,6 @@ import MetaMaskIcon from '../images/metamask_logo.png';
 import Genesis_TV from '../images/TV-RAIR-StandardColor-0.gif';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 import GenesisMember from '../images/creator-flow.png';
-
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
@@ -26,6 +25,10 @@ import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/Vi
 import axios from 'axios';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
+import { RootState } from '../../../ducks';
+import { INumberedCircle, IRAIRGenesisSplashPage } from '../splashPage.types';
+import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -47,7 +50,7 @@ const WarningModal = () => {
   );
 };
 
-const NumberedCircle = ({ index, primaryColor }) => {
+const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
   return (
     <div
       className="numbered-circle"
@@ -57,8 +60,12 @@ const NumberedCircle = ({ index, primaryColor }) => {
   );
 };
 
-const RAIRGenesisSplashPage = ({ connectUserData }) => {
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
+const RAIRGenesisSplashPage: React.FC<IRAIRGenesisSplashPage> = ({
+  connectUserData
+}) => {
+  const currentUserAddress = useSelector<RootState, string | undefined>(
+    (store) => store.contractStore.currentUserAddress
+  );
   const splashData = {
     NFTName: 'Genesis Pass artwork',
     title: 'RAIR Genesis Pass',
@@ -115,13 +122,15 @@ const RAIRGenesisSplashPage = ({ connectUserData }) => {
     }
   };
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
   /* UTILITIES FOR MARKETPLACE DEMO */
-  const [mode, setMode] = useState('collection');
-  const [tokenId, setTokenId] = useState('0');
+  const [mode, setMode] = useState<TModeType>('collection');
+  const [tokenId, setTokenId] = useState<string>('0');
 
-  const embeddedParams = {
+  const embeddedParams: TEmbeddedParams = {
     ...splashData.marketplaceDemoParams,
     mode: mode,
     setMode: setMode,
@@ -130,8 +139,8 @@ const RAIRGenesisSplashPage = ({ connectUserData }) => {
   };
 
   /* UTILITIES FOR NFT PURCHASE */
-  const [openCheckList /*setOpenCheckList*/] = useState(false);
-  const [purchaseList, setPurchaseList] = useState(true);
+  const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
+  const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
   const dispatch = useDispatch();
 

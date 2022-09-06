@@ -1,7 +1,7 @@
-//@ts-nocheck
 import styled from 'styled-components';
+import { TAuthenticityStyled } from '../../nftList.types';
 
-export const TableAuthenticity = styled.div`
+export const TableAuthenticity = styled.div<TAuthenticityStyled>`
   background: ${(props) =>
     props.primaryColor === 'rhyno' ? 'rgb(189, 189, 189)' : '#383637'};
   border-radius: 16px;

@@ -29,11 +29,6 @@ export type ContractsResponseType = {
   success: boolean;
 };
 
-export type UsersContractsType = {
-  label: string;
-  value: string;
-};
-
 export type BlockchainInfoType = {
   image: string;
   name: string;

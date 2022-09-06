@@ -22,6 +22,7 @@ import CarouselModule from './SplashPageTemplate/Carousel/Carousel';
 import VideoPlayerModule from './SplashPageTemplate/VideoPlayer/VideoPlayerModule';
 import MetaTags from '../SeoTags/MetaTags';
 import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
+import { TVideoPlayerViewSpecialVideoType } from '../MockUpPage/NftList/nftList.types';
 
 //TODO:Until we have a contract it will be commented
 // import { TNftFilesResponse } from '../../axios.responseTypes';
@@ -30,6 +31,8 @@ import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/Video
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
+
+//temporal types, later will create folder for them
 
 const splashData = {
   title: '#NFTLA',
@@ -133,7 +136,7 @@ const NFTLASplashPage = ({ setIsSplashPage }) => {
 
   const whatSplashPage = 'nftla-page';
 
-  const someAdditionalData = [
+  const someAdditionalData: TVideoPlayerViewSpecialVideoType[] = [
     {
       urlVideo: 'https://storage.googleapis.com/rair-videos/',
       mediaIdVideo: 'YOyAaCOt8xrOt-NcvffXR7g0ibX5kJ2w21yGHR1XKOPMEY',

@@ -15,11 +15,11 @@ import {
   TListCollectionsNetworkProductsResponse,
   TListCollectionsContractResponse,
   TListCollectionsOffers,
-  TListCollectionsProducts,
   TParamsContractDetails,
   TProductDataLocal,
   TSetDataUseState
 } from './creatorStudio.types';
+import { TProducts } from '../../axios.responseTypes';
 
 const ListCollections = () => {
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
@@ -56,13 +56,11 @@ const ListCollections = () => {
     // Special case where a product exists but it has no offers
     if (response4.success) {
       response4.products.forEach((item: TListCollectionsOffers) => {
-        response2.contract.products.forEach(
-          (existingItem: TListCollectionsProducts) => {
-            if (item._id.toString() === existingItem._id.toString()) {
-              existingItem.offers = item.offers;
-            }
+        response2.contract.products.forEach((existingItem: TProducts) => {
+          if (item._id.toString() === existingItem._id.toString()) {
+            existingItem.offers = item.offers;
           }
-        );
+        });
       });
     }
     if (response2.contract) {
@@ -102,10 +100,7 @@ const ListCollections = () => {
           contractAddress={data.contractAddress}
           contractBlockchain={blockchain}>
           {data.products.map(
-            (
-              item: TListCollectionsProducts | TProductDataLocal,
-              index: number
-            ) => {
+            (item: TProducts | TProductDataLocal, index: number) => {
               return (
                 <NavLink
                   to={`/creator/contract/${blockchain}/${data.contractAddress}/collection/${item.collectionIndexInContract}/offers`}

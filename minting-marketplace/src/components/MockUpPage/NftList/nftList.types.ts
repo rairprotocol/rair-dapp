@@ -1,7 +1,22 @@
-import { TMetadataType } from './../../../axios.responseTypes';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { TNftDataItem } from '../../../ducks/nftData/nftData.types';
 import { UserType } from '../../../ducks/users/users.types';
-import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { TOfferType } from '../../marketplace/marketplace.types';
+import { TEmbeddedParams } from '../mockupPage.types';
+import {
+  TContract,
+  TFileType,
+  TMetadataType,
+  TProducts,
+  TTokenData
+} from './../../../axios.responseTypes';
+export interface IAuthenticityBlock {
+  tokenData: TTokenData[];
+  title: boolean;
+  collectionToken: string;
+  selectedToken?: string | undefined;
+  selectedData?: TMetadataType | undefined;
+}
 
 export interface INftItemComponent {
   blockchain: BlockchainType | undefined;
@@ -27,55 +42,173 @@ export interface ISvgKey {
   mobile?: boolean;
 }
 
-export type TEmbeddedParamsType = {
-  contract: string;
-  product: string;
-  mode: 'collection' | 'tokens';
-  setMode: (mode: string) => void;
-  tokenId: string;
-  setTokenId: (tokenId: string) => void;
+export type TVideoPlayerViewSpecialVideoType = {
+  urlVideo: string;
+  mediaIdVideo: string;
+  videoTime: string;
+  videoName: string;
+  VideoBg: string;
 };
 
-export interface INftItemForCollectionView {
-  embeddedParams: TEmbeddedParamsType;
+export type TAuthenticityStyled = {
+  primaryColor: ColorChoice;
+};
+
+export interface INftDataCommonLinkComponent {
+  userData: UserType;
+  embeddedParams: TEmbeddedParams | undefined;
+  loginDone: boolean;
+}
+
+export type TParamsNftDataCommonLink = {
+  contract: string;
+  product: string;
+  tokenId: string;
+  blockchain: BlockchainType;
+};
+
+export interface IBreadcrumbsComponent {
+  embeddedParams?: TEmbeddedParams | undefined;
+}
+
+export interface INftCollectionPageComponent {
+  embeddedParams: TEmbeddedParams | undefined;
   blockchain: BlockchainType | undefined;
-  pict: string;
-  offerPrice: string[];
+  selectedData: TMetadataType | undefined;
+  tokenData: TTokenData[] | null;
+  totalCount: number | undefined;
+  offerPrice: string[] | undefined;
+  getAllProduct: (fromToken: number, toToken: number) => Promise<void>;
+  showToken: number;
+  setShowToken: (token: number) => void;
+  isLoading: boolean;
+  tokenDataFiltered: TTokenData[];
+  setTokenDataFiltered: (filteredTokens: any[]) => void;
+  userData: UserType;
+  someUsersData: UserType | null | undefined;
+  offerDataCol: TOfferType[] | undefined;
+  offerAllData: TProducts | undefined;
+  collectionName: string | undefined;
+}
+
+export interface INftUnlockablesPage {
+  embeddedParams: TEmbeddedParams | undefined;
+  productsFromOffer: TFileType[];
+  primaryColor: ColorChoice;
+  selectedToken: string | undefined;
+  tokenData: TTokenData[] | null;
+  someUsersData: UserType | null | undefined;
+  collectionName: string | undefined;
+  setTokenDataFiltered: (filteredData: any) => void;
+}
+
+export interface INftSingleUnlockables {
+  embeddedParams: TEmbeddedParams | undefined;
+  productsFromOffer: TFileType[];
+  setTokenDataFiltered: (filteredData: any) => void;
+  primaryColor: ColorChoice;
+  setSelectVideo: (selectedVideo: TFileType) => void;
+}
+
+export type TRarity = 'Ultra Rair' | 'Rair' | 'Common';
+export type TUnlockRarity =
+  | 'Unlock Ultra Rair'
+  | 'Unlock Rair'
+  | 'Unlock Common';
+
+export type TRarityType = TRarity[] | TUnlockRarity[];
+
+export interface INftItemForCollectionViewComponent {
+  embeddedParams?: TEmbeddedParams | undefined;
+  blockchain: BlockchainType | undefined;
+  pict: string | undefined;
+  offerPrice: string[] | undefined;
   index: string;
   metadata: TMetadataType;
   offer: string;
-  selectedData: TMetadataType;
-  someUsersData: UserType;
-  userName: string;
-  tokenDataLength: number;
+  selectedData: TMetadataType | undefined;
+  someUsersData: UserType | null | undefined;
+  userName: string | undefined;
+  tokenDataLength?: number;
 }
 
-export type TParamsNftItemForCollectionView = {
-  blockchain: BlockchainType;
-  contract: string;
-  product: string;
-  tokenId: string;
+export interface ICollectionInfo {
+  blockchain: BlockchainType | undefined;
+  offerData: TOfferType[] | undefined;
+  openTitle: boolean;
+  someUsersData: UserType | null | undefined;
+}
+
+export type TCollectionInfoBody = {
+  primaryColor: ColorChoice;
 };
 
-export interface IOfferItemComponent {
-  handleClickToken: () => void;
-  token: string;
-  index: number;
-  metadata: TMetadataType;
-  setSelectedToken;
-  selectedToken;
+export interface ICustomButton {
+  text: string;
+  width?: string;
+  height?: string;
+  onClick?: () => void;
+  textColor?: string | undefined;
+  margin?: string;
+  custom?: boolean;
 }
 
-export interface ISvgLock {
-  color: string;
-}
+export type TShowMoreContainer = {
+  width: string | undefined;
+  height: string | undefined;
+  textColor: string | undefined;
+  margin: string | undefined;
+};
 
-export type TWhatPage = 'nft' | 'video';
+export type TShowMoreItem = {
+  width: string | undefined;
+  height: string | undefined;
+  textColor: string | undefined;
+  background?: boolean | undefined;
+  primaryColor?: ColorChoice;
+  onClick?: () => void;
+};
 
-export interface IPaginationBox {
-  changePage: (currentPage: number) => void;
-  currentPage: number;
+export type TModalContentCloseBtnStyled = {
   primaryColor: ColorChoice;
-  totalPageForPagination: number | undefined;
-  whatPage: TWhatPage;
+};
+
+export interface INftDifferentRarity {
+  title: TRarity | TUnlockRarity;
+  setTokenDataFiltered: (filteredTokenData: TTokenData[]) => void;
+  isUnlocked: boolean[];
+  embeddedParams: TEmbeddedParams | undefined;
 }
+
+export type TNftSingleUnlockablesSections = {
+  [key: string]: TFileType[];
+};
+
+export type TSplashPageSetSelectedVideoArgs = {
+  videoBg: string;
+  urlVideo: string;
+  mediaIdVideo: string;
+};
+
+export interface IVideoPlayerView {
+  productsFromOffer: TFileType[];
+  primaryColor?: ColorChoice;
+  selectVideo: TFileType | undefined;
+  setSelectVideo: (
+    selectedVideo: any /*TFileType | TSplashPageSetSelectedVideoArgs*/
+  ) => void;
+  whatSplashPage?: string;
+  someAdditionalData?: TVideoPlayerViewSpecialVideoType[];
+  unlockables?: boolean;
+}
+
+export type TGettingPriceReturnType = {
+  maxPrice: string;
+  minPrice: string;
+};
+
+export type TNftExternalLinkType = {
+  contract: TContract;
+  tokens: TTokenData[];
+  totalCount: number;
+};

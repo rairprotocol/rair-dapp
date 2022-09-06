@@ -1,5 +1,5 @@
 import React from 'react';
-import { ISvgLock } from './nftList.types';
+import { ISvgLock } from '../mockupPage.types';
 export const SvgLock: React.FC<ISvgLock> = ({ color }) => (
   <div
     style={{

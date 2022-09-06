@@ -132,7 +132,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
     }
   }, [offerDataInfo]);
 
-  if (!selectedData.name) {
+  if (!selectedData?.name) {
     return (
       <div className="list-wrapper-empty">
         <CircularProgress
@@ -167,14 +167,14 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               contract={contract}
               selectedToken={selectedToken}
               classTitle={
-                selectedData.animation_url && isFileUrl !== 'gif'
+                selectedData?.animation_url && isFileUrl !== 'gif'
                   ? 'nft-collection-video-etherscan'
                   : 'nft-collection-icons'
               }
             />
             <div
               className={
-                selectedData.animation_url && isFileUrl !== 'gif'
+                selectedData?.animation_url && isFileUrl !== 'gif'
                   ? 'nft-videos-wrapper-container'
                   : 'nft-images-gifs-wrapper'
               }>
@@ -183,7 +183,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 contract={contract}
                 selectedToken={selectedToken}
                 classTitle={
-                  selectedData.animation_url && isFileUrl !== 'gif'
+                  selectedData?.animation_url && isFileUrl !== 'gif'
                     ? 'nft-collection-single-video'
                     : 'nft-collection-icons-media'
                 }
@@ -263,9 +263,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             style={{
               color: `${primaryColor === 'rhyno' ? '#383637' : '#A7A6A6'}`
             }}>
-            {selectedData.description !== 'none' &&
-            selectedData.description !== 'No description available'
-              ? selectedData.description
+            {selectedData?.description !== 'none' &&
+            selectedData?.description !== 'No description available'
+              ? selectedData?.description
               : "This NFT doesn't have any description"}
           </div>
           <div className="properties-title">
@@ -274,7 +274,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
               primaryColor={primaryColor}
             />
           </div>
-          {selectedData.attributes && selectedData.attributes?.length > 0 ? (
+          {selectedData?.attributes && selectedData?.attributes?.length > 0 ? (
             <SingleTokenViewProperties
               selectedData={selectedData}
               textColor={textColor}

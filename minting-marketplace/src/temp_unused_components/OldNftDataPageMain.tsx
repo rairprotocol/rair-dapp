@@ -12,23 +12,23 @@ import {
   AccordionItemButton,
   AccordionItemPanel
 } from 'react-accessible-accordion';
-import { metamaskCall } from '../../../../utils/metamaskUtils';
-import ItemRank from '../../SelectBox/ItemRank';
-import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
+import { metamaskCall } from '../utils/metamaskUtils';
+import ItemRank from '../components/MockUpPage/SelectBox/ItemRank';
+import SelectNumber from '../components/MockUpPage/SelectBox/SelectNumber/SelectNumber';
 import ReactPlayer from 'react-player';
-import chainData from '../../../../utils/blockchainData';
+import chainData from '../utils/blockchainData';
 import { useDispatch } from 'react-redux';
-import setDocumentTitle from '../../../../utils/setTitle';
+import setDocumentTitle from '../utils/setTitle';
 
-import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
-import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
-import CustomButton from '../../utils/button/CustomButton';
-import CollectionInfo from './CollectionInfo/CollectionInfo';
-import TitleCollection from './TitleCollection/TitleCollection';
-import NftListUnlockablesVideos from './NftListUnlockablesVideos';
-import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
-import { gettingPrice } from '../utils/gettingPrice';
-import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
+import { BreadcrumbsView } from '../components/MockUpPage/NftList/Breadcrumbs/Breadcrumbs';
+import AuthenticityBlock from '../components/MockUpPage/NftList/NftData/AuthenticityBlock/AuthenticityBlock';
+import CustomButton from '../components/MockUpPage/utils/button/CustomButton';
+import CollectionInfo from '../components/MockUpPage/NftList/NftData/CollectionInfo/CollectionInfo';
+import TitleCollection from '../components/MockUpPage/NftList/NftData/TitleCollection/TitleCollection';
+import NftListUnlockablesVideos from '../components/MockUpPage/NftList/NftData/NftListUnlockablesVideos';
+import { setShowSidebarTrue } from '../ducks/metadata/actions';
+import { gettingPrice } from '../components/MockUpPage/NftList/utils/gettingPrice';
+import { CheckEthereumChain } from '../utils/CheckEthereumChain';
 
 const NftDataPageMain = ({
   // setTokenData,

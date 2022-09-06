@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { memo, useEffect, useCallback, useState, useRef } from 'react';
 import { NftItemForCollectionView } from '../NftItemForCollectionView';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
@@ -10,28 +9,18 @@ import { useNavigate } from 'react-router-dom';
 import TitleCollection from './TitleCollection/TitleCollection';
 import CircularProgress from '@mui/material/CircularProgress';
 import AuthenticityBlock from './AuthenticityBlock/AuthenticityBlock';
-
-// import styles
 import './../../GeneralCollectionStyles.css';
 import CustomButton from '../../utils/button/CustomButton';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import { setTokenData } from '../../../../ducks/nftData/action';
+import { INftCollectionPageComponent } from '../nftList.types';
 
-const NftCollectionPageComponent = ({
+const NftCollectionPageComponent: React.FC<INftCollectionPageComponent> = ({
   embeddedParams,
   blockchain,
-  currentUser,
-  handleClickToken,
-  product,
-  productsFromOffer,
-  primaryColor,
   selectedData,
-  selectedToken,
-  setSelectedToken,
   tokenData,
   totalCount,
-  textColor,
-  offerData,
   offerPrice,
   getAllProduct,
   showToken,
@@ -47,8 +36,8 @@ const NftCollectionPageComponent = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const myRef = useRef();
-  const [show, setShow] = useState(true);
+  const myRef = useRef<HTMLDivElement>(null);
+  const [show, setShow] = useState<boolean>(true);
 
   const loadToken = useCallback(() => {
     setShowToken(showToken * 2);
@@ -64,14 +53,12 @@ const NftCollectionPageComponent = ({
     if (!embeddedParams) {
       window.scroll(0, 0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const goBack = () => {
     navigate('/');
   };
-
-  const defaultImg =
-    'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
   if (!tokenData) {
     return (
@@ -84,6 +71,7 @@ const NftCollectionPageComponent = ({
       </div>
     );
   }
+
   return (
     <>
       {tokenData.length > 0 || tokenDataFiltered.length > 0 ? (
@@ -94,9 +82,7 @@ const NftCollectionPageComponent = ({
             flexDirection: 'column',
             alignContent: 'flex-start',
             justifyContent: 'center',
-            // alignItems: "flex-start",
             marginBottom: '66px'
-            // overflow: "hidden"
           }}>
           <BreadcrumbsView />
           <TitleCollection
@@ -112,7 +98,7 @@ const NftCollectionPageComponent = ({
                 <CustomButton
                   text={'Clean filter'}
                   onClick={() => {
-                    setTokenDataFiltered(0);
+                    setTokenDataFiltered([]);
                     dispatch(setTokenData(tokenData));
                     setShow(false);
                   }}
@@ -123,31 +109,22 @@ const NftCollectionPageComponent = ({
           <div className={'list-button-wrapper'}>
             {tokenDataFiltered.length > 0
               ? tokenDataFiltered.map((token, index) => {
-                  if (token.cover !== 'none') {
+                  if (
+                    token.metadata.image &&
+                    token.metadata.image !== 'undefined'
+                  ) {
                     return (
                       <NftItemForCollectionView
-                        key={`${token.id + '-' + token.productId + index}`}
-                        pict={token.cover ? token.cover : defaultImg}
+                        key={`${
+                          token._id + '-' + token.uniqueIndexInContract + index
+                        }`}
+                        pict={offerAllData?.cover}
                         metadata={token.metadata}
-                        contract={token.contract}
-                        token={token.token}
-                        handleClickToken={handleClickToken}
-                        setSelectedToken={setSelectedToken}
-                        selectedToken={selectedToken}
                         offerPrice={offerPrice}
-                        ownerAddress={token.ownerAddress}
                         blockchain={blockchain}
-                        currentUser={currentUser}
-                        offerData={offerData}
-                        primaryColor={primaryColor}
-                        productsFromOffer={productsFromOffer}
                         selectedData={selectedData}
-                        textColor={textColor}
-                        tokenData={tokenData}
-                        totalCount={totalCount}
-                        product={product}
                         index={token.token}
-                        offer={token.offer}
+                        offer={token.offer.offerIndex}
                         someUsersData={someUsersData}
                         userName={offerAllData?.owner}
                       />
@@ -158,31 +135,22 @@ const NftCollectionPageComponent = ({
                 })
               : tokenData.length > 0
               ? tokenData.map((token, index) => {
-                  if (token.cover !== 'none') {
+                  if (
+                    token.metadata.image &&
+                    token.metadata.image !== 'undefined'
+                  ) {
                     return (
                       <NftItemForCollectionView
-                        key={`${token.id + '-' + token.productId + index}`}
-                        pict={token.cover ? token.cover : defaultImg}
+                        key={`${
+                          token._id + '-' + token.uniqueIndexInContract + index
+                        }`}
+                        pict={offerAllData?.cover}
                         metadata={token.metadata}
-                        contract={token.contract}
-                        token={token.token}
-                        handleClickToken={handleClickToken}
-                        setSelectedToken={setSelectedToken}
-                        selectedToken={selectedToken}
                         offerPrice={offerPrice}
-                        ownerAddress={token.ownerAddress}
                         blockchain={blockchain}
-                        currentUser={currentUser}
-                        offerData={offerData}
-                        primaryColor={primaryColor}
-                        productsFromOffer={productsFromOffer}
                         selectedData={selectedData}
-                        textColor={textColor}
-                        tokenData={tokenData}
-                        totalCount={totalCount}
-                        product={product}
-                        index={index}
-                        offer={token.offer}
+                        index={String(index)}
+                        offer={token.offer.offerIndex}
                         someUsersData={someUsersData}
                         userName={offerAllData?.owner}
                         tokenDataLength={tokenData.length}
@@ -218,7 +186,8 @@ const NftCollectionPageComponent = ({
             )}
             {tokenDataFiltered.length
               ? null
-              : showToken <= totalCount && (
+              : totalCount &&
+                showToken <= totalCount && (
                   <CustomButton
                     onClick={loadToken}
                     width="232px"
@@ -230,7 +199,6 @@ const NftCollectionPageComponent = ({
           </div>
           <CollectionInfo
             blockchain={blockchain}
-            defaultImg={defaultImg}
             offerData={offerDataCol}
             openTitle={true}
             someUsersData={someUsersData}
@@ -238,7 +206,6 @@ const NftCollectionPageComponent = ({
           <AuthenticityBlock
             collectionToken={tokenData[0]?.authenticityLink}
             title={true}
-            ownerInfo={offerAllData}
             tokenData={tokenData}
           />
         </div>

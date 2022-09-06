@@ -1,23 +1,27 @@
-//@ts-nocheck
 import React, { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { TTokenData } from '../../../../../axios.responseTypes';
+import { RootState } from '../../../../../ducks';
+import { ColorChoice } from '../../../../../ducks/colors/colorStore.types';
+import { IAuthenticityBlock } from '../../nftList.types';
 import './AuthenticityBlock.css';
 import { TableAuthenticity } from './AuthenticityBlockItems';
 
-const AuthenticityBlock = ({
+const AuthenticityBlock: React.FC<IAuthenticityBlock> = ({
   tokenData,
-  // ownerInfo,
   selectedToken,
   title,
   collectionToken,
   selectedData
 }) => {
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
-  const [authCollection, setAuthCollection] = useState(false);
-  const [ipfsLink, setIpfsLink] = useState('');
+  const [authCollection, setAuthCollection] = useState<string>();
+  const [ipfsLink, setIpfsLink] = useState<string>('');
   const defaultImg =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
 
@@ -58,7 +62,7 @@ const AuthenticityBlock = ({
         <div className="table-authenticity-title">Action</div>
         {tokenData && (
           <>
-            {tokenData.map((el, index) => {
+            {tokenData.map((el: TTokenData, index: number) => {
               if (
                 Number(el.token) === Number(selectedToken) &&
                 el.authenticityLink !== 'none'

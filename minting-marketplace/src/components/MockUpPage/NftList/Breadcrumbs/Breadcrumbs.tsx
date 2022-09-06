@@ -12,8 +12,11 @@ import './Breadcrumbs.css';
 import { RootState } from '../../../../ducks';
 import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
 import { TParamsBreadcrumbsComponent } from '../../mockupPage.types';
+import { IBreadcrumbsComponent } from '../nftList.types';
 
-const BreadcrumbsComponent = ({ embeddedParams }) => {
+const BreadcrumbsComponent: React.FC<IBreadcrumbsComponent> = ({
+  embeddedParams
+}) => {
   const params = useParams<TParamsBreadcrumbsComponent>();
   const { contract, product, blockchain } = embeddedParams
     ? embeddedParams

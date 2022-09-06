@@ -1,6 +1,5 @@
 .mainWrapper {
   margin: auto;
-  /* max-width: 1600px; */
   margin-top: 56px;
   display: flex;
   flex-direction: row;
@@ -11,6 +10,7 @@
   width: 100%;
 }
 
+/* unused-className */
 .main {
 }
 

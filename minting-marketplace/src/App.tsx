@@ -771,12 +771,7 @@ function App() {
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',
-                    content: NftDataExternalLink,
-                    props: {
-                      currentUser: currentUserAddress,
-                      primaryColor: primaryColor,
-                      textColor: textColor
-                    }
+                    content: NftDataExternalLink
                   },
                   {
                     path: '/coming-soon',

@@ -34,7 +34,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   const realChainProtected = currentChain || currentProvider;
 
   const disableBuyBtn = useCallback(() => {
-    if (!offerData.diamondRangeIndex) {
+    if (!offerData?.diamondRangeIndex) {
       return false;
     } else if (!offerData?.offerPool) {
       return false;
@@ -53,11 +53,11 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
     if (
       await metamaskCall(
         minterInstance?.buyToken(
-          offerData.offerPool,
-          offerData.offerIndex,
+          offerData?.offerPool,
+          offerData?.offerIndex,
           selectedToken,
           {
-            value: offerData.price
+            value: offerData?.price
           }
         ),
         'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
@@ -82,7 +82,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
         handleClick={handleBuyButton()}
         disabled={disableBuyBtn()}
         isColorPurple={true}
-        title={`Buy .${(+price !== Infinity && price !== undefined
+        title={`Buy .${(price && +price !== Infinity && price !== undefined
           ? price
           : 0
         ).toString()}
@@ -104,7 +104,7 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
       ) : (
         checkOwner()
       );
-    } else if (!tokenData[selectedToken]?.isMinted) {
+    } else if (selectedToken && !tokenData?.[selectedToken].isMinted) {
       return checkOwner();
     } else {
       return (

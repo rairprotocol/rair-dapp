@@ -1,25 +1,26 @@
-//@ts-nocheck
 import React, { useCallback, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import cl from './NftDifferentRarity.module.css';
 import CustomButton from '../../../../utils/button/CustomButton';
+import { TTokenData } from '../../../../../../axios.responseTypes';
+import {
+  INftDifferentRarity,
+  TParamsNftDataCommonLink
+} from '../../../nftList.types';
 
-const NftDifferentRarity = ({
+const NftDifferentRarity: React.FC<INftDifferentRarity> = ({
   title,
   setTokenDataFiltered,
   isUnlocked,
   embeddedParams
 }) => {
   const navigate = useNavigate();
-  const params = useParams();
-  const [allTokenData, setAllTokenData] = useState([]);
-  const [isOpenPart, setIsOpenPart] = useState(false);
+  const params = useParams<TParamsNftDataCommonLink>();
   const { contract, product, blockchain } = embeddedParams
     ? embeddedParams
     : params;
-
-  const sortedClickHandler = (tokenId) => {
+  const sortedClickHandler = (tokenId: string) => {
     if (embeddedParams) {
       embeddedParams.setTokenId(tokenId);
       embeddedParams.setMode('collection');
@@ -27,9 +28,11 @@ const NftDifferentRarity = ({
       navigate(`/collection/${blockchain}/${contract}/${product}/${tokenId}`);
     }
   };
+  const [allTokenData, setAllTokenData] = useState<TTokenData[]>([]);
+  const [isOpenPart, setIsOpenPart] = useState<boolean>(false);
 
-  const checkThisPart = (data) => {
-    const part = data.every((i) => i === true);
+  const checkThisPart = (data: boolean[]) => {
+    const part = data.every((i: boolean) => i === true);
     setIsOpenPart(part);
   };
 
@@ -55,7 +58,7 @@ const NftDifferentRarity = ({
     /* eslint-disable */
     switch (title) {
       case 'Unlock Ultra Rair':
-        const firstTokenFromUnlockUltra = allTokenData.filter(
+        const firstTokenFromUnlockUltra: TTokenData[] = allTokenData.filter(
           (e) => e.offer.offerIndex === '0'
         );
         setTokenDataFiltered(firstTokenFromUnlockUltra);
@@ -109,7 +112,6 @@ const NftDifferentRarity = ({
         <span className={cl.unlockText}>&#10003; Unlocked</span>
       ) : (
         <CustomButton
-          className="custom-btn-rarity"
           text={title}
           width={'224px'}
           height={'48px'}

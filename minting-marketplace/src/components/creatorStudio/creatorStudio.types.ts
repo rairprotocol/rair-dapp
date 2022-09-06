@@ -10,6 +10,7 @@ import {
   TTokenData,
   TProducts
 } from '../../axios.responseTypes';
+import { OptionsType } from '../common/commonTypes/InputSelectTypes.types';
 export interface IMarketplaceOfferConfig {
   array: TMarketplaceOfferConfigArrayItem[];
   index: number;
@@ -144,17 +145,15 @@ export type TMetadataExtra = {
   singleMetadata: boolean;
 };
 
-export type TWorkflowProduct = TProducts &
-  TMetadataExtra & {
-    tokenLock: TTokenLock | undefined;
-  };
+export type TWorkflowProduct = TProducts & {
+  tokenLock: TTokenLock | undefined;
+};
 
-export type TContractData = Omit<TContract, 'product' | 'offerPool'> &
-  TMetadataExtra & {
-    instance: ethers.Contract;
-    nfts: TNftItemResult;
-    product: TWorkflowProduct;
-  };
+export type TContractData = Omit<TContract, 'product' | 'offerPool'> & {
+  instance: ethers.Contract;
+  nfts: TNftItemResult;
+  product: TWorkflowProduct;
+};
 
 export type TTokenLock = {
   contract: string;
@@ -187,11 +186,10 @@ export type TParamsDiamondListOffers = {
   collectionIndex: string;
 };
 
-export type TListOffersProductType = Omit<TProducts, 'offers'> &
-  TMetadataExtra & {
-    tokenLock: TTokenLock | undefined;
-    offers: TMarketplaceOfferConfigArrayItem[];
-  };
+export type TListOffersProductType = Omit<TProducts, 'offers'> & {
+  tokenLock: TTokenLock | undefined;
+  offers: TMarketplaceOfferConfigArrayItem[];
+};
 
 export type TDiamondContractData = Omit<TContract, 'product' | 'offerPool'> &
   TMetadataExtra & {
@@ -232,11 +230,6 @@ export type TMediaType = {
   title: string;
 };
 
-export type TOptionCategory = {
-  label: string;
-  value: string;
-};
-
 export type TCategories = {
   name: string;
   _id: string;
@@ -244,12 +237,12 @@ export type TCategories = {
 
 export interface IMediaUploadRow {
   item: TMediaType;
-  offerList: TOptionCategory[];
+  offerList: OptionsType[];
   deleter: () => void;
   rerender: () => void;
   index: number;
   array: TMediaType[];
-  categoriesArray: TOptionCategory[];
+  categoriesArray: OptionsType[];
 }
 
 export interface IOfferRow {
@@ -446,7 +439,7 @@ export type TContractsNetworkContract = {
   lastSyncedBlock: string;
   metadataURI: string;
   singleMetadata: boolean;
-  products: TListCollectionsProducts[];
+  products: TProducts[];
   title: string;
   transactionHash?: string;
   user: string;
@@ -458,11 +451,9 @@ export type TListCollectionsContractResponse = {
   contract: TContractsNetworkContract;
 };
 
-export type TListCollectionsProducts = TProducts & TMetadataExtra;
-
 export type TListCollectionsNetworkProductsResponse = {
   success: boolean;
-  products: TListCollectionsProducts[];
+  products: TProducts[];
 };
 
 export type TListCollectionsOffers = TProducts & {
@@ -509,8 +500,7 @@ export type TContractsNetworkResponseType = {
   contract: TContractsNetworkContract;
 };
 
-export type TContractsDetailsProducts = Omit<TProducts, 'offers'> &
-  TMetadataExtra;
+export type TContractsDetailsProducts = Omit<TProducts, 'offers'>;
 
 export type TContractsNetworkProductsResponse = {
   success: boolean;

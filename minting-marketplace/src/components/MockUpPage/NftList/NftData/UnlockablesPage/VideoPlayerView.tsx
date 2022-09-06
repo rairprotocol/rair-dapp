@@ -1,11 +1,13 @@
-//@ts-nocheck
 import React, { useState } from 'react';
 import cl from './VideoPlayerView.module.css';
 import playImages from '../../../../SplashPage/images/playImg.png';
 import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
-import { IVideoPlaterView } from './videoPlayerView.types';
+import {
+  IVideoPlayerView,
+  TVideoPlayerViewSpecialVideoType
+} from '../../nftList.types';
 
-const VideoPlayerView: React.FC<IVideoPlaterView> = ({
+const VideoPlayerView: React.FC<IVideoPlayerView> = ({
   productsFromOffer,
   primaryColor,
   selectVideo,
@@ -14,8 +16,8 @@ const VideoPlayerView: React.FC<IVideoPlaterView> = ({
   someAdditionalData,
   unlockables
 }) => {
-  const [openVideoplayer, setOpenVideoplayer] = useState(false);
-  const [selectedBg, setSelectedBg] = useState();
+  const [openVideoplayer, setOpenVideoplayer] = useState<boolean>(false);
+  const [selectedBg, setSelectedBg] = useState<string>();
 
   const colorRarity = ['#E4476D', 'gold', 'silver'];
 
@@ -32,48 +34,46 @@ const VideoPlayerView: React.FC<IVideoPlaterView> = ({
       <div className={cl.ListOfVideosWrapper}>
         {whatSplashPage &&
           someAdditionalData &&
-          someAdditionalData.map((data, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => {
-                  setSelectVideo(
-                    data.VideoBg,
-                    data.urlVideo,
-                    data.mediaIdVideo
-                  );
-                  setOpenVideoplayer(false);
-                  setSelectedBg(data.VideoBg);
-                }}
-                style={{
-                  backgroundImage: `url(${data.VideoBg})`
-                }}
-                className={cl.ListOfVideosOneVideo}>
-                <div className={cl.previewWrapper}>
-                  <span className={cl.preview}>Preview</span>
-                  <i
-                    style={{ color: `red` }}
-                    className={`fas fa-key ${cl.iconKey}`}
-                  />
-                </div>
-                <div className={cl.play}>
-                  <button
-                    style={{ border: 'none', background: 'none' }}
-                    className="">
-                    <img
-                      className={cl.playImagesOnListVideos}
-                      src={playImages}
-                      alt="Play"
+          someAdditionalData.map(
+            (data: TVideoPlayerViewSpecialVideoType, index: number) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setSelectVideo(data);
+                    setOpenVideoplayer(false);
+                    setSelectedBg(data.VideoBg);
+                  }}
+                  style={{
+                    backgroundImage: `url(${data.VideoBg})`
+                  }}
+                  className={cl.ListOfVideosOneVideo}>
+                  <div className={cl.previewWrapper}>
+                    <span className={cl.preview}>Preview</span>
+                    <i
+                      style={{ color: `red` }}
+                      className={`fas fa-key ${cl.iconKey}`}
                     />
-                  </button>
+                  </div>
+                  <div className={cl.play}>
+                    <button
+                      style={{ border: 'none', background: 'none' }}
+                      className="">
+                      <img
+                        className={cl.playImagesOnListVideos}
+                        src={playImages}
+                        alt="Play"
+                      />
+                    </button>
+                  </div>
+                  <div className={cl.description}>
+                    <strong>{data.videoName}</strong>
+                    <span className={cl.duration}>{data.videoTime}</span>
+                  </div>
                 </div>
-                <div className={cl.description}>
-                  <strong>{data.videoName}</strong>
-                  <span className={cl.duration}>{data.videoTime}</span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         {!!productsFromOffer?.length &&
           productsFromOffer.map((data) => {
             return (
@@ -116,11 +116,7 @@ const VideoPlayerView: React.FC<IVideoPlaterView> = ({
       {productsFromOffer?.length ? (
         <div className={cl.SingleVideoWrapper}>
           {openVideoplayer ? (
-            <NftVideoplayer
-              selectVideo={selectVideo}
-              width="40vw"
-              height="406px"
-            />
+            <NftVideoplayer selectVideo={selectVideo} />
           ) : (
             <div
               onClick={() => setOpenVideoplayer(true)}

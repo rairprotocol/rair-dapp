@@ -8,15 +8,11 @@ import chainData from '../../../utils/blockchainData';
 import Dropzone from 'react-dropzone';
 import videoIcon from '../../../images/videoIcon.svg';
 import MediaUploadRow from './MediaUploadRow';
-import {
-  IMediaUpload,
-  TCategories,
-  TMediaType,
-  TOptionCategory
-} from '../creatorStudio.types';
+import { IMediaUpload, TCategories, TMediaType } from '../creatorStudio.types';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
 import { TOfferType } from '../../marketplace/marketplace.types';
+import { OptionsType } from '../../common/commonTypes/InputSelectTypes.types';
 
 const MediaUpload: React.FC<IMediaUpload> = ({
   setStepNumber,
@@ -28,9 +24,9 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   );
 
   const [mediaList, setMediaList] = useState<TMediaType[]>([]);
-  const [offerList, setOfferList] = useState<TOptionCategory[]>([]);
+  const [offerList, setOfferList] = useState<OptionsType[]>([]);
   const [forceRerender, setForceRerender] = useState<boolean>(false);
-  const [categoryArray, setCategoryArray] = useState<TOptionCategory[]>([]);
+  const [categoryArray, setCategoryArray] = useState<OptionsType[]>([]);
   const getCategories = useCallback(async () => {
     const { success, categories } = await rFetch('/api/categories');
     if (success) {
@@ -47,7 +43,7 @@ const MediaUpload: React.FC<IMediaUpload> = ({
   }, [getCategories]);
 
   useEffect(() => {
-    const unlocked = [
+    const unlocked: OptionsType[] = [
       {
         label: 'Unlocked',
         value: '-1'

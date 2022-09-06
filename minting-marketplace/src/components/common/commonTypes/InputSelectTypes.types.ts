@@ -1,6 +1,6 @@
 export type OptionsType = {
   label: string;
-  value: string;
+  value?: string;
 };
 
 export interface InputSelectProps<T = any> {

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useEffect, useRef, useState } from 'react';
 import CustomButton from '../../utils/button/CustomButton';
 import { BreadcrumbsView } from '../Breadcrumbs/Breadcrumbs';
@@ -9,30 +8,22 @@ import setDocumentTitle from '../../../../utils/setTitle';
 import { setShowSidebarTrue } from '../../../../ducks/metadata/actions';
 import TitleCollection from './TitleCollection/TitleCollection';
 import { CircularProgress } from '@mui/material';
-const NftUnlockablesPage = ({
+import { INftUnlockablesPage } from '../nftList.types';
+import { TFileType } from '../../../../axios.responseTypes';
+
+const NftUnlockablesPage: React.FC<INftUnlockablesPage> = ({
   embeddedParams,
-  blockchain,
-  contract,
-  product,
   productsFromOffer,
   primaryColor,
-  selectedData,
   selectedToken,
   tokenData,
   someUsersData,
   collectionName,
-  isLoading,
-  // data,
-  // handleClickToken,
-  // setSelectedToken,
-  // totalCount,
-  // textColor,
-  // offerData,
-  // offerPrice,
   setTokenDataFiltered
 }) => {
-  const [selectVideo, setSelectVideo] = useState();
-  const myRef = useRef(null);
+  const [selectVideo, setSelectVideo] = useState<TFileType>();
+  const myRef = useRef<HTMLDivElement>(null);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,7 +33,7 @@ const NftUnlockablesPage = ({
 
   useEffect(() => {
     if (embeddedParams) {
-      myRef.current.scrollIntoView();
+      myRef.current?.scrollIntoView();
     } else {
       window.scroll(0, 0);
     }
@@ -74,7 +65,6 @@ const NftUnlockablesPage = ({
           title={collectionName}
           someUsersData={someUsersData}
           userName={tokenData[selectedToken]?.owner}
-          // currentUser={userData}
         />
       )}
       <div style={{ marginBottom: 108 }}>
@@ -88,14 +78,8 @@ const NftUnlockablesPage = ({
         <div style={{ width: '85vw', margin: 'auto' }} className="">
           <NftSingleUnlockables
             embeddedParams={embeddedParams}
-            blockchain={blockchain}
-            contract={contract}
-            product={product}
             productsFromOffer={productsFromOffer}
-            selectedData={selectedData}
             setSelectVideo={setSelectVideo}
-            selectedToken={selectedToken}
-            tokenData={tokenData}
             setTokenDataFiltered={setTokenDataFiltered}
             primaryColor={primaryColor}
           />

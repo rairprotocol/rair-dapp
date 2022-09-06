@@ -14,11 +14,11 @@ const SellButton: React.FC<ISellButton> = ({
   const handleClickSellButton = useCallback(() => {
     setInputSellValue('');
     setIsInputPriceExist(false);
-  }, [isInputPriceExist, sellingPrice]);
+  }, [setInputSellValue, setIsInputPriceExist]);
 
   const openInputField = useCallback(() => {
     setIsInputPriceExist(true);
-  }, [isInputPriceExist]);
+  }, [setIsInputPriceExist]);
 
   const shrinkSellPrice = useMemo(() => {
     if (sellingPrice?.trim && sellingPrice.length < 3) {
@@ -30,8 +30,9 @@ const SellButton: React.FC<ISellButton> = ({
 
   const sellButton = useCallback(() => {
     if (
-      currentUser === tokenData[selectedToken]?.ownerAddress &&
-      tokenData[selectedToken]?.isMinted
+      selectedToken &&
+      currentUser === tokenData?.[selectedToken]?.ownerAddress &&
+      tokenData?.[selectedToken]?.isMinted
     ) {
       return (
         <BuySellButton

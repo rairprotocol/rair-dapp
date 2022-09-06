@@ -37,8 +37,8 @@ const SharePopUp: React.FC<ISharePopUp> = ({
   };
 
   const handleCopy = async () => {
-    if (selectedData.external_url) {
-      window.navigator.clipboard.writeText(selectedData.external_url);
+    if (selectedData?.external_url) {
+      window.navigator.clipboard.writeText(selectedData?.external_url);
       closePopUp();
     }
   };

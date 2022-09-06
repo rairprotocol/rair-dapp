@@ -53,7 +53,7 @@ export default function nftDataStore(
         errorMessage: action.errorMessage
       };
 
-    case types.SET_SELECTED_INDEX_START: {
+    case types.SET_TOKEN_DATA_START: {
       return {
         ...state,
         loading: true,
@@ -61,7 +61,7 @@ export default function nftDataStore(
       };
     }
 
-    case types.SET_SELECTED_INDEX: {
+    case types.SET_TOKEN_DATA: {
       return {
         ...state,
         loading: false,

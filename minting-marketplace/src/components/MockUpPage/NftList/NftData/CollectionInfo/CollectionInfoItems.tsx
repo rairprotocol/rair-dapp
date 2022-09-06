@@ -1,5 +1,5 @@
-//@ts-nocheck
 import styled from 'styled-components';
+import { TCollectionInfoBody } from '../../nftList.types';
 
 export const BlockItemCollection = styled.div`
   width: 100%;
@@ -12,7 +12,7 @@ export const BlockItemCollection = styled.div`
   font-size: 19px;
 `;
 
-export const CollectionInfoBody = styled.div`
+export const CollectionInfoBody = styled.div<TCollectionInfoBody>`
   width: 100%;
 
   .block-item-collection:nth-child(odd) {

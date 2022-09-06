@@ -1,4 +1,5 @@
 //@ts-nocheck
+//unused-component
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 // import NftDifferentRarity from "./UnlockablesPage/NftDifferentRarity/NftDifferentRarity";

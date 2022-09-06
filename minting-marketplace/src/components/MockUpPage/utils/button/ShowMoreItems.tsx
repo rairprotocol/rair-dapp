@@ -1,7 +1,11 @@
-//@ts-nocheck
 import styled from 'styled-components';
+import {
+  TModalContentCloseBtnStyled,
+  TShowMoreContainer,
+  TShowMoreItem
+} from '../../NftList/nftList.types';
 
-export const ShowMoreContainer = styled.div`
+export const ShowMoreContainer = styled.div<TShowMoreContainer>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   color: ${(props) => props.textColor};
@@ -14,7 +18,7 @@ export const ShowMoreContainer = styled.div`
   }
 `;
 
-export const ShowMoreItem = styled.div`
+export const ShowMoreItem = styled.div<TShowMoreItem>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   color: ${(props) => props.textColor};
@@ -38,7 +42,7 @@ export const ShowMoreItem = styled.div`
   }
 `;
 
-export const ModalContentCloseBtn = styled.div`
+export const ModalContentCloseBtn = styled.div<TModalContentCloseBtnStyled>`
   width: 32px;
   height: 32px;
   border-radius: 11.5px;

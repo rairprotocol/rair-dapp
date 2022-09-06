@@ -1,11 +1,12 @@
-//@ts-nocheck
 import React from 'react';
 import { useSelector } from 'react-redux';
-
+import { RootState } from '../../../../ducks';
+import { ColorChoice } from '../../../../ducks/colors/colorStore.types';
+import { ICustomButton } from '../../NftList/nftList.types';
 import cl from './CustomButton.module.css';
 import { ShowMoreContainer, ShowMoreItem } from './ShowMoreItems';
 
-function CustomButton({
+const CustomButton: React.FC<ICustomButton> = ({
   text,
   width,
   height,
@@ -13,16 +14,17 @@ function CustomButton({
   textColor,
   margin,
   custom
-  // primaryColor
-}) {
-  const { primaryColor } = useSelector((store) => store.colorStore);
+}) => {
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
   return (
     <ShowMoreContainer
       className={cl.nftDataPageShowMoreWrapper}
       width={width}
       height={height}
-      color={textColor}
+      textColor={textColor}
       margin={margin}>
       {onClick ? (
         <ShowMoreItem
@@ -46,6 +48,6 @@ function CustomButton({
       )}
     </ShowMoreContainer>
   );
-}
+};
 
 export default CustomButton;
