@@ -3,6 +3,10 @@
   font-family: 'Aldrich', sans-serif;
 }
 
+.wrapper-splash-page.wallstreet80sclub .left-tokens-content .title-tokens {
+  text-align: left;
+}
+
 .wrapper-splash-page.wallstreet80sclub .left-tokens-response {
   margin-top: 125px;
 }
@@ -582,6 +586,30 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(2) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(3) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(4) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(7) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(8) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(9) {
+    margin-left: 0px;
+  }
+
   .wrapper-splash-page.wallstreet80sclub .splashpage-subtitle.below-need-help {
     margin: 6.7vw 0 6.7vw 0;
   }
@@ -590,6 +618,10 @@
     .btn-submit-with-form.need-help
     button {
     font-size: 1.7rem;
+  }
+
+  .wrapper-splash-page.wallstreet80sclub .left-tokens-content .title-tokens {
+    text-align: center;
   }
 
   .wrapper-splash-page.wallstreet80sclub .tokens-description p {
@@ -800,30 +832,6 @@
 }
 
 @media screen and (max-width: 900px) {
-  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(2) {
-    margin-left: 0px;
-  }
-
-  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(3) {
-    margin-left: 0px;
-  }
-
-  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(4) {
-    margin-left: 0px;
-  }
-
-  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(7) {
-    margin-left: 0px;
-  }
-
-  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(8) {
-    margin-left: 0px;
-  }
-
-  .wrapper-splash-page.wallstreet80sclub .tokens-description p:nth-child(9) {
-    margin-left: 0px;
-  }
-
   /* carousel styles - mobile*/
   .wrapper-splash-page.wallstreet80sclub .join-pic-carousel {
     display: flex;
