@@ -3,17 +3,27 @@ const { nanoid } = require('nanoid');
 const fs = require('fs').promises;
 const path = require('path');
 const log = require('../../utils/logger')(module);
+const applicationConfig = require('../../shared_backend_code_generated/config/applicationConfig');
+const {
+  getAuthorizedStorageObject
+} = require('../../shared_backend_code_generated/integrations/gcp')
+
+
 
 module.exports = config => {
   let storage = {};
 
   try {
-    const credentials = JSON.parse(config.gcp.credentials);
-
-    storage = new Storage({
-      credentials,
+    let storageParams = {
       projectId: config.gcp.projectId,
+    };
+
+    storage = getAuthorizedStorageObject({
+      use_default_iam: applicationConfig["rairnode"].useDefaultIamUserForFileManager,
+      storageParams,
+      jsonCredentialsLocation: config.gcp.credentials
     });
+
   } catch (e) {
     log.error(e);
   }

@@ -54,6 +54,7 @@ locals {
     REDISPORT: 80,
     SESSION_SECRET: "test-secret",
     SESSION_TTL: 15,
+    USE_DEFAULT_IAM_USER_FOR_FILE_MANAGEMENT: true
   }
 
   minting_network_configmap = {
