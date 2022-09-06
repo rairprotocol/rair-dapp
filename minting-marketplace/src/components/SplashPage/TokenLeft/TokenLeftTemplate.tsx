@@ -14,7 +14,8 @@ const TokenLeftTemplate = ({
   counterData,
   ipftButton,
   loginDone,
-  nftTitle = 'NFTs minted'
+  nftTitle = 'NFTs minted',
+  counterOverride
 }) => {
   const {
     backgroundImage,
@@ -62,7 +63,7 @@ const TokenLeftTemplate = ({
 
   return (
     <div className="left-tokens left-tokens-response">
-      {soldCopies !== undefined && loginDone && (
+      {(counterOverride || (soldCopies !== undefined && loginDone)) && (
         <div className="block-left-content-greyman">
           <div
             className="block-left-tokens"
@@ -158,38 +159,40 @@ const TokenLeftTemplate = ({
                     );
                   })}
               </div>
-              <div className="property-btn-wrapper">
-                {/* <a
+              {counterOverride || (
+                <div className="property-btn-wrapper">
+                  {/* <a
                                 href="https://rair.mypinata.cloud/ipfs/QmdJN6BzzYk5vJh1hQgGHGxT7GhVgrvNdArdFo9t9fgqLt"
                                 target="_blank" rel="noreferrer"
                             > */}
-                {ipftButton ? (
-                  <button
-                    className="property-btn"
-                    style={{
-                      background: `${btnColorIPFS ? btnColorIPFS : ''}`
-                    }}>
-                    View on IPFS
-                  </button>
-                ) : (
-                  <div className="block-after-ipfs">
-                    Metadata will be frozen to ipfs in batches as tokens are
-                    minted.
-                    <br />
-                    Please be patient with seeing your NFT on Opensea.
-                    <br />
-                    <a
-                      href="https://discord.com/invite/y98EMXRsCE"
-                      target="_blank"
-                      rel="noreferrer">
-                      {' '}
-                      Inquire on our discord
-                    </a>{' '}
-                    for more info.
-                  </div>
-                )}
-                {/* </a> */}
-              </div>
+                  {ipftButton ? (
+                    <button
+                      className="property-btn"
+                      style={{
+                        background: `${btnColorIPFS ? btnColorIPFS : ''}`
+                      }}>
+                      View on IPFS
+                    </button>
+                  ) : (
+                    <div className="block-after-ipfs">
+                      Metadata will be frozen to ipfs in batches as tokens are
+                      minted.
+                      <br />
+                      Please be patient with seeing your NFT on Opensea.
+                      <br />
+                      <a
+                        href="https://discord.com/invite/y98EMXRsCE"
+                        target="_blank"
+                        rel="noreferrer">
+                        {' '}
+                        Inquire on our discord
+                      </a>{' '}
+                      for more info.
+                    </div>
+                  )}
+                  {/* </a> */}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -7,7 +7,8 @@ const ModalHelp = ({
   purchaseList,
   togglePurchaseList,
   toggleCheckList,
-  backgroundColor
+  backgroundColor,
+  templateOverride
 }) => {
   const { primaryColor } = useSelector((store) => store.colorStore);
 
@@ -26,7 +27,7 @@ const ModalHelp = ({
         }`
       }}
       className="tutorial-checklist">
-      <h5>UkraineGlitch purchase checklist</h5>
+      <h5>{!templateOverride && 'UkraineGlitch'} purchase checklist</h5>
       <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
         <i className={`fas fa-chevron-${purchaseList ? 'down' : 'up'}`}></i>
       </div>
@@ -48,8 +49,10 @@ const ModalHelp = ({
         </li>
         <li>3. Sign the request to complete login.</li>
         <li>
-          4. Make sure you are switched to the Ethereum network and have at
-          least .21 ETH to cover price + gas fees
+          4. Make sure you are switched to the {templateOverride && 'correct'}{' '}
+          {!templateOverride && 'Ethereum'} network and have{' '}
+          {templateOverride && 'sufficient funds'}{' '}
+          {!templateOverride && 'at least .21 ETH'} to cover price + gas fees
         </li>
       </ul>
     </div>

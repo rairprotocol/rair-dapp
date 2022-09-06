@@ -101,6 +101,7 @@ import {
 } from './styled-components/nft/AppContainer';
 import CoinAgenda2021SplashPage from './components/SplashPage/CoinAgenda2021/CoinAgenda2021';
 import InquiriesPage from './components/InquiriesPage/InquiriesPage';
+import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
 
 const rSwal = withReactContent(Swal);
 
@@ -537,6 +538,10 @@ function App() {
                   {
                     path: '/genesis-splash',
                     content: RAIRGenesisSplashPage
+                  },
+                  {
+                    path: '/wallstreet80sclub',
+                    content: Wallstreet80sClubSplashPage
                   },
                   {
                     path: '/coinagenda2021',

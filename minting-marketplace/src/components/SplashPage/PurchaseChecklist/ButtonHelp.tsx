@@ -1,13 +1,17 @@
 //@ts-nocheck
 import React from 'react';
 
-const ButtonHelp = ({ toggleCheckList, backgroundButton }) => {
+const ButtonHelp = ({
+  toggleCheckList,
+  backgroundButton,
+  backgroundButtonText
+}) => {
   return (
     <button
       className="btn-help"
       onClick={() => toggleCheckList()}
       style={{ background: backgroundButton }}>
-      Need help?
+      {backgroundButtonText || 'Need help?'}
     </button>
   );
 };

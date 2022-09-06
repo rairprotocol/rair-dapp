@@ -21,7 +21,8 @@ const AuthorCard = ({
     textDescriptionCustomStyles,
     backgroundImage,
     cardFooter,
-    buttonBackgroundHelp
+    buttonBackgroundHelp,
+    customStyle
   } = splashData;
 
   const DefaultButtonBlock = ({
@@ -36,7 +37,12 @@ const AuthorCard = ({
       <div className="button-wrapper">
         {purchaseButton?.buttonComponent !== undefined && (
           <purchaseButton.buttonComponent
-            {...{ ...purchaseButton, connectUserData, buttonLabel }}
+            {...{
+              ...purchaseButton,
+              connectUserData,
+              buttonLabel,
+              customStyle
+            }}
           />
         )}
         <div className="button-row-0">

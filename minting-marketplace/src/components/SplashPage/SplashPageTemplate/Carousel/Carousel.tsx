@@ -7,7 +7,9 @@ const CarouselListItem = (props) => {
   const { carouselItemTitle, carouselItemImg, carouselDescription } = props;
   return (
     <div className="join-pic-list">
-      <h4 className="carousel-items"> {carouselItemTitle} </h4>
+      {carouselItemTitle && (
+        <h4 className="carousel-items"> {carouselItemTitle} </h4>
+      )}
       <img className="join-pic-img" src={carouselItemImg} alt="community-img" />
       {carouselDescription && (
         <h6 className="carousel-description">{carouselDescription}</h6>
@@ -20,7 +22,9 @@ const CarouselItem = (props) => {
   const { carouselItemTitle, carouselItemImg, carouselDescription } = props;
   return (
     <div className="join-pic-carousel">
-      <h4 className="carousel-items"> {carouselItemTitle} </h4>
+      {carouselItemTitle && (
+        <h4 className="carousel-items"> {carouselItemTitle} </h4>
+      )}
       <img className="join-pic-img" src={carouselItemImg} alt="community-img" />
       {carouselDescription && (
         <h6 className="carousel-description">{carouselDescription}</h6>

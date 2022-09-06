@@ -12,6 +12,8 @@ import Teammate_VV from '../images/vv_Rair_logo.png';
 import BruceFenton2 from '../images/BruceFenton2.png';
 import NFTLA_ICON from '../images/NFTLA_icon.png';
 import NFTNYC_LOGO from '../images/nftnyc_logo.png';
+import Wallstreet1 from '../images/wallstreet1.png';
+import Wallstreet2 from '../images/wallstreet2.png';
 import CoinAgenda_LOGO from '../images/coinagenda.png';
 // import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
@@ -806,6 +808,31 @@ const teamVaporVerseArray = [
   }
 ];
 
+const teamWallstreetArray = [
+  {
+    chain: '',
+    nameTeammate: 'G. GEKKO',
+    imageUrl: Wallstreet1,
+    aboutTeammate: [
+      `Alpha trader. #80sboss. Greed is Good. 
+
+       Well, degens, we're not here to indulge in fantasy, but in political and economic reality. The metaverse, zuckerverse has become a second-rate power. Its trade deficit and its fiscal deficit are at nightmare proportions. Now, in the days of the free market, when our country was a top industrial power, there was accountability to the shitcoiner. The Carnegies, the Buterins, the men that built this great MLM empire, made sure of it because it was their crypto at stake. Today, management has no stake in the DAO! `
+    ],
+    socials: []
+  },
+  {
+    chain: '',
+    nameTeammate: 'P. BATEMEN',
+    imageUrl: Wallstreet2,
+    aboutTeammate: [
+      `Murders and Aquisitions. Big Huey fan.
+      
+      Their early work was a little too new wave for my taste. But when degens came out in '21, I think they really came into their own, commercially and artistically. The whole mint has a clear, crisp sound, and a new sheen of consummate professionalism that really gives the collection a big boost. He's been compared to Craig Wright, but I think Vitalik has a far more bitter, cynical sense of humor.`
+    ],
+    socials: []
+  }
+];
+
 const teamNFTLAarray = [
   {
     chain: '',
@@ -1247,6 +1274,26 @@ const NFTLATeamComponent = ({ primaryColor }) => {
   );
 };
 
+const WallstreetTeamComponent = ({ primaryColor }) => {
+  return (
+    <div className="splash-team-greyman">
+      {teamWallstreetArray.map((t, index) => {
+        return (
+          <Teammate
+            key={index + t.nameTeammate}
+            name={t.nameTeammate}
+            chain={t.chain}
+            desc={t.aboutTeammate}
+            socials={t.socials}
+            primaryColor={primaryColor}
+            url={t.imageUrl}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 const ImmersiVerseTeamComponent = ({ primaryColor }) => {
   return (
     <div className="splash-team-greyman">
@@ -1375,6 +1422,9 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
         )}
         {arraySplash === 'immersiverse' && (
           <ImmersiVerseTeamComponent primaryColor={primaryColor} />
+        )}
+        {arraySplash === 'wallstreet80sclub' && (
+          <WallstreetTeamComponent primaryColor={primaryColor} />
         )}
         {arraySplash === 'rair-basic' && (
           <RAIRBasicTeamComponent primaryColor={primaryColor} />

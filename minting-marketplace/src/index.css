@@ -21,6 +21,40 @@
     url(./fonts/charriot_deluxe/CharriotDeluxe.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'Cooper Std Black';
+  src: local('Cooper Std Black'),
+    url(./fonts/Cooper\ Std\ Black/Cooper\ Std\ Black.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Copperplate';
+  font-weight: normal;
+  src: local('Copperplate'),
+    url(./fonts/copperplate/OPTICopperplate.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Copperplate';
+  font-weight: heavy;
+  src: local('Copperplate'),
+    url(./fonts/copperplate/OPTICopperplate-Heavy.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Copperplate';
+  font-weight: normal;
+  src: local('Copperplate'),
+    url(./fonts/copperplate/OPTICopperplate.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Copperplate';
+  font-weight: light;
+  src: local('Copperplate'),
+    url(./fonts/copperplate/OPTICopperplate-Light.otf) format('opentype');
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
