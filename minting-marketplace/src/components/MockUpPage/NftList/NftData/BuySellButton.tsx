@@ -29,7 +29,7 @@ export const BuySellButton: React.FC<IBuySellButton> = ({
           : 'var(--charcoal-60)'
       }}>
       <MetamaskFox className="metamask-buy-button" />
-      {title}
+      <span className="button-buy-sell-text">{title}</span>
     </button>
   );
 };

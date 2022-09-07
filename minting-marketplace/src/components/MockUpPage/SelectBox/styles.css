@@ -419,10 +419,11 @@ video::-webkit-media-controls-panel {
 
 .nft-video-player-video {
   height: 427px;
+  width: 100%;
 }
 
 .video-js * {
-  border-radius: 16px;
+  border-radius: 50px;
 }
 
 .unlockable-videos-wrapper {
@@ -845,11 +846,7 @@ video {
   }
 
   #nft-data-page-wrapper {
-    align-items: center;
-    padding: 16px 45px 33px;
-    margin: 0px;
-    margin-top: 0.5rem;
-    width: inherit;
+    padding: 16px 20px 33px !important;
   }
 
   .custom-desc-to-offer {
@@ -890,8 +887,8 @@ video {
     padding-left: 4vw;
   }
 
-  #nft-data-page-wrapper {
-    /* margin-top: 1rem; */
+  .col-12.blockchain-switcher {
+    height: 6vw;
   }
 
   .custom-desc-to-offer {
@@ -948,9 +945,7 @@ video {
   }
 
   #nft-data-page-wrapper {
-    padding: 16px 20px 33px;
-    margin: 0px;
-    /* margin-top: 4rem; */
+    padding: 16px 45px 33px;
   }
 
   .nft-collection-wrapper {
@@ -982,6 +977,10 @@ video {
     margin-bottom: 16px;
   }
 
+  .button-buy-sell-text {
+    line-height: initial;
+  }
+
   .input-sell-value {
     margin-right: 0px;
     width: 257px;
@@ -995,6 +994,10 @@ video {
 @media screen and (max-width: 844px) {
   .main-block-app {
     margin-top: 0;
+  }
+
+  .mt-3 {
+    margin-top: 0 !important;
   }
 
   .col-12.blockchain-switcher {
@@ -1051,7 +1054,7 @@ video {
 
   .nft-video-player-video {
     width: 100%;
-    /* height: 250px; */
+    height: 300px;
   }
 
   .video-js {
@@ -1118,6 +1121,10 @@ video {
     width: 200px;
   }
 
+  .nft-video-player-video {
+    height: 260px;
+  }
+
   .container-title-collection .block-title-share h2 {
     font-size: 24px !important;
   }
@@ -1131,6 +1138,9 @@ video {
   }
 
   .nft-collection-icons-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 34px;
     height: 34px;
   }
@@ -1199,6 +1209,10 @@ video {
     align-items: flex-start;
   }
 
+  .nft-collection-video-wrapper {
+    height: inherit;
+  }
+
   .nft-data-sell-button {
     display: flex;
     flex-direction: column-reverse;
@@ -1265,7 +1279,7 @@ video {
 
   .nft-video-player-video {
     margin-right: 10px;
-    height: 250px;
+    height: 210px;
   }
 
   .nft-collection-wrapper {
@@ -1415,6 +1429,12 @@ video {
   .serial-number-title {
     font-size: 14px !important;
   }
+
+  #nft-data-page-wrapper {
+    width: 85vw;
+    padding: 16px 30px 108px !important;
+    margin: 0px;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -1433,9 +1453,8 @@ video {
 
   #nft-data-page-wrapper {
     width: 85vw;
-    padding: 16px 10px 108px;
+    padding: 16px 25px 108px !important;
     margin: 0px;
-    /* margin-top: 4rem; */
   }
 
   .nft-data-content {
@@ -1544,10 +1563,6 @@ video {
     height: 82px !important;
   }
 
-  .nft-collection-video-wrapper {
-    height: inherit;
-  }
-
   .unlockables-videos-list {
     width: 100%;
   }
@@ -1586,11 +1601,6 @@ video {
     top: 5px;
   }
 
-  .nft-collection-icons {
-    top: 30px;
-    right: 20px;
-  }
-
   .unlockables-video-player-circle {
     width: 37px;
     height: 37px;
@@ -1613,7 +1623,7 @@ video {
 
 @media screen and (max-device-width: 400px) {
   #nft-data-page-wrapper {
-    padding: 16px 0px 108px;
+    padding: 16px 20px 108px;
   }
 
   .nft-data-content {

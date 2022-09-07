@@ -80,7 +80,11 @@ const UnlockableVideosSingleTokenPage: React.FC<
                       {data.isUnlocked ? (
                         <>
                           <div className="video-lock-round">
-                            <PlayCircle className="video-single-token-unlock-play-circle" />
+                            <PlayCircle
+                              className="video-single-token-unlock-play-circle"
+                              width={'35px'}
+                              height={'35px'}
+                            />
                           </div>
                         </>
                       ) : (

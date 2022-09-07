@@ -65,6 +65,10 @@
   position: relative;
 }
 
+img.single-token-block-img {
+  object-fit: contain;
+}
+
 .nft-collection-icons-media {
   position: absolute;
   display: none;

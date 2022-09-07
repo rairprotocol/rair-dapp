@@ -11,7 +11,9 @@ const CustomShareButton: React.FC<ICusmonShareButton> = ({
   return (
     <button
       onClick={handleClick}
-      className={`share-button ${moreUnlockablesClassName}`}
+      className={`share-button ${
+        moreUnlockablesClassName ? moreUnlockablesClassName : ''
+      }`}
       style={{
         background: `${
           primaryColor === 'rhyno' ? '#F5F5F5' : 'var(--charcoal)'

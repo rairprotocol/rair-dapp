@@ -222,15 +222,23 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                   </div>
                 )
               ) : (
-                <div
+                <img
+                  src={
+                    selectedData?.image
+                      ? selectedData.image
+                      : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                  }
+                  alt="nft token image"
                   className="single-token-block-img"
-                  style={{
-                    backgroundImage: `url(${
-                      selectedData?.image
-                        ? selectedData.image
-                        : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
-                    })`
-                  }}></div>
+                  // style={{ objectFit: 'fill' }}
+                  // style={{
+                  //   backgroundImage: `url(${
+                  //     selectedData?.image
+                  //       ? selectedData.image
+                  //       : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
+                  //   })`
+                  // }}
+                ></img>
               )}
             </div>
           </div>
