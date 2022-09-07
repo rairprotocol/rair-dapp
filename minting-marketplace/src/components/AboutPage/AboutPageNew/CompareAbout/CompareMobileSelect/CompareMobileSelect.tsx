@@ -18,7 +18,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="rair tech" />
+                <img src={RairLogo} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Metaverse as-a-Service</div>
@@ -26,7 +26,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="rair tech" />
+                <img src={OpenSea} alt="OpenSea" />
               </div>
             </div>
             <div className="select-mobile-text">Just another Opensea page</div>
@@ -34,7 +34,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="rair tech" />
+                <img src={Rarible} alt="Rarible" />
               </div>
             </div>
             <div className="select-mobile-text">Just another Rarible page</div>
@@ -42,7 +42,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="rair tech" />
+                <img src={OneOf} alt="OneOf" />
               </div>
             </div>
             <div className="select-mobile-text">Not your brand</div>
@@ -50,7 +50,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="rair tech" />
+                <img src={Dapper} alt="Dapper" />
               </div>
             </div>
             <div className="select-mobile-text">Need flow devs</div>
@@ -58,7 +58,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={MinTable} alt="rair tech" />
+                <img src={MinTable} alt="Mintable App" />
               </div>
             </div>
             <div className="select-mobile-text">Just another Mintable page</div>
@@ -66,7 +66,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Curios} alt="rair tech" />
+                <img src={Curios} alt="Curios" />
               </div>
             </div>
             <div className="select-mobile-text">Curios backend..</div>
@@ -78,7 +78,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="rair tech" />
+                <img src={RairLogo} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Any EVM</div>
@@ -86,7 +86,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="rair tech" />
+                <img src={OpenSea} alt="OpenSea" />
               </div>
             </div>
             <div className="select-mobile-text">Limited EVMs</div>
@@ -94,7 +94,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="rair tech" />
+                <img src={Rarible} alt="Rarible" />
               </div>
             </div>
             <div className="select-mobile-text">ETH only</div>
@@ -102,7 +102,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="rair tech" />
+                <img src={OneOf} alt="OneOf" />
               </div>
             </div>
             <div className="select-mobile-text">Only Tezos</div>
@@ -110,7 +110,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="rair tech" />
+                <img src={Dapper} alt="Dapper" />
               </div>
             </div>
             <div className="select-mobile-text">Only Flow</div>
@@ -118,7 +118,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={MinTable} alt="rair tech" />
+                <img src={MinTable} alt="Mintable App" />
               </div>
             </div>
             <div className="select-mobile-text">ETH</div>
@@ -126,7 +126,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Curios} alt="rair tech" />
+                <img src={Curios} alt="Curios" />
               </div>
             </div>
             <div className="select-mobile-text">MATIC</div>
@@ -138,7 +138,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="rair tech" />
+                <img src={RairLogo} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Universal Onchain</div>
@@ -146,7 +146,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OpenSea} alt="rair tech" />
+                <img src={OpenSea} alt="OpenSea" />
               </div>
             </div>
             <div className="select-mobile-text">2.5% Offchain</div>
@@ -154,7 +154,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Rarible} alt="rair tech" />
+                <img src={Rarible} alt="Rarible" />
               </div>
             </div>
             <div className="select-mobile-text">2.5% Offchain</div>
@@ -162,7 +162,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={OneOf} alt="rair tech" />
+                <img src={OneOf} alt="OneOf" />
               </div>
             </div>
             <div className="select-mobile-text">Stuck on Tezos</div>
@@ -170,7 +170,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={Dapper} alt="rair tech" />
+                <img src={Dapper} alt="Dapper" />
               </div>
             </div>
             <div className="select-mobile-text">Stuck on Flow</div>

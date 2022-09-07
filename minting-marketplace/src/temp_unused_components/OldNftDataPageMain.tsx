@@ -445,7 +445,7 @@ const NftDataPageMain = ({
                       ? chainData[data?.contract.blockchain]?.image
                       : chainData[blockchain]?.image
                   }`}
-                  alt=""
+                  alt="Blockchain network"
                 />
                 <span
                   style={{

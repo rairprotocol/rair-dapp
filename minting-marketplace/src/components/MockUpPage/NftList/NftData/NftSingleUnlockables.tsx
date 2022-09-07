@@ -78,7 +78,10 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
                             style={{
                               position: 'relative'
                             }}>
-                            <img src={`${v?.staticThumbnail}`} alt="" />
+                            <img
+                              src={`${v?.staticThumbnail}`}
+                              alt="Preview unlockable video"
+                            />
                           </div>
                         ) : (
                           <div className="block-rariry-unlock-video lock">
@@ -91,7 +94,10 @@ const NftSingleUnlockables: React.FC<INftSingleUnlockables> = ({
                                 {v.description}
                               </p>
                             </div>
-                            <img src={`${v?.staticThumbnail}`} alt="" />
+                            <img
+                              src={`${v?.staticThumbnail}`}
+                              alt="Preview unlockable video"
+                            />
                           </div>
                         )}
                         <div

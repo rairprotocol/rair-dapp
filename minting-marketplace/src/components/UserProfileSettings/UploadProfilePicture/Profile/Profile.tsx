@@ -26,7 +26,7 @@ const ProfileComponent = ({
         <h1> </h1>
         <label className={`${cl.customFileUpload} ${'fas'}`}>
           <div className={cl.imgWrap}>
-            <img alt="" htmlFor={cl.photoUpload} src={src} />
+            <img alt="User Avatar" htmlFor={cl.photoUpload} src={src} />
           </div>
         </label>
         <div className={cl.name}>{name}</div>

@@ -100,13 +100,11 @@ const VideoTilesItem = ({
               <div
                 className="block-with-video"
                 style={{ position: 'relative' }}>
-                <div className="video-block-metamask-some">
-                  {/* <img src={Metamask} alt="metamask logo" /> */}
-                </div>
+                <div className="video-block-metamask-some"></div>
                 <img
                   className="block-img-bg static"
                   src={backgroundImage}
-                  alt="demo video"
+                  alt="Previw for demo video"
                 />
               </div>
               <div className="video-description">
@@ -190,7 +188,7 @@ const VideoTilesItem = ({
                 <img
                   className="block-img-bg"
                   src={videoSRC}
-                  alt="unlockable video"
+                  alt="Unlockable preview video"
                 />
               </div>
               <div className="video-description">

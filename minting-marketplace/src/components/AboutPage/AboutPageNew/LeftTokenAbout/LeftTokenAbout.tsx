@@ -42,7 +42,8 @@ const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
                 href="https://discord.gg/APmkpQzxrx"
                 target="_blank"
                 rel="noreferrer">
-                <img src={DiscordIcon} alt="discord icon" /> Join our Discord
+                <img src={DiscordIcon} alt="Discord RAIR.TECH" /> Join our
+                Discord
               </a>
             </div>
           </div>

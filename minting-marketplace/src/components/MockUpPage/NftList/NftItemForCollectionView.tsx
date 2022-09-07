@@ -129,7 +129,7 @@ const NftItemForCollectionViewComponent: React.FC<
         {metadata?.animation_url ? (
           isFileUrl === 'gif' ? (
             <img
-              alt="thumbnail"
+              alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
               src={metadata?.animation_url ? metadata?.animation_url : pict}
               style={{
                 position: 'absolute',
@@ -146,7 +146,7 @@ const NftItemForCollectionViewComponent: React.FC<
                 overflow: 'hidden'
               }}>
               <ReactPlayer
-                alt="thumbnail"
+                alt="metadata?.name === 'none' ? 'NFT token' : metadata?.name"
                 url={`${metadata?.animation_url}`}
                 light={metadata?.image ? metadata?.image : pict}
                 style={{
@@ -165,7 +165,7 @@ const NftItemForCollectionViewComponent: React.FC<
           )
         ) : (
           <img
-            alt="thumbnail"
+            alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
             src={
               metadata?.image
                 ? // ? metaDataProducts?.metadata?.image
@@ -217,7 +217,7 @@ const NftItemForCollectionViewComponent: React.FC<
                             ? someUsersData.avatar
                             : defaultImage
                         }
-                        alt="user"
+                        alt="User Avatar"
                       />
                       <h5 style={{ wordBreak: 'break-all' }}>
                         {someUsersData.nickName
@@ -235,7 +235,7 @@ const NftItemForCollectionViewComponent: React.FC<
                     </div>
                   ) : (
                     <div className="collection-block-user-creator">
-                      <img src={defaultImage} alt="user" />
+                      <img src={defaultImage} alt="User Avatar" />
                       <h5 style={{ wordBreak: 'break-all' }}>
                         {userName &&
                           userName.slice(0, 5) +
@@ -250,7 +250,7 @@ const NftItemForCollectionViewComponent: React.FC<
                   style={{ alignItems: 'flex-end' }}>
                   <img
                     src={blockchain && chainData[blockchain]?.image}
-                    alt="blockchain"
+                    alt="Blockchain network"
                   />
                   {checkPrice()}
                 </div>
@@ -262,7 +262,7 @@ const NftItemForCollectionViewComponent: React.FC<
               <img
                 className="blockchain-img"
                 src={`${blockchain && chainData[blockchain]?.image}`}
-                alt=""
+                alt="Blockchain network"
               />
             </div>
             <span className="description description-price description-price-unlockables-page">

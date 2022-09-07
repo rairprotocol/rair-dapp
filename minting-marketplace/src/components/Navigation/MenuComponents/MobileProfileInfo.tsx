@@ -79,11 +79,11 @@ const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
             <div className="burger-menu-profile">
               {profileData.avatar ? (
                 <div className="block-avatar-profile">
-                  <img src={profileData.avatar} alt="avatar" />
+                  <img src={profileData.avatar} alt="Your Profile avatar" />
                 </div>
               ) : (
                 <div className="block-avatar-profile">
-                  <img src={defaultPictures} alt="avatar" /> :
+                  <img src={defaultPictures} alt="Your Profile avatar" /> :
                 </div>
               )}
               <div style={{ margin: '10px 0', wordBreak: 'break-all' }}>

@@ -74,7 +74,7 @@ const NftListUnlockablesVideos = ({
                     }}
                     src={`${v?.staticThumbnail}`}
                     // src={selectedData?.image}
-                    alt=""
+                    alt="Preview unlockable video"
                   />
                 </div>
                 <div
@@ -154,7 +154,7 @@ const NftListUnlockablesVideos = ({
                 }}
                 // src={`/thumbnails/${v?.thumbnail}.png`}
                 src={selectedData?.image}
-                alt=""
+                alt="Preview unlockable video"
               />
             </div>
             <div

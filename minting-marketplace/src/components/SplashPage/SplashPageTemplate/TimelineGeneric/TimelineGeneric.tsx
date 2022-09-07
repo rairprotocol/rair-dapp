@@ -10,7 +10,11 @@ const TimelineGenericComponent = ({ timelinePics }) => {
         <ul>
           <li style={{ paddingBottom: '91px' }}>
             <div className={cl.right_content}>
-              <img className={cl.pic1} src={pic1} alt="TimeLine" />
+              <img
+                className={cl.pic1}
+                src={pic1}
+                alt="It's the incredible GREYMAN 100% PURE GREY. Offical DADARA No-fun product"
+              />
             </div>
             <div className={cl.left_content}>
               <h3>Physical Era</h3>
@@ -32,7 +36,11 @@ const TimelineGenericComponent = ({ timelinePics }) => {
                 display: 'inline-flex'
               }}
               className={cl.right_content}>
-              <img className={cl.pic2} src={pic2} alt="TimeLine" />
+              <img
+                className={cl.pic2}
+                src={pic2}
+                alt="We finally discovered some color inside GREYMAN!"
+              />
               <p className={cl.p_content}>
                 <strong>1996-98</strong> <br />
                 Greyman became a series based on the same character with various
@@ -52,7 +60,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
                 alignItems: 'flex-start'
               }}
               className={cl.right_content}>
-              <img className={cl.pic3} src={pic3} alt="TimeLine" />
+              <img className={cl.pic3} src={pic3} alt="Greyman Statue" />
               <p
                 style={{ paddingLeft: '5rem', wight: '353px' }}
                 className={cl.p_content}>
@@ -72,7 +80,11 @@ const TimelineGenericComponent = ({ timelinePics }) => {
               they could burn them in a private ritual at the end, thus burning
               burning and freeing their Inner Greyman.
             </p>
-            <img className={cl.pic5} src={pic5} alt="TimeLine" />
+            <img
+              className={cl.pic5}
+              src={pic5}
+              alt="The desert in which there are a lot of Greyman statues"
+            />
           </div>
 
           <li>
@@ -97,7 +109,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
                   height: '355px'
                 }}
                 src={pic4}
-                alt="TimeLine"
+                alt="Greyman on a pink background"
               />
             </div>
             <div className={cl.left_content}>
@@ -128,7 +140,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
               </span>{' '}
               for 0.7 ETH)
             </p>
-            <img className={cl.pic6} src={pic6} alt="TimeLine" />
+            <img className={cl.pic6} src={pic6} alt="Greyman in the Matrix" />
           </div>
 
           <li style={{ marginTop: '3rem' }}>
@@ -138,7 +150,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
               <img
                 style={{ display: 'block', width: '358px', height: '464px' }}
                 src={pic7}
-                alt="TimeLine"
+                alt="Person of the Year TIME"
               />
             </div>
             <div className={cl.right_content}>
@@ -171,7 +183,10 @@ const TimelineGenericComponent = ({ timelinePics }) => {
       <div className={cl.timelineMobile}>
         <div className={cl.mobileTitleBlock}>Physical Era</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic1} alt="TimeLine" />
+          <img
+            src={pic1}
+            alt="It's the incredible GREYMAN 100% PURE GREY. Offical DADARA No-fun product"
+          />
 
           <div className={cl.mobileDesc}>
             <span>1994</span>
@@ -182,7 +197,10 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic2} alt="TimeLine" />
+          <img
+            src={pic2}
+            alt="We finally discovered some color inside GREYMAN!"
+          />
 
           <div className={cl.mobileDesc}>
             <span>1996-98</span>
@@ -194,7 +212,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic3} alt="TimeLine" />
+          <img src={pic3} alt="Greyman Statue" />
 
           <div className={cl.mobileDesc}>
             <span>1998</span> <br />
@@ -203,7 +221,10 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic5} alt="TimeLine" />
+          <img
+            src={pic5}
+            alt="The desert in which there are a lot of Greyman statues"
+          />
 
           <div className={cl.mobileDesc}>
             <span>2002</span> <br />
@@ -225,7 +246,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
         </div>
         <div className={cl.mobileTitleBlock}>Web3 Era</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic4} alt="TimeLine" />
+          <img src={pic4} alt="Greyman on a pink background" />
 
           <div className={cl.mobileDesc}>
             <span>4 November 2021 </span> <br />
@@ -234,7 +255,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic6} alt="TimeLine" />
+          <img src={pic6} alt="Greyman in the Matrix" />
 
           <div className={cl.mobileDesc}>
             <span>30 November 2021</span> <br />
@@ -244,7 +265,7 @@ const TimelineGenericComponent = ({ timelinePics }) => {
         </div>
         <div className={cl.mobileTitleBlock}>Beyond</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic7} alt="TimeLine" />
+          <img src={pic7} alt="Person of the Year TIME" />
 
           <div className={cl.mobileDesc}>
             <span>2022</span> <br />

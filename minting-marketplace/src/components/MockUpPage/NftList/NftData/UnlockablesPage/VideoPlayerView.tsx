@@ -101,7 +101,7 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                     <img
                       className={cl.playImagesOnListVideos}
                       src={playImages}
-                      alt="Play"
+                      alt="Button Play video"
                     />
                   </button>
                 </div>
@@ -131,7 +131,7 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
               <img
                 className={cl.playImagesOnSingleVideo}
                 src={playImages}
-                alt="Play"
+                alt="Button Play video"
               />
             </div>
           )}
@@ -158,7 +158,7 @@ const VideoPlayerView: React.FC<IVideoPlayerView> = ({
                   <img
                     className={cl.playImagesOnSingleVideo}
                     src={playImages}
-                    alt="Play"
+                    alt="Button Play video"
                   />
                 </div>
               )

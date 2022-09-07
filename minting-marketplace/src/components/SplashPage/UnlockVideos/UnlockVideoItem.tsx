@@ -19,12 +19,12 @@ const UnlockVideoItem = ({
         }}>
         <div className="block-with-video" style={{ position: 'relative' }}>
           <div className="video-block-metamask-some">
-            <img src={Metamask} alt="metamask logo" />
+            <img src={Metamask} alt="metamask-logo" />
           </div>
           <img
             className="block-img-bg"
             src={UnlockableVideo}
-            alt="unlockble video"
+            alt="Preview unlockable video"
           />
         </div>
         <div className="video-description">

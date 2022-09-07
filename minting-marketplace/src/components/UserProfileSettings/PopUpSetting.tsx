@@ -165,7 +165,7 @@ const PopUpSettings = ({
                 objectFit: 'cover'
               }}
               src={imagePreviewUrl === null ? defaultPictures : imagePreviewUrl}
-              alt="avatart-user"
+              alt="User Avatar"
             />
           ) : (
             <SvgUserIcon />

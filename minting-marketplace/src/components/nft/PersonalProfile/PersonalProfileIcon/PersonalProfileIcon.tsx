@@ -231,13 +231,17 @@ const PersonalProfileIconComponent = ({ userData }) => {
           <div className={cl.profileIconPicWrapper}>
             <img
               className={cl.profileIconPic}
-              alt=""
+              alt="User Avatar"
               src={originalPhotoValue}
             />
           </div>
         ) : isPhotoUpdate ? (
           <div className={cl.profileIconPicWrapper}>
-            <img className={cl.profileIconPic} alt="" src={newPhotoValue} />
+            <img
+              className={cl.profileIconPic}
+              alt="User Avatar"
+              src={newPhotoValue}
+            />
           </div>
         ) : (
           <div className={cl.profileIcon}>

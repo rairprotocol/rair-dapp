@@ -37,7 +37,7 @@ const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
         }}>
         {buttonCustomLogo}
         {buttonImg && (
-          <img className="metamask-logo" src={buttonImg} alt="form-logo" />
+          <img className="metamask-logo" src={buttonImg} alt="metamask-logo" />
         )}{' '}
         {buttonLabel}
       </button>

@@ -57,7 +57,7 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                             ? someUsersData?.avatar
                             : defaultPhoto
                         }
-                        alt="rair-tech"
+                        alt="Created by user"
                       />
                       <div className="item-name-text">{token.offerName}</div>
                     </div>
@@ -81,8 +81,8 @@ const CollectionInfo: React.FC<ICollectionInfo> = ({
                     </div>
                     <div className="item-price">
                       <img
+                        alt="Blockchain network"
                         src={blockchain && chainData[blockchain]?.image}
-                        alt="blockchain"
                       />
                       {utils
                         .formatEther(

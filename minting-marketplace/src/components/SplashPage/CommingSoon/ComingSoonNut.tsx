@@ -17,7 +17,7 @@ const ComingSoonNut = () => {
       <div className="nipsey-comming-soon nutcrackers">
         <div className="information-author">
           <div className="img-coming-nuts">
-            <img src={Main} alt="logo" />
+            <img src={Main} alt="Custom logo by Rair Tech" />
           </div>
           <div className="block-splash">
             <div className="text-splash">

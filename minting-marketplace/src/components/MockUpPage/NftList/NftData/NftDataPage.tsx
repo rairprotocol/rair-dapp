@@ -255,7 +255,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                   <img
                     style={{ width: '24px', transform: 'scale(1.2)' }}
                     // src={`${chainData[data?.product.blockchain]?.image}`}
-                    alt=""
+                    alt="NFT powered by Rair Tech"
                   />
                   <span
                     style={{
@@ -462,7 +462,7 @@ const NftDataPage = ({ primaryColor, textColor }) => {
                             filter: 'blur(3px)'
                           }}
                           src={data?.tokens[0].metadata?.image}
-                          alt=""
+                          alt="NFT powered by Rair Tech"
                         />
                       </div>
                       <div

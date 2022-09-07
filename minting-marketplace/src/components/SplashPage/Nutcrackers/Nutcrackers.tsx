@@ -326,19 +326,13 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
                 good for the environment so the North Pole doesn’t melt too
                 fast.
               </p>
-
-              {/* <div className="btn-buy-metamask">
-                                <button><img className="metamask-logo" src={Metamask} alt="metamask-logo" />Join with Telegram</button>
-                            </div> */}
             </div>
             <div className="join-pic">
               <img src={Cracker} alt="Cracker" />
             </div>
           </div>
         </div>
-        <div className="block-photos-nuts">
-          {/* <img src={photoNut} alt="photo" /> */}
-        </div>
+        <div className="block-photos-nuts"></div>
         <TeamMeet primaryColor={primaryColor} arraySplash={'nuts'} />
         <div className="powered-by-rair">
           <img src={PoweredRair} alt="Powered by Rair tech" />

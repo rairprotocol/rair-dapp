@@ -125,7 +125,7 @@ const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
               href="https://discord.gg/NFeGnPkbfd"
               target="_blank"
               rel="noreferrer">
-              <img src={DiscordIcon} alt="discord icon" /> Join our Discord
+              <img src={DiscordIcon} alt="Discord RAIR.TECH" /> Join our Discord
             </a>
           </div>
         </div>

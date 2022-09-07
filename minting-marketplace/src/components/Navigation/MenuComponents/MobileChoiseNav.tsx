@@ -125,7 +125,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
         </div>
       ) : (
         <NavLink to="/">
-          <img src={headerLogoMobile} alt="logo_rair" />
+          <img src={headerLogoMobile} alt="Rair Tech" />
         </NavLink>
       )}
     </div>

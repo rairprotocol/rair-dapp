@@ -130,7 +130,7 @@ const PersonalProfileMyCreatedComponent = ({
                                     ? `${chainData[item?.blc]?.image}`
                                     : ''
                                 }
-                                alt=""
+                                alt="Blockchain network"
                               />
                             </div>
                           </div>

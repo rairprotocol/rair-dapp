@@ -66,7 +66,7 @@ const SharePopUp: React.FC<ISharePopUp> = ({
             <img
               style={{ width: 30, height: 'auto', marginLeft: '10px' }}
               src={headerLogo}
-              alt="rair tech"
+              alt="Rair Tech"
             />
           </ListItemAvatar>
           <ListItemText

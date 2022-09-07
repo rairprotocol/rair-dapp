@@ -10,7 +10,11 @@ const CarouselListItem = (props) => {
       {carouselItemTitle && (
         <h4 className="carousel-items"> {carouselItemTitle} </h4>
       )}
-      <img className="join-pic-img" src={carouselItemImg} alt="community-img" />
+      <img
+        className="join-pic-img"
+        src={carouselItemImg}
+        alt="Join to community"
+      />
       {carouselDescription && (
         <h6 className="carousel-description">{carouselDescription}</h6>
       )}
@@ -25,7 +29,11 @@ const CarouselItem = (props) => {
       {carouselItemTitle && (
         <h4 className="carousel-items"> {carouselItemTitle} </h4>
       )}
-      <img className="join-pic-img" src={carouselItemImg} alt="community-img" />
+      <img
+        className="join-pic-img"
+        src={carouselItemImg}
+        alt="Join to community"
+      />
       {carouselDescription && (
         <h6 className="carousel-description">{carouselDescription}</h6>
       )}

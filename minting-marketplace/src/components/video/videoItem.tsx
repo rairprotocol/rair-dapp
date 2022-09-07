@@ -206,7 +206,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
           width: 'inherit'
         }}>
         <img
-          alt="thumbnail"
+          alt="Video thumbnail"
           src={`${mediaList[item].staticThumbnail}`}
           style={{
             position: 'absolute',
@@ -218,7 +218,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
           className="col-12 h-100 w-100"
         />
         <img
-          alt="Animated thumbnail"
+          alt="Animated video thumbnail"
           src={`${mediaList[item].animatedThumbnail}`}
           style={{
             position: 'absolute',
@@ -243,7 +243,10 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
         <div className="info-wrapper video-size">
           <div className="user-info">
             <div className="user-image">
-              <img src={dataUser?.avatar ? dataUser?.avatar : ''} alt="user" />
+              <img
+                src={dataUser?.avatar ? dataUser?.avatar : ''}
+                alt="User Avatar"
+              />
             </div>
             <div className="user-name">
               <span>
@@ -285,7 +288,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                       onClick={() => setOpenVideoplayer(true)}
                       className={'modal-content-play-image'}
                       src={playImages}
-                      alt="Play"
+                      alt="Button play video"
                     />
                   </>
                 )}
@@ -293,7 +296,7 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                   <></>
                 ) : (
                   <img
-                    alt="modal-content-video-thumbnail"
+                    alt="Modal content video thumbnail"
                     src={`${mediaList[item].staticThumbnail}`}
                     className="modal-content-video-thumbnail"
                   />
@@ -315,7 +318,10 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                 <div className="modal-content-block-btns">
                   {mediaList[item]?.isUnlocked === false && (
                     <div className="modal-content-block-buy">
-                      <img src={data?.tokens[0].metadata.image} alt="fsf" />
+                      <img
+                        src={data?.tokens[0].metadata.image}
+                        alt="NFT token powered by Rair tech"
+                      />
                       <CustomButton
                         text={'Buy now'}
                         width={'232px'}
@@ -361,7 +367,10 @@ const VideoItem: React.FC<IVideoItem> = ({ mediaList, item }) => {
                     availableToken.map((e) => {
                       return (
                         <div key={e._id} className="more-info-unlock-wrapper">
-                          <img src={e.metadata.image} alt="fsf" />
+                          <img
+                            src={e.metadata.image}
+                            alt="NFT token powered by Rair Tech"
+                          />
                           <CustomButton
                             text={
                               data?.contract.products.offers[e.offer].price +

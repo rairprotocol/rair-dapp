@@ -92,7 +92,7 @@ const ShowVideoToLoggedInUsers = ({
                 style={{ border: 'none', background: 'none' }}
                 className="video-module-play-button"
                 onClick={() => openVideo()}>
-                <img src={playIcon} alt="Play" />
+                <img src={playIcon} alt="Button Play Video" />
               </button>
             </div>
           </div>
@@ -164,7 +164,7 @@ const ShowVideoToLoggedInUsers = ({
                 style={{ border: 'none', background: 'none' }}
                 className="video-module-play-button"
                 onClick={() => openVideo()}>
-                <img src={playIcon} alt="Play" />
+                <img src={playIcon} alt="Button Play video" />
               </button>
             </div>
           </div>

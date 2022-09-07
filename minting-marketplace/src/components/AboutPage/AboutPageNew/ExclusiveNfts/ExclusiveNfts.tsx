@@ -29,21 +29,27 @@ const ExclusiveNfts = () => {
         </MainSelectNft>
         <div className="block-nfts">
           <div className="box-nft">
-            <img src={Nft_4} alt="img" />
-            <img src={Nft_2} alt="img" />
+            <img src={Nft_4} alt="Exclusive NFT Coin Agenda Global" />
+            <img src={Nft_2} alt="Exclusive NFT Nutcracher" />
           </div>
           <div className="box-nft">
-            <img src={Nft_3} alt="img" />
-            <img src={Nft_1} alt="img" />
+            <img
+              src={Nft_3}
+              alt="Exclusive NFT Coin Agenda Middle East and Africa"
+            />
+            <img src={Nft_1} alt="Exclusive NFT Moster" />
           </div>
         </div>
       </div>
       <MobileCarouselNfts>
         <img src={NftImage} alt="img" />
-        <img src={Nft_4} alt="img" />
-        <img src={Nft_2} alt="img" />
-        <img src={Nft_3} alt="img" />
-        <img src={Nft_1} alt="img" />
+        <img src={Nft_4} alt="Exclusive NFT Coin Agenda Global" />
+        <img src={Nft_2} alt="Exclusive NFT Nutcracher" />
+        <img
+          src={Nft_3}
+          alt="Exclusive NFT Coin Agenda Middle East and Africa"
+        />
+        <img src={Nft_1} alt="Exclusive NFT Moster" />
       </MobileCarouselNfts>
     </div>
   );

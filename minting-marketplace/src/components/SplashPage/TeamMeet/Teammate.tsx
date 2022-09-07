@@ -14,7 +14,7 @@ const Teammate = ({
   return (
     <div className="box-teammate">
       <div className="img-teammate">
-        <img src={url} alt="teamate-img" />
+        <img src={url} alt={name} />
       </div>
       <div className="position-teammate">
         <div className="temmate-content-up">

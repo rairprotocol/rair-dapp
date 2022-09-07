@@ -83,7 +83,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
             <span>by:</span>
             <img
               src={someUsersData?.avatar ? someUsersData.avatar : defaultUser}
-              alt="user"
+              alt="User Avatar"
             />
             <h5 style={{ wordBreak: 'break-all' }}>
               {someUsersData && someUsersData.nickName

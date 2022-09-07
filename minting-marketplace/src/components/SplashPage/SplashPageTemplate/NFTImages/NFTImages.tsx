@@ -45,7 +45,7 @@ const NFTImages = ({
                   <img
                     className="join-pic-main-img"
                     src={NftImage}
-                    alt="community-img"
+                    alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
               </div>
@@ -54,28 +54,28 @@ const NFTImages = ({
                   <img
                     className="join-pic-img"
                     src={Nft_1}
-                    alt="community-img"
+                    alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
                 <div className="join-pic">
                   <img
                     className="join-pic-img"
                     src={Nft_2}
-                    alt="community-img"
+                    alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
                 <div className="join-pic">
                   <img
                     className="join-pic-img"
                     src={Nft_3}
-                    alt="community-img"
+                    alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
                 <div className="join-pic">
                   <img
                     className="join-pic-img"
                     src={Nft_4}
-                    alt="community-img"
+                    alt="Exclusive NFT powered by RAIR"
                   />
                 </div>
               </div>
@@ -88,12 +88,28 @@ const NFTImages = ({
                 <img
                   className="join-pic-img"
                   src={NftImage}
-                  alt="community-img"
+                  alt="Exclusive NFT powered by RAIR"
                 />
-                <img className="join-pic-img" src={Nft_4} alt="community-img" />
-                <img className="join-pic-img" src={Nft_3} alt="community-img" />
-                <img className="join-pic-img" src={Nft_2} alt="community-img" />
-                <img className="join-pic-img" src={Nft_1} alt="community-img" />
+                <img
+                  className="join-pic-img"
+                  src={Nft_4}
+                  alt="Exclusive NFT powered by RAIR"
+                />
+                <img
+                  className="join-pic-img"
+                  src={Nft_3}
+                  alt="Exclusive NFT powered by RAIR"
+                />
+                <img
+                  className="join-pic-img"
+                  src={Nft_2}
+                  alt="Exclusive NFT powered by RAIR"
+                />
+                <img
+                  className="join-pic-img"
+                  src={Nft_1}
+                  alt="Exclusive NFT powered by RAIR"
+                />
               </MobileCarouselNfts>
             </div>
           </>

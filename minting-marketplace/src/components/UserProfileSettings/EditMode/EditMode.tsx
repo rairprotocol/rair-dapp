@@ -116,7 +116,7 @@ const EditMode = ({
                   }`}>
                   <label>
                     <div className="change-profile-photo-block">
-                      <img alt="" src={userAvatar} />
+                      <img alt="User Avatar" src={userAvatar} />
                     </div>
                     <input
                       style={{ display: 'none' }}
@@ -134,7 +134,7 @@ const EditMode = ({
                       borderRadius: 16
                     }}
                     src={imagePreviewUrl}
-                    alt="avatart"
+                    alt="User Avatar"
                   />
                 </div>
               )}
@@ -148,7 +148,7 @@ const EditMode = ({
                   }`}>
                   <label>
                     <div className="change-profile-photo-block">
-                      <img alt="" src={userAvatar} />
+                      <img alt="User Avatar" src={userAvatar} />
                     </div>
                     <input
                       style={{ display: 'none' }}

@@ -56,7 +56,7 @@ const PersonalProfileMyNftTabComponent = ({
                                 ? `${chainData[item?.blockchain]?.image}`
                                 : ''
                             }
-                            alt=""
+                            alt="Blockchain network"
                           />
                         </div>
                       </div>

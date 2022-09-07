@@ -37,7 +37,7 @@ const ThankYouPage = () => {
                     href="https://discord.gg/NFeGnPkbfd"
                     target="_blank"
                     rel="noreferrer">
-                    <img src={DiscordIcon} alt="discord icon" /> Join our
+                    <img src={DiscordIcon} alt="Discord RAIR.TECH" /> Join our
                     Discord
                   </a>
                 </div>
@@ -47,7 +47,7 @@ const ThankYouPage = () => {
               </div>
               <div className="logo-author">
                 {/* <img src={logoDigital} alt="southwest digital" /> */}
-                <img src={logoAuthor} alt="logo-author" />
+                <img src={logoAuthor} alt="Custom Rair Tech logo" />
               </div>
             </div>
           </div>

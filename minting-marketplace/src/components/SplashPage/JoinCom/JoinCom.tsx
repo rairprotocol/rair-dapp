@@ -36,7 +36,7 @@ const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {
           </div>
         </div>
         <div className="join-pic">
-          <img src={JoinCommunity} alt="community-img" />
+          <img src={JoinCommunity} alt="Join to community" />
         </div>
       </div>
     </div>

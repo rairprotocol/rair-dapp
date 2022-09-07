@@ -13,7 +13,7 @@ const MainLogo: React.FC<IMainLogo> = ({
   return (
     <>
       <MainLogoContaier>
-        <img onClick={() => goHome()} alt="Header Logo" src={headerLogo} />
+        <img onClick={() => goHome()} alt="Rair Tech" src={headerLogo} />
       </MainLogoContaier>
     </>
   );

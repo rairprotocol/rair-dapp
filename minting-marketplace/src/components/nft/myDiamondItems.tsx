@@ -90,7 +90,7 @@ const TokenLayout: React.FC<ITokenLayout> = ({
                   ? `${blockchainData[item?.blockchain]?.image}`
                   : ''
               }
-              alt=""
+              alt="Blockchain network"
             />
           </div>
         </div>

@@ -43,12 +43,12 @@ const ExclusiveNft = ({
         </div>
         <div className="block-nfts">
           <div className="box-nft">
-            <img src={Nft_4} alt="img" />
-            <img src={Nft_2} alt="img" />
+            <img src={Nft_4} alt="Exclusive NFT powered by Rair Tech" />
+            <img src={Nft_2} alt="Exclusive NFT powered by Rair Tech" />
           </div>
           <div className="box-nft">
-            <img src={Nft_3} alt="img" />
-            <img src={Nft_1} alt="img" />
+            <img src={Nft_3} alt="Exclusive NFT powered by Rair Tech" />
+            <img src={Nft_1} alt="Exclusive NFT powered by Rair Tech" />
           </div>
         </div>
       </div>

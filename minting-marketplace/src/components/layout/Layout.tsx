@@ -43,11 +43,11 @@ const Layout: React.FC<ILayout> = (props) => {
         <div
           className="col-12 pt-2 mb-4"
           style={{ height: '8vh', marginTop: '30px' }}>
-          <img src={headerLogo} className="h-100" alt="header logo" />
+          <img src={headerLogo} className="h-100" alt="Rair Tech Logo" />
         </div>
         {!userData && account ? (
           <button className="btn btn-light" onClick={connectUserData}>
-            Connect <img src={MetamaskLogo} alt="metamask logo" />
+            Connect <img src={MetamaskLogo} alt="Metamask Logo" />
           </button>
         ) : (
           <div className="menu">

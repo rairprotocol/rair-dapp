@@ -24,7 +24,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
             <div className="notification-left">
               <div className="dot-notification" />
               <div className="notification-img">
-                <img src={headerLogo} alt="author" />
+                <img src={headerLogo} alt="Rair Tech" />
               </div>
               <div className="text-notification">
                 <div className="title-notif">Notification from Rair.tech</div>
@@ -42,7 +42,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
                 3 hours ago
               </div>
               <div className="icon-remove">
-                <img src={IconRemove} alt="icon-remove" />
+                <img src={IconRemove} alt="Close notification item" />
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
             <div className="notification-left">
               <div className="dot-notification" />
               <div className="notification-img">
-                <img src={headerLogo} alt="author" />
+                <img src={headerLogo} alt="Rair Tech" />
               </div>
               <div className="text-notification">
                 <div className="title-notif">Notification from Rair.tech</div>
@@ -81,7 +81,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
                 3 hours ago
               </div>
               <div className="icon-remove">
-                <img src={IconRemove} alt="icon-remove" />
+                <img src={IconRemove} alt="Close notification item" />
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
             <div className="notification-left">
               <div className="dot-notification" />
               <div className="notification-img">
-                <img src={NftImg} alt="author" />
+                <img src={NftImg} alt="Exclusive NFT token" />
               </div>
               <div className="text-notification">
                 <div className="title-notif">Factory updates</div>
@@ -111,7 +111,7 @@ const NotificationPage = ({ headerLogo, NftImg, primaryColor }) => {
                 5 hours ago
               </div>
               <div className="icon-remove">
-                <img src={IconRemove} alt="icon-remove" />
+                <img src={IconRemove} alt="Close notification item" />
               </div>
             </div>
           </div>

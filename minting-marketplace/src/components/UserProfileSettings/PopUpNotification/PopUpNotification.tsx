@@ -77,7 +77,7 @@ const PopUpNotification = () =>
               <div className="box-notification">
                 <div className="dot-notification" />
                 <div className="notification-img">
-                  <img src={headerLogo} alt="author" />
+                  <img src={headerLogo} alt="Rair Tech" />
                 </div>
                 <div className="text-notification">
                   <div className="title-notif">Notification from Rair.tech</div>
@@ -98,7 +98,7 @@ const PopUpNotification = () =>
               <div className="box-notification">
                 <div className="dot-notification" />
                 <div className="notification-img">
-                  <img src={NftImg} alt="author" />
+                  <img src={NftImg} alt="Exclusive NFT token by RAIR" />
                 </div>
                 <div className="text-notification">
                   <div className="title-notif">Factory updates</div>

@@ -176,7 +176,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
           {metaDataProducts?.metadata?.animation_url ? (
             isFileUrl === 'gif' ? (
               <img
-                alt="thumbnail"
+                alt={collectionName}
                 src={
                   metaDataProducts?.metadata?.animation_url
                     ? metaDataProducts?.metadata?.animation_url
@@ -197,7 +197,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                   overflow: 'hidden'
                 }}>
                 <ReactPlayer
-                  alt="thumbnail"
+                  alt={collectionName}
                   url={`${metaDataProducts.metadata?.animation_url}`}
                   light={
                     metaDataProducts.metadata?.image
@@ -220,7 +220,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             )
           ) : (
             <img
-              alt="thumbnail"
+              alt={collectionName}
               src={
                 metaDataProducts?.metadata?.image
                   ? metaDataProducts?.metadata?.image
@@ -264,7 +264,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                               ? accountData.avatar
                               : defaultAvatar
                           }
-                          alt="user"
+                          alt="User Avatar"
                         />
                         <h5 style={{ wordBreak: 'break-all', ...mobileFont }}>
                           {accountData.nickName
@@ -284,7 +284,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                       </div>
                     ) : (
                       <div className="collection-block-user-creator">
-                        <img src={defaultAvatar} alt="user" />
+                        <img src={defaultAvatar} alt="User Avatar" />
                         <h5 style={{ wordBreak: 'break-all', ...mobileFont }}>
                           {ownerCollectionUser &&
                             ownerCollectionUser.slice(0, 5) +
@@ -300,7 +300,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
                     <img
                       className="blockchain-img"
                       src={`${blockchain && chainData[blockchain]?.image}`}
-                      alt="blockchain-img"
+                      alt="Blockchain network"
                     />
                     <span className="description">
                       {ifPriseSame()?.split(' ')[0]}
@@ -313,7 +313,7 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               <img
                 className="blockchain-img"
                 src={`${blockchain && chainData[blockchain]?.image}`}
-                alt="blockchain-img"
+                alt="Blockchain network"
               />
               <span className="description description-price">
                 {checkPrice()}

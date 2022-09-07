@@ -140,7 +140,7 @@ const SplashPage = ({ setIsSplashPage }) => {
                   <img
                     className="metamask-logo"
                     src={DocumentIcon}
-                    alt="form-logo"
+                    alt="metamask-logo"
                   />{' '}
                   Form
                 </button>
@@ -240,7 +240,7 @@ const SplashPage = ({ setIsSplashPage }) => {
                 <img
                   className="join-pic-img-list"
                   src={SXSW1}
-                  alt="community-img"
+                  alt="ImmersiVerse ATX Bubblegum"
                 />
               </div>
               <div className="join-pic-list">
@@ -248,7 +248,7 @@ const SplashPage = ({ setIsSplashPage }) => {
                 <img
                   className="join-pic-img-list"
                   src={SXSW2}
-                  alt="community-img"
+                  alt="ImmersiVerse ATX Gold"
                 />
               </div>
               <div className="join-pic-list">
@@ -256,7 +256,7 @@ const SplashPage = ({ setIsSplashPage }) => {
                 <img
                   className="join-pic-img-list"
                   src={SXSW3}
-                  alt="community-img"
+                  alt="ImmersiVerse ATX Seabreeze"
                 />
               </div>
             </div>
@@ -264,15 +264,27 @@ const SplashPage = ({ setIsSplashPage }) => {
             <MobileCarouselNfts>
               <div className="join-pic-carousel">
                 <h4 className="carousel-items"> Bubblegum </h4>
-                <img className="join-pic-img" src={SXSW1} alt="community-img" />
+                <img
+                  className="join-pic-img"
+                  src={SXSW1}
+                  alt="ImmersiVerse ATX Bubblegum"
+                />
               </div>
               <div className="join-pic-carousel">
                 <h4 className="carousel-items"> Gold</h4>
-                <img className="join-pic-img" src={SXSW2} alt="community-img" />
+                <img
+                  className="join-pic-img"
+                  src={SXSW2}
+                  alt="ImmersiVerse ATX Gold"
+                />
               </div>
               <div className="join-pic-carousel">
                 <h4 className="carousel-items"> Seabreeze </h4>
-                <img className="join-pic-img" src={SXSW3} alt="community-img" />
+                <img
+                  className="join-pic-img"
+                  src={SXSW3}
+                  alt="ImmersiVerse ATX Seabreeze"
+                />
               </div>
             </MobileCarouselNfts>
           )}

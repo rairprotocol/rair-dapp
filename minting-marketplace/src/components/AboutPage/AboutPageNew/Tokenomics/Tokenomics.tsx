@@ -57,10 +57,10 @@ const Tokenomics: React.FC<ITokenomics> = () => {
               <div className="items-title">Q1 2022</div>
               <ul>
                 <li>
-                  <img src={Matic_icon} alt="matic" />
+                  <img src={Matic_icon} alt="Matic" />
                 </li>
                 <li>
-                  <img src={Binance_icon} alt="binance" />
+                  <img src={Binance_icon} alt="Binance" />
                 </li>
                 <li>
                   <img src={Kit_icon} alt="Kit" />

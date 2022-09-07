@@ -55,7 +55,7 @@ const Footer = () => {
         <div className="footer-box-join">
           <FooterImage>
             <NavLink to="/">
-              <img src={headerLogo} alt="rair-logo" />
+              <img src={headerLogo} alt="Rair Tech" />
             </NavLink>
           </FooterImage>
           <CommunityBlock primaryColor={primaryColor}>

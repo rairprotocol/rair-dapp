@@ -24,7 +24,7 @@ const TimelineComponent = () => {
                   height: '355px'
                 }}
                 src={pic1}
-                alt="TimeLine"
+                alt="It's the incredible GREYMAN 100% PURE GREY. Offical DADARA No-fun product"
               />
             </div>
             <div className={cl.left_content}>
@@ -56,7 +56,7 @@ const TimelineComponent = () => {
                   zIndex: '1'
                 }}
                 src={pic2}
-                alt="TimeLine"
+                alt="We finally discovered some color inside GREYMAN!"
               />
               <p className={cl.p_content}>
                 <strong>1996-98</strong> <br />
@@ -85,7 +85,7 @@ const TimelineComponent = () => {
                   height: '441px'
                 }}
                 src={pic3}
-                alt="TimeLine"
+                alt="Greyman Statue"
               />
               <p
                 style={{ paddingLeft: '5rem', wight: '353px' }}
@@ -114,7 +114,7 @@ const TimelineComponent = () => {
                 height: '373px'
               }}
               src={pic5}
-              alt="TimeLine"
+              alt="The desert in which there are a lot of Greyman statues"
             />
           </div>
 
@@ -140,7 +140,7 @@ const TimelineComponent = () => {
                   height: '355px'
                 }}
                 src={pic4}
-                alt="TimeLine"
+                alt="Greyman on a pink background"
               />
             </div>
             <div className={cl.left_content}>
@@ -179,7 +179,7 @@ const TimelineComponent = () => {
                 height: '356px'
               }}
               src={pic6}
-              alt="TimeLine"
+              alt="Greyman in the Matrix"
             />
           </div>
 
@@ -190,7 +190,7 @@ const TimelineComponent = () => {
               <img
                 style={{ display: 'block', width: '358px', height: '464px' }}
                 src={pic7}
-                alt="TimeLine"
+                alt="Person of the Year TIME"
               />
             </div>
             <div className={cl.right_content}>
@@ -223,7 +223,10 @@ const TimelineComponent = () => {
       <div className={cl.timelineMobile}>
         <div className={cl.mobileTitleBlock}>Physical Era</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic1} alt="TimeLine" />
+          <img
+            src={pic1}
+            alt="It's the incredible GREYMAN 100% PURE GREY. Offical DADARA No-fun product"
+          />
 
           <div className={cl.mobileDesc}>
             <span>1994</span>
@@ -234,7 +237,10 @@ const TimelineComponent = () => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic2} alt="TimeLine" />
+          <img
+            src={pic2}
+            alt="We finally discovered some color inside GREYMAN!"
+          />
 
           <div className={cl.mobileDesc}>
             <span>1996-98</span>
@@ -246,7 +252,7 @@ const TimelineComponent = () => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic3} alt="TimeLine" />
+          <img src={pic3} alt="Greyman Statue" />
 
           <div className={cl.mobileDesc}>
             <span>1998</span> <br />
@@ -255,7 +261,10 @@ const TimelineComponent = () => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic5} alt="TimeLine" />
+          <img
+            src={pic5}
+            alt="The desert in which there are a lot of Greyman statues"
+          />
 
           <div className={cl.mobileDesc}>
             <span>2002</span> <br />
@@ -277,7 +286,7 @@ const TimelineComponent = () => {
         </div>
         <div className={cl.mobileTitleBlock}>Web3 Era</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic4} alt="TimeLine" />
+          <img src={pic4} alt="Greyman on a pink background" />
 
           <div className={cl.mobileDesc}>
             <span>4 November 2021 </span> <br />
@@ -286,7 +295,7 @@ const TimelineComponent = () => {
           </div>
         </div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic6} alt="TimeLine" />
+          <img src={pic6} alt="Greyman in the Matrix" />
 
           <div className={cl.mobileDesc}>
             <span>30 November 2021</span> <br />
@@ -296,7 +305,7 @@ const TimelineComponent = () => {
         </div>
         <div className={cl.mobileTitleBlock}>Beyond</div>
         <div className={cl.timeLineContentMobile}>
-          <img src={pic7} alt="TimeLine" />
+          <img src={pic7} alt="Person of the Year TIME" />
 
           <div className={cl.mobileDesc}>
             <span>2022</span> <br />

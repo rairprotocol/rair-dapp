@@ -206,7 +206,7 @@ const SplashPage = ({ setIsSplashPage }) => {
             <img
               className="block-img-mobile"
               src={NipseyBg}
-              alt="nipsey-hussle"
+              alt="Nipseyverse"
             />
             <div className="text-splash">
               <div className="title-splash nipsey">
@@ -344,7 +344,7 @@ const SplashPage = ({ setIsSplashPage }) => {
               </div>
               <div className="logo-author">
                 {/* <img src={logoDigital} alt="southwest digital" /> */}
-                <img src={logoAuthor} alt="logo-author" />
+                <img src={logoAuthor} alt="Custom logo by Rair Tech" />
               </div>
             </div>
           </div>
@@ -382,16 +382,7 @@ const SplashPage = ({ setIsSplashPage }) => {
                 launch.
               </p>
             </div>
-
             <Countdown />
-            {/* <button onClick={() => navigate('/coming-soon')}>
-                <img
-                  className="metamask-logo"
-                  src={Metamask}
-                  alt="metamask-logo"
-                />{" "}
-                COMING SOON
-              </button> */}
           </div>
           <div className="offer-fans">
             <div className="offer-fans-container">
@@ -423,10 +414,10 @@ const SplashPage = ({ setIsSplashPage }) => {
         /> */}
         <TeamMeet primaryColor={primaryColor} arraySplash={'nipsey'} />
         <div className="nipsey-img-masks">
-          <img src={Bandana} alt="" />
-          <img src={Pods} alt="" />
-          <img src={Cepk} alt="" />
-          <img src={Bandana} alt="" />
+          <img src={Bandana} alt="Bandana" />
+          <img src={Pods} alt="headphones" />
+          <img src={Cepk} alt="White Cap" />
+          <img src={Bandana} alt="Bandana" />
         </div>
       </div>
       <div className="home-splash-mobile">
@@ -436,7 +427,7 @@ const SplashPage = ({ setIsSplashPage }) => {
             background: `${primaryColor === 'rhyno' ? '#dedede' : '#181717'}`
           }}>
           <div className="splash-header-mobile">
-            <img src={DigitalMobile} alt="logo" />
+            <img src={DigitalMobile} alt="Digital photo" />
           </div>
           <div className="splash-auth-mobile">
             <div className="auth-mobile-title">
@@ -482,7 +473,7 @@ const SplashPage = ({ setIsSplashPage }) => {
             </div>
             <div className="streaming-nft-block">
               <div className="nft-box">
-                <img src={NftMobile_1} alt="nft-logo" />
+                <img src={NftMobile_1} alt="Exclusive Nipseyverse NFT" />
                 <div className="nft-description">
                   <h4>
                     Only{' '}
@@ -521,7 +512,7 @@ const SplashPage = ({ setIsSplashPage }) => {
                 </div>
               </div>
               <div className="nft-box">
-                <img src={NftMobile_2} alt="nft-logo" />
+                <img src={NftMobile_2} alt="Exclusive Nipseyverse NFT" />
                 <div className="nft-description">
                   <h4>
                     Only{' '}
@@ -647,7 +638,7 @@ const SplashPage = ({ setIsSplashPage }) => {
               </div>
               <div className="owner-box">
                 <div className="owner-img">
-                  <img src={RairTechMobile} alt="rair-tech-logo" />
+                  <img src={RairTechMobile} alt="Rair Tech" />
                 </div>
                 <div className="owner-title-mobile">
                   <h5>RAIR Technologies</h5>
