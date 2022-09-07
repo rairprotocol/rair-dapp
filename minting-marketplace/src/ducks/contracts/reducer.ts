@@ -29,7 +29,7 @@ const contractAddresses: ContractAddressesType = {
   },
   '0x61': {
     // Binance Testnet
-    factory: '0x2b5ed3C018DA72270C3C30003C8d5affdBB9F7f5',
+    factory: '0xfaB4B835fBFC671c15e2fDe237c625e82612893F',
     erc777: '0x5b01aBE2DCfaa4C9c80ccE87223c8e21D7Fc9845',
     minterMarketplace: '0xcBA6014452e82eBF98fA2748BBD46f1733a13AdD',
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
@@ -40,7 +40,7 @@ const contractAddresses: ContractAddressesType = {
   },
   '0x5': {
     // Ethereum Goerli
-    factory: '0xe1BBd1d2B2B52042CC3B766Fb72AA2804e402B2e',
+    factory: '0x12EF5310499318C90C55077241137Db52189b036',
     erc777: '0x4e6a5B076730954d80e55dDb2d2e7E732B5bAb70',
     minterMarketplace: '0x14ef15A945b6Cae28f4FA3862E41d74E484Cd3B5',
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
@@ -51,7 +51,7 @@ const contractAddresses: ContractAddressesType = {
   },
   '0x13881': {
     // Matic Mumbai
-    factory: '0x2E8DC5Bc8523Bd129dc770908b41c5c2c22d4AdD',
+    factory: '0x72639374fC9e4eec25839080763025A1d3E710EC',
     erc777: '0x1AeAb89553233D1045b506e8DCBFa3df76E18896',
     minterMarketplace: '0x4594D508cDa05D016571082d467889f4629e1f56',
     diamondFactory: (process.env.REACT_APP_DIAMONDS_ENABLED === 'true' &&
