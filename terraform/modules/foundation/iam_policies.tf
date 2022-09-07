@@ -18,7 +18,12 @@ resource "google_storage_bucket_iam_binding" "file_manager_gke_binding" {
     # Rairnode
     "serviceAccount:${google_service_account.each_gke_service_account[
       "rairnode"
-    ].email}"
+    ].email}",
+
+    # Media service
+    "serviceAccount:${google_service_account.each_gke_service_account[
+      "media_service"
+    ].email}",
   ]
 }
 

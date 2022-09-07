@@ -3,6 +3,8 @@ resource "google_service_account" "tailscale_relay" {
   display_name = "Tailscale Relay VM Service Account"
 }
 
+# TODO: this can be turned into a GKE binding role
+# https://rairtech.atlassian.net/browse/RAIR-3702
 resource "google_service_account" "jenkins_gce" {
   account_id   = "jenkins-gce"
   display_name = "jenkins resource for building and deploying nodes"
