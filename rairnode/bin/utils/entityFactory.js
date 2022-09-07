@@ -65,7 +65,6 @@ exports.getOne = (Model, populateOptions) =>
       Model.findById(req.params.id).populate(populateOptions);
     }
     const doc = await query;
-    // Tour.findOne({ _id: req.params.id })
 
     if (!doc) {
       return next(new AppError('No doc found with that ID', 404));
@@ -111,7 +110,7 @@ exports.getAll = (Model, options = {}) =>
     }
 
     const doc = await features.query.find();
-    if (!doc) {
+    if (!doc || doc.length < 1) {
       return next(new AppError('No doc found', 404));
     }
     // SEND RESPONSE

@@ -26,12 +26,5 @@ Contract.statics = {
     blockchain: 1,
     diamond: 1,
   },
-  findByUserProjection: {
-    _id: 1,
-    contractAddress: 1,
-    title: 1,
-    blockchain: 1,
-    diamond: 1,
-  },
 };
 module.exports = Contract;

@@ -118,6 +118,7 @@ Provide ability to make some specific actions on the platform
           * [x] /my - get contracts for curent user [see details here](readme/get_contracts_my.md).
           * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts.md)
           * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
+          * [x] /byUser/:userId - get list of conract for user based on user address [see details here](readme/get_contracts_by_userId.md)
       * [x] /products - Return all Products (Query string supported) [see details here](readme/common_get_all.md)
           * [x] /:productId - return one found by ID [see details here](readme\get_product_by_id)
           * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme\get_products_by_user_adress)

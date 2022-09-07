@@ -51,10 +51,10 @@ exports.getMyContracts = async (req, res, next) => {
 };
 
 exports.findContractsByUser = async (user) =>
-  Contract.find({ user }, Contract.findByUserProjection);
+  Contract.find({ user }, Contract.defaultProjection);
 
 exports.getContractsIdsForUser = async (user) =>
-  Contract.find({ user }, Contract.findByUserProjection).distinct('_id');
+  Contract.find({ user }, Contract.defaultProjection).distinct('_id');
 
 exports.getFullContracts = async (req, res, next) => {
   try {
