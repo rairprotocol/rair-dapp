@@ -298,10 +298,3 @@ resource "cloudflare_record" "rair_tech__staging_jenkins" {
   value   = "10.1.64.7"
   type    = local.record_type.A
 }
-
-resource "cloudflare_record" "rair_tech__new_dev" {
-  zone_id = cloudflare_zone.rair_tech.id
-  name    = "new.dev"
-  value   = "10.0.64.44"
-  type    = local.record_type.A
-}
