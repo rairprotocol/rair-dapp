@@ -16,9 +16,9 @@ module.exports = (config) => {
       retryOptions: {
         autoRetry: true,
         retryDelayMultiplier: 3,
-        totalTimeout: 500,
-        maxRetryDelay: 60,
-        maxRetries: 5,
+        totalTimeout: 1000,
+        maxRetryDelay: 180,
+        maxRetries: 10,
       },
     });
   } catch (e) {
