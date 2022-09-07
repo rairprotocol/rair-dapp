@@ -38,19 +38,15 @@ Get tokens for the product
   "fromToken": {
     "required": false,
     "content": {
-      "type": "number"
+      "type": "number",
+      "defaultValues": 0
     }
   },
   "toToken": {
     "required": false,
     "content": {
-      "type": "number"
-    }
-  },
-  "limit": {
-    "required": false,
-    "content": {
-      "type": "number"
+      "type": "number",
+      "defaultValues": 20
     }
   },
   "sortByToken": {

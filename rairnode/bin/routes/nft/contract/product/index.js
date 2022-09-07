@@ -17,19 +17,17 @@ module.exports = (context) => {
         const { contract, product } = req;
         const {
           fromToken = 0,
-          toToken = 0,
-          limit = 20,
+          toToken,
           sortByToken = '1',
           sortByPrice = '',
           priceFrom = '',
           priceTo = '',
           forSale = '',
         } = req.query;
-
         const firstToken = (BigInt(fromToken) - 1n).toString();
-        const lastToken = (BigInt(toToken) + 1n).toString();
-        const numberOfTokens = Number(limit);
-
+        const lastToken = !toToken
+          ? (BigInt(fromToken) + 1n + BigInt(20)).toString()
+          : (BigInt(toToken) + 1n).toString();
         let options = {
           token:
             lastToken - 1
@@ -155,8 +153,7 @@ module.exports = (context) => {
 
         const tokens = await MintedToken.aggregate(aggregateOptions)
           .sort(_.assign({}, sortByPrice ? { 'offer.price': Number(sortByPrice) } : {}, sortByToken ? { token: Number(sortByToken) } : {}))
-          .collation({ locale: 'en_US', numericOrdering: true })
-          .limit(numberOfTokens);
+          .collation({ locale: 'en_US', numericOrdering: true });
 
         return res.json({ success: true, result: { totalCount, tokens } });
       } catch (err) {
