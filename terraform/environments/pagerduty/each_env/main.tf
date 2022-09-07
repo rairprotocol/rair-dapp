@@ -12,7 +12,7 @@ locals {
 }
 
 resource "pagerduty_service" "service" {
-  name                    = "Dev ${local.tf_admin_postfix}"
+  name                    = "${var.name} ${local.tf_admin_postfix}"
   escalation_policy       = var.escalation_policy
   alert_creation          = "create_alerts_and_incidents"
 }
