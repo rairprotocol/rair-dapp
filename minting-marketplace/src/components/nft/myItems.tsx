@@ -40,6 +40,7 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
   const [titleSearch, setTitleSearch] = useState<string>('');
   const [sortItem, setSortItem] = useState<TSortChoice>();
   const [isOpenBlockchain, setIsOpenBlockchain] = useState<boolean>(false);
+  const [isCreatedTab, setIsCreatedTab] = useState<boolean>(false);
   const [tabIndex, setTabIndex] = useState(0);
 
   const getMyNft = useCallback(async () => {
@@ -138,7 +139,6 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
       <PersonalProfileBackground />
       <div className="my-items-header-wrapper">
         <PersonalProfileIcon userData={userData} />
-
         {/* <div onClick={() => navigate(-1)} className="my-items-title-wrapper">
           <i className="fas fa-arrow-left fa-arrow-custom"></i>
           <h1 className="my-items-title">My Items</h1>
@@ -260,8 +260,10 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
               <PersonalProfileMyCreated
                 openModal={openModal}
                 setSelectedData={setSelectedData}
+                setIsCreatedTab={setIsCreatedTab}
                 primaryColor={primaryColor}
                 chainData={chainData}
+                tabIndex={tabIndex}
               />
             </TabPanel>
           </Tabs>
@@ -274,6 +276,8 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
           selectedData={selectedData}
           primaryColor={primaryColor}
           defaultImg={defaultImg}
+          isCreatedTab={isCreatedTab}
+          setIsCreatedTab={setIsCreatedTab}
         />
       ) : (
         <></>

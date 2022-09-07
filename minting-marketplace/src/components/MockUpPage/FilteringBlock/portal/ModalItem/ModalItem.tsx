@@ -20,9 +20,11 @@ import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.t
 const ModalItem: React.FC<IModalItem> = ({
   isOpenBlockchain,
   setIsOpenBlockchain,
+  setIsCreatedTab,
   selectedData,
   defaultImg,
-  primaryColor
+  primaryColor,
+  isCreatedTab
 }) => {
   const [price, setPrice] = useState<number>(0);
   const [isApproved, setIsApproved] = useState<boolean | undefined>(undefined);
@@ -40,9 +42,10 @@ const ModalItem: React.FC<IModalItem> = ({
   }, [currentChain, selectedData]);
 
   const onCloseModal = useCallback(() => {
+    setIsCreatedTab(false);
     setIsOpenBlockchain(false);
     setPrice(0);
-  }, [setIsOpenBlockchain]);
+  }, [setIsOpenBlockchain, setIsCreatedTab]);
 
   useEffect(() => {
     setOnMyChain(currentChain === selectedData?.blockchain);
@@ -183,32 +186,41 @@ const ModalItem: React.FC<IModalItem> = ({
           )}
 
           <div>
-            <button
-              className="btn btn-stimorol"
-              onClick={() => {
-                if (onMyChain && resaleInstance) {
-                  if (isApproved === false) {
-                    approveToken();
-                  } else if (isApproved === true) {
-                    createResaleOffer();
+            {isCreatedTab ? (
+              <span>
+                Price for this NFT on the marketplace :{' '}
+                {ethers.utils.formatEther(Number(selectedData?.offer?.price))}{' '}
+                {selectedData?.blockchain &&
+                  blockchainData[selectedData.blockchain]?.symbol}
+              </span>
+            ) : (
+              <button
+                className="btn btn-stimorol"
+                onClick={() => {
+                  if (onMyChain && resaleInstance) {
+                    if (isApproved === false) {
+                      approveToken();
+                    } else if (isApproved === true) {
+                      createResaleOffer();
+                    }
+                  } else {
+                    web3Switch(selectedData?.blockchain);
                   }
-                } else {
-                  web3Switch(selectedData?.blockchain);
-                }
-              }}>
-              {onMyChain
-                ? resaleInstance
-                  ? isApproved === undefined
-                    ? 'Please wait...'
-                    : isApproved
-                    ? 'Sell'
-                    : 'Approve the marketplace for this token'
-                  : 'The marketplace is not available for this blockchain'
-                : `Switch to ${
-                    selectedData?.blockchain &&
-                    blockchainData[selectedData?.blockchain]?.name
-                  }`}
-            </button>
+                }}>
+                {onMyChain
+                  ? resaleInstance
+                    ? isApproved === undefined
+                      ? 'Please wait...'
+                      : isApproved
+                      ? 'Sell'
+                      : 'Approve the marketplace for this token'
+                    : 'The marketplace is not available for this blockchain'
+                  : `Switch to ${
+                      selectedData?.blockchain &&
+                      blockchainData[selectedData?.blockchain]?.name
+                    }`}
+              </button>
+            )}
           </div>
         </div>
       </div>

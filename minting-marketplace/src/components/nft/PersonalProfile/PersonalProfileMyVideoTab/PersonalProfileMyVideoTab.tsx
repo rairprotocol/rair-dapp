@@ -54,7 +54,7 @@ const PersonalProfileMyVideoTabComponent = ({ titleSearch }) => {
   return (
     <div className="PersonalProfileMyVideoTab-wrapper">
       <div
-        className="list-button-wrapper"
+        className="list-button-wrapper tree-tab-unlocks"
         style={{ verticalAlign: 'top', width: '100%' }}>
         {myVideo ? (
           Object.keys(myVideo).length > 0 ? (

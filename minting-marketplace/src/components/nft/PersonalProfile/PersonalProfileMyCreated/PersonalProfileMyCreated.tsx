@@ -1,19 +1,21 @@
 //@ts-nocheck
 import { memo, useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
-// import cl from './created.module.css';
+import { useStateIfMounted } from 'use-state-if-mounted';
 
 const PersonalProfileMyCreatedComponent = ({
   openModal,
   setSelectedData,
   primaryColor,
-  chainData
-  // textColor
+  chainData,
+  setIsCreatedTab,
+  tabIndex
 }) => {
   const defaultImg =
     'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW';
   const [myContracts, setMyContracts] = useState();
-  const [myProducts, setMyProducts] = useState();
+  const [myProducts, setMyProducts] = useStateIfMounted();
+  const [load, setLoad] = useState(true);
 
   const getMyContracts = useCallback(async () => {
     const response = await axios.get('/api/contracts', {
@@ -24,6 +26,7 @@ const PersonalProfileMyCreatedComponent = ({
     });
 
     if (response.data.success) {
+      setLoad(false);
       setMyContracts(response.data.contracts);
     } else if (
       response?.message === 'jwt expired' ||
@@ -38,31 +41,42 @@ const PersonalProfileMyCreatedComponent = ({
   const getMyProducts = useCallback(async () => {
     if (myContracts && myContracts.length) {
       const allInOne = [];
-
       for await (const oneContract of myContracts) {
-        const response = await axios.get(
-          `/api/nft/network/${oneContract.blockchain}/${oneContract.contractAddress}/0`
-        );
-        allInOne.push({
-          ...response.data.result.tokens
-        });
-        setMyProducts(allInOne);
+        // const response = await axios.get(
+        //   `/api/nft/network/${oneContract.blockchain}/${oneContract.contractAddress}/0`
+        // );
+        axios
+          .get(
+            `/api/nft/network/${oneContract.blockchain}/${oneContract.contractAddress}/0`
+          )
+          .then((response) => {
+            allInOne.push({
+              ...response.data.result.tokens,
+              blc: oneContract.blockchain,
+              title: oneContract.title
+            });
+            setMyProducts(allInOne);
+          });
       }
     }
-  }, [myContracts]);
+  }, [myContracts, setMyProducts]);
 
-  useEffect(() => {
-    getMyContracts();
-  }, [getMyContracts]);
+  // useEffect(() => {
+  //   getMyContracts();
+  // }, [getMyContracts]);
 
   useEffect(() => {
     getMyProducts();
   }, [getMyProducts]);
 
+  useEffect(() => {
+    if (tabIndex === 3) {
+      getMyContracts();
+    }
+  }, [getMyContracts, tabIndex]);
+
   return (
-    <div
-      className="wrapper
-  ">
+    <div className="wrapper">
       <div className="gen">
         <div className="my-items-product-wrapper row">
           {myProducts && myProducts.length > 0 ? (
@@ -71,8 +85,13 @@ const PersonalProfileMyCreatedComponent = ({
                 return (
                   <div
                     onClick={() => {
+                      setIsCreatedTab(true);
                       openModal();
-                      setSelectedData(op);
+                      setSelectedData({
+                        ...op,
+                        blockchain: item.blc,
+                        title: item.title
+                      });
                     }}
                     key={Math.random() + index}
                     className="m-1 my-1 col-2 my-item-element"
@@ -107,8 +126,8 @@ const PersonalProfileMyCreatedComponent = ({
                               <img
                                 className="my-items-blockchain-img"
                                 src={
-                                  op?.blockchain
-                                    ? `${chainData[op?.blockchain]?.image}`
+                                  item?.blc
+                                    ? `${chainData[item?.blc]?.image}`
                                     : ''
                                 }
                                 alt=""
@@ -122,8 +141,12 @@ const PersonalProfileMyCreatedComponent = ({
                 );
               });
             })
+          ) : load ? (
+            <div className="loader-wrapper">
+              <div className="load" />
+            </div>
           ) : (
-            <p>you do not created, yet</p>
+            <h1>You do not created, yet</h1>
           )}
         </div>
       </div>

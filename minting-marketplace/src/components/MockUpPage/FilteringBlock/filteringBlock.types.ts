@@ -123,9 +123,11 @@ export interface IModal {
 export interface IModalItem {
   isOpenBlockchain: boolean;
   setIsOpenBlockchain: (value: boolean) => void;
+  setIsCreatedTab: (value: boolean) => void;
   selectedData: TDiamondTokensType | undefined;
   defaultImg: string;
   primaryColor: ColorChoice;
+  isCreatedTab: boolean;
 }
 
 export interface IBlockMinMax {

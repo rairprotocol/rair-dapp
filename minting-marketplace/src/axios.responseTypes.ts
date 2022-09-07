@@ -32,6 +32,7 @@ export type TMetadataType = TCheckMetadataOnBlockchain & {
 
 export type TTokenData = {
   authenticityLink: string;
+  blockchain?: string;
   contract: string;
   creationDate: string;
   isMetadataPinned: boolean;
