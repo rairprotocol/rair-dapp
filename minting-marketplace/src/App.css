@@ -613,6 +613,9 @@ a:hover {
   position: absolute;
   top: 32%;
   left: 36%;
+  background: rgba(127, 127, 127, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
 }
 .modal-content-play-image:hover {
   transform: scale(1.2);

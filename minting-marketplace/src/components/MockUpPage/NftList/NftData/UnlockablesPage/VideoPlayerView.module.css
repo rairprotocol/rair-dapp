@@ -73,6 +73,15 @@
   word-break: break-all;
   overflow: auto;
   color: #fff;
+  background: rgba(100, 100, 100, 0.5);
+  padding: 2px 7px;
+  border-radius: 8px;
+}
+
+.preview {
+  background: rgba(127, 127, 127, 0.5);
+  padding: 2px 7px;
+  border-radius: 8px;
 }
 
 .iconKey {
@@ -96,6 +105,8 @@
 .playImagesOnSingleVideo {
   margin-top: 7rem;
   transition: all 0.1s ease;
+  background: rgba(127, 127, 127, 0.3);
+  border-radius: 50%;
 }
 
 .playImagesOnSingleVideo:hover {

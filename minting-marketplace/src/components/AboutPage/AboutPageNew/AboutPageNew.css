@@ -290,7 +290,7 @@
 }
 
 .streaming-box .streaming-offer.rhyno {
-  background: #989898;
+  background: #cfcfcf;
 }
 
 .streaming-box .streaming-offer button {
@@ -1038,6 +1038,10 @@
   align-items: flex-start;
 }
 
+.about-map-item .progress-title.rhyno {
+  color: #000;
+}
+
 .about-map-item .progress-title span {
   width: 68px;
   height: 8px;
@@ -1069,6 +1073,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.about-roadmap .block-devide-box.rhyno {
+  background: #4e4d4d;
+}
+
+.about-roadmap .block-devide-box.rhyno .squere {
+  background: #4e4d4d;
 }
 
 .about-roadmap .block-devide-box .squere {
@@ -1851,7 +1863,7 @@ button.btn-show-more {
 
   .left-tokens.about-page {
     width: 100%;
-    margin-bottom: 325px;
+    margin-bottom: -100px;
     justify-content: center;
   }
 
@@ -1923,7 +1935,7 @@ button.btn-show-more {
   }
 
   .roadmap-container-mobile .about-map-item {
-    margin-bottom: 128px;
+    margin-bottom: 80px;
   }
 
   .roadmap-container-mobile .about-map-item:first-child {
@@ -1944,6 +1956,10 @@ button.btn-show-more {
 
   .about-page-logo img {
     margin-left: 30px;
+  }
+
+  .about-streams-video {
+    padding-bottom: 0;
   }
 }
 
@@ -2358,6 +2374,10 @@ button.btn-show-more {
     width: 150px;
     z-index: 1;
   }
+
+  .about-map-item .map-progress .line-grey {
+    width: 180px;
+  }
 }
 
 @media screen and (max-width: 515px) {
@@ -2442,7 +2462,7 @@ button.btn-show-more {
 
 @media screen and (max-width: 480px) {
   .left-tokens.about-page {
-    margin-bottom: 350px;
+    /* margin-bottom: 0px; */
   }
 
   .left-tokens.about-page .block-left-tokens {
@@ -2531,6 +2551,10 @@ button.btn-show-more {
   .about-map-item .map-progress .line-public {
     width: 120px;
     z-index: 1;
+  }
+
+  .about-map-item .map-progress .line-grey {
+    width: 120px;
   }
 
   .about-roadmap .map-item-progress {
@@ -2639,7 +2663,7 @@ button.btn-show-more {
   }
 
   .about-page-platform {
-    margin-top: 500px;
+    /* margin-top: 500px; */
   }
 
   .home-about--page .btn-discord a {
@@ -2667,7 +2691,7 @@ button.btn-show-more {
   }
 
   .left-tokens.about-page {
-    margin-bottom: 450px;
+    /* margin-bottom: 450px; */
   }
 
   .tokenomics-ecosystem .ecosystem-list-text {

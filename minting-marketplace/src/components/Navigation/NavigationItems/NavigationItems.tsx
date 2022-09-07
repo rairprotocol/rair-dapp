@@ -77,7 +77,7 @@ export const List = styled.ul<IMenuMobileWrapper>`
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
-  padding: 20px 20px 50px;
+  padding: 20px 20px 70px;
   width: 100%;
   height: 93vh;
   position: absolute;
@@ -91,6 +91,10 @@ export const List = styled.ul<IMenuMobileWrapper>`
   list-style-type: none;
   grid-gap: 0px;
   z-index: 50;
+
+  @media screen and (max-width: 450px) {
+    padding: 20px 20px 90px;
+  }
 `;
 
 export const ListProfileItem = styled.div`

@@ -1,7 +1,7 @@
 import React from 'react';
 import { IRoadMap } from '../aboutPage.types';
 
-const RoadMap: React.FC<IRoadMap> = () => {
+const RoadMap: React.FC<IRoadMap> = ({ primaryColor }) => {
   return (
     <div className="about-roadmap">
       <div className="about-road-title">2022 Roadmap</div>
@@ -15,7 +15,10 @@ const RoadMap: React.FC<IRoadMap> = () => {
               <div className="progress-box">Q2</div>
               <div className="progress-box">Q3</div>
             </div>
-            <div className="progress-title">
+            <div
+              className={`progress-title ${
+                primaryColor === 'rhyno' ? 'rhyno' : ''
+              }`}>
               Curation Alpha
               <span></span>
             </div>
@@ -35,7 +38,10 @@ const RoadMap: React.FC<IRoadMap> = () => {
               <div className="progress-box">Q3</div>
               <div className="progress-box">Q4</div>
             </div>
-            <div className="progress-title">
+            <div
+              className={`progress-title ${
+                primaryColor === 'rhyno' ? 'rhyno' : ''
+              }`}>
               Private Beta
               <span></span>
             </div>
@@ -55,7 +61,10 @@ const RoadMap: React.FC<IRoadMap> = () => {
               <div className="progress-box">Q4</div>
               <div className="progress-box">Q5</div>
             </div>
-            <div className="progress-title">
+            <div
+              className={`progress-title ${
+                primaryColor === 'rhyno' ? 'rhyno' : ''
+              }`}>
               Public Release
               <span></span>
             </div>
@@ -78,7 +87,10 @@ const RoadMap: React.FC<IRoadMap> = () => {
                 <div className="progress-box">Q2</div>
                 <div className="progress-box">Q3</div>
               </div>
-              <div className="progress-title">
+              <div
+                className={`progress-title ${
+                  primaryColor === 'rhyno' ? 'rhyno' : ''
+                }`}>
                 Curation Alpha
                 <span></span>
               </div>
@@ -98,7 +110,10 @@ const RoadMap: React.FC<IRoadMap> = () => {
                 <div className="progress-box">Q4</div>
                 <div className="progress-box">Q5</div>
               </div>
-              <div className="progress-title">
+              <div
+                className={`progress-title ${
+                  primaryColor === 'rhyno' ? 'rhyno' : ''
+                }`}>
                 Public Release
                 <span></span>
               </div>
@@ -110,7 +125,10 @@ const RoadMap: React.FC<IRoadMap> = () => {
             </div>
           </div>
         </div>
-        <div className="block-devide-box">
+        <div
+          className={`block-devide-box ${
+            primaryColor === 'rhyno' ? 'rhyno' : ''
+          }`}>
           <div className="squere"></div>
           <div className="squere"></div>
           <div className="squere"></div>
@@ -125,7 +143,10 @@ const RoadMap: React.FC<IRoadMap> = () => {
                 <div className="progress-box">Q3</div>
                 <div className="progress-box">Q4</div>
               </div>
-              <div className="progress-title">
+              <div
+                className={`progress-title ${
+                  primaryColor === 'rhyno' ? 'rhyno' : ''
+                }`}>
                 Private Beta
                 <span></span>
               </div>

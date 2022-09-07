@@ -17,7 +17,7 @@ export const InquireWrapper = styled.div<IInquireItems>`
   }
 
   @media screen and (max-width: 750px) {
-    margin: 0 0px 90px 0px;
+    margin: 0px;
   }
 `;
 
@@ -46,14 +46,14 @@ export const InquireContainer = styled.div<IInquireItems>`
     }
   }
 
-  @media screen and (max-width: 750px) {
+  @media screen and (max-width: 800px) {
     width: 90%;
     span.field-error-message {
       font-size: 14px;
     }
   }
 
-  @media screen and (max-width: 520px) {
+  @media screen and (max-width: 550px) {
     span.field-error-message {
       font-size: 12px;
       word-break: break-all;
@@ -96,7 +96,7 @@ export const InquireField = styled.div<IInquireItems>`
     margin-right: 10px;
   }
 
-  @media screen and (max-width: 750px) {
+  @media screen and (max-width: 800px) {
     .btn-box-inquire {
       width: 100%;
       display: flex;
@@ -108,7 +108,7 @@ export const InquireField = styled.div<IInquireItems>`
     }
   }
 
-  @media screen and (max-width: 520px) {
+  @media screen and (max-width: 550px) {
     .btn-box-inquire {
       flex-direction: column;
       justify-content: center;
@@ -139,11 +139,11 @@ export const InquireInput = styled.input`
     word-break: break-all;
   }
 
-  @media screen and (max-width: 750px) {
+  @media screen and (max-width: 800px) {
     width: 70%;
   }
 
-  @media screen and (max-width: 520px) {
+  @media screen and (max-width: 550px) {
     width: 60%;
     font-size: 12px;
   }
@@ -169,7 +169,7 @@ export const InquireSelect = styled.select<IInquireItems>`
 
   padding: 0 12px;
 
-  @media screen and (max-width: 750px) {
+  @media screen and (max-width: 800px) {
     width: 70%;
   }
 
@@ -187,11 +187,11 @@ export const InquireLabel = styled.label<IInquireItems>`
   color: ${(props) => (props.primaryColor === 'rhyno' ? '#363435' : '#fff')};
   line-height: 20px;
 
-  @media screen and (max-width: 750px) {
+  @media screen and (max-width: 800px) {
     font-size: 14px;
   }
 
-  @media screen and (max-width: 520px) {
+  @media screen and (max-width: 550px) {
     font-size: 12px;
   }
 `;
@@ -204,7 +204,7 @@ export const InquireButton = styled.button`
   border-radius: 16px;
   background: none;
 
-  @media screen and (max-width: 520px) {
+  @media screen and (max-width: 550px) {
     width: 124px;
     border-radius: 10px;
   }

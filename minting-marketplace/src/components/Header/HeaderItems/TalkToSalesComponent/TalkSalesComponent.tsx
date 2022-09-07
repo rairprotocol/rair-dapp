@@ -38,7 +38,7 @@ const TalkSalesComponent: React.FC<ITalkSalesComponent> = ({
         </Provider>
       ),
       showConfirmButton: false,
-      width: '90vw',
+      width: '85vw',
       customClass: {
         popup: `bg-${primaryColor} rounded-rair`
       }
