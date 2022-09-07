@@ -26,26 +26,26 @@ locals {
   tf_admin_postfix = "(TF Administered)"
 }
 
-resource "pagerduty_service" "dev" {
-  name                    = "Dev ${local.tf_admin_postfix}"
-  escalation_policy       = pagerduty_escalation_policy.devops.id
-  alert_creation          = "create_alerts_and_incidents"
+module "dev" {
+  source            = "./each_env"
+  name              = "Dev"
+  escalation_policy = pagerduty_escalation_policy.devops.id
 }
 
-resource "pagerduty_service" "staging" {
-  name                    = "Staging ${local.tf_admin_postfix}"
-  escalation_policy       = pagerduty_escalation_policy.devops.id
-  alert_creation          = "create_alerts_and_incidents"
+module "staging" {
+  source            = "./each_env"
+  name              = "Staging"
+  escalation_policy = pagerduty_escalation_policy.devops.id
 }
 
-resource "pagerduty_service" "qa" {
-  name                    = "QA ${local.tf_admin_postfix}"
-  escalation_policy       = pagerduty_escalation_policy.devops.id
-  alert_creation          = "create_alerts_and_incidents"
+module "qa" {
+  source            = "./each_env"
+  name              = "QA"
+  escalation_policy = pagerduty_escalation_policy.devops.id
 }
 
-resource "pagerduty_service" "prod" {
-  name                    = "Prod ${local.tf_admin_postfix}"
-  escalation_policy       = pagerduty_escalation_policy.devops.id
-  alert_creation          = "create_alerts_and_incidents"
+module "prod" {
+  source            = "./each_env"
+  name              = "Prod"
+  escalation_policy = pagerduty_escalation_policy.devops.id
 }
