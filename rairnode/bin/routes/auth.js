@@ -3,61 +3,67 @@ const jwt = require('jsonwebtoken');
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const { checkBalanceProduct, checkAdminTokenOwns, checkBalanceAny } = require('../integrations/ethers/tokenValidation');
+const {
+  checkBalanceProduct,
+  checkAdminTokenOwns,
+  checkBalanceAny,
+} = require('../integrations/ethers/tokenValidation');
 const { JWTVerification, validation, isSuperAdmin } = require('../middleware');
 const log = require('../utils/logger')(module);
 
-const getTokensForUser = async (context, ownerAddress, { offer, contract, product }) => context.db.Offer.aggregate([
-  { $match: { offerIndex: { $in: offer }, contract: ObjectId(contract), product } },
-  {
-    $lookup: {
-      from: 'MintedToken',
-      let: {
-        contractT: '$contract',
-        offerP: '$offerPool',
-        of: '$offerIndex',
-        owner: ownerAddress.toLowerCase(),
+// TODO: remove ARTIFACT
+
+// eslint-disable-next-line no-unused-vars
+const getTokensForUser = async (
+  context,
+  ownerAddress,
+  { offer, contract, product },
+) =>
+  context.db.Offer.aggregate([
+    {
+      $match: {
+        offerIndex: { $in: offer },
+        contract: ObjectId(contract),
+        product,
       },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $eq: [
-                    '$contract',
-                    '$$contractT',
-                  ],
-                },
-                {
-                  $eq: [
-                    '$offerPool',
-                    '$$offerP',
-                  ],
-                },
-                {
-                  $eq: [
-                    '$offer',
-                    '$$of',
-                  ],
-                },
-                {
-                  $eq: [
-                    '$ownerAddress',
-                    '$$owner',
-                  ],
-                },
-              ],
+    },
+    {
+      $lookup: {
+        from: 'MintedToken',
+        let: {
+          contractT: '$contract',
+          offerP: '$offerPool',
+          of: '$offerIndex',
+          owner: ownerAddress.toLowerCase(),
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$contract', '$$contractT'],
+                  },
+                  {
+                    $eq: ['$offerPool', '$$offerP'],
+                  },
+                  {
+                    $eq: ['$offer', '$$of'],
+                  },
+                  {
+                    $eq: ['$ownerAddress', '$$owner'],
+                  },
+                ],
+              },
             },
           },
-        },
-      ],
-      as: 'tokens',
+        ],
+        as: 'tokens',
+      },
     },
-  },
-  { $unwind: '$tokens' },
-  { $replaceRoot: { newRoot: '$tokens' } },
-]);
+    { $unwind: '$tokens' },
+    { $replaceRoot: { newRoot: '$tokens' } },
+  ]);
 
 module.exports = (context) => {
   const router = express.Router();
@@ -66,7 +72,8 @@ module.exports = (context) => {
    *
    * /api/auth/get_challenge/{MetaAddress}:
    *   get:
-   *     description: Request an auth challenge for the given ethereum address. The challenge could be signed and then sent to /auth/:message/:signature to get a JWT
+   *     description: Request an auth challenge for the given ethereum address.
+   *         The challenge could be signed and then sent to /auth/:message/:signature to get a JWT
    *     produces:
    *       - application/json
    *     parameters:
@@ -79,9 +86,14 @@ module.exports = (context) => {
    *       200:
    *         description: Returns a challenge for the client to sign with the ethereum private key
    */
-  router.get('/get_challenge/:MetaAddress', validation('getChallenge', 'params'), metaAuth, (req, res) => {
-    res.send({ success: true, response: req.metaAuth.challenge });
-  });
+  router.get(
+    '/get_challenge/:MetaAddress',
+    validation('getChallenge', 'params'),
+    metaAuth,
+    (req, res) => {
+      res.send({ success: true, response: req.metaAuth.challenge });
+    },
+  );
 
   /**
    * @swagger
@@ -112,156 +124,207 @@ module.exports = (context) => {
    *         required: true
    *     responses:
    *       200:
-   *         description: If the signer meets the requirments (signature valid, holds required token) returns a JWT which grants stream access.
+   *         description: If the signer meets the requirments
+   *            (signature valid, holds required token)
+   *          returns a JWT which grants stream access.
    */
-  router.get('/get_token/:MetaMessage/:MetaSignature/:mediaId', validation('getToken', 'params'), metaAuth, async (req, res, next) => {
-    const ethAddress = req.metaAuth.recovered;
-    const { mediaId } = req.params;
-    try {
-      let ownsTheAdminToken;
-      const ownsTheAccessTokens = [];
-      const file = await context.db.File.findOne({ _id: mediaId });
+  router.get(
+    '/get_token/:MetaMessage/:MetaSignature/:mediaId',
+    validation('getToken', 'params'),
+    metaAuth,
+    async (req, res, next) => {
+      const ethAddress = req.metaAuth.recovered;
+      const { mediaId } = req.params;
+      try {
+        let ownsTheAdminToken;
+        const ownsTheAccessTokens = [];
+        const file = await context.db.File.findOne({ _id: mediaId });
 
-      if (!file) {
-        return res.status(400).send({ success: false, message: 'No file found' });
-      }
-
-      const contract = await context.db.Contract.findOne(file.contract);
-      const offers = await context.db.Offer.find(_.assign(
-        { contract: file.contract },
-        contract.diamond ? { diamondRangeIndex: { $in: file.offer } } : { offerIndex: { $in: file.offer } },
-      ));
-
-      if (ethAddress) {
-        // Verify the user has the tokens needed in a RAIR contract
-        for await (const offer of offers) {
-          let result = contract.external ? await checkBalanceAny(
-            ethAddress,
-            contract.blockchain,
-            contract.contractAddress
-          ) : await checkBalanceProduct(
-            ethAddress,
-            contract.blockchain,
-            contract.contractAddress,
-            offer.product,
-            offer.range[0],
-            offer.range[1],
-          )
-          ownsTheAccessTokens.push(result);
-          if (ownsTheAccessTokens.includes(true)) {
-            break;
-          }
+        if (!file) {
+          return res
+            .status(400)
+            .send({ success: false, message: 'No file found' });
         }
 
-        // verify the account holds the required admin NFT
-        if (!ownsTheAccessTokens.includes(true) && file.authorPublicAddress === ethAddress.toLowerCase()) {
-          try {
-            ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);
+        const contract = await context.db.Contract.findOne(file.contract);
+        const offers = await context.db.Offer.find(
+          _.assign(
+            { contract: file.contract },
+            contract.diamond
+              ? { diamondRangeIndex: { $in: file.offer } }
+              : { offerIndex: { $in: file.offer } },
+          ),
+        );
 
-            if (ownsTheAdminToken) {
+        if (ethAddress) {
+          // Verify the user has the tokens needed in a RAIR contract
+          // eslint-disable-next-line no-restricted-syntax
+          for await (const offer of offers) {
+            const result = contract.external
+              ? await checkBalanceAny(
+                ethAddress,
+                contract.blockchain,
+                contract.contractAddress,
+              )
+              : await checkBalanceProduct(
+                ethAddress,
+                contract.blockchain,
+                contract.contractAddress,
+                offer.product,
+                offer.range[0],
+                offer.range[1],
+              );
+            ownsTheAccessTokens.push(result);
+            if (ownsTheAccessTokens.includes(true)) {
+              break;
+            }
+          }
+
+          // verify the account holds the required admin NFT
+          if (
+            !ownsTheAccessTokens.includes(true) &&
+            file.authorPublicAddress === ethAddress.toLowerCase()
+          ) {
+            try {
+              ownsTheAdminToken = await checkAdminTokenOwns(ethAddress);
+
+              if (ownsTheAdminToken) {
+                log.info('Verifying user account has the admin token');
+              }
+            } catch (e) {
+              return next(new Error(`Could not verify account: ${e}`));
+            }
+          }
+
+          if (
+            !ownsTheAdminToken &&
+            !ownsTheAccessTokens.includes(true) &&
+            !file.demo
+          ) {
+            return res
+              .status(403)
+              .send({ success: false, message: "You don't have permission." });
+          }
+
+          await context.redis.redisService.set(`sess:${req.sessionID}`, {
+            ...req.session,
+            eth_addr: ethAddress,
+            media_id: mediaId,
+            streamAuthorized: true,
+          });
+
+          return res.send({ success: true });
+        }
+        return res.status(400).send({ success: false });
+      } catch (err) {
+        return next(err);
+      }
+    },
+  );
+
+  // Verify with a Metamask challenge if the user holds the current Administrator token
+  router.get(
+    '/admin/:MetaMessage/:MetaSignature/',
+    validation('admin', 'params'),
+    metaAuth,
+    async (req, res, next) => {
+      const ethAddress = req.metaAuth.recovered;
+
+      try {
+        if (ethAddress) {
+          const user = await context.db.User.findOne({
+            publicAddress: ethAddress,
+          });
+
+          if (_.isNull(user)) {
+            return res
+              .status(404)
+              .send({ success: false, message: 'User not found.' });
+          }
+
+          try {
+            const ownsTheToken = await checkAdminTokenOwns(ethAddress);
+
+            if (!ownsTheToken) {
+              return res.json({
+                success: false,
+                message: "You don't hold the current admin token",
+              });
+            }
+            return res.json({ success: true, message: 'Admin token holder' });
+          } catch (e) {
+            log.error(e);
+            return next(new Error('Could not verify account.'));
+          }
+        } else {
+          return res
+            .status(400)
+            .send({ success: false, message: 'Incorrect credentials.' });
+        }
+      } catch (err) {
+        return next(err);
+      }
+    },
+  );
+
+  router.get(
+    '/authentication/:MetaMessage/:MetaSignature/',
+    validation('authentication', 'params'),
+    metaAuth,
+    isSuperAdmin,
+    async (req, res, next) => {
+      const ethAddress = req.metaAuth.recovered;
+      let adminRights = false;
+
+      try {
+        if (ethAddress) {
+          const user = await context.db.User.findOne({
+            publicAddress: ethAddress,
+          });
+
+          if (_.isNull(user)) {
+            return res
+              .status(404)
+              .send({ success: false, message: 'User not found.' });
+          }
+
+          try {
+            adminRights = await checkAdminTokenOwns(ethAddress);
+
+            if (adminRights) {
               log.info('Verifying user account has the admin token');
             }
           } catch (e) {
-            return next(new Error(`Could not verify account: ${e}`));
+            log.error(e);
           }
+        } else {
+          return res
+            .status(400)
+            .send({ success: false, message: 'Incorrect credentials.' });
         }
 
-        if (!ownsTheAdminToken && !ownsTheAccessTokens.includes(true) && !file.demo) {
-          return res.status(403).send({ success: false, message: 'You don\'t have permission.' });
-        }
-
-        await context.redis.redisService.set(`sess:${req.sessionID}`, {
-          ...req.session,
-          eth_addr: ethAddress,
-          media_id: mediaId,
-          streamAuthorized: true,
-        });
-
-        res.send({ success: true });
-      } else {
-        return res.status(400).send({ success: false });
+        jwt.sign(
+          {
+            eth_addr: ethAddress,
+            adminRights,
+            superAdmin: req.user.superAdmin,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: '1d' },
+          (err, token) => {
+            if (err) next(new Error('Could not create JWT'));
+            return res.send({ success: true, token });
+          },
+        );
+        return null;
+      } catch (err) {
+        return next(err);
       }
-    } catch (err) {
-      return next(err);
-    }
-  });
-
-  // Verify with a Metamask challenge if the user holds the current Administrator token
-  router.get('/admin/:MetaMessage/:MetaSignature/', validation('admin', 'params'), metaAuth, async (req, res, next) => {
-    const ethAddress = req.metaAuth.recovered;
-
-    try {
-      if (ethAddress) {
-        const user = await context.db.User.findOne({ publicAddress: ethAddress });
-
-        if (_.isNull(user)) {
-          return res.status(404).send({ success: false, message: 'User not found.' });
-        }
-
-        try {
-          const ownsTheToken = await checkAdminTokenOwns(ethAddress);
-
-          if (!ownsTheToken) {
-            res.json({ success: false, message: 'You don\'t hold the current admin token' });
-          } else {
-            res.json({ success: true, message: 'Admin token holder' });
-          }
-        } catch (e) {
-          log.error(e);
-          next(new Error('Could not verify account.'));
-        }
-      } else {
-        return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
-      }
-    } catch (err) {
-      return next(err);
-    }
-  });
-
-  router.get('/authentication/:MetaMessage/:MetaSignature/', validation('authentication', 'params'), metaAuth, isSuperAdmin, async (req, res, next) => {
-    const ethAddress = req.metaAuth.recovered;
-    let adminRights = false;
-
-    try {
-      if (ethAddress) {
-        const user = await context.db.User.findOne({ publicAddress: ethAddress });
-
-        if (_.isNull(user)) {
-          return res.status(404).send({ success: false, message: 'User not found.' });
-        }
-
-        try {
-          adminRights = await checkAdminTokenOwns(ethAddress);
-
-          if (adminRights) {
-            log.info('Verifying user account has the admin token');
-          }
-        } catch (e) {
-          log.error(e);
-        }
-      } else {
-        return res.status(400).send({ success: false, message: 'Incorrect credentials.' });
-      }
-      
-      jwt.sign(
-        { eth_addr: ethAddress, adminRights, superAdmin: req.user.superAdmin },
-        process.env.JWT_SECRET,
-        { expiresIn: '1d' },
-        (err, token) => {
-          if (err) next(new Error('Could not create JWT'));
-          res.send({ success: true, token });
-        },
-      );
-    } catch (err) {
-      return next(err);
-    }
-  });
+    },
+  );
 
   router.get('/user_info', JWTVerification, async (req, res, next) => {
-    const user = _.chain(req.user)
-      .assign({})
-      .omit(['nonce'])
-      .value();
+    const user = _.chain(req.user).assign({}).omit(['nonce']).value();
 
     res.send({
       success: true,
@@ -274,7 +337,7 @@ module.exports = (context) => {
     try {
       req.session.streamAuthorized = false;
       delete req.session.media_id;
-      res.send({ success: true });
+      return res.send({ success: true });
     } catch (err) {
       return next(err);
     }

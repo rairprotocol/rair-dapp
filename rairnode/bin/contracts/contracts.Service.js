@@ -1,9 +1,19 @@
 const _ = require('lodash');
+const { ObjectID } = require('mongodb');
 const { Contract, Blockchain, Category } = require('../models');
 const AppError = require('../utils/appError');
 const eFactory = require('../utils/entityFactory');
+const {
+  importContractData,
+} = require('../integrations/ethers/importContractData');
 
 exports.getAllContracts = eFactory.getAll(Contract);
+
+exports.findContractsByUser = async (user) =>
+  Contract.find({ user }, Contract.defaultProjection);
+
+exports.getContractsIdsForUser = async (user) =>
+  Contract.find({ user }, Contract.defaultProjection).distinct('_id');
 
 exports.getContractById = async (req, res, next) => {
   try {
@@ -50,12 +60,21 @@ exports.getMyContracts = async (req, res, next) => {
   }
 };
 
-exports.findContractsByUser = async (user) =>
-  Contract.find({ user }, Contract.defaultProjection);
-
-exports.getContractsIdsForUser = async (user) =>
-  Contract.find({ user }, Contract.defaultProjection).distinct('_id');
-
+// create like method
+exports.importContractsMoralis = async (req, res, next) => {
+  try {
+    const { networkId, contractAddress, limit } = req.body;
+    const { success, result, message } = await importContractData(
+      networkId,
+      contractAddress,
+      limit,
+      req.user, // jwtverify provides
+    );
+    return res.json({ success, result, message });
+  } catch (err) {
+    return next(err);
+  }
+};
 exports.getFullContracts = async (req, res, next) => {
   try {
     const {
@@ -63,119 +82,55 @@ exports.getFullContracts = async (req, res, next) => {
       itemsPerPage = '20',
       blockchain = '',
       category = '',
+      contractAddress = '',
+      contractId = '',
+      addOffers = true,
+      addLocks = false,
     } = req.query;
     const pageSize = parseInt(itemsPerPage, 10);
     const skip = (parseInt(pageNum, 10) - 1) * pageSize;
     const blockchainArr = blockchain.split(',');
-
-    const lookupProduct = {
-      $lookup: {
-        from: 'Product',
-        let: {
-          contr: '$_id',
-        },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {
-                    $eq: ['$contract', '$$contr'],
-                  },
-                ],
-              },
-            },
-          },
-        ],
-        as: 'products',
-      },
-    };
-
+    const contractAddressArr = contractAddress.split(',');
+    const contractIdArr = contractId.split(',');
+    const addOffersFlag = addOffers * 1;
+    const addLocksFlag = addLocks * 1;
     const foundCategory = await Category.findOne({
       name: category,
     });
-
+    const options = [Contract.lookupProduct, { $unwind: '$products' }];
+    if (addLocksFlag) {
+      options.push(Contract.lookupLockedTokens, { $unwind: '$tokenLock' });
+    }
     if (foundCategory) {
-      _.set(lookupProduct, '$lookup.let.categoryF', foundCategory._id);
-      _.set(lookupProduct, '$lookup.pipeline[0].$match.$expr.$and[1]', {
+      _.set(options[0], '$lookup.let.categoryF', foundCategory._id);
+      _.set(options[0], '$lookup.pipeline[0].$match.$expr.$and[1]', {
         $eq: ['$category', '$$categoryF'],
       });
     }
-
-    const options = [
-      lookupProduct,
-      { $unwind: '$products' },
-      {
-        $lookup: {
-          from: 'OfferPool',
-          let: {
-            contr: '$_id',
-            prod: '$products.collectionIndexInContract',
+    if (addOffersFlag) {
+      options.push(
+        Contract.offerPoolLookup,
+        {
+          $unwind: {
+            path: '$offerPool',
+            preserveNullAndEmptyArrays: true,
           },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    {
-                      $eq: ['$contract', '$$contr'],
-                    },
-                    {
-                      $eq: ['$product', '$$prod'],
-                    },
-                  ],
-                },
+        },
+        Contract.offerLookup,
+        {
+          $match: {
+            $or: [
+              { diamond: true, 'products.offers': { $not: { $size: 0 } } },
+              {
+                diamond: { $in: [false, undefined] },
+                offerPool: { $ne: null },
+                'products.offers': { $not: { $size: 0 } },
               },
-            },
-          ],
-          as: 'offerPool',
-        },
-      },
-      {
-        $unwind: {
-          path: '$offerPool',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: 'Offer',
-          let: {
-            prod: '$products.collectionIndexInContract',
-            contractL: '$_id',
+            ],
           },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    {
-                      $eq: ['$contract', '$$contractL'],
-                    },
-                    {
-                      $eq: ['$product', '$$prod'],
-                    },
-                  ],
-                },
-              },
-            },
-          ],
-          as: 'products.offers',
         },
-      },
-      {
-        $match: {
-          $or: [
-            { diamond: true, 'products.offers': { $not: { $size: 0 } } },
-            {
-              diamond: { $in: [false, undefined] },
-              offerPool: { $ne: null },
-              'products.offers': { $not: { $size: 0 } },
-            },
-          ],
-        },
-      },
-    ];
+      );
+    }
 
     const foundBlockchain = await Blockchain.find({
       hash: [...blockchainArr],
@@ -186,6 +141,29 @@ exports.getFullContracts = async (req, res, next) => {
         $match: {
           blockchain: {
             $in: [...blockchainArr],
+          },
+        },
+      });
+    }
+    if (contractIdArr.length >= 1 && contractIdArr[0] !== '') {
+      const optionIds = [];
+      contractIdArr.reduce(
+        (prev, curr) => optionIds.push(new ObjectID(curr)),
+        {},
+      );
+      options.unshift({
+        $match: {
+          _id: {
+            $in: [...optionIds],
+          },
+        },
+      });
+    }
+    if (contractAddressArr.length >= 1 && contractAddressArr[0] !== '') {
+      options.unshift({
+        $match: {
+          contractAddress: {
+            $in: [...contractAddressArr],
           },
         },
       });
@@ -203,7 +181,7 @@ exports.getFullContracts = async (req, res, next) => {
       .skip(skip)
       .limit(pageSize);
 
-    res.json({ success: true, contracts, totalNumber });
+    res.json({ success: true, totalNumber, contracts });
   } catch (e) {
     next(e);
   }

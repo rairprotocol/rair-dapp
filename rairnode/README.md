@@ -116,9 +116,10 @@ Provide ability to make some specific actions on the platform
           * [x] /:textParam/all - GET - NOT FOR PROD work in progress - returns all results of search among tokens, products and authors with text params
       * [x] /contracts - Return all Contracts (Query string supported) [see details here](readme/get_all.md)
           * [x] /my - get contracts for curent user [see details here](readme/get_contracts_my.md).
-          * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts.md)
+          * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts_v2.md)
           * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
           * [x] /byUser/:userId - get list of conract for user based on user address [see details here](readme/get_contracts_by_userId.md)
+          * [x] /import - POST - Import the given contract's NFTs, [see details here](readme/post_external_contract.md)
       * [x] /products - Return all Products (Query string supported) [see details here](readme/common_get_all.md)
           * [x] /:productId - return one found by ID [see details here](readme\get_product_by_id)
           * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme\get_products_by_user_adress)

@@ -241,7 +241,6 @@ module.exports = (context) => {
           contractAddress,
           limit,
           req.user,
-          context.db,
         );
         return res.json({ success, result, message });
       } catch (err) {
