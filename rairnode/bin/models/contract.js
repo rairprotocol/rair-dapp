@@ -126,6 +126,106 @@ Contract.statics = {
       as: 'products.offers',
     },
   },
+  lookupProduct: {
+    $lookup: {
+      from: 'Product',
+      let: {
+        contr: '$_id',
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ['$contract', '$$contr'],
+                },
+              ],
+            },
+          },
+        },
+      ],
+      as: 'products',
+    },
+  },
+  lookupLockedTokens: {
+    $lookup: {
+      from: 'LockedTokens',
+      let: {
+        contr: '$_id',
+        prod: '$products.collectionIndexInContract',
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ['$contract', '$$contr'],
+                },
+                {
+                  $eq: ['$product', '$$prod'],
+                },
+              ],
+            },
+          },
+        },
+      ],
+      as: 'tokenLock',
+    },
+  },
+  offerPoolLookup: {
+    $lookup: {
+      from: 'OfferPool',
+      let: {
+        contr: '$_id',
+        prod: '$products.collectionIndexInContract',
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ['$contract', '$$contr'],
+                },
+                {
+                  $eq: ['$product', '$$prod'],
+                },
+              ],
+            },
+          },
+        },
+      ],
+      as: 'offerPool',
+    },
+  },
+  offerLookup: {
+    $lookup: {
+      from: 'Offer',
+      let: {
+        prod: '$products.collectionIndexInContract',
+        contractL: '$_id',
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ['$contract', '$$contractL'],
+                },
+                {
+                  $eq: ['$product', '$$prod'],
+                },
+              ],
+            },
+          },
+        },
+      ],
+      as: 'products.offers',
+    },
+  },
 };
 
 module.exports = Contract;
