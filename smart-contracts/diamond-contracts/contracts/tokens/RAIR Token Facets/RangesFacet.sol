@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.16;
 
 import './AppStorage.sol';
 /// @title  This is contract to manage the Rair token ranges facet
@@ -154,7 +154,8 @@ contract RAIRRangesFacet is AccessControlAppStorageEnumerable721 {
 		string memory name_
 	) internal {
 		// Sanity checks
-		require(price_ >= 100, "RAIR ERC721: Minimum price allowed is 100 wei");
+		// 0 to make the offer free, over 100 to make sure paid offers can split the funds correctly
+		require(price_ == 0 || price_ >= 100, "RAIR ERC721: Minimum price allowed is 100 wei");
 		require(rangeLength_ >= tokensAllowed_, "RAIR ERC721: Allowed tokens should be less than range's length");
 		require(rangeLength_ >= lockedTokens_, "RAIR ERC721: Locked tokens should be less than range's length");
 		product storage selectedProduct = s.products[productId_];

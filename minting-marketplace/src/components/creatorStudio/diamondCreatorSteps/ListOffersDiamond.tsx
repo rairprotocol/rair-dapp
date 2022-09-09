@@ -45,7 +45,7 @@ const ListOffers: React.FC<TListOffers> = ({
   useEffect(() => {
     let value = false;
     offerList.forEach((item) => {
-      value = value || item.offerName.trim() === '' || +item.price <= 0;
+      value = value || item.offerName.trim() === '';
     });
     setInvalidItems(value);
   }, [forceRerender, offerList]);

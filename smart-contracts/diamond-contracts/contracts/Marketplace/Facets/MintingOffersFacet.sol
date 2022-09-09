@@ -189,21 +189,23 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		newOffer.nodeAddress = nodeAddress_;
 		newOffer.rangeIndex = rangeIndex_;
 		newOffer.visible = visible_;
-		uint totalPercentage = s.nodeFee + s.treasuryFee;
-		uint totalFunds = rangeData.rangePrice * totalPercentage / (100 * s.decimalPow);
-		for (uint i = 0; i < splits.length; i++) {
-			require(!isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
-			uint splitForPercentage = rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow);
-			require(
-				splitForPercentage > 0,
-				"Minter Marketplace: A percentage on the array will result in an empty transfer"
-			);
-			totalFunds += splitForPercentage;
-			totalPercentage += splits[i].percentage;
-			newOffer.fees.push(splits[i]);
+		if (rangeData.rangePrice > 0) {
+			uint totalPercentage = s.nodeFee + s.treasuryFee;
+			uint totalFunds = rangeData.rangePrice * totalPercentage / (100 * s.decimalPow);
+			for (uint i = 0; i < splits.length; i++) {
+				require(!isContract(splits[i].recipient), "Minter Marketplace: Contracts can't be recipients of the splits");
+				uint splitForPercentage = rangeData.rangePrice * splits[i].percentage / (100 * s.decimalPow);
+				require(
+					splitForPercentage > 0,
+					"Minter Marketplace: A percentage on the array will result in an empty transfer"
+				);
+				totalFunds += splitForPercentage;
+				totalPercentage += splits[i].percentage;
+				newOffer.fees.push(splits[i]);
+			}
+			require(totalPercentage == (100 * s.decimalPow), "Minter Marketplace: Fees don't add up to 100%");
+			require(totalFunds == rangeData.rangePrice, "Minter Marketplace: Current fee configuration will result in missing funds");
 		}
-		require(totalPercentage == (100 * s.decimalPow), "Minter Marketplace: Fees don't add up to 100%");
-		require(totalFunds == rangeData.rangePrice, "Minter Marketplace: Current fee configuration will result in missing funds");
 		s.addressToOffers[erc721Address_].push(s.mintingOffers.length - 1);
 		s.addressToRangeOffer[erc721Address_][rangeIndex_] = s.mintingOffers.length - 1;
 		emit AddedMintingOffer(erc721Address_, rangeIndex_, rangeData.rangeName, rangeData.rangePrice, splits.length, visible_, s.mintingOffers.length - 1);
@@ -272,20 +274,22 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
 		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
 		(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
-		require(rangeData.rangePrice <= msg.value, "Minter Marketplace: Insufficient funds!");
-		if (msg.value - rangeData.rangePrice > 0) {
-			payable(msg.sender).transfer(msg.value - rangeData.rangePrice);
+		if (rangeData.rangePrice > 0) {
+			require(rangeData.rangePrice <= msg.value, "Minter Marketplace: Insufficient funds!");
+			if (msg.value - rangeData.rangePrice > 0) {
+				payable(msg.sender).transfer(msg.value - rangeData.rangePrice);
+			}
+			uint totalTransferred = rangeData.rangePrice * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);
+			payable(selectedOffer.nodeAddress).transfer(rangeData.rangePrice * s.nodeFee / (100 * s.decimalPow));
+			payable(s.treasuryAddress).transfer(rangeData.rangePrice * s.treasuryFee / (100 * s.decimalPow));
+			uint auxMoneyToBeSent;
+			for (uint i = 0; i < selectedOffer.fees.length; i++) {
+				auxMoneyToBeSent = rangeData.rangePrice * selectedOffer.fees[i].percentage / (100 * s.decimalPow);
+				totalTransferred += auxMoneyToBeSent;
+				payable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);
+			}
+			require(totalTransferred == rangeData.rangePrice, "Minter Marketplace: Error transferring funds!");
 		}
-		uint totalTransferred = rangeData.rangePrice * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);
-		payable(selectedOffer.nodeAddress).transfer(rangeData.rangePrice * s.nodeFee / (100 * s.decimalPow));
-		payable(s.treasuryAddress).transfer(rangeData.rangePrice * s.treasuryFee / (100 * s.decimalPow));
-		uint auxMoneyToBeSent;
-		for (uint i = 0; i < selectedOffer.fees.length; i++) {
-			auxMoneyToBeSent = rangeData.rangePrice * selectedOffer.fees[i].percentage / (100 * s.decimalPow);
-			totalTransferred += auxMoneyToBeSent;
-			payable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);
-		}
-		require(totalTransferred == rangeData.rangePrice, "Minter Marketplace: Error transferring funds!");
 		_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndex_, msg.sender);
 	}
 
@@ -305,21 +309,23 @@ contract MintingOffersFacet is AccessControlAppStorageEnumerableMarket {
 		require(selectedOffer.visible, "Minter Marketplace: This offer is not ready to be sold!");
 		require(hasMinterRole(selectedOffer.erc721Address), "Minter Marketplace: This Marketplace isn't a Minter!");
 		(IRAIR721.range memory rangeData,) = IRAIR721(selectedOffer.erc721Address).rangeInfo(selectedOffer.rangeIndex);
-		require((rangeData.rangePrice * tokenIndexes.length) <= msg.value, "Minter Marketplace: Insufficient funds!");
-		if (msg.value - (rangeData.rangePrice * tokenIndexes.length) > 0) {
-			payable(msg.sender).transfer(msg.value - (rangeData.rangePrice * tokenIndexes.length));
-		}
-		uint totalTransferred = (rangeData.rangePrice * tokenIndexes.length) * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);
-		payable(selectedOffer.nodeAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.nodeFee / (100 * s.decimalPow));
-		payable(s.treasuryAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.treasuryFee / (100 * s.decimalPow));
-		uint auxMoneyToBeSent;
 		uint i;
-		for (i = 0; i < selectedOffer.fees.length; i++) {
-			auxMoneyToBeSent = (rangeData.rangePrice * tokenIndexes.length) * selectedOffer.fees[i].percentage / (100 * s.decimalPow);
-			totalTransferred += auxMoneyToBeSent;
-			payable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);
+		if (rangeData.rangePrice > 0) {
+			require((rangeData.rangePrice * tokenIndexes.length) <= msg.value, "Minter Marketplace: Insufficient funds!");
+			if (msg.value - (rangeData.rangePrice * tokenIndexes.length) > 0) {
+				payable(msg.sender).transfer(msg.value - (rangeData.rangePrice * tokenIndexes.length));
+			}
+			uint totalTransferred = (rangeData.rangePrice * tokenIndexes.length) * (s.nodeFee + s.treasuryFee) / (100 * s.decimalPow);
+			payable(selectedOffer.nodeAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.nodeFee / (100 * s.decimalPow));
+			payable(s.treasuryAddress).transfer((rangeData.rangePrice * tokenIndexes.length) * s.treasuryFee / (100 * s.decimalPow));
+			uint auxMoneyToBeSent;
+			for (i = 0; i < selectedOffer.fees.length; i++) {
+				auxMoneyToBeSent = (rangeData.rangePrice * tokenIndexes.length) * selectedOffer.fees[i].percentage / (100 * s.decimalPow);
+				totalTransferred += auxMoneyToBeSent;
+				payable(selectedOffer.fees[i].recipient).transfer(auxMoneyToBeSent);
+			}
+			require(totalTransferred == (rangeData.rangePrice * tokenIndexes.length), "Minter Marketplace: Error transferring funds!");
 		}
-		require(totalTransferred == (rangeData.rangePrice * tokenIndexes.length), "Minter Marketplace: Error transferring funds!");
 		for (i = 0; i < tokenIndexes.length; i++) {
 			_buyMintingOffer(selectedOffer.erc721Address, selectedOffer.rangeIndex, tokenIndexes[i], recipients[i]);
 		}
