@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.11;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 import './AppStorage.sol';
@@ -55,7 +55,7 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 	/// @notice	Returns the token index inside the product
 	/// @param	token	Token ID to find
 	/// @return tokenIndex which contains the corresponding token index
-	function tokenToProductIndex(uint token) public view returns (uint tokenIndex) {
+	function tokenToCollectionIndex(uint token) public view returns (uint tokenIndex) {
 		return token - s.products[s.tokenToProduct[token]].startingToken;
 	}
 
@@ -150,30 +150,64 @@ contract RAIRMetadataFacet is AccessControlAppStorageEnumerable721 {
 		emit UpdatedBaseURI(newURI, appendTokenIndexToBaseURI, s._metadataExtension);
 	}
 
-	/// @notice	Returns a token's URI, could be specific or general
-	/// @dev	If the specific token URI doesn't exist, the general base URI will be returned
-	/// @param	tokenId		Token Index to look for
+	/// @notice	Returns a token's URI
+    /// @dev	Will return unique token URI or product URI or contract URI
+    /// @param	tokenId		Token Index to look for
 	/// @return string with the URI of the toke that we are using
-	function tokenURI(uint tokenId) public view returns (string memory) {
-		require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-		string memory URI = s.uniqueTokenURI[tokenId];
-		if (bytes(URI).length > 0) {
-			return URI;
-		}
-		URI = s.productURI[s.tokenToProduct[tokenId]];
-		if (bytes(URI).length > 0) {
-			if (s.appendTokenIndexToProductURI[s.tokenToProduct[tokenId]]) {
-				return string(abi.encodePacked(URI, tokenToProductIndex(tokenId).toString()));
-			}
-			return URI; 
-		}
-		URI = s.baseURI;
-		if (bytes(URI).length > 0) {
-			if (s.appendTokenIndexToBaseURI) {
-				return string(abi.encodePacked(URI, tokenId.toString()));
-			}
-			return URI;
-		}
-		return "";
-	}
+    function tokenURI(uint tokenId)
+        public
+        view
+        returns (string memory)
+    {
+        // Unique token URI
+        string memory URI = s.uniqueTokenURI[tokenId];
+        if (bytes(URI).length > 0) {
+            return URI;
+        }
+
+        // Range wide URI
+        URI = s.rangeURI[s.tokenToRange[tokenId]];
+        if (bytes(URI).length > 0) {
+            if (s.appendTokenIndexToRangeURI[s.tokenToRange[tokenId]]) {
+                return
+                    string(
+                        abi.encodePacked(
+                            URI,
+                            tokenToCollectionIndex(tokenId).toString(),
+                            s._metadataExtension
+                        )
+                    );
+            }
+            return URI;
+        }
+
+        // Collection wide URI
+        URI = s.productURI[s.tokenToProduct[tokenId]];
+        if (bytes(URI).length > 0) {
+            if (s.appendTokenIndexToProductURI[s.tokenToProduct[tokenId]]) {
+                return
+                    string(
+                        abi.encodePacked(
+                            URI,
+                            tokenToCollectionIndex(tokenId).toString(),
+                            s._metadataExtension
+                        )
+                    );
+            }
+            return URI;
+        }
+
+        URI = s.baseURI;
+        if (s.appendTokenIndexToBaseURI) {
+            return
+                string(
+                    abi.encodePacked(
+                        URI,
+                        tokenId.toString(),
+                        s._metadataExtension
+                    )
+                );
+        }
+        return URI;
+    }
 }

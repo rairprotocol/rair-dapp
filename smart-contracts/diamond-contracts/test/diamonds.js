@@ -1118,7 +1118,7 @@ describe("Diamonds", function () {
 				.to.emit(metadataFacet, 'UpdatedBaseURI')
 				.withArgs('devs.rairs.techs/', true, ".webp");
 			await expect(await metadataFacet.tokenURI(100))
-				.to.equal("devs.rairs.techs/100");
+				.to.equal("devs.rairs.techs/100.webp");
 		});
 
 		it ("Should set the token's product URI", async () => {
@@ -1127,7 +1127,7 @@ describe("Diamonds", function () {
 				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, 'first.rair.tech/', true, ".webp");
 			await expect(await metadataFacet.tokenURI(100))
-				.to.equal("first.rair.tech/0");
+				.to.equal("first.rair.tech/0.webp");
 		});
 
 		it ("Should emit the OpenSea event to freeze the metadata", async () => {
@@ -1179,13 +1179,13 @@ describe("Diamonds", function () {
 				.withArgs(100, '');
 
 			await expect(await metadataFacet.tokenURI(100))
-				.to.equal("first.rair.tech/0");
+				.to.equal("first.rair.tech/0.webp");
 			await expect(await metadataFacet.setProductURI(1, '', true))
 				.to.emit(metadataFacet, 'UpdatedProductURI')
 				.withArgs(1, '', true, ".webp");
 
 			await expect(await metadataFacet.tokenURI(100))
-				.to.equal("devs.rairs.techs/100");
+				.to.equal("devs.rairs.techs/100.webp");
 			await expect(await metadataFacet.setBaseURI("", false))
 				.to.emit(metadataFacet, 'UpdatedBaseURI')
 				.withArgs('', false, ".webp");
