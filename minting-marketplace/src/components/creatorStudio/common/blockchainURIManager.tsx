@@ -267,14 +267,25 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
               });
               setBlockchainOperationInProgress(true);
 
-              if (
-                await metamaskCall(
-                  contractData.instance.setBaseURI(
-                    contractWideMetadata,
-                    appendTokenForContract
-                  )
+              let result = await metamaskCall(
+                contractData.instance.setBaseURI(
+                  contractWideMetadata,
+                  appendTokenForContract
                 )
-              ) {
+              );
+              if (!result) {
+                Swal.fire({
+                  title: '(Legacy) Updating Contract Wide URI',
+                  html: 'The token index will not be appended at the end of the URI',
+                  icon: 'info',
+                  showConfirmButton: false
+                });
+                result = await metamaskCall(
+                  contractData.instance.setBaseURI(contractWideMetadata)
+                );
+              }
+
+              if (result) {
                 Swal.fire('Success', 'Contract URI updated', 'success');
               }
               setBlockchainOperationInProgress(false);
@@ -323,15 +334,28 @@ const BlockchainURIManager: React.FC<IIBlockchainURIManager> = ({
                 showConfirmButton: false
               });
               setBlockchainOperationInProgress(true);
-              if (
-                await metamaskCall(
+              let result = await metamaskCall(
+                contractData.instance.setProductURI(
+                  collectionIndex,
+                  collectionWideMetadata,
+                  appendTokenForContract
+                )
+              );
+              if (!result) {
+                Swal.fire({
+                  title: '(Legacy) Updating Product Wide URI',
+                  html: 'The token index will not be appended at the end of the URI',
+                  icon: 'info',
+                  showConfirmButton: false
+                });
+                result = await metamaskCall(
                   contractData.instance.setProductURI(
                     collectionIndex,
-                    collectionWideMetadata,
-                    appendTokenForCollection
+                    collectionWideMetadata
                   )
-                )
-              ) {
+                );
+              }
+              if (result) {
                 Swal.fire('Success', 'Collection URI updated', 'success');
               }
               setBlockchainOperationInProgress(false);
