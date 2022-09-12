@@ -2,7 +2,7 @@
 
 Upload the media
 
-**URL** : `/api/v1/media/upload`
+**URL** : `/ms/api/v1/media/upload`
 
 **Method** : `POST`
 

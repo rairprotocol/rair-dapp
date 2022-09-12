@@ -51,7 +51,7 @@ Logs to Sentry will collect only for Production environment
 
 # API
 
-* [x] /api
+* [x] /ms/api
     * [x] /v1
       * [x] /media/upload - POST - Upload the media, [see details here](readme/upload_media.md)
     

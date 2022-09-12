@@ -2,7 +2,7 @@
 
 Remove favorite token for current user from DB
 
-**URL** : `/api/v2/tokens/favorite/:id`
+**URL** : `/api/v2/favorites/:id`
 
 **Method** : `DELETE`
 
@@ -27,7 +27,7 @@ Remove favorite token for current user from DB
     "required": true,
     "content": {
       "type": "string",
-      "description": "id of favorite in DB"
+      "description": "id of favorites in DB"
     }
   }
 }

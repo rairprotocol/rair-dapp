@@ -2,7 +2,7 @@
 
 Store favorite token for current user in DB
 
-**URL** : `/api/v2/tokens/favorite`
+**URL** : `/api/v2/favorites`
 
 **Method** : `POST`
 

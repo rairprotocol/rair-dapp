@@ -1,21 +1,39 @@
 const express = require('express');
-const favoriteController = require('./favorite.Controller');
-const { createTokensWithCommonMetadata } = require('./tokens.Service');
+const { createTokensWithCommonMetadata, getSingleToken } = require('./tokens.Service');
+const { getContractsByBlockchainAndContractAddress } = require('../contracts/contracts.Service');
+const { getOfferIndexesByContractAndProduct } = require('../offers/offers.Service');
+const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.Service');
 const upload = require('../Multer/Config');
-const { dataTransform, validation } = require('../middleware');
+const { dataTransform, validation, JWTVerification } = require('../middleware');
 
 module.exports = () => {
   const router = express.Router();
 
   router.post(
     '/',
+    JWTVerification,
     upload.array('files', 2),
     dataTransform(['attributes']),
     validation('createCommonTokenMetadata'),
     createTokensWithCommonMetadata,
   );
 
-  router.use('/favorite', favoriteController());
+  router.get(
+    '/:token',
+    getContractsByBlockchainAndContractAddress,
+    getOfferIndexesByContractAndProduct,
+    getOfferPoolByContractAndProduct,
+    (req, res, next) => {
+      const { contract, offers, offerPool } = req;
+
+      req.specificFilterOptions = contract.diamond
+        ? { offer: { $in: offers } }
+        : { offerPool: offerPool.marketplaceCatalogIndex };
+
+      return next();
+    },
+    getSingleToken,
+  );
 
   return router;
 };

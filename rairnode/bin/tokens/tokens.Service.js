@@ -10,6 +10,7 @@ const config = require('../config');
 const { addPin, addFile } = require('../integrations/ipfsService')();
 const log = require('../utils/logger')(module);
 const { textPurify, cleanStorage } = require('../utils/helpers');
+const eFactory = require('../utils/entityFactory');
 
 const getOffersAndOfferPools = async (contract, product) => {
   let offerPool = [];
@@ -311,3 +312,5 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
     return next(err);
   }
 };
+
+exports.getSingleToken = eFactory.getOne(MintedToken, { filter: { contract: 'contract._id', token: 'params.token', specificFilterOptions: 'specificFilterOptions' } });

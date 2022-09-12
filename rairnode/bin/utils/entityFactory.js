@@ -1,5 +1,6 @@
 /* eslint-disable implicit-arrow-linebreak */
 const _ = require('lodash');
+const { ObjectId } = require('mongodb');
 const AppError = require('./appError');
 const APIFeatures = require('./apiFeatures');
 
@@ -58,11 +59,29 @@ exports.createOne = (Model, additionalFields = {}) =>
     });
   });
 
-exports.getOne = (Model, populateOptions) =>
+exports.getOne = (Model, options = {}) =>
   catchAsync(async (req, res, next) => {
-    const query = Model.findById(req.params.id);
-    if (populateOptions) {
-      Model.findById(req.params.id).populate(populateOptions);
+    let query;
+    const filterOptions = options.filter
+      ? _.reduce(options.filter, (r, v, k) => {
+        // specificFilterOptions - will be used as is
+        if (k === 'specificFilterOptions') {
+          // eslint-disable-next-line no-param-reassign
+          r = _.assign(r, _.get(req, v, {}));
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          r[k] = _.get(req, v, v);
+        }
+
+        return r;
+      }, {})
+      : { _id: ObjectId(req.params.id) };
+    const projection = options.projection || {};
+
+    if (options.populateOptions) {
+      query = Model.findOne(filterOptions, projection).populate(options.populateOptions);
+    } else {
+      query = Model.findOne(filterOptions, projection);
     }
     const doc = await query;
 

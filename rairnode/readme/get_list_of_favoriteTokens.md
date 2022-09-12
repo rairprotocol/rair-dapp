@@ -2,7 +2,7 @@
 
 Get list of favorites token for current user
 
-**URL** : `/api/v2/tokens/favorite`
+**URL** : `/api/v2/favorites`
 
 **Method** : `GET`
 

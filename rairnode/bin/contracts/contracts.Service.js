@@ -75,6 +75,29 @@ exports.importContractsMoralis = async (req, res, next) => {
     return next(err);
   }
 };
+exports.getContractsByBlockchainAndContractAddress = async (req, res, next) => {
+  try {
+    const contract = await Contract.findOne({
+      contractAddress: req.query.contractAddress.toLowerCase(),
+      blockchain: req.query.networkId,
+    });
+
+    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+
+    req.contract = contract;
+
+    return next();
+  } catch (e) {
+    return next(e);
+  }
+};
+
+exports.findContractsByUser = async (user) =>
+  Contract.find({ user }, Contract.defaultProjection);
+
+exports.getContractsIdsForUser = async (user) =>
+  Contract.find({ user }, Contract.defaultProjection).distinct('_id');
+
 exports.getFullContracts = async (req, res, next) => {
   try {
     const {
