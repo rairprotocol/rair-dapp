@@ -24,7 +24,7 @@ output "env_config" {
       gcp_project_id: "rair-market-production",
       region: "us-west1",
       obfuscated_project_id: "9550688921",
-      rairnode_subdomain: "rairnode",
+      rairnode_subdomain: "new-prod-rairnode",
       minting_marketplace_frontend_subdomain: "new-prod"
     }
   }
