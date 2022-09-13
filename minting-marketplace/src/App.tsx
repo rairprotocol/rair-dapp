@@ -764,7 +764,11 @@ function App() {
                   // Public Facing Routes
                   {
                     path: '/all',
-                    content: MockUpPage
+                    content: MockUpPage,
+                    props: {
+                      tabIndex: tabIndex,
+                      setTabIndex: setTabIndex
+                    }
                   },
                   {
                     path: '/my-items',
