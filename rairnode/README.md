@@ -136,6 +136,7 @@ Provide ability to make some specific actions on the platform
       * [x] /tokens - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
           * [x] /:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index_v2.md)
           * [x] /:token - PATCH - Update specific token metadata by contract, product and internal ID, [see details here](readme/update_token_metadata_v2.md)
+          * [x] /:token - POST - Pin token metadata to IPFS cloud, [see details here](readme/pin_token_metadata_to_ipfs_v2.md)
       * [x] /resales - Return all ResalesTokenOffers (Query string supported) [see details here](readme/get_list_of_favoriteTokens.md)
           * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
           * [x] /customRoyalties - Return all customRoyaltiesSets (Query string supported) [see details here](readme/common_get_all.md)

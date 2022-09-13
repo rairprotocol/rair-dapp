@@ -8,7 +8,7 @@ const {
   Product,
 } = require('../models');
 const config = require('../config');
-const { addPin, addFile } = require('../integrations/ipfsService')();
+const { addPin, addFile, addMetadata, removePin } = require('../integrations/ipfsService')();
 const log = require('../utils/logger')(module);
 const { textPurify, cleanStorage } = require('../utils/helpers');
 const eFactory = require('../utils/entityFactory');
@@ -122,7 +122,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
     // upload files to IPFS cloud storage
     const uploadFilesToIpfs = async () => {
-      if (req.files.length) {
+      if (_.get(req, 'files.length', false)) {
         const files = await Promise.all(
           _.map(req.files, async (file) => {
             try {
@@ -344,7 +344,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
     );
 
     if (user.publicAddress !== contract.user) {
-      if (req.files.length) {
+      if (_.get(req, 'files.length', false)) {
         await Promise.all(
           _.map(req.files, async (file) => {
             await fs.rm(`${file.destination}/${file.filename}`);
@@ -360,7 +360,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
     }
 
     if (_.isEmpty(fieldsForUpdate)) {
-      if (req.files.length) {
+      if (_.get(req, 'files.length', false)) {
         await Promise.all(
           _.map(req.files, async (file) => {
             await fs.rm(`${file.destination}/${file.filename}`);
@@ -379,7 +379,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
     );
 
     if (countDocuments === 0) {
-      if (req.files.length) {
+      if (_.get(req, 'files.length', false)) {
         await Promise.all(
           _.map(req.files, async (file) => {
             await fs.rm(`${file.destination}/${file.filename}`);
@@ -393,7 +393,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
         .send({ success: false, message: 'Token not found.' });
     }
 
-    if (req.files.length) {
+    if (_.get(req, 'files.length', false)) {
       const files = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const file of req.files) {
@@ -455,7 +455,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
       { new: true },
     );
 
-    if (req.files.length) {
+    if (_.get(req, 'files.length', false)) {
       await Promise.all(
         _.map(req.files, async (file) => {
           await fs.rm(`${file.destination}/${file.filename}`);
@@ -466,7 +466,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
 
     return res.json({ success: true, token: updatedToken });
   } catch (err) {
-    if (req.files.length) {
+    if (_.get(req, 'files.length', false)) {
       await Promise.all(
         _.map(req.files, async (file) => {
           await fs.rm(`${file.destination}/${file.filename}`);
@@ -475,6 +475,61 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
       );
     }
 
+    return next(err);
+  }
+};
+
+exports.pinMetadataToPinata = async (req, res, next) => {
+  try {
+    const { contract, offers, offerPool } = req;
+    const { token } = req.params;
+    const { user } = req;
+    // eslint-disable-next-line
+    const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
+    let metadataURI = 'none';
+
+    if (user.publicAddress !== contract.user) {
+      return res.status(403).send({
+        success: false,
+        message: `You have no permissions for updating token ${token}.`,
+      });
+    }
+
+    const options = _.assign(
+      {
+        contract: contract._id,
+        token,
+      },
+      contract.diamond
+        ? { offer: { $in: offers } }
+        : { offerPool: offerPool.marketplaceCatalogIndex },
+    );
+
+    const foundToken = await MintedToken.findOne(options);
+
+    if (_.isEmpty(foundToken)) {
+      return res
+        .status(400)
+        .send({ success: false, message: 'Token not found.' });
+    }
+
+    metadataURI = foundToken.metadataURI;
+
+    if (!_.isEmpty(foundToken.metadata)) {
+      const CID = await addMetadata(foundToken.metadata, _.get(foundToken.metadata, 'name', 'none'));
+      await addPin(CID, `metadata_${_.get(foundToken.metadata, 'name', 'none')}`);
+      metadataURI = `${process.env.PINATA_GATEWAY}/${CID}`;
+    }
+
+    if (reg.test(foundToken.metadataURI)) {
+      const CID = _.chain(foundToken.metadataURI).split('/').last().value();
+      await removePin(CID);
+    }
+
+    await foundToken.updateOne({ metadataURI, isMetadataPinned: true });
+
+    return res.json({ success: true, metadataURI });
+  } catch (err) {
     return next(err);
   }
 };
