@@ -144,7 +144,7 @@
   /* top: -4rem; */
 }
 
-.main-wrapper-nyc {
+.main-wrapper-nyc-genesis {
   /* max-width: 400px;
   max-height: 60%;
   display: flex; */
@@ -155,11 +155,11 @@
   align-items: flex-start;
   justify-content: space-evenly;
 }
-.main-wrapper-nyc img {
-  max-width: 80%;
-  /* height: 300px; */
-  height: 30rem;
+.main-wrapper-nyc-genesis img {
+  width: 303.5px;
+  height: 513px;
 }
+
 .bad {
   flex: 1;
   font-family: 'Aldrich', sans-serif;
@@ -298,6 +298,11 @@
   .wrapper-splash-page.genesis .main-greyman-pic-wrapper {
     margin-left: 0rem;
     width: 100%;
+  }
+
+  .main-wrapper-nyc-genesis img {
+    width: 24.85vw;
+    height: 42vw;
   }
 }
 
@@ -476,6 +481,10 @@
   /* .wrapper-splash-page.genesis .warning-img { */
   /* width: 40vw; */
   /* } */
+
+  .swal2-title.text-genesis {
+    font-size: 1.2rem;
+  }
 
   .wrapper-splash-page.genesis .template-author-card {
     background-position: center 25vw;

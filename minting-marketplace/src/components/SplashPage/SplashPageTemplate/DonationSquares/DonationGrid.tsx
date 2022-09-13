@@ -3,7 +3,7 @@ import DonationSquare from './DonationSquare';
 import { useState } from 'react';
 
 const DonationGrid = ({ donationGridArray }) => {
-  const mobile_match = window.matchMedia('(min-width: 1100px)');
+  const mobile_match = window.matchMedia('(min-width: 1266px)');
   const [mobileView, setMobile] = useState(mobile_match.matches);
   window.addEventListener('resize', () => setMobile(mobile_match.matches));
   return (

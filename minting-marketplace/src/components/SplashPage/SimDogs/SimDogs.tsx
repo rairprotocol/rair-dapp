@@ -50,13 +50,13 @@ const reactSwal = withReactContent(Swal);
 
 const WarningModal = () => {
   return (
-    <div className="main-wrapper-nyc">
-      <div className="bad">
-        <h3>Bad don&#8219;t sign</h3>
+    <div className="main-wrapper-nyc-simdogs">
+      <div className="bad-simdogs">
+        <div>Bad don&#8219;t sign</div>
         <img src={warning1} alt="Bad don&#8219;t sign" />
       </div>
-      <div className="good">
-        <h3>Good safe to sign</h3>
+      <div className="good-simdogs">
+        <div>Good safe to sign</div>
         <img src={warning2} alt="Good safe to sign" />
       </div>
     </div>
@@ -73,56 +73,55 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
       imageClass: 'zero',
       buttonData: {
         buttonAction: () => {
-          return;
+          Swal.fire('Coming soon!');
         },
         buttonTextColor: '#FFFFFF',
-        buttonColor: 'rgb(58,65,139)',
-        buttonLabel: 'View on Opensea'
+        buttonColor: '#384190',
+        buttonLabel: 'Mint on 9/29'
       },
       textBoxArray: [
-        '100 unique drawings with various rarity traits',
+        '107 unique drawings with various rarity traits',
         '“Bored Ape” style ownership rights',
-        'Same content categories as Prosecutor, plus video',
         '+++',
-        '50 free Blockchain Wire press releases',
-        ' One year of free CoinAgenda conference pass (value $12,000)',
-        'Private Zoom updates on trial',
-        ' '
+        '25 free Blockchain Wire press releases (Express circuit)',
+        '$15K CoinAgenda sponsorships',
+        'One year of free CoinAgenda conference passes (value: $12,000)',
+        'Private Zoom updates on trial'
       ]
     },
     {
       title: 'SUPREME COURT',
       image: SimDogs2,
-      imageClass: 'one',
-      buttonData: {
-        buttonAction: () => {
-          return;
-        },
-        buttonTextColor: '#FFFFFF',
-        buttonColor: 'rgb(46, 108, 225)',
-        buttonLabel: 'View on Nifty Gateway'
-      },
-      textBoxArray: [
-        'Nine 1-of-1 unique drawings representing caricatures of the actual nine Supreme Court Justices',
-        'Work directly with Miripolsky to design',
-        '“Bored Ape” style ownership rights',
-        '++++',
-        '$150,000 of CoinAgenda sponsorships',
-        'Lifetime conference pass to all CoinAgendas',
-        'In-person meetings with Michael Terpin'
-      ]
-    },
-    {
-      title: 'SUPPORTER',
-      image: SimDogs3,
       imageClass: 'zero',
       buttonData: {
         buttonAction: () => {
           Swal.fire('Coming soon!');
         },
         buttonTextColor: '#FFFFFF',
-        buttonColor: 'rgb(127, 229, 100)',
-        buttonLabel: 'Support for .107'
+        buttonColor: '#006EE9',
+        buttonLabel: 'Coming soon'
+      },
+      textBoxArray: [
+        'Nine unique “1-of-1” original drawings by Andre Miripolsky',
+        'Work directly with Miripolsky to design',
+        '+++ +',
+        '100 free Blockchain Wire press releases (Express circuit)',
+        '$150K CoinAgenda sponsorships',
+        'Lifetime conference pass to all CoinAgenda conferences',
+        'Ten hours of personal meetings with Michael Terpin'
+      ]
+    },
+    {
+      title: 'SUPPORTER',
+      image: SimDogs3,
+      imageClass: 'one',
+      buttonData: {
+        buttonAction: () => {
+          Swal.fire('Coming soon!');
+        },
+        buttonTextColor: '#FFFFFF',
+        buttonColor: '#51E84D',
+        buttonLabel: 'Coming soon'
       },
       textBoxArray: [
         '10,000 unique pieces of generative art, with various degrees of rarity',
@@ -143,31 +142,28 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
           Swal.fire('Coming soon!');
         },
         buttonTextColor: '#FFFFFF',
-        buttonColor: 'rgb(240, 153, 249)',
-        buttonLabel: 'Support for 1.07'
+        buttonColor: '#FE94FF',
+        buttonLabel: 'Coming soon'
       },
       textBoxArray: [
         '1,000 unique pieces of generative art, with various degrees of rarity',
-        'Unreleased audio from these transcripts',
+        'Unreleased audio from conversations with convicted SIM swapper',
         '++',
-        '10 free Blockchain Wire press releases',
-        'One free CoinAgenda conference pass (value $3,000)',
-        'Video updates on trial'
+        '10 free Blockchain Wire press releases (Express circuit)',
+        'One free CoinAgenda conference pass (value $3,000)'
       ]
     }
   ];
   const splashData = {
     // NFTName: 'Genesis Pass artwork',
     title: 'SIM DOGS',
-    subtitle: 'HELP CATCH THE CROOKS AND END SIM CARD JACKING!',
-    description: '',
-    textBottom: true,
+    titleColor: '#495CB0',
+    description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+    textBottom: false,
     seoInformation: {
-      // title: 'NFT Genesis Pass',
+      title: 'Sim Dogs',
       contentName: 'author',
-      // content: 'NFT Genesis Pass',
-      description: 'Claim your NFT to unlock encrypted streams',
-      // favicon: NFTNYC_favicon,
+      description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
       image: SimDogs0
     },
     videoPlayerParams: {
@@ -200,7 +196,7 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
       buttonMarginBottom: currentUserAddress === undefined ? 0 : '6vw',
       buttonBorder: null,
       buttonTextColor: '#FFFFFF',
-      buttonColor: 'rgb(120,204,250)',
+      buttonColor: '#55CFFF',
       buttonLabel: 'PREMINT',
       buttonImg: null,
       buttonLink: 'https://www.premint.xyz/simdogsxyz/'
@@ -291,7 +287,6 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
             customButtonBlock
           }}
         />
-        <div style={{ height: '32px' }} />
         <div className="btn-submit-with-form need-help">
           <button
             className="genesis-font"
@@ -302,12 +297,12 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
                 html: <WarningModal />,
                 customClass: {
                   popup: `bg-${primaryColor} genesis-radius genesis-resp `,
-                  title: 'text-genesis'
+                  title: 'text-simdogs'
                 },
                 showConfirmButton: false
               })
             }>
-            Need Help?
+            Need Help
           </button>
         </div>
         <DonationGrid donationGridArray={donationGridData} />
@@ -327,21 +322,67 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
             />
           </>
         )}
-        {/* <h1
-          className="splashpage-subtitle"
-          style={{ marginTop: '150px', marginBottom: '16px' }}>
-          {' '}
-          CRIME LINE{' '}
-        </h1> */}
-        {/* <TimelineGeneric timelinePics={splashData.timelinePics} /> */}
-        <h1
-          className="splashpage-subtitle"
-          style={{ marginTop: '150px', marginBottom: '16px' }}>
-          {' '}
-          ABOUT{' '}
+        <h1 className="splashpage-subtitle">
+          <div>BACKSTORY</div>
         </h1>
+        <div className="backstory-text">
+          My name is Michael Terpin, and I am an American investor and serial
+          entrepreneur.
+          {'\n'}
+          {'\n'}
+          {'\n'}
+          On January 7, 2018, I was robbed of $24.7 million in digital assets by
+          a criminal gang known variously as “The Community” or “the Pinsky
+          Gang” after its 15-year-old ringleader, Ellis Pinsky. The crime would
+          not have been possible without the porous security systems and
+          improper supervision of employees and contractors at AT&T, which the
+          gang was able to penetrate by bribing AT&T store employee Jahmil Smith
+          to put false entries into the AT&T computer system indicating that he
+          was transferring control of my phone number to me in a store in
+          Connecticut, when I was thousands of miles away in Las Vegas. Instead,
+          he sent the control of my phone number, which in effect is one’s
+          digital identity, without my permission, to the gang members in and
+          around New York City. This scenario has happened hundreds, perhaps
+          thousands of times, and yet to date AT&T denies any responsibility for
+          its role in this blatant assault on personal freedoms, consumer
+          privacy and data protection.
+          {'\n'}
+          {'\n'}
+          {'\n'}
+          On August 15, 2018, I sued AT&T in Federal Court in Los Angeles for
+          $24.7 million in damages, plus $200 million in punitive damages,
+          resulting in worldwide attention. AT&T has spent a lot of time and
+          money trying to bury me in paperwork and motions, but the case has
+          proceeded to depositions and to a docketed trial date in Los Angeles
+          in May, 2023.
+          {'\n'}
+          {'\n'}
+          {'\n'}
+          This NFT sale is designed to help me continue the fight, no matter how
+          long it takes (I’ve been at this for nearly five years and have spent
+          over $3 million in attorneys fees to date). I also want attention to
+          my case, as well as to the lack of regulation and protection of
+          consumers, which I first pursued with an open letter the Federal
+          Federal Communications Commission (FCC) in October, 2019 (and my case
+          was mentioned in currently proposed rule changes put forth in 2021 to
+          protect consumers – which AT&T is fighting).
+          {'\n'}
+          {'\n'}
+          {'\n'}
+          To the best of my knowledge, this is the first NFT series designed by
+          a plaintiff in a federal lawsuit, and I recognize the power of
+          community and digital assets in hoping this will bring forth a new
+          generation of cause-related NFTs in the world of law and politics.
+          {'\n'}
+          {'\n'}
+          {'\n'}
+          The SIM Dog series was designed by renowned pop artist Andre
+          Miripolsky (see bio below) and features four distinct NFT series,
+          which are described below. Please join us in supporting this
+          groundbreaking case and project.
+        </div>
+        <h1 className="splashpage-subtitle above-meet-team"> TEAM </h1>
         <TeamMeet primaryColor={primaryColor} arraySplash={'sim-dogs'} />
-        <div style={{ height: '900px' }} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={'NFT'} />
       </div>
     </div>

@@ -16,6 +16,11 @@
 }
 
 @font-face {
+  font-family: 'Acme';
+  src: local('Acme'), url(./fonts/Acme/Acme-Regular.ttf) format('truetype');
+}
+
+@font-face {
   font-family: 'Charriot Deluxe';
   src: local('Charriot Deluxe'),
     url(./fonts/charriot_deluxe/CharriotDeluxe.ttf) format('truetype');

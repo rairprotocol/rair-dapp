@@ -37,7 +37,7 @@ const reactSwal = withReactContent(Swal);
 
 const WarningModal = () => {
   return (
-    <div className="main-wrapper-nyc">
+    <div className="main-wrapper-nyc-genesis">
       <div className="bad">
         <h3>Bad don&#8219;t sign</h3>
         <img src={warning1} alt="Bad don&#8219;t sign" />

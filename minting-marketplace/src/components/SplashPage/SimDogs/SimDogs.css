@@ -1,30 +1,220 @@
 /* use .wrapper-splash-page.simdogs selector to override any general styling*/
-
 .wrapper-splash-page.simdogs {
-  margin-left: calc(var(--bs-gutter-x) * 0.5);
-  margin-top: 0px;
-  font-family: 'Aldrich', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.wrapper-splash-page.simdogs .membership-block {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+.wrapper-splash-page.simdogs .backstory-text {
+  white-space: pre-line;
+  text-align: left;
+  font-family: 'Plus Jakarta San', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 32px;
+  width: 1166px;
 }
 
-.wrapper-splash-page.simdogs .template-author-card .block-splash {
+/* author card default styling */
+.wrapper-splash-page.simdogs .template-home-splash-page {
+  width: 1200px;
+  white-space: pre-line;
 }
 
 .wrapper-splash-page.simdogs .template-author-card {
-  background-size: 24vw auto;
-  background-position: 90% center;
-  width: calc(1200px + -1vw);
-  align-self: center;
-  height: fit-content;
+  background-size: 538px 538px;
+  background-position: bottom 78px right 36px;
+  width: 100%;
+  height: 694px;
 }
 
+.wrapper-splash-page.simdogs .template-author-card .block-splash {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.wrapper-splash-page.simdogs .template-author-card .text-splash {
+  padding: 123px 0 0 75px;
+  height: auto;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .title-splash
+  h3.text-gradient-template {
+  font-family: 'Acme', sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .text-description {
+  font-family: 'Plus Jakarta Sans Bold', sans-serif;
+  color: #100003;
+  font-weight: 700;
+  width: 473px;
+  margin: 15px 0 0 0;
+  padding: 0 0 0 4px;
+  font-size: 32px;
+  line-height: 37px;
+}
+
+/**/
+
+/* need help button */
+
+.wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 56px 0 96px 0;
+}
+
+.wrapper-splash-page.simdogs .btn-submit-with-form.need-help button {
+  font-family: 'Aldrich', sans-serif;
+  font-size: 24px;
+  line-height: 28px;
+  background-color: rgb(160, 110, 210);
+  width: 303px;
+  height: 64px;
+}
+
+/**/
+
+/* the three button arrangement */
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper {
+  margin: 81px 0 0 70px;
+  padding: 0;
+  width: 244px;
+  height: 191px;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-0 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-0
+  .btn-submit-with-form {
+  width: 46%;
+  height: 100%;
+  margin-top: 0;
+  border-radius: 1rem;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-1
+  .btn-submit-with-form {
+  width: 100%;
+  height: 83px;
+  margin-top: 16px;
+  border-radius: 1rem;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-0
+  .btn-submit-with-form
+  button {
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-1
+  .btn-submit-with-form
+  button {
+  font-family: 'Acme', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 36px;
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-0
+  .btn-submit-with-form
+  button.col-0 {
+  width: 100%;
+  background: #2351a1;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .button-wrapper
+  .button-row-0
+  .btn-submit-with-form
+  button.col-1 {
+  width: 100%;
+  background: #2351a1;
+}
+
+/* icon sizing */
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .btn-submit-with-form
+  button
+  img.metamask-logo {
+  width: 47%;
+  height: auto;
+  margin-right: 0;
+}
+
+.wrapper-splash-page.simdogs
+  .template-author-card
+  .text-splash
+  .btn-submit-with-form
+  i.fab.fa-twitter.twitter-logo {
+  font-size: 47px;
+}
+
+/**/
+
 .wrapper-splash-page.simdogs .splash-team {
-  margin-bottom: 56px;
+  margin-bottom: 600px;
 }
 
 .wrapper-splash-page.simdogs .meet-team {
@@ -36,27 +226,17 @@
 }
 
 .wrapper-splash-page.simdogs .splashpage-subtitle {
-  font-family: 'Bazar', sans-serif;
   display: flex;
   flex-direction: row;
-  margin: 64px 0;
-  font-size: 1.8vw;
+  margin: 120px 0 60px 0;
+  font-size: 40px;
+  line-height: 60px;
+  font-family: 'Acme', sans-serif;
+  font-weight: 900;
 }
 
-.wrapper-splash-page.simdogs .splashpage-subtitle.paragraph-header {
-  font-family: 'Bazar', sans-serif;
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  margin: 64px 0;
-  font-size: 1.4vw;
-}
-
-.wrapper-splash-page.simdogs .paragraph-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  width: 60%;
-  align-self: center;
-  font-size: 1.2vw;
+.wrapper-splash-page.simdogs .splashpage-subtitle.above-meet-team {
+  margin: 110px 0 20px 0;
 }
 
 .wrapper-splash-page.simdogs .membership-block-text {
@@ -82,7 +262,6 @@
   border-radius: 1rem;
 }
 .genesis-resp {
-  height: 95vh;
   width: 80%;
 }
 .genesis-textCenter {
@@ -90,15 +269,6 @@
 }
 .genesis-font {
   font-family: 'Aldrich', sans-serif;
-}
-
-/*css button color variable instead of inline styling for linear gradient*/
-.wrapper-splash-page.simdogs .btn-submit-with-form button.genesis-font {
-  background: var(--stimorol);
-}
-
-.wrapper-splash-page.simdogs .btn-submit-with-form button.genesis-font:hover {
-  background: var(--stimorol-hover);
 }
 
 .wrapper-splash-page.simdogs .numbered-circle {
@@ -123,6 +293,8 @@
   font-weight: 700;
   margin-bottom: 2rem;
 }
+
+/* warning modal */
 
 .warning-modal {
   display: flex;
@@ -151,229 +323,65 @@
 
 .warning-modal-col-0-title {
   font-family: 'Aldrich', sans-serif;
-  /* font-size: calc(1.25rem + 1vw); */
   font-size: 1.125rem;
   color: red;
-  /* margin-top: 52px; */
-  /* position: relative; */
-  /* top: -4rem; */
 }
 
 .warning-modal-col-1-title {
   font-family: 'Aldrich', sans-serif;
-  /* font-size: calc(1.25rem + 1vw); */
   font-size: 1.125rem;
   color: green;
-  /* margin-top: 50px; */
-  /* position: relative; */
-  /* top: -4rem; */
 }
 
-.main-wrapper-nyc {
-  /* max-width: 400px;
-  max-height: 60%;
-  display: flex; */
-  /* max-height: 60%; */
+/* the images */
+
+.main-wrapper-nyc-simdogs {
   display: flex;
   flex-direction: row;
   align-content: center;
   align-items: flex-start;
   justify-content: space-evenly;
 }
-.main-wrapper-nyc img {
-  max-width: 80%;
-  /* height: 300px; */
-  height: 30rem;
+
+.main-wrapper-nyc-simdogs img {
+  width: 395px;
+  height: 700px;
 }
-.bad {
+
+/**/
+
+.bad-simdogs {
   flex: 1;
   font-family: 'Aldrich', sans-serif;
-  font-size: 1.125rem;
+  font-size: 2rem;
   color: red;
 }
-.good {
+
+.good-simdogs {
   flex: 1;
   font-family: 'Aldrich', sans-serif;
-  font-size: 1.125rem;
+  font-size: 2rem;
   color: green;
 }
 
-.swal2-title.text-genesis {
+.swal2-title.text-simdogs {
   color: #f15621;
   /* margin-top: 1rem; */
   font-family: 'Aldrich', sans-serif;
+  height: 120px;
+  margin-top: 50px;
 }
 
-.wrapper-splash-page.simdogs .template-author-card .text-splash .title-splash {
-  padding-left: 3vw;
-  width: 60%;
-  padding-top: 3vw;
+div#swal2-html-container.swal2-html-container {
+  margin-bottom: 0px;
 }
 
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .title-splash
-  h3.text-gradient-template {
-  font-family: 'Bazar', sans-serif;
-  font-weight: 500;
-  font-size: 3vw;
-  color: rgb(79, 112, 170);
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .author-card-subtitle {
-  font-family: 'Plus Jakarta Sans Bold', sans-serif;
-  font-weight: 400;
-  /* padding-left: 1.5vw; */
-  width: 100%;
-  margin-top: 24px;
-  font-size: 1.4vw;
-  color: rgb(0, 0, 0);
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .text-description {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-style: italic;
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 24px;
-  width: 60%;
-  padding: 2vw 0 2vw 3.5vw;
-  color: rgb(182, 182, 182);
-}
+/**/
 
 .wrapper-splash-page.simdogs .warning-img {
   width: 30vw;
   margin: 1.563rem 0 1.5rem 0;
 }
-
-.wrapper-splash-page.simdogs .template-author-card .text-splash {
-  padding-right: 12vw;
-  padding-left: 3vw;
-  height: auto;
-}
-
-/** button styling **/
-
-.wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
-  display: flex;
-  /* flex-direction: row-reverse; */
-  justify-content: flex-end;
-  width: calc(1200px + -1vw);
-  align-self: center;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper {
-  align-self: normal;
-  width: 25%;
-  margin-left: 7vw;
-  margin-top: 2vw;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper
-  .button-row-0 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper
-  .button-row-0
-  .btn-submit-with-form {
-  width: 46%;
-  margin-top: 0;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper
-  .button-row-0
-  .btn-submit-with-form
-  button.col-0 {
-  width: 100%;
-  background: #2351a1;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .btn-submit-with-form
-  button
-  img.metamask-logo {
-  width: 45%;
-  height: auto;
-  margin-right: 0;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .btn-submit-with-form
-  i.fab.fa-twitter.twitter-logo {
-  font-size: 1.5em;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper
-  .button-row-0
-  .btn-submit-with-form
-  button.col-1 {
-  width: 100%;
-  background: #2351a1;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper
-  .button-row-1 {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper
-  .button-row-1
-  .btn-submit-with-form {
-  width: 100%;
-  margin-top: 0;
-}
-
-.wrapper-splash-page.simdogs
-  .template-author-card
-  .text-splash
-  .button-wrapper
-  .button-row-1
-  .btn-submit-with-form
-  button {
-  font-size: 2vw;
-  width: 100%;
-  font-family: 'Bazar', sans-serif;
-}
-
-/* end button styling */
 
 .wrapper-splash-page.simdogs .main-greyman-pic-wrapper .join-pic-main img,
 .wrapper-splash-page.simdogs .list-of-greymans-pic .join-pic img {
@@ -386,6 +394,7 @@
   justify-content: center;
 }
 
+/** token counter initial styling **/
 .wrapper-splash-page.simdogs .left-tokens-content .tokens-description {
   width: 100%;
 }
@@ -394,26 +403,121 @@
   max-width: 1600px;
 }
 
-/* .btn-help {
-    position: absolute;
-    top: 20px;
-    right: 5vw;
-    width: 200px;
-    height: 48px;
-    color: #fff;
-    border: none;
-    border-radius: 16px;
-    background: #FFD505;
-    cursor: pointer;
-} */
+.wrapper-splash-page.simdogs .left-tokens-content .title-tokens {
+  text-align: left;
+}
+
+.wrapper-splash-page.simdogs .left-tokens-response {
+  margin-top: 125px;
+}
+
+.wrapper-splash-page.simdogs .left-tokens-content {
+  margin-left: 80px;
+}
+
+.wrapper-splash-page.simdogs .block-left-content-greyman {
+  margin-left: 80px;
+}
+
+.wrapper-splash-page.simdogs .title-tokens h3 span {
+  font-family: 'Acme', sans-serif;
+  font-weight: heavy;
+  font-size: 38px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 42px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p:nth-child(6) {
+  margin-bottom: 30px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p:nth-child(2) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p:nth-child(3) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p:nth-child(4) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p:nth-child(7) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p:nth-child(8) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.simdogs .tokens-description p:nth-child(9) {
+  margin-left: 40px;
+}
+
+.wrapper-splash-page.simdogs .btn-help {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+/**/
+/* Carousel Styles*/
+
+/* list - full size styles */
+.wrapper-splash-page.simdogs .carousel-description {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 28px;
+  line-height: 60px;
+  width: 100%;
+  margin: 29px 0;
+}
+.wrapper-splash-page.simdogs .carousel-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  align-items: center;
+}
+
+.wrapper-splash-page.simdogs .carousel-container .carousel-title {
+  margin: 0;
+}
+
+.wrapper-splash-page.simdogs .carousel-container .carousel-list {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-height: 900px;
+  flex-wrap: wrap;
+  align-content: space-between;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.wrapper-splash-page.simdogs .carousel-container .join-pic-img {
+  width: 350px;
+  height: 350px;
+}
+
+/**/
+.wrapper-splash-page.simdogs .membership-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.wrapper-splash-page.simdogs .template-home-splash-page .img-teammate img {
+  width: 269px;
+  height: 269px;
+}
+/**/
 
 @media screen and (max-width: 4200px) and (min-width: 2001px) {
-  .main-wrapper-nyc img {
-    max-width: 80%;
-    height: 78rem;
-  }
-  .swal2-title.text-genesis {
-    font-size: 5rem;
+  .swal2-title.text-simdogs {
+    font-size: 2rem;
   }
   .main-wrapper-nyc h3 {
     font-size: 5.75rem;
@@ -424,37 +528,69 @@
   }
 }
 
-@media screen and (max-width: 2000px) {
-  /* .wrapper-splash-page.simdogs .info-block{
-        font-size: 32px;
-    } */
-}
-
-@media screen and (max-width: 1800px) {
-  .warning-modal-col-0 {
-    width: 30%;
+@media screen and (max-width: 1330px) {
+  .swal2-title.text-simdogs {
+    font-size: 1.5rem;
   }
 
-  .warning-modal-col-1 {
-    width: 31%;
-  }
-}
-
-@media screen and (max-width: 1700px) {
-  .wrapper-splash-page.simdogs .template-author-card .text-splash {
-    padding-left: 7vw;
+  .main-wrapper-nyc-simdogs img {
+    width: 24.85vw;
+    height: 42vw;
   }
 
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .title-splash {
-    width: 55%;
+  .wrapper-splash-page.simdogs .backstory-text {
+    font-size: 1.944vw;
+    line-height: 2.222vw;
+    width: 100%;
   }
 
+  /* need help button */
+
+  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 3.889vw 0 3.889vw 0;
+  }
+
+  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help button {
+    font-family: 'Aldrich', sans-serif;
+    font-size: 2.2vw;
+    line-height: 2.2vw;
+    background-color: rgb(160, 110, 210);
+    width: 21.042vw;
+    height: 4.444vw;
+  }
+  /**/
+
+  /* carousel list - responsive */
+  .wrapper-splash-page.simdogs .carousel-container .join-pic-img {
+    width: 24vw;
+    height: 24vw;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-description {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.9vw;
+    line-height: 4.2vw;
+    width: 100%;
+    margin: 2vw 0;
+  }
+  /**/
+
+  .wrapper-splash-page.simdogs .template-home-splash-page {
+    max-width: 90vw;
+  }
+  /* author card - convert to responsive units */
   .wrapper-splash-page.simdogs .template-author-card {
-    background-size: 23vw auto;
-    background-position: 87% center;
+    background-size: 37.361vw 37.361vw;
+    background-position: bottom 5.417vw right 2.5vw;
+    width: 100%;
+    height: 48.2vw;
+  }
+
+  .wrapper-splash-page.simdogs .template-author-card .text-splash {
+    padding: 8.542vw 0 0 5.208vw;
+    height: auto;
   }
 
   .wrapper-splash-page.simdogs
@@ -462,21 +598,87 @@
     .text-splash
     .title-splash
     h3.text-gradient-template {
-    font-weight: 500;
-    font-size: 2.8vw;
+    font-size: 3.333vw;
   }
 
   .wrapper-splash-page.simdogs
     .template-author-card
     .text-splash
-    .author-card-subtitle {
-    font-size: 1.4vw;
+    .text-description {
+    width: 32.847vw;
+    margin: 1.042vw 0 0 0;
+    padding: 0 0 0 0.278vw;
+    font-size: 2.222vw;
+    line-height: 2.569vw;
   }
-}
+  /**/
 
-@media screen and (max-width: 1440px) {
-  .wrapper-splash-page.simdogs {
-    margin-top: 32px;
+  /* the three button arrangement */
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper {
+    margin: 5.625vw 0 0 4.861vw;
+    width: 16.944vw;
+    height: 13.264vw;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-0 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-0
+    .btn-submit-with-form {
+    width: 46%;
+    height: 100%;
+    margin-top: 0;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-1
+    .btn-submit-with-form {
+    width: 100%;
+    height: 5.764vw;
+    margin-top: 1.111vw;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-0
+    .btn-submit-with-form
+    button {
+    width: 100%;
+    height: 100%;
   }
 
   .wrapper-splash-page.simdogs
@@ -486,70 +688,56 @@
     .button-row-1
     .btn-submit-with-form
     button {
-    font-size: 2.4vw;
+    font-family: 'Acme', sans-serif;
+    font-weight: 400;
+    font-size: 2.5vw;
+    line-height: 2.5vw;
+    width: 100%;
+    height: 100%;
   }
 
-  .template-author-card
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-0
+    .btn-submit-with-form
+    button.col-0 {
+    width: 100%;
+    background: #2351a1;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-0
+    .btn-submit-with-form
+    button
+    .col-1 {
+    width: 100%;
+    background: #2351a1;
+  }
+
+  /* icon sizing */
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .btn-submit-with-form
+    button
+    img.metamask-logo {
+    width: 47%;
+    height: auto;
+    margin-right: 0;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
     .text-splash
     .btn-submit-with-form
     i.fab.fa-twitter.twitter-logo {
-    font-size: 2.1em;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .button-wrapper {
-    align-self: normal;
-    width: 23%;
-    margin-left: 9.5vw;
-    margin-top: 4vw;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .author-card-subtitle {
-    font-size: 1.7vw;
-  }
-
-  .wrapper-splash-page.simdogs .template-author-card .text-splash {
-    padding-right: 12vw;
-    padding-left: 5vw;
-  }
-
-  .wrapper-splash-page.simdogs .template-author-card {
-    background-size: 30vw auto;
-    background-position: 95% center;
-    width: 80vw;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .title-splash {
-    width: 60%;
-    padding-top: 4.5vw;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .title-splash
-    h3.text-gradient-template {
-    font-weight: 500;
-    font-size: 3vw;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .text-description {
-    width: 55%;
-  }
-
-  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
-    width: 80vw;
+    font-size: 3.264vw;
   }
 }
 
@@ -569,43 +757,129 @@
     max-width: 100%;
     width: 100%;
   }
-
-  .wrapper-splash-page.simdogs .block-splash {
-    padding: 0 0 0 4vw;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .title-splash {
-    width: 50%;
-  }
 }
 
 @media screen and (max-width: 1100px) {
-  .wrapper-splash-page.simdogs {
-    padding-right: 0 !important;
+  /* need help button */
+
+  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 3.889vw 0 12vw 0;
   }
 
-  .wrapper-splash-page.simdogs .template-home-splash-page {
-    padding-left: 0;
+  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help button {
+    font-family: 'Aldrich', sans-serif;
+    font-size: 2.8vw;
+    line-height: 2.8vw;
+    width: 32vw;
+    height: 6vw;
+  }
+  /**/
+
+  .wrapper-splash-page.simdogs .tokens-description p:nth-child(2) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .tokens-description p:nth-child(3) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .tokens-description p:nth-child(4) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .tokens-description p:nth-child(7) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .tokens-description p:nth-child(8) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .tokens-description p:nth-child(9) {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .splashpage-subtitle.below-need-help {
+    margin: 6.7vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.simdogs .left-tokens-content .title-tokens {
+    text-align: center;
+  }
+
+  .wrapper-splash-page.simdogs .tokens-description p {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .wrapper-splash-page.simdogs .left-tokens-response {
+    margin-top: 8.7vw;
+  }
+
+  .wrapper-splash-page.simdogs .left-tokens-content {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .block-left-content-greyman {
+    margin-left: 0px;
+  }
+
+  .wrapper-splash-page.simdogs .left-tokens-content .tokens-description p {
+    text-align: center;
+  }
+
+  /* carousel styles */
+  .wrapper-splash-page.simdogs .carousel-container .carousel {
+    width: 80%;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-container .carousel-items {
+    margin-bottom: calc(16px + 1vw);
+    font-weight: 700;
+    font-size: calc(24px + 0.5vw);
+  }
+
+  .wrapper-splash-page.simdogs .carousel-container {
+    margin: 0;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-container .carousel-title {
+    text-align: center;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-description {
+    width: 24vw;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-container .join-pic-img {
+    width: 24vw;
+    height: 24vw;
+  }
+  /* author card - mobile breakpoint */
+
+  .wrapper-splash-page.simdogs .template-author-card .block-splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .wrapper-splash-page.simdogs .template-author-card .text-splash {
+    padding: 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
     align-items: center;
   }
 
-  .wrapper-splash-page.simdogs .block-splash {
-    padding-left: 0;
-  }
-
   .wrapper-splash-page.simdogs .template-author-card {
-    background-position: center 20vw;
-    background-size: 37vw auto;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .title-splash {
-    padding: 7vw 0 0 0;
+    background-size: 40vw auto;
+    background-position: center 20.5vw;
+    height: 95vw;
+    padding: 0;
   }
 
   .wrapper-splash-page.simdogs
@@ -613,49 +887,70 @@
     .text-splash
     .title-splash
     h3.text-gradient-template {
-    font-size: 5.4vw !important;
-    margin-bottom: 0vw;
-  }
-
-  .wrapper-splash-page.simdogs
-    .template-author-card
-    .text-splash
-    .author-card-subtitle {
-    margin: 43vw 0 4vw 0;
-    padding: 0;
-    font-size: 2.4vw;
-  }
-
-  .wrapper-splash-page.simdogs .template-author-card .text-splash {
-    padding: 0 5vw;
-    align-items: center;
+    font-size: 7vw !important;
+    margin-bottom: 50vw;
   }
 
   .wrapper-splash-page.simdogs
     .template-author-card
     .text-splash
     .text-description {
-    padding: 4vw 0;
-    font-size: 2.5vw;
+    width: 60%;
+    margin: 0;
+    padding: 0;
+    font-size: 2.7vw;
+    line-height: 2.7vw;
   }
 
   .wrapper-splash-page.simdogs
     .template-author-card
     .text-splash
     .button-wrapper {
-    margin: 0;
-    align-self: center;
-    width: 40%;
+    margin: 4vw 0 0 0;
+    padding: 0;
   }
 
   .wrapper-splash-page.simdogs
     .template-author-card
     .text-splash
     .button-wrapper
-    .button-row-1
+    .btn-submit-with-form {
+    margin: 1.4vw 0 0 0;
+  }
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
     .btn-submit-with-form
     button {
-    font-size: 4.4vw;
+    width: 30vw;
+    height: 5vw;
+    font-size: 2vw;
+    line-height: 2vw;
+    padding: 0.2vw 0 0 0;
+  }
+
+  /**/
+  .wrapper-splash-page.simdogs .membership-block {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper-splash-page.simdogs .membership-block-text {
+    text-align: center;
+    width: 40vw;
+    display: flex;
+    font-size: 24px;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .wrapper-splash-page.simdogs .membership-block-image {
+    margin-top: 5vw;
+  }
+
+  .wrapper-splash-page.simdogs .membership-block {
+    flex-direction: column;
   }
 
   .warning-modal-col-0 {
@@ -687,53 +982,60 @@
     height: 29.5rem;
     margin-right: 0 !important;
   }
+}
 
-  .wrapper-splash-page.simdogs .membership-block {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .wrapper-splash-page.simdogs .membership-block-text {
-    text-align: center;
-    width: 40vw;
+@media screen and (max-width: 950px) {
+  .wrapper-splash-page.simdogs .left-tokens .text-progress .progress-info {
     display: flex;
-    font-size: 24px;
-    flex-direction: column;
-    justify-content: center;
+    width: 8.125rem;
+    height: 8.125rem;
   }
 
-  .wrapper-splash-page.simdogs .membership-block-image {
-    margin-top: 5vw;
-  }
-
-  .wrapper-splash-page.simdogs .membership-block {
-    flex-direction: column;
-  }
-
-  .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
-    width: inherit;
-  }
-}
-
-@media screen and (max-width: 1000px) {
-  .wrapper-splash-page.simdogs {
-    margin-top: 50px;
-  }
-}
-
-@media screen and (max-width: 940px) {
-  .wrapper-splash-page.simdogs {
-    margin-top: 100px;
+  .wrapper-splash-page.simdogs .text-progress.progress-text-template {
+    bottom: 30%;
+    left: 30%;
   }
 }
 
 @media screen and (max-width: 900px) {
-  .wrapper-splash-page.simdogs .template-author-card {
-    background-position: center 22vw;
+  /* carousel styles - mobile*/
+  .wrapper-splash-page.simdogs .join-pic-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .wrapper-splash-page.simdogs {
-    /* margin-top: 10vw; */
+  .wrapper-splash-page.simdogs .carousel-container {
+    margin: 0;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-container .carousel {
+    width: 100%;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-description {
+    width: 384px;
+    font-size: 4.2vw;
+    margin: 4.2vw 0 0 0;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-container .join-pic-img {
+    width: 384px;
+    height: 384px;
+  }
+  /**/
+
+  .wrapper-splash-page.simdogs .template-home-splash-page .img-teammate img {
+    width: 384px;
+    height: 384px;
+  }
+
+  .wrapper-splash-page.simdogs .splashpage-subtitle {
+    margin: 13.4vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.simdogs .splashpage-subtitle.above-meet-team {
+    margin: 12vw 0 6.7vw 0;
   }
 }
 
@@ -747,23 +1049,31 @@
   }
 
   .warning-modal-col-0-title {
-    /* margin-top: 42px; */
     margin-top: -2rem;
   }
 
   .warning-modal-col-1-title {
-    /* margin-top: 44px; */
     margin-top: -2rem;
   }
 }
 
 @media screen and (max-width: 700px) {
-  .wrapper-splash-page.simdogs {
-    /* margin-top: 15vw; */
+  .bad-simdogs {
+    font-size: 1.2rem;
   }
 
+  .good-simdogs {
+    font-size: 1.2rem;
+  }
+
+  .wrapper-splash-page.simdogs .left-tokens-response {
+    margin-top: 90px;
+  }
+  /* author card - smaller mobile breakpoint */
   .wrapper-splash-page.simdogs .template-author-card {
-    background-position: center 24vw;
+    background-size: 45vw auto;
+    background-position: center 18vw;
+    height: 98vw;
   }
 
   .wrapper-splash-page.simdogs
@@ -771,28 +1081,133 @@
     .text-splash
     .title-splash
     h3.text-gradient-template {
-    font-size: 6vw !important;
+    font-size: 7.8vw !important;
   }
 
   .wrapper-splash-page.simdogs
     .template-author-card
     .text-splash
-    .author-card-subtitle {
-    font-size: 2.7vw;
+    .text-description {
+    width: 70%;
+    font-size: 3.5vw;
+    line-height: 3.5vw;
   }
 
-  .template-author-card
+  /* buttons */
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper {
+    margin: 3.5vw 0 0 0;
+    padding: 0;
+    width: 40vw;
+    height: 18vw;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .btn-submit-with-form {
+    margin: 2vw 0 0 0;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-1
+    .btn-submit-with-form {
+    width: 100%;
+    height: 7.3vw;
+    margin-top: 2vw;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .button-wrapper
+    .button-row-1
+    .btn-submit-with-form
+    button {
+    font-size: 3.6vw;
+    line-height: 3.6vw;
+  }
+  /**/
+
+  /* icon sizing */
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
     .text-splash
     .btn-submit-with-form
     button
     img.metamask-logo {
-    width: 45%;
+    width: 30%;
     height: auto;
     margin-right: 0;
+  }
+
+  .wrapper-splash-page.simdogs
+    .template-author-card
+    .text-splash
+    .btn-submit-with-form
+    i.fab.fa-twitter.twitter-logo {
+    font-size: 4.9vw;
+  }
+
+  /**/
+  .wrapper-splash-page.simdogs .splash-team {
+    margin-bottom: 700px;
   }
 }
 
 @media screen and (max-width: 600px) {
+  /* carousel styles - breakpoint*/
+  .wrapper-splash-page.simdogs .carousel-container .join-pic-img {
+    width: 50vw;
+    height: 50vw;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-description {
+    width: 384px;
+    font-size: 4.7vw;
+  }
+  /**/
+
+  .wrapper-splash-page.simdogs .template-home-splash-page .img-teammate img {
+    width: 50vw;
+    height: 50vw;
+  }
+
+  .wrapper-splash-page.simdogs .splash-team {
+    margin-bottom: 800px;
+  }
+
+  .wrapper-splash-page.simdogs .splashpage-subtitle.below-need-help {
+    font-size: 6.7vw;
+    line-height: 6.7vw;
+    margin: 12vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.simdogs
+    .splashpage-subtitle.splashpage-subtitle.above-meet-team {
+    font-size: 6.7vw;
+    line-height: 6.7vw;
+    margin: 12vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.simdogs .splashpage-subtitle {
+    font-size: 6.7vw;
+    line-height: 6.7vw;
+    margin: 12vw 0 6.7vw 0;
+  }
+
+  .wrapper-splash-page.simdogs .title-tokens h3 span {
+    font-size: 6vw !important;
+    line-height: 4vw !important;
+  }
+
   .wrapper-splash-page.simdogs .membership-block-text {
     font-size: calc(16px + 0.5vw);
   }
@@ -801,10 +1216,6 @@
     width: 30px;
     height: 30px;
     line-height: 30px;
-  }
-
-  .wrapper-splash-page.simdogs .left-tokens-content .tokens-description p {
-    font-size: 1rem;
   }
 
   .warning-modal-col-0-title {
@@ -817,40 +1228,69 @@
 }
 
 @media screen and (max-width: 500px) {
-  .wrapper-splash-page.simdogs {
-    /* margin-top: 20vw; */
+  .wrapper-splash-page.simdogs .backstory-text {
+    font-size: 3.4vw;
+    line-height: 4vw;
+    width: 100%;
   }
 
-  .wrapper-splash-page.simdogs .splashpage-subtitle {
-    display: flex;
-    flex-direction: column;
-    margin: 54px 0;
-    font-size: 2.5rem;
+  /* modal img */
+
+  .bad-simdogs {
+    font-size: 0.8rem;
   }
+
+  .good-simdogs {
+    font-size: 0.8rem;
+  }
+
+  .swal2-title.text-simdogs {
+    height: 200px;
+    margin-top: 10vw;
+    font-size: 5vw;
+  }
+
+  div#swal2-html-container.swal2-html-container {
+    margin-bottom: 240px;
+  }
+
+  .wrapper-splash-page.simdogs .left-tokens-content .tokens-description p {
+    font-size: 1.2rem;
+    line-height: 1.7rem;
+  }
+  /* carousel - breakpoint */
+  .wrapper-splash-page.simdogs .carousel-container {
+    margin: 0;
+  }
+
+  .wrapper-splash-page.simdogs .carousel-container .carousel-description {
+    width: 100%;
+    padding: 0 10px;
+  }
+  /* author card - smallest mobile breakpoint */
 
   .wrapper-splash-page.simdogs .template-author-card {
-    background-position: center 27vw;
+    background-size: 52vw auto;
+    background-position: center 20.5vw;
+    height: 112vw;
   }
 
-  .wrapper-splash-page.simdogs .btn-submit-with-form button {
-    width: 60vw;
-  }
-
-  .template-author-card
+  .wrapper-splash-page.simdogs
+    .template-author-card
     .text-splash
-    .btn-submit-with-form
-    button
-    img.metamask-logo {
-    width: 60%;
-    height: auto;
-    margin-right: 0;
+    .title-splash
+    h3.text-gradient-template {
+    font-size: 8vw !important;
+    margin-bottom: 58vw;
   }
 
   .wrapper-splash-page.simdogs
     .template-author-card
     .text-splash
     .text-description {
-    font-size: 3vw;
+    width: 80%;
+    font-size: 4.3vw;
+    line-height: 4.3vw;
   }
 
   .wrapper-splash-page.simdogs .left-tokens .block-left-tokens {
@@ -905,27 +1345,18 @@
   }
 }
 
-@media screen and (max-width: 450px) {
-  .wrapper-splash-page.simdogs {
-    /* margin-top: 25vw; */
-  }
-}
-
 @media screen and (max-width: 390px) {
-  .wrapper-splash-page.simdogs {
-    margin-top: 100px;
-  }
-
   .template-home-splash-page .splash-team-greyman {
     margin-bottom: 56.25rem;
   }
+  .wrapper-splash-page.simdogs .splash-team {
+    margin-bottom: 900px;
+  }
 }
+
 @media screen and (min-width: 2500px) {
   html {
     font-size: 1rem;
-  }
-  .genesis-font {
-    font-size: 2rem !important;
   }
   .position-teammate {
     justify-content: start !important;
