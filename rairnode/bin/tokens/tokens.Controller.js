@@ -1,5 +1,5 @@
 const express = require('express');
-const { createTokensWithCommonMetadata, getSingleToken } = require('./tokens.Service');
+const { createTokensWithCommonMetadata, getSingleToken, updateSingleTokenMetadata } = require('./tokens.Service');
 const { getContractsByBlockchainAndContractAddress } = require('../contracts/contracts.Service');
 const { getOfferIndexesByContractAndProduct } = require('../offers/offers.Service');
 const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.Service');
@@ -33,6 +33,18 @@ module.exports = () => {
       return next();
     },
     getSingleToken,
+  );
+
+  router.patch(
+    '/:token',
+    JWTVerification,
+    getContractsByBlockchainAndContractAddress,
+    getOfferIndexesByContractAndProduct,
+    getOfferPoolByContractAndProduct,
+    upload.array('files', 2),
+    dataTransform(['attributes']),
+    validation('updateTokenMetadata'),
+    updateSingleTokenMetadata,
   );
 
   return router;

@@ -1,3 +1,4 @@
+const { promises: fs } = require('fs');
 const _ = require('lodash');
 const {
   OfferPool,
@@ -11,6 +12,8 @@ const { addPin, addFile } = require('../integrations/ipfsService')();
 const log = require('../utils/logger')(module);
 const { textPurify, cleanStorage } = require('../utils/helpers');
 const eFactory = require('../utils/entityFactory');
+
+const { pinata } = config;
 
 const getOffersAndOfferPools = async (contract, product) => {
   let offerPool = [];
@@ -129,7 +132,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
               log.info(`File ${file.filename} has added to ipfs.`);
 
               // eslint-disable-next-line no-param-reassign
-              file.link = `${config.pinata.gateway}/${cid}/${file.filename}`;
+              file.link = `${pinata.gateway}/${cid}/${file.filename}`;
 
               return file;
             } catch (err) {
@@ -314,3 +317,164 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 };
 
 exports.getSingleToken = eFactory.getOne(MintedToken, { filter: { contract: 'contract._id', token: 'params.token', specificFilterOptions: 'specificFilterOptions' } });
+
+exports.updateSingleTokenMetadata = async (req, res, next) => {
+  try {
+    const { contract, offers, offerPool } = req;
+    const { token } = req.params;
+    const { user } = req;
+    const fieldsForUpdate = _.pick(req.body, [
+      'name',
+      'description',
+      'artist',
+      'external_url',
+      'image',
+      'animation_url',
+      'attributes',
+    ]);
+
+    const options = _.assign(
+      {
+        contract: contract._id,
+        token,
+      },
+      contract.diamond
+        ? { offer: { $in: offers } }
+        : { offerPool: offerPool.marketplaceCatalogIndex },
+    );
+
+    if (user.publicAddress !== contract.user) {
+      if (req.files.length) {
+        await Promise.all(
+          _.map(req.files, async (file) => {
+            await fs.rm(`${file.destination}/${file.filename}`);
+            log.info(`File ${file.filename} has removed.`);
+          }),
+        );
+      }
+
+      return res.status(403).send({
+        success: false,
+        message: `You have no permissions for updating token ${token}.`,
+      });
+    }
+
+    if (_.isEmpty(fieldsForUpdate)) {
+      if (req.files.length) {
+        await Promise.all(
+          _.map(req.files, async (file) => {
+            await fs.rm(`${file.destination}/${file.filename}`);
+            log.info(`File ${file.filename} has removed.`);
+          }),
+        );
+      }
+
+      return res
+        .status(400)
+        .send({ success: false, message: 'Nothing to update.' });
+    }
+
+    const countDocuments = await MintedToken.countDocuments(
+      options,
+    );
+
+    if (countDocuments === 0) {
+      if (req.files.length) {
+        await Promise.all(
+          _.map(req.files, async (file) => {
+            await fs.rm(`${file.destination}/${file.filename}`);
+            log.info(`File ${file.filename} has removed.`);
+          }),
+        );
+      }
+
+      return res
+        .status(400)
+        .send({ success: false, message: 'Token not found.' });
+    }
+
+    if (req.files.length) {
+      const files = [];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const file of req.files) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const cid = await addFile(file.destination, file.filename);
+          // eslint-disable-next-line no-await-in-loop
+          await addPin(cid, file.filename);
+
+          log.info(`File ${file.filename} has added to ipfs.`);
+
+          file.link = `${pinata.gateway}/${cid}/${file.filename}`;
+
+          files.push(file);
+        } catch (err) {
+          log.error(err);
+
+          return err;
+        }
+      }
+
+      _.chain(fieldsForUpdate)
+        .pick(['image', 'animation_url'])
+        .forEach((value, key) => {
+          const v = _.chain(files)
+            .find((f) => f.originalname === value)
+            .get('link')
+            .value();
+
+          if (v) fieldsForUpdate[key] = v;
+          else delete fieldsForUpdate[key];
+        })
+        .value();
+    }
+
+    // sanitize fields
+    let sanitizedFieldsForUpdate = {};
+    _.forEach(fieldsForUpdate, (v, k) => {
+      sanitizedFieldsForUpdate[k] = _.includes(
+        ['image', 'animation_url', 'external_url', 'attributes'],
+        k,
+      )
+        ? v
+        : textPurify.sanitize(v);
+    });
+
+    sanitizedFieldsForUpdate = _.mapKeys(
+      sanitizedFieldsForUpdate,
+      (v, k) => `metadata.${k}`,
+    );
+
+    const updatedToken = await MintedToken.findOneAndUpdate(
+      options,
+      {
+        ...sanitizedFieldsForUpdate,
+        isMetadataPinned: false,
+        isURIStoredToBlockchain: false,
+      },
+      { new: true },
+    );
+
+    if (req.files.length) {
+      await Promise.all(
+        _.map(req.files, async (file) => {
+          await fs.rm(`${file.destination}/${file.filename}`);
+          log.info(`File ${file.filename} has removed.`);
+        }),
+      );
+    }
+
+    return res.json({ success: true, token: updatedToken });
+  } catch (err) {
+    if (req.files.length) {
+      await Promise.all(
+        _.map(req.files, async (file) => {
+          await fs.rm(`${file.destination}/${file.filename}`);
+          log.info(`File ${file.filename} has removed.`);
+        }),
+      );
+    }
+
+    return next(err);
+  }
+};
