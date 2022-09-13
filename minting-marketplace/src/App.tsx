@@ -102,6 +102,8 @@ import {
 import CoinAgenda2021SplashPage from './components/SplashPage/CoinAgenda2021/CoinAgenda2021';
 import InquiriesPage from './components/InquiriesPage/InquiriesPage';
 import Wallstreet80sClubSplashPage from './components/SplashPage/wallstreet80sclub/wallstreet80sclub';
+import IframePage from './components/iframePage/IframePage';
+import TestIframe from './components/iframePage/testIframe';
 
 const rSwal = withReactContent(Swal);
 
@@ -142,6 +144,7 @@ function App() {
   const [renderBtnConnect, setRenderBtnConnect] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
   const [isSplashPage, setIsSplashPage] = useState(false);
+  const [isIframePage, setIsIframePage] = useState<boolean>(false);
   const { currentChain, realChain } = useSelector(
     (store) => store.contractStore
   );
@@ -451,7 +454,7 @@ function App() {
         backgroundImage={backgroundImage}
         showAlert={showAlert}>
         <div className="row w-100 m-0 p-0">
-          {carousel ? (
+          {carousel && !isIframePage ? (
             <MainHeader
               goHome={goHome}
               loginDone={loginDone}
@@ -466,20 +469,22 @@ function App() {
               isSplashPage={isSplashPage}
             />
           ) : (
-            <MenuNavigation
-              adminRights={adminRights}
-              primaryColor={primaryColor}
-              startedLogin={startedLogin}
-              connectUserData={connectUserData}
-              renderBtnConnect={renderBtnConnect}
-              loginDone={loginDone}
-              setLoginDone={setLoginDone}
-              currentUserAddress={currentUserAddress}
-              creatorViewsDisabled={creatorViewsDisabled}
-              programmaticProvider={programmaticProvider}
-              showAlert={showAlert}
-              selectedChain={selectedChain}
-            />
+            !isIframePage && (
+              <MenuNavigation
+                adminRights={adminRights}
+                primaryColor={primaryColor}
+                startedLogin={startedLogin}
+                connectUserData={connectUserData}
+                renderBtnConnect={renderBtnConnect}
+                loginDone={loginDone}
+                setLoginDone={setLoginDone}
+                currentUserAddress={currentUserAddress}
+                creatorViewsDisabled={creatorViewsDisabled}
+                programmaticProvider={programmaticProvider}
+                showAlert={showAlert}
+                selectedChain={selectedChain}
+              />
+            )
           )}
 
           {/*
@@ -843,9 +848,14 @@ function App() {
                   },
                   // Video Player
                   {
-                    path: '/watch/:videoId/:mainManifest',
-                    content: VideoPlayer,
-                    exact: false
+                    path: '/watch/:contract/:videoId/:mainManifest',
+                    content: IframePage,
+                    props: { loginDone, setIsIframePage }
+                  },
+                  {
+                    path: '/test-iframe/:contract/:videoId/:mainManifest',
+                    content: TestIframe,
+                    props: { loginDone, setIsIframePage }
                   },
                   {
                     path: '*',
@@ -874,7 +884,7 @@ function App() {
           </MainBlockApp>
         </div>
       </AppContainerFluid>
-      <Footer />
+      {!isIframePage && <Footer />}
     </ErrorBoundary>
   );
 }

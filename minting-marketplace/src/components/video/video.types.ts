@@ -9,6 +9,7 @@ export interface IVideoPlayer {
 export type VideoPlayerParams = {
   videoId: string;
   mainManifest: string;
+  contract: string;
 };
 
 export type TParticularProduct = {

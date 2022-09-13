@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const AppContainerFluid = styled.div`
   ${(props) => props.backgroundImageEffect};
   background-size: 100vw 100vh;
-  min-height: 90vh;
+  min-height: 100vh;
   position: relative;
   background-color: ${(props) =>
     props.primaryColor === 'rhyno'

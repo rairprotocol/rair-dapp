@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+// @ts-nocheck
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
 import setDocumentTitle from '../../utils/setTitle';
-import { getRandomValues } from '../../utils/getRandomValues';
 import { VideoPlayerParams } from './video.types';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
@@ -13,23 +13,20 @@ import {
   TAuthGetChallengeResponse,
   TOnlySuccessResponse
 } from '../../axios.responseTypes';
+import withReactContent from 'sweetalert2-react-content';
 
+const reactSwall = withReactContent(Swal);
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
-  const navigate = useNavigate();
-
-  const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
-
-  const [videoName] = useState(getRandomValues);
+  const { /*contract,*/ mainManifest, videoId } = params;
+  const { programmaticProvider /*, currentChain, minterInstance*/ } =
+    useSelector<RootState, ContractsInitialType>((state) => {
+      return state.contractStore;
+    });
+  const [videoName] = useState(videoId);
   const [mediaAddress, setMediaAddress] = useState<string | null>(
-    String(getRandomValues())
+    String(videoId)
   );
-
-  const btnGoBack = () => {
-    navigate(-1);
-  };
 
   const requestChallenge = useCallback(async () => {
     let signature;
@@ -57,6 +54,7 @@ const VideoPlayer = () => {
       parsedResponse = JSON.parse(response);
       // EIP712Domain is added automatically by Ethers.js!
       const { /* EIP712Domain,*/ ...revisedTypes } = parsedResponse.types;
+
       signature = await programmaticProvider._signTypedData(
         parsedResponse.domain,
         revisedTypes,
@@ -74,20 +72,20 @@ const VideoPlayer = () => {
           '/' +
           signature +
           '/' +
-          params.videoId
+          videoId
       );
       if (streamAddress.data.success) {
-        await setMediaAddress(
-          '/stream/' + params.videoId + '/' + params.mainManifest
-        );
+        await setMediaAddress('/stream/' + videoId + '/' + mainManifest);
         videojs('vjs-' + videoName);
       }
     } catch (err) {
       const error = err as AxiosError;
       console.error(error.message);
-      Swal.fire('NFT required to view this content');
+      reactSwall.fire({
+        title: 'NFT required to view this content'
+      });
     }
-  }, [params.mainManifest, params.videoId, videoName, programmaticProvider]);
+  }, [mainManifest, videoId, videoName, programmaticProvider]);
 
   useEffect(() => {
     requestChallenge();
@@ -108,16 +106,13 @@ const VideoPlayer = () => {
 
   return (
     <>
-      <div className="video-btn-back">
-        <button onClick={() => btnGoBack()}>back</button>
-      </div>
       <div className="col-12 row mx-0 h1" style={{ minHeight: '50vh' }}>
         <video
           id={'vjs-' + videoName}
           className="video-js vjs-16-9"
           controls
           preload="auto"
-          autoPlay
+          // autoPlay
           //poster={ video && ('/thumbnails/' + video.thumbnail + '.png') }
           data-setup="{}">
           <source
