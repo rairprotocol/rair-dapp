@@ -24,7 +24,7 @@ const getAppRoleIDFromEnv = ({appName}) => {
     return process.env.VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID;
   }
   if(appName === applicationConfig["media-service"].name) {
-    return process.env.VAULT_RAIRNODE_APP_ROLE_ID;
+    return process.env.VAULT_MEDIA_SERVICE_APP_ROLE_ID;
   }
 }
 
@@ -36,7 +36,7 @@ const getAppRoleSecretIDFromEnv = ({appName}) => {
     return process.env.VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID;
   }
   if(appName === applicationConfig["media-service"].name) {
-    return process.env.VAULT_RAIRNODE_APP_ROLE_SECRET_ID;
+    return process.env.VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID;
   }
 }
 

@@ -86,3 +86,29 @@ module "jwt_secret" {
     google_service_account.each_gke_service_account["rairnode"].email,
   ]
 }
+
+
+module "gke_vault_role_id_media_service" {
+  depends_on = [google_project_service.secret_manager]
+
+  source = "../gke_secret"
+
+  secret_name = "gke-vault-role-id-media-service"
+  service_account_emails_to_grant_secret_accessor = [
+    google_service_account.each_gke_service_account["media_service"].email,
+  ]
+}
+
+module "gke_vault_secret_id_media_service" {
+  depends_on = [google_project_service.secret_manager]
+
+  source = "../gke_secret"
+
+  secret_name = "gke-vault-secret-id-media-service"
+  service_account_emails_to_grant_secret_accessor = [
+    google_service_account.each_gke_service_account["media_service"].email,
+  ]
+}
+
+
+

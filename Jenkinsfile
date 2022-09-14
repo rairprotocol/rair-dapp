@@ -131,6 +131,25 @@ pipeline {
             }
           }
         }
+    stage('Build and push media-service new infra') {
+          when {
+            not { branch 'dev'}
+          }
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile.prod \
+                    --context ./media-service/ \
+                    --verbosity debug \
+                    --destination rairtechinc/media-service-new-infra:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
     stage('Build and push dev minting-marketplace') {
           when { branch 'dev'}
           steps {
@@ -200,6 +219,24 @@ pipeline {
                     --verbosity debug \
                     --destination rairtechinc/media-service:${GIT_COMMIT} \
                     --destination rairtechinc/media-service:${GIT_BRANCH}_2.${BUILD_ID}
+
+                '''
+              }
+
+            }
+          }
+    stage('Build and push dev media-service new infra') {
+          when { branch 'dev'}
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile.prod \
+                    --context ./media-service/ \
+                    --verbosity debug \
+                    --destination rairtechinc/media-service-new-infra:${GIT_COMMIT} \
+                    --destination rairtechinc/media-service-new-infra:${GIT_BRANCH}_2.${BUILD_ID}
 
                 '''
               }

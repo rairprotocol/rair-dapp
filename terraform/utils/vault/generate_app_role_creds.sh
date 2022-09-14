@@ -13,7 +13,7 @@ APP_ROLE_NAME=""
 
 
 PS3='Select application: '
-options=("rairnode" "blockchain-network")
+options=("rairnode" "blockchain-network" "media-service")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -23,6 +23,10 @@ do
             ;;
         "blockchain-network")
             APP_ROLE_NAME="blockchain-network"
+            break;
+            ;;
+        "media-service")
+            APP_ROLE_NAME="media-service"
             break;
             ;;
         *) echo "invalid option $REPLY";;

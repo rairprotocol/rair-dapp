@@ -32,5 +32,8 @@ module "vault_config" {
   blockchain_network_app_role_authorized_login_cidr_ranges = [
     # "0.0.0.0/0"
   ]
+  media_service_app_role_authorized_login_cidr_ranges = [
+    # "0.0.0.0/0"
+  ]
 }
 

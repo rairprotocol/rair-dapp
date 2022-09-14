@@ -31,6 +31,8 @@ locals {
   gke_default_namespace = "default"
 }
 
+# TODO: rename this binding to "each_service"
+# rairnode is a bad name for this resource
 resource "google_service_account_iam_binding" "rairnode" {
   for_each = module.shared_config.gke_service_accounts
 
