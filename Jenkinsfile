@@ -222,7 +222,7 @@ pipeline {
 
                 '''
               }
-
+            }
             }
           }
     stage('Build and push dev media-service new infra') {
