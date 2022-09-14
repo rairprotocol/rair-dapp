@@ -1,7 +1,7 @@
 const {deployments, ethers} = require('hardhat');
 
 module.exports = async ({accounts, getUnnamedAccounts}) => {
-	const { deploy } = deployments;
+	const { deploy, get } = deployments;
 	const [deployerAddress] = await getUnnamedAccounts();
 
 	// Selects the address for the ERC777 depending on the blockhain
@@ -16,12 +16,13 @@ module.exports = async ({accounts, getUnnamedAccounts}) => {
 			binanceMainnet: "0x0Ce668D271b8016a785Bf146e58739F432300B12",
 		}[hre.network.name]
 	];
-
+	
 	if (constructorArgumentsForNewFactory[1] === undefined) {
 		console.error("NO ERC777 CONTRACT DEFINED");
 		return;
 	}
-
+	
+	//let newFactoryDeployment = await get("RAIR721_Master_Factory");
 	let newFactoryDeployment = (await deploy(
 		"RAIR721_Master_Factory",
 		{

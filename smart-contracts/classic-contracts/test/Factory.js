@@ -1195,6 +1195,19 @@ describe("Token Factory", function () {
 				.withArgs(3, 'Fourth Collection!', collection1Limit + collection2Limit + collection3Limit, collection4Limit);
 		});
 
+		it ("Should validate the range's price", async () => {
+			await expect(
+				newRair721Instance.createRange(
+					0,								// Collection index
+					collection1Limit,				// Length of the range
+					collection1Limit, 				// Tokens allowed to sell
+					collection1Limit,				// Tokens locked
+					1,								// Price of the range
+					"Bad!"							// Name of the range
+				)
+			).to.be.revertedWith("RAIR ERC721: Minimum price for a range is 100");
+		});
+
 		it ("Should create ranges", async () => {
 			await expect(
 				await newRair721Instance.createRange(

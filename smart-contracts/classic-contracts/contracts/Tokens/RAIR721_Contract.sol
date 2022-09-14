@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
 import "openzeppelin-v4.7.1/token/ERC721/ERC721.sol";
 import "openzeppelin-v4.7.1/access/AccessControl.sol";
@@ -437,7 +437,7 @@ contract RAIR721_Contract is
             _lockedTokens <= _rangeLength,
             "RAIR ERC721: Number of locked tokens must be less or equal than the range's length"
         );
-        require(_price >= 100, "RAIR ERC721: Minimum price for a range is 100");
+        require(_price == 0 || _price >= 100, "RAIR ERC721: Minimum price for a range is 100");
 
         range storage newRange = _ranges.push();
 
