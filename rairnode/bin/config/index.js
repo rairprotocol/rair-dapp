@@ -66,7 +66,7 @@ module.exports = {
     contract: ADMIN_CONTRACT,
   },
   superAdmin: {
-    storageKye: SUPER_ADMIN_VAULT_STORE || null,
+    storageKey: SUPER_ADMIN_VAULT_STORE || null,
   },
   blockchain: {
     networks: {

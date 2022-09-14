@@ -17,10 +17,10 @@ module.exports = async (req, res, next) => {
       address = req.metaAuth.recovered;
     }
 
-    if (address && superAdminConfig.storageKye) {
+    if (address && superAdminConfig.storageKey) {
       const vaultToken = vaultAppRoleTokenManager.getToken();
       const vaultRes = await vaultKeyManager.read({
-        secretName: superAdminConfig.storageKye,
+        secretName: superAdminConfig.storageKey,
         vaultToken,
       });
 

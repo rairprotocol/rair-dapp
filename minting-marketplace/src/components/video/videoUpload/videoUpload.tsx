@@ -456,7 +456,7 @@ const FileUpload = ({ /*address,*/ primaryColor, textColor }) => {
               setUploading(true);
               axios
                 .post<TUploadSocket>(
-                  `/api/media/upload?socketSessionId=${thisSessionId}`,
+                  `/ms/api/v1/media/upload?socketSessionId=${thisSessionId}`,
                   formData,
                   {
                     headers: {

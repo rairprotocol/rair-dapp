@@ -187,7 +187,7 @@ services:
       REACT_APP_DISABLE_CREATOR_VIEWS: ${react-app-disable-creator-views}
       REACT_APP_HOME_PAGE: /
     ports:
-      - 80:80
+      - 80:443
     networks:
       - rair-local
     depends_on:

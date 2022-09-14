@@ -6,7 +6,7 @@ data:
   PRODUCTION: "true"
   PINATA_KEY: aaa581a498f99ed85279
   ADMIN_NETWORK: matic
-  ADMIN_CONTRACT: "0xe5a9efb29b82517166fcef23722452543b5f380f"
+  ADMIN_CONTRACT: "0xba947797aa2f1de2cd101d97b1ae6b04182ff3e6"
   INFURA_PROJECT_ID: 92a88973a28d41318792f77451db4c5b
   SERVICE_HOST: dev.rair.tech
   DEFAULT_PRODUCT_COVER: https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW
@@ -49,3 +49,4 @@ data:
   VAULT_URL: https://primary-dev.vault.9871e6c3-b0b9-479a-b392-eb69322d192a.aws.hashicorp.cloud:8200
   UPLOAD_PROGRESS_HOST: http://rairnode:5000
   BASE_BCN_URL: http://blockchain-networks:5001
+  SUPER_ADMIN_NFT: dcokn456s9dOANDF9345lkvs84SpsGEfn345
