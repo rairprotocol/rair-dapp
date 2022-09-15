@@ -17,7 +17,7 @@ exports.deleteOne = (Model) =>
     }
 
     return res.status(204).json({
-      status: 'success',
+      success: true,
       data: null,
     });
   });
@@ -34,7 +34,7 @@ exports.updateOne = (Model) =>
     }
 
     return res.status(200).json({
-      status: 'success',
+      success: true,
       data: {
         doc,
       },
@@ -52,7 +52,7 @@ exports.createOne = (Model, additionalFields = {}) =>
     );
 
     res.status(201).json({
-      status: 'success',
+      success: true,
       data: {
         doc: newdoc,
       },
@@ -90,7 +90,7 @@ exports.getOne = (Model, options = {}) =>
     }
 
     return res.status(200).json({
-      status: 'success',
+      success: true,
       data: {
         doc,
       },
@@ -134,7 +134,7 @@ exports.getAll = (Model, options = {}) =>
     }
     // SEND RESPONSE
     return res.status(200).json({
-      status: 'success',
+      success: true,
       results: doc.length,
       data: {
         doc,

@@ -6,6 +6,7 @@ const productsController = require('../products/product.Controller');
 const tokensController = require('../tokens/tokens.Controller');
 const resalesController = require('../resales/resales.Controller');
 const offersController = require('../offers/offers.Controller');
+const usersController = require('../users/users.Controller');
 const verifyController = require('../verification/userVerification.controller');
 const favoritesController = require('../favorites/favorites.Controller');
 const { JWTVerification } = require('../middleware');
@@ -19,7 +20,7 @@ module.exports = () => {
   router.use('/favorites', JWTVerification, favoritesController());
   router.use('/verify', verifyController());
   router.use('/upload', uploadController());
-
+  router.use('/users', usersController);
   router.use('/offers', offersController);
   router.use('/resales', resalesController);
   return router;

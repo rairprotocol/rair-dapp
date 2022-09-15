@@ -66,7 +66,7 @@ Provide ability to make some specific actions on the platform
 # API
 
 * [x] /api
-    * [x] /transaction/:network/:hash - GET - Process the transaction hash given, [see details here](readme/get_transaction.md)
+    * [x] /transaction/:network/:hash - POST - Process the transaction hash given, [see details here](readme/get_transaction.md)
     * [x] /blockchains - GET - get blockchains list, [see details here](readme/get_blockchains.md)
     * [x] /categories - GET - get categories list, [see details here](readme/get_categories.md)
     * [x] /search - POST - searching by files, products, users, [see details here](readme/search.md)
@@ -114,7 +114,7 @@ Provide ability to make some specific actions on the platform
       * [x] /search - NULL
           * [x] /:textParam - GET - returns top 4 results of search among tokens, products and authors with text params [see details here](readme/search_v2.md)
           * [x] /:textParam/all - GET - NOT FOR PROD work in progress - returns all results of search among tokens, products and authors with text params
-      * [x] /contracts - Return all Contracts (Query string supported) [see details here](readme/get_all.md)
+      * [x] /contracts - Return all Contracts (Query string supported) [see details here](readme/common_get_all.md)
           * [x] /my - get contracts for curent user [see details here](readme/get_contracts_my.md).
           * [x] /full - GET - get list of all contracts with all products and offers, [see details here](readme/get_full_contracts_v2.md)
           * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
@@ -137,6 +137,9 @@ Provide ability to make some specific actions on the platform
           * [x] /:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index_v2.md)
           * [x] /:token - PATCH - Update specific token metadata by contract, product and internal ID, [see details here](readme/update_token_metadata_v2.md)
           * [x] /:token - POST - Pin token metadata to IPFS cloud, [see details here](readme/pin_token_metadata_to_ipfs_v2.md)
+      * [x] /users - POST - Create new user[see details here](readme/create_user.md)
+          * [x] /:publicAddress - GET   - get single user data by public address [see details here](readme/get_user.md)
+          * [x] /:publicAddress - PATCH - update single user data by public address [see details here](readme/update_user.md)
       * [x] /resales - Return all ResalesTokenOffers (Query string supported) [see details here](readme/get_list_of_favoriteTokens.md)
           * [x] /:id - return one found by ID [see details here](readme/common_get_by_id.md)
           * [x] /customRoyalties - Return all customRoyaltiesSets (Query string supported) [see details here](readme/common_get_all.md)

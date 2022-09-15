@@ -3,7 +3,7 @@
 Loads all of the information about the NFTs of a contract
 NOTE: if limit is less than moralis page size at least 1 page will be imported
 
-**URL** : `/api/contracts/import/network/:networkId/:contractAddress/:limit`
+**URL** : `/api/v2/contracts/import/`
 
 **Method** : `POST`
 
