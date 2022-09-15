@@ -142,8 +142,13 @@ module.exports = (context) => {
           { $match: filterOptions },
         ];
 
+        const optionsForTotalCount = _.cloneDeep(aggregateOptions);
+
+        optionsForTotalCount.shift();
+        optionsForTotalCount.unshift({ $match: options });
+
         const totalCount = _.chain(
-          await MintedToken.aggregate(aggregateOptions)
+          await MintedToken.aggregate(optionsForTotalCount)
             .count('tokens')
             .collation({ locale: 'en_US', numericOrdering: true }),
         )
