@@ -15,6 +15,12 @@
   background-color: transparent;
   overflow: hidden;
   margin: 0px 24px 24px 24px;
+  transition: all 0.3s ease;
+  border-radius: 16px;
+}
+
+.nft-item-collection:hover {
+  box-shadow: 0px 0px 12px 1px rgba(0, 0, 0, 0.75);
 }
 
 .video-wrapper {

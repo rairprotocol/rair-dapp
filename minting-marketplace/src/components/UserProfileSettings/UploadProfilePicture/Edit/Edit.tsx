@@ -44,7 +44,6 @@ const EditComponent = ({
         background: primaryColor === 'rhyno' ? 'rgb(192, 192, 192)' : '#383637'
       }}>
       <form onSubmit={onSubmit}>
-        <h1> </h1>
         <ImageUpload onChange={photoUpload} src={imagePreviewUrl} />
         <Name
           onChange={(e) => setName(e.target.value)}

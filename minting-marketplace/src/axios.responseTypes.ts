@@ -53,6 +53,22 @@ export type TNftItemResponse = {
   result: TNftItemResult;
 };
 
+export type TFavotiteTokenData = {
+  token: TTokenData;
+  userAddress: string;
+  _id: string;
+};
+
+export type TDocData = {
+  doc: TFavotiteTokenData[];
+};
+
+export type TAxiosFavoriteData = {
+  data: TDocData;
+  status: string;
+  results?: number;
+};
+
 export type TFileKeyType = {
   key: {
     data: number[];

@@ -7,15 +7,22 @@ import { ReactComponent as EtherscanDark } from '../../assets/EtherscanDark.svg'
 import { ReactComponent as EtherscanLight } from '../../assets/EtherscanLight.svg';
 import chainData from '../../../../utils/blockchainData';
 import LikeButton from '../LikeButton/LikeButton';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
+import { Tooltip } from '@mui/material';
 
 const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
   classTitle,
   contract,
   selectedToken,
-  blockchain
+  blockchain,
+  currentTokenId
 }) => {
   const primaryColor = useSelector<RootState, ColorChoice>(
     (state) => state.colorStore.primaryColor
+  );
+
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
   );
 
   return (
@@ -27,23 +34,39 @@ const EtherscanIconComponent: React.FC<IEtherscanIconComponent> = ({
             target="_blank"
             rel="noreferrer">
             {primaryColor === 'charcoal' ? (
-              <div className="etherscan-icon-token-dark">
-                <EtherscanDark className="nft-collection-icons-icon" />
-              </div>
+              <Tooltip placement="left" arrow title={'Token Address'}>
+                <div className="etherscan-icon-token-dark">
+                  <EtherscanDark className="nft-collection-icons-icon" />
+                </div>
+              </Tooltip>
             ) : (
-              <div className="etherscan-icon-token-light">
-                <EtherscanLight className="nft-collection-icons-icon" />
-              </div>
+              <Tooltip placement="left" arrow title={'Token Address'}>
+                <div className="etherscan-icon-token-light">
+                  <EtherscanLight className="nft-collection-icons-icon" />
+                </div>
+              </Tooltip>
             )}
           </a>
-          {primaryColor === 'charcoal' ? (
-            <div className="etherscan-icon-token-dark">
-              <LikeButton likeButtonStyle="nft-collection-icons-icon" />
-            </div>
-          ) : (
-            <div className="etherscan-icon-token-light">
-              <LikeButton likeButtonStyle="nft-collection-icons-icon" />
-            </div>
+          {currentUserAddress && (
+            <>
+              {primaryColor === 'charcoal' ? (
+                <div className="etherscan-icon-token-dark">
+                  <LikeButton
+                    selectedToken={selectedToken}
+                    tokenId={currentTokenId}
+                    likeButtonStyle="nft-collection-icons-icon"
+                  />
+                </div>
+              ) : (
+                <div className="etherscan-icon-token-light">
+                  <LikeButton
+                    selectedToken={selectedToken}
+                    tokenId={currentTokenId}
+                    likeButtonStyle="nft-collection-icons-icon"
+                  />
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

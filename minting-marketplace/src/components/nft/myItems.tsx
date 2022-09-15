@@ -24,6 +24,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TSortChoice } from '../MockUpPage/FilteringBlock/filteringBlock.types';
 import { Breadcrumbs, Typography } from '@mui/material';
 import chainData from '../../utils/blockchainData';
+import PersonalProfileFavoritesTab from './PersonalProfile/PersonalProfileFavoritesTab/PersonalProfileFavoritesTab';
 
 const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
   const { width } = useWindowDimensions();
@@ -254,7 +255,7 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
               <PersonalProfileMyVideoTab titleSearch={titleSearch} />
             </TabPanel>
             <TabPanel>
-              <h1>Coming soon</h1>
+              <PersonalProfileFavoritesTab titleSearch={titleSearch} />
             </TabPanel>
             <TabPanel>
               <PersonalProfileMyCreated

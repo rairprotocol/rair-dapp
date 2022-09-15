@@ -165,6 +165,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
             <EtherscanIconComponent
               blockchain={blockchain}
               contract={contract}
+              currentTokenId={
+                tokenData && selectedToken && tokenData[selectedToken]?._id
+              }
               selectedToken={selectedToken}
               classTitle={
                 selectedData?.animation_url && isFileUrl !== 'gif'
@@ -182,6 +185,9 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                 blockchain={blockchain}
                 contract={contract}
                 selectedToken={selectedToken}
+                currentTokenId={
+                  tokenData && selectedToken && tokenData[selectedToken]?._id
+                }
                 classTitle={
                   selectedData?.animation_url && isFileUrl !== 'gif'
                     ? 'nft-collection-single-video'

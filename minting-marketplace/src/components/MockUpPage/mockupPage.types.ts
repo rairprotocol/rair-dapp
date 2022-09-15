@@ -59,6 +59,8 @@ export interface IPaginationBox {
 
 export interface ILikeButton {
   likeButtonStyle: string;
+  tokenId: string | undefined;
+  selectedToken: string | undefined;
 }
 
 export interface IEtherscanIconComponent {
@@ -66,6 +68,7 @@ export interface IEtherscanIconComponent {
   contract: string | undefined;
   selectedToken: string | undefined;
   blockchain: BlockchainType | undefined;
+  currentTokenId: string | undefined;
 }
 
 export type TParamsBreadcrumbsComponent = {

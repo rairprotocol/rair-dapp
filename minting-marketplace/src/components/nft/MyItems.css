@@ -25,7 +25,9 @@
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  background-size: cover;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 16px;
   margin: 10px;
 }
@@ -42,7 +44,7 @@
   height: 282px;
   width: 282px;
   cursor: pointer;
-  background-size: cover;
+  background-size: contain;
 }
 
 .modal-main-content .bg-my-items {
