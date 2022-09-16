@@ -1,4 +1,3 @@
-//@ts-nocheck
 import axios from 'axios';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
@@ -6,25 +5,19 @@ import Swal from 'sweetalert2';
 import setDocumentTitle from '../../../../utils/setTitle';
 import './VideoPlayer.css';
 import { TAuthGetChallengeResponse } from '../../../../axios.responseTypes';
+import { RootState } from '../../../../ducks';
+import { ethers } from 'ethers';
+import { IVideoPlayerBySignature, IVideoWindow } from '../../splashPage.types';
 
-const VideoWindow = ({ mediaAddress }) => {
+const VideoWindow: React.FC<IVideoWindow> = ({ mediaAddress }) => {
   return (
     <div
       className="col-12 row mx-0 h1"
       style={{
         justifyContent: 'center'
       }}>
-      <video
-        // id={"vjs-" + videoName}
-        className="video-player"
-        controls
-        preload="auto"
-        data-setup="{}">
-        <source
-          // autostart="false"
-          src={mediaAddress}
-          type="video/mp4"
-        />
+      <video className="video-player" controls preload="auto" data-setup="{}">
+        <source src={mediaAddress} type="video/mp4" />
       </video>
     </div>
   );
@@ -41,8 +34,13 @@ const VideoWindowError = () => {
   );
 };
 
-const VideoPlayerBySignature = ({ mediaAddress }) => {
-  const { programmaticProvider } = useSelector((state) => state.contractStore);
+const VideoPlayerBySignature: React.FC<IVideoPlayerBySignature> = ({
+  mediaAddress
+}) => {
+  const programmaticProvider = useSelector<
+    RootState,
+    ethers.Wallet | undefined
+  >((state) => state.contractStore.programmaticProvider);
   const [signature, setSignature] = useState(null);
 
   const requestChallenge = useCallback(async () => {
@@ -50,7 +48,7 @@ const VideoPlayerBySignature = ({ mediaAddress }) => {
     let parsedResponse;
 
     if (window.ethereum) {
-      const [account] = await window.ethereum.request({
+      const account = await window.ethereum.request({
         method: 'eth_requestAccounts'
       });
       const response = await axios.get<TAuthGetChallengeResponse>(

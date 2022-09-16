@@ -1,8 +1,8 @@
-//@ts-nocheck
 import React from 'react';
+import { INipseyRelease } from '../splashPage.types';
 import MailchimpComponent from './MailchimpComponent';
 
-const NipseyRelease = ({ DiscordIcon }) => {
+const NipseyRelease: React.FC<INipseyRelease> = ({ DiscordIcon }) => {
   return (
     <div className="nipsey-release">
       <div className="release-container">

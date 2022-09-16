@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React from 'react';
 import playIcon from '../../images/playImg.png';
 import Modal from 'react-modal';
@@ -10,6 +9,9 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { Provider, useStore, useSelector } from 'react-redux';
 import NftVideoplayer from '../../../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
+import { RootState } from '../../../../ducks';
+import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
+import { IShowVideoToLoggedInUsers } from '../../splashPage.types';
 
 const reactSwal = withReactContent(Swal);
 
@@ -39,7 +41,7 @@ const customStylesForVideo = {
 };
 Modal.setAppElement('#root');
 
-const ShowVideoToLoggedInUsers = ({
+const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
   backgroundImage,
   video,
   videoTitle,
@@ -48,7 +50,7 @@ const ShowVideoToLoggedInUsers = ({
   demo,
   selectVideo
 }) => {
-  const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
+  const [modalVideoIsOpen, setVideoIsOpen] = useState<boolean>(false);
   const openModalForVideo = useCallback(() => {
     setVideoIsOpen(true);
   }, []);
@@ -62,7 +64,9 @@ const ShowVideoToLoggedInUsers = ({
   }
 
   const store = useStore();
-  const { primaryColor, textColor } = useSelector((store) => store.colorStore);
+  const { primaryColor, textColor } = useSelector<RootState, ColorStoreType>(
+    (store) => store.colorStore
+  );
 
   return (
     <>
@@ -85,8 +89,7 @@ const ShowVideoToLoggedInUsers = ({
             //   showConfirmButton: false
             // })}
             className="video-module-background"
-            style={{ backgroundImage: 'url(' + backgroundImage + ')' }}
-            alt="community-img">
+            style={{ backgroundImage: 'url(' + backgroundImage + ')' }}>
             <div className="video-module-play-button-wrapper">
               <button
                 style={{ border: 'none', background: 'none' }}
@@ -116,17 +119,12 @@ const ShowVideoToLoggedInUsers = ({
                   justifyContent: 'center'
                 }}>
                 <video
-                  // id={"vjs-" + videoName}
                   className="video-player"
                   controls
                   autoPlay
                   preload="auto"
                   data-setup="{}">
-                  <source
-                    // autostart="false"
-                    src={video}
-                    type="video/mp4"
-                  />
+                  <source src={video} type="video/mp4" />
                 </video>
               </div>
             </Modal>
@@ -148,7 +146,6 @@ const ShowVideoToLoggedInUsers = ({
                   </Provider>
                 ),
                 width: '90vw',
-                // height: '90vh',
                 customClass: {
                   popup: `bg-${primaryColor}`,
                   title: `text-${textColor}`
@@ -157,8 +154,7 @@ const ShowVideoToLoggedInUsers = ({
               })
             }
             className="video-module-background"
-            style={{ backgroundImage: 'url(' + backgroundImage + ')' }}
-            alt="community-img">
+            style={{ backgroundImage: 'url(' + backgroundImage + ')' }}>
             <div className="video-module-play-button-wrapper">
               <button
                 style={{ border: 'none', background: 'none' }}

@@ -1,8 +1,8 @@
 import { TContract, TTokenData } from '../../axios.responseTypes';
 export interface IVideoPlayer {
-  mediaId: number;
+  mediaId?: string;
   mainManifest?: string;
-  baseURL: string;
+  baseURL?: string;
   setProcessDone?: (value: boolean) => void;
 }
 

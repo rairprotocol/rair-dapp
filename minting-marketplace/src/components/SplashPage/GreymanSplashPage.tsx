@@ -1,7 +1,5 @@
-//@ts-nocheck
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from "react-router-dom";
 
 import './SplashPage.css';
 import './GreymanSplashPageMobile.css';
@@ -24,14 +22,12 @@ import PurchaseChecklist from './PurchaseChecklist/PurchaseChecklist';
 import ButtonHelp from './PurchaseChecklist/ButtonHelp';
 
 import { diamondFactoryAbi } from '../../contracts/index';
-//import { rFetch } from "../../utils/rFetch";
 import { metamaskCall } from '../../utils/metamaskUtils';
 import { web3Switch } from '../../utils/switchBlockchain';
 import Swal from 'sweetalert2';
 import NotCommercial from './NotCommercial/NotCommercial';
 import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
 import StandaloneVideoPlayer from '../video/videoPlayerGenerall';
-// import setTitle from './../../utils/setTitle';
 import { Countdown } from './Timer/CountDown';
 import PurchaseTokenButton from '../common/PurchaseToken';
 
@@ -39,6 +35,14 @@ import PurchaseTokenButton from '../common/PurchaseToken';
 import ReactGA from 'react-ga';
 import MetaTags from '../SeoTags/MetaTags';
 import { setRealChain } from '../../ducks/contracts/actions';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import {
+  ISplashPageProps,
+  TSeoInformationType,
+  TSplashPageIsActive
+} from './splashPage.types';
+import { RootState } from '../../ducks';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 
 // Google Analytics
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -91,22 +95,31 @@ const customStylesForVideo = {
 };
 Modal.setAppElement('#root');
 
-const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
-  const [timerLeft, setTimerLeft] = useState();
-  const [copies, setCopies] = useState();
-  const [soldCopies, setSoldCopies] = useState();
-  const [openCheckList, setOpenCheckList] = useState(false);
-  const [processDone, setProcessDone] = useState(false);
+const GreymanSplashPage: React.FC<ISplashPageProps> = ({
+  loginDone,
+  connectUserData,
+  setIsSplashPage
+}) => {
+  const [timerLeft, setTimerLeft] = useState<number>();
+  const [copies, setCopies] = useState<string>();
+  const [soldCopies, setSoldCopies] = useState<string>();
+  const [openCheckList, setOpenCheckList] = useState<boolean>(false);
+  const [processDone, setProcessDone] = useState<boolean>(false);
 
-  const [active, setActive] = useState({ policy: false, use: false });
+  const [active, setActive] = useState<TSplashPageIsActive>({
+    policy: false,
+    use: false
+  });
   const GraymanSplashPageTESTNET = '0xbA947797AA2f1De2cD101d97B1aE6b04182fF3e6';
   const GreymanChainId = '0x89';
   const offerIndexInMarketplace = 2;
-  const { primaryColor } = useSelector((store) => store.colorStore);
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [modalVideoIsOpen, setVideoIsOpen] = useState(false);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [modalVideoIsOpen, setVideoIsOpen] = useState<boolean>(false);
 
-  const seoInformation = {
+  const seoInformation: TSeoInformationType = {
     title: '#Cryptogreyman',
     contentName: 'author',
     content: '#Cryptogreyman',
@@ -120,7 +133,9 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
     contractCreator,
     currentUserAddress,
     currentChain
-  } = useSelector((store) => store.contractStore);
+  } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
   const dispatch = useDispatch();
 
   const toggleCheckList = () => {
@@ -159,7 +174,7 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
       connectUserData();
       return;
     }
-    if (window.ethereum.chainId !== GreymanChainId) {
+    if (currentChain !== GreymanChainId) {
       web3Switch(GreymanChainId);
       return;
     }
@@ -183,12 +198,12 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
       return;
     }
     if (greymanOffer) {
-      const instance = contractCreator(
+      const instance = contractCreator?.(
         GraymanSplashPageTESTNET,
         diamondFactoryAbi
       );
       const nextToken = await metamaskCall(
-        instance.getNextSequentialIndex(
+        instance?.getNextSequentialIndex(
           greymanOffer.productIndex,
           greymanOffer.rangeData.rangeStart,
           greymanOffer.rangeData.rangeEnd
@@ -221,7 +236,6 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
         )
       ) {
         Swal.fire({
-          // title : "Success",
           imageUrl: GreyMan,
           imageHeight: 'auto',
           imageWidth: '65%',
@@ -269,7 +283,6 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
               ref={(_subtitle) => (subtitle = _subtitle)}>
               Interview with artist Dadara.
             </h2>
-            {/* <button onClick={closeModal}>close</button> */}
             <StandaloneVideoPlayer
               setProcessDone={setProcessDone}
               baseURL={'https://storage.googleapis.com/rair-videos/'}
@@ -309,7 +322,6 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
               ref={(_subtitle) => (subtitle = _subtitle)}>
               Interview with artist Dadara.
             </h2>
-            {/* <button onClick={closeModal}>close</button> */}
             <StandaloneVideoPlayer
               setProcessDone={setProcessDone}
               baseURL={'https://storage.googleapis.com/rair-videos/'}
@@ -325,7 +337,6 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
 
   const getAllProduct = useCallback(async () => {
     try {
-      // console.log(diamondMarketplaceInstance, "diamondMarketplaceInstance")
       if (
         diamondMarketplaceInstance &&
         window.ethereum &&
@@ -358,19 +369,17 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
       return;
     }
     diamondMarketplaceInstance.on('MintedToken', getAllProduct);
-    return diamondMarketplaceInstance.off('MintedToken', getAllProduct);
+    return () => {
+      diamondMarketplaceInstance.off('MintedToken', getAllProduct);
+    };
   }, [diamondMarketplaceInstance, getAllProduct]);
-
-  // useEffect(() => {
-  //   setTitle(`#Cryptogreyman`);
-  // }, [])
 
   useEffect(() => {
     getAllProduct();
   }, [getAllProduct]);
 
   useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   return (
@@ -585,7 +594,6 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
         </AuthorBlock>
         {timerLeft === 0 && (
           <TokenLeftGreyman
-            Metamask={Metamask}
             primaryColor={primaryColor}
             soldCopies={soldCopies}
             copies={copies}
@@ -862,7 +870,7 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
               </h1>
             </div>
             <Timeline />
-            <TeamMeet primaryColor={primaryColor} arraySplash={'greyman'} />
+            <TeamMeet arraySplash={'greyman'} />
             <NotCommercial primaryColor={primaryColor} />
           </>
         )}
@@ -871,4 +879,4 @@ const SplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
   );
 };
 
-export default SplashPage;
+export default GreymanSplashPage;

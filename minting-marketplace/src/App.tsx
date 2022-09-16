@@ -73,8 +73,6 @@ import Token from './components/nft/Token';
 import TransferTokens from './components/adminViews/transferTokens';
 import { TermsUse } from './components/SplashPage/TermsUse';
 
-import VideoPlayer from './components/video/videoPlayer';
-
 import WorkflowSteps from './components/creatorStudio/workflowSteps';
 
 // logos for About Page

@@ -1,8 +1,11 @@
-//@ts-nocheck
 import React from 'react';
+import { INotCommercialTemplate2 } from '../splashPage.types';
 import './NotCommercial-2.css';
 
-const NotCommercialTemplate2 = ({ primaryColor, NFTName }) => {
+const NotCommercialTemplate2: React.FC<INotCommercialTemplate2> = ({
+  primaryColor,
+  NFTName
+}) => {
   return (
     <div
       className="container-commercial-2"

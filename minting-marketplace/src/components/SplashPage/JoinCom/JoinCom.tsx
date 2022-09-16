@@ -1,4 +1,5 @@
 //@ts-nocheck
+//unused-component
 import React from 'react';
 
 const JoinCom = ({ JoinCommunity, Metamask, primaryColor }) => {

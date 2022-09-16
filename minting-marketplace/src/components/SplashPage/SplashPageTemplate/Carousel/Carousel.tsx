@@ -1,9 +1,13 @@
-//@ts-nocheck
 import React from 'react';
 import './Carousel.css';
 import Carousel from 'react-multi-carousel';
+import {
+  ICarouselItem,
+  ICarouselListItem,
+  ICarouselModule
+} from '../../splashPage.types';
 
-const CarouselListItem = (props) => {
+const CarouselListItem: React.FC<ICarouselListItem> = (props) => {
   const { carouselItemTitle, carouselItemImg, carouselDescription } = props;
   return (
     <div className="join-pic-list">
@@ -22,7 +26,7 @@ const CarouselListItem = (props) => {
   );
 };
 
-const CarouselItem = (props) => {
+const CarouselItem: React.FC<ICarouselItem> = (props) => {
   const { carouselItemTitle, carouselItemImg, carouselDescription } = props;
   return (
     <div className="join-pic-carousel">
@@ -41,7 +45,7 @@ const CarouselItem = (props) => {
   );
 };
 
-const CarouselModule = (props) => {
+const CarouselModule: React.FC<ICarouselModule> = (props) => {
   const { carousel, carouselTitle, carouselData } = props;
 
   const responsive = {
@@ -60,7 +64,7 @@ const CarouselModule = (props) => {
           infinite={true}
           responsive={responsive}
           className="carousel">
-          {carouselData.map((row, index) => (
+          {carouselData?.map((row, index) => (
             <CarouselItem
               key={index}
               carouselItemTitle={row.title}
@@ -71,7 +75,7 @@ const CarouselModule = (props) => {
         </Carousel>
       ) : (
         <div className="carousel-list">
-          {carouselData.map((row, index) => (
+          {carouselData?.map((row, index) => (
             <CarouselListItem
               key={index}
               carouselItemTitle={row.title}

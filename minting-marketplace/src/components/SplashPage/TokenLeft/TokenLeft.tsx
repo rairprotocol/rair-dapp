@@ -1,12 +1,16 @@
-//@ts-nocheck
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-// import { useNavigate } from 'react-router';
 import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
+import { ITokenLeft } from '../splashPage.types';
 
-const TokenLeft = ({ primaryColor, DiscordIcon, copies, soldCopies }) => {
-  const [percentTokens, setPersentTokens] = useState(0);
+const TokenLeft: React.FC<ITokenLeft> = ({
+  primaryColor,
+  DiscordIcon,
+  copies,
+  soldCopies
+}) => {
+  const [percentTokens, setPersentTokens] = useState<number>(0);
 
   const leftTokensNumber = Number(copies) - Number(soldCopies);
   const wholeTokens = Number(copies);

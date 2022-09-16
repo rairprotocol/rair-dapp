@@ -1,13 +1,11 @@
-//@ts-nocheck
 import React from 'react';
 import Metamask from '../images/metamask_logo.png';
+import { IUnlockVideoItem } from '../splashPage.types';
 
-const UnlockVideoItem = ({
-  // typeVideo,
+const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
   nameVideo,
   timeVideo,
-  UnlockableVideo,
-  // locked,
+  unlockableVideo,
   primaryColor
 }) => {
   return (
@@ -23,7 +21,7 @@ const UnlockVideoItem = ({
           </div>
           <img
             className="block-img-bg"
-            src={UnlockableVideo}
+            src={unlockableVideo}
             alt="Preview unlockable video"
           />
         </div>

@@ -1,10 +1,9 @@
-//@ts-nocheck
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 const MailchimpComponent = () => {
-  const [emailField, setEmailField] = useState('');
+  const [emailField, setEmailField] = useState<string>('');
 
-  const onChangeEmail = (e) => {
+  const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmailField(e.target.value);
   };
 
@@ -32,7 +31,6 @@ const MailchimpComponent = () => {
             />
             <button
               disabled={emailField.length > 5 ? false : true}
-              required
               type="submit"
               value="Subscribe"
               name="subscribe"
@@ -49,7 +47,7 @@ const MailchimpComponent = () => {
             <input
               type="text"
               name="b_4740c76c171ce33ffa0edd3e6_1f95f6ad8c"
-              tabIndex="-1"
+              tabIndex={-1}
             />
           </div>
           <div className="btn-subscribe">

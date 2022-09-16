@@ -50,7 +50,7 @@ const StaticTiles = ({ videoArr, title, UnlockableVideo, primaryColor }) => {
           return (
             <UnlockVideoItem
               key={index + video.unlockVideoName}
-              UnlockableVideo={UnlockableVideo}
+              unlockableVideo={UnlockableVideo}
               typeVideo={video.typeVideo}
               nameVideo={video.unlockVideoName}
               timeVideo={video.timeVideo}

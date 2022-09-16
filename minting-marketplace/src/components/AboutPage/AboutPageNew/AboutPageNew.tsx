@@ -99,13 +99,10 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
           <RoadMap primaryColor={primaryColor} RairLogo={RairLogo} />
           <CompareAbout />
           <div className="about-page--team">
-            <TeamMeet primaryColor={primaryColor} arraySplash={'rair'} />
+            <TeamMeet arraySplash={'rair'} />
           </div>
           <div className="about-page--team">
-            <TeamMeet
-              primaryColor={primaryColor}
-              arraySplash={'rair-advisors'}
-            />
+            <TeamMeet arraySplash={'rair-advisors'} />
           </div>
         </div>
       </div>

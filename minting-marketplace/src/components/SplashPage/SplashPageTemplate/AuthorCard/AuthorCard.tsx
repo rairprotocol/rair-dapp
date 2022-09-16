@@ -1,10 +1,10 @@
-//@ts-nocheck
 import React from 'react';
+import DefaultButtonBlock from '../../DefaultButtonBlock';
 import ButtonHelp from '../../PurchaseChecklist/ButtonHelp';
+import { IAuthorCard } from '../../splashPage.types';
 import './AuthorCard.css';
-import AuthorCardButton from './AuthorCardButton';
 
-const AuthorCard = ({
+const AuthorCard: React.FC<IAuthorCard> = ({
   splashData,
   toggleCheckList,
   customButtonBlock,
@@ -21,55 +21,8 @@ const AuthorCard = ({
     textDescriptionCustomStyles,
     backgroundImage,
     cardFooter,
-    buttonBackgroundHelp,
-    customStyle
-  } = splashData;
-
-  const DefaultButtonBlock = ({
-    splashData,
-    connectUserData,
-    whatSplashPage
-  }) => {
-    const { button1, button2, button3, purchaseButton, buttonLabel } =
-      splashData;
-
-    return (
-      <div className="button-wrapper">
-        {purchaseButton?.buttonComponent !== undefined && (
-          <purchaseButton.buttonComponent
-            {...{
-              ...purchaseButton,
-              connectUserData,
-              buttonLabel,
-              customStyle
-            }}
-          />
-        )}
-        <div className="button-row-0">
-          {button1 && (
-            <AuthorCardButton
-              buttonData={button1}
-              whatSplashPage={whatSplashPage}
-            />
-          )}
-        </div>
-        <div className="button-row-1">
-          {button2 && (
-            <AuthorCardButton
-              buttonData={button2}
-              whatSplashPage={whatSplashPage}
-            />
-          )}
-          {button3 && (
-            <AuthorCardButton
-              buttonData={button3}
-              whatSplashPage={whatSplashPage}
-            />
-          )}
-        </div>
-      </div>
-    );
-  };
+    buttonBackgroundHelp
+  } = splashData || {};
 
   return (
     <div
@@ -84,12 +37,6 @@ const AuthorCard = ({
       <div className="block-splash">
         <div className="text-splash">
           <div className="title-splash">
-            {/* <button
-							className="btn-help"
-							onClick={() => toggleCheckList()}
-						>
-							Need help?
-						</button> */}
             <h3
               className="text-gradient-template"
               style={{

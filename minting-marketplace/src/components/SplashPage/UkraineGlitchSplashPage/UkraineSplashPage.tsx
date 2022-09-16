@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
@@ -31,7 +30,6 @@ import DiscordIcon from '../images/discord-icon.png';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
-// import setTitle from "../../../utils/setTitle";
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import CarouselModule from '../SplashPageTemplate/Carousel/Carousel';
 import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModule';
@@ -47,6 +45,14 @@ import MetaTags from './../../SeoTags/MetaTags';
 import { rFetch } from '../../../utils/rFetch';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import { setRealChain } from '../../../ducks/contracts/actions';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import {
+  ISplashPageProps,
+  TMainContractType,
+  TSplashDataType
+} from '../splashPage.types';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 // import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics
@@ -54,25 +60,25 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 //ReactGA.initialize(TRACKING_ID);
 
 // This will be the default contract used in this splash page
-const mainContract = {
+const mainContract: TMainContractType = {
   contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
   requiredBlockchain: '0x1',
-  offerIndex: [0, 1]
+  offerIndex: ['0', '1']
 };
 // By setting REACT_APP_TEST_CONTRACTS
-const testContract = {
+const testContract: TMainContractType = {
   contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
   requiredBlockchain: '0x5',
-  offerIndex: [52, 0]
+  offerIndex: ['52', '0']
 };
 
-const splashData = {
+const splashData: TSplashDataType = {
   title: '#UkraineGlitch',
   titleColor: '#FFD505',
   description: [
     '1991 generative pixelated glitch art pieces represent pseudo random shelling, aimless fire, a flag in distress ',
-    <br key={Math.random() * 1_000_000} />,
-    <br key={Math.random() * 1_000_000} />,
+    // <br key={Math.random() * 1_000_000} />,
+    // <br key={Math.random() * 1_000_000} />,
     '100% of proceeds fund tactical first aid supplies and Ukrainian developers'
   ],
   seoInformation: {
@@ -106,7 +112,7 @@ const splashData = {
     blockchainOnly: true,
     // Custom function that will be called if the minting is a success
     // First parameter will be the minted token's number
-    customSuccessAction: async (nextToken) => {
+    customSuccessAction: async (nextToken: number) => {
       const tokenMetadata = await rFetch(
         `/api/nft/network/0x1/0xbd034e188f35d920cf5dedfb66f24dcdd90d7804/0/token/${nextToken}`
       );
@@ -219,13 +225,20 @@ const splashData = {
   }
 };
 
-const UkraineSplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
-  const [openCheckList, setOpenCheckList] = useState(false);
-  const [soldCopies, setSoldCopies] = useState(0);
-  const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentChain, minterInstance } = useSelector(
-    (store) => store.contractStore
+const UkraineSplashPage: React.FC<ISplashPageProps> = ({
+  loginDone,
+  connectUserData,
+  setIsSplashPage
+}) => {
+  const [openCheckList, setOpenCheckList] = useState<boolean>(false);
+  const [soldCopies, setSoldCopies] = useState<number>(0);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
   );
+  const { currentChain, minterInstance } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurshaseList] = useState(true);
@@ -244,16 +257,19 @@ const UkraineSplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
-      if (currentChain === splashData.purchaseButton.requiredBlockchain) {
+      if (
+        currentChain === splashData.purchaseButton?.requiredBlockchain &&
+        splashData.purchaseButton?.offerIndex
+      ) {
         setSoldCopies(
           (
-            await minterInstance.getOfferRangeInfo(
-              ...splashData.purchaseButton.offerIndex
+            await minterInstance?.getOfferRangeInfo(
+              ...splashData.purchaseButton?.offerIndex
             )
           ).tokensAllowed.toString()
         );
       } else {
-        setSoldCopies();
+        setSoldCopies(0);
       }
     }
   }, [setSoldCopies, loginDone, currentChain, minterInstance]);
@@ -268,7 +284,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
   }, []);
 
   useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   return (
@@ -295,7 +311,6 @@ const UkraineSplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
         {/* <NFTCounter primaryColor={"rhyno"} leftTokensNumber={0} wholeTokens={0} counterData={splashData.counterData} /> */}
         <TokenLeftTemplate
           counterData={splashData.counterData}
-          copies={splashData.counterData.nftCount}
           soldCopies={soldCopies}
           primaryColor={primaryColor}
           loginDone={loginDone}
@@ -307,12 +322,11 @@ const UkraineSplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
           Nft_2={UKR1989}
           Nft_3={UKR4}
           Nft_4={UKR126}
-          amountTokens={splashData.counterData.nftCount}
-          titleNft={splashData.exclusiveNft.title}
-          colorText={splashData.exclusiveNft.titleColor}
+          amountTokens={splashData.counterData?.nftCount}
+          titleNft={splashData.exclusiveNft?.title}
+          colorText={splashData.exclusiveNft?.titleColor}
           carousel={carousel}
         />
-        {/* <div style={{ height: "108px" }} /> */}
         <VideoPlayerModule
           backgroundImage={videoBackground}
           videoData={splashData.videoData}
@@ -323,7 +337,7 @@ const UkraineSplashPage = ({ loginDone, connectUserData, setIsSplashPage }) => {
           carouselTitle={splashData.carouselTitle}
           carouselData={splashData.carouselData}
         />
-        <TeamMeet primaryColor={primaryColor} arraySplash={'ukraine'} />
+        <TeamMeet arraySplash={'ukraine'} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

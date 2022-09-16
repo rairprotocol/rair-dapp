@@ -1,8 +1,12 @@
-//@ts-nocheck
 import { useState } from 'react';
+import { ITeammateDesc } from '../splashPage.types';
 
-const TeammateDesc = ({ desc, primaryColor, arraySplash }) => {
-  const [showMore, setShowMore] = useState(false);
+const TeammateDesc: React.FC<ITeammateDesc> = ({
+  desc,
+  primaryColor,
+  arraySplash
+}) => {
+  const [showMore, setShowMore] = useState<boolean>(false);
 
   return (
     <div className="teammate-description">

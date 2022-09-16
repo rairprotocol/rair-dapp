@@ -1,16 +1,15 @@
-//@ts-nocheck
 import React from 'react';
 import './NFTImages.css';
 import MobileCarouselNfts from '../../../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
+import { INFTImages } from '../../splashPage.types';
 
-const NFTImages = ({
+const NFTImages: React.FC<INFTImages> = ({
   Nft_1,
   Nft_2,
   Nft_3,
   Nft_4,
   NftImage,
   amountTokens,
-  // linkComing,
   titleNft,
   colorText,
   carousel,
@@ -84,7 +83,7 @@ const NFTImages = ({
         ) : (
           <>
             <div style={{ width: '100%' }}>
-              <MobileCarouselNfts screen={'900'}>
+              <MobileCarouselNfts screen={900}>
                 <img
                   className="join-pic-img"
                   src={NftImage}

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { memo } from 'react';
 import cl from './Timeline.module.css';
 import pic1 from './img/pic1.png';
@@ -88,7 +87,7 @@ const TimelineComponent = () => {
                 alt="Greyman Statue"
               />
               <p
-                style={{ paddingLeft: '5rem', wight: '353px' }}
+                style={{ paddingLeft: '5rem', width: '353px' }}
                 className={cl.p_content}>
                 <strong>1998</strong> <br />
                 Nine metres high Greyman Statue of No Liberty made out of

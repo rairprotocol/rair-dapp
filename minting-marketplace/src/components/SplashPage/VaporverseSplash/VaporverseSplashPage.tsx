@@ -1,9 +1,9 @@
-//@ts-nocheck
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './VaporverseSplash.css';
+import { v1 } from 'uuid';
 
 /* importing images*/
 import vaporverse_background from '../images/vaporverse_authorcard_background.png';
@@ -28,8 +28,15 @@ import MetaTags from '../../SeoTags/MetaTags';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import PurchaseChecklist from '../PurchaseChecklist/PurchaseChecklist';
 import { setRealChain } from '../../../ducks/contracts/actions';
+import {
+  IInfoBlock,
+  IVaporverseSplashPage,
+  TSplashDataType
+} from '../splashPage.types';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 
-const splashData = {
+const splashData: TSplashDataType = {
   title: null,
   titleColor: 'rgb(234,51,127)',
   description: null,
@@ -43,9 +50,9 @@ const splashData = {
     image: vaporverse_background
   },
   buttonLabel: 'Mint for .1991 Eth',
-  buttonBackgroundHelp: null,
+  buttonBackgroundHelp: undefined,
   backgroundImage: vaporverse_background,
-  purchaseButton: null,
+  purchaseButton: undefined,
   button1: {
     buttonColor: 'rgb(234,51,127)',
     buttonLabel: 'premint.xyz',
@@ -88,32 +95,30 @@ const splashData = {
   NFTName: 'NFT'
 };
 
-const Text = ({ text }) => {
-  return <>{text}</>;
-};
-
-const InfoBlock = ({ infoArray, style, subclass }) => {
+const InfoBlock: React.FC<IInfoBlock> = ({
+  infoArray,
+  style,
+  subclass,
+  children
+}) => {
   return (
-    <div style={style} className={`info-block ${subclass}`}>
-      {infoArray?.map((info, index) => {
-        return (
-          <span key={index}>
-            {info}
-            <br />
-          </span>
-        );
+    <div style={style} className={`info-block ${subclass ? subclass : ''}`}>
+      {infoArray?.map((info: string) => {
+        return <div key={v1()}>{info}</div>;
       })}
+      {children && children}
     </div>
   );
 };
 
-const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
-  const [openCheckList, setOpenCheckList] = useState(false);
-  const { primaryColor } = useSelector((store) => store.colorStore);
-  // const [soldCopies, setSoldCopies] = useState(0);
-  // const { currentChain, minterInstance, currentUserAddress } = useSelector(
-  //   (store) => store.contractStore
-  // );
+const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
+  connectUserData,
+  setIsSplashPage
+}) => {
+  const [openCheckList, setOpenCheckList] = useState<boolean>(false);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
   const carousel_match = window.matchMedia('(min-width: 630px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurchaseList] = useState(true);
@@ -124,7 +129,15 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
     setPurchaseList((prev) => !prev);
   };
 
-  window.addEventListener('resize', () => setCarousel(carousel_match.matches));
+  useEffect(() => {
+    window.addEventListener('resize', () =>
+      setCarousel(carousel_match.matches)
+    );
+    return () =>
+      window.removeEventListener('resize', () =>
+        setCarousel(carousel_match.matches)
+      );
+  }, [carousel_match.matches]);
 
   const toggleCheckList = () => {
     setOpenCheckList((prev) => !prev);
@@ -186,17 +199,16 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
             <InfoBlock
               subclass="info-block-col"
               infoArray={[
-                <>must own</>,
-                <>/heavencomputer</>,
-                <>/bastardganpunksv1/v2</>,
-                <>/glitchpixx</>,
-                <div
-                  style={{ color: 'RGB(189,52,182)' }}
-                  key={Math.random() * 1_000_000}>
-                  ---Discord4FullList---
-                </div>
-              ]}
-            />
+                'must own',
+                '/heavencomputer',
+                '/bastardganpunksv1/v2',
+                '/glitchpixx'
+              ]}>
+              <div style={{ color: 'RGB(189,52,182)' }} key={v1()}>
+                ---Discord4FullList---
+              </div>
+            </InfoBlock>
+
             <div
               style={{
                 height: '12px',
@@ -210,10 +222,10 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
             <InfoBlock
               subclass="info-block-col"
               infoArray={[
-                <></>,
-                <>/snapshot date 8/19/2022</>,
-                <>/1:1 polygon claim token</>,
-                <>/convert to ETH @ ETH2.0 launch 2 save treees</>
+                '',
+                '/snapshot date 8/19/2022',
+                '/1:1 polygon claim token',
+                '/convert to ETH @ ETH2.0 launch 2 save treees'
               ]}
             />
             <div
@@ -235,71 +247,13 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
             '//Whispers. Whitelist on aisle 8. Tag 3 frens 4 brainchip pass. Give your grankids +80 dopamine for life.',
             '//All is claim. Claim your pass. NO BOOMER PUNKS',
             'time 2 go 2 skool...'
-          ].map((text) => (
-            <Text text={text} key={Math.random() * 1_000_000} />
-          ))}
+          ]}
         />
 
         <div style={{ height: '5vw' }} />
-
-        <div
-          style={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'space-evenly'
-          }}>
-          <InfoBlock
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}
-            infoArray={[
-              <img
-                style={{ width: '90%' }}
-                src={VV_warning_2}
-                key={Math.random() * 1_000_000}
-              />,
-              <div
-                style={{
-                  textAlign: 'center',
-                  width: '75%',
-                  color: 'RGB(117, 251, 81)'
-                }}
-                key={Math.random() * 1_000_000}>
-                {' '}
-                {
-                  //clean safe only challenge{" "}
-                }
-              </div>
-            ]}
-          />
-          <InfoBlock
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}
-            infoArray={[
-              <img
-                style={{ width: '90%' }}
-                src={VV_warning_1}
-                key={Math.random() * 1_000_000}
-              />,
-              <div
-                style={{
-                  textAlign: 'center',
-                  width: '75%',
-                  color: 'RGB(234, 51, 35)'
-                }}
-                key={Math.random() * 1_000_000}>
-                {' '}
-                {
-                  //dirty do not sign will steal yur eth
-                }
-              </div>
-            ]}
-          />
+        <div className={'vaporverse-images-container'}>
+          <img src={VV_warning_2} className={'vaporverse-images'} />
+          <img src={VV_warning_1} className={'vaporverse-images'} />
         </div>
 
         <InfoBlock
@@ -310,14 +264,11 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
             'goto looksrare',
             '//buy supported degens',
             'loading....'
-          ].map((text) => (
-            <Text text={text} key={Math.random() * 1_000_000} />
-          ))}
+          ]}
         />
 
         <div style={{ height: '5vw' }} />
 
-        {/* <img style={{ width: '100%' }} src={VV_test_transmission} /> */}
         <VideoPlayerModule
           backgroundImage={VV_test_transmission}
           videoData={splashData.videoDataDemo}
@@ -326,13 +277,7 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
         <div style={{ height: '7vw' }} />
 
         <InfoBlock
-          infoArray={[
-            '//join lore',
-            '//moar streaming vapor',
-            'awaits....'
-          ].map((text) => (
-            <Text text={text} key={Math.random() * 1_000_000} />
-          ))}
+          infoArray={['//join lore', '//moar streaming vapor', 'awaits....']}
         />
 
         <VideoPlayerModule
@@ -357,7 +302,7 @@ const VaporverseSplashPage = ({ connectUserData, setIsSplashPage }) => {
 
         <div style={{ height: '10vw' }} />
 
-        <TeamMeet primaryColor={primaryColor} arraySplash={'vaporverse'} />
+        <TeamMeet arraySplash={'vaporverse'} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

@@ -1,8 +1,8 @@
-//@ts-nocheck
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { IExclusiveNft } from '../splashPage.types';
 
-const ExclusiveNft = ({
+const ExclusiveNft: React.FC<IExclusiveNft> = ({
   Nft_1,
   Nft_2,
   Nft_3,

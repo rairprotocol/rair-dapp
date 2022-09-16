@@ -1,8 +1,8 @@
-//@ts-nocheck
 import React from 'react';
+import { INotCommercial } from '../splashPage.types';
 import './NotCommercial.css';
 
-const NotCommercial = ({ primaryColor }) => {
+const NotCommercial: React.FC<INotCommercial> = ({ primaryColor }) => {
   return (
     <div
       className="container-commercial"

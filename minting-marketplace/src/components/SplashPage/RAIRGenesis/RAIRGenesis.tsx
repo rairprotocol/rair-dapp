@@ -5,9 +5,6 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './RAIRGenesis.css';
 
-import warning1 from '../images/warning_1.png';
-import warning2 from '../images/warning_2.png';
-
 import MetaMaskIcon from '../images/metamask_logo.png';
 import Genesis_TV from '../images/TV-RAIR-StandardColor-0.gif';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
@@ -26,29 +23,15 @@ import axios from 'axios';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate2 from '../NotCommercial-2/NotCommercialTemplate-2';
 import { RootState } from '../../../ducks';
-import { INumberedCircle, IRAIRGenesisSplashPage } from '../splashPage.types';
+import { INumberedCircle, ISplashPageProps } from '../splashPage.types';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import WarningModal from '../WarningModal';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
 const reactSwal = withReactContent(Swal);
-
-const WarningModal = () => {
-  return (
-    <div className="main-wrapper-nyc-genesis">
-      <div className="bad">
-        <h3>Bad don&#8219;t sign</h3>
-        <img src={warning1} alt="Bad don&#8219;t sign" />
-      </div>
-      <div className="good">
-        <h3>Good safe to sign</h3>
-        <img src={warning2} alt="Good safe to sign" />
-      </div>
-    </div>
-  );
-};
 
 const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
   return (
@@ -60,7 +43,7 @@ const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
   );
 };
 
-const RAIRGenesisSplashPage: React.FC<IRAIRGenesisSplashPage> = ({
+const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData
 }) => {
   const currentUserAddress = useSelector<RootState, string | undefined>(
@@ -180,7 +163,6 @@ const RAIRGenesisSplashPage: React.FC<IRAIRGenesisSplashPage> = ({
           openCheckList={openCheckList}
           purchaseList={purchaseList}
           togglePurchaseList={togglePurchaseList}
-          // toggleCheckList={toggleCheckList}
           backgroundColor={{
             darkTheme: 'rgb(3, 91, 188)',
             lightTheme: 'rgb(3, 91, 188)'
@@ -195,7 +177,7 @@ const RAIRGenesisSplashPage: React.FC<IRAIRGenesisSplashPage> = ({
               reactSwal.fire({
                 title:
                   'Watch out for sign requests that look like this. There are now gasless attack vectors that can set permissions to drain your wallet',
-                html: <WarningModal />,
+                html: <WarningModal className="genesis" />,
                 customClass: {
                   popup: `bg-${primaryColor} genesis-radius genesis-resp `,
                   title: 'text-genesis'

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { /*useCallback, useEffect,*/ useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import './SplashPageTemplate/AuthorCard/AuthorCard.css';
 import './../AboutPage/AboutPageNew/AboutPageNew.css';
@@ -23,6 +23,14 @@ import VideoPlayerModule from './SplashPageTemplate/VideoPlayer/VideoPlayerModul
 import MetaTags from '../SeoTags/MetaTags';
 import VideoPlayerView from '../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import { TVideoPlayerViewSpecialVideoType } from '../MockUpPage/NftList/nftList.types';
+import {
+  ISplashPageProps,
+  TNftLaSelectedVideo,
+  TSplashDataType
+} from './splashPage.types';
+import { TFileType } from '../../axios.responseTypes';
+import { RootState } from '../../ducks';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
 
 //TODO:Until we have a contract it will be commented
 // import { TNftFilesResponse } from '../../axios.responseTypes';
@@ -32,9 +40,7 @@ import { TVideoPlayerViewSpecialVideoType } from '../MockUpPage/NftList/nftList.
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
 
-//temporal types, later will create folder for them
-
-const splashData = {
+const splashData: TSplashDataType = {
   title: '#NFTLA',
   titleColor: '#A4396F',
   description:
@@ -125,11 +131,13 @@ const splashData = {
   ]
 };
 
-const NFTLASplashPage = ({ setIsSplashPage }) => {
-  const [selectVideo, setSelectVideo] = useState({});
+const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+  const [selectVideo, setSelectVideo] = useState<TNftLaSelectedVideo | {}>({});
   // TODO: Until we have a contract it will be commented
-  const [allVideos /*setAllVideos*/] = useState([]);
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const [allVideos /*setAllVideos*/] = useState<TFileType[]>([]);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
@@ -160,6 +168,7 @@ const NFTLASplashPage = ({ setIsSplashPage }) => {
     }
   ];
 
+  //temporarily unused-snippet
   // const getAllVideos = useCallback(async () => {
   //   const response = await axios.get<TNftFilesResponse>(
   //     '/api/nft/network/neededBlockchain/neededContract/indexInContract/files'
@@ -173,7 +182,7 @@ const NFTLASplashPage = ({ setIsSplashPage }) => {
   // }, [getAllVideos]);
 
   useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   return (
@@ -205,7 +214,7 @@ const NFTLASplashPage = ({ setIsSplashPage }) => {
             />
           </div>
         </div>
-        <TeamMeet primaryColor={primaryColor} arraySplash={'NFTLA'} />
+        <TeamMeet arraySplash={'NFTLA'} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

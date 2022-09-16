@@ -1,4 +1,4 @@
-//@ts-nocheck
+//unused-component
 import Modal from 'react-modal';
 
 import './SplashPage.css';

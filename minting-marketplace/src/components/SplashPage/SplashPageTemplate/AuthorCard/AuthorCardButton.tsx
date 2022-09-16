@@ -1,10 +1,14 @@
+import { IAuthorCardButton } from '../../splashPage.types';
 import './AuthorCard.css';
 
-const hyperlink = (url) => {
+const hyperlink = (url: string) => {
   window.open(url);
 };
 
-const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
+const AuthorCardButton: React.FC<IAuthorCardButton> = ({
+  buttonData,
+  whatSplashPage
+}) => {
   const {
     buttonLabel,
     buttonColor,
@@ -16,7 +20,7 @@ const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
     buttonCustomLogo,
     buttonLink,
     buttonAction
-  } = buttonData;
+  } = buttonData || {};
   return (
     <div className="btn-submit-with-form">
       <button
@@ -25,7 +29,7 @@ const AuthorCardButton = ({ buttonData, whatSplashPage }) => {
           if (buttonAction) {
             buttonAction();
           } else {
-            hyperlink(buttonLink);
+            buttonLink && hyperlink(buttonLink);
           }
         }}
         style={{

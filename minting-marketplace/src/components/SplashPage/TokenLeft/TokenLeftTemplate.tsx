@@ -1,15 +1,11 @@
-//@ts-nocheck
 import React, { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-// import { useNavigate } from 'react-router';
 import './TokenLeftTemplate.css';
-// import MailchimpComponent from '../NipseyRelease/MailchimpComponent';
+import { ITokenLeftTemplate } from '../splashPage.types';
 
-const TokenLeftTemplate = ({
+const TokenLeftTemplate: React.FC<ITokenLeftTemplate> = ({
   primaryColor,
-  // DiscordIcon,
-  copies,
   soldCopies,
   counterData,
   ipftButton,
@@ -25,18 +21,18 @@ const TokenLeftTemplate = ({
     titleColor,
     btnColorIPFS,
     properties,
-    royaltiesNft
-  } = counterData;
+    royaltiesNft,
+    nftCount
+  } = counterData || {};
 
-  const [percentTokens, setPersentTokens] = useState(0);
-  // const [showMore, setShowMore] = useState(false);
-  const [fontSize, setFontSize] = useState('');
+  const [percentTokens, setPersentTokens] = useState<number>(0);
+  const [fontSize, setFontSize] = useState<string>('');
 
-  const wholeTokens = Number(copies);
-  const leftTokensNumber = Number(soldCopies);
+  const wholeTokens = nftCount;
+  const leftTokensNumber = soldCopies;
 
   useEffect(() => {
-    if (leftTokensNumber <= wholeTokens) {
+    if (wholeTokens && leftTokensNumber <= wholeTokens) {
       const percentLeft =
         (Number(leftTokensNumber) * 100) / Number(wholeTokens);
       if (percentLeft > 1) {
@@ -47,7 +43,10 @@ const TokenLeftTemplate = ({
         setPersentTokens(Math.ceil(percentLeft));
       }
     }
-    if (leftTokensNumber > wholeTokens || leftTokensNumber === wholeTokens) {
+    if (
+      (wholeTokens && leftTokensNumber > wholeTokens) ||
+      leftTokensNumber === wholeTokens
+    ) {
       setPersentTokens(100);
     }
   }, [setPersentTokens, wholeTokens, leftTokensNumber]);
@@ -120,7 +119,7 @@ const TokenLeftTemplate = ({
                       className="">
                       {leftTokensNumber}{' '}
                     </div>
-                    <div className="text-whole-tokens"> / {copies}</div>
+                    <div className="text-whole-tokens"> / {nftCount}</div>
                   </div>
                 </div>
               </div>
