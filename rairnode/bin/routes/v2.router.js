@@ -21,7 +21,7 @@ module.exports = () => {
   router.use('/locks', locksController());
   router.use('/favorites', JWTVerification, favoritesController());
   router.use('/verify', verifyController());
-  router.use('/upload', uploadController());
+  router.use('/upload', uploadController);
   router.use('/users', usersController);
   router.use('/offers', offersController);
   router.use('/resales', resalesController);
