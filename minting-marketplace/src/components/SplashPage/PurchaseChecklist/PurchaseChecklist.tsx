@@ -1,14 +1,19 @@
-//@ts-nocheck
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { IPurchaseChecklist } from '../splashPage.types';
 
-const PurchaseChecklist = ({
+const PurchaseChecklist: React.FC<IPurchaseChecklist> = ({
   openCheckList,
   toggleCheckList,
   nameSplash,
   backgroundColor
 }) => {
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
+
   const [purchaseList, setPurshaseList] = useState(true);
 
   const dappUrl = window.location.host;

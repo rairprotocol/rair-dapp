@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -6,7 +5,6 @@ import { erc721Abi } from '../../contracts/index';
 import { rFetch } from '../../utils/rFetch';
 import { metamaskCall } from '../../utils/metamaskUtils';
 import Swal from 'sweetalert2';
-
 import './SplashPage.css';
 
 /* importing images*/
@@ -19,7 +17,6 @@ import Nft_3 from './images/exclusive_3.jpeg';
 import Nft_4 from './images/image_3.png';
 import NftImage from './images/main-nft-screen.png';
 import UnlockableVideo from './images/nipsey1.png';
-// import JoinCommunity from "./images/join_com.jpeg";
 import DigitalMobile from './images/digital-mobile.png';
 import NftMobile_1 from './images/nft-mobile_1.png';
 import NftMobile_2 from './images/nft-mobile_2.png';
@@ -29,14 +26,12 @@ import DiscordIcon from './images/discord-icon.png';
 import Bandana from './images/bandana.png';
 import Pods from './images/Pods.png';
 import Cepk from './images/cepk.png';
-// import Cepp from './images/cepp.png';
 
 /* importing Components*/
 import TokenLeft from './TokenLeft/TokenLeft';
 import ExclusiveNft from './ExclusiveNft/ExclusiveNft';
 import UnlockVideos from './UnlockVideos/UnlockVideos';
 import TeamMeet from './TeamMeet/TeamMeetList';
-// import JoinCom from "./JoinCom/JoinCom";
 
 import Modal from 'react-modal';
 import RoadMap from './Roadmap/RoadMap';
@@ -46,6 +41,15 @@ import { useNavigate } from 'react-router-dom';
 import { setRealChain } from '../../ducks/contracts/actions';
 import axios from 'axios';
 import { TProductResponseType } from '../../axios.responseTypes';
+import {
+  ISplashPageProps,
+  TMetamaskError,
+  TSplashPageIsActive
+} from './splashPage.types';
+import { TAddChainData } from '../../utils/utils.types';
+import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { RootState } from '../../ducks';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
 
 const customStyles = {
   overlay: {
@@ -69,22 +73,21 @@ const customStyles = {
   }
 };
 
-// Modal.setAppElement("#root");
-
-const SplashPage = ({ setIsSplashPage }) => {
-  const [dataNipsey, setDataNipsey] = useState();
-  const [copies, setCopies] = useState();
-  const [timerLeft, setTimerLeft] = useState();
+const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+  const [dataNipsey, setDataNipsey] = useState<number>();
+  const [copies, setCopies] = useState<number>();
+  const [timerLeft, setTimerLeft] = useState<number>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const switchEthereumChain = async (chainData) => {
+  const switchEthereumChain = async (chainData: TAddChainData) => {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: chainData.chainId }]
       });
-    } catch (switchError) {
+    } catch (metamaskError) {
+      const switchError = metamaskError as TMetamaskError;
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
         try {
@@ -107,15 +110,16 @@ const SplashPage = ({ setIsSplashPage }) => {
   }, []);
 
   useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   // let params = `scrollbars=no,resizable=no,status=no,location=no,
   //               toolbar=no,menubar=no,width=700,height=800,left=100,top=100`;
 
-  const { minterInstance, contractCreator } = useSelector(
-    (store) => store.contractStore
-  );
+  const { minterInstance, contractCreator } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
 
   const nipseyAddress = '0xCB0252EeD5056De450Df4D8D291B4c5E8Af1D9A6';
 
@@ -123,8 +127,8 @@ const SplashPage = ({ setIsSplashPage }) => {
     const { /*success*/ products } = await rFetch(
       `/api/contracts/${nipseyAddress}/products/offers`
     );
-    const instance = contractCreator(nipseyAddress, erc721Abi);
-    const nextToken = await instance.getNextSequentialIndex(0, 50, 250);
+    const instance = contractCreator?.(nipseyAddress, erc721Abi);
+    const nextToken = await instance?.getNextSequentialIndex(0, 50, 250);
     Swal.fire({
       title: 'Please wait...',
       html: `Buying token #${nextToken.toString()}`,
@@ -140,7 +144,7 @@ const SplashPage = ({ setIsSplashPage }) => {
     }
     if (
       await metamaskCall(
-        minterInstance.buyToken(
+        minterInstance?.buyToken(
           products[0].offerPool.marketplaceCatalogIndex,
           firstPressingOffer.offerIndex,
           nextToken,
@@ -155,9 +159,12 @@ const SplashPage = ({ setIsSplashPage }) => {
     }
   };
 
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState({ policy: false, use: false });
+  let subtitle: Modal;
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [active, setActive] = useState<TSplashPageIsActive>({
+    policy: false,
+    use: false
+  });
 
   const openModal = useCallback(() => {
     setIsOpen(true);
@@ -175,9 +182,10 @@ const SplashPage = ({ setIsSplashPage }) => {
       use: false
     }));
   }
-  // console.log(Object.values(active).every(el => el));
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
   const getAllProduct = useCallback(async () => {
     const responseAllProduct = await axios.get<TProductResponseType>(
@@ -240,7 +248,6 @@ const SplashPage = ({ setIsSplashPage }) => {
                 ) : (
                   <Countdown
                     setTimerLeft={setTimerLeft}
-                    timerLeft={timerLeft}
                     time={'2022-01-06T19:00:00-08:00'}
                   />
                 )}
@@ -260,7 +267,6 @@ const SplashPage = ({ setIsSplashPage }) => {
                     ref={(_subtitle) => (subtitle = _subtitle)}>
                     Terms of Service
                   </h2>
-                  {/* <button onClick={closeModal}>close</button> */}
                   <div className="modal-content-wrapper">
                     <div className="modal-form">
                       <form>
@@ -394,7 +400,7 @@ const SplashPage = ({ setIsSplashPage }) => {
         </div>
         <UnlockVideos
           primaryColor={primaryColor}
-          UnlockableVideo={UnlockableVideo}
+          unlockableVideo={UnlockableVideo}
         />
         <ExclusiveNft
           Nft_1={Nft_1}
@@ -412,7 +418,7 @@ const SplashPage = ({ setIsSplashPage }) => {
           JoinCommunity={JoinCommunity}
           primaryColor={primaryColor}
         /> */}
-        <TeamMeet primaryColor={primaryColor} arraySplash={'nipsey'} />
+        <TeamMeet arraySplash={'nipsey'} />
         <div className="nipsey-img-masks">
           <img src={Bandana} alt="Bandana" />
           <img src={Pods} alt="headphones" />
@@ -618,7 +624,7 @@ const SplashPage = ({ setIsSplashPage }) => {
               </div>
             </div>
             <NipseyRelease DiscordIcon={DiscordIcon} />
-            <TeamMeet primaryColor={primaryColor} arraySplash={'nipsey'} />
+            <TeamMeet arraySplash={'nipsey'} />
             <div className="content-owners-mobile">
               <div className="owner-box">
                 <div className="owner-img">

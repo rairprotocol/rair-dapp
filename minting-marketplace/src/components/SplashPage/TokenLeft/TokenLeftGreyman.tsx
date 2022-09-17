@@ -1,13 +1,17 @@
-//@ts-nocheck
 import React, { useState, useEffect } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import { ITokenLeftGreyman } from '../splashPage.types';
 
-const TokenLeftGreyman = ({ primaryColor, soldCopies, copies }) => {
+const TokenLeftGreyman: React.FC<ITokenLeftGreyman> = ({
+  primaryColor,
+  soldCopies,
+  copies
+}) => {
   // in props was Metamask
-  const [percentTokens, setPersentTokens] = useState(0);
-  const [showMore, setShowMore] = useState(false);
-  const [fontSize, setFontSize] = useState('');
+  const [percentTokens, setPersentTokens] = useState<number>(0);
+  const [showMore, setShowMore] = useState<boolean>(false);
+  const [fontSize, setFontSize] = useState<string>('');
 
   const wholeTokens = Number(copies);
   const leftTokensNumber = Number(soldCopies);

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-// import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import videojs from 'video.js';
 import Swal from 'sweetalert2';
@@ -122,11 +121,7 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
           controls
           preload="auto"
           data-setup="{}">
-          <source
-            // autostart="false"
-            src={mediaAddress}
-            type="application/x-mpegURL"
-          />
+          <source src={mediaAddress} type="application/x-mpegURL" />
         </video>
       </div>
     </>

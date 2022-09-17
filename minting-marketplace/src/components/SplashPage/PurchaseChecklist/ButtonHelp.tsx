@@ -1,7 +1,7 @@
-//@ts-nocheck
 import React from 'react';
+import { IButtonHelp } from '../splashPage.types';
 
-const ButtonHelp = ({
+const ButtonHelp: React.FC<IButtonHelp> = ({
   toggleCheckList,
   backgroundButton,
   backgroundButtonText

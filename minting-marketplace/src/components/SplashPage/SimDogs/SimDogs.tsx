@@ -1,13 +1,9 @@
-//@ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './SimDogs.css';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
-
-import warning1 from '../images/warning_1.png';
-import warning2 from '../images/warning_2.png';
 
 // import MetaMaskIcon from '../images/metamask_logo.png';
 import DiscordIcon from '../images/discord-icon.png';
@@ -41,6 +37,18 @@ import axios from 'axios';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
+import {
+  ICustomButtonBlock,
+  ISplashPageProps,
+  TDonationGridDataItem,
+  TSplashDataType
+} from '../splashPage.types';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import WarningModal from '../WarningModal';
 // import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -48,25 +56,15 @@ import DonationGrid from '../SplashPageTemplate/DonationSquares/DonationGrid';
 
 const reactSwal = withReactContent(Swal);
 
-const WarningModal = () => {
-  return (
-    <div className="main-wrapper-nyc-simdogs">
-      <div className="bad-simdogs">
-        <div>Bad don&#8219;t sign</div>
-        <img src={warning1} alt="Bad don&#8219;t sign" />
-      </div>
-      <div className="good-simdogs">
-        <div>Good safe to sign</div>
-        <img src={warning2} alt="Good safe to sign" />
-      </div>
-    </div>
+const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
+  connectUserData,
+  setIsSplashPage
+}) => {
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
   );
-};
 
-const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
-
-  const donationGridData = [
+  const donationGridData: TDonationGridDataItem[] = [
     {
       title: 'PROSECUTOR',
       image: SimDogs1,
@@ -154,7 +152,7 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
       ]
     }
   ];
-  const splashData = {
+  const splashData: TSplashDataType = {
     // NFTName: 'Genesis Pass artwork',
     title: 'SIM DOGS',
     titleColor: '#495CB0',
@@ -192,9 +190,9 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
       buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
     },
     button3: {
-      buttonMarginTop: currentUserAddress === undefined ? 0 : '2vw',
-      buttonMarginBottom: currentUserAddress === undefined ? 0 : '6vw',
-      buttonBorder: null,
+      buttonMarginTop: currentUserAddress === undefined ? '0' : '2vw',
+      buttonMarginBottom: currentUserAddress === undefined ? '0' : '6vw',
+      // buttonBorder: null,
       buttonTextColor: '#FFFFFF',
       buttonColor: '#55CFFF',
       buttonLabel: 'PREMINT',
@@ -210,7 +208,7 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
 
   //an option for custom button arrangment
 
-  const CustomButtonBlock = ({ splashData }) => {
+  const CustomButtonBlock: React.FC<ICustomButtonBlock> = ({ splashData }) => {
     const { button1, button2, button3 } = splashData;
     return (
       <div className="button-wrapper">
@@ -227,11 +225,13 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
 
   const customButtonBlock = <CustomButtonBlock splashData={splashData} />;
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
   /* UTILITIES FOR NFT PURCHASE */
-  const [openCheckList /*setOpenCheckList*/] = useState(false);
-  const [purchaseList, setPurchaseList] = useState(true);
+  const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
+  const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
   const dispatch = useDispatch();
 
@@ -240,17 +240,17 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
   };
 
   useEffect(() => {
-    dispatch({ type: 'SET_REAL_CHAIN', payload: ukraineglitchChainId });
+    dispatch(setRealChain(ukraineglitchChainId));
     //eslint-disable-next-line
   }, []);
 
   /* UTILITIES FOR VIDEO PLAYER VIEW */
-  const [productsFromOffer, setProductsFromOffer] = useState([]);
-  const [selectVideo, setSelectVideo] = useState();
+  const [productsFromOffer, setProductsFromOffer] = useState<TFileType[]>([]);
+  const [selectVideo, setSelectVideo] = useState<TFileType>();
 
   const getProductsFromOffer = useCallback(async () => {
     const response = await axios.get<TNftFilesResponse>(
-      `/api/nft/network/${splashData.marketplaceDemoParams.blockchain}/${splashData.marketplaceDemoParams.contract}/${splashData.marketplaceDemoParams.product}/files`
+      `/api/nft/network/${splashData.marketplaceDemoParams?.blockchain}/${splashData.marketplaceDemoParams?.contract}/${splashData.marketplaceDemoParams?.product}/files`
     );
     setProductsFromOffer(response.data.files);
     setSelectVideo(response.data.files[0]);
@@ -261,7 +261,7 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
   }, [getProductsFromOffer]);
 
   useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   /**** */
@@ -274,7 +274,6 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
           openCheckList={openCheckList}
           purchaseList={purchaseList}
           togglePurchaseList={togglePurchaseList}
-          // toggleCheckList={toggleCheckList}
           backgroundColor={{
             darkTheme: 'rgb(3, 91, 188)',
             lightTheme: 'rgb(3, 91, 188)'
@@ -294,7 +293,13 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
               reactSwal.fire({
                 title:
                   'Watch out for sign requests that look like this. There are now gasless attack vectors that can set permissions to drain your wallet',
-                html: <WarningModal />,
+                html: (
+                  <WarningModal
+                    className="simdogs"
+                    bad="bad-simdogs"
+                    good="good-simdogs"
+                  />
+                ),
                 customClass: {
                   popup: `bg-${primaryColor} genesis-radius genesis-resp `,
                   title: 'text-simdogs'
@@ -382,7 +387,7 @@ const SimDogsSplashPage = ({ connectUserData, setIsSplashPage }) => {
           groundbreaking case and project.
         </div>
         <h1 className="splashpage-subtitle above-meet-team"> TEAM </h1>
-        <TeamMeet primaryColor={primaryColor} arraySplash={'sim-dogs'} />
+        <TeamMeet arraySplash={'sim-dogs'} />
         <NotCommercialTemplate primaryColor={primaryColor} NFTName={'NFT'} />
       </div>
     </div>

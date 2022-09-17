@@ -1,9 +1,11 @@
-//@ts-nocheck
 /* eslint-disable  */
 import React, { memo, useEffect } from 'react';
+import { ITermsUseComponent } from './splashPage.types';
 import cl from './TermsUse.module.css';
 
-const TermsUseComponent = ({ setIsSplashPage }) => {
+const TermsUseComponent: React.FC<ITermsUseComponent> = ({
+  setIsSplashPage
+}) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsSplashPage(false);

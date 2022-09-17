@@ -1,7 +1,5 @@
-//@ts-nocheck
-import React, { useState /*useCallback*/, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-// import { useNavigate } from "react-router-dom";
 
 import './SplashPage.css';
 import './GreymanSplashPageMobile.css';
@@ -19,12 +17,13 @@ import SXSW3 from './images/SxSW-IMSV-ATX-2022-Concept03.jpg';
 import TeamMeet from './TeamMeet/TeamMeetList';
 import AuthorBlock from './AuthorBlock/AuthorBlock';
 import MobileCarouselNfts from '../AboutPage/AboutPageNew/ExclusiveNfts/MobileCarouselNfts';
-// import setTitle from "../../utils/setTitle";
 
 //Google Analytics
-// import ReactGA from 'react-ga';
 import NotCommercialGeneric from './NotCommercial/NotCommercialGeneric';
 import MetaTags from '../SeoTags/MetaTags';
+import { RootState } from '../../ducks';
+import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
 
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -54,16 +53,20 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-const SplashPage = ({ setIsSplashPage }) => {
-  // props was loginDone
-  const [/*active,*/ setActive] = useState({ policy: false, use: false });
-  const { primaryColor } = useSelector((store) => store.colorStore);
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const { currentUserAddress } = useSelector((store) => store.contractStore);
-
-  // const openModal = useCallback(() => {
-  //   setIsOpen(true);
-  // }, []);
+const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
+  setIsSplashPage
+}) => {
+  const [, /*active*/ setActive] = useState<TSplashPageIsActive>({
+    policy: false,
+    use: false
+  });
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const currentUserAddress = useSelector<RootState, string | undefined>(
+    (store) => store.contractStore.currentUserAddress
+  );
 
   const seoInformation = {
     title: '#ImmersiverseATX',
@@ -76,11 +79,11 @@ const SplashPage = ({ setIsSplashPage }) => {
   };
 
   const carousel_match = window.matchMedia('(min-width: 600px)');
-  const [carousel, setCarousel] = useState(carousel_match.matches);
+  const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
   window.addEventListener('resize', () => setCarousel(carousel_match.matches));
 
   function afterOpenModal() {
-    subtitle.style.color = '#9013FE';
+    return (subtitle.style.color = '#9013FE');
   }
 
   function closeModal() {
@@ -92,11 +95,7 @@ const SplashPage = ({ setIsSplashPage }) => {
     }));
   }
 
-  let subtitle;
-
-  // useEffect(() => {
-  //   setTitle(`#ImmersiVerse ATX`);
-  // }, []);
+  let subtitle: Modal;
 
   const formHyperlink = () => {
     window.open(
@@ -106,7 +105,7 @@ const SplashPage = ({ setIsSplashPage }) => {
   };
 
   useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   return (
@@ -289,11 +288,11 @@ const SplashPage = ({ setIsSplashPage }) => {
             </MobileCarouselNfts>
           )}
         </div>
-        <TeamMeet primaryColor={primaryColor} arraySplash={'immersiverse'} />
+        <TeamMeet arraySplash={'immersiverse'} />
         <NotCommercialGeneric primaryColor={primaryColor} />
       </div>
     </div>
   );
 };
 
-export default SplashPage;
+export default ImmersiVerseSplashPage;

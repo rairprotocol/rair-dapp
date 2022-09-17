@@ -1,8 +1,9 @@
-//@ts-nocheck
 import React from 'react';
+import { ITeammate } from '../splashPage.types';
 import TeammateDesc from './TeammateDesc';
+import { v4 } from 'uuid';
 
-const Teammate = ({
+const Teammate: React.FC<ITeammate> = ({
   url,
   name,
   desc,
@@ -38,9 +39,9 @@ const Teammate = ({
         </div>
         <div className="box-socials">
           {socials &&
-            socials.map((social, index) => {
+            socials.map((social) => {
               return (
-                <span key={social + index}>
+                <span key={v4()}>
                   <a
                     className={social.classLink}
                     target="_blank"

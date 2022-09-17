@@ -1,8 +1,10 @@
-//@ts-nocheck
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { IModalHelp } from '../splashPage.types';
 
-const ModalHelp = ({
+const ModalHelp: React.FC<IModalHelp> = ({
   openCheckList,
   purchaseList,
   togglePurchaseList,
@@ -10,7 +12,9 @@ const ModalHelp = ({
   backgroundColor,
   templateOverride
 }) => {
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
 
   const dappUrl = window.location.host;
   const metamaskAppDeepLink = 'https://metamask.app.link/dapp/' + dappUrl;
@@ -31,7 +35,7 @@ const ModalHelp = ({
       <div className="tutorial-show-list" onClick={() => togglePurchaseList()}>
         <i className={`fas fa-chevron-${purchaseList ? 'down' : 'up'}`}></i>
       </div>
-      <div className="tutorial-close" onClick={() => toggleCheckList()}>
+      <div className="tutorial-close" onClick={() => toggleCheckList?.()}>
         <i className="fas fa-times"></i>
       </div>
       <ul style={{ display: `${purchaseList ? 'block' : 'none'}` }}>

@@ -1,11 +1,8 @@
-//@ts-nocheck
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './NFTNYC.css';
-import warning1 from '../images/warning_1.png';
-import warning2 from '../images/warning_2.png';
 
 import MetaMaskIcon from '../images/metamask_logo.png';
 import NFTNYC_TITLE from '../images/NFTNYX_TITLE.gif';
@@ -24,37 +21,29 @@ import withReactContent from 'sweetalert2-react-content';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 
-import axios from 'axios';
 import MetaTags from '../../SeoTags/MetaTags';
-// Google Analytics
-//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-//ReactGA.initialize(TRACKING_ID);
+import WarningModal from '../WarningModal';
+import { RootState } from '../../../ducks';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { setRealChain } from '../../../ducks/contracts/actions';
+import { useGetProducts } from '../splashPageProductsHook';
 
 const reactSwal = withReactContent(Swal);
 
-const WarningModal = () => {
-  return (
-    <div className="main-wrapper-nyc">
-      <div className="bad">
-        <h3>Bad don&#8219;t sign</h3>
-        <img src={warning1} alt="Bad don&#8219;t sign" />
-      </div>
-      <div className="good">
-        <h3>Good safe to sign</h3>
-        <img src={warning2} alt="Good safe to sign" />
-      </div>
-    </div>
-  );
-};
-
-const NFTNYCSplashPage = ({
-  /*loginDone ,*/ connectUserData,
+const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
+  connectUserData,
   setIsSplashPage
 }) => {
-  const { /* currentChain */ currentUserAddress /*minterInstance */ } =
-    useSelector((store) => store.contractStore);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
+  );
+  const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
+    (store) => store.contractStore
+  );
 
-  const splashData = {
+  const splashData: TSplashDataType = {
     NFTName: 'NFT',
     title: 'NFTNYC X RAIR',
     titleColor: '#F15621',
@@ -70,6 +59,11 @@ const NFTNYCSplashPage = ({
       favicon: NFTNYC_favicon,
       image: NFTNYC_TITLE
     },
+    videoPlayerParams: {
+      blockchain: '0x89',
+      contract: '0xb41660b91c8ebc19ffe345726764d4469a4ab9f8',
+      product: '0'
+    },
     purchaseButton: {
       requiredBlockchain: '0x89',
       contractAddress: '0xb41660b91c8ebc19ffe345726764d4469a4ab9f8'
@@ -78,12 +72,14 @@ const NFTNYCSplashPage = ({
     buttonLabel: 'Connect Wallet',
     buttonBackgroundHelp: 'rgb(3, 91, 188)',
     backgroundImage: NFTNYC_TITLE,
-    button1: currentUserAddress === undefined && {
-      buttonColor: '#F15621',
-      buttonLabel: 'Connect wallet',
-      buttonImg: MetaMaskIcon,
-      buttonAction: connectUserData
-    },
+    button1: currentUserAddress
+      ? {
+          buttonColor: '#F15621',
+          buttonLabel: 'Connect wallet',
+          buttonImg: MetaMaskIcon,
+          buttonAction: connectUserData
+        }
+      : {},
     button2: {
       buttonColor: '#000000',
       buttonLabel: 'View on Opensea',
@@ -95,23 +91,23 @@ const NFTNYCSplashPage = ({
       titleColor: 'rgb(3, 91, 188)'
     },
     videoBackground1: videoBackground1,
-    videoData1: {
+    videoData: {
       video: null,
       videoTitle: '',
       videoModuleDescription:
         'NFT owners can learn more about the project by signing with metamask to unlock an encrypted stream ',
       videoModuleTitle: 'Exclusive 1: Degen Toonz Cartoon',
-      // baseURL: 'https://storage.googleapis.com/rair-videos/',
-      // mediaId: 'VUPLZvYEertdAQMiZ4KTI9HgnX5fNSN036GAbKnj9XoXbJ',
       demo: true
     }
   };
 
-  const { primaryColor } = useSelector((store) => store.colorStore);
+  /* UTILITIES FOR VIDEO PLAYER VIEW (placed this functionality into custom hook for reusability)*/
+  const [productsFromOffer, selectVideo, setSelectVideo] =
+    useGetProducts(splashData);
 
   /* UTILITIES FOR NFT PURCHASE */
-  const [openCheckList /*setOpenCheckList*/] = useState(false);
-  const [purchaseList, setPurchaseList] = useState(true);
+  const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
+  const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
   const dispatch = useDispatch();
 
@@ -120,32 +116,15 @@ const NFTNYCSplashPage = ({
   };
 
   useEffect(() => {
-    dispatch({ type: 'SET_REAL_CHAIN', payload: ukraineglitchChainId });
+    dispatch(setRealChain(ukraineglitchChainId));
     //eslint-disable-next-line
   }, []);
 
-  /* UTILITIES FOR VIDEO PLAYER VIEW */
-  const [productsFromOffer, setProductsFromOffer] = useState([]);
-  const [selectVideo, setSelectVideo] = useState();
-
-  const getProductsFromOffer = useCallback(async () => {
-    const response = await axios.get<TNftFilesResponse>(
-      '/api/nft/network/0x89/0xb41660b91c8ebc19ffe345726764d4469a4ab9f8/0/files'
-    );
-    setProductsFromOffer(response.data.files);
-    setSelectVideo(response.data.files[0]);
-  }, []);
-
   useEffect(() => {
-    getProductsFromOffer();
-  }, [getProductsFromOffer]);
-
-  useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   const whatSplashPage = 'nftnyc-font';
-  /**** */
 
   return (
     <div className="wrapper-splash-page nftnyc">
@@ -155,7 +134,6 @@ const NFTNYCSplashPage = ({
           openCheckList={openCheckList}
           purchaseList={purchaseList}
           togglePurchaseList={togglePurchaseList}
-          // toggleCheckList={toggleCheckList}
           backgroundColor={{
             darkTheme: 'rgb(3, 91, 188)',
             lightTheme: 'rgb(3, 91, 188)'
@@ -213,7 +191,7 @@ const NFTNYCSplashPage = ({
         <div style={{ height: '58px' }} />
         {/* <VideoPlayerModule
           backgroundImage={videoBackground1}
-          videoData={splashData.videoData1}
+          videoData={splashData.videoData}
         /> */}
         {/* <div style={{ height: '108px' }} /> */}
         {/* <div className="info-block">
@@ -228,7 +206,7 @@ const NFTNYCSplashPage = ({
           whatSplashPage={whatSplashPage}
         />
         <div style={{ height: '108px' }} />
-        <TeamMeet primaryColor={primaryColor} arraySplash={'nftnyc'} />
+        <TeamMeet arraySplash={'nftnyc'} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

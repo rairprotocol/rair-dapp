@@ -1,4 +1,5 @@
 //@ts-nocheck
+//unused-component
 import React from 'react';
 import UnlockVideoItem from '../../UnlockVideos/UnlockVideoItem';
 import './StaticTiles.css';
@@ -50,7 +51,7 @@ const StaticTiles = ({ title, UnlockableVideo, primaryColor }) => {
           return (
             <UnlockVideoItem
               key={index + video.unlockVideoName}
-              UnlockableVideo={UnlockableVideo}
+              unlockableVideo={UnlockableVideo}
               typeVideo={video.typeVideo}
               nameVideo={video.unlockVideoName}
               timeVideo={video.timeVideo}

@@ -12,6 +12,17 @@
   height: 12vw;
 }
 
+.vaporverse-images-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  margin-bottom: 20px;
+}
+
+.vaporverse-images {
+  width: 45%;
+}
+
 .wrapper-splash-page.vaporverse {
   font-family: 'Charriot Deluxe', sans-serif;
 }

@@ -1,8 +1,8 @@
-//@ts-nocheck
 import React from 'react';
+import { IUnlockVideos, TVideoArrType } from '../splashPage.types';
 import UnlockVideoItem from './UnlockVideoItem';
 
-const videoArr = [
+const videoArr: TVideoArrType[] = [
   {
     typeVideo: 'Sneak Preview Coming Soon',
     unlockVideoName: 'Intro',
@@ -53,7 +53,10 @@ const videoArr = [
   }
 ];
 
-const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
+const UnlockVideos: React.FC<IUnlockVideos> = ({
+  unlockableVideo,
+  primaryColor
+}) => {
   return (
     <div className="unlockble-video">
       <div className="title-gets">
@@ -66,11 +69,9 @@ const UnlockVideos = ({ UnlockableVideo, primaryColor }) => {
           return (
             <UnlockVideoItem
               key={index + video.unlockVideoName}
-              UnlockableVideo={UnlockableVideo}
-              typeVideo={video.typeVideo}
+              unlockableVideo={unlockableVideo}
               nameVideo={video.unlockVideoName}
               timeVideo={video.timeVideo}
-              locked={video.locked}
               primaryColor={primaryColor}
             />
           );

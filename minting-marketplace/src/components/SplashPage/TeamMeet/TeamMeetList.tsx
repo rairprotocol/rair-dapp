@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React from 'react';
 import Teammate_1 from '../images/mrlee.jpeg';
 import Teammate_2 from '../images/foundation.png';
@@ -15,9 +14,7 @@ import NFTNYC_LOGO from '../images/nftnyc_logo.png';
 import Wallstreet1 from '../images/wallstreet1.png';
 import Wallstreet2 from '../images/wallstreet2.png';
 import CoinAgenda_LOGO from '../images/coinagenda.png';
-// import TCC_ICON from '../images/TCC_icon.png'
 import Estate_Teammate from '../images/estate_team.png';
-import Teammate from './Teammate';
 import GreymanAuthor from '../images/greymanAuthor.png';
 import Ed from '../../AboutPage/assets/Ed.jpeg';
 import Garrett from '../../AboutPage/assets/GARRETT.jpeg';
@@ -26,13 +23,14 @@ import Martin from '../../AboutPage/assets/Martin.jpeg';
 import MICHAEL from '../../AboutPage/assets/MICHAEL.jpg';
 import JULIA from '../../AboutPage/assets/JULIA.jpg';
 import David from '../../AboutPage/assets/David.jpeg';
-// import Sonnenfeld from '../../AboutPage/assets/Seth.jpeg';
 import Matthew from '../../AboutPage/assets/Matthew.jpg';
 import NutTeam from '../images/nuts-teammate.jpeg';
 import MichaelTerpin from '../images/MichaelTerpin.png';
 import AndreMiripolsky from '../images/AndreMiripolsky.png';
+import { ITeamComponentCommon, TTeamArrayItemType } from '../splashPage.types';
+import TeamMeetComponentCommon from './TeamComponentCommon';
 
-const teamArray = [
+const teamArray: TTeamArrayItemType[] = [
   {
     nameTeammate: 'Mr.Lee',
     imageUrl: Teammate_1,
@@ -170,7 +168,7 @@ const teamArray = [
   }
 ];
 
-const teamAboutRair = [
+const teamAboutRair: TTeamArrayItemType[] = [
   {
     nameTeammate: 'Ed Prado | Chief Executive Officer',
     imageUrl: Ed,
@@ -256,7 +254,7 @@ const teamAboutRair = [
   }
 ];
 
-const rairAdvisorsTeam = [
+const rairAdvisorsTeam: TTeamArrayItemType[] = [
   {
     nameTeammate: 'Michael Terpin  | Strategic Advisor + Investor',
     imageUrl: MICHAEL,
@@ -437,7 +435,7 @@ const rairAdvisorsTeam = [
   }
 ];
 
-const teamGreymanArray = [
+const teamGreymanArray: TTeamArrayItemType[] = [
   {
     chain: '0x7bfbAAC8b6bC1B7b9e4bEB5c1d92C913B9598465',
     nameTeammate: 'Dadara',
@@ -507,7 +505,7 @@ const teamGreymanArray = [
   }
 ];
 
-const teamNFTNYCArray = [
+const teamNFTNYCArray: TTeamArrayItemType[] = [
   {
     chain: null,
     nameTeammate: 'NFTNYC',
@@ -550,7 +548,7 @@ const teamNFTNYCArray = [
     ]
   }
 ];
-const teamCoinAgendaArray = [
+const teamCoinAgendaArray: TTeamArrayItemType[] = [
   {
     chain: '  ',
     nameTeammate: 'CoinAgenda',
@@ -590,7 +588,7 @@ const teamCoinAgendaArray = [
   }
 ];
 
-const teamRAIRBasicArray = [
+const teamRAIRBasicArray: TTeamArrayItemType[] = [
   {
     chain: '0x7849194dD593d6c3aeD24035D70B5394a1C90F8F',
     nameTeammate: 'RAIR Technologies',
@@ -617,7 +615,7 @@ const teamRAIRBasicArray = [
   }
 ];
 
-const teamRAIRBasic2Array = [
+const teamRAIRBasic2Array: TTeamArrayItemType[] = [
   {
     chain: '0x7849194dD593d6c3aeD24035D70B5394a1C90F8F',
     nameTeammate: 'RAIR Technologies',
@@ -636,7 +634,7 @@ const teamRAIRBasic2Array = [
   }
 ];
 
-const teamSimDogsArray = [
+const teamSimDogsArray: TTeamArrayItemType[] = [
   {
     chain: '',
     nameTeammate: 'Michael Terpin',
@@ -699,7 +697,7 @@ const teamSimDogsArray = [
   }
 ];
 
-const teamBruceFentonArray = [
+const teamBruceFentonArray: TTeamArrayItemType[] = [
   {
     chain: '',
     nameTeammate: 'Bruce Fenton',
@@ -730,7 +728,7 @@ const teamBruceFentonArray = [
   }
 ];
 
-const teamUkraineArray = [
+const teamUkraineArray: TTeamArrayItemType[] = [
   {
     chain: '0xFC9E791955AeDB8dbAd1Be054f82720c8bDbf582',
     nameTeammate: 'Ukrainian American Coordinating Council',
@@ -776,7 +774,7 @@ const teamUkraineArray = [
   }
 ];
 
-const teamVaporVerseArray = [
+const teamVaporVerseArray: TTeamArrayItemType[] = [
   {
     chain: '0x7849194dD593d6c3aeD24035D70B5394a1C90F8F',
     nameTeammate: 'RAIR Technologies',
@@ -800,7 +798,7 @@ const teamVaporVerseArray = [
   }
 ];
 
-const teamWallstreetArray = [
+const teamWallstreetArray: TTeamArrayItemType[] = [
   {
     chain: '',
     nameTeammate: 'G. GEKKO',
@@ -825,7 +823,7 @@ const teamWallstreetArray = [
   }
 ];
 
-const teamNFTLAarray = [
+const teamNFTLAarray: TTeamArrayItemType[] = [
   {
     chain: '',
     nameTeammate: 'NFT LA',
@@ -868,7 +866,7 @@ const teamNFTLAarray = [
   }
 ];
 
-const teamImmersiverseArray = [
+const teamImmersiverseArray: TTeamArrayItemType[] = [
   {
     chain: '',
     nameTeammate: 'ImmersiVerse',
@@ -914,7 +912,7 @@ const teamImmersiverseArray = [
   }
 ];
 
-const teamNutArray = [
+const teamNutArray: TTeamArrayItemType[] = [
   {
     nameTeammate: 'MC Cranksy',
     imageUrl: NutTeam,
@@ -956,7 +954,7 @@ const teamNutArray = [
   }
 ];
 
-const teamSlideLockArray = [
+const teamSlideLockArray: TTeamArrayItemType[] = [
   {
     chain: '',
     nameTeammate: 'Slidelock',
@@ -1002,349 +1000,7 @@ const teamSlideLockArray = [
   }
 ];
 
-const NutsTeamComponent = ({ primaryColor }) => {
-  return (
-    <>
-      {teamNutArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </>
-  );
-};
-
-const NipseyTeamComponent = ({ primaryColor }) => {
-  return (
-    <>
-      {teamArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </>
-  );
-};
-
-const UkraineGlitchComponent = ({ primaryColor }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamUkraineArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const RAIRBasicTeamComponent = ({ primaryColor, arraySplash }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamRAIRBasicArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-            arraySplash={arraySplash}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const RAIRBasic2TeamComponent = ({ primaryColor, arraySplash }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamRAIRBasic2Array.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-            arraySplash={arraySplash}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const BruceFentonTeamComponent = ({ primaryColor, arraySplash }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamBruceFentonArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-            arraySplash={arraySplash}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const SimDogsTeamComponent = ({ primaryColor, arraySplash }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamSimDogsArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-            arraySplash={arraySplash}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const CoinAgendaComponent = ({ primaryColor, arraySplash }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamCoinAgendaArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-            arraySplash={arraySplash}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const NFTNYCTeamComponent = ({ primaryColor, arraySplash }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamNFTNYCArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-            arraySplash={arraySplash}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const VaporVerseComponent = ({ primaryColor }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamVaporVerseArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const SlideLockComponent = ({ primaryColor }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamSlideLockArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const GreyManTeamComponent = ({ primaryColor }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamGreymanArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const NFTLATeamComponent = ({ primaryColor }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamNFTLAarray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const WallstreetTeamComponent = ({ primaryColor }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamWallstreetArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const ImmersiVerseTeamComponent = ({ primaryColor }) => {
-  return (
-    <div className="splash-team-greyman">
-      {teamImmersiverseArray.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            chain={t.chain}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </div>
-  );
-};
-
-const RairTeamComponent = ({ primaryColor }) => {
-  return (
-    <>
-      {teamAboutRair.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            socials={t.socials}
-            desc={t.aboutTeammate}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </>
-  );
-};
-
-const RairAdvisortComponent = ({ primaryColor }) => {
-  return (
-    <>
-      {rairAdvisorsTeam.map((t, index) => {
-        return (
-          <Teammate
-            key={index + t.nameTeammate}
-            name={t.nameTeammate}
-            desc={t.aboutTeammate}
-            socials={t.socials}
-            primaryColor={primaryColor}
-            url={t.imageUrl}
-          />
-        );
-      })}
-    </>
-  );
-};
-
-const TeamMeet = ({ primaryColor, arraySplash }) => {
+const TeamMeet: React.FC<ITeamComponentCommon> = ({ arraySplash }) => {
   return (
     <div className="splash-team">
       <div className="title-team">
@@ -1400,51 +1056,107 @@ const TeamMeet = ({ primaryColor, arraySplash }) => {
       </div>
       <div className="meet-team">
         {arraySplash === 'nftnyc' && (
-          <NFTNYCTeamComponent
-            primaryColor={primaryColor}
+          <TeamMeetComponentCommon
+            arraySplash={arraySplash}
+            teamArray={teamNFTNYCArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'coinagenda' && (
+          <TeamMeetComponentCommon
+            arraySplash={arraySplash}
+            teamArray={teamCoinAgendaArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'ukraine' && (
+          <TeamMeetComponentCommon
+            teamArray={teamUkraineArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'vaporverse' && (
+          <TeamMeetComponentCommon
+            teamArray={teamVaporVerseArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'slidelock' && (
+          <TeamMeetComponentCommon
+            teamArray={teamSlideLockArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'greyman' && (
+          <TeamMeetComponentCommon
+            teamArray={teamGreymanArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'immersiverse' && (
+          <TeamMeetComponentCommon
+            teamArray={teamImmersiverseArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'wallstreet80sclub' && (
+          <TeamMeetComponentCommon
+            teamArray={teamWallstreetArray}
+            className={true}
+          />
+        )}
+        {arraySplash === 'rair-basic' && (
+          <TeamMeetComponentCommon
+            teamArray={teamRAIRBasicArray}
+            className={true}
             arraySplash={arraySplash}
           />
         )}
-        {arraySplash === 'coinagenda' && <CoinAgendaComponent />}
-        {arraySplash === 'ukraine' && <UkraineGlitchComponent />}
-        {arraySplash === 'vaporverse' && <VaporVerseComponent />}
-        {arraySplash === 'slidelock' && <SlideLockComponent />}
-        {arraySplash === 'greyman' && (
-          <GreyManTeamComponent primaryColor={primaryColor} />
-        )}
-        {arraySplash === 'immersiverse' && (
-          <ImmersiVerseTeamComponent primaryColor={primaryColor} />
-        )}
-        {arraySplash === 'wallstreet80sclub' && (
-          <WallstreetTeamComponent primaryColor={primaryColor} />
-        )}
-        {arraySplash === 'rair-basic' && (
-          <RAIRBasicTeamComponent primaryColor={primaryColor} />
-        )}
         {arraySplash === 'rair-basic-2' && (
-          <RAIRBasic2TeamComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon
+            teamArray={teamRAIRBasic2Array}
+            className={true}
+            arraySplash={arraySplash}
+          />
         )}
         {arraySplash === 'bruce-fenton' && (
-          <BruceFentonTeamComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon
+            teamArray={teamBruceFentonArray}
+            className={true}
+            arraySplash={arraySplash}
+          />
         )}
         {arraySplash === 'sim-dogs' && (
-          <SimDogsTeamComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon
+            teamArray={teamSimDogsArray}
+            className={true}
+            arraySplash={arraySplash}
+          />
         )}
         {arraySplash === 'NFTLA' && (
-          <NFTLATeamComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon
+            teamArray={teamNFTLAarray}
+            className={true}
+          />
         )}
         {arraySplash === 'nipsey' && (
-          <NipseyTeamComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon teamArray={teamArray} className={false} />
         )}
         {arraySplash === 'rair' && (
-          <RairTeamComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon
+            teamArray={teamAboutRair}
+            className={false}
+          />
         )}
         {arraySplash === 'rair-advisors' && (
-          <RairAdvisortComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon
+            teamArray={rairAdvisorsTeam}
+            className={false}
+          />
         )}
 
         {arraySplash === 'nuts' && (
-          <NutsTeamComponent primaryColor={primaryColor} />
+          <TeamMeetComponentCommon teamArray={teamNutArray} className={false} />
         )}
       </div>
     </div>

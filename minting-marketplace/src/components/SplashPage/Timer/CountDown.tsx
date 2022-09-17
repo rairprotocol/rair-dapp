@@ -2,12 +2,13 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import './Countdown.css';
 import moment from 'moment-timezone';
+import { ICountdown, TCowntdownObject } from '../splashPage.types';
 
-const CountdownComponent = ({ setTimerLeft, time }) => {
+const CountdownComponent: React.FC<ICountdown> = ({ setTimerLeft, time }) => {
   const dec = moment(new Date(time)); //.tz("America/New_York");
   const [countdownDate /*setCountdownDate*/] = useState(dec);
 
-  const [state, setState] = useState({
+  const [state, setState] = useState<TCowntdownObject>({
     days: 0,
     hours: 0,
     minutes: 0,
@@ -19,7 +20,7 @@ const CountdownComponent = ({ setTimerLeft, time }) => {
     const distanceToDate = countdownDate - currentTime;
 
     if (countdownDate) {
-      let days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
+      const days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
       let hours = Math.floor(
         (distanceToDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
@@ -28,13 +29,13 @@ const CountdownComponent = ({ setTimerLeft, time }) => {
       );
       let seconds = Math.floor((distanceToDate % (1000 * 60)) / 1000);
       const numbersToAddZeroTo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      days = `${days}`;
+      // days = `${days}`;
       if (numbersToAddZeroTo.includes(hours)) {
-        hours = `0${hours}`;
+        hours = +`0${hours}`;
       } else if (numbersToAddZeroTo.includes(minutes)) {
-        minutes = `0${minutes}`;
+        minutes = +`0${minutes}`;
       } else if (numbersToAddZeroTo.includes(seconds)) {
-        seconds = `0${seconds}`;
+        seconds = +`0${seconds}`;
       }
       setState({ days: days, hours: hours, minutes, seconds });
     }

@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
@@ -24,9 +23,17 @@ import VideoPlayerModule from '../SplashPageTemplate/VideoPlayer/VideoPlayerModu
 import NFTImages from '../SplashPageTemplate/NFTImages/NFTImages';
 import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
 
-import PurchaseTokenButton from '../../common/PurchaseToken.tsx';
+import PurchaseTokenButton from '../../common/PurchaseToken';
 import Swal from 'sweetalert2';
 import { rFetch } from '../../../utils/rFetch';
+import {
+  ISplashPageProps,
+  TMainContractType,
+  TSplashDataType
+} from '../splashPage.types';
+import { RootState } from '../../../ducks';
+import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 
 // TODO: UNUSED
 // import MetaTags from '../../SeoTags/MetaTags'
@@ -39,19 +46,19 @@ import { rFetch } from '../../../utils/rFetch';
 //ReactGA.initialize(TRACKING_ID);
 
 // This will be the default contract used in this splash page
-const mainContract = {
+const mainContract: TMainContractType = {
   contractAddress: '0xbd034e188f35d920cf5dedfb66f24dcdd90d7804',
   requiredBlockchain: '0x1',
-  offerIndex: [0, 1]
+  offerIndex: ['0', '1']
 };
 // By setting REACT_APP_TEST_CONTRACTS
-const testContract = {
+const testContract: TMainContractType = {
   contractAddress: '0x971ee6dd633cb6d8cc18e5d27000b7dde30d8009',
   requiredBlockchain: '0x5',
-  offerIndex: [52, 0]
+  offerIndex: ['52', '0']
 };
 
-const splashData = {
+const splashData: TSplashDataType = {
   title: '',
   titleImage: titleImage,
   titleColor: '#57B69C',
@@ -144,7 +151,7 @@ const splashData = {
   //   },
   // ],
   videoData: {
-    // video: null,
+    video: null
     // videoTitle: "Watch the Transformation",
     // videoModuleDescription: "NFT owners can learn more about the project by signing with metamask to unlock an encrypted document",
     // videoModuleTitle: "Only NFT owners can see these slides",
@@ -211,28 +218,44 @@ const splashData = {
   }
 };
 
-const SlideLock = ({ loginDone, connectUserData, setIsSplashPage }) => {
-  const [soldCopies, setSoldCopies] = useState(0);
-  const { primaryColor } = useSelector((store) => store.colorStore);
-  const { currentChain, minterInstance } = useSelector(
-    (store) => store.contractStore
+const SlideLock: React.FC<ISplashPageProps> = ({
+  loginDone,
+  connectUserData,
+  setIsSplashPage
+}) => {
+  const [soldCopies, setSoldCopies] = useState<number>(0);
+  const primaryColor = useSelector<RootState, ColorChoice>(
+    (store) => store.colorStore.primaryColor
   );
+  const { currentChain, minterInstance } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((store) => store.contractStore);
   const carousel_match = window.matchMedia('(min-width: 900px)');
-  const [carousel, setCarousel] = useState(carousel_match.matches);
-  window.addEventListener('resize', () => setCarousel(carousel_match.matches));
+  const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
+
+  useEffect(() => {
+    window.addEventListener('resize', () =>
+      setCarousel(carousel_match.matches)
+    );
+    return () =>
+      window.removeEventListener('resize', () =>
+        setCarousel(carousel_match.matches)
+      );
+  }, [carousel_match.matches]);
 
   const getAllProduct = useCallback(async () => {
     if (loginDone) {
-      if (currentChain === splashData.purchaseButton.requiredBlockchain) {
+      if (currentChain === splashData.purchaseButton?.requiredBlockchain) {
         setSoldCopies(
           (
-            await minterInstance.getOfferRangeInfo(
-              ...splashData.purchaseButton.offerIndex
+            await minterInstance?.getOfferRangeInfo(
+              ...(splashData?.purchaseButton?.offerIndex || [])
             )
           ).tokensAllowed.toString()
         );
       } else {
-        setSoldCopies();
+        setSoldCopies(0); /*it was empty but I put 0*/
       }
     }
   }, [setSoldCopies, loginDone, currentChain, minterInstance]);
@@ -242,7 +265,7 @@ const SlideLock = ({ loginDone, connectUserData, setIsSplashPage }) => {
   }, [getAllProduct]);
 
   useEffect(() => {
-    setIsSplashPage(true);
+    setIsSplashPage?.(true);
   }, [setIsSplashPage]);
 
   // useEffect(() => {
@@ -262,11 +285,10 @@ const SlideLock = ({ loginDone, connectUserData, setIsSplashPage }) => {
         /> */}
         <TokenLeftTemplate
           counterData={splashData.counterData}
-          copies={splashData.counterData.nftCount}
           soldCopies={soldCopies}
           primaryColor={primaryColor}
           loginDone={loginDone}
-          nftTitle={splashData.counterData.nftTitle}
+          nftTitle={splashData.counterData?.nftTitle}
         />
         <div style={{ height: '108px' }} />
         <VideoPlayerModule
@@ -279,12 +301,12 @@ const SlideLock = ({ loginDone, connectUserData, setIsSplashPage }) => {
           Nft_2={slideNFT2}
           Nft_3={slideNFT3}
           Nft_4={slideNFT4}
-          amountTokens={splashData.counterData.nftCount}
-          titleNft={splashData.exclusiveNft.title}
-          colorText={splashData.exclusiveNft.titleColor}
+          amountTokens={splashData.counterData?.nftCount}
+          titleNft={splashData.exclusiveNft?.title}
+          colorText={splashData.exclusiveNft?.titleColor}
           carousel={carousel}
         />
-        <TeamMeet primaryColor={primaryColor} arraySplash={'slidelock'} />
+        <TeamMeet arraySplash={'slidelock'} />
         <NotCommercialTemplate
           primaryColor={primaryColor}
           NFTName={splashData.NFTName}

@@ -1,8 +1,13 @@
 import React from 'react';
 import './VideoPlayer.css';
 import ShowVideoToLoggedInUsers from './ShowVideoToLoggedInUsers';
+import { IVideoPlayerModule } from '../../splashPage.types';
 
-const VideoPlayerModule = ({ backgroundImage, videoData, selectVideo }) => {
+const VideoPlayerModule: React.FC<IVideoPlayerModule> = ({
+  backgroundImage,
+  videoData,
+  selectVideo
+}) => {
   const {
     videoTitle,
     videoModuleDescription,
@@ -11,7 +16,7 @@ const VideoPlayerModule = ({ backgroundImage, videoData, selectVideo }) => {
     baseURL,
     mediaId,
     demo
-  } = videoData;
+  } = videoData || {};
   return (
     <div className="video-module-wrapper">
       <h3 className="video-module-title">{videoModuleTitle}</h3>
