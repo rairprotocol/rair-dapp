@@ -38,12 +38,6 @@ module "staging" {
   escalation_policy = pagerduty_escalation_policy.devops.id
 }
 
-module "qa" {
-  source            = "./each_env"
-  name              = "QA"
-  escalation_policy = pagerduty_escalation_policy.devops.id
-}
-
 module "prod" {
   source            = "./each_env"
   name              = "Prod"
