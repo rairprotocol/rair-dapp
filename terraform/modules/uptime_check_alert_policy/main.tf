@@ -1,6 +1,6 @@
 
 resource "google_monitoring_alert_policy" "rairnode_uptime" {
-  display_name          = "Rairnode Uptime"
+  display_name          = var.display_name
 
   enabled               = true
   combiner              = "OR"
@@ -15,7 +15,7 @@ resource "google_monitoring_alert_policy" "rairnode_uptime" {
     display_name = "Uptime Check on ${var.uptime_check_name}"
 
     condition_threshold {
-      filter                 = "resource.type = \"uptime_url\" AND metric.type = \"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id = \"${var.uptime_check_name}\""
+      filter                 = "resource.type = \"uptime_url\" AND metric.type = \"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.labels.check_id = \"${var.uptime_check_id}\""
       duration               = "0s"
       comparison             = "COMPARISON_GT"
 
