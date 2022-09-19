@@ -128,10 +128,15 @@ exports.getAll = (Model, options = {}) =>
         .paginate();
     }
 
-    const doc = await features.query.find();
+    let doc = await features.query.find();
     if (!doc || doc.length < 1) {
       return next(new AppError('No doc found', 404));
     }
+
+    if (options.dataTransform) {
+      doc = await options.dataTransform.func(doc, ..._.map(_.get(options, 'dataTransform.parameters', []), (v) => _.get(req, v, v)));
+    }
+
     // SEND RESPONSE
     return res.status(200).json({
       success: true,

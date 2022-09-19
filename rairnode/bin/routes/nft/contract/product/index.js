@@ -321,7 +321,7 @@ module.exports = (context) => {
       });
 
       // verify the user have needed tokens for unlock the files
-      files = await verifyAccessRightsToFile(req.user, files);
+      files = await verifyAccessRightsToFile(files, req.user);
 
       res.json({ success: true, files });
     } catch (err) {
