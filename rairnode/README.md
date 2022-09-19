@@ -124,6 +124,7 @@ Provide ability to make some specific actions on the platform
       * [x] /favorites - GET - get list of favorites token for current user, [see details here](readme/get_list_of_favoriteTokens.md)
           * [x] /:id - DELETE - remove favorite token for current user, [see details here](readme/delete_favoriteToken.md)
       * [x] /locks - GET - get all locks for specific product, [see details here](readme/get_product_locks_v2.md)
+      * [x] /files - GET - get files for specific product, [see details here](readme/get_files_by_product_v2.md) 
       * [x] /products - Return all Products (Query string supported) [see details here](readme/common_get_all.md)
           * [x] /:productId - return one found by ID [see details here](readme\get_product_by_id)
           * [x] /user/:userAddress - return one found by user adress (adresses are stored in contract) (Query string supported) [see details here](readme\get_products_by_user_adress)

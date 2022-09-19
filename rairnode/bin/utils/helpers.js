@@ -16,7 +16,7 @@ const execPromise = (command, options = {}) => new Promise((resolve, reject) => 
   });
 });
 
-const verifyAccessRightsToFile = (user, files) => Promise.all(_.map(files, async (file) => {
+const verifyAccessRightsToFile = (files, user) => Promise.all(_.map(files, async (file) => {
   const clonedFile = _.assign({ isUnlocked: false }, file.toObject());
   const ownsTheAccessTokens = [];
 

@@ -181,7 +181,7 @@ module.exports = () => {
         const totalNumber = await File.count(searchQuery);
 
         // verify the user have needed tokens for unlock the files
-        data = await verifyAccessRightsToFile(req.user, data);
+        data = await verifyAccessRightsToFile(data, req.user);
 
         const list = _.chain(data)
           .reduce((result, value) => {

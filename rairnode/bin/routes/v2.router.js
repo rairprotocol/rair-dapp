@@ -1,6 +1,7 @@
 const express = require('express');
 const searchController = require('../search/search.Controller');
 const contractsController = require('../contracts/contracts.Controller');
+const filesController = require('../files/files.Controller');
 const uploadController = require('../media/uploadController');
 const productsController = require('../products/product.Controller');
 const tokensController = require('../tokens/tokens.Controller');
@@ -16,6 +17,7 @@ module.exports = () => {
   const router = express.Router();
   router.use('/search', searchController);
   router.use('/contracts', contractsController);
+  router.use('/files', filesController);
   router.use('/products', productsController);
   router.use('/tokens', tokensController());
   router.use('/locks', locksController());
