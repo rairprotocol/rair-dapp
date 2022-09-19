@@ -242,7 +242,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
             setBuyingToken(true);
             // If currentUserAddress isn't set then the user hasn't connected their wallet
             if (!currentUserAddress) {
-              await connectUserData();
+              await connectUserData?.();
               setBuyingToken(false);
               return;
             }

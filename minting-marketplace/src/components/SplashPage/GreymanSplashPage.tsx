@@ -171,7 +171,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
 
   const buyGrayman = async () => {
     if (!currentUserAddress) {
-      connectUserData();
+      connectUserData?.();
       return;
     }
     if (currentChain !== GreymanChainId) {

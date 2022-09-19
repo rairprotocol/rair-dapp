@@ -5,7 +5,7 @@ export interface IAgreementsPropsType {
   contractAddress: string;
   requiredBlockchain: BlockchainType;
   offerIndex: number[];
-  connectUserData: () => void;
+  connectUserData?: () => void;
   diamond: boolean;
   customSuccessAction: (nextToken: number) => void;
   blockchainOnly?: boolean;
@@ -20,7 +20,7 @@ export interface IPurchaseTokenButtonProps {
   requiredBlockchain: BlockchainType;
   offerIndex: number[];
   buttonLabel: string;
-  connectUserData: () => void;
+  connectUserData?: () => void;
   presaleMessage: string | React.ReactNode;
   diamond: boolean;
   customSuccessAction: (nextToken: number) => void;

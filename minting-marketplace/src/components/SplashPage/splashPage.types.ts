@@ -8,7 +8,7 @@ export interface INumberedCircle {
 
 export interface ISplashPageProps {
   loginDone?: boolean;
-  connectUserData: () => Promise<void>;
+  connectUserData?: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
 }
 
