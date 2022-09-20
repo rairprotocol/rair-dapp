@@ -23,14 +23,18 @@ provider "vault" {
   token = var.vault_token
 }
 
+locals {
+  gke_nat_gateway_ip = "34.127.63.233"
+}
+
 module "vault_config" {
   source = "../../../modules/vault_config"
 
   rairnode_app_role_authorized_login_cidr_ranges = [
-    # "0.0.0.0/0"
+    "${local.gke_nat_gateway_ip}/32"
   ]
   blockchain_network_app_role_authorized_login_cidr_ranges = [
-    # "0.0.0.0/0"
+    "${local.gke_nat_gateway_ip}/32"
   ]
   media_service_app_role_authorized_login_cidr_ranges = [
     # "0.0.0.0/0"

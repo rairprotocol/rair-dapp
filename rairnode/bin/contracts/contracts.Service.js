@@ -104,7 +104,6 @@ exports.getFullContracts = async (req, res, next) => {
       pageNum = '1',
       itemsPerPage = '20',
       blockchain = '',
-      category = '',
       contractAddress = '',
       contractId = '',
       addOffers = true,
@@ -117,18 +116,9 @@ exports.getFullContracts = async (req, res, next) => {
     const contractIdArr = contractId.split(',');
     const addOffersFlag = addOffers * 1;
     const addLocksFlag = addLocks * 1;
-    const foundCategory = await Category.findOne({
-      name: category,
-    });
     const options = [Contract.lookupProduct, { $unwind: '$products' }];
     if (addLocksFlag) {
       options.push(Contract.lookupLockedTokens, { $unwind: '$tokenLock' });
-    }
-    if (foundCategory) {
-      _.set(options[0], '$lookup.let.categoryF', foundCategory._id);
-      _.set(options[0], '$lookup.pipeline[0].$match.$expr.$and[1]', {
-        $eq: ['$category', '$$categoryF'],
-      });
     }
     if (addOffersFlag) {
       options.push(
