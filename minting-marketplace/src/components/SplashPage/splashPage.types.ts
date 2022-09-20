@@ -488,5 +488,9 @@ export interface IWarningModal {
 }
 
 export interface ISplashPageMainBlock {
-  splashData: TSplashDataType;
+  widthDiff?: string;
+  heightDiff?: string;
+  bgColor?: string;
+  children: React.ReactNode;
+  borderRadius: string;
 }
