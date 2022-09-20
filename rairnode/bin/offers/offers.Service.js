@@ -1,5 +1,3 @@
-// const contractService = require('../contracts/contracts.Service');
-// const productctService = require('../products/product.Service');
 const _ = require('lodash');
 const { Offer } = require('../models');
 const eFactory = require('../utils/entityFactory');
@@ -13,12 +11,15 @@ exports.getOfferIndexesByContractAndProduct = async (req, res, next) => {
     const { product } = req.query;
 
     if (contract.diamond) {
-      const offers = await Offer
-        .find({ contract: contract._id, product })
-        .distinct('diamondRangeIndex');
+      const offers = await Offer.find({
+        contract: contract._id,
+        product,
+      }).distinct('diamondRangeIndex');
 
       if (_.isEmpty(offers)) {
-        return res.status(404).send({ success: false, message: 'Offers not found.' });
+        return res
+          .status(404)
+          .send({ success: false, message: 'Offers not found.' });
       }
 
       req.offers = offers;
