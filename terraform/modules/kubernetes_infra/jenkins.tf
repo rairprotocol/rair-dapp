@@ -18,8 +18,7 @@ resource "kubernetes_persistent_volume_claim" "claim" {
     access_modes = ["ReadWriteOnce"]
     resources {
       requests = {
-        storage = "20Gi"
-        
+        storage = "50Gi"
       }
     }
   }

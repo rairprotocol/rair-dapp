@@ -29,6 +29,9 @@ This EP brings together v1 EP:
 
 **Query parameters:**
 
+  "category" removed on V2
+
+
 ```json
 {
   "pageNum": {
@@ -49,13 +52,6 @@ This EP brings together v1 EP:
       "type": "string"
     }
   },
-  // to be removed
-  "category": {
-    "required": false,
-    "content": {
-      "type": "string"
-    }
-  },      
   "contractAddress": {
     "required": false,
     "content": {

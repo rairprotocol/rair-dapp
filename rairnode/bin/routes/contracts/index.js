@@ -1,6 +1,11 @@
 const express = require('express');
 const _ = require('lodash');
-const { JWTVerification, validation, isAdmin, isSuperAdmin } = require('../../middleware');
+const {
+  JWTVerification,
+  validation,
+  isAdmin,
+  isSuperAdmin,
+} = require('../../middleware');
 const {
   importContractData,
 } = require('../../integrations/ethers/importContractData');
@@ -13,16 +18,13 @@ module.exports = (context) => {
   async function getContractsByUser(user, res, next) {
     // Contex is part of global scope
     try {
-      const contracts = await context.db.Contract.find(
-        user ? { user } : {},
-        {
-          _id: 1,
-          contractAddress: 1,
-          title: 1,
-          blockchain: 1,
-          diamond: 1,
-        },
-      );
+      const contracts = await context.db.Contract.find(user ? { user } : {}, {
+        _id: 1,
+        contractAddress: 1,
+        title: 1,
+        blockchain: 1,
+        diamond: 1,
+      });
       return res.json({ success: true, contracts });
     } catch (e) {
       return next(e);
@@ -159,11 +161,12 @@ module.exports = (context) => {
         });
 
         if (foundBlockchain.length >= 1) {
-          options.unshift({ $match: {
-            blockchain: {
-              $in: [...blockchainArr],
+          options.unshift({
+            $match: {
+              blockchain: {
+                $in: [...blockchainArr],
+              },
             },
-          },
           });
         }
 
@@ -198,17 +201,13 @@ module.exports = (context) => {
   });
 
   // Get list of contracts for specific user
-  router.get(
-    'byUser/:userId',
-    JWTVerification,
-    async (req, res, next) => {
-      const userFound = await context.db.User.findOne({
-        _id: req.params.userId,
-      });
-      const { publicAddress: user } = userFound;
-      await getContractsByUser(user, res, next);
-    },
-  );
+  router.get('byUser/:userId', JWTVerification, async (req, res, next) => {
+    const userFound = await context.db.User.findOne({
+      _id: req.params.userId,
+    });
+    const { publicAddress: user } = userFound;
+    await getContractsByUser(user, res, next);
+  });
 
   // Get specific contract by ID
   router.get('/singleContract/:contractId', async (req, res, next) => {

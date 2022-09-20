@@ -20,7 +20,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 ###############################################
 
 WORKDIR /usr/src/rairnode-prod
-COPY --from=build /usr/src/rairnode-prod /usr/src/rairnode
+COPY --from=build /usr/src/rairnode-prod /usr/src/rairnode-prod
 
 EXPOSE 3000
 EXPOSE 5000

@@ -10,3 +10,7 @@ output "complete_output" {
     "vpc_cidr_ranges": module.vpc_cidr_ranges.network_cidr_blocks
   }
 }
+
+output "pagerduty_primary_monitoring_notification_name" {
+  value = google_monitoring_notification_channel.pagerduty_primary.name
+}
