@@ -486,3 +486,7 @@ export interface IWarningModal {
   bad?: string;
   good?: string;
 }
+
+export interface ISplashPageMainBlock {
+  splashData: TSplashDataType;
+}

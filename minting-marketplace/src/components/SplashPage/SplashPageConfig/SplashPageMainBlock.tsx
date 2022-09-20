@@ -1,12 +1,23 @@
 import React from 'react';
-import { ISplashPageProps } from '../splashPage.types';
-import { SplashMainBlockWrapper } from './SplashMainBlockStyled.styles';
+import { ISplashPageMainBlock } from '../splashPage.types';
+import {
+  ImageBlock,
+  MainBlockImage,
+  SplashMainBlockWrapper
+} from './SplashMainBlockStyled.styles';
 
-const SplashPageMainBlock: React.FC<ISplashPageProps> = ({
-  connectUserData
+const SplashPageMainBlock: React.FC<ISplashPageMainBlock> = ({
+  splashData
 }) => {
   return (
     <SplashMainBlockWrapper bgColor="#ffffff">
+      <MainBlockImage>
+        <ImageBlock
+          src={splashData.backgroundImage}
+          widthDiff={'488px'}
+          heightDiff="488px"
+        />
+      </MainBlockImage>
       Splash Page Main Block
     </SplashMainBlockWrapper>
   );
