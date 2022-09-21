@@ -4,7 +4,7 @@ const { getContractsByBlockchainAndContractAddress } = require('../contracts/con
 const { getOfferIndexesByContractAndProduct } = require('../offers/offers.Service');
 const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.Service');
 const upload = require('../Multer/Config');
-const { dataTransform, validation, JWTVerification } = require('../middleware');
+const { dataTransform, validation, JWTVerification, isAdmin } = require('../middleware');
 
 module.exports = () => {
   const router = express.Router();
@@ -12,6 +12,7 @@ module.exports = () => {
   router.post(
     '/',
     JWTVerification,
+    isAdmin,
     upload.array('files', 2),
     dataTransform(['attributes']),
     validation('createCommonTokenMetadata'),
