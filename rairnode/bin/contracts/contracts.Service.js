@@ -9,12 +9,6 @@ const {
 
 exports.getAllContracts = eFactory.getAll(Contract);
 
-exports.findContractsByUser = async (user) =>
-  Contract.find({ user }, Contract.defaultProjection);
-
-exports.getContractsIdsForUser = async (user) =>
-  Contract.find({ user }, Contract.defaultProjection).distinct('_id');
-
 exports.getContractById = async (req, res, next) => {
   try {
     const contract = await Contract.findById(
@@ -91,12 +85,6 @@ exports.getContractsByBlockchainAndContractAddress = async (req, res, next) => {
     return next(e);
   }
 };
-
-exports.findContractsByUser = async (user) =>
-  Contract.find({ user }, Contract.defaultProjection);
-
-exports.getContractsIdsForUser = async (user) =>
-  Contract.find({ user }, Contract.defaultProjection).distinct('_id');
 
 exports.getFullContracts = async (req, res, next) => {
   try {

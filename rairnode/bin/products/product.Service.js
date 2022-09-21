@@ -1,6 +1,5 @@
-const contractService = require('../contracts/contracts.Service');
 const APIFeatures = require('../utils/apiFeatures');
-const { Product: ProductModel } = require('../models');
+const { Product: ProductModel, Contract } = require('../models');
 
 const eFactory = require('../utils/entityFactory');
 
@@ -16,7 +15,7 @@ exports.getProductById = async (req, res, next) => {
 
 exports.getProductsByUser = async (req, res, next) => {
   try {
-    const contractIds = await contractService.getContractsIdsForUser(
+    const contractIds = await Contract.getContractsIdsForUser(
       req.params.userAddress.toLowerCase(),
     );
     if (!contractIds || contractIds.length === 0) {
