@@ -132,10 +132,10 @@ export type TCounterData = {
 
 export type TSplashDataType = {
   LicenseName?: string;
-  title?: string | null;
+  title?: string;
   titleColor?: string;
   titleImage?: string;
-  description?: string[] | string | null;
+  description?: string[] | string;
   textDescriptionCustomStyles?: React.CSSProperties;
   seoInformation?: TSeoInformationType;
   backgroundImage?: string;

@@ -1,21 +1,15 @@
 import React from 'react';
-import { IMainBlockInfoText } from '../splashConfig.types';
-import {
-  MainBlockTextContainer,
-  MainBlockTitle
-} from '../styles/MainBlockTextContainer';
+import { TMainBlockInfoText } from '../splashConfig.types';
+import { StyledMainBlockTextContainer } from '../styles/MainBlockTextContainer';
 
-const MainBlockInfoText: React.FC<IMainBlockInfoText> = ({
-  splashData,
-  color,
-  fontSize,
-  children
+const MainBlockInfoText: React.FC<TMainBlockInfoText> = ({
+  children,
+  margin
 }) => {
   return (
-    <MainBlockTextContainer>
+    <StyledMainBlockTextContainer margin={margin}>
       {children}
-      {/* {splashData.title && <MainBlockTitle color={color} fontSize={fontSize} />} */}
-    </MainBlockTextContainer>
+    </StyledMainBlockTextContainer>
   );
 };
 
