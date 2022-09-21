@@ -8,11 +8,13 @@ import {
 const MainBlockInfoText: React.FC<IMainBlockInfoText> = ({
   splashData,
   color,
-  fontSize
+  fontSize,
+  children
 }) => {
   return (
     <MainBlockTextContainer>
-      {splashData.title && <MainBlockTitle color={color} fontSize={fontSize} />}
+      {children}
+      {/* {splashData.title && <MainBlockTitle color={color} fontSize={fontSize} />} */}
     </MainBlockTextContainer>
   );
 };

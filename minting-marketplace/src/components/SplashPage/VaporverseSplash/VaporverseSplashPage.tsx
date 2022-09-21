@@ -35,6 +35,11 @@ import {
 } from '../splashPage.types';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../SplashPageConfig/theme.styled';
+import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
+import { ImageBlock } from '../SplashPageConfig/styles/SplashMainBlockStyled.styles';
+import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
 
 const splashData: TSplashDataType = {
   title: null,
@@ -181,6 +186,22 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
           }}
         />
         <AuthorCard {...{ splashData, connectUserData, toggleCheckList }} />
+
+        {/* <ThemeProvider theme={theme}>
+          <SplashPageMainBlock
+            bgColor="#DFDFDF"
+            widthDiff="90vw"
+            heightDiff="563px"
+            borderRadius="0">
+            <MainBlockInfoText />
+            <ImageBlock
+              src={splashData.backgroundImage}
+              widthDiff="609px"
+              heightDiff="320px"
+            />
+          </SplashPageMainBlock>
+        </ThemeProvider> */}
+
         <PurchaseChecklist
           toggleCheckList={toggleCheckList}
           openCheckList={openCheckList}

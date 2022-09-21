@@ -6,3 +6,8 @@ export interface IMainBlockInfoText {
   color: string;
   fontSize: string;
 }
+
+export type TMainBlockTitle = {
+  color: string;
+  fontSize: string;
+};
