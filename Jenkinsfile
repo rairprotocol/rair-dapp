@@ -198,7 +198,7 @@ pipeline {
               withEnv(['PATH+EXTRA=/busybox']) {
                 sh '''#!/busybox/sh -xe
                   /kaniko/executor \
-                    --dockerfile Dockerfile.prod-new \
+                    --dockerfile Dockerfile.prod \
                     --context ./minting-marketplace/ \
                     --verbosity debug \
                     --cleanup \
