@@ -7,11 +7,12 @@ export type TDefaultThemeType = {
   mobile: string;
 };
 
-export type ISplashMainBlockWrapper = {
+export type TStyledSplashMainBlockWrapper = {
   widthDiff?: string;
   heightDiff?: string;
   bgColor?: string;
   borderRadius: string;
+  backgroundImage?: string;
 };
 
 export type IImageBlock = {
@@ -20,7 +21,7 @@ export type IImageBlock = {
   marginLeft?: string;
 };
 
-export const SplashMainBlockWrapper = styled.div<ISplashMainBlockWrapper>`
+export const SplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,6 +29,7 @@ export const SplashMainBlockWrapper = styled.div<ISplashMainBlockWrapper>`
   background-color: ${({ bgColor }) => bgColor || 'none'};
   width: ${({ widthDiff }) => widthDiff || '1200px'};
   height: ${({ heightDiff }) => heightDiff || '694px'};
+  background-image: ${({ backgroundImage }) => backgroundImage};
 `;
 
 export const ImageBlock = styled.img<IImageBlock>`

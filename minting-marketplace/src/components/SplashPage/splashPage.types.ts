@@ -486,11 +486,3 @@ export interface IWarningModal {
   bad?: string;
   good?: string;
 }
-
-export interface ISplashPageMainBlock {
-  widthDiff?: string;
-  heightDiff?: string;
-  bgColor?: string;
-  children: React.ReactNode;
-  borderRadius: string;
-}

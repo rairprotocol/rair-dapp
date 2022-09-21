@@ -1,7 +1,15 @@
 import { TSplashDataType } from '../splashPage.types';
+import { TStyledSplashMainBlockWrapper } from './styles/SplashMainBlockStyled.styles';
+
+export type TSplashPageMainBlock = TStyledSplashMainBlockWrapper & {
+  children: React.ReactNode;
+};
 
 export interface ISplashPageWrapper {
   splashData: TSplashDataType;
+  loginDone?: boolean;
+  connectUserData?: () => Promise<void>;
+  setIsSplashPage?: (isSplashPage: boolean) => void;
 }
 
 export interface IMainBlockDescription {

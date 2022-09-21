@@ -1,20 +1,22 @@
 import React from 'react';
-import { ISplashPageMainBlock } from '../../splashPage.types';
+import { TSplashPageMainBlock } from '../splashConfig.types';
 import { SplashMainBlockWrapper } from '../styles/SplashMainBlockStyled.styles';
 
-const SplashPageMainBlock: React.FC<ISplashPageMainBlock> = ({
+const SplashPageMainBlock: React.FC<TSplashPageMainBlock> = ({
   widthDiff,
   heightDiff,
   bgColor,
   children,
-  borderRadius
+  borderRadius,
+  backgroundImage
 }) => {
   return (
     <SplashMainBlockWrapper
       bgColor={bgColor}
       widthDiff={widthDiff}
       heightDiff={heightDiff}
-      borderRadius={borderRadius}>
+      borderRadius={borderRadius}
+      backgroundImage={backgroundImage}>
       {children}
     </SplashMainBlockWrapper>
   );
