@@ -190,9 +190,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       buttonAction: () => window.open('https://twitter.com/SIMDogsXYZ')
     },
     button3: {
-      buttonMarginTop: currentUserAddress === undefined ? '0' : '2vw',
-      buttonMarginBottom: currentUserAddress === undefined ? '0' : '6vw',
-      // buttonBorder: null,
       buttonTextColor: '#FFFFFF',
       buttonColor: '#55CFFF',
       buttonLabel: 'PREMINT',
