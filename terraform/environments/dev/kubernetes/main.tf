@@ -41,8 +41,8 @@ module "kubernetes_infra" {
   rairnode_configmap_data                  = local.rairnode_configmap
   minting_network_configmap_data           = local.minting_network_configmap
   blockchain_event_listener_configmap_data = local.blockchain_event_listener_configmap
-  media_service_configmap_data             = local. media_service_configmap
+  media_service_configmap_data             = local.media_service_configmap
   pull_secret_name                         = "regcred"
-  enable_public_ingress_rairnode           = false
-  enable_public_ingress_minting_marketplace= false
+  enable_public_ingress_rairnode           = true
+  enable_public_ingress_minting_marketplace= true
 }
