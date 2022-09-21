@@ -301,7 +301,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
                   />
                 ),
                 customClass: {
-                  popup: `bg-${primaryColor} genesis-radius genesis-resp `,
+                  popup: `bg-${primaryColor} genesis-radius simdog-resp `,
                   title: 'text-simdogs'
                 },
                 showConfirmButton: false

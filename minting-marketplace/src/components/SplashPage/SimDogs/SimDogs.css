@@ -261,9 +261,14 @@
 .genesis-radius {
   border-radius: 1rem;
 }
-.genesis-resp {
+
+.simdog-resp {
+  display: flex !important;
+  flex-direction: column;
+  height: 90vh;
   width: 80%;
 }
+
 .genesis-textCenter {
   text-align: center !important;
 }
@@ -333,7 +338,7 @@
   color: green;
 }
 
-/* the images */
+/* warning modal */
 
 .main-wrapper-nyc-simdogs {
   display: flex;
@@ -344,11 +349,9 @@
 }
 
 .main-wrapper-nyc-simdogs img {
-  width: 395px;
-  height: 700px;
+  width: 33vmin;
+  height: 58.28vmin;
 }
-
-/**/
 
 .bad-simdogs {
   flex: 1;
@@ -364,16 +367,24 @@
   color: green;
 }
 
+.bad-simdogs div {
+  padding: 0.7rem;
+}
+
+.good-simdogs div {
+  padding: 0.7rem;
+}
+
 .swal2-title.text-simdogs {
   color: #f15621;
   /* margin-top: 1rem; */
   font-family: 'Aldrich', sans-serif;
-  height: 120px;
+  height: 7vw;
   margin-top: 50px;
 }
 
 div#swal2-html-container.swal2-html-container {
-  margin-bottom: 0px;
+  margin: 0px;
 }
 
 /**/
@@ -515,17 +526,18 @@ div#swal2-html-container.swal2-html-container {
 }
 /**/
 
-@media screen and (max-width: 4200px) and (min-width: 2001px) {
+@media screen and (max-width: 1500px) {
+  /* warning modal */
+  .main-wrapper-nyc-simdogs img {
+    width: 30vmin;
+    height: 52.98vmin;
+  }
+
   .swal2-title.text-simdogs {
-    font-size: 2rem;
+    height: 10vw;
   }
-  .main-wrapper-nyc h3 {
-    font-size: 5.75rem;
-  }
-  .genesis-resp {
-    height: 90vh;
-    width: 80%;
-  }
+
+  /**/
 }
 
 @media screen and (max-width: 1330px) {
@@ -534,8 +546,8 @@ div#swal2-html-container.swal2-html-container {
   }
 
   .main-wrapper-nyc-simdogs img {
-    width: 24.85vw;
-    height: 42vw;
+    width: 24.85vmin;
+    height: 42vmin;
   }
 
   .wrapper-splash-page.simdogs .backstory-text {
@@ -760,6 +772,18 @@ div#swal2-html-container.swal2-html-container {
 }
 
 @media screen and (max-width: 1100px) {
+  /* warning modal */
+  .main-wrapper-nyc-simdogs img {
+    width: 25vmin;
+    height: 44.15vmin;
+  }
+
+  .swal2-title.text-simdogs {
+    height: 14vw;
+  }
+
+  /**/
+
   /* need help button */
 
   .wrapper-splash-page.simdogs .btn-submit-with-form.need-help {
@@ -1039,7 +1063,23 @@ div#swal2-html-container.swal2-html-container {
   }
 }
 
+@media screen and (max-width: 850px) {
+  .bad-simdogs {
+    font-size: 1.2rem;
+  }
+
+  .good-simdogs {
+    font-size: 1.2rem;
+  }
+}
+
 @media screen and (max-width: 800px) {
+  .swal2-title.text-simdogs {
+    height: 14vmin;
+    margin-top: 10vw;
+    font-size: 3vmin;
+  }
+
   .warning-modal-col-0 {
     width: 37%;
   }
@@ -1058,14 +1098,6 @@ div#swal2-html-container.swal2-html-container {
 }
 
 @media screen and (max-width: 700px) {
-  .bad-simdogs {
-    font-size: 1.2rem;
-  }
-
-  .good-simdogs {
-    font-size: 1.2rem;
-  }
-
   .wrapper-splash-page.simdogs .left-tokens-response {
     margin-top: 90px;
   }
@@ -1163,6 +1195,10 @@ div#swal2-html-container.swal2-html-container {
 }
 
 @media screen and (max-width: 600px) {
+  /* modal img */
+  .swal2-title.text-simdogs {
+    height: 20vw;
+  }
   /* carousel styles - breakpoint*/
   .wrapper-splash-page.simdogs .carousel-container .join-pic-img {
     width: 50vw;
@@ -1245,13 +1281,9 @@ div#swal2-html-container.swal2-html-container {
   }
 
   .swal2-title.text-simdogs {
-    height: 200px;
+    height: 14vmin;
     margin-top: 10vw;
-    font-size: 5vw;
-  }
-
-  div#swal2-html-container.swal2-html-container {
-    margin-bottom: 240px;
+    font-size: 3vmin;
   }
 
   .wrapper-splash-page.simdogs .left-tokens-content .tokens-description p {
@@ -1351,6 +1383,14 @@ div#swal2-html-container.swal2-html-container {
   }
   .wrapper-splash-page.simdogs .splash-team {
     margin-bottom: 900px;
+  }
+
+  .bad-simdogs {
+    font-size: 0.6rem;
+  }
+
+  .good-simdogs {
+    font-size: 0.6rem;
   }
 }
 
