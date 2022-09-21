@@ -26,7 +26,7 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
           setLoading(false);
         });
     } catch (e) {
-      console.info(e);
+      setMyFavoriteItems(null);
       setLoading(false);
     }
   }, []);
@@ -48,7 +48,7 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
               }
             });
         } catch (e) {
-          console.info(e);
+          // console.info(e);
         }
       }
     }
@@ -70,7 +70,8 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
         </div>
       ) : (
         <div className="my-items-product-wrapper row favorite">
-          {myFavoriteItems &&
+          {myFavoriteItems ? (
+            myFavoriteItems.doc &&
             myFavoriteItems.doc
               .filter((el) =>
                 el.token.metadata.name
@@ -85,7 +86,10 @@ const PersonalProfileFavoritesTab: React.FC<IPersonalProfileFavoritesTab> = ({
                     removeFavotite={removeFavotite}
                   />
                 );
-              })}
+              })
+          ) : (
+            <p style={{ fontSize: '20px' }}>You don`t have any favorites</p>
+          )}
         </div>
       )}
     </div>
