@@ -40,6 +40,12 @@ import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
 import { useGetProducts } from '../splashPageProductsHook';
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../SplashPageConfig/theme.styled';
+import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
+import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
+import { ImageBlock } from '../SplashPageConfig/styles/SplashMainBlockStyled.styles';
+import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -264,6 +270,44 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
             lightTheme: 'rgb(3, 91, 188)'
           }}
         />
+
+        <ThemeProvider theme={theme}>
+          <SplashPageMainBlock
+            backgroundImage={splashData.backgroundImage}
+            bgColor="#FFFFFF"
+            widthDiff="90vw"
+            heightDiff="563px"
+            borderRadius="24px">
+            <MainBlockInfoText margin={'112px 44px 62px 88px'}>
+              <MainTitleBlock
+                color="#A7A6A6"
+                fontSize="24px"
+                fontWeight={800}
+                text={splashData.title}
+                fontFamily={"Cooper Std Black', sans-serif"}
+                lineHeight={''}
+                textMargin={'0 0 0 0'}
+                textPadding={'0 0 0 0'}
+              />
+              <MainTitleBlock
+                color="#A7A6A6"
+                fontSize="24px"
+                fontWeight={'normal'}
+                text={splashData.description}
+                fontFamily={"Cooper Std Black', sans-serif"}
+                lineHeight={''}
+                textMargin={'0 0 0 0'}
+                textPadding={'0 0 0 0'}
+              />
+            </MainBlockInfoText>
+            <ImageBlock
+              src={splashData.backgroundImage}
+              widthDiff="609px"
+              heightDiff="320px"
+            />
+          </SplashPageMainBlock>
+        </ThemeProvider>
+
         <AuthorCard {...{ splashData, connectUserData }} />
         <TokenLeftTemplate
           counterData={splashData.counterData}

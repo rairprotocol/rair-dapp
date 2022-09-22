@@ -49,6 +49,11 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import WarningModal from '../WarningModal';
+import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
+import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../SplashPageConfig/theme.styled';
+import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
 // import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -283,6 +288,39 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
             customButtonBlock
           }}
         />
+
+        <ThemeProvider theme={theme}>
+          <SplashPageMainBlock
+            // backgroundImage={splashData.backgroundImage}
+            bgColor="#FFFFFF"
+            widthDiff="85vw"
+            heightDiff="563px"
+            borderRadius="24px">
+            <MainBlockInfoText margin={'112px 44px 62px 88px'}>
+              <MainTitleBlock
+                color="#A7A6A6"
+                fontSize="24px"
+                fontWeight={800}
+                text={splashData.title}
+                fontFamily={"Cooper Std Black', sans-serif"}
+                lineHeight={''}
+                textMargin={'0 0 0 0'}
+                textPadding={'0 0 0 0'}
+              />
+              <MainTitleBlock
+                color="#A7A6A6"
+                fontSize="24px"
+                fontWeight={'normal'}
+                text={splashData.description}
+                fontFamily={"Cooper Std Black', sans-serif"}
+                lineHeight={''}
+                textMargin={'0 0 0 0'}
+                textPadding={'0 0 0 0'}
+              />
+            </MainBlockInfoText>
+          </SplashPageMainBlock>
+        </ThemeProvider>
+
         <div className="btn-submit-with-form need-help">
           <button
             className="genesis-font"
