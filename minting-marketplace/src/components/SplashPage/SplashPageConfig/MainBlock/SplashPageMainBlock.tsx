@@ -1,6 +1,6 @@
 import React from 'react';
 import { TSplashPageMainBlock } from '../splashConfig.types';
-import { SplashMainBlockWrapper } from '../styles/SplashMainBlockStyled.styles';
+import { SplashMainBlockWrapper } from '../styles/SplashMainBlockStyled.styled';
 
 const SplashPageMainBlock: React.FC<TSplashPageMainBlock> = ({
   widthDiff,

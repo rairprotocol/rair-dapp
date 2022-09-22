@@ -1,25 +1,8 @@
 import styled from 'styled-components';
-
-export type TDefaultThemeType = {
-  colors: {
-    mainBlock: string;
-  };
-  mobile: string;
-};
-
-export type TStyledSplashMainBlockWrapper = {
-  widthDiff?: string;
-  heightDiff?: string;
-  bgColor?: string;
-  borderRadius: string;
-  backgroundImage?: string;
-};
-
-export type IImageBlock = {
-  widthDiff?: string;
-  heightDiff?: string;
-  marginLeft?: string;
-};
+import {
+  TStyledImageBlock,
+  TStyledSplashMainBlockWrapper
+} from '../splashConfig.types';
 
 export const SplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
   display: flex;
@@ -32,8 +15,8 @@ export const SplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
   background-image: ${({ backgroundImage }) => backgroundImage};
 `;
 
-export const ImageBlock = styled.img<IImageBlock>`
+export const StyledImageBlock = styled.img<TStyledImageBlock>`
   width: ${({ widthDiff }) => widthDiff || '1200px'};
   height: ${({ heightDiff }) => heightDiff || '694px'};
-  margin-right: ${({ marginLeft }) => marginLeft || '35px'};
+  margin: ${({ imageMargin }) => imageMargin};
 `;

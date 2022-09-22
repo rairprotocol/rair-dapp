@@ -44,7 +44,6 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from '../SplashPageConfig/theme.styled';
 import SplashPageMainBlock from '../SplashPageConfig/MainBlock/SplashPageMainBlock';
 import MainBlockInfoText from '../SplashPageConfig/MainBlock/MainBlockInfoText';
-import { ImageBlock } from '../SplashPageConfig/styles/SplashMainBlockStyled.styles';
 import MainTitleBlock from '../SplashPageConfig/MainBlock/MainTitleBlock';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -271,7 +270,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
           }}
         />
 
-        <ThemeProvider theme={theme}>
+        {/* <ThemeProvider theme={theme}>
           <SplashPageMainBlock
             backgroundImage={splashData.backgroundImage}
             bgColor="#FFFFFF"
@@ -306,7 +305,7 @@ const Wallstreet80sClubSplashPage: React.FC<ISplashPageProps> = ({
               heightDiff="320px"
             />
           </SplashPageMainBlock>
-        </ThemeProvider>
+        </ThemeProvider> */}
 
         <AuthorCard {...{ splashData, connectUserData }} />
         <TokenLeftTemplate

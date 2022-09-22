@@ -1,4 +1,4 @@
-import { TDefaultThemeType } from './styles/SplashMainBlockStyled.styles';
+import { TDefaultThemeType } from './splashConfig.types';
 
 export const theme: TDefaultThemeType = {
   colors: {

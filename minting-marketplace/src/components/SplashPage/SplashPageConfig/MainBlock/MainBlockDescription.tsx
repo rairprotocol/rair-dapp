@@ -1,6 +1,6 @@
 import React from 'react';
 import { IMainBlockDescription } from '../splashConfig.types';
-import { StyledMainBlockDescription } from '../styles/MainBlockTextContainer';
+import { StyledMainBlockDescription } from '../styles/MainBlockTextContainer.styled';
 
 const MainBlockDescription: React.FC<IMainBlockDescription> = ({
   description,

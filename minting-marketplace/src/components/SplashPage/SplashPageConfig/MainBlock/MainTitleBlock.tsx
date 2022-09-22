@@ -1,6 +1,6 @@
 import React from 'react';
 import { TMainTitleBlock } from '../splashConfig.types';
-import { StyledMainBlockTitle } from '../styles/MainBlockTextContainer';
+import { StyledMainBlockTitle } from '../styles/MainBlockTextContainer.styled';
 
 const MainTitleBlock: React.FC<TMainTitleBlock> = ({
   color,
