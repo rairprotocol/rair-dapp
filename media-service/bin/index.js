@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 const log = require('./utils/logger')(module);
 const apiRoutes = require('./routes');
-const { errorHandler } = require('./middleware');
+const errorHandler = require('./utils/errors/mainErrorHandler');
 const config = require('./config');
 
 const { port, serviceHost } = config;
