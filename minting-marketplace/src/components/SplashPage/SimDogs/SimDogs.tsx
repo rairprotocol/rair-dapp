@@ -75,7 +75,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
         },
         buttonTextColor: '#FFFFFF',
         buttonColor: '#384190',
-        buttonLabel: 'Mint on 9/29'
+        buttonLabel: 'Mint on 10/22'
       },
       textBoxArray: [
         '107 unique drawings with various rarity traits',
