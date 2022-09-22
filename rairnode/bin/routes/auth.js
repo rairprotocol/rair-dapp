@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
+const AppError = require('../utils/errors/AppError');
 const {
   checkBalanceProduct,
   checkAdminTokenOwns,
@@ -141,9 +142,7 @@ module.exports = (context) => {
         const file = await context.db.File.findOne({ _id: mediaId });
 
         if (!file) {
-          return res
-            .status(400)
-            .send({ success: false, message: 'No file found' });
+          return next(new AppError('No file found', 400));
         }
 
         const contract = await context.db.Contract.findOne(file.contract);
@@ -192,7 +191,7 @@ module.exports = (context) => {
                 log.info('Verifying user account has the admin token');
               }
             } catch (e) {
-              return next(new Error(`Could not verify account: ${e}`));
+              return next(new AppError(`Could not verify account: ${e}`, 403));
             }
           }
 
@@ -201,9 +200,7 @@ module.exports = (context) => {
             !ownsTheAccessTokens.includes(true) &&
             !file.demo
           ) {
-            return res
-              .status(403)
-              .send({ success: false, message: "You don't have permission." });
+            return next(new AppError("You don't have permission.", 403));
           }
 
           await context.redis.redisService.set(`sess:${req.sessionID}`, {
@@ -215,7 +212,7 @@ module.exports = (context) => {
 
           return res.send({ success: true });
         }
-        return res.status(400).send({ success: false });
+        return next(new AppError('Something went wrong', 400));
       } catch (err) {
         return next(err);
       }
@@ -237,29 +234,22 @@ module.exports = (context) => {
           });
 
           if (_.isNull(user)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'User not found.' });
+            return next(new AppError('User not found.', 404));
           }
 
           try {
             const ownsTheToken = await checkAdminTokenOwns(ethAddress);
 
             if (!ownsTheToken) {
-              return res.json({
-                success: false,
-                message: "You don't hold the current admin token",
-              });
+              return next(new AppError("You don't hold the current admin token", 401));
             }
             return res.json({ success: true, message: 'Admin token holder' });
           } catch (e) {
             log.error(e);
-            return next(new Error('Could not verify account.'));
+            return next(new AppError('Could not verify account.', 401));
           }
         } else {
-          return res
-            .status(400)
-            .send({ success: false, message: 'Incorrect credentials.' });
+          return next(new AppError('Incorrect credentials.', 400));
         }
       } catch (err) {
         return next(err);
@@ -283,9 +273,7 @@ module.exports = (context) => {
           });
 
           if (_.isNull(user)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'User not found.' });
+            return next(new AppError('User not found.', 404));
           }
 
           try {
@@ -298,9 +286,7 @@ module.exports = (context) => {
             log.error(e);
           }
         } else {
-          return res
-            .status(400)
-            .send({ success: false, message: 'Incorrect credentials.' });
+          return next(new AppError('Incorrect credentials.', 400));
         }
 
         jwt.sign(
@@ -312,7 +298,7 @@ module.exports = (context) => {
           process.env.JWT_SECRET,
           { expiresIn: '1d' },
           (err, token) => {
-            if (err) next(new Error('Could not create JWT'));
+            if (err) next(new AppError('Could not create JWT', 401));
             return res.send({ success: true, token });
           },
         );

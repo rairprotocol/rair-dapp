@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
 const { Contract, Blockchain, Category } = require('../models');
-const AppError = require('../utils/appError');
+const AppError = require('../utils/errors/AppError');
 const eFactory = require('../utils/entityFactory');
 const {
   importContractData,
@@ -76,7 +76,7 @@ exports.getContractsByBlockchainAndContractAddress = async (req, res, next) => {
       blockchain: req.query.networkId,
     });
 
-    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+    if (_.isEmpty(contract)) return next(new AppError('Contract not found.', 404));
 
     req.contract = contract;
 

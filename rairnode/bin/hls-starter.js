@@ -1,4 +1,5 @@
 // const HLSServer = require('@rair/hls-server');
+const AppError = require('./utils/errors/AppError');
 const HLSServer = require('./utils/hls-server');
 const streamDecrypter = require('./stream-decrypter');
 const { File } = require('./models');
@@ -12,7 +13,7 @@ module.exports = async () => {
     const vaultRes = await vaultKeyManager.read({
       secretName: mediaId,
       vaultToken,
-    });
+    }).catch((e) => new AppError(`Vault error: ${e}`, 503));
 
     const mongoRes = await File.findOne({ _id: mediaId });
 
@@ -26,7 +27,7 @@ module.exports = async () => {
       return fileData;
     }
 
-    throw new Error('File not found.');
+    return new AppError('File not found.', 404);
   };
 
   return HLSServer({

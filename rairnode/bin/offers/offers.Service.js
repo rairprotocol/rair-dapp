@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const { Offer } = require('../models');
 const eFactory = require('../utils/entityFactory');
 
@@ -17,9 +18,7 @@ exports.getOfferIndexesByContractAndProduct = async (req, res, next) => {
       }).distinct('diamondRangeIndex');
 
       if (_.isEmpty(offers)) {
-        return res
-          .status(404)
-          .send({ success: false, message: 'Offers not found.' });
+        return next(new AppError('Offers not found.', 404));
       }
 
       req.offers = offers;

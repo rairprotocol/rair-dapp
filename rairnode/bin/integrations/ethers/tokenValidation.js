@@ -57,11 +57,11 @@ async function checkBalanceProduct(
     delete provider;
     return result;
   } catch (error) {
-    console.error(
+    log.error(
       'Error querying a range of NFTs on RPC: ',
       endpoints[blockchain]
     );
-    console.error(error);
+    log.error(error);
   }
   return false;
 }
@@ -99,7 +99,7 @@ async function checkBalanceSingle(
       'Error querying a single NFT on RPC: ',
       endpoints[blockchain]
     );
-    console.error(error);
+    log.error(error);
   }
   return false;
 }

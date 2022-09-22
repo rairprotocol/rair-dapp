@@ -1,5 +1,6 @@
 const schemas = require('../schemas');
 const log = require('../utils/logger')(module);
+const AppError = require('../utils/errors/AppError');
 
 module.exports = (schemaName, destination = 'body') => (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ module.exports = (schemaName, destination = 'body') => (req, res, next) => {
 
     log.error(message);
 
-    return res.status(400).json({ success: false, error: true, message });
+    return next(new AppError(`${message}`, 400));
   } catch (err) {
     return next(err);
   }

@@ -1,6 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
+const AppError = require('../utils/errors/AppError');
 
 module.exports = (context) => {
   const router = express.Router();
@@ -95,9 +96,7 @@ module.exports = (context) => {
       ]);
 
       if (_.isEmpty(contract)) {
-        return res
-          .status(404)
-          .send({ success: false, message: 'Product or contract not found.' });
+        return next(new AppError('Product or contract not found.', 404));
       }
 
       const offers = await context.db.Offer.find({
@@ -118,9 +117,7 @@ module.exports = (context) => {
       const totalCount = await context.db.MintedToken.countDocuments(options);
 
       if (_.isEmpty(tokens)) {
-        return res
-          .status(404)
-          .send({ success: false, message: 'Tokens not found.' });
+        return next(new AppError('Tokens not found.', 404));
       }
 
       res.json({

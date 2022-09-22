@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const { retrieveMediaInfo, addPin, removePin, addFolder } = require('../integrations/ipfsService')();
 const upload = require('../Multer/Config');
 const {
@@ -21,7 +22,6 @@ const {
 } = require('../utils/ffmpegUtils');
 const { vaultKeyManager, vaultAppRoleTokenManager } = require('../vault');
 const { verifyAccessRightsToFile } = require('../utils/helpers');
-
 const config = require('../config/index');
 const gcp = require('../integrations/gcp')(config);
 const { textPurify } = require('../utils/helpers');
@@ -216,11 +216,11 @@ module.exports = () => {
     const foundContract = await Contract.findById(contract);
 
     if (!foundContract) {
-      return res.status(404).send({ success: false, message: `Contract ${contract} not found.` });
+      return next(new AppError(`Contract ${contract} not found.`, 404));
     }
 
     if (foundContract.user !== publicAddress && !superAdmin) {
-      return res.status(400).send({ success: false, message: `Contract ${contract} not belong to you.` });
+      return next(new AppError(`Contract ${contract} not belong to you.`, 400));
     }
 
     const foundProduct = await Product.findOne({
@@ -229,13 +229,13 @@ module.exports = () => {
     });
 
     if (!foundProduct) {
-      return res.status(404).send({ success: false, message: `Product ${product} not found.` });
+      return next(new AppError(`Product ${product} not found.`, 404));
     }
 
     const foundCategory = await Category.findOne({ name: category });
 
     if (!foundCategory) {
-      return res.status(404).send({ success: false, message: 'Category not found.' });
+      return next(new AppError('Category not found.', 404));
     }
 
     // Diamond contracts have no offerPools
@@ -254,9 +254,7 @@ module.exports = () => {
 
       offer.forEach((item) => {
         if (!_.includes(foundOffers, item)) {
-          return res
-            .status(404)
-            .send({ success: false, message: `Offer ${item} not found.` });
+          return next(new AppError(`Offer ${item} not found.`, 404));
         }
 
         return true;
@@ -435,7 +433,7 @@ module.exports = () => {
         log.error('An error has occurred encoding the file', e);
       }
     } else {
-      return res.status(400).send({ success: false, message: 'File not provided.' });
+      return next(new AppError('File not provided.', 400));
     }
   });
 

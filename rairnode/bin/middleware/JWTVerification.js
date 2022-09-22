@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const { User } = require('../models');
 
 module.exports = async (req, res, next) => {
@@ -8,7 +9,7 @@ module.exports = async (req, res, next) => {
     const user = await User.findOne({ publicAddress: decoded.eth_addr }, { nonce: 0 });
 
     if (!user) {
-      return next(new Error('User with provided Token is not found in database'));
+      return next(new AppError('User with provided Token is not found in database'), 401);
     }
 
     req.user = _.assign(user.toObject(), { adminRights: decoded.adminRights });

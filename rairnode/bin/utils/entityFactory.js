@@ -1,7 +1,7 @@
 /* eslint-disable implicit-arrow-linebreak */
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const AppError = require('./appError');
+const AppError = require('./errors/AppError');
 const APIFeatures = require('./apiFeatures');
 
 const catchAsync = (fn) => (req, res, next) => {
