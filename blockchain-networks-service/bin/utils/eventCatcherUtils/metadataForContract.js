@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 
+const { BigNumber } = require('ethers');
 const {
   findContractFromAddress,
   updateMetadataForTokens,
@@ -15,7 +16,13 @@ module.exports = async (
   // eslint-disable-next-line no-unused-vars
   appendTokenIndex = true,
   // Assume it's true for the classic contracts that don't have the append index feature
+  metadataExtension = ""
+  // Assume extension is empty for contracts that don't have the extension feature
 ) => {
+  // Because of the fallback system the contract-wide URI will affect
+  // tokens without unique metadata in products without product-wide metadata
+
+  //event UpdatedBaseURI(string newURI, bool appendTokenIndex, string _metadataExtension);
   const contract = await findContractFromAddress(
     transactionReceipt.to
       ? transactionReceipt.to
@@ -24,24 +31,25 @@ module.exports = async (
     transactionReceipt,
     dbModels,
   );
-  log.info(`METADATA FOR CONTRACT =++++++++ > ${contract}`);
 
   if (!contract) {
     return;
   }
   contract.metadataURI = newURI;
   await contract.save();
-  // Find products with common URIs set
+
+  // Find products without general URIs set
   const products = await dbModels.Product.find({
     contract: contract._id,
+    metadataURI: 'none'
   }).distinct('collectionIndexInContract');
 
   let foundOffers = [];
   if (products.length > 0) {
-    // Find the offers tied to the products with common URIs
+    // Find the offers tied to the products without common URIs
     foundOffers = await dbModels.Offer.find({
       contract: contract._id,
-      product: { $nin: products },
+      product: { $in: products },
     }).distinct('offerIndex');
   }
 
@@ -52,6 +60,6 @@ module.exports = async (
     metadataURI: 'none',
   });
   // MB TODO: Same as above... and this is duplicate code
-  updateMetadataForTokens(foundTokensToUpdate, appendTokenIndex, newURI);
+  updateMetadataForTokens(foundTokensToUpdate, appendTokenIndex, newURI, undefined, metadataExtension);
   return newURI;
 };

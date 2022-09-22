@@ -6,6 +6,22 @@ const _ = require('lodash');
 const { addMetadata, addPin } = require('../../integrations/ipfsService')();
 const log = require('../logger')(module);
 
+const fetchJson = async (URL) => {
+  try {
+    const metadata = await (
+      await fetch(URL)
+    ).json();
+    if (!metadata.description || metadata.description !== "" || !metadata.name || metadata.name !== "") {
+      return metadata;
+    } else {
+      log.error(`Metadata from ${URL} is missing required fields! (Description or name)`);
+    }
+  } catch (err) {
+    log.error(`Couldn't load metadata from ${URL}, skipping!`);
+  }
+  return false;
+}
+
 module.exports = {
   handleMetadataForToken: async (
     dbModels,
@@ -48,7 +64,7 @@ module.exports = {
     if (foundMetadataURI !== 'none' && tokenInstance.metadataURI === 'none') {
       // If single metadata exists, set it as the token's metadata
       log.info('New token has single Metadata preset!');
-      const fetchedMetadata = await (await fetch(foundMetadataURI)).json();
+      const fetchedMetadata = await fetchJson(foundMetadataURI);
       tokenInstance.metadata = fetchedMetadata;
       tokenInstance.isMetadataPinned = true;
     } else if (
@@ -106,6 +122,7 @@ module.exports = {
     appendTokenIndexFlag,
     newURI,
     collectionWideFlag,
+    metadataExtension = ""
   ) => {
     let tokensToUpdate = [];
     if (newURI !== "") {
@@ -120,25 +137,29 @@ module.exports = {
     }
     if (tokens.length > 0) {
       if (appendTokenIndexFlag && newURI) {
-        tokensToUpdate = tokens.reduce(async (data, token) => {
-          let fetchedMetadata = "";
+        for await (const token of tokens) {
+          let fetchedMetadata = {};
           if (newURI !== "") {
-            fetchedMetadata = collectionWideFlag
-              ? await (await fetch(`${newURI}/${token.token}`)).json()
-              : await (
-                await fetch(`${newURI}/${token.uniqueIndexInContract}`)
-              ).json();
+            fetchedMetadata = await fetchJson(collectionWideFlag ?
+              `${newURI}${token.token}${metadataExtension}`
+              :
+              `${newURI}${token.uniqueIndexInContract}${metadataExtension}`
+            )
+          }
+          if (fetchedMetadata === false) {
+            continue;
           }
           token.metadata = fetchedMetadata;
           token.isMetadataPinned = true;
           token.isURIStoredToBlockchain = true;
-          data.push(token.save().catch(this.handleDuplicateKey));
-          return data;
-        }, []);
+          tokensToUpdate.push(
+            await token.save().catch(this.handleDuplicateKey)
+          );
+        }
       } else {
         let fetchedMetadata = ""
         if (newURI !== "") {
-          fetchedMetadata = await (await fetch(newURI)).json();
+          fetchedMetadata = await fetchJson(newURI);
         }
         tokensToUpdate = tokens.reduce((data, token) => {
           token.metadata = fetchedMetadata;
