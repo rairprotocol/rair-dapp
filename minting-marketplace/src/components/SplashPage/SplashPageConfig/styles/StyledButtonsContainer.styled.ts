@@ -12,7 +12,6 @@ export const StyledButtonContainerMainBlock = styled.div<TStyledButtonContainerM
   height: ${({ height }) => height};
   margin: ${({ margin }) => margin};
   gap: ${({ gap }) => gap};
-  box-sizing: border-box;
   background-color: red;
 `;
 
@@ -28,7 +27,7 @@ export const StyledButtonMainBlock = styled.button<TStyledButtonMainBlock>`
   line-height: ${({ lineHeight }) => lineHeight};
   background: ${({ background }) => background};
   color: ${({ color }) => color};
-  border: ${({ border }) => border};
+  border: ${({ border }) => border || 'none'};
 `;
 
 export const StyledButtonImage = styled.img<TStyledButtonImage>`

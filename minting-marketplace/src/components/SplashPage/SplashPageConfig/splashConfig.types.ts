@@ -103,10 +103,10 @@ export type TStyledButtonMainBlock = {
   borderRadius: string;
   margin: string;
   height: string;
-  fontFamily: string;
-  fontWeight: string;
-  fontSize: string;
-  lineHeight: string;
+  fontFamily?: string;
+  fontWeight?: string;
+  fontSize?: string;
+  lineHeight?: string;
   background?: string;
   color?: string;
   border?: string;

@@ -57,8 +57,7 @@ const ButtonMainBlock: React.FC<TButtonMainBlock> = ({
           src={buttonImg}
           alt="metamask-logo"
         />
-        // <img className="metamask-logo" src={buttonImg} alt="metamask-logo" />
-      )}{' '}
+      )}
       {buttonLabel}
     </StyledButtonMainBlock>
   );
