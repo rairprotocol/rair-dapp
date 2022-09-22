@@ -16,6 +16,7 @@ import axios from 'axios';
 import { utils } from 'ethers';
 import { INftItemComponent } from './nftList.types';
 import { UserType } from '../../../ducks/users/users.types';
+import { ImageLazy } from '../ImageLazy/ImageLazy';
 
 const NftItemComponent: React.FC<INftItemComponent> = ({
   blockchain,
@@ -175,20 +176,16 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
             ))}
           {metaDataProducts?.metadata?.animation_url ? (
             isFileUrl === 'gif' ? (
-              <img
+              <ImageLazy
+                className="col-12 h-100 w-100"
+                width={'282px'}
+                height={'282px'}
                 alt={collectionName}
                 src={
                   metaDataProducts?.metadata?.animation_url
                     ? metaDataProducts?.metadata?.animation_url
                     : pict
                 }
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  borderRadius: '16px',
-                  objectFit: 'contain'
-                }}
-                className="col-12 h-100 w-100"
               />
             ) : (
               <div
@@ -219,21 +216,32 @@ const NftItemComponent: React.FC<INftItemComponent> = ({
               </div>
             )
           ) : (
-            <img
-              alt={collectionName}
+            <ImageLazy
+              className="col-12 h-100 w-100"
+              width={'282px'}
+              height={'282px'}
               src={
                 metaDataProducts?.metadata?.image
                   ? metaDataProducts?.metadata?.image
                   : pict
               }
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                borderRadius: '16px',
-                objectFit: 'contain'
-              }}
-              className="col-12 h-100 w-100"
+              alt={collectionName}
             />
+            // <img
+            //   alt={collectionName}
+            //   src={
+            //     metaDataProducts?.metadata?.image
+            //       ? metaDataProducts?.metadata?.image
+            //       : pict
+            //   }
+            //   style={{
+            //     position: 'absolute',
+            //     bottom: 0,
+            //     borderRadius: '16px',
+            //     objectFit: 'contain'
+            //   }}
+            //   className="col-12 h-100 w-100"
+            // />
           )}
           {
             <SvgKey

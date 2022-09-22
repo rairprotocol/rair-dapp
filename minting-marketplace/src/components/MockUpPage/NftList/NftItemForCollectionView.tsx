@@ -9,6 +9,7 @@ import {
   INftItemForCollectionView,
   TParamsNftItemForCollectionView
 } from '../mockupPage.types';
+import { ImageLazy } from '../ImageLazy/ImageLazy';
 
 const NftItemForCollectionViewComponent: React.FC<
   INftItemForCollectionView
@@ -128,18 +129,25 @@ const NftItemForCollectionViewComponent: React.FC<
           ))}
         {metadata?.animation_url ? (
           isFileUrl === 'gif' ? (
-            <img
+            <ImageLazy
+              className="col-12 h-100 w-100"
+              width={'282px'}
+              height={'282px'}
               alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
               src={metadata?.animation_url ? metadata?.animation_url : pict}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                borderRadius: '16px',
-                objectFit: 'contain'
-              }}
-              className="col-12 h-100 w-100"
             />
           ) : (
+            // <img
+            //   alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
+            //   src={metadata?.animation_url ? metadata?.animation_url : pict}
+            //   style={{
+            //     position: 'absolute',
+            //     bottom: 0,
+            //     borderRadius: '16px',
+            //     objectFit: 'contain'
+            //   }}
+            //   className="col-12 h-100 w-100"
+            // />
             <div
               style={{
                 borderRadius: '16px',
@@ -164,22 +172,29 @@ const NftItemForCollectionViewComponent: React.FC<
             </div>
           )
         ) : (
-          <img
-            alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
-            src={
-              metadata?.image
-                ? // ? metaDataProducts?.metadata?.image
-                  metadata?.image
-                : pict
-            }
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              borderRadius: '16px',
-              objectFit: 'contain'
-            }}
+          <ImageLazy
             className="col-12 h-100 w-100"
+            width={'282px'}
+            height={'282px'}
+            alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
+            src={metadata?.image ? metadata?.image : pict}
           />
+          // <img
+          //   alt={metadata?.name === 'none' ? 'NFT token' : metadata?.name}
+          //   src={
+          //     metadata?.image
+          //       ? // ? metaDataProducts?.metadata?.image
+          //         metadata?.image
+          //       : pict
+          //   }
+          //   style={{
+          //     position: 'absolute',
+          //     bottom: 0,
+          //     borderRadius: '16px',
+          //     objectFit: 'contain'
+          //   }}
+          //   className="col-12 h-100 w-100"
+          // />
         )}
         {offer === '0' ? (
           <SvgKey color={'#E4476D'} bgColor={'rgba(34, 32, 33, 0.5)'} />

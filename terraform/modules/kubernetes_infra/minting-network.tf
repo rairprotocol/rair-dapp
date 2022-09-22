@@ -1,6 +1,6 @@
 locals {
   minting_network_service = "minting-network-primary"
-  minting_network_image = "rairtechinc/minting-network:69a76f0d3d849e97591e1efb406a95249b0289fa"
+  minting_network_image = "rairtechinc/minting-network:4021cc5ecbbc2d58b2cbed62760369356003d80d"
   minting_network_default_port_1 = 443
   minting_network_configmap_name = "minting-network-env"
 }
@@ -26,7 +26,7 @@ resource "kubernetes_ingress_v1" "minting_network_ingress" {
       "ingress.gcp.kubernetes.io/pre-shared-cert": module.shared_config.minting_marketplace_managed_cert_name
       "kubernetes.io/ingress.global-static-ip-name": module.shared_config.minting_marketplace_static_ip_name
     }
-  }
+  } 
 
   wait_for_load_balancer = true
 

@@ -105,17 +105,18 @@ locals {
     POLYGONSCAN_GATEWAY: "https://polygonscan.com/token",
     ETHERSCAN_GATEWAY: "https://etherscan.io/token",
     BSCSCAN_GATEWAY: "https://bscscan.com/token",
-    MORALIS_SERVER_TEST: "",
+    MORALIS_SERVER_TEST: "https://ldz2lkdhowt1.usemoralis.com:2053/server",
     MORALIS_SERVER_MAIN: "https://y14jhwis7uao.moralishost.com:2053/server",
-    MORALIS_API_KEY_TEST: "",
-    MORALIS_API_KEY_MAIN: "1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn",
-    MORALIS_MASTER_KEY_TEST: "",
-    MORALIS_MASTER_KEY_MAIN: "",
+    MORALIS_API_KEY_TEST: "1fwzRnhKfABUG6v8PBgsQlRmbdKsgjLKqvmPMZEn",
+    MORALIS_API_KEY_MAIN: "P3bQyDqkU5NU80xt2lTg3jGDaFP2KN0XkbtxpNV5",
+    MORALIS_MASTER_KEY_TEST: "JUV7LTJJ0dHZsEMd5PzyRNShbcpSjxqXIDX6jqOi",
+    MORALIS_MASTER_KEY_MAIN: "MWNPXrsKAv8PpziXKbxuDWTZIUUtPNfZnAFFfX0g",
     GENERATE_MONGO_URI_WITH_VAULT_CREDENTIAL_UTIL: true,
     MONGO_DB_HOSTNAME: local.MONGO_DB_HOSTNAME,
     MONGO_DB_NAME: local.MONGO_DB_NAME,
     USE_X509_CERT_AUTH: true,
     VAULT_URL: local.vault_url,
+    PRODUCTION: "true"
   }
    media_service_configmap = {
     PRODUCTION: "true",
