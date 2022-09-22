@@ -11,6 +11,7 @@ const offersController = require('../offers/offers.Controller');
 const usersController = require('../users/users.Controller');
 const verifyController = require('../verification/userVerification.controller');
 const favoritesController = require('../favorites/favorites.Controller');
+const csv = require('./csv');
 const { JWTVerification } = require('../middleware');
 
 module.exports = () => {
@@ -27,5 +28,6 @@ module.exports = () => {
   router.use('/users', usersController);
   router.use('/offers', offersController);
   router.use('/resales', resalesController);
+  router.use('/csv', csv);
   return router;
 };
