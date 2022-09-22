@@ -1,7 +1,7 @@
 locals {
    media_service_namespace = "media-service-primary"
    media_service_default_port_1 = "5002"
-   media_service_image = "rairtechinc/media-service:dev_2.34"
+   media_service_image = "rairtechinc/media-service:${local.latest_git_hash_for_testing_builds}"
    media_service_configmap_name = "media-service-env"
 }
 

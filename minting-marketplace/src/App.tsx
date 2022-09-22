@@ -501,7 +501,7 @@ function App() {
 						*/}
           <MainBlockApp showAlert={showAlert} selectedChain={selectedChain}>
             <div className="col-12 blockchain-switcher" />
-            <div className="col-12 mt-3 row">
+            <div className="col-12 mt-3">
               <SentryRoutes>
                 {/*
 										Iterate over the routes in the array
@@ -848,7 +848,14 @@ function App() {
                   {
                     path: '/watch/:contract/:videoId/:mainManifest',
                     content: IframePage,
-                    props: { loginDone, setIsIframePage }
+                    props: {
+                      loginDone,
+                      setIsIframePage,
+                      renderBtnConnect,
+                      programmaticProvider,
+                      startedLogin,
+                      connectUserData
+                    }
                   },
                   {
                     path: '/test-iframe/:contract/:videoId/:mainManifest',

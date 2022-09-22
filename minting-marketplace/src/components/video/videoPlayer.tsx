@@ -106,7 +106,9 @@ const VideoPlayer = () => {
 
   return (
     <>
-      <div className="col-12 row mx-0 h1" style={{ minHeight: '50vh' }}>
+      <div
+        className="col-12 row mx-0 h1 iframe-video-player"
+        style={{ minHeight: '100vh' }}>
         <video
           id={'vjs-' + videoName}
           className="video-js vjs-16-9"

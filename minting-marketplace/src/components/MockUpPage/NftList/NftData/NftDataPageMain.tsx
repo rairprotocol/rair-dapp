@@ -18,6 +18,7 @@ import UnlockableVideosSingleTokenPage from './UnlockableVideosSingleTokenPage';
 import { CircularProgress } from '@mui/material';
 import { RootState } from '../../../../ducks';
 import { InitialNftDataStateType } from '../../../../ducks/nftData/nftData.types';
+import { ImageLazy } from '../../ImageLazy/ImageLazy';
 
 const NftDataPageMain: React.FC<INftDataPageMain> = ({
   blockchain,
@@ -228,7 +229,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                   </div>
                 )
               ) : (
-                <img
+                <ImageLazy
                   src={
                     selectedData?.image
                       ? selectedData.image
@@ -236,15 +237,7 @@ const NftDataPageMain: React.FC<INftDataPageMain> = ({
                   }
                   alt="nft token image"
                   className="single-token-block-img"
-                  // style={{ objectFit: 'fill' }}
-                  // style={{
-                  //   backgroundImage: `url(${
-                  //     selectedData?.image
-                  //       ? selectedData.image
-                  //       : 'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW'
-                  //   })`
-                  // }}
-                ></img>
+                />
               )}
             </div>
           </div>
