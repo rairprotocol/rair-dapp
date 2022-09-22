@@ -11,7 +11,9 @@ export const StyledMainBlockTextContainer = styled.div<TStyledMainBlockTextConta
   align-items: flex-start;
   justify-content: flex-start;
   margin: ${({ margin }) => margin};
-  background-color: red;
+  /* background-color: red; */
+  width: 50%;
+  height: 100%;
 `;
 
 export const StyledMainBlockTitle = styled.div<TStyledMainBlockTitle>`
@@ -21,8 +23,10 @@ export const StyledMainBlockTitle = styled.div<TStyledMainBlockTitle>`
   font-family: ${({ fontFamily }) => fontFamily};
   line-height: ${({ lineHeight }) => lineHeight};
   word-break: break-all;
-  margin: ${({ textMargin }) => textMargin};
-  padding: ${({ textPadding }) => textPadding};
+  margin: ${({ margin }) => margin || '0px'};
+  padding: ${({ padding }) => padding || '0px'};
+  text-align: ${({ textAlign }) => textAlign || 'start'};
+  width: ${({ width }) => width || '100%'};
 `;
 
 export const StyledMainBlockDescription = styled.div<TStyledMainBlockDescription>`

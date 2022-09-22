@@ -1,15 +1,15 @@
 import { TSplashDataType } from '../splashPage.types';
-import { TStyledSplashMainBlockWrapper } from './styles/SplashMainBlockStyled.styles';
 
 export type TSplashPageMainBlock = TStyledSplashMainBlockWrapper & {
   children: React.ReactNode;
 };
 
 export interface ISplashPageWrapper {
-  splashData: TSplashDataType;
+  splashData?: TSplashDataType;
   loginDone?: boolean;
   connectUserData?: () => Promise<void>;
   setIsSplashPage?: (isSplashPage: boolean) => void;
+  children: React.ReactNode;
 }
 
 export interface IMainBlockDescription {
@@ -25,8 +25,10 @@ export type TStyledMainBlockTitle = {
   fontWeight: number | string;
   fontFamily: string;
   lineHeight: string;
-  textMargin: string;
-  textPadding: string;
+  margin?: string;
+  padding?: string;
+  textAlign?: string;
+  width?: string;
 };
 
 export type TStyledMainBlockDescription = {
@@ -45,4 +47,34 @@ export type TMainBlockInfoText = TStyledMainBlockTextContainer & {
 
 export type TMainTitleBlock = TStyledMainBlockTitle & {
   text?: string | string[];
+};
+
+export type TStyledHigherWrapperSplashPage = {
+  fontFamily: string;
+};
+
+export type TDefaultThemeType = {
+  colors: {
+    mainBlock: string;
+  };
+  mobile: string;
+};
+
+export type TStyledSplashMainBlockWrapper = {
+  widthDiff?: string;
+  heightDiff?: string;
+  bgColor?: string;
+  borderRadius: string;
+  backgroundImage?: string;
+  paddingLeft: string;
+};
+
+export type TStyledImageBlock = {
+  widthDiff: string;
+  heightDiff: string;
+  imageMargin: string;
+};
+
+export type TImageMainBlock = TStyledImageBlock & {
+  image?: string;
 };

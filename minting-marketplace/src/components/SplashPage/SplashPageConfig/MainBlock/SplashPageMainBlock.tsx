@@ -8,7 +8,8 @@ const SplashPageMainBlock: React.FC<TSplashPageMainBlock> = ({
   bgColor,
   children,
   borderRadius,
-  backgroundImage
+  backgroundImage,
+  paddingLeft
 }) => {
   return (
     <SplashMainBlockWrapper
@@ -16,7 +17,8 @@ const SplashPageMainBlock: React.FC<TSplashPageMainBlock> = ({
       widthDiff={widthDiff}
       heightDiff={heightDiff}
       borderRadius={borderRadius}
-      backgroundImage={backgroundImage}>
+      backgroundImage={backgroundImage}
+      paddingLeft={paddingLeft}>
       {children}
     </SplashMainBlockWrapper>
   );

@@ -10,9 +10,10 @@ export const SplashMainBlockWrapper = styled.div<TStyledSplashMainBlockWrapper>`
   align-items: center;
   border-radius: ${({ borderRadius }) => borderRadius || '24px'};
   background-color: ${({ bgColor }) => bgColor || 'none'};
-  width: ${({ widthDiff }) => widthDiff || '1200px'};
+  width: ${({ widthDiff }) => widthDiff || '100%'};
   height: ${({ heightDiff }) => heightDiff || '694px'};
   background-image: ${({ backgroundImage }) => backgroundImage};
+  padding-left: ${({ paddingLeft }) => paddingLeft};
 `;
 
 export const StyledImageBlock = styled.img<TStyledImageBlock>`
