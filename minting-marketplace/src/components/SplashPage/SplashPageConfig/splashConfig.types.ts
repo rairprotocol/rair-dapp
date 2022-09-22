@@ -1,4 +1,7 @@
-import { TSplashDataType } from '../splashPage.types';
+import {
+  TSplashDataType,
+  TSplashPageDataButtonType
+} from '../splashPage.types';
 
 export type TSplashPageMainBlock = TStyledSplashMainBlockWrapper & {
   children: React.ReactNode;
@@ -77,4 +80,40 @@ export type TStyledImageBlock = {
 
 export type TImageMainBlock = TStyledImageBlock & {
   image?: string;
+};
+
+export type TStyledButtonContainerMainBlock = {
+  height: string;
+  width: string;
+  margin: string;
+  gap?: string;
+};
+
+export type TButtonContainerMainBlock = TStyledButtonContainerMainBlock & {
+  children: React.ReactNode;
+};
+
+export type TButtonMainBlock = TStyledButtonMainBlock &
+  TStyledButtonImage & {
+    buttonData: TSplashPageDataButtonType | undefined;
+  };
+
+export type TStyledButtonMainBlock = {
+  width: string;
+  borderRadius: string;
+  margin: string;
+  height: string;
+  fontFamily: string;
+  fontWeight: string;
+  fontSize: string;
+  lineHeight: string;
+  background?: string;
+  color?: string;
+  border?: string;
+};
+
+export type TStyledButtonImage = {
+  buttonImageWidth: string;
+  buttonImageHeight: string;
+  buttonImageMarginRight: string;
 };

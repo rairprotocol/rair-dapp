@@ -29,12 +29,6 @@ export const StyledMainBlockTitle = styled.div<TStyledMainBlockTitle>`
   width: ${({ width }) => width || '100%'};
 `;
 
-export const StyledMainBlockDescription = styled.div<TStyledMainBlockDescription>`
-  width: 100%;
-  margin-top: ${({ marginTop }) => marginTop};
-  margin-bottom: ${({ marginBottom }) => marginBottom};
-`;
-
 export type TStyledWrapperSplashPage = {
   bgSize: string;
   bgPosition: string;
