@@ -1,25 +1,30 @@
 const express = require('express');
-const { createTokensWithCommonMetadata, getSingleToken, updateSingleTokenMetadata, pinMetadataToPinata } = require('./tokens.Service');
+const {
+  createTokensWithCommonMetadata,
+  getSingleToken,
+  updateSingleTokenMetadata,
+  pinMetadataToPinata
+} = require('./tokens.Service');
 const { getContractsByBlockchainAndContractAddress } = require('../contracts/contracts.Service');
 const { getOfferIndexesByContractAndProduct } = require('../offers/offers.Service');
 const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.Service');
 const upload = require('../Multer/Config');
 const { dataTransform, validation, JWTVerification, isAdmin } = require('../middleware');
 
-module.exports = () => {
-  const router = express.Router();
 
-  router.post(
+const router = express.Router();
+
+router.post(
     '/',
     JWTVerification,
     isAdmin,
     upload.array('files', 2),
-    dataTransform(['attributes']),
+    dataTransform([ 'attributes' ]),
     validation('createCommonTokenMetadata'),
     createTokensWithCommonMetadata,
-  );
+);
 
-  router.get(
+router.get(
     '/:token',
     getContractsByBlockchainAndContractAddress,
     getOfferIndexesByContractAndProduct,
@@ -28,34 +33,33 @@ module.exports = () => {
       const { contract, offers, offerPool } = req;
 
       req.specificFilterOptions = contract.diamond
-        ? { offer: { $in: offers } }
-        : { offerPool: offerPool.marketplaceCatalogIndex };
+          ? { offer: { $in: offers } }
+          : { offerPool: offerPool.marketplaceCatalogIndex };
 
       return next();
     },
     getSingleToken,
-  );
+);
 
-  router.patch(
+router.patch(
     '/:token',
     JWTVerification,
     getContractsByBlockchainAndContractAddress,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     upload.array('files', 2),
-    dataTransform(['attributes']),
+    dataTransform([ 'attributes' ]),
     validation('updateTokenMetadata'),
     updateSingleTokenMetadata,
-  );
+);
 
-  router.post(
+router.post(
     '/:token',
     JWTVerification,
     getContractsByBlockchainAndContractAddress,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     pinMetadataToPinata,
-  );
+);
 
-  return router;
-};
+module.exports = router;

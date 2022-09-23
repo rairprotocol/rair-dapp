@@ -3,12 +3,12 @@ const { createFavorite, getAllFavoritesByUser, deleteFavorite } = require('./fav
 const { validation, isOwner } = require('../middleware');
 const { FavoriteTokens } = require('../models');
 
-module.exports = () => {
-  const router = express.Router();
 
-  router.post('/', validation('createFavoriteToken'), createFavorite);
-  router.get('/', getAllFavoritesByUser);
-  router.delete('/:id', isOwner(FavoriteTokens), deleteFavorite);
+const router = express.Router();
 
-  return router;
-};
+router.post('/', validation('createFavoriteToken'), createFavorite);
+router.get('/', getAllFavoritesByUser);
+router.delete('/:id', isOwner(FavoriteTokens), deleteFavorite);
+
+module.exports = router;
+
