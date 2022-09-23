@@ -85,7 +85,7 @@ const TitleCollection: React.FC<ITitleCollection> = ({
               src={someUsersData?.avatar ? someUsersData.avatar : defaultUser}
               alt="User Avatar"
             />
-            <h5 style={{ wordBreak: 'break-all' }}>
+            <h5>
               {someUsersData && someUsersData.nickName
                 ? someUsersData.nickName
                 : userName && userName.length > 25

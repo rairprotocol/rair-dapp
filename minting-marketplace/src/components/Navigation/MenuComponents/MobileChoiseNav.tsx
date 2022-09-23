@@ -45,11 +45,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
         <div className="social-media">
           {(messageAlert && messageAlert === 'profile') ||
           messageAlert === 'profileEdit' ? (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center'
-              }}>
+            <div className="social-media-profile">
               <UserIconMobile
                 onClick={() => handleMessageAlert('profile')}
                 avatar={userRd && userRd.avatar}
@@ -60,10 +56,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                   <SvgUserIcon width={'22.5px'} height={'22.5px'} />
                 )}
               </UserIconMobile>
-              <div
-                style={{
-                  marginLeft: 10
-                }}>
+              <div>
                 {userRd && (
                   <>
                     {userRd.nickName && userRd.nickName.length > 13
@@ -76,11 +69,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
               </div>
             </div>
           ) : messageAlert === 'notification' ? (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center'
-              }}>
+            <div className="social-media-profile">
               {currentUserAddress && (
                 <SocialBox
                   className="social-bell-icon"
@@ -90,12 +79,7 @@ const MobileChoiseNav: React.FC<IMobileChoiseNav> = ({
                   <BellIcon primaryColor={primaryColor} />
                 </SocialBox>
               )}
-              <div
-                style={{
-                  marginLeft: 10
-                }}>
-                Notifications
-              </div>
+              <div className="social-media-user-icon">Notifications</div>
             </div>
           ) : (
             <>

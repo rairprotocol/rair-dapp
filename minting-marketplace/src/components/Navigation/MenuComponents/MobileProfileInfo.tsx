@@ -86,7 +86,7 @@ const MobileProfileInfo: React.FC<IMobileProfileInfo> = ({
                   <img src={defaultPictures} alt="Your Profile avatar" /> :
                 </div>
               )}
-              <div style={{ margin: '10px 0', wordBreak: 'break-all' }}>
+              <div className={'block-user-profile'}>
                 Name: {profileData.nickName}
               </div>
               <div>Email: {profileData.email}</div>
