@@ -26,6 +26,25 @@ export const SvgUserIcon: React.FC<ISvgUserIcon> = ({
   );
 };
 
+export const SvgMyFavorites = ({ primaryColor }) => {
+  return (
+    <svg
+      width="17"
+      height="15"
+      viewBox="0 0 17 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M4.75 1C2.67894 1 1 2.59771 1 4.56859C1 6.15968 1.656 9.93569 8.11563 13.7534C8.34955 13.8917 8.65045 13.8917 8.88437 13.7534C15.344 9.93569 16 6.15968 16 4.56859C16 2.59771 14.321 1 12.25 1C10.179 1 8.5 3.16279 8.5 3.16279C8.5 3.16279 6.82106 1 4.75 1Z"
+        stroke={primaryColor === 'rhyno' ? '#222021' : 'white'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 export const SvgItemsIcon = ({ primaryColor }) => {
   return (
     <svg

@@ -18,7 +18,8 @@ const UserProfileSettings = ({
   setLoginDone,
   userData,
   showAlert,
-  selectedChain
+  selectedChain,
+  setTabIndexItems
 }) => {
   const dispatch = useDispatch();
   const { primaryColor } = useSelector((store) => store.colorStore);
@@ -78,27 +79,10 @@ const UserProfileSettings = ({
               currentUserAddress={currentUserAddress}
               showAlert={showAlert}
               selectedChain={selectedChain}
+              setTabIndexItems={setTabIndexItems}
             />
           </div>
         )}
-      </div>
-      <div>
-        {/* <button
-          className="btn-change-theme"
-          style={{
-            backgroundColor: primaryColor === 'charcoal' ? '#222021' : '#D3D2D3'
-          }}
-          onClick={(e) => {
-            dispatch(
-              setColorScheme(primaryColor === 'rhyno' ? 'charcoal' : 'rhyno')
-            );
-          }}>
-          {primaryColor === 'rhyno' ? (
-            <i className="far fa-moon" />
-          ) : (
-            <SunIcon primaryColor={primaryColor} color={'#fff'} />
-          )}
-        </button> */}
       </div>
     </div>
   );

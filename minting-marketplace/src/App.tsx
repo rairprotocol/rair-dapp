@@ -153,6 +153,7 @@ function App() {
   const carousel_match = window.matchMedia('(min-width: 1025px)');
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndexItems, setTabIndexItems] = useState(0);
   const navigate = useNavigate();
 
   const seoInformation = {
@@ -465,6 +466,7 @@ function App() {
               showAlert={showAlert}
               selectedChain={selectedChain}
               isSplashPage={isSplashPage}
+              setTabIndexItems={setTabIndexItems}
             />
           ) : (
             !isIframePage && (
@@ -481,6 +483,7 @@ function App() {
                 programmaticProvider={programmaticProvider}
                 showAlert={showAlert}
                 selectedChain={selectedChain}
+                setTabIndexItems={setTabIndexItems}
               />
             )
           )}
@@ -777,7 +780,13 @@ function App() {
                     path: '/my-items',
                     content: MyItems,
                     requirement: loginDone,
-                    props: { goHome, userData, setIsSplashPage }
+                    props: {
+                      goHome,
+                      userData,
+                      setIsSplashPage,
+                      setTabIndexItems,
+                      tabIndexItems
+                    }
                   },
                   {
                     path: '/:contractId/:product/:offer/:token',

@@ -50,7 +50,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   creatorViewsDisabled,
   selectedChain,
   showAlert,
-  isSplashPage
+  isSplashPage,
+  setTabIndexItems
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -327,6 +328,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             setLoginDone={setLoginDone}
             showAlert={showAlert}
             selectedChain={selectedChain}
+            setTabIndexItems={setTabIndexItems}
           />
           <div className="social-media">
             <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>

@@ -40,6 +40,7 @@ interface IMenuNavigation {
     | undefined;
   showAlert: boolean | null | undefined;
   selectedChain: string | null | undefined;
+  setTabIndexItems: (arg: number) => void;
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
@@ -51,7 +52,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   currentUserAddress,
   programmaticProvider,
   showAlert,
-  selectedChain
+  selectedChain,
+  setTabIndexItems
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
@@ -172,6 +174,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
             activeSearch={activeSearch}
             messageAlert={messageAlert}
             setMessageAlert={setMessageAlert}
+            setTabIndexItems={setTabIndexItems}
           />
         )}
         <RightSideMenu>

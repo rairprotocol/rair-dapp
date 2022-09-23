@@ -26,7 +26,12 @@ import { Breadcrumbs, Typography } from '@mui/material';
 import chainData from '../../utils/blockchainData';
 import PersonalProfileFavoritesTab from './PersonalProfile/PersonalProfileFavoritesTab/PersonalProfileFavoritesTab';
 
-const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
+const MyItems: React.FC<IMyItems> = ({
+  userData,
+  setIsSplashPage,
+  setTabIndexItems,
+  tabIndexItems
+}) => {
   const { width } = useWindowDimensions();
   const dispatch = useDispatch();
   const defaultImg =
@@ -42,7 +47,7 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
   const [sortItem, setSortItem] = useState<TSortChoice>();
   const [isOpenBlockchain, setIsOpenBlockchain] = useState<boolean>(false);
   const [isCreatedTab, setIsCreatedTab] = useState<boolean>(false);
-  const [tabIndex, setTabIndex] = useState(0);
+  // const [tabIndex, setTabIndex] = useState(0);
 
   const getMyNft = useCallback(async () => {
     const response = await rFetch('/api/nft');
@@ -146,8 +151,8 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
         </div> */}
         <>
           <Tabs
-            selectedIndex={tabIndex}
-            onSelect={(index) => setTabIndex(index)}>
+            selectedIndex={tabIndexItems}
+            onSelect={(index) => setTabIndexItems(index)}>
             <TabList className="category-wrapper">
               <Tab
                 selectedClassName={`search-tab-selected-${
@@ -264,7 +269,7 @@ const MyItems: React.FC<IMyItems> = ({ userData, setIsSplashPage }) => {
                 setIsCreatedTab={setIsCreatedTab}
                 primaryColor={primaryColor}
                 chainData={chainData}
-                tabIndex={tabIndex}
+                tabIndex={tabIndexItems}
               />
             </TabPanel>
           </Tabs>

@@ -339,7 +339,13 @@ const PersonalProfileIconComponent = ({ userData }) => {
         ) : (
           <>
             <span className={cl['profileName' + textColor]}>
-              {userName ? `@${userName}` : userData.publicAddress}
+              {/* {userName ? `@${userName}` : userData.publicAddress} */}
+              {userName && userName.length > 13
+                ? '@' +
+                  userName.slice(0, 5) +
+                  '...' +
+                  userName.slice(userName.length - 4)
+                : '@' + userName}
             </span>
             <i
               onClick={() => setEditMode(true)}
