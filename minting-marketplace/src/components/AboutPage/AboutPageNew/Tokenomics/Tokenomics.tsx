@@ -1,11 +1,13 @@
 import React from 'react';
-import Eth_icon from './../../assets/eth-icon.png';
-import Space_icon from './../../assets/space-icon.png';
-import Triple_icon from './../../assets/triple-icon.png';
-import Matic_icon from './../../assets/matic-icon.png';
-import Binance_icon from './../../assets/binance-icon.png';
-import Arb_icon from './../../assets/arb-icon.png';
-import Kit_icon from './../../assets/kat-icon.png';
+import { MaticLogo } from '../../../../images';
+import {
+  EthIcon,
+  SpaceIcon,
+  TrippleIcon,
+  BinanceIcon,
+  ArbIcon,
+  KitIcon
+} from '../../assets/tokenomics/tokenomics';
 import { ITokenomics } from '../aboutPage.types';
 
 const Tokenomics: React.FC<ITokenomics> = () => {
@@ -57,13 +59,13 @@ const Tokenomics: React.FC<ITokenomics> = () => {
               <div className="items-title">Q1 2022</div>
               <ul>
                 <li>
-                  <img src={Matic_icon} alt="Matic" />
+                  <img src={MaticLogo} alt="Matic" />
                 </li>
                 <li>
-                  <img src={Binance_icon} alt="Binance" />
+                  <img src={BinanceIcon} alt="Binance" />
                 </li>
                 <li>
-                  <img src={Kit_icon} alt="Kit" />
+                  <img src={KitIcon} alt="Kit" />
                 </li>
               </ul>
             </div>
@@ -71,16 +73,16 @@ const Tokenomics: React.FC<ITokenomics> = () => {
               <div className="items-title">Q2 2022</div>
               <ul>
                 <li>
-                  <img src={Eth_icon} alt="Ethrerium" />
+                  <img src={EthIcon} alt="Ethrerium" />
                 </li>
                 <li>
-                  <img src={Arb_icon} alt="Arb" />
+                  <img src={ArbIcon} alt="Arb" />
                 </li>
                 <li>
-                  <img src={Triple_icon} alt="Triple" />
+                  <img src={TrippleIcon} alt="Triple" />
                 </li>
                 <li>
-                  <img src={Space_icon} alt="Space" />
+                  <img src={SpaceIcon} alt="Space" />
                 </li>
               </ul>
             </div>

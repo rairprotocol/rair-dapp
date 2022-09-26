@@ -13,7 +13,7 @@ import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts/actions';
 import axios from 'axios';
 import { TUserResponse } from '../../axios.responseTypes';
-import { BellIcon, CloseIconMobile, MenuIcon } from '../Header/DiscordIcon';
+import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import {
   SocialBox,

@@ -5,14 +5,11 @@ import './SplashPageTemplate/AuthorCard/AuthorCard.css';
 import './../AboutPage/AboutPageNew/AboutPageNew.css';
 
 /* importing images*/
-import NFTLA1_rounded from './images/NFT-LA-Dig-V01-modified.png';
-import NFTLA1 from './images/NFT-LA-Dig-V01.jpg';
-import NFTLA2 from './images/NFT-LA-Dig-V02.png';
-import NFTLA3 from './images/NFT-LA-Dig-V03.png';
-import NFTLA_Video from './images/NFT-LA-RAIR-2021.mp4';
-import DocumentIcon from '../../images/documentIcon.svg';
-import DiscordIcon from './images/discord-icon.png';
-import NFTfavicon from './images/NFT_favicon.ico';
+import { NFTLA1_rounded, NFTLA1, NFTLA2, NFTLA3 } from './images/NFTLA/nftLA';
+import NFTLA_Video from './images/NFTLA/NFT-LA-RAIR-2021.mp4';
+import { DocumentIcon } from '../../images';
+import { discrodIconNoBorder } from '../../images';
+import NFTfavicon from './images/favicons/NFT_favicon.ico';
 
 /* importing Components*/
 import TeamMeet from './TeamMeet/TeamMeetList';
@@ -65,7 +62,7 @@ const splashData: TSplashDataType = {
   button2: {
     buttonColor: '#E6B4A2',
     buttonLabel: 'Join Our Discord',
-    buttonImg: DiscordIcon,
+    buttonImg: discrodIconNoBorder,
     buttonLink: 'https://discord.com/invite/y98EMXRsCE'
   },
   NFTName: 'NFT art',

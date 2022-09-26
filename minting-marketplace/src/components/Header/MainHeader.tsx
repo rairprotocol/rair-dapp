@@ -10,15 +10,14 @@ import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
-import { DiscordIcon, TwitterIcon } from './DiscordIcon';
+import { DiscordIcon, TwitterIcon } from '../../images';
 import AdminPanel from './AdminPanel/AdminPanel';
 import {
   HeaderContainer /*, SocialHeaderBox */
 } from './HeaderItems/HeaderItems';
 
 //images
-import headerLogoWhite from './../../images/rairTechLogoWhite.png';
-import headerLogoBlack from './../../images/rairTechLogoBlack.png';
+import { headerLogoBlack, headerLogoWhite } from '../../images';
 
 //styles
 import './Header.css';

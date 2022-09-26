@@ -7,7 +7,7 @@ import './UserProfileSettings.css';
 import PopUpSettings from './PopUpSetting';
 import PopUpNotification from './PopUpNotification/PopUpNotification';
 import { setColorScheme } from '../../ducks/colors/actions';
-import { SunIcon } from '../Header/DiscordIcon';
+import { SunIcon } from '../../images';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import { getUserStart } from '../../ducks/users/actions';
 

@@ -7,11 +7,8 @@ import './../AboutPage/AboutPageNew/AboutPageNew.css';
 import Modal from 'react-modal';
 
 /* importing images*/
-import Metamask from '../../images/metamask-fox.svg';
-import DocumentIcon from '../../images/documentIcon.svg';
-import SXSW1 from './images/SxSW-IMSV-ATX-2022-Concept01.jpg';
-import SXSW2 from './images/SxSW-IMSV-ATX-2022-Concept02.jpg';
-import SXSW3 from './images/SxSW-IMSV-ATX-2022-Concept03.jpg';
+import { metaMaskIcon, DocumentIcon } from '../../images';
+import { SXSW1, SXSW2, SXSW3 } from './images/SxSw/sxSw';
 
 /* importing Components*/
 import TeamMeet from './TeamMeet/TeamMeetList';
@@ -215,7 +212,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
                           <img
                             style={{ width: '100px', marginLeft: '-1rem' }}
                             className="metamask-logo modal-btn-logo"
-                            src={Metamask}
+                            src={metaMaskIcon}
                             alt="metamask-logo"
                           />{' '}
                           {currentUserAddress

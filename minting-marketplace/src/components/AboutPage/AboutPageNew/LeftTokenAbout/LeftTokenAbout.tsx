@@ -1,6 +1,6 @@
 import React from 'react';
 import { ILeftTokenAbout } from '../aboutPage.types';
-import DiscordIcon from './../../../SplashPage/images/discord-icon.png';
+import { discrodIconNoBorder } from '../../../../images';
 
 const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
   return (
@@ -42,8 +42,8 @@ const LeftTokenAbout: React.FC<ILeftTokenAbout> = ({ primaryColor }) => {
                 href="https://discord.gg/APmkpQzxrx"
                 target="_blank"
                 rel="noreferrer">
-                <img src={DiscordIcon} alt="Discord RAIR.TECH" /> Join our
-                Discord
+                <img src={discrodIconNoBorder} alt="Discord RAIR.TECH" /> Join
+                our Discord
               </a>
             </div>
           </div>

@@ -5,11 +5,7 @@ import {
   CommunityBlock,
   CommunityBoxFooter
 } from '../../Footer/FooterItems/FooterItems';
-import {
-  DiscordIcon,
-  TelegramIcon,
-  TwitterIcon
-} from '../../Header/DiscordIcon';
+import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../../images';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
 import MobileNavigationList from './MobileNavigationList';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';

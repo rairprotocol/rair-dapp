@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Main from '../images/nuts-main.png';
+import { NutsMain } from '../images/commingSoon/commingSoonImages';
 
 const ComingSoonNut = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const ComingSoonNut = () => {
       <div className="nipsey-comming-soon nutcrackers">
         <div className="information-author">
           <div className="img-coming-nuts">
-            <img src={Main} alt="Custom logo by Rair Tech" />
+            <img src={NutsMain} alt="Custom logo by Rair Tech" />
           </div>
           <div className="block-splash">
             <div className="text-splash">

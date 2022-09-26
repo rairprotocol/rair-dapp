@@ -4,15 +4,17 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './wallstreet80sclub.css';
 
-import WallstreetImg from '../images/wallstreet.png';
-import MetaMaskIcon from '../images/metamask_logo.png';
-import WallstreetCounter from '../images/wallstreetCounter.png';
-import WallstreetA from '../images/wallstreetA.png';
-import WallstreetB from '../images/wallstreetB.png';
-import WallstreetC from '../images/wallstreetC.png';
-import WallstreetD from '../images/wallstreetD.png';
-import WallstreetE from '../images/wallstreetE.png';
-import WallstreetF from '../images/wallstreetF.png';
+import { metaMaskIcon, discrodIconNoBorder } from '../../../images';
+import {
+  WallstreetImg,
+  WallstreetCounter,
+  WallstreetA,
+  WallstreetB,
+  WallstreetC,
+  WallstreetD,
+  WallstreetE,
+  WallstreetF
+} from '../images/wallstreet80sclub/wallstreet80sclub';
 
 /* importing Components*/
 import TokenLeftTemplate from '../TokenLeft/TokenLeftTemplate';
@@ -29,7 +31,6 @@ import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/Vi
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import ButtonHelp from '../PurchaseChecklist/ButtonHelp';
-import DiscordIcon from '../images/discord-icon.png';
 import {
   ISplashPageProps,
   TMainContractType,
@@ -122,7 +123,7 @@ const splashData: TSplashDataType = {
   backgroundImage: WallstreetImg,
   purchaseButton: {
     buttonComponent: PurchaseTokenButton,
-    img: MetaMaskIcon,
+    img: metaMaskIcon,
     ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
       ? testContract
       : mainContract),
@@ -151,7 +152,7 @@ const splashData: TSplashDataType = {
     buttonTextColor: '#FFFFFF',
     buttonColor: '#000000',
     buttonLabel: 'Join our Discord',
-    buttonImg: DiscordIcon,
+    buttonImg: discrodIconNoBorder,
     buttonLink: 'https://discord.com/invite/y98EMXRsCE'
   },
   counterOverride: true,

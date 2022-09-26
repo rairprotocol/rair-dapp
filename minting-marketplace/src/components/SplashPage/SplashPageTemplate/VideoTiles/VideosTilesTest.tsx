@@ -1,6 +1,6 @@
 //@ts-nocheck
 //test page for video tiles
-import videoBackground1 from '../../../SplashPage/images/nftnyc_videobackground1.png';
+import { NYCVideoBackground } from '../../images/NFTNYC/nftnyc';
 import VideoPlayerView from '../../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
 import VideoPlayerModule from '../VideoPlayer/VideoPlayerModule';
 import { useState, useEffect } from 'react';
@@ -87,7 +87,7 @@ const VideoTilesTest = ({ setIsSplashPage }) => {
   return (
     <>
       <VideoPlayerModule
-        backgroundImage={videoBackground1}
+        backgroundImage={NYCVideoBackground}
         videoData={videoData}
         selectVideo={mainVideo}
       />

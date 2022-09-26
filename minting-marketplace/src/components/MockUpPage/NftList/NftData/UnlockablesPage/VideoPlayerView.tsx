@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import cl from './VideoPlayerView.module.css';
-import playImages from '../../../../SplashPage/images/playImg.png';
+import { playImages } from '../../../../SplashPage/images/greyMan/grayMan';
 import NftVideoplayer from '../NftVideoplayer/NftVideoplayer';
 import {
   IVideoPlayerView,

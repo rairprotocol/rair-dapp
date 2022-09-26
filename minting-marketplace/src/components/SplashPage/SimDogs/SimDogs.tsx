@@ -6,21 +6,25 @@ import './SimDogs.css';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 
 // import MetaMaskIcon from '../images/metamask_logo.png';
-import DiscordIcon from '../images/discord-icon.png';
-import SimDogs0 from '../images/SimDogs0.png';
-import SimDogs1 from '../images/SimDogs1.png';
-import SimDogs2 from '../images/SimDogs2.png';
-import SimDogs3 from '../images/SimDogs3.png';
-import SimDogs4 from '../images/SimDogs4.png';
+import { discrodIconNoBorder } from '../../../images';
+import {
+  SimDogs0,
+  SimDogs1,
+  SimDogs2,
+  SimDogs3,
+  SimDogs4
+} from '../images/simDogs/simDogs';
 // import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 
-import pic1 from '../SplashPageTemplate/TimelineGeneric/img/pic1.png';
-import pic2 from '../SplashPageTemplate/TimelineGeneric/img/pic2.png';
-import pic3 from '../SplashPageTemplate/TimelineGeneric/img/pic3.png';
-import pic5 from '../SplashPageTemplate/TimelineGeneric/img/pic5.png';
-import pic6 from '../SplashPageTemplate/TimelineGeneric/img/pic6.png';
-import pic7 from '../SplashPageTemplate/TimelineGeneric/img/pic7.png';
-import pic4 from '../images/greyman.png';
+import {
+  GreymanRose,
+  Flyinggreyman,
+  GreymanVariants,
+  GreymanMonument,
+  GreymanArmy,
+  GreymanMatrix,
+  GreyManTimes
+} from '../images/greyMan/grayMan';
 // import GenesisMember from '../images/creator-flow.png';
 
 /* importing Components*/
@@ -182,7 +186,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     buttonBackgroundHelp: 'rgb(3, 91, 188)',
     backgroundImage: SimDogs0,
     button1: {
-      buttonImg: DiscordIcon,
+      buttonImg: discrodIconNoBorder,
       buttonAction: () => window.open('https://discord.gg/pSTbf2yz7V')
     },
     button2: {
@@ -200,7 +204,15 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
       title: 'NFTs',
       titleColor: 'rgb(3, 91, 188)'
     },
-    timelinePics: [pic1, pic2, pic3, pic4, pic5, pic6, pic7]
+    timelinePics: [
+      Flyinggreyman,
+      GreymanVariants,
+      GreymanMonument,
+      GreymanRose,
+      GreymanArmy,
+      GreymanMatrix,
+      GreyManTimes
+    ]
   };
 
   //an option for custom button arrangment

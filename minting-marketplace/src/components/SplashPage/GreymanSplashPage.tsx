@@ -7,10 +7,8 @@ import './../AboutPage/AboutPageNew/AboutPageNew.css';
 import Modal from 'react-modal';
 
 /* importing images*/
-import Metamask from '../../images/metamask-fox.svg';
-import GreyMan from './images/greyman1.png';
-import playImages from './images/playImg.png';
-import GreyManNotFun from './images/not-fun.png';
+import { metaMaskIcon } from '../../images';
+import { GreyMan, playImages, GreyManNotFun } from './images/greyMan/grayMan';
 import GreymanFavicon from './images/favicons/greyman-favicon.ico';
 
 /* importing Components*/
@@ -436,7 +434,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                   <button onClick={() => openModal()}>
                     <img
                       className="metamask-logo"
-                      src={Metamask}
+                      src={metaMaskIcon}
                       alt="metamask-logo"
                     />{' '}
                     Mint with Matic
@@ -447,7 +445,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                     {...{
                       customStyle: {},
                       customWrapperClassName: '',
-                      img: Metamask,
+                      img: metaMaskIcon,
                       contractAddress: GraymanSplashPageTESTNET,
                       requiredBlockchain: GreymanChainId,
                       offerIndex: [offerIndexInMarketplace],
@@ -575,7 +573,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
                           <img
                             style={{ width: '100px', marginLeft: '-1rem' }}
                             className="metamask-logo modal-btn-logo"
-                            src={Metamask}
+                            src={metaMaskIcon}
                             alt="metamask-logo"
                           />{' '}
                           {window.ethereum?.chainId !== GreymanChainId

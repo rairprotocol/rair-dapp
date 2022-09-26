@@ -5,27 +5,21 @@ import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './UkraineSplash.css';
 
 /* importing images*/
-import UKR_rounded from '../images/UkraineGlitchNFTExamples/rounded_corners.png';
-import UKR4 from '../images/UkraineGlitchNFTExamples/4.jpg';
-import UKR5 from '../images/UkraineGlitchNFTExamples/5.gif';
-import UKR126 from '../images/UkraineGlitchNFTExamples/126.jpg';
-// import UKR246 from '../images/UkraineGlitchNFTExamples/246.jpg'
-import UKR497 from '../images/UkraineGlitchNFTExamples/497.jpg';
-// import UKR653 from '../images/UkraineGlitchNFTExamples/653.jpg'
-// import UKR777 from '../images/UkraineGlitchNFTExamples/777.jpg'
-// import UKR1050 from '../images/UkraineGlitchNFTExamples/1050.jpg'
-import UKR1294 from '../images/UkraineGlitchNFTExamples/1294.jpg';
-// import UKR1518 from '../images/UkraineGlitchNFTExamples/1518.jpg'
-// import UKR1641 from '../images/UkraineGlitchNFTExamples/1641.jpg'
-// import UKR1896 from '../images/UkraineGlitchNFTExamples/1896.jpg'
-import UKR1989 from '../images/UkraineGlitchNFTExamples/1989.jpg';
-import videoBackground from '../images/metamask-vid-final.png';
-import nftCountUkraine from '../images/UkrainianSoldierswithMedical/nftCountUkraine.jpeg';
+import {
+  UKR_rounded,
+  UKR4,
+  UKR5,
+  UKR126,
+  UKR497,
+  UKR1294,
+  UKR1989,
+  videoBackground,
+  nftCountUkraine
+} from '../images/UkraineGlitch/urkaineGlitch';
 import faviconUkraine from './../images/favicons/favicon-ukraine.ico';
 
 // import NFTLA_Video from "../images/NFT-LA-RAIR-2021.mp4"
-import MetaMaskIcon from '../images/metamask_logo.png';
-import DiscordIcon from '../images/discord-icon.png';
+import { metaMaskIcon, discrodIconNoBorder } from '../../../images';
 
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
@@ -96,7 +90,7 @@ const splashData: TSplashDataType = {
     // Reusable component
     buttonComponent: PurchaseTokenButton,
     // OPTIONAL: Image on the purchase button
-    img: MetaMaskIcon,
+    img: metaMaskIcon,
     // Contract address
     ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
       ? testContract
@@ -141,7 +135,7 @@ const splashData: TSplashDataType = {
   button2: {
     buttonColor: '#FFD505',
     buttonLabel: 'Join Our Discord',
-    buttonImg: DiscordIcon,
+    buttonImg: discrodIconNoBorder,
     buttonLink: 'https://discord.com/invite/y98EMXRsCE'
   },
   exclusiveNft: {

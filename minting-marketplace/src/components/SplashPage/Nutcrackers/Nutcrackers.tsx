@@ -1,21 +1,25 @@
 //@ts-nocheck
 /* eslint-disable  */
 import React, { useState, useEffect } from 'react';
-import Nuts from '../images/nuts-main.png';
-import Metamask from '../images/metamask_logo.png';
+import { NutsMain } from '../images/commingSoon/commingSoonImages';
+import { metaMaskIcon } from '../../../images';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
-import NftImage from '../images/exclusive-nuts_1.jpeg';
-import Nft_1 from '../images/exclusive-nuts_2.jpeg';
-import Nft_2 from '../images/exclusive-nuts_3.jpeg';
-import Nft_3 from '../images/exclusive-nuts_4.jpeg';
-import Nft_4 from '../images/exclusive-nuts_5.jpeg';
+
+import {
+  NftImage,
+  Nft_1,
+  Nft_2,
+  Nft_3,
+  Nft_4,
+  Cracker
+} from '../images/nutcrackers/nutcrackers';
 import ExclusiveNft from '../ExclusiveNft/ExclusiveNft';
-import Cracker from '../images/cracker-icon.png';
 // import photoNut from '../images/block-nuts-photos.png';
 import TeamMeet from '../TeamMeet/TeamMeetList';
-import PoweredRair from '../images/poweredRair.png';
+
+import { PoweredRair } from '../images/splashPageImages/splashPage';
 
 import { erc721Abi } from '../../../contracts/index';
 import { metamaskCall } from '../../../utils/metamaskUtils';
@@ -115,7 +119,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
       <div className="home-splash--page">
         <div className="information-author nutcrackers">
           <div className="block-splash">
-            <img className="nut-block-img" src={Nuts} alt="Nutcrackers" />
+            <img className="nut-block-img" src={NutsMain} alt="Nutcrackers" />
             <div className="text-splash">
               <div className="title-splash nipsey">
                 <h3>Introducing</h3>
@@ -130,7 +134,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
               <PurchaseTokenButton
                 {...{
                   customWrapperClassName: 'btn-buy-metamask',
-                  img: Metamask,
+                  img: metaMaskIcon,
                   contractAddress: nutcrackerAddress,
                   requiredBlockchain: '0x89',
                   offerIndex: [1, 0],
@@ -151,7 +155,7 @@ const Nutcrackers = ({ connectUserData, setIsSplashPage }) => {
                   <button onClick={mintNutcracker}>
                     <img
                       className="metamask-logo"
-                      src={Metamask}
+                      src={metaMaskIcon}
                       alt="metamask-logo"
                     />{' '}
                     Mint with Matic

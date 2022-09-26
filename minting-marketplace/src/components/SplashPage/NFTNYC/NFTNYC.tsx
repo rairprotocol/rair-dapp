@@ -4,12 +4,11 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './NFTNYC.css';
 
-import MetaMaskIcon from '../images/metamask_logo.png';
-import NFTNYC_TITLE from '../images/NFTNYX_TITLE.gif';
+import { metaMaskIcon } from '../../../images';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-import warning0 from '../images/warning_0.png';
+import { warning0, NFTNYC_TITLE } from '../images/NFTNYC/nftnyc';
 
-import videoBackground1 from '../images/nftnyc_videobackground1.png';
+import { NYCVideoBackground } from '../images/NFTNYC/nftnyc';
 
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
@@ -76,7 +75,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
       ? {
           buttonColor: '#F15621',
           buttonLabel: 'Connect wallet',
-          buttonImg: MetaMaskIcon,
+          buttonImg: metaMaskIcon,
           buttonAction: connectUserData
         }
       : {},
@@ -90,7 +89,6 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
       title: 'NFTs',
       titleColor: 'rgb(3, 91, 188)'
     },
-    videoBackground1: videoBackground1,
     videoData: {
       video: null,
       videoTitle: '',
@@ -190,7 +188,6 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
         </div>
         <div style={{ height: '58px' }} />
         {/* <VideoPlayerModule
-          backgroundImage={videoBackground1}
           videoData={splashData.videoData}
         /> */}
         {/* <div style={{ height: '108px' }} /> */}

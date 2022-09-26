@@ -10,7 +10,7 @@ import {
   SocialBoxSearch,
   UserIconMobile
 } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { BellIcon, SunIcon } from '../../Header/DiscordIcon';
+import { BellIcon, SunIcon } from '../../../images';
 import { SvgUserIcon } from '../../UserProfileSettings/SettingsIcons/SettingsIcons';
 
 interface IMobileChoiseNav {

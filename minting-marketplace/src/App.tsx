@@ -76,8 +76,7 @@ import { TermsUse } from './components/SplashPage/TermsUse';
 import WorkflowSteps from './components/creatorStudio/workflowSteps';
 
 // logos for About Page
-import headerLogoWhite from './images/rairTechLogoWhite.png';
-import headerLogoBlack from './images/rairTechLogoBlack.png';
+import { headerLogoBlack, headerLogoWhite } from './images';
 import RairFavicon from './components/MockUpPage/assets/rair_favicon.ico';
 import Analytics from 'analytics';
 import googleAnalytics from '@analytics/google-analytics';

@@ -5,7 +5,7 @@ import { Popup } from 'reactjs-popup';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { SocialBox } from '../../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { BellIcon } from '../../Header/DiscordIcon';
+import { BellIcon } from '../../../images';
 import NotificationPage from '../NotificationPage/NotificationPage';
 import NftImg from './images/image.png';
 

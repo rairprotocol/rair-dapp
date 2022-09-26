@@ -1,11 +1,13 @@
 import React from 'react';
-import RairLogo from './../../../assets/rairLogo_blue.png';
-import OpenSea from './../../../assets/openSea-logo.png';
-import Rarible from './../../../assets/rarible-logo.png';
-import OneOf from './../../../assets/oneOf-logo.png';
-import Dapper from './../../../assets/dapper-logo.png';
-import MinTable from './../../../assets/mintable-logo.png';
-import Curios from './../../../assets/curios.png';
+import {
+  RairLogoBlue,
+  OpenSea,
+  Rarible,
+  OneOf,
+  Dapper,
+  MinTable,
+  Curios
+} from '../../../../../images';
 import { ICompareMobileSelect } from '../../aboutPage.types';
 
 const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
@@ -18,7 +20,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="Rair Tech" />
+                <img src={RairLogoBlue} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Metaverse as-a-Service</div>
@@ -78,7 +80,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="Rair Tech" />
+                <img src={RairLogoBlue} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Any EVM</div>
@@ -138,7 +140,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="Rair Tech" />
+                <img src={RairLogoBlue} alt="Rair Tech" />
               </div>
             </div>
             <div className="select-mobile-text">Universal Onchain</div>
@@ -198,7 +200,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="rair tech" />
+                <img src={RairLogoBlue} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">Provenance & Speed</div>
@@ -258,7 +260,7 @@ const CompareMobileSelect: React.FC<ICompareMobileSelect> = ({
           <div className="block-logos-mobile">
             <div className="block-logo">
               <div>
-                <img src={RairLogo} alt="rair tech" />
+                <img src={RairLogoBlue} alt="rair tech" />
               </div>
             </div>
             <div className="select-mobile-text">

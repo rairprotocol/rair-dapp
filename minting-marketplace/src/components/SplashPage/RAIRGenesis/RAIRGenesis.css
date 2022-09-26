@@ -111,7 +111,7 @@
 .warning-modal-col-0 {
   width: 25%;
   height: auto;
-  background-image: url('../images/warning_1.png');
+  background-image: url('../images/splashPageImages/warning_1.webp');
   background-repeat: no-repeat;
   background-size: 100% auto;
 }
@@ -119,7 +119,7 @@
 .warning-modal-col-1 {
   width: 26%;
   height: auto;
-  background-image: url('../images/warning_2.png');
+  background-image: url('../images/splashPageImages/warning_2.webp');
   background-repeat: no-repeat;
   background-size: 100% auto;
 }

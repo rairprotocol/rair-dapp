@@ -1,5 +1,5 @@
 import React from 'react';
-import Metamask from '../images/metamask_logo.png';
+import { metaMaskIcon } from '../../../images';
 import { IUnlockVideoItem } from '../splashPage.types';
 
 const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
@@ -17,7 +17,7 @@ const UnlockVideoItem: React.FC<IUnlockVideoItem> = ({
         }}>
         <div className="block-with-video" style={{ position: 'relative' }}>
           <div className="video-block-metamask-some">
-            <img src={Metamask} alt="metamask-logo" />
+            <img src={metaMaskIcon} alt="metamask-logo" />
           </div>
           <img
             className="block-img-bg"

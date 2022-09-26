@@ -1,6 +1,6 @@
 import React from 'react';
-import DiscordIcon from '../images/discord-icon.png';
-import logoAuthor from '../images/colab.png';
+import { discrodIconNoBorder } from '../../../images';
+import { LogoAuthor } from '../images/commingSoon/commingSoonImages';
 import { useNavigate } from 'react-router-dom';
 
 const ComingSoon = () => {
@@ -31,8 +31,8 @@ const ComingSoon = () => {
                     href="https://discord.gg/NFeGnPkbfd"
                     target="_blank"
                     rel="noreferrer">
-                    <img src={DiscordIcon} alt="Discord RAIR.TECH" /> Join our
-                    Discord
+                    <img src={discrodIconNoBorder} alt="Discord RAIR.TECH" />{' '}
+                    Join our Discord
                   </a>
                 </div>
               </div>
@@ -40,7 +40,7 @@ const ComingSoon = () => {
                 <button onClick={goBack}>Back</button>
               </div>
               <div className="logo-author">
-                <img src={logoAuthor} alt="Custom logo by Rair Tech" />
+                <img src={LogoAuthor} alt="Custom logo by Rair Tech" />
               </div>
             </div>
           </div>
