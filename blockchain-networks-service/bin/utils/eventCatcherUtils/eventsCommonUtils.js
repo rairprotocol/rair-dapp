@@ -85,7 +85,7 @@ module.exports = {
         `New token has Metadata from the database! Pinned with CID: ${CID}`,
       );
     } else {
-      log.info(`Minted token ${tokenInstance}has no metadata!`);
+      log.info(`Minted token ${contractId}:${tokenIndex} has no metadata!`);
     }
     tokenInstance.isURIStoredToBlockchain = false;
     return tokenInstance;
