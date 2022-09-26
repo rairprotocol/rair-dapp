@@ -210,25 +210,25 @@ pipeline {
             }
           }
         }
-    stage('Build and push dev minting-marketplace new-infra') {
-          when { branch 'dev'}
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile.prod-new \
-                    --context ./minting-marketplace/ \
-                    --verbosity debug \
-                    --cleanup \
-                    --destination rairtechinc/minting-network:${GIT_COMMIT} \
-                    --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
-                '''
-              }
+    //stage('Build and push dev minting-marketplace new-infra') {
+    //      when { branch 'dev'}
+    //      steps {
+    //        container(name: 'kaniko', shell: '/busybox/sh') {
+    //          withEnv(['PATH+EXTRA=/busybox']) {
+    //            sh '''#!/busybox/sh -xe
+    //              /kaniko/executor \
+    //                --dockerfile Dockerfile.prod-new \
+    //                --context ./minting-marketplace/ \
+    //                --verbosity debug \
+    //                --cleanup \
+    //                --destination rairtechinc/minting-network:${GIT_COMMIT} \
+    //                --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
+    //            '''
+    //          }
 
-            }
-          }
-        }
+    //        }
+    //      }
+    //    }
     stage('Build and push dev rairnode') {
           when { branch 'dev'}
           steps {
