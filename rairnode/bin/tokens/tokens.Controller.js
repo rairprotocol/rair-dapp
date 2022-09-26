@@ -3,29 +3,49 @@ const {
   createTokensWithCommonMetadata,
   getSingleToken,
   updateSingleTokenMetadata,
-  pinMetadataToPinata
+  pinMetadataToPinata,
+  getAllTokens,
 } = require('./tokens.Service');
-const { getContractsByBlockchainAndContractAddress } = require('../contracts/contracts.Service');
-const { getOfferIndexesByContractAndProduct } = require('../offers/offers.Service');
-const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.Service');
+const {
+  getContractsByBlockchainAndContractAddress,
+} = require('../contracts/contracts.Service');
+const {
+  getOfferIndexesByContractAndProduct,
+} = require('../offers/offers.Service');
+const {
+  getOfferPoolByContractAndProduct,
+} = require('../offerPools/offerPools.Service');
 const upload = require('../Multer/Config');
-const { dataTransform, validation, JWTVerification, isAdmin } = require('../middleware');
-
+const {
+  dataTransform,
+  validation,
+  JWTVerification,
+  isAdmin,
+} = require('../middleware');
 
 const router = express.Router();
 
 router.post(
-    '/',
-    JWTVerification,
-    isAdmin,
-    upload.array('files', 2),
-    dataTransform([ 'attributes' ]),
-    validation('createCommonTokenMetadata'),
-    createTokensWithCommonMetadata,
+  '/',
+  JWTVerification,
+  isAdmin,
+  upload.array('files', 2),
+  dataTransform(['attributes']),
+  validation('createCommonTokenMetadata'),
+  createTokensWithCommonMetadata,
 );
-
 router.get(
-    '/:token',
+  '/my',
+  JWTVerification,
+  (req, res, next) => {
+    req.query.ownerAddress = req.user.publicAddress;
+    next();
+  },
+  getAllTokens,
+);
+router
+  .route('/:token')
+  .get(
     getContractsByBlockchainAndContractAddress,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
@@ -33,33 +53,29 @@ router.get(
       const { contract, offers, offerPool } = req;
 
       req.specificFilterOptions = contract.diamond
-          ? { offer: { $in: offers } }
-          : { offerPool: offerPool.marketplaceCatalogIndex };
+        ? { offer: { $in: offers } }
+        : { offerPool: offerPool.marketplaceCatalogIndex };
 
       return next();
     },
     getSingleToken,
-);
-
-router.patch(
-    '/:token',
+  )
+  .patch(
     JWTVerification,
     getContractsByBlockchainAndContractAddress,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     upload.array('files', 2),
-    dataTransform([ 'attributes' ]),
+    dataTransform(['attributes']),
     validation('updateTokenMetadata'),
     updateSingleTokenMetadata,
-);
-
-router.post(
-    '/:token',
+  )
+  .post(
     JWTVerification,
     getContractsByBlockchainAndContractAddress,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     pinMetadataToPinata,
-);
+  );
 
 module.exports = router;

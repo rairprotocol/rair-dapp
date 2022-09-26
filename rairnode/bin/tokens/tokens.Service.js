@@ -77,6 +77,8 @@ const prepareTokens = (
   });
 };
 
+exports.getAllTokens = eFactory.getAll(MintedToken);
+
 exports.createTokensWithCommonMetadata = async (req, res, next) => {
   try {
     const { user } = req;
