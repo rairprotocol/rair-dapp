@@ -8,6 +8,13 @@ const catchAsync = (fn) => (req, res, next) => {
   fn(req, res, next).catch(next);
 };
 
+exports.validateQuery = (paramName) => catchAsync(async (req, res, next) => {
+  if (!req.query[paramName]) {
+    return next(new AppError(`Missing query parameter ${paramName}`, 400));
+  }
+  return next();
+});
+
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);

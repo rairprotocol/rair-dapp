@@ -7,7 +7,7 @@ const {
   getAllTokens,
 } = require('./tokens.Service');
 const {
-  getContractsByBlockchainAndContractAddress,
+  getSpecificContracts,
 } = require('../contracts/contracts.Service');
 const {
   getOfferIndexesByContractAndProduct,
@@ -46,7 +46,7 @@ router.get(
 router
   .route('/:token')
   .get(
-    getContractsByBlockchainAndContractAddress,
+    getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     (req, res, next) => {
@@ -62,7 +62,7 @@ router
   )
   .patch(
     JWTVerification,
-    getContractsByBlockchainAndContractAddress,
+    getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     upload.array('files', 2),
@@ -72,7 +72,7 @@ router
   )
   .post(
     JWTVerification,
-    getContractsByBlockchainAndContractAddress,
+    getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     pinMetadataToPinata,

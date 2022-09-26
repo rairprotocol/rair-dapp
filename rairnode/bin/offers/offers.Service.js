@@ -5,6 +5,7 @@ const eFactory = require('../utils/entityFactory');
 
 exports.getOfferById = eFactory.getOne(Offer);
 exports.getAllOffers = eFactory.getAll(Offer);
+exports.validateQueryProduct = eFactory.validateQuery('product');
 
 exports.getOfferIndexesByContractAndProduct = async (req, res, next) => {
   try {

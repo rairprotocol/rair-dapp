@@ -11,11 +11,6 @@ router.get(
   userService.addUserAdressToFilterById,
   contractService.getAllContracts,
 );
-router.get(
-  '/byUser/:userId',
-  userService.addUserAdressToFilterById,
-  contractService.getAllContracts,
-);
 router.get('/full', contractService.getFullContracts);
 router.get('/my', JWTVerification, contractService.getMyContracts);
 router.post(
