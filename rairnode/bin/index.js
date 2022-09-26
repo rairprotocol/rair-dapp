@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
@@ -79,6 +80,8 @@ async function main() {
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
   app.use(bodyParser.json());
+  app.use(cookieParser());
+  app.set('trust proxy', 1);
   app.use(
     session({
       store: new RedisStorage({
@@ -88,16 +91,16 @@ async function main() {
       secret: config.session.secret,
       saveUninitialized: true,
       resave: false,
-      name: 'id',
+      proxy: config.production,
       cookie: {
+        sameSite: config.production ? 'none' : 'lax',
         path: '/',
-        httpOnly: true,
-        // secure: true,
+        httpOnly: config.production,
+        secure: config.production,
         // maxAge:  (12 * 60 * 60 * 1000)  // 12 hours
       },
     }),
   );
-
   app.use(
     '/thumbnails',
     express.static(path.join(__dirname, 'Videos/Thumbnails')),
@@ -105,7 +108,6 @@ async function main() {
   app.use('/stream', streamRoute(context));
   app.use('/api', apiV1Routes(context));
   app.use(express.static(path.join(__dirname, 'public')));
-
   app.use(mainErrorHandler);
 
   const server = app.listen(config.port, () => {

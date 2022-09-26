@@ -203,12 +203,10 @@ module.exports = (context) => {
             return next(new AppError("You don't have permission.", 403));
           }
 
-          await context.redis.redisService.set(`sess:${req.sessionID}`, {
-            ...req.session,
-            eth_addr: ethAddress,
-            media_id: mediaId,
-            streamAuthorized: true,
-          });
+          const sess = req.session;
+          sess.eth_addr = ethAddress;
+          sess.media_id = mediaId;
+          sess.streamAuthorized = true;
 
           return res.send({ success: true });
         }
@@ -320,13 +318,13 @@ module.exports = (context) => {
 
   // Terminating access for video streaming session
   router.get('/stream/out', (req, res, next) => {
-    try {
-      req.session.streamAuthorized = false;
-      delete req.session.media_id;
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+
       return res.send({ success: true });
-    } catch (err) {
-      return next(err);
-    }
+    });
   });
 
   return router;
