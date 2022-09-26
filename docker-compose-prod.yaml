@@ -149,7 +149,7 @@ services:
       GCP_VIDEO_BUCKET_NAME: ${gcp_video_bucket_name}
       GCP_CREDENTIALS: ${gcp_credentials}
       GCP_GATEWAY: ${gcp_gateway}
-      USE_X509_CERT_AUTH: ${VAULT_BLOCKCHAIN_NETWORK_use_x509_cert_auth}
+      USE_X509_CERT_AUTH: ${VAULT_MEDIA_SERVICE_use_x509_cert_auth}
       PINATA_KEY: ${pinata_key}
       PINATA_SECRET: ${pinata_secret}
       PINATA_GATEWAY: ${pinata_gateway}
@@ -159,8 +159,8 @@ services:
       MONGO_LOG_COLLECTION: ${mongo_log_collection}
       LOG_LEVEL: ${log_level}
       VAULT_URL: ${VAULT_URL}
-      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_ID}
-      VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID: ${VAULT_BLOCKCHAIN_NETWORK_APP_ROLE_SECRET_ID}
+      VAULT_MEDIA_SERVICE_APP_ROLE_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_ID}
+      VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID: ${VAULT_MEDIA_SERVICE_APP_ROLE_SECRET_ID}
       SENTRY_DSN: ${sentry_dsn}
     ports:
       - 5002:5002
