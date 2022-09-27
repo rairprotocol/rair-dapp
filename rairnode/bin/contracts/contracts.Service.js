@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
-const { Contract, Blockchain, Category } = require('../models');
+const { Contract, Blockchain } = require('../models');
 const AppError = require('../utils/errors/AppError');
 const eFactory = require('../utils/entityFactory');
 const {
@@ -8,6 +8,7 @@ const {
 } = require('../integrations/ethers/importContractData');
 
 exports.getAllContracts = eFactory.getAll(Contract);
+exports.updateContract = eFactory.updateOne(Contract);
 
 exports.getContractById = async (req, res, next) => {
   try {

@@ -1,6 +1,12 @@
 const express = require('express');
 const contractService = require('./contracts.Service');
-const { JWTVerification, isAdmin } = require('../middleware');
+const {
+  JWTVerification,
+  isAdmin,
+  isSuperAdmin,
+  validation,
+  verifySuperAdmin,
+} = require('../middleware');
 const userService = require('../users/users.Service');
 
 const router = express.Router();
@@ -20,5 +26,16 @@ router.post(
   contractService.importContractsMoralis,
 );
 router.get('/:id', contractService.getContractById);
+
+// Allows update only two fields
+router.patch(
+  '/:id',
+  JWTVerification,
+  isAdmin,
+  isSuperAdmin,
+  verifySuperAdmin,
+  validation('manageContract'),
+  contractService.updateContract,
+);
 
 module.exports = router;
