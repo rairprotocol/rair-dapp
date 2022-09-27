@@ -4,4 +4,4 @@ metadata:
   name: ingress-env
 data:
   IP_NAME: staging-ip
-  HOSTNAME: staging.rair.market
+  HOSTNAME: staging.rair.tech
