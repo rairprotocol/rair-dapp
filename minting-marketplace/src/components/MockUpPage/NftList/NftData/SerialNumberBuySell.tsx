@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ISerialNumberBuySell } from '../../mockupPage.types';
 import { CheckEthereumChain } from '../../../../utils/CheckEthereumChain';
 import { BuySellButton } from './BuySellButton';
@@ -10,6 +10,8 @@ import SelectNumber from '../../SelectBox/SelectNumber/SelectNumber';
 import chainData from '../../../../utils/blockchainData';
 import Swal from 'sweetalert2';
 import SellInputButton from './SellInputButton';
+import { rFetch } from '../../../../utils/rFetch';
+import { ContractType } from '../../../adminViews/adminView.types';
 
 const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   tokenData,
@@ -25,47 +27,84 @@ const SerialNumberBuySell: React.FC<ISerialNumberBuySell> = ({
   currentUser,
   loginDone
 }) => {
-  const { minterInstance, currentChain } = useSelector<
-    RootState,
-    ContractsInitialType
-  >((state) => state.contractStore);
+  const { minterInstance, diamondMarketplaceInstance, currentChain } =
+    useSelector<RootState, ContractsInitialType>(
+      (state) => state.contractStore
+    );
   const currentProvider = window.ethereum.chainId;
+  const [contractData, setContractData] = useState<ContractType>();
 
   const realChainProtected = currentChain || currentProvider;
 
   const disableBuyBtn = useCallback(() => {
-    if (!offerData?.diamondRangeIndex) {
-      return false;
-    } else if (!offerData?.offerPool) {
-      return false;
-    } else {
+    // Returns true to DISABLE the button
+    // Returs false to ENABLE the button
+    if (!contractData || !offerData?.offerIndex) {
       return true;
+    } else if (contractData.diamond) {
+      return !offerData.diamondRangeIndex;
+    } else {
+      return !offerData.offerPool;
     }
-  }, [offerData]);
+  }, [offerData, contractData]);
 
   const buyContract = useCallback(async () => {
+    if (
+      !contractData ||
+      !offerData ||
+      !diamondMarketplaceInstance ||
+      !minterInstance
+    ) {
+      return;
+    }
     Swal.fire({
       title: 'Buying token',
       html: 'Awaiting transaction completion',
       icon: 'info',
       showConfirmButton: false
     });
+    let marketplaceCall, marketplaceArguments;
+    if (contractData.diamond) {
+      marketplaceCall = diamondMarketplaceInstance?.buyMintingOffer;
+      marketplaceArguments = [
+        offerData.offerIndex, // Offer Index
+        selectedToken // Token Index
+      ];
+    } else {
+      marketplaceCall = minterInstance?.buyToken;
+      marketplaceArguments = [
+        offerData?.offerPool, // Catalog Index
+        offerData?.offerIndex, // Range Index
+        selectedToken // Internal Token Index
+      ];
+    }
+    marketplaceArguments.push({ value: offerData.price });
     if (
       await metamaskCall(
-        minterInstance?.buyToken(
-          offerData?.offerPool,
-          offerData?.offerIndex,
-          selectedToken,
-          {
-            value: offerData?.price
-          }
-        ),
+        marketplaceCall(...marketplaceArguments),
         'Sorry your transaction failed! When several people try to buy at once - only one transaction can get to the blockchain first. Please try again!'
       )
     ) {
       Swal.fire('Success', 'Now, you are the owner of this token', 'success');
     }
-  }, [minterInstance, offerData, selectedToken]);
+  }, [
+    minterInstance,
+    offerData,
+    diamondMarketplaceInstance,
+    contractData,
+    selectedToken
+  ]);
+
+  useEffect(() => {
+    if (offerData) {
+      (async () => {
+        const contractInfo = await rFetch(
+          `/api/v2/contracts/${offerData.contract}`
+        );
+        setContractData(contractInfo?.contract);
+      })();
+    }
+  }, [offerData]);
 
   const checkOwner = useCallback(() => {
     const price = offerData?.price;
