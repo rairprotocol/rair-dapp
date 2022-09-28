@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
+const { generateChallenge, validateChallenge } = require("../integrations/ethers/web3Signature");
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
 const AppError = require('../utils/errors/AppError');
@@ -90,7 +90,7 @@ module.exports = (context) => {
   router.get(
     '/get_challenge/:MetaAddress',
     validation('getChallenge', 'params'),
-    metaAuth,
+    generateChallenge('Login to RAIR. This sign request securely logs you in to RAIR. Check for a second sign request to play videos.'),
     (req, res) => {
       res.send({ success: true, response: req.metaAuth.challenge });
     },
@@ -132,7 +132,7 @@ module.exports = (context) => {
   router.get(
     '/get_token/:MetaMessage/:MetaSignature/:mediaId',
     validation('getToken', 'params'),
-    metaAuth,
+    validateChallenge,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
       const { mediaId } = req.params;
@@ -221,10 +221,9 @@ module.exports = (context) => {
   router.get(
     '/admin/:MetaMessage/:MetaSignature/',
     validation('admin', 'params'),
-    metaAuth,
+    validateChallenge,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
-
       try {
         if (ethAddress) {
           const user = await context.db.User.findOne({
@@ -258,7 +257,7 @@ module.exports = (context) => {
   router.get(
     '/authentication/:MetaMessage/:MetaSignature/',
     validation('authentication', 'params'),
-    metaAuth,
+    validateChallenge,
     isSuperAdmin,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
