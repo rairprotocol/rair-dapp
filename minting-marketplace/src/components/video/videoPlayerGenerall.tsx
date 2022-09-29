@@ -18,9 +18,10 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
   baseURL,
   setProcessDone = () => false
 }) => {
-  const { programmaticProvider } = useSelector<RootState, ContractsInitialType>(
-    (state) => state.contractStore
-  );
+  const { programmaticProvider, currentUserAddress } = useSelector<
+    RootState,
+    ContractsInitialType
+  >((state) => state.contractStore);
   const [videoName] = useState(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState<string>(
     `${baseURL}${mediaId}`
@@ -40,8 +41,13 @@ const VideoPlayer: React.FC<IVideoPlayer> = ({
       if (account) {
         account = account[0];
       }
-      const response = await axios.get<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/' + account
+      const response = await axios.post<TAuthGetChallengeResponse>(
+        '/api/auth/get_challenge/',
+        {
+          userAddress: currentUserAddress,
+          intent: 'decrypt',
+          mediaId
+        }
       );
       parsedResponse = JSON.parse(response.data.response);
       signature = await window.ethereum.request({

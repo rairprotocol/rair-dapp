@@ -74,7 +74,7 @@ async function checkChallenge(challenge, sig) {
   return false;
 }
 
-function createChallenge(address, options, customDescription) {
+function createChallenge(address, customDescription) {
   const hash = createHmac('sha256', secret)
     .update(address + uuidv4())
     .digest('hex');
@@ -107,7 +107,7 @@ module.exports = {
     if (req.params[OPTIONS.address]) {
       const address = req.params[OPTIONS.address];
       if (utils.isAddress(address)) {
-        const challenge = createChallenge(address, OPTIONS, message);
+        const challenge = createChallenge(address, message);
         const json = {
           challenge,
         };
@@ -117,6 +117,15 @@ module.exports = {
       }
     }
     next();
+  },
+  generateChallengeV2: (req, res, next) => {
+    const address = req.body.userAddress;
+    if (utils.isAddress(address)) {
+      const challenge = createChallenge(address, req.metaAuth.customDescription);
+      const json = { challenge };
+      req.metaAuth = json;
+      next();
+    }
   },
   validateChallenge: async (req, res, next) => {
     if (req.params[OPTIONS.message] && req.params[OPTIONS.signature]) {

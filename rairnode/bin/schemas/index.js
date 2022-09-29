@@ -4,6 +4,7 @@ const authentication = require('./authentication');
 const createContract = require('./createContract');
 const createUser = require('./createUser');
 const getChallenge = require('./getChallenge');
+const getChallengeV2 = require('./getChallengeV2');
 const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
 const singleUser = require('./singleUser');
@@ -52,4 +53,5 @@ module.exports = {
   createCommonTokenMetadata,
   createFavoriteToken,
   manageContract,
+  getChallengeV2,
 };

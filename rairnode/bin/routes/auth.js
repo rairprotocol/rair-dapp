@@ -1,8 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { generateChallenge, validateChallenge } = require("../integrations/ethers/web3Signature");
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
+const { generateChallenge, generateChallengeV2, validateChallenge } = require('../integrations/ethers/web3Signature');
 const AppError = require('../utils/errors/AppError');
 const {
   checkBalanceProduct,
@@ -68,6 +68,32 @@ const getTokensForUser = async (
 
 module.exports = (context) => {
   const router = express.Router();
+
+  router.post(
+    '/get_challenge',
+    validation('getChallengeV2'),
+    async (req, res, next) => {
+      const messages = {
+        login: 'Login to RAIR. This sign request securely logs you in to RAIR. Check for a second sign request to play videos.',
+      };
+      if (req?.body?.mediaId) {
+        const fileData = await context.db.File.findById(req.body.mediaId);
+        const authorData = await context.db.User.findOne({
+          publicAddress: fileData.authorPublicAddress,
+        });
+        messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.authorPublicAddress}`;
+      }
+      req.metaAuth = {
+        customDescription: messages[req.body.intent],
+      };
+      next();
+    },
+    generateChallengeV2,
+    (req, res, next) => {
+      res.send({ success: true, response: req.metaAuth.challenge });
+    },
+  );
+
   /**
    * @swagger
    *
