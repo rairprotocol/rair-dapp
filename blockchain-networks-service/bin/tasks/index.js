@@ -7,7 +7,7 @@ module.exports = async (context) => {
   const db = context.mongo;
 
   // remove all old sync and sync-contracts tasks
-  await context.db.Task.deleteMany({ name: { $in: ['sync', 'sync contracts'] } });
+  await context.db.Task.deleteMany();
   // Mark all sync task as Not Running
   await context.db.Versioning.updateMany({}, { $set: { running: false } });
 

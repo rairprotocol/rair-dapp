@@ -49,6 +49,13 @@ module.exports = (context) => {
 				})).save();
 			}
 
+			if (version.running) {
+				return done({reason: `A ${AgendaTaskEnum.SyncClassicMarketplaceEvents} process for network ${network} is already running!`});
+			} else {
+				version.running = true;
+				version = await version.save();
+			}
+
 			/*
 				Collection Name 	Description
 				------------------------------------------------------------
