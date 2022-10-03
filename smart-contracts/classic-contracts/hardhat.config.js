@@ -5,6 +5,7 @@ require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-contract-sizer');
 require("hardhat-tracer");
+require("@nomicfoundation/hardhat-toolbox");
 // Disabled because there's no use for Types
 //require('@typechain/hardhat');
 require('dotenv').config()
@@ -17,7 +18,6 @@ module.exports = {
       forking: {
         url: process.env.ETHEREUM_ARCHIVE_SPEEDY_NODE,
         blockNumber: 14000000,
-        timeout: 1000000
       }
     },
     ethMainnet: {
@@ -55,7 +55,7 @@ module.exports = {
         }
       }
     },{
-      version: "0.8.16",
+      version: "0.8.17",
       settings: {
         optimizer: {
           enabled: true,
@@ -65,6 +65,7 @@ module.exports = {
     }],
   },
   gasReporter: {
+    enabled: true,
     currency: 'USD',
     showTimeSpent: true,
     coinmarketcap: process.env.COINMARKETCAP || undefined

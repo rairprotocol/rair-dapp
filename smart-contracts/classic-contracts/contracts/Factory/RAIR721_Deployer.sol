@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.16;
+pragma solidity ^0.8.17;
 
 // Parents
 import "openzeppelin-v4.7.1/access/AccessControlEnumerable.sol";
