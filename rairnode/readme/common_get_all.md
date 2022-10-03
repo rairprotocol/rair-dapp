@@ -1,4 +1,4 @@
-# Get full contracts
+# Get all (common)
 
 Find all <entities>
 

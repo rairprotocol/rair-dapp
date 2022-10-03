@@ -1,18 +1,17 @@
 const express = require('express');
 const offerService = require('./offers.Service');
-const {
-  getContractsByBlockchainAndContractAddress,
-} = require('../contracts/contracts.Service');
+const { getSpecificContracts } = require('../contracts/contracts.Service');
+const { validation } = require('../middleware');
 
 const router = express.Router();
 
 router.get('/', offerService.getAllOffers);
 router.get(
   '/byAddressAndProduct/',
-  offerService.validateQueryProduct,
+  validation('withProductV2', 'query'),
   async (req, res, next) => {
     if (!req.query.contract) {
-      await getContractsByBlockchainAndContractAddress(req, res, next);
+      await getSpecificContracts(req, res, next);
     } else {
       next();
     }

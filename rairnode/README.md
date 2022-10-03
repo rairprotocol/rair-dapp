@@ -140,6 +140,8 @@ Provide ability to make some specific actions on the platform
           * [x] /byAddressAndProduct - GET - get list of offers for specific Product [see details here](readme/get_Offer_by_Address_and_Product.md)
       * [x] /tokens - POST - create a batch of tokens with common metadata for contract or product, [see details here](readme/create_tokens_with_common_metadata.md)
           * [x] /my - GET - get all tokens which belongs to current user, [see details here](readme/get_my_tokens.md)
+          * [x] /tokenNumbers - GET - get all tokens' numbers for [see details here](readme/get_tokenNumbers.md)
+          * [x] /viaCSV - POST - update existed nft tokens, (**mirrors POST:api/nft/** without creating of new tokens. No handling for *"Token not created"* scenario.) [see details here](readme/bulk_create_NFT_tokens.md)
           * [x] /:token - GET - Get specific token by contract, product and internal ID, [see details here](readme/get_minted_token_by_contract_product_index_v2.md)
           * [x] /:token - PATCH - Update specific token metadata by contract, product and internal ID, [see details here](readme/update_token_metadata_v2.md)
           * [x] /:token - POST - Pin token metadata to IPFS cloud, [see details here](readme/pin_token_metadata_to_ipfs_v2.md)
