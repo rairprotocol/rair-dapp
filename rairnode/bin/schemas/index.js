@@ -26,7 +26,6 @@ const createCommonTokenMetadata = require('./createCommonTokenMetadata');
 const createFavoriteToken = require('./createFavoriteToken');
 const withProductV2 = require('./withProductV2');
 const manageContract = require('./manageContract');
-const withProductV2 = require('./withProductV2');
 
 module.exports = {
   admin,
