@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import ModalHelp from '../SplashPageTemplate/ModalHelp';
 import VideoPlayerView from '../../MockUpPage/NftList/NftData/UnlockablesPage/VideoPlayerView';
-
+import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 import MetaTags from '../../SeoTags/MetaTags';
 import NotCommercialTemplate from '../NotCommercial/NotCommercialTemplate';
 import AuthorCardButton from '../SplashPageTemplate/AuthorCard/AuthorCardButton';
@@ -20,18 +20,17 @@ import { setRealChain } from '../../../ducks/contracts/actions';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { useGetProducts } from '../splashPageProductsHook';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
 
 const reactSwal = withReactContent(Swal);
 
 const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const splashData: TSplashDataType = {
-    seoInformation: {
-      title: 'CoinAGENDA 2021',
-      contentName: 'author',
-      content: 'CoinAGENDA 2021'
-    },
     NFTName: '#coinagenda NFT',
     videoPlayerParams: {
       contract: '0x551213286900193ff3882a3f3d0441aadd32d42d',
@@ -55,6 +54,26 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
     }
   };
 
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'CoinAGENDA 2021',
+        ogTitle: 'CoinAGENDA 2021',
+        twitterTitle: 'CoinAGENDA 2021',
+        contentName: 'author',
+        content: '',
+        description: '',
+        ogDescription: '',
+        twitterDescription: '',
+        image:
+          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        favicon: RairFavicon,
+        faviconMobile: RairFavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
+
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
@@ -67,7 +86,6 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
-  const dispatch = useDispatch();
 
   // this conditionally hides the search bar in header
   useEffect(() => {
@@ -87,7 +105,7 @@ const CoinAgenda2021SplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page coinagenda">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}

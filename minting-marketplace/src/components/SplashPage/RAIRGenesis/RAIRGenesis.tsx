@@ -26,6 +26,8 @@ import { INumberedCircle, ISplashPageProps } from '../splashPage.types';
 import { TEmbeddedParams, TModeType } from '../../MockUpPage/mockupPage.types';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import WarningModal from '../WarningModal';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
 //ReactGA.initialize(TRACKING_ID);
@@ -45,6 +47,8 @@ const NumberedCircle: React.FC<INumberedCircle> = ({ index, primaryColor }) => {
 const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const currentUserAddress = useSelector<RootState, string | undefined>(
     (store) => store.contractStore.currentUserAddress
   );
@@ -56,15 +60,6 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
     textDescriptionCustomStyles: connectUserData
       ? { paddingTop: '3vw' }
       : undefined,
-    seoInformation: {
-      title: 'RAIR Genesis Pass',
-      contentName: 'author',
-      content: 'RAIR Genesis Pass',
-      description:
-        'Claim your NFT to unlock encrypted streams from the NFTLA conference',
-      favicon: NFTNYC_favicon,
-      image: Genesis_TV
-    },
     videoPlayerParams: {
       contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
       product: '0',
@@ -124,7 +119,28 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'RAIR Genesis Pass',
+        ogTitle: 'RAIR Genesis Pass',
+        twitterTitle: 'RAIR Genesis Pass',
+        contentName: 'author',
+        content: 'RAIR Genesis Pass',
+        description:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        ogDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        twitterDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        image: Genesis_TV,
+        favicon: NFTNYC_favicon,
+        faviconMobile: NFTNYC_favicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
@@ -156,7 +172,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page genesis">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}

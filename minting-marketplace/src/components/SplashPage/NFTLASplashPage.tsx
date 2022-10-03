@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './SplashPageTemplate/AuthorCard/AuthorCard.css';
 import './../AboutPage/AboutPageNew/AboutPageNew.css';
 
@@ -28,6 +28,7 @@ import {
 import { TFileType } from '../../axios.responseTypes';
 import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { setInfoSEO } from '../../ducks/seo/actions';
 
 //TODO:Until we have a contract it will be commented
 // import { TNftFilesResponse } from '../../axios.responseTypes';
@@ -42,15 +43,6 @@ const splashData: TSplashDataType = {
   titleColor: '#A4396F',
   description:
     'Connect with Metamask for your free NFT airdrop and access exclusive streaming content from our event!',
-  seoInformation: {
-    title: 'Official NFTLA Streaming NFTs',
-    contentName: 'author',
-    content: '#NFTLA',
-    description:
-      'Claim your NFT to unlock encrypted streams from the NFTLA conference',
-    favicon: NFTfavicon,
-    faviconMobile: NFTfavicon
-  },
   backgroundImage: NFTLA1_rounded,
   button1: {
     buttonColor: '#A4396F',
@@ -129,6 +121,8 @@ const splashData: TSplashDataType = {
 };
 
 const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [selectVideo, setSelectVideo] = useState<TNftLaSelectedVideo | {}>({});
   // TODO: Until we have a contract it will be commented
   const [allVideos /*setAllVideos*/] = useState<TFileType[]>([]);
@@ -165,6 +159,29 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
     }
   ];
 
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'Official NFTLA Streaming NFTs',
+        ogTitle: 'Official NFTLA Streaming NFTs',
+        twitterTitle: 'Official NFTLA Streaming NFTs',
+        contentName: 'author',
+        content: '#NFTLA',
+        description:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        ogDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        twitterDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        image:
+          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        favicon: NFTfavicon,
+        faviconMobile: NFTfavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
+
   //temporarily unused-snippet
   // const getAllVideos = useCallback(async () => {
   //   const response = await axios.get<TNftFilesResponse>(
@@ -184,7 +201,7 @@ const NFTLASplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   return (
     <div className="wrapper-splash-page">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <AuthorCard splashData={splashData} />
         <CarouselModule

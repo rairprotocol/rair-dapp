@@ -8,13 +8,16 @@ const MetaTags: React.FC<IMetaTags> = ({ seoMetaTags }) => {
       <title>{seoMetaTags?.title}</title>
       <meta name={seoMetaTags?.contentName} content={seoMetaTags?.content} />
       <meta name="description" content={seoMetaTags?.description} />
-      <meta property="og:title" content={seoMetaTags?.title} />
-      <meta property="og:description" content={seoMetaTags?.description} />
+      <meta property="og:title" content={seoMetaTags?.ogTitle} />
+      <meta property="og:description" content={seoMetaTags?.ogDescription} />
       {seoMetaTags?.image && (
         <meta property="og:image" content={seoMetaTags.image} />
       )}
-      <meta name="twitter:title" content={seoMetaTags?.title} />
-      <meta name="twitter:description" content={seoMetaTags?.description} />
+      <meta name="twitter:title" content={seoMetaTags?.twitterTitle} />
+      <meta
+        name="twitter:description"
+        content={seoMetaTags?.twitterDescription}
+      />
       <link rel="icon" href={seoMetaTags?.favicon} />
       <link
         rel="apple-touch-icon"

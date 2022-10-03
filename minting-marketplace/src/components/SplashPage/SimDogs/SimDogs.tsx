@@ -14,6 +14,7 @@ import {
   SimDogs3,
   SimDogs4
 } from '../images/simDogs/simDogs';
+import RairFavicon from '../../../components/MockUpPage/assets/rair_favicon.ico';
 // import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
 
 import {
@@ -53,6 +54,8 @@ import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { TFileType, TNftFilesResponse } from '../../../axios.responseTypes';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import WarningModal from '../WarningModal';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
 // import { TimelineGeneric } from '../SplashPageTemplate/TimelineGeneric/TimelineGeneric';
 // Google Analytics
 //const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -64,6 +67,8 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { currentUserAddress } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
@@ -162,12 +167,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     titleColor: '#495CB0',
     description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
     textBottom: false,
-    seoInformation: {
-      title: 'Sim Dogs',
-      contentName: 'author',
-      description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
-      image: SimDogs0
-    },
     videoPlayerParams: {
       contract: '0x09926100eeab8ca2d636d0d77d1ccef323631a73',
       product: '0',
@@ -215,6 +214,25 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
     ]
   };
 
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'Sim Dogs',
+        ogTitle: 'Sim Dogs',
+        twitterTitle: 'Sim Dogs',
+        contentName: 'author',
+        content: '',
+        description: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        ogDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        twitterDescription: 'BUY A DOG, WIN A LAWSUIT & END SIM SWAP CRIME!',
+        image: SimDogs0,
+        favicon: RairFavicon,
+        faviconMobile: RairFavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
+
   //an option for custom button arrangment
 
   const CustomButtonBlock: React.FC<ICustomButtonBlock> = ({ splashData }) => {
@@ -242,7 +260,6 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
-  const dispatch = useDispatch();
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
@@ -277,7 +294,7 @@ const SimDogsSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page simdogs">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}

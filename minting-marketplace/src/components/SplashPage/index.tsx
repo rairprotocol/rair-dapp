@@ -51,6 +51,10 @@ import { TAddChainData } from '../../utils/utils.types';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
+import { setInfoSEO } from '../../ducks/seo/actions';
+import { InitialState } from '../../ducks/seo/reducers';
+import { TInfoSeo } from '../../ducks/seo/seo.types';
+import MetaTags from '../SeoTags/MetaTags';
 
 const customStyles = {
   overlay: {
@@ -75,11 +79,16 @@ const customStyles = {
 };
 
 const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [dataNipsey, setDataNipsey] = useState<number>();
   const [copies, setCopies] = useState<number>();
   const [timerLeft, setTimerLeft] = useState<number>();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  useEffect(() => {
+    dispatch(setInfoSEO(InitialState));
+    //eslint-disable-next-line
+  }, []);
 
   const switchEthereumChain = async (chainData: TAddChainData) => {
     try {
@@ -209,6 +218,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
 
   return (
     <div className="wrapper-splash-page">
+      <MetaTags seoMetaTags={seo} />
       <div className="home-splash--page">
         <div className="information-author">
           <div className="block-splash">

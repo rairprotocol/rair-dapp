@@ -28,6 +28,8 @@ import { ISplashPageProps, TSplashDataType } from '../splashPage.types';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { setRealChain } from '../../../ducks/contracts/actions';
 import { useGetProducts } from '../splashPageProductsHook';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
 
 const reactSwal = withReactContent(Swal);
 
@@ -35,6 +37,8 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
@@ -49,15 +53,6 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
     description: [
       'Connect your wallet to receive a free airdrop. Unlock exclusive encrypted streams'
     ],
-    seoInformation: {
-      title: 'NFTNYC X RAIR',
-      contentName: 'author',
-      content: 'NFTNYC X RAIR',
-      description:
-        'Claim your NFT to unlock encrypted streams from the NFTLA conference',
-      favicon: NFTNYC_favicon,
-      image: NFTNYC_TITLE
-    },
     videoPlayerParams: {
       blockchain: '0x89',
       contract: '0xb41660b91c8ebc19ffe345726764d4469a4ab9f8',
@@ -99,6 +94,28 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
     }
   };
 
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'NFTNYC X RAIR',
+        ogTitle: 'NFTNYC X RAIR',
+        twitterTitle: 'NFTNYC X RAIR',
+        contentName: 'author',
+        content: '#NFTLA',
+        description:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        ogDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        twitterDescription:
+          'Claim your NFT to unlock encrypted streams from the NFTLA conference',
+        image: NFTNYC_TITLE,
+        favicon: NFTNYC_favicon,
+        faviconMobile: NFTNYC_favicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
+
   /* UTILITIES FOR VIDEO PLAYER VIEW (placed this functionality into custom hook for reusability)*/
   const [productsFromOffer, selectVideo, setSelectVideo] =
     useGetProducts(splashData);
@@ -107,7 +124,6 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
   const [openCheckList /*setOpenCheckList*/] = useState<boolean>(false);
   const [purchaseList, setPurchaseList] = useState<boolean>(true);
   const ukraineglitchChainId = '0x1';
-  const dispatch = useDispatch();
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
@@ -126,7 +142,7 @@ const NFTNYCSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page nftnyc">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}

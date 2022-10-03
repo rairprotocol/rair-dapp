@@ -18,21 +18,32 @@ import RoadMap from './RoadMapAbout/RoadMapAbout';
 import CompareAbout from './CompareAbout/CompareAbout';
 import TeamMeet from '../../SplashPage/TeamMeet/TeamMeetList';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import PurchaseTokenButton from '../../common/PurchaseToken';
 import { IAboutPageNew } from './aboutPage.types';
 import { RootState } from '../../../ducks';
 import { ColorStoreType } from '../../../ducks/colors/colorStore.types';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { InitialState } from '../../../ducks/seo/reducers';
+import MetaTags from '../../SeoTags/MetaTags';
 
 const AboutPageNew: React.FC<IAboutPageNew> = ({
   connectUserData,
   setIsSplashPage
 }) => {
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { primaryColor } = useSelector<RootState, ColorStoreType>(
     (store) => store.colorStore
   );
+
+  useEffect(() => {
+    dispatch(setInfoSEO(InitialState));
+    //eslint-disable-next-line
+  }, []);
 
   const termsText =
     'I understand this a test NFT designed to unlock RAIR streams';
@@ -76,6 +87,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
   return (
     <>
       <div className="wrapper-about-page">
+        <MetaTags seoMetaTags={seo} />
         <div className="home-about--page">
           <MainBlock
             connectUserData={connectUserData}

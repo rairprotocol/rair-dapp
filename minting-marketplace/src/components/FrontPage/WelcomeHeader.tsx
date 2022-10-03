@@ -1,5 +1,11 @@
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../ducks';
+import { setInfoSEO } from '../../ducks/seo/actions';
+import { InitialState } from '../../ducks/seo/reducers';
+import { TInfoSeo } from '../../ducks/seo/seo.types';
 import MockUpPage from '../MockUpPage/MockUpPage';
+import MetaTags from '../SeoTags/MetaTags';
 
 const WelcomeHeader = ({
   // // seoInformation,
@@ -7,13 +13,19 @@ const WelcomeHeader = ({
   setTabIndex,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
+  useEffect(() => {
+    dispatch(setInfoSEO(InitialState));
+    //eslint-disable-next-line
+  }, []);
   useEffect(() => {
     setIsSplashPage(false);
   }, [setIsSplashPage]);
 
   return (
     <div className="main-wrapper">
-      {/* <MetaTags seoMetaTags={seoInformation} /> */}
+      <MetaTags seoMetaTags={seo} />
       <div className="col-6 text-left main">
         <h1 className="w-100 general-title">
           Digital <b className="title">Ownership</b>

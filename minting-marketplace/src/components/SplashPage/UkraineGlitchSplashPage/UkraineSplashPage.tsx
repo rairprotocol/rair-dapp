@@ -47,6 +47,8 @@ import {
   TSplashDataType
 } from '../splashPage.types';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
 // import PurchaseChecklist from "../PurchaseChecklist/PurchaseChecklist";
 
 // Google Analytics
@@ -75,14 +77,6 @@ const splashData: TSplashDataType = {
     // <br key={Math.random() * 1_000_000} />,
     '100% of proceeds fund tactical first aid supplies and Ukrainian developers'
   ],
-  seoInformation: {
-    title: 'Слава Україні!',
-    contentName: 'author',
-    content: '#UkraineGlitch',
-    description: '1991 Generative Abstract Glitch Art pieces to aid Ukraine',
-    favicon: faviconUkraine,
-    image: UKR_rounded
-  },
   buttonLabel: 'Mint for .1991 Eth',
   buttonBackgroundHelp: 'rgb(3, 91, 188)',
   backgroundImage: UKR_rounded,
@@ -224,6 +218,8 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const [soldCopies, setSoldCopies] = useState<number>(0);
   const primaryColor = useSelector<RootState, ColorChoice>(
@@ -237,7 +233,28 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurshaseList] = useState(true);
   const ukraineglitchChainId = '0x1';
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'Слава Україні!',
+        ogTitle: 'Слава Україні!',
+        twitterTitle: 'Слава Україні!',
+        contentName: 'author',
+        content: '#UkraineGlitch',
+        description:
+          '1991 Generative Abstract Glitch Art pieces to aid Ukraine',
+        ogDescription:
+          '1991 Generative Abstract Glitch Art pieces to aid Ukraine',
+        twitterDescription:
+          '1991 Generative Abstract Glitch Art pieces to aid Ukraine',
+        image: UKR_rounded,
+        favicon: faviconUkraine,
+        faviconMobile: faviconUkraine
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   const togglePurchaseList = () => {
     setPurshaseList((prev) => !prev);
@@ -283,7 +300,7 @@ const UkraineSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page ukraineglitch">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}

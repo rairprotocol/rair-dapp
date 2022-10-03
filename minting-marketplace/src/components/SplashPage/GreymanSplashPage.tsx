@@ -34,13 +34,11 @@ import ReactGA from 'react-ga';
 import MetaTags from '../SeoTags/MetaTags';
 import { setRealChain } from '../../ducks/contracts/actions';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
-import {
-  ISplashPageProps,
-  TSeoInformationType,
-  TSplashPageIsActive
-} from './splashPage.types';
+import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
 import { RootState } from '../../ducks';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
+import { setInfoSEO } from '../../ducks/seo/actions';
+import { TInfoSeo } from '../../ducks/seo/seo.types';
 
 // Google Analytics
 const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
@@ -98,6 +96,8 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [timerLeft, setTimerLeft] = useState<number>();
   const [copies, setCopies] = useState<string>();
   const [soldCopies, setSoldCopies] = useState<string>();
@@ -117,14 +117,25 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalVideoIsOpen, setVideoIsOpen] = useState<boolean>(false);
 
-  const seoInformation: TSeoInformationType = {
-    title: '#Cryptogreyman',
-    contentName: 'author',
-    content: '#Cryptogreyman',
-    description: '7.907.414.597 Non-Unique NFTs',
-    favicon: GreymanFavicon,
-    faviconMobile: GreymanFavicon
-  };
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: '#Cryptogreyman',
+        ogTitle: '#Cryptogreyman',
+        twitterTitle: '#Cryptogreyman',
+        contentName: 'author',
+        content: 'Digital Ownership Encryption',
+        description: '7.907.414.597 Non-Unique NFTs',
+        ogDescription: '7.907.414.597 Non-Unique NFTs',
+        twitterDescription: '7.907.414.597 Non-Unique NFTs',
+        image:
+          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        favicon: GreymanFavicon,
+        faviconMobile: GreymanFavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   const {
     diamondMarketplaceInstance,
@@ -134,7 +145,6 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
   } = useSelector<RootState, ContractsInitialType>(
     (store) => store.contractStore
   );
-  const dispatch = useDispatch();
 
   const toggleCheckList = () => {
     setOpenCheckList((prev) => !prev);
@@ -382,7 +392,7 @@ const GreymanSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page greyman-page">
-      <MetaTags seoMetaTags={seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="home-splash--page">
         <PurchaseChecklist
           openCheckList={openCheckList}

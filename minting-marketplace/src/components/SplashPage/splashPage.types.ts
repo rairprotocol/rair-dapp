@@ -32,12 +32,16 @@ export type TNftLaSelectedVideo = {
 
 export type TSeoInformationType = {
   title?: string;
+  ogTitle?: string;
+  ogDescription?: string;
   contentName: string;
   content?: string;
   description?: string;
   favicon?: string;
   faviconMobile?: string;
   image?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
 };
 
 export interface IMetaTags {

@@ -6,7 +6,6 @@ export interface IAboutPageNew {
   headerLogoWhite?: string;
   setIsSplashPage: (arg: boolean) => void;
   connectUserData: () => void;
-  seoInformation: Object;
 }
 
 export interface IMainBlock {

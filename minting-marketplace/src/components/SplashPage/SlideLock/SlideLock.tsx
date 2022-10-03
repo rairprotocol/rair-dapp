@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './SlideLock.css';
@@ -36,6 +36,10 @@ import {
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
 import { ContractsInitialType } from '../../../ducks/contracts/contracts.types';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
+import { InitialState } from '../../../ducks/seo/reducers';
+import MetaTags from '../../SeoTags/MetaTags';
 
 // TODO: UNUSED
 // import MetaTags from '../../SeoTags/MetaTags'
@@ -225,16 +229,23 @@ const SlideLock: React.FC<ISplashPageProps> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
   const [soldCopies, setSoldCopies] = useState<number>(0);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
   );
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const { currentChain, minterInstance } = useSelector<
     RootState,
     ContractsInitialType
   >((store) => store.contractStore);
   const carousel_match = window.matchMedia('(min-width: 900px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
+
+  useEffect(() => {
+    dispatch(setInfoSEO(InitialState));
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () =>
@@ -276,7 +287,7 @@ const SlideLock: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page slidelock">
-      {/* <MetaTags seoMetaTags={splashData.seoInformation} /> */}
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <AuthorCard {...{ splashData, connectUserData }} />
         {/* <NFTCounterTemplate 

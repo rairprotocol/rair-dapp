@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './SplashPage.css';
 import './GreymanSplashPageMobile.css';
@@ -21,10 +21,9 @@ import MetaTags from '../SeoTags/MetaTags';
 import { RootState } from '../../ducks';
 import { ColorChoice } from '../../ducks/colors/colorStore.types';
 import { ISplashPageProps, TSplashPageIsActive } from './splashPage.types';
-
-// Google Analytics
-//const TRACKING_ID = 'UA-209450870-5'; // YOUR_OWN_TRACKING_ID
-//ReactGA.initialize(TRACKING_ID);
+import { TInfoSeo } from '../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../ducks/seo/actions';
+import RairFavicon from '../../components/MockUpPage/assets/rair_favicon.ico';
 
 const customStyles = {
   overlay: {
@@ -53,6 +52,8 @@ Modal.setAppElement('#root');
 const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [, /*active*/ setActive] = useState<TSplashPageIsActive>({
     policy: false,
     use: false
@@ -65,15 +66,28 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
     (store) => store.contractStore.currentUserAddress
   );
 
-  const seoInformation = {
-    title: '#ImmersiverseATX',
-    contentName: 'author',
-    content: 'ImmersiverseATX',
-    description:
-      'Claim your NFT to unlock encrypted streams from the ImmersiverseATX event',
-    favicon: '',
-    faviconMobile: ''
-  };
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: '#ImmersiverseATX',
+        ogTitle: '#ImmersiverseATX',
+        twitterTitle: '#ImmersiverseATX',
+        contentName: 'author',
+        content: 'Digital Ownership Encryption',
+        description:
+          'Claim your NFT to unlock encrypted streams from the ImmersiverseATX event',
+        ogDescription:
+          'Claim your NFT to unlock encrypted streams from the ImmersiverseATX event',
+        twitterDescription:
+          'Claim your NFT to unlock encrypted streams from the ImmersiverseATX event',
+        image:
+          'https://rair.mypinata.cloud/ipfs/QmNtfjBAPYEFxXiHmY5kcPh9huzkwquHBcn9ZJHGe7hfaW',
+        favicon: RairFavicon,
+        faviconMobile: RairFavicon
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   const carousel_match = window.matchMedia('(min-width: 600px)');
   const [carousel, setCarousel] = useState<boolean>(carousel_match.matches);
@@ -107,7 +121,7 @@ const ImmersiVerseSplashPage: React.FC<ISplashPageProps> = ({
 
   return (
     <div className="wrapper-splash-page greyman-page">
-      <MetaTags seoMetaTags={seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="home-splash--page">
         <AuthorBlock mainClass="immersiverse-page-author">
           <div className="block-splash">

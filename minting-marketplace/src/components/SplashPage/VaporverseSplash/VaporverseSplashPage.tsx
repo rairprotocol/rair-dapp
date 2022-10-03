@@ -37,20 +37,14 @@ import {
 } from '../splashPage.types';
 import { RootState } from '../../../ducks';
 import { ColorChoice } from '../../../ducks/colors/colorStore.types';
+import { TInfoSeo } from '../../../ducks/seo/seo.types';
+import { setInfoSEO } from '../../../ducks/seo/actions';
 
 const splashData: TSplashDataType = {
   title: null,
   titleColor: 'rgb(234,51,127)',
   description: null,
   cardFooter: '/utility drop for OG degens /mintpass to vaporverse',
-  seoInformation: {
-    title: 'Vaporverse',
-    contentName: 'author',
-    content: 'Vaporverse',
-    description: 'Utility drop for OG degens /mintpass to vaporverse',
-    favicon: favion_Vaporverse,
-    image: vaporverse_background
-  },
   buttonLabel: 'Mint for .1991 Eth',
   buttonBackgroundHelp: undefined,
   backgroundImage: vaporverse_background,
@@ -117,6 +111,8 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   connectUserData,
   setIsSplashPage
 }) => {
+  const dispatch = useDispatch();
+  const seo = useSelector<RootState, TInfoSeo>((store) => store.seoStore);
   const [openCheckList, setOpenCheckList] = useState<boolean>(false);
   const primaryColor = useSelector<RootState, ColorChoice>(
     (store) => store.colorStore.primaryColor
@@ -125,11 +121,30 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
   const [carousel, setCarousel] = useState(carousel_match.matches);
   const [purchaseList, setPurchaseList] = useState(true);
   const chainId = '0x1';
-  const dispatch = useDispatch();
 
   const togglePurchaseList = () => {
     setPurchaseList((prev) => !prev);
   };
+
+  useEffect(() => {
+    dispatch(
+      setInfoSEO({
+        title: 'Vaporverse',
+        ogTitle: 'Vaporverse',
+        twitterTitle: 'Vaporverse',
+        contentName: 'author',
+        content: 'Vaporverse',
+        description: 'Utility drop for OG degens /mintpass to vaporverse',
+        ogDescription: 'Utility drop for OG degens /mintpass to vaporverse',
+        twitterDescription:
+          'Utility drop for OG degens /mintpass to vaporverse',
+        image: vaporverse_background,
+        favicon: favion_Vaporverse,
+        faviconMobile: favion_Vaporverse
+      })
+    );
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () =>
@@ -170,7 +185,7 @@ const VaporverseSplashPage: React.FC<IVaporverseSplashPage> = ({
 
   return (
     <div className="wrapper-splash-page vaporverse">
-      <MetaTags seoMetaTags={splashData.seoInformation} />
+      <MetaTags seoMetaTags={seo} />
       <div className="template-home-splash-page">
         <ModalHelp
           openCheckList={openCheckList}
