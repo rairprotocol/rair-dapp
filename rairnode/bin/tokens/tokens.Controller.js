@@ -5,10 +5,9 @@ const {
   updateSingleTokenMetadata,
   pinMetadataToPinata,
   getAllTokens,
+  getTokenNumbers,
 } = require('./tokens.Service');
-const {
-  getSpecificContracts,
-} = require('../contracts/contracts.Service');
+const { getSpecificContracts } = require('../contracts/contracts.Service');
 const {
   getOfferIndexesByContractAndProduct,
 } = require('../offers/offers.Service');
@@ -43,28 +42,26 @@ router.get(
   },
   getAllTokens,
 );
+router.use(
+  validation('withProductV2', 'query'),
+  getSpecificContracts,
+  getOfferIndexesByContractAndProduct,
+  getOfferPoolByContractAndProduct,
+);
+router.get('/tokenNumbers', JWTVerification, getTokenNumbers);
 router
   .route('/:token')
-  .get(
-    getSpecificContracts,
-    getOfferIndexesByContractAndProduct,
-    getOfferPoolByContractAndProduct,
-    (req, res, next) => {
-      const { contract, offers, offerPool } = req;
+  .get((req, res, next) => {
+    const { contract, offers, offerPool } = req;
 
-      req.specificFilterOptions = contract.diamond
-        ? { offer: { $in: offers } }
-        : { offerPool: offerPool.marketplaceCatalogIndex };
+    req.specificFilterOptions = contract.diamond
+      ? { offer: { $in: offers } }
+      : { offerPool: offerPool.marketplaceCatalogIndex };
 
-      return next();
-    },
-    getSingleToken,
-  )
+    return next();
+  }, getSingleToken)
   .patch(
     JWTVerification,
-    getSpecificContracts,
-    getOfferIndexesByContractAndProduct,
-    getOfferPoolByContractAndProduct,
     upload.array('files', 2),
     dataTransform(['attributes']),
     validation('updateTokenMetadata'),
@@ -72,9 +69,7 @@ router
   )
   .post(
     JWTVerification,
-    getSpecificContracts,
-    getOfferIndexesByContractAndProduct,
-    getOfferPoolByContractAndProduct,
+
     pinMetadataToPinata,
   );
 

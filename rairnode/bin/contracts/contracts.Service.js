@@ -73,13 +73,18 @@ exports.importContractsMoralis = async (req, res, next) => {
 exports.getSpecificContracts = async (req, res, next) => {
   try {
     let contract;
-    if ((req.query.contractAddress && req.query.networkId) || req.query.contract) {
-      contract = await Contract.findOne(req.query.contract
-        ? { _id: ObjectID(req.query.contract) }
-        : {
-          contractAddress: req.query.contractAddress.toLowerCase(),
-          blockchain: req.query.networkId,
-        });
+    if (
+      (req.query.contractAddress && req.query.networkId) ||
+      req.query.contract
+    ) {
+      contract = await Contract.findOne(
+        req.query.contract
+          ? { _id: ObjectID(req.query.contract) }
+          : {
+              contractAddress: req.query.contractAddress.toLowerCase(),
+              blockchain: req.query.networkId,
+            },
+      );
     } else {
       return next(new AppError('Cannot find contract: missing params', 400));
     }

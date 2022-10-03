@@ -24,6 +24,7 @@ const updateTokenMetadata = require('./updateTokenMetadata');
 const pinningMultiple = require('./pinningMultiple');
 const createCommonTokenMetadata = require('./createCommonTokenMetadata');
 const createFavoriteToken = require('./createFavoriteToken');
+const withProductV2 = require('./withProductV2');
 const manageContract = require('./manageContract');
 
 module.exports = {
@@ -54,4 +55,5 @@ module.exports = {
   createFavoriteToken,
   manageContract,
   getChallengeV2,
+  withProductV2,
 };

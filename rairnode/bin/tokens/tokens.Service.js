@@ -9,7 +9,8 @@ const {
   Product,
 } = require('../models');
 const config = require('../config');
-const { addPin, addFile, addMetadata, removePin } = require('../integrations/ipfsService')();
+const { addPin, addFile, addMetadata, removePin } =
+  require('../integrations/ipfsService')();
 const log = require('../utils/logger')(module);
 const { textPurify, cleanStorage } = require('../utils/helpers');
 const eFactory = require('../utils/entityFactory');
@@ -76,6 +77,40 @@ const prepareTokens = (
     }
   });
 };
+exports.getTokenNumbers = async (req, res, next) => {
+  try {
+    // reminder of controller level logic - can be removed
+    // getSpecificContracts -> req.contract = contract
+    // getOfferIndexesByContractAndProduct, -> req.offers = offers (diamondRangeIndex)
+    // getOfferPoolByContractAndProduct, -> req.offerPool = offerPool
+    // create options \|/
+    const { contract, offerPool, offers } = req;
+    const options = offerPool
+      ? {
+          contract: contract._id,
+          offerPool: offerPool.marketplaceCatalogIndex,
+        }
+      : {
+          contract: contract._id,
+          offer: { $in: offers },
+        };
+
+    // request mintedToken \|/
+    const tokens = await MintedToken.find(options)
+      .sort([['token', 1]])
+      .collation({ locale: 'en_US', numericOrdering: true })
+      .distinct('token');
+    // handle respond \|/
+    if (!tokens || tokens.length === 0) {
+      return next(new AppError('No Tokens found', 404));
+    }
+    return res.json({ success: true, tokens });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.getAllTokens = eFactory.getAll(MintedToken);
 
 exports.getAllTokens = eFactory.getAll(MintedToken);
 
@@ -180,7 +215,12 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
         if (tokensCount > 0) {
           await cleanStorage(req.files);
-          return next(new AppError(`Current Contract already have ${tokensCount} created tokens.`, 400));
+          return next(
+            new AppError(
+              `Current Contract already have ${tokensCount} created tokens.`,
+              400,
+            ),
+          );
         }
       }
 
@@ -193,7 +233,12 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
       if (!foundProducts) {
         await cleanStorage(req.files);
-        return next(new AppError(`Products for contract ${foundContract._id} not found.`, 404));
+        return next(
+          new AppError(
+            `Products for contract ${foundContract._id} not found.`,
+            404,
+          ),
+        );
       }
 
       await Promise.all(
@@ -227,7 +272,12 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
         if (!foundProduct) {
           await cleanStorage(req.files);
-          return next(new AppError(`Product for contract ${foundContract._id} not found.`, 404));
+          return next(
+            new AppError(
+              `Product for contract ${foundContract._id} not found.`,
+              404,
+            ),
+          );
         }
 
         const [offers, offerPool] = await getOffersAndOfferPools(
@@ -249,7 +299,12 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
           if (tokensCount > 0) {
             await cleanStorage(req.files);
-            return next(new AppError(`Current Product already have ${tokensCount} created tokens.`, 400));
+            return next(
+              new AppError(
+                `Current Product already have ${tokensCount} created tokens.`,
+                400,
+              ),
+            );
           }
         }
 
@@ -292,7 +347,13 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
   }
 };
 
-exports.getSingleToken = eFactory.getOne(MintedToken, { filter: { contract: 'contract._id', token: 'params.token', specificFilterOptions: 'specificFilterOptions' } });
+exports.getSingleToken = eFactory.getOne(MintedToken, {
+  filter: {
+    contract: 'contract._id',
+    token: 'params.token',
+    specificFilterOptions: 'specificFilterOptions',
+  },
+});
 
 exports.updateSingleTokenMetadata = async (req, res, next) => {
   try {
@@ -329,7 +390,12 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
         );
       }
 
-      return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
+      return next(
+        new AppError(
+          `You have no permissions for updating token ${token}.`,
+          403,
+        ),
+      );
     }
 
     if (_.isEmpty(fieldsForUpdate)) {
@@ -345,9 +411,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
       return next(new AppError('Nothing to update.', 400));
     }
 
-    const countDocuments = await MintedToken.countDocuments(
-      options,
-    );
+    const countDocuments = await MintedToken.countDocuments(options);
 
     if (countDocuments === 0) {
       if (_.get(req, 'files.length', false)) {
@@ -453,12 +517,17 @@ exports.pinMetadataToPinata = async (req, res, next) => {
     const { contract, offers, offerPool } = req;
     const { token } = req.params;
     const { user } = req;
-    // eslint-disable-next-line
-    const reg = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
+    const reg =
+      /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gm;
     let metadataURI = 'none';
 
     if (user.publicAddress !== contract.user) {
-      return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
+      return next(
+        new AppError(
+          `You have no permissions for updating token ${token}.`,
+          403,
+        ),
+      );
     }
 
     const options = _.assign(
@@ -480,8 +549,14 @@ exports.pinMetadataToPinata = async (req, res, next) => {
     metadataURI = foundToken.metadataURI;
 
     if (!_.isEmpty(foundToken.metadata)) {
-      const CID = await addMetadata(foundToken.metadata, _.get(foundToken.metadata, 'name', 'none'));
-      await addPin(CID, `metadata_${_.get(foundToken.metadata, 'name', 'none')}`);
+      const CID = await addMetadata(
+        foundToken.metadata,
+        _.get(foundToken.metadata, 'name', 'none'),
+      );
+      await addPin(
+        CID,
+        `metadata_${_.get(foundToken.metadata, 'name', 'none')}`,
+      );
       metadataURI = `${process.env.PINATA_GATEWAY}/${CID}`;
     }
 
