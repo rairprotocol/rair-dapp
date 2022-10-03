@@ -11,6 +11,7 @@ import {
 import { INftVideoplayer } from '../../../mockupPage.types';
 import { RootState } from '../../../../../ducks';
 import { ethers } from 'ethers';
+import { ContractsInitialType } from '../../../../../ducks/contracts/contracts.types';
 
 const NftVideoplayer: React.FC<INftVideoplayer> = ({
   selectVideo,
@@ -19,10 +20,10 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
 }) => {
   const mainManifest = 'stream.m3u8';
 
-  const programmaticProvider = useSelector<
+  const { programmaticProvider, currentUserAddress } = useSelector<
     RootState,
-    ethers.Wallet | undefined
-  >((state) => state.contractStore.programmaticProvider);
+    ContractsInitialType
+  >((state) => state.contractStore);
 
   const [videoName] = useState<number>(Math.round(Math.random() * 10000));
   const [mediaAddress, setMediaAddress] = useState<string>(
@@ -35,8 +36,13 @@ const NftVideoplayer: React.FC<INftVideoplayer> = ({
       const account = await window.ethereum.request({
         method: 'eth_requestAccounts'
       });
-      const response = await axios.get<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/' + account?.[0]
+      const response = await axios.post<TAuthGetChallengeResponse>(
+        '/api/auth/get_challenge/',
+        {
+          userAddress: currentUserAddress,
+          intent: 'decrypt',
+          mediaId: selectVideo?._id
+        }
       );
       parsedResponse = JSON.parse(response.data.response);
       signature = await window.ethereum.request({

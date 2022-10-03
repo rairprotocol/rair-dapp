@@ -11,7 +11,7 @@ resource "vault_approle_auth_backend_role" "media_service" {
 
     # allow access to read secrets for rairnode application
     vault_policy.app_directory_secret_read_access[
-      var.applications.rairnode.vault_secrets_dirname
+      var.applications.media-service.vault_secrets_dirname
     ].name
 
   ]

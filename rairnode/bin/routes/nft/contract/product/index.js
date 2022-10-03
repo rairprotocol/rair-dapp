@@ -1,5 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
+const AppError = require('../../../../utils/errors/AppError');
 const { validation, assignUser } = require('../../../../middleware');
 const { verifyAccessRightsToFile } = require('../../../../utils/helpers');
 const { Offer, OfferPool, Product, MintedToken, File, LockedTokens } = require('../../../../models');
@@ -63,9 +64,7 @@ module.exports = (context) => {
           }).distinct('diamondRangeIndex');
 
           if (_.isEmpty(offers)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'Offers not found.' });
+            return next(new AppError('Offers not found.', 404));
           }
 
           options = {
@@ -88,9 +87,7 @@ module.exports = (context) => {
           });
 
           if (_.isEmpty(offerPool)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'OfferPools not found.' });
+            return next(new AppError('OfferPools not found.', 404));
           }
 
           options = {

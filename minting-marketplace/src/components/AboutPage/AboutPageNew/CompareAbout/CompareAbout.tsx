@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 
 // imports image logos
-import RairLogo from '../../assets/rairLogo_blue.png';
-import OpenSea from '../../assets/openSea-logo.png';
-import Rarible from '../../assets/rarible-logo.png';
-import OneOf from '../../assets/oneOf-logo.png';
-import Dapper from '../../assets/dapper-logo.png';
-import MinTable from '../../assets/mintable-logo.png';
-import Curios from '../../assets/curios.png';
+import {
+  RairLogoBlue,
+  OpenSea,
+  Rarible,
+  OneOf,
+  Dapper,
+  MinTable,
+  Curios
+} from '../../../../images';
 
 // import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -62,7 +64,7 @@ const CompareAbout = () => {
                 <th>
                   <div className="circle-table-img">
                     <div className="img_wrapper">
-                      <img src={RairLogo} alt="Rair Tech" />
+                      <img src={RairLogoBlue} alt="Rair Tech" />
                     </div>
                     <span>Rair.tech</span>
                   </div>

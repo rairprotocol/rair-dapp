@@ -5,15 +5,17 @@ import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './SlideLock.css';
 
 /* importing images*/
-import SlideLock_IMG from '../images/slidelock_background.png';
-import slideNFT0 from '../images/Slide-Toppic-01.jpg';
-import slideNFT1 from '../images/slide-NFT1.png';
-import slideNFT2 from '../images/slide-NFT2.png';
-import slideNFT3 from '../images/slide-NFT3.png';
-import slideNFT4 from '../images/slide-NFT4.png';
-import videoBackground from '../images/slidelock_video_background.png';
-import titleImage from './../images/NEW-Logo-sample-slidelock-1.png';
-import MetaMaskIcon from '../images/metamask_logo.png';
+import {
+  SlideLock_IMG,
+  slideNFT0,
+  slideNFT1,
+  slideNFT2,
+  slideNFT3,
+  slideNFT4,
+  videoBackground,
+  titleImage
+} from '../images/slideLock/slideLock';
+import { metaMaskIcon } from '../../../images';
 
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
@@ -77,7 +79,7 @@ const splashData: TSplashDataType = {
     // Reusable component
     buttonComponent: PurchaseTokenButton,
     // OPTIONAL: Image on the purchase button
-    img: MetaMaskIcon,
+    img: metaMaskIcon,
     // Contract address
     ...(process.env.REACT_APP_TEST_CONTRACTS === 'true'
       ? testContract

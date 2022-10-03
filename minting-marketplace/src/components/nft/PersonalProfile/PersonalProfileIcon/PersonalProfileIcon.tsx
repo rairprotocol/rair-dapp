@@ -6,7 +6,7 @@ import { ColorStoreType } from '../../../../ducks/colors/colorStore.types';
 import { useSelector, useDispatch } from 'react-redux';
 import { TUserResponse } from '../../../../axios.responseTypes';
 import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
-import defaultAvatar from './../../../../images/defaultAvatarProfile.png';
+import { defaultAvatar } from '../../../../images';
 import axios, { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { TUsersInitialState } from '../../../../ducks/users/users.types';
@@ -339,7 +339,13 @@ const PersonalProfileIconComponent = ({ userData }) => {
         ) : (
           <>
             <span className={cl['profileName' + textColor]}>
-              {userName ? `@${userName}` : userData.publicAddress}
+              {/* {userName ? `@${userName}` : userData.publicAddress} */}
+              {userName && userName.length > 13
+                ? '@' +
+                  userName.slice(0, 5) +
+                  '...' +
+                  userName.slice(userName.length - 4)
+                : '@' + userName}
             </span>
             <i
               onClick={() => setEditMode(true)}

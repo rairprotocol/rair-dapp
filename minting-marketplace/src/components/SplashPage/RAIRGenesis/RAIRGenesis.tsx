@@ -5,10 +5,9 @@ import '../SplashPageTemplate/AuthorCard/AuthorCard.css';
 import '../../AboutPage/AboutPageNew/AboutPageNew.css';
 import './RAIRGenesis.css';
 
-import MetaMaskIcon from '../images/metamask_logo.png';
-import Genesis_TV from '../images/TV-RAIR-StandardColor-0.gif';
+import { metaMaskIcon } from '../../../images';
+import { Genesis_TV, GenesisMember } from '../images/rairGenesis/rairGenesis';
 import NFTNYC_favicon from '../images/favicons/NFTNYX_TITLE.ico';
-import GenesisMember from '../images/creator-flow.png';
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';
 import AuthorCard from '../SplashPageTemplate/AuthorCard/AuthorCard';
@@ -86,7 +85,7 @@ const RAIRGenesisSplashPage: React.FC<ISplashPageProps> = ({
     backgroundImage: Genesis_TV,
     button1: currentUserAddress === undefined && {
       buttonLabel: 'Connect wallet',
-      buttonImg: MetaMaskIcon,
+      buttonImg: metaMaskIcon,
       buttonAction: connectUserData
     },
     button2: {

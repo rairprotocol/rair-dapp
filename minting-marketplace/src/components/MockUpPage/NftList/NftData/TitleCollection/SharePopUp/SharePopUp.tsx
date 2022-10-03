@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
+import { FacebookShareButton, TwitterShareButton } from 'react-share';
+import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
-import { FacebookShareButton, TwitterShareButton } from 'react-share';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import { useSelector } from 'react-redux';
-import './SharePopUp.css';
+
+import {
+  headerLogoBlackMobile,
+  headerLogoWhiteMobile
+} from '../../../../../../images';
 import { ISharePopUp } from '../../../../mockupPage.types';
-import { RootState } from '../../../../../../ducks';
+
+import './SharePopUp.css';
 
 const SharePopUp: React.FC<ISharePopUp> = ({
   onClose,
   selectedValue,
   open,
-  primaryColor,
-  selectedData
+  primaryColor
 }) => {
   const [copySuccess /*setCopySuccess*/] = useState<string>('Copy link');
   const currentUrl = document.location.href;
-  const headerLogo = useSelector<RootState, string>(
-    (store) => store.colorStore.headerLogo
-  );
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -37,8 +37,8 @@ const SharePopUp: React.FC<ISharePopUp> = ({
   };
 
   const handleCopy = async () => {
-    if (selectedData?.external_url) {
-      window.navigator.clipboard.writeText(selectedData?.external_url);
+    if (currentUrl) {
+      window.navigator.clipboard.writeText(currentUrl);
       closePopUp();
     }
   };
@@ -65,7 +65,11 @@ const SharePopUp: React.FC<ISharePopUp> = ({
           <ListItemAvatar>
             <img
               style={{ width: 30, height: 'auto', marginLeft: '10px' }}
-              src={headerLogo}
+              src={
+                primaryColor === 'rhyno'
+                  ? headerLogoBlackMobile
+                  : headerLogoWhiteMobile
+              }
               alt="Rair Tech"
             />
           </ListItemAvatar>

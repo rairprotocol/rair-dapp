@@ -77,9 +77,10 @@
 
 .wrapper-splash-page {
   overflow: hidden;
-  background-image: url('./images/victory_lap.png'),
-    url('./images/maraphon.png'), url('./images/or.png'),
-    url('./images/humble.png');
+  background-image: url('./images/splashPageImages/victory_lap.webp'),
+    url('./images/splashPageImages/maraphon.webp'),
+    url('./images/splashPageImages/or.webp'),
+    url('./images/splashPageImages/humble.webp');
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
   background-size: 891px 353px, 1203px 432px, 992px 420px, 1202px 415px;
   background-position: 600px 730px, 200px 2750px, 0 1400px, 0px 3800px;
@@ -126,7 +127,7 @@
   justify-content: flex-start;
   max-width: 1200px;
   /* height: 694px; */
-  background-image: url('./images/nipsey.png');
+  background-image: url('./images/splashPageImages/nipsey.webp');
   background-repeat: no-repeat;
   background-size: 530px auto;
   background-position: 95% center;
@@ -138,7 +139,7 @@
 
 .nipsey-comming-soon .information-author,
 .nipsey-thank-you-page .information-author {
-  background-image: url('./images/nipsey.png');
+  background-image: url('./images/splashPageImages/nipsey.webp');
   background-repeat: no-repeat;
   background-size: 530px auto;
   background-position: 95% center;
@@ -148,7 +149,7 @@
 }
 
 .nipsey-comming-soon.nutcrackers .information-author {
-  background-image: url('./images/nuts-main.png');
+  background-image: url('./images/commingSoon/nuts-main.webp');
 }
 
 .nipsey-comming-soon.nutcrackers .img-coming-nuts {
@@ -230,7 +231,7 @@
 }
 
 .information-author.greyman-page-author {
-  background-image: url('./images/greyman1.png');
+  background-image: url('./images/greyMan/greyman1.webp');
   background-size: 516px 516px;
   background-position: 90% center;
   height: 694px;
@@ -242,7 +243,7 @@
 }
 
 .information-author.immersiverse-page-author {
-  background-image: url('./images/SxSW-IMSV-ATX-2022-Concept01-modified.png');
+  background-image: url('./images/SxSw/SxSW-IMSV-ATX-2022-Concept01-modified.webp');
   background-size: 516px 516px;
   background-position: 88% center;
   height: 694px;
@@ -496,13 +497,13 @@
   height: 472px;
   margin-right: 91px;
   overflow: hidden;
-  background: url('./images/left-tokens.jpeg') center center;
+  background: url('./images/splashPageImages/left-tokens.jpeg') center center;
   background-size: cover;
   position: relative;
 }
 
 .left-tokens.greyman-page .block-left-tokens {
-  background: url('./images/greyman1.png') center center;
+  background: url('./images/greyMan/greyman1.webp') center center;
   background-size: cover;
 }
 
@@ -1032,7 +1033,7 @@
   width: 424px;
   height: 424px;
   border-radius: 16px;
-  background: url('./images/image_1.png') no-repeat;
+  background: url('./images/splashPageImages/image_1.webp') no-repeat;
   background-size: cover;
 }
 
@@ -1044,7 +1045,7 @@
   width: 376px;
   height: 376px;
   border-radius: 16px;
-  background: url('./images/image_2.png') no-repeat;
+  background: url('./images/splashPageImages/image_2.webp') no-repeat;
   background-size: cover;
   background-position: center top;
 }
@@ -1057,7 +1058,7 @@
   width: 328px;
   height: 328px;
   border-radius: 16px;
-  background: url('./images/image_3.png') no-repeat;
+  background: url('./images/splashPageImages/image_3.webp') no-repeat;
   background-size: cover;
   background-position: center top;
 }
@@ -2201,7 +2202,7 @@ img.block-img-mobile {
 }
 
 .splash-auth-mobile {
-  background-image: url('./images/nipsey-bg-mobile.jpeg');
+  background-image: url('./images/splashPageImages/nipsey-bg-mobile.webp');
   background-repeat: no-repeat;
   height: 600px;
   background-size: cover;
@@ -3336,7 +3337,7 @@ img.block-img-mobile {
 /* Nutcrackers */
 
 .home-splash--page .information-author.nutcrackers {
-  background-image: url('./images/bg-nuts.png');
+  background-image: url('./images/nutcrackers/bg-nuts.webp');
   background-size: cover;
 }
 
@@ -3370,7 +3371,7 @@ img.block-img-mobile {
 }
 
 .wrapper-splash-page.nutcrackers .left-tokens .block-left-tokens {
-  background: url('./images/nft-token-nuts.png') center center;
+  background: url('./images/nutcrackers/nft-token-nuts.webp') center center;
   background-size: cover;
 }
 
@@ -3382,7 +3383,8 @@ img.block-img-mobile {
   margin: 108px 0;
   width: 1200px;
   height: 577px;
-  background: url('./images/block-nuts-photos.png') no-repeat center center;
+  background: url('./images/nutcrackers/block-nuts-photos.webp') no-repeat
+    center center;
   background-size: cover;
   border-radius: 16px;
 }

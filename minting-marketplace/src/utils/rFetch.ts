@@ -83,8 +83,12 @@ const getJWT = async (
   userAddress: string | undefined
 ) => {
   try {
-    const responseData = await axios.get<TAuthGetChallengeResponse>(
-      `/api/auth/get_challenge/${userAddress}`
+    const responseData = await axios.post<TAuthGetChallengeResponse>(
+      `/api/auth/get_challenge/`,
+      {
+        userAddress,
+        intent: 'login'
+      }
     );
 
     const { response } = responseData.data;

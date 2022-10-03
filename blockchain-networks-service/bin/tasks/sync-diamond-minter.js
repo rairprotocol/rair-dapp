@@ -48,6 +48,13 @@ module.exports = (context) => {
 				})).save();
 			}
 
+			if (version.running === true) {
+				return done({reason: `A ${AgendaTaskEnum.SyncDiamondMarketplaceEvents} process for network ${network} is already running!`});
+			} else {
+				version.running = true;
+				version = await version.save();
+			}
+
 			/*
 				Collection Name 	Description
 				------------------------------------------------------------

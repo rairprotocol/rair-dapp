@@ -2,6 +2,7 @@ const { Storage } = require('@google-cloud/storage');
 const { nanoid } = require('nanoid');
 const fs = require('fs').promises;
 const path = require('path');
+const AppError = require('../../utils/errors/AppError');
 const log = require('../../utils/logger')(module);
 
 module.exports = (config) => {
@@ -33,7 +34,7 @@ module.exports = (config) => {
       return uploadData[0].metadata.name;
     } catch (e) {
       log.error(e.message);
-      throw new Error('Can\'t store image.');
+      throw new AppError('Can\'t store image.', 500);
     }
   };
 
@@ -127,7 +128,7 @@ module.exports = (config) => {
       return onComplete();
     } catch (e) {
       log.error(e.message);
-      throw new Error('Can\'t store folder.');
+      throw new AppError('Can\'t store folder.', 500);
     }
   };
 

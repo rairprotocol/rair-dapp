@@ -10,15 +10,14 @@ import UserProfileSettings from './../UserProfileSettings/UserProfileSettings';
 import ImageCustomForSearch from '../MockUpPage/utils/image/ImageCustomForSearch';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import MainLogo from '../GroupLogos/MainLogo';
-import { DiscordIcon, TwitterIcon } from './DiscordIcon';
+import { DiscordIcon, TwitterIcon } from '../../images';
 import AdminPanel from './AdminPanel/AdminPanel';
 import {
   HeaderContainer /*, SocialHeaderBox */
 } from './HeaderItems/HeaderItems';
 
 //images
-import headerLogoWhite from './../../images/rairTechLogoWhite.png';
-import headerLogoBlack from './../../images/rairTechLogoBlack.png';
+import { headerLogoBlack, headerLogoWhite } from '../../images';
 
 //styles
 import './Header.css';
@@ -50,7 +49,8 @@ const MainHeader: React.FC<IMainHeader> = ({
   creatorViewsDisabled,
   selectedChain,
   showAlert,
-  isSplashPage
+  isSplashPage,
+  setTabIndexItems
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -327,6 +327,7 @@ const MainHeader: React.FC<IMainHeader> = ({
             setLoginDone={setLoginDone}
             showAlert={showAlert}
             selectedChain={selectedChain}
+            setTabIndexItems={setTabIndexItems}
           />
           <div className="social-media">
             <SocialBox hoverColor={'#7289d9'} primaryColor={primaryColor}>

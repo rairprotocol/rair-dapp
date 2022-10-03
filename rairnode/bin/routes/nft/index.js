@@ -4,6 +4,7 @@ const csv = require('csv-parser');
 const _ = require('lodash');
 const path = require('path');
 const { nanoid } = require('nanoid');
+const AppError = require('../../utils/errors/AppError');
 const { JWTVerification, validation, isAdmin } = require('../../middleware');
 const log = require('../../utils/logger')(module);
 const upload = require('../../Multer/Config');
@@ -43,11 +44,11 @@ module.exports = (context) => {
       const foundContract = await Contract.findById(contract);
 
       if (_.isEmpty(foundContract)) {
-        return res.status(404).send({ success: false, message: 'Contract not found.' });
+        return next(new AppError('Contract not found.', 404));
       }
 
       if (user.publicAddress !== foundContract.user) {
-        return res.status(403).send({ success: false, message: 'This contract not belong to you.' });
+        return next(new AppError('This contract not belong to you.', 403));
       }
 
       const offerPool = await OfferPool.findOne({
@@ -58,7 +59,7 @@ module.exports = (context) => {
 
       if (_.isEmpty(offers)) {
         await removeTempFile(roadToFile);
-        return res.status(404).send({ success: false, message: 'Offers not found.' });
+        return next(new AppError('Offers not found.', 404));
       }
 
       const offerIndexes = offers.map((v) => (
@@ -71,7 +72,7 @@ module.exports = (context) => {
 
       if (_.isEmpty(foundProduct)) {
         await removeTempFile(roadToFile);
-        return res.status(404).send({ success: false, message: 'Product not found.' });
+        return next(new AppError('Product not found.', 404));
       }
 
       if (foundContract.diamond) {
@@ -82,7 +83,7 @@ module.exports = (context) => {
       } else {
         if (_.isEmpty(offerPool)) {
           await removeTempFile(roadToFile);
-          return res.status(404).send({ success: false, message: 'OfferPools not found.' });
+          return next(new AppError('OfferPools not found.', 404));
         }
 
         foundTokens = await MintedToken.find({
@@ -214,7 +215,7 @@ module.exports = (context) => {
       await removeTempFile(roadToFile);
 
       if (_.isEmpty(forSave) && _.isEmpty(forUpdate)) {
-        return res.json({ success: false, message: 'Don\'t have tokens for creation / update.' });
+        return next(new AppError( 'Don\'t have tokens for creation / update.', 400));
       }
 
       if (!_.isEmpty(forSave)) {
@@ -285,14 +286,11 @@ module.exports = (context) => {
       const contract = await Contract.findById(contractId);
 
       if (_.isEmpty(contract)) {
-        return res.status(404).send({ success: false, message: 'Contract not found.' });
+        return next(new AppError('Contract not found.', 404));
       }
 
       if (user.publicAddress !== contract.user) {
-        return res.status(403).send({
-          success: false,
-          message: 'You have no permissions for uploading metadata.',
-        });
+        return next(new AppError('You have no permissions for uploading metadata.', 403));
       }
 
       let options = {
@@ -307,7 +305,7 @@ module.exports = (context) => {
           collectionIndexInContract: product,
         });
 
-        if (_.isEmpty(foundProduct)) return res.status(404).send({ success: false, message: 'Product not found.' });
+        if (_.isEmpty(foundProduct)) return next(new AppError('Product not found.', 404));
       }
 
       if (contract.singleMetadata) singleMetadataFor = 'contract';
@@ -321,9 +319,7 @@ module.exports = (context) => {
           }).distinct('diamondRangeIndex');
 
           if (_.isEmpty(offers)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'Offers not found.' });
+            return next(new AppError('Offers not found.', 404));
           }
 
           options = _.assign(options, {
@@ -336,9 +332,7 @@ module.exports = (context) => {
           });
 
           if (_.isEmpty(offerPool)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'OfferPools not found.' });
+            return next(new AppError('OffersPools not found.', 404));
           }
 
           options = _.assign(options, {
@@ -350,9 +344,7 @@ module.exports = (context) => {
       let foundTokens = await MintedToken.find(options);
 
       if (_.isEmpty(foundTokens)) {
-        return res
-          .status(400)
-          .send({ success: false, message: 'Tokens not found.' });
+        return next(new AppError('Tokens not found.', 400));
       }
 
       // create a folder with all metadata files for uploading
@@ -447,7 +439,7 @@ module.exports = (context) => {
         blockchain: req.params.networkId,
       });
 
-      if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+      if (_.isEmpty(contract)) return next(new AppError('Contract not found.', 404));
 
       req.contract = contract;
 

@@ -1,124 +1,12 @@
 const log = require('./logger')(module);
-const fetch = require('node-fetch');
 const Moralis = require('moralis/node');
-
-const {
-	insertContract,
-	insertCollection,
-	insertTokenClassic,
-	insertTokenDiamond,
-	insertOfferPool,
-	insertOffer,
-	insertDiamondOffer,
-	insertLock,
-	insertDiamondRange,
-	metadataForToken,
-	metadataForProduct,
-	updateOfferClassic,
-	updateDiamondRange,
-	metadataForContract,
-	handleResaleOffer,
-	updateResaleOffer,
-	registerCustomSplits
-} = require('./eventCatcherUtils');
+const { masterMapping } = require('./eventCatcherMapping');
 
 const ethers = require('ethers');
-const {
-	erc721Abi,
-	minterAbi,
-	factoryAbi,
-	erc777Abi,
-	diamondMarketplaceAbi,
-	diamondFactoryAbi,
-	classicDeprecatedEvents,
-	diamondDeprecatedEvents,
-	resaleMarketplaceEvents
-} = require('../integrations/ethers/contracts');
-
-const findContractFromAddress = async (address, network, transactionReceipt, dbModels) => {
-	return await dbModels.Contract.findOne({contractAddress: address.toLowerCase(), blockchain: network});
-}
 
 const wasteTime = (ms) => new Promise((resolve, reject) => {
 	setTimeout(resolve, ms);
 })
-
-// Events from this list will be stored on the database
-const insertionMapping = {
-	// Diamond Factory
-	DeployedContract: insertContract,
-	CreatedCollection: insertCollection,
-	CreatedRange: insertDiamondRange,
-	UpdatedRange: updateDiamondRange,
-	UpdatedBaseURI: metadataForContract,
-	UpdatedProductURI: metadataForProduct,
-	UpdatedTokenURI: metadataForToken,
-	
-	// Diamond Marketplace 
-	AddedMintingOffer: insertDiamondOffer,
-	TokenMinted: insertTokenClassic,
-	MintedToken: insertTokenDiamond,
-
-	// Classic Factory
-	NewContractDeployed: insertContract,
-
-	// Classic ERC721
-	BaseURIChanged: metadataForContract,
-	ProductURIChanged: metadataForProduct,
-	TokenURIChanged: metadataForToken,
-	ProductCreated: insertCollection,
-
-	// Classic Marketplace
-	AddedOffer: insertOfferPool,
-	AppendedRange: insertOffer,
-	RangeLocked: insertLock,
-	UpdatedOffer: updateOfferClassic,
-	SoldOut: null,
-
-	// Resale Marketplace
-    OfferStatusChange: handleResaleOffer,
-    UpdatedOfferPrice: updateResaleOffer,
-    CustomRoyaltiesSet: registerCustomSplits
-};
-
-const getContractEvents = (abi, isDiamond = false) => {
-	// Generate an interface with the ABI found
-	let interface = new ethers.utils.Interface(abi);
-	// Initialize the mapping of each event
-	let mapping = {};
-
-	Object.keys(interface.events).forEach((eventSignature) => {
-		// Find the one entry in the ABI for the signature
-		let [singleAbi] = abi.filter(item => {
-			return item.name === eventSignature.split('(')[0];
-		});
-		if (!singleAbi) {
-			console.error(`Couldn't find ABI for signature ${eventSignature}`);
-		} else {
-			mapping[ethers.utils.id(eventSignature)] = {
-				signature: eventSignature,
-				abi: [singleAbi],
-				diamondEvent: isDiamond,
-				operation: insertionMapping[singleAbi.name],
-			};
-		}
-	});
-	return mapping;
-};
-
-const masterMapping = {
-	...getContractEvents(erc721Abi),
-	...getContractEvents(minterAbi),
-	...getContractEvents(factoryAbi),
-
-	...getContractEvents(diamondFactoryAbi, true),
-	...getContractEvents(diamondMarketplaceAbi, true),
-	
-	...getContractEvents(classicDeprecatedEvents, false),
-	...getContractEvents(diamondDeprecatedEvents, true),
-
-	...getContractEvents(resaleMarketplaceEvents, false),
-}
 
 const processLog = (event) => {
 	// Array of found events
@@ -203,7 +91,6 @@ const getTransactionHistory = async (address, chain, from_block = 0) => {
 
 module.exports = {
 	processLog,
-	getContractEvents,
 	getTransactionHistory,
 	wasteTime
 }

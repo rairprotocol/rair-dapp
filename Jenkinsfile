@@ -49,27 +49,6 @@ pipeline {
     MAIN_LOCATION = "southamerica-west1-a"
   }
   stages{
-    stage('Build and push minting-marketplace') {
-          when {
-            not { branch 'dev'}
-          }
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile.prod \
-                    --context ./minting-marketplace/ \
-                    --verbosity debug \
-                    --cleanup \
-                    --destination rairtechinc/minting-network:latest \
-                    --destination rairtechinc/minting-network:${GIT_COMMIT}
-                '''
-              }
-
-            }
-          }
-        }
     stage('Build and push rairnode') {
           when {
             not { branch 'dev'}
@@ -85,6 +64,27 @@ pipeline {
                     --cleanup \
                     --destination rairtechinc/rairservernode:latest \
                     --destination rairtechinc/rairservernode:${GIT_COMMIT}
+                '''
+              }
+
+            }
+          }
+        }
+    stage('Build and push minting-marketplace') {
+          when {
+            not { branch 'dev'}
+          }
+          steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+              withEnv(['PATH+EXTRA=/busybox']) {
+                sh '''#!/busybox/sh -xe
+                  /kaniko/executor \
+                    --dockerfile Dockerfile.prod \
+                    --context ./minting-marketplace/ \
+                    --verbosity debug \
+                    --cleanup \
+                    --destination rairtechinc/minting-network:latest \
+                    --destination rairtechinc/minting-network:${GIT_COMMIT}
                 '''
               }
 
@@ -210,25 +210,25 @@ pipeline {
             }
           }
         }
-    stage('Build and push dev minting-marketplace new-infra') {
-          when { branch 'dev'}
-          steps {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-              withEnv(['PATH+EXTRA=/busybox']) {
-                sh '''#!/busybox/sh -xe
-                  /kaniko/executor \
-                    --dockerfile Dockerfile.prod-new \
-                    --context ./minting-marketplace/ \
-                    --verbosity debug \
-                    --cleanup \
-                    --destination rairtechinc/minting-network:${GIT_COMMIT} \
-                    --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
-                '''
-              }
+    //stage('Build and push dev minting-marketplace new-infra') {
+    //      when { branch 'dev'}
+    //      steps {
+    //        container(name: 'kaniko', shell: '/busybox/sh') {
+    //          withEnv(['PATH+EXTRA=/busybox']) {
+    //            sh '''#!/busybox/sh -xe
+    //              /kaniko/executor \
+    //                --dockerfile Dockerfile.prod-new \
+    //                --context ./minting-marketplace/ \
+    //                --verbosity debug \
+    //                --cleanup \
+    //                --destination rairtechinc/minting-network:${GIT_COMMIT} \
+    //                --destination rairtechinc/minting-network:${GIT_BRANCH}_2.${BUILD_ID}
+    //            '''
+    //          }
 
-            }
-          }
-        }
+    //        }
+    //      }
+    //    }
     stage('Build and push dev rairnode') {
           when { branch 'dev'}
           steps {

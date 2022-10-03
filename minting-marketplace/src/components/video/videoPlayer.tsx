@@ -19,10 +19,12 @@ const reactSwall = withReactContent(Swal);
 const VideoPlayer = () => {
   const params = useParams<VideoPlayerParams>();
   const { /*contract,*/ mainManifest, videoId } = params;
-  const { programmaticProvider /*, currentChain, minterInstance*/ } =
-    useSelector<RootState, ContractsInitialType>((state) => {
-      return state.contractStore;
-    });
+  const {
+    programmaticProvider,
+    currentUserAddress /*, currentChain, minterInstance*/
+  } = useSelector<RootState, ContractsInitialType>((state) => {
+    return state.contractStore;
+  });
   const [videoName] = useState(videoId);
   const [mediaAddress, setMediaAddress] = useState<string | null>(
     String(videoId)
@@ -35,8 +37,13 @@ const VideoPlayer = () => {
       const account = await window.ethereum.request({
         method: 'eth_requestAccounts'
       });
-      const getChallengeResponse = await axios.get<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/' + (account && account[0])
+      const getChallengeResponse = await axios.post<TAuthGetChallengeResponse>(
+        '/api/auth/get_challenge/',
+        {
+          userAddress: currentUserAddress,
+          intent: 'decrypt',
+          mediaId: videoId
+        }
       );
       const { response } = getChallengeResponse.data;
       parsedResponse = JSON.parse(response);

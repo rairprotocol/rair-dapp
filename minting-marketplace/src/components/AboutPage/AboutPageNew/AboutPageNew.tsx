@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import './AboutPageNew.css';
 
 // import images
-import RairLogo from '../assets/rairLogo_blue.png';
-import Metamask from '../assets/metamask_logo.png';
+import { RairLogoBlue, metaMaskIcon } from '../../../images';
 
 //import utils
 import setDocumentTitle from './../../../utils/setTitle';
@@ -60,7 +59,7 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
       {...{
         customStyle: {},
         customWrapperClassName: 'btn-buy-metamask',
-        img: Metamask,
+        img: metaMaskIcon,
         contractAddress: aboutPageAddress,
         requiredBlockchain: switchToNetwork,
         offerIndex: [offerIndexInMarketplace],
@@ -80,9 +79,9 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
         <div className="home-about--page">
           <MainBlock
             connectUserData={connectUserData}
-            RairLogo={RairLogo}
+            RairLogo={RairLogoBlue}
             primaryColor={primaryColor}
-            Metamask={Metamask}
+            Metamask={metaMaskIcon}
             termsText={termsText}
             purchaseButton={purchaseButton}
           />
@@ -91,12 +90,12 @@ const AboutPageNew: React.FC<IAboutPageNew> = ({
           <RairOffer primaryColor={primaryColor} />
           <ExclusiveNfts />
           <StreamsAbout
-            Metamask={Metamask}
+            Metamask={metaMaskIcon}
             primaryColor={primaryColor}
             purchaseButton={purchaseButton}
           />
           {/* <Tokenomics Metamask={Metamask} /> */}
-          <RoadMap primaryColor={primaryColor} RairLogo={RairLogo} />
+          <RoadMap primaryColor={primaryColor} RairLogo={RairLogoBlue} />
           <CompareAbout />
           <div className="about-page--team">
             <TeamMeet arraySplash={'rair'} />

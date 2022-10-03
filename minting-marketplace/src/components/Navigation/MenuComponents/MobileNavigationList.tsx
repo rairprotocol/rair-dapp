@@ -13,6 +13,7 @@ interface IMobileNavigationList {
   currentUserAddress: string | undefined;
   toggleMenu: (otherPage?: string) => void;
   logout: () => void;
+  setTabIndexItems: (arg: number) => void;
 }
 
 const MobileNavigationList: React.FC<IMobileNavigationList> = ({
@@ -21,8 +22,14 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
   primaryColor,
   toggleMenu,
   currentUserAddress,
-  logout
+  logout,
+  setTabIndexItems
 }) => {
+  const goToMyItems = (tab: number) => {
+    setTabIndexItems(tab);
+    toggleMenu();
+  };
+
   return (
     <NavFooter>
       {messageAlert && messageAlert === 'notification' ? (
@@ -44,8 +51,10 @@ const MobileNavigationList: React.FC<IMobileNavigationList> = ({
           <li onClick={() => setMessageAlert('profileEdit')}>
             Personal Profile <i className="fal fa-edit" />
           </li>
-          <li>My favorites</li>
-          <li onClick={() => toggleMenu()}>
+          <li onClick={() => goToMyItems(2)}>
+            <NavLink to="/my-items">My favorites</NavLink>
+          </li>
+          <li onClick={() => goToMyItems(0)}>
             <NavLink to="/my-items">My items</NavLink>
           </li>
         </NavFooterBox>

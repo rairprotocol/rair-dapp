@@ -1,29 +1,19 @@
-module.exports = (context) => async (req, res, next) => {
-  const cleanData = async (sessionData) => {
-    // eslint-disable-next-line no-param-reassign
-    sessionData.streamAuthorized = false;
-    // eslint-disable-next-line no-param-reassign
-    delete sessionData.media_id;
-    await context.redis.redisService.set(`sess:${req.sessionID}`, sessionData);
-  };
+const AppError = require('../utils/errors/AppError');
 
-  try {
-    const sessionData = await context.redis.redisService.get(`sess:${req.sessionID}`);
+module.exports = async (req, res, next) => {
+  const sess = req.session;
 
-    if (!sessionData) return next(new Error('Invalid session data.'));
+  if (!sess.media_id || !sess.streamAuthorized) {
+    sess.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
 
-    if (!sessionData.media_id) {
-      await cleanData(sessionData);
-      return next(new Error('Invalid session data.'));
-    }
-
-    if (!sessionData.streamAuthorized) {
-      await cleanData(sessionData);
-      return next(new Error('User is not authorized.'));
-    }
-
-    return next();
-  } catch (err) {
-    return next(err);
+      return !sess.streamAuthorized
+        ? next(new AppError('User is not authorized.', 403))
+        : next(new AppError('Invalid session data.', 400));
+    });
   }
+
+  return next();
 };

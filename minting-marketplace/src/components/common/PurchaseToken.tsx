@@ -3,7 +3,7 @@ import { useSelector, Provider, useStore } from 'react-redux';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import Metamask from '../../images/metamask-fox.svg';
+import { metaMaskIcon } from '../../images';
 import blockchainData from '../../utils/blockchainData';
 import { web3Switch } from '../../utils/switchBlockchain';
 import { rFetch } from '../../utils/rFetch';
@@ -324,7 +324,7 @@ const Agreements: React.FC<IAgreementsPropsType> = ({
           }}>
           <img
             style={{ maxHeight: '7vh' }}
-            src={Metamask}
+            src={metaMaskIcon}
             alt="metamask-logo"
           />
           <wbr />{' '}

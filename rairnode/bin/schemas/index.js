@@ -4,6 +4,7 @@ const authentication = require('./authentication');
 const createContract = require('./createContract');
 const createUser = require('./createUser');
 const getChallenge = require('./getChallenge');
+const getChallengeV2 = require('./getChallengeV2');
 const filterAndSort = require('./filterAndSort');
 const getToken = require('./getToken');
 const singleUser = require('./singleUser');
@@ -23,6 +24,7 @@ const updateTokenMetadata = require('./updateTokenMetadata');
 const pinningMultiple = require('./pinningMultiple');
 const createCommonTokenMetadata = require('./createCommonTokenMetadata');
 const createFavoriteToken = require('./createFavoriteToken');
+const manageContract = require('./manageContract');
 
 module.exports = {
   admin,
@@ -50,4 +52,6 @@ module.exports = {
   pinningMultiple,
   createCommonTokenMetadata,
   createFavoriteToken,
+  manageContract,
+  getChallengeV2,
 };

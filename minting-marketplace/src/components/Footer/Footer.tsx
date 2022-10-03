@@ -16,9 +16,7 @@ import {
   FooterEmailBlock
 } from './FooterItems/FooterItems';
 import { SocialBox } from '../../styled-components/SocialLinkIcons/SocialLinkIcons';
-import { TelegramIcon } from '../Header/DiscordIcon';
-import { TwitterIcon } from '../Header/DiscordIcon';
-import { DiscordIcon } from '../Header/DiscordIcon';
+import { DiscordIcon, TelegramIcon, TwitterIcon } from '../../images';
 import { ContractsInitialType } from '../../ducks/contracts/contracts.types';
 import Swal from 'sweetalert2';
 import TalkSalesComponent from '../Header/HeaderItems/TalkToSalesComponent/TalkSalesComponent';

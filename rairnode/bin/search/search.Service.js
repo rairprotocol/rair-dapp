@@ -1,3 +1,5 @@
+const AppError = require('../utils/errors/AppError');
+
 exports.globalSearch = (models, allFlag) => async (req, res, next) => {
   try {
     const { User, Product, MintedToken } = models;
@@ -18,9 +20,11 @@ exports.globalSearch = (models, allFlag) => async (req, res, next) => {
       MintedToken.defaultProjection,
       limit,
     );
+
     if (users.length === 0 && products.length === 0 && tokens.length === 0) {
-      return res.json({ success: false, message: 'Nothing found...' });
+      return next(new AppError('Nothing found...', 404));
     }
+
     const data = { users, products, tokens };
     return res.json({ success: true, data });
   } catch (err) {

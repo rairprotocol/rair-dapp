@@ -74,6 +74,47 @@
       ],
       "name": "TokenMinted",
       "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "newURI",
+          "type": "string"
+        }, {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "appendTokenIndex",
+          "type": "bool"
+        }
+      ],
+      "name": "UpdatedBaseURI",
+      "type": "event"
+    }, 
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "productId",
+          "type": "uint256"
+        }, {
+          "indexed": false,
+          "internalType": "string",
+          "name": "newURI",
+          "type": "string"
+        }, {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "appendTokenIndex",
+          "type": "bool"
+        }
+      ],
+      "name": "UpdatedProductURI",
+      "type": "event"
     }
   ]
 }

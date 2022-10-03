@@ -1,7 +1,7 @@
 const express = require('express');
 
-module.exports = context => {
-  const router = express.Router()
+module.exports = (context) => {
+  const router = express.Router();
 
   // Get specific contract
   router.get('/', async (req, res, next) => {
@@ -32,10 +32,10 @@ module.exports = context => {
 
       let products;
 
-      let commonQuery = [
-          { $match: { contract: contract._id } },
-          { $sort: { creationDate: -1 } },
-      ]
+      const commonQuery = [
+        { $match: { contract: contract._id } },
+        { $sort: { creationDate: -1 } },
+      ];
 
       if (contract?.diamond) {
         products = await context.db.Product.aggregate([
@@ -46,7 +46,7 @@ module.exports = context => {
               from: 'LockedTokens',
               let: {
                 contr: '$contract',
-                prod: '$collectionIndexInContract'
+                prod: '$collectionIndexInContract',
               },
               pipeline: [
                 {
@@ -56,22 +56,22 @@ module.exports = context => {
                         {
                           $eq: [
                             '$contract',
-                            '$$contr'
-                          ]
+                            '$$contr',
+                          ],
                         },
                         {
                           $eq: [
                             '$product',
-                            '$$prod'
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                }
+                            '$$prod',
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                },
               ],
-              as: 'tokenLock'
-            }
+              as: 'tokenLock',
+            },
           },
           { $unwind: '$tokenLock' },
           {
@@ -79,7 +79,7 @@ module.exports = context => {
               from: 'Offer',
               let: {
                 contr: '$contract',
-                prod: '$collectionIndexInContract'
+                prod: '$collectionIndexInContract',
               },
               pipeline: [
                 {
@@ -89,24 +89,24 @@ module.exports = context => {
                         {
                           $eq: [
                             '$contract',
-                            '$$contr'
-                          ]
+                            '$$contr',
+                          ],
                         },
                         {
                           $eq: [
                             '$product',
-                            '$$prod'
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                }
+                            '$$prod',
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                },
               ],
-              as: 'offers'
-            }
-          }
-          ]);
+              as: 'offers',
+            },
+          },
+        ]);
       } else {
         products = await context.db.Product.aggregate([
           ...commonQuery,
@@ -115,7 +115,7 @@ module.exports = context => {
               from: 'OfferPool',
               let: {
                 contr: '$contract',
-                prod: '$collectionIndexInContract'
+                prod: '$collectionIndexInContract',
               },
               pipeline: [
                 {
@@ -125,22 +125,22 @@ module.exports = context => {
                         {
                           $eq: [
                             '$contract',
-                            '$$contr'
-                          ]
+                            '$$contr',
+                          ],
                         },
                         {
                           $eq: [
                             '$product',
-                            '$$prod'
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                }
+                            '$$prod',
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                },
               ],
-              as: 'offerPool'
-            }
+              as: 'offerPool',
+            },
           },
           { $unwind: '$offerPool' },
           {
@@ -148,7 +148,7 @@ module.exports = context => {
               from: 'Offer',
               let: {
                 offerPoolL: '$offerPool.marketplaceCatalogIndex',
-                contractL: '$contract'
+                contractL: '$contract',
               },
               pipeline: [
                 {
@@ -158,26 +158,25 @@ module.exports = context => {
                         {
                           $eq: [
                             '$contract',
-                            '$$contractL'
-                          ]
+                            '$$contractL',
+                          ],
                         },
                         {
                           $eq: [
                             '$offerPool',
-                            '$$offerPoolL'
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                }
+                            '$$offerPoolL',
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                },
               ],
-              as: 'offers'
-            }
-          }
+              as: 'offers',
+            },
+          },
         ]);
       }
-
 
       res.json({ success: true, products });
     } catch (err) {
@@ -186,4 +185,4 @@ module.exports = context => {
   });
 
   return router;
-}
+};

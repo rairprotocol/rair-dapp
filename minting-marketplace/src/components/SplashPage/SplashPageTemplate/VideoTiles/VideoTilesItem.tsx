@@ -1,5 +1,5 @@
 //@ts-nocheck
-import Metamask from '../../images/metamask_logo.png';
+import { metaMaskIcon } from '../../../../images';
 import Modal from 'react-modal';
 import VideoPlayerBySignature from '../VideoPlayer/VideoPlayerBySignature ';
 import StandaloneVideoPlayer from '../../../video/videoPlayerGenerall';
@@ -183,7 +183,7 @@ const VideoTilesItem = ({
                 className="block-with-video"
                 style={{ position: 'relative' }}>
                 <div className="video-block-metamask-some">
-                  <img src={Metamask} alt="metamask logo" />
+                  <img src={metaMaskIcon} alt="metamask logo" />
                 </div>
                 <img
                   className="block-img-bg"

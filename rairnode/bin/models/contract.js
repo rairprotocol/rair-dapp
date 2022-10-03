@@ -15,6 +15,8 @@ const Contract = new Schema(
     external: { type: Boolean, required: true, default: false },
     singleMetadata: { type: Boolean, default: false },
     metadataURI: { type: String, default: 'none' },
+    blockSync: { type: Boolean, default: false },
+    blockView: { type: Boolean, default: false },
   },
   { versionKey: false },
 );

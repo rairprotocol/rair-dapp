@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const log = require('../utils/logger')(module);
 
 module.exports = (Model) => async (req, res, next) => {
@@ -14,7 +15,7 @@ module.exports = (Model) => async (req, res, next) => {
 
       log.error(message);
 
-      return res.status(404).send({ success: false, error: true, message });
+      return next(new AppError(`${message}`, 404));
     }
 
     foundItem = foundItem.toObject();
@@ -29,7 +30,7 @@ module.exports = (Model) => async (req, res, next) => {
 
       log.error(message);
 
-      return res.status(403).send({ success: false, error: true, message });
+      return next(new AppError(`${message}`, 403));
     }
 
     return next();

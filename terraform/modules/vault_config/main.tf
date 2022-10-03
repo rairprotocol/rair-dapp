@@ -20,6 +20,9 @@ variable "applications" {
     },
     blockchain-network: {
       vault_secrets_dirname: "blockchain-network"
+    },
+    media-service: {
+      vault_secrets_dirname: "media-service"
     }
   }
 }

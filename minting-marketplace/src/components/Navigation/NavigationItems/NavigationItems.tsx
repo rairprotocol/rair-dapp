@@ -104,6 +104,11 @@ export const ListProfileItem = styled.div`
   justify-content: center;
   width: 100%;
   min-height: 30vh;
+
+  .block-user-profile {
+    margin: 10px 0;
+    word-break: break-all;
+  }
 `;
 
 export const ListProfileLoading = styled.div`

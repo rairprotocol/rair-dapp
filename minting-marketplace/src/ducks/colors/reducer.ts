@@ -1,12 +1,9 @@
 import * as types from './types';
 
-import headerLogoBlackMobile from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
-import headerLogoWhiteMobile from '../../images/RAIR-Tech-Logo-POWERED BY-WHITE-2021.png';
-import headerLogoWhite from '../../images/rairTechLogoWhite.png';
-import headerLogoBlack from '../../images/rairTechLogoBlack.png';
+import { headerLogoBlackMobile, headerLogoWhiteMobile } from '../../images';
+import { headerLogoBlack, headerLogoWhite } from '../../images';
 
-import bgLogoBlack from '../../images/BlackBg.png';
-import bgLogoWhite from '../../images/ClayBg.png';
+import { bgLogoBlack, bgLogoWhite } from '../../images';
 import {
   ColorStoreType,
   SchemaType,

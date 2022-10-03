@@ -1,5 +1,5 @@
 import React from 'react';
-import playIcon from '../../images/playImg.png';
+import { playImages } from '../../images/greyMan/grayMan';
 import Modal from 'react-modal';
 import VideoPlayerBySignature from './VideoPlayerBySignature ';
 import './VideoPlayer.css';
@@ -95,7 +95,7 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
                 style={{ border: 'none', background: 'none' }}
                 className="video-module-play-button"
                 onClick={() => openVideo()}>
-                <img src={playIcon} alt="Button Play Video" />
+                <img src={playImages} alt="Button Play Video" />
               </button>
             </div>
           </div>
@@ -160,7 +160,7 @@ const ShowVideoToLoggedInUsers: React.FC<IShowVideoToLoggedInUsers> = ({
                 style={{ border: 'none', background: 'none' }}
                 className="video-module-play-button"
                 onClick={() => openVideo()}>
-                <img src={playIcon} alt="Button Play video" />
+                <img src={playImages} alt="Button Play video" />
               </button>
             </div>
           </div>

@@ -65,8 +65,8 @@ module.exports = (context) => {
 				})).save();
 			}
 
-			if (version?.running === true) {
-				return done({reason: `A ${AgendaTaskEnum.SyncAll721Events} process for network ${network} is already running!`});
+			if (version.running === true) {
+				return done({reason: `A ${AgendaTaskEnum.SyncContracts} process for network ${network} is already running!`});
 			} else {
 				version.running = true;
 				version = await version.save();

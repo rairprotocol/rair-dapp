@@ -13,7 +13,7 @@ import { getTokenComplete } from '../../ducks/auth/actions';
 import { setUserAddress } from '../../ducks/contracts/actions';
 import axios from 'axios';
 import { TUserResponse } from '../../axios.responseTypes';
-import { BellIcon, CloseIconMobile, MenuIcon } from '../Header/DiscordIcon';
+import { BellIcon, CloseIconMobile, MenuIcon } from '../../images';
 import { OnboardingButton } from '../common/OnboardingButton/OnboardingButton';
 import {
   SocialBox,
@@ -40,6 +40,7 @@ interface IMenuNavigation {
     | undefined;
   showAlert: boolean | null | undefined;
   selectedChain: string | null | undefined;
+  setTabIndexItems: (arg: number) => void;
 }
 
 const MenuNavigation: React.FC<IMenuNavigation> = ({
@@ -51,7 +52,8 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
   currentUserAddress,
   programmaticProvider,
   showAlert,
-  selectedChain
+  selectedChain,
+  setTabIndexItems
 }) => {
   const [click, setClick] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
@@ -172,6 +174,7 @@ const MenuNavigation: React.FC<IMenuNavigation> = ({
             activeSearch={activeSearch}
             messageAlert={messageAlert}
             setMessageAlert={setMessageAlert}
+            setTabIndexItems={setTabIndexItems}
           />
         )}
         <RightSideMenu>

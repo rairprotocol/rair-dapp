@@ -37,7 +37,7 @@ module.exports = (context) => {
    */
   router.use(
     '/:mediaId',
-    streamVerification(context),
+    streamVerification,
     validation('stream', 'params'),
     context.hls.middleware,
   );

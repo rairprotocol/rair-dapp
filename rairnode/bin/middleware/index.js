@@ -7,6 +7,7 @@ const assignUser = require('./assignUser');
 const isAdmin = require('./isAdmin');
 const isSuperAdmin = require('./isSuperAdmin');
 const dataTransform = require('./dataTransform');
+const verifySuperAdmin = require('./verifySuperAdmin');
 
 module.exports = {
   JWTVerification,
@@ -18,4 +19,5 @@ module.exports = {
   isAdmin,
   isSuperAdmin,
   dataTransform,
+  verifySuperAdmin,
 };

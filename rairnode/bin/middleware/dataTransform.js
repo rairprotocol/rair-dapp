@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const log = require('../utils/logger')(module);
 
 module.exports = (fieldNames = []) => async (req, res, next) => {
@@ -18,7 +19,6 @@ module.exports = (fieldNames = []) => async (req, res, next) => {
   } catch (err) {
     log.error(`Invalide data in ${fieldName} `);
 
-    return res.status(400).send({ success: false, message: `Invalide data in ${fieldName}` });
-    // return next(new Error(`Invalide data in ${fieldName} `));
+    return next(new AppError(`Invalide data in ${fieldName} `, 400));
   }
 };

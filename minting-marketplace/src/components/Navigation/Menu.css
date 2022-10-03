@@ -13,6 +13,15 @@
   display: flex;
 }
 
+.burder-menu .social-media .social-media-profile {
+  display: flex;
+  align-items: center;
+}
+
+.burder-menu .social-media .social-media-profile .social-media-user-icon {
+  margin-left: 10px;
+}
+
 .col-1.rounded.burder-menu .metamask-on-boarding {
   position: relative;
   right: 0;

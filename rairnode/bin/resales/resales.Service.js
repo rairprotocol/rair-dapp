@@ -1,4 +1,6 @@
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
+
 const {
   Contract,
   ResaleTokenOffer,
@@ -19,7 +21,7 @@ const getOffersAndOfferPools = async (contract, product) => {
   });
 
   if (_.isEmpty(offers)) {
-    throw new Error('Offers not found.');
+    throw new AppError('Offers not found.', 404);
   }
 
   if (!contract.diamond) {
@@ -29,7 +31,7 @@ const getOffersAndOfferPools = async (contract, product) => {
     });
 
     if (_.isEmpty(offerPool)) {
-      throw new Error('Offerpool not found.');
+      throw new AppError('Offerpool not found.', 404);
     }
   }
 
@@ -44,13 +46,14 @@ exports.getResaleByExternalId = async (req, res, next) => {
     let tokens = {};
     let filter = {};
     let contractId = '';
+
     if (req.params.productId) {
       const product = await Product.findById(req.params.productId);
+
       if (!product) {
-        return res
-          .status(404)
-          .json({ success: false, message: 'Product not found' });
+        return next(new AppError('Product not found.', 404));
       }
+
       const contract = await Contract.findById(product.contract);
       const offersAndOfferPools = await getOffersAndOfferPools(
         contract,
@@ -64,13 +67,14 @@ exports.getResaleByExternalId = async (req, res, next) => {
       };
       contractId = contract._id;
     }
+
     if (req.params.offerId) {
       const offer = await Offer.findById(req.params.offerId);
+
       if (!offer) {
-        return res
-          .status(404)
-          .json({ success: false, message: 'Offer not found' });
+        return next(new AppError('Offer not found.', 404));
       }
+
       contractId = offer.contract;
       filter = offer.diamond
         ? { offer: offer.diamondRangeIndex }
@@ -81,11 +85,11 @@ exports.getResaleByExternalId = async (req, res, next) => {
       contract: contractId,
       tokenId: { $in: tokens },
     });
+
     if (!resultResaleTokens || resultResaleTokens.length === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'No resale offers found' });
+      return next(new AppError('No resale offers found.', 404));
     }
+
     return res.json({ success: true, data: resultResaleTokens });
   } catch (err) {
     return next(err);

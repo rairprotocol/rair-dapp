@@ -76,6 +76,7 @@
   margin-top: 1.4rem;
   width: auto;
   height: 2.5rem;
+  word-break: break-all;
 
   font-family: 'Plus Jakarta Sans' sans-serif;
   font-style: normal;
@@ -373,5 +374,10 @@
 
   .containerInput .inputBefore:last-child {
     margin-left: -6rem;
+  }
+
+  .profileNameblack,
+  .profileNamewhite {
+    font-size: 16px;
   }
 }

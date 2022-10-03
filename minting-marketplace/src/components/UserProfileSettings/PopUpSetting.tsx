@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Popup } from 'reactjs-popup';
 import defaultPictures from './images/defaultUserPictures.png';
-// import UploadProfilePicture from './UploadProfilePicture/UploadProfilePicture';
 
 // React Redux types
 import { getTokenComplete } from '../../ducks/auth/actions';
@@ -13,6 +12,7 @@ import { setAdminRights } from '../../ducks/users/actions';
 import {
   SvgFactoryIcon,
   SvgItemsIcon,
+  SvgMyFavorites,
   SvgUserIcon
 } from './SettingsIcons/SettingsIcons';
 import EditMode from './EditMode/EditMode';
@@ -22,14 +22,14 @@ const PopUpSettings = ({
   setLoginDone,
   primaryColor,
   showAlert,
-  selectedChain
+  selectedChain,
+  setTabIndexItems
 }) => {
   const settingBlockRef = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [next, setNext] = useState(false);
   const [, /*openModal*/ setOpenModal] = useState(false);
-  // const [openModalPic, setOpenModalPic] = useState(false);
   const [, /*userData*/ setUserData] = useState({});
   const [userName, setUserName] = useState();
   const [userEmail, setUserEmail] = useState();
@@ -38,10 +38,7 @@ const PopUpSettings = ({
 
   const { adminRights, userRd } = useSelector((store) => store.userStore);
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(
-    // "https://static.dezeen.com/uploads/2021/06/elon-musk-architect_dezeen_1704_col_1.jpg"
-    null
-  );
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
 
   const onChangeEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
@@ -85,7 +82,8 @@ const PopUpSettings = ({
     navigate('/');
   };
 
-  const pushToMyItems = () => {
+  const pushToMyItems = (tab: number) => {
+    setTabIndexItems(tab);
     navigate('/my-items');
   };
 
@@ -111,26 +109,6 @@ const PopUpSettings = ({
   useEffect(() => {
     return () => setEditMode(false);
   }, []);
-
-  // if (openModalPic) {
-  //   return (
-  //     <>
-  //       <UploadProfilePicture
-  //         setUserName={setUserName}
-  //         setUserEmail={setUserEmail}
-  //         currentUserAddress={currentUserAddress}
-  //         setOpenModalPic={setOpenModalPic}
-  //         setImagePreviewUrl={setImagePreviewUrl}
-  //         imagePreviewUrl={imagePreviewUrl}
-  //         setTriggerState={setTriggerState}
-  //         userEmail={userEmail}
-  //         userName={userName}
-  //       />
-  //     </>
-  //   );
-  // } else {
-  //   <Popup />;
-  // }
 
   return (
     <>
@@ -221,7 +199,15 @@ const PopUpSettings = ({
                   <SvgUserIcon primaryColor={primaryColor} /> Profile settings
                 </li>
                 <li
-                  onClick={pushToMyItems}
+                  onClick={() => pushToMyItems(2)}
+                  style={{
+                    color:
+                      primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'
+                  }}>
+                  <SvgMyFavorites primaryColor={primaryColor} /> My favorites
+                </li>
+                <li
+                  onClick={() => pushToMyItems(0)}
                   style={{
                     color:
                       primaryColor === 'rhyno' ? 'rgb(41, 41, 41)' : 'white'

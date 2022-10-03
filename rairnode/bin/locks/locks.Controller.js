@@ -1,10 +1,9 @@
 const express = require('express');
 const { getLocks } = require('./locks.Service');
 
-module.exports = () => {
-  const router = express.Router();
+const router = express.Router();
 
-  router.get('/', getLocks);
+router.get('/', getLocks);
 
-  return router;
-};
+module.exports = router;
+

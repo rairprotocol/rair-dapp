@@ -1,12 +1,19 @@
 /* eslint-disable implicit-arrow-linebreak */
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const AppError = require('./appError');
+const AppError = require('./errors/AppError');
 const APIFeatures = require('./apiFeatures');
 
 const catchAsync = (fn) => (req, res, next) => {
   fn(req, res, next).catch(next);
 };
+
+exports.validateQuery = (paramName) => catchAsync(async (req, res, next) => {
+  if (!req.query[paramName]) {
+    return next(new AppError(`Missing query parameter ${paramName}`, 400));
+  }
+  return next();
+});
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {

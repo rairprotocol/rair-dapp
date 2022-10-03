@@ -13,6 +13,7 @@ const {
   encryptFolderContents,
 } = require('../utils/ffmpegUtils');
 const { vaultKeyManager, vaultAppRoleTokenManager } = require('../vault');
+const AppError = require('../utils/errors/AppError');
 
 const { baseUri } = config.rairnode;
 
@@ -64,7 +65,7 @@ module.exports = {
     const foundContractId = foundContract._id;
 
     if (foundContract.user !== publicAddress && !superAdmin) {
-      return res.status(400).send({ success: false, message: `Contract ${contract} not belong to you.` });
+      return next(new AppError('Contract not belong to you.', 400));
     }
 
     // Get the socket connection from Express app
@@ -279,9 +280,7 @@ module.exports = {
         log.error(e);
       }
     } else {
-      return res
-        .status(400)
-        .send({ success: false, message: 'File not provided.' });
+      return next(new AppError('File not provided.', 400));
     }
   },
 };

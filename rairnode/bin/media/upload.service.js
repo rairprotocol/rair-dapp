@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const {
   Category,
   Contract,
@@ -17,9 +18,7 @@ module.exports = {
       const foundContractId = foundContract._id;
 
       if (!foundContract) {
-        return res
-          .status(404)
-          .send({ success: false, message: `Contract ${contract} not found.` });
+        return next(new AppError(`Contract ${contract} not found.`, 404));
       }
 
       const foundProduct = await Product.findOne({
@@ -28,17 +27,13 @@ module.exports = {
       });
 
       if (!foundProduct) {
-        return res
-          .status(404)
-          .send({ success: false, message: `Product ${product} not found.` });
+        return next(new AppError(`Product ${product} not found.`, 404));
       }
 
       const foundCategory = await Category.findOne({ name: category });
 
       if (!foundCategory) {
-        return res
-          .status(404)
-          .send({ success: false, message: 'Category not found.' });
+        return next(new AppError('Category not found.', 404));
       }
 
       // Diamond contracts have no offerPools
@@ -72,9 +67,7 @@ module.exports = {
         });
 
         if (notExistOffer) {
-          return res
-            .status(404)
-            .send({ success: false, message: `Offer ${notExistOffer} not found.` });
+          return next(new AppError(`Offer ${notExistOffer} not found.`, 404));
         }
 
         return res.json({ foundContract, foundCategory });
@@ -89,7 +82,6 @@ module.exports = {
   addFile: async (req, res, next) => {
     try {
       const { cid, meta } = req.body;
-
       await File.create({
         _id: cid,
         ...meta,

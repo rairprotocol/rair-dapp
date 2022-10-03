@@ -37,6 +37,10 @@
   align-items: center;
 }
 
+.block-user-creator h5 {
+  word-break: break-all;
+}
+
 .container-title-collection .block-user-creator img {
   width: 32px;
   height: 32px;

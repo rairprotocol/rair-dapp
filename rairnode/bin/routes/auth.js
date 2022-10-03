@@ -1,8 +1,9 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const metaAuth = require('@rair/eth-auth')({ dAppName: 'RAIR Inc.' });
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
+const { generateChallenge, generateChallengeV2, validateChallenge } = require('../integrations/ethers/web3Signature');
+const AppError = require('../utils/errors/AppError');
 const {
   checkBalanceProduct,
   checkAdminTokenOwns,
@@ -67,6 +68,32 @@ const getTokensForUser = async (
 
 module.exports = (context) => {
   const router = express.Router();
+
+  router.post(
+    '/get_challenge',
+    validation('getChallengeV2'),
+    async (req, res, next) => {
+      const messages = {
+        login: 'Login to RAIR. This sign request securely logs you in to RAIR. Check for a second sign request to play videos.',
+      };
+      if (req?.body?.mediaId) {
+        const fileData = await context.db.File.findById(req.body.mediaId);
+        const authorData = await context.db.User.findOne({
+          publicAddress: fileData.authorPublicAddress,
+        });
+        messages.decrypt = `Complete this signature request to unlock media: ${fileData?.title} by ${authorData?.nickName ? authorData?.nickName : fileData?.authorPublicAddress}`;
+      }
+      req.metaAuth = {
+        customDescription: messages[req.body.intent],
+      };
+      next();
+    },
+    generateChallengeV2,
+    (req, res, next) => {
+      res.send({ success: true, response: req.metaAuth.challenge });
+    },
+  );
+
   /**
    * @swagger
    *
@@ -89,7 +116,7 @@ module.exports = (context) => {
   router.get(
     '/get_challenge/:MetaAddress',
     validation('getChallenge', 'params'),
-    metaAuth,
+    generateChallenge('Login to RAIR. This sign request securely logs you in to RAIR. Check for a second sign request to play videos.'),
     (req, res) => {
       res.send({ success: true, response: req.metaAuth.challenge });
     },
@@ -131,7 +158,7 @@ module.exports = (context) => {
   router.get(
     '/get_token/:MetaMessage/:MetaSignature/:mediaId',
     validation('getToken', 'params'),
-    metaAuth,
+    validateChallenge,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
       const { mediaId } = req.params;
@@ -141,9 +168,7 @@ module.exports = (context) => {
         const file = await context.db.File.findOne({ _id: mediaId });
 
         if (!file) {
-          return res
-            .status(400)
-            .send({ success: false, message: 'No file found' });
+          return next(new AppError('No file found', 400));
         }
 
         const contract = await context.db.Contract.findOne(file.contract);
@@ -192,7 +217,7 @@ module.exports = (context) => {
                 log.info('Verifying user account has the admin token');
               }
             } catch (e) {
-              return next(new Error(`Could not verify account: ${e}`));
+              return next(new AppError(`Could not verify account: ${e}`, 403));
             }
           }
 
@@ -201,21 +226,17 @@ module.exports = (context) => {
             !ownsTheAccessTokens.includes(true) &&
             !file.demo
           ) {
-            return res
-              .status(403)
-              .send({ success: false, message: "You don't have permission." });
+            return next(new AppError("You don't have permission.", 403));
           }
 
-          await context.redis.redisService.set(`sess:${req.sessionID}`, {
-            ...req.session,
-            eth_addr: ethAddress,
-            media_id: mediaId,
-            streamAuthorized: true,
-          });
+          const sess = req.session;
+          sess.eth_addr = ethAddress;
+          sess.media_id = mediaId;
+          sess.streamAuthorized = true;
 
           return res.send({ success: true });
         }
-        return res.status(400).send({ success: false });
+        return next(new AppError('Something went wrong', 400));
       } catch (err) {
         return next(err);
       }
@@ -226,10 +247,9 @@ module.exports = (context) => {
   router.get(
     '/admin/:MetaMessage/:MetaSignature/',
     validation('admin', 'params'),
-    metaAuth,
+    validateChallenge,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
-
       try {
         if (ethAddress) {
           const user = await context.db.User.findOne({
@@ -237,29 +257,22 @@ module.exports = (context) => {
           });
 
           if (_.isNull(user)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'User not found.' });
+            return next(new AppError('User not found.', 404));
           }
 
           try {
             const ownsTheToken = await checkAdminTokenOwns(ethAddress);
 
             if (!ownsTheToken) {
-              return res.json({
-                success: false,
-                message: "You don't hold the current admin token",
-              });
+              return next(new AppError("You don't hold the current admin token", 401));
             }
             return res.json({ success: true, message: 'Admin token holder' });
           } catch (e) {
             log.error(e);
-            return next(new Error('Could not verify account.'));
+            return next(new AppError('Could not verify account.', 401));
           }
         } else {
-          return res
-            .status(400)
-            .send({ success: false, message: 'Incorrect credentials.' });
+          return next(new AppError('Incorrect credentials.', 400));
         }
       } catch (err) {
         return next(err);
@@ -270,7 +283,7 @@ module.exports = (context) => {
   router.get(
     '/authentication/:MetaMessage/:MetaSignature/',
     validation('authentication', 'params'),
-    metaAuth,
+    validateChallenge,
     isSuperAdmin,
     async (req, res, next) => {
       const ethAddress = req.metaAuth.recovered;
@@ -283,9 +296,7 @@ module.exports = (context) => {
           });
 
           if (_.isNull(user)) {
-            return res
-              .status(404)
-              .send({ success: false, message: 'User not found.' });
+            return next(new AppError('User not found.', 404));
           }
 
           try {
@@ -298,9 +309,7 @@ module.exports = (context) => {
             log.error(e);
           }
         } else {
-          return res
-            .status(400)
-            .send({ success: false, message: 'Incorrect credentials.' });
+          return next(new AppError('Incorrect credentials.', 400));
         }
 
         jwt.sign(
@@ -312,7 +321,7 @@ module.exports = (context) => {
           process.env.JWT_SECRET,
           { expiresIn: '1d' },
           (err, token) => {
-            if (err) next(new Error('Could not create JWT'));
+            if (err) next(new AppError('Could not create JWT', 401));
             return res.send({ success: true, token });
           },
         );
@@ -334,13 +343,13 @@ module.exports = (context) => {
 
   // Terminating access for video streaming session
   router.get('/stream/out', (req, res, next) => {
-    try {
-      req.session.streamAuthorized = false;
-      delete req.session.media_id;
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+
       return res.send({ success: true });
-    } catch (err) {
-      return next(err);
-    }
+    });
   });
 
   return router;

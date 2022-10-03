@@ -14,7 +14,7 @@ import { TUserResponse } from '../../axios.responseTypes';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import chainData from '../../utils/blockchainData';
 import CustomButton from '../MockUpPage/utils/button/CustomButton';
-import playImages from '../SplashPage/images/playImg.png';
+import { playImages } from '../SplashPage/images/greyMan/grayMan';
 import NftVideoplayer from '../MockUpPage/NftList/NftData/NftVideoplayer/NftVideoplayer';
 import { CheckEthereumChain } from '../../utils/CheckEthereumChain';
 import { ModalContentCloseBtn } from '../MockUpPage/utils/button/ShowMoreItems';

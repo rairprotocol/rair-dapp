@@ -1,27 +1,52 @@
 const express = require('express');
-const { createTokensWithCommonMetadata, getSingleToken, updateSingleTokenMetadata, pinMetadataToPinata } = require('./tokens.Service');
-const { getContractsByBlockchainAndContractAddress } = require('../contracts/contracts.Service');
-const { getOfferIndexesByContractAndProduct } = require('../offers/offers.Service');
-const { getOfferPoolByContractAndProduct } = require('../offerPools/offerPools.Service');
+const {
+  createTokensWithCommonMetadata,
+  getSingleToken,
+  updateSingleTokenMetadata,
+  pinMetadataToPinata,
+  getAllTokens,
+} = require('./tokens.Service');
+const {
+  getSpecificContracts,
+} = require('../contracts/contracts.Service');
+const {
+  getOfferIndexesByContractAndProduct,
+} = require('../offers/offers.Service');
+const {
+  getOfferPoolByContractAndProduct,
+} = require('../offerPools/offerPools.Service');
 const upload = require('../Multer/Config');
-const { dataTransform, validation, JWTVerification, isAdmin } = require('../middleware');
+const {
+  dataTransform,
+  validation,
+  JWTVerification,
+  isAdmin,
+} = require('../middleware');
 
-module.exports = () => {
-  const router = express.Router();
+const router = express.Router();
 
-  router.post(
-    '/',
-    JWTVerification,
-    isAdmin,
-    upload.array('files', 2),
-    dataTransform(['attributes']),
-    validation('createCommonTokenMetadata'),
-    createTokensWithCommonMetadata,
-  );
-
-  router.get(
-    '/:token',
-    getContractsByBlockchainAndContractAddress,
+router.post(
+  '/',
+  JWTVerification,
+  isAdmin,
+  upload.array('files', 2),
+  dataTransform(['attributes']),
+  validation('createCommonTokenMetadata'),
+  createTokensWithCommonMetadata,
+);
+router.get(
+  '/my',
+  JWTVerification,
+  (req, res, next) => {
+    req.query.ownerAddress = req.user.publicAddress;
+    next();
+  },
+  getAllTokens,
+);
+router
+  .route('/:token')
+  .get(
+    getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     (req, res, next) => {
@@ -34,28 +59,23 @@ module.exports = () => {
       return next();
     },
     getSingleToken,
-  );
-
-  router.patch(
-    '/:token',
+  )
+  .patch(
     JWTVerification,
-    getContractsByBlockchainAndContractAddress,
+    getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     upload.array('files', 2),
     dataTransform(['attributes']),
     validation('updateTokenMetadata'),
     updateSingleTokenMetadata,
-  );
-
-  router.post(
-    '/:token',
+  )
+  .post(
     JWTVerification,
-    getContractsByBlockchainAndContractAddress,
+    getSpecificContracts,
     getOfferIndexesByContractAndProduct,
     getOfferPoolByContractAndProduct,
     pinMetadataToPinata,
   );
 
-  return router;
-};
+module.exports = router;

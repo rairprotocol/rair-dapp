@@ -1,5 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
+const AppError = require('../../utils/errors/AppError');
 const {
   JWTVerification,
   validation,
@@ -260,9 +261,7 @@ module.exports = (context) => {
       });
 
       if (_.isEmpty(contract)) {
-        return res
-          .status(404)
-          .send({ success: false, message: 'Contract not found.' });
+        return next(new AppError('Contract not found.', 404));
       }
 
       req.contract = contract;

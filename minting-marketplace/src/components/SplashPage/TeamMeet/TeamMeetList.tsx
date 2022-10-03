@@ -1,32 +1,38 @@
 import React from 'react';
-import Teammate_1 from '../images/mrlee.jpeg';
-import Teammate_2 from '../images/foundation.png';
-import Teammate_3 from '../images/south-dig.png';
-import Teammate_4 from '../images/rair-block.png';
-import Teammate_5 from '../images/movementontheground.png';
-import Teammate_6 from '../images/immersiverse_logo.png';
-import Teammate_7 from '../images/UkrainianAmericanCons/15724868_10208080805993720_1581371147497725224_o.jpeg';
-import Teammate_8 from '../images/slidelock_team.png';
-import Teammate_VV from '../images/vv_Rair_logo.png';
-import BruceFenton2 from '../images/BruceFenton2.png';
-import NFTLA_ICON from '../images/NFTLA_icon.png';
-import NFTNYC_LOGO from '../images/nftnyc_logo.png';
-import Wallstreet1 from '../images/wallstreet1.png';
-import Wallstreet2 from '../images/wallstreet2.png';
-import CoinAgenda_LOGO from '../images/coinagenda.png';
-import Estate_Teammate from '../images/estate_team.png';
-import GreymanAuthor from '../images/greymanAuthor.png';
-import Ed from '../../AboutPage/assets/Ed.jpeg';
-import Garrett from '../../AboutPage/assets/GARRETT.jpeg';
-import Gunther from '../../AboutPage/assets/Gunther.jpeg';
-import Martin from '../../AboutPage/assets/Martin.jpeg';
-import MICHAEL from '../../AboutPage/assets/MICHAEL.jpg';
-import JULIA from '../../AboutPage/assets/JULIA.jpg';
-import David from '../../AboutPage/assets/David.jpeg';
-import Matthew from '../../AboutPage/assets/Matthew.jpg';
-import NutTeam from '../images/nuts-teammate.jpeg';
-import MichaelTerpin from '../images/MichaelTerpin.png';
-import AndreMiripolsky from '../images/AndreMiripolsky.png';
+import {
+  Teammate_1,
+  Teammate_2,
+  Teammate_3,
+  Teammate_4,
+  Teammate_5,
+  Teammate_6,
+  Teammate_8,
+  BruceFenton2,
+  NFTLA_ICON,
+  NFTNYC_LOGO,
+  CoinAgenda_LOGO,
+  Estate_Teammate,
+  GreymanAuthor,
+  NutTeam,
+  MichaelTerpin,
+  AndreMiripolsky
+} from '../images/teamMeetList/teamMeetList';
+import { Teammate_7 } from '../images/UkraineGlitch/urkaineGlitch';
+import { Teammate_VV } from '../images/vaporverse/vaporverse';
+import {
+  Wallstreet1,
+  Wallstreet2
+} from '../images/wallstreet80sclub/wallstreet80sclub';
+import {
+  Ed,
+  Garrett,
+  Julia,
+  Martin,
+  Michael,
+  Gunther,
+  David,
+  Matthew
+} from '../../AboutPage/assets/about';
 import { ITeamComponentCommon, TTeamArrayItemType } from '../splashPage.types';
 import TeamMeetComponentCommon from './TeamComponentCommon';
 
@@ -257,7 +263,7 @@ const teamAboutRair: TTeamArrayItemType[] = [
 const rairAdvisorsTeam: TTeamArrayItemType[] = [
   {
     nameTeammate: 'Michael Terpin  | Strategic Advisor + Investor',
-    imageUrl: MICHAEL,
+    imageUrl: Michael,
     aboutTeammate: [
       `Michael Terpin is perhaps best known for founding Marketwire, which was funded by Sequoia
             Capital in 2000, then sold in 2006. Today, Michael is a pioneering investor and adviser 
@@ -289,7 +295,7 @@ const rairAdvisorsTeam: TTeamArrayItemType[] = [
   },
   {
     nameTeammate: 'Julia Yan  | Strategic Advisor',
-    imageUrl: JULIA,
+    imageUrl: Julia,
     aboutTeammate: [
       `Julia is a growth leader focused on consumer product, tech and media. Her experience 
             in building growth engines and scaling product adoption from zero to one enabled companies 

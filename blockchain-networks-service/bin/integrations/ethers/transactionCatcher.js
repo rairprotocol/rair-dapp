@@ -2,35 +2,8 @@
 const ethers = require('ethers');
 const Moralis = require('moralis/node');
 const endpoints = require('../../config/blockchainEndpoints');
-const {
-  insertContract,
-  insertCollection,
-  insertTokenClassic,
-  insertTokenDiamond,
-  insertOfferPool,
-  insertOffer,
-  insertDiamondOffer,
-  insertLock,
-  insertDiamondRange,
-  metadataForToken,
-  metadataForProduct,
-  updateOfferClassic,
-  updateDiamondRange,
-  metadataForContract,
-  handleResaleOffer,
-  registerCustomSplits,
-  updateResaleOffer,
-} = require('../../utils/eventCatcherUtils');
 const log = require('../../utils/logger')(module);
-
-// Contract ABIs
-const Rair721 = require('./contracts/RAIR_ERC721.json').abi;
-const MinterMarketplace = require('./contracts/Minter_Marketplace.json').abi;
-const MasterFactory = require('./contracts/RAIR_Token_Factory.json').abi;
-const DiamondFactory = require('./contracts/diamondFactoryABI.json').abi;
-const DiamondMarketplace =
-  require('./contracts/diamondMarketplaceABI.json').abi;
-const ResaleMarketplace = require('./contracts/Resale_Marketplace.json').abi;
+const {masterMapping, insertionMapping} = require('../../utils/eventCatcherMapping');
 
 const { providersMapping } = require('../../utils/speedyNodeProviders');
 
@@ -39,69 +12,6 @@ Moralis.start({
   serverUrl: process.env.MORALIS_SERVER_TEST,
   appId: process.env.MORALIS_API_KEY_TEST,
 });
-
-// Events from this list will be stored on the database
-const insertionMapping = {
-  // Diamond Factory
-  DeployedContract: insertContract,
-  CreatedCollection: insertCollection,
-  CreatedRange: insertDiamondRange,
-  UpdatedRange: updateDiamondRange,
-  UpdatedBaseURI: metadataForContract,
-  UpdatedProductURI: metadataForProduct,
-  UpdatedTokenURI: metadataForToken,
-
-  // Diamond Marketplace
-  AddedMintingOffer: insertDiamondOffer,
-  TokenMinted: insertTokenClassic,
-  MintedToken: insertTokenDiamond,
-
-  // Classic Factory
-  NewContractDeployed: insertContract,
-
-  // Classic ERC721
-  BaseURIChanged: metadataForContract,
-  ProductURIChanged: metadataForProduct,
-  TokenURIChanged: metadataForToken,
-  ProductCreated: insertCollection,
-
-  // Classic Marketplace
-  AddedOffer: insertOfferPool,
-  AppendedRange: insertOffer,
-  RangeLocked: insertLock,
-  UpdatedOffer: updateOfferClassic,
-
-  // Resale Marketplace
-  OfferStatusChange: handleResaleOffer,
-  UpdatedOfferPrice: updateResaleOffer,
-  CustomRoyaltiesSet: registerCustomSplits,
-};
-
-const getContractEvents = (abi, isDiamond = false) => {
-  const contractInterface = new ethers.utils.Interface(abi);
-  const mapping = {};
-  Object.keys(contractInterface.events).forEach((eventSignature) => {
-    const singleAbi = abi.filter(
-      (item) => eventSignature.includes(item.name) && item.type === 'event',
-    )[0];
-    mapping[ethers.utils.id(eventSignature)] = {
-      signature: eventSignature,
-      abi: [singleAbi],
-      diamondEvent: isDiamond,
-      insertionOperation: insertionMapping[singleAbi.name],
-    };
-  });
-  return mapping;
-};
-
-const masterMapping = {
-  ...getContractEvents(Rair721),
-  ...getContractEvents(MinterMarketplace),
-  ...getContractEvents(MasterFactory),
-  ...getContractEvents(DiamondFactory, true),
-  ...getContractEvents(DiamondMarketplace, true),
-  ...getContractEvents(ResaleMarketplace),
-};
 
 const getTransaction = async (
   network,
@@ -210,10 +120,10 @@ const getTransaction = async (
             event.data,
             event.topics,
           );
-          if (found.insertionOperation) {
+          if (found.operation) {
             insertionQueue.push({
               eventData: found,
-              operation: found.insertionOperation,
+              operation: found.operation,
               params: [
                 dbModels,
                 network,
@@ -243,11 +153,9 @@ const getTransaction = async (
         try {
           await insertion.operation(...insertion.params);
         } catch (err) {
-          log.error(
-            'Error storing information of event',
-            insertion.eventData,
-            err,
-          );
+          log.error('Error storing information of event');
+          console.log(insertion.eventData);
+          log.error(err);
         }
       }
       // Set transaction as fully processed ONLY if there was something to insert, otherwise ignore

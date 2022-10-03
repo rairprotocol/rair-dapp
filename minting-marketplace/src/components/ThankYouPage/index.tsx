@@ -1,9 +1,8 @@
 //@ts-nocheck
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import DiscordIcon from '../SplashPage/images/discord-icon.png';
-import logoAuthor from '../SplashPage/images/colab.png';
+import { discrodIconNoBorder } from '../../images';
+import { LogoAuthor } from '../SplashPage/images/commingSoon/commingSoonImages';
 
 const ThankYouPage = () => {
   const navigate = useNavigate();
@@ -37,8 +36,8 @@ const ThankYouPage = () => {
                     href="https://discord.gg/NFeGnPkbfd"
                     target="_blank"
                     rel="noreferrer">
-                    <img src={DiscordIcon} alt="Discord RAIR.TECH" /> Join our
-                    Discord
+                    <img src={discrodIconNoBorder} alt="Discord RAIR.TECH" />{' '}
+                    Join our Discord
                   </a>
                 </div>
               </div>
@@ -47,7 +46,7 @@ const ThankYouPage = () => {
               </div>
               <div className="logo-author">
                 {/* <img src={logoDigital} alt="southwest digital" /> */}
-                <img src={logoAuthor} alt="Custom Rair Tech logo" />
+                <img src={LogoAuthor} alt="Custom Rair Tech logo" />
               </div>
             </div>
           </div>

@@ -8,24 +8,25 @@ import Swal from 'sweetalert2';
 import './SplashPage.css';
 
 /* importing images*/
-import Metamask from './images/metamask_logo.png';
-import NipseyBg from './images/nipsey.png';
-import logoAuthor from './images/colab.png';
-import Nft_1 from './images/exclusive_1.jpeg';
-import Nft_2 from './images/exclusive_2.jpeg';
-import Nft_3 from './images/exclusive_3.jpeg';
-import Nft_4 from './images/image_3.png';
-import NftImage from './images/main-nft-screen.png';
-import UnlockableVideo from './images/nipsey1.png';
-import DigitalMobile from './images/digital-mobile.png';
-import NftMobile_1 from './images/nft-mobile_1.png';
-import NftMobile_2 from './images/nft-mobile_2.png';
-import VideoPresent from './images/video-present.png';
-import RairTechMobile from './images/rair_tech_mobile.png';
-import DiscordIcon from './images/discord-icon.png';
-import Bandana from './images/bandana.png';
-import Pods from './images/Pods.png';
-import Cepk from './images/cepk.png';
+import { metaMaskIcon, discrodIconNoBorder } from '../../images';
+import { LogoAuthor } from './images/commingSoon/commingSoonImages';
+import {
+  NipseyBg,
+  Nft_1,
+  Nft_2,
+  Nft_3,
+  Nft_4,
+  NftImage,
+  UnlockableVideo,
+  DigitalMobile,
+  NftMobile_1,
+  NftMobile_2,
+  VideoPresent,
+  RairTechMobile,
+  Bandana,
+  Pods,
+  Cepk
+} from './images/splashPageImages/splashPage';
 
 /* importing Components*/
 import TokenLeft from './TokenLeft/TokenLeft';
@@ -240,7 +241,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                   <button onClick={openModal}>
                     <img
                       className="metamask-logo"
-                      src={Metamask}
+                      src={metaMaskIcon}
                       alt="metamask-logo"
                     />
                     Preorderwith ETH
@@ -338,7 +339,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                           className="modal-btn">
                           <img
                             className="metamask-logo modal-btn-logo"
-                            src={Metamask}
+                            src={metaMaskIcon}
                             alt="metamask-logo"
                           />{' '}
                           PURCHASE
@@ -350,7 +351,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
               </div>
               <div className="logo-author">
                 {/* <img src={logoDigital} alt="southwest digital" /> */}
-                <img src={logoAuthor} alt="Custom logo by Rair Tech" />
+                <img src={LogoAuthor} alt="Custom logo by Rair Tech" />
               </div>
             </div>
           </div>
@@ -359,7 +360,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           soldCopies={dataNipsey}
           copies={copies}
           primaryColor={primaryColor}
-          DiscordIcon={DiscordIcon}
+          DiscordIcon={discrodIconNoBorder}
         />
         <div className="special-offer">
           <div className="offer-desp">
@@ -411,7 +412,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
           amountTokens={Number(copies) - Number(dataNipsey)}
           linkComing={'/coming-soon'}
         />
-        <NipseyRelease DiscordIcon={DiscordIcon} />
+        <NipseyRelease DiscordIcon={discrodIconNoBorder} />
         <RoadMap />
         {/* <JoinCom
           Metamask={Metamask}
@@ -623,7 +624,7 @@ const SplashPage: React.FC<ISplashPageProps> = ({ setIsSplashPage }) => {
                 </div>
               </div>
             </div>
-            <NipseyRelease DiscordIcon={DiscordIcon} />
+            <NipseyRelease DiscordIcon={discrodIconNoBorder} />
             <TeamMeet arraySplash={'nipsey'} />
             <div className="content-owners-mobile">
               <div className="owner-box">

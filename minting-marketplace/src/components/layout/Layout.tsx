@@ -1,8 +1,8 @@
 //@ts-nocheck
 import React from 'react';
 import { Link } from 'react-router-dom';
-import MetamaskLogo from '../../images/metamask-fox.svg';
-import headerLogo from '../../images/RAIR-Tech-Logo-POWERED BY-BLACK-2021.png';
+import { metaMaskIcon } from '../../images';
+import { headerLogoBlackMobile } from '../../images';
 import './Layout.css';
 import { ILayout } from './layout.types';
 
@@ -43,11 +43,15 @@ const Layout: React.FC<ILayout> = (props) => {
         <div
           className="col-12 pt-2 mb-4"
           style={{ height: '8vh', marginTop: '30px' }}>
-          <img src={headerLogo} className="h-100" alt="Rair Tech Logo" />
+          <img
+            src={headerLogoBlackMobile}
+            className="h-100"
+            alt="Rair Tech Logo"
+          />
         </div>
         {!userData && account ? (
           <button className="btn btn-light" onClick={connectUserData}>
-            Connect <img src={MetamaskLogo} alt="Metamask Logo" />
+            Connect <img src={metaMaskIcon} alt="Metamask Logo" />
           </button>
         ) : (
           <div className="menu">

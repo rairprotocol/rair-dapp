@@ -8,6 +8,7 @@ import { TAuthGetChallengeResponse } from '../../../../axios.responseTypes';
 import { RootState } from '../../../../ducks';
 import { ethers } from 'ethers';
 import { IVideoPlayerBySignature, IVideoWindow } from '../../splashPage.types';
+import { ContractsInitialType } from '../../../../ducks/contracts/contracts.types';
 
 const VideoWindow: React.FC<IVideoWindow> = ({ mediaAddress }) => {
   return (
@@ -37,10 +38,10 @@ const VideoWindowError = () => {
 const VideoPlayerBySignature: React.FC<IVideoPlayerBySignature> = ({
   mediaAddress
 }) => {
-  const programmaticProvider = useSelector<
+  const { programmaticProvider, currentUserAddress } = useSelector<
     RootState,
-    ethers.Wallet | undefined
-  >((state) => state.contractStore.programmaticProvider);
+    ContractsInitialType
+  >((state) => state.contractStore);
   const [signature, setSignature] = useState(null);
 
   const requestChallenge = useCallback(async () => {
@@ -51,8 +52,13 @@ const VideoPlayerBySignature: React.FC<IVideoPlayerBySignature> = ({
       const account = await window.ethereum.request({
         method: 'eth_requestAccounts'
       });
-      const response = await axios.get<TAuthGetChallengeResponse>(
-        '/api/auth/get_challenge/' + account
+      const response = await axios.post<TAuthGetChallengeResponse>(
+        '/api/auth/get_challenge/',
+        {
+          userAddress: currentUserAddress,
+          intent: 'decrypt',
+          mediaId: mediaAddress
+        }
       );
       parsedResponse = JSON.parse(response.data.response);
       try {

@@ -1,9 +1,11 @@
+const AppError = require('../utils/errors/AppError');
+
 module.exports = (req, res, next) => {
   try {
     const { adminRights, publicAddress } = req.user;
 
     if (!adminRights) {
-      return next(new Error(`User ${publicAddress} don't have admin rights.`));
+      return next(new AppError(`User ${publicAddress} don't have admin rights.`, 401));
     }
 
     return next();

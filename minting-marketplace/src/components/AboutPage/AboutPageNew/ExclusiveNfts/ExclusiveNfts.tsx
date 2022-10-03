@@ -1,10 +1,12 @@
 //@ts-nocheck
 import React from 'react';
-import NftImage from './../../assets/grayman-matrix.png';
-import Nft_1 from './../../assets/monster.jpeg';
-import Nft_2 from './../../assets/coin-agenda_2.png';
-import Nft_3 from './../../assets/nutcracher-nft-photo.png';
-import Nft_4 from './../../assets/coin-agenda_1.jpeg';
+import {
+  grayManMatrix,
+  CoinAgenda1,
+  CoinAgenda2,
+  Monster,
+  NutcracherNftPhoto
+} from '../../assets/exclusiveNfts/exclusiveNfts';
 import MobileCarouselNfts from './MobileCarouselNfts';
 import { MainSelectNft } from './MainSelectNft';
 
@@ -17,7 +19,7 @@ const ExclusiveNfts = () => {
         </h3>
       </div>
       <div className="nfts-select">
-        <MainSelectNft className="main-nft" NftImage={NftImage}>
+        <MainSelectNft className="main-nft" NftImage={grayManMatrix}>
           <div className="btn-open-store">
             <a
               href="https://cryptogreyman.com/"
@@ -29,27 +31,27 @@ const ExclusiveNfts = () => {
         </MainSelectNft>
         <div className="block-nfts">
           <div className="box-nft">
-            <img src={Nft_4} alt="Exclusive NFT Coin Agenda Global" />
-            <img src={Nft_2} alt="Exclusive NFT Nutcracher" />
+            <img src={CoinAgenda1} alt="Exclusive NFT Coin Agenda Global" />
+            <img src={CoinAgenda2} alt="Exclusive NFT Nutcracher" />
           </div>
           <div className="box-nft">
             <img
-              src={Nft_3}
+              src={NutcracherNftPhoto}
               alt="Exclusive NFT Coin Agenda Middle East and Africa"
             />
-            <img src={Nft_1} alt="Exclusive NFT Moster" />
+            <img src={Monster} alt="Exclusive NFT Moster" />
           </div>
         </div>
       </div>
       <MobileCarouselNfts>
-        <img src={NftImage} alt="img" />
-        <img src={Nft_4} alt="Exclusive NFT Coin Agenda Global" />
-        <img src={Nft_2} alt="Exclusive NFT Nutcracher" />
+        <img src={grayManMatrix} alt="img" />
+        <img src={CoinAgenda1} alt="Exclusive NFT Coin Agenda Global" />
+        <img src={CoinAgenda2} alt="Exclusive NFT Nutcracher" />
         <img
-          src={Nft_3}
+          src={NutcracherNftPhoto}
           alt="Exclusive NFT Coin Agenda Middle East and Africa"
         />
-        <img src={Nft_1} alt="Exclusive NFT Moster" />
+        <img src={Monster} alt="Exclusive NFT Moster" />
       </MobileCarouselNfts>
     </div>
   );

@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const { OfferPool } = require('../models');
 
 exports.getOfferPoolByContractAndProduct = async (req, res, next) => {
@@ -13,7 +14,7 @@ exports.getOfferPoolByContractAndProduct = async (req, res, next) => {
       });
 
       if (_.isEmpty(offerPool)) {
-        return res.status(404).send({ success: false, message: 'OfferPool not found.' });
+        return next(new AppError('OfferPool not found.', 404));
       }
 
       req.offerPool = offerPool;

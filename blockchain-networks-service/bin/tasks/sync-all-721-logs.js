@@ -65,7 +65,6 @@ module.exports = (context) => {
 				version = await version.save();
 			}
 
-
 			/*
 				Collection Name 	Description
 				------------------------------------------------

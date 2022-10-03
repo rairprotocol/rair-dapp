@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
@@ -17,7 +18,8 @@ const models = require('./models');
 const redisService = require('./services/redis');
 const streamRoute = require('./routes/stream');
 const apiV1Routes = require('./routes');
-const { textPurify, cleanStorage } = require('./utils/helpers');
+const mainErrorHandler = require('./utils/errors/mainErrorHandler');
+const { textPurify } = require('./utils/helpers');
 
 const { appSecretManager, vaultAppRoleTokenManager } = require('./vault');
 
@@ -78,6 +80,8 @@ async function main() {
   app.use(morgan('dev'));
   app.use(bodyParser.raw());
   app.use(bodyParser.json());
+  app.use(cookieParser());
+  app.set('trust proxy', 1);
   app.use(
     session({
       store: new RedisStorage({
@@ -87,16 +91,16 @@ async function main() {
       secret: config.session.secret,
       saveUninitialized: true,
       resave: false,
-      name: 'id',
+      proxy: config.production,
       cookie: {
+        sameSite: config.production ? 'none' : 'lax',
         path: '/',
-        httpOnly: true,
-        // secure: true,
+        httpOnly: config.production,
+        secure: config.production,
         // maxAge:  (12 * 60 * 60 * 1000)  // 12 hours
       },
     }),
   );
-
   app.use(
     '/thumbnails',
     express.static(path.join(__dirname, 'Videos/Thumbnails')),
@@ -104,22 +108,7 @@ async function main() {
   app.use('/stream', streamRoute(context));
   app.use('/api', apiV1Routes(context));
   app.use(express.static(path.join(__dirname, 'public')));
-  // ESLint block reason is that nex structure is documented express approach
-  // eslint-disable-next-line consistent-return
-  app.use(async (err, req, res, next) => {
-    // remove temporary files if validation of some middleware was rejected
-    try {
-      await cleanStorage(req.files || req.file);
-    } catch (e) {
-      log.error(e);
-    }
-    // prevents from server drop by headers already sent
-    if (res.headersSent) {
-      return next(err);
-    }
-    log.error(err);
-    res.status(500).json({ success: false, error: true, message: err.message });
-  });
+  app.use(mainErrorHandler);
 
   const server = app.listen(config.port, () => {
     log.info(`Rairnode server listening at http://localhost:${config.port}`);

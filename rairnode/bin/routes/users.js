@@ -1,5 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const { JWTVerification, validation } = require('../middleware');
 const upload = require('../Multer/Config');
 const { cleanStorage } = require('../utils/helpers');
@@ -46,14 +47,11 @@ module.exports = (context) => {
       let fieldsForUpdate = _.assign({}, req.body);
 
       if (!foundUser) {
-        return res.status(404).send({ success: false, message: 'User not found.' });
+        return next(new AppError('User not found.', 404));
       }
 
       if (publicAddress !== user.publicAddress) {
-        return res.status(403).send({
-          success: false,
-          message: `You have no permissions for updating user ${publicAddress}.`,
-        });
+        return next(new AppError(`You have no permissions for updating user ${publicAddress}.`, 403));
       }
 
       if (req.files.length) {
@@ -98,7 +96,7 @@ module.exports = (context) => {
       }
 
       if (_.isEmpty(fieldsForUpdate)) {
-        return res.status(400).send({ success: false, message: 'Nothing to update.' });
+        return next(new AppError('Nothing to update.', 400));
       }
 
       if (fieldsForUpdate.nickName) {

@@ -5,7 +5,7 @@ const gcp = require('../integrations/gcp')(config);
 const log = require('../utils/logger')(module);
 const { cleanStorage, textPurify } = require('../utils/helpers');
 const { User } = require('../models');
-const AppError = require('../utils/appError');
+const AppError = require('../utils/errors/AppError');
 const eFactory = require('../utils/entityFactory');
 
 exports.getAllUsers = eFactory.getAll(User);
@@ -60,17 +60,13 @@ exports.updateUserByUserAddress = async (req, res, next) => {
     let fieldsForUpdate = _.assign({}, req.body);
 
     if (!foundUser) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'User not found.' });
+      return next(new AppError('User not found.', 404));
     }
 
     if (publicAddress !== user.publicAddress) {
-      return res.status(403).json({
-        success: false,
-        message: `You have no permissions for updating user ${publicAddress}.`,
-      });
+      return next(new AppError(`You have no permissions for updating user ${publicAddress}.`, 403));
     }
+
     if (req.files) {
       if (req.files.length) {
         const files = await Promise.all(
@@ -122,9 +118,7 @@ exports.updateUserByUserAddress = async (req, res, next) => {
       }
     }
     if (_.isEmpty(fieldsForUpdate)) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'Nothing to update.' });
+      return next(new AppError('Nothing to update.', 400));
     }
 
     if (fieldsForUpdate.nickName) {

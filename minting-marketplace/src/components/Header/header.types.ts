@@ -13,6 +13,7 @@ export interface IMainHeader {
   selectedChain: string | null;
   showAlert: boolean;
   isSplashPage: boolean;
+  setTabIndexItems: (arg: number) => void;
 }
 
 export type TAxiosCollectionData = {

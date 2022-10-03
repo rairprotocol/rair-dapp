@@ -1,13 +1,14 @@
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
-const { Contract, Blockchain, Category } = require('../models');
-const AppError = require('../utils/appError');
+const { Contract, Blockchain } = require('../models');
+const AppError = require('../utils/errors/AppError');
 const eFactory = require('../utils/entityFactory');
 const {
   importContractData,
 } = require('../integrations/ethers/importContractData');
 
 exports.getAllContracts = eFactory.getAll(Contract);
+exports.updateContract = eFactory.updateOne(Contract);
 
 exports.getContractById = async (req, res, next) => {
   try {
@@ -69,16 +70,26 @@ exports.importContractsMoralis = async (req, res, next) => {
     return next(err);
   }
 };
-exports.getContractsByBlockchainAndContractAddress = async (req, res, next) => {
+exports.getSpecificContracts = async (req, res, next) => {
   try {
-    const contract = await Contract.findOne({
-      contractAddress: req.query.contractAddress.toLowerCase(),
-      blockchain: req.query.networkId,
-    });
+    let contract;
+    if ((req.query.contractAddress && req.query.networkId) || req.query.contract) {
+      contract = await Contract.findOne(req.query.contract
+        ? { _id: ObjectID(req.query.contract) }
+        : {
+          contractAddress: req.query.contractAddress.toLowerCase(),
+          blockchain: req.query.networkId,
+        });
+    } else {
+      return next(new AppError('Cannot find contract: missing params', 400));
+    }
 
-    if (_.isEmpty(contract)) return res.status(404).send({ success: false, message: 'Contract not found.' });
+    if (_.isEmpty(contract)) {
+      return next(new AppError('Contract not found.', 404));
+    }
 
     req.contract = contract;
+    if (!req.query.contract) req.query.contract = contract._id;
 
     return next();
   } catch (e) {

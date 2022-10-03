@@ -1,5 +1,6 @@
 const { promises: fs } = require('fs');
 const _ = require('lodash');
+const AppError = require('../utils/errors/AppError');
 const {
   OfferPool,
   Offer,
@@ -24,7 +25,7 @@ const getOffersAndOfferPools = async (contract, product) => {
   });
 
   if (_.isEmpty(offers)) {
-    throw new Error('Offers not found.');
+    throw new AppError('Offers not found.', 404);
   }
 
   if (!contract.diamond) {
@@ -34,7 +35,7 @@ const getOffersAndOfferPools = async (contract, product) => {
     });
 
     if (_.isEmpty(offerPool)) {
-      throw new Error('Offerpool not found.');
+      throw new AppError('Offerpool not found.', 404);
     }
   }
 
@@ -76,6 +77,8 @@ const prepareTokens = (
   });
 };
 
+exports.getAllTokens = eFactory.getAll(MintedToken);
+
 exports.createTokensWithCommonMetadata = async (req, res, next) => {
   try {
     const { user } = req;
@@ -99,25 +102,19 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
     if (_.isEmpty(metadataFields)) {
       await cleanStorage(req.files);
-      return res
-        .status(400)
-        .send({ success: false, message: 'Nothing to store.' });
+      return next(new AppError('Nothing to store.', 400));
     }
 
     const foundContract = await Contract.findById(contract);
 
     if (_.isEmpty(foundContract)) {
       await cleanStorage(req.files);
-      return res
-        .status(404)
-        .send({ success: false, message: 'Contract not found.' });
+      return next(new AppError('Contract not found.', 404));
     }
 
     if (user.publicAddress !== foundContract.user) {
       await cleanStorage(req.files);
-      return res
-        .status(403)
-        .send({ success: false, message: 'This contract not belong to you.' });
+      return next(new AppError('This contract not belong to you.', 403));
     }
 
     // upload files to IPFS cloud storage
@@ -183,12 +180,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
         if (tokensCount > 0) {
           await cleanStorage(req.files);
-          return res
-            .status(400)
-            .send({
-              success: false,
-              message: `Current Contract already have ${tokensCount} created tokens.`,
-            });
+          return next(new AppError(`Current Contract already have ${tokensCount} created tokens.`, 400));
         }
       }
 
@@ -201,10 +193,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
       if (!foundProducts) {
         await cleanStorage(req.files);
-        return res.status(404).send({
-          success: false,
-          message: `Products for contract ${foundContract._id} not found.`,
-        });
+        return next(new AppError(`Products for contract ${foundContract._id} not found.`, 404));
       }
 
       await Promise.all(
@@ -225,9 +214,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
             );
           } catch (err) {
             await cleanStorage(req.files);
-            return res
-              .status(404)
-              .send({ success: false, message: err.message });
+            return next(new AppError(`${err.message}`, 404));
           }
         }),
       );
@@ -240,10 +227,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
         if (!foundProduct) {
           await cleanStorage(req.files);
-          return res.status(404).send({
-            success: false,
-            message: `Product for contract ${foundContract._id} not found.`,
-          });
+          return next(new AppError(`Product for contract ${foundContract._id} not found.`, 404));
         }
 
         const [offers, offerPool] = await getOffersAndOfferPools(
@@ -265,12 +249,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
 
           if (tokensCount > 0) {
             await cleanStorage(req.files);
-            return res
-              .status(400)
-              .send({
-                success: false,
-                message: `Current Product already have ${tokensCount} created tokens.`,
-              });
+            return next(new AppError(`Current Product already have ${tokensCount} created tokens.`, 400));
           }
         }
 
@@ -289,7 +268,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
         );
       } catch (err) {
         await cleanStorage(req.files);
-        return res.status(404).send({ success: false, message: err.message });
+        return next(new AppError(`${err.message}`, 404));
       }
     }
 
@@ -302,10 +281,7 @@ exports.createTokensWithCommonMetadata = async (req, res, next) => {
       }
     } else {
       await cleanStorage(req.files);
-      return res.json({
-        success: false,
-        message: "Don't have tokens for creation.",
-      });
+      return next(new AppError("Don't have tokens for creation.", 400));
     }
 
     await cleanStorage(req.files);
@@ -353,10 +329,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
         );
       }
 
-      return res.status(403).send({
-        success: false,
-        message: `You have no permissions for updating token ${token}.`,
-      });
+      return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
     }
 
     if (_.isEmpty(fieldsForUpdate)) {
@@ -369,9 +342,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
         );
       }
 
-      return res
-        .status(400)
-        .send({ success: false, message: 'Nothing to update.' });
+      return next(new AppError('Nothing to update.', 400));
     }
 
     const countDocuments = await MintedToken.countDocuments(
@@ -388,9 +359,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
         );
       }
 
-      return res
-        .status(400)
-        .send({ success: false, message: 'Token not found.' });
+      return next(new AppError('Token not found.', 400));
     }
 
     if (_.get(req, 'files.length', false)) {
@@ -489,10 +458,7 @@ exports.pinMetadataToPinata = async (req, res, next) => {
     let metadataURI = 'none';
 
     if (user.publicAddress !== contract.user) {
-      return res.status(403).send({
-        success: false,
-        message: `You have no permissions for updating token ${token}.`,
-      });
+      return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
     }
 
     const options = _.assign(
@@ -508,9 +474,7 @@ exports.pinMetadataToPinata = async (req, res, next) => {
     const foundToken = await MintedToken.findOne(options);
 
     if (_.isEmpty(foundToken)) {
-      return res
-        .status(400)
-        .send({ success: false, message: 'Token not found.' });
+      return next(new AppError('Token not found.', 400));
     }
 
     metadataURI = foundToken.metadataURI;

@@ -11,6 +11,7 @@ const offersController = require('../offers/offers.Controller');
 const usersController = require('../users/users.Controller');
 const verifyController = require('../verification/userVerification.controller');
 const favoritesController = require('../favorites/favorites.Controller');
+const csv = require('./csv');
 const { JWTVerification } = require('../middleware');
 
 module.exports = () => {
@@ -19,13 +20,14 @@ module.exports = () => {
   router.use('/contracts', contractsController);
   router.use('/files', filesController);
   router.use('/products', productsController);
-  router.use('/tokens', tokensController());
-  router.use('/locks', locksController());
-  router.use('/favorites', JWTVerification, favoritesController());
-  router.use('/verify', verifyController());
+  router.use('/tokens', tokensController);
+  router.use('/locks', locksController);
+  router.use('/favorites', JWTVerification, favoritesController);
+  router.use('/verify', verifyController);
   router.use('/upload', uploadController);
   router.use('/users', usersController);
   router.use('/offers', offersController);
   router.use('/resales', resalesController);
+  router.use('/csv', csv);
   return router;
 };

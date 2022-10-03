@@ -6,17 +6,19 @@ import './VaporverseSplash.css';
 import { v1 } from 'uuid';
 
 /* importing images*/
-import vaporverse_background from '../images/vaporverse_authorcard_background.png';
-import VV0 from '../images/vv_NFT_0.png';
-import VV1 from '../images/vv_NFT_1.png';
-import VV2 from '../images/vv_NFT_2.png';
-import VV3 from '../images/vv_NFT_3.png';
-import VV4 from '../images/vv_NFT_4.png';
-import VV_warning_1 from '../images/vv_warning_1.png';
-import VV_warning_2 from '../images/vv_warning_2.png';
-import VV_test_transmission from '../images/vv_test_transmission.png';
+import {
+  vaporverse_background,
+  VV0,
+  VV1,
+  VV2,
+  VV3,
+  VV4,
+  VV_warning_1,
+  VV_warning_2,
+  VV_test_transmission,
+  videoBackground
+} from '../images/vaporverse/vaporverse';
 import favion_Vaporverse from './../images/favicons/vv_Rair_logo.ico';
-import videoBackground from '../images/vaporverse_video_background.png';
 
 /* importing Components*/
 import TeamMeet from '../TeamMeet/TeamMeetList';

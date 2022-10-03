@@ -1,6 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const fs = require('fs').promises;
+const AppError = require('../../../../../utils/errors/AppError');
 const {
   JWTVerification,
   validation,
@@ -31,9 +32,7 @@ module.exports = (context) => {
       const result = await context.db.MintedToken.findOne(options);
 
       if (result === null) {
-        return res
-          .status(404)
-          .send({ success: false, message: 'Token not found.' });
+        return next(new AppError('Token not found.', 404))
       }
 
       return res.json({ success: true, result });
@@ -82,10 +81,7 @@ module.exports = (context) => {
             );
           }
 
-          return res.status(403).send({
-            success: false,
-            message: `You have no permissions for updating token ${token}.`,
-          });
+          return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
         }
 
         if (_.isEmpty(fieldsForUpdate)) {
@@ -98,9 +94,7 @@ module.exports = (context) => {
             );
           }
 
-          return res
-            .status(400)
-            .send({ success: false, message: 'Nothing to update.' });
+          return next(new AppError('Nothing to update.', 400));
         }
 
         const countDocuments = await context.db.MintedToken.countDocuments(
@@ -117,9 +111,7 @@ module.exports = (context) => {
             );
           }
 
-          return res
-            .status(400)
-            .send({ success: false, message: 'Token not found.' });
+          return next(new AppError('Token not found.', 400));
         }
 
         if (req.files.length) {
@@ -219,10 +211,7 @@ module.exports = (context) => {
       let metadataURI = 'none';
 
       if (user.publicAddress !== contract.user) {
-        return res.status(403).send({
-          success: false,
-          message: `You have no permissions for updating token ${token}.`,
-        });
+        return next(new AppError(`You have no permissions for updating token ${token}.`, 403));
       }
 
       const options = _.assign(
@@ -238,9 +227,7 @@ module.exports = (context) => {
       const foundToken = await context.db.MintedToken.findOne(options);
 
       if (_.isEmpty(foundToken)) {
-        return res
-          .status(400)
-          .send({ success: false, message: 'Token not found.' });
+        return next(new AppError('Token not found.', 400));
       }
 
       metadataURI = foundToken.metadataURI;
