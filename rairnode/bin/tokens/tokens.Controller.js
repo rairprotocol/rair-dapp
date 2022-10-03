@@ -4,6 +4,7 @@ const {
   getSingleToken,
   updateSingleTokenMetadata,
   pinMetadataToPinata,
+  createTokensViaCSV,
   getAllTokens,
   getTokenNumbers,
 } = require('./tokens.Service');
@@ -32,6 +33,13 @@ router.post(
   dataTransform(['attributes']),
   validation('createCommonTokenMetadata'),
   createTokensWithCommonMetadata,
+);
+router.post(
+  '/viaCSV',
+  JWTVerification,
+  isAdmin,
+  upload.single('csv'),
+  createTokensViaCSV,
 );
 router.get(
   '/my',

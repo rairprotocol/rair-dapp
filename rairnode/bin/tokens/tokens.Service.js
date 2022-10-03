@@ -1,5 +1,6 @@
-const { promises: fs } = require('fs');
+const fs = require('fs');
 const _ = require('lodash');
+const csv = require('csv-parser');
 const AppError = require('../utils/errors/AppError');
 const {
   OfferPool,
@@ -384,7 +385,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
       if (_.get(req, 'files.length', false)) {
         await Promise.all(
           _.map(req.files, async (file) => {
-            await fs.rm(`${file.destination}/${file.filename}`);
+            await fs.promises.rm(`${file.destination}/${file.filename}`);
             log.info(`File ${file.filename} has removed.`);
           }),
         );
@@ -417,7 +418,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
       if (_.get(req, 'files.length', false)) {
         await Promise.all(
           _.map(req.files, async (file) => {
-            await fs.rm(`${file.destination}/${file.filename}`);
+            await fs.promises.rm(`${file.destination}/${file.filename}`);
             log.info(`File ${file.filename} has removed.`);
           }),
         );
@@ -491,7 +492,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
     if (_.get(req, 'files.length', false)) {
       await Promise.all(
         _.map(req.files, async (file) => {
-          await fs.rm(`${file.destination}/${file.filename}`);
+          await fs.promises.rm(`${file.destination}/${file.filename}`);
           log.info(`File ${file.filename} has removed.`);
         }),
       );
@@ -502,7 +503,7 @@ exports.updateSingleTokenMetadata = async (req, res, next) => {
     if (_.get(req, 'files.length', false)) {
       await Promise.all(
         _.map(req.files, async (file) => {
-          await fs.rm(`${file.destination}/${file.filename}`);
+          await fs.promises.rm(`${file.destination}/${file.filename}`);
           log.info(`File ${file.filename} has removed.`);
         }),
       );
@@ -517,6 +518,7 @@ exports.pinMetadataToPinata = async (req, res, next) => {
     const { contract, offers, offerPool } = req;
     const { token } = req.params;
     const { user } = req;
+    // eslint-disable-next-line
     const reg =
       /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gm;
     let metadataURI = 'none';
@@ -569,6 +571,235 @@ exports.pinMetadataToPinata = async (req, res, next) => {
 
     return res.json({ success: true, metadataURI });
   } catch (err) {
+    return next(err);
+  }
+};
+
+exports.createTokensViaCSV = async (req, res, next) => {
+  try {
+    const { contract, product, updateMeta = 'false' } = req.body;
+    const { user } = req;
+    const prod = product;
+    const defaultFields = ['nftid', 'name', 'description', 'artist'];
+    const optionalFields = ['image', 'animation_url', 'publicaddress'];
+    const reg =
+      /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/gm;
+    const records = [];
+    const forUpdate = [];
+    const tokens = [];
+    let foundTokens = [];
+
+    const foundContract = await Contract.findById(contract);
+
+    if (_.isEmpty(foundContract)) {
+      return res
+        .status(404)
+        .send({ success: false, message: 'Contract not found.' });
+    }
+
+    if (user.publicAddress !== foundContract.user) {
+      return res
+        .status(403)
+        .send({ success: false, message: 'This contract not belong to you.' });
+    }
+
+    const offerPool = await OfferPool.findOne({
+      contract: foundContract._id,
+      product: prod,
+    });
+    const offers = await Offer.find({
+      contract: foundContract._id,
+      product: prod,
+    });
+
+    if (_.isEmpty(offers)) {
+      await cleanStorage(req.file);
+      return res
+        .status(404)
+        .send({ success: false, message: 'Offers not found.' });
+    }
+
+    const offerIndexes = offers.map((v) =>
+      foundContract.diamond ? v.diamondRangeIndex : v.offerIndex,
+    );
+    const foundProduct = await Product.findOne({
+      contract,
+      collectionIndexInContract: product,
+    });
+
+    if (_.isEmpty(foundProduct)) {
+      await cleanStorage(req.file);
+      return res
+        .status(404)
+        .send({ success: false, message: 'Product not found.' });
+    }
+
+    if (foundContract.diamond) {
+      foundTokens = await MintedToken.find({
+        contract,
+        offer: { $in: offerIndexes },
+      });
+    } else {
+      if (_.isEmpty(offerPool)) {
+        await cleanStorage(req.file);
+        return res
+          .status(404)
+          .send({ success: false, message: 'OfferPools not found.' });
+      }
+
+      foundTokens = await MintedToken.find({
+        contract,
+        offerPool: offerPool.marketplaceCatalogIndex,
+      });
+    }
+    // Processing file input
+    await new Promise((resolve, reject) =>
+      // eslint-disable-next-line no-promise-executor-return
+      fs
+        .createReadStream(`${req.file.destination}${req.file.filename}`)
+        .pipe(
+          csv({
+            mapHeaders: ({ header }) => {
+              let h = header.toLowerCase();
+              h = h.replace(/\s/g, '');
+
+              if (
+                _.includes(defaultFields, h) ||
+                _.includes(optionalFields, h)
+              ) {
+                return h;
+              }
+
+              return header;
+            },
+          }),
+        )
+        .on('data', (data) => {
+          const foundFields = _.keys(data);
+          let isValid = true;
+          let isCoverPresent = false;
+
+          _.forEach(defaultFields, (field) => {
+            if (!_.includes(foundFields, field)) {
+              isValid = false;
+            }
+          });
+
+          _.forEach(optionalFields, (field) => {
+            if (_.includes(foundFields, field)) {
+              isCoverPresent = true;
+            }
+          });
+
+          if (isValid && isCoverPresent) records.push(data);
+        })
+        .on('end', () => {
+          _.forEach(offers, (offer) => {
+            _.forEach(records, (record) => {
+              const token = record.nftid;
+
+              if (
+                BigInt(token) >= BigInt(offer.range[0]) &&
+                BigInt(token) <= BigInt(offer.range[1])
+              ) {
+                const address = record.publicaddress
+                  ? record.publicaddress
+                  : `0xooooooooooooooooooooooooooooooooooo${token}`;
+                const sanitizedOwnerAddress = address.toLowerCase();
+                const attributes = _.chain(record)
+                  .assign({})
+                  .omit(_.concat(defaultFields, optionalFields))
+                  .reduce((re, v, k) => {
+                    re.push({ trait_type: k, value: v });
+                    return re;
+                  }, [])
+                  .value();
+                const foundToken = _.find(
+                  foundTokens,
+                  (t) =>
+                    t.offer ===
+                      (foundContract.diamond
+                        ? offer.diamondRangeIndex
+                        : offer.offerIndex) && t.token === token,
+                );
+                const mainFields = {
+                  contract,
+                  token,
+                };
+
+                if (!foundContract.diamond) {
+                  mainFields.offerPool = offerPool.marketplaceCatalogIndex;
+                }
+
+                const offerIndex = foundContract.diamond
+                  ? offer.diamondRangeIndex
+                  : offer.offerIndex;
+
+                const externalURL = encodeURI(
+                  `https://${process.env.SERVICE_HOST}/${foundContract._id}/${foundProduct.collectionIndexInContract}/${offerIndex}/${token}`,
+                );
+
+                if (
+                  updateMeta === 'true' &&
+                  foundToken &&
+                  !foundToken.isMinted
+                ) {
+                  forUpdate.push({
+                    updateOne: {
+                      filter: mainFields,
+                      update: {
+                        ownerAddress: sanitizedOwnerAddress,
+                        isURIStoredToBlockchain: false,
+                        metadata: {
+                          name: textPurify.sanitize(record.name),
+                          description: textPurify.sanitize(record.description),
+                          artist: textPurify.sanitize(record.artist),
+                          external_url: externalURL,
+                          image: record.image || '',
+                          animation_url: record.animation_url || '',
+                          isMetadataPinned: reg.test(token.metadataURI || ''),
+                          attributes,
+                        },
+                      },
+                    },
+                  });
+
+                  tokens.push(token);
+                }
+              }
+            });
+
+            return resolve(records);
+          });
+
+          if (_.isEmpty(offers)) resolve();
+        })
+        .on('error', reject),
+    );
+
+    await cleanStorage(req.file);
+    if (!_.isEmpty(forUpdate)) {
+      try {
+        await MintedToken.bulkWrite(forUpdate, { ordered: false });
+      } catch (err) {
+        log.error(err);
+      }
+    }
+    const resultOptions = _.assign(
+      {
+        contract,
+        token: { $in: tokens },
+        isMinted: false,
+      },
+      foundContract.diamond
+        ? { offer: { $in: offerIndexes } }
+        : { offerPool: offerPool.marketplaceCatalogIndex },
+    );
+    const result = await MintedToken.find(resultOptions);
+
+    return res.json({ success: true, result });
+  } catch (err) {
+    await cleanStorage(req.file);
     return next(err);
   }
 };
